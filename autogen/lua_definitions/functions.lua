@@ -6512,6 +6512,46 @@ function vec3s_sum(dest, a, b)
     -- ...
 end
 
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Pointer_integer
+--- Subtracts the components of the 3D signed-integer vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
+function vec3s_dif(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a integer
+--- @return Pointer_integer
+--- Multiplies each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
+function vec3s_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a integer
+--- @return Pointer_integer
+--- Divides each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
+function vec3s_div(dest, a)
+    -- ...
+end
+
+--- @param a Vec3s
+--- @return integer
+--- Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
+function vec3s_length(a)
+    -- ...
+end
+
+--- @param v1 Vec3s
+--- @param v2 Vec3s
+--- @return integer
+--- Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+function vec3s_dist(v1, v2)
+    -- ...
+end
+
 --- @param v Vec3s
 --- @return Pointer_integer
 --- Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.

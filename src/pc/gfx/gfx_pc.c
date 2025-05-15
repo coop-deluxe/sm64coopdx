@@ -64,14 +64,17 @@
 #define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #define MAX_BUFFERED 256
+#define MAX_MATRIX_STACK_SIZE 11
 #define MAX_LIGHTS 18
 #define MAX_VERTICES 64
 
-# define MAX_CACHED_TEXTURES 4096 // for preloading purposes
-# define HASH_SHIFT 0
+#define MAX_CACHED_TEXTURES 4096 // for preloading purposes
+#define HASH_SHIFT 0
 
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
 #define HASH_MASK (HASHMAP_LEN - 1)
+
+#define RDP_TILES 8
 
 u8 gGfxPcResetTex1 = 0;
 
@@ -93,11 +96,9 @@ struct LoadedVertex {
 
 struct TextureHashmapNode {
     struct TextureHashmapNode *next;
-
     const uint8_t *texture_addr;
-    uint8_t fmt, siz;
-
     uint32_t texture_id;
+    uint8_t fmt, siz;
     uint8_t cms, cmt;
     bool linear_filter;
 };
@@ -112,30 +113,27 @@ static uint8_t color_combiner_pool_size = 0;
 static uint8_t color_combiner_pool_index = 0;
 
 static struct RSP {
-    float modelview_matrix_stack[11][4][4];
-    uint8_t modelview_matrix_stack_size;
-
-    ALIGNED16 float MP_matrix[4][4];
-    ALIGNED16 float P_matrix[4][4];
-
-    Light_t current_lights[MAX_LIGHTS + 1];
-    float current_lights_coeffs[MAX_LIGHTS][3];
-    float current_lookat_coeffs[2][3]; // lookat_x, lookat_y
-    uint8_t current_num_lights; // includes ambient light
-    bool lights_changed;
-
+    ALIGNED16 Mat4 MP_matrix;
+    ALIGNED16 Mat4 P_matrix;
+    ALIGNED16 Mat4 modelview_matrix_stack[MAX_MATRIX_STACK_SIZE];
+    uint32_t modelview_matrix_stack_size;
+    
     uint32_t geometry_mode;
     int16_t fog_mul, fog_offset;
-
+    
     struct {
         // U0.16
         uint16_t s, t;
     } texture_scaling_factor;
+    
+    bool lights_changed;
+    uint8_t current_num_lights; // includes ambient light
+    Vec3f current_lights_coeffs[MAX_LIGHTS];
+    Vec3f current_lookat_coeffs[2]; // lookat_x, lookat_y
+    Light_t current_lights[MAX_LIGHTS + 1];
 
     struct LoadedVertex loaded_vertices[MAX_VERTICES + 4];
 } rsp;
-
-#define RDP_TILES 2
 
 static struct RDP {
     const uint8_t *palette;
@@ -683,7 +681,7 @@ static void OPTIMIZE_O3 gfx_transposed_matrix_mul(Vec3f res, const Vec3f a, cons
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
 }
 
-static void calculate_normal_dir(const Light_t *light, float coeffs[3], bool applyLightingDir) {
+static void calculate_normal_dir(const Light_t *light, Vec3f coeffs, bool applyLightingDir) {
     float light_dir[3] = {
         light->dir[0] / 127.0f,
         light->dir[1] / 127.0f,
@@ -723,7 +721,7 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
             mtxf_mul(rsp.P_matrix, matrix, rsp.P_matrix);
         }
     } else { // G_MTX_MODELVIEW
-        if ((parameters & G_MTX_PUSH) && rsp.modelview_matrix_stack_size < 11) {
+        if ((parameters & G_MTX_PUSH) && rsp.modelview_matrix_stack_size < MAX_MATRIX_STACK_SIZE) {
             ++rsp.modelview_matrix_stack_size;
             mtxf_copy(rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 2]);
         }
@@ -755,8 +753,8 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     if (!vertices) { return; }
 
-    float globalLightCached[2][3];
-    float vertexColorCached[3];
+    Vec3f globalLightCached[2];
+    Vec3f vertexColorCached;
     if (rsp.geometry_mode & G_LIGHTING) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++)
@@ -1345,7 +1343,6 @@ static void gfx_dp_set_texture_image(UNUSED uint32_t format, uint32_t size, UNUS
 }
 
 static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t tmem, uint8_t tile, uint32_t palette, uint32_t cmt, UNUSED uint32_t maskt, UNUSED uint32_t shiftt, uint32_t cms, UNUSED uint32_t masks, UNUSED uint32_t shifts) {
-
     if (tile == G_TX_RENDERTILE) {
         SUPPORT_CHECK(palette == 0); // palette should set upper 4 bits of color index in 4b mode
         rdp.texture_tile.fmt = fmt;

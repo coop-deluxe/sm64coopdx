@@ -3,7 +3,7 @@
 
 It's best to put them in this file so they can be recompiled if needed.
 
-Credit to PeachyPeach, Issac, Blockyyy, and others for suggestions
+Credit to PeachyPeach, Isaac0, Blockyyy, and others for suggestions
 optimizations and bug reports.
 */
 
@@ -14,7 +14,9 @@ optimizations and bug reports.
 Vec3f Functions
 */
 
-/// Copy vector 'src' to 'dest'
+/**
+ * Copy vector 'src' to 'dest'.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_copy(Vec3f dest, Vec3f src) {
     dest[0] = src[0];
     dest[1] = src[1];
@@ -22,7 +24,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_copy(Vec3f dest, Vec3f src) {
     return dest;
 }
 
-/// Set vector 'dest' to (x, y, z)
+/**
+ * Set vector 'dest' to (x, y, z).
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z) {
     dest[0] = x;
     dest[1] = y;
@@ -30,7 +34,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z) {
     return dest;
 }
 
-/// Add vector 'a' to 'dest'
+/**
+ * Add vector 'a' to 'dest'.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_add(Vec3f dest, Vec3f a) {
     dest[0] += a[0];
     dest[1] += a[1];
@@ -38,7 +44,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_add(Vec3f dest, Vec3f a) {
     return dest;
 }
 
-/// Make 'dest' the sum of vectors a and b.
+/**
+ * Make 'dest' the sum of vectors a and b.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
     dest[0] = a[0] + b[0];
     dest[1] = a[1] + b[1];
@@ -46,7 +54,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
     return dest;
 }
 
-/// Subtracts vector a from 'dest'.
+/**
+ * Subtracts vector a from 'dest'.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_sub(Vec3f dest, Vec3f a) {
     if (!dest || !a) { return NULL; }
     dest[0] -= a[0];
@@ -55,7 +65,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_sub(Vec3f dest, Vec3f a) {
     return dest;
 }
 
-/// Make 'dest' the difference of vectors a and b.
+/**
+ * Make 'dest' the difference of vectors a and b.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b) {
     dest[0] = a[0] - b[0];
     dest[1] = a[1] - b[1];
@@ -63,7 +75,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b) {
     return dest;
 }
 
-/// Multiply vector 'dest' by a
+/**
+ * Multiply vector 'dest' by a.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_mul(Vec3f dest, f32 a) {
     dest[0] *= a;
     dest[1] *= a;
@@ -71,7 +85,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_mul(Vec3f dest, f32 a) {
     return dest;
 }
 
-/// Divides vector 'dest' by a
+/**
+ * Divides vector 'dest' by a.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_div(Vec3f dest, f32 a) {
     dest[0] /= a;
     dest[1] /= a;
@@ -79,7 +95,9 @@ INLINE OPTIMIZE_O3 f32 *vec3f_div(Vec3f dest, f32 a) {
     return dest;
 }
 
-/// Make vector 'dest' the cross product of vectors a and b.
+/**
+ * Make vector 'dest' the cross product of vectors a and b.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b) {
     dest[0] = a[1] * b[2] - b[1] * a[2];
     dest[1] = a[2] * b[0] - b[2] * a[0];
@@ -87,24 +105,32 @@ INLINE OPTIMIZE_O3 f32 *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b) {
     return dest;
 }
 
-// Normalizes each component of the 3D floating-point vector 'v'.
+/**
+ * Normalizes each component of the 3D floating-point vector 'v'.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_normalize2(Vec3f v) {
     float s = vec3f_length(v);
     vec3f_div(v, s);
     return v;
 }
 
-/// Get length of vector 'a'
+/**
+ * Get length of vector 'a'.
+ */
 INLINE OPTIMIZE_O3 f32 vec3f_length(Vec3f a) {
     return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
-/// Get dot product of vectors 'a' and 'b'
+/**
+ * Get dot product of vectors 'a' and 'b'.
+ */
 INLINE OPTIMIZE_O3 f32 vec3f_dot(Vec3f a, Vec3f b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-/// Takes respective scales of vecA and vecB, and sums them
+/**
+ * Takes respective scales of vecA and vecB, and sums them.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
     for (s32 i = 0; i < 3; ++i) {
         dest[i] = vecA[i] * sclA + vecB[i] * sclB;
@@ -112,12 +138,12 @@ INLINE OPTIMIZE_O3 f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sc
     return dest;
 }
 
+/**
+ * Calculates the distance between point 'v1' and 'v2'.
+ */
 INLINE OPTIMIZE_O3 f32 vec3f_dist(Vec3f v1, Vec3f v2) {
-    Vec3f diff = {
-        v1[0] - v2[0],
-        v1[1] - v2[1],
-        v1[2] - v2[2],
-    };
+    Vec3f diff;
+    vec3f_dif(diff, v1, v2);
     return vec3f_length(diff);
 }
 
@@ -141,7 +167,9 @@ INLINE OPTIMIZE_O3 s16 *vec3f_to_vec3s(Vec3s dest, Vec3f a) {
 Vec3s Functions
 */
 
-/// Copy vector src to dest
+/**
+ * Copy vector src to dest.
+ */
 INLINE OPTIMIZE_O3 s16 *vec3s_copy(Vec3s dest, Vec3s src) {
     dest[0] = src[0];
     dest[1] = src[1];
@@ -149,7 +177,9 @@ INLINE OPTIMIZE_O3 s16 *vec3s_copy(Vec3s dest, Vec3s src) {
     return dest;
 }
 
-/// Set vector 'dest' to (x, y, z)
+/**
+ * Set vector 'dest' to (x, y, z).
+ */
 INLINE OPTIMIZE_O3 s16 *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z) {
     dest[0] = x;
     dest[1] = y;
@@ -157,7 +187,9 @@ INLINE OPTIMIZE_O3 s16 *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z) {
     return dest;
 }
 
-/// Add vector a to 'dest'
+/**
+ * Add vector a to 'dest'.
+ */
 INLINE OPTIMIZE_O3 s16 *vec3s_add(Vec3s dest, Vec3s a) {
     dest[0] += a[0];
     dest[1] += a[1];
@@ -165,7 +197,9 @@ INLINE OPTIMIZE_O3 s16 *vec3s_add(Vec3s dest, Vec3s a) {
     return dest;
 }
 
-/// Make 'dest' the sum of vectors a and b.
+/**
+ * Make 'dest' the sum of vectors a and b.
+ */
 INLINE OPTIMIZE_O3 s16 *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b) {
     dest[0] = a[0] + b[0];
     dest[1] = a[1] + b[1];
@@ -173,7 +207,9 @@ INLINE OPTIMIZE_O3 s16 *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b) {
     return dest;
 }
 
-/// Subtracts vector a from 'dest'.
+/**
+ * Subtracts vector a from 'dest'.
+ */
 INLINE OPTIMIZE_O3 s16 *vec3s_sub(Vec3s dest, Vec3s a) {
     dest[0] -= a[0];
     dest[1] -= a[1];
@@ -181,12 +217,59 @@ INLINE OPTIMIZE_O3 s16 *vec3s_sub(Vec3s dest, Vec3s a) {
     return dest;
 }
 
+/**
+ * Make 'dest' the difference of vectors a and b.
+ */
+INLINE OPTIMIZE_O3 s16 *vec3s_dif(Vec3s dest, Vec3s a, Vec3s b) {
+    dest[0] = a[0] - b[0];
+    dest[1] = a[1] - b[1];
+    dest[2] = a[2] - b[2];
+    return dest;
+}
+
+/**
+ * Multiply vector 'dest' by a.
+ */
+INLINE OPTIMIZE_O3 s16 *vec3s_mul(Vec3s dest, s16 a) {
+    dest[0] *= a;
+    dest[1] *= a;
+    dest[2] *= a;
+    return dest;
+}
+
+/**
+ * Divides vector 'dest' by a.
+ */
+INLINE OPTIMIZE_O3 s16 *vec3s_div(Vec3s dest, s16 a) {
+    dest[0] /= a;
+    dest[1] /= a;
+    dest[2] /= a;
+    return dest;
+}
+
+/**
+ * Get length of vector 'a'.
+ */
+INLINE OPTIMIZE_O3 s32 vec3s_length(Vec3s a) {
+    return sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+}
+
+/**
+ * Calculates the distance between point 'v1' and 'v2'.
+ */
+INLINE OPTIMIZE_O3 s32 vec3s_dist(Vec3s v1, Vec3s v2) {
+    Vec3s diff;
+    vec3s_dif(diff, v1, v2);
+    return vec3s_length(diff);
+}
 
 INLINE OPTIMIZE_O3 s16 *vec3s_zero(Vec3s v) {
     return vec3s_set(v, 0, 0, 0);
 }
 
-/// Convert short vector a to float vector 'dest'
+/**
+ * Convert short vector a to float vector 'dest'.
+ */
 INLINE OPTIMIZE_O3 f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a) {
     dest[0] = a[0];
     dest[1] = a[1];
@@ -198,14 +281,27 @@ INLINE OPTIMIZE_O3 f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a) {
 Mat4 Functions
 */
 
-/// Copy matrix 'src' to 'dest'
+/**
+ * Copy matrix 'src' to 'dest'.
+ */
 INLINE OPTIMIZE_O3 void mtxf_copy(Mat4 dest, Mat4 src) {
+#ifdef __SSE__
+   __m128 r1 = _mm_load_ps(src[0]); // Load floats into 128-bits
+   __m128 r2 = _mm_load_ps(src[1]);
+   __m128 r3 = _mm_load_ps(src[2]);
+   __m128 r4 = _mm_load_ps(src[3]);
+   _mm_store_ps(dest[0], r1); // Stores 128 bits into a float[4].
+   _mm_store_ps(dest[1], r2);
+   _mm_store_ps(dest[2], r3);
+   _mm_store_ps(dest[3], r4);
+#else
     u32 *d = (u32 *) dest;
     u32 *s = (u32 *) src;
 
     for (s32 i = 0; i < 16; i++) {
         *d++ = *s++;
     }
+#endif
 }
 
 /**

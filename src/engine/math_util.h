@@ -239,6 +239,32 @@ Subtracts the components of a 3D signed-integer vector `b` from the components o
 INLINE OPTIMIZE_O3 s16 *vec3s_sub(Vec3s dest, Vec3s a);
 
 /* |description|
+Subtracts the components of the 3D signed-integer vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x`
+This results in a vector that represents the difference between `a` and `b`.
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s16 *vec3s_dif(Vec3s dest, Vec3s a, Vec3s b);
+
+/* |description|
+Multiplies each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s16 *vec3s_mul(Vec3s dest, s16 a);
+
+/* |description|
+Divides each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s16 *vec3s_div(Vec3s dest, s16 a);
+
+/* |description|
+Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s32 vec3s_length(Vec3s a);
+
+/* |description|
+Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 s32 vec3s_dist(Vec3s v1, Vec3s v2);
+
+/* |description|
 Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.
 |descriptionEnd| */
 INLINE OPTIMIZE_O3 s16 *vec3s_zero(Vec3s v);

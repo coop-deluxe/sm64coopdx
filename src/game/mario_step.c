@@ -16,22 +16,22 @@
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 
 struct Surface gWaterSurfacePseudoFloor = {
-    SURFACE_VERY_SLIPPERY, // Type
-    0, // Flags
-    0, // Room
-    0, // Force
-    0, // Lower Y
-    0, // Upper Y
-    { 0, 0, 0 }, // Vertex 1
-    { 0, 0, 0 }, // Vertex 2
-    { 0, 0, 0 }, // Vertex 3
-    { 0, 0, 0 }, // Prev Vertex 1
-    { 0, 0, 0 }, // Prev Vertex 2
-    { 0, 0, 0 }, // Prev Vertex 3
-    { 0.0f, 1.0f, 0.0f }, // Normal
-    0.0f, // Origin Offset
-    0, // Modified Timestamp
-    NULL // Object
+    .type = SURFACE_VERY_SLIPPERY,
+    .flags = 0,
+    .room = 0,
+    .force = 0,
+    .lowerY = 0,
+    .upperY = 0,
+    .vertex1 = { 0, 0, 0 },
+    .vertex2 = { 0, 0, 0 },
+    .vertex3 = { 0, 0, 0 },
+    .prevVertex1 = { 0, 0, 0 },
+    .prevVertex2 = { 0, 0, 0 },
+    .prevVertex3 = { 0, 0, 0 },
+    .normal = { 0.0f, 1.0f, 0.0f },
+    .originOffset = 0.0f,
+    .modifiedTimestamp = 0,
+    .object = NULL
 };
 
 /**

@@ -4806,6 +4806,126 @@ Adds the components of two 3D signed-integer vectors `a` and `b` together and st
 
 <br />
 
+## [vec3s_dif](#vec3s_dif)
+
+### Description
+Subtracts the components of the 3D signed-integer vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
+
+### Lua Example
+`local PointerValue = vec3s_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_dif(Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_mul](#vec3s_mul)
+
+### Description
+Multiplies each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
+
+### Lua Example
+`local PointerValue = vec3s_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_mul(Vec3s dest, s16 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_div](#vec3s_div)
+
+### Description
+Divides each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
+
+### Lua Example
+`local PointerValue = vec3s_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_div(Vec3s dest, s16 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_length](#vec3s_length)
+
+### Description
+Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
+
+### Lua Example
+`local integerValue = vec3s_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 vec3s_length(Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dist](#vec3s_dist)
+
+### Description
+Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+
+### Lua Example
+`local integerValue = vec3s_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 vec3s_dist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [vec3s_zero](#vec3s_zero)
 
 ### Description
