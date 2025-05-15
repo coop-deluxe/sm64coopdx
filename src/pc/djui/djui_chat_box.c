@@ -129,6 +129,10 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
             if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || strcmp(chatInput->buffer, "/") == 0) {
+                char tabcompletionHint[MAX_CHAT_MSG_LENGTH];
+                snprintf(tabcompletionHint, sizeof(tabcompletionHint), "\\#ff2020\\%s \\#ffa020\\(%s)\\#ff2020\\:\\#000000\\", 
+                    DLANG(CHAT, ALL_COMMANDS), DLANG(CHAT, TAB_COMPLETE_INFO));
+                djui_chat_message_create(tabcompletionHint);
                 display_chat_commands();
             } else if (!exec_chat_command(chatInput->buffer)) {
                 char extendedUnknownCommandMessage[MAX_CHAT_MSG_LENGTH];
