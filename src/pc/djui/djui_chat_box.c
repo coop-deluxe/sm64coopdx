@@ -165,7 +165,7 @@ static char* get_main_command_from_input(const char* input) {
     return command;
 }
 
-static bool complete_subcommand(const char* mainCommand, const char* subCommandPrefix) {
+static bool complete_subcommand(const char* mainCommand, const char* subCommandPrefix, bool reverse) {
     char** subcommands = smlua_get_chat_subcommands_list(mainCommand);
 
     if (!subcommands || !subcommands[0]) {
@@ -181,7 +181,13 @@ static bool complete_subcommand(const char* mainCommand, const char* subCommandP
 
     bool completionSuccess = false;
     if (foundSubCommandsCount > 0) {
-        sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundSubCommandsCount;
+        if (reverse) {
+            sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex <= 0) 
+                ? foundSubCommandsCount - 1 
+                : (sCommandsTabCompletionIndex - 1) % foundSubCommandsCount;
+        } else {
+            sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundSubCommandsCount;
+        }
         s32 currentIndex = 0;
 
         for (s32 i = 0; subcommands[i] != NULL; i++) {
@@ -262,7 +268,7 @@ void djui_inputbox_replace_current_word(struct DjuiInputbox* inputbox, char* tex
     djui_inputbox_move_cursor_to_position(inputbox, currentWordStart + strlen(text));
 }
 
-static bool complete_player_name(const char* namePrefix) {
+static bool complete_player_name(const char* namePrefix, bool reverse) {
     char** playerNames = smlua_get_chat_player_list();
     if (!playerNames || !playerNames[0]) {
         if (playerNames) {
@@ -280,7 +286,13 @@ static bool complete_player_name(const char* namePrefix) {
 
     bool completionSuccess = false;
     if (foundNamesCount > 0) {
-        sPlayersTabCompletionIndex = (sPlayersTabCompletionIndex + 1) % foundNamesCount;
+        if (reverse) {
+            sPlayersTabCompletionIndex = (sPlayersTabCompletionIndex <= 0) 
+                ? foundNamesCount - 1 
+                : (sPlayersTabCompletionIndex - 1) % foundNamesCount;
+        } else {
+            sPlayersTabCompletionIndex = (sPlayersTabCompletionIndex + 1) % foundNamesCount;
+        }
         s32 currentIndex = 0;
 
         for (s32 i = 0; playerNames[i] != NULL; i++) {
@@ -303,14 +315,14 @@ static bool complete_player_name(const char* namePrefix) {
     return completionSuccess;
 }
 
-static void handle_tab_completion(void) {
+static void handle_tab_completion(bool reverse) {
     bool alreadyTabCompleted = false;
     if (gDjuiChatBox->chatInput->buffer[0] == '/') {
         char* spacePosition = strrchr(sCommandsTabCompletionOriginalText, ' ');
         if (spacePosition != NULL) {
             char* mainCommand = get_main_command_from_input(sCommandsTabCompletionOriginalText);
             if (mainCommand) {
-                if (!complete_subcommand(mainCommand + 1, spacePosition + 1)) {
+                if (!complete_subcommand(mainCommand + 1, spacePosition + 1, reverse)) {
                     reset_tab_completion_all();
                 } else {
                     alreadyTabCompleted = true;
@@ -333,7 +345,13 @@ static void handle_tab_completion(void) {
             }
 
             if (foundCommandsCount > 0) {
-                sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
+                if (reverse) {
+                    sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex <= 0) 
+                        ? foundCommandsCount - 1 
+                        : (sCommandsTabCompletionIndex - 1) % foundCommandsCount;
+                } else {
+                    sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
+                }
                 s32 currentIndex = 0;
 
                 for (s32 i = 0; commands[i] != NULL; i++) {
@@ -353,7 +371,7 @@ static void handle_tab_completion(void) {
                 if (spacePositionB != NULL) {
                     char* mainCommandB = get_main_command_from_input(sCommandsTabCompletionOriginalText);
                     if (mainCommandB) {
-                        if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1)) {
+                        if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1, reverse)) {
                             reset_tab_completion_all();
                         } else {
                             alreadyTabCompleted = true;
@@ -393,7 +411,7 @@ static void handle_tab_completion(void) {
             if (sPlayersTabCompletionIndex == -1) {
                 snprintf(sPlayersTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", wordInfo.word);
             }
-            if (!complete_player_name(sPlayersTabCompletionOriginalText)) {
+            if (!complete_player_name(sPlayersTabCompletionOriginalText, reverse)) {
                 reset_tab_completion_players();
             } else {
                 alreadyTabCompleted = true;
@@ -466,7 +484,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
             if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
             return true;
         case SCANCODE_TAB:
-            handle_tab_completion();
+            handle_tab_completion(gDjuiInputHeldShift);
             return true;
         case SCANCODE_ENTER:
             reset_tab_completion_all();
