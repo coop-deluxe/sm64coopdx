@@ -4885,7 +4885,7 @@ Divides each component of the 3D signed-integer vector `dest` by the scalar valu
 Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
 
 ### Lua Example
-`local integerValue = vec3s_length(a)`
+`local numberValue = vec3s_length(a)`
 
 ### Parameters
 | Field | Type |
@@ -4893,10 +4893,10 @@ Calculates the length (magnitude) of the 3D signed-integer vector `a`. The lengt
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- `integer`
+- `number`
 
 ### C Prototype
-`s32 vec3s_length(Vec3s a);`
+`f32 vec3s_length(Vec3s a);`
 
 [:arrow_up_small:](#)
 
@@ -4908,7 +4908,7 @@ Calculates the length (magnitude) of the 3D signed-integer vector `a`. The lengt
 Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
 
 ### Lua Example
-`local integerValue = vec3s_dist(v1, v2)`
+`local numberValue = vec3s_dist(v1, v2)`
 
 ### Parameters
 | Field | Type |
@@ -4917,10 +4917,10 @@ Calculates the distance between two 3D signed-integer points `v1` and `v2`. The 
 | v2 | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- `integer`
+- `number`
 
 ### C Prototype
-`s32 vec3s_dist(Vec3s v1, Vec3s v2);`
+`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
 
 [:arrow_up_small:](#)
 

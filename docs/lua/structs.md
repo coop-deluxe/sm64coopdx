@@ -1224,7 +1224,6 @@
 | flags | `integer` |  |
 | hookProcess | `integer` |  |
 | next | [GraphNode](structs.md#GraphNode) | read-only |
-| padding | `integer` |  |
 | parent | [GraphNode](structs.md#GraphNode) | read-only |
 | prev | [GraphNode](structs.md#GraphNode) | read-only |
 | type | `integer` | read-only |

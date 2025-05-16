@@ -6538,7 +6538,7 @@ function vec3s_div(dest, a)
 end
 
 --- @param a Vec3s
---- @return integer
+--- @return number
 --- Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
 function vec3s_length(a)
     -- ...
@@ -6546,7 +6546,7 @@ end
 
 --- @param v1 Vec3s
 --- @param v2 Vec3s
---- @return integer
+--- @return number
 --- Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
 function vec3s_dist(v1, v2)
     -- ...

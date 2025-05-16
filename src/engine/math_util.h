@@ -257,12 +257,12 @@ INLINE OPTIMIZE_O3 s16 *vec3s_div(Vec3s dest, s16 a);
 /* |description|
 Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 s32 vec3s_length(Vec3s a);
+INLINE OPTIMIZE_O3 f32 vec3s_length(Vec3s a);
 
 /* |description|
 Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 s32 vec3s_dist(Vec3s v1, Vec3s v2);
+INLINE OPTIMIZE_O3 f32 vec3s_dist(Vec3s v1, Vec3s v2);
 
 /* |description|
 Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.

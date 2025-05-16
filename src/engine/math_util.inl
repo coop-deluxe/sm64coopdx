@@ -250,14 +250,14 @@ INLINE OPTIMIZE_O3 s16 *vec3s_div(Vec3s dest, s16 a) {
 /**
  * Get length of vector 'a'.
  */
-INLINE OPTIMIZE_O3 s32 vec3s_length(Vec3s a) {
-    return sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+INLINE OPTIMIZE_O3 f32 vec3s_length(Vec3s a) {
+    return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
 }
 
 /**
  * Calculates the distance between point 'v1' and 'v2'.
  */
-INLINE OPTIMIZE_O3 s32 vec3s_dist(Vec3s v1, Vec3s v2) {
+INLINE OPTIMIZE_O3 f32 vec3s_dist(Vec3s v1, Vec3s v2) {
     Vec3s diff;
     vec3s_dif(diff, v1, v2);
     return vec3s_length(diff);
@@ -285,23 +285,7 @@ Mat4 Functions
  * Copy matrix 'src' to 'dest'.
  */
 INLINE OPTIMIZE_O3 void mtxf_copy(Mat4 dest, Mat4 src) {
-#ifdef __SSE__
-   __m128 r1 = _mm_load_ps(src[0]); // Load floats into 128-bits
-   __m128 r2 = _mm_load_ps(src[1]);
-   __m128 r3 = _mm_load_ps(src[2]);
-   __m128 r4 = _mm_load_ps(src[3]);
-   _mm_store_ps(dest[0], r1); // Stores 128 bits into a float[4].
-   _mm_store_ps(dest[1], r2);
-   _mm_store_ps(dest[2], r3);
-   _mm_store_ps(dest[3], r4);
-#else
-    u32 *d = (u32 *) dest;
-    u32 *s = (u32 *) src;
-
-    for (s32 i = 0; i < 16; i++) {
-        *d++ = *s++;
-    }
-#endif
+    memcpy(dest, src, sizeof(Mat4));
 }
 
 /**

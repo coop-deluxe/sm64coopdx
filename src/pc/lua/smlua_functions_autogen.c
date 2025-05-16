@@ -19647,7 +19647,7 @@ int smlua_func_vec3s_length(lua_State* L) {
     smlua_get_vec3s(a, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_length"); return 0; }
 
-    lua_pushinteger(L, vec3s_length(a));
+    lua_pushnumber(L, vec3s_length(a));
 
     smlua_push_vec3s(a, 1);
 
@@ -19672,7 +19672,7 @@ int smlua_func_vec3s_dist(lua_State* L) {
     smlua_get_vec3s(v2, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_dist"); return 0; }
 
-    lua_pushinteger(L, vec3s_dist(v1, v2));
+    lua_pushnumber(L, vec3s_dist(v1, v2));
 
     smlua_push_vec3s(v1, 1);
 
