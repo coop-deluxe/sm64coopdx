@@ -1,2 +1,2 @@
 --- @type integer
-ANIM_FLAG_FORWARD = (1 << 
+ANIM_FLAG_FORWARD = (1 << 1)
