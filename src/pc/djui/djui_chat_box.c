@@ -7,6 +7,8 @@
 #include "pc/configfile.h"
 #include "djui.h"
 
+#define CLAMP(_val, _min, _max) fmax(fmin((_val), _max), _min)
+
 struct DjuiChatBox* gDjuiChatBox = NULL;
 bool gDjuiChatBoxFocus = false;
 static bool sDjuiChatBoxClearText = false;
@@ -100,6 +102,15 @@ bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiChatBox* chatBox = (struct DjuiChatBox*)base;
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
     djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
+    if (chatBox->scrolling) {
+        f32 yMax = chatBox->chatContainer->base.elem.height - chatBox->chatFlow->base.height.value;
+        f32 target = chatBox->chatFlow->base.y.value + (chatBox->scrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
+
+        chatBox->chatFlow->base.y.value = CLAMP(target, yMax, 0.f);
+        if (target < yMax || 0.f < target) {
+            chatBox->scrollY = CLAMP(target, yMax, 0.f);
+        }
+    } else { chatBox->scrollY = chatBox->chatFlow->base.y.value; }
     if (sDjuiChatBoxClearText) {
         sDjuiChatBoxClearText = false;
         djui_inputbox_set_text(gDjuiChatBox->chatInput, "");
@@ -406,11 +417,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
     sent_history_init(&sentHistory);
 
     if (gDjuiChatBox == NULL) { return false; }
-    f32 yMax = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
 
-    f32* yValue = &gDjuiChatBox->chatFlow->base.y.value;
-    bool canScrollUp   = (*yValue > yMax);
-    bool canScrollDown = (*yValue < 0);
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
     char previousText[MAX_CHAT_MSG_LENGTH];
@@ -420,7 +427,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
         case SCANCODE_UP:
             if (!configUseStandardKeyBindingsChat && (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/')) {
                 gDjuiChatBox->scrolling = true;
-                if (canScrollDown) { *yValue = fmin(*yValue + 15, 0); }
+                gDjuiChatBox->scrollY += 15;
             } else {
                 sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
                 sent_history_navigate(&sentHistory, true);
@@ -430,7 +437,7 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
         case SCANCODE_DOWN:
             if (!configUseStandardKeyBindingsChat && (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/')) {
                 gDjuiChatBox->scrolling = true;
-                if (canScrollUp) { *yValue = fmax(*yValue - 15, yMax); }
+                gDjuiChatBox->scrollY -= 15;
             } else {
                 sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
                 sent_history_navigate(&sentHistory, false);
@@ -439,31 +446,19 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
             return true;
         case SCANCODE_PAGE_UP:
             gDjuiChatBox->scrolling = true;
-            if (canScrollDown) {
-                if (configUseStandardKeyBindingsChat) {
-                    *yValue = fmin(*yValue + 15, 0);
-                } else {
-                    *yValue = fmin(*yValue + pageAmount, 0);
-                }
-            }
+            gDjuiChatBox->scrollY += configUseStandardKeyBindingsChat ? 15 : pageAmount;
             return true;
         case SCANCODE_PAGE_DOWN:
             gDjuiChatBox->scrolling = true;
-            if (canScrollUp) {
-                if (configUseStandardKeyBindingsChat) {
-                    *yValue = fmax(*yValue - 15, yMax);
-                } else {
-                    *yValue = fmax(*yValue - pageAmount, yMax);
-                }
-            }
+            gDjuiChatBox->scrollY -= configUseStandardKeyBindingsChat ? 15 : pageAmount;
             return true;
         case SCANCODE_POS1:
             gDjuiChatBox->scrolling = true;
-            if (canScrollDown) { *yValue = fmin(*yValue + pageAmount, 0); }
+            gDjuiChatBox->scrollY += pageAmount;
             return true;
         case SCANCODE_END:
             gDjuiChatBox->scrolling = true;
-            if (canScrollUp) { *yValue = fmax(*yValue - pageAmount, yMax); }
+            gDjuiChatBox->scrollY -= pageAmount;
             return true;
         case SCANCODE_TAB:
             handle_tab_completion();
@@ -505,18 +500,12 @@ static void djui_chat_box_input_on_text_editing(struct DjuiBase *base, char* tex
 static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {
     if (gDjuiChatBox == NULL) { return; }
 
-    f32 yMax = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
-    f32* yValue = &gDjuiChatBox->chatFlow->base.y.value;
-    bool canScrollUp   = (*yValue > yMax);
-    bool canScrollDown = (*yValue < 0);
-    
-    y *= 24;
+    y *= 24.f;
     if (gDjuiInputHeldControl) { y /= 2; }
     if (gDjuiInputHeldShift) { y *= 3; }
 
     gDjuiChatBox->scrolling = true;
-    if (y > 0 && canScrollDown) { *yValue = fmin(*yValue + y, 0); }
-    if (y < 0 && canScrollUp) { *yValue = fmax(*yValue + y, yMax); }
+    gDjuiChatBox->scrollY += y;
 }
 
 void djui_chat_box_toggle(void) {
