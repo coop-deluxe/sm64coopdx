@@ -26,7 +26,6 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORD_SDK

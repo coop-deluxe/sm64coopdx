@@ -135,6 +135,37 @@ function network_player_get_override_palette_color(np, part)
 end
 
 
+--------------------
+-- math functions --
+--------------------
+--- Note: These functions don't exist in the Lua math library,
+--- and are useful enough to not have to redefine them in every mod
+
+--- @param x number
+--- @return number
+--- Computes the square of the number `x`
+function math.sqr(x)
+    return x * x
+end
+
+--- @param x number
+--- @param a number
+--- @param b number
+--- @return number
+--- Clamps the number `x` between bounds `a` (minimum) and `b` (maximum)
+function math.clamp(x, a, b)
+    return math.min(math.max(x, a), b)
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+--- Computes the hypotenuse of a right-angled triangle given sides `a` and `b` using the Pythagorean theorem
+function math.hypot(a, b)
+    return math.sqrt(a * a + b * b)
+end
+
+
 -----------------
 -- legacy font --
 -----------------

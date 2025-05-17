@@ -26,6 +26,41 @@ VEC_TYPES = {
             "w": "[3]",
         },
     },
+    "Vec2i": {
+        "field_c_type": "s32",
+        "field_lua_type": "integer",
+        "fields_mapping": {
+            "x": "[0]",
+            "y": "[1]",
+        },
+    },
+    "Vec3i": {
+        "field_c_type": "s32",
+        "field_lua_type": "integer",
+        "fields_mapping": {
+            "x": "[0]",
+            "y": "[1]",
+            "z": "[2]",
+        },
+    },
+    "Vec4i": {
+        "field_c_type": "s32",
+        "field_lua_type": "integer",
+        "fields_mapping": {
+            "x": "[0]",
+            "y": "[1]",
+            "z": "[2]",
+            "w": "[3]",
+        },
+    },
+    "Vec2s": {
+        "field_c_type": "s16",
+        "field_lua_type": "integer",
+        "fields_mapping": {
+            "x": "[0]",
+            "y": "[1]",
+        },
+    },
     "Vec3s": {
         "field_c_type": "s16",
         "field_lua_type": "integer",

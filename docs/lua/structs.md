@@ -106,9 +106,13 @@
 - [UnusedArea28](#UnusedArea28)
 - [VblankHandler](#VblankHandler)
 - [Vec2f](#Vec2f)
+- [Vec2i](#Vec2i)
+- [Vec2s](#Vec2s)
 - [Vec3f](#Vec3f)
+- [Vec3i](#Vec3i)
 - [Vec3s](#Vec3s)
 - [Vec4f](#Vec4f)
+- [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
 - [Vtx_Interp](#Vtx_Interp)
@@ -3200,6 +3204,28 @@
 
 <br />
 
+## [Vec2i](#Vec2i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec2s](#Vec2s)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Vec3f](#Vec3f)
 
 | Field | Type | Access |
@@ -3207,6 +3233,18 @@
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec3i](#Vec3i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+| z | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3232,6 +3270,19 @@
 | y | `number` |  |
 | z | `number` |  |
 | w | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec4i](#Vec4i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+| z | `integer` |  |
+| w | `integer` |  |
 
 [:arrow_up_small:](#)
 
