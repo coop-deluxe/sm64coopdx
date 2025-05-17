@@ -22,11 +22,11 @@ void djui_cursor_set_visible(bool visible) {
         djui_base_set_visible(&sMouseCursor->base, visible);
     }
 
-    if (wm_api) {
+    if (gWindowApi) {
         if (configWindow.fullscreen) {
-            wm_api->set_cursor_visible(false);
+            gWindowApi->set_cursor_visible(false);
         } else {
-            wm_api->set_cursor_visible(!visible);
+            gWindowApi->set_cursor_visible(!visible);
         }
     }
     sSavedMouseX = mouse_window_x;
@@ -112,7 +112,7 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
 }
 
 void djui_cursor_update(void) {
-#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
     if (!djui_panel_is_active()) { return; }

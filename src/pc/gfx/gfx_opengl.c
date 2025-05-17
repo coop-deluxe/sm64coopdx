@@ -1,7 +1,7 @@
-#ifdef RAPI_GL
-
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef _LANGUAGE_C
 # define _LANGUAGE_C
@@ -27,11 +27,6 @@
 #  include <SDL2/SDL_opengles2.h>
 # else
 #  include <SDL2/SDL_opengl.h>
-# endif
-#elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
 # endif
 #endif
 
@@ -765,5 +760,3 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL
