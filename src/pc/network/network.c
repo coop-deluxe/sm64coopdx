@@ -750,6 +750,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gMenuMode = -1;
 
     reset_window_title();
+    reset_window_icon();
 
     init_mario_from_save_file();
 

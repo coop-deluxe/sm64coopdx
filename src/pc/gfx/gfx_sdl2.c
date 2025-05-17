@@ -59,6 +59,7 @@ static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
 static f64 sFrameTargetTime = 0;
 
 static SDL_Window *wnd;
+static SDL_Surface *icon;
 static SDL_GLContext ctx = NULL;
 
 static kb_callback_t kb_key_down = NULL;
@@ -311,6 +312,94 @@ static void gfx_sdl_reset_window_title(void) {
     SDL_SetWindowTitle(wnd, TITLE);
 }
 
+// borrowed from SDL_surface.c:SDL_CalculatePitch
+static size_t calculate_pitch(u32 format, size_t width, bool minimal)
+{
+    size_t pitch;
+
+    if (SDL_BITSPERPIXEL(format) >= 8) {
+        if (SDL_size_mul_overflow(width, SDL_BYTESPERPIXEL(format), &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+    } else {
+        if (SDL_size_mul_overflow(width, SDL_BITSPERPIXEL(format), &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        if (SDL_size_add_overflow(pitch, 7, &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        pitch /= 8;
+    }
+    if (!minimal) {
+        /* 4-byte aligning for speed */
+        if (SDL_size_add_overflow(pitch, 3, &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        pitch &= ~3;
+    }
+    return pitch;
+}
+
+static void gfx_sdl_set_window_icon(struct TextureInfo* texture) {
+    printf("1\n");
+    if (!icon) {
+#if defined(_WIN32) || defined(_WIN64)
+        HWND hwnd = ((SDL_WindowData *)window->driverdata)->hwnd;
+        // TODO: collect original icon, delete old icons
+        HICON hIcon = (HICON)LoadImage(
+            GetModuleHandle(NULL), 
+            MAKEINTRESOURCE("id"), 
+            IMAGE_ICON, 
+            128, 128, 
+            0);
+            
+
+#else
+        for (u16 i=0; i<2184; i++) {
+            icon = (SDL_Surface*)((intptr_t)wnd + i);
+            // icon->flags |= SDL_DONTFREE;
+            // printf("%i: %i, %i\n", i, icon->w, icon->h);
+            if (icon->w > 0 && icon->w == icon->h) printf("%i: square size! (%i)\n", i, icon->w);
+        }
+#endif
+    }
+
+    printf("2\n");
+    uint32_t format;
+    // uint32_t pitch;
+    switch (texture->bitSize) {
+        case  8:
+        case 16: format = SDL_PIXELFORMAT_RGBA5551; break;
+        case 32: format = SDL_PIXELFORMAT_RGBA32;   break;
+        default: return;
+    }
+    printf("format: %i\n", texture->bitSize);
+
+    printf("3\n");
+    SDL_Surface* custom = SDL_CreateRGBSurfaceWithFormatFrom(
+        texture->texture+(texture->bitSize != 32),
+        texture->width,
+        texture->height,
+        0, calculate_pitch(format, texture->width, true), format
+    );
+    if (!custom) { printf(SDL_GetError()); return; }
+
+    printf("4\n");
+    SDL_SetWindowIcon(wnd, custom);
+    printf("Done\n");
+}
+
+static void gfx_sdl_reset_window_icon(void) {
+    if (icon) {
+#if defined(_WIN32) || defined(_WIN64)
+        GetClassInfoEx()
+#endif
+
+        SDL_SetWindowIcon(wnd, NULL);
+        icon = NULL;
+    }
+}
+
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0)) {
         if (ctx) { SDL_GL_DeleteContext(ctx); ctx = NULL; }
@@ -361,6 +450,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
     gfx_sdl_reset_window_title,
+    gfx_sdl_set_window_icon,
+    gfx_sdl_reset_window_icon,
     gfx_sdl_has_focus
 };
 

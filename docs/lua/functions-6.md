@@ -4430,6 +4430,50 @@ Resets the window title
 
 <br />
 
+## [set_window_icon](#set_window_icon)
+
+### Description
+Sets the window icon to a custom icon
+
+### Lua Example
+`set_window_icon(texture)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texture | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void set_window_icon(struct TextureInfo* texture);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_window_icon](#reset_window_icon)
+
+### Description
+Resets the window icon
+
+### Lua Example
+`reset_window_icon()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void reset_window_icon(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_os_name](#get_os_name)
 
 ### Description

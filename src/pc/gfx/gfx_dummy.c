@@ -92,6 +92,12 @@ static void gfx_dummy_wm_set_window_title(UNUSED const char* title) {
 static void gfx_dummy_wm_reset_window_title(void) {
 }
 
+static void gfx_dummy_wm_set_window_icon(UNUSED struct TextureInfo* texture) {
+}
+
+static void gfx_dummy_wm_reset_window_icon(void) {
+}
+
 static void gfx_dummy_wm_swap_buffers_begin(void) {
 }
 
@@ -222,6 +228,8 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_get_max_msaa,
     gfx_dummy_wm_set_window_title,
     gfx_dummy_wm_reset_window_title,
+    gfx_dummy_wm_set_window_icon,
+    gfx_dummy_wm_reset_window_icon,
     gfx_dummy_wm_has_focus
 };
 
