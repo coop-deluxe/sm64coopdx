@@ -7,8 +7,8 @@
  */
 
 #ifdef OBJECT_FIELDS_INDEX_DIRECTLY
-#define OBJECT_FIELD_U16(index, subIndex) index + subIndex
-#define OBJECT_FIELD_S16(index, subIndex) index + subIndex
+#define OBJECT_FIELD_U16(index, subIndex) index // Warning: UB! Do not use these in behavior scripts
+#define OBJECT_FIELD_S16(index, subIndex) index // Warning: UB! Do not use these in behavior scripts
 #define OBJECT_FIELD_U32(index)           index
 #define OBJECT_FIELD_S32(index)           index
 #define OBJECT_FIELD_F32(index)           index

@@ -18,8 +18,6 @@
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/smlua_hooks.h"
 
-#define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
-
 struct FirstPersonCamera gFirstPersonCamera = {
     .enabled = false,
     .forcePitch = false,
@@ -73,16 +71,16 @@ static void first_person_camera_update(void) {
         s16 extStickX = m->controller->extStickX;
         s16 extStickY = m->controller->extStickY;
         if (extStickX == 0) {
-            extStickX = (CLAMP(m->controller->buttonDown & R_CBUTTONS, 0, 1) - CLAMP(m->controller->buttonDown & L_CBUTTONS, 0, 1)) * 32;
+            extStickX = (clamp(m->controller->buttonDown & R_CBUTTONS, 0, 1) - clamp(m->controller->buttonDown & L_CBUTTONS, 0, 1)) * 32;
         }
         if (extStickY == 0) {
-            extStickY = (CLAMP(m->controller->buttonDown & U_CBUTTONS, 0, 1) - CLAMP(m->controller->buttonDown & D_CBUTTONS, 0, 1)) * 24;
+            extStickY = (clamp(m->controller->buttonDown & U_CBUTTONS, 0, 1) - clamp(m->controller->buttonDown & D_CBUTTONS, 0, 1)) * 24;
         }
 
         // update pitch
         if (!gFirstPersonCamera.forcePitch) {
             gFirstPersonCamera.pitch -= sensY * (invY * extStickY - 1.5f * mouse_y);
-            gFirstPersonCamera.pitch = CLAMP(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
+            gFirstPersonCamera.pitch = clamp(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
         }
 
         // update yaw
@@ -121,9 +119,9 @@ static void first_person_camera_update(void) {
     if (mario_is_crouching(m) || m->action == ACT_LEDGE_GRAB) {
         bool up = (m->controller->buttonDown & Z_TRIG) != 0 || m->action == ACT_CROUCH_SLIDE || m->action == ACT_LEDGE_GRAB;
         f32 inc = 10 * (up ? 1 : -1);
-        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch + inc, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = clamp(gFirstPersonCamera.crouch + inc, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
     } else {
-        gFirstPersonCamera.crouch = CLAMP(gFirstPersonCamera.crouch - 10, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
+        gFirstPersonCamera.crouch = clamp(gFirstPersonCamera.crouch - 10, 0, FIRST_PERSON_MARIO_HEAD_POS - FIRST_PERSON_MARIO_HEAD_POS_SHORT);
     }
 
     if (m->action == ACT_LEDGE_GRAB) {

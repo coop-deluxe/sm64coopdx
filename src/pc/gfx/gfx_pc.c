@@ -623,7 +623,7 @@ static void calculate_normal_dir(const Light_t *light, Vec3f coeffs, bool applyL
     }
 
     gfx_transposed_matrix_mul(coeffs, light_dir, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1]);
-    vec3f_normalize2(coeffs);
+    vec3f_normalize(coeffs);
 }
 
 static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {

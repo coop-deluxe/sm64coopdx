@@ -1,7 +1,6 @@
 #include "lighting_engine.h"
 #include "math_util.h"
 #include "surface_collision.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/debuglog.h"
 #include "data/dynos_cmap.cpp.h"
 

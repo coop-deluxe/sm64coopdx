@@ -16,6 +16,11 @@ out_filename_defs = 'autogen/lua_definitions/functions.lua'
 in_files = [
     "src/audio/external.h",
     "src/engine/math_util.h",
+    "src/engine/math_util.inl",
+    "src/engine/math_util_vec3f.inl",
+    "src/engine/math_util_vec3i.inl",
+    "src/engine/math_util_vec3s.inl",
+    "src/engine/math_util_mat4.inl",
     "src/engine/surface_collision.h",
     "src/engine/surface_load.h",
     "src/game/camera.h",
@@ -49,7 +54,6 @@ in_files = [
     "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_gfx_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
-    "src/pc/lua/utils/smlua_math_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
@@ -96,7 +100,6 @@ override_allowed_functions = {
 
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
-    "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
     "src/engine/surface_load.h":                [ "load_area_terrain", "alloc_surface_pools", "clear_dynamic_surfaces", "get_area_terrain_size" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
@@ -1190,7 +1193,7 @@ def output_fuzz_file():
     global fuzz_functions
     with open(fuzz_from) as f:
         file_str = f.read()
-    with open(fuzz_to, 'w') as f:
+    with open(fuzz_to, 'w', encoding='utf-8', newline='\n') as f:
         f.write(file_str.replace('-- $[FUNCS]', fuzz_functions))
 
 ############################################################################
@@ -1379,7 +1382,7 @@ def doc_files(processed_files):
 
         buffer = buffer.replace('$[FUNCTION_NAV_HERE', function_nav)
 
-        with open(get_path(out_filename_docs % page_name), 'w', newline='\n') as out:
+        with open(get_path(out_filename_docs % page_name), 'w', encoding='utf-8', newline='\n') as out:
             out.write(buffer)
 
 ############################################################################
@@ -1437,7 +1440,7 @@ def def_files(processed_files):
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
-    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
+    with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -1458,7 +1461,7 @@ def main():
         .replace("$[BINDS]", built_binds)         \
         .replace("$[INCLUDES]", built_includes)
 
-    with open(filename, 'w', newline='\n') as out:
+    with open(filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(gen)
 
     if rejects != "":

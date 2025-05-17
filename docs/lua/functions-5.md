@@ -6,6 +6,626 @@
 
 
 ---
+# functions from mod_storage.h
+
+<br />
+
+
+## [mod_storage_save](#mod_storage_save)
+
+### Description
+Saves a `key` corresponding to a string `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save(const char* key, const char* value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_save_number](#mod_storage_save_number)
+
+### Description
+Saves a `key` corresponding to a float `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save_number(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `number` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save_number(const char* key, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_save_bool](#mod_storage_save_bool)
+
+### Description
+Saves a `key` corresponding to a bool `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save_bool(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save_bool(const char* key, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load](#mod_storage_load)
+
+### Description
+Loads a string `value` from a `key` in mod storage
+
+### Lua Example
+`local stringValue = mod_storage_load(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_storage_load(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load_number](#mod_storage_load_number)
+
+### Description
+Loads a float `value` from a `key` in mod storage
+
+### Lua Example
+`local numberValue = mod_storage_load_number(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 mod_storage_load_number(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load_bool](#mod_storage_load_bool)
+
+### Description
+Loads a bool `value` from a `key` in mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_load_bool(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_load_bool(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_exists](#mod_storage_exists)
+
+### Description
+Checks if a `key` is in mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_exists(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_exists(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_remove](#mod_storage_remove)
+
+### Description
+Removes a `key` from mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_remove(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_remove(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_clear](#mod_storage_clear)
+
+### Description
+Clears the mod's data from mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_clear()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_clear(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_player.h
+
+<br />
+
+
+## [network_player_connected_count](#network_player_connected_count)
+
+### Description
+Gets the amount of players connected
+
+### Lua Example
+`local integerValue = network_player_connected_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_player_connected_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_description](#network_player_set_description)
+
+### Description
+Sets the description field of `np`
+
+### Lua Example
+`network_player_set_description(np, description, r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| description | `string` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_location](#network_player_set_override_location)
+
+### Description
+Overrides the location of `np`
+
+### Lua Example
+`network_player_set_override_location(np, location)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| location | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_location(struct NetworkPlayer *np, const char *location);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_from_global_index](#network_player_from_global_index)
+
+### Description
+Gets a network player from `globalIndex`
+
+### Lua Example
+`local NetworkPlayerValue = network_player_from_global_index(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_from_level](#get_network_player_from_level)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_level(courseNum, actNum, levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_from_area](#get_network_player_from_area)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_smallest_global](#get_network_player_smallest_global)
+
+### Description
+Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_smallest_global()`
+
+### Parameters
+- None
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_smallest_global(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
+
+### Description
+Sets the `part in `np`'s override color palette`
+
+### Lua Example
+`network_player_set_override_palette_color(np, part, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
+| color | `Color` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_reset_override_palette](#network_player_reset_override_palette)
+
+### Description
+Resets `np`'s override color palette
+
+### Lua Example
+`network_player_reset_override_palette(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_reset_override_palette(struct NetworkPlayer *np);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
+
+### Description
+Checks if `np`'s override color palette is identical to the regular color palette
+
+### Lua Example
+`local booleanValue = network_player_is_override_palette_same(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_player_is_override_palette_same(struct NetworkPlayer *np);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_utils.h
+
+<br />
+
+
+## [network_global_index_from_local](#network_global_index_from_local)
+
+### Description
+Gets a player's global index from their local index
+
+### Lua Example
+`local integerValue = network_global_index_from_local(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_global_index_from_local(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_local_index_from_global](#network_local_index_from_global)
+
+### Description
+Gets a player's local index from their global index
+
+### Lua Example
+`local integerValue = network_local_index_from_global(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_local_index_from_global(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_server](#network_is_server)
+
+### Description
+Checks if you are hosting the current lobby, this value doesn't change
+
+### Lua Example
+`local booleanValue = network_is_server()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_server(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_moderator](#network_is_moderator)
+
+### Description
+Checks if you are a moderator in the current lobby
+
+### Lua Example
+`local booleanValue = network_is_moderator()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_moderator(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_get_player_text_color_string](#network_get_player_text_color_string)
+
+### Description
+Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
+
+### Lua Example
+`local stringValue = network_get_player_text_color_string(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_get_player_text_color_string(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
+
+### Description
+Checks if the game can currently be paused in singleplayer
+
+### Lua Example
+`local booleanValue = network_check_singleplayer_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_check_singleplayer_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
+
+### Description
+Gets a Discord ID corresponding to the network player with `localIndex`
+
+### Lua Example
+`local stringValue = network_discord_id_from_local_index(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_discord_id_from_local_index(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from obj_behaviors.c
 
 <br />
@@ -7530,483 +8150,6 @@ Gets the name of the current animation playing on `obj`, returns `nil` if there'
 
 ### C Prototype
 `const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_audio_utils.h
-
-<br />
-
-
-## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
-
-### Description
-Resets all custom sequences back to vanilla
-
-### Lua Example
-`smlua_audio_utils_reset_all()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_reset_all(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
-
-### Description
-Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
-
-### Lua Example
-`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sequenceId | `integer` |
-| bankId | `integer` |
-| defaultVolume | `integer` |
-| m64Name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_load](#audio_stream_load)
-
-### Description
-Loads an `audio` stream by `filename` (with extension)
-
-### Lua Example
-`local ModAudioValue = audio_stream_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_destroy](#audio_stream_destroy)
-
-### Description
-Destroys an `audio` stream
-
-### Lua Example
-`audio_stream_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_play](#audio_stream_play)
-
-### Description
-Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-
-### Lua Example
-`audio_stream_play(audio, restart, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| restart | `boolean` |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_pause](#audio_stream_pause)
-
-### Description
-Pauses an `audio` stream
-
-### Lua Example
-`audio_stream_pause(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_pause(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_stop](#audio_stream_stop)
-
-### Description
-Stops an `audio` stream
-
-### Lua Example
-`audio_stream_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_position](#audio_stream_get_position)
-
-### Description
-Gets the position of an `audio` stream in seconds
-
-### Lua Example
-`local numberValue = audio_stream_get_position(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_position(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_position](#audio_stream_set_position)
-
-### Description
-Sets the position of an `audio` stream in seconds
-
-### Lua Example
-`audio_stream_set_position(audio, pos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| pos | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_looping](#audio_stream_get_looping)
-
-### Description
-Gets if an `audio` stream is looping or not
-
-### Lua Example
-`local booleanValue = audio_stream_get_looping(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool audio_stream_get_looping(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_looping](#audio_stream_set_looping)
-
-### Description
-Sets if an `audio` stream is looping or not
-
-### Lua Example
-`audio_stream_set_looping(audio, looping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| looping | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
-
-### Description
-Sets an `audio` stream's loop points in samples
-
-### Lua Example
-`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| loopStart | `integer` |
-| loopEnd | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_frequency](#audio_stream_get_frequency)
-
-### Description
-Gets the frequency of an `audio` stream
-
-### Lua Example
-`local numberValue = audio_stream_get_frequency(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_frequency(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_frequency](#audio_stream_set_frequency)
-
-### Description
-Sets the frequency of an `audio` stream
-
-### Lua Example
-`audio_stream_set_frequency(audio, freq)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| freq | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_volume](#audio_stream_get_volume)
-
-### Description
-Gets the volume of an `audio` stream
-
-### Lua Example
-`local numberValue = audio_stream_get_volume(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_volume(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_volume](#audio_stream_set_volume)
-
-### Description
-Sets the volume of an `audio` stream
-
-### Lua Example
-`audio_stream_set_volume(audio, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_load](#audio_sample_load)
-
-### Description
-Loads an `audio` sample
-
-### Lua Example
-`local ModAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_destroy](#audio_sample_destroy)
-
-### Description
-Destroys an `audio` sample
-
-### Lua Example
-`audio_sample_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_stop](#audio_sample_stop)
-
-### Description
-Stops an `audio` sample
-
-### Lua Example
-`audio_sample_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
-### Description
-Plays an `audio` sample at `position` with `volume`
-
-### Lua Example
-`audio_sample_play(audio, position, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| position | [Vec3f](structs.md#Vec3f) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
 
 [:arrow_up_small:](#)
 

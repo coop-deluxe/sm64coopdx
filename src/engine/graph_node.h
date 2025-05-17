@@ -380,11 +380,6 @@ extern struct GraphNode *gCurGraphNodeList[];
 
 extern s16 gCurGraphNodeIndex;
 
-extern Vec3f gVec3fZero;
-extern Vec3s gVec3sZero;
-extern Vec3f gVec3fOne;
-extern Vec3s gVec3sOne;
-
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type);
 
 struct GraphNodeRoot *init_graph_node_root(struct DynamicPool *pool, struct GraphNodeRoot *graphNode,

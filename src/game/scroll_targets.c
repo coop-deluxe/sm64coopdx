@@ -1,5 +1,4 @@
 #include "scroll_targets.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "data/dynos_cmap.cpp.h"
 
 static void *sScrollTargets = NULL;
