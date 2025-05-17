@@ -44,7 +44,7 @@
 #define G_TX_LOADTILE_6_UNKNOWN 6
 //////////////////////////////////
 
-#define RDP_TILES 8
+#define RDP_TILES 2
 
 u8 gGfxPcResetTex1 = 0;
 
