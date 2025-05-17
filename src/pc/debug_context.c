@@ -1,7 +1,7 @@
 #include <PR/ultratypes.h>
 #include "utils/misc.h"
 #include "debug_context.h"
-#include "debuglog.h"
+#include "log.h"
 #include "gfx_dimensions.h"
 
 static u32 sCtxDepth[CTX_MAX] = { 0 };

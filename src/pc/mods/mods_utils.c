@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 #include "mods.h"
 #include "mods_utils.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>

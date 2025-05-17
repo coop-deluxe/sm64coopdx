@@ -11,7 +11,7 @@
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/crash_handler.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define MAX_SPAWN_OBJECTS_PER_PACKET 8
 
@@ -60,20 +60,24 @@ void network_send_spawn_objects(struct Object* objects[], u32 models[], u8 objec
 }
 
 void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[], u32 models[], u8 objectCount) {
+    log_context_begin(LOG_CTX_NETWORK);
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
-        LOG_ERROR("failed: area sync invalid");
+        LOG_ERROR_VERBOSE("failed: area sync invalid");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     if (objectCount == 0) {
-        LOG_ERROR("Tried to send 0 objects");
+        LOG_ERROR_VERBOSE("Tried to send 0 objects");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
     SOFT_ASSERT(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
     // prevent sending spawn objects during credits
     if (gCurrActStarNum == 99) {
-        LOG_ERROR("failed: in credits");
+        LOG_ERROR_VERBOSE("failed: in credits");
+        log_context_end(LOG_CTX_NETWORK);
         return;
     }
 
@@ -86,7 +90,8 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
         if (!o || !o->ctx) {
-            LOG_ERROR("Tried to send null object");
+            LOG_ERROR_VERBOSE("Tried to send null object");
+            log_context_end(LOG_CTX_NETWORK);
             return;
         }
 
@@ -114,20 +119,21 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
         network_send(&p);
         if (objects[0] && objects[0]->behavior) {
-            LOG_INFO("tx spawn objects (BROADCAST) | %u", get_id_from_behavior(objects[0]->behavior));
+            LOG_DEBUG_VERBOSE("tx spawn objects (BROADCAST) | %u", get_id_from_behavior(objects[0]->behavior));
         }
     } else {
         network_send_to(sendToLocalIndex, &p);
         if (objects[0] && objects[0]->behavior) {
-            LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
+            LOG_DEBUG_VERBOSE("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
         }
     }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
     // prevent receiving spawn objects during credits
     if (gCurrActStarNum == 99) {
-        LOG_ERROR("rx failed: in credits");
+        LOG_ERROR_VERBOSE("rx failed: in credits");
         return;
     }
 
@@ -167,9 +173,9 @@ void network_receive_spawn_objects(struct Packet* p) {
             struct SyncObject *so = sync_object_get(syncID);
             if (so && so->o) {
                 if (so->o->behavior == get_behavior_from_id(data.behaviorId)) {
-                    LOG_ERROR("recieved duplicate sync object with id %d from %s (%s)", syncID, name, id);
+                    LOG_ERROR_VERBOSE("recieved duplicate sync object with id %d from %s (%s)", syncID, name, id);
                 } else {
-                    LOG_ERROR("recieved duplicate sync object with id %d with different behavior %s from %s (%s)", syncID, bhvName, name, id);
+                    LOG_ERROR_VERBOSE("recieved duplicate sync object with id %d with different behavior %s from %s (%s)", syncID, bhvName, name, id);
                 }
                 continue;
             }
@@ -188,7 +194,7 @@ void network_receive_spawn_objects(struct Packet* p) {
             // this object has a known parent
             struct SyncObject* parentSo = sync_object_get(data.parentId);
             if (i == 0 && !parentSo) {
-                LOG_ERROR("Invalid spawn object parentId: %u", data.parentId);
+                LOG_ERROR_VERBOSE("Invalid spawn object parentId: %u", data.parentId);
                 return;
             }
 
@@ -199,14 +205,14 @@ void network_receive_spawn_objects(struct Packet* p) {
             if (parentObj == NULL) {
                 // failed to find parent, make it it's own parent
                 // may cause issues, but we want it to spawn!
-                LOG_ERROR("ERROR: failed to find spawn object's parent (%d)!", data.parentId);
+                LOG_ERROR_VERBOSE("ERROR: failed to find spawn object's parent (%d)!", data.parentId);
                 parentObj = gMarioStates[0].marioObj;
                 data.parentId = (u32)-1;
             }
         }
 
         if (parentObj == NULL) {
-            LOG_ERROR("ERROR: failed to attach to mario!");
+            LOG_ERROR_VERBOSE("ERROR: failed to attach to mario!");
             return;
         }
 
@@ -220,7 +226,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         struct Object* o = NULL;
         if (ctx) { o = spawn_object(parentObj, data.model, behavior); }
         if (o == NULL) {
-            LOG_ERROR("ERROR: failed to allocate object!");
+            LOG_ERROR_VERBOSE("ERROR: failed to allocate object!");
             return;
         }
 
@@ -254,7 +260,7 @@ void network_receive_spawn_objects(struct Packet* p) {
                     so->rxEventId[j] = 0;
                 }
             } else {
-                LOG_ERROR("Invalid spawn object sync id: %u", o->oSyncID);
+                LOG_ERROR_VERBOSE("Invalid spawn object sync id: %u", o->oSyncID);
                 return;
             }
         }

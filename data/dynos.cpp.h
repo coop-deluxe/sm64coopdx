@@ -10,6 +10,8 @@ extern "C" {
 #include "game/moving_texture.h"
 #include "pc/djui/djui_console.h"
 #include "pc/fs/fmem.h"
+#include "pc/network/network.h"
+#include "pc/log.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -729,9 +731,10 @@ void PrintNoNewLine(const char *aFmt, Args... aArgs) {
 
 template <typename... Args>
 void Print(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    // printf(aFmt, aArgs...);
+    // printf("\r\n");
+    // fflush(stdout);
+    LOG_INFO(aFmt, aArgs...);
 }
 
 template <typename... Args>
@@ -743,9 +746,10 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 
 template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    // printf(aFmt, aArgs...);
+    // printf("\r\n");
+    // fflush(stdout);
+    LOG_ERROR(aFmt, aArgs...);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \

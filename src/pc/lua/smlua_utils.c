@@ -1,6 +1,7 @@
 #include "smlua.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
+#include "pc/network/network.h"
 
 u8 gSmLuaConvertSuccess = false;
 

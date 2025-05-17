@@ -2,9 +2,10 @@
 #include "pc/pc_main.h"
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 #include "pc/utils/misc.h"
 #include "pc/djui/djui_panel_join_message.h"
+#include "pc/network/network.h"
 #ifdef COOPNET
 #include "pc/network/coopnet/coopnet.h"
 #endif
@@ -16,12 +17,12 @@ static uint64_t sQueuedLobbyId = 0;
 static char sQueuedLobbyPassword[64] = "";
 
 static void on_activity_update_callback(UNUSED void* data, enum EDiscordResult result) {
-    LOG_INFO("> on_activity_update_callback returned %d", result);
+    LOG_DEBUG_VERBOSE("> on_activity_update_callback returned %d", result);
     DISCORD_REQUIRE(result);
 }
 
 static void on_activity_join(UNUSED void* data, const char* secret) {
-    LOG_INFO("> on_activity_join, secret: %s", secret);
+    LOG_DEBUG_VERBOSE("> on_activity_join, secret: %s", secret);
     char *token;
 
     // extract lobby type
@@ -52,12 +53,12 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
 }
 
 static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordResult result) {
-    LOG_INFO("> on_activity_join_request_callback returned %d", (int)result);
+    LOG_DEBUG_VERBOSE("> on_activity_join_request_callback returned %d", (int)result);
     DISCORD_REQUIRE(result);
 }
 
 static void on_activity_join_request(UNUSED void* data, struct DiscordUser* user) {
-    LOG_INFO("> on_activity_join_request from " DISCORD_ID_FORMAT, user->id);
+    LOG_DEBUG_VERBOSE("> on_activity_join_request from " DISCORD_ID_FORMAT, user->id);
 }
 
 static void strncat_len(char* destination, char* source, size_t destinationLength, size_t sourceLength) {
@@ -129,17 +130,17 @@ void discord_activity_update(void) {
     free(detailsNoColor);
 
     if (!app.activities) {
-        LOG_INFO("no activities");
+        LOG_DEBUG_VERBOSE("no activities");
         return;
     }
 
     if (!app.activities->update_activity) {
-        LOG_INFO("no update_activity");
+        LOG_DEBUG_VERBOSE("no update_activity");
         return;
     }
 
     app.activities->update_activity(app.activities, &sCurActivity, NULL, on_activity_update_callback);
-    LOG_INFO("set activity");
+    LOG_DEBUG_VERBOSE("set activity");
 }
 
 void discord_activity_update_check(void) {

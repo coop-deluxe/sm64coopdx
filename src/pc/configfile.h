@@ -112,9 +112,7 @@ extern bool         configCameraInvertY;
 extern bool         configCameraToxicGas;
 // debug
 extern bool         configLuaProfiler;
-extern bool         configDebugPrint;
-extern bool         configDebugInfo;
-extern bool         configDebugError;
+extern bool         configVerboseLogs;
 #ifdef DEVELOPMENT
 extern bool         configCtxProfiler;
 #endif

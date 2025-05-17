@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "../network.h"
 #define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlayer* toNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     gNetworkRequestLocationTimer = 0;
     if (gNetworkType == NT_SERVER && toNp == gNetworkPlayerLocal) {
         // requesting server's area, send it immediately
@@ -19,11 +20,12 @@ void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlaye
     packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
     packet_write(&p, &fromNp->currAreaIndex,     sizeof(s16));
     network_send_to(toNp->localIndex, &p);
-    LOG_INFO("tx area request");
+    LOG_DEBUG_VERBOSE("tx area request");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_area_request(struct Packet* p) {
-    LOG_INFO("rx area request");
+    LOG_DEBUG_VERBOSE("rx area request");
 
     u8 globalIndex;
     s16 courseNum, actNum, levelNum, areaIndex;
@@ -35,13 +37,13 @@ void network_receive_area_request(struct Packet* p) {
 
     struct NetworkPlayer* toNp = network_player_from_global_index(globalIndex);
     if (toNp == NULL || toNp->localIndex == UNKNOWN_LOCAL_INDEX || !toNp->connected) {
-        LOG_ERROR("Receiving area request from inactive player!");
+        LOG_ERROR_VERBOSE("Receiving area request from inactive player!");
         return;
     }
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
-        LOG_ERROR("rx area request: received an improper location");
+        LOG_ERROR_VERBOSE("rx area request: received an improper location");
         return;
     }
 

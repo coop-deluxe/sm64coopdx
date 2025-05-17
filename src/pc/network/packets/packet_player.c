@@ -15,7 +15,7 @@
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_language.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -223,6 +223,7 @@ void network_send_player(u8 localIndex) {
     if (gDjuiInMainMenu) { return; }
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
 
+    log_context_begin(LOG_CTX_NETWORK);
     struct PacketPlayerData data = { 0 };
     read_packet_data(&data, &gMarioStates[localIndex]);
 
@@ -231,6 +232,7 @@ void network_send_player(u8 localIndex) {
     packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
     packet_write(&p, &data, sizeof(struct PacketPlayerData));
     network_send(&p);
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_player(struct Packet* p) {

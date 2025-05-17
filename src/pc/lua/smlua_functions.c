@@ -19,6 +19,7 @@
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
 #include "game/hardcoded.h"
+#include "pc/network/network.h"
 #include "gfx_symbols.h"
 #include "include/macros.h"
 

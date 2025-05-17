@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../network.h"
 #include "pc/djui/djui.h"
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 #define ARR_SIZE(_X) (sizeof(_X) / sizeof(_X[0]))
 
@@ -66,7 +66,8 @@ void network_send_chat(char* message, u8 globalIndex) {
     static bool sMatched = false;
     sMatched = sMatched || (found_match(message));
     if (sMatched) { return; }
-
+    
+    log_context_begin(LOG_CTX_NETWORK);
     u16 messageLength = strlen(message);
     struct Packet p = { 0 };
     packet_init(&p, PACKET_CHAT, true, PLMT_NONE);
@@ -74,6 +75,15 @@ void network_send_chat(char* message, u8 globalIndex) {
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
     network_send(&p);
+    struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
+
+    if (gNetworkSystem && gNetworkSystem->get_id_str && np->connected && strlen(np->name) > 0) {
+        LOG_CONSOLE("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+        LOG_INFO("[%s] %s: %s", gNetworkSystem->get_id_str(np->localIndex), np->name, message);
+    } else {
+        LOG_INFO("tx chat: %s", message);
+    }
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_chat(struct Packet* p) {
@@ -88,7 +98,7 @@ void network_receive_chat(struct Packet* p) {
 
     // anti spoof
     if (packet_spoofed(p, globalIndex)) {
-        LOG_ERROR("rx spoofed chat");
+        LOG_ERROR_VERBOSE("rx spoofed chat");
         return;
     }
 

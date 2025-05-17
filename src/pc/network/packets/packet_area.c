@@ -12,7 +12,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua_hooks.h"
 //#define DISABLE_MODULE_LOG 1
-#include "pc/debuglog.h"
+#include "pc/log.h"
 
 u32 sRemoveSyncIds[SYNC_ID_BLOCK_SIZE] = { 0 };
 u32 sRemoveSyncIdsIndex = 0;
@@ -32,6 +32,7 @@ void area_remove_sync_ids_clear(void) {
 /////////////////////////////////////////////////
 
 void network_send_area(struct NetworkPlayer* toNp) {
+    log_context_begin(LOG_CTX_NETWORK);
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
     bool levelControlTimerRunning = level_control_timer_running();
     bool levelControlTimerVisible = (gHudDisplay.flags & HUD_DISPLAY_FLAG_TIMER) ? 1 : 0;
@@ -61,7 +62,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
         packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u32));
         for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
             packet_write(&p, &sRemoveSyncIds[i], sizeof(u32));
-            LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
+            LOG_DEBUG_VERBOSE("tx remove sync id %d", sRemoveSyncIds[i]);
         }
 
         // count respawners and write
@@ -87,7 +88,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             packet_write(&p, &so->o->oRespawnerMinSpawnDist, sizeof(f32));
             packet_write(&p, &behaviorToRespawn, sizeof(u32));
             packet_write(&p, &so->o->oSyncID, sizeof(u32));
-            LOG_INFO("tx respawner");
+            LOG_DEBUG_VERBOSE("tx respawner");
         }
 
         // send area packet
@@ -106,7 +107,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
             u32 models[] = { model };
             network_send_spawn_objects_to(toNp->localIndex, spawn_objects, models, 1);
-            LOG_INFO("tx non-static");
+            LOG_DEBUG_VERBOSE("tx non-static");
         }
 
         // send last reliable ent packet
@@ -125,14 +126,15 @@ void network_send_area(struct NetworkPlayer* toNp) {
     }
     packet_ordered_end();
 
-    LOG_INFO("tx area");
+    LOG_DEBUG_VERBOSE("tx area");
+    log_context_end(LOG_CTX_NETWORK);
 }
 
 void network_receive_area(struct Packet* p) {
-    LOG_INFO("rx area");
+    LOG_DEBUG_VERBOSE("rx area");
 
     if (p == NULL) {
-        LOG_ERROR("rx area: the packet was NULL, failed to receive the area.");
+        LOG_ERROR_VERBOSE("rx area: the packet was NULL, failed to receive the area.");
         return;
     }
 
@@ -145,7 +147,7 @@ void network_receive_area(struct Packet* p) {
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
-        LOG_ERROR("rx area: received an improper location");
+        LOG_ERROR_VERBOSE("rx area: received an improper location");
         return;
     }
 
@@ -184,7 +186,7 @@ void network_receive_area(struct Packet* p) {
         }
 
         sync_object_forget(so->id);
-        LOG_INFO("rx remove sync id %d", sRemoveSyncIds[i]);
+        LOG_DEBUG_VERBOSE("rx remove sync id %d", sRemoveSyncIds[i]);
     }
 
     // read respawner count
@@ -212,8 +214,8 @@ void network_receive_area(struct Packet* p) {
         struct SyncObject* so = sync_object_get(syncId);
 
         if (so == NULL) {
-            LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
-            LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \
+            LOG_ERROR_VERBOSE("rx area: Sync object was NULL, Skipping respawner.");
+            LOG_DEBUG_VERBOSE("rx area debug: Sync Object DEBUG:\n\n \
                        POS X: %f\n \
                        POS Y: %f\n \
                        POS Z: %f\n \
@@ -227,7 +229,7 @@ void network_receive_area(struct Packet* p) {
             continue;
         }
 
-        LOG_INFO("rx respawner");
+        LOG_DEBUG_VERBOSE("rx respawner");
         if (syncId < SYNC_ID_BLOCK_SIZE) {
             struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
             if (respawner != NULL) {
@@ -246,7 +248,7 @@ void network_receive_area(struct Packet* p) {
             }
 
             if (respawner != NULL) { so->o = respawner; }
-            LOG_INFO("rx respawner replaced!");
+            LOG_DEBUG_VERBOSE("rx respawner replaced!");
         }
     }
 }
