@@ -13,15 +13,15 @@
  * bombs that are shot from cannons are intangible.
  */
 static struct ObjectHitbox sWaterBombHitbox = {
-    /* interactType:      */ INTERACT_MR_BLIZZARD,
-    /* downOffset:        */ 25,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 99,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 80,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 60,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 25,
+    .damageOrCoinValue = 1,
+    .health = 99,
+    .numLootCoins = 0,
+    .radius = 80,
+    .height = 50,
+    .hurtboxRadius = 60,
+    .hurtboxHeight = 50,
 };
 
 /**

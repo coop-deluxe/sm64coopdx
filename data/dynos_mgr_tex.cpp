@@ -2,6 +2,7 @@
 #include <set>
 #include "dynos.cpp.h"
 extern "C" {
+#include "pc/gfx/gfx.h"
 #include "pc/gfx/gfx_rendering_api.h"
 }
 
@@ -45,13 +46,6 @@ static bool sDynosDumpTextureCache = false;
 //
 // Conversion
 //
-
-#define SCALE_5_8(VAL_) (((VAL_) * 0xFF) / 0x1F)
-#define SCALE_8_5(VAL_) ((((VAL_) + 4) * 0x1F) / 0xFF)
-#define SCALE_4_8(VAL_) ((VAL_) * 0x11)
-#define SCALE_8_4(VAL_) ((VAL_) / 0x11)
-#define SCALE_3_8(VAL_) ((VAL_) * 0x24)
-#define SCALE_8_3(VAL_) ((VAL_) / 0x24)
 
 static u8 *RGBA16_RGBA32(const u8 *aData, u64 aLength) {
     u8 *_Buffer = New<u8>(aLength * 2);
@@ -233,14 +227,7 @@ static void DynOS_Tex_Upload(DataNode<TexData> *aNode, GRAPI *aGfxRApi, s32 aTil
 // Cache
 //
 
-struct THN {
-    struct THN *mNext;
-    const void *mAddr; // Contains the pointer to the DataNode<TexData> struct, NOT the actual texture data
-    u8 mFmt, mSiz;
-    s32 mTexId;
-    u8 mCms, mCmt;
-    bool mLInf;
-};
+typedef struct TextureHashmapNode THN;
 
 static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
 
@@ -248,15 +235,15 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
     uintptr_t _Hash = ((uintptr_t) aNode) & ((aPoolSize * 2) - 1);
     THN **_Node = &(aHashMap[_Hash]);
     while ((*_Node) != NULL && ((*_Node) - aPool) < (*aPoolPos)) {
-        if ((*_Node)->mAddr == (const void *) aNode) {
-            aGfxRApi->select_texture(aTile, (*_Node)->mTexId);
+        if ((*_Node)->texture_addr == (const void *) aNode) {
+            aGfxRApi->select_texture(aTile, (*_Node)->texture_id);
             if (!aNode->mData->mUploaded) {
-                DynOS_Tex_Upload(aNode, aGfxRApi, aTile, (*_Node)->mTexId);
+                DynOS_Tex_Upload(aNode, aGfxRApi, aTile, (*_Node)->texture_id);
             }
             (*aOutput) = (*_Node);
             return true;
         }
-        _Node = &(*_Node)->mNext;
+        _Node = &(*_Node)->next;
     }
 
     // If cache is full, clear cache
@@ -267,19 +254,19 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
 
     // Add new texture to cache
     (*_Node) = &aPool[(*aPoolPos)++];
-    if (!(*_Node)->mAddr) {
-        (*_Node)->mTexId = aGfxRApi->new_texture();
+    if (!(*_Node)->texture_addr) {
+        (*_Node)->texture_id = aGfxRApi->new_texture();
     }
-    aGfxRApi->select_texture(aTile, (*_Node)->mTexId);
+    aGfxRApi->select_texture(aTile, (*_Node)->texture_id);
     aGfxRApi->set_sampler_parameters(aTile, false, 0, 0);
-    (*_Node)->mCms  = 0;
-    (*_Node)->mCmt  = 0;
-    (*_Node)->mLInf = false;
-    (*_Node)->mNext = NULL;
-    (*_Node)->mAddr = aNode;
-    (*_Node)->mFmt  = G_IM_FMT_RGBA;
-    (*_Node)->mSiz  = G_IM_SIZ_32b;
-    (*aOutput)      = (*_Node);
+    (*_Node)->next = NULL;
+    (*_Node)->texture_addr = aNode;
+    (*_Node)->fmt = G_IM_FMT_RGBA;
+    (*_Node)->siz = G_IM_SIZ_32b;
+    (*_Node)->cms = 0;
+    (*_Node)->cmt = 0;
+    (*_Node)->linear_filter = false;
+    (*aOutput) = (*_Node);
     return false;
 }
 
@@ -350,7 +337,7 @@ static bool DynOS_Tex_Import_Typed(THN **aOutput, void *aPtr, s32 aTile, GRAPI *
     DataNode<TexData> *_Node = DynOS_Tex_RetrieveNode(aPtr);
     if (_Node) {
         if (!DynOS_Tex_Cache(aOutput, _Node, aTile, aGfxRApi, aHashMap, aPool, aPoolPos, aPoolSize)) {
-            DynOS_Tex_Upload(_Node, aGfxRApi, aTile, (*aOutput)->mTexId);
+            DynOS_Tex_Upload(_Node, aGfxRApi, aTile, (*aOutput)->texture_id);
         }
         return true;
     }

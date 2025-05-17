@@ -11,15 +11,15 @@
  * uses a hardcoded soft hitbox.
  */
 static struct ObjectHitbox sKoopaHitbox = {
-    /* interactType:      */ INTERACT_KOOPA,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 0,
-    /* numLootCoins:      */ -1,
-    /* radius:            */ 60,
-    /* height:            */ 40,
-    /* hurtboxRadius:     */ 40,
-    /* hurtboxHeight:     */ 30,
+    .interactType = INTERACT_KOOPA,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 0,
+    .numLootCoins = -1,
+    .radius = 60,
+    .height = 40,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 30,
 };
 
 /**

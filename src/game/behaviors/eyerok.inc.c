@@ -1,13 +1,13 @@
 struct ObjectHitbox sEyerokHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 4,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 150,
-    /* height:            */ 100,
-    /* hurtboxRadius:     */ 1,
-    /* hurtboxHeight:     */ 1,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 4,
+    .numLootCoins = 0,
+    .radius = 150,
+    .height = 100,
+    .hurtboxRadius = 1,
+    .hurtboxHeight = 1,
 };
 
 s8 D_80331BA4[] = { 0, 1, 3, 2, 1, 0 };

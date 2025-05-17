@@ -6,15 +6,15 @@ struct Struct80331B30 {
 };
 
 struct ObjectHitbox sFlyingBookendHitbox = {
-    /* interactType:      */ INTERACT_HIT_FROM_BELOW,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ -1,
-    /* radius:            */ 60,
-    /* height:            */ 30,
-    /* hurtboxRadius:     */ 40,
-    /* hurtboxHeight:     */ 30,
+    .interactType = INTERACT_HIT_FROM_BELOW,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = -1,
+    .radius = 60,
+    .height = 30,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 30,
 };
 
 struct Struct80331B30 D_80331B30[] = {
@@ -24,15 +24,15 @@ struct Struct80331B30 D_80331B30[] = {
 };
 
 struct ObjectHitbox sBookSwitchHitbox = {
-    /* interactType:      */ INTERACT_BREAKABLE,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 99,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 20,
-    /* height:            */ 30,
-    /* hurtboxRadius:     */ 20,
-    /* hurtboxHeight:     */ 30,
+    .interactType = INTERACT_BREAKABLE,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 99,
+    .numLootCoins = 0,
+    .radius = 20,
+    .height = 30,
+    .hurtboxRadius = 20,
+    .hurtboxHeight = 30,
 };
 
 void flying_bookend_act_0(void) {

@@ -1,13 +1,13 @@
 static struct ObjectHitbox sKleptoHitbox = {
-    /* interactType:      */ INTERACT_HIT_FROM_BELOW,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 1,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 160,
-    /* height:            */ 250,
-    /* hurtboxRadius:     */ 80,
-    /* hurtboxHeight:     */ 200,
+    .interactType = INTERACT_HIT_FROM_BELOW,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 160,
+    .height = 250,
+    .hurtboxRadius = 80,
+    .hurtboxHeight = 200,
 };
 
 static Vec3f sKleptoTargetPositions[] = {

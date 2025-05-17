@@ -1721,7 +1721,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | currentAnimAddr | `Pointer` <`integer`> | read-only |
-| padding | `Array` <`integer`> |  |
 | targetAnim | [Animation](structs.md#Animation) |  |
 
 [:arrow_up_small:](#)
@@ -2141,6 +2140,7 @@
 | oMarioTornadoPosY | `number` |  |
 | oMarioReadingSignDPosZ | `number` |  |
 | oMarioWhirlpoolPosY | `number` |  |
+| oMarioJumboStarCutscenePosZ | `number` |  |
 | oMarioBurnTimer | `integer` |  |
 | oMarioLongJumpIsSlow | `integer` |  |
 | oMarioSteepJumpYaw | `integer` |  |

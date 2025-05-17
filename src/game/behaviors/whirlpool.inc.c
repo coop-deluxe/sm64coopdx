@@ -1,15 +1,15 @@
 // whirlpool.c.inc
 
 static struct ObjectHitbox sWhirlpoolHitbox = {
-    /* interactType:      */ INTERACT_WHIRLPOOL,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 200,
-    /* height:            */ 500,
-    /* hurtboxRadius:     */ 0,
-    /* hurtboxHeight:     */ 0,
+    .interactType = INTERACT_WHIRLPOOL,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 200,
+    .height = 500,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 void bhv_whirlpool_init(void) {
