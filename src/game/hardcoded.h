@@ -50,6 +50,7 @@ struct FixCollisionBugs {
     u8 fixFloorOvershadowing;
     u8 fixOnlyFirstWall;
     u8 fixObjectOobPush;
+    u8 fixWallOnSlope;
     u8 throwaway; // Used for legacy fixCollisionBugs support
 };
 

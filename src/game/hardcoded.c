@@ -53,6 +53,7 @@ struct LevelValues gDefaultLevelValues = {
         .fixFloorOvershadowing = FALSE,
         .fixOnlyFirstWall = FALSE,
         .fixObjectOobPush = FALSE,
+        .fixWallOnSlope = FALSE,
         .throwaway = FALSE,
     },
     .fixVanishFloors                  = FALSE,

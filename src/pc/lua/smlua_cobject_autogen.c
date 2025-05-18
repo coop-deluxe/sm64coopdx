@@ -843,7 +843,7 @@ static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FI
     { "yaw",        LVT_S16,     offsetof(struct FirstPersonCamera, yaw),        false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_FIX_COLLISION_BUGS_FIELD_COUNT 9
+#define LUA_FIX_COLLISION_BUGS_FIELD_COUNT 10
 static struct LuaObjectField sFixCollisionBugsFields[LUA_FIX_COLLISION_BUGS_FIELD_COUNT] = {
     { "disableFalseLedgeGrab",   LVT_U8, offsetof(struct FixCollisionBugs, disableFalseLedgeGrab),   false, LOT_NONE, 1, sizeof(u8) },
     { "disableGroundPoundBonks", LVT_U8, offsetof(struct FixCollisionBugs, disableGroundPoundBonks), false, LOT_NONE, 1, sizeof(u8) },
@@ -851,6 +851,7 @@ static struct LuaObjectField sFixCollisionBugsFields[LUA_FIX_COLLISION_BUGS_FIEL
     { "fixFloorOvershadowing",   LVT_U8, offsetof(struct FixCollisionBugs, fixFloorOvershadowing),   false, LOT_NONE, 1, sizeof(u8) },
     { "fixObjectOobPush",        LVT_U8, offsetof(struct FixCollisionBugs, fixObjectOobPush),        false, LOT_NONE, 1, sizeof(u8) },
     { "fixOnlyFirstWall",        LVT_U8, offsetof(struct FixCollisionBugs, fixOnlyFirstWall),        false, LOT_NONE, 1, sizeof(u8) },
+    { "fixWallOnSlope",          LVT_U8, offsetof(struct FixCollisionBugs, fixWallOnSlope),          false, LOT_NONE, 1, sizeof(u8) },
     { "pickBestWall",            LVT_U8, offsetof(struct FixCollisionBugs, pickBestWall),            false, LOT_NONE, 1, sizeof(u8) },
     { "roundedCorners",          LVT_U8, offsetof(struct FixCollisionBugs, roundedCorners),          false, LOT_NONE, 1, sizeof(u8) },
     { "throwaway",               LVT_U8, offsetof(struct FixCollisionBugs, throwaway),               false, LOT_NONE, 1, sizeof(u8) },

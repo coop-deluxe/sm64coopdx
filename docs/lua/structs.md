@@ -993,6 +993,7 @@
 | fixFloorOvershadowing | `integer` |  |
 | fixObjectOobPush | `integer` |  |
 | fixOnlyFirstWall | `integer` |  |
+| fixWallOnSlope | `integer` |  |
 | pickBestWall | `integer` |  |
 | roundedCorners | `integer` |  |
 

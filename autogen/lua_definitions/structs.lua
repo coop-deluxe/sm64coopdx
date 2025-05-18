@@ -652,6 +652,7 @@
 --- @field public fixFloorOvershadowing integer
 --- @field public fixObjectOobPush integer
 --- @field public fixOnlyFirstWall integer
+--- @field public fixWallOnSlope integer
 --- @field public pickBestWall integer
 --- @field public roundedCorners integer
 --- @field public throwaway integer
