@@ -114,22 +114,22 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
  */
 static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                                           struct WallCollisionData *data) {
-    register struct Surface *surf;
-    register f32 offset = 0;
-    register f32 radius = data->radius;
-    register f32 x = data->x;
-    register f32 y = data->y + data->offsetY;
-    register f32 z = data->z;
-    register f32 px, pz;
-    register f32 w1, w2, w3;
-    register f32 y1, y2, y3;
-    register f32 v0x, v0y, v0z;
-	register f32 v1x, v1y, v1z;
-	register f32 v2x, v2y, v2z;
-	register f32 d00, d01, d11, d20, d21;
-	register f32 invDenom;
-	register f32 v, w;
-	register f32 margin_radius = radius - 1.0f;
+    struct Surface *surf;
+    f32 offset = 0;
+    f32 radius = data->radius;
+    f32 x = data->x;
+    f32 y = data->y + data->offsetY;
+    f32 z = data->z;
+    f32 px, pz;
+    f32 w1, w2, w3;
+    f32 y1, y2, y3;
+    f32 v0x, v0y, v0z;
+    f32 v1x, v1y, v1z;
+    f32 v2x, v2y, v2z;
+    f32 d00, d01, d11, d20, d21;
+    f32 invDenom;
+    f32 v, w;
+    f32 margin_radius = radius - 1.0f;
     const f32 corner_threshold = -0.9f;
     s32 numCols = 0;
 
@@ -411,13 +411,13 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         //  <Fixed when gLevelValues.fixCollisionBugs != 0>
         if (!gLevelValues.fixCollision.fixWallOnSlope) {
             if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
-            data->x = cPos[0] + cNorm[0] * radius;
-            data->z = cPos[2] + cNorm[2] * radius;
-            x = data->x;
-            z = data->z;
-            data->normalAddition[0] += cNorm[0];
-            data->normalAddition[2] += cNorm[2];
-            data->normalCount++;
+                data->x = cPos[0] + cNorm[0] * radius;
+                data->z = cPos[2] + cNorm[2] * radius;
+                x = data->x;
+                z = data->z;
+                data->normalAddition[0] += cNorm[0];
+                data->normalAddition[2] += cNorm[2];
+                data->normalCount++;
             } else {
                 data->x += surf->normal.x * (radius - offset);
                 data->z += surf->normal.z * (radius - offset);
@@ -437,7 +437,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
     if (gLevelValues.fixCollision.fixWallOnSlope) {
         data->x = x;
-	    data->z = z;
+        data->z = z;
     }
 
     return numCols;
