@@ -128,9 +128,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     Vec3f cPos = { 0 };
     Vec3f cNorm = { 0 };
 
-    // Max collision radius = 200
-    if (radius > 200.0f) {
-        radius = 200.0f;
+    // Default max collision radius = 200
+    if (radius > gBehaviorValues.WallMaxRadius) {
+        radius = gBehaviorValues.WallMaxRadius;
     }
 
     // Stay in this loop until out of walls.

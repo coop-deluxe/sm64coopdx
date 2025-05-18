@@ -367,6 +367,7 @@
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |
 | ToadStar3Requirement | `integer` |  |
+| WallMaxRadius | `number` |  |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |

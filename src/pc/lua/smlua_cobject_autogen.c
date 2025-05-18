@@ -314,7 +314,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER, 1, sizeof(Trajectory*) },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 32
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 33
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE,                 1, sizeof(f32)                         },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE,                 1, sizeof(f32)                         },
@@ -345,6 +345,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "ToadStar1Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar1Requirement),     false, LOT_NONE,                 1, sizeof(u16)                         },
     { "ToadStar2Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar2Requirement),     false, LOT_NONE,                 1, sizeof(u16)                         },
     { "ToadStar3Requirement",     LVT_U16,     offsetof(struct BehaviorValues, ToadStar3Requirement),     false, LOT_NONE,                 1, sizeof(u16)                         },
+    { "WallMaxRadius",            LVT_F32,     offsetof(struct BehaviorValues, WallMaxRadius),            false, LOT_NONE,                 1, sizeof(f32)                         },
     { "dialogs",                  LVT_COBJECT, offsetof(struct BehaviorValues, dialogs),                  true,  LOT_BEHAVIORDIALOGS,      1, sizeof(struct BehaviorDialogs)      },
     { "starsNeededForDialog",     LVT_COBJECT, offsetof(struct BehaviorValues, starsNeededForDialog),     true,  LOT_STARSNEEDEDFORDIALOG, 1, sizeof(struct StarsNeededForDialog) },
     { "trajectories",             LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),             true,  LOT_BEHAVIORTRAJECTORIES, 1, sizeof(struct BehaviorTrajectories) },
