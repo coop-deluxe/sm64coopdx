@@ -378,7 +378,7 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
     gPaintingValues = gDefaultPaintingValues;
 }
 
-void fix_collision_bugs_set_all(u8 enable) {
+void fix_collision_bugs_set_all(bool enable) {
     gLevelValues.fixCollision.roundedCorners = enable;
     gLevelValues.fixCollision.disableFalseLedgeGrab = enable;
     gLevelValues.fixCollision.disableGroundPoundBonks = enable;

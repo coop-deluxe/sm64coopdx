@@ -42,16 +42,16 @@ struct StarPositions {
 };
 
 struct FixCollisionBugs {
-    u8 roundedCorners;
-    u8 disableFalseLedgeGrab;
-    u8 disableGroundPoundBonks;
-    u8 pickBestWall;
-    u8 fixExposedCeilings;
-    u8 fixFloorOvershadowing;
-    u8 fixOnlyFirstWall;
-    u8 fixObjectOobPush;
-    u8 fixWallOnSlope;
-    u8 throwaway; // Used for legacy fixCollisionBugs support
+    bool roundedCorners;
+    bool disableFalseLedgeGrab;
+    bool disableGroundPoundBonks;
+    bool pickBestWall;
+    bool fixExposedCeilings;
+    bool fixFloorOvershadowing;
+    bool fixOnlyFirstWall;
+    bool fixObjectOobPush;
+    bool fixWallOnSlope;
+    bool throwaway; // Used for legacy fixCollisionBugs support
 };
 
 struct LevelValues {
@@ -326,6 +326,6 @@ void hardcoded_reset_default_values(void);
 /* |description|
 Sets all fields of `fixCollisionBugs`
 |descriptionEnd| */
-void fix_collision_bugs_set_all(u8 enable);
+void fix_collision_bugs_set_all(bool enable);
 
 #endif
