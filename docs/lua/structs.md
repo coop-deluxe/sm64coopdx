@@ -1672,7 +1672,7 @@
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
-| fixCollisionBugs | [FixCollisionBugs](structs.md#FixCollisionBugs) | read-only |
+| fixCollision | [FixCollisionBugs](structs.md#FixCollisionBugs) | read-only |
 | fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |

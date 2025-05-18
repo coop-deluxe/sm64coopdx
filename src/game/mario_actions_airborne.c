@@ -1089,7 +1089,7 @@ s32 act_ground_pound(struct MarioState *m) {
             }
             if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_GROUND_POUND); }
         } else if (stepResult == AIR_STEP_HIT_WALL) {
-            if (gLevelValues.fixCollisionBugs.disableGroundPoundBonks) {
+            if (gLevelValues.fixCollision.disableGroundPoundBonks) {
                 // do nothing
             } else {
                 mario_set_forward_vel(m, -16.0f);

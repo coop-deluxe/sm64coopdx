@@ -673,7 +673,7 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 // Prevent exposed ceilings
 f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
     if (!ceil) { return 0; }
-    if (gLevelValues.fixCollisionBugs.fixExposedCeilings) {
+    if (gLevelValues.fixCollision.fixExposedCeilings) {
         height = MAX(height + 80.0f, pos[1] - 2);
         return find_ceil(pos[0], height, pos[2], ceil);
     } else {
@@ -2354,7 +2354,7 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear) {
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
     if (!m || !wcd) { return; }
 
-    if (gLevelValues.fixCollisionBugs.pickBestWall) {
+    if (gLevelValues.fixCollision.pickBestWall) {
         // turn face angle into a direction vector
         Vec3f faceAngle;
         faceAngle[0] = coss(m->faceAngle[0]) * sins(m->faceAngle[1]);
@@ -2383,7 +2383,7 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
             : NULL;
     }
 
-    if (gLevelValues.fixCollisionBugs.pickBestWall && wcd->normalCount > 0) {
+    if (gLevelValues.fixCollision.pickBestWall && wcd->normalCount > 0) {
         vec3f_set(m->wallNormal,
                   wcd->normalAddition[0] / wcd->normalCount,
                   wcd->normalAddition[1] / wcd->normalCount,

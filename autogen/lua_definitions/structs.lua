@@ -1087,7 +1087,7 @@
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
 --- @field public extendedPauseDisplay integer
---- @field public fixCollisionBugs FixCollisionBugs
+--- @field public fixCollision FixCollisionBugs
 --- @field public fixInvalidShellRides integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer

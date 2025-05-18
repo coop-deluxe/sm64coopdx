@@ -54,7 +54,7 @@ struct FixCollisionBugs {
 };
 
 struct LevelValues {
-    struct FixCollisionBugs fixCollisionBugs;
+    struct FixCollisionBugs fixCollision;
     u8 fixVanishFloors;
     u8 fixInvalidShellRides;
     u8 hudCapTimer;

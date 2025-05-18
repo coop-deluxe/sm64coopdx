@@ -44,7 +44,7 @@ extern Trajectory sThiTinyMetalBallTraj[];
 ////////////
 
 struct LevelValues gDefaultLevelValues = {
-    .fixCollisionBugs = {
+    .fixCollision = {
         .roundedCorners = FALSE,
         .disableFalseLedgeGrab = FALSE,
         .disableGroundPoundBonks = FALSE,
@@ -378,13 +378,13 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
 }
 
 void fix_collision_bugs_set_all(u8 enable) {
-    gLevelValues.fixCollisionBugs.roundedCorners = enable;
-    gLevelValues.fixCollisionBugs.disableFalseLedgeGrab = enable;
-    gLevelValues.fixCollisionBugs.disableGroundPoundBonks = enable;
-    gLevelValues.fixCollisionBugs.pickBestWall = enable;
-    gLevelValues.fixCollisionBugs.fixExposedCeilings = enable;
-    gLevelValues.fixCollisionBugs.fixFloorOvershadowing = enable;
-    gLevelValues.fixCollisionBugs.fixOnlyFirstWall = enable;
-    gLevelValues.fixCollisionBugs.fixObjectOobPush = enable;
-    gLevelValues.fixCollisionBugs.throwaway = enable;
+    gLevelValues.fixCollision.roundedCorners = enable;
+    gLevelValues.fixCollision.disableFalseLedgeGrab = enable;
+    gLevelValues.fixCollision.disableGroundPoundBonks = enable;
+    gLevelValues.fixCollision.pickBestWall = enable;
+    gLevelValues.fixCollision.fixExposedCeilings = enable;
+    gLevelValues.fixCollision.fixFloorOvershadowing = enable;
+    gLevelValues.fixCollision.fixOnlyFirstWall = enable;
+    gLevelValues.fixCollision.fixObjectOobPush = enable;
+    gLevelValues.fixCollision.throwaway = enable;
 }

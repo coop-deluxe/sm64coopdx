@@ -1362,7 +1362,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "exitCastleLevel",                 LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),                 false, LOT_NONE,             1, sizeof(enum LevelNum)           },
     { "exitCastleWarpNode",              LVT_U8,      offsetof(struct LevelValues, exitCastleWarpNode),              false, LOT_NONE,             1, sizeof(u8)                      },
     { "extendedPauseDisplay",            LVT_U8,      offsetof(struct LevelValues, extendedPauseDisplay),            false, LOT_NONE,             1, sizeof(u8)                      },
-    { "fixCollisionBugs",                LVT_COBJECT, offsetof(struct LevelValues, fixCollisionBugs),                true,  LOT_FIXCOLLISIONBUGS, 1, sizeof(struct FixCollisionBugs) },
+    { "fixCollision",                    LVT_COBJECT, offsetof(struct LevelValues, fixCollision),                    true,  LOT_FIXCOLLISIONBUGS, 1, sizeof(struct FixCollisionBugs) },
     { "fixInvalidShellRides",            LVT_U8,      offsetof(struct LevelValues, fixInvalidShellRides),            false, LOT_NONE,             1, sizeof(u8)                      },
     { "fixVanishFloors",                 LVT_U8,      offsetof(struct LevelValues, fixVanishFloors),                 false, LOT_NONE,             1, sizeof(u8)                      },
     { "floatingStarDance",               LVT_U8,      offsetof(struct LevelValues, floatingStarDance),               false, LOT_NONE,             1, sizeof(u8)                      },
