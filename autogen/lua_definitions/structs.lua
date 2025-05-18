@@ -200,7 +200,6 @@
 --- @field public ToadStar1Requirement integer
 --- @field public ToadStar2Requirement integer
 --- @field public ToadStar3Requirement integer
---- @field public WallMaxRadius number
 --- @field public dialogs BehaviorDialogs
 --- @field public starsNeededForDialog StarsNeededForDialog
 --- @field public trajectories BehaviorTrajectories
@@ -1068,6 +1067,7 @@
 --- @field public yaw integer
 
 --- @class LevelValues
+--- @field public WallMaxRadius number
 --- @field public bubbleOnDeathBarrierInCapStages integer
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer

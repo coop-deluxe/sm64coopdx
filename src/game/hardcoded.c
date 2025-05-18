@@ -126,7 +126,8 @@ struct LevelValues gDefaultLevelValues = {
     .wdwWaterLevelSpeed               = 10.0f,
     .useGlobalStarIds                 = FALSE,
     .zoomOutCameraOnPause             = TRUE,
-    .jrbDarkenSkybox                  = TRUE
+    .jrbDarkenSkybox                  = TRUE,
+    .WallMaxRadius                    = 200.0f,
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -165,7 +166,6 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,
     .CourtyardBoosRequirement = 12,
-    .WallMaxRadius            = 200.0f,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {
         .BobombBuddyBob1Dialog         = DIALOG_004,

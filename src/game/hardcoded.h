@@ -94,6 +94,7 @@ struct LevelValues {
     u8 useGlobalStarIds;
     u8 zoomOutCameraOnPause;
     u8 jrbDarkenSkybox;
+    f32 WallMaxRadius;
 };
 
 extern struct LevelValues gLevelValues;
@@ -262,7 +263,6 @@ struct BehaviorValues {
     u8  MultipleCapCollection;
     u8  InfiniteRenderDistance;
     s16 CourtyardBoosRequirement;
-    f32 WallMaxRadius;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;
