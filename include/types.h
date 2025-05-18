@@ -359,7 +359,7 @@ struct Surface
 };
 
 enum MarioAnimPart {
-    MARIO_ANIM_PART_NONE = 0,
+    MARIO_ANIM_PART_NONE,
 
     MARIO_ANIM_PART_ROOT,
     MARIO_ANIM_PART_BUTT,
