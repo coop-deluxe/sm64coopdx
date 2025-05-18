@@ -41,15 +41,20 @@ struct StarPositions {
     Vec3f JetstreamRingStarPos;
 };
 
+struct FixCollisionBugs {
+    u8 roundedCorners;
+    u8 disableFalseLedgeGrab;
+    u8 disableGroundPoundBonks;
+    u8 pickBestWall;
+    u8 fixExposedCeilings;
+    u8 fixFloorOvershadowing;
+    u8 fixOnlyFirstWall;
+    u8 fixObjectOobPush;
+    u8 throwaway; // Used for legacy fixCollisionBugs support
+};
+
 struct LevelValues {
-    u8 fixCollisionBugs;
-    u8 fixCollisionBugsRoundedCorners;
-    u8 fixCollisionBugsFalseLedgeGrab;
-    u8 fixCollisionBugsGroundPoundBonks;
-    u8 fixCollisionBugsPickBestWall;
-    u8 fixCollisionBugsExposedCeilings;
-    u8 fixCollisionBugsFloorOvershadowing;
-    u8 fixCollisionBugsOnlyFirstWall;
+    struct FixCollisionBugs fixCollisionBugs;
     u8 fixVanishFloors;
     u8 fixInvalidShellRides;
     u8 hudCapTimer;
@@ -317,5 +322,9 @@ extern struct PaintingValues gPaintingValues;
 ///////////////
 
 void hardcoded_reset_default_values(void);
+/* |description|
+Sets all fields of `fixCollisionBugs`
+|descriptionEnd| */
+void fix_collision_bugs_set_all(u8 enable);
 
 #endif

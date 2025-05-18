@@ -4325,6 +4325,12 @@ function first_person_reset()
     -- ...
 end
 
+--- @param enable integer
+--- Sets all fields of `fixCollisionBugs`
+function fix_collision_bugs_set_all(enable)
+    -- ...
+end
+
 --- @param dialog integer
 --- Creates a dialog box with a dialog ID that rotates into view
 function create_dialog_box(dialog)

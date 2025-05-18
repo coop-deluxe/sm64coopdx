@@ -528,11 +528,22 @@ static int smlua__get_field(lua_State* L) {
         return 1;
     }
 
-    const char *key = lua_tostring(L, 2);
-    if (!key) {
+    // This warns due to not being a const
+    char *tempKey = lua_tostring(L, 2);
+    if (!tempKey) {
         LOG_LUA_LINE("Tried to get a non-string field of cobject");
         return 0;
     }
+    // Legacy fixCollisionBugs support
+    if (lot == (enum LuaObjectType)LOT_LEVELVALUES && strncmp(tempKey, "fixCollisionBugs", 16) == 0) {
+        lot = (enum LuaObjectType)LOT_FIXCOLLISIONBUGS;
+        if (strcmp(tempKey, "fixCollisionBugs") == 0) { tempKey = "throwaway"; }
+        else if (strcmp(tempKey, "fixCollisionBugsRoundedCorners") == 0) { tempKey = "roundedCorners"; }
+        else if (strcmp(tempKey, "fixCollisionBugsFalseLedgeGrab") == 0) { tempKey = "disableFalseLedgeGrab"; }
+        else if (strcmp(tempKey, "fixCollisionBugsGroundPoundBonks") == 0) { tempKey = "disableGroundPoundBonks"; }
+        else if (strcmp(tempKey, "fixCollisionBugsPickBestWall") == 0) { tempKey = "pickBestWall"; }
+    }
+    const char *key = tempKey;
 
     // Legacy support
     if (key[0] == '_') {
@@ -614,11 +625,29 @@ static int smlua__set_field(lua_State* L) {
         return 1;
     }
 
-    const char *key = lua_tostring(L, 2);
-    if (!key) {
+    // This warns due to not being a const
+    char *tempKey = lua_tostring(L, 2);
+    if (!tempKey) {
         LOG_LUA_LINE("Tried to set a non-string field of cobject");
         return 0;
     }
+    // Legacy fixCollisionBugs support
+    if (lot == (enum LuaObjectType)LOT_LEVELVALUES && strncmp(tempKey, "fixCollisionBugs", 16) == 0) {
+        lot = (enum LuaObjectType)LOT_FIXCOLLISIONBUGS;
+        if (strcmp(tempKey, "fixCollisionBugs") == 0) {
+            tempKey = "throwaway";
+            u8 isEnabled = smlua_to_integer(L, 3);
+            if (gSmLuaConvertSuccess) {
+                // Not ideal since several mods do disable some of the options
+                fix_collision_bugs_set_all(isEnabled);
+            }
+        }
+        else if (strcmp(tempKey, "fixCollisionBugsRoundedCorners") == 0) { tempKey = "roundedCorners"; }
+        else if (strcmp(tempKey, "fixCollisionBugsFalseLedgeGrab") == 0) { tempKey = "disableFalseLedgeGrab"; }
+        else if (strcmp(tempKey, "fixCollisionBugsGroundPoundBonks") == 0) { tempKey = "disableGroundPoundBonks"; }
+        else if (strcmp(tempKey, "fixCollisionBugsPickBestWall") == 0) { tempKey = "pickBestWall"; }
+    }
+    const char *key = tempKey;
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {

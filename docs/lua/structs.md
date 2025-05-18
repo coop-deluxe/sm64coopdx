@@ -31,6 +31,7 @@
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
+- [FixCollisionBugs](#FixCollisionBugs)
 - [FloorGeometry](#FloorGeometry)
 - [FnGraphNode](#FnGraphNode)
 - [Gfx](#Gfx)
@@ -982,6 +983,23 @@
 
 <br />
 
+## [FixCollisionBugs](#FixCollisionBugs)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| disableFalseLedgeGrab | `integer` |  |
+| disableGroundPoundBonks | `integer` |  |
+| fixExposedCeilings | `integer` |  |
+| fixFloorOvershadowing | `integer` |  |
+| fixObjectOobPush | `integer` |  |
+| fixOnlyFirstWall | `integer` |  |
+| pickBestWall | `integer` |  |
+| roundedCorners | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [FloorGeometry](#FloorGeometry)
 
 | Field | Type | Access |
@@ -1654,11 +1672,7 @@
 | exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | exitCastleWarpNode | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
-| fixCollisionBugs | `integer` |  |
-| fixCollisionBugsFalseLedgeGrab | `integer` |  |
-| fixCollisionBugsGroundPoundBonks | `integer` |  |
-| fixCollisionBugsPickBestWall | `integer` |  |
-| fixCollisionBugsRoundedCorners | `integer` |  |
+| fixCollisionBugs | [FixCollisionBugs](structs.md#FixCollisionBugs) | read-only |
 | fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
 | floatingStarDance | `integer` |  |

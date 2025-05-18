@@ -4474,6 +4474,35 @@ Resets first person
 <br />
 
 ---
+# functions from hardcoded.h
+
+<br />
+
+
+## [fix_collision_bugs_set_all](#fix_collision_bugs_set_all)
+
+### Description
+Sets all fields of `fixCollisionBugs`
+
+### Lua Example
+`fix_collision_bugs_set_all(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void fix_collision_bugs_set_all(u8 enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from ingame_menu.h
 
 <br />

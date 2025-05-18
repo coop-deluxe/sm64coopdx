@@ -773,7 +773,7 @@ void push_mario_out_of_object(struct MarioState *m, struct Object *o, f32 paddin
             //  <Fixed when gLevelValues.fixCollisionBugs != 0>
             m->pos[0] = newMarioX;
             m->pos[2] = newMarioZ;
-            if (gLevelValues.fixCollisionBugs) {
+            if (gLevelValues.fixCollisionBugs.fixObjectOobPush) {
                 m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
             }
         }
