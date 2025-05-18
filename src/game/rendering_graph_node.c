@@ -16,6 +16,7 @@
 #include "pc/debuglog.h"
 #include "game/skybox.h"
 #include "game/first_person_cam.h"
+#include "game/mario_misc.h"
 #include "course_table.h"
 #include "skybox.h"
 
@@ -911,6 +912,9 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
  * but set in global variables. If an animated part is skipped, everything afterwards desyncs.
  */
 static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
+    struct MarioBodyState *bodyState = geo_get_body_state();
+    bodyState->currAnimPart++;
+
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
@@ -940,6 +944,15 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
+
+    // Mario anim part pos
+    if (bodyState->currAnimPart > MARIO_ANIM_PART_NONE && bodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
+        get_pos_from_transform_mtx(
+            bodyState->animPartsPos[bodyState->currAnimPart],
+            gMatStack[gMatStackIndex],
+            *gCurGraphNodeCamera->matrixPtr
+        );
+    }
 
     if (gCurGraphNodeMarioState != NULL) {
         Vec3f translated = { 0 };
@@ -1366,6 +1379,8 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
+                struct MarioBodyState *bodyState = geo_get_body_state();
+                bodyState->currAnimPart = (node->behavior == bhvMario ? MARIO_ANIM_PART_NONE : MARIO_ANIM_PART_MAX);
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
                 geo_sanitize_object_gfx();

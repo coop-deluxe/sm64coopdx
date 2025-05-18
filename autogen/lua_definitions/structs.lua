@@ -1135,9 +1135,9 @@
 --- @field public action integer
 --- @field public allowPartRotation integer
 --- @field public capState integer
+--- @field public currAnimPart integer
 --- @field public eyeState integer
 --- @field public grabPos integer
---- @field public handFootPos Vec3f[]
 --- @field public handState integer
 --- @field public headAngle Vec3s
 --- @field public headPos Vec3f

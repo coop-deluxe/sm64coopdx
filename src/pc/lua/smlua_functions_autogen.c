@@ -31463,6 +31463,31 @@ int smlua_func_get_hand_foot_pos_z(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_mario_anim_part_pos(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mario_anim_part_pos", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_anim_part_pos"); return 0; }
+    u32 animPart = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mario_anim_part_pos"); return 0; }
+
+    Vec3f pos;
+    smlua_get_vec3f(pos, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_mario_anim_part_pos"); return 0; }
+
+    lua_pushboolean(L, get_mario_anim_part_pos(m, animPart, pos));
+
+    smlua_push_vec3f(pos, 3);
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35781,6 +35806,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
+    smlua_bind_function(L, "get_mario_anim_part_pos", smlua_func_get_mario_anim_part_pos);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

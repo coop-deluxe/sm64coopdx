@@ -551,11 +551,6 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* m
                 gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
                 / 10.0f;
         }
-        // update hand/foot position in bodyState
-        get_pos_from_transform_mtx(bodyState->handFootPos[(asGenerated->parameter & 0x03)],
-                                   *curTransform,
-                                   *gCurGraphNodeCamera->matrixPtr);
-
     }
     return NULL;
 }

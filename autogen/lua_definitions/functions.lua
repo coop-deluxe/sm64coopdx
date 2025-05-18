@@ -10476,6 +10476,15 @@ function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
+--- @param m MarioState
+--- @param animPart integer
+--- @param pos Vec3f
+--- @return boolean
+--- Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+function get_mario_anim_part_pos(m, animPart, pos)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
