@@ -33,8 +33,12 @@
 <br />
 
 - area.h
+   - [get_mario_spawn_type](functions.md#get_mario_spawn_type)
    - [area_get_warp_node](functions.md#area_get_warp_node)
+   - [area_get_any_warp_node](functions.md#area_get_any_warp_node)
    - [area_get_warp_node_from_params](functions.md#area_get_warp_node_from_params)
+   - [play_transition](functions.md#play_transition)
+   - [play_transition_after_delay](functions.md#play_transition_after_delay)
 
 <br />
 
@@ -907,6 +911,7 @@
    - [mario_throw_held_object](functions-3.md#mario_throw_held_object)
    - [mario_stop_riding_and_holding](functions-3.md#mario_stop_riding_and_holding)
    - [does_mario_have_normal_cap_on_head](functions-3.md#does_mario_have_normal_cap_on_head)
+   - [does_mario_have_blown_cap](functions-3.md#does_mario_have_blown_cap)
    - [mario_blow_off_cap](functions-3.md#mario_blow_off_cap)
    - [mario_lose_cap_to_enemy](functions-3.md#mario_lose_cap_to_enemy)
    - [mario_retrieve_cap](functions-3.md#mario_retrieve_cap)
@@ -1284,44 +1289,43 @@
 <br />
 
 - obj_behaviors.c
-   - [set_yoshi_as_not_dead](functions-4.md#set_yoshi_as_not_dead)
-   - [absf_2](functions-4.md#absf_2)
-   - [turn_obj_away_from_surface](functions-4.md#turn_obj_away_from_surface)
-   - [obj_find_wall](functions-4.md#obj_find_wall)
-   - [turn_obj_away_from_steep_floor](functions-4.md#turn_obj_away_from_steep_floor)
-   - [obj_orient_graph](functions-4.md#obj_orient_graph)
-   - [calc_obj_friction](functions-4.md#calc_obj_friction)
-   - [calc_new_obj_vel_and_pos_y](functions-4.md#calc_new_obj_vel_and_pos_y)
-   - [calc_new_obj_vel_and_pos_y_underwater](functions-4.md#calc_new_obj_vel_and_pos_y_underwater)
-   - [obj_update_pos_vel_xz](functions-4.md#obj_update_pos_vel_xz)
-   - [obj_splash](functions-4.md#obj_splash)
-   - [object_step](functions-4.md#object_step)
-   - [object_step_without_floor_orient](functions-4.md#object_step_without_floor_orient)
-   - [obj_move_xyz_using_fvel_and_yaw](functions-4.md#obj_move_xyz_using_fvel_and_yaw)
-   - [is_point_within_radius_of_mario](functions-4.md#is_point_within_radius_of_mario)
-   - [is_point_within_radius_of_any_player](functions-4.md#is_point_within_radius_of_any_player)
-   - [is_player_active](functions-4.md#is_player_active)
-   - [is_other_player_active](functions-4.md#is_other_player_active)
-   - [is_player_in_local_area](functions-4.md#is_player_in_local_area)
-   - [nearest_mario_state_to_object](functions-4.md#nearest_mario_state_to_object)
-   - [nearest_possible_mario_state_to_object](functions-4.md#nearest_possible_mario_state_to_object)
-   - [nearest_player_to_object](functions-4.md#nearest_player_to_object)
-   - [nearest_interacting_mario_state_to_object](functions-4.md#nearest_interacting_mario_state_to_object)
-   - [nearest_interacting_player_to_object](functions-4.md#nearest_interacting_player_to_object)
-   - [is_nearest_mario_state_to_object](functions-4.md#is_nearest_mario_state_to_object)
-   - [is_nearest_player_to_object](functions-4.md#is_nearest_player_to_object)
-   - [is_point_close_to_object](functions-4.md#is_point_close_to_object)
-   - [set_object_visibility](functions-4.md#set_object_visibility)
-   - [obj_return_home_if_safe](functions-4.md#obj_return_home_if_safe)
-   - [obj_return_and_displace_home](functions-4.md#obj_return_and_displace_home)
-   - [obj_check_if_facing_toward_angle](functions-4.md#obj_check_if_facing_toward_angle)
-   - [obj_find_wall_displacement](functions-4.md#obj_find_wall_displacement)
-   - [obj_spawn_yellow_coins](functions-4.md#obj_spawn_yellow_coins)
-   - [obj_flicker_and_disappear](functions-4.md#obj_flicker_and_disappear)
-   - [current_mario_room_check](functions-4.md#current_mario_room_check)
-   - [obj_check_floor_death](functions-4.md#obj_check_floor_death)
-   - [obj_lava_death](functions-4.md#obj_lava_death)
-   - [spawn_orange_number](functions-4.md#spawn_orange_number)
+   - [set_yoshi_as_not_dead](functions-5.md#set_yoshi_as_not_dead)
+   - [absf_2](functions-5.md#absf_2)
+   - [obj_find_wall](functions-5.md#obj_find_wall)
+   - [turn_obj_away_from_steep_floor](functions-5.md#turn_obj_away_from_steep_floor)
+   - [obj_orient_graph](functions-5.md#obj_orient_graph)
+   - [calc_obj_friction](functions-5.md#calc_obj_friction)
+   - [calc_new_obj_vel_and_pos_y](functions-5.md#calc_new_obj_vel_and_pos_y)
+   - [calc_new_obj_vel_and_pos_y_underwater](functions-5.md#calc_new_obj_vel_and_pos_y_underwater)
+   - [obj_update_pos_vel_xz](functions-5.md#obj_update_pos_vel_xz)
+   - [obj_splash](functions-5.md#obj_splash)
+   - [object_step](functions-5.md#object_step)
+   - [object_step_without_floor_orient](functions-5.md#object_step_without_floor_orient)
+   - [obj_move_xyz_using_fvel_and_yaw](functions-5.md#obj_move_xyz_using_fvel_and_yaw)
+   - [is_point_within_radius_of_mario](functions-5.md#is_point_within_radius_of_mario)
+   - [is_point_within_radius_of_any_player](functions-5.md#is_point_within_radius_of_any_player)
+   - [is_player_active](functions-5.md#is_player_active)
+   - [is_other_player_active](functions-5.md#is_other_player_active)
+   - [is_player_in_local_area](functions-5.md#is_player_in_local_area)
+   - [nearest_mario_state_to_object](functions-5.md#nearest_mario_state_to_object)
+   - [nearest_possible_mario_state_to_object](functions-5.md#nearest_possible_mario_state_to_object)
+   - [nearest_player_to_object](functions-5.md#nearest_player_to_object)
+   - [nearest_interacting_mario_state_to_object](functions-5.md#nearest_interacting_mario_state_to_object)
+   - [nearest_interacting_player_to_object](functions-5.md#nearest_interacting_player_to_object)
+   - [is_nearest_mario_state_to_object](functions-5.md#is_nearest_mario_state_to_object)
+   - [is_nearest_player_to_object](functions-5.md#is_nearest_player_to_object)
+   - [is_point_close_to_object](functions-5.md#is_point_close_to_object)
+   - [set_object_visibility](functions-5.md#set_object_visibility)
+   - [obj_return_home_if_safe](functions-5.md#obj_return_home_if_safe)
+   - [obj_return_and_displace_home](functions-5.md#obj_return_and_displace_home)
+   - [obj_check_if_facing_toward_angle](functions-5.md#obj_check_if_facing_toward_angle)
+   - [obj_find_wall_displacement](functions-5.md#obj_find_wall_displacement)
+   - [obj_spawn_yellow_coins](functions-5.md#obj_spawn_yellow_coins)
+   - [obj_flicker_and_disappear](functions-5.md#obj_flicker_and_disappear)
+   - [current_mario_room_check](functions-5.md#current_mario_room_check)
+   - [obj_check_floor_death](functions-5.md#obj_check_floor_death)
+   - [obj_lava_death](functions-5.md#obj_lava_death)
+   - [spawn_orange_number](functions-5.md#spawn_orange_number)
 
 <br />
 
@@ -1693,70 +1697,70 @@
 <br />
 
 - smlua_camera_utils.h
-   - [camera_reset_overrides](functions-5.md#camera_reset_overrides)
-   - [camera_freeze](functions-5.md#camera_freeze)
-   - [camera_unfreeze](functions-5.md#camera_unfreeze)
-   - [camera_is_frozen](functions-5.md#camera_is_frozen)
-   - [camera_romhack_allow_only_mods](functions-5.md#camera_romhack_allow_only_mods)
-   - [camera_set_romhack_override](functions-5.md#camera_set_romhack_override)
-   - [camera_romhack_allow_centering](functions-5.md#camera_romhack_allow_centering)
-   - [camera_allow_toxic_gas_camera](functions-5.md#camera_allow_toxic_gas_camera)
-   - [camera_romhack_allow_dpad_usage](functions-5.md#camera_romhack_allow_dpad_usage)
-   - [rom_hack_cam_set_collisions](functions-5.md#rom_hack_cam_set_collisions)
-   - [camera_romhack_set_zoomed_in_dist](functions-5.md#camera_romhack_set_zoomed_in_dist)
-   - [camera_romhack_set_zoomed_out_dist](functions-5.md#camera_romhack_set_zoomed_out_dist)
-   - [camera_romhack_set_zoomed_in_height](functions-5.md#camera_romhack_set_zoomed_in_height)
-   - [camera_romhack_set_zoomed_out_height](functions-5.md#camera_romhack_set_zoomed_out_height)
-   - [camera_romhack_get_zoomed_in_dist](functions-5.md#camera_romhack_get_zoomed_in_dist)
-   - [camera_romhack_get_zoomed_out_dist](functions-5.md#camera_romhack_get_zoomed_out_dist)
-   - [camera_romhack_get_zoomed_in_height](functions-5.md#camera_romhack_get_zoomed_in_height)
-   - [camera_romhack_get_zoomed_out_height](functions-5.md#camera_romhack_get_zoomed_out_height)
-   - [camera_get_romhack_override](functions-5.md#camera_get_romhack_override)
-   - [camera_romhack_get_allow_centering](functions-5.md#camera_romhack_get_allow_centering)
-   - [camera_get_allow_toxic_gas_camera](functions-5.md#camera_get_allow_toxic_gas_camera)
-   - [camera_romhack_get_allow_dpad_usage](functions-5.md#camera_romhack_get_allow_dpad_usage)
-   - [camera_romhack_get_collisions](functions-5.md#camera_romhack_get_collisions)
-   - [camera_config_is_free_cam_enabled](functions-5.md#camera_config_is_free_cam_enabled)
-   - [camera_config_is_analog_cam_enabled](functions-5.md#camera_config_is_analog_cam_enabled)
-   - [camera_config_is_dpad_enabled](functions-5.md#camera_config_is_dpad_enabled)
-   - [camera_config_is_collision_enabled](functions-5.md#camera_config_is_collision_enabled)
-   - [camera_config_is_mouse_look_enabled](functions-5.md#camera_config_is_mouse_look_enabled)
-   - [camera_config_is_x_inverted](functions-5.md#camera_config_is_x_inverted)
-   - [camera_config_is_y_inverted](functions-5.md#camera_config_is_y_inverted)
-   - [camera_config_get_x_sensitivity](functions-5.md#camera_config_get_x_sensitivity)
-   - [camera_config_get_y_sensitivity](functions-5.md#camera_config_get_y_sensitivity)
-   - [camera_config_get_aggression](functions-5.md#camera_config_get_aggression)
-   - [camera_config_get_pan_level](functions-5.md#camera_config_get_pan_level)
-   - [camera_config_get_deceleration](functions-5.md#camera_config_get_deceleration)
-   - [camera_config_get_centering](functions-5.md#camera_config_get_centering)
-   - [camera_config_enable_free_cam](functions-5.md#camera_config_enable_free_cam)
-   - [camera_config_enable_analog_cam](functions-5.md#camera_config_enable_analog_cam)
-   - [camera_config_enable_centering](functions-5.md#camera_config_enable_centering)
-   - [camera_config_enable_dpad](functions-5.md#camera_config_enable_dpad)
-   - [camera_config_enable_collisions](functions-5.md#camera_config_enable_collisions)
-   - [camera_config_enable_mouse_look](functions-5.md#camera_config_enable_mouse_look)
-   - [camera_config_invert_x](functions-5.md#camera_config_invert_x)
-   - [camera_config_invert_y](functions-5.md#camera_config_invert_y)
-   - [camera_config_set_x_sensitivity](functions-5.md#camera_config_set_x_sensitivity)
-   - [camera_config_set_y_sensitivity](functions-5.md#camera_config_set_y_sensitivity)
-   - [camera_config_set_aggression](functions-5.md#camera_config_set_aggression)
-   - [camera_config_set_pan_level](functions-5.md#camera_config_set_pan_level)
-   - [camera_config_set_deceleration](functions-5.md#camera_config_set_deceleration)
-   - [camera_get_checking_surfaces](functions-5.md#camera_get_checking_surfaces)
-   - [camera_set_checking_surfaces](functions-5.md#camera_set_checking_surfaces)
+   - [camera_reset_overrides](functions-6.md#camera_reset_overrides)
+   - [camera_freeze](functions-6.md#camera_freeze)
+   - [camera_unfreeze](functions-6.md#camera_unfreeze)
+   - [camera_is_frozen](functions-6.md#camera_is_frozen)
+   - [camera_romhack_allow_only_mods](functions-6.md#camera_romhack_allow_only_mods)
+   - [camera_set_romhack_override](functions-6.md#camera_set_romhack_override)
+   - [camera_romhack_allow_centering](functions-6.md#camera_romhack_allow_centering)
+   - [camera_allow_toxic_gas_camera](functions-6.md#camera_allow_toxic_gas_camera)
+   - [camera_romhack_allow_dpad_usage](functions-6.md#camera_romhack_allow_dpad_usage)
+   - [rom_hack_cam_set_collisions](functions-6.md#rom_hack_cam_set_collisions)
+   - [camera_romhack_set_zoomed_in_dist](functions-6.md#camera_romhack_set_zoomed_in_dist)
+   - [camera_romhack_set_zoomed_out_dist](functions-6.md#camera_romhack_set_zoomed_out_dist)
+   - [camera_romhack_set_zoomed_in_height](functions-6.md#camera_romhack_set_zoomed_in_height)
+   - [camera_romhack_set_zoomed_out_height](functions-6.md#camera_romhack_set_zoomed_out_height)
+   - [camera_romhack_get_zoomed_in_dist](functions-6.md#camera_romhack_get_zoomed_in_dist)
+   - [camera_romhack_get_zoomed_out_dist](functions-6.md#camera_romhack_get_zoomed_out_dist)
+   - [camera_romhack_get_zoomed_in_height](functions-6.md#camera_romhack_get_zoomed_in_height)
+   - [camera_romhack_get_zoomed_out_height](functions-6.md#camera_romhack_get_zoomed_out_height)
+   - [camera_get_romhack_override](functions-6.md#camera_get_romhack_override)
+   - [camera_romhack_get_allow_centering](functions-6.md#camera_romhack_get_allow_centering)
+   - [camera_get_allow_toxic_gas_camera](functions-6.md#camera_get_allow_toxic_gas_camera)
+   - [camera_romhack_get_allow_dpad_usage](functions-6.md#camera_romhack_get_allow_dpad_usage)
+   - [camera_romhack_get_collisions](functions-6.md#camera_romhack_get_collisions)
+   - [camera_config_is_free_cam_enabled](functions-6.md#camera_config_is_free_cam_enabled)
+   - [camera_config_is_analog_cam_enabled](functions-6.md#camera_config_is_analog_cam_enabled)
+   - [camera_config_is_dpad_enabled](functions-6.md#camera_config_is_dpad_enabled)
+   - [camera_config_is_collision_enabled](functions-6.md#camera_config_is_collision_enabled)
+   - [camera_config_is_mouse_look_enabled](functions-6.md#camera_config_is_mouse_look_enabled)
+   - [camera_config_is_x_inverted](functions-6.md#camera_config_is_x_inverted)
+   - [camera_config_is_y_inverted](functions-6.md#camera_config_is_y_inverted)
+   - [camera_config_get_x_sensitivity](functions-6.md#camera_config_get_x_sensitivity)
+   - [camera_config_get_y_sensitivity](functions-6.md#camera_config_get_y_sensitivity)
+   - [camera_config_get_aggression](functions-6.md#camera_config_get_aggression)
+   - [camera_config_get_pan_level](functions-6.md#camera_config_get_pan_level)
+   - [camera_config_get_deceleration](functions-6.md#camera_config_get_deceleration)
+   - [camera_config_get_centering](functions-6.md#camera_config_get_centering)
+   - [camera_config_enable_free_cam](functions-6.md#camera_config_enable_free_cam)
+   - [camera_config_enable_analog_cam](functions-6.md#camera_config_enable_analog_cam)
+   - [camera_config_enable_centering](functions-6.md#camera_config_enable_centering)
+   - [camera_config_enable_dpad](functions-6.md#camera_config_enable_dpad)
+   - [camera_config_enable_collisions](functions-6.md#camera_config_enable_collisions)
+   - [camera_config_enable_mouse_look](functions-6.md#camera_config_enable_mouse_look)
+   - [camera_config_invert_x](functions-6.md#camera_config_invert_x)
+   - [camera_config_invert_y](functions-6.md#camera_config_invert_y)
+   - [camera_config_set_x_sensitivity](functions-6.md#camera_config_set_x_sensitivity)
+   - [camera_config_set_y_sensitivity](functions-6.md#camera_config_set_y_sensitivity)
+   - [camera_config_set_aggression](functions-6.md#camera_config_set_aggression)
+   - [camera_config_set_pan_level](functions-6.md#camera_config_set_pan_level)
+   - [camera_config_set_deceleration](functions-6.md#camera_config_set_deceleration)
+   - [camera_get_checking_surfaces](functions-6.md#camera_get_checking_surfaces)
+   - [camera_set_checking_surfaces](functions-6.md#camera_set_checking_surfaces)
 
 <br />
 
 - smlua_collision_utils.h
-   - [collision_find_floor](functions-5.md#collision_find_floor)
-   - [collision_find_ceil](functions-5.md#collision_find_ceil)
-   - [get_water_surface_pseudo_floor](functions-5.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-5.md#smlua_collision_util_get)
-   - [collision_get_temp_wall_collision_data](functions-5.md#collision_get_temp_wall_collision_data)
-   - [get_surface_from_wcd_index](functions-5.md#get_surface_from_wcd_index)
-   - [smlua_collision_util_get_current_terrain_collision](functions-5.md#smlua_collision_util_get_current_terrain_collision)
-   - [smlua_collision_util_get_level_collision](functions-5.md#smlua_collision_util_get_level_collision)
-   - [smlua_collision_util_find_surface_types](functions-5.md#smlua_collision_util_find_surface_types)
+   - [collision_find_floor](functions-6.md#collision_find_floor)
+   - [collision_find_ceil](functions-6.md#collision_find_ceil)
+   - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-6.md#smlua_collision_util_get)
+   - [collision_get_temp_wall_collision_data](functions-6.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-6.md#get_surface_from_wcd_index)
+   - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
+   - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
 
 <br />
 
@@ -1793,16 +1797,18 @@
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
    - [gfx_copy](functions-6.md#gfx_copy)
-   - [gfx_new](functions-6.md#gfx_new)
-   - [gfx_realloc](functions-6.md#gfx_realloc)
+   - [gfx_create](functions-6.md#gfx_create)
+   - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
+   - [gfx_delete_all](functions-6.md#gfx_delete_all)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
    - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
    - [vtx_copy](functions-6.md#vtx_copy)
-   - [vtx_new](functions-6.md#vtx_new)
-   - [vtx_realloc](functions-6.md#vtx_realloc)
+   - [vtx_create](functions-6.md#vtx_create)
+   - [vtx_resize](functions-6.md#vtx_resize)
    - [vtx_delete](functions-6.md#vtx_delete)
+   - [vtx_delete_all](functions-6.md#vtx_delete_all)
 
 <br />
 
@@ -1884,7 +1890,6 @@
    - [movtexqc_register](functions-6.md#movtexqc_register)
    - [get_water_level](functions-6.md#get_water_level)
    - [set_water_level](functions-6.md#set_water_level)
-   - [play_transition](functions-6.md#play_transition)
    - [course_is_main_course](functions-6.md#course_is_main_course)
    - [get_ttc_speed_setting](functions-6.md#get_ttc_speed_setting)
    - [set_ttc_speed_setting](functions-6.md#set_ttc_speed_setting)
@@ -2013,7 +2018,6 @@
 <br />
 
 - spawn_sound.h
-   - [exec_anim_sound_state](functions-6.md#exec_anim_sound_state)
    - [cur_obj_play_sound_1](functions-6.md#cur_obj_play_sound_1)
    - [cur_obj_play_sound_2](functions-6.md#cur_obj_play_sound_2)
    - [create_sound_spawner](functions-6.md#create_sound_spawner)
@@ -2033,8 +2037,6 @@
 <br />
 
 - surface_load.h
-   - [get_area_terrain_size](functions-6.md#get_area_terrain_size)
-   - [load_area_terrain](functions-6.md#load_area_terrain)
    - [load_object_collision_model](functions-6.md#load_object_collision_model)
    - [obj_get_surface_from_index](functions-6.md#obj_get_surface_from_index)
    - [surface_has_force](functions-6.md#surface_has_force)
@@ -2627,6 +2629,29 @@ N/A
 <br />
 
 
+## [get_mario_spawn_type](#get_mario_spawn_type)
+
+### Description
+Derives a `MARIO_SPAWN_*` constant from `o`
+
+### Lua Example
+`local integerValue = get_mario_spawn_type(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_mario_spawn_type(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [area_get_warp_node](#area_get_warp_node)
 
 ### Description
@@ -2650,6 +2675,27 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 
 <br />
 
+## [area_get_any_warp_node](#area_get_any_warp_node)
+
+### Description
+Gets the first warp node found in the area, otherwise returns nil
+
+### Lua Example
+`local ObjectWarpNodeValue = area_get_any_warp_node()`
+
+### Parameters
+- None
+
+### Returns
+[ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_get_any_warp_node(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
 
 ### Description
@@ -2668,6 +2714,61 @@ Finds a warp node in the current area using parameters from the provided object.
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_transition](#play_transition)
+
+### Description
+Plays a screen transition
+
+### Lua Example
+`play_transition(transType, time, red, green, blue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| transType | `integer` |
+| time | `integer` |
+| red | `integer` |
+| green | `integer` |
+| blue | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [play_transition_after_delay](#play_transition_after_delay)
+
+### Description
+Plays a screen transition after a `delay` in frames
+
+### Lua Example
+`play_transition_after_delay(transType, time, red, green, blue, delay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| transType | `integer` |
+| time | `integer` |
+| red | `integer` |
+| green | `integer` |
+| blue | `integer` |
+| delay | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 blue, s16 delay);`
 
 [:arrow_up_small:](#)
 

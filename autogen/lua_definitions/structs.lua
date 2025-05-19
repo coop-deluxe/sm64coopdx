@@ -974,7 +974,7 @@
 
 --- @class GraphNodeSwitchCase
 --- @field public fnNode FnGraphNode
---- @field public numCases integer
+--- @field public parameter integer
 --- @field public selectedCase integer
 --- @field public unused integer
 
@@ -1071,6 +1071,7 @@
 --- @field public fixCollisionBugsGroundPoundBonks integer
 --- @field public fixCollisionBugsPickBestWall integer
 --- @field public fixCollisionBugsRoundedCorners integer
+--- @field public fixInvalidShellRides integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer
 --- @field public floorLowerLimit integer
@@ -2292,10 +2293,6 @@
 --- @field public dialog5 integer
 --- @field public dialog6 integer
 
---- @class Struct802A272C
---- @field public vecF Vec3f
---- @field public vecS Vec3s
-
 --- @class Surface
 --- @field public flags integer
 --- @field public force integer
@@ -2408,10 +2405,6 @@
 --- @class Whirlpool
 --- @field public pos Vec3s
 --- @field public strength integer
-
---- @class struct802A1230
---- @field public unk00 integer
---- @field public unk02 integer
 
 --- @class Vec2f
 --- @field public x number

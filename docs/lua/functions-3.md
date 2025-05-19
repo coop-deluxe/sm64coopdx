@@ -1955,6 +1955,9 @@ Transitions the camera to the next Lakitu state, updating position and focus. Th
 
 ## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
 
+### Description
+Set the fixed camera base pos depending on the current level area
+
 ### Lua Example
 `set_fixed_cam_axis_sa_lobby(preset)`
 
@@ -2437,6 +2440,9 @@ Centers the ROM hack camera. This function is designed for non-standard level la
 
 
 ## [get_character](#get_character)
+
+### Description
+Gets a Character struct from `m`
 
 ### Lua Example
 `local CharacterValue = get_character(m)`
@@ -4281,6 +4287,9 @@ Plays Toad's jingle
 
 ## [sound_reset_background_music_default_volume](#sound_reset_background_music_default_volume)
 
+### Description
+Resets a sequence's (`seqId`) volume back to the default volume
+
 ### Lua Example
 `sound_reset_background_music_default_volume(seqId)`
 
@@ -4300,6 +4309,9 @@ Plays Toad's jingle
 <br />
 
 ## [sound_set_background_music_default_volume](#sound_set_background_music_default_volume)
+
+### Description
+Sets a sequence's (`seqId`) volume to `volume`
 
 ### Lua Example
 `sound_set_background_music_default_volume(seqId, volume)`
@@ -4322,6 +4334,9 @@ Plays Toad's jingle
 
 ## [get_sound_pan](#get_sound_pan)
 
+### Description
+Gets a sound left/right pan using `x` and `z`
+
 ### Lua Example
 `local numberValue = get_sound_pan(x, z)`
 
@@ -4342,6 +4357,9 @@ Plays Toad's jingle
 <br />
 
 ## [sound_get_level_intensity](#sound_get_level_intensity)
+
+### Description
+Gets a sound level intensity based on `distance`
 
 ### Lua Example
 `local numberValue = sound_get_level_intensity(distance)`
@@ -4463,6 +4481,9 @@ Resets first person
 
 ## [create_dialog_box](#create_dialog_box)
 
+### Description
+Creates a dialog box with a dialog ID that rotates into view
+
 ### Lua Example
 `create_dialog_box(dialog)`
 
@@ -4482,6 +4503,9 @@ Resets first person
 <br />
 
 ## [create_dialog_box_with_var](#create_dialog_box_with_var)
+
+### Description
+Creates a dialog box with a dialog variable
 
 ### Lua Example
 `create_dialog_box_with_var(dialog, dialogVar)`
@@ -4504,6 +4528,9 @@ Resets first person
 
 ## [create_dialog_inverted_box](#create_dialog_inverted_box)
 
+### Description
+Creates a dialog box with a dialog ID that zooms into view
+
 ### Lua Example
 `create_dialog_inverted_box(dialog)`
 
@@ -4523,6 +4550,9 @@ Resets first person
 <br />
 
 ## [create_dialog_box_with_response](#create_dialog_box_with_response)
+
+### Description
+Creates a dialog box with a response
 
 ### Lua Example
 `create_dialog_box_with_response(dialog)`
@@ -4544,6 +4574,9 @@ Resets first person
 
 ## [reset_dialog_render_state](#reset_dialog_render_state)
 
+### Description
+Resets the dialog box's state including dialog ID and open state
+
 ### Lua Example
 `reset_dialog_render_state()`
 
@@ -4561,6 +4594,9 @@ Resets first person
 <br />
 
 ## [set_menu_mode](#set_menu_mode)
+
+### Description
+Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
 
 ### Lua Example
 `set_menu_mode(mode)`
@@ -4582,6 +4618,9 @@ Resets first person
 
 ## [set_min_dialog_width](#set_min_dialog_width)
 
+### Description
+Dialog box customization: Sets the minimum width for a dialog box
+
 ### Lua Example
 `set_min_dialog_width(width)`
 
@@ -4601,6 +4640,9 @@ Resets first person
 <br />
 
 ## [set_dialog_override_pos](#set_dialog_override_pos)
+
+### Description
+Dialog box customization: Sets the override position for a dialog box
 
 ### Lua Example
 `set_dialog_override_pos(x, y)`
@@ -4623,6 +4665,9 @@ Resets first person
 
 ## [reset_dialog_override_pos](#reset_dialog_override_pos)
 
+### Description
+Dialog box customization: Resets the override position for a dialog box
+
 ### Lua Example
 `reset_dialog_override_pos()`
 
@@ -4640,6 +4685,9 @@ Resets first person
 <br />
 
 ## [set_dialog_override_color](#set_dialog_override_color)
+
+### Description
+Dialog box customization: Sets the override color for a dialog box
 
 ### Lua Example
 `set_dialog_override_color(bgR, bgG, bgB, bgA, textR, textG, textB, textA)`
@@ -4668,6 +4716,9 @@ Resets first person
 
 ## [reset_dialog_override_color](#reset_dialog_override_color)
 
+### Description
+Dialog box customization: Resets the override color for a dialog box
+
 ### Lua Example
 `reset_dialog_override_color()`
 
@@ -4685,6 +4736,9 @@ Resets first person
 <br />
 
 ## [set_dialog_box_state](#set_dialog_box_state)
+
+### Description
+Sets the state for a dialog box (`DIALOG_STATE_*`)
 
 ### Lua Example
 `set_dialog_box_state(state)`
@@ -5622,6 +5676,29 @@ Checks if Mario is currently wearing his normal cap on his head. Returns true if
 
 <br />
 
+## [does_mario_have_blown_cap](#does_mario_have_blown_cap)
+
+### Description
+Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+
+### Lua Example
+`local booleanValue = does_mario_have_blown_cap(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool does_mario_have_blown_cap(struct MarioState *m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mario_blow_off_cap](#mario_blow_off_cap)
 
 ### Description
@@ -6008,6 +6085,9 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 
 ## [get_level_name_sm64](#get_level_name_sm64)
 
+### Description
+Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+
 ### Lua Example
 `local PointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
 
@@ -6080,6 +6160,9 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as an AS
 <br />
 
 ## [get_star_name_sm64](#get_star_name_sm64)
+
+### Description
+Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
 `local PointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
@@ -6327,22 +6410,22 @@ Special warps to arg (`SPECIAL_WARP_*`)
 ## [lvl_set_current_level](#lvl_set_current_level)
 
 ### Description
-Sets the level number and handles the act select screen
+Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
 
 ### Lua Example
-`local integerValue = lvl_set_current_level(arg0, levelNum)`
+`local integerValue = lvl_set_current_level(param, levelNum)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| arg0 | `integer` |
+| param | `integer` |
 | levelNum | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 lvl_set_current_level(s16 arg0, s16 levelNum);`
+`s32 lvl_set_current_level(s16 param, s16 levelNum);`
 
 [:arrow_up_small:](#)
 

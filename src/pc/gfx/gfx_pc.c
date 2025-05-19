@@ -37,6 +37,8 @@
 #include "engine/lighting_engine.h"
 #include "pc/debug_context.h"
 
+#include "game/object_helpers.h"
+
 #define SUPPORT_CHECK(x) assert(x)
 
 // this is used for multi-textures
@@ -779,9 +781,13 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
         }
-    } else if (luaVertexColor) {
-        for (int i = 0; i < 3; i ++) {
-            vertexColorCached[i] = gVertexColor[i] / 255.0f;
+    }
+
+    if (luaVertexColor) {
+        if ((rsp.geometry_mode & G_PACKED_NORMALS_EXT) || (!(rsp.geometry_mode & G_LIGHTING))) {
+            for (int i = 0; i < 3; i ++) {
+                vertexColorCached[i] = gVertexColor[i] / 255.0f;
+            }
         }
     }
 
@@ -838,9 +844,37 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
             for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
                 float intensity = 0;
-                intensity += vn->n[0] * rsp.current_lights_coeffs[i][0];
-                intensity += vn->n[1] * rsp.current_lights_coeffs[i][1];
-                intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
+                if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
+                    // original f3dex3 algorithm translated to c (from fast64 source code)
+                    unsigned short packedNormal = vn->flag;
+                    int xo = packedNormal >> 8;
+                    int yo = packedNormal & 0xFF;
+    
+                    int x = xo & 0x7F;
+                    int y = yo & 0x7F;
+                    int z = x + y;
+                    int x2 = x ^ 0x7F;
+                    int y2 = y ^ 0x7F;
+                    z = z ^ 0x7F;
+                    if (z & 0x80) {
+                        x = x2;
+                        y = y2;
+                    }
+
+                    x = (xo & 0x80) ? -x : x;
+                    y = (yo & 0x80) ? -y : y;
+                    z = (z & 0x80) ? (z - 0x100) : z;
+                    SUPPORT_CHECK(absi(x) + absi(y) + absi(z) == 127);
+
+                    intensity += x * rsp.current_lights_coeffs[i][0];
+                    intensity += y * rsp.current_lights_coeffs[i][1];
+                    intensity += z * rsp.current_lights_coeffs[i][2];
+                } else {
+                    intensity += vn->n[0] * rsp.current_lights_coeffs[i][0];
+                    intensity += vn->n[1] * rsp.current_lights_coeffs[i][1];
+                    intensity += vn->n[2] * rsp.current_lights_coeffs[i][2];
+                }
+
                 intensity /= 127.0f;
                 if (intensity > 0.0f) {
                     r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
@@ -852,6 +886,21 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             d->color.r = r > 255.0f ? 255 : (uint8_t)r;
             d->color.g = g > 255.0f ? 255 : (uint8_t)g;
             d->color.b = b > 255.0f ? 255 : (uint8_t)b;
+
+            if (rsp.geometry_mode & G_PACKED_NORMALS_EXT) {
+                float vtxR = (v->cn[0] / 255.0f);
+                float vtxG = (v->cn[1] / 255.0f);
+                float vtxB = (v->cn[2] / 255.0f);
+                if (luaVertexColor) {
+                    d->color.r *= vtxR * vertexColorCached[0];
+                    d->color.g *= vtxG * vertexColorCached[1];
+                    d->color.b *= vtxB * vertexColorCached[2];
+                } else {
+                    d->color.r *= vtxR;
+                    d->color.g *= vtxG;
+                    d->color.b *= vtxB;
+                }
+            }
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
@@ -865,6 +914,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 U = (int32_t)((dotx / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.s);
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
+
             if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
                 Color color;
                 CTX_BEGIN(CTX_LIGHTING);

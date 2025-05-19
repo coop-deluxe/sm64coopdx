@@ -357,6 +357,7 @@ struct Character {
 
 struct MarioState;
 extern struct Character gCharacters[];
+/* |description|Gets a Character struct from `m`|descriptionEnd| */
 struct Character* get_character(struct MarioState* m);
 
 /* |description|

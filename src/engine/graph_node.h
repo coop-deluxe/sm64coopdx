@@ -175,7 +175,7 @@ struct GraphNodeSwitchCase
 {
     /*0x00*/ struct FnGraphNode fnNode;
     /*0x18*/ s32 unused;
-    /*0x1C*/ s16 numCases;
+    /*0x1C*/ s16 parameter;
     /*0x1E*/ s16 selectedCase;
 };
 
@@ -397,7 +397,7 @@ struct GraphNodeMasterList *init_graph_node_master_list(struct DynamicPool *pool
 struct GraphNodeLevelOfDetail *init_graph_node_render_range(struct DynamicPool *pool, struct GraphNodeLevelOfDetail *graphNode,
                                                             s16 minDistance, s16 maxDistance);
 struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool, struct GraphNodeSwitchCase *graphNode,
-                                                        s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
+                                                        s16 parameter, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
 struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool, struct GraphNodeCamera *graphNode,
                                                f32 *pos, f32 *focus, GraphNodeFunc func, s32 mode);
 struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(struct DynamicPool *pool, struct GraphNodeTranslationRotation *graphNode,

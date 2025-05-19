@@ -3526,7 +3526,6 @@ s16 render_course_complete_screen(void) {
     return 0;
 }
 
-// Only case 1 and 2 are used
 s16 render_menus_and_dialogs(void) {
     s16 mode = 0;
 

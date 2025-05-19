@@ -36,10 +36,11 @@ static s16 sSwimStrength[MAX_PLAYERS] = { MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, 
 
 static s16 sWaterCurrentSpeeds[] = { 28, 12, 8, 4 };
 
-static s16 D_80339FD0;
-static s16 D_80339FD2;
-static f32 D_80339FD4;
+static s16 sBobTimer;
+static s16 sBobIncrement;
+static f32 sBobHeight;
 
+/* |description|Sets Mario's particle flags if he's at the surface of a water box|descriptionEnd| */
 void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     if (!m) { return; }
     s16 atSurface = m->pos[1] >= m->waterLevel - 130;
@@ -83,6 +84,7 @@ static f32 get_buoyancy(struct MarioState *m) {
     return buoyancy;
 }
 
+/* |description|Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality|descriptionEnd| */
 u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     if (!m) { return 0; }
     struct WallCollisionData wcd = { 0 };
@@ -133,6 +135,7 @@ u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
     }
 }
 
+/* |description|Calculates a water current and outputs it in `step`|descriptionEnd| */
 void apply_water_current(struct MarioState *m, Vec3f step) {
     if (!m) { return; }
     s32 i;
@@ -183,6 +186,7 @@ void apply_water_current(struct MarioState *m, Vec3f step) {
     }
 }
 
+/* |description|Performs a water step|descriptionEnd| */
 u32 perform_water_step(struct MarioState *m) {
     if (!m) { return 0; }
     UNUSED u32 unused;
@@ -455,21 +459,22 @@ static s32 act_hold_water_action_end(struct MarioState *m) {
 
 static void reset_float_globals(struct MarioState *m) {
     if (!m) { return; }
-    D_80339FD0 = 0;
-    D_80339FD2 = 0x800;
-    D_80339FD4 = m->faceAngle[0] / 256.0f + 20.0f;
+    sBobTimer = 0;
+    sBobIncrement = 0x800;
+    sBobHeight = m->faceAngle[0] / 256.0f + 20.0f;
 }
 
+/* |description|Controls the bobbing that happens when you swim near the water surface|descriptionEnd| */
 void float_surface_gfx(struct MarioState *m) {
     if (!m) { return; }
-    if (D_80339FD2 != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
-        if ((D_80339FD0 += D_80339FD2) >= 0) {
-            m->marioObj->header.gfx.pos[1] += D_80339FD4 * sins(D_80339FD0);
+    if (sBobIncrement != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
+        if ((sBobTimer += sBobIncrement) >= 0) {
+            m->marioObj->header.gfx.pos[1] += sBobHeight * sins(sBobTimer);
             return;
         }
     }
 
-    D_80339FD2 = 0;
+    sBobIncrement = 0;
 }
 
 static void common_swimming_step(struct MarioState *m, s16 swimStrength) {
@@ -1099,7 +1104,7 @@ static s32 act_water_plunge(struct MarioState *m) {
                 set_mario_action(m, ACT_HOLD_METAL_WATER_FALLING, 0);
                 break;
         }
-        D_80339FD2 = 0;
+        sBobIncrement = 0;
     }
 
     switch (stateFlags) {
@@ -1649,6 +1654,10 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
     return FALSE;
 }
 
+/* |description|
+Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0.
+Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
+|descriptionEnd| */
 s32 mario_execute_submerged_action(struct MarioState *m) {
     if (!m) { return FALSE; }
     s32 cancel;

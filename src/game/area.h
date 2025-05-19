@@ -157,6 +157,7 @@ extern u8 gSpawnedStarHiddenCount;
 
 void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e);
 void print_intro_text(void);
+/* |description|Derives a `MARIO_SPAWN_*` constant from `o`|descriptionEnd| */
 u32 get_mario_spawn_type(struct Object *o);
 
 /* |description|
@@ -164,6 +165,7 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 |descriptionEnd| */
 struct ObjectWarpNode *area_get_warp_node(u8 id);
+/* |description|Gets the first warp node found in the area, otherwise returns nil|descriptionEnd| */
 struct ObjectWarpNode *area_get_any_warp_node(void);
 
 /* |description|
@@ -179,7 +181,9 @@ void load_mario_area(void);
 void unload_mario_area(void);
 void change_area(s32 index);
 void area_update_objects(void);
+/* |description|Plays a screen transition|descriptionEnd| */
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue);
+/* |description|Plays a screen transition after a `delay` in frames|descriptionEnd| */
 void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 blue, s16 delay);
 void render_game(void);
 

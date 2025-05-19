@@ -41,4 +41,5 @@ define_gfx_symbol(gsSPCopyLightEXT, 2, false);          \
 define_gfx_symbol(gsSPCopyLightsPlayerPart, 1, false);  \
 define_gfx_symbol(gsSPFogFactor, 2, false);             \
 define_gfx_symbol(gsMoveWd, 3, false);                  \
+define_gfx_symbol(gsSPLoadGeometryMode, 1, false);      \
 define_gfx_symbol(gsSPVertexNonGlobal, 3, true);

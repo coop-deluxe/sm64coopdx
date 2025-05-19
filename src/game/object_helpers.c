@@ -172,9 +172,9 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
             obj = gCurGraphNodeHeldObject->objNode;
         }
 
-        // if the case is greater than the number of cases, set to 0 to avoid overflowing
+        // if the case is greater than the number of anim states, set to 0 to avoid overflowing
         // the switch.
-        if (obj->oAnimState >= switchCase->numCases) {
+        if (obj->oAnimState >= switchCase->parameter) {
             obj->oAnimState = 0;
         }
 
@@ -187,6 +187,7 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
 
 s16 gRoomOverride = -1;
 
+/* |description|Overrides the current room Mario is in. Set to -1 to reset override|descriptionEnd| */
 void set_room_override(s16 room) {
     gRoomOverride = room;
 }
@@ -815,14 +816,14 @@ void obj_init_animation(struct Object *obj, s32 animIndex) {
     }
 }
 
-/**
- * Multiply a vector by a matrix of the form
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | 0 0 0 1 |
- * i.e. a matrix representing a linear transformation over 3 space.
- */
+/* |description|
+Multiplies a vector by a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
+|descriptionEnd| */
 void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
@@ -830,14 +831,14 @@ void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     }
 }
 
-/**
- * Multiply a vector by the transpose of a matrix of the form
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | 0 0 0 1 |
- * i.e. a matrix representing a linear transformation over 3 space.
- */
+/* |description|
+Multiplies a vector by the transpose of a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
+|descriptionEnd| */
 void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
@@ -1468,9 +1469,9 @@ s32 cur_obj_clear_interact_status_flag(s32 flag) {
     return FALSE;
 }
 
-/**
- * Mark an object to be unloaded at the end of the frame.
- */
+/* |description|
+Marks an object to be unloaded at the end of the frame
+|descriptionEnd| */
 void obj_mark_for_deletion(struct Object *obj) {
     //! This clears all activeFlags. Since some of these flags disable behavior,
     //  setting it to 0 could potentially enable unexpected behavior. After an
@@ -2313,10 +2314,9 @@ void obj_set_gfx_pos_at_obj_pos(struct Object *obj1, struct Object *obj2) {
     obj1->header.gfx.angle[2] = obj2->oMoveAngleRoll & 0xFFFF;
 }
 
-/**
- * Transform the vector at localTranslateIndex into the object's local
- * coordinates, and then add it to the vector at posIndex.
- */
+/* |description|
+Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
+|descriptionEnd| */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
     if (obj == NULL) { return; }
     f32 dx = obj->rawData.asF32[localTranslateIndex + 0];
@@ -3476,6 +3476,7 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 }
 #endif
 
+/* |description|Sets the current object's home only the first time it's called|descriptionEnd| */
 void cur_obj_set_home_once(void) {
     if (!o) { return; }
     if (o->setHome) { return; }
@@ -3485,6 +3486,8 @@ void cur_obj_set_home_once(void) {
     o->oHomeZ = o->oPosZ;
 }
 
+
+/* |description|Gets a trajectory's length|descriptionEnd| */
 s32 get_trajectory_length(Trajectory* trajectory) {
     if (!trajectory) { return 0; }
     s32 count = 0;

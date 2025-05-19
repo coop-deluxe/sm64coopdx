@@ -40,16 +40,6 @@ struct WaterDropletParams
     f32 randSizeScale;
 };
 
-struct struct802A1230 {
-    /*0x00*/ s16 unk00;
-    /*0x02*/ s16 unk02;
-};
-
-struct Struct802A272C {
-    Vec3f vecF;
-    Vec3s vecS;
-};
-
 // TODO: Field names
 struct SpawnParticlesInfo
 {

@@ -80,6 +80,8 @@ enum MarioSpawnType {
 #define WARP_TYPE_CHANGE_AREA 2
 #define WARP_TYPE_SAME_AREA 3
 
+#define WARP_ARG_EXIT_COURSE -1
+
 #define PRESS_START_DEMO_TIMER 800
 
 // From Surface 0xD3 to 0xFC
@@ -131,7 +133,6 @@ struct SavedWarpValues {
 
 extern struct WarpDest sWarpDest;
 extern s8 sWarpCheckpointActive;
-extern u8 gRejectInstantWarp;
 extern u16 gFanFareDebounce;
 
 extern s16 D_80339EE0;
@@ -197,8 +198,8 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);
 
 s32 lvl_init_or_update(s16 initOrUpdate, UNUSED s32 unused);
 s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum);
-/* |description|Sets the level number and handles the act select screen|descriptionEnd| */
-s32 lvl_set_current_level(s16 arg0, s16 levelNum);
+/* |description|Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua|descriptionEnd| */
+s32 lvl_set_current_level(s16 param, s16 levelNum);
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1);
 void basic_update(UNUSED s16 *arg);
 
