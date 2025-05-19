@@ -528,8 +528,7 @@ static int smlua__get_field(lua_State* L) {
         return 1;
     }
 
-    // This warns due to not being a const
-    char *tempKey = lua_tostring(L, 2);
+    char *tempKey = (char*)lua_tostring(L, 2);
     if (!tempKey) {
         LOG_LUA_LINE("Tried to get a non-string field of cobject");
         return 0;
@@ -625,8 +624,7 @@ static int smlua__set_field(lua_State* L) {
         return 1;
     }
 
-    // This warns due to not being a const
-    char *tempKey = lua_tostring(L, 2);
+    char *tempKey = (char*)lua_tostring(L, 2);
     if (!tempKey) {
         LOG_LUA_LINE("Tried to set a non-string field of cobject");
         return 0;
