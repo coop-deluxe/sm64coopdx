@@ -11,6 +11,12 @@ extern "C" {
 
 #define AT_STARTUP __attribute__((constructor))
 
+#ifdef GIT_HASH
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s, [%s]", WINDOW_NAME, get_version(), GIT_HASH); title; })
+#else
+#define TITLE ({ char title[96] = ""; snprintf(title, 96, "%s %s", WINDOW_NAME, get_version()); title; })
+#endif
+
 extern bool gGameInited;
 extern bool gGfxInited;
 

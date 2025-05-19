@@ -1121,7 +1121,9 @@ endif
 CFLAGS += -fPIE
 
 # Generate a map file
-LDFLAGS += -Wl,-Map $(MAP)
+ifeq ($(OSX_BUILD),0)
+  LDFLAGS += -Wl,-Map $(MAP)
+endif
 
 # Prevent a crash with -sopt
 export LANG := C
