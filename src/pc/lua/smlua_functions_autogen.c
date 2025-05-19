@@ -13663,10 +13663,25 @@ int smlua_func_fix_collision_bugs_set_all(lua_State* L) {
         return 0;
     }
 
-    u8 enable = smlua_to_integer(L, 1);
+    bool enable = smlua_to_boolean(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fix_collision_bugs_set_all"); return 0; }
 
     fix_collision_bugs_set_all(enable);
+
+    return 1;
+}
+
+int smlua_func_fix_collision_bugs_is_any_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "fix_collision_bugs_is_any_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, fix_collision_bugs_is_any_enabled());
 
     return 1;
 }
@@ -34582,6 +34597,7 @@ void smlua_bind_functions_autogen(void) {
 
     // hardcoded.h
     smlua_bind_function(L, "fix_collision_bugs_set_all", smlua_func_fix_collision_bugs_set_all);
+    smlua_bind_function(L, "fix_collision_bugs_is_any_enabled", smlua_func_fix_collision_bugs_is_any_enabled);
 
     // ingame_menu.h
     smlua_bind_function(L, "create_dialog_box", smlua_func_create_dialog_box);

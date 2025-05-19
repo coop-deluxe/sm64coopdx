@@ -389,3 +389,15 @@ void fix_collision_bugs_set_all(bool enable) {
     gLevelValues.fixCollision.fixObjectOobPush = enable;
     gLevelValues.fixCollision.throwaway = enable;
 }
+
+bool fix_collision_bugs_is_any_enabled(void) {
+    return gLevelValues.fixCollision.roundedCorners ||
+    gLevelValues.fixCollision.disableFalseLedgeGrab ||
+    gLevelValues.fixCollision.disableGroundPoundBonks ||
+    gLevelValues.fixCollision.pickBestWall ||
+    gLevelValues.fixCollision.fixExposedCeilings ||
+    gLevelValues.fixCollision.fixFloorOvershadowing ||
+    gLevelValues.fixCollision.fixOnlyFirstWall ||
+    gLevelValues.fixCollision.fixObjectOobPush ||
+    gLevelValues.fixCollision.throwaway;
+}

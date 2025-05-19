@@ -327,5 +327,9 @@ void hardcoded_reset_default_values(void);
 Sets all fields of `fixCollisionBugs`
 |descriptionEnd| */
 void fix_collision_bugs_set_all(bool enable);
+/* |description|
+Returns `true` if any fields of `fixCollision` are enabled
+|descriptionEnd| */
+bool fix_collision_bugs_is_any_enabled(void);
 
 #endif

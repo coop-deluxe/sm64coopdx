@@ -4490,13 +4490,34 @@ Sets all fields of `fixCollisionBugs`
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| enable | `integer` |
+| enable | `boolean` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void fix_collision_bugs_set_all(u8 enable);`
+`void fix_collision_bugs_set_all(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [fix_collision_bugs_is_any_enabled](#fix_collision_bugs_is_any_enabled)
+
+### Description
+Returns `true` if any fields of `fixCollision` are enabled
+
+### Lua Example
+`local booleanValue = fix_collision_bugs_is_any_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool fix_collision_bugs_is_any_enabled(void);`
 
 [:arrow_up_small:](#)
 

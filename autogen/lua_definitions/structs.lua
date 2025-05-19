@@ -646,16 +646,16 @@
 --- @field public yaw integer
 
 --- @class FixCollisionBugs
---- @field public disableFalseLedgeGrab integer
---- @field public disableGroundPoundBonks integer
---- @field public fixExposedCeilings integer
---- @field public fixFloorOvershadowing integer
---- @field public fixObjectOobPush integer
---- @field public fixOnlyFirstWall integer
---- @field public fixWallOnSlope integer
---- @field public pickBestWall integer
---- @field public roundedCorners integer
---- @field public throwaway integer
+--- @field public disableFalseLedgeGrab boolean
+--- @field public disableGroundPoundBonks boolean
+--- @field public fixExposedCeilings boolean
+--- @field public fixFloorOvershadowing boolean
+--- @field public fixObjectOobPush boolean
+--- @field public fixOnlyFirstWall boolean
+--- @field public fixWallOnSlope boolean
+--- @field public pickBestWall boolean
+--- @field public roundedCorners boolean
+--- @field public throwaway boolean
 
 --- @class FloorGeometry
 --- @field public normalX number

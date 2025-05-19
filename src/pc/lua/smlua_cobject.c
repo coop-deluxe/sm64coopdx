@@ -470,6 +470,56 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
     return false;
 }
 
+static int smlua_get_field_deprecated(lua_State* L, enum LuaObjectType lot, const char* key, u64 pointer, UNUSED struct LuaObjectField* data) {
+    // Legacy metadata fields support
+    if (key[0] == '_') {
+        if (strcmp(key, "_lot") == 0) {
+            lua_pushinteger(L, lot);
+            return 1;
+        }
+        if (strcmp(key, "_pointer") == 0) {
+            lua_pushinteger(L, pointer);
+            return 1;
+        }
+    }
+
+    // Legacy LevelValues support
+    if (lot == (enum LuaObjectType)LOT_LEVELVALUES) {
+        // Legacy fixCollisionBugs support
+        if (strncmp(key, "fixCollisionBugs", 16) == 0) {
+            if (!strcmp(key, "fixCollisionBugs")) { lua_pushinteger(L, (u8)fix_collision_bugs_is_any_enabled()); }
+            if (!strcmp(key, "fixCollisionBugsRoundedCorners"))          { lua_pushinteger(L, gLevelValues.fixCollision.roundedCorners); }
+            if (!strcmp(key, "fixCollisionBugsDisableFalseLedgeGrab"))   { lua_pushinteger(L, gLevelValues.fixCollision.disableFalseLedgeGrab); }
+            if (!strcmp(key, "fixCollisionBugsDisableGroundPoundBonks")) { lua_pushinteger(L, gLevelValues.fixCollision.disableGroundPoundBonks); }
+            if (!strcmp(key, "fixCollisionBugsPickBestWall"))            { lua_pushinteger(L, gLevelValues.fixCollision.pickBestWall); }
+            return 1;
+        }
+    }
+    return -1;
+}
+
+
+static int smlua_set_field_deprecated(lua_State* L, enum LuaObjectType lot, const char* key, UNUSED u64 pointer, struct LuaObjectField* data) {
+    // Legacy LevelValues support
+    if (lot == (enum LuaObjectType)LOT_LEVELVALUES) {
+        // Legacy fixCollisionBugs support
+        if (!strncmp(key, "fixCollisionBugs", 16)) {
+            int value = smlua_to_integer(L, 3);
+            if (gSmLuaConvertSuccess) {
+                if (!strcmp(key, "fixCollisionBugs")) { fix_collision_bugs_set_all(value); }
+                if (!strcmp(key, "fixCollisionBugsRoundedCorners"))          { gLevelValues.fixCollision.roundedCorners = value; }
+                if (!strcmp(key, "fixCollisionBugsDisableFalseLedgeGrab"))   { gLevelValues.fixCollision.disableFalseLedgeGrab = value; }
+                if (!strcmp(key, "fixCollisionBugsDisableGroundPoundBonks")) { gLevelValues.fixCollision.disableGroundPoundBonks = value; }
+                if (!strcmp(key, "fixCollisionBugsPickBestWall"))            { gLevelValues.fixCollision.pickBestWall = value; }
+                return 1;
+            }
+            LOG_LUA_LINE("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
+            return 0;
+        }
+    }
+    return -1;
+}
+
 static int smlua__get_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
@@ -528,38 +578,22 @@ static int smlua__get_field(lua_State* L) {
         return 1;
     }
 
-    char *tempKey = (char*)lua_tostring(L, 2);
-    if (!tempKey) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to get a non-string field of cobject");
         return 0;
-    }
-    // Legacy fixCollisionBugs support
-    if (lot == (enum LuaObjectType)LOT_LEVELVALUES && strncmp(tempKey, "fixCollisionBugs", 16) == 0) {
-        lot = (enum LuaObjectType)LOT_FIXCOLLISIONBUGS;
-        if (strcmp(tempKey, "fixCollisionBugs") == 0) { tempKey = "throwaway"; }
-        else if (strcmp(tempKey, "fixCollisionBugsRoundedCorners") == 0) { tempKey = "roundedCorners"; }
-        else if (strcmp(tempKey, "fixCollisionBugsFalseLedgeGrab") == 0) { tempKey = "disableFalseLedgeGrab"; }
-        else if (strcmp(tempKey, "fixCollisionBugsGroundPoundBonks") == 0) { tempKey = "disableGroundPoundBonks"; }
-        else if (strcmp(tempKey, "fixCollisionBugsPickBestWall") == 0) { tempKey = "pickBestWall"; }
-    }
-    const char *key = tempKey;
-
-    // Legacy support
-    if (key[0] == '_') {
-        if (strcmp(key, "_lot") == 0) {
-            lua_pushinteger(L, lot);
-            return 1;
-        }
-        if (strcmp(key, "_pointer") == 0) {
-            lua_pushinteger(L, pointer);
-            return 1;
-        }
     }
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
         data = smlua_get_custom_field(L, lot, 2);
     }
+
+    int legacyRet = smlua_get_field_deprecated(L, lot, key, pointer, data);
+    if (legacyRet > -1) {
+        return legacyRet;
+    }
+
     if (data == NULL) {
         LOG_LUA_LINE("_get_field on invalid key '%s', lot '%s'", key, smlua_get_lot_name(lot));
         return 0;
@@ -624,32 +658,20 @@ static int smlua__set_field(lua_State* L) {
         return 1;
     }
 
-    char *tempKey = (char*)lua_tostring(L, 2);
-    if (!tempKey) {
+    const char *key = lua_tostring(L, 2);
+    if (!key) {
         LOG_LUA_LINE("Tried to set a non-string field of cobject");
         return 0;
     }
-    // Legacy fixCollisionBugs support
-    if (lot == (enum LuaObjectType)LOT_LEVELVALUES && strncmp(tempKey, "fixCollisionBugs", 16) == 0) {
-        lot = (enum LuaObjectType)LOT_FIXCOLLISIONBUGS;
-        if (strcmp(tempKey, "fixCollisionBugs") == 0) {
-            tempKey = "throwaway";
-            u8 isEnabled = smlua_to_integer(L, 3);
-            if (gSmLuaConvertSuccess) {
-                // Not ideal since several mods do disable some of the options
-                fix_collision_bugs_set_all(isEnabled);
-            }
-        }
-        else if (strcmp(tempKey, "fixCollisionBugsRoundedCorners") == 0) { tempKey = "roundedCorners"; }
-        else if (strcmp(tempKey, "fixCollisionBugsFalseLedgeGrab") == 0) { tempKey = "disableFalseLedgeGrab"; }
-        else if (strcmp(tempKey, "fixCollisionBugsGroundPoundBonks") == 0) { tempKey = "disableGroundPoundBonks"; }
-        else if (strcmp(tempKey, "fixCollisionBugsPickBestWall") == 0) { tempKey = "pickBestWall"; }
-    }
-    const char *key = tempKey;
 
     struct LuaObjectField* data = smlua_get_object_field(lot, key);
     if (data == NULL) {
         data = smlua_get_custom_field(L, lot, 2);
+    }
+
+    int legacyRet = smlua_set_field_deprecated(L, lot, key, pointer, data);
+    if (legacyRet > -1) {
+        return legacyRet;
     }
 
     if (data == NULL) {

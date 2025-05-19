@@ -4325,9 +4325,15 @@ function first_person_reset()
     -- ...
 end
 
---- @param enable integer
+--- @param enable boolean
 --- Sets all fields of `fixCollisionBugs`
 function fix_collision_bugs_set_all(enable)
+    -- ...
+end
+
+--- @return boolean
+--- Returns `true` if any fields of `fixCollision` are enabled
+function fix_collision_bugs_is_any_enabled()
     -- ...
 end
 

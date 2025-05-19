@@ -859,6 +859,7 @@
 
 - hardcoded.h
    - [fix_collision_bugs_set_all](functions-3.md#fix_collision_bugs_set_all)
+   - [fix_collision_bugs_is_any_enabled](functions-3.md#fix_collision_bugs_is_any_enabled)
 
 <br />
 

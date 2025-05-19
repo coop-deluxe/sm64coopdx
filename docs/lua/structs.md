@@ -987,15 +987,15 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| disableFalseLedgeGrab | `integer` |  |
-| disableGroundPoundBonks | `integer` |  |
-| fixExposedCeilings | `integer` |  |
-| fixFloorOvershadowing | `integer` |  |
-| fixObjectOobPush | `integer` |  |
-| fixOnlyFirstWall | `integer` |  |
-| fixWallOnSlope | `integer` |  |
-| pickBestWall | `integer` |  |
-| roundedCorners | `integer` |  |
+| disableFalseLedgeGrab | `boolean` |  |
+| disableGroundPoundBonks | `boolean` |  |
+| fixExposedCeilings | `boolean` |  |
+| fixFloorOvershadowing | `boolean` |  |
+| fixObjectOobPush | `boolean` |  |
+| fixOnlyFirstWall | `boolean` |  |
+| fixWallOnSlope | `boolean` |  |
+| pickBestWall | `boolean` |  |
+| roundedCorners | `boolean` |  |
 
 [:arrow_up_small:](#)
 
