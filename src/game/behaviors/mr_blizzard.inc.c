@@ -1,14 +1,14 @@
 // Mr. Blizzard hitbox
 struct ObjectHitbox sMrBlizzardHitbox = {
-    /* interactType:      */ INTERACT_MR_BLIZZARD,
-    /* downOffset:        */ 24,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 99,
-    /* numLootCoins:      */ 3,
-    /* radius:            */ 65,
-    /* height:            */ 170,
-    /* hurtboxRadius:     */ 65,
-    /* hurtboxHeight:     */ 170,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 24,
+    .damageOrCoinValue = 2,
+    .health = 99,
+    .numLootCoins = 3,
+    .radius = 65,
+    .height = 170,
+    .hurtboxRadius = 65,
+    .hurtboxHeight = 170,
 };
 
 // Mr. Blizzard particle spawner.
@@ -472,15 +472,15 @@ static void mr_blizzard_snowball_act_1(void) {
 }
 // Snowball hitbox.
 struct ObjectHitbox sMrBlizzardSnowballHitbox = {
-    /* interactType:      */ INTERACT_MR_BLIZZARD,
-    /* downOffset:        */ 12,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 99,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 30,
-    /* height:            */ 30,
-    /* hurtboxRadius:     */ 25,
-    /* hurtboxHeight:     */ 25,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 12,
+    .damageOrCoinValue = 1,
+    .health = 99,
+    .numLootCoins = 0,
+    .radius = 30,
+    .height = 30,
+    .hurtboxRadius = 25,
+    .hurtboxHeight = 25,
 };
 
 /**

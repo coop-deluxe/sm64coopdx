@@ -6,15 +6,15 @@
  */
 
 struct ObjectHitbox sTweesterHitbox = {
-    /* interactType:      */ INTERACT_TORNADO,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 1500,
-    /* height:            */ 4000,
-    /* hurtboxRadius:     */ 0,
-    /* hurtboxHeight:     */ 0,
+    .interactType = INTERACT_TORNADO,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 1500,
+    .height = 4000,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 /**

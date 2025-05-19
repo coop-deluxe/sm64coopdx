@@ -291,10 +291,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->collidedObjInteractTypes = 0;
     obj->numCollidedObjs = 0;
 
-    for (s32 i = 0; i < OBJECT_NUM_FIELDS; i++) {
-        obj->rawData.asS32[i] = 0;
-        obj->ptrData.asVoidPtr[i] = NULL;
-    }
+    memset(&obj->rawData, 0, sizeof(obj->rawData));
+    memset(&obj->ptrData, 0, sizeof(obj->ptrData));
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;
@@ -329,13 +327,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->oRoom = -1;
 
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-    obj->header.gfx.pos[0] = -10000.0f;
-    obj->header.gfx.pos[1] = -10000.0f;
-    obj->header.gfx.pos[2] = -10000.0f;
+    vec3f_set(obj->header.gfx.pos, -10000.0f, -10000.0f, -10000.0f);
+    vec3s_zero(obj->header.gfx.angle);
     obj->header.gfx.throwMatrix = NULL;
-    obj->header.gfx.angle[0] = 0;
-    obj->header.gfx.angle[1] = 0;
-    obj->header.gfx.angle[2] = 0;
     obj->header.gfx.inited = false;
 
     obj->coopFlags = 0;

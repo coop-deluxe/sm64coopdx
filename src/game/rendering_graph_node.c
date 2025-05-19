@@ -70,7 +70,7 @@ Mtx sPrevCamTranf, sCurrCamTranf = {
 };
 
 static Gfx obj_sanitize_gfx[] = {
-    gsSPClearGeometryMode(G_TEXTURE_GEN),
+    gsSPClearGeometryMode(G_TEXTURE_GEN | G_PACKED_NORMALS_EXT),
     gsSPSetGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
     gsSPTexture(0xFFFF, 0xFFFF, 0, 0, G_OFF),
@@ -1206,7 +1206,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     return TRUE;
 }
 
-static void geo_sanitize_object_gfx() {
+static void geo_sanitize_object_gfx(void) {
     geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
     geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
     geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
@@ -1535,10 +1535,12 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
             break;
         }
 
+#ifdef DEBUG
         if (curGraphNode->_guard1 != GRAPH_NODE_GUARD || curGraphNode->_guard2 != GRAPH_NODE_GUARD) {
             LOG_ERROR("Graph Node corrupted!");
             break;
         }
+#endif
 
         // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
         if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) {

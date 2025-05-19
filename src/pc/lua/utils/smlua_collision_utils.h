@@ -121,6 +121,7 @@ struct Surface* collision_find_floor(f32 x, f32 y, f32 z);
 /* |description|Finds a potential ceiling at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);
 
+/* |description|Gets the generated water floor surface used when riding a shell|descriptionEnd| */
 struct Surface* get_water_surface_pseudo_floor(void);
 
 /* |description|Gets the `Collision` with `name`|descriptionEnd| */

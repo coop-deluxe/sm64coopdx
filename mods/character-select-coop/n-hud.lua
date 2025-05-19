@@ -5,7 +5,7 @@
 if incompatibleClient then return 0 end
 
 -- localize functions to improve performance - n-hud.lua
-local hud_get_value,hud_set_value,djui_hud_print_text,tostring,hud_set_flash,get_global_timer,hud_get_flash,djui_hud_get_screen_width,math_ceil,obj_get_first_with_behavior_id,get_behavior_from_id,count_objects_with_behavior,djui_hud_render_rect,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_set_color,djui_hud_set_font,djui_hud_measure_text,djui_chat_message_create,hud_is_hidden,djui_is_playerlist_open = hud_get_value,hud_set_value,djui_hud_print_text,tostring,hud_set_flash,get_global_timer,hud_get_flash,djui_hud_get_screen_width,math.ceil,obj_get_first_with_behavior_id,get_behavior_from_id,count_objects_with_behavior,djui_hud_render_rect,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_set_color,djui_hud_set_font,djui_hud_measure_text,djui_chat_message_create,hud_is_hidden,djui_is_playerlist_open
+local og_hud_get_value,og_hud_set_value,djui_hud_print_text,tostring,hud_set_flash,get_global_timer,hud_get_flash,djui_hud_get_screen_width,math_ceil,obj_get_first_with_behavior_id,get_behavior_from_id,count_objects_with_behavior,djui_hud_render_rect,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_set_color,djui_hud_set_font,djui_hud_measure_text,djui_chat_message_create,hud_is_hidden,djui_is_playerlist_open = hud_get_value,hud_set_value,djui_hud_print_text,tostring,hud_set_flash,get_global_timer,hud_get_flash,djui_hud_get_screen_width,math.ceil,obj_get_first_with_behavior_id,get_behavior_from_id,count_objects_with_behavior,djui_hud_render_rect,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_set_color,djui_hud_set_font,djui_hud_measure_text,djui_chat_message_create,hud_is_hidden,djui_is_playerlist_open
 
 --[[
     Some functions we need for the hud
@@ -20,15 +20,21 @@ local function convert_color(text)
         return nil
     end
     text = text:sub(3, -2)
-    local rstring = text:sub(1, 2) or "ff"
-    local gstring = text:sub(3, 4) or "ff"
-    local bstring = text:sub(5, 6) or "ff"
-    local astring = text:sub(7, 8) or "ff"
+    local rstring, gstring, bstring = "", "", ""
+    if text:len() ~= 3 and text:len() ~= 6 then return 255, 255, 255, 255 end
+    if text:len() == 6 then
+        rstring = text:sub(1, 2) or "ff"
+        gstring = text:sub(3, 4) or "ff"
+        bstring = text:sub(5, 6) or "ff"
+    else
+        rstring = text:sub(1, 1) .. text:sub(1, 1)
+        gstring = text:sub(2, 2) .. text:sub(2, 2)
+        bstring = text:sub(3, 3) .. text:sub(3, 3)
+    end
     local r = tonumber("0x" .. rstring) or 255
     local g = tonumber("0x" .. gstring) or 255
     local b = tonumber("0x" .. bstring) or 255
-    local a = tonumber("0x" .. astring) or 255
-    return r, g, b, a
+    return r, g, b, 255
 end
 
 ---@param text string
@@ -169,33 +175,66 @@ end
 -- Real HUD Stuffs --
 ---------------------
 
-local sHudElements = {
-    [HUD_DISPLAY_FLAG_LIVES] = true,
-    [HUD_DISPLAY_FLAG_STAR_COUNT] = true,
-    [HUD_DISPLAY_FLAG_CAMERA] = true
-}
+-- Modified Vanilla Functions --
+--[[
+    These are `_G` on their own to replace vanilla functions
+]]
+
+local sCharSelectHudDisplayFlags -- `local` because we aren't exposing this
+
+-- Here to make sure the flags are at the default state
+hook_event(HOOK_UPDATE, function ()
+    if not sCharSelectHudDisplayFlags or sCharSelectHudDisplayFlags == 0 then
+        sCharSelectHudDisplayFlags = og_hud_get_value(HUD_DISPLAY_FLAGS) | HUD_DISPLAY_DEFAULT
+    end
+end)
+
+--- @param type HudDisplayValue
+--- @return integer
+function _G.hud_get_value(type)
+    if type == HUD_DISPLAY_FLAGS then
+        return sCharSelectHudDisplayFlags
+    else
+        return og_hud_get_value(type)
+    end
+end
+
+--- @param type HudDisplayValue
+--- @param value integer
+--- Sets a HUD display value
+function _G.hud_set_value(type, value)
+    if type == HUD_DISPLAY_FLAGS then
+        sCharSelectHudDisplayFlags = value
+    else
+        og_hud_set_value(type, value)
+    end
+end
+
+-- Old CS Hud Functions --
 
 ---Hides the specified custom hud element
 ---@param hudElement HUDDisplayFlag
 function hud_hide_element(hudElement)
-    if sHudElements[hudElement] == nil then return false end
-    sHudElements[hudElement] = false
+    --log_to_console("The `charSelect.hud_hide_element()` function is deprecated, please use normal vanilla functions as they have been modified to work with Character Select.", CONSOLE_MESSAGE_WARNING)
+    hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~hudElement)
     return true
 end
 
 ---Shows the specified custom hud element
 ---@param hudElement HUDDisplayFlag
 function hud_show_element(hudElement)
-    if sHudElements[hudElement] == nil then return false end
-    sHudElements[hudElement] = true
+    --log_to_console("The `charSelect.hud_show_element()` function is deprecated, please use normal vanilla functions as they have been modified to work with Character Select.", CONSOLE_MESSAGE_WARNING)
+    hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) | hudElement)
     return true
 end
 
 ---Gets the specified custom hud element's state
 ---@param hudElement HUDDisplayFlag
+---@return boolean
 function hud_get_element(hudElement)
-    if sHudElements[hudElement] == nil then return false end
-    return sHudElements[hudElement]
+    --log_to_console("The `charSelect.hud_get_element()` function is deprecated, please use normal vanilla functions as they have been modified to work with Character Select.", CONSOLE_MESSAGE_WARNING)
+    djui_chat_message_create(tostring(sCharSelectHudDisplayFlags))
+    return (hud_get_value(HUD_DISPLAY_FLAGS) & hudElement) ~= 0
 end
 
 local MATH_DIVIDE_16 = 1/16
@@ -252,30 +291,6 @@ function life_icon_from_local_index(localIndex)
     return "?"
 end
 
-local TYPE_STRING = "string"
---- @param localIndex integer
---- @param x integer
---- @param y integer
---- @param scale integer
-function render_life_icon_from_local_index(localIndex, x, y, scale)
-    if localIndex == nil then localIndex = 0 end
-    local lifeIcon = life_icon_from_local_index(localIndex)
-    local startFont = djui_hud_get_font()
-    local startColor = djui_hud_get_color()
-
-    if type(lifeIcon) == TYPE_STRING then
-        local color = color_from_local_index(localIndex)
-        djui_hud_set_font(FONT_RECOLOR_HUD)
-        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
-        djui_hud_print_text(lifeIcon, x - scale, y - 11*scale, scale)
-        -- Reset HUD Modifications
-        djui_hud_set_font(startFont)
-        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
-    else
-        djui_hud_render_texture(lifeIcon, x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
-    end
-end
-
 --- @param localIndex integer
 --- @return TextureInfo
 --- This assumes multiple characters will not have the same model,
@@ -292,6 +307,56 @@ function star_icon_from_local_index(localIndex)
     return gTextures.star
 end
 
+local TYPE_STRING = "string"
+--- @param localIndex integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_life_icon_from_local_index(localIndex, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local lifeIcon = life_icon_from_local_index(localIndex)
+    local startFont = djui_hud_get_font()
+    local startColor = djui_hud_get_color()
+
+    if type(lifeIcon) == TYPE_STRING then
+        local color = color_from_local_index(localIndex)
+        djui_hud_set_font(FONT_RECOLOR_HUD)
+        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
+        djui_hud_print_text(lifeIcon, x, y, scale)
+        -- Reset HUD Modifications
+        djui_hud_set_font(startFont)
+        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
+    else
+        djui_hud_render_texture(lifeIcon, x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
+    end
+end
+
+--- @param localIndex integer
+--- @param prevX integer
+--- @param prevY integer
+--- @param prevScale integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_life_icon_from_local_index_interpolated(localIndex, prevX, prevY, prevScale, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local lifeIcon = life_icon_from_local_index(localIndex)
+    local startFont = djui_hud_get_font()
+    local startColor = djui_hud_get_color()
+
+    if type(lifeIcon) == TYPE_STRING then
+        local color = color_from_local_index(localIndex)
+        djui_hud_set_font(FONT_RECOLOR_HUD)
+        djui_hud_set_color(color.r/startColor.r*255, color.g/startColor.g*255, color.b/startColor.b*255, startColor.a)
+        djui_hud_print_text_interpolated(lifeIcon, prevX - prevScale/4, prevY - 10*prevScale - prevScale/4, prevScale, x - scale/4, y - 10*scale - scale/4, scale)
+        -- Reset HUD Modifications
+        djui_hud_set_font(startFont)
+        djui_hud_set_color(startColor.r, startColor.g, startColor.b, startColor.a)
+    else
+        djui_hud_render_texture_interpolated(lifeIcon, prevX, prevY, prevScale / (lifeIcon.width * MATH_DIVIDE_16), prevScale / (lifeIcon.height * MATH_DIVIDE_16), x, y, scale / (lifeIcon.width * MATH_DIVIDE_16), scale / (lifeIcon.height * MATH_DIVIDE_16))
+    end
+end
+
 --- @param localIndex integer
 --- @param x integer
 --- @param y integer
@@ -302,6 +367,17 @@ function render_star_icon_from_local_index(localIndex, x, y, scale)
     djui_hud_render_texture(starIcon, x, y, scale / (starIcon.width * MATH_DIVIDE_16), scale / (starIcon.height * MATH_DIVIDE_16))
 end
 
+--- @param localIndex integer
+--- @param x integer
+--- @param y integer
+--- @param scale integer
+function render_star_icon_from_local_index_interpolated(localIndex, prevX, prevY, prevScale, x, y, scale)
+    if localIndex == nil then localIndex = 0 end
+    local starIcon = star_icon_from_local_index(localIndex)
+    djui_hud_render_texture_interpolated(starIcon, prevX, prevY, prevScale / (starIcon.width * MATH_DIVIDE_16), prevScale / (starIcon.height * MATH_DIVIDE_16), x, y, scale / (starIcon.width * MATH_DIVIDE_16), scale / (starIcon.height * MATH_DIVIDE_16))
+end
+
+-- Health Meter --
 local TEXT_DEFAULT_METER_PREFIX = "char-select-custom-meter-"
 local TEX_DEFAULT_METER_LEFT = get_texture_info(TEXT_DEFAULT_METER_PREFIX.."left")
 local TEX_DEFAULT_METER_RIGHT = get_texture_info(TEXT_DEFAULT_METER_PREFIX.."right")
@@ -385,7 +461,7 @@ local pieTextureNames = {
 }
 
 local function render_hud_health()
-    if currChar == 1 then
+    if currChar == 1 and characterTable[1].currAlt == 1 then
         texture_override_reset("texture_power_meter_left_side")
         texture_override_reset("texture_power_meter_right_side")
 		for i = 1, 8 do
@@ -399,9 +475,9 @@ local function render_hud_health()
 			texture_override_set("texture_power_meter_left_side", textureTable.label.left)
 			texture_override_set("texture_power_meter_right_side", textureTable.label.right)
 		end
-		for i = 1, 8 do
-			texture_override_set("texture_power_meter_" .. pieTextureNames[i], textureTable.pie[i])
-		end
+        for i = 1, 8 do
+            texture_override_set("texture_power_meter_" .. pieTextureNames[i], (textureTable.pie and textureTable.pie[i]) and textureTable.pie[i] or defaultMeterInfo.pie[i])
+        end
 	else -- resets the health HUD
         texture_override_set("texture_power_meter_left_side", defaultMeterInfo.label.left)
         texture_override_set("texture_power_meter_right_side", defaultMeterInfo.label.right)
@@ -430,9 +506,9 @@ local function render_hud_act_select_course()
 end
 
 local function render_hud_mario_lives()
-    hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_LIVES)
+    og_hud_set_value(HUD_DISPLAY_FLAGS, og_hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_LIVES)
 
-    if not hud_get_element(HUD_DISPLAY_FLAG_LIVES) then return end
+    if (hud_get_value(HUD_DISPLAY_FLAGS) & HUD_DISPLAY_FLAG_LIVES) == 0 then return end
 
     local x = 22
     local y = 15 -- SCREEN_HEIGHT - 209 - 16
@@ -442,9 +518,9 @@ local function render_hud_mario_lives()
 end
 
 local function render_hud_stars()
-    hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_STAR_COUNT)
+    og_hud_set_value(HUD_DISPLAY_FLAGS, og_hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_STAR_COUNT)
 
-    if not hud_get_element(HUD_DISPLAY_FLAG_STAR_COUNT) then return end
+    if (hud_get_value(HUD_DISPLAY_FLAGS) & HUD_DISPLAY_FLAG_STAR_COUNT) == 0 then return end
     if hud_get_flash ~= nil then
         -- prevent star count from flashing outside of castle
         if gNetworkPlayers[0].currCourseNum ~= COURSE_NONE then hud_set_flash(0) end
@@ -474,9 +550,9 @@ end
 local function render_hud_camera_status()
     if not HUD_DISPLAY_CAMERA_STATUS then return end
 
-    hud_set_value(HUD_DISPLAY_FLAGS, hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_CAMERA)
+    og_hud_set_value(HUD_DISPLAY_FLAGS, og_hud_get_value(HUD_DISPLAY_FLAGS) & ~HUD_DISPLAY_FLAG_CAMERA)
 
-    if not hud_get_element(HUD_DISPLAY_FLAG_CAMERA) then return end
+    if (hud_get_value(HUD_DISPLAY_FLAGS) & HUD_DISPLAY_FLAG_CAMERA) == 0 then return end
 
     local x = djui_hud_get_screen_width() - 54
     local y = 205
@@ -656,6 +732,66 @@ function render_playerlist_and_modlist()
     end
 end
 
+-- Yes the ending stuffs is hardcoded, no there's not much of a better way to do it
+
+local DIALOG_ENDING_REPLACE_1 = "$CHARNAME!"
+local DIALOG_ENDING_REPLACE_2 = "Thank you $CHARNAME!"
+local DIALOG_ENDING_REPLACE_3 = "...for $CHARNAME..."
+
+local END_PEACH_CUTSCENE_DIALOG_1 = 6
+local END_PEACH_CUTSCENE_DIALOG_2 = 7
+local END_PEACH_CUTSCENE_DIALOG_3 = 10
+local END_PEACH_CUTSCENE_RUN_TO_CASTLE = 11
+
+local fadeLength = 5
+local function render_hud_ending_dialog()
+    djui_hud_set_font(FONT_TINY)
+    local m = gMarioStates[0]
+    if m.action ~= ACT_END_PEACH_CUTSCENE then return end
+
+    local width = djui_hud_get_screen_width()
+
+    local charName = characterTable[currChar][characterTable[currChar].currAlt].name
+    local string = ""
+    local startTime = 0
+    local endTime = 0
+    if m.actionArg == END_PEACH_CUTSCENE_DIALOG_1 and m.actionTimer >= 230 and m.actionTimer <= 275 then
+        string = DIALOG_ENDING_REPLACE_1
+        startTime = 230
+        endTime = 275
+    elseif m.actionArg == END_PEACH_CUTSCENE_DIALOG_2 and m.actionTimer >= 75 and m.actionTimer <= 130 then
+        string = DIALOG_ENDING_REPLACE_2
+        startTime = 75
+        endTime = 130
+    elseif m.actionArg == END_PEACH_CUTSCENE_DIALOG_3 and m.actionTimer >= 130 and m.actionTimer <= 195 then
+        string = DIALOG_ENDING_REPLACE_3
+        startTime = 130
+        endTime = 195
+    elseif m.actionArg == END_PEACH_CUTSCENE_RUN_TO_CASTLE and m.actionTimer >= 95 and m.actionTimer <= 150 then
+        string = DIALOG_ENDING_REPLACE_1
+        startTime = 95
+        endTime = 150
+    end
+
+    if string ~= "" then
+        djui_hud_set_color(0, 0, 0, 255)
+        djui_hud_render_rect(0, 210, width, 30)
+        string = string:gsub("$CHARNAME", charName)
+        local opacity = 255
+        local startToTimer = m.actionTimer - startTime
+        local endToTimer = endTime - m.actionTimer
+        if startToTimer >= 0 then
+            opacity = math.min(startToTimer, fadeLength)/fadeLength * 255
+        end
+        if endToTimer >= 0 and startToTimer >= fadeLength then
+            opacity = math.min(endToTimer, fadeLength)/fadeLength * 255
+        end
+        djui_hud_set_color(255, 255, 255, opacity)
+        local x = width*0.5 - djui_hud_measure_text(string)*0.5
+        djui_hud_print_text(string, x, 210, 1)
+    end
+end
+
 local function on_hud_render_behind()
     FONT_USER = djui_menu_get_font()
     djui_hud_set_resolution(RESOLUTION_N64)
@@ -665,6 +801,7 @@ local function on_hud_render_behind()
     if gNetworkPlayers[0].currActNum == 99 or gMarioStates[0].action == ACT_INTRO_CUTSCENE or hud_is_hidden() then
         return
     end
+
     if obj_get_first_with_behavior_id(id_bhvActSelector) == nil then
         render_hud_mario_lives()
         render_hud_stars()
@@ -687,6 +824,10 @@ local function on_hud_render()
 
     if obj_get_first_with_behavior_id(id_bhvActSelector) ~= nil then
         render_act_select_hud()
+    end
+
+    if gNetworkPlayers[0].currActNum == 99 then
+        render_hud_ending_dialog()
     end
 
     gServerSettings.enablePlayerList = false -- Disables the original playerlist and modlist

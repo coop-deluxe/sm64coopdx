@@ -374,7 +374,7 @@ static void level_reset_globals(void) {
 
     // clear area's level pool pointers
     for (int i = 0; i < MAX_AREAS; i++) {
-        gAreas[i].unk04 = NULL;
+        gAreas[i].root = NULL;
     }
 
     // reset mariostate spawninfo pointers
@@ -384,6 +384,9 @@ static void level_reset_globals(void) {
 
     // free models stored in dynos
     dynos_model_clear_pool(MODEL_POOL_LEVEL);
+
+    // clear the gfx command cache filled by gfx_set_command
+    dynos_smlua_clear_gfx_command_cache();
 }
 
 static void level_cmd_alloc_level_pool(void) {
@@ -436,7 +439,7 @@ static void level_cmd_begin_area(void) {
 
         sCurrAreaIndex = areaIndex;
         screenArea->areaIndex = areaIndex;
-        gAreas[areaIndex].unk04 = screenArea;
+        gAreas[areaIndex].root = screenArea;
         gAreas[areaIndex].numRedCoins = 0;
         gAreas[areaIndex].numSecrets = 0;
         gAreas[areaIndex].nextSyncID = 10;

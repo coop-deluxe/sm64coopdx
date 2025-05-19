@@ -28,7 +28,7 @@ s32 act_stop_crouching(struct MarioState *m);
 s32 act_start_crawling(struct MarioState *m);
 s32 act_stop_crawling(struct MarioState *m);
 s32 act_shockwave_bounce(struct MarioState *m);
-s32 landing_step(struct MarioState *m, s32 arg1, u32 action);
+s32 landing_step(struct MarioState *m, s32 animID, u32 action);
 s32 check_common_landing_cancels(struct MarioState *m, u32 action);
 s32 act_jump_land_stop(struct MarioState *m);
 s32 act_double_jump_land_stop(struct MarioState *m);

@@ -21,7 +21,7 @@ bool djui_rect_render(struct DjuiBase* base) {
 
     // render
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-    gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
+    gSPDisplayList(gDisplayListHead++, base->gradient ? dl_djui_menu_rect : dl_djui_simple_rect);
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     return true;

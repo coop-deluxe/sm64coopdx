@@ -2,17 +2,10 @@
 #define GFX_PC_H
 
 #include "types.h"
+#include "pc/gfx/gfx.h"
 
 struct GfxRenderingAPI;
 struct GfxWindowManagerAPI;
-
-struct GfxDimensions {
-    uint32_t width, height;
-    float aspect_ratio;
-    float x_adjust_ratio;
-};
-
-extern struct GfxDimensions gfx_current_dimensions;
 
 extern Vec3f gLightingDir;
 extern Color gLightingColor[2];

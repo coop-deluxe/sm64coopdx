@@ -8,6 +8,7 @@
 #include <string>
 
 #include <windows.h>
+#include <windowsx.h>
 #include <wrl/client.h>
 #include <dxgi1_3.h>
 #include <versionhelpers.h>
@@ -93,6 +94,8 @@ static struct {
     bool (*on_key_up)(int scancode);
     void (*on_all_keys_up)(void);
     void (*on_text_input)(char*);
+
+    void (*on_scroll)(float x, float y);
 } dxgi;
 
 static void load_dxgi_library(void) {
@@ -272,6 +275,10 @@ static void gfx_dxgi_on_text_input(wchar_t code_unit) {
     }
 }
 
+static void gfx_dxgi_on_scroll(WPARAM w_param) {
+    dxgi.on_scroll(0, GET_WHEEL_DELTA_WPARAM(w_param)/120);
+}
+
 static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_param, LPARAM l_param) {
     WCHAR wcsFileName[MAX_PATH];
     char szFileName[MAX_PATH];
@@ -308,6 +315,10 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
         case WM_CHAR: {
             // some keyboard input translated to a single UTF-16LE code unit
             gfx_dxgi_on_text_input((wchar_t)w_param);
+            return 0;
+        }
+        case WM_MOUSEWHEEL: {
+            gfx_dxgi_on_scroll(w_param);
             return 0;
         }
         case WM_SYSKEYDOWN: {
@@ -423,6 +434,10 @@ static void gfx_dxgi_set_keyboard_callbacks(bool (*on_key_down)(int scancode), b
     dxgi.on_key_up = on_key_up;
     dxgi.on_all_keys_up = on_all_keys_up;
     dxgi.on_text_input = on_text_input;
+}
+
+static void gfx_dxgi_set_scroll_callback(void (*on_scroll)(float, float)) {
+    dxgi.on_scroll = on_scroll;
 }
 
 static void gfx_dxgi_main_loop(void (*run_one_game_iter)(void)) {
@@ -778,6 +793,7 @@ void ThrowIfFailed(HRESULT res, HWND h_wnd, const char *message) {
 struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_init,
     gfx_dxgi_set_keyboard_callbacks,
+    gfx_dxgi_set_scroll_callback,
     gfx_dxgi_main_loop,
     gfx_dxgi_get_dimensions,
     gfx_dxgi_handle_events,

@@ -672,8 +672,10 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_3(FIXED_LOAD, 1, 2, 3);
     lvl_symbol_noop_3(LOAD_RAW);
     lvl_symbol_noop_3(LOAD_MIO0);
+    lvl_symbol_noop_3(LOAD_YAY0);
     lvl_symbol_1(LOAD_MARIO_HEAD, 0);
     lvl_symbol_noop_3(LOAD_MIO0_TEXTURE);
+    lvl_symbol_noop_3(LOAD_YAY0_TEXTURE);
 
     // levels
     lvl_symbol_0(INIT_LEVEL);

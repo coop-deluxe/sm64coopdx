@@ -35,7 +35,7 @@ void smlua_level_util_reset(void) {
 }
 
 void smlua_level_util_change_area(s32 areaIndex) {
-    if (areaIndex >= MIN_AREA_INDEX && areaIndex < MAX_AREAS && gAreas[areaIndex].unk04 != NULL) {
+    if (areaIndex >= MIN_AREA_INDEX && areaIndex < MAX_AREAS && gAreas[areaIndex].root != NULL) {
         change_area(areaIndex);
     }
 }

@@ -1,7 +1,7 @@
-local sNightSequences = {}
-
 -- localize functions to improve performance
-local mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math_floor,mod_storage_save_number,mod_storage_load_number,string_format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,mod_storage_exists,math.floor,mod_storage_save_number,mod_storage_load_number,string.format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+local mod_storage_remove,mod_storage_load_bool,math_floor,mod_storage_save_number,mod_storage_load_number,type,error,string_format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion = mod_storage_remove,mod_storage_load_bool,math.floor,mod_storage_save_number,mod_storage_load_number,type,error,string.format,smlua_audio_utils_replace_sequence,fade_volume_scale,set_background_music,obj_mark_for_deletion
+
+local sNightSequences = {}
 
 -- purge legacy fields
 mod_storage_remove("ampm")
@@ -10,7 +10,7 @@ mod_storage_remove("night-music")
 use24h = mod_storage_load_bool("24h")
 
 --- @type boolean
-playNightMusic = if_then_else(mod_storage_exists("night_music"), mod_storage_load_bool("night_music"), true)
+playNightMusic = mod_storage_load_bool_2("night_music")
 playingNightMusic = false
 
 --- Returns the amount of days that have passed
@@ -76,16 +76,12 @@ function set_time_scale(scale)
     gGlobalSyncTable.timeScale = scale
 end
 
---- @param time number
+--- @param time number|nil
 --- Returns the properly formatted time string
+--- * `time` is optional, if not provided then the in-game time will automatically be used
 function get_time_string(time)
     if type(time) ~= "number" then
-        error("get_time_string: Parameter 'time' must be a number")
-        if use24h then
-            return "12:00 AM"
-        else
-            return "0:00"
-        end
+        time = gGlobalSyncTable.time
     end
 
     local minutes = (time / MINUTE) % 24
@@ -163,7 +159,7 @@ function update_night_music()
     if minutes >= HOUR_SUNSET_END + 0.75 and minutes < HOUR_NIGHT_START then
         local threshold = 1 - (minutes - (HOUR_SUNSET_END + 0.75)) * 4  -- multiply by 4 because four quarters make a whole
         fade_volume_scale(SEQ_PLAYER_LEVEL, threshold * 127, 1)
-    elseif minutes >= HOUR_SUNRISE_START + 0.75 and minutes <= HOUR_SUNRISE_END then
+    elseif minutes >= HOUR_SUNRISE_START + 0.75 and minutes < HOUR_SUNRISE_END then
         local threshold = 1 - (minutes - (HOUR_SUNRISE_START + 0.75)) * 4
         fade_volume_scale(SEQ_PLAYER_LEVEL, threshold * 127, 1)
     end

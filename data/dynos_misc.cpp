@@ -1,21 +1,5 @@
 #include "dynos.cpp.h"
 extern "C" {
-#include "object_fields.h"
-#include "engine/level_script.h"
-#include "game/object_helpers.h"
-#include "game/segment2.h"
-#include "game/level_geo.h"
-#include "game/level_update.h"
-#include "game/moving_texture.h"
-#include "game/paintings.h"
-#include "game/geo_misc.h"
-#include "game/mario_misc.h"
-#include "game/mario_actions_cutscene.h"
-#include "game/screen_transition.h"
-#include "game/object_list_processor.h"
-#include "game/behavior_actions.h"
-#include "game/rendering_graph_node.h"
-#include "game/skybox.h"
 #include "game/scroll_targets.h"
 }
 
@@ -123,7 +107,7 @@ void DynOS_Add_Scroll_Target(u32 index, const char* name, u32 offset, u32 size) 
             if (node->mName.Find(name) >= 0) {
                 add_vtx_scroll_target(
                     index,
-                    offset > 0 ? &node->mData[offset] : node->mData,
+                    &node->mData[offset],
                     (size > 0 && size < node->mSize) ? size : node->mSize,
                     offset > 0
                 );

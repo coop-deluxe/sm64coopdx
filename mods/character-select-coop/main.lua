@@ -1,9 +1,26 @@
 -- name: Character Select
--- description:\\#ffff33\\-- Character Select Coop v1.12 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
+-- description:\\#ffff33\\-- Character Select Coop v1.14.1 --\n\n\\#dcdcdc\\A Library / API made to make adding and using Custom Characters as simple as possible!\nUse\\#ffff33\\ /char-select\\#dcdcdc\\ to get started!\n\nCreated by:\\#008800\\ Squishy6094\n\n\\#AAAAFF\\Updates can be found on\nCharacter Select's Github:\n\\#6666FF\\Squishy6094/character-select-coop
 -- pausable: false
 -- category: cs
 
 if incompatibleClient then return 0 end
+
+--- @param hookEventType LuaHookedEventType
+local function create_hook_wrapper(hookEventType)
+    local callbacks = {}
+
+    hook_event(hookEventType, function(...)
+        for _, func in pairs(callbacks) do
+            func(...)
+        end
+    end)
+
+    return function(func)
+        table.insert(callbacks, func)
+    end
+end
+
+cs_hook_mario_update = create_hook_wrapper(HOOK_MARIO_UPDATE)
 
 -- localize functions to improve performance - main.lua
 local mod_storage_load,tonumber,mod_storage_save,djui_popup_create,tostring,djui_chat_message_create,is_game_paused,obj_get_first_with_behavior_id,djui_hud_is_pause_menu_created,camera_freeze,hud_hide,vec3f_copy,set_mario_action,set_mario_animation,camera_unfreeze,hud_show,type,get_id_from_behavior,obj_has_behavior_id,network_local_index_from_global,obj_has_model_extended,obj_set_model_extended,nearest_player_to_object,math_random,djui_hud_set_resolution,djui_hud_set_font,djui_hud_get_screen_width,maxf,djui_hud_set_color,djui_hud_render_rect,djui_hud_measure_text,djui_hud_print_text,min,math_min,math_ceil,math_abs,math_sin,minf,djui_hud_set_rotation,table_insert,djui_hud_print_text_interpolated,math_max,play_sound,play_character_sound,string_lower = mod_storage_load,tonumber,mod_storage_save,djui_popup_create,tostring,djui_chat_message_create,is_game_paused,obj_get_first_with_behavior_id,djui_hud_is_pause_menu_created,camera_freeze,hud_hide,vec3f_copy,set_mario_action,set_mario_animation,camera_unfreeze,hud_show,type,get_id_from_behavior,obj_has_behavior_id,network_local_index_from_global,obj_has_model_extended,obj_set_model_extended,nearest_player_to_object,math.random,djui_hud_set_resolution,djui_hud_set_font,djui_hud_get_screen_width,maxf,djui_hud_set_color,djui_hud_render_rect,djui_hud_measure_text,djui_hud_print_text,min,math.min,math.ceil,math.abs,math.sin,minf,djui_hud_set_rotation,table.insert,djui_hud_print_text_interpolated,math.max,play_sound,play_character_sound,string.lower
@@ -14,6 +31,8 @@ options = false
 local credits = false
 local creditsAndTransition = false
 currChar = 1
+currCharRender = 1
+currCategory = 1
 local currOption = 1
 local creditScroll = 0
 local prevCreditScroll = creditScroll
@@ -35,6 +54,8 @@ function header_set_texture(texture)
     TEX_OVERRIDE_HEADER = texture
 end
 
+CS_ANIM_MENU = CHAR_ANIM_MAX + 1
+
 local TEXT_PREF_LOAD_NAME = "Default"
 local TEXT_PREF_LOAD_ALT = 1
 
@@ -48,6 +69,8 @@ local TEXT_PREF_LOAD_ALT = 1
 characterTable = {
     [1] = {
         saveName = "Default",
+        category = "All_CoopDX",
+        ogNum = 1,
         currAlt = 1,
         hasMoveset = false,
         locked = false,
@@ -62,7 +85,7 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 255, g = 50,  b = 50  },
             model = E_MODEL_MARIO,
-            offset = 0,
+            ogModel = E_MODEL_MARIO,
             forceChar = CT_MARIO,
             lifeIcon = gTextures.mario_head,
             starIcon = gTextures.star,
@@ -80,11 +103,17 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 50,  g = 255, b = 50  },
             model = E_MODEL_LUIGI,
-            offset = 0,
+            ogModel = E_MODEL_LUIGI,
             forceChar = CT_LUIGI,
             lifeIcon = gTextures.luigi_head,
             starIcon = gTextures.star,
             camScale = 1.0,
+            healthTexture = {
+                label = {
+                    left = get_texture_info("char-select-luigi-meter-left"),
+                    right = get_texture_info("char-select-luigi-meter-right"),
+                }
+            }
         },
         [3] = {
             name = "Toad",
@@ -97,11 +126,17 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 50,  g = 50,  b = 255 },
             model = E_MODEL_TOAD_PLAYER,
-            offset = 0,
+            ogModel = E_MODEL_TOAD_PLAYER,
             forceChar = CT_TOAD,
             lifeIcon = gTextures.toad_head,
             starIcon = gTextures.star,
             camScale = 0.8,
+            healthTexture = {
+                label = {
+                    left = get_texture_info("char-select-toad-meter-left"),
+                    right = get_texture_info("char-select-toad-meter-right"),
+                }
+            }
         },
         [4] = {
             name = "Waluigi",
@@ -114,11 +149,17 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 130, g = 25,  b = 130 },
             model = E_MODEL_WALUIGI,
-            offset = 0,
+            ogModel = E_MODEL_WALUIGI,
             forceChar = CT_WALUIGI,
             lifeIcon = gTextures.waluigi_head,
             starIcon = gTextures.star,
             camScale = 1.1,
+            healthTexture = {
+                label = {
+                    left = get_texture_info("char-select-waluigi-meter-left"),
+                    right = get_texture_info("char-select-waluigi-meter-right"),
+                }
+            }
         },
         [5] = {
             name = "Wario",
@@ -132,14 +173,56 @@ characterTable = {
             credit = "Nintendo / Coop Team",
             color = { r = 255, g = 255, b = 50  },
             model = E_MODEL_WARIO,
-            offset = 0,
+            ogModel = E_MODEL_WARIO,
             forceChar = CT_WARIO,
             lifeIcon = gTextures.wario_head,
             starIcon = gTextures.star,
             camScale = 1.0,
+            healthTexture = {
+                label = {
+                    left = get_texture_info("char-select-wario-meter-left"),
+                    right = get_texture_info("char-select-wario-meter-right"),
+                }
+            }
         },
     },
 }
+
+characterCategories = {
+    "All",
+    "CoopDX",
+    "Locked",
+}
+
+local characterTableRender = {}
+
+local function update_character_render_table()
+    local ogNum = currChar
+    currChar = 1
+    currCharRender = 1
+    local category = characterCategories[currCategory]
+    if category == nil then return false end
+    characterTableRender = {}
+    local listCount = 0
+    for i = 1, #characterTable do
+        local charCategories = string_split(characterTable[i].category, "_")
+        for c = 1, #charCategories do
+            if category == charCategories[c] and not characterTable[i].locked then
+                table_insert(characterTableRender, characterTable[i])
+                if ogNum == i then
+                    currChar = ogNum
+                    currCharRender = #characterTableRender
+                end
+            end
+        end
+    end
+    if #characterTableRender > 0 then
+        currChar = (characterTableRender[currCharRender] and characterTableRender[currCharRender].ogNum or characterTableRender[1].ogNum)
+        return true
+    else
+        return false
+    end
+end
 
 characterCaps = {}
 characterCelebrationStar = {}
@@ -148,23 +231,27 @@ characterAnims = {}
 characterMovesets = {[1] = {}}
 characterUnlock = {}
 
+tableRefNum = 0
+local function make_table_ref_num()
+    tableRefNum = tableRefNum + 1
+    return tableRefNum
+end
+
 optionTableRef = {
     -- Menu
-    openInputs = 1,
-    notification = 2,
-    menuColor = 3,
-    anims = 4,
-    inputLatency = 5,
-    showLocked = 6,
+    openInputs = make_table_ref_num(),
+    notification = make_table_ref_num(),
+    menuColor = make_table_ref_num(),
+    anims = make_table_ref_num(),
+    inputLatency = make_table_ref_num(),
     -- Characters
-    autoPalette = 7,
-    localMoveset = 8,
-    localModels = 9,
-    localVoices = 10,
+    localMoveset = make_table_ref_num(),
+    localModels = make_table_ref_num(),
+    localVoices = make_table_ref_num(),
     -- CS
-    credits = 11,
-    debugInfo = 12,
-    resetSaveData = 13,
+    credits = make_table_ref_num(),
+    debugInfo = make_table_ref_num(),
+    resetSaveData = make_table_ref_num(),
 }
 
 optionTable = {
@@ -184,7 +271,7 @@ optionTable = {
         toggleDefault = 1,
         toggleMax = 2,
         toggleNames = {"Off", "On", "Pop-ups Only"},
-        description = {"Toggles wheather Pop-ups and", "Chat Messages display"}
+        description = {"Toggles whether Pop-ups and", "Chat Messages display"}
     },
     [optionTableRef.menuColor] = {
         name = "Menu Color",
@@ -212,22 +299,6 @@ optionTable = {
         toggleMax = 2,
         toggleNames = {"Slow", "Normal", "Fast"},
         description = {"Sets how fast you scroll", "throughout the Menu"}
-    },
-    [optionTableRef.showLocked] = {
-        name = "Show Locked Chars",
-        toggle = tonumber(mod_storage_load("showLocked")),
-        toggleSaveName = "showLocked",
-        toggleDefault = 1,
-        toggleMax = 1,
-        description = {"Toggles if Locked Characters", "Display In-Menu"}
-    },
-    [optionTableRef.autoPalette] = {
-        name = "Auto-Apply Palette",
-        toggle = tonumber(mod_storage_load("autoPalette")),
-        toggleSaveName = "autoPalette",
-        toggleDefault = 1,
-        toggleMax = 1,
-        description = {"If On, Automatically", "sets your palette to the", "Character's Preset if avalible"}
     },
     [optionTableRef.localMoveset] = {
         name = "Character Moveset",
@@ -308,29 +379,6 @@ local menuColorTable = {
     { r = 50,  g = 50,  b = 50  }
 }
 
--- Default Player Adjustments
-local defaultMenuColors = {
-    [CT_MARIO] = menuColorTable[1],
-    [CT_LUIGI] = menuColorTable[4],
-    [CT_TOAD] =  menuColorTable[5],
-    [CT_WALUIGI] = menuColorTable[7],
-    [CT_WARIO] = menuColorTable[3]
-}
-local defaultModels = {
-    [CT_MARIO] = E_MODEL_MARIO,
-    [CT_LUIGI] = E_MODEL_LUIGI,
-    [CT_TOAD] = E_MODEL_TOAD_PLAYER,
-    [CT_WALUIGI] = E_MODEL_WALUIGI,
-    [CT_WARIO] = E_MODEL_WARIO
-}
-local defaultForceChar = {
-    [CT_MARIO] = "CT_MARIO",
-    [CT_LUIGI] = "CT_LUIGI",
-    [CT_TOAD] = "CT_TOAD",
-    [CT_WALUIGI] = "CT_WALUIGI",
-    [CT_WARIO] = "CT_WARIO"
-}
-
 ---@param m MarioState
 local function nullify_inputs(m)
     local c = m.controller
@@ -361,6 +409,7 @@ local prefCharColor = {r = 255, g = 50, b = 50}
 local function load_preferred_char()
     local savedChar = mod_storage_load("PrefChar")
     local savedAlt = tonumber(mod_storage_load("PrefAlt"))
+    local savedPalette = tonumber(mod_storage_load("PrefPalette"))
     if savedChar == nil or savedChar == "" then
         mod_storage_save("PrefChar", "Default")
         savedChar = "Default"
@@ -369,29 +418,38 @@ local function load_preferred_char()
         mod_storage_save("PrefAlt", "1")
         savedAlt = 1
     end
-    if savedChar ~= nil and savedChar ~= "Default" then
+    if savedPalette == nil then
+        local paletteSave = savedChar ~= "Default" and 1 or 0
+        mod_storage_save("PrefAlt", tostring(paletteSave))
+        savedPalette = paletteSave
+    end
+    if savedChar ~= "Default" and optionTable[optionTableRef.localModels].toggle == 1 then
         for i = 2, #characterTable do
             local char = characterTable[i]
             if char.saveName == savedChar and not char.locked then
                 currChar = i
+                currCharRender = i
                 if savedAlt > 0 and savedAlt <= #char then
                     char.currAlt = savedAlt
                 end
-                if optionTable[optionTableRef.localModels].toggle == 1 then
-                    if optionTable[optionTableRef.notification].toggle > 0 then
-                        djui_popup_create('Character Select:\nYour Preferred Character\n"' .. string_underscore_to_space(char[char.currAlt].name) .. '"\nwas applied successfully!', 4)
-                    end
+                local model = characterTable[currChar][savedAlt].model
+                if characterColorPresets[model] ~= nil then
+                    gCSPlayers[0].presetPalette = savedPalette
+                    characterColorPresets[model].currPalette = savedPalette
+                end
+                if optionTable[optionTableRef.notification].toggle > 0 then
+                    djui_popup_create('Character Select:\nYour Preferred Character\n"' .. string_underscore_to_space(char[char.currAlt].name) .. '"\nwas applied successfully!', 4)
                 end
                 break
             end
         end
     end
-
+    
     characterTable[1].currAlt = gNetworkPlayers[0].modelIndex + 1
 
     local savedCharColors = mod_storage_load("PrefCharColor")
     if savedCharColors ~= nil and savedCharColors ~= "" then
-        local savedCharColorsTable = string_split(string_underscore_to_space(savedCharColors))
+        local savedCharColorsTable = string_split(savedCharColors, "_")
         prefCharColor = {
             r = tonumber(savedCharColorsTable[1]),
             g = tonumber(savedCharColorsTable[2]),
@@ -408,12 +466,14 @@ local function load_preferred_char()
     end
     TEXT_PREF_LOAD_NAME = savedChar
     TEXT_PREF_LOAD_ALT = savedAlt
+    update_character_render_table()
 end
 
 local function mod_storage_save_pref_char(charTable)
     mod_storage_save("PrefChar", charTable.saveName)
     mod_storage_save("PrefAlt", tostring(charTable.currAlt))
     mod_storage_save("PrefCharColor", tostring(charTable[charTable.currAlt].color.r) .. "_" .. tostring(charTable[charTable.currAlt].color.g) .. "_" .. tostring(charTable[charTable.currAlt].color.b))
+    mod_storage_save("PrefPalette", tostring(gCSPlayers[0].presetPalette))
     TEXT_PREF_LOAD_NAME = charTable.saveName
     TEXT_PREF_LOAD_ALT = charTable.currAlt
     prefCharColor = charTable[charTable.currAlt].color
@@ -499,6 +559,7 @@ local function menu_is_allowed(m)
     return true
 end
 
+--[[
 local function get_next_unlocked_char()
     for i = currChar, #characterTable do
         if not characterTable[i].locked then
@@ -516,20 +577,15 @@ local function get_last_unlocked_char()
     end
     return 1
 end
+]]
 
 -------------------
 -- Model Handler --
 -------------------
 
 local stallFrame = 0
-local noLoop = false
 
-local CUTSCENE_CS_MENU = 0xFA
-
-local ignoredSurfaces = {
-    SURFACE_BURNING, SURFACE_QUICKSAND, SURFACE_INSTANT_QUICKSAND, SURFACE_INSTANT_MOVING_QUICKSAND, SURFACE_DEEP_MOVING_QUICKSAND, SURFACE_INSTANT_QUICKSAND, SURFACE_DEEP_QUICKSAND, SURFACE_SHALLOW_MOVING_QUICKSAND,
-    SURFACE_SHALLOW_QUICKSAND, SURFACE_WARP, SURFACE_LOOK_UP_WARP, SURFACE_WOBBLING_WARP, SURFACE_INSTANT_WARP_1B, SURFACE_INSTANT_WARP_1C, SURFACE_INSTANT_WARP_1D, SURFACE_INSTANT_WARP_1E
-}
+CUTSCENE_CS_MENU = 0xFA
 
 local TYPE_FUNCTION = "function"
 local TYPE_BOOLEAN = "boolean"
@@ -539,58 +595,13 @@ local TYPE_TABLE = "table"
 
 local MATH_PI = math.pi
 
-local menuActBlacklist = {
-    -- Star Acts
-    [ACT_FALL_AFTER_STAR_GRAB] = true,
-    [ACT_STAR_DANCE_EXIT] = true,
-    [ACT_STAR_DANCE_NO_EXIT] = true,
-    [ACT_STAR_DANCE_WATER] = true,
-    -- Key Acts
-    [ACT_UNLOCKING_KEY_DOOR] = true,
-    [ACT_UNLOCKING_STAR_DOOR] = true,
-    -- Cutscene Acts
-    [ACT_INTRO_CUTSCENE] = true,
-    [ACT_CREDITS_CUTSCENE] = true,
-    [ACT_WARP_DOOR_SPAWN] = true,
-    [ACT_PULLING_DOOR] = true,
-    [ACT_PUSHING_DOOR] = true,
-    [ACT_UNLOCKING_KEY_DOOR] = true,
-    [ACT_UNLOCKING_STAR_DOOR] = true,
-    -- Dialog Acts
-    [ACT_READING_NPC_DIALOG] = true,
-    [ACT_WAITING_FOR_DIALOG] = true,
-    [ACT_EXIT_LAND_SAVE_DIALOG] = true,
-    [ACT_READING_AUTOMATIC_DIALOG] = true,
-}
-
-local faceAngle = 0
-local function anim_generic_idle_offset(offset, animFrame)
-    return offset - math.max((math.sin((animFrame)/24*MATH_PI)+1.1)*2, 1.8)
-end
-local altOffsetAnim = {
-    [MARIO_ANIM_CROUCHING] = true,
-    [ACT_READING_AUTOMATIC_DIALOG] = true,
-    [MARIO_ANIM_FALL_OVER_BACKWARDS] = true,
-    [MARIO_ANIM_SLIDE_KICK] = false,
-    [MARIO_ANIM_GROUND_POUND] = false,
-    [MARIO_ANIM_GROUND_POUND_LANDING] = false,
-    [MARIO_ANIM_SLEEP_IDLE] = false,
-    [MARIO_ANIM_SLEEP_LYING] = false,
-    [MARIO_ANIM_SLEEP_START_LYING] = false,
-    [MARIO_ANIM_IDLE_HEAD_LEFT] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
-    [MARIO_ANIM_IDLE_HEAD_CENTER] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
-    [MARIO_ANIM_IDLE_HEAD_RIGHT] = function (offset, animFrame)
-        return anim_generic_idle_offset(offset, animFrame)
-    end,
-}
-
 local prevBaseCharFrame = gNetworkPlayers[0].modelIndex
 local prevAnim = 0
 local animTimer = 0
+local faceAngle = 0
+local eyeState = MARIO_EYES_OPEN
+local prevFOV = 40
+local menuFOV = 45
 --- @param m MarioState
 local function mario_update(m)
     local np = gNetworkPlayers[m.playerIndex]
@@ -618,32 +629,27 @@ local function mario_update(m)
         end
         prevBaseCharFrame = np.modelIndex
 
-        local defaultTable = characterTable[1]
+        if optionTable[optionTableRef.localModels].toggle == 0 then
+            currCategory = 1
+            currChar = 1
+            currCharRender = 1
+        end
+
         local charTable = characterTable[currChar]
         p.saveName = charTable.saveName
         p.currAlt = charTable.currAlt
-
-        if optionTable[optionTableRef.localModels].toggle > 0 then
-            p.modelId = charTable[charTable.currAlt].model
-            if charTable[charTable.currAlt].forceChar ~= nil then
-                p.forceChar = charTable[charTable.currAlt].forceChar
-            end
-            m.marioObj.hookRender = 1
-        else
-            p.modelId = nil
-            p.forceChar = defaultTable.forceChar
-            currChar = 1
+    
+        p.modelId = charTable[charTable.currAlt].model
+        if charTable[charTable.currAlt].forceChar ~= nil then
+            p.forceChar = charTable[charTable.currAlt].forceChar
         end
-
-        p.offset = charTable[charTable.currAlt].offset
+        p.modelEditOffset = charTable[charTable.currAlt].model - charTable[charTable.currAlt].ogModel
+        m.marioObj.hookRender = 1
 
         if menuAndTransition then
             --play_secondary_music(0, 0, 0.5, 0)
             camera_freeze()
             hud_hide()
-            if _G.PersonalStarCounter then
-                _G.PersonalStarCounter.hide_star_counters(true)
-            end
             if m.area.camera.cutscene == 0 then
                 m.area.camera.cutscene = CUTSCENE_CS_MENU
             end
@@ -653,27 +659,30 @@ local function mario_update(m)
                 y = m.pos.y + 120 * camScale,
                 z = m.pos.z,
             }
+            set_override_fov(menuFOV)
             vec3f_copy(gLakituState.focus, focusPos)
+            m.marioBodyState.eyeState = eyeState
             gLakituState.pos.x = m.pos.x + sins(faceAngle) * 500 * camScale
             gLakituState.pos.y = m.pos.y + 100 * camScale
             gLakituState.pos.z = m.pos.z + coss(faceAngle) * 500 * camScale
-
-            if m.forwardVel == 0 and m.pos.y == m.floorHeight and not ignoredSurfaces[m.floor.type] and m.health > 255 and not menuActBlacklist[m.action] then
-                set_mario_action(m, ACT_IDLE, 0)
-                set_mario_animation(m, MARIO_ANIM_FIRST_PERSON)
+            set_window_title("Character Select v".. MOD_VERSION_STRING .. " - " .. string_underscore_to_space(charTable[charTable.currAlt].name) .. " (CoopDX)")
+            p.inMenu = true
+        else
+            if p.inMenu then
+                --stop_secondary_music(50)
+                camera_unfreeze()
+                hud_show()
+                set_override_fov(prevFOV)
+                if m.area.camera.cutscene == CUTSCENE_CS_MENU then
+                    m.area.camera.cutscene = CUTSCENE_STOP
+                end
+                p.inMenu = false
+                reset_window_title()
             end
-            noLoop = false
-        elseif not noLoop then
-            --stop_secondary_music(50)
-            camera_unfreeze()
-            hud_show()
-            if _G.PersonalStarCounter then
-                _G.PersonalStarCounter.hide_star_counters(false)
+            local currFOV = get_current_fov()
+            if currFOV ~= menuFOV then
+                prevFOV = currFOV
             end
-            if m.area.camera.cutscene == CUTSCENE_CS_MENU then
-                m.area.camera.cutscene = CUTSCENE_STOP
-            end
-            noLoop = true
         end
 
         -- Check for Locked Chars
@@ -685,14 +694,17 @@ local function mario_update(m)
                 if type(unlock) == TYPE_FUNCTION then
                     if unlock() then
                         currChar.locked = false
-                        if stallFrame == 3 and notif then
-                            if optionTable[optionTableRef.notification].toggle > 0 then
-                                djui_popup_create('Character Select:\nUnlocked '..currChar.name..'\nas a Playable Character!', 3)
-                            end
-                        end
                     end
                 elseif type(unlock) == TYPE_BOOLEAN then
                     currChar.locked = not unlock
+                end
+                if not currChar.locked then -- Character was unlocked
+                    update_character_render_table()
+                    if stallFrame == 3 and notif then
+                        if optionTable[optionTableRef.notification].toggle > 0 then
+                            djui_popup_create('Character Select:\nUnlocked '..tostring(currChar[1].name)..'\nas a Playable Character!', 3)
+                        end
+                    end
                 end
             end
         end
@@ -712,6 +724,14 @@ local function mario_update(m)
         for i = 1, #optionTable do
             optionTable[i].optionBeingSet = false
         end
+
+        p.movesetToggle = optionTable[optionTableRef.localMoveset].toggle ~= 0
+    end
+    
+    if p.inMenu and m.action & ACT_FLAG_ALLOW_FIRST_PERSON ~= 0 then
+        set_mario_animation(m, (characterAnims[p.modelId] and characterAnims[p.modelId][CS_ANIM_MENU]) and CS_ANIM_MENU or MARIO_ANIM_IDLE_HEAD_LEFT)
+        set_anim_to_frame(m, 0)
+        m.marioObj.header.gfx.angle.y = m.faceAngle.y
     end
 
     local marioGfx = m.marioObj.header.gfx
@@ -721,28 +741,7 @@ local function mario_update(m)
     end
     animTimer = animTimer + 1
         
-    
-    local networkOffset = p.offset
-    local forceChar = p.forceChar
-    if networkOffset ~= 0 and networkOffset ~= nil then
-        if m.playerIndex == 0 then
-        end
-        local offset = altOffsetAnim[marioGfx.animInfo.animID]
-        if offset ~= false then
-            if type(offset) == TYPE_FUNCTION then
-                marioGfx.pos.y = marioGfx.pos.y + offset(networkOffset, marioGfx.animInfo.animFrame)
-            elseif type(offset) == TYPE_TABLE then
-                marioGfx.pos.y = marioGfx.pos.y - offset[(math.min(animTimer, #offset))]*networkOffset + networkOffset
-            elseif type(offset) == TYPE_INTEGER then
-                marioGfx.pos.y = marioGfx.pos.y + networkOffset*offset
-            else
-                marioGfx.pos.y = (altOffsetAnim[marioGfx.animInfo.animID] and m.pos.y or marioGfx.pos.y) + networkOffset
-            end
-        end
-    end
-    if forceChar ~= nil then
-        np.overrideModelIndex = forceChar
-    end
+    np.overrideModelIndex = p.forceChar ~= nil and p.forceChar or CT_MARIO
 
     -- Character Animations
     if characterAnims[p.modelId] then
@@ -772,26 +771,40 @@ local function on_star_or_key_grab(m, o, type)
     end
 end
 
-local settingModel
 function set_model(o, model)
-    if settingModel then return end
     if optionTable[optionTableRef.localModels].toggle == 0 then return end
+
+    -- Player Models
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
         local i = network_local_index_from_global(o.globalPlayerIndex)
-        if gCSPlayers[i].modelId ~= nil and obj_has_model_extended(o, gCSPlayers[i].modelId) == 0 then
-            settingModel = true
-            obj_set_model_extended(o, gCSPlayers[i].modelId)
-            settingModel = false
+        local prevModelData = obj_get_model_id_extended(o)
+        local localModelData = nil
+        for c = 1, #characterTable do
+            if gCSPlayers[i].saveName == characterTable[c].saveName then
+                if gCSPlayers[i].currAlt <= #characterTable[c] then
+                    localModelData = characterTable[c][gCSPlayers[i].currAlt].ogModel + gCSPlayers[i].modelEditOffset
+                end
+            end
+        end
+        if localModelData ~= nil then
+            if obj_has_model_extended(o, localModelData) == 0 then
+                obj_set_model_extended(o, localModelData)
+            end
+        else
+            -- Original/Backup
+            if gCSPlayers[i].modelId ~= nil and obj_has_model_extended(o, gCSPlayers[i].modelId) == 0 then
+                obj_set_model_extended(o, gCSPlayers[i].modelId)
+            end
         end
         return
     end
+
+    -- Star Models
     if obj_has_behavior_id(o, id_bhvCelebrationStar) ~= 0 and o.parentObj ~= nil then
         local i = network_local_index_from_global(o.parentObj.globalPlayerIndex)
         local starModel = characterCelebrationStar[gCSPlayers[i].modelId]
         if gCSPlayers[i].modelId ~= nil and starModel ~= nil and obj_has_model_extended(o, starModel) == 0 and not BowserKey then
-            settingModel = true
             obj_set_model_extended(o, starModel)
-            settingModel = false
         end
         return
     end
@@ -819,15 +832,14 @@ function set_model(o, model)
                 capModel = capModels.metalWing
             end
             if capModel ~= E_MODEL_NONE and capModel ~= E_MODEL_ERROR_MODEL and capModel ~= nil then
-                settingModel = true
                 obj_set_model_extended(o, capModel)
-                settingModel = false
             end
         end
     end
 end
 
-hook_event(HOOK_MARIO_UPDATE, mario_update)
+--hook_event(HOOK_MARIO_UPDATE, mario_update)
+cs_hook_mario_update(mario_update)
 hook_event(HOOK_ON_INTERACT, on_star_or_key_grab)
 hook_event(HOOK_OBJECT_SET_MODEL, set_model)
 
@@ -854,10 +866,11 @@ local yearsOfCS = get_date_and_time().year - 123 -- Zero years as of 2023
 local TEXT_VERSION = "Version: " .. MOD_VERSION_STRING .. " | sm64coopdx" .. (seasonalEvent == SEASON_EVENT_BIRTHDAY and (" | " .. tostring(yearsOfCS) .. " year" .. (yearsOfCS > 1 and "s" or "") .. " of Character Select!") or "")
 local TEXT_RATIO_UNSUPPORTED = "Your Current Aspect-Ratio isn't Supported!"
 local TEXT_DESCRIPTION = "Character Description:"
-local TEXT_PREF_SAVE = "Press A to Set as Preferred Character"
-local TEXT_PREF_SAVE_AND_PALETTE = "A - Set Preference | Y - Toggle Palette"
+local TEXT_PREF_SAVE = "Preferred Char (A)"
+local TEXT_PREF_PALETTE = "Toggle Palette (Y)"
+local TEXT_MOVESET_INFO = "Moveset Info (Z)"
 local TEXT_PAUSE_Z_OPEN = "Z Button - Character Select"
-local TEXT_PAUSE_UNAVALIBLE = "Character Select is Unavalible"
+local TEXT_PAUSE_UNAVAILABLE = "Character Select is Unavailable"
 local TEXT_PAUSE_CURR_CHAR = "Current Character: "
 local TEXT_MOVESET_RESTRICTED = "Movesets are Restricted"
 local TEXT_PALETTE_RESTRICTED = "Palettes are Restricted"
@@ -876,7 +889,6 @@ local TEXT_DESCRIPTION_SHORT = "Description:"
 local TEXT_LIFE_ICON = "Life Icon:"
 local TEXT_STAR_ICON = "Star Icon:"
 local TEXT_FORCED_CHAR = "Forced: "
-local TEXT_OFFSET = "Offset: "
 local TEXT_TABLE_POS = "Table Position: "
 local TEXT_PALETTE = "Palette: "
 
@@ -886,11 +898,19 @@ local TEXT_MENU_CLOSE = "Press B to Exit Menu"
 local TEXT_OPTIONS_SELECT = "A - Select | B - Exit  "
 local TEXT_LOCAL_MODEL_OFF = "Locally Display Models is Off"
 local TEXT_LOCAL_MODEL_OFF_OPTIONS = "You can turn it back on in the Options Menu"
+local TEXT_LOCAL_MODEL_ERROR = "Failed to find a Character Model"
+local TEXT_LOCAL_MODEL_ERROR_FIX = "Please Verify the Integrity of the Pack!"
 
 --Credit Text
 local TEXT_CREDITS_HEADER = "Credits"
 
-menuColor = characterTable[1][1].color
+local forceCharStrings = {
+    [CT_MARIO] = "CT_MARIO",
+    [CT_LUIGI] = "CT_LUIGI",
+    [CT_TOAD] = "CT_TOAD",
+    [CT_WALUIGI] = "CT_WALUIGI",
+    [CT_WARIO] = "CT_WARIO"
+}
 
 local MATH_DIVIDE_320 = 1/320
 local MATH_DIVIDE_64 = 1/64
@@ -898,16 +918,44 @@ local MATH_DIVIDE_32 = 1/32
 local MATH_DIVIDE_30 = 1/30
 local MATH_DIVIDE_16 = 1/16
 
+local targetMenuColor = {r = 0 , g = 0, b = 0}
+menuColor = targetMenuColor
+local menuColorHalf = menuColor
+local transSpeed = 0.1
+local prevBindText = ""
+local bindText = 1
+local bindTextTimerLoop = 150
+local bindTextTimer = 0
+local bindTextOpacity = -255
 function update_menu_color()
-    if optionTable[optionTableRef.menuColor].toggle > 1 then
-        menuColor = menuColorTable[optionTable[optionTableRef.menuColor].toggle - 1]
-    elseif optionTable[optionTableRef.menuColor].toggle == 1 then
-        optionTable[optionTableRef.menuColor].toggleNames[2] = string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. ((TEXT_PREF_LOAD_ALT ~= 1 and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "") .. " (Pref)"
-        menuColor = prefCharColor
-    elseif characterTable[currChar] ~= nil then
-        local char = characterTable[currChar]
-        menuColor = char[char.currAlt].color
+    if optionTable[optionTableRef.menuColor].toggle == nil then return end
+    if optionTable[optionTableRef.localModels].toggle == 1 then
+        if optionTable[optionTableRef.menuColor].toggle > 1 then
+            targetMenuColor = menuColorTable[optionTable[optionTableRef.menuColor].toggle - 1]
+        elseif optionTable[optionTableRef.menuColor].toggle == 1 then
+            optionTable[optionTableRef.menuColor].toggleNames[2] = string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. ((TEXT_PREF_LOAD_ALT ~= 1 and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "") .. " (Pref)"
+            targetMenuColor = prefCharColor
+        elseif characterTable[currChar] ~= nil then
+            local char = characterTable[currChar]
+            targetMenuColor = char[char.currAlt].color
+        end
+    else
+        targetMenuColor = menuColorTable[9]
     end
+    if optionTable[optionTableRef.anims].toggle > 0 then
+        menuColor.r = lerp(menuColor.r, targetMenuColor.r, transSpeed)
+        menuColor.g = lerp(menuColor.g, targetMenuColor.g, transSpeed)
+        menuColor.b = lerp(menuColor.b, targetMenuColor.b, transSpeed)
+    else
+        menuColor.r = targetMenuColor.r
+        menuColor.g = targetMenuColor.g
+        menuColor.b = targetMenuColor.b
+    end
+    menuColorHalf = {
+        r = menuColor.r * 0.5 + 127,
+        g = menuColor.g * 0.5 + 127,
+        b = menuColor.b * 0.5 + 127
+    }
     return menuColor
 end
 
@@ -917,19 +965,24 @@ local function djui_hud_render_triangle(x, y, width, height)
 end
 
 local buttonAltAnim = 0
+local menuOpacity = 245
+local menuText = {}
 local function on_hud_render()
     local FONT_USER = djui_menu_get_font()
-    djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_ALIASED)
-
-    local width = djui_hud_get_screen_width() + 1.4
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+    local djuiWidth = djui_hud_get_screen_width()
+    local djuiHeight = djui_hud_get_screen_height()
+    djui_hud_set_resolution(RESOLUTION_N64)
+    local width = djuiWidth * (240/djuiHeight) -- Get accurate, unrounded width
     local height = 240
     local widthHalf = width * 0.5
     local heightHalf = height * 0.5
-    local widthScale = maxf(width, 321.4) * MATH_DIVIDE_320
+    local widthScale = maxf(width, 320) * MATH_DIVIDE_320
+
+    update_menu_color()
 
     if menuAndTransition then
-        update_menu_color()
 
         if optionTable[optionTableRef.localModels].toggle == 0 then
             djui_hud_set_color(0, 0, 0, 200)
@@ -939,19 +992,24 @@ local function on_hud_render()
             djui_hud_print_text(TEXT_LOCAL_MODEL_OFF_OPTIONS, widthHalf - djui_hud_measure_text(TEXT_LOCAL_MODEL_OFF_OPTIONS) * 0.1 * widthScale, heightHalf + 10 * widthScale, 0.2 * widthScale)
         end
 
+        if characterTable[currChar][characterTable[currChar].currAlt].model == E_MODEL_ARMATURE then
+            djui_hud_set_color(0, 0, 0, 200)
+            djui_hud_render_rect(0, 0, width, height)
+            djui_hud_set_color(255, 255, 255, 255)
+            djui_hud_print_text(TEXT_LOCAL_MODEL_ERROR, widthHalf - djui_hud_measure_text(TEXT_LOCAL_MODEL_ERROR) * 0.15 * widthScale, heightHalf, 0.3 * widthScale)
+            djui_hud_print_text(TEXT_LOCAL_MODEL_ERROR_FIX, widthHalf - djui_hud_measure_text(TEXT_LOCAL_MODEL_ERROR_FIX) * 0.1 * widthScale, heightHalf + 10 * widthScale, 0.2 * widthScale)
+        end
+
         local x = 135 * widthScale * 0.8
 
         -- Render All Black Squares Behind Below API
+        djui_hud_set_color(menuColorHalf.r * 0.1, menuColorHalf.g * 0.1, menuColorHalf.b * 0.1, menuOpacity)
         -- Description
-        djui_hud_set_color(0, 0, 0, 255)
-        djui_hud_render_rect(width - x + 2, 2, x - 4, height - 4)
+        djui_hud_render_rect(width - x + 2, 2 + 46, x - 4, height - 4 - 46)
         -- Buttons
-        djui_hud_set_color(0, 0, 0, 255)
-        djui_hud_render_rect(2, 2, x - 4, height - 4)
+        djui_hud_render_rect(2, 2 + 46, x - 4, height - 4 - 46)
         -- Header
-        djui_hud_set_color(0, 0, 0, 255)
         djui_hud_render_rect(2, 2, width - 4, 46)
-
 
         -- API Rendering (Below Text)
         if #renderInMenuTable.back > 0 then
@@ -965,6 +1023,7 @@ local function on_hud_render()
         djui_hud_render_rect(width - x, 50, 2, height - 50)
         djui_hud_render_rect(width - x, height - 2, x, 2)
         djui_hud_render_rect(width - 2, 50, 2, height - 50)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         djui_hud_set_font(FONT_ALIASED)
         local character = characterTable[currChar]
         local TEXT_SAVE_NAME = "Save Name: " .. character.saveName
@@ -972,21 +1031,13 @@ local function on_hud_render()
         local TEXT_ALT = "Alt: " .. character.currAlt .. "/" .. #character
         character = characterTable[currChar][character.currAlt]
         local paletteCount = characterColorPresets[gCSPlayers[0].modelId] ~= nil and #characterColorPresets[gCSPlayers[0].modelId] or 0
+        local currPaletteTable = characterColorPresets[gCSPlayers[0].modelId] and characterColorPresets[gCSPlayers[0].modelId] or {currPalette = 0}
         if optionTable[optionTableRef.debugInfo].toggle == 0 then
             -- Actual Description --
             local TEXT_NAME = string_underscore_to_space(character.name)
             local TEXT_CREDIT = "Credit: " .. character.credit
             local TEXT_DESCRIPTION_TABLE = character.description
-            local TEXT_PRESET = "Preset Character Palette: "..(gCSPlayers[0].presetPalette > 0 and (paletteCount > 1 and "("..gCSPlayers[0].presetPalette.."/"..paletteCount..")" or "On") or "Off")
-            local TEXT_PREF = "Preferred Character:"
-            local TEXT_PREF_LOAD_NAME = string_underscore_to_space(TEXT_PREF_LOAD_NAME)
-            if djui_hud_measure_text(TEXT_PREF_LOAD_NAME) / widthScale > 110 then
-                TEXT_PREF = "Preferred Char:"
-            end
-            if djui_hud_measure_text(TEXT_PREF_LOAD_NAME) / widthScale > 164 then
-                TEXT_PREF = "Pref Char:"
-            end
-            TEXT_PREF = TEXT_PREF .. ' "' .. TEXT_PREF_LOAD_NAME .. '"' .. ((TEXT_PREF_LOAD_ALT ~= 1 and TEXT_PREF_LOAD_NAME ~= "Default" and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "")
+            local TEXT_PREF_LOAD_NAME = string_underscore_to_space(TEXT_PREF_LOAD_NAME) .. ((TEXT_PREF_LOAD_ALT ~= 1 and TEXT_PREF_LOAD_NAME ~= "Default" and currChar ~= 1) and " ("..TEXT_PREF_LOAD_ALT..")" or "")
 
             local textX = x * 0.5
             djui_hud_print_text(TEXT_NAME, width - textX - djui_hud_measure_text(TEXT_NAME) * 0.3, 55, 0.6)
@@ -1013,16 +1064,46 @@ local function on_hud_render()
                 end
             end
 
-            local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[gMarioStates[0].character.type]
-            djui_hud_print_text(TEXT_PREF, width - textX - djui_hud_measure_text(TEXT_PREF) * 0.15, height - 22, 0.3)
+            menuText = {
+                TEXT_PREF_SAVE .. " - " .. TEXT_PREF_LOAD_NAME
+            }
+            local modelId = gCSPlayers[0].modelId
+            local TEXT_PRESET_TOGGLE = ((currPaletteTable[currPaletteTable.currPalette] ~= nil and currPaletteTable[currPaletteTable.currPalette].name ~= nil) and (currPaletteTable[currPaletteTable.currPalette].name .. " - ") or "") .. ((paletteCount > 1 and "("..currPaletteTable.currPalette.."/"..paletteCount..")" or (currPaletteTable.currPalette > 0 and "On" or "Off")) or "Off")
             if characterColorPresets[modelId] and not stopPalettes then
-                djui_hud_print_text(TEXT_PRESET, width - textX - djui_hud_measure_text(TEXT_PRESET) * 0.15, height - 31, 0.3)
-                djui_hud_set_font(FONT_TINY)
-                djui_hud_print_text(TEXT_PREF_SAVE_AND_PALETTE, width - textX - djui_hud_measure_text(TEXT_PREF_SAVE_AND_PALETTE) * 0.25, height - 13, 0.5)
-            else
-                djui_hud_set_font(FONT_TINY)
-                djui_hud_print_text(TEXT_PREF_SAVE, width - textX - djui_hud_measure_text(TEXT_PREF_SAVE) * 0.25, height - 13, 0.5)
+                table_insert(menuText, TEXT_PREF_PALETTE .. " - " .. TEXT_PRESET_TOGGLE)
+            elseif stopPalettes then
+                table_insert(menuText, TEXT_PALETTE_RESTRICTED)
             end
+            if #menuText > 1 then
+                bindTextTimer = (bindTextTimer + 1)%(bindTextTimerLoop)
+            end
+            if bindTextTimer == 0 then
+                bindText = bindText + 1
+                bindTextOpacity = -254
+            end
+            if bindText > #menuText or not menuText[bindText] then
+                bindText = 1
+            end
+            if menuText[bindText] ~= prevBindText and bindTextOpacity == -255 then
+                bindTextOpacity = -254
+            end
+            if bindTextOpacity > -255 and bindTextOpacity < 255 then
+                bindTextOpacity = math.min(bindTextOpacity + 25, 255)
+                if bindTextOpacity == 255 then
+                    bindTextOpacity = -255
+                    prevBindText = menuText[bindText]
+                end
+            end
+            --local bindTextOpacity = clamp(math.abs(math.sin(bindTextTimer*MATH_PI/bindTextTimerLoop)), 0, 0.2) * 5 * 255
+            local fadeOut = math_abs(clamp(bindTextOpacity, -255, 0))
+            local fadeIn = math_abs(clamp(bindTextOpacity, 0, 255))
+            local bindTextScale = math.min((x - 10)/(djui_hud_measure_text(menuText[bindText]) * 0.3), 1)*0.3
+            local prevBindTextScale = math.min((x - 10)/(djui_hud_measure_text(prevBindText) * 0.3), 1)*0.3
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, fadeOut)
+            djui_hud_print_text(prevBindText, width - textX - djui_hud_measure_text(prevBindText) * prevBindTextScale*0.5, height - 15, prevBindTextScale)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, fadeIn)
+            djui_hud_print_text(menuText[bindText], width - textX - djui_hud_measure_text(menuText[bindText]) * bindTextScale*0.5, height - 15, bindTextScale)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         else
             -- Debugging Info --
             local TEXT_NAME = "Name: " .. character.name
@@ -1032,7 +1113,7 @@ local function on_hud_render()
             local TEX_LIFE_ICON = character.lifeIcon
             local TEX_STAR_ICON = character.starIcon
             local TEXT_SCALE = "Camera Scale: " .. character.camScale
-            local TEXT_PRESET = "Preset Palette: ("..gCSPlayers[0].presetPalette.."/"..paletteCount..")"
+            local TEXT_PRESET = "Preset Palette: ("..currPaletteTable.currPalette.."/"..paletteCount..")"
             local TEXT_PREF = "Preferred: " .. TEXT_PREF_LOAD_NAME .. " ("..TEXT_PREF_LOAD_ALT..")"
             local TEXT_PREF_COLOR = "Pref Color: R-" .. prefCharColor.r .. ", G-" .. prefCharColor.g .. ", B-" .. prefCharColor.b
 
@@ -1072,7 +1153,7 @@ local function on_hud_render()
             end
             djui_hud_set_color(character.color.r, character.color.g, character.color.b, 255)
             djui_hud_print_text(TEXT_COLOR, width - x + 8, y, 0.5)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             y = y + 7
             if type(TEX_LIFE_ICON) ~= TYPE_STRING then
                 djui_hud_print_text(TEXT_LIFE_ICON .. "    (" .. TEX_LIFE_ICON.width .. "x" .. TEX_LIFE_ICON.height .. ")", width - x + 8, y, 0.5)
@@ -1086,44 +1167,40 @@ local function on_hud_render()
                 djui_hud_set_font(FONT_TINY)
             end
             y = y + 7
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             djui_hud_print_text(TEXT_STAR_ICON .. "    (" .. TEX_STAR_ICON.width .. "x" .. TEX_STAR_ICON.height .. ")", width - x + 8, y, 0.5)
             djui_hud_set_color(255, 255, 255, 255)
             djui_hud_render_texture(TEX_STAR_ICON, width - x + 35, y + 1, 0.4 / (TEX_STAR_ICON.width * MATH_DIVIDE_16), 0.4 / (TEX_STAR_ICON.height * MATH_DIVIDE_16))
             y = y + 7
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
-            djui_hud_print_text(TEXT_FORCED_CHAR .. defaultForceChar[character.forceChar], width - x + 8, y, 0.5)
-            y = y + 7
-            djui_hud_print_text(TEXT_OFFSET .. character.offset, width - x + 8, y, 0.5)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
+            djui_hud_print_text(TEXT_FORCED_CHAR .. forceCharStrings[character.forceChar], width - x + 8, y, 0.5)
             y = y + 7
             djui_hud_print_text(TEXT_TABLE_POS .. currChar, width - x + 8, y, 0.5)
             y = y + 7
             djui_hud_print_text(TEXT_SCALE, width - x + 8, y, 0.5)
-            local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[gMarioStates[0].character.type]
+            local modelId = gCSPlayers[0].modelId
             y = y + 7
             if characterColorPresets[modelId] ~= nil then
                 djui_hud_print_text(TEXT_PALETTE, width - x + 8, y, 0.5)
                 local x = x - djui_hud_measure_text(TEXT_PALETTE)*0.5
-                local currPalette = gCSPlayers[0].presetPalette > 0 and gCSPlayers[0].presetPalette or 1
-                local paletteTable = characterColorPresets[modelId][currPalette]
+                local currPalette = currPaletteTable.currPalette > 0 and currPaletteTable.currPalette or 1
+                local paletteTable = currPaletteTable[currPalette]
                 for i = 0, #paletteTable do
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_render_rect(width - x + 6.5 + (6.5 * i), y + 1.5, 6, 6)
                     djui_hud_set_color(paletteTable[i].r, paletteTable[i].g, paletteTable[i].b, 255)
                     djui_hud_render_rect(width - x + 7 + (6.5 * i), y + 2, 5, 5)
                 end
                 y = y + 7
-                djui_hud_set_color(character.color.r, character.color.g, character.color.b, 255)
+                djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             end
             djui_hud_print_text(TEXT_MOVESET, width - x + 8, y, 0.5)
             y = y + 7
-
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_print_text(TEXT_PRESET, width - x + 8, height - 29, 0.5)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_print_text(TEXT_PREF, width - x + 8, height - 22, 0.5)
             djui_hud_set_color(prefCharColor.r, prefCharColor.g, prefCharColor.b, 255)
             djui_hud_print_text(TEXT_PREF_COLOR, width - x + 8, height - 15, 0.5)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         end
 
         --Character Buttons
@@ -1156,27 +1233,11 @@ local function on_hud_render()
         local charNum = -1
         for i = -1, 4 do
             -- Hide Locked Characters based on Toggle
-            charNum = currChar + i
-            local char = characterTable[charNum]
-            if optionTable[optionTableRef.showLocked].toggle == 0 and char ~= nil and char.locked then
-                if i < 0 then
-                    repeat 
-                        charNum = charNum - 1
-                    until characterTable[charNum] == nil or (not characterTable[charNum].locked)
-                    charNum = charNum + 1
-                else
-                    repeat 
-                        charNum = charNum + 1
-                    until characterTable[charNum] == nil or (not characterTable[charNum].locked)
-                    charNum = charNum - 1
-                end
-                charNum = charNum + i
-            end
-
-            local char = characterTable[charNum]
+            charNum = currCharRender + i
+            local char = characterTableRender[charNum]
             if char ~= nil then
                 if not char.locked then
-                    buttonColor = char[char.currAlt].color -- Change Later
+                    buttonColor = char[char.currAlt].color
                 else
                     buttonColor = {r = char[char.currAlt].color.r*0.5, g = char[char.currAlt].color.g*0.5, b = char[char.currAlt].color.b*0.5}
                 end
@@ -1202,7 +1263,7 @@ local function on_hud_render()
                 djui_hud_render_rect(x, y, 70, 1)
                 djui_hud_render_rect(x + 69, y, 1, 20)
                 djui_hud_render_rect(x, y + 19, 70, 1)
-                djui_hud_set_color(0, 0, 0, 200)
+                djui_hud_set_color(buttonColor.r * 0.1, buttonColor.g * 0.1, buttonColor.b * 0.1, menuOpacity)
                 djui_hud_render_rect(x + 1, y + 1, 68, 18)
                 djui_hud_set_font(FONT_TINY)
                 djui_hud_set_color(buttonColor.r, buttonColor.g, buttonColor.b, 255)
@@ -1210,22 +1271,25 @@ local function on_hud_render()
                 if char.locked then
                     charName = TEXT_CHAR_LOCKED
                 end
+                djui_hud_set_color(buttonColor.r * 0.5 + 127, buttonColor.g * 0.5 + 127, buttonColor.b * 0.5 + 127, 255)
                 djui_hud_print_text(charName, x + 5, y + 5, 0.6)
             end
         end
 
         -- Scroll Bar
-        local MATH_DIVIDE_CHARACTERS = 1/#characterTable
+        local MATH_DIVIDE_CHARACTERS = 1/#characterTableRender
         local MATH_7_WIDTHSCALE = 7 * widthScale
         djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
         djui_hud_render_rect(MATH_7_WIDTHSCALE, 55, 1, 170)
         djui_hud_render_rect(MATH_7_WIDTHSCALE, 55, 7, 1)
         djui_hud_render_rect(MATH_7_WIDTHSCALE + 6, 55, 1, 170)
         djui_hud_render_rect(MATH_7_WIDTHSCALE, 224, 7, 1)
-        djui_hud_render_rect(MATH_7_WIDTHSCALE + 2, 57 + 166 * ((currChar - 1) * MATH_DIVIDE_CHARACTERS) - (buttonScroll * MATH_DIVIDE_30) * (166 * MATH_DIVIDE_CHARACTERS), 3, 166 * MATH_DIVIDE_CHARACTERS)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
+        djui_hud_render_rect(MATH_7_WIDTHSCALE + 2, 57 + 166 * ((currCharRender - 1) * MATH_DIVIDE_CHARACTERS) - (buttonScroll * MATH_DIVIDE_30) * (166 * MATH_DIVIDE_CHARACTERS), 3, 166 * MATH_DIVIDE_CHARACTERS)
         djui_hud_set_font(FONT_TINY)
-        local TEXT_CHAR_COUNT = currChar .. "/" .. #characterTable
+        local TEXT_CHAR_COUNT = currCharRender .. "/" .. #characterTableRender
         djui_hud_print_text(TEXT_CHAR_COUNT, (11 - djui_hud_measure_text(TEXT_CHAR_COUNT) * 0.2) * widthScale, height - 12, 0.4)
+        djui_hud_print_text("- "..characterCategories[currCategory] .. " (L/R)", (11 + djui_hud_measure_text(TEXT_CHAR_COUNT) * 0.2) * widthScale, height - 12, 0.4)
 
         --Character Select Header
         djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
@@ -1233,22 +1297,23 @@ local function on_hud_render()
         djui_hud_render_rect(0, 0, 2, 50)
         djui_hud_render_rect(0, 48, width, 2)
         djui_hud_render_rect(width - 2, 0, 2, 50)
-        djui_hud_set_color(menuColor.r * 0.5 + 127, menuColor.g * 0.5 + 127, menuColor.b * 0.5 + 127, 255)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         if TEX_OVERRIDE_HEADER ~= nil then -- Render Override Header
             djui_hud_render_texture(TEX_OVERRIDE_HEADER, widthHalf - 128, 10, 1 / (TEX_OVERRIDE_HEADER.height*MATH_DIVIDE_32), 1 / (TEX_OVERRIDE_HEADER.height*MATH_DIVIDE_32))
         else
             djui_hud_render_texture(TEX_HEADER, widthHalf - 128, 10, 1, 1)
         end
-        djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
         djui_hud_set_font(FONT_TINY)
-        djui_hud_print_text(TEXT_VERSION, 5, 3, 0.5)
+        djui_hud_print_text(optionTable[optionTableRef.debugInfo].toggle == 0 and TEXT_VERSION or MOD_VERSION_DEBUG, 5, 3, 0.5)
 
         --Unsupported Res Warning
-        if width < 321.2 or width > 575 then
+        if width < 319 or width > 575 then
             djui_hud_print_text(TEXT_RATIO_UNSUPPORTED, 5, 39, 0.5)
         end
 
         -- API Rendering (Above Text)
+        djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
         if #renderInMenuTable.front > 0 then
             for i = 1, #renderInMenuTable.front do
                 renderInMenuTable.front[i]()
@@ -1263,7 +1328,7 @@ local function on_hud_render()
             djui_hud_render_rect(0, 0, width, height)
             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_render_rect(width * 0.5 - 50 * widthScale, minf(55 - optionAnimTimer, height - 25 * widthScale), 100 * widthScale, 200)
-            djui_hud_set_color(0, 0, 0, 255)
+            djui_hud_set_color(menuColor.r * 0.1, menuColor.g * 0.1, menuColor.b * 0.1, menuOpacity)
             djui_hud_render_rect(width * 0.5 - 50 * widthScale + 2, minf(55 - optionAnimTimer + 2, height - 25 * widthScale + 2), 100 * widthScale - 4, 196)
             djui_hud_set_font(FONT_ALIASED)
 
@@ -1271,14 +1336,14 @@ local function on_hud_render()
                 local widthScaleLimited = minf(widthScale, 1.5)
                 -- Up Arrow
                 if currOption > 3 then
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_render_triangle(widthHalf - 3.5*widthScaleLimited, 94 - optionAnimTimer, 6*widthScaleLimited, 3*widthScaleLimited)
                 end
 
                 -- Down Arrow
                 if currOption < optionTableCount - 2 then
                     local yOffset = 90 - optionAnimTimer + 45 * widthScaleLimited
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     djui_hud_set_rotation(0x8000, 0.5, 0.5)
                     djui_hud_render_triangle(widthHalf - 3.5*widthScaleLimited, yOffset + 10 + 3*widthScaleLimited, 6*widthScaleLimited, 3*widthScaleLimited)
                     djui_hud_set_rotation(0, 0, 0)
@@ -1301,11 +1366,10 @@ local function on_hud_render()
                             else
                                 toggleName = toggleName
                             end
-                            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
                         else
                             djui_hud_set_font(FONT_TINY)
-                            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 150)
                         end
+                        djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                         scale = scale * widthScaleLimited
                         djui_hud_print_text(toggleName, widthHalf - djui_hud_measure_text(toggleName) * scale * 0.5, yOffset, scale)
                     end
@@ -1313,7 +1377,7 @@ local function on_hud_render()
 
                 -- Description
                 if optionTable[currOption].description ~= nil then
-                    djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                    djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                     for i = 1, #optionTable[currOption].description do
                         djui_hud_set_font(FONT_ALIASED)
                         local line = optionTable[currOption].description[i]
@@ -1322,7 +1386,7 @@ local function on_hud_render()
                 end
                 -- Footer
                 djui_hud_set_font(FONT_TINY)
-                djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+                djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                 djui_hud_print_text(TEXT_OPTIONS_SELECT, widthHalf - djui_hud_measure_text(TEXT_OPTIONS_SELECT) * 0.3, height - 20 - optionAnimTimer, 0.6)
             else
                 local renderList = {}
@@ -1342,10 +1406,10 @@ local function on_hud_render()
                 for i = 1, #renderList do
                     local credit = renderList[i]
                     local header = (credit.font == FONT_ALIASED)
-                    if y > 61 and y < height then 
+                    if y > 62 and y < height then 
                         djui_hud_set_font(credit.font)
                         if not header then
-                            djui_hud_set_color(menuColor.r * 0.5 + 127, menuColor.g * 0.5 + 127, menuColor.b * 0.5 + 127, 255)
+                            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
                         else
                             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
                         end
@@ -1369,7 +1433,7 @@ local function on_hud_render()
                 prevCreditScroll = creditScroll
 
                 for i = 1, 8 do
-                    djui_hud_set_color(0, 0, 0, 100)
+                    djui_hud_set_color(menuColor.r * 0.1, menuColor.g * 0.1, menuColor.b * 0.1, 100)
                     djui_hud_render_rect(widthHalf - 50 * widthScale + 2, 60 - optionAnimTimer, 100 * widthScale - 4, i*4)
                     djui_hud_render_rect(widthHalf - 50 * widthScale + 2, height - 2 - i*4, 96 * widthScale, i*4)
                 end
@@ -1418,9 +1482,9 @@ local function on_hud_render()
             local widthScaleLimited = minf(widthScale, 1.42)
             djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
             djui_hud_render_rect(widthHalf - 50 * widthScale, height - 25 * widthScaleLimited, 100 * widthScale, 26 * widthScaleLimited)
-            djui_hud_set_color(0, 0, 0, 255)
+            djui_hud_set_color(menuColorHalf.r * 0.1, menuColorHalf.g * 0.1, menuColorHalf.b * 0.1, menuOpacity)
             djui_hud_render_rect(widthHalf - 50 * widthScale + 2, height - 25 * widthScaleLimited + 2, 100 * widthScale - 4, 22 * widthScaleLimited)
-            djui_hud_set_color(menuColor.r, menuColor.g, menuColor.b, 255)
+            djui_hud_set_color(menuColorHalf.r, menuColorHalf.g, menuColorHalf.b, 255)
             djui_hud_render_rect(widthHalf - 50 * widthScale, height - 2, 100 * widthScale, 2)
             djui_hud_set_font(FONT_ALIASED)
             djui_hud_print_text(TEXT_OPTIONS_OPEN, widthHalf - djui_hud_measure_text(TEXT_OPTIONS_OPEN) * 0.175 * widthScaleLimited, height - 23 * widthScaleLimited + optionAnimTimer + 202, 0.35 * widthScaleLimited)
@@ -1455,6 +1519,7 @@ local function on_hud_render()
         optionAnimTimer = optionAnimTimerCap
         credits = false
         creditsCrossFade = 0
+        bindTextTimer = 0
     end
 
     -- Fade in/out of menu
@@ -1481,10 +1546,6 @@ local function on_hud_render()
         menuAndTransition = menu
     end
 
-    djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_color(0, 0, 0, (math_abs(menuCrossFade)) * -menuCrossFadeMath)
-    djui_hud_render_rect(0, 0, width, height)
-
     -- Info / Z Open Bind on Pause Menu
     if is_game_paused() and not djui_hud_is_pause_menu_created() and gMarioStates[0].action ~= ACT_EXIT_LAND_SAVE_DIALOG then
         local currCharY = 0
@@ -1492,7 +1553,7 @@ local function on_hud_render()
         djui_hud_set_font(FONT_USER)
         if optionTable[optionTableRef.openInputs].toggle == 1 then
             currCharY = 27
-            local text = menu_is_allowed() and TEXT_PAUSE_Z_OPEN or TEXT_PAUSE_UNAVALIBLE
+            local text = menu_is_allowed() and TEXT_PAUSE_Z_OPEN or TEXT_PAUSE_UNAVAILABLE
             width = djui_hud_get_screen_width() - djui_hud_measure_text(text)
             djui_hud_set_color(255, 255, 255, 255)
             djui_hud_print_text(text, width - 20, 16, 1)
@@ -1529,8 +1590,15 @@ local function on_hud_render()
             djui_hud_print_text(text, width - 20, 16 + currCharY, 1)
         end
     end
+
+    -- Cross Fade to Menu
+    djui_hud_set_resolution(RESOLUTION_N64)
+    djui_hud_set_color(0, 0, 0, (math_abs(menuCrossFade)) * -menuCrossFadeMath)
+    djui_hud_render_rect(0, 0, width, height)
 end
 
+local prevMouseScroll = 0
+local mouseScroll = 0
 local function before_mario_update(m)
     if m.playerIndex ~= 0 then return end
     local controller = m.controller
@@ -1557,52 +1625,12 @@ local function before_mario_update(m)
         return
     end
 
-    local cameraToObject = m.marioObj.header.gfx.cameraToObject
+    mouseScroll = mouseScroll + djui_hud_get_mouse_scroll_y()
 
+    local cameraToObject = m.marioObj.header.gfx.cameraToObject
     if menuAndTransition and not options then
         if menu then
-            if inputStallTimerDirectional == 0 and optionTable[optionTableRef.localModels].toggle ~= 0 and not charBeingSet then
-                if (controller.buttonPressed & D_JPAD) ~= 0 or (controller.buttonPressed & D_CBUTTONS) ~= 0 or controller.stickY < -60 then
-                    currChar = currChar + 1
-                    local character = characterTable[currChar]
-                    if character ~= nil and character.locked then
-                        currChar = get_next_unlocked_char()
-                    end
-                    if (controller.buttonPressed & D_CBUTTONS) == 0 then
-                        inputStallTimerDirectional = inputStallToDirectional
-                    else
-                        inputStallTimerDirectional = 3 -- C-Scrolling
-                    end
-                    if currChar > #characterTable then
-                        buttonScroll = -buttonScrollCap * #characterTable
-                    else
-                        buttonScroll = buttonScrollCap
-                    end
-                    play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
-                    gCSPlayers[0].presetPalette = 0
-                    if currChar > #characterTable then currChar = 1 end
-                end
-                if (controller.buttonPressed & U_JPAD) ~= 0 or (controller.buttonPressed & U_CBUTTONS) ~= 0 or controller.stickY > 60 then
-                    currChar = currChar - 1
-                    local character = characterTable[currChar]
-                    if character ~= nil and character.locked then
-                        currChar = get_last_unlocked_char()
-                    end
-                    if (controller.buttonPressed & U_CBUTTONS) == 0 then
-                        inputStallTimerDirectional = inputStallToDirectional
-                    else
-                        inputStallTimerDirectional = 3 -- C-Scrolling
-                    end
-                    if currChar < 1 then
-                        buttonScroll = buttonScrollCap * (#characterTable - 1)
-                    else
-                        buttonScroll = -buttonScrollCap
-                    end
-                    play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
-                    gCSPlayers[0].presetPalette = 0
-                    if currChar < 1 then currChar = #characterTable end
-                end
-
+            if inputStallTimerDirectional == 0 and not charBeingSet then
                 -- Alt switcher
                 if #characterTable[currChar] > 1 then
                     local character = characterTable[currChar]
@@ -1621,6 +1649,83 @@ local function before_mario_update(m)
                     if character.currAlt > #character then character.currAlt = 1 end
                     if character.currAlt < 1 then character.currAlt = #character end
                 end
+
+                if optionTable[optionTableRef.localModels].toggle ~= 0 then    
+                    if (controller.buttonPressed & D_JPAD) ~= 0 or (controller.buttonPressed & D_CBUTTONS) ~= 0 or controller.stickY < -60 or prevMouseScroll < mouseScroll then
+                        currCharRender = currCharRender + 1
+                        --[[
+                        local character = characterTableRender[currCharRender]
+                        if character ~= nil and character.locked then
+                            currCharRender = get_next_unlocked_char()
+                        end
+                        ]]
+                        if (controller.buttonPressed & D_CBUTTONS) == 0 then
+                            inputStallTimerDirectional = inputStallToDirectional
+                        else
+                            inputStallTimerDirectional = 3 -- C-Scrolling
+                        end
+                        if currCharRender > #characterTableRender then
+                            buttonScroll = -buttonScrollCap * #characterTableRender
+                        else
+                            buttonScroll = buttonScrollCap
+                        end
+                        play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
+                        if currCharRender > #characterTableRender then currCharRender = 1 end
+                        currChar = characterTableRender[currCharRender].ogNum
+                        if characterColorPresets[characterTable[currChar]] ~= nil then
+                            characterColorPresets[characterTable[currChar]].currPalette = 0
+                        end
+                        prevMouseScroll = mouseScroll
+                    end
+                    if (controller.buttonPressed & U_JPAD) ~= 0 or (controller.buttonPressed & U_CBUTTONS) ~= 0 or controller.stickY > 60 or prevMouseScroll > mouseScroll then
+                        currCharRender = currCharRender - 1
+                        --[[
+                        local character = characterTableRender[currCharRender]
+                        if character ~= nil and character.locked then
+                            currCharRender = get_last_unlocked_char()
+                        end
+                        ]]
+                        if (controller.buttonPressed & U_CBUTTONS) == 0 then
+                            inputStallTimerDirectional = inputStallToDirectional
+                        else
+                            inputStallTimerDirectional = 3 -- C-Scrolling
+                        end
+                        if currCharRender < 1 then
+                            buttonScroll = buttonScrollCap * (#characterTableRender - 1)
+                        else
+                            buttonScroll = -buttonScrollCap
+                        end
+                        play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
+                        if currCharRender < 1 then currCharRender = #characterTableRender end
+                        currChar = characterTableRender[currCharRender].ogNum
+                        if characterColorPresets[characterTable[currChar]] ~= nil then
+                            characterColorPresets[characterTable[currChar]].currPalette = 0
+                        end
+                        prevMouseScroll = mouseScroll
+                    end
+
+                    -- Tab Switcher
+                    if (controller.buttonPressed & L_TRIG) ~= 0 then
+                        local renderEmpty = true
+                        while renderEmpty do
+                            currCategory = currCategory - 1
+                            if currCategory < 1 then currCategory = #characterCategories end
+                            renderEmpty = not update_character_render_table()
+                        end
+                        inputStallTimerDirectional = inputStallToDirectional
+                        play_sound(SOUND_MENU_CAMERA_TURN, cameraToObject)
+                    end
+                    if (controller.buttonPressed & R_TRIG) ~= 0 then
+                        local renderEmpty = true
+                        while renderEmpty do
+                            currCategory = currCategory + 1
+                            if currCategory > #characterCategories then currCategory = 1 end
+                            renderEmpty = not update_character_render_table()
+                        end
+                        inputStallTimerDirectional = inputStallToDirectional
+                        play_sound(SOUND_MENU_CAMERA_TURN, cameraToObject)
+                    end
+                end
             end
 
             if inputStallTimerButton == 0 then
@@ -1632,6 +1737,10 @@ local function before_mario_update(m)
                     else
                         play_sound(SOUND_MENU_CAMERA_BUZZ, cameraToObject)
                     end
+                    
+                    -- Set bottom right text
+                    bindText = 1
+                    bindTextTimer = 1
                 end
                 if (controller.buttonPressed & B_BUTTON) ~= 0 then
                     menu = false
@@ -1639,27 +1748,41 @@ local function before_mario_update(m)
                 if (controller.buttonPressed & START_BUTTON) ~= 0 then
                     options = true
                 end
-                local modelId = gCSPlayers[0].modelId and gCSPlayers[0].modelId or defaultModels[m.character.type]
+                local modelId = gCSPlayers[0].modelId
+                local paletteCount = characterColorPresets[gCSPlayers[0].modelId] ~= nil and #characterColorPresets[gCSPlayers[0].modelId] or 0
+                local currPaletteTable = characterColorPresets[gCSPlayers[0].modelId] and characterColorPresets[gCSPlayers[0].modelId] or {currPalette = 0}
+
                 if (controller.buttonPressed & Y_BUTTON) ~= 0 then
                     if characterColorPresets[modelId] and optionTable[optionTableRef.localModels].toggle > 0 and not stopPalettes then
                         play_sound(SOUND_MENU_CLICK_FILE_SELECT, cameraToObject)
-                        gCSPlayers[0].presetPalette = gCSPlayers[0].presetPalette + 1
+                        currPaletteTable.currPalette = currPaletteTable.currPalette + 1
                         inputStallTimerButton = inputStallToButton
                     else
                         play_sound(SOUND_MENU_CAMERA_BUZZ, cameraToObject)
                         inputStallTimerButton = inputStallToButton
                     end
+
+                    -- Set bottom right text
+                    bindText = 2
+                    bindTextTimer = 1
                 end
-            end
-            if characterColorPresets[gCSPlayers[0].modelId] ~= nil then
-                if #characterColorPresets[gCSPlayers[0].modelId] < gCSPlayers[0].presetPalette then gCSPlayers[0].presetPalette = 0 end
+                if characterColorPresets[gCSPlayers[0].modelId] ~= nil then
+                    if paletteCount < currPaletteTable.currPalette then currPaletteTable.currPalette = 0 end
+                end
             end
         end
 
         -- Handles Camera Posistioning
         faceAngle = m.faceAngle.y
-        if controller.buttonPressed & R_CBUTTONS ~= 0 then faceAngle = faceAngle + 0x1000 end
-        if controller.buttonPressed & L_CBUTTONS ~= 0 then faceAngle = faceAngle - 0x1000 end
+        eyeState = MARIO_EYES_OPEN
+        if controller.buttonPressed & R_CBUTTONS ~= 0 then
+            faceAngle = faceAngle + 0x1000
+            eyeState = MARIO_EYES_LOOK_RIGHT
+        end
+        if controller.buttonPressed & L_CBUTTONS ~= 0 then
+            faceAngle = faceAngle - 0x1000
+            eyeState = MARIO_EYES_LOOK_LEFT
+        end
 
         nullify_inputs(m)
         if is_game_paused() then
@@ -1742,7 +1865,7 @@ local function chat_command(msg)
             menu = not menu
             return true
         else
-            djui_chat_message_create(TEXT_PAUSE_UNAVALIBLE)
+            djui_chat_message_create(TEXT_PAUSE_UNAVAILABLE)
             return true
         end
     end
@@ -1775,7 +1898,9 @@ local function chat_command(msg)
             local saveName = string_underscore_to_space(string_lower(characterTable[i].saveName))
             for a = 1, #characterTable[i] do
                 if msg == string_lower(characterTable[i][a].name) or msg == saveName then
+                    currCategory = 1
                     currChar = i
+                    update_character_render_table()
                     if msg ~= saveName then
                         characterTable[i].currAlt = a
                     end

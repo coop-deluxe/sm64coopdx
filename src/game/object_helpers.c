@@ -172,9 +172,9 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
             obj = gCurGraphNodeHeldObject->objNode;
         }
 
-        // if the case is greater than the number of cases, set to 0 to avoid overflowing
+        // if the case is greater than the number of anim states, set to 0 to avoid overflowing
         // the switch.
-        if (obj->oAnimState >= switchCase->numCases) {
+        if (obj->oAnimState >= switchCase->parameter) {
             obj->oAnimState = 0;
         }
 
@@ -187,6 +187,7 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
 
 s16 gRoomOverride = -1;
 
+/* |description|Overrides the current room Mario is in. Set to -1 to reset override|descriptionEnd| */
 void set_room_override(s16 room) {
     gRoomOverride = room;
 }
@@ -527,14 +528,14 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
             break;
     }
 
-    startAngle = o->rawData.asU32[angleIndex];
-    o->rawData.asU32[angleIndex] = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
+    startAngle = o->OBJECT_FIELD_U32(angleIndex);
+    o->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
     return targetAngle;
 }
 
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ) {
     if (obj == NULL) { return; }
-    
+
     obj->oParentRelativePosX = relX;
     obj->oParentRelativePosY = relY;
     obj->oParentRelativePosZ = relZ;
@@ -542,7 +543,7 @@ void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 rel
 
 void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
     if (obj == NULL) { return; }
-    
+
     obj->oPosX = x;
     obj->oPosY = y;
     obj->oPosZ = z;
@@ -550,7 +551,7 @@ void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
 
 void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oFaceAnglePitch = pitch;
     obj->oFaceAngleYaw = yaw;
     obj->oFaceAngleRoll = roll;
@@ -562,7 +563,7 @@ void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oMoveAnglePitch = pitch;
     obj->oMoveAngleYaw = yaw;
     obj->oMoveAngleRoll = roll;
@@ -570,7 +571,7 @@ void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->oFaceAnglePitch = pitch;
     obj->oFaceAngleYaw = yaw;
     obj->oFaceAngleRoll = roll;
@@ -578,7 +579,7 @@ void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.angle[0] = pitch;
     obj->header.gfx.angle[1] = yaw;
     obj->header.gfx.angle[2] = roll;
@@ -586,7 +587,7 @@ void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
 
 void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.pos[0] = x;
     obj->header.gfx.pos[1] = y;
     obj->header.gfx.pos[2] = z;
@@ -594,7 +595,7 @@ void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
 
 void obj_set_gfx_scale(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
-    
+
     obj->header.gfx.scale[0] = x;
     obj->header.gfx.scale[1] = y;
     obj->header.gfx.scale[2] = z;
@@ -815,14 +816,14 @@ void obj_init_animation(struct Object *obj, s32 animIndex) {
     }
 }
 
-/**
- * Multiply a vector by a matrix of the form
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | 0 0 0 1 |
- * i.e. a matrix representing a linear transformation over 3 space.
- */
+/* |description|
+Multiplies a vector by a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
+|descriptionEnd| */
 void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
@@ -830,14 +831,14 @@ void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     }
 }
 
-/**
- * Multiply a vector by the transpose of a matrix of the form
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | ? ? ? 0 |
- * | 0 0 0 1 |
- * i.e. a matrix representing a linear transformation over 3 space.
- */
+/* |description|
+Multiplies a vector by the transpose of a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
+|descriptionEnd| */
 void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
@@ -1468,9 +1469,9 @@ s32 cur_obj_clear_interact_status_flag(s32 flag) {
     return FALSE;
 }
 
-/**
- * Mark an object to be unloaded at the end of the frame.
- */
+/* |description|
+Marks an object to be unloaded at the end of the frame
+|descriptionEnd| */
 void obj_mark_for_deletion(struct Object *obj) {
     //! This clears all activeFlags. Since some of these flags disable behavior,
     //  setting it to 0 could potentially enable unexpected behavior. After an
@@ -1970,14 +1971,14 @@ void cur_obj_set_billboard_if_vanilla_cam(void) {
 
 void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
     if (o == NULL) { return; }
-    
+
     o->hitboxRadius = radius;
     o->hitboxHeight = height;
 }
 
 void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
     if (o == NULL) { return; }
-    
+
     o->hurtboxRadius = radius;
     o->hurtboxHeight = height;
 }
@@ -2313,21 +2314,20 @@ void obj_set_gfx_pos_at_obj_pos(struct Object *obj1, struct Object *obj2) {
     obj1->header.gfx.angle[2] = obj2->oMoveAngleRoll & 0xFFFF;
 }
 
-/**
- * Transform the vector at localTranslateIndex into the object's local
- * coordinates, and then add it to the vector at posIndex.
- */
+/* |description|
+Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
+|descriptionEnd| */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
     if (obj == NULL) { return; }
-    f32 dx = obj->rawData.asF32[localTranslateIndex + 0];
-    f32 dy = obj->rawData.asF32[localTranslateIndex + 1];
-    f32 dz = obj->rawData.asF32[localTranslateIndex + 2];
+    f32 dx = obj->OBJECT_FIELD_F32(localTranslateIndex + 0);
+    f32 dy = obj->OBJECT_FIELD_F32(localTranslateIndex + 1);
+    f32 dz = obj->OBJECT_FIELD_F32(localTranslateIndex + 2);
 
-    obj->rawData.asF32[posIndex + 0] +=
+    obj->OBJECT_FIELD_F32(posIndex + 0) +=
         obj->transform[0][0] * dx + obj->transform[1][0] * dy + obj->transform[2][0] * dz;
-    obj->rawData.asF32[posIndex + 1] +=
+    obj->OBJECT_FIELD_F32(posIndex + 1) +=
         obj->transform[0][1] * dx + obj->transform[1][1] * dy + obj->transform[2][1] * dz;
-    obj->rawData.asF32[posIndex + 2] +=
+    obj->OBJECT_FIELD_F32(posIndex + 2) +=
         obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz;
 }
 
@@ -2336,13 +2336,13 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
     f32 translate[3];
     s16 rotation[3];
 
-    translate[0] = obj->rawData.asF32[posIndex + 0];
-    translate[1] = obj->rawData.asF32[posIndex + 1];
-    translate[2] = obj->rawData.asF32[posIndex + 2];
+    translate[0] = obj->OBJECT_FIELD_F32(posIndex + 0);
+    translate[1] = obj->OBJECT_FIELD_F32(posIndex + 1);
+    translate[2] = obj->OBJECT_FIELD_F32(posIndex + 2);
 
-    rotation[0] = obj->rawData.asS32[angleIndex + 0];
-    rotation[1] = obj->rawData.asS32[angleIndex + 1];
-    rotation[2] = obj->rawData.asS32[angleIndex + 2];
+    rotation[0] = obj->OBJECT_FIELD_S32(angleIndex + 0);
+    rotation[1] = obj->OBJECT_FIELD_S32(angleIndex + 1);
+    rotation[2] = obj->OBJECT_FIELD_S32(angleIndex + 2);
 
     mtxf_rotate_zxy_and_translate(obj->transform, translate, rotation);
 }
@@ -2548,7 +2548,7 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
         numParticles = 10;
     }
-    
+
 
     // We're close to running out of object slots, so don't spawn particles at
     // all
@@ -2641,16 +2641,18 @@ s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
 s32 cur_obj_is_mario_ground_pounding_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[i].marioObj) { continue; }
-        if (gMarioStates[i].marioObj->platform == o) {
-            u32 interaction = determine_interaction(&gMarioStates[i], o);
-            if ((gMarioStates[i].action == ACT_GROUND_POUND_LAND) || (interaction & INT_GROUND_POUND && interaction & INT_LUA)) {
-                return TRUE;
-            }
+        if (obj_is_mario_ground_pounding_platform(&gMarioStates[i], o)) {
+            return TRUE;
         }
     }
 
     return FALSE;
+}
+
+s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj) {
+    if (!m || !obj || !m->marioObj) { return FALSE; }
+    if (m->marioObj->platform != obj) { return FALSE; }
+    return mario_is_ground_pound_landing(m);
 }
 
 void spawn_mist_particles(void) {
@@ -2745,7 +2747,7 @@ s32 cur_obj_progress_direction_table(void) {
     if (tableLength < 0 || index < 0 || tableLength >= 150 || index >= tableLength) {
         ret = table[0];
         o->oToxBoxMovementStep = 0;
-        LOG_ERROR("Exceeded direction table! tableLength %d, index %d\n", tableLength, index);
+        LOG_ERROR("Exceeded direction table! tableLength %d, index %d", tableLength, index);
     } else if (table[index] != -1) {
         ret = table[index];
         o->oToxBoxMovementStep++;
@@ -3476,6 +3478,7 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 }
 #endif
 
+/* |description|Sets the current object's home only the first time it's called|descriptionEnd| */
 void cur_obj_set_home_once(void) {
     if (!o) { return; }
     if (o->setHome) { return; }
@@ -3485,6 +3488,8 @@ void cur_obj_set_home_once(void) {
     o->oHomeZ = o->oPosZ;
 }
 
+
+/* |description|Gets a trajectory's length|descriptionEnd| */
 s32 get_trajectory_length(Trajectory* trajectory) {
     if (!trajectory) { return 0; }
     s32 count = 0;

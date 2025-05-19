@@ -1944,8 +1944,7 @@ s32 act_taking_off_cap(struct MarioState *m) {
 /* |description|
 Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
 |descriptionEnd| */
-void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2,
-                             s32 target3, s32 endAction) {
+void stuck_in_ground_handler(struct MarioState *m, s32 animation, s32 unstuckFrame, s32 target2, s32 target3, s32 endAction) {
     if (!m) { return; }
     s32 animFrame = set_character_animation(m, animation);
 
@@ -2248,7 +2247,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
 
     if (m->actionState == 0) {
         set_character_animation(m, CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN);
-        marioObj->rawData.asF32[0x22] = 0.0f;
+        marioObj->oMarioJumboStarCutscenePosZ = 0.0f;
 
         if (is_anim_past_end(m)) {
             play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
@@ -2260,7 +2259,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_JUMP, 1);
         }
         if (animFrame >= 3) {
-            marioObj->rawData.asF32[0x22] -= 32.0f;
+            marioObj->oMarioJumboStarCutscenePosZ -= 32.0f;
         }
 
         switch (animFrame) {
@@ -2283,7 +2282,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
         }
     }
 
-    vec3f_set(m->pos, 0.0f, 307.0, marioObj->rawData.asF32[0x22]);
+    vec3f_set(m->pos, 0.0f, 307.0, marioObj->oMarioJumboStarCutscenePosZ);
     m->pos[0] += 100.0f * m->playerIndex;
 
     update_mario_pos_for_anim(m);
@@ -3004,6 +3003,10 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
     m->actionTimer++;
 
     if (m->playerIndex == 0) {
+        if (m->controller->buttonPressed & START_BUTTON) {
+            lvl_skip_credits();
+        }
+        
         sEndCutsceneVp.vp.vscale[0] = 640;
         sEndCutsceneVp.vp.vscale[1] = 360;
         sEndCutsceneVp.vp.vtrans[0] = 640;
@@ -3049,6 +3052,10 @@ static s32 act_credits_cutscene(struct MarioState *m) {
         if (m->actionTimer > 0) {
             stop_and_set_height_to_floor(m);
         }
+    }
+    
+    if (m->playerIndex == 0 && m->controller->buttonPressed & START_BUTTON) {
+        lvl_skip_credits();
     }
 
     if (m->actionTimer >= TIMER_CREDITS_SHOW) {

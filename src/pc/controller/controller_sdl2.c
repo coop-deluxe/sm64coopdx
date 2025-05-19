@@ -23,6 +23,7 @@
 
 #include "game/level_update.h"
 #include "game/first_person_cam.h"
+#include "game/bettercamera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
@@ -33,11 +34,10 @@
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers
 #define AXIS_THRESHOLD (30 * 256)
 
-extern u8 newcam_mouse;
-
 static bool init_ok = false;
 static bool haptics_enabled = false;
 static SDL_GameController *sdl_cntrl = NULL;
+static SDL_Joystick *sdl_joystick = NULL;
 static SDL_Haptic *sdl_haptic = NULL;
 
 static bool sBackgroundGamepad = false;
@@ -51,6 +51,11 @@ static bool joy_buttons[MAX_JOYBUTTONS] = { false };
 static u32 last_mouse = VK_INVALID;
 static u32 last_joybutton = VK_INVALID;
 static u32 last_gamepad = 0;
+
+static s16 invert_s16(s16 val) {
+    if (val == -0x8000) return 0x7FFF;
+    return (s16)(-(s32)val);
+}
 
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
@@ -130,7 +135,7 @@ static void controller_sdl_init(void) {
     }
 #endif
 
-    if (newcam_mouse == 1) { controller_mouse_enter_relative(); }
+    if (gNewCamera.isMouse) { controller_mouse_enter_relative(); }
     controller_mouse_read_relative();
 
     controller_sdl_bind();
@@ -177,7 +182,7 @@ extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
 
-    if ((newcam_mouse == 1 || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && wm_api->has_focus()) {
+    if ((gNewCamera.isMouse || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && wm_api->has_focus()) {
         controller_mouse_enter_relative();
     } else {
         controller_mouse_leave_relative();
@@ -211,34 +216,70 @@ static void controller_sdl_read(OSContPad *pad) {
         sdl_haptic = NULL;
     }
 
-    if (sdl_cntrl == NULL || last_gamepad != configGamepadNumber) {
+    if ((!sdl_cntrl && !sdl_joystick) || last_gamepad != configGamepadNumber) {
+        if (sdl_haptic) { SDL_HapticClose(sdl_haptic); sdl_haptic = NULL; }
+        if (sdl_cntrl) { SDL_GameControllerClose(sdl_cntrl); sdl_cntrl = NULL; }
+        if (sdl_joystick) { SDL_JoystickClose(sdl_joystick); sdl_joystick = NULL; }
+        last_gamepad = configGamepadNumber;
         if (SDL_IsGameController(configGamepadNumber)) {
             sdl_cntrl = SDL_GameControllerOpen(configGamepadNumber);
             if (sdl_cntrl != NULL) {
                 sdl_haptic = controller_sdl_init_haptics(configGamepadNumber);
-                last_gamepad = configGamepadNumber;
-            }
-            if (sdl_cntrl == NULL) {
-                return;
             }
         } else {
-            sdl_cntrl = NULL;
-            return;
+            sdl_joystick = SDL_JoystickOpen(configGamepadNumber);
+            if (!sdl_joystick) { return; }
         }
     }
 
-    int16_t leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
-    int16_t lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
-    int16_t rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
-    int16_t righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+    int16_t leftx = 0, lefty = 0, rightx = 0, righty = 0;
+    int16_t ltrig = 0, rtrig = 0;
+    if (sdl_cntrl) {
+        leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
+        lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
+        rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
+        righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+        ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+        rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+        for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
+            const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
+            update_button(i, new);
+        }
+    } else if (sdl_joystick) {
+        int axis_count = SDL_JoystickNumAxes(sdl_joystick);
+        if (axis_count >= 2) {
+            leftx = SDL_JoystickGetAxis(sdl_joystick, 0);
+            lefty = SDL_JoystickGetAxis(sdl_joystick, 1);
+        }
+        if (axis_count >= 4) {
+            rightx = SDL_JoystickGetAxis(sdl_joystick, 2);
+            righty = SDL_JoystickGetAxis(sdl_joystick, 5); // Specific to N64 controller
+        }
+        if (axis_count >= 6) {
+            ltrig = SDL_JoystickGetAxis(sdl_joystick, 3);
+            rtrig = SDL_JoystickGetAxis(sdl_joystick, 4);
+        }
 
-    int16_t ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-    int16_t rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-
-    for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
-        const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
-        update_button(i, new);
+        int button_count = SDL_JoystickNumButtons(sdl_joystick);
+        for (int i = 0; i < button_count && i < MAX_JOYBUTTONS; ++i) {
+            update_button(i, SDL_JoystickGetButton(sdl_joystick, i));
+        }
     }
+
+    if (configStick.rotateLeft) {
+        s16 tmp = leftx;
+        leftx = invert_s16(lefty);
+        lefty = tmp;
+    }
+    if (configStick.rotateRight) {
+        s16 tmp = rightx;
+        rightx = invert_s16(righty);
+        righty = tmp;
+    }
+    if (configStick.invertLeftX) { leftx = invert_s16(leftx); }
+    if (configStick.invertLeftY) { lefty = invert_s16(lefty); }
+    if (configStick.invertRightX) { rightx = invert_s16(rightx); }
+    if (configStick.invertRightY) { righty = invert_s16(righty); }
 
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);

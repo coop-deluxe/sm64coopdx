@@ -151,8 +151,11 @@ bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
     if (indexType != LUA_TUSERDATA) {
-        LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
-        gSmLuaConvertSuccess = false;
+        // suppress script errors
+        if (indexType != LUA_TNIL) {
+            LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
+            gSmLuaConvertSuccess = false;
+        }
         return NULL;
     }
 
@@ -346,10 +349,10 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
+CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
-        return;
+        return NULL;
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
@@ -358,10 +361,10 @@ void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        const CObject *cobj = lua_touserdata(L, -1);
+        CObject *cobj = lua_touserdata(L, -1);
         if (cobj && cobj->lot == lot && cobj->pointer == p) {
             lua_remove(L, -2); // Remove gSmLuaCObjects table
-            return;
+            return cobj;
         }
     }
     lua_pop(L, 1);
@@ -379,12 +382,14 @@ void smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
     LUA_STACK_CHECK_END();
+
+    return cobject;
 }
 
-void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
+CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
-        return;
+        return NULL;
     }
     LUA_STACK_CHECK_BEGIN_NUM(1);
 
@@ -393,10 +398,10 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
     if (lua_isuserdata(L, -1)) {
-        const CPointer *cptr = lua_touserdata(L, 1);
+        CPointer *cptr = lua_touserdata(L, 1);
         if (cptr && cptr->lvt == lvt && cptr->pointer == p) {
             lua_remove(L, -2); // Remove gSmLuaCPointers table
-            return;
+            return cptr;
         }
     }
     lua_pop(L, 1);
@@ -413,6 +418,8 @@ void smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCPointers table
     LUA_STACK_CHECK_END();
+
+    return cpointer;
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
@@ -748,7 +755,7 @@ void smlua_logline(void) {
         int slashCount = 0;
         const char* folderStart = NULL;
         for (const char* p = src + strlen(src); p > src; --p) {
-            if (*p == '/') {
+            if (*p == '/' || *p == '\\') {
                 if (++slashCount == 2) {
                     folderStart = p + 1;
                     break;

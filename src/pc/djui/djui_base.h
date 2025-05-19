@@ -41,6 +41,7 @@ struct DjuiBase {
     struct DjuiInteractable* interactable;
     bool addChildrenToHead;
     bool abandonAfterChildRenderFail;
+    bool gradient;
     s64 tag;
     bool bTag;
     void (*get_cursor_hover_location)(struct DjuiBase*, f32* x, f32* y);
@@ -63,6 +64,7 @@ void djui_base_set_border_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
 void djui_base_set_padding(struct DjuiBase* base, f32 top, f32 right, f32 bottom, f32 left);
 void djui_base_set_padding_type(struct DjuiBase* base, enum DjuiScreenValueType topType, enum DjuiScreenValueType rightType, enum DjuiScreenValueType bottomType, enum DjuiScreenValueType leftType);
 void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign);
+void djui_base_set_gradient(struct DjuiBase* base, bool gradient);
 
 void djui_base_compute(struct DjuiBase* base);
 void djui_base_compute_tree(struct DjuiBase* base);

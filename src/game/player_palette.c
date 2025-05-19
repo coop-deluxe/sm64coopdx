@@ -87,25 +87,25 @@ static void player_palettes_sort_characters(void) {
 }
 
 void player_palettes_read(const char* palettesPath, bool appendPalettes) {
-    // construct lang path
-    char lpath[SYS_MAX_PATH] = "";
+    // construct palette path
+    char ppath[SYS_MAX_PATH] = "";
     if (appendPalettes) {
-        snprintf(lpath, SYS_MAX_PATH, "%s/palettes", palettesPath);
+        snprintf(ppath, SYS_MAX_PATH, "%s/palettes", palettesPath);
     } else {
-        snprintf(lpath, SYS_MAX_PATH, "%s", palettesPath);
+        snprintf(ppath, SYS_MAX_PATH, "%s", palettesPath);
     }
 
     // open directory
     struct dirent* dir = NULL;
 
-    DIR* d = opendir(lpath);
+    DIR* d = opendir(ppath);
     if (!d) { return; }
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
     while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
-        if (!directory_sanity_check(dir, lpath, path)) { continue; }
+        if (!directory_sanity_check(dir, ppath, path)) { continue; }
         snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
 
         // strip the name before the .
@@ -154,14 +154,14 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
 }
 
 void player_palette_export(char* name) {
-    // construct lang path
+    // construct palette path
     const char* palettesPath = fs_get_write_path(PALETTES_DIRECTORY);
-    char lpath[SYS_MAX_PATH] = "";
-    snprintf(lpath, SYS_MAX_PATH, "%s/%s.ini", palettesPath, name);
+    char ppath[SYS_MAX_PATH] = "";
+    snprintf(ppath, SYS_MAX_PATH, "%s/%s.ini", palettesPath, name);
     fs_sys_mkdir(palettesPath);
 
     printf("Saving palette as '%s.ini'\n", name);
-    FILE* file = fopen(lpath, "w");
+    FILE* file = fopen(ppath, "w");
     fprintf(file, "[PALETTE]\n\
 PANTS_R = %d\n\
 PANTS_G = %d\n\
@@ -215,15 +215,15 @@ EMBLEM_B = %d\n",
 }
 
 bool player_palette_delete(const char* palettesPath, char* name, bool appendPalettes) {
-    // construct lang path
-    char lpath[SYS_MAX_PATH] = "";
+    // construct palette path
+    char ppath[SYS_MAX_PATH] = "";
     if (appendPalettes) {
-        snprintf(lpath, SYS_MAX_PATH, "%s/palettes/%s.ini", palettesPath, name);
+        snprintf(ppath, SYS_MAX_PATH, "%s/palettes/%s.ini", palettesPath, name);
     } else {
-        snprintf(lpath, SYS_MAX_PATH, "%s/%s.ini", palettesPath, name);
+        snprintf(ppath, SYS_MAX_PATH, "%s/%s.ini", palettesPath, name);
     }
 
-    if (remove(lpath) == 0) {
+    if (remove(ppath) == 0) {
         printf("Deleting palette '%s.ini'\n", name);
         return true;
     }

@@ -381,15 +381,6 @@ endif
 
 TARGET := sm64.$(VERSION)
 
-# Stuff for showing the git hash and build time in dev builds
-# Originally from https://stackoverflow.com/questions/44038428/include-git-commit-hash-and-or-branch-name-in-c-c-source
-ifneq ($(shell git rev-parse --abbrev-ref HEAD),main)
-  GIT_HASH=$(shell git rev-parse --short HEAD)
-  COMPILE_TIME=$(shell date -u +'%Y-%m-%d %H:%M:%S UTC')
-  C_DEFINES += -DGIT_HASH="\"$(GIT_HASH)\"" -DCOMPILE_TIME="\"$(COMPILE_TIME)\""
-endif
-
-
 # GRUCODE - selects which RSP microcode to use.
 #   f3d_old - default for JP and US versions
 #   f3d_new - default for EU and Shindou versions
@@ -1118,6 +1109,12 @@ ifeq ($(IS_DEV_OR_DEBUG),0)
   ifeq ($(OSX_BUILD),0)
     LDFLAGS += -Wl,--build-id=none
   endif
+else
+  # Stuff for showing the git hash and build time in dev builds
+  # Originally from https://stackoverflow.com/questions/44038428/include-git-commit-hash-and-or-branch-name-in-c-c-source
+  GIT_HASH=$(shell git rev-parse --short HEAD)
+  COMPILE_TIME=$(shell date -u +'%Y-%m-%d %H:%M:%S UTC')
+  C_DEFINES += -DGIT_HASH="\"$(GIT_HASH)\"" -DCOMPILE_TIME="\"$(COMPILE_TIME)\""
 endif
 
 # Enable ASLR

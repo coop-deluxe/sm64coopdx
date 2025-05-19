@@ -502,6 +502,23 @@ static void djui_chat_box_input_on_text_editing(struct DjuiBase *base, char* tex
     djui_inputbox_on_text_editing(base, text, cursorPos);
 }
 
+static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {
+    if (gDjuiChatBox == NULL) { return; }
+
+    f32 yMax = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+    f32* yValue = &gDjuiChatBox->chatFlow->base.y.value;
+    bool canScrollUp   = (*yValue > yMax);
+    bool canScrollDown = (*yValue < 0);
+    
+    y *= 24;
+    if (gDjuiInputHeldControl) { y /= 2; }
+    if (gDjuiInputHeldShift) { y *= 3; }
+
+    gDjuiChatBox->scrolling = true;
+    if (y > 0 && canScrollDown) { *yValue = fmin(*yValue + y, 0); }
+    if (y < 0 && canScrollUp) { *yValue = fmax(*yValue + y, yMax); }
+}
+
 void djui_chat_box_toggle(void) {
     if (gDjuiChatBox == NULL) { return; }
     if (!gDjuiChatBoxFocus) { sDjuiChatBoxClearText = true; }
@@ -555,6 +572,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
     djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);
+    djui_interactable_hook_scroll(&chatInput->base, djui_chat_box_input_on_scroll);
     chatBox->chatInput = chatInput;
 
     gDjuiChatBox = chatBox;

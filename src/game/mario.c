@@ -95,7 +95,7 @@ static s16 mario_set_animation_internal(struct MarioState *m, s32 targetAnimID, 
         if (targetAnim->flags & ANIM_FLAG_2) {
             o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10);
         } else {
-            if (targetAnim->flags & ANIM_FLAG_FORWARD) {
+            if (targetAnim->flags & ANIM_FLAG_BACKWARD) {
                 o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10) + accel;
             } else {
                 o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10) - accel;
@@ -118,13 +118,6 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
 }
 
 /**
- * Sets the character specific animation without any acceleration, running at its default rate.
- */
-s16 set_character_animation(struct MarioState *m, s32 targetAnimID) {
-    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), 0x10000);
-}
-
-/**
  * Sets Mario's animation where the animation is sped up or
  * slowed down via acceleration.
  */
@@ -133,10 +126,17 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
 }
 
 /**
+ * Sets the character specific animation without any acceleration, running at its default rate.
+ */
+s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAnimID) {
+    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), 0x10000);
+}
+
+/**
  * Sets character specific animation where the animation is sped up or
  * slowed down via acceleration.
  */
-s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel) {
+s16 set_character_anim_with_accel(struct MarioState *m, enum CharacterAnimID targetAnimID, s32 accel) {
     return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), accel);
 }
 
@@ -151,13 +151,13 @@ void set_anim_to_frame(struct MarioState *m, s16 animFrame) {
     if (animInfo == NULL) { return; }
 
     if (animInfo->animAccel) {
-        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_BACKWARD) {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) + animInfo->animAccel;
         } else {
             animInfo->animFrameAccelAssist = (animFrame << 0x10) - animInfo->animAccel;
         }
     } else {
-        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim != NULL && curAnim->flags & ANIM_FLAG_BACKWARD) {
             animInfo->animFrame = animFrame + 1;
         } else {
             animInfo->animFrame = animFrame - 1;
@@ -176,7 +176,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
     struct Animation *curAnim = animInfo->curAnim;
 
     if (animInfo->animAccel) {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim->flags & ANIM_FLAG_BACKWARD) {
             isPastFrame =
                 (animInfo->animFrameAccelAssist > acceleratedFrame)
                 && (acceleratedFrame >= (animInfo->animFrameAccelAssist - animInfo->animAccel));
@@ -186,7 +186,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
                 && (acceleratedFrame <= (animInfo->animFrameAccelAssist + animInfo->animAccel));
         }
     } else {
-        if (curAnim->flags & ANIM_FLAG_FORWARD) {
+        if (curAnim->flags & ANIM_FLAG_BACKWARD) {
             isPastFrame = (animInfo->animFrame == (animFrame + 1));
         } else {
             isPastFrame = ((animInfo->animFrame + 1) == animFrame);
@@ -410,6 +410,13 @@ bool mario_is_crouching(struct MarioState *m) {
     return m->action == ACT_START_CROUCHING || m->action == ACT_CROUCHING || m->action == ACT_STOP_CROUCHING ||
         m->action == ACT_START_CRAWLING || m->action == ACT_CRAWLING || m->action == ACT_STOP_CRAWLING ||
         m->action == ACT_CROUCH_SLIDE;
+}
+
+bool mario_is_ground_pound_landing(struct MarioState *m) {
+    if (!m) { return false; }
+
+    return m->action == ACT_GROUND_POUND_LAND ||
+        (!(m->action & ACT_FLAG_AIR) && (determine_interaction(m, m->marioObj) & INT_GROUND_POUND));
 }
 
 bool mario_can_bubble(struct MarioState* m) {
@@ -1131,7 +1138,7 @@ static u32 set_mario_action_cutscene(struct MarioState *m, u32 action, UNUSED u3
 u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     if (!m) { return FALSE; }
     u32 returnValue = 0;
-    smlua_call_event_hooks_mario_action_params_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, &returnValue);
+    smlua_call_event_hooks_mario_action_and_arg_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, actionArg, &returnValue);
     if (returnValue == 1) { return TRUE; } else if (returnValue) { action = returnValue; }
 
     switch (action & ACT_GROUP_MASK) {
@@ -1491,7 +1498,7 @@ void update_mario_joystick_inputs(struct MarioState *m) {
         } else if (get_first_person_enabled()) {
             m->intendedYaw = atan2s(-controller->stickY, controller->stickX) + gLakituState.yaw;
         } else {
-            m->intendedYaw = atan2s(-controller->stickY, controller->stickX) - newcam_yaw + 0x4000;
+            m->intendedYaw = atan2s(-controller->stickY, controller->stickX) - gNewCamera.yaw + 0x4000;
         }
         m->input |= INPUT_NONZERO_ANALOG;
     } else {
@@ -1610,10 +1617,6 @@ void update_mario_inputs(struct MarioState *m) {
     }
 #endif
     /* End of developer stuff */
-
-    if ((m->action == ACT_END_PEACH_CUTSCENE || m->action == ACT_CREDITS_CUTSCENE) && m->controller->buttonPressed & START_BUTTON) {
-        lvl_skip_credits();
-    }
 
     if (m->playerIndex == 0) {
         if (!localIsPaused && (gCameraMovementFlags & CAM_MOVE_C_UP_MODE)) {
@@ -2391,4 +2394,15 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
                   m->wall->normal.y,
                   m->wall->normal.z);
     }
+}
+
+struct MarioState *get_mario_state_from_object(struct Object *o) {
+    if (!o) { return NULL; }
+    for (s32 i = 0; i != MAX_PLAYERS; ++i) {
+        struct MarioState *m = &gMarioStates[i];
+        if (m->marioObj == o) {
+            return m;
+        }
+    }
+    return NULL;
 }

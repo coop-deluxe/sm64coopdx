@@ -46,7 +46,6 @@ local princessFloatActs = {
     [ACT_SIDE_FLIP] = true,
     [ACT_WALL_KICK_AIR] = true,
 }
-
 local function play_custom_anim(m, name, accel)
     if accel == nil then
         accel = 0x10000
@@ -176,7 +175,7 @@ local function act_peach_float(m)
         play_character_sound(m, CHAR_SOUND_HELLO)
     end
 
-
+    
     if m.forwardVel > 20 then
         m.forwardVel = m.forwardVel - 0.5
     end
@@ -692,7 +691,7 @@ function bhv_birdo_egg_loop(o)
             for i, list in ipairs(obj_lists_check) do
                 local o2 = obj_get_first(list)
                 while o2 and o.numCollidedObjs < 4 do
-                    if o ~= o2 and detect_object_hitbox_overlap(o, o2) ~= 0 then
+                    if o ~= o2 and detect_object_hitbox_overlap(o, o2) ~= 0 and o2.oInteractType ~= INTERACT_DOOR and o2.oInteractType ~= INTERACT_WARP_DOOR and o2.oInteractType ~= INTERACT_TEXT then
                         if obj_has_behavior_id(o2, id_bhvBowser) == 0 then
                             o2.oInteractStatus = o2.oInteractStatus | ATTACK_PUNCH | INT_STATUS_WAS_ATTACKED | INT_STATUS_INTERACTED | INT_STATUS_TOUCHED_BOB_OMB
                         end
@@ -984,6 +983,28 @@ hook_mario_action(ACT_BIRDO_SPIT_EGG, { every_frame = act_birdo_spit_egg })
 hook_mario_action(ACT_BIRDO_SPIT_EGG_AIR, { every_frame = act_birdo_spit_egg_air })
 hook_mario_action(ACT_BIRDO_SPIT_EGG_WALK, { every_frame = act_birdo_spit_egg_walk })
 
+-- needed to prevent torso bug
+local wasBirdo = false
+function fix_torso_bug(m)
+    if m.playerIndex ~= 0 or not charSelectExists then return end
+    local charTable = charSelect.character_get_current_table()
+    if charTable and charTable.name == "Birdo" and charSelect.get_options_status(charSelect.optionTableRef.localMoveset) ~= 0 then
+        wasBirdo = true
+    elseif wasBirdo then
+        wasBirdo = false
+        m.marioBodyState.allowPartRotation = 0
+        m.marioBodyState.torsoAngle.x = 0
+        m.marioBodyState.torsoAngle.y = 0
+        m.marioBodyState.torsoAngle.z = 0
+        m.marioBodyState.headAngle.y = 0
+        gStateExtras[m.playerIndex].spitTimer = 0
+        if m.action == ACT_BIRDO_HOLD_WALKING or m.action == ACT_BIRDO_SPIT_EGG or m.action == ACT_BIRDO_SPIT_EGG_AIR or m.action == ACT_BIRDO_SPIT_EGG_WALK then
+            force_idle_state(m)
+        end
+    end
+end
+hook_event(HOOK_MARIO_UPDATE, fix_torso_bug)
+
 function birdo_on_set_action(m)
     m.marioBodyState.allowPartRotation = 0
     m.marioBodyState.torsoAngle.x = 0
@@ -997,7 +1018,7 @@ function birdo_on_set_action(m)
 end
 
 function birdo_before_action(m, action)
-    if ((action == ACT_PUNCHING and m.action ~= ACT_CROUCHING) or action == ACT_MOVE_PUNCHING) then
+    if ((action == ACT_PUNCHING and m.action ~= ACT_CROUCHING) or action == ACT_MOVE_PUNCHING or action == ACT_JUMP_KICK) and m.controller.buttonDown & A_BUTTON == 0 then
         local e = gStateExtras[m.playerIndex]
         e.framesSinceShoot = 0
         if e.spitTimer == 0 then
@@ -1024,6 +1045,9 @@ function birdo_before_action(m, action)
         elseif action == ACT_MOVE_PUNCHING then
             m.marioObj.header.gfx.animInfo.animFrame = 1
             return ACT_BIRDO_SPIT_EGG_WALK
+        elseif action == ACT_JUMP_KICK then
+            m.marioObj.header.gfx.animInfo.animFrame = 1
+            return ACT_BIRDO_SPIT_EGG_AIR
         else
             m.marioObj.header.gfx.animInfo.animFrame = 1
             return ACT_BIRDO_SPIT_EGG
@@ -1158,7 +1182,7 @@ local ROSALINA_SOUND_SPIN = audio_sample_load("spin_attack.ogg") -- Load audio s
 
 ---@param m MarioState
 function act_spinjump(m)
-
+ 
     if m.actionTimer >= 15 then
         return set_mario_action(m, ACT_FREEFALL, 0) -- End the action
     end
@@ -1243,24 +1267,9 @@ end
 
 hook_mario_action(ACT_SPINJUMP, { every_frame = act_spinjump }, INT_KICK)
 
-----------------
----  Pauline  --
-----------------
-
-local function pauline_update(m)
-    if m.action == ACT_GROUND_POUND and m.input & INPUT_B_PRESSED ~= 0 then
-        m.forwardVel = 30
-        m.faceAngle.y = m.intendedYaw
-        m.vel.y = 30
-        set_mario_action(m, ACT_DIVE, 0)
-        m.particleFlags = m.particleFlags | PARTICLE_DUST
-    end
-end
-
 -------------
 ---  Main  --
 -------------
-
 local function on_character_select_load()
     local CT_TOADETTE  = extraCharacters[1].tablePos
     local CT_PEACH     = extraCharacters[2].tablePos
@@ -1269,7 +1278,7 @@ local function on_character_select_load()
     local CT_BIRDO     = extraCharacters[5].tablePos
     local CT_PAULINE   = extraCharacters[7].tablePos
     local CT_ROSALINA  = extraCharacters[8].tablePos
-
+    
     -- Toadette
     _G.charSelect.character_hook_moveset(CT_TOADETTE, HOOK_MARIO_UPDATE, toadette_update)
     _G.charSelect.character_hook_moveset(CT_TOADETTE, HOOK_ON_SET_MARIO_ACTION, toadette_on_set_action)
@@ -1288,7 +1297,12 @@ local function on_character_select_load()
     _G.charSelect.character_hook_moveset(CT_BIRDO, HOOK_BEFORE_PHYS_STEP, birdo_before_phys_step)
     _G.charSelect.character_hook_moveset(CT_BIRDO, HOOK_BEFORE_MARIO_UPDATE, birdo_before_update)
     -- Pauline
-    _G.charSelect.character_hook_moveset(CT_PAULINE, HOOK_MARIO_UPDATE, pauline_update)
+    if not _G.OmmEnabled then
+        hook_event(HOOK_ON_SET_MARIO_ACTION, pauline_init_action) -- Must run for every character
+        _G.charSelect.character_hook_moveset(CT_PAULINE, HOOK_BEFORE_SET_MARIO_ACTION, pauline_before_action)
+        _G.charSelect.character_hook_moveset(CT_PAULINE, HOOK_BEFORE_MARIO_UPDATE, pauline_cancel_action)
+        hook_event(HOOK_MARIO_UPDATE, pauline_update) -- Must run for every character
+    end
     -- Rosalina
     _G.charSelect.character_hook_moveset(CT_ROSALINA, HOOK_MARIO_UPDATE, rosalina_update)
     _G.charSelect.character_hook_moveset(CT_ROSALINA, HOOK_ON_PVP_ATTACK, rosalina_on_pvp_attack)

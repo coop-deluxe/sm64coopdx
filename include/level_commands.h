@@ -134,10 +134,22 @@
     CMD_PTR(NULL), \
     CMD_PTR(NULL)
 
+// same as LOAD_MIO0, neither do anything
+#define LOAD_YAY0(seg, romStart, romEnd) \
+    CMD_BBH(0x18, 0x0C, 0x0000), \
+    CMD_PTR(NULL), \
+    CMD_PTR(NULL)
+
 #define LOAD_MARIO_HEAD(sethead) \
     CMD_BBH(0x19, 0x04, sethead)
 
 #define LOAD_MIO0_TEXTURE(seg, romStart, romEnd) \
+    CMD_BBH(0x1A, 0x0C, 0x0000), \
+    CMD_PTR(NULL), \
+    CMD_PTR(NULL)
+
+// same as LOAD_MIO0_TEXTURE, neither do anything
+#define LOAD_YAY0_TEXTURE(seg, romStart, romEnd) \
     CMD_BBH(0x1A, 0x0C, 0x0000), \
     CMD_PTR(NULL), \
     CMD_PTR(NULL)

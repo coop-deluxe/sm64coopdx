@@ -185,17 +185,18 @@ void djui_panel_update(void) {
     }
 
     if (activeBase && removingBase) {
-        activeBase->y.value = moveMax - moveMax * smoothstep(0, moveMax, sMoveAmount);
+        activeBase->y.value = moveMax - moveMax * smooth_step(0, moveMax, sMoveAmount);
         if (sPanelRemoving) {
             removingBase->y.value = activeBase->y.value - 1.0f;
         }
     } else if (activeBase && parentBase) {
-        activeBase->y.value = moveMax * smoothstep(0, moveMax, sMoveAmount) - moveMax;
+        activeBase->y.value = moveMax * smooth_step(0, moveMax, sMoveAmount) - moveMax;
         parentBase->y.value = activeBase->y.value + moveMax;
     }
 }
 
 extern bool gDjuiShuttingDown;
+extern bool gDjuiChangingTheme;
 void djui_panel_shutdown(void) {
     static bool sShuttingDown = false;
     if (sShuttingDown) { return; }
@@ -229,7 +230,7 @@ void djui_panel_shutdown(void) {
     gDjuiPanelMainCreated = false;
     gDjuiPanelPauseCreated = false;
     djui_cursor_set_visible(false);
-    if (!gDjuiShuttingDown) {
+    if (!gDjuiShuttingDown && !gDjuiChangingTheme) {
         configfile_save(configfile_name());
         if (gDjuiInMainMenu) {
             gDjuiInMainMenu = false;

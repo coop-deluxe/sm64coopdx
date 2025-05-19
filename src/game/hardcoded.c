@@ -50,6 +50,7 @@ struct LevelValues gDefaultLevelValues = {
     .fixCollisionBugsGroundPoundBonks = TRUE,
     .fixCollisionBugsPickBestWall     = TRUE,
     .fixVanishFloors                  = FALSE,
+    .fixInvalidShellRides             = TRUE,
     .hudCapTimer                      = FALSE,
     .hudRedCoinsRadar                 = FALSE,
     .hudSecretsRadar                  = FALSE,

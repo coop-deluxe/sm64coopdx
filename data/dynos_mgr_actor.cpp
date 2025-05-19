@@ -24,6 +24,10 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
 
+std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
+    return DynosValidActors();
+}
+
 void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
@@ -150,8 +154,9 @@ ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {
 
     // If georef is not NULL, check georef
     if (aGraphNode->georef != NULL) {
-        if (_ValidActors.count(aGraphNode->georef) != 0) {
-            return &_ValidActors[aGraphNode->georef];
+        auto it = _ValidActors.find(aGraphNode->georef);
+        if (it != _ValidActors.end()) {
+            return &it->second;
         }
         return NULL;
     }
@@ -177,10 +182,11 @@ void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx) {
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex) {
     if (aGeoref == NULL) { return; }
     auto& _ValidActors = DynosValidActors();
-    if (_ValidActors.count(aGeoref) == 0) { return; }
-    if (_ValidActors[aGeoref].mPackIndex != aPackIndex) { return; }
+    auto it = _ValidActors.find(aGeoref);
+    if (it == _ValidActors.end()) { return; }
+    if (it->second.mPackIndex != aPackIndex) { return; }
 
-    DynOS_Tex_Invalid(_ValidActors[aGeoref].mGfxData);
+    DynOS_Tex_Invalid(it->second.mGfxData);
     _ValidActors.erase(aGeoref);
 }
 
@@ -191,7 +197,8 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (georef == NULL) { return; }
 
     auto& _ValidActors = DynosValidActors();
-    if (_ValidActors.count(georef) == 0) { return; }
+    auto it = _ValidActors.find(georef);
+    if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
     if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
@@ -206,7 +213,7 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     }
 
 
-    *aSharedChild = (void*)_ValidActors[georef].mGraphNode;
+    *aSharedChild = (void*)it->second.mGraphNode;
 }
 
 void DynOS_Actor_Override_All(void) {

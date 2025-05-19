@@ -776,6 +776,8 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_bhvYoshi);
     bhv_constant(id_RM_Scroll_Texture);
     bhv_constant(id_editor_Scroll_Texture);
+    bhv_constant(id_bhvAmbientLight);
+    bhv_constant(id_bhvPointLight);
 
     // Define a special type for new ids that don't override.
     if (_Arg == "id_bhvNewId") { return (BehaviorScript) (0xFFFF); }
@@ -1883,6 +1885,9 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
 
     /* BreakableWall */
     bhv_constant(oBreakableWallForce);
+
+    /* PointLight */
+    bhv_constant(oLightID);
 
     *found = false;
     return 0;

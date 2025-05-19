@@ -19,6 +19,12 @@ enum RomhackCameraOverride {
     RCO_DISABLE
 };
 
+enum RomhackCameraEnable {
+    RCE_AUTOMATIC,
+    RCE_ON,
+    RCE_OFF
+};
+
 struct RomhackCameraSettings {
     enum RomhackCameraOverride enable;
     u8 centering;
@@ -779,12 +785,6 @@ void stub_camera_2(UNUSED struct Camera *c);
 void stub_camera_3(UNUSED struct Camera *c);
 
 /* |description|
-Subtracts one 3D vector (`src`) from another (`dst`).
-Stores the result in the destination vector
-|descriptionEnd| */
-void vec3f_sub(Vec3f dst, Vec3f src);
-
-/* |description|
 Converts an object's position to a `Vec3f` format.
 Useful for aligning object behaviors or interactions with the camera system
 |descriptionEnd| */
@@ -1146,6 +1146,7 @@ This function handles smooth transitions between different gameplay scenarios
 |descriptionEnd| */
 s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
 
+/* |description|Set the fixed camera base pos depending on the current level area|descriptionEnd| */
 void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);
 /* |description|
 Processes course-specific camera settings, such as predefined positions or modes.

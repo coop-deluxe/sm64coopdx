@@ -67,6 +67,8 @@ static void (*kb_all_keys_up)(void) = NULL;
 static void (*kb_text_input)(char*) = NULL;
 static void (*kb_text_editing)(char*, int) = NULL;
 
+static void (*m_scroll)(float, float) = NULL;
+
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
 static inline void gfx_sdl_set_vsync(const bool enabled) {
@@ -254,6 +256,11 @@ static void gfx_sdl_onkeyup(int scancode) {
         kb_key_up(translate_sdl_scancode(scancode));
 }
 
+static void gfx_sdl_onscroll(float x, float y) {
+    if (m_scroll)
+        m_scroll(x, y);
+}
+
 static void gfx_sdl_ondropfile(char* path) {
 #ifdef _WIN32
     char portable_path[SYS_MAX_PATH];
@@ -288,6 +295,9 @@ static void gfx_sdl_handle_events(void) {
                 break;
             case SDL_KEYUP:
                 gfx_sdl_onkeyup(event.key.keysym.scancode);
+                break;
+            case SDL_MOUSEWHEEL:
+                gfx_sdl_onscroll(event.wheel.preciseX, event.wheel.preciseY);
                 break;
             case SDL_WINDOWEVENT:
                 if (!IS_FULLSCREEN()) {
@@ -329,6 +339,10 @@ void (*on_all_keys_up)(void), void (*on_text_input)(char*), void (*on_text_editi
     kb_all_keys_up = on_all_keys_up;
     kb_text_input = on_text_input;
     kb_text_editing = on_text_editing;
+}
+
+static void gfx_sdl_set_scroll_callback(void (*on_scroll)(float, float)) {
+    m_scroll = on_scroll;
 }
 
 static bool gfx_sdl_start_frame(void) {
@@ -397,6 +411,7 @@ static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? 
 struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_init,
     gfx_sdl_set_keyboard_callbacks,
+    gfx_sdl_set_scroll_callback,
     gfx_sdl_main_loop,
     gfx_sdl_get_dimensions,
     gfx_sdl_handle_events,

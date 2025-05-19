@@ -35,13 +35,13 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
 /* |description|
 Sets the character-specific animation at its default rate (no acceleration)
 |descriptionEnd| */
-s16 set_character_animation(struct MarioState *m, s32 targetAnimID);
+s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAnimID);
 
 /* |description|
 Sets a character-specific animation where the animation speed is adjusted by `accel`.
 Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
 |descriptionEnd| */
-s16 set_character_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel);
+s16 set_character_anim_with_accel(struct MarioState *m, enum CharacterAnimID targetAnimID, s32 accel);
 
 /* |description|
 Sets the current animation frame to a specific `animFrame`
@@ -128,6 +128,11 @@ void play_mario_sound(struct MarioState *m, s32 primarySoundBits, s32 scondarySo
 Returns true if Mario is in any of the crouching or crawling states, checking his current action
 |descriptionEnd| */
 bool mario_is_crouching(struct MarioState *m);
+
+/* |description|
+Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
+|descriptionEnd| */
+bool mario_is_ground_pound_landing(struct MarioState *m);
 
 /* |description|
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
@@ -299,5 +304,10 @@ void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
 Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
 |descriptionEnd| */
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
+
+/* |description|
+Gets the MarioState corresponding to the provided object if the object is a Mario object
+|descriptionEnd| */
+struct MarioState *get_mario_state_from_object(struct Object *o);
 
 #endif // MARIO_H
