@@ -359,7 +359,7 @@ void audio_stream_stop(struct ModAudio* audio) {
 f32 audio_stream_get_position(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "get stream position from")) { return 0; }
 
-    u64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
+    ma_uint64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
     return (f32)cursor / ma_engine_get_sample_rate(&sModAudioEngine);
 }
 
@@ -384,7 +384,7 @@ void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
     
-    u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
+    ma_uint64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart += length;
     if (loopEnd <= 0) loopEnd += length;
 

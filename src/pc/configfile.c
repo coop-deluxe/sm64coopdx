@@ -22,7 +22,7 @@
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "string_utils.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 

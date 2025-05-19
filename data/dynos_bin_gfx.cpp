@@ -23,7 +23,7 @@ static u32 sGfxCommandErrorSize = 0;
 
 #define CHECK_TOKEN_INDEX(tokenIndex, returnValue) { \
     if (tokenIndex >= aNode->mTokens.Count()) { \
-        PrintDataErrorGfx("  ERROR: Invalid token index: %llu, tokens count is: %d", tokenIndex, aNode->mTokens.Count()); \
+        DynOS_PrintDataErrorGfx("  ERROR: Invalid token index: %llu, tokens count is: %d", tokenIndex, aNode->mTokens.Count()); \
         return returnValue; \
     } \
 }
@@ -1217,7 +1217,7 @@ template <typename T, typename SmluaToFunc, typename ReturnFunc>
 static String ConvertParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, const char *typeName, const SmluaToFunc &smluaToFunc, const ReturnFunc &returnFunc) {
     T value = smluaToFunc(L, paramIndex);
     if (!gSmLuaConvertSuccess) {
-        PrintDataErrorGfx("  ERROR: Failed to convert parameter %u to %s", paramIndex, typeName);
+        DynOS_PrintDataErrorGfx("  ERROR: Failed to convert parameter %u to %s", paramIndex, typeName);
         return "";
     }
     return returnFunc(value);
@@ -1266,7 +1266,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
             [&aGfxData] (Gfx *gfx) { return CreateRawPointerDataNode(aGfxData, gfx); }
         );
     }
-    PrintDataErrorGfx("  ERROR: Unknown parameter type: '%c'", paramType);
+    DynOS_PrintDataErrorGfx("  ERROR: Unknown parameter type: '%c'", paramType);
     return "";
 }
 
@@ -1353,7 +1353,7 @@ static bool CheckGfxLength(GfxData *aGfxData, Gfx *gfx, u32 lengthToWrite) {
     if (lengthToWrite > 1) {
         u32 gfxLength = gfx_get_length(gfx);
         if (gfxLength < lengthToWrite) {
-            PrintDataErrorGfx("  ERROR: Cannot write %u commands to display list of length: %u", lengthToWrite, gfxLength);
+            DynOS_PrintDataErrorGfx("  ERROR: Cannot write %u commands to display list of length: %u", lengthToWrite, gfxLength);
             return false;
         }
     }

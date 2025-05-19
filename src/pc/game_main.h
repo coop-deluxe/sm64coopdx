@@ -14,6 +14,8 @@ extern "C" {
 extern bool gGameInited;
 extern bool gGfxInited;
 
+extern f32 gMasterVolume;
+
 extern u8 gLuaVolumeMaster;
 extern u8 gLuaVolumeLevel;
 extern u8 gLuaVolumeSfx;
