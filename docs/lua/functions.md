@@ -1067,6 +1067,7 @@
    - [climb_up_ledge](functions-4.md#climb_up_ledge)
    - [update_ledge_climb_camera](functions-4.md#update_ledge_climb_camera)
    - [update_ledge_climb](functions-4.md#update_ledge_climb)
+   - [mario_pop_bubble](functions-4.md#mario_pop_bubble)
    - [check_common_automatic_cancels](functions-4.md#check_common_automatic_cancels)
    - [mario_execute_automatic_action](functions-4.md#mario_execute_automatic_action)
 
@@ -2050,6 +2051,7 @@
    - [find_water_level](functions-6.md#find_water_level)
    - [find_poison_gas_level](functions-6.md#find_poison_gas_level)
    - [set_find_wall_direction](functions-6.md#set_find_wall_direction)
+   - [closest_point_to_triangle](functions-6.md#closest_point_to_triangle)
 
 <br />
 
