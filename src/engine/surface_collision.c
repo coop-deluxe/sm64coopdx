@@ -104,6 +104,36 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
     out[2] = v1[2] + s * edge0[2] + t * edge1[2];
 }
 
+u8 is_point_past_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
+    f32 weight = (posRelToEdge[1] / edgePos[1]);
+    const f32 corner_threshold = -0.9f;
+    // Don't calculate if above edge
+    if (weight < 0.0f || weight > 1.0f) {
+        return TRUE;
+    } else {
+        f32 weightedDistToEdgeX = edgePos[0] * weight - posRelToEdge[0];
+        f32 weightedDistToEdgeZ = edgePos[2] * weight - posRelToEdge[2];
+        f32 invDenom = sqrtf(weightedDistToEdgeX * weightedDistToEdgeX + weightedDistToEdgeZ * weightedDistToEdgeZ);
+        f32 offset = invDenom - *margin_radius;
+        // Is the position further than the wall's hitbox?
+        if (offset > 0.0f) {
+            return TRUE;
+        } else {
+            invDenom = offset / invDenom;
+            *returnX += (weightedDistToEdgeX *= invDenom);
+            *returnZ += (weightedDistToEdgeZ *= invDenom);
+            *margin_radius += 0.01f;
+
+            // Is the position close to the corner?
+            if (weightedDistToEdgeX * surf->normal.x + weightedDistToEdgeZ * surf->normal.z < corner_threshold * offset) {
+                return TRUE;
+            }
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 /**************************************************
  *                      WALLS                     *
  **************************************************/
@@ -123,14 +153,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     f32 px, pz;
     f32 w1, w2, w3;
     f32 y1, y2, y3;
-    f32 v0x, v0y, v0z;
-    f32 v1x, v1y, v1z;
-    f32 v2x, v2y, v2z;
-    f32 d00, d01, d11, d20, d21;
-    f32 invDenom;
-    f32 v, w;
-    f32 margin_radius = radius - 1.0f;
-    const f32 corner_threshold = -0.9f;
     s32 numCols = 0;
 
     Vec3f cPos = { 0 };
@@ -140,6 +162,17 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     if (radius > 200.0f) {
         radius = 200.0f;
     }
+
+    // Used for fixWallOnSlope
+    Vec3f edge12;
+    Vec3f edge13;
+    Vec3f edge23;
+    Vec3f posRelToEdge;
+    f32 dotEdge12, dotEdge12_13, dotEdge13, dotPosWithEdge12, dotPosWithEdge13;
+    f32 invDenom;
+    f32 vertex2Weight, vertex3Weight;
+    f32 margin_radius = radius - 1.0f;
+    u8 hasCollision = FALSE;
 
     // Stay in this loop until out of walls.
     while (surfaceNode != NULL) {
@@ -294,116 +327,87 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         }
 
         if (gLevelValues.fixCollision.fixWallOnSlope) {
-            v0x = (f32)(surf->vertex2[0] - surf->vertex1[0]);
-            v0y = (f32)(surf->vertex2[1] - surf->vertex1[1]);
-            v0z = (f32)(surf->vertex2[2] - surf->vertex1[2]);
+            hasCollision = FALSE;
 
-            v1x = (f32)(surf->vertex3[0] - surf->vertex1[0]);
-            v1y = (f32)(surf->vertex3[1] - surf->vertex1[1]);
-            v1z = (f32)(surf->vertex3[2] - surf->vertex1[2]);
+            edge12[0] = (f32)(surf->vertex2[0] - surf->vertex1[0]);
+            edge12[1] = (f32)(surf->vertex2[1] - surf->vertex1[1]);
+            edge12[2] = (f32)(surf->vertex2[2] - surf->vertex1[2]);
 
-            v2x = x - (f32)surf->vertex1[0];
-            v2y = y - (f32)surf->vertex1[1];
-            v2z = z - (f32)surf->vertex1[2];
+            edge13[0] = (f32)(surf->vertex3[0] - surf->vertex1[0]);
+            edge13[1] = (f32)(surf->vertex3[1] - surf->vertex1[1]);
+            edge13[2] = (f32)(surf->vertex3[2] - surf->vertex1[2]);
 
-            //Face
-            d00 = v0x * v0x + v0y * v0y + v0z * v0z;
-            d01 = v0x * v1x + v0y * v1y + v0z * v1z;
-            d11 = v1x * v1x + v1y * v1y + v1z * v1z;
-            d20 = v2x * v0x + v2y * v0y + v2z * v0z;
-            d21 = v2x * v1x + v2y * v1y + v2z * v1z;
-            invDenom = 1.0f / (d00 * d11 - d01 * d01);
-            v = (d11 * d20 - d01 * d21) * invDenom;
-            if (v < 0.0f || v > 1.0f)
-                goto edge_1_2;
+            posRelToEdge[0] = x - (f32)surf->vertex1[0];
+            posRelToEdge[1] = y - (f32)surf->vertex1[1];
+            posRelToEdge[2] = z - (f32)surf->vertex1[2];
 
-            w = (d00 * d21 - d01 * d20) * invDenom;
-            if (w < 0.0f || w > 1.0f || v + w > 1.0f)
-                goto edge_1_2;
+            // Face (Initial check)
+            dotEdge12 = edge12[0] * edge12[0] + edge12[1] * edge12[1] + edge12[2] * edge12[2];
+            dotEdge12_13 = edge12[0] * edge13[0] + edge12[1] * edge13[1] + edge12[2] * edge13[2];
+            dotEdge13 = edge13[0] * edge13[0] + edge13[1] * edge13[1] + edge13[2] * edge13[2];
+            dotPosWithEdge12 = posRelToEdge[0] * edge12[0] + posRelToEdge[1] * edge12[1] + posRelToEdge[2] * edge12[2];
+            dotPosWithEdge13 = posRelToEdge[0] * edge13[0] + posRelToEdge[1] * edge13[1] + posRelToEdge[2] * edge13[2];
 
-            x += surf->normal.x * (radius - offset);
-            z += surf->normal.z * (radius - offset);
-            goto hasCollision;
+            invDenom = 1.0f / (dotEdge12 * dotEdge13 - dotEdge12_13 * dotEdge12_13);
+            vertex2Weight = (dotEdge13 * dotPosWithEdge12 - dotEdge12_13 * dotPosWithEdge13) * invDenom;
+            // Is the position outside the 12 edge?
+            if (vertex2Weight < 0.0f || vertex2Weight > 1.0f) {
+                // do nothing
+            } else {
+                vertex3Weight = (dotEdge12 * dotPosWithEdge13 - dotEdge12_13 * dotPosWithEdge12) * invDenom;
+                // Is the position outside the 13 edge?
+                if (vertex3Weight < 0.0f || vertex3Weight > 1.0f || vertex2Weight + vertex3Weight > 1.0f) {
+                    // do nothing
+                } else {
+                    x += surf->normal.x * (radius - offset);
+                    z += surf->normal.z * (radius - offset);
+                    hasCollision = TRUE;
+                }
+            }
 
-        edge_1_2:
-            if (offset < 0)
-                continue;
             //Edge 1-2
-            if (v0y != 0.0f) {
-                v = (v2y / v0y);
-                if (v < 0.0f || v > 1.0f)
-                    goto edge_1_3;
-                d00 = v0x * v - v2x;
-                d01 = v0z * v - v2z;
-                invDenom = sqrtf(d00 * d00 + d01 * d01);
-                offset = invDenom - margin_radius;
-                if (offset > 0.0f)
-                    goto edge_1_3;
-                invDenom = offset / invDenom;
-                x += (d00 *= invDenom);
-                z += (d01 *= invDenom);
-                margin_radius += 0.01f;
-
-                if (d00 * surf->normal.x + d01 * surf->normal.z < corner_threshold * offset)
+            if (!hasCollision) {
+                if (offset < 0) {
                     continue;
-                else
-                    goto hasCollision;
+                }
+                if (edge12[1] != 0.0f) {
+                    if (is_point_past_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
+                        // do nothing
+                    } else {
+                        hasCollision = TRUE;
+                    }
+                }
             }
 
-        edge_1_3:
             //Edge 1-3
-            if (v1y != 0.0f) {
-                v = (v2y / v1y);
-                if (v < 0.0f || v > 1.0f)
-                    goto edge_2_3;
-                d00 = v1x * v - v2x;
-                d01 = v1z * v - v2z;
-                invDenom = sqrtf(d00 * d00 + d01 * d01);
-                offset = invDenom - margin_radius;
-                if (offset > 0.0f)
-                    goto edge_2_3;
-                invDenom = offset / invDenom;
-                x += (d00 *= invDenom);
-                z += (d01 *= invDenom);
-                margin_radius += 0.01f;
-
-                if (d00 * surf->normal.x + d01 * surf->normal.z < corner_threshold * offset)
-                    continue;
-                else
-                    goto hasCollision;
+            if (!hasCollision) {
+                if (edge13[1] != 0.0f) {
+                    if (is_point_past_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
+                        // do nothing
+                    } else {
+                        hasCollision = TRUE;
+                    }
+                }
             }
 
-        edge_2_3:
             //Edge 2-3
-            v1x = (f32)(surf->vertex3[0] - surf->vertex2[0]);
-            v1y = (f32)(surf->vertex3[1] - surf->vertex2[1]);
-            v1z = (f32)(surf->vertex3[2] - surf->vertex2[2]);
+            if (!hasCollision) {
+                edge23[0] = (f32)(surf->vertex3[0] - surf->vertex2[0]);
+                edge23[1] = (f32)(surf->vertex3[1] - surf->vertex2[1]);
+                edge23[2] = (f32)(surf->vertex3[2] - surf->vertex2[2]);
 
-            v2x = x - (f32)surf->vertex2[0];
-            v2y = y - (f32)surf->vertex2[1];
-            v2z = z - (f32)surf->vertex2[2];
+                posRelToEdge[0] = x - (f32)surf->vertex2[0];
+                posRelToEdge[1] = y - (f32)surf->vertex2[1];
+                posRelToEdge[2] = z - (f32)surf->vertex2[2];
 
-            if (v1y != 0.0f) {
-                v = (v2y / v1y);
-                if (v < 0.0f || v > 1.0f)
+                if (edge23[1] != 0.0f) {
+                    if (is_point_past_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
+                        continue;
+                    }
+                } else {
                     continue;
-                d00 = v1x * v - v2x;
-                d01 = v1z * v - v2z;
-                invDenom = sqrtf(d00 * d00 + d01 * d01);
-                offset = invDenom - margin_radius;
-                if (offset > 0.0f)
-                    continue;
-                invDenom = offset / invDenom;
-                x += (d00 *= invDenom);
-                z += (d01 *= invDenom);
-                margin_radius += 0.01f;
-                if (d00 * surf->normal.x + d01 * surf->normal.z < corner_threshold * offset)
-                    continue;
-                else
-                    goto hasCollision;
+                }
             }
-            else
-                continue;
         }
 
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
@@ -424,7 +428,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             }
         }
 
-    hasCollision:
         //! (Unreferenced Walls) Since this only returns the first four walls,
         //  this can lead to wall interaction being missed. Typically unreferenced walls
         //  come from only using one wall, however.
