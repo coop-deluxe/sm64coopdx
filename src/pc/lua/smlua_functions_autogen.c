@@ -17052,6 +17052,24 @@ int smlua_func_update_ledge_climb(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mario_pop_bubble(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_pop_bubble", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_pop_bubble"); return 0; }
+
+    extern void mario_pop_bubble(struct MarioState* m);
+    mario_pop_bubble(m);
+
+    return 1;
+}
+
 int smlua_func_check_common_automatic_cancels(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33921,6 +33939,35 @@ int smlua_func_set_find_wall_direction(lua_State* L) {
     return 1;
 }
 
+int smlua_func_closest_point_to_triangle(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "closest_point_to_triangle", 3, top);
+        return 0;
+    }
+
+    struct Surface* surf = (struct Surface*)smlua_to_cobject(L, 1, LOT_SURFACE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "closest_point_to_triangle"); return 0; }
+
+    Vec3f src;
+    smlua_get_vec3f(src, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "closest_point_to_triangle"); return 0; }
+
+    Vec3f out;
+    smlua_get_vec3f(out, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "closest_point_to_triangle"); return 0; }
+
+    closest_point_to_triangle(surf, src, out);
+
+    smlua_push_vec3f(src, 2);
+
+    smlua_push_vec3f(out, 3);
+
+    return 1;
+}
+
   ////////////////////
  // surface_load.h //
 ////////////////////
@@ -34988,6 +35035,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "climb_up_ledge", smlua_func_climb_up_ledge);
     smlua_bind_function(L, "update_ledge_climb_camera", smlua_func_update_ledge_climb_camera);
     smlua_bind_function(L, "update_ledge_climb", smlua_func_update_ledge_climb);
+    smlua_bind_function(L, "mario_pop_bubble", smlua_func_mario_pop_bubble);
     smlua_bind_function(L, "check_common_automatic_cancels", smlua_func_check_common_automatic_cancels);
     smlua_bind_function(L, "mario_execute_automatic_action", smlua_func_mario_execute_automatic_action);
 
@@ -35927,6 +35975,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "find_poison_gas_level", smlua_func_find_poison_gas_level);
     //smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray); <--- UNIMPLEMENTED
     smlua_bind_function(L, "set_find_wall_direction", smlua_func_set_find_wall_direction);
+    smlua_bind_function(L, "closest_point_to_triangle", smlua_func_closest_point_to_triangle);
 
     // surface_load.h
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);

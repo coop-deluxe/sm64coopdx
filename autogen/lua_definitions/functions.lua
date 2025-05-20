@@ -5642,6 +5642,12 @@ function update_ledge_climb(m, animation, endAction)
 end
 
 --- @param m MarioState
+--- Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+function mario_pop_bubble(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 --- Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
 function check_common_automatic_cancels(m)
@@ -11385,6 +11391,14 @@ end
 --- @param airborne boolean
 --- Sets whether collision finding functions should check wall directions.
 function set_find_wall_direction(dir, active, airborne)
+    -- ...
+end
+
+--- @param surf Surface
+--- @param src Vec3f
+--- @param out Vec3f
+--- Gets the closest point of the triangle to `src` and returns it in `out`.
+function closest_point_to_triangle(surf, src, out)
     -- ...
 end
 
