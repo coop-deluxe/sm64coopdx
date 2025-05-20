@@ -143,6 +143,8 @@ end
 --- Note: These functions don't exist in the Lua math library,
 --- and are useful enough to not have to redefine them in every mod
 
+local __math_min, __math_max, __math_sqrt = math.min, math.max, math.sqrt
+
 --- @param x number
 --- @return number
 --- Computes the square of the number `x`
@@ -156,7 +158,7 @@ end
 --- @return number
 --- Clamps the number `x` between bounds `a` (minimum) and `b` (maximum)
 function math.clamp(x, a, b)
-    return math.min(math.max(x, a), b)
+    return __math_min(__math_max(x, a), b)
 end
 
 --- @param a number
@@ -164,7 +166,7 @@ end
 --- @return number
 --- Computes the hypotenuse of a right-angled triangle given sides `a` and `b` using the Pythagorean theorem
 function math.hypot(a, b)
-    return math.sqrt(a * a + b * b)
+    return __math_sqrt(a * a + b * b)
 end
 
 

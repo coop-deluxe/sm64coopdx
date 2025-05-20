@@ -70,9 +70,14 @@ TEMPLATES = {
 def main():
     verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
     for template_file, x in TEMPLATES.items():
-        tmpl = open(template_file).read()
+        with open(template_file) as f:
+            tmpl = f.read()
         templates = x["templates"]
         post_template = x.get("post-template", None)
+
+        if verbose:
+            print("Generating the following files from template: %s" % (template_file))
+
         for template in templates:
             generated = (
                 "/* THIS FILE IS AUTO-GENERATED */\n" +
@@ -84,11 +89,14 @@ def main():
                 generated = generated.replace("{{" + template_field + "}}", str(template_replacement))
 
             if post_template:
-                generated = post_template["function"](generated, template, templates, **post_template["args"])            
+                generated = post_template["function"](generated, template, templates, **post_template["args"])
 
             generated_filename = template_file[:template_file.rfind(".")] + template["suffix"] + ".inl"
             with open(generated_filename, 'w', encoding='utf-8', newline='\n') as f:
                 f.write(generated)
+
+            if verbose:
+                print(">>> %s" % (generated_filename))
 
 
 if __name__ == "__main__":
