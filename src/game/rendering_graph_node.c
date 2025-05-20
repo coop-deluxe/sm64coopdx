@@ -912,6 +912,10 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
  * but set in global variables. If an animated part is skipped, everything afterwards desyncs.
  */
 static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
+        gCurMarioBodyState->currAnimPart++;
+    }
+
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
@@ -943,15 +947,12 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     if (!increment_mat_stack()) { return; }
 
     // Mario anim part pos
-    if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
-        gCurMarioBodyState->currAnimPart++;
-        if (gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
-            get_pos_from_transform_mtx(
-                gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
-                gMatStack[gMatStackIndex],
-                *gCurGraphNodeCamera->matrixPtr
-            );
-        }
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
+        get_pos_from_transform_mtx(
+            gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
+            gMatStack[gMatStackIndex],
+            *gCurGraphNodeCamera->matrixPtr
+        );
     }
 
     if (gCurGraphNodeMarioState != NULL) {
