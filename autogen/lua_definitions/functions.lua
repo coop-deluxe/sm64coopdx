@@ -10247,6 +10247,20 @@ function get_area_update_counter()
     -- ...
 end
 
+--- @param initialValue integer
+--- @return Pointer_integer
+--- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+function get_temp_s32_pointer(initialValue)
+    -- ...
+end
+
+--- @param pointer Pointer_integer
+--- @return integer
+--- Gets the signed 32-bit integer value from `pointer`
+function deref_s32_pointer(pointer)
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 --- Creates a DJUI popup that is broadcasted to every client

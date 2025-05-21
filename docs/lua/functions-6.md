@@ -2936,6 +2936,52 @@ Gets the area update counter incremented when objects are updated
 
 <br />
 
+## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Description
+Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+
+### Lua Example
+`local PointerValue = get_temp_s32_pointer(initialValue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| initialValue | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32* get_temp_s32_pointer(s32 initialValue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [deref_s32_pointer](#deref_s32_pointer)
+
+### Description
+Gets the signed 32-bit integer value from `pointer`
+
+### Lua Example
+`local integerValue = deref_s32_pointer(pointer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pointer | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 deref_s32_pointer(s32* pointer);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_popup_create_global](#djui_popup_create_global)
 
 ### Description

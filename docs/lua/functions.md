@@ -1861,6 +1861,8 @@
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-6.md#get_network_area_timer)
    - [get_area_update_counter](functions-6.md#get_area_update_counter)
+   - [get_temp_s32_pointer](functions-6.md#get_temp_s32_pointer)
+   - [deref_s32_pointer](functions-6.md#deref_s32_pointer)
    - [djui_popup_create_global](functions-6.md#djui_popup_create_global)
    - [djui_is_popup_disabled](functions-6.md#djui_is_popup_disabled)
    - [djui_set_popup_disabled_override](functions-6.md#djui_set_popup_disabled_override)

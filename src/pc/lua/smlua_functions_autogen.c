@@ -30875,6 +30875,40 @@ int smlua_func_get_area_update_counter(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_temp_s32_pointer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_temp_s32_pointer", 1, top);
+        return 0;
+    }
+
+    s32 initialValue = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_temp_s32_pointer"); return 0; }
+
+    smlua_push_pointer(L, LVT_S32_P, (void*)get_temp_s32_pointer(initialValue), NULL);
+
+    return 1;
+}
+
+int smlua_func_deref_s32_pointer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "deref_s32_pointer", 1, top);
+        return 0;
+    }
+
+    s32* pointer = (s32*)smlua_to_cpointer(L, 1, LVT_S32_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "deref_s32_pointer"); return 0; }
+
+    lua_pushinteger(L, deref_s32_pointer(pointer));
+
+    return 1;
+}
+
 int smlua_func_djui_popup_create_global(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35793,6 +35827,8 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_area_update_counter", smlua_func_get_area_update_counter);
+    smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
+    smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_is_popup_disabled", smlua_func_djui_is_popup_disabled);
     smlua_bind_function(L, "djui_set_popup_disabled_override", smlua_func_djui_set_popup_disabled_override);

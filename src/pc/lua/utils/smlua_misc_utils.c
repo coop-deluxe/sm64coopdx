@@ -51,6 +51,22 @@ u16 get_area_update_counter(void) {
 
 ///
 
+s32* get_temp_s32_pointer(s32 initialValue) {
+    static s32 value = 0;
+    value = initialValue;
+    return &value;
+}
+
+s32 deref_s32_pointer(s32* pointer) {
+    if (pointer == NULL) {
+        LOG_LUA_LINE("Tried to dereference null pointer!");
+        return 0;
+    }
+    return *pointer;
+}
+
+///
+
 void djui_popup_create_global(const char* message, int lines) {
     djui_popup_create(message, lines);
     network_send_global_popup(message, lines);
