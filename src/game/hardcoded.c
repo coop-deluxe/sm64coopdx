@@ -387,6 +387,7 @@ void fix_collision_bugs_set_all(bool enable) {
     gLevelValues.fixCollision.fixFloorOvershadowing = enable;
     gLevelValues.fixCollision.fixOnlyFirstWall = enable;
     gLevelValues.fixCollision.fixObjectOobPush = enable;
+    gLevelValues.fixCollision.fixWallOnSlope = enable;
     gLevelValues.fixCollision.throwaway = enable;
 }
 
@@ -399,5 +400,6 @@ bool fix_collision_bugs_is_any_enabled(void) {
     gLevelValues.fixCollision.fixFloorOvershadowing ||
     gLevelValues.fixCollision.fixOnlyFirstWall ||
     gLevelValues.fixCollision.fixObjectOobPush ||
+    gLevelValues.fixCollision.fixWallOnSlope ||
     gLevelValues.fixCollision.throwaway;
 }

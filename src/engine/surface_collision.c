@@ -184,6 +184,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             continue;
         }
 
+        // Used with fixWallOnSlope so it will be calculated regardless of roundedCorners
+        offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
+
         if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
             // Check AABB to exclude walls before doing expensive triangle check
             f32 minX = MIN(MIN(surf->vertex1[0], surf->vertex2[0]), surf->vertex3[0]) - radius;
@@ -226,8 +229,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             if (!gFindWallDirectionActive && vec3f_dot(norm, cNorm) < 0) { continue; }
 
         } else {
-
-            offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
 
             if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0 : -radius) || offset > radius) {
                 continue;
