@@ -104,7 +104,7 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     }
 }
 
-void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, s16 itemId) {
+void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 itemId) {
     if (content == NULL) { return; }
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
