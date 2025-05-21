@@ -1645,7 +1645,6 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| WallMaxRadius | `number` |  |
 | bubbleOnDeathBarrierInCapStages | `integer` |  |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
@@ -1692,6 +1691,7 @@
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | visibleSecrets | `integer` |  |
+| wallMaxRadius | `number` |  |
 | wdwWaterLevelSpeed | `number` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |

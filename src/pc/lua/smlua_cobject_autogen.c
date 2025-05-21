@@ -1340,7 +1340,6 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
 
 #define LUA_LEVEL_VALUES_FIELD_COUNT 53
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
-    { "WallMaxRadius",                    LVT_F32,     offsetof(struct LevelValues, WallMaxRadius),                    false, LOT_NONE,          1, sizeof(f32)                  },
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE,          1, sizeof(u8)                   },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
     { "coinsRequiredForCoinStar",         LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar),         false, LOT_NONE,          1, sizeof(s16)                  },
@@ -1387,6 +1386,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "vanishCapDurationVcutm",           LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),           false, LOT_NONE,          1, sizeof(u16)                  },
     { "vanishCapSequence",                LVT_S32,     offsetof(struct LevelValues, vanishCapSequence),                false, LOT_NONE,          1, sizeof(enum SeqId)           },
     { "visibleSecrets",                   LVT_U8,      offsetof(struct LevelValues, visibleSecrets),                   false, LOT_NONE,          1, sizeof(u8)                   },
+    { "wallMaxRadius",                    LVT_F32,     offsetof(struct LevelValues, wallMaxRadius),                    false, LOT_NONE,          1, sizeof(f32)                  },
     { "wdwWaterLevelSpeed",               LVT_F32,     offsetof(struct LevelValues, wdwWaterLevelSpeed),               false, LOT_NONE,          1, sizeof(f32)                  },
     { "wingCapDuration",                  LVT_U16,     offsetof(struct LevelValues, wingCapDuration),                  false, LOT_NONE,          1, sizeof(u16)                  },
     { "wingCapDurationTotwc",             LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),             false, LOT_NONE,          1, sizeof(u16)                  },

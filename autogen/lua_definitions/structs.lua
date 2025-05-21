@@ -1067,7 +1067,6 @@
 --- @field public yaw integer
 
 --- @class LevelValues
---- @field public WallMaxRadius number
 --- @field public bubbleOnDeathBarrierInCapStages integer
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
@@ -1114,6 +1113,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
+--- @field public wallMaxRadius number
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer

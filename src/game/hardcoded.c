@@ -127,7 +127,7 @@ struct LevelValues gDefaultLevelValues = {
     .useGlobalStarIds                 = FALSE,
     .zoomOutCameraOnPause             = TRUE,
     .jrbDarkenSkybox                  = TRUE,
-    .WallMaxRadius                    = 200.0f,
+    .wallMaxRadius                    = 200.0f,
 };
 
 struct LevelValues gLevelValues = { 0 };

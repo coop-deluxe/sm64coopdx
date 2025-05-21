@@ -94,7 +94,7 @@ struct LevelValues {
     u8 useGlobalStarIds;
     u8 zoomOutCameraOnPause;
     u8 jrbDarkenSkybox;
-    f32 WallMaxRadius;
+    f32 wallMaxRadius;
 };
 
 extern struct LevelValues gLevelValues;
