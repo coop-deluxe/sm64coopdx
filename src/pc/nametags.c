@@ -6,11 +6,8 @@
 #include "engine/math_util.h"
 #include "game/obj_behaviors.h"
 #include "game/camera.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
-
-#define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
 
 #define FADE_SCALE 4.f
 
@@ -105,7 +102,7 @@ void nametags_render(void) {
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
             out[1] -= 16 * scale;
 
-            u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * CLAMP(FADE_SCALE - scale, 0.f, 1.f);
+            u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - scale, 0.f, 1.f);
 
             struct StateExtras* e = &sStateExtras[i];
             if (!e->inited) {

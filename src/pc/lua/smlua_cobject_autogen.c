@@ -55,6 +55,33 @@ static struct LuaObjectField sVec4fFields[LUA_VEC4F_FIELD_COUNT] = {
     { "z", LVT_F32, sizeof(f32) * 2, false, LOT_NONE, 1, sizeof(f32) },
 };
 
+#define LUA_VEC2I_FIELD_COUNT 2
+static struct LuaObjectField sVec2iFields[LUA_VEC2I_FIELD_COUNT] = {
+    { "x", LVT_S32, sizeof(s32) * 0, false, LOT_NONE, 1, sizeof(s32) },
+    { "y", LVT_S32, sizeof(s32) * 1, false, LOT_NONE, 1, sizeof(s32) },
+};
+
+#define LUA_VEC3I_FIELD_COUNT 3
+static struct LuaObjectField sVec3iFields[LUA_VEC3I_FIELD_COUNT] = {
+    { "x", LVT_S32, sizeof(s32) * 0, false, LOT_NONE, 1, sizeof(s32) },
+    { "y", LVT_S32, sizeof(s32) * 1, false, LOT_NONE, 1, sizeof(s32) },
+    { "z", LVT_S32, sizeof(s32) * 2, false, LOT_NONE, 1, sizeof(s32) },
+};
+
+#define LUA_VEC4I_FIELD_COUNT 4
+static struct LuaObjectField sVec4iFields[LUA_VEC4I_FIELD_COUNT] = {
+    { "w", LVT_S32, sizeof(s32) * 3, false, LOT_NONE, 1, sizeof(s32) },
+    { "x", LVT_S32, sizeof(s32) * 0, false, LOT_NONE, 1, sizeof(s32) },
+    { "y", LVT_S32, sizeof(s32) * 1, false, LOT_NONE, 1, sizeof(s32) },
+    { "z", LVT_S32, sizeof(s32) * 2, false, LOT_NONE, 1, sizeof(s32) },
+};
+
+#define LUA_VEC2S_FIELD_COUNT 2
+static struct LuaObjectField sVec2sFields[LUA_VEC2S_FIELD_COUNT] = {
+    { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE, 1, sizeof(s16) },
+    { "y", LVT_S16, sizeof(s16) * 1, false, LOT_NONE, 1, sizeof(s16) },
+};
+
 #define LUA_VEC3S_FIELD_COUNT 3
 static struct LuaObjectField sVec3sFields[LUA_VEC3S_FIELD_COUNT] = {
     { "x", LVT_S16, sizeof(s16) * 0, false, LOT_NONE, 1, sizeof(s16) },
@@ -118,6 +145,10 @@ struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     [LOT_VEC2F] = { LOT_VEC2F, sVec2fFields, LUA_VEC2F_FIELD_COUNT },
     [LOT_VEC3F] = { LOT_VEC3F, sVec3fFields, LUA_VEC3F_FIELD_COUNT },
     [LOT_VEC4F] = { LOT_VEC4F, sVec4fFields, LUA_VEC4F_FIELD_COUNT },
+    [LOT_VEC2I] = { LOT_VEC2I, sVec2iFields, LUA_VEC2I_FIELD_COUNT },
+    [LOT_VEC3I] = { LOT_VEC3I, sVec3iFields, LUA_VEC3I_FIELD_COUNT },
+    [LOT_VEC4I] = { LOT_VEC4I, sVec4iFields, LUA_VEC4I_FIELD_COUNT },
+    [LOT_VEC2S] = { LOT_VEC2S, sVec2sFields, LUA_VEC2S_FIELD_COUNT },
     [LOT_VEC3S] = { LOT_VEC3S, sVec3sFields, LUA_VEC3S_FIELD_COUNT },
     [LOT_VEC4S] = { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
     [LOT_MAT4] = { LOT_MAT4, sMat4Fields, LUA_MAT4_FIELD_COUNT },
@@ -2919,6 +2950,10 @@ const char *sLuaLotNames[] = {
 	[LOT_VEC2F] = "Vec2f",
 	[LOT_VEC3F] = "Vec3f",
 	[LOT_VEC4F] = "Vec4f",
+	[LOT_VEC2I] = "Vec2i",
+	[LOT_VEC3I] = "Vec3i",
+	[LOT_VEC4I] = "Vec4i",
+	[LOT_VEC2S] = "Vec2s",
 	[LOT_VEC3S] = "Vec3s",
 	[LOT_VEC4S] = "Vec4s",
 	[LOT_MAT4] = "Mat4",

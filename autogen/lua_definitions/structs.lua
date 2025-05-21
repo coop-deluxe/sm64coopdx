@@ -2432,6 +2432,25 @@
 --- @field public z number
 --- @field public w number
 
+--- @class Vec2i
+--- @field public x integer
+--- @field public y integer
+
+--- @class Vec3i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+
+--- @class Vec4i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+--- @field public w integer
+
+--- @class Vec2s
+--- @field public x integer
+--- @field public y integer
+
 --- @class Vec3s
 --- @field public x integer
 --- @field public y integer

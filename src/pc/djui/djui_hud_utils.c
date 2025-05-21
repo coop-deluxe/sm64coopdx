@@ -634,7 +634,7 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
 }
 
 f32 get_current_fov() {
-    return get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
+    return get_first_person_enabled() ? gFirstPersonCamera.fov : replace_value_if_not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
 }
 
 f32 djui_hud_get_fov_coeff() {

@@ -31,7 +31,7 @@
 #endif
 #include "level_table.h"
 #include "course_table.h"
-#include "../../include/libc/stdlib.h"
+#include "libc/stdlib.h"
 #include "rumble_init.h"
 #include "game/interaction.h"
 #include "menu/intro_geo.h"
