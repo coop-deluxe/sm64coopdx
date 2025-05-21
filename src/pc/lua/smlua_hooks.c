@@ -1526,6 +1526,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->overrideId = newBehavior ? customBehaviorId : originalBehaviorId;
     hooked->originalId = originalBehaviorId;
     hooked->originalBehavior = newBehavior ? bhvScript : get_behavior_from_id(originalBehaviorId);
+    hooked->bhvName = bhvName;
     hooked->initReference = 0;
     hooked->loopReference = 0;
     hooked->replace = true;
