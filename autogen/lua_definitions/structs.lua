@@ -1113,6 +1113,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
+--- @field public wallMaxRadius number
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
