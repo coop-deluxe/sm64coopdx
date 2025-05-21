@@ -112,7 +112,7 @@ override_field_immutable = {
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
-    "MarioBodyState": [ "updateTorsoTime" ],
+    "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "currAnimPart" ],
     "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],

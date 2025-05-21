@@ -133,6 +133,10 @@ f32 get_hand_foot_pos_y(struct MarioState* m, u8 index);
 Gets the Z coordinate of Mario's hand (0-1) or foot (2-3)
 but it is important to note that the positions are not updated off-screen|descriptionEnd| */
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
+/* |description|
+Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+|descriptionEnd| */
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);

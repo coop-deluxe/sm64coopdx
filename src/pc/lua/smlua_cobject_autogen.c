@@ -1446,10 +1446,11 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE,  1, sizeof(u32)   },
     { "allowPartRotation",   LVT_U8,      offsetof(struct MarioBodyState, allowPartRotation),   false, LOT_NONE,  1, sizeof(u8)    },
+//  { "animPartsPos",        LVT_???,     offsetof(struct MarioBodyState, animPartsPos),        true,  LOT_???,   1, sizeof(Vec3f) }, <--- UNIMPLEMENTED
     { "capState",            LVT_S8,      offsetof(struct MarioBodyState, capState),            false, LOT_NONE,  1, sizeof(s8)    },
+    { "currAnimPart",        LVT_U32,     offsetof(struct MarioBodyState, currAnimPart),        true,  LOT_NONE,  1, sizeof(u32)   },
     { "eyeState",            LVT_S8,      offsetof(struct MarioBodyState, eyeState),            false, LOT_NONE,  1, sizeof(s8)    },
     { "grabPos",             LVT_S8,      offsetof(struct MarioBodyState, grabPos),             false, LOT_NONE,  1, sizeof(s8)    },
-    { "handFootPos",         LVT_COBJECT, offsetof(struct MarioBodyState, handFootPos),         true,  LOT_VEC3F, 4, sizeof(Vec3f) },
     { "handState",           LVT_S8,      offsetof(struct MarioBodyState, handState),           false, LOT_NONE,  1, sizeof(s8)    },
     { "headAngle",           LVT_COBJECT, offsetof(struct MarioBodyState, headAngle),           true,  LOT_VEC3S, 1, sizeof(Vec3s) },
     { "headPos",             LVT_COBJECT, offsetof(struct MarioBodyState, headPos),             true,  LOT_VEC3F, 1, sizeof(Vec3f) },
@@ -1468,7 +1469,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "shadeR",              LVT_U16,     offsetof(struct MarioBodyState, shadeR),              false, LOT_NONE,  1, sizeof(u16)   },
     { "torsoAngle",          LVT_COBJECT, offsetof(struct MarioBodyState, torsoAngle),          true,  LOT_VEC3S, 1, sizeof(Vec3s) },
     { "torsoPos",            LVT_COBJECT, offsetof(struct MarioBodyState, torsoPos),            true,  LOT_VEC3F, 1, sizeof(Vec3f) },
-    { "updateHeadPosTime",   LVT_U32,     offsetof(struct MarioBodyState, updateHeadPosTime),   false, LOT_NONE,  1, sizeof(u32)   },
+    { "updateHeadPosTime",   LVT_U32,     offsetof(struct MarioBodyState, updateHeadPosTime),   true,  LOT_NONE,  1, sizeof(u32)   },
     { "updateTorsoTime",     LVT_U32,     offsetof(struct MarioBodyState, updateTorsoTime),     true,  LOT_NONE,  1, sizeof(u32)   },
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE,  1, sizeof(s8)    },
 };

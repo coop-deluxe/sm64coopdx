@@ -1739,9 +1739,9 @@
 | action | `integer` |  |
 | allowPartRotation | `integer` |  |
 | capState | `integer` |  |
+| currAnimPart | `integer` | read-only |
 | eyeState | `integer` |  |
 | grabPos | `integer` |  |
-| handFootPos | `Array` <`Vec3f`> | read-only |
 | handState | `integer` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1760,7 +1760,7 @@
 | shadeR | `integer` |  |
 | torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
-| updateHeadPosTime | `integer` |  |
+| updateHeadPosTime | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | wingFlutter | `integer` |  |
 

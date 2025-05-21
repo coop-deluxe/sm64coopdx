@@ -163,6 +163,7 @@ struct GraphNodePerspective *gCurGraphNodeCamFrustum = NULL;
 struct GraphNodeCamera *gCurGraphNodeCamera = NULL;
 struct GraphNodeObject *gCurGraphNodeObject = NULL;
 struct GraphNodeHeldObject *gCurGraphNodeHeldObject = NULL;
+struct MarioBodyState *gCurMarioBodyState = NULL;
 u16 gAreaUpdateCounter = 0;
 
 #ifdef F3DEX_GBI_2
@@ -911,6 +912,10 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
  * but set in global variables. If an animated part is skipped, everything afterwards desyncs.
  */
 static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
+        gCurMarioBodyState->currAnimPart++;
+    }
+
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
@@ -940,6 +945,15 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
+
+    // Mario anim part pos
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
+        get_pos_from_transform_mtx(
+            gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
+            gMatStack[gMatStackIndex],
+            *gCurGraphNodeCamera->matrixPtr
+        );
+    }
 
     if (gCurGraphNodeMarioState != NULL) {
         Vec3f translated = { 0 };
@@ -1212,6 +1226,16 @@ static void geo_sanitize_object_gfx(void) {
     geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
 }
 
+static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
+    for (s32 i = 0; i < MAX_PLAYERS; ++i) {
+        struct MarioState *m = &gMarioStates[i];
+        if (m->marioObj == marioObj) {
+            return m->marioBodyState;
+        }
+    }
+    return NULL;
+}
+
 /**
  * Process an object node.
  */
@@ -1366,12 +1390,17 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
+                gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
+                if (gCurMarioBodyState) {
+                    gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
                 geo_sanitize_object_gfx();
                 geo_process_node_and_siblings(node->header.gfx.sharedChild);
                 node->header.gfx.sharedChild->parent = NULL;
                 gCurGraphNodeObject = NULL;
+                gCurMarioBodyState = NULL;
             }
 
             if (node->header.gfx.node.children != NULL) {

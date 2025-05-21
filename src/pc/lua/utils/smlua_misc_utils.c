@@ -3,6 +3,7 @@
 #include "types.h"
 
 #include "data/dynos.c.h"
+#include "engine/math_util.h"
 #include "game/bettercamera.h"
 #include "game/camera.h"
 #include "game/hardcoded.h"
@@ -296,22 +297,36 @@ u32 allocate_mario_action(u32 actFlags) {
 
 ///
 
+static const u32 sHandFootToAnimParts[] = {
+    [0] = MARIO_ANIM_PART_RIGHT_HAND,
+    [1] = MARIO_ANIM_PART_LEFT_HAND,
+    [2] = MARIO_ANIM_PART_RIGHT_FOOT,
+    [3] = MARIO_ANIM_PART_LEFT_FOOT,
+};
+
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][0];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][0];
 }
 
 f32 get_hand_foot_pos_y(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][1];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][1];
 }
 
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][2];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
+}
+
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos) {
+    if (!m) { return false; }
+    if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
+    vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
+    return true;
 }
 
 ///
