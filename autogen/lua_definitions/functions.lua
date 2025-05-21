@@ -11407,14 +11407,6 @@ function set_find_wall_direction(dir, active, airborne)
 end
 
 --- @param surf Surface
---- @param point Vec3f
---- @return boolean
---- Figures out if a point is "past" a triangle
-function is_point_past_facing_triangle(surf, point)
-    -- ...
-end
-
---- @param surf Surface
 --- @param src Vec3f
 --- @param out Vec3f
 --- Gets the closest point of the triangle to `src` and returns it in `out`.

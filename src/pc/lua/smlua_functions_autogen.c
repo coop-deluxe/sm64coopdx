@@ -33976,29 +33976,6 @@ int smlua_func_set_find_wall_direction(lua_State* L) {
     return 1;
 }
 
-int smlua_func_is_point_past_facing_triangle(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "is_point_past_facing_triangle", 2, top);
-        return 0;
-    }
-
-    struct Surface* surf = (struct Surface*)smlua_to_cobject(L, 1, LOT_SURFACE);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "is_point_past_facing_triangle"); return 0; }
-
-    Vec3f point;
-    smlua_get_vec3f(point, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "is_point_past_facing_triangle"); return 0; }
-
-    lua_pushboolean(L, is_point_past_facing_triangle(surf, point));
-
-    smlua_push_vec3f(point, 2);
-
-    return 1;
-}
-
 int smlua_func_closest_point_to_triangle(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36039,7 +36016,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "find_poison_gas_level", smlua_func_find_poison_gas_level);
     //smlua_bind_function(L, "find_surface_on_ray", smlua_func_find_surface_on_ray); <--- UNIMPLEMENTED
     smlua_bind_function(L, "set_find_wall_direction", smlua_func_set_find_wall_direction);
-    smlua_bind_function(L, "is_point_past_facing_triangle", smlua_func_is_point_past_facing_triangle);
     smlua_bind_function(L, "closest_point_to_triangle", smlua_func_closest_point_to_triangle);
 
     // surface_load.h
