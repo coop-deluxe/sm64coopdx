@@ -968,7 +968,7 @@ bool smlua_call_event_hooks_mario_character_sound_param_ret_int(enum LuaHookedEv
     return false;
 }
 
-void smlua_call_event_hooks_mario_action_params_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32* returnValue) {
+void smlua_call_event_hooks_mario_action_and_arg_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32 arg, u32* returnValue) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -987,8 +987,11 @@ void smlua_call_event_hooks_mario_action_params_ret_int(enum LuaHookedEventType 
         // push action
         lua_pushinteger(L, action);
 
+        // push arg
+        lua_pushinteger(L, arg);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
             LOG_LUA("Failed to call the callback: %u", hookType);
             continue;
         }
@@ -1523,6 +1526,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->overrideId = newBehavior ? customBehaviorId : originalBehaviorId;
     hooked->originalId = originalBehaviorId;
     hooked->originalBehavior = newBehavior ? bhvScript : get_behavior_from_id(originalBehaviorId);
+    hooked->bhvName = bhvName;
     hooked->initReference = 0;
     hooked->loopReference = 0;
     hooked->replace = true;

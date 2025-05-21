@@ -27,7 +27,7 @@ void set_find_wall_direction(Vec3f dir, bool active, bool airborne) {
     gFindWallDirectionAirborne = airborne;
 }
 
-static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
+void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
     Vec3f v1; vec3s_to_vec3f(v1, surf->vertex1);
     Vec3f v2; vec3s_to_vec3f(v2, surf->vertex2);
     Vec3f v3; vec3s_to_vec3f(v3, surf->vertex3);
@@ -239,9 +239,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     Vec3f cPos = { 0 };
     Vec3f cNorm = { 0 };
 
-    // Max collision radius = 200
-    if (radius > 200.0f) {
-        radius = 200.0f;
+    // Default max collision radius = 200
+    if (radius > gLevelValues.wallMaxRadius) {
+        radius = gLevelValues.wallMaxRadius;
     }
 
     // Used for fixWallOnSlope

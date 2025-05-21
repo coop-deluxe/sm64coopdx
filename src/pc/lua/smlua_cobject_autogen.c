@@ -1352,7 +1352,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 48
+#define LUA_LEVEL_VALUES_FIELD_COUNT 49
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages", LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages), false, LOT_NONE,             1, sizeof(u8)                      },
     { "cellHeightLimit",                 LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                 false, LOT_NONE,             1, sizeof(s16)                     },
@@ -1396,6 +1396,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "vanishCapDurationVcutm",          LVT_U16,     offsetof(struct LevelValues, vanishCapDurationVcutm),          false, LOT_NONE,             1, sizeof(u16)                     },
     { "vanishCapSequence",               LVT_S32,     offsetof(struct LevelValues, vanishCapSequence),               false, LOT_NONE,             1, sizeof(enum SeqId)              },
     { "visibleSecrets",                  LVT_U8,      offsetof(struct LevelValues, visibleSecrets),                  false, LOT_NONE,             1, sizeof(u8)                      },
+    { "wallMaxRadius",                   LVT_F32,     offsetof(struct LevelValues, wallMaxRadius),                   false, LOT_NONE,             1, sizeof(f32)                     },
     { "wdwWaterLevelSpeed",              LVT_F32,     offsetof(struct LevelValues, wdwWaterLevelSpeed),              false, LOT_NONE,             1, sizeof(f32)                     },
     { "wingCapDuration",                 LVT_U16,     offsetof(struct LevelValues, wingCapDuration),                 false, LOT_NONE,             1, sizeof(u16)                     },
     { "wingCapDurationTotwc",            LVT_U16,     offsetof(struct LevelValues, wingCapDurationTotwc),            false, LOT_NONE,             1, sizeof(u16)                     },
@@ -1413,11 +1414,10 @@ static struct LuaObjectField sLinearTransitionPointFields[LUA_LINEAR_TRANSITION_
     { "yaw",   LVT_S16,     offsetof(struct LinearTransitionPoint, yaw),   false, LOT_NONE,  1, sizeof(s16)   },
 };
 
-#define LUA_MARIO_ANIMATION_FIELD_COUNT 3
+#define LUA_MARIO_ANIMATION_FIELD_COUNT 2
 static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COUNT] = {
 //  { "animDmaTable",    LVT_COBJECT_P, offsetof(struct MarioAnimation, animDmaTable),    true,  LOT_???,       1, sizeof(struct MarioAnimDmaRelatedThing*) }, <--- UNIMPLEMENTED
     { "currentAnimAddr", LVT_U8_P,      offsetof(struct MarioAnimation, currentAnimAddr), true,  LOT_POINTER,   1, sizeof(u8*)                              },
-    { "padding",         LVT_U8,        offsetof(struct MarioAnimation, padding),         false, LOT_NONE,      4, sizeof(u8)                               },
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION, 1, sizeof(struct Animation*)                },
 };
 
@@ -1638,7 +1638,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 762
+#define LUA_OBJECT_FIELD_COUNT 763
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2057,6 +2057,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oMarioBurnTimer",                            LVT_S32,                 offsetof(struct Object, oMarioBurnTimer),                            false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioCannonInputYaw",                       LVT_S32,                 offsetof(struct Object, oMarioCannonInputYaw),                       false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioCannonObjectYaw",                      LVT_S32,                 offsetof(struct Object, oMarioCannonObjectYaw),                      false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oMarioJumboStarCutscenePosZ",                LVT_F32,                 offsetof(struct Object, oMarioJumboStarCutscenePosZ),                false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMarioLongJumpIsSlow",                       LVT_S32,                 offsetof(struct Object, oMarioLongJumpIsSlow),                       false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioParticleFlags",                        LVT_S32,                 offsetof(struct Object, oMarioParticleFlags),                        false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMarioPolePos",                              LVT_F32,                 offsetof(struct Object, oMarioPolePos),                              false, LOT_NONE,         1, sizeof(f32)                   },

@@ -74,14 +74,6 @@ characterColorPresets = {
     }
 }
 
-local defaultModels = {
-    [CT_MARIO] = E_MODEL_MARIO,
-    [CT_LUIGI] = E_MODEL_LUIGI,
-    [CT_TOAD] = E_MODEL_TOAD_PLAYER,
-    [CT_WALUIGI] = E_MODEL_WALUIGI,
-    [CT_WARIO] = E_MODEL_WARIO
-}
-
 local paletteLoop = #characterColorPresets[E_MODEL_MARIO][1]
 
 local function network_player_set_full_override_palette(networkPlayer, colorTable)

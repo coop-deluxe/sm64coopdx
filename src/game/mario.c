@@ -1138,7 +1138,7 @@ static u32 set_mario_action_cutscene(struct MarioState *m, u32 action, UNUSED u3
 u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     if (!m) { return FALSE; }
     u32 returnValue = 0;
-    smlua_call_event_hooks_mario_action_params_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, &returnValue);
+    smlua_call_event_hooks_mario_action_and_arg_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, actionArg, &returnValue);
     if (returnValue == 1) { return TRUE; } else if (returnValue) { action = returnValue; }
 
     switch (action & ACT_GROUP_MASK) {

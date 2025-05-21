@@ -1,15 +1,15 @@
 // jumping_box.c.inc
 
 struct ObjectHitbox sJumpingBoxHitbox = {
-    /* interactType: */ INTERACT_GRABBABLE,
-    /* downOffset: */ 20,
-    /* damageOrCoinValue: */ 0,
-    /* health: */ 1,
-    /* numLootCoins: */ 5,
-    /* radius: */ 150,
-    /* height: */ 250,
-    /* hurtboxRadius: */ 150,
-    /* hurtboxHeight: */ 250,
+    .interactType = INTERACT_GRABBABLE,
+    .downOffset = 20,
+    .damageOrCoinValue = 0,
+    .health = 1,
+    .numLootCoins = 5,
+    .radius = 150,
+    .height = 250,
+    .hurtboxRadius = 150,
+    .hurtboxHeight = 250,
 };
 
 void jumping_box_act_0(void) {

@@ -3788,13 +3788,6 @@ void stub_camera_2(UNUSED struct Camera *c) {
 void stub_camera_3(UNUSED struct Camera *c) {
 }
 
-void vec3f_sub(Vec3f dst, Vec3f src) {
-    if (!dst || !src) { return; }
-    dst[0] -= src[0];
-    dst[1] -= src[1];
-    dst[2] -= src[2];
-}
-
 void object_pos_to_vec3f(Vec3f dst, struct Object *o) {
     if (!dst || !o) { return; }
     dst[0] = o->oPosX;

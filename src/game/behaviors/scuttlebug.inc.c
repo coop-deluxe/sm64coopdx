@@ -1,15 +1,15 @@
 // scuttlebug.c.inc
 
 struct ObjectHitbox sScuttlebugHitbox = {
-    /* interactType: */ INTERACT_BOUNCE_TOP,
-    /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health: */ 1,
-    /* numLootCoins: */ 3,
-    /* radius: */ 130,
-    /* height: */ 70,
-    /* hurtboxRadius: */ 90,
-    /* hurtboxHeight: */ 60,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 1,
+    .numLootCoins = 3,
+    .radius = 130,
+    .height = 70,
+    .hurtboxRadius = 90,
+    .hurtboxHeight = 60,
 };
 
 s32 update_angle_from_move_flags(s32 *angle) {

@@ -3131,13 +3131,6 @@ function select_mario_cam_mode()
 end
 
 --- @param dst Vec3f
---- @param src Vec3f
---- Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
-function vec3f_sub(dst, src)
-    -- ...
-end
-
---- @param dst Vec3f
 --- @param o Object
 --- Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
 function object_pos_to_vec3f(dst, o)
@@ -5661,6 +5654,12 @@ function update_ledge_climb(m, animation, endAction)
 end
 
 --- @param m MarioState
+--- Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+function mario_pop_bubble(m)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 --- Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
 function check_common_automatic_cancels(m)
@@ -6311,9 +6310,17 @@ function coss(sm64Angle)
     -- ...
 end
 
+--- @param y number
+--- @param x number
+--- @return integer
+--- Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
+function atan2s(y, x)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param src Vec3f
---- @return void*
+--- @return Pointer_number
 --- Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`). After this operation, `dest` will have the same x, y, and z values as `src`
 function vec3f_copy(dest, src)
     -- ...
@@ -6323,7 +6330,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return void*
+--- @return Pointer_number
 --- Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values. After this function, `dest` will have values (x, y, z)
 function vec3f_set(dest, x, y, z)
     -- ...
@@ -6331,7 +6338,7 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3f
---- @return void*
+--- @return Pointer_number
 --- Adds the components of the 3D floating-point vector `a` to `dest`. After this operation, `dest.x` will be `dest.x + a.x`, and similarly for the y and z components
 function vec3f_add(dest, a)
     -- ...
@@ -6340,7 +6347,7 @@ end
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
---- @return void*
+--- @return Pointer_number
 --- Adds the corresponding components of two 3D floating-point vectors `a` and `b`, and stores the result in `dest`. For example, `dest.x = a.x + b.x`, `dest.y = a.y + b.y`, and `dest.z = a.z + b.z`
 function vec3f_sum(dest, a, b)
     -- ...
@@ -6348,8 +6355,16 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3f
+--- @return Pointer_number
+--- Subtracts the components of the 3D floating-point vector `a` from `dest`. After this operation, `dest.x` will be `dest.x - a.x`, and similarly for the y and z components
+function vec3f_sub(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
 --- @param b Vec3f
---- @return void*
+--- @return Pointer_number
 --- Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
 function vec3f_dif(dest, a, b)
     -- ...
@@ -6357,86 +6372,40 @@ end
 
 --- @param dest Vec3f
 --- @param a number
---- @return void*
+--- @return Pointer_number
 --- Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
 function vec3f_mul(dest, a)
     -- ...
 end
 
---- @param dest Vec3s
---- @param src Vec3s
---- @return void*
---- Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
-function vec3s_copy(dest, src)
-    -- ...
-end
-
---- @param dest Vec3s
---- @param x integer
---- @param y integer
---- @param z integer
---- @return void*
---- Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
-function vec3s_set(dest, x, y, z)
-    -- ...
-end
-
---- @param dest Vec3s
---- @param a Vec3s
---- @return void*
---- Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
-function vec3s_add(dest, a)
-    -- ...
-end
-
---- @param dest Vec3s
---- @param a Vec3s
---- @param b Vec3s
---- @return void*
---- Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
-function vec3s_sum(dest, a, b)
-    -- ...
-end
-
 --- @param dest Vec3f
---- @param a Vec3s
---- @return void*
---- Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
-function vec3s_to_vec3f(dest, a)
-    -- ...
-end
-
---- @param dest Vec3s
---- @param a Vec3f
---- @return void*
---- Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
-function vec3f_to_vec3s(dest, a)
+--- @param a number
+--- @return Pointer_number
+--- Divides each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
+function vec3f_div(dest, a)
     -- ...
 end
 
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
---- @param c Vec3f
---- @return void*
---- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
-function find_vector_perpendicular_to_plane(dest, a, b, c)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param a Vec3f
---- @param b Vec3f
---- @return void*
+--- @return Pointer_number
 --- Computes the cross product of two 3D floating-point vectors `a` and `b`. The cross product is a vector perpendicular to both `a` and `b`. The result is stored in `dest`
 function vec3f_cross(dest, a, b)
     -- ...
 end
 
 --- @param dest Vec3f
---- @return void*
+--- @return Pointer_number
 --- Normalizes the 3D floating-point vector `dest` so that its length (magnitude) becomes 1, while retaining its direction. This effectively scales `dest` so that it lies on the unit sphere
 function vec3f_normalize(dest)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @return Pointer_number
+--- Normalizes each component of the 3D floating-point vector 'v'.
+function vec3f_normalize2(v)
     -- ...
 end
 
@@ -6460,6 +6429,7 @@ end
 --- @param vecB Vec3f
 --- @param sclA number
 --- @param sclB number
+--- @return Pointer_number
 --- Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, and then adds the scaled vectors together. The final combined vector is stored in `dest`
 function vec3f_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
@@ -6467,9 +6437,161 @@ end
 
 --- @param v Vec3f
 --- @param rotate Vec3s
---- @return void*
+--- @return Pointer_number
 --- Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 function vec3f_rotate_zxy(v, rotate)
+    -- ...
+end
+
+--- @param vec Vec3f
+--- @param onto Vec3f
+--- @param out Vec3f
+--- @return Pointer_number
+--- Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
+function vec3f_project(vec, onto, out)
+    -- ...
+end
+
+--- @param v1 Vec3f
+--- @param v2 Vec3f
+--- @return number
+--- Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+function vec3f_dist(v1, v2)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist Pointer_number
+--- @param pitch Pointer_integer
+--- @param yaw Pointer_integer
+--- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
+function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist number
+--- @param pitch integer
+--- @param yaw integer
+--- Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
+function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @return Pointer_number
+--- Sets the values of the 3D floating-point vector `v` to 0. After this function, `v` will have values of 0.
+function vec3f_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3f
+--- @return Pointer_integer
+--- Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
+function vec3f_to_vec3s(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param src Vec3s
+--- @return Pointer_integer
+--- Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
+function vec3s_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param x integer
+--- @param y integer
+--- @param z integer
+--- @return Pointer_integer
+--- Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
+function vec3s_set(dest, x, y, z)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return Pointer_integer
+--- Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
+function vec3s_add(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Pointer_integer
+--- Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
+function vec3s_sum(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Pointer_integer
+--- Subtracts the components of the 3D signed-integer vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
+function vec3s_dif(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a integer
+--- @return Pointer_integer
+--- Multiplies each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
+function vec3s_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a integer
+--- @return Pointer_integer
+--- Divides each component of the 3D signed-integer vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x / a`, and similarly for y and z. This scales the vector `dest` by `a`
+function vec3s_div(dest, a)
+    -- ...
+end
+
+--- @param a Vec3s
+--- @return number
+--- Calculates the length (magnitude) of the 3D signed-integer vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
+function vec3s_length(a)
+    -- ...
+end
+
+--- @param v1 Vec3s
+--- @param v2 Vec3s
+--- @return number
+--- Calculates the distance between two 3D signed-integer points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+function vec3s_dist(v1, v2)
+    -- ...
+end
+
+--- @param v Vec3s
+--- @return Pointer_integer
+--- Sets the values of the 3D signed-integer vector `v` to 0. After this function, `v` will have values of 0.
+function vec3s_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3s
+--- @return Pointer_number
+--- Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
+function vec3s_to_vec3f(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @param c Vec3f
+--- @return Pointer_number
+--- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
+function find_vector_perpendicular_to_plane(dest, a, b, c)
     -- ...
 end
 
@@ -6572,6 +6694,7 @@ end
 
 --- @param mtx Mat4
 --- @param b Vec3s
+--- @return Pointer_integer
 --- Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
 function mtxf_mul_vec3s(mtx, b)
     -- ...
@@ -6584,31 +6707,18 @@ function mtxf_inverse(dest, src)
     -- ...
 end
 
+--- @param mtx Mat4
+--- Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+function mtxf_zero(mtx)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
+--- @return Pointer_number
 --- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
-    -- ...
-end
-
---- @param from Vec3f
---- @param to Vec3f
---- @param dist Pointer_number
---- @param pitch Pointer_integer
---- @param yaw Pointer_integer
---- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
-function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
-    -- ...
-end
-
---- @param from Vec3f
---- @param to Vec3f
---- @param dist number
---- @param pitch integer
---- @param yaw integer
---- Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
-function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
@@ -6629,14 +6739,6 @@ end
 --- @return number
 --- Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
 function approach_f32(current, target, inc, dec)
-    -- ...
-end
-
---- @param y number
---- @param x number
---- @return integer
---- Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
-function atan2s(y, x)
     -- ...
 end
 
@@ -6669,22 +6771,6 @@ end
 --- @return number
 --- Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns the `replacement` value. This function ensures that a zero value can be substituted with a fallback value if needed
 function not_zero(value, replacement)
-    -- ...
-end
-
---- @param vec Vec3f
---- @param onto Vec3f
---- @param out Vec3f
---- Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
-function vec3f_project(vec, onto, out)
-    -- ...
-end
-
---- @param v1 Vec3f
---- @param v2 Vec3f
---- @return number
---- Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
-function vec3f_dist(v1, v2)
     -- ...
 end
 
@@ -11325,6 +11411,14 @@ end
 --- @return boolean
 --- Figures out if a point is "past" a triangle
 function is_point_past_facing_triangle(surf, point)
+    -- ...
+end
+
+--- @param surf Surface
+--- @param src Vec3f
+--- @param out Vec3f
+--- Gets the closest point of the triangle to `src` and returns it in `out`.
+function closest_point_to_triangle(surf, src, out)
     -- ...
 end
 

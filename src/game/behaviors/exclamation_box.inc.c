@@ -1,15 +1,15 @@
 // exclamation_box.c.inc
 
 struct ObjectHitbox sExclamationBoxHitbox = {
-    /* interactType: */ INTERACT_BREAKABLE,
-    /* downOffset: */ 5,
-    /* damageOrCoinValue: */ 0,
-    /* health: */ 1,
-    /* numLootCoins: */ 0,
-    /* radius: */ 40,
-    /* height: */ 30,
-    /* hurtboxRadius: */ 40,
-    /* hurtboxHeight: */ 30,
+    .interactType = INTERACT_BREAKABLE,
+    .downOffset = 5,
+    .damageOrCoinValue = 0,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 40,
+    .height = 30,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 30,
 };
 
 void bhv_rotating_exclamation_box_loop(void) {
@@ -104,7 +104,7 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     }
 }
 
-void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 itemId) {
+void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, s16 itemId) {
     if (content == NULL) { return; }
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;

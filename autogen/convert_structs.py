@@ -94,7 +94,7 @@ override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
-    "GraphNode": [ "_guard1", "_guard2" ],
+    "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],

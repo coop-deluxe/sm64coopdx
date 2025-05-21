@@ -1,15 +1,15 @@
 // coin.c.inc
 
 struct ObjectHitbox sYellowCoinHitbox = {
-    /* interactType: */ INTERACT_COIN,
-    /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health: */ 0,
-    /* numLootCoins: */ 0,
-    /* radius: */ 100,
-    /* height: */ 64,
-    /* hurtboxRadius: */ 0,
-    /* hurtboxHeight: */ 0,
+    .interactType = INTERACT_COIN,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 100,
+    .height = 64,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 s16 D_8032F2A4[][2] = { { 0, -150 },  { 0, -50 },   { 0, 50 },   { 0, 150 },

@@ -1121,6 +1121,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
+--- @field public wallMaxRadius number
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
@@ -1137,7 +1138,6 @@
 
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer
---- @field public padding integer[]
 --- @field public targetAnim Animation
 
 --- @class MarioBodyState
@@ -1741,6 +1741,7 @@
 --- @field public oMarioBurnTimer integer
 --- @field public oMarioCannonInputYaw integer
 --- @field public oMarioCannonObjectYaw integer
+--- @field public oMarioJumboStarCutscenePosZ number
 --- @field public oMarioLongJumpIsSlow integer
 --- @field public oMarioParticleFlags integer
 --- @field public oMarioPolePos number

@@ -1706,6 +1706,7 @@
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | visibleSecrets | `integer` |  |
+| wallMaxRadius | `number` |  |
 | wdwWaterLevelSpeed | `number` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
@@ -1736,7 +1737,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | currentAnimAddr | `Pointer` <`integer`> | read-only |
-| padding | `Array` <`integer`> |  |
 | targetAnim | [Animation](structs.md#Animation) |  |
 
 [:arrow_up_small:](#)
@@ -2156,6 +2156,7 @@
 | oMarioTornadoPosY | `number` |  |
 | oMarioReadingSignDPosZ | `number` |  |
 | oMarioWhirlpoolPosY | `number` |  |
+| oMarioJumboStarCutscenePosZ | `number` |  |
 | oMarioBurnTimer | `integer` |  |
 | oMarioLongJumpIsSlow | `integer` |  |
 | oMarioSteepJumpYaw | `integer` |  |

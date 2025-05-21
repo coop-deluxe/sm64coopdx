@@ -88,5 +88,9 @@ void set_find_wall_direction(Vec3f dir, bool active, bool airborne);
 Figures out if a point is "past" a triangle
 |descriptionEnd| */
 bool is_point_past_facing_triangle(struct Surface* surf, Vec3f point);
+/* |description|
+Gets the closest point of the triangle to `src` and returns it in `out`.
+|descriptionEnd| */
+void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out);
 
 #endif // SURFACE_COLLISION_H

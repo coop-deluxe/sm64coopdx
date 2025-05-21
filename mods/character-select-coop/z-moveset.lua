@@ -163,3 +163,12 @@ local function object_render(obj)
     return currMoveset[hook](obj)
 end
 hook_event(HOOK_ON_OBJECT_RENDER, object_render)
+
+local function allow_water_action(m, water)
+    if stopMovesets or not gCSPlayers[0].movesetToggle then return end
+    local hook = HOOK_ALLOW_FORCE_WATER_ACTION
+    local currMoveset = characterMovesets[find_character_number(0)]
+    if currMoveset == nil or currMoveset[hook] == nil then return end
+    return currMoveset[hook](m, water)
+end
+hook_event(HOOK_ALLOW_FORCE_WATER_ACTION, allow_water_action)
