@@ -11320,6 +11320,14 @@ function set_find_wall_direction(dir, active, airborne)
     -- ...
 end
 
+--- @param surf Surface
+--- @param point Vec3f
+--- @return boolean
+--- Figures out if a point is "past" a triangle
+function is_point_past_facing_triangle(surf, point)
+    -- ...
+end
+
 --- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
     -- ...

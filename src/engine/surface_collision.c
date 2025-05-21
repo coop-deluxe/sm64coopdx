@@ -104,7 +104,7 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
     out[2] = v1[2] + s * edge0[2] + t * edge1[2];
 }
 
-u8 is_point_past_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
+u8 is_point_past_facing_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
     f32 weight = (posRelToEdge[1] / edgePos[1]);
     const f32 corner_threshold = -0.9f;
     // Don't calculate if above edge
@@ -132,6 +132,87 @@ u8 is_point_past_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f
         }
     }
     return TRUE;
+}
+
+// Used for Lua
+bool is_point_past_facing_triangle(struct Surface* surf, Vec3f point) {
+    if (!surf || !point) { return false; }
+    Vec3f edge12 = {
+        (f32)(surf->vertex2[0] - surf->vertex1[0]),
+        (f32)(surf->vertex2[1] - surf->vertex1[1]),
+        (f32)(surf->vertex2[2] - surf->vertex1[2]),
+    };
+    Vec3f edge13 = {
+        (f32)(surf->vertex3[0] - surf->vertex1[0]),
+        (f32)(surf->vertex3[1] - surf->vertex1[1]),
+        (f32)(surf->vertex3[2] - surf->vertex1[2]),
+    };
+    Vec3f posRelToEdge = {
+        point[0] - (f32)surf->vertex1[0],
+        point[1] - (f32)surf->vertex1[1],
+        point[2] - (f32)surf->vertex1[2],
+    };
+
+    // Face (Initial check)
+    f32 dotEdge12 = edge12[0] * edge12[0] + edge12[1] * edge12[1] + edge12[2] * edge12[2];
+    f32 dotEdge12_13 = edge12[0] * edge13[0] + edge12[1] * edge13[1] + edge12[2] * edge13[2];
+    f32 dotEdge13 = edge13[0] * edge13[0] + edge13[1] * edge13[1] + edge13[2] * edge13[2];
+    f32 dotPosWithEdge12 = posRelToEdge[0] * edge12[0] + posRelToEdge[1] * edge12[1] + posRelToEdge[2] * edge12[2];
+    f32 dotPosWithEdge13 = posRelToEdge[0] * edge13[0] + posRelToEdge[1] * edge13[1] + posRelToEdge[2] * edge13[2];
+
+    f32 invDenom = 1.0f / (dotEdge12 * dotEdge13 - dotEdge12_13 * dotEdge12_13);
+    f32 vertex2Weight = (dotEdge13 * dotPosWithEdge12 - dotEdge12_13 * dotPosWithEdge13) * invDenom;
+    // Is the position outside the 12 edge?
+    if (vertex2Weight < 0.0f || vertex2Weight > 1.0f) {
+        // do nothing
+    } else {
+        f32 vertex3Weight = (dotEdge12 * dotPosWithEdge13 - dotEdge12_13 * dotPosWithEdge12) * invDenom;
+        // Is the position outside the 13 edge?
+        if (vertex3Weight < 0.0f || vertex3Weight > 1.0f || vertex2Weight + vertex3Weight > 1.0f) {
+            // do nothing
+        } else {
+            return false;
+        }
+    }
+
+    f32 offset = surf->normal.x * point[0] + surf->normal.y * point[1] + surf->normal.z * point[2] + surf->originOffset;
+    Vec3f throwaway = { 0, 0, 0 }; // Can't exactly modify NULL
+    f32 margin_radius = 199.0f;
+
+    //Edge 1-2
+    if (offset < 0) {
+        return true;
+    }
+    if (edge12[1] != 0.0f) {
+        if (!is_point_past_facing_edge(surf, posRelToEdge, edge12, &point[0], &point[2], &margin_radius)) {
+            return false;
+        }
+    }
+
+    //Edge 1-3
+    if (edge13[1] != 0.0f) {
+        if (!is_point_past_facing_edge(surf, posRelToEdge, edge13, &point[0], &point[2], &margin_radius)) {
+            return false;
+        }
+    }
+
+    //Edge 2-3
+    Vec3f edge23 = {
+        (f32)(surf->vertex3[0] - surf->vertex2[0]),
+        (f32)(surf->vertex3[1] - surf->vertex2[1]),
+        (f32)(surf->vertex3[2] - surf->vertex2[2]),
+    };
+
+    posRelToEdge[0] = point[0] - (f32)surf->vertex2[0];
+    posRelToEdge[1] = point[1] - (f32)surf->vertex2[1];
+    posRelToEdge[2] = point[2] - (f32)surf->vertex2[2];
+
+    if (edge23[1] != 0.0f) {
+        if (!is_point_past_facing_edge(surf, posRelToEdge, edge23, &point[0], &point[2], &margin_radius)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**************************************************
@@ -230,6 +311,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
         } else {
 
+            // Used for walls near the edge of the slope, which roundedCorner handles (though less well)
             if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0 : -radius) || offset > radius) {
                 continue;
             }
@@ -372,9 +454,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                     continue;
                 }
                 if (edge12[1] != 0.0f) {
-                    if (is_point_past_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
-                        // do nothing
-                    } else {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
                         hasCollision = TRUE;
                     }
                 }
@@ -383,9 +463,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             //Edge 1-3
             if (!hasCollision) {
                 if (edge13[1] != 0.0f) {
-                    if (is_point_past_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
-                        // do nothing
-                    } else {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
                         hasCollision = TRUE;
                     }
                 }
@@ -402,7 +480,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                 posRelToEdge[2] = z - (f32)surf->vertex2[2];
 
                 if (edge23[1] != 0.0f) {
-                    if (is_point_past_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
+                        // do nothing (Collision found)
+                    } else {
                         continue;
                     }
                 } else {

@@ -6782,6 +6782,30 @@ Sets whether collision finding functions should check wall directions.
 
 <br />
 
+## [is_point_past_facing_triangle](#is_point_past_facing_triangle)
+
+### Description
+Figures out if a point is "past" a triangle
+
+### Lua Example
+`local booleanValue = is_point_past_facing_triangle(surf, point)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+| point | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_point_past_facing_triangle(struct Surface* surf, Vec3f point);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from surface_load.h
 

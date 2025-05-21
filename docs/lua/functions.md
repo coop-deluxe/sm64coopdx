@@ -2046,6 +2046,7 @@
    - [find_water_level](functions-6.md#find_water_level)
    - [find_poison_gas_level](functions-6.md#find_poison_gas_level)
    - [set_find_wall_direction](functions-6.md#set_find_wall_direction)
+   - [is_point_past_facing_triangle](functions-6.md#is_point_past_facing_triangle)
 
 <br />
 

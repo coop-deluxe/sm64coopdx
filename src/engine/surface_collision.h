@@ -84,4 +84,9 @@ Sets whether collision finding functions should check wall directions.
 |descriptionEnd| */
 void set_find_wall_direction(Vec3f dir, bool active, bool airborne);
 
+/* |description|
+Figures out if a point is "past" a triangle
+|descriptionEnd| */
+bool is_point_past_facing_triangle(struct Surface* surf, Vec3f point);
+
 #endif // SURFACE_COLLISION_H
