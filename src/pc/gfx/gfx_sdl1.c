@@ -17,7 +17,7 @@
 
 #include "gfx_window_manager_api.h"
 #include "gfx_screen_config.h"
-#include "../pc_main.h"
+#include "../game_main.h"
 #include "../configfile.h"
 #include "../cliopts.h"
 #include "../platform.h"

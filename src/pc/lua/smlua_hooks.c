@@ -14,11 +14,12 @@
 #include "pc/network/network_player.h"
 #include "pc/network/socket/socket.h"
 #include "pc/chat_commands.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/configfile.h"
 #include "pc/utils/misc.h"
+#include "pc/string_utils.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"

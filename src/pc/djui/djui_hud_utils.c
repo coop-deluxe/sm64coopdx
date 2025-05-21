@@ -6,7 +6,7 @@
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 
 #include "djui_gfx.h"

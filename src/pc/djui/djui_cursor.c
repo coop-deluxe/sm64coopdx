@@ -2,7 +2,7 @@
 #include "djui_panel.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 
 extern ALIGNED8 u8 gd_texture_hand_open[];
 extern ALIGNED8 u8 gd_texture_hand_closed[];
@@ -112,7 +112,7 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
 }
 
 void djui_cursor_update(void) {
-#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2) || defined(CAPI_SDL1) || defined(CAPI_SWITCH)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
     if (!djui_panel_is_active()) { return; }

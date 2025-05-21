@@ -6,6 +6,7 @@
 #include "pc/utils/misc.h"
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
+#include "pc/string_utils.h"
 #include "pc/fs/fmem.h"
 
 size_t mod_get_lua_size(struct Mod* mod) {

@@ -23,6 +23,30 @@
 #define SCANCODE_LSHIFT 42
 #define SCANCODE_RSHIFT 54
 
+#define DJUI_BTN_BAD      0
+#define DJUI_BTN_A        1
+#define DJUI_BTN_B        2
+#define DJUI_BTN_X        3
+#define DJUI_BTN_Y        4
+#define DJUI_BTN_L        5
+#define DJUI_BTN_R        6
+#define DJUI_BTN_ZL       7
+#define DJUI_BTN_ZR       8
+#define DJUI_BTN_PADUP    9
+#define DJUI_BTN_PADLEFT  10
+#define DJUI_BTN_PADDOWN  11
+#define DJUI_BTN_PADRIGHT 12
+#define DJUI_BTN_UP       13
+#define DJUI_BTN_LEFT     14
+#define DJUI_BTN_DOWN     15
+#define DJUI_BTN_RIGHT    16
+#define DJUI_BTN_CUP      17
+#define DJUI_BTN_CLEFT    18
+#define DJUI_BTN_CDOWN    19
+#define DJUI_BTN_CRIGHT   20
+#define DJUI_BTN_START    21
+#define DJUI_BTN_SELECT   22
+
 struct DjuiInteractable {
     bool enabled;
     void (*update_style)(struct DjuiBase*);
@@ -59,8 +83,13 @@ bool djui_interactable_is_binding(void);
 void djui_interactable_set_binding(struct DjuiBase* base);
 void djui_interactable_set_input_focus(struct DjuiBase* base);
 bool djui_interactable_is_input_focus(struct DjuiBase* base);
+void djui_interactable_set_buttons_only(bool enabled);
+bool djui_interactable_is_buttons_only(void);
 bool djui_interactable_on_key_down(int scancode);
 void djui_interactable_on_key_up(int scancode);
+bool djui_interactable_on_button_down(u8 code);
+void djui_interactable_on_button_up(u8 code);
+void djui_interactable_on_button_held(u8 code);
 void djui_interactable_on_text_input(char *text);
 void djui_interactable_on_text_editing(char* text, int cursorPos);
 void djui_interactable_on_scroll(float x, float y);

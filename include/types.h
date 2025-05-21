@@ -19,6 +19,10 @@
     #define BAD_RETURN(cmd) cmd
 #endif
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 struct Controller
 {
     // For optimization reasons, See MarioState

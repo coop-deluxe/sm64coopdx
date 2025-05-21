@@ -5,6 +5,10 @@
 #include "platform.h"
 #include "fs/fs.h"
 
+#ifdef __SWITCH__
+#include "nx_utils.h"
+#endif
+
 u8* gOverrideEeprom = NULL;
 
 extern OSMgrArgs piMgrArgs;
@@ -132,7 +136,10 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes)
 
     u8 content[512];
     s32 ret = -1;
-
+    
+#if defined(__SWITCH__) && !defined(BUILD_NRO)
+    mount_save_data();
+#endif
     fs_file_t *fp = fs_open(SAVE_FILENAME);
     if (fp == NULL) {
         return -1;
@@ -142,6 +149,9 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes)
         ret = 0;
     }
     fs_close(fp);
+#if defined(__SWITCH__) && !defined(BUILD_NRO)
+    unmount_save_data();
+#endif
 
     return ret;
 }
@@ -158,12 +168,19 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes
     }
     memcpy(content + address * 8, buffer, nbytes);
 
+#if defined(__SWITCH__) && !defined(BUILD_NRO)
+    mount_save_data();
+#endif
     FILE *fp = fopen(fs_get_write_path(SAVE_FILENAME), "wb");
     if (fp == NULL) {
         return -1;
     }
     s32 ret = fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
     fclose(fp);
+#if defined(__SWITCH__) && !defined(BUILD_NRO)
+    commit_save();
+    unmount_save_data();
+#endif
 
     return ret;
 }

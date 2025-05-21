@@ -19,7 +19,7 @@
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
 #include "game/hardcoded.h"

@@ -12,7 +12,7 @@
 #include "controller_api.h"
 #include "controller_sdl.h"
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2) || defined(CAPI_SWITCH)
 
 static int inverted_scancode_table[512];
 static SDL_Scancode bind_to_sdl_scancode[512] = { 0 };

@@ -8,7 +8,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
 #include "djui_panel_mod_menu.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "game/object_helpers.h"

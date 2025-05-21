@@ -31,6 +31,9 @@ TARGET_RPI ?= 0
 # Build and optimize for RK3588 processor
 TARGET_RK3588 ?= 0
 
+# Build and optimize for the Nintendo Switch
+TARGET_NX ?= 0
+
 # Makeflag to enable OSX fixes
 OSX_BUILD ?= 0
 
@@ -71,7 +74,7 @@ else
   MIN_MACOS_VERSION ?= 10.15
 endif
 # Make some small adjustments for handheld devices
-HANDHELD ?= 0
+HANDHELD ?= $(TARGET_NX)
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -85,7 +88,7 @@ RENDER_API ?= GL
 WINDOW_API ?= SDL2
 # Audio backends: SDL1, SDL2, DUMMY
 AUDIO_API ?= SDL2
-# Controller backends (can have multiple, space separated): SDL2, SDL1
+# Controller backends (can have multiple, space separated): SDL2, SDL1, SWITCH
 CONTROLLER_API ?= SDL2
 
 # Automatic settings for PC port(s)
@@ -93,6 +96,11 @@ CONTROLLER_API ?= SDL2
 WINDOWS_BUILD ?= 0
 
 WINDOWS_AUTO_BUILDER ?= 0
+
+# Switch Only Settings
+ifeq ($(TARGET_NX), 1)
+BUILD_NRO ?= 0
+endif
 
 # Setup extra cflags
 EXTRA_CFLAGS ?=
@@ -119,7 +127,9 @@ else
 endif
 
 ifeq ($(HOST_OS),Windows)
-  WINDOWS_BUILD := 1
+  ifneq ($(TARGET_NX),1)
+    WINDOWS_BUILD := 1
+  endif
 endif
 
 ifeq ($(HOST_OS),Darwin)
@@ -208,6 +218,7 @@ $(eval $(call validate-option,VERSION,us))
 # Graphics microcode used
 GRUCODE ?= f3dex2e
 
+
 ifeq      ($(VERSION),jp)
   DEFINES   += VERSION_JP=1
   #GRUCODE   ?= f3d_old
@@ -286,8 +297,8 @@ else
 endif
 
 ifeq ($(TARGET_RPI),1)
-  $(info Compiling for Raspberry Pi)
-  DISCORD_SDK := 0
+	$(info Compiling for Raspberry Pi)
+	DISCORD_SDK := 0
 
     # Raspberry Pi B+, Zero, etc
 	ifneq (,$(findstring armv6l,$(machine)))
@@ -296,7 +307,7 @@ ifeq ($(TARGET_RPI),1)
 
     # Raspberry Pi 2 and 3 in ARM 32bit mode
 	ifneq (,$(findstring armv7l,$(machine)))
-  $(info ARM 32bit mode)
+        $(info ARM 32bit mode)
 		model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
 		ifneq (,$(findstring 3,$(model)))
 			 OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -O3
@@ -308,7 +319,7 @@ ifeq ($(TARGET_RPI),1)
     # RPi3 or RPi4, in ARM64 (aarch64) mode. NEEDS TESTING 32BIT.
     # DO NOT pass -mfpu stuff here, thats for 32bit ARM only and will fail for 64bit ARM.
 	ifneq (,$(findstring aarch64,$(machine)))
-    $(info ARM64 mode)
+        $(info ARM64 mode)
 		model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
 		ifneq (,$(findstring 3,$(model)))
 			 OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -O3
@@ -316,9 +327,43 @@ ifeq ($(TARGET_RPI),1)
 			 OPT_FLAGS := -march=armv8-a+crc+simd -mtune=cortex-a72 -O3
 		endif
 	endif
-endif
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+    $(info Compiling for Nintendo Switch)
+    RENDER_API := GL
+    WINDOW_API := SDL2
+    AUDIO_API := SDL2
+    DISCORD_SDK := 0
 
-ifeq ($(TARGET_RK3588),1)
+    ifeq ($(strip $(DEVKITPRO)),)
+        $(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
+    endif
+
+    export PATH := $(DEVKITPRO)/tools/bin:$(DEVKITPRO)/devkitA64/bin:$(PATH)
+    include $(DEVKITPRO)/devkitA64/base_tools
+    NXPATH := $(DEVKITPRO)/portlibs/switch/bin
+    PORTLIBS := $(DEVKITPRO)/portlibs/switch
+    LIBNX ?= $(DEVKITPRO)/libnx
+    CROSS ?= aarch64-none-elf-
+    SDLCROSS := $(NXPATH)/
+    CC := $(CROSS)gcc
+    CXX := $(CROSS)g++
+    STRIP := $(CROSS)strip
+
+    OPT_FLAGS := -ffunction-sections -fdata-sections -march=armv8-a+crc+crypto+simd -mtune=cortex-a57 -mtp=soft -ftls-model=local-exec -fwrapv -fPIC
+    DEFINES += __SWITCH__=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1 USE_GLES=1
+    
+    ifeq ($(BUILD_NRO),1)
+        DEFINES += BUILD_NRO=1
+    endif
+
+    APP_TITLE := SM64 Coop DX
+    APP_AUTHOR := The Coop DX Team
+    APP_VERSION := 1.0.0
+    APP_ICON := res/icon_AmericanEnglish.jpg
+    APP_TITLEID := 0100534d36344350
+    APP_JSON := res/npdm.json
+    ICON := res/icon_AmericanEnglish.dat
+else ifeq ($(TARGET_RK3588),1)
   $(info Compiling for RK3588)
   DISCORD_SDK := 0
   COOPNET := 0
@@ -330,7 +375,9 @@ ifeq ($(TARGET_RK3588),1)
 endif
 
 # Set BITS (32/64) to compile for
-OPT_FLAGS += $(BITS)
+ifeq ($(TARGET_NX),0)
+  OPT_FLAGS += $(BITS)
+endif
 
 TARGET := sm64.$(VERSION)
 
@@ -486,23 +533,35 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 
 BUILD_DIR_BASE := build
 # BUILD_DIR is the location where all build artifacts are placed
-BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
-ifeq ($(WINDOWS_BUILD),1)
-	EXE := $(BUILD_DIR)/sm64coopdx.exe
-else # Linux builds/binary namer
-	ifeq ($(TARGET_RPI),1)
-		EXE := $(BUILD_DIR)/sm64coopdx.arm
-	else
-		EXE := $(BUILD_DIR)/sm64coopdx
-	endif
+
+ifeq ($(TARGET_RPI),1)
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_rpi
+    EXE := $(BUILD_DIR)/sm64coopdx.arm
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_nx
+    ELF := $(BUILD_DIR)/sm64coopdx.elf
+    ifeq ($(BUILD_NRO),1)
+        EXE := $(BUILD_DIR)/sm64coopdx.nro
+    else
+        EXE := $(BUILD_DIR)/sm64coopdx.nsp
+    endif
+else ifeq ($(TARGET_RK3588),1)
+    EXE := $(BUILD_DIR)/sm64coopdx.arm
+else ifeq ($(TARGET_N64),1) # Nintendo 64 (Unused)
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)
+    ELF := $(BUILD_DIR)/sm64coopdx.elf
+    EXE := $(BUILD_DIR)/sm64coopdx.n64
+else ifeq ($(WINDOWS_BUILD),1)
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
+    EXE := $(BUILD_DIR)/sm64coopdx.exe
+else
+    BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
+    EXE := $(BUILD_DIR)/sm64coopdx
 endif
 
-ifeq ($(TARGET_RK3588),1)
-  EXE := $(BUILD_DIR)/sm64coopdx.arm
-endif
+MAP := $(BUILD_DIR)/sm64coopdx.map
 
-ELF            := $(BUILD_DIR)/$(TARGET).elf
 LIBULTRA       := $(BUILD_DIR)/libultra.a
 LD_SCRIPT      := sm64.ld
 MIO0_DIR       := $(BUILD_DIR)/bin
@@ -617,6 +676,16 @@ ifeq ($(DISCORD_SDK), 1)
   endif
 endif
 
+
+ifeq ($(TARGET_NX),1)
+
+ROMFS_DIR := romfs
+
+# Remove old romfs dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(ROMFS_DIR))
+
+endif
+
 LANG_DIR := lang
 
 # Remove old lang dir
@@ -654,10 +723,14 @@ endif
 # Compiler Options                                                             #
 #==============================================================================#
 
-AS        := $(CROSS)as
+SDLCROSS ?= $(CROSS)
 
 ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+  AS := aarch64-none-elf-as
+else
+  AS := $(CROSS)as
 endif
 
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
@@ -690,11 +763,7 @@ else
   endif
 endif
 
-ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
-  CPP := cpp -P
-  OBJCOPY := objcopy
-  OBJDUMP := $(CROSS)objdump
-else ifeq ($(OSX_BUILD),1)
+ifeq ($(OSX_BUILD),1)
   OSX_GCC_VER = $(shell find $(BREW_PREFIX)/bin/gcc* | grep -oE '[[:digit:]]+' | sort -n | uniq | tail -1)
   # if we couldn't find a gcc ver, default to 9
   ifeq ($(OSX_GCC_VER),)
@@ -706,6 +775,10 @@ else ifeq ($(OSX_BUILD),1)
 else ifeq ($(TARGET_N64),0) # Linux & other builds
   CPP := $(CROSS)cpp -P
   OBJCOPY := $(CROSS)objcopy
+  OBJDUMP := $(CROSS)objdump
+else ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
+  CPP := cpp -P
+  OBJCOPY := objcopy
   OBJDUMP := $(CROSS)objdump
 else
   # Prefer gcc's cpp if installed on the system
@@ -755,11 +828,14 @@ ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
+  ifeq ($(TARGET_NX),1)
+  	INCLUDE_DIRS += ${PORTLIBS}/include system ${DEVKITPRO}/libnx/include
+  endif
 endif
 
 # Connfigure backend flags
 
-SDLCONFIG := $(CROSS)sdl2-config
+SDLCONFIG := $(SDLCROSS)sdl2-config
 
 BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_API)=1
 # can have multiple controller APIs
@@ -781,12 +857,15 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(TARGET_RK3588),1)
     BACKEND_LDFLAGS += -lGLESv2
+  else ifeq ($(TARGET_NX),1) # Nintendo Switch
+    BACKEND_LDFLAGS += -lGLESv2
+	EXTRA_CPP_FLAGS += -std=gnu++17 -fsanitize=builtin -fstack-protector
   else ifeq ($(OSX_BUILD),1)
     BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
   else
     BACKEND_LDFLAGS += -lGL
-   endif
+  endif
 endif
 
 ifeq ($(WINDOW_API),DUMMY)
@@ -810,10 +889,10 @@ endif
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
 ifeq ($(SDL2_USED),1)
-  SDLCONFIG := $(CROSS)sdl2-config
+  SDLCONFIG := $(SDLCROSS)sdl2-config
   BACKEND_CFLAGS += -DHAVE_SDL2=1
 else ifeq ($(SDL1_USED),1)
-  SDLCONFIG := $(CROSS)sdl-config
+  SDLCONFIG := $(SDLCROSS)sdl-config
   BACKEND_CFLAGS += -DHAVE_SDL1=1
 endif
 
@@ -826,7 +905,9 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
 
-  ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_NX),1) # Nintendo Switch
+    BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
+  else ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
   else
     BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
@@ -839,17 +920,7 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 # Check code syntax with host compiler
 CC_CHECK := $(CC)
 
-ifeq ($(WINDOWS_BUILD),1)
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
-
-  ifeq ($(TARGET_BITS), 32)
-    BACKEND_LDFLAGS += -ldbghelp
-  endif
-else ifeq ($(TARGET_N64),0) # Linux / Other builds below
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
-  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
-else # C compiler options for N64
+ifeq ($(TARGET_N64),1) # C compiler options for N64
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(TARGET_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-main -DNON_MATCHING -DAVOID_UB $(DEF_INC_CFLAGS)
   CFLAGS = -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
   ifeq ($(COMPILER),gcc)
@@ -857,6 +928,19 @@ else # C compiler options for N64
   else
     CFLAGS += -non_shared -Wab,-r4300_mul -Xcpluscomm -Xfullwarn -signed -32
   endif
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
+  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -std=gnu17
+else ifeq ($(WINDOWS_BUILD),1)
+  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
+  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
+
+  ifeq ($(TARGET_BITS), 32)
+    BACKEND_LDFLAGS += -ldbghelp
+  endif
+else # Linux / Other builds below
+  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
+  CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
 endif
 
 ifeq ($(TARGET_N64),1)
@@ -887,9 +971,11 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
   LDFLAGS += -T windows.ld
 else ifeq ($(TARGET_RPI),1)
-  LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
+  LDFLAGS := $(OPT_FLAGS) $(BACKEND_LDFLAGS) -no-pie
 else ifeq ($(TARGET_RK3588),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+  LDFLAGS := -specs=$(LIBNX)/switch.specs $(OPT_FLAGS) -L$(LIBNX)/lib -L$(PORTLIBS)/lib $(BACKEND_LDFLAGS)
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
@@ -898,7 +984,11 @@ endif
 
 # used by crash handler and loading screen on linux
 ifeq ($(WINDOWS_BUILD),0)
-  LDFLAGS += -rdynamic -ldl -pthread
+  ifeq ($(TARGET_NX),1)
+    LDFLAGS += -pthread
+  else
+    LDFLAGS += -rdynamic -ldl -pthread
+  endif
 endif
 
 # icon
@@ -954,13 +1044,15 @@ else ifeq ($(OSX_BUILD),1)
     LDFLAGS += -L./lib/lua/mac_intel/ -l lua53
   endif
 else ifeq ($(TARGET_RPI),1)
-	ifneq (,$(findstring aarch64,$(machine)))
+  ifneq (,$(findstring aarch64,$(machine)))
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
   else
     LDFLAGS += -Llib/lua/linux -l:liblua53-arm.a
   endif
 else ifeq ($(TARGET_RK3588),1)
   LDFLAGS += -Llib/lua/linux -l:liblua53-arm64.a
+else ifeq ($(TARGET_NX),1)
+  LDFLAGS += -Llib/lua/nx -l:liblua53.a
 else
   LDFLAGS += -Llib/lua/linux -l:liblua53.a -ldl
 endif
@@ -992,6 +1084,8 @@ ifeq ($(COOPNET),1)
     endif
   else ifeq ($(TARGET_RK3588),1)
     LDFLAGS += -Llib/coopnet/linux -l:libcoopnet-arm64.a -l:libjuice.a
+  else ifeq ($(TARGET_NX),1)
+    LDFLAGS += -Llib/coopnet/nx -l:libcoopnet.a -l:libjuice.a
   else
     LDFLAGS += -Llib/coopnet/linux -l:libcoopnet.a -l:libjuice.a
   endif
@@ -1026,11 +1120,18 @@ endif
 # Enable ASLR
 CFLAGS += -fPIE
 
+# Generate a map file
+ifeq ($(OSX_BUILD),0)
+  LDFLAGS += -Wl,-Map $(MAP)
+endif
+
 # Prevent a crash with -sopt
 export LANG := C
 
-ifeq ($(OSX_BUILD),0)
-  LDFLAGS += -latomic
+ifeq ($(TARGET_NX),0)
+  ifeq ($(OSX_BUILD),0)
+    LDFLAGS += -latomic
+  endif
 endif
 
 #==============================================================================#
@@ -1217,14 +1318,25 @@ $(BUILD_DIR)/$(DISCORD_SDK_LIBS):
 $(BUILD_DIR)/$(COOPNET_LIBS):
 	@$(CP) -f $(COOPNET_LIBS) $(BUILD_DIR)
 
+ifeq ($(TARGET_NX),1)
+$(BUILD_DIR)/$(ROMFS_DIR):
+	@mkdir -p $(BUILD_DIR)/$(ROMFS_DIR)
+    
+$(BUILD_DIR)/$(LANG_DIR): $(BUILD_DIR)/$(ROMFS_DIR)
+	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)/$(ROMFS_DIR)/$(LANG_DIR)/
+
+$(BUILD_DIR)/$(PALETTES_DIR): $(BUILD_DIR)/$(ROMFS_DIR)
+	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)/$(ROMFS_DIR)/$(PALETTES_DIR)/
+else
 $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
-$(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
-
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
+endif
+
+$(BUILD_DIR)/$(MOD_DIR):
+	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 # Extra object file dependencies
 
@@ -1342,6 +1454,57 @@ $(BUILD_DIR)/%.mio0.o: $(BUILD_DIR)/%.mio0
 
 endif
 
+#==============================================================================#
+# Nintendo Switch App Generation                                               #
+#==============================================================================#
+
+ifeq ($(TARGET_NX),1)
+
+ifneq ($(APP_TITLEID),)
+    export NACPFLAGS += --titleid=$(APP_TITLEID)
+endif
+
+ifneq ($(APP_ICON),)
+    export NROFLAGS += --icon=$(APP_ICON)
+endif
+
+ifneq ($(ROMFS),)
+    export NROFLAGS += --romfsdir=$(BUILD_DIR)/$(ROMFS_DIR)
+endif
+
+define make_pfs0
+	$(V)mkdir -p $(BUILD_DIR)/exefs
+	$(V)[ $(BUILD_EXEFS_SRC) ] && [ -d $(BUILD_EXEFS_SRC) ] && cp -R $(BUILD_EXEFS_SRC)/* $(BUILD_DIR)/exefs || echo > /dev/null
+	$(V)cp $*.nso $(BUILD_DIR)/exefs/main
+	$(V)[ $(APP_JSON) ] && cp $*.npdm $(BUILD_DIR)/exefs/main.npdm || echo > /dev/null
+	$(V)build_pfs0 $(BUILD_DIR)/exefs $@
+endef
+
+%.nacp: $(MAKEFILE_LIST)
+	$(V)nacptool --create "$(APP_TITLE)" "$(APP_AUTHOR)" "$(APP_VERSION)" $@ $(NACPFLAGS)
+	@$(PRINT) "$(GREEN)Built NACP: $(BLUE)$(notdir $@) $(NO_COL)\n"
+
+%.nro: %.elf %.nacp
+	$(V)elf2nro $< $@ --nacp=$(BUILD_DIR)/sm64coopdx.nacp $(NROFLAGS)
+	@$(PRINT) "$(GREEN)Built NRO: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.nso: %.elf
+	$(V)elf2nso $< $@
+	@$(PRINT) "$(GREEN)Built NSO: $(BLUE)$(notdir $@) $(NO_COL)\n"
+
+%.npdm: $(APP_JSON)
+	$(V)npdmtool $< $@
+	@$(PRINT) "$(GREEN)Built NPDM: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.pfs0: %.nso %.npdm
+	$(make_pfs0)
+	@$(PRINT) "$(GREEN)Built PFS0: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+%.nsp: %.nso %.npdm %.nacp
+	$(make_pfs0)
+	@$(PRINT) "$(GREEN)Built NSP: $(BLUE)$(notdir $@) $(NO_COL)\n"
+    
+endif
 
 #==============================================================================#
 # Sound File Generation                                                        #
@@ -1564,6 +1727,10 @@ ifeq ($(TARGET_N64),1)
 
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
+else ifeq ($(TARGET_NX),1) # Nintendo Switch
+  $(ELF): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
+	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS) -lnx -lm
 else
   $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"

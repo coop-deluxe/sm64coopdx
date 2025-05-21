@@ -132,6 +132,11 @@ void djui_panel_back(void) {
 
     // play a sound
     play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+    
+#if defined(CAPI_SWITCH)
+    // Reselect the default element.
+    djui_cursor_input_controlled_center(sPanelList->defaultElementBase);
+#endif
 
     gDjuiPanelJoinMessageVisible = false;
 }

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "djui.h"
 #include "djui_lobby_entry.h"
+#include "pc/string_utils.h"
 
 #define VK_ESCAPE 1
 

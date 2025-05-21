@@ -13,6 +13,7 @@
 #include "game/save_file.h"
 #include "engine/math_util.h"
 #include "pc/configfile.h"
+#include "pc/string_utils.h"
 
 float smooth_step(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);

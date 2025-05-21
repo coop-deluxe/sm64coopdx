@@ -2,7 +2,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
@@ -23,6 +23,16 @@ static void djui_panel_display_uncapped_change(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
 }
 
+#if defined(__SWITCH__)
+static u32 sFramerateSelection = 0;
+
+static void djui_panel_display_frame_limit_change(UNUSED struct DjuiBase* caller) {
+    switch (sFramerateSelection) {
+        case 1:  configFrameLimit = 60;  break;
+        default: configFrameLimit = 30;  break;
+    }
+}
+#else
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     s32 frameLimit = atoi(inputbox1->buffer);
@@ -34,6 +44,7 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
     }
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
 }
+#endif
 
 static void djui_panel_display_msaa_change(UNUSED struct DjuiBase* caller) {
     switch (sMsaaSelection) {
@@ -60,16 +71,22 @@ void djui_panel_display_create(struct DjuiBase* caller) {
     if (sMsaaOriginal == MSAA_ORIGINAL_UNSET) { sMsaaOriginal = configWindow.msaa; }
 
     {
-        djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
-        djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
+        djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
+#if !defined(__SWITCH__)
+        djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
+#endif
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             if (configFrameLimit < 30) { configFrameLimit = 30; }
             if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+#if defined(__SWITCH__)
+            char *framerateChoices[3] = { "30", "60", NULL };
+            struct DjuiSelectionbox *framerate = djui_selectionbox_create(body, DLANG(DISPLAY, FRAME_LIMIT), framerateChoices, 2, &sFramerateSelection, djui_panel_display_frame_limit_change);
+#else 
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(DISPLAY, FRAME_LIMIT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 220, 220, 220, 255);
@@ -87,6 +104,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_display_frame_limit_text_change);
             djui_base_set_enabled(&inputbox1->base, !configUncappedFramerate);
             sFrameLimitInput = inputbox1;
+#endif
         }
 
         char* interpChoices[2] = { DLANG(DISPLAY, FAST), DLANG(DISPLAY, ACCURATE) };
@@ -94,7 +112,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_base_set_enabled(&selectionbox1->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
         sInterpolationSelectionBox = selectionbox1;
 
-        char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };
+        char* filterChoices[4] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT), NULL };
         djui_selectionbox_create(body, DLANG(DISPLAY, FILTERING), filterChoices, 3, &configFiltering, NULL);
 
         int maxMsaa = wm_api->get_max_msaa();
@@ -110,7 +128,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             else if (maxMsaa >= 8)  { choiceCount = 4; }
             else if (maxMsaa >= 4)  { choiceCount = 3; }
 
-            char* msaaChoices[5] = { DLANG(DISPLAY, OFF), "2x", "4x", "8x", "16x" };
+            char* msaaChoices[6] = { DLANG(DISPLAY, OFF), "2x", "4x", "8x", "16x", NULL };
             msaa = djui_selectionbox_create(body, DLANG(DISPLAY, ANTIALIASING), msaaChoices, choiceCount, &sMsaaSelection, djui_panel_display_msaa_change);
         }
 

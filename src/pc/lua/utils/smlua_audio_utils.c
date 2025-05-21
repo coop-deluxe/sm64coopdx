@@ -15,7 +15,7 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/fs/fmem.h"
 
 struct AudioOverride {
@@ -331,8 +331,8 @@ void audio_stream_destroy(struct ModAudio* audio) {
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
-    
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+  
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -359,7 +359,7 @@ void audio_stream_stop(struct ModAudio* audio) {
 f32 audio_stream_get_position(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "get stream position from")) { return 0; }
 
-    u64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
+    ma_uint64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
     return (f32)cursor / ma_engine_get_sample_rate(&sModAudioEngine);
 }
 
@@ -384,7 +384,7 @@ void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
     
-    u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
+    ma_uint64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart += length;
     if (loopEnd <= 0) loopEnd += length;
 
@@ -423,9 +423,9 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 }
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
-    if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
-    
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (!audio_sanity_check(audio, true, "set stream volume")) { return; }
+  
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -563,7 +563,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(sound, 0);
     } else {
         f32 intensity = sound_get_level_intensity(dist);
@@ -584,7 +584,7 @@ void audio_custom_update_volume(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (configMuteFocusLoss && !WAPI.has_focus()) {
+        if (configMuteFocusLoss && !wm_api->has_focus()) {
             ma_sound_set_volume(&audio->sound, 0);
         } else if (audio->isStream) {
             ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);

@@ -31,7 +31,7 @@
 #include "hardcoded.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"

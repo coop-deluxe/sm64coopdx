@@ -8,6 +8,9 @@
 #define TRUE 1
 #define FALSE 0
 
+#ifdef __SWITCH__
+#include <switch.h>
+#else
 typedef signed char            s8;
 typedef unsigned char          u8;
 typedef signed short int       s16;
@@ -25,6 +28,7 @@ typedef volatile s8   vs8;
 typedef volatile s16 vs16;
 typedef volatile s32 vs32;
 typedef volatile s64 vs64;
+#endif
 
 typedef float  f32;
 typedef double f64;

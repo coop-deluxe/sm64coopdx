@@ -10,7 +10,7 @@
 #include "djui_panel_dynos.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 
 static void djui_panel_options_back(struct DjuiBase* caller) {
     configfile_save(configfile_name());

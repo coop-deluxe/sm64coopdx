@@ -1,4 +1,4 @@
-#ifdef WINSOCK
+#if defined(WINSOCK) && !defined(__SWITCH__)
 #include "socket_windows.h"
 #include <stdio.h>
 #include "pc/debuglog.h"

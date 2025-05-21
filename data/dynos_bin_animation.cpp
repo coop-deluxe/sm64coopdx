@@ -7,7 +7,7 @@
 static void ScanAnimationDataFile(GfxData *aGfxData, const SysPath &aFilename) {
     FILE *_File = fopen(aFilename.c_str(), "rb");
     if (!_File) {
-        PrintDataError("  ERROR: Unable to open file \"%s\"", aFilename.c_str());
+        DynOS_PrintDataError("  ERROR: Unable to open file \"%s\"", aFilename.c_str());
     }
 
     // Load file into a buffer while removing all comments
@@ -70,7 +70,7 @@ static void ScanAnimationDataFile(GfxData *aGfxData, const SysPath &aFilename) {
 
                     case DATA_TYPE_ANIMATION: {
                         if (_Data.Count() < 10) {
-                            PrintDataError("  ERROR: %s: Not enough data", _DataName.begin());
+                            DynOS_PrintDataError("  ERROR: %s: Not enough data", _DataName.begin());
                             break;
                         }
 
@@ -104,7 +104,7 @@ static void ScanAnimationDataFile(GfxData *aGfxData, const SysPath &aFilename) {
 static void ScanAnimationTableFile(GfxData *aGfxData, const SysPath &aFilename) {
     FILE *_File = fopen(aFilename.c_str(), "rb");
     if (!_File) {
-        PrintDataError("  ERROR: Unable to open file \"%s\"", aFilename.c_str());
+        DynOS_PrintDataError("  ERROR: Unable to open file \"%s\"", aFilename.c_str());
     }
 
     // Load file into a buffer while removing all comments

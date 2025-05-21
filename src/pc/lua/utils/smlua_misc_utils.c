@@ -13,7 +13,7 @@
 #include "pc/mods/mod.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "game/object_list_processor.h"
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
@@ -509,11 +509,11 @@ struct Mod* get_active_mod(void) {
 ///
 
 void set_window_title(const char* title) {
-    WAPI.set_window_title(title);
+    wm_api->set_window_title(title);
 }
 
 void reset_window_title(void) {
-    WAPI.reset_window_title();
+    wm_api->reset_window_title();
 }
 
 ///
