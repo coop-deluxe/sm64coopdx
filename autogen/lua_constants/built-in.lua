@@ -22,11 +22,44 @@ _ReadOnlyTable = {
 }
 
 -----------
+-- table --
+-----------
+
+--- Creates a shallow copy of table `t`
+--- @param t table
+--- @return table
+function table.copy(t)
+    return table_copy(t)
+end
+
+--- Creates a deep copy of table `t`
+--- @param t table
+--- @return table
+function table.deepcopy(t)
+    return table_deepcopy(t)
+end
+
+--- Utility function to create a read-only table
+--- @param data table
+--- @return table
+function create_read_only_table(data)
+    local t = {}
+    local mt = {
+        __index = data,
+        __newindex = function() end,
+        __call = function() return table_copy(data) end,
+        __metatable = false
+    }
+    setmetatable(t, mt)
+    return t
+end
+
+-----------
 -- sound --
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number

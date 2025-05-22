@@ -1,5 +1,6 @@
 from common import *
 from extract_constants import *
+from vec_types import *
 import sys
 
 in_filename = 'autogen/lua_constants/built-in.lua'
@@ -365,12 +366,30 @@ def build_files(processed_files):
 
     return s
 
+def build_vec_type_constant(type_name, vec_type, constant, values):
+    txt = 'g%s%s = create_read_only_table({' % (type_name, constant)
+    txt += ','.join([
+        '%s=%s' % (lua_field, str(values[i]))
+        for i, lua_field in enumerate(vec_type["fields_mapping"])
+    ])
+    txt += '})'
+    return txt
+
 def build_to_c(built_files):
     txt = ''
+
+    # Built-in and deprecated
     for filename in [in_filename, deprecated_filename]:
         with open(get_path(filename), 'r') as f:
             for line in f.readlines():
                 txt += line.strip() + '\n'
+
+    # Vec types constants
+    for type_name, vec_type in VEC_TYPES.items():
+        for constant, values in vec_type.get("constants", {}).items():
+            txt += build_vec_type_constant(type_name, vec_type, constant, values) + '\n'
+
+    # Source files
     txt += '\n' + built_files
 
     while ('\n\n' in txt):
@@ -504,6 +523,14 @@ def build_to_def(processed_files):
     with open(get_path(in_filename), 'r') as f:
         s += f.read()
         s += '\n'
+
+    s += '\n\n-------------------------\n'
+    s += '-- vec types constants --\n'
+    s += '-------------------------\n\n'
+    for type_name, vec_type in VEC_TYPES.items():
+        for constant, values in vec_type.get("constants", {}).items():
+            s += '--- @type %s\n' % (type_name)
+            s += build_vec_type_constant(type_name, vec_type, constant, values) + '\n\n'
 
     for file in processed_files:
         constants = file['constants']

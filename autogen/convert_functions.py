@@ -919,6 +919,9 @@ def build_call(function):
     elif ftype == 'void *':
         return '    %s;\n' % ccall
 
+    if ftype in VECP_TYPES:
+        return '    %s;\n' % ccall
+
     flot = translate_type_to_lot(ftype)
 
     lfunc = 'UNIMPLEMENTED -->'
@@ -991,6 +994,10 @@ def build_function(function, do_extern):
         s += build_param_after(param, i)
         i += 1
     s += '\n'
+
+    # To allow chaining vector functions calls, return the table corresponding to `dest` parameter
+    if function['type'] in VECP_TYPES:
+        s += '    lua_settop(L, 1);\n'
 
     s += '    return 1;\n}\n'
 
@@ -1439,6 +1446,9 @@ def def_files(processed_files):
 
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
+
+    for vecp_type, vec_type in VECP_TYPES.items():
+        s += '--- @alias %s %s\n' % (vecp_type, vec_type)
 
     with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
