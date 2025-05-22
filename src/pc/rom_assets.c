@@ -26,15 +26,6 @@ static u32 sCurrentPhysicalSize = 0;
 static u8* sCurrentSegmentMemory = NULL;
 static u32 sCurrentSegmentSize = 0;
 
-static s32 READ32(struct RomAsset* asset) {
-    s64 index = (asset->segmentedAddress + asset->cursor);
-    if (index < 0 || index >= sCurrentSegmentSize) { return 0; }
-    u8* ptr = &sCurrentSegmentMemory[index];
-    s32 value = BSWAP32(*((s32*)ptr));
-    asset->cursor += sizeof(s32);
-    return value;
-}
-
 static s16 READ16(struct RomAsset* asset) {
     s64 index = (asset->segmentedAddress + asset->cursor);
     if (index < 0 || index >= sCurrentSegmentSize) { return 0; }

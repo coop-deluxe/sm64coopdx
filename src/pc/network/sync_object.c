@@ -25,7 +25,6 @@ struct SyncObjectForgetEntry {
 struct SyncObjectForgetEntry* sForgetList = NULL;
 
 static u32 sNextSyncId = SYNC_ID_BLOCK_SIZE / 2;
-static bool sFreeingAll = false;
 
   ////////////
  // system //
@@ -33,18 +32,6 @@ static bool sFreeingAll = false;
 
 void sync_objects_init_system(void) {
     sSoMap = hmap_create(true);
-}
-
-static bool sync_objects_forget_list_contains(struct SyncObject* so) {
-    struct SyncObjectForgetEntry* entry = sForgetList;
-    while (entry) {
-        struct SyncObjectForgetEntry* next = entry->next;
-        if (entry->so == so) {
-            return true;
-        }
-        entry = next;
-    }
-    return false;
 }
 
 void sync_objects_update(void) {

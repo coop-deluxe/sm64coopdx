@@ -127,7 +127,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_INTERACTIONS",
     "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_BEFORE_WARP",
-    "HOOK_ON_INSTANT_WARP"
+    "HOOK_ON_INSTANT_WARP",
     "HOOK_MAX"
 };
 

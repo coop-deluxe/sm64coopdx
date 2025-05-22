@@ -414,7 +414,7 @@ static void handle_tab_completion(void) {
     }
 }
 
-static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode) {
+static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int scancode) {
     sent_history_init(&sentHistory);
 
     if (gDjuiChatBox == NULL) { return false; }
@@ -469,12 +469,13 @@ static bool djui_chat_box_input_on_key_down(struct DjuiBase* base, int scancode)
             sent_history_reset_navigation(&sentHistory);
             djui_chat_box_input_escape(gDjuiChatBox->chatInput);
             break;
-        default:
+        default: {
             bool returnValueOnOtherKeyDown = djui_inputbox_on_key_down(base, scancode);
             if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) {
                 reset_tab_completion_all();
             }
             return returnValueOnOtherKeyDown;
+        }
     }
 
     if (!gDjuiConsole->scrolling) {

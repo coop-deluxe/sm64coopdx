@@ -154,9 +154,9 @@ void ext_gfx_run_dl(Gfx* cmd);
 
 //////////////////////////////////
 
-static unsigned long get_time(void) {
+/*static unsigned long get_time(void) {
     return 0;
-}
+}*/
 
 static void gfx_flush(void) {
     if (buf_vbo_len > 0) {
@@ -2046,10 +2046,10 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint
     sDjuiOverride  = (texture != NULL);
 }
 
-static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+/*static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
     gfx_sp_vertex(n_vertices, dest_index, vertices, false);
     return;
-}
+}*/
 
 static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     gfx_sp_tri1(vtx1_idx, vtx2_idx, vtx3_idx);
