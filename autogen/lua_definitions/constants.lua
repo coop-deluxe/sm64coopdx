@@ -7667,7 +7667,8 @@ HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
 HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
 HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
-HOOK_MAX                                    = 56 --- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
+HOOK_MAX                                    = 57 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7726,6 +7727,7 @@ HOOK_MAX                                    = 56 --- @type LuaHookedEventType
 --- | `HOOK_ALLOW_FORCE_WATER_ACTION`
 --- | `HOOK_BEFORE_WARP`
 --- | `HOOK_ON_INSTANT_WARP`
+--- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
 --- | `HOOK_MAX`
 
 ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
