@@ -3,8 +3,7 @@
 #include "djui.h"
 #include "djui_console.h"
 #include "pc/pc_main.h"
-
-#define CLAMP(_val, _min, _max) fmax(fmin((_val), _max), _min)
+#include "engine/math_util.h"
 
 #define MAX_CONSOLE_MESSAGES 500
 
@@ -58,9 +57,9 @@ bool djui_console_render(struct DjuiBase* base) {
         f32 yMax = console->base.comp.height - console->flow->base.height.value;
         f32 target = console->flow->base.y.value + (console->scrollY - console->flow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
 
-        console->flow->base.y.value = CLAMP(target, yMax, 0.f);
+        console->flow->base.y.value = clamp(target, yMax, 0.f);
         if (target < yMax || 0.f < target) {
-            console->scrollY = CLAMP(target, yMax, 0.f);
+            console->scrollY = clamp(target, yMax, 0.f);
             if (target > 0.f) { gDjuiConsole->scrolling = false; }
         }
     } else { console->scrollY = console->flow->base.y.value; }
@@ -97,6 +96,7 @@ static void djui_console_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x,
     if (gDjuiInputHeldShift) { y *= 3; }
 
     gDjuiConsole->scrollY -= y;
+    
     if (!gDjuiConsole->scrolling) {
         gDjuiConsole->scrolling = y > 0 && gDjuiConsole->scrollY > yMax;
     }
@@ -124,6 +124,7 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
         case SCANCODE_ESCAPE: djui_console_toggle(); break;
         default: break;
     }
+
     if (!gDjuiConsole->scrolling) {
         gDjuiConsole->scrolling = gDjuiConsole->scrollY < 0 && gDjuiConsole->scrollY > yMax;
     }
