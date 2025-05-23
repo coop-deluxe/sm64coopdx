@@ -1,4 +1,10 @@
-#ifdef WAPI_SDL2
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define DYNOS_SDL_INCLUDED
+#include <SDL2/SDL.h>
 
 #ifdef __MINGW32__
 #define FOR_WINDOWS 1
@@ -13,11 +19,9 @@
 #if FOR_WINDOWS
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL2/SDL_opengl.h>
 #else
-#include <SDL2/SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef OSX_BUILD
@@ -28,7 +32,6 @@
 
 #endif // End of OS-Specific GL defines
 
-#include <stdio.h>
 #include <unistd.h>
 
 #include "gfx_window_manager_api.h"
@@ -337,7 +340,7 @@ static char* gfx_sdl_get_clipboard_text(void) {
 static void gfx_sdl_set_clipboard_text(const char* text) { SDL_SetClipboardText(text); }
 static void gfx_sdl_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
 
-struct GfxWindowManagerAPI gfx_sdl = {
+struct GfxWindowManagerAPI gfx_sdl2 = {
     gfx_sdl_init,
     gfx_sdl_set_keyboard_callbacks,
     gfx_sdl_set_scroll_callback,
@@ -360,5 +363,3 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_reset_window_title,
     gfx_sdl_has_focus
 };
-
-#endif // BACKEND_WM

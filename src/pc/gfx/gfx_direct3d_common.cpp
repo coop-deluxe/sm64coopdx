@@ -1,5 +1,3 @@
-#ifdef RAPI_D3D11
-
 #include <cstdio>
 
 #include "gfx_direct3d_common.h"
@@ -340,5 +338,3 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     }
     append_line(buf, &len, "}");
 }
-
-#endif
