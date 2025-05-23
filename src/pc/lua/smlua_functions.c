@@ -640,20 +640,20 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
 
         // OBJECT, OBJECT_WITH_ACTS
         case 0x24: {
-            const BehaviorScript *bhvPtr = (const BehaviorScript *) dynos_level_cmd_get(cmd, 20);
+            const BehaviorScript *bhvPtr = (const BehaviorScript *) dynos_level_cmd_get(cmd, 24);
             if (bhvPtr) {
                 bhvId = get_id_from_behavior(bhvPtr);
                 if (bhvId == id_bhv1Up) {
                     bhvId = get_id_from_vanilla_behavior(bhvPtr); // for behaviors with no id in the script (e.g. bhvInstantActiveWarp)
                 }
-                bhvArgs = dynos_level_cmd_get(cmd, 16);
-                bhvModelId = dynos_level_cmd_get(cmd, 3);
-                bhvPosX = dynos_level_cmd_get(cmd, 4);
-                bhvPosY = dynos_level_cmd_get(cmd, 6);
-                bhvPosZ = dynos_level_cmd_get(cmd, 8);
-                bhvPitch = (dynos_level_cmd_get(cmd, 10) * 0x8000) / 180;
-                bhvYaw   = (dynos_level_cmd_get(cmd, 12) * 0x8000) / 180;
-                bhvRoll  = (dynos_level_cmd_get(cmd, 14) * 0x8000) / 180;
+                bhvArgs = dynos_level_cmd_get(cmd, 20);
+                bhvModelId = dynos_level_cmd_get(cmd, 4);
+                bhvPosX = dynos_level_cmd_get(cmd, 8);
+                bhvPosY = dynos_level_cmd_get(cmd, 10);
+                bhvPosZ = dynos_level_cmd_get(cmd, 12);
+                bhvPitch = (dynos_level_cmd_get(cmd, 14) * 0x8000) / 180;
+                bhvYaw   = (dynos_level_cmd_get(cmd, 16) * 0x8000) / 180;
+                bhvRoll  = (dynos_level_cmd_get(cmd, 18) * 0x8000) / 180;
                 bhv = true;
             }
         } break;
