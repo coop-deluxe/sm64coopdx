@@ -7,6 +7,7 @@ struct DjuiChatBox {
     struct DjuiFlowLayout* chatFlow;
     struct DjuiInputbox* chatInput;
     bool scrolling;
+    f32 scrollY;
 };
 
 extern struct DjuiChatBox* gDjuiChatBox;

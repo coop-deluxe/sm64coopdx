@@ -29,7 +29,7 @@
 #include "rumble_init.h"
 #include "obj_behaviors.h"
 #include "hardcoded.h"
-#include "../../include/libc/stdlib.h"
+#include "libc/stdlib.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/configfile.h"

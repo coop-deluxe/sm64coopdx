@@ -532,8 +532,7 @@ Gfx* geo_switch_mario_hand(s32 callContext, struct GraphNode* node, UNUSED Mat4*
  * ! Since the animation gets updated in GEO_CONTEXT_RENDER, drawing Mario multiple times
  * (such as in the mirror room) results in a faster and desynced punch / kick animation.
  */
-Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* mtx) {
-    Mat4 * curTransform = mtx;
+Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, UNUSED Mat4* mtx) {
     static s16 sMarioAttackAnimCounter[MAX_PLAYERS] = { 0 };
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     struct GraphNodeScale* scaleNode = (struct GraphNodeScale*) node->next;
@@ -551,11 +550,6 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* m
                 gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
                 / 10.0f;
         }
-        // update hand/foot position in bodyState
-        get_pos_from_transform_mtx(bodyState->handFootPos[(asGenerated->parameter & 0x03)],
-                                   *curTransform,
-                                   *gCurGraphNodeCamera->matrixPtr);
-
     }
     return NULL;
 }
