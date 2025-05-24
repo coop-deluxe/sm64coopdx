@@ -102,6 +102,36 @@ void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
     out[2] = v1[2] + s * edge0[2] + t * edge1[2];
 }
 
+u8 is_point_past_facing_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
+    f32 weight = (posRelToEdge[1] / edgePos[1]);
+    const f32 corner_threshold = -0.9f;
+    // Don't calculate if above edge
+    if (weight < 0.0f || weight > 1.0f) {
+        return TRUE;
+    } else {
+        f32 weightedDistToEdgeX = edgePos[0] * weight - posRelToEdge[0];
+        f32 weightedDistToEdgeZ = edgePos[2] * weight - posRelToEdge[2];
+        f32 invDenom = sqrtf(weightedDistToEdgeX * weightedDistToEdgeX + weightedDistToEdgeZ * weightedDistToEdgeZ);
+        f32 offset = invDenom - *margin_radius;
+        // Is the position further than the wall's hitbox?
+        if (offset > 0.0f) {
+            return TRUE;
+        } else {
+            invDenom = offset / invDenom;
+            *returnX += (weightedDistToEdgeX *= invDenom);
+            *returnZ += (weightedDistToEdgeZ *= invDenom);
+            *margin_radius += 0.01f;
+
+            // Is the position close to the corner?
+            if (weightedDistToEdgeX * surf->normal.x + weightedDistToEdgeZ * surf->normal.z < corner_threshold * offset) {
+                return TRUE;
+            }
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 /**************************************************
  *                      WALLS                     *
  **************************************************/
@@ -112,15 +142,15 @@ void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
  */
 static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                                           struct WallCollisionData *data) {
-    register struct Surface *surf;
-    register f32 offset = 0;
-    register f32 radius = data->radius;
-    register f32 x = data->x;
-    register f32 y = data->y + data->offsetY;
-    register f32 z = data->z;
-    register f32 px, pz;
-    register f32 w1, w2, w3;
-    register f32 y1, y2, y3;
+    struct Surface *surf;
+    f32 offset = 0;
+    f32 radius = data->radius;
+    f32 x = data->x;
+    f32 y = data->y + data->offsetY;
+    f32 z = data->z;
+    f32 px, pz;
+    f32 w1, w2, w3;
+    f32 y1, y2, y3;
     s32 numCols = 0;
 
     Vec3f cPos = { 0 };
@@ -130,6 +160,17 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     if (radius > gLevelValues.wallMaxRadius) {
         radius = gLevelValues.wallMaxRadius;
     }
+
+    // Used for fixWallOnSlope
+    Vec3f edge12;
+    Vec3f edge13;
+    Vec3f edge23;
+    Vec3f posRelToEdge;
+    f32 dotEdge12, dotEdge12_13, dotEdge13, dotPosWithEdge12, dotPosWithEdge13;
+    f32 invDenom;
+    f32 vertex2Weight, vertex3Weight;
+    f32 margin_radius = radius - 1.0f;
+    u8 hasCollision = FALSE;
 
     // Stay in this loop until out of walls.
     while (surfaceNode != NULL) {
@@ -141,7 +182,10 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             continue;
         }
 
-        if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsRoundedCorners && !gFindWallDirectionAirborne) {
+        // Used with fixWallOnSlope so it will be calculated regardless of roundedCorners
+        offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
+
+        if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
             // Check AABB to exclude walls before doing expensive triangle check
             f32 minX = MIN(MIN(surf->vertex1[0], surf->vertex2[0]), surf->vertex3[0]) - radius;
             f32 minZ = MIN(MIN(surf->vertex1[2], surf->vertex2[2]), surf->vertex3[2]) - radius;
@@ -184,66 +228,67 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
         } else {
 
-            offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
-
-            if (offset < -radius || offset > radius) {
+            // Used for walls near the edge of the slope, which roundedCorner handles (though less well)
+            if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0 : -radius) || offset > radius) {
                 continue;
             }
 
-            px = x;
-            pz = z;
+            if (!gLevelValues.fixCollision.fixWallOnSlope) {
+                px = x;
+                pz = z;
 
-            //! (Quantum Tunneling) Due to issues with the vertices walls choose and
-            //  the fact they are floating point, certain floating point positions
-            //  along the seam of two walls may collide with neither wall or both walls.
-            if (surf->flags & SURFACE_FLAG_X_PROJECTION) {
-                w1 = -surf->vertex1[2]; w2 = -surf->vertex2[2]; w3 = -surf->vertex3[2];
-                y1 = surf->vertex1[1];  y2 = surf->vertex2[1];  y3 = surf->vertex3[1];
+                //! (Quantum Tunneling) Due to issues with the vertices walls choose and
+                //  the fact they are floating point, certain floating point positions
+                //  along the seam of two walls may collide with neither wall or both walls.
+                if (surf->flags & SURFACE_FLAG_X_PROJECTION) {
+                    w1 = -surf->vertex1[2]; w2 = -surf->vertex2[2]; w3 = -surf->vertex3[2];
+                    y1 = surf->vertex1[1];  y2 = surf->vertex2[1];  y3 = surf->vertex3[1];
 
-                if (surf->normal.x > 0.0f) {
-                    if ((y1 - y) * (w2 - w1) - (w1 - -pz) * (y2 - y1) > 0.0f) {
-                        continue;
-                    }
-                    if ((y2 - y) * (w3 - w2) - (w2 - -pz) * (y3 - y2) > 0.0f) {
-                        continue;
-                    }
-                    if ((y3 - y) * (w1 - w3) - (w3 - -pz) * (y1 - y3) > 0.0f) {
-                        continue;
+                    if (surf->normal.x > 0.0f) {
+                        if ((y1 - y) * (w2 - w1) - (w1 - -pz) * (y2 - y1) > 0.0f) {
+                            continue;
+                        }
+                        if ((y2 - y) * (w3 - w2) - (w2 - -pz) * (y3 - y2) > 0.0f) {
+                            continue;
+                        }
+                        if ((y3 - y) * (w1 - w3) - (w3 - -pz) * (y1 - y3) > 0.0f) {
+                            continue;
+                        }
+                    } else {
+                        if ((y1 - y) * (w2 - w1) - (w1 - -pz) * (y2 - y1) < 0.0f) {
+                            continue;
+                        }
+                        if ((y2 - y) * (w3 - w2) - (w2 - -pz) * (y3 - y2) < 0.0f) {
+                            continue;
+                        }
+                        if ((y3 - y) * (w1 - w3) - (w3 - -pz) * (y1 - y3) < 0.0f) {
+                            continue;
+                        }
                     }
                 } else {
-                    if ((y1 - y) * (w2 - w1) - (w1 - -pz) * (y2 - y1) < 0.0f) {
-                        continue;
-                    }
-                    if ((y2 - y) * (w3 - w2) - (w2 - -pz) * (y3 - y2) < 0.0f) {
-                        continue;
-                    }
-                    if ((y3 - y) * (w1 - w3) - (w3 - -pz) * (y1 - y3) < 0.0f) {
-                        continue;
-                    }
-                }
-            } else {
-                w1 = surf->vertex1[0]; w2 = surf->vertex2[0]; w3 = surf->vertex3[0];
-                y1 = surf->vertex1[1]; y2 = surf->vertex2[1]; y3 = surf->vertex3[1];
+                    w1 = surf->vertex1[0]; w2 = surf->vertex2[0]; w3 = surf->vertex3[0];
+                    y1 = surf->vertex1[1]; y2 = surf->vertex2[1]; y3 = surf->vertex3[1];
 
-                if (surf->normal.z > 0.0f) {
-                    if ((y1 - y) * (w2 - w1) - (w1 - px) * (y2 - y1) > 0.0f) {
-                        continue;
-                    }
-                    if ((y2 - y) * (w3 - w2) - (w2 - px) * (y3 - y2) > 0.0f) {
-                        continue;
-                    }
-                    if ((y3 - y) * (w1 - w3) - (w3 - px) * (y1 - y3) > 0.0f) {
-                        continue;
-                    }
-                } else {
-                    if ((y1 - y) * (w2 - w1) - (w1 - px) * (y2 - y1) < 0.0f) {
-                        continue;
-                    }
-                    if ((y2 - y) * (w3 - w2) - (w2 - px) * (y3 - y2) < 0.0f) {
-                        continue;
-                    }
-                    if ((y3 - y) * (w1 - w3) - (w3 - px) * (y1 - y3) < 0.0f) {
-                        continue;
+                    if (surf->normal.z > 0.0f) {
+                        if ((y1 - y) * (w2 - w1) - (w1 - px) * (y2 - y1) > 0.0f) {
+                            continue;
+                        }
+                        if ((y2 - y) * (w3 - w2) - (w2 - px) * (y3 - y2) > 0.0f) {
+                            continue;
+                        }
+                        if ((y3 - y) * (w1 - w3) - (w3 - px) * (y1 - y3) > 0.0f) {
+                            continue;
+                        }
+                    } else {
+                        if ((y1 - y) * (w2 - w1) - (w1 - px) * (y2 - y1) < 0.0f) {
+                            continue;
+                        }
+                        if ((y2 - y) * (w3 - w2) - (w2 - px) * (y3 - y2) < 0.0f) {
+                            continue;
+                        }
+                        if ((y3 - y) * (w1 - w3) - (w3 - px) * (y1 - y3) < 0.0f) {
+                            continue;
+                        }
                     }
                 }
             }
@@ -281,20 +326,104 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             }
         }
 
+        if (gLevelValues.fixCollision.fixWallOnSlope) {
+            hasCollision = FALSE;
+
+            edge12[0] = (f32)(surf->vertex2[0] - surf->vertex1[0]);
+            edge12[1] = (f32)(surf->vertex2[1] - surf->vertex1[1]);
+            edge12[2] = (f32)(surf->vertex2[2] - surf->vertex1[2]);
+
+            edge13[0] = (f32)(surf->vertex3[0] - surf->vertex1[0]);
+            edge13[1] = (f32)(surf->vertex3[1] - surf->vertex1[1]);
+            edge13[2] = (f32)(surf->vertex3[2] - surf->vertex1[2]);
+
+            posRelToEdge[0] = x - (f32)surf->vertex1[0];
+            posRelToEdge[1] = y - (f32)surf->vertex1[1];
+            posRelToEdge[2] = z - (f32)surf->vertex1[2];
+
+            // Face (Initial check)
+            dotEdge12 = edge12[0] * edge12[0] + edge12[1] * edge12[1] + edge12[2] * edge12[2];
+            dotEdge12_13 = edge12[0] * edge13[0] + edge12[1] * edge13[1] + edge12[2] * edge13[2];
+            dotEdge13 = edge13[0] * edge13[0] + edge13[1] * edge13[1] + edge13[2] * edge13[2];
+            dotPosWithEdge12 = posRelToEdge[0] * edge12[0] + posRelToEdge[1] * edge12[1] + posRelToEdge[2] * edge12[2];
+            dotPosWithEdge13 = posRelToEdge[0] * edge13[0] + posRelToEdge[1] * edge13[1] + posRelToEdge[2] * edge13[2];
+
+            invDenom = 1.0f / (dotEdge12 * dotEdge13 - dotEdge12_13 * dotEdge12_13);
+            vertex2Weight = (dotEdge13 * dotPosWithEdge12 - dotEdge12_13 * dotPosWithEdge13) * invDenom;
+            // Is the position outside the 12 edge?
+            if (vertex2Weight < 0.0f || vertex2Weight > 1.0f) {
+                // do nothing
+            } else {
+                vertex3Weight = (dotEdge12 * dotPosWithEdge13 - dotEdge12_13 * dotPosWithEdge12) * invDenom;
+                // Is the position outside the 13 edge?
+                if (vertex3Weight < 0.0f || vertex3Weight > 1.0f || vertex2Weight + vertex3Weight > 1.0f) {
+                    // do nothing
+                } else {
+                    x += surf->normal.x * (radius - offset);
+                    z += surf->normal.z * (radius - offset);
+                    hasCollision = TRUE;
+                }
+            }
+
+            //Edge 1-2
+            if (!hasCollision) {
+                if (offset < 0) {
+                    continue;
+                }
+                if (edge12[1] != 0.0f) {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
+                        hasCollision = TRUE;
+                    }
+                }
+            }
+
+            //Edge 1-3
+            if (!hasCollision) {
+                if (edge13[1] != 0.0f) {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
+                        hasCollision = TRUE;
+                    }
+                }
+            }
+
+            //Edge 2-3
+            if (!hasCollision) {
+                edge23[0] = (f32)(surf->vertex3[0] - surf->vertex2[0]);
+                edge23[1] = (f32)(surf->vertex3[1] - surf->vertex2[1]);
+                edge23[2] = (f32)(surf->vertex3[2] - surf->vertex2[2]);
+
+                posRelToEdge[0] = x - (f32)surf->vertex2[0];
+                posRelToEdge[1] = y - (f32)surf->vertex2[1];
+                posRelToEdge[2] = z - (f32)surf->vertex2[2];
+
+                if (edge23[1] != 0.0f) {
+                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
+                        // do nothing (Collision found)
+                    } else {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+            }
+        }
+
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
         //  multiple walls can push mario more than is required.
         //  <Fixed when gLevelValues.fixCollisionBugs != 0>
-        if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsRoundedCorners && !gFindWallDirectionAirborne) {
-            data->x = cPos[0] + cNorm[0] * radius;
-            data->z = cPos[2] + cNorm[2] * radius;
-            x = data->x;
-            z = data->z;
-            data->normalAddition[0] += cNorm[0];
-            data->normalAddition[2] += cNorm[2];
-            data->normalCount++;
-        } else {
-            data->x += surf->normal.x * (radius - offset);
-            data->z += surf->normal.z * (radius - offset);
+        if (!gLevelValues.fixCollision.fixWallOnSlope) {
+            if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
+                data->x = cPos[0] + cNorm[0] * radius;
+                data->z = cPos[2] + cNorm[2] * radius;
+                x = data->x;
+                z = data->z;
+                data->normalAddition[0] += cNorm[0];
+                data->normalAddition[2] += cNorm[2];
+                data->normalCount++;
+            } else {
+                data->x += surf->normal.x * (radius - offset);
+                data->z += surf->normal.z * (radius - offset);
+            }
         }
 
         //! (Unreferenced Walls) Since this only returns the first four walls,
@@ -305,6 +434,11 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         }
 
         numCols++;
+    }
+
+    if (gLevelValues.fixCollision.fixWallOnSlope) {
+        data->x = x;
+        data->z = z;
     }
 
     return numCols;
@@ -390,7 +524,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
     ceil = NULL;
 
     // set pheight to highest value
-    if (gLevelValues.fixCollisionBugs) {
+    if (gLevelValues.fixCollision.fixExposedCeilings) {
         *pheight = gLevelValues.cellHeightLimit;
     }
 
@@ -465,7 +599,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             height = -(x * nx + nz * z + oo) / ny;
 
             // Reject ceilings below previously found ceiling
-            if (gLevelValues.fixCollisionBugs && (height > *pheight)) {
+            if (gLevelValues.fixCollision.fixExposedCeilings && (height > *pheight)) {
                 continue;
             }
 
@@ -481,7 +615,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             *pheight = height;
             ceil = surf;
 
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollision.fixExposedCeilings) {
                 break;
             }
         }
@@ -612,7 +746,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     s32 interpolate;
 
     // set pheight to lowest value
-    if (gLevelValues.fixCollisionBugs) {
+    if (gLevelValues.fixCollision.fixFloorOvershadowing) {
         *pheight = gLevelValues.floorLowerLimit;
     }
 
@@ -734,7 +868,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         height = -(x * nx + nz * z + oo) / ny;
 
         // Find highest floor
-        if (gLevelValues.fixCollisionBugs && (height < *pheight)) {
+        if (gLevelValues.fixCollision.fixFloorOvershadowing && (height < *pheight)) {
             continue;
         }
 
@@ -759,7 +893,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
         floor = surf;
 
-        if (!gLevelValues.fixCollisionBugs) {
+        if (!gLevelValues.fixCollision.fixFloorOvershadowing) {
             break;
         }
     }
