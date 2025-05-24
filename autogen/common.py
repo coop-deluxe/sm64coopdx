@@ -233,7 +233,10 @@ def translate_type_to_lua(ptype):
         ptype = ptype.split(' ')[1].replace('*', '')
         return ptype, 'structs.md#%s' % ptype
 
-    if 'Vec3' in ptype:
+    if ptype in VECP_TYPES:
+        return VECP_TYPES[ptype], 'structs.md#%s' % VECP_TYPES[ptype]
+
+    if ptype in VEC_TYPES:
         return ptype, 'structs.md#%s' % ptype
 
     if ptype.startswith('enum '):
@@ -267,7 +270,7 @@ def translate_type_to_lua(ptype):
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
-        s = '`Pointer` <%s>' % translate_type_to_lua(ptype)[0]
+        s = '`Pointer` <`%s`>' % translate_type_to_lua(ptype)[0].replace('`', '').strip()
         return s, None
 
     if not ptype.startswith('`'):

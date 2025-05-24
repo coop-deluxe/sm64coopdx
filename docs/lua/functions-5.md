@@ -6,6 +6,247 @@
 
 
 ---
+# functions from misc.h
+
+<br />
+
+
+## [smooth_step](#smooth_step)
+
+### Description
+Smoothly steps between `edge0` and `edge1` with `x` as delta
+
+### Lua Example
+`local numberValue = smooth_step(edge0, edge1, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| edge0 | `number` |
+| edge1 | `number` |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`float smooth_step(float edge0, float edge1, float x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_all_mario_stars](#update_all_mario_stars)
+
+### Description
+Updates every Mario state's star count with the save file total star count
+
+### Lua Example
+`update_all_mario_stars()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void update_all_mario_stars(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed](#clock_elapsed)
+
+### Description
+Gets the current clock elapsed time
+
+### Lua Example
+`local numberValue = clock_elapsed()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clock_elapsed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_f64](#clock_elapsed_f64)
+
+### Description
+Gets the current clock elapsed time with double precision
+
+### Lua Example
+`local numberValue = clock_elapsed_f64()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f64 clock_elapsed_f64(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_ticks](#clock_elapsed_ticks)
+
+### Description
+Gets the current clock elapsed time in frames
+
+### Lua Example
+`local integerValue = clock_elapsed_ticks()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 clock_elapsed_ticks(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_is_date](#clock_is_date)
+
+### Description
+Checks whether it is the day given
+
+### Lua Example
+`local booleanValue = clock_is_date(month, day)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| month | `integer` |
+| day | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool clock_is_date(u8 month, u8 day);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_f32](#delta_interpolate_f32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local numberValue = delta_interpolate_f32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| delta | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_s32](#delta_interpolate_s32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_s32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3f](#delta_interpolate_vec3f)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3f(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3s](#delta_interpolate_vec3s)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3s(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mod_storage.h
 
 <br />
@@ -406,7 +647,7 @@ Sets the `part in `np`'s override color palette`
 | ----- | ---- |
 | np | [NetworkPlayer](structs.md#NetworkPlayer) |
 | part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| color | `Color` |
+| color | [Color](structs.md#Color) |
 
 ### Returns
 - None
@@ -2659,7 +2900,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `Mat4` |
+| a0 | [Mat4](structs.md#Mat4) |
 | a1 | [Object](structs.md#Object) |
 
 ### Returns
@@ -2681,8 +2922,8 @@ Overrides the current room Mario is in. Set to -1 to reset override
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| dst | `Mat4` |
-| src | `Mat4` |
+| dst | [Mat4](structs.md#Mat4) |
+| src | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
@@ -2702,9 +2943,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `Mat4` |
-| a1 | `Mat4` |
-| a2 | `Mat4` |
+| a0 | [Mat4](structs.md#Mat4) |
+| a1 | [Mat4](structs.md#Mat4) |
+| a2 | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
@@ -3376,7 +3617,7 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| m | `Mat4` |
+| m | [Mat4](structs.md#Mat4) |
 | dst | [Vec3f](structs.md#Vec3f) |
 | v | [Vec3f](structs.md#Vec3f) |
 
@@ -3401,7 +3642,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| m | `Mat4` |
+| m | [Mat4](structs.md#Mat4) |
 | dst | [Vec3f](structs.md#Vec3f) |
 | v | [Vec3f](structs.md#Vec3f) |
 
@@ -7858,298 +8099,6 @@ Returns the current sound mode (e.g., stereo, mono) stored in the save file. Use
 
 ### C Prototype
 `u16 save_file_get_sound_mode(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from seqplayer.h
-
-<br />
-
-
-## [sequence_player_get_tempo](#sequence_player_get_tempo)
-
-### Description
-Gets the tempo of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_tempo(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_tempo(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_tempo](#sequence_player_set_tempo)
-
-### Description
-Sets the `tempo` of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_tempo(player, tempo)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| tempo | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_tempo(u8 player, u16 tempo);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
-
-### Description
-Gets the tempoAcc (tempo accumulation) of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_tempo_acc(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_tempo_acc(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
-
-### Description
-Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_tempo_acc(player, tempoAcc)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| tempoAcc | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_transposition](#sequence_player_get_transposition)
-
-### Description
-Gets the transposition (pitch) of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_transposition(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_transposition(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_transposition](#sequence_player_set_transposition)
-
-### Description
-Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_transposition(player, transposition)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| transposition | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_transposition(u8 player, u16 transposition);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_volume](#sequence_player_get_volume)
-
-### Description
-Gets the volume of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_volume(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_volume(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
-
-### Description
-Gets the fade volume of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_fade_volume(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_fade_volume(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
-
-### Description
-Gets the mute volume scale of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_mute_volume_scale(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_mute_volume_scale(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_anim_utils.h
-
-<br />
-
-
-## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
-
-### Description
-Gets a vanilla mario Animation with `index`
-
-### Lua Example
-`local AnimationValue = get_mario_vanilla_animation(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-[Animation](structs.md#Animation)
-
-### C Prototype
-`struct Animation *get_mario_vanilla_animation(u16 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_anim_util_set_animation](#smlua_anim_util_set_animation)
-
-### Description
-Sets the animation of `obj` to the animation `name` corresponds to
-
-### Lua Example
-`smlua_anim_util_set_animation(obj, name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
-
-### Description
-Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
-
-### Lua Example
-`local stringValue = smlua_anim_util_get_current_animation_name(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
 
 [:arrow_up_small:](#)
 

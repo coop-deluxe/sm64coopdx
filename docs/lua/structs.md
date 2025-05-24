@@ -408,7 +408,7 @@
 | filler3C | `Array` <`integer`> |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | mode | `integer` |  |
-| mtx | `Mat4` | read-only |
+| mtx | [Mat4](structs.md#Mat4) | read-only |
 | nextYaw | `integer` |  |
 | paletteEditorCap | `boolean` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1384,7 +1384,7 @@
 | prevScaleTimestamp | `integer` | read-only |
 | prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevShadowPosTimestamp | `integer` | read-only |
-| prevThrowMatrix | `Mat4` | read-only |
+| prevThrowMatrix | [Mat4](structs.md#Mat4) | read-only |
 | prevThrowMatrixTimestamp | `integer` | read-only |
 | prevTimestamp | `integer` | read-only |
 | scale | [Vec3f](structs.md#Vec3f) | read-only |
@@ -2043,7 +2043,7 @@
 | prevObj | [Object](structs.md#Object) |  |
 | respawnInfoType | `integer` | read-only |
 | setHome | `integer` |  |
-| transform | `Mat4` | read-only |
+| transform | [Mat4](structs.md#Mat4) | read-only |
 | unused1 | `integer` |  |
 | usingObj | [Object](structs.md#Object) |  |
 

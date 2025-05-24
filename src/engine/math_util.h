@@ -152,22 +152,22 @@ OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, Vec3f result);
 /* |description|
 Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);
+OPTIMIZE_O3 Vec3fp vec3f_rotate_zxy(Vec3f v, Vec3s rotate);
 
 /* |description|
 Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation `r` (in sm64 angle units), and stores the result in `dest`
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r);
+OPTIMIZE_O3 Vec3fp vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r);
 
 /* |description|
 Projects the 3D floating-point vector `v` onto another 3D floating-point vector `onto`. The resulting projection, stored in `dest`, represents how much of `v` lies along the direction of `onto`
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *vec3f_project(Vec3f dest, Vec3f v, Vec3f onto);
+OPTIMIZE_O3 Vec3fp vec3f_project(Vec3f dest, Vec3f v, Vec3f onto);
 
 /* |description|
 Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it by the rotation vector `rotation`, and finally translates it by the vector `translation`. The resulting vector is stored in `dest`
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale);
+OPTIMIZE_O3 Vec3fp vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale);
 
 /* |description|
 Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
@@ -182,7 +182,7 @@ OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pi
 /* |description|
 Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);
+OPTIMIZE_O3 Vec3fp find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);
 
   ///////////
  // Vec3i //
@@ -243,7 +243,7 @@ Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing 
 OPTIMIZE_O3 void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b);
 
 /* |description|
-Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
+Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
 |descriptionEnd| */
 OPTIMIZE_O3 s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b);
 
@@ -260,7 +260,7 @@ OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src);
 /* |description|
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 |descriptionEnd| */
-OPTIMIZE_O3 f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);
+OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);
 
 #endif // MATH_UTIL_H
 
