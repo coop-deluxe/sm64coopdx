@@ -1641,7 +1641,7 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
                     m->heldObj = NULL;
                     stop_shell_music();
                 }
-    
+
                 return transition_submerged_to_walking(m);
             }
         }
