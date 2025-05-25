@@ -275,7 +275,7 @@ void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
         return;
     }
 
-    memcpy(dest, src, length * sizeof(Gfx));
+    memmove(dest, src, length * sizeof(Gfx));
 }
 
 Gfx *gfx_create(const char *name, u32 length) {
@@ -377,7 +377,7 @@ void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
         return;
     }
 
-    memcpy(dest, src, count * sizeof(Vtx));
+    memmove(dest, src, count * sizeof(Vtx));
 }
 
 Vtx *vtx_create(const char *name, u32 count) {

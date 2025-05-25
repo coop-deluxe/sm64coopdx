@@ -6,6 +6,483 @@
 
 
 ---
+# functions from smlua_audio_utils.h
+
+<br />
+
+
+## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+
+### Description
+Resets all custom sequences back to vanilla
+
+### Lua Example
+`smlua_audio_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+### Description
+Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
+
+### Lua Example
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sequenceId | `integer` |
+| bankId | `integer` |
+| defaultVolume | `integer` |
+| m64Name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_load](#audio_stream_load)
+
+### Description
+Loads an `audio` stream by `filename` (with extension)
+
+### Lua Example
+`local ModAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_destroy](#audio_stream_destroy)
+
+### Description
+Destroys an `audio` stream
+
+### Lua Example
+`audio_stream_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Description
+Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_pause](#audio_stream_pause)
+
+### Description
+Pauses an `audio` stream
+
+### Lua Example
+`audio_stream_pause(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_pause(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_stop](#audio_stream_stop)
+
+### Description
+Stops an `audio` stream
+
+### Lua Example
+`audio_stream_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_position](#audio_stream_get_position)
+
+### Description
+Gets the position of an `audio` stream in seconds
+
+### Lua Example
+`local numberValue = audio_stream_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_position(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_position](#audio_stream_set_position)
+
+### Description
+Sets the position of an `audio` stream in seconds
+
+### Lua Example
+`audio_stream_set_position(audio, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_looping](#audio_stream_get_looping)
+
+### Description
+Gets if an `audio` stream is looping or not
+
+### Lua Example
+`local booleanValue = audio_stream_get_looping(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_stream_get_looping(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_looping](#audio_stream_set_looping)
+
+### Description
+Sets if an `audio` stream is looping or not
+
+### Lua Example
+`audio_stream_set_looping(audio, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
+
+### Description
+Sets an `audio` stream's loop points in samples
+
+### Lua Example
+`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_frequency](#audio_stream_get_frequency)
+
+### Description
+Gets the frequency of an `audio` stream
+
+### Lua Example
+`local numberValue = audio_stream_get_frequency(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_frequency](#audio_stream_set_frequency)
+
+### Description
+Sets the frequency of an `audio` stream
+
+### Lua Example
+`audio_stream_set_frequency(audio, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_volume](#audio_stream_get_volume)
+
+### Description
+Gets the volume of an `audio` stream
+
+### Lua Example
+`local numberValue = audio_stream_get_volume(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_volume(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume](#audio_stream_set_volume)
+
+### Description
+Sets the volume of an `audio` stream
+
+### Lua Example
+`audio_stream_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_load](#audio_sample_load)
+
+### Description
+Loads an `audio` sample
+
+### Lua Example
+`local ModAudioValue = audio_sample_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_destroy](#audio_sample_destroy)
+
+### Description
+Destroys an `audio` sample
+
+### Lua Example
+`audio_sample_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_stop](#audio_sample_stop)
+
+### Description
+Stops an `audio` sample
+
+### Lua Example
+`audio_sample_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Description
+Plays an `audio` sample at `position` with `volume`
+
+### Lua Example
+`audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_camera_utils.h
 
 <br />
@@ -2575,320 +3052,6 @@ Warps back to the castle from `aLevel`
 <br />
 
 ---
-# functions from smlua_math_utils.h
-
-<br />
-
-
-## [min](#min)
-
-### Description
-Finds the minimum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = min(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 min(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [max](#max)
-
-### Description
-Finds the maximum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = max(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 max(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqr](#sqr)
-
-### Description
-Computes the square of a signed 32-bit integer
-
-### Lua Example
-`local integerValue = sqr(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 sqr(s32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [minf](#minf)
-
-### Description
-Finds the minimum of two floating-point numbers
-
-### Lua Example
-`local numberValue = minf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 minf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [maxf](#maxf)
-
-### Description
-Finds the maximum of two floating-point numbers
-
-### Lua Example
-`local numberValue = maxf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 maxf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqrf](#sqrf)
-
-### Description
-Computes the square of a floating-point number
-
-### Lua Example
-`local numberValue = sqrf(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sqrf(f32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_radians](#sm64_to_radians)
-
-### Description
-Converts an angle from SM64 format to radians
-
-### Lua Example
-`local numberValue = sm64_to_radians(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_radians(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [radians_to_sm64](#radians_to_sm64)
-
-### Description
-Converts an angle from radians to SM64 format
-
-### Lua Example
-`local integerValue = radians_to_sm64(radiansAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| radiansAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 radians_to_sm64(f32 radiansAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_degrees](#sm64_to_degrees)
-
-### Description
-Converts an angle from SM64 format to degrees
-
-### Lua Example
-`local numberValue = sm64_to_degrees(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_degrees(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [degrees_to_sm64](#degrees_to_sm64)
-
-### Description
-Converts an angle from degrees to SM64 format
-
-### Lua Example
-`local integerValue = degrees_to_sm64(degreesAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| degreesAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 degrees_to_sm64(f32 degreesAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [hypotf](#hypotf)
-
-### Description
-Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
-
-### Lua Example
-`local numberValue = hypotf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 hypotf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clamp](#clamp)
-
-### Description
-Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local integerValue = clamp(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| c | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 clamp(s32 a, s32 b, s32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clampf](#clampf)
-
-### Description
-Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local numberValue = clampf(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-| c | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 clampf(f32 a, f32 b, f32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
 # functions from smlua_misc_utils.h
 
 <br />
@@ -2931,6 +3094,52 @@ Gets the area update counter incremented when objects are updated
 
 ### C Prototype
 `u16 get_area_update_counter(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Description
+Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+
+### Lua Example
+`local PointerValue = get_temp_s32_pointer(initialValue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| initialValue | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32* get_temp_s32_pointer(s32 initialValue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [deref_s32_pointer](#deref_s32_pointer)
+
+### Description
+Gets the signed 32-bit integer value from `pointer`
+
+### Lua Example
+`local integerValue = deref_s32_pointer(pointer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pointer | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 deref_s32_pointer(s32* pointer);`
 
 [:arrow_up_small:](#)
 
@@ -3736,6 +3945,31 @@ Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 
 ### C Prototype
 `f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_mario_anim_part_pos](#get_mario_anim_part_pos)
+
+### Description
+Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+
+### Lua Example
+`local booleanValue = get_mario_anim_part_pos(m, animPart, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animPart | `integer` |
+| pos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -6777,6 +7011,31 @@ Sets whether collision finding functions should check wall directions.
 
 ### C Prototype
 `void set_find_wall_direction(Vec3f dir, bool active, bool airborne);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [closest_point_to_triangle](#closest_point_to_triangle)
+
+### Description
+Gets the closest point of the triangle to `src` and returns it in `out`.
+
+### Lua Example
+`closest_point_to_triangle(surf, src, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+| src | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out);`
 
 [:arrow_up_small:](#)
 

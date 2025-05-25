@@ -83,7 +83,7 @@ end
 --- @param sound CharacterSound
 local function custom_character_sound(m, sound)
     if m.playerIndex == 0 then
-        if stallTimer < stallSayLine - 1 then
+        if stallTimer < stallSayLine then
             return NO_SOUND
         end
     end
@@ -204,7 +204,8 @@ _G.charSelect.voice = {
 -- Must be ran on startup
 local function config_character_sounds()
     hook_event(HOOK_CHARACTER_SOUND, custom_character_sound)
-    hook_event(HOOK_MARIO_UPDATE, custom_character_snore)
+    --hook_event(HOOK_MARIO_UPDATE, custom_character_snore)
+    cs_hook_mario_update(custom_character_snore)
 end
 _G.charSelect.config_character_sounds = config_character_sounds
 
@@ -218,4 +219,5 @@ local function mario_update(m)
         stallTimer = stallTimer + 1
     end
 end
-hook_event(HOOK_MARIO_UPDATE, mario_update)
+--hook_event(HOOK_MARIO_UPDATE, mario_update)
+cs_hook_mario_update(mario_update)

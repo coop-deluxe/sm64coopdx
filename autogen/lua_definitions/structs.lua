@@ -1113,6 +1113,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
+--- @field public wallMaxRadius number
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
@@ -1135,9 +1136,9 @@
 --- @field public action integer
 --- @field public allowPartRotation integer
 --- @field public capState integer
+--- @field public currAnimPart integer
 --- @field public eyeState integer
 --- @field public grabPos integer
---- @field public handFootPos Vec3f[]
 --- @field public handState integer
 --- @field public headAngle Vec3s
 --- @field public headPos Vec3f
@@ -2430,6 +2431,25 @@
 --- @field public y number
 --- @field public z number
 --- @field public w number
+
+--- @class Vec2i
+--- @field public x integer
+--- @field public y integer
+
+--- @class Vec3i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+
+--- @class Vec4i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+--- @field public w integer
+
+--- @class Vec2s
+--- @field public x integer
+--- @field public y integer
 
 --- @class Vec3s
 --- @field public x integer

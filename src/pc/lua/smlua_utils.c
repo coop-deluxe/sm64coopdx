@@ -150,12 +150,10 @@ bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
+    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
-        // suppress script errors
-        if (indexType != LUA_TNIL) {
-            LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
-            gSmLuaConvertSuccess = false;
-        }
+        LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
+        gSmLuaConvertSuccess = false;
         return NULL;
     }
 
@@ -179,6 +177,7 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     s32 indexType = lua_type(L, index);
+    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
         LOG_LUA_LINE("smlua_to_cpointer received improper type '%s'", lua_typename(L, indexType));
         gSmLuaConvertSuccess = false;

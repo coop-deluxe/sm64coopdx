@@ -137,6 +137,39 @@ function network_player_get_override_palette_color(np, part)
 end
 
 
+--------------------
+-- math functions --
+--------------------
+--- Note: These functions don't exist in the Lua math library,
+--- and are useful enough to not have to redefine them in every mod
+
+local __math_min, __math_max, __math_sqrt = math.min, math.max, math.sqrt
+
+--- @param x number
+--- @return number
+--- Computes the square of the number `x`
+function math.sqr(x)
+    return x * x
+end
+
+--- @param x number
+--- @param a number
+--- @param b number
+--- @return number
+--- Clamps the number `x` between bounds `a` (minimum) and `b` (maximum)
+function math.clamp(x, a, b)
+    return __math_min(__math_max(x, a), b)
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+--- Computes the hypotenuse of a right-angled triangle given sides `a` and `b` using the Pythagorean theorem
+function math.hypot(a, b)
+    return __math_sqrt(a * a + b * b)
+end
+
+
 -----------------
 -- legacy font --
 -----------------
@@ -10593,6 +10626,53 @@ OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
 
 --- @type integer
 OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+
+MARIO_ANIM_PART_NONE          =  0 --- @type MarioAnimPart
+MARIO_ANIM_PART_ROOT          =  1 --- @type MarioAnimPart
+MARIO_ANIM_PART_BUTT          =  2 --- @type MarioAnimPart
+MARIO_ANIM_PART_TORSO         =  3 --- @type MarioAnimPart
+MARIO_ANIM_PART_HEAD          =  4 --- @type MarioAnimPart
+MARIO_ANIM_PART_UPPER_LEFT    =  5 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_ARM      =  6 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_FOREARM  =  7 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_HAND     =  8 --- @type MarioAnimPart
+MARIO_ANIM_PART_UPPER_RIGHT   =  9 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_ARM     = 10 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_FOREARM = 11 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_HAND    = 12 --- @type MarioAnimPart
+MARIO_ANIM_PART_LOWER_LEFT    = 13 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_THIGH    = 14 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_LEG      = 15 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_FOOT     = 16 --- @type MarioAnimPart
+MARIO_ANIM_PART_LOWER_RIGHT   = 17 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_THIGH   = 18 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_LEG     = 19 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_FOOT    = 20 --- @type MarioAnimPart
+MARIO_ANIM_PART_MAX           = 21 --- @type MarioAnimPart
+
+--- @alias MarioAnimPart
+--- | `MARIO_ANIM_PART_NONE`
+--- | `MARIO_ANIM_PART_ROOT`
+--- | `MARIO_ANIM_PART_BUTT`
+--- | `MARIO_ANIM_PART_TORSO`
+--- | `MARIO_ANIM_PART_HEAD`
+--- | `MARIO_ANIM_PART_UPPER_LEFT`
+--- | `MARIO_ANIM_PART_LEFT_ARM`
+--- | `MARIO_ANIM_PART_LEFT_FOREARM`
+--- | `MARIO_ANIM_PART_LEFT_HAND`
+--- | `MARIO_ANIM_PART_UPPER_RIGHT`
+--- | `MARIO_ANIM_PART_RIGHT_ARM`
+--- | `MARIO_ANIM_PART_RIGHT_FOREARM`
+--- | `MARIO_ANIM_PART_RIGHT_HAND`
+--- | `MARIO_ANIM_PART_LOWER_LEFT`
+--- | `MARIO_ANIM_PART_LEFT_THIGH`
+--- | `MARIO_ANIM_PART_LEFT_LEG`
+--- | `MARIO_ANIM_PART_LEFT_FOOT`
+--- | `MARIO_ANIM_PART_LOWER_RIGHT`
+--- | `MARIO_ANIM_PART_RIGHT_THIGH`
+--- | `MARIO_ANIM_PART_RIGHT_LEG`
+--- | `MARIO_ANIM_PART_RIGHT_FOOT`
+--- | `MARIO_ANIM_PART_MAX`
 
 --- @type integer
 PLAY_MODE_NORMAL = 0
