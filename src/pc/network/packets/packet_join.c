@@ -201,7 +201,7 @@ void network_receive_join(struct Packet* p) {
     network_send_lua_sync_table_request();
 
     gCurrentlyJoining = false;
-    smlua_call_event_hooks(HOOK_JOINED_GAME);
+    smlua_call_event_hooks_HOOK_JOINED_GAME();
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
 

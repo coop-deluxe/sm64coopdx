@@ -354,7 +354,7 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 ceilOffset;
 
     s32 returnValue = 0;
-    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, &returnValue)) return returnValue;
+    if (smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(m, STEP_TYPE_HANG, 0, &returnValue)) return returnValue;
 
     struct WallCollisionData wcd = { 0 };
     resolve_and_return_wall_collisions_data(nextPos, 50.0f, 50.0f, &wcd);
@@ -1171,7 +1171,7 @@ s32 check_common_automatic_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] < m->waterLevel - 100) {
         bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
+        smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(m, false, &allow);
         if (allow) {
             return set_water_plunge_action(m);
         }

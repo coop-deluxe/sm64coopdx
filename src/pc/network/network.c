@@ -638,7 +638,7 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
 }
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
-    smlua_call_event_hooks(HOOK_ON_EXIT);
+    smlua_call_event_hooks_HOOK_ON_EXIT();
 
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);

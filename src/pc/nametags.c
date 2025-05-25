@@ -89,8 +89,8 @@ void nametags_render(void) {
             f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
 
             char name[MAX_CONFIG_STRING];
-            char* hookedString = NULL;
-            smlua_call_event_hooks_int_params_ret_string(HOOK_ON_NAMETAGS_RENDER, i, &hookedString);
+            const char* hookedString = NULL;
+            smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(i, &hookedString);
             if (hookedString) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {

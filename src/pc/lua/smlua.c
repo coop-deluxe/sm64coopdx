@@ -333,7 +333,7 @@ void smlua_init(void) {
         gLuaLoadingMod = NULL;
     }
 
-    smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
+    smlua_call_event_hooks_HOOK_ON_MODS_LOADED();
 }
 
 void smlua_update(void) {
@@ -342,7 +342,7 @@ void smlua_update(void) {
 
     audio_sample_destroy_pending_copies();
 
-    smlua_call_event_hooks(HOOK_UPDATE);
+    smlua_call_event_hooks_HOOK_UPDATE();
 
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.

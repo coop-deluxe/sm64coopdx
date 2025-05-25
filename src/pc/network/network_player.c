@@ -356,7 +356,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
 
-    smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_CONNECTED, &gMarioStates[localIndex]);
+    smlua_call_event_hooks_HOOK_ON_PLAYER_CONNECTED(&gMarioStates[localIndex]);
 
 #ifdef DISCORD_SDK
     if (gDiscordInitialized) {
@@ -408,7 +408,7 @@ u8 network_player_disconnected(u8 globalIndex) {
 
         packet_ordered_clear(globalIndex);
 
-        smlua_call_event_hooks_mario_param(HOOK_ON_PLAYER_DISCONNECTED, &gMarioStates[i]);
+        smlua_call_event_hooks_HOOK_ON_PLAYER_DISCONNECTED(&gMarioStates[i]);
 
         memset(np, 0, sizeof(struct NetworkPlayer));
 

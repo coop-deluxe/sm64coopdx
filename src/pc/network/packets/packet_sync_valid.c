@@ -18,7 +18,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
         // call hooks
         if (!wasSyncValid) {
             network_player_update_course_level(toNp, courseNum, actNum, levelNum, areaIndex);
-            smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
+            smlua_call_event_hooks_HOOK_ON_SYNC_VALID();
         }
         return;
     }
@@ -67,7 +67,7 @@ void network_receive_sync_valid(struct Packet* p) {
 
     if (np == gNetworkPlayerLocal && !wasSyncValid) {
         network_player_update_course_level(np, courseNum, actNum, levelNum, areaIndex);
-        smlua_call_event_hooks(HOOK_ON_SYNC_VALID);
+        smlua_call_event_hooks_HOOK_ON_SYNC_VALID();
     }
 
     // inform server
