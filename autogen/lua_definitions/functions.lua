@@ -11671,6 +11671,20 @@ function surface_has_force(surfaceType)
     -- ...
 end
 
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is initialized using a `syncId`
+function sync_object_is_initialized(syncId)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is owned locally using a `syncId`
+function sync_object_is_owned_locally(syncId)
+    -- ...
+end
+
 --- @alias Pointer_integer integer
 --- @alias Pointer_BehaviorScript BehaviorScript
 --- @alias Pointer_number number

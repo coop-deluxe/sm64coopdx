@@ -60,7 +60,9 @@ struct SyncObject* sync_object_get(u32 syncId);
 struct SyncObject* sync_object_get_first(void);
 struct SyncObject* sync_object_get_next(void);
 struct Object* sync_object_get_object(u32 syncId);
+/* |description|Checks if a sync object is initialized using a `syncId`|descriptionEnd| */
 bool sync_object_is_initialized(u32 syncId);
+/* |description|Checks if a sync object is owned locally using a `syncId`|descriptionEnd| */
 bool sync_object_is_owned_locally(u32 syncId);
 struct Packet* sync_object_get_last_reliable_packet(u32 syncId);
 
