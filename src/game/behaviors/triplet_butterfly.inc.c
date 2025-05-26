@@ -5,15 +5,15 @@ struct TripletButterflyActivationData {
 };
 
 static struct ObjectHitbox sTripletButterflyExplodeHitbox = {
-    /* interactType:      */ INTERACT_MR_BLIZZARD,
-    /* downOffset:        */ 50,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 1,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 100,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 100,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 50,
+    .damageOrCoinValue = 2,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 100,
+    .height = 50,
+    .hurtboxRadius = 100,
+    .hurtboxHeight = 50,
 };
 
 static struct TripletButterflyActivationData sTripletButterflyActivationData[] = {

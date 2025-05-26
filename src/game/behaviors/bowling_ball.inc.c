@@ -1,15 +1,15 @@
 // bowling_ball.c.inc
 
 static struct ObjectHitbox sBowlingBallHitbox = {
-    /* interactType:      */ INTERACT_DAMAGE,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 100,
-    /* height:            */ 150,
-    /* hurtboxRadius:     */ 0,
-    /* hurtboxHeight:     */ 0,
+    .interactType = INTERACT_DAMAGE,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 100,
+    .height = 150,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 Trajectory sThiHugeMetalBallTraj[] = {

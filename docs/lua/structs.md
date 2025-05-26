@@ -106,9 +106,13 @@
 - [UnusedArea28](#UnusedArea28)
 - [VblankHandler](#VblankHandler)
 - [Vec2f](#Vec2f)
+- [Vec2i](#Vec2i)
+- [Vec2s](#Vec2s)
 - [Vec3f](#Vec3f)
+- [Vec3i](#Vec3i)
 - [Vec3s](#Vec3s)
 - [Vec4f](#Vec4f)
+- [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
 - [Vtx_Interp](#Vtx_Interp)
@@ -191,6 +195,7 @@
 | numSecrets | `integer` |  |
 | objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
 | surfaceRooms | `Pointer` <`integer`> | read-only |
 | terrainData | `Pointer` <`integer`> | read-only |
 | terrainType | `integer` |  |
@@ -1434,6 +1439,22 @@
 
 <br />
 
+## [GraphNodeRoot](#GraphNodeRoot)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| areaIndex | `integer` | read-only |
+| height | `integer` |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| numViews | `integer` | read-only |
+| width | `integer` |  |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [GraphNodeRotation](#GraphNodeRotation)
 
 | Field | Type | Access |
@@ -1674,6 +1695,7 @@
 | vanishCapDurationVcutm | `integer` |  |
 | vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | visibleSecrets | `integer` |  |
+| wallMaxRadius | `number` |  |
 | wdwWaterLevelSpeed | `number` |  |
 | wingCapDuration | `integer` |  |
 | wingCapDurationTotwc | `integer` |  |
@@ -1704,7 +1726,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | currentAnimAddr | `Pointer` <`integer`> | read-only |
-| padding | `Array` <`integer`> |  |
 | targetAnim | [Animation](structs.md#Animation) |  |
 
 [:arrow_up_small:](#)
@@ -1718,9 +1739,9 @@
 | action | `integer` |  |
 | allowPartRotation | `integer` |  |
 | capState | `integer` |  |
+| currAnimPart | `integer` | read-only |
 | eyeState | `integer` |  |
 | grabPos | `integer` |  |
-| handFootPos | `Array` <`Vec3f`> | read-only |
 | handState | `integer` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1739,7 +1760,7 @@
 | shadeR | `integer` |  |
 | torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
-| updateHeadPosTime | `integer` |  |
+| updateHeadPosTime | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | wingFlutter | `integer` |  |
 
@@ -2124,6 +2145,7 @@
 | oMarioTornadoPosY | `number` |  |
 | oMarioReadingSignDPosZ | `number` |  |
 | oMarioWhirlpoolPosY | `number` |  |
+| oMarioJumboStarCutscenePosZ | `number` |  |
 | oMarioBurnTimer | `integer` |  |
 | oMarioLongJumpIsSlow | `integer` |  |
 | oMarioSteepJumpYaw | `integer` |  |
@@ -3183,6 +3205,28 @@
 
 <br />
 
+## [Vec2i](#Vec2i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec2s](#Vec2s)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Vec3f](#Vec3f)
 
 | Field | Type | Access |
@@ -3190,6 +3234,18 @@
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec3i](#Vec3i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+| z | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3215,6 +3271,19 @@
 | y | `number` |  |
 | z | `number` |  |
 | w | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [Vec4i](#Vec4i)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| x | `integer` |  |
+| y | `integer` |  |
+| z | `integer` |  |
+| w | `integer` |  |
 
 [:arrow_up_small:](#)
 

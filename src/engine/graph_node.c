@@ -11,15 +11,6 @@
 #include "include/geo_commands.h"
 #include "pc/debuglog.h"
 
-// unused Mtx(s)
-s16 identityMtx[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
-s16 zeroMtx[4][4] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
-
-Vec3f gVec3fZero = { 0.0f, 0.0f, 0.0f };
-Vec3s gVec3sZero = { 0, 0, 0 };
-Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
-UNUSED Vec3s gVec3sOne = { 1, 1, 1 };
-
 /**
  * Initialize a geo node with a given type. Sets all links such that there
  * are no siblings, parent or children for this node.
@@ -34,8 +25,10 @@ void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type) {
     graphNode->children = NULL;
     graphNode->georef = NULL;
     graphNode->hookProcess = 0;
+#ifdef DEBUG
     graphNode->_guard1 = GRAPH_NODE_GUARD;
     graphNode->_guard2 = GRAPH_NODE_GUARD;
+#endif
 }
 
 /**

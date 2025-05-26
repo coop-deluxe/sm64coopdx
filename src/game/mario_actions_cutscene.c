@@ -29,7 +29,7 @@
 #include "rumble_init.h"
 #include "obj_behaviors.h"
 #include "hardcoded.h"
-#include "../../include/libc/stdlib.h"
+#include "libc/stdlib.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/configfile.h"
@@ -2247,7 +2247,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
 
     if (m->actionState == 0) {
         set_character_animation(m, CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN);
-        marioObj->rawData.asF32[0x22] = 0.0f;
+        marioObj->oMarioJumboStarCutscenePosZ = 0.0f;
 
         if (is_anim_past_end(m)) {
             play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
@@ -2259,7 +2259,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_JUMP, 1);
         }
         if (animFrame >= 3) {
-            marioObj->rawData.asF32[0x22] -= 32.0f;
+            marioObj->oMarioJumboStarCutscenePosZ -= 32.0f;
         }
 
         switch (animFrame) {
@@ -2282,7 +2282,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
         }
     }
 
-    vec3f_set(m->pos, 0.0f, 307.0, marioObj->rawData.asF32[0x22]);
+    vec3f_set(m->pos, 0.0f, 307.0, marioObj->oMarioJumboStarCutscenePosZ);
     m->pos[0] += 100.0f * m->playerIndex;
 
     update_mario_pos_for_anim(m);

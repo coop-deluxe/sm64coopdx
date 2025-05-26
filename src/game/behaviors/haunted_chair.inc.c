@@ -1,15 +1,15 @@
 // haunted_chair.inc.c
 
 struct ObjectHitbox sHauntedChairHitbox = {
-    /* interactType:      */ INTERACT_MR_BLIZZARD,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 50,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 50,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_MR_BLIZZARD,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 50,
+    .height = 50,
+    .hurtboxRadius = 50,
+    .hurtboxHeight = 50,
 };
 
 void bhv_haunted_chair_init(void) {

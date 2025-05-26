@@ -127,7 +127,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ON_INTERACTIONS",
     "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_BEFORE_WARP",
-    "HOOK_ON_INSTANT_WARP"
+    "HOOK_ON_INSTANT_WARP",
     "HOOK_MAX"
 };
 
@@ -199,7 +199,7 @@ void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int
 void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue);
 void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, struct MarioState* m, const char* message, bool* returnValue);
 bool smlua_call_event_hooks_mario_character_sound_param_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, enum CharacterSound characterSound, s32* returnValue);
-void smlua_call_event_hooks_mario_action_params_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32* returnValue);
+void smlua_call_event_hooks_mario_action_and_arg_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32 arg, u32* returnValue);
 void smlua_call_event_hooks_mario_param_and_int_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, bool* returnValue);
 bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, s32* returnValue);
 void smlua_call_event_hooks_mario_param_and_bool_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool param, bool* returnValue);

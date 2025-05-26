@@ -51,20 +51,20 @@ extern ALIGNED8 const u8 texture_hud_char_apostrophe[];
 extern ALIGNED8 const u8 texture_hud_char_double_quote[];
 
 struct GlobalTextures gGlobalTextures = {
-    .camera       = { .texture = (u8*)texture_hud_char_camera,       .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_camera"       },
-    .lakitu       = { .texture = (u8*)texture_hud_char_lakitu,       .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_lakitu"       },
-    .no_camera    = { .texture = (u8*)texture_hud_char_no_camera,    .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_no_camera"    },
-    .arrow_up     = { .texture = (u8*)texture_hud_char_arrow_up,     .bitSize = 8, .width =  8, .height =  8, "texture_hud_char_arrow_up"     },
-    .arrow_down   = { .texture = (u8*)texture_hud_char_arrow_down,   .bitSize = 8, .width =  8, .height =  8, "texture_hud_char_arrow_down"   },
-    .coin         = { .texture = (u8*)texture_hud_char_coin,         .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_coin"         },
-    .star         = { .texture = (u8*)texture_hud_char_star,         .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_star"         },
-    .apostrophe   = { .texture = (u8*)texture_hud_char_apostrophe,   .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_apostrophe"   },
-    .double_quote = { .texture = (u8*)texture_hud_char_double_quote, .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_double_quote" },
-    .mario_head   = { .texture = (u8*)texture_hud_char_mario_head,   .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_mario_head"   },
-    .luigi_head   = { .texture = (u8*)texture_hud_char_luigi_head,   .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_luigi_head"   },
-    .toad_head    = { .texture = (u8*)texture_hud_char_toad_head,    .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_toad_head"    },
-    .waluigi_head = { .texture = (u8*)texture_hud_char_waluigi_head, .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_waluigi_head" },
-    .wario_head   = { .texture = (u8*)texture_hud_char_wario_head,   .bitSize = 8, .width = 16, .height = 16, "texture_hud_char_wario_head"   }
+    .camera       = { .texture = (u8*)texture_hud_char_camera,       "texture_hud_char_camera",       .width = 16, .height = 16, .bitSize = 8 },
+    .lakitu       = { .texture = (u8*)texture_hud_char_lakitu,       "texture_hud_char_lakitu",       .width = 16, .height = 16, .bitSize = 8 },
+    .no_camera    = { .texture = (u8*)texture_hud_char_no_camera,    "texture_hud_char_no_camera",    .width = 16, .height = 16, .bitSize = 8 },
+    .arrow_up     = { .texture = (u8*)texture_hud_char_arrow_up,     "texture_hud_char_arrow_up",     .width =  8, .height =  8, .bitSize = 8 },
+    .arrow_down   = { .texture = (u8*)texture_hud_char_arrow_down,   "texture_hud_char_arrow_down",   .width =  8, .height =  8, .bitSize = 8 },
+    .coin         = { .texture = (u8*)texture_hud_char_coin,         "texture_hud_char_coin",         .width = 16, .height = 16, .bitSize = 8 },
+    .star         = { .texture = (u8*)texture_hud_char_star,         "texture_hud_char_star",         .width = 16, .height = 16, .bitSize = 8 },
+    .apostrophe   = { .texture = (u8*)texture_hud_char_apostrophe,   "texture_hud_char_apostrophe",   .width = 16, .height = 16, .bitSize = 8 },
+    .double_quote = { .texture = (u8*)texture_hud_char_double_quote, "texture_hud_char_double_quote", .width = 16, .height = 16, .bitSize = 8 },
+    .mario_head   = { .texture = (u8*)texture_hud_char_mario_head,   "texture_hud_char_mario_head",   .width = 16, .height = 16, .bitSize = 8 },
+    .luigi_head   = { .texture = (u8*)texture_hud_char_luigi_head,   "texture_hud_char_luigi_head",   .width = 16, .height = 16, .bitSize = 8 },
+    .toad_head    = { .texture = (u8*)texture_hud_char_toad_head,    "texture_hud_char_toad_head",    .width = 16, .height = 16, .bitSize = 8 },
+    .waluigi_head = { .texture = (u8*)texture_hud_char_waluigi_head, "texture_hud_char_waluigi_head", .width = 16, .height = 16, .bitSize = 8 },
+    .wario_head   = { .texture = (u8*)texture_hud_char_wario_head,   "texture_hud_char_wario_head",   .width = 16, .height = 16, .bitSize = 8 }
 };
 
 static void djui_hud_position_translate(f32* x, f32* y) {
@@ -634,7 +634,7 @@ static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
 }
 
 f32 get_current_fov() {
-    return get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
+    return get_first_person_enabled() ? gFirstPersonCamera.fov : replace_value_if_not_zero(gFOVState.fov, gOverrideFOV) + gFOVState.fovOffset;
 }
 
 f32 djui_hud_get_fov_coeff() {

@@ -11,30 +11,30 @@
  * Hitbox for wiggler's non-head body parts.
  */
 static struct ObjectHitbox sWigglerBodyPartHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 3,
-    /* health:            */ 99, // never decreases
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 20,
-    /* height:            */ 20,
-    /* hurtboxRadius:     */ 20,
-    /* hurtboxHeight:     */ 10,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 3,
+    .health = 99, // never decreases
+    .numLootCoins = 0,
+    .radius = 20,
+    .height = 20,
+    .hurtboxRadius = 20,
+    .hurtboxHeight = 10,
 };
 
 /**
  * Hitbox for wiggler's head.
  */
 static struct ObjectHitbox sWigglerHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 3,
-    /* health:            */ 4,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 60,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 30,
-    /* hurtboxHeight:     */ 40,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 3,
+    .health = 4,
+    .numLootCoins = 0,
+    .radius = 60,
+    .height = 50,
+    .hurtboxRadius = 30,
+    .hurtboxHeight = 40,
 };
 
 /**

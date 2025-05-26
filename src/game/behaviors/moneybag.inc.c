@@ -1,27 +1,27 @@
 // moneybag.c.inc
 
 static struct ObjectHitbox sMoneybagHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 1,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 120,
-    /* height:            */ 60,
-    /* hurtboxRadius:     */ 100,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 120,
+    .height = 60,
+    .hurtboxRadius = 100,
+    .hurtboxHeight = 50,
 };
 
 static struct ObjectHitbox sMoneybagHiddenHitbox = {
-    /* interactType:      */ INTERACT_DAMAGE,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 1,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 120,
-    /* height:            */ 60,
-    /* hurtboxRadius:     */ 100,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_DAMAGE,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 120,
+    .height = 60,
+    .hurtboxRadius = 100,
+    .hurtboxHeight = 50,
 };
 
 void bhv_moneybag_init(void) {

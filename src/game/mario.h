@@ -77,7 +77,7 @@ Plays a sound if Mario does not currently have a specific flag set. Once played,
 void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags);
 
 /* |description|
-Plays Mario’s jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
+Plays Mario's jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
 |descriptionEnd| */
 void play_mario_jump_sound(struct MarioState *m);
 
@@ -130,6 +130,11 @@ Returns true if Mario is in any of the crouching or crawling states, checking hi
 bool mario_is_crouching(struct MarioState *m);
 
 /* |description|
+Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
+|descriptionEnd| */
+bool mario_is_ground_pound_landing(struct MarioState *m);
+
+/* |description|
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 |descriptionEnd| */
 bool mario_can_bubble(struct MarioState* m);
@@ -152,14 +157,14 @@ Useful for controlling friction, movement speed adjustments, and whether Mario s
 s32 mario_get_floor_class(struct MarioState *m);
 
 /* |description|
-Computes a value added to terrain sounds, depending on the floor’s type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects.
+Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects.
 Useful for playing context-specific footstep or movement sounds
 |descriptionEnd| */
 u32 mario_get_terrain_sound_addend(struct MarioState *m);
 
 /* |description|
 Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls.
-Useful for collision detection when updating Mario’s movement or adjusting his position
+Useful for collision detection when updating Mario's movement or adjusting his position
 |descriptionEnd| */
 struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius);
 
@@ -296,7 +301,7 @@ Sets Mario's particle flags to spawn various visual effects (dust, water splashe
 void set_mario_particle_flags(struct MarioState* m, u32 flags, u8 clear);
 
 /* |description|
-Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
+Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
 |descriptionEnd| */
 void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd);
 

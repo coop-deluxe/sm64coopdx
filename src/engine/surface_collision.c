@@ -17,8 +17,6 @@ Vec3f gFindWallDirection = { 0 };
 u8 gFindWallDirectionActive = false;
 u8 gFindWallDirectionAirborne = false;
 
-#define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
-
 void set_find_wall_direction(Vec3f dir, bool active, bool airborne) {
     if (active) {
         vec3f_copy(gFindWallDirection, dir);
@@ -27,7 +25,7 @@ void set_find_wall_direction(Vec3f dir, bool active, bool airborne) {
     gFindWallDirectionAirborne = airborne;
 }
 
-static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
+void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
     Vec3f v1; vec3s_to_vec3f(v1, surf->vertex1);
     Vec3f v2; vec3s_to_vec3f(v2, surf->vertex2);
     Vec3f v3; vec3s_to_vec3f(v3, surf->vertex3);
@@ -50,18 +48,18 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
         if (s < 0) {
             if (t < 0) {
                 if (d < 0) {
-                    s = CLAMP(-d/a, 0, 1);
+                    s = clamp(-d/a, 0, 1);
                     t = 0;
                 } else {
                     s = 0;
-                    t = CLAMP(-e/c, 0, 1);
+                    t = clamp(-e/c, 0, 1);
                 }
             } else {
                 s = 0;
-                t = CLAMP(-e/c, 0, 1);
+                t = clamp(-e/c, 0, 1);
             }
         } else if (t < 0) {
-            s = CLAMP(-d/a, 0, 1);
+            s = clamp(-d/a, 0, 1);
             t = 0;
         } else {
             f32 invDet = 1 / det;
@@ -75,26 +73,26 @@ static void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out
             if (tmp1 > tmp0) {
                 f32 numer = tmp1 - tmp0;
                 f32 denom = a-2*b+c;
-                s = CLAMP(numer/denom, 0, 1);
+                s = clamp(numer/denom, 0, 1);
                 t = (1 - s);
             } else {
-                t = CLAMP(-e/c, 0, 1);
+                t = clamp(-e/c, 0, 1);
                 s = 0;
             }
         } else if (t < 0.f) {
             if ((a + d) > (b + e)) {
                 f32 numer = c+e-b-d;
                 f32 denom = a-2*b+c;
-                s = CLAMP(numer/denom, 0, 1);
+                s = clamp(numer/denom, 0, 1);
                 t = (1 - s);
             } else {
-                s = CLAMP(-e/c, 0, 1);
+                s = clamp(-e/c, 0, 1);
                 t = 0;
             }
         } else {
             f32 numer = c+e-b-d;
             f32 denom = a-2*b+c;
-            s = CLAMP(numer/denom, 0, 1);
+            s = clamp(numer/denom, 0, 1);
             t = 1 - s;
         }
     }
@@ -128,9 +126,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     Vec3f cPos = { 0 };
     Vec3f cNorm = { 0 };
 
-    // Max collision radius = 200
-    if (radius > 200.0f) {
-        radius = 200.0f;
+    // Default max collision radius = 200
+    if (radius > gLevelValues.wallMaxRadius) {
+        radius = gLevelValues.wallMaxRadius;
     }
 
     // Stay in this loop until out of walls.

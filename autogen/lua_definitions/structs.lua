@@ -45,6 +45,7 @@
 --- @field public numSecrets integer
 --- @field public objectSpawnInfos SpawnInfo
 --- @field public paintingWarpNodes WarpNode
+--- @field public root GraphNodeRoot
 --- @field public surfaceRooms Pointer_integer
 --- @field public terrainData Pointer_integer
 --- @field public terrainType integer
@@ -950,6 +951,15 @@
 --- @field public prevTimestamp number
 --- @field public unused integer
 
+--- @class GraphNodeRoot
+--- @field public areaIndex integer
+--- @field public height integer
+--- @field public node GraphNode
+--- @field public numViews integer
+--- @field public width integer
+--- @field public x integer
+--- @field public y integer
+
 --- @class GraphNodeRotation
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
@@ -1103,6 +1113,7 @@
 --- @field public vanishCapDurationVcutm integer
 --- @field public vanishCapSequence SeqId
 --- @field public visibleSecrets integer
+--- @field public wallMaxRadius number
 --- @field public wdwWaterLevelSpeed number
 --- @field public wingCapDuration integer
 --- @field public wingCapDurationTotwc integer
@@ -1119,16 +1130,15 @@
 
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer
---- @field public padding integer[]
 --- @field public targetAnim Animation
 
 --- @class MarioBodyState
 --- @field public action integer
 --- @field public allowPartRotation integer
 --- @field public capState integer
+--- @field public currAnimPart integer
 --- @field public eyeState integer
 --- @field public grabPos integer
---- @field public handFootPos Vec3f[]
 --- @field public handState integer
 --- @field public headAngle Vec3s
 --- @field public headPos Vec3f
@@ -1723,6 +1733,7 @@
 --- @field public oMarioBurnTimer integer
 --- @field public oMarioCannonInputYaw integer
 --- @field public oMarioCannonObjectYaw integer
+--- @field public oMarioJumboStarCutscenePosZ number
 --- @field public oMarioLongJumpIsSlow integer
 --- @field public oMarioParticleFlags integer
 --- @field public oMarioPolePos number
@@ -2420,6 +2431,25 @@
 --- @field public y number
 --- @field public z number
 --- @field public w number
+
+--- @class Vec2i
+--- @field public x integer
+--- @field public y integer
+
+--- @class Vec3i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+
+--- @class Vec4i
+--- @field public x integer
+--- @field public y integer
+--- @field public z integer
+--- @field public w integer
+
+--- @class Vec2s
+--- @field public x integer
+--- @field public y integer
 
 --- @class Vec3s
 --- @field public x integer

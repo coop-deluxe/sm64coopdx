@@ -1,6 +1,14 @@
 -- localize functions to improve performance - a-utils.lua
 local string_lower,string_format,table_insert,get_date_and_time = string.lower,string.format,table.insert,get_date_and_time
 
+-- Version Data --
+MOD_VERSION_API = 1
+MOD_VERSION_MAJOR = 14
+MOD_VERSION_MINOR = 1
+MOD_VERSION_INDEV = false
+MOD_VERSION_STRING = tostring(MOD_VERSION_API) .. "." .. tostring(MOD_VERSION_MAJOR) .. (MOD_VERSION_MINOR > 0 and ("." .. tostring(MOD_VERSION_MINOR)) or "") .. (MOD_VERSION_INDEV and " (In-Dev)" or "")
+MOD_VERSION_DEBUG = tostring(GITHUB_REPO) .. " | " .. tostring(GITHUB_COMMIT_ID) .. " | " .. tostring(GITHUB_COMMIT_TIME)
+
 if VERSION_NUMBER < 38 then
     djui_popup_create("\n\\#FFAAAA\\Character Select requires\n the latest version of CoopDX to use!\n\nYou can find CoopDX here:\n\\#6666FF\\https://sm64coopdx.com", 5)
     incompatibleClient = true
@@ -9,6 +17,8 @@ end
 
 local dependacyFiles = {
     -- Required Lua File
+    --"a-github.lua",
+    "dialog.lua",
     "main.lua",
     "n-hud.lua",
     "o-api.lua",
@@ -24,40 +34,41 @@ local legacyFiles = {
     "z-anims.lua",
 }
 
+local fileErrorList = {}
+
 -- Check for Missing Files
-local missingDependacyFiles = false
 for i = 1, #dependacyFiles do
     if not mod_file_exists(dependacyFiles[i]) then
-        log_to_console("Character Select file missing: '" .. dependacyFiles[i] .. "'", CONSOLE_MESSAGE_ERROR)
-        missingDependacyFiles = true
+        log_to_console("Character Select file missing: '" .. dependacyFiles[i] .. "'", CONSOLE_MESSAGE_WARNING)
+        table_insert(fileErrorList, "Missing File '" .. dependacyFiles[i] .. "'")
     end
 end
-if missingDependacyFiles then
-    djui_popup_create("\n\\#FFAAAA\\Character Select is missing\nan important file!\n\nYou can find a list of\nmissing files in the console!", 5)
-    incompatibleClient = true
-    return 0
-end
-
 -- Check for Legacy Files
-local foundLegacyFiles = false
 for i = 1, #legacyFiles do
     if mod_file_exists(legacyFiles[i]) then
-        log_to_console("Character Select legacy file found: '" .. legacyFiles[i] .. "'", CONSOLE_MESSAGE_ERROR)
-        foundLegacyFiles = true
+        log_to_console("Character Select legacy file found: '" .. legacyFiles[i] .. "'", CONSOLE_MESSAGE_WARNING)
+        table_insert(fileErrorList, "Legacy File '" .. legacyFiles[i] .. "'")
     end
 end
-if foundLegacyFiles then
-    djui_popup_create("\n\\#FFAAAA\\Character Select is loading\nan outdated file!\n\nYou can find a list of\nold files in the console!", 5)
+if #fileErrorList > 0 then
     incompatibleClient = true
+    local frameCount = 0
+    hook_event(HOOK_UPDATE, function ()
+        frameCount = frameCount + 1
+        if frameCount == 5 then
+            local errorString = "\\#FFAAAA\\Character Select File Issues:"
+            djui_popup_create("\\#FFAAAA\\Character Select is having\nfile issues and cannot load!\n\nErrors have been logged in chat!", 4)
+            for i = 1, #fileErrorList do
+                errorString = errorString .. "\n" .. fileErrorList[i]
+            end
+            errorString = errorString .. "\n\nThe best way to resolve these issues is to delete your current version of Character Select and then install the latest version!"
+            
+            log_to_console(errorString)
+            djui_chat_message_create(errorString)
+        end
+    end)
     return 0
 end
-
--- Version Data --
-MOD_VERSION_API = 1
-MOD_VERSION_MAJOR = 13
-MOD_VERSION_MINOR = 1
-MOD_VERSION_INDEV = false
-MOD_VERSION_STRING = tostring(MOD_VERSION_API) .. "." .. tostring(MOD_VERSION_MAJOR) .. (MOD_VERSION_MINOR > 0 and ("." .. tostring(MOD_VERSION_MINOR)) or "") .. (MOD_VERSION_INDEV and " (In-Dev)" or "")
 
 ommActive = false
 for i in pairs(gActiveMods) do
@@ -67,49 +78,51 @@ for i in pairs(gActiveMods) do
     end
 end
 
+E_MODEL_ARMATURE = smlua_model_util_get_id("armature_geo")
+
 local saveableCharacters = {
-    ["1"] = true,
-    ["2"] = true,
-    ["3"] = true,
-    ["4"] = true,
-    ["5"] = true,
-    ["6"] = true,
-    ["7"] = true,
-    ["8"] = true,
-    ["9"] = true,
-    ["0"] = true,
-    ["a"] = true,
-    ["b"] = true,
-    ["c"] = true,
-    ["d"] = true,
-    ["e"] = true,
-    ["f"] = true,
-    ["g"] = true,
-    ["h"] = true,
-    ["i"] = true,
-    ["j"] = true,
-    ["k"] = true,
-    ["l"] = true,
-    ["m"] = true,
-    ["n"] = true,
-    ["o"] = true,
-    ["p"] = true,
-    ["q"] = true,
-    ["r"] = true,
-    ["s"] = true,
-    ["t"] = true,
-    ["u"] = true,
-    ["v"] = true,
-    ["w"] = true,
-    ["x"] = true,
-    ["y"] = true,
-    ["z"] = true,
-    ["_"] = true,
-    ["-"] = true,
-    ["."] = true,
+    ["1"] = 1,
+    ["2"] = 1,
+    ["3"] = 1,
+    ["4"] = 1,
+    ["5"] = 1,
+    ["6"] = 1,
+    ["7"] = 1,
+    ["8"] = 1,
+    ["9"] = 1,
+    ["0"] = 1,
+    ["a"] = 1,
+    ["b"] = 1,
+    ["c"] = 1,
+    ["d"] = 1,
+    ["e"] = 1,
+    ["f"] = 1,
+    ["g"] = 1,
+    ["h"] = 1,
+    ["i"] = 1,
+    ["j"] = 1,
+    ["k"] = 1,
+    ["l"] = 1,
+    ["m"] = 1,
+    ["n"] = 1,
+    ["o"] = 1,
+    ["p"] = 1,
+    ["q"] = 1,
+    ["r"] = 1,
+    ["s"] = 1,
+    ["t"] = 1,
+    ["u"] = 1,
+    ["v"] = 1,
+    ["w"] = 1,
+    ["x"] = 1,
+    ["y"] = 1,
+    ["z"] = 1,
+    ["_"] = 1,
+    ["-"] = 1,
+    ["."] = 1,
 
     -- Replace with Underscore
-    [" "] = false,
+    [" "] = 0,
 }
 
 --- @param string string
@@ -126,9 +139,9 @@ function string_space_to_underscore(string)
     local s = ''
     for i = 1, #string do
         local c = string:sub(i,i)
-        if saveableCharacters[string_lower(c)] then
+        if saveableCharacters[string_lower(c)] == 1 then
             s = s .. c
-        elseif saveableCharacters[string_lower(c)] ~= nil then
+        elseif saveableCharacters[string_lower(c)] == 0 then
             s = s .. "_"
         end
     end
@@ -137,9 +150,12 @@ end
 
 --- @param string string
 --- Splits a string into a table by spaces
-function string_split(string)
+function string_split(string, splitAt)
+    if splitAt == nil then
+        splitAt = " "
+    end
     local result = {}
-    for match in string:gmatch(string_format("[^%s]+", " ")) do
+    for match in string:gmatch(string_format("[^%s]+", splitAt)) do
         table_insert(result, match)
     end
     return result

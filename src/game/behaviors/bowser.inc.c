@@ -1632,27 +1632,27 @@ void (*sFallingBowserPlatformActions[])(void) = { falling_bowser_plat_act_0,
                                                   falling_bowser_plat_act_2 };
 
 struct ObjectHitbox sGrowingBowserFlameHitbox = {
-    /* interactType: */ INTERACT_FLAME,
-    /* downOffset: */ 20,
-    /* damageOrCoinValue: */ 1,
-    /* health: */ 0,
-    /* numLootCoins: */ 0,
-    /* radius: */ 10,
-    /* height: */ 40,
-    /* hurtboxRadius: */ 0,
-    /* hurtboxHeight: */ 0,
+    .interactType = INTERACT_FLAME,
+    .downOffset = 20,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 10,
+    .height = 40,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 struct ObjectHitbox sBowserFlameHitbox = {
-    /* interactType: */ INTERACT_FLAME,
-    /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health: */ 0,
-    /* numLootCoins: */ 0,
-    /* radius: */ 10,
-    /* height: */ 40,
-    /* hurtboxRadius: */ 0,
-    /* hurtboxHeight: */ 0,
+    .interactType = INTERACT_FLAME,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 10,
+    .height = 40,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 f32 D_8032F748[] = { -8.0f, -6.0f, -3.0f };

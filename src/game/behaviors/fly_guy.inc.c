@@ -7,15 +7,15 @@
  * Hitbox for fly guy.
  */
 static struct ObjectHitbox sFlyGuyHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 2,
-    /* radius:            */ 70,
-    /* height:            */ 60,
-    /* hurtboxRadius:     */ 40,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 2,
+    .radius = 70,
+    .height = 60,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 50,
 };
 
 /**

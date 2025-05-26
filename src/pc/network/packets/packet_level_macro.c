@@ -30,7 +30,7 @@ static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
 static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaIndex) {
     // check that the area is active
     struct Area* area = &gAreaData[areaIndex];
-    if (area->unk04 == NULL) { return; }
+    if (area->root == NULL) { return; }
 
     if (destNp == NULL || !destNp->connected) {
         LOG_ERROR("network_send_level_macro: dest np is invalid");
@@ -206,7 +206,7 @@ void network_receive_level_macro(struct Packet* p) {
                     }
                 }
                 LOG_INFO("rx macro special: coin formation");
-            } else if (behavior == bhvGoombaTripletSpawner) {
+            } else if (behavior == smlua_override_behavior(bhvGoombaTripletSpawner)) {
                 for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }

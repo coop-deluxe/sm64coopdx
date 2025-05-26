@@ -1,15 +1,15 @@
 // koopa_shell.c.inc
 
 struct ObjectHitbox sKoopaShellHitbox = {
-    /* interactType: */ INTERACT_KOOPA_SHELL,
-    /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 4,
-    /* health: */ 1,
-    /* numLootCoins: */ 1,
-    /* radius: */ 50,
-    /* height: */ 50,
-    /* hurtboxRadius: */ 50,
-    /* hurtboxHeight: */ 50,
+    .interactType = INTERACT_KOOPA_SHELL,
+    .downOffset = 0,
+    .damageOrCoinValue = 4,
+    .health = 1,
+    .numLootCoins = 1,
+    .radius = 50,
+    .height = 50,
+    .hurtboxRadius = 50,
+    .hurtboxHeight = 50,
 };
 
 void koopa_shell_spawn_water_drop(void) {
