@@ -85,8 +85,8 @@ static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, str
             if (*pick == NULL) {
                 *pick = base;
             } else {
-                f32 pickDist = djui_cursor_base_distance(*pick, xDir, yDir ? 1.0f : 2.0f);
-                f32 baseDist = djui_cursor_base_distance(base,  xDir, yDir ? 1.0f : 2.0f);
+                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 1.2f, yDir ? 1.0f : 2.0f);
+                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 1.2f, yDir ? 1.0f : 2.0f);
                 if (baseDist < pickDist) { *pick = base; }
             }
         }
