@@ -3788,13 +3788,6 @@ void stub_camera_2(UNUSED struct Camera *c) {
 void stub_camera_3(UNUSED struct Camera *c) {
 }
 
-void vec3f_sub(Vec3f dst, Vec3f src) {
-    if (!dst || !src) { return; }
-    dst[0] -= src[0];
-    dst[1] -= src[1];
-    dst[2] -= src[2];
-}
-
 void object_pos_to_vec3f(Vec3f dst, struct Object *o) {
     if (!dst || !o) { return; }
     dst[0] = o->oPosX;
@@ -12080,7 +12073,7 @@ Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context) 
         }
     }
 
-    perspective->fov = get_first_person_enabled() ? gFirstPersonCamera.fov : not_zero(gFOVState.fov, gOverrideFOV);
+    perspective->fov = get_first_person_enabled() ? gFirstPersonCamera.fov : replace_value_if_not_zero(gFOVState.fov, gOverrideFOV);
     shake_camera_fov(perspective);
     return NULL;
 }
@@ -12303,7 +12296,7 @@ void rom_hack_cam_walk(Vec3f pos, Vec3f dir, f32 dist) {
         surf->normal.y,
         surf->normal.z,
     };
-    vec3f_project(dirNorm, normal, dir);
+    vec3f_project(dir, dirNorm, normal);
     dir[0] = dirNorm[0] - dir[0];
     dir[1] = dirNorm[1] - dir[1];
     dir[2] = dirNorm[2] - dir[2];

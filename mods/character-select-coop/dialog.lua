@@ -1,3 +1,5 @@
+if incompatibleClient then return 0 end
+
 -- Original Made by EliteMasterEric along with CoopDX PR #321 to replace dialog depending on character --
 -- https://github.com/coop-deluxe/sm64coopdx/pull/321 --
 -- Eric's Original stuffs will be added as soon as there is some way to directly get dialog strings
@@ -107,7 +109,7 @@ define_cs_dialog(DIALOG_086, 1, 3, 30, 200, ("Running around in circles\nmakes s
 define_cs_dialog(DIALOG_087, 1, 4, 30, 200, ("Santa Claus isn't the only\none who can go down a\nchimney! Come on in!\n/--Cabin Proprietor"))
 define_cs_dialog(DIALOG_088, 1, 5, 30, 200, ("Work Elevator\nFor those who get off\nhere: Grab the pole to the\nleft and slide carefully\ndown."))
 define_cs_dialog(DIALOG_089, 1, 5, 95, 200, ("Both ways fraught with\ndanger! Watch your feet!\nThose who can't do the\nLong Jump, tsk, tsk. Make\nyour way to the right.\nRight: Work Elevator\n/// Cloudy Maze\nLeft: Black Hole\n///Underground Lake\n\nRed Circle: Elevator 2\n//// Underground Lake\nArrow: You are here"))
-define_cs_dialog(DIALOG_090, 1, 6, 30, 200, ("Bwa ha ha ha!\nYou've stepped right into\nmy trap, just as I knew\nyou would! I warn you,\n『Friend,』 watch your\nstep!"))
+define_cs_dialog(DIALOG_090, 1, 6, 30, 200, ("Bwa ha ha ha!\nYou've stepped right into\nmy trap, just as I knew\nyou would! I warn you,\n" .. ' "Friend," ' .. "watch your\nstep!"))
 define_cs_dialog(DIALOG_091, 2, 2, 30, 200, ("Danger!\nStrong Gusts!\nBut the wind makes a\ncomfy ride."))
 define_cs_dialog(DIALOG_092, 1, 5, 30, 200, ("Pestering me again, are\nyou, Mario? Can't you see\nthat I'm having a merry\nlittle time, making\nmischief with my minions?\nNow, return those Stars!\nMy troops in the walls\nneed them! Bwa ha ha!"))
 define_cs_dialog(DIALOG_093, 1, 5, 30, 200, ("Mario! You again! Well\nthat's just fine--I've\nbeen looking for something\nto fry with my fire\nbreath!\nYour Star Power is\nuseless against me!\nYour friends are all\ntrapped within the\nwalls...\nAnd you'll never see the\nPrincess again!\nBwa ha ha ha!"))
@@ -201,7 +203,7 @@ local function dialog_swap(charName)
     for i = DIALOG_000, #dialogTable do
         if dialogTable[i] ~= nil then
             local dialog = dialogTable[i]
-            charName = charName:gsub('"', "'")
+            charName = charName:gsub('"', "''")
             local replaced_dialog = dialog.str:gsub(DIALOG_NAME, charName)
             real_dialog_replace(i, dialog.unused, dialog.linesPerBox, dialog.leftOffset, dialog.width, replaced_dialog)
         end

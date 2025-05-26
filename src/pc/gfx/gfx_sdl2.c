@@ -54,9 +54,6 @@
 #else
 # define FRAMERATE 30
 #endif
-// time between consequtive game frames
-static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
-static f64 sFrameTargetTime = 0;
 
 static SDL_Window *wnd;
 static SDL_GLContext ctx = NULL;

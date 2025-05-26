@@ -652,7 +652,6 @@
    - [soft_reset_camera](functions-3.md#soft_reset_camera)
    - [reset_camera](functions-3.md#reset_camera)
    - [select_mario_cam_mode](functions-3.md#select_mario_cam_mode)
-   - [vec3f_sub](functions-3.md#vec3f_sub)
    - [object_pos_to_vec3f](functions-3.md#object_pos_to_vec3f)
    - [vec3f_to_object_pos](functions-3.md#vec3f_to_object_pos)
    - [cam_select_alt_mode](functions-3.md#cam_select_alt_mode)
@@ -1068,6 +1067,7 @@
    - [climb_up_ledge](functions-4.md#climb_up_ledge)
    - [update_ledge_climb_camera](functions-4.md#update_ledge_climb_camera)
    - [update_ledge_climb](functions-4.md#update_ledge_climb)
+   - [mario_pop_bubble](functions-4.md#mario_pop_bubble)
    - [check_common_automatic_cancels](functions-4.md#check_common_automatic_cancels)
    - [mario_execute_automatic_action](functions-4.md#mario_execute_automatic_action)
 
@@ -1189,28 +1189,20 @@
 - math_util.h
    - [sins](functions-4.md#sins)
    - [coss](functions-4.md#coss)
-   - [vec3f_copy](functions-4.md#vec3f_copy)
-   - [vec3f_set](functions-4.md#vec3f_set)
-   - [vec3f_add](functions-4.md#vec3f_add)
-   - [vec3f_sum](functions-4.md#vec3f_sum)
-   - [vec3f_dif](functions-4.md#vec3f_dif)
-   - [vec3f_mul](functions-4.md#vec3f_mul)
-   - [vec3s_copy](functions-4.md#vec3s_copy)
-   - [vec3s_set](functions-4.md#vec3s_set)
-   - [vec3s_add](functions-4.md#vec3s_add)
-   - [vec3s_sum](functions-4.md#vec3s_sum)
-   - [vec3s_to_vec3f](functions-4.md#vec3s_to_vec3f)
-   - [vec3f_to_vec3s](functions-4.md#vec3f_to_vec3s)
-   - [find_vector_perpendicular_to_plane](functions-4.md#find_vector_perpendicular_to_plane)
-   - [vec3f_cross](functions-4.md#vec3f_cross)
-   - [vec3f_normalize](functions-4.md#vec3f_normalize)
-   - [vec3f_length](functions-4.md#vec3f_length)
-   - [vec3f_dot](functions-4.md#vec3f_dot)
-   - [vec3f_combine](functions-4.md#vec3f_combine)
+   - [atan2s](functions-4.md#atan2s)
+   - [atan2f](functions-4.md#atan2f)
+   - [approach_s32](functions-4.md#approach_s32)
+   - [approach_f32](functions-4.md#approach_f32)
+   - [spline_get_weights](functions-4.md#spline_get_weights)
+   - [anim_spline_init](functions-4.md#anim_spline_init)
+   - [anim_spline_poll](functions-4.md#anim_spline_poll)
    - [vec3f_rotate_zxy](functions-4.md#vec3f_rotate_zxy)
-   - [mtxf_copy](functions-4.md#mtxf_copy)
-   - [mtxf_identity](functions-4.md#mtxf_identity)
-   - [mtxf_translate](functions-4.md#mtxf_translate)
+   - [vec3f_rotate_around_n](functions-4.md#vec3f_rotate_around_n)
+   - [vec3f_project](functions-4.md#vec3f_project)
+   - [vec3f_transform](functions-4.md#vec3f_transform)
+   - [vec3f_get_dist_and_angle](functions-4.md#vec3f_get_dist_and_angle)
+   - [vec3f_set_dist_and_angle](functions-4.md#vec3f_set_dist_and_angle)
+   - [find_vector_perpendicular_to_plane](functions-4.md#find_vector_perpendicular_to_plane)
    - [mtxf_lookat](functions-4.md#mtxf_lookat)
    - [mtxf_rotate_zxy_and_translate](functions-4.md#mtxf_rotate_zxy_and_translate)
    - [mtxf_rotate_xyz_and_translate](functions-4.md#mtxf_rotate_xyz_and_translate)
@@ -1219,21 +1211,100 @@
    - [mtxf_align_terrain_normal](functions-4.md#mtxf_align_terrain_normal)
    - [mtxf_align_terrain_triangle](functions-4.md#mtxf_align_terrain_triangle)
    - [mtxf_mul](functions-4.md#mtxf_mul)
-   - [mtxf_scale_vec3f](functions-4.md#mtxf_scale_vec3f)
    - [mtxf_mul_vec3s](functions-4.md#mtxf_mul_vec3s)
+   - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
-   - [vec3f_get_dist_and_angle](functions-4.md#vec3f_get_dist_and_angle)
-   - [vec3f_set_dist_and_angle](functions-4.md#vec3f_set_dist_and_angle)
-   - [approach_s32](functions-4.md#approach_s32)
-   - [approach_f32](functions-4.md#approach_f32)
-   - [atan2s](functions-4.md#atan2s)
-   - [spline_get_weights](functions-4.md#spline_get_weights)
-   - [anim_spline_init](functions-4.md#anim_spline_init)
-   - [anim_spline_poll](functions-4.md#anim_spline_poll)
-   - [not_zero](functions-4.md#not_zero)
-   - [vec3f_project](functions-4.md#vec3f_project)
+
+<br />
+
+- math_util.inl
+   - [replace_value_if_not_zero](functions-4.md#replace_value_if_not_zero)
+   - [sm64_to_radians](functions-4.md#sm64_to_radians)
+   - [radians_to_sm64](functions-4.md#radians_to_sm64)
+   - [sm64_to_degrees](functions-4.md#sm64_to_degrees)
+   - [degrees_to_sm64](functions-4.md#degrees_to_sm64)
+
+<br />
+
+- math_util_mat4.inl
+   - [mtxf_zero](functions-4.md#mtxf_zero)
+   - [mtxf_copy](functions-4.md#mtxf_copy)
+   - [mtxf_identity](functions-4.md#mtxf_identity)
+   - [mtxf_translate](functions-4.md#mtxf_translate)
+   - [mtxf_scale_vec3f](functions-4.md#mtxf_scale_vec3f)
+
+<br />
+
+- math_util_vec3f.inl
+   - [vec3f_zero](functions-4.md#vec3f_zero)
+   - [vec3f_copy](functions-4.md#vec3f_copy)
+   - [vec3f_set](functions-4.md#vec3f_set)
+   - [vec3f_add](functions-4.md#vec3f_add)
+   - [vec3f_sum](functions-4.md#vec3f_sum)
+   - [vec3f_sub](functions-4.md#vec3f_sub)
+   - [vec3f_dif](functions-4.md#vec3f_dif)
+   - [vec3f_mul](functions-4.md#vec3f_mul)
+   - [vec3f_div](functions-4.md#vec3f_div)
+   - [vec3f_length](functions-4.md#vec3f_length)
+   - [vec3f_normalize](functions-4.md#vec3f_normalize)
+   - [vec3f_set_magnitude](functions-4.md#vec3f_set_magnitude)
+   - [vec3f_dot](functions-4.md#vec3f_dot)
+   - [vec3f_cross](functions-4.md#vec3f_cross)
+   - [vec3f_combine](functions-4.md#vec3f_combine)
    - [vec3f_dist](functions-4.md#vec3f_dist)
+   - [vec3f_hdist](functions-4.md#vec3f_hdist)
+   - [vec3f_is_zero](functions-4.md#vec3f_is_zero)
+   - [vec3f_to_vec3i](functions-4.md#vec3f_to_vec3i)
+   - [vec3f_to_vec3s](functions-4.md#vec3f_to_vec3s)
+
+<br />
+
+- math_util_vec3i.inl
+   - [vec3i_zero](functions-4.md#vec3i_zero)
+   - [vec3i_copy](functions-4.md#vec3i_copy)
+   - [vec3i_set](functions-4.md#vec3i_set)
+   - [vec3i_add](functions-4.md#vec3i_add)
+   - [vec3i_sum](functions-4.md#vec3i_sum)
+   - [vec3i_sub](functions-4.md#vec3i_sub)
+   - [vec3i_dif](functions-4.md#vec3i_dif)
+   - [vec3i_mul](functions-4.md#vec3i_mul)
+   - [vec3i_div](functions-4.md#vec3i_div)
+   - [vec3i_length](functions-4.md#vec3i_length)
+   - [vec3i_normalize](functions-4.md#vec3i_normalize)
+   - [vec3i_set_magnitude](functions-4.md#vec3i_set_magnitude)
+   - [vec3i_dot](functions-4.md#vec3i_dot)
+   - [vec3i_cross](functions-4.md#vec3i_cross)
+   - [vec3i_combine](functions-4.md#vec3i_combine)
+   - [vec3i_dist](functions-4.md#vec3i_dist)
+   - [vec3i_hdist](functions-4.md#vec3i_hdist)
+   - [vec3i_is_zero](functions-4.md#vec3i_is_zero)
+   - [vec3i_to_vec3f](functions-4.md#vec3i_to_vec3f)
+   - [vec3i_to_vec3s](functions-4.md#vec3i_to_vec3s)
+
+<br />
+
+- math_util_vec3s.inl
+   - [vec3s_zero](functions-4.md#vec3s_zero)
+   - [vec3s_copy](functions-4.md#vec3s_copy)
+   - [vec3s_set](functions-4.md#vec3s_set)
+   - [vec3s_add](functions-4.md#vec3s_add)
+   - [vec3s_sum](functions-4.md#vec3s_sum)
+   - [vec3s_sub](functions-4.md#vec3s_sub)
+   - [vec3s_dif](functions-4.md#vec3s_dif)
+   - [vec3s_mul](functions-4.md#vec3s_mul)
+   - [vec3s_div](functions-4.md#vec3s_div)
+   - [vec3s_length](functions-4.md#vec3s_length)
+   - [vec3s_normalize](functions-4.md#vec3s_normalize)
+   - [vec3s_set_magnitude](functions-4.md#vec3s_set_magnitude)
+   - [vec3s_dot](functions-4.md#vec3s_dot)
+   - [vec3s_cross](functions-4.md#vec3s_cross)
+   - [vec3s_combine](functions-4.md#vec3s_combine)
+   - [vec3s_dist](functions-4.md#vec3s_dist)
+   - [vec3s_hdist](functions-4.md#vec3s_hdist)
+   - [vec3s_is_zero](functions-4.md#vec3s_is_zero)
+   - [vec3s_to_vec3f](functions-4.md#vec3s_to_vec3f)
+   - [vec3s_to_vec3i](functions-4.md#vec3s_to_vec3i)
 
 <br />
 
@@ -1252,40 +1323,40 @@
 <br />
 
 - mod_storage.h
-   - [mod_storage_save](functions-4.md#mod_storage_save)
-   - [mod_storage_save_number](functions-4.md#mod_storage_save_number)
-   - [mod_storage_save_bool](functions-4.md#mod_storage_save_bool)
-   - [mod_storage_load](functions-4.md#mod_storage_load)
-   - [mod_storage_load_number](functions-4.md#mod_storage_load_number)
-   - [mod_storage_load_bool](functions-4.md#mod_storage_load_bool)
-   - [mod_storage_exists](functions-4.md#mod_storage_exists)
-   - [mod_storage_remove](functions-4.md#mod_storage_remove)
-   - [mod_storage_clear](functions-4.md#mod_storage_clear)
+   - [mod_storage_save](functions-5.md#mod_storage_save)
+   - [mod_storage_save_number](functions-5.md#mod_storage_save_number)
+   - [mod_storage_save_bool](functions-5.md#mod_storage_save_bool)
+   - [mod_storage_load](functions-5.md#mod_storage_load)
+   - [mod_storage_load_number](functions-5.md#mod_storage_load_number)
+   - [mod_storage_load_bool](functions-5.md#mod_storage_load_bool)
+   - [mod_storage_exists](functions-5.md#mod_storage_exists)
+   - [mod_storage_remove](functions-5.md#mod_storage_remove)
+   - [mod_storage_clear](functions-5.md#mod_storage_clear)
 
 <br />
 
 - network_player.h
-   - [network_player_connected_count](functions-4.md#network_player_connected_count)
-   - [network_player_set_description](functions-4.md#network_player_set_description)
-   - [network_player_set_override_location](functions-4.md#network_player_set_override_location)
-   - [network_player_from_global_index](functions-4.md#network_player_from_global_index)
-   - [get_network_player_from_level](functions-4.md#get_network_player_from_level)
-   - [get_network_player_from_area](functions-4.md#get_network_player_from_area)
-   - [get_network_player_smallest_global](functions-4.md#get_network_player_smallest_global)
-   - [network_player_set_override_palette_color](functions-4.md#network_player_set_override_palette_color)
-   - [network_player_reset_override_palette](functions-4.md#network_player_reset_override_palette)
-   - [network_player_is_override_palette_same](functions-4.md#network_player_is_override_palette_same)
+   - [network_player_connected_count](functions-5.md#network_player_connected_count)
+   - [network_player_set_description](functions-5.md#network_player_set_description)
+   - [network_player_set_override_location](functions-5.md#network_player_set_override_location)
+   - [network_player_from_global_index](functions-5.md#network_player_from_global_index)
+   - [get_network_player_from_level](functions-5.md#get_network_player_from_level)
+   - [get_network_player_from_area](functions-5.md#get_network_player_from_area)
+   - [get_network_player_smallest_global](functions-5.md#get_network_player_smallest_global)
+   - [network_player_set_override_palette_color](functions-5.md#network_player_set_override_palette_color)
+   - [network_player_reset_override_palette](functions-5.md#network_player_reset_override_palette)
+   - [network_player_is_override_palette_same](functions-5.md#network_player_is_override_palette_same)
 
 <br />
 
 - network_utils.h
-   - [network_global_index_from_local](functions-4.md#network_global_index_from_local)
-   - [network_local_index_from_global](functions-4.md#network_local_index_from_global)
-   - [network_is_server](functions-4.md#network_is_server)
-   - [network_is_moderator](functions-4.md#network_is_moderator)
-   - [network_get_player_text_color_string](functions-4.md#network_get_player_text_color_string)
-   - [network_check_singleplayer_pause](functions-4.md#network_check_singleplayer_pause)
-   - [network_discord_id_from_local_index](functions-4.md#network_discord_id_from_local_index)
+   - [network_global_index_from_local](functions-5.md#network_global_index_from_local)
+   - [network_local_index_from_global](functions-5.md#network_local_index_from_global)
+   - [network_is_server](functions-5.md#network_is_server)
+   - [network_is_moderator](functions-5.md#network_is_moderator)
+   - [network_get_player_text_color_string](functions-5.md#network_get_player_text_color_string)
+   - [network_check_singleplayer_pause](functions-5.md#network_check_singleplayer_pause)
+   - [network_discord_id_from_local_index](functions-5.md#network_discord_id_from_local_index)
 
 <br />
 
@@ -1675,26 +1746,26 @@
 <br />
 
 - smlua_audio_utils.h
-   - [smlua_audio_utils_reset_all](functions-5.md#smlua_audio_utils_reset_all)
-   - [smlua_audio_utils_replace_sequence](functions-5.md#smlua_audio_utils_replace_sequence)
-   - [audio_stream_load](functions-5.md#audio_stream_load)
-   - [audio_stream_destroy](functions-5.md#audio_stream_destroy)
-   - [audio_stream_play](functions-5.md#audio_stream_play)
-   - [audio_stream_pause](functions-5.md#audio_stream_pause)
-   - [audio_stream_stop](functions-5.md#audio_stream_stop)
-   - [audio_stream_get_position](functions-5.md#audio_stream_get_position)
-   - [audio_stream_set_position](functions-5.md#audio_stream_set_position)
-   - [audio_stream_get_looping](functions-5.md#audio_stream_get_looping)
-   - [audio_stream_set_looping](functions-5.md#audio_stream_set_looping)
-   - [audio_stream_set_loop_points](functions-5.md#audio_stream_set_loop_points)
-   - [audio_stream_get_frequency](functions-5.md#audio_stream_get_frequency)
-   - [audio_stream_set_frequency](functions-5.md#audio_stream_set_frequency)
-   - [audio_stream_get_volume](functions-5.md#audio_stream_get_volume)
-   - [audio_stream_set_volume](functions-5.md#audio_stream_set_volume)
-   - [audio_sample_load](functions-5.md#audio_sample_load)
-   - [audio_sample_destroy](functions-5.md#audio_sample_destroy)
-   - [audio_sample_stop](functions-5.md#audio_sample_stop)
-   - [audio_sample_play](functions-5.md#audio_sample_play)
+   - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
+   - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
+   - [audio_stream_load](functions-6.md#audio_stream_load)
+   - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
+   - [audio_stream_play](functions-6.md#audio_stream_play)
+   - [audio_stream_pause](functions-6.md#audio_stream_pause)
+   - [audio_stream_stop](functions-6.md#audio_stream_stop)
+   - [audio_stream_get_position](functions-6.md#audio_stream_get_position)
+   - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
+   - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
+   - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
+   - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
+   - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
+   - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
+   - [audio_stream_get_volume](functions-6.md#audio_stream_get_volume)
+   - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
+   - [audio_sample_load](functions-6.md#audio_sample_load)
+   - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
+   - [audio_sample_stop](functions-6.md#audio_sample_stop)
+   - [audio_sample_play](functions-6.md#audio_sample_play)
 
 <br />
 
@@ -1830,26 +1901,11 @@
 
 <br />
 
-- smlua_math_utils.h
-   - [min](functions-6.md#min)
-   - [max](functions-6.md#max)
-   - [sqr](functions-6.md#sqr)
-   - [minf](functions-6.md#minf)
-   - [maxf](functions-6.md#maxf)
-   - [sqrf](functions-6.md#sqrf)
-   - [sm64_to_radians](functions-6.md#sm64_to_radians)
-   - [radians_to_sm64](functions-6.md#radians_to_sm64)
-   - [sm64_to_degrees](functions-6.md#sm64_to_degrees)
-   - [degrees_to_sm64](functions-6.md#degrees_to_sm64)
-   - [hypotf](functions-6.md#hypotf)
-   - [clamp](functions-6.md#clamp)
-   - [clampf](functions-6.md#clampf)
-
-<br />
-
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-6.md#get_network_area_timer)
    - [get_area_update_counter](functions-6.md#get_area_update_counter)
+   - [get_temp_s32_pointer](functions-6.md#get_temp_s32_pointer)
+   - [deref_s32_pointer](functions-6.md#deref_s32_pointer)
    - [djui_popup_create_global](functions-6.md#djui_popup_create_global)
    - [djui_is_popup_disabled](functions-6.md#djui_is_popup_disabled)
    - [djui_set_popup_disabled_override](functions-6.md#djui_set_popup_disabled_override)
@@ -1886,6 +1942,7 @@
    - [get_hand_foot_pos_x](functions-6.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-6.md#get_hand_foot_pos_y)
    - [get_hand_foot_pos_z](functions-6.md#get_hand_foot_pos_z)
+   - [get_mario_anim_part_pos](functions-6.md#get_mario_anim_part_pos)
    - [get_current_save_file_num](functions-6.md#get_current_save_file_num)
    - [save_file_get_using_backup_slot](functions-6.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-6.md#save_file_set_using_backup_slot)
@@ -2040,6 +2097,7 @@
    - [find_water_level](functions-6.md#find_water_level)
    - [find_poison_gas_level](functions-6.md#find_poison_gas_level)
    - [set_find_wall_direction](functions-6.md#set_find_wall_direction)
+   - [closest_point_to_triangle](functions-6.md#closest_point_to_triangle)
 
 <br />
 

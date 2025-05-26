@@ -3,7 +3,6 @@
 #include "types.h"
 
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
-static char sOnlineVersionString[MAX_VERSION_LENGTH] = { 0 };
 
 const char* get_version(void) {
 #if defined(VERSION_US)

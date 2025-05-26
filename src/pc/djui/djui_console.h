@@ -11,6 +11,7 @@ struct DjuiConsole {
     struct DjuiBase base;
     struct DjuiFlowLayout* flow;
     bool scrolling;
+    f32 scrollY;
 };
 
 #define CONSOLE_MAX_TMP_BUFFER 512

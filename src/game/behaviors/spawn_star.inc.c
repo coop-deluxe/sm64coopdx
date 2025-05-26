@@ -47,15 +47,15 @@ void spawn_star_number(void) {
 }
 
 static struct ObjectHitbox sCollectStarHitbox = {
-    /* interactType:      */ INTERACT_STAR_OR_KEY,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 80,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 0,
-    /* hurtboxHeight:     */ 0,
+    .interactType = INTERACT_STAR_OR_KEY,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 80,
+    .height = 50,
+    .hurtboxRadius = 0,
+    .hurtboxHeight = 0,
 };
 
 void bhv_collect_star_init(void) {

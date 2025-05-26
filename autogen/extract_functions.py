@@ -13,6 +13,9 @@ replacements = {
     'BAD_RETURN(u64)': 'void',
     'BAD_RETURN(f32)': 'void',
     'BAD_RETURN(f64)': 'void',
+    'INLINE': '',
+    'NOINLINE': '',
+    'OPTIMIZE_O3': '',
 }
 
 def extract_functions(filename):

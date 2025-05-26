@@ -302,7 +302,7 @@ Plays a sound if Mario does not currently have a specific flag set. Once played,
 ## [play_mario_jump_sound](#play_mario_jump_sound)
 
 ### Description
-Plays Mario’s jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
+Plays Mario's jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
 
 ### Lua Example
 `play_mario_jump_sound(m)`
@@ -658,7 +658,7 @@ Retrieves the slipperiness class of Mario's current floor, ranging from not slip
 ## [mario_get_terrain_sound_addend](#mario_get_terrain_sound_addend)
 
 ### Description
-Computes a value added to terrain sounds, depending on the floor’s type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
+Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
 
 ### Lua Example
 `local integerValue = mario_get_terrain_sound_addend(m)`
@@ -681,7 +681,7 @@ Computes a value added to terrain sounds, depending on the floor’s type (sand,
 ## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
 
 ### Description
-Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario’s movement or adjusting his position
+Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario's movement or adjusting his position
 
 ### Lua Example
 `local SurfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
@@ -1255,7 +1255,7 @@ Sets Mario's particle flags to spawn various visual effects (dust, water splashe
 ## [mario_update_wall](#mario_update_wall)
 
 ### Description
-Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
+Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
 
 ### Lua Example
 `mario_update_wall(m, wcd)`
@@ -2013,6 +2013,29 @@ Updates Mario's climb onto a ledge by setting the chosen climbing animation and 
 
 ### C Prototype
 `void update_ledge_climb(struct MarioState *m, s32 animation, u32 endAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mario_pop_bubble](#mario_pop_bubble)
+
+### Description
+Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+
+### Lua Example
+`mario_pop_bubble(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void mario_pop_bubble(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 
@@ -4168,444 +4191,175 @@ Calculates the cosine of the given angle, where the angle is specified as a sign
 
 <br />
 
-## [vec3f_copy](#vec3f_copy)
+## [atan2s](#atan2s)
 
 ### Description
-Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`). After this operation, `dest` will have the same x, y, and z values as `src`
+Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
 
 ### Lua Example
-`local voidValue = vec3f_copy(dest, src)`
+`local integerValue = atan2s(y, x)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| src | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_copy(Vec3f dest, Vec3f src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_set](#vec3f_set)
-
-### Description
-Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values. After this function, `dest` will have values (x, y, z)
-
-### Lua Example
-`local voidValue = vec3f_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| x | `number` |
 | y | `number` |
-| z | `number` |
+| x | `number` |
 
 ### Returns
-- `void *`
+- `integer`
 
 ### C Prototype
-`void *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z);`
+`s16 atan2s(f32 y, f32 x);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3f_add](#vec3f_add)
+## [atan2f](#atan2f)
 
 ### Description
-Adds the components of the 3D floating-point vector `a` to `dest`. After this operation, `dest.x` will be `dest.x + a.x`, and similarly for the y and z components
+Computes the arctangent of a/b and returns it as a floating-point angle in radians. This is the floating-point equivalent of `atan2s`, allowing more precise angle calculations
 
 ### Lua Example
-`local voidValue = vec3f_add(dest, a)`
+`local numberValue = atan2f(a, b)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_add(Vec3f dest, Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_sum](#vec3f_sum)
-
-### Description
-Adds the corresponding components of two 3D floating-point vectors `a` and `b`, and stores the result in `dest`. For example, `dest.x = a.x + b.x`, `dest.y = a.y + b.y`, and `dest.z = a.z + b.z`
-
-### Lua Example
-`local voidValue = vec3f_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_dif](#vec3f_dif)
-
-### Description
-Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
-
-### Lua Example
-`local voidValue = vec3f_dif(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_mul](#vec3f_mul)
-
-### Description
-Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
-
-### Lua Example
-`local voidValue = vec3f_mul(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
 | a | `number` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_mul(Vec3f dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_copy](#vec3s_copy)
-
-### Description
-Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
-
-### Lua Example
-`local voidValue = vec3s_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| src | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_copy(Vec3s dest, Vec3s src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_set](#vec3s_set)
-
-### Description
-Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
-
-### Lua Example
-`local voidValue = vec3s_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_add](#vec3s_add)
-
-### Description
-Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
-
-### Lua Example
-`local voidValue = vec3s_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_add(Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_sum](#vec3s_sum)
-
-### Description
-Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
-
-### Lua Example
-`local voidValue = vec3s_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_to_vec3f](#vec3s_to_vec3f)
-
-### Description
-Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
-
-### Lua Example
-`local voidValue = vec3s_to_vec3f(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3s_to_vec3f(Vec3f dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_to_vec3s](#vec3f_to_vec3s)
-
-### Description
-Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
-
-### Lua Example
-`local voidValue = vec3f_to_vec3s(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_to_vec3s(Vec3s dest, Vec3f a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
-
-### Description
-Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
-
-### Lua Example
-`local voidValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-| c | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_cross](#vec3f_cross)
-
-### Description
-Computes the cross product of two 3D floating-point vectors `a` and `b`. The cross product is a vector perpendicular to both `a` and `b`. The result is stored in `dest`
-
-### Lua Example
-`local voidValue = vec3f_cross(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_normalize](#vec3f_normalize)
-
-### Description
-Normalizes the 3D floating-point vector `dest` so that its length (magnitude) becomes 1, while retaining its direction. This effectively scales `dest` so that it lies on the unit sphere
-
-### Lua Example
-`local voidValue = vec3f_normalize(dest)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `void *`
-
-### C Prototype
-`void *vec3f_normalize(Vec3f dest);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3f_length](#vec3f_length)
-
-### Description
-Calculates the length (magnitude) of the 3D floating-point vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
-
-### Lua Example
-`local numberValue = vec3f_length(a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3f](structs.md#Vec3f) |
+| b | `number` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 vec3f_length(Vec3f a);`
+`f32 atan2f(f32 a, f32 b);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3f_dot](#vec3f_dot)
+## [approach_s32](#approach_s32)
 
 ### Description
-Computes the dot product of the two 3D floating-point vectors `a` and `b`. The dot product is a scalar value defined by (a.x * b.x + a.y * b.y + a.z * b.z), representing how aligned the two vectors are
+Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
 
 ### Lua Example
-`local numberValue = vec3f_dot(a, b)`
+`local integerValue = approach_s32(current, target, inc, dec)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
+| current | `integer` |
+| target | `integer` |
+| inc | `integer` |
+| dec | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [approach_f32](#approach_f32)
+
+### Description
+Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
+
+### Lua Example
+`local numberValue = approach_f32(current, target, inc, dec)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| current | `number` |
+| target | `number` |
+| inc | `number` |
+| dec | `number` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`f32 vec3f_dot(Vec3f a, Vec3f b);`
+`f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3f_combine](#vec3f_combine)
+## [spline_get_weights](#spline_get_weights)
 
 ### Description
-Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, and then adds the scaled vectors together. The final combined vector is stored in `dest`
+Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
 
 ### Lua Example
-`vec3f_combine(dest, vecA, vecB, sclA, sclB)`
+`spline_get_weights(m, result, t, c)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| vecA | [Vec3f](structs.md#Vec3f) |
-| vecB | [Vec3f](structs.md#Vec3f) |
-| sclA | `number` |
-| sclB | `number` |
+| m | [MarioState](structs.md#MarioState) |
+| result | `Vec4f` |
+| t | `number` |
+| c | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
+`void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [anim_spline_init](#anim_spline_init)
+
+### Description
+Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
+
+### Lua Example
+`anim_spline_init(m, keyFrames)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| keyFrames | `Pointer` <`Vec4s`> |
+
+### Returns
+- None
+
+### C Prototype
+`void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [anim_spline_poll](#anim_spline_poll)
+
+### Description
+Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
+
+### Lua Example
+`local integerValue = anim_spline_poll(m, result)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| result | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 anim_spline_poll(struct MarioState* m, Vec3f result);`
 
 [:arrow_up_small:](#)
 
@@ -4617,7 +4371,7 @@ Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA`
 Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 
 ### Lua Example
-`local voidValue = vec3f_rotate_zxy(v, rotate)`
+`local PointerValue = vec3f_rotate_zxy(v, rotate)`
 
 ### Parameters
 | Field | Type |
@@ -4626,81 +4380,168 @@ Rotates the 3D floating-point vector `v` by the angles specified in the 3D signe
 | rotate | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-- `void *`
+- `Pointer` <`number`>
 
 ### C Prototype
-`void *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);`
+`f32 *vec3f_rotate_zxy(Vec3f v, Vec3s rotate);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [mtxf_copy](#mtxf_copy)
+## [vec3f_rotate_around_n](#vec3f_rotate_around_n)
 
 ### Description
-Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
+Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation `r` (in sm64 angle units), and stores the result in `dest`
 
 ### Lua Example
-`mtxf_copy(dest, src)`
+`local PointerValue = vec3f_rotate_around_n(dest, v, n, r)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dest | `Mat4` |
-| src | `Mat4` |
+| dest | [Vec3f](structs.md#Vec3f) |
+| v | [Vec3f](structs.md#Vec3f) |
+| n | [Vec3f](structs.md#Vec3f) |
+| r | `integer` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_project](#vec3f_project)
+
+### Description
+Projects the 3D floating-point vector `v` onto another 3D floating-point vector `onto`. The resulting projection, stored in `dest`, represents how much of `v` lies along the direction of `onto`
+
+### Lua Example
+`local PointerValue = vec3f_project(dest, v, onto)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| v | [Vec3f](structs.md#Vec3f) |
+| onto | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_project(Vec3f dest, Vec3f v, Vec3f onto);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_transform](#vec3f_transform)
+
+### Description
+Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it by the rotation vector `rotation`, and finally translates it by the vector `translation`. The resulting vector is stored in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_transform(dest, v, translation, rotation, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| v | [Vec3f](structs.md#Vec3f) |
+| translation | [Vec3f](structs.md#Vec3f) |
+| rotation | [Vec3s](structs.md#Vec3s) |
+| scale | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
+
+### Description
+Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
+
+### Lua Example
+`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `Pointer` <`number`> |
+| pitch | `Pointer` <`integer`> |
+| yaw | `Pointer` <`integer`> |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mtxf_copy(Mat4 dest, Mat4 src);`
+`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [mtxf_identity](#mtxf_identity)
+## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
 
 ### Description
-Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
+Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
 
 ### Lua Example
-`mtxf_identity(mtx)`
+`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| mtx | `Mat4` |
+| from | [Vec3f](structs.md#Vec3f) |
+| to | [Vec3f](structs.md#Vec3f) |
+| dist | `number` |
+| pitch | `integer` |
+| yaw | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mtxf_identity(Mat4 mtx);`
+`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [mtxf_translate](#mtxf_translate)
+## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
 
 ### Description
-Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
+Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 
 ### Lua Example
-`mtxf_translate(dest, b)`
+`local PointerValue = find_vector_perpendicular_to_plane(dest, a, b, c)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dest | `Mat4` |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
 | b | [Vec3f](structs.md#Vec3f) |
+| c | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `Pointer` <`number`>
 
 ### C Prototype
-`void mtxf_translate(Mat4 dest, Vec3f b);`
+`f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
 
 [:arrow_up_small:](#)
 
@@ -4911,38 +4752,13 @@ Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing 
 
 <br />
 
-## [mtxf_scale_vec3f](#mtxf_scale_vec3f)
-
-### Description
-Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
-
-### Lua Example
-`mtxf_scale_vec3f(dest, mtx, s)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | `Mat4` |
-| mtx | `Mat4` |
-| s | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mtxf_mul_vec3s](#mtxf_mul_vec3s)
 
 ### Description
 Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
 
 ### Lua Example
-`mtxf_mul_vec3s(mtx, b)`
+`local PointerValue = mtxf_mul_vec3s(mtx, b)`
 
 ### Parameters
 | Field | Type |
@@ -4951,10 +4767,34 @@ Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_rotate_xy](#mtxf_rotate_xy)
+
+### Description
+Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
+
+### Lua Example
+`mtxf_rotate_xy(mtx, angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mtx | `Mat4` |
+| angle | `integer` |
+
+### Returns
 - None
 
 ### C Prototype
-`void mtxf_mul_vec3s(Mat4 mtx, Vec3s b);`
+`void mtxf_rotate_xy(Mat4 mtx, s16 angle);`
 
 [:arrow_up_small:](#)
 
@@ -4990,7 +4830,7 @@ Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Ap
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 
 ### Lua Example
-`get_pos_from_transform_mtx(dest, objMtx, camMtx)`
+`local PointerValue = get_pos_from_transform_mtx(dest, objMtx, camMtx)`
 
 ### Parameters
 | Field | Type |
@@ -5000,226 +4840,28 @@ Extracts the position (translation component) from the transformation matrix `ob
 | camMtx | `Mat4` |
 
 ### Returns
-- None
+- `Pointer` <`number`>
 
 ### C Prototype
-`void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
+`f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
-
-### Description
-Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
-
-### Lua Example
-`vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `Pointer` <`number`> |
-| pitch | `Pointer` <`integer`> |
-| yaw | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw);`
-
-[:arrow_up_small:](#)
+---
+# functions from math_util.inl
 
 <br />
 
-## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
+
+## [replace_value_if_not_zero](#replace_value_if_not_zero)
 
 ### Description
-Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
+Returns `replacement` if `replacement` is not zero. Otherwise, returns `value`
 
 ### Lua Example
-`vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| from | [Vec3f](structs.md#Vec3f) |
-| to | [Vec3f](structs.md#Vec3f) |
-| dist | `number` |
-| pitch | `integer` |
-| yaw | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [approach_s32](#approach_s32)
-
-### Description
-Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
-
-### Lua Example
-`local integerValue = approach_s32(current, target, inc, dec)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| current | `integer` |
-| target | `integer` |
-| inc | `integer` |
-| dec | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [approach_f32](#approach_f32)
-
-### Description
-Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
-
-### Lua Example
-`local numberValue = approach_f32(current, target, inc, dec)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| current | `number` |
-| target | `number` |
-| inc | `number` |
-| dec | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [atan2s](#atan2s)
-
-### Description
-Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
-
-### Lua Example
-`local integerValue = atan2s(y, x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| y | `number` |
-| x | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 atan2s(f32 y, f32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spline_get_weights](#spline_get_weights)
-
-### Description
-Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
-
-### Lua Example
-`spline_get_weights(m, result, t, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| result | `Vec4f` |
-| t | `number` |
-| c | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_spline_init](#anim_spline_init)
-
-### Description
-Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
-
-### Lua Example
-`anim_spline_init(m, keyFrames)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| keyFrames | `Pointer` <`Vec4s`> |
-
-### Returns
-- None
-
-### C Prototype
-`void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [anim_spline_poll](#anim_spline_poll)
-
-### Description
-Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
-
-### Lua Example
-`local integerValue = anim_spline_poll(m, result)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| result | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 anim_spline_poll(struct MarioState* m, Vec3f result);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [not_zero](#not_zero)
-
-### Description
-Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns the `replacement` value. This function ensures that a zero value can be substituted with a fallback value if needed
-
-### Lua Example
-`local numberValue = not_zero(value, replacement)`
+`local numberValue = replace_value_if_not_zero(value, replacement)`
 
 ### Parameters
 | Field | Type |
@@ -5231,32 +4873,595 @@ Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns
 - `number`
 
 ### C Prototype
-`f32 not_zero(f32 value, f32 replacement);`
+`f32 replace_value_if_not_zero(f32 value, f32 replacement);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [vec3f_project](#vec3f_project)
+## [sm64_to_radians](#sm64_to_radians)
 
 ### Description
-Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
+Converts an angle from SM64 format to radians
 
 ### Lua Example
-`vec3f_project(vec, onto, out)`
+`local numberValue = sm64_to_radians(sm64Angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| vec | [Vec3f](structs.md#Vec3f) |
-| onto | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
+| sm64Angle | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sm64_to_radians(s16 sm64Angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [radians_to_sm64](#radians_to_sm64)
+
+### Description
+Converts an angle from radians to SM64 format
+
+### Lua Example
+`local integerValue = radians_to_sm64(radiansAngle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| radiansAngle | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 radians_to_sm64(f32 radiansAngle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sm64_to_degrees](#sm64_to_degrees)
+
+### Description
+Converts an angle from SM64 format to degrees
+
+### Lua Example
+`local numberValue = sm64_to_degrees(sm64Angle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sm64Angle | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sm64_to_degrees(s16 sm64Angle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [degrees_to_sm64](#degrees_to_sm64)
+
+### Description
+Converts an angle from degrees to SM64 format
+
+### Lua Example
+`local integerValue = degrees_to_sm64(degreesAngle)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| degreesAngle | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 degrees_to_sm64(f32 degreesAngle);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_mat4.inl
+
+<br />
+
+
+## [mtxf_zero](#mtxf_zero)
+
+### Description
+Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+
+### Lua Example
+`mtxf_zero(mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mtx | `Mat4` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out);`
+`void mtxf_zero(Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_copy](#mtxf_copy)
+
+### Description
+Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
+
+### Lua Example
+`mtxf_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | `Mat4` |
+| src | `Mat4` |
+
+### Returns
+- None
+
+### C Prototype
+`void mtxf_copy(Mat4 dest, Mat4 src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_identity](#mtxf_identity)
+
+### Description
+Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
+
+### Lua Example
+`mtxf_identity(mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mtx | `Mat4` |
+
+### Returns
+- None
+
+### C Prototype
+`void mtxf_identity(Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_translate](#mtxf_translate)
+
+### Description
+Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
+
+### Lua Example
+`mtxf_translate(dest, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | `Mat4` |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void mtxf_translate(Mat4 dest, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_scale_vec3f](#mtxf_scale_vec3f)
+
+### Description
+Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
+
+### Lua Example
+`mtxf_scale_vec3f(dest, mtx, s)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | `Mat4` |
+| mtx | `Mat4` |
+| s | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_vec3f.inl
+
+<br />
+
+
+## [vec3f_zero](#vec3f_zero)
+
+### Description
+Sets the components of the 3D floating-point vector `v` to 0
+
+### Lua Example
+`local PointerValue = vec3f_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_zero(Vec3f v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_copy](#vec3f_copy)
+
+### Description
+Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`)
+
+### Lua Example
+`local PointerValue = vec3f_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| src | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_copy(Vec3f dest, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_set](#vec3f_set)
+
+### Description
+Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local PointerValue = vec3f_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_add](#vec3f_add)
+
+### Description
+Adds the components of the 3D floating-point vector `a` to `dest`
+
+### Lua Example
+`local PointerValue = vec3f_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_add(Vec3f dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_sum](#vec3f_sum)
+
+### Description
+Adds the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_sub](#vec3f_sub)
+
+### Description
+Subtracts the components of the 3D floating-point vector `a` from `dest`
+
+### Lua Example
+`local PointerValue = vec3f_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_sub(Vec3f dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_dif](#vec3f_dif)
+
+### Description
+Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_mul](#vec3f_mul)
+
+### Description
+Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3f_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_mul(Vec3f dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_div](#vec3f_div)
+
+### Description
+Divides each component of the 3D floating-point vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3f_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_div(Vec3f dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_length](#vec3f_length)
+
+### Description
+Calculates the length (magnitude) of the 3D floating-point vector `a`
+
+### Lua Example
+`local numberValue = vec3f_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_length(Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_normalize](#vec3f_normalize)
+
+### Description
+Normalizes the 3D floating-point vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3f_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_normalize(Vec3f v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_set_magnitude](#vec3f_set_magnitude)
+
+### Description
+Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3f_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+| mag | `number` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_set_magnitude(Vec3f v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_dot](#vec3f_dot)
+
+### Description
+Computes the dot product of the two 3D floating-point vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3f_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_dot(Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_cross](#vec3f_cross)
+
+### Description
+Computes the cross product of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_combine](#vec3f_combine)
+
+### Description
+Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| vecA | [Vec3f](structs.md#Vec3f) |
+| vecB | [Vec3f](structs.md#Vec3f) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
 
 [:arrow_up_small:](#)
 
@@ -5265,7 +5470,7 @@ Projects the 3D floating-point vector `vec` onto another 3D floating-point vecto
 ## [vec3f_dist](#vec3f_dist)
 
 ### Description
-Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+Calculates the distance between two 3D floating-point vectors `v1` and `v2`
 
 ### Lua Example
 `local numberValue = vec3f_dist(v1, v2)`
@@ -5281,6 +5486,1081 @@ Calculates the distance between two 3D floating-point points `v1` and `v2`. The 
 
 ### C Prototype
 `f32 vec3f_dist(Vec3f v1, Vec3f v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_hdist](#vec3f_hdist)
+
+### Description
+Calculates the horizontal distance between two 3D floating-point vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3f_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3f](structs.md#Vec3f) |
+| v2 | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3f_hdist(Vec3f v1, Vec3f v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_is_zero](#vec3f_is_zero)
+
+### Description
+Returns `true` if all components of the 3D floating-point vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3f_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3f_is_zero(Vec3f v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_to_vec3i](#vec3f_to_vec3i)
+
+### Description
+Converts a 3D floating-point vector `a` into a 3D integer vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_to_vec3i(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3f_to_vec3i(Vec3i dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3f_to_vec3s](#vec3f_to_vec3s)
+
+### Description
+Converts a 3D floating-point vector `a` into a 3D short integer vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3f_to_vec3s(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3f_to_vec3s(Vec3s dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_vec3i.inl
+
+<br />
+
+
+## [vec3i_zero](#vec3i_zero)
+
+### Description
+Sets the components of the 3D integer vector `v` to 0
+
+### Lua Example
+`local PointerValue = vec3i_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_zero(Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_copy](#vec3i_copy)
+
+### Description
+Copies the contents of a 3D integer vector (`src`) into another 3D integer vector (`dest`)
+
+### Lua Example
+`local PointerValue = vec3i_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| src | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_copy(Vec3i dest, Vec3i src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_set](#vec3i_set)
+
+### Description
+Sets the values of the 3D integer vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local PointerValue = vec3i_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_set(Vec3i dest, s32 x, s32 y, s32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_add](#vec3i_add)
+
+### Description
+Adds the components of the 3D integer vector `a` to `dest`
+
+### Lua Example
+`local PointerValue = vec3i_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_add(Vec3i dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_sum](#vec3i_sum)
+
+### Description
+Adds the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_sum(Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_sub](#vec3i_sub)
+
+### Description
+Subtracts the components of the 3D integer vector `a` from `dest`
+
+### Lua Example
+`local PointerValue = vec3i_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_sub(Vec3i dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_dif](#vec3i_dif)
+
+### Description
+Subtracts the components of the 3D integer vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_dif(Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_mul](#vec3i_mul)
+
+### Description
+Multiplies each component of the 3D integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3i_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_mul(Vec3i dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_div](#vec3i_div)
+
+### Description
+Divides each component of the 3D integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3i_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_div(Vec3i dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_length](#vec3i_length)
+
+### Description
+Calculates the length (magnitude) of the 3D integer vector `a`
+
+### Lua Example
+`local numberValue = vec3i_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_length(Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_normalize](#vec3i_normalize)
+
+### Description
+Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3i_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_normalize(Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_set_magnitude](#vec3i_set_magnitude)
+
+### Description
+Sets the length (magnitude) of 3D integer vector `v`, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3i_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+| mag | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_set_magnitude(Vec3i v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_dot](#vec3i_dot)
+
+### Description
+Computes the dot product of the two 3D integer vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3i_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_dot(Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_cross](#vec3i_cross)
+
+### Description
+Computes the cross product of two 3D integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_cross(Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_combine](#vec3i_combine)
+
+### Description
+Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| vecA | [Vec3i](structs.md#Vec3i) |
+| vecB | [Vec3i](structs.md#Vec3i) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3i_combine(Vec3i dest, Vec3i vecA, Vec3i vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_dist](#vec3i_dist)
+
+### Description
+Calculates the distance between two 3D integer vectors `v1` and `v2`
+
+### Lua Example
+`local numberValue = vec3i_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3i](structs.md#Vec3i) |
+| v2 | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_dist(Vec3i v1, Vec3i v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_hdist](#vec3i_hdist)
+
+### Description
+Calculates the horizontal distance between two 3D integer vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3i_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3i](structs.md#Vec3i) |
+| v2 | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_hdist(Vec3i v1, Vec3i v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_is_zero](#vec3i_is_zero)
+
+### Description
+Returns `true` if all components of the 3D integer vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3i_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3i_is_zero(Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_to_vec3f](#vec3i_to_vec3f)
+
+### Description
+Converts a 3D integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3i_to_vec3f(Vec3f dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3i_to_vec3s](#vec3i_to_vec3s)
+
+### Description
+Converts a 3D integer vector `a` into a 3D short integer vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3i_to_vec3s(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3i_to_vec3s(Vec3s dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_vec3s.inl
+
+<br />
+
+
+## [vec3s_zero](#vec3s_zero)
+
+### Description
+Sets the components of the 3D short integer vector `v` to 0
+
+### Lua Example
+`local PointerValue = vec3s_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_zero(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_copy](#vec3s_copy)
+
+### Description
+Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
+
+### Lua Example
+`local PointerValue = vec3s_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_copy(Vec3s dest, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_set](#vec3s_set)
+
+### Description
+Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local PointerValue = vec3s_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_add](#vec3s_add)
+
+### Description
+Adds the components of the 3D short integer vector `a` to `dest`
+
+### Lua Example
+`local PointerValue = vec3s_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_add(Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_sum](#vec3s_sum)
+
+### Description
+Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_sub](#vec3s_sub)
+
+### Description
+Subtracts the components of the 3D short integer vector `a` from `dest`
+
+### Lua Example
+`local PointerValue = vec3s_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_sub(Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dif](#vec3s_dif)
+
+### Description
+Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_dif(Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_mul](#vec3s_mul)
+
+### Description
+Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3s_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_mul(Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_div](#vec3s_div)
+
+### Description
+Divides each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local PointerValue = vec3s_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_div(Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_length](#vec3s_length)
+
+### Description
+Calculates the length (magnitude) of the 3D short integer vector `a`
+
+### Lua Example
+`local numberValue = vec3s_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_length(Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_normalize](#vec3s_normalize)
+
+### Description
+Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3s_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_normalize(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_set_magnitude](#vec3s_set_magnitude)
+
+### Description
+Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
+
+### Lua Example
+`local PointerValue = vec3s_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+| mag | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_set_magnitude(Vec3s v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dot](#vec3s_dot)
+
+### Description
+Computes the dot product of the two 3D short integer vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3s_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dot(Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_cross](#vec3s_cross)
+
+### Description
+Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_cross(Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_combine](#vec3s_combine)
+
+### Description
+Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| vecA | [Vec3s](structs.md#Vec3s) |
+| vecB | [Vec3s](structs.md#Vec3s) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s16 *vec3s_combine(Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dist](#vec3s_dist)
+
+### Description
+Calculates the distance between two 3D short integer vectors `v1` and `v2`
+
+### Lua Example
+`local numberValue = vec3s_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_hdist](#vec3s_hdist)
+
+### Description
+Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3s_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_hdist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_is_zero](#vec3s_is_zero)
+
+### Description
+Returns `true` if all components of the 3D short integer vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3s_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3s_is_zero(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_vec3f](#vec3s_to_vec3f)
+
+### Description
+Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`number`>
+
+### C Prototype
+`f32 *vec3s_to_vec3f(Vec3f dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_vec3i](#vec3s_to_vec3i)
+
+### Description
+Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
+
+### Lua Example
+`local PointerValue = vec3s_to_vec3i(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32 *vec3s_to_vec3i(Vec3i dest, Vec3s a);`
 
 [:arrow_up_small:](#)
 
@@ -5522,626 +6802,6 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 
 ### C Prototype
 `void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from mod_storage.h
-
-<br />
-
-
-## [mod_storage_save](#mod_storage_save)
-
-### Description
-Saves a `key` corresponding to a string `value` to mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_save(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save(const char* key, const char* value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_save_number](#mod_storage_save_number)
-
-### Description
-Saves a `key` corresponding to a float `value` to mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_save_number(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `number` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save_number(const char* key, f32 value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_save_bool](#mod_storage_save_bool)
-
-### Description
-Saves a `key` corresponding to a bool `value` to mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_save_bool(key, value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-| value | `boolean` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_save_bool(const char* key, bool value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load](#mod_storage_load)
-
-### Description
-Loads a string `value` from a `key` in mod storage
-
-### Lua Example
-`local stringValue = mod_storage_load(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char *mod_storage_load(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load_number](#mod_storage_load_number)
-
-### Description
-Loads a float `value` from a `key` in mod storage
-
-### Lua Example
-`local numberValue = mod_storage_load_number(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 mod_storage_load_number(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_load_bool](#mod_storage_load_bool)
-
-### Description
-Loads a bool `value` from a `key` in mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_load_bool(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_load_bool(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_exists](#mod_storage_exists)
-
-### Description
-Checks if a `key` is in mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_exists(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_exists(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_remove](#mod_storage_remove)
-
-### Description
-Removes a `key` from mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_remove(key)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| key | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_remove(const char* key);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_storage_clear](#mod_storage_clear)
-
-### Description
-Clears the mod's data from mod storage
-
-### Lua Example
-`local booleanValue = mod_storage_clear()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_storage_clear(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from network_player.h
-
-<br />
-
-
-## [network_player_connected_count](#network_player_connected_count)
-
-### Description
-Gets the amount of players connected
-
-### Lua Example
-`local integerValue = network_player_connected_count()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_player_connected_count(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_set_description](#network_player_set_description)
-
-### Description
-Sets the description field of `np`
-
-### Lua Example
-`network_player_set_description(np, description, r, g, b, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| description | `string` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| a | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_set_override_location](#network_player_set_override_location)
-
-### Description
-Overrides the location of `np`
-
-### Lua Example
-`network_player_set_override_location(np, location)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| location | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_set_override_location(struct NetworkPlayer *np, const char *location);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_from_global_index](#network_player_from_global_index)
-
-### Description
-Gets a network player from `globalIndex`
-
-### Lua Example
-`local NetworkPlayerValue = network_player_from_global_index(globalIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| globalIndex | `integer` |
-
-### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
-
-### C Prototype
-`struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_network_player_from_level](#get_network_player_from_level)
-
-### Description
-Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`
-
-### Lua Example
-`local NetworkPlayerValue = get_network_player_from_level(courseNum, actNum, levelNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseNum | `integer` |
-| actNum | `integer` |
-| levelNum | `integer` |
-
-### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
-
-### C Prototype
-`struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_network_player_from_area](#get_network_player_from_area)
-
-### Description
-Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`
-
-### Lua Example
-`local NetworkPlayerValue = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseNum | `integer` |
-| actNum | `integer` |
-| levelNum | `integer` |
-| areaIndex | `integer` |
-
-### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
-
-### C Prototype
-`struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_network_player_smallest_global](#get_network_player_smallest_global)
-
-### Description
-Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
-
-### Lua Example
-`local NetworkPlayerValue = get_network_player_smallest_global()`
-
-### Parameters
-- None
-
-### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
-
-### C Prototype
-`struct NetworkPlayer* get_network_player_smallest_global(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
-
-### Description
-Sets the `part in `np`'s override color palette`
-
-### Lua Example
-`network_player_set_override_palette_color(np, part, color)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
-| color | `Color` |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_reset_override_palette](#network_player_reset_override_palette)
-
-### Description
-Resets `np`'s override color palette
-
-### Lua Example
-`network_player_reset_override_palette(np)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-
-### Returns
-- None
-
-### C Prototype
-`void network_player_reset_override_palette(struct NetworkPlayer *np);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
-
-### Description
-Checks if `np`'s override color palette is identical to the regular color palette
-
-### Lua Example
-`local booleanValue = network_player_is_override_palette_same(np)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| np | [NetworkPlayer](structs.md#NetworkPlayer) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_player_is_override_palette_same(struct NetworkPlayer *np);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from network_utils.h
-
-<br />
-
-
-## [network_global_index_from_local](#network_global_index_from_local)
-
-### Description
-Gets a player's global index from their local index
-
-### Lua Example
-`local integerValue = network_global_index_from_local(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_global_index_from_local(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_local_index_from_global](#network_local_index_from_global)
-
-### Description
-Gets a player's local index from their global index
-
-### Lua Example
-`local integerValue = network_local_index_from_global(globalIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| globalIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 network_local_index_from_global(u8 globalIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_is_server](#network_is_server)
-
-### Description
-Checks if you are hosting the current lobby, this value doesn't change
-
-### Lua Example
-`local booleanValue = network_is_server()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_is_server(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_is_moderator](#network_is_moderator)
-
-### Description
-Checks if you are a moderator in the current lobby
-
-### Lua Example
-`local booleanValue = network_is_moderator()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_is_moderator(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_get_player_text_color_string](#network_get_player_text_color_string)
-
-### Description
-Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
-
-### Lua Example
-`local stringValue = network_get_player_text_color_string(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char* network_get_player_text_color_string(u8 localIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
-
-### Description
-Checks if the game can currently be paused in singleplayer
-
-### Lua Example
-`local booleanValue = network_check_singleplayer_pause()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool network_check_singleplayer_pause(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
-
-### Description
-Gets a Discord ID corresponding to the network player with `localIndex`
-
-### Lua Example
-`local stringValue = network_discord_id_from_local_index(localIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localIndex | `integer` |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char* network_discord_id_from_local_index(u8 localIndex);`
 
 [:arrow_up_small:](#)
 

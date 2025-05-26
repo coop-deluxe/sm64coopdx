@@ -21,27 +21,34 @@
 
 struct Controller
 {
-  /*0x00*/ s16 rawStickX;       //
-  /*0x02*/ s16 rawStickY;       //
-  /*0x04*/ f32 stickX;        // [-64, 64] positive is right
-  /*0x08*/ f32 stickY;        // [-64, 64] positive is up
-  /*0x0C*/ f32 stickMag;      // distance from center [0, 64]
-  /*0x10*/ u16 buttonDown;
-  /*0x12*/ u16 buttonPressed;
-  /*0x14*/ u16 buttonReleased;
-  /*0x18*/ OSContStatus *statusData;
-  /*0x1C*/ OSContPad *controllerData;
-  /*0x20*/ s32 port;
-  /*ext */ s16 extStickX;       // additional (right) stick values
-  /*ext */ s16 extStickY;
+    // For optimization reasons, See MarioState
+    
+    s32 port;
+    f32 stickX;        // [-64, 64] positive is right
+    f32 stickY;        // [-64, 64] positive is up
+    f32 stickMag;      // distance from center [0, 64]
+    s16 rawStickX;
+    s16 rawStickY;
+    s16 extStickX;       // additional (right) stick values
+    s16 extStickY;
+    
+    u16 buttonDown;
+    u16 buttonPressed;
+    u16 buttonReleased;
+
+    OSContStatus *statusData;
+    OSContPad *controllerData;
 };
 
-typedef f32 Vec2f[2];
+typedef f32 Vec2f[2]; // X, Y
+typedef s16 Vec2s[2];
+typedef s32 Vec2i[2];
 typedef f32 Vec3f[3]; // X, Y, Z, where Y is up
 typedef s16 Vec3s[3];
 typedef s32 Vec3i[3];
-typedef f32 Vec4f[4];
+typedef f32 Vec4f[4]; // X, Y, Z, W
 typedef s16 Vec4s[4];
+typedef s32 Vec4i[4];
 
 typedef f32 Mat4[4][4];
 
@@ -95,88 +102,116 @@ struct VblankHandler
 #define ANIM_FLAG_7          (1 << 7) // 0x80
 
 struct Animation {
-    /*0x00*/ s16 flags;
-    /*0x02*/ s16 animYTransDivisor;
-    /*0x04*/ s16 startFrame;
-    /*0x06*/ s16 loopStart;
-    /*0x08*/ s16 loopEnd;
-    /*0x0A*/ s16 unusedBoneCount;
-    /*0x0C*/ u16 *values;
-    /*0x10*/ u16 *index;
-    /*0x14*/ u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
-    /*????*/ u32 valuesLength;
-    /*????*/ u32 indexLength;
+    // TODO: Optimize this later if possible.
+    
+    s16 flags;
+    s16 animYTransDivisor;
+    s16 startFrame;
+    s16 loopStart;
+    s16 loopEnd;
+    s16 unusedBoneCount;
+    u16 *values;
+    u16 *index;
+    u32 length; // only used with Mario animations to determine how much to load. 0 otherwise.
+    u32 valuesLength;
+    u32 indexLength;
 };
 
 struct AnimationTable {
     u32 count;
-    const struct Animation* const anims[];
+    const struct Animation *const anims[];
 };
 
 #define ANIMINDEX_NUMPARTS(animindex) (sizeof(animindex) / sizeof(u16) / 6 - 1)
 #define ANIM_FIELD_LENGTH(animindex) (sizeof(animindex) / sizeof(u16))
 
-#define GRAPH_NODE_GUARD 0xAA
+#define GRAPH_NODE_GUARD 0xDEADBEEF
 
 struct GraphNode
 {
-    s16 type; // structure type
-    s16 flags; // hi = drawing layer, lo = rendering modes
+    // For optimization reasons, See MarioState
+    
+#ifdef DEBUG
+    uintptr_t _guard1;
+#endif
     struct GraphNode *prev;
-    u8 _guard1;
     struct GraphNode *next;
-    u8 _guard2;
     struct GraphNode *parent;
     struct GraphNode *children;
     const void *georef;
+    
+    s16 type; // structure type
+    s16 flags; // hi = drawing layer, lo = rendering modes
     u8 extraFlags;
     u8 hookProcess;
+    s16 padding;
+    
+#ifdef DEBUG
+    uintptr_t _guard2;
+#endif
 };
 
 struct AnimInfo
 {
-    /*0x00 0x38*/ s16 animID;
-    /*0x02 0x3A*/ s16 animYTrans;
-    /*0x04 0x3C*/ struct Animation *curAnim;
-    /*0x08 0x40*/ s16 animFrame;
-    /*0x0A 0x42*/ u16 animTimer;
-    /*0x0C 0x44*/ s32 animFrameAccelAssist;
-    /*0x10 0x48*/ s32 animAccel;
-    s16 prevAnimFrame;
-    s16 prevAnimID;
-    u32 prevAnimFrameTimestamp;
+    // For optimization reasons, See MarioState
+    
+    struct Animation *curAnim;
     struct Animation *prevAnimPtr;
+    
+    s16 animID;
+    s16 prevAnimID;
+    
+    s16 animFrame;
+    s16 prevAnimFrame;
+    
+    u32 prevAnimFrameTimestamp;
+    s32 animFrameAccelAssist;
+    
+    s32 animAccel;
+    u16 animTimer;
+    s16 animYTrans;
 };
 
 struct GraphNodeObject
 {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ struct GraphNode *sharedChild;
-    /*0x18*/ s8 areaIndex;
-    /*0x19*/ s8 activeAreaIndex;
-    /*0x1A*/ Vec3s angle;
-    /*0x20*/ Vec3f pos;
+    // For optimization reasons, See MarioState
+    
+    struct GraphNode node;
+    struct GraphNode *sharedChild;
+    struct SpawnInfo *unk4C;
+    
+    Mat4 *throwMatrix; // matrix ptr
+    Mat4 *throwMatrixPrev;
+    Mat4 prevThrowMatrix;
+    
+    Vec3s angle;
     Vec3s prevAngle;
+    
+    Vec3f pos;
     Vec3f prevPos;
-    u32 prevTimestamp;
+    
     Vec3f shadowPos;
     Vec3f prevShadowPos;
+    
+    Vec3f scale;
+    Vec3f prevScale;
+    
+    Vec3f cameraToObject;
+    
+    u32 prevTimestamp;
     u32 prevShadowPosTimestamp;
+    u32 prevScaleTimestamp;
+    u32 prevThrowMatrixTimestamp;
+    u32 skipInterpolationTimestamp;
+    
+    struct AnimInfo animInfo;
+    
+    s8 areaIndex;
+    s8 activeAreaIndex;
+    
     bool shadowInvisible;
     bool disableAutomaticShadowPos;
-    /*0x2C*/ Vec3f scale;
-    Vec3f prevScale;
-    u32 prevScaleTimestamp;
-    /*0x38*/ struct AnimInfo animInfo;
-    /*0x4C*/ struct SpawnInfo *unk4C;
-    /*0x50*/ Mat4 *throwMatrix; // matrix ptr
-    Mat4 prevThrowMatrix;
-    u32 prevThrowMatrixTimestamp;
-    Mat4 *throwMatrixPrev;
-    /*0x54*/ Vec3f cameraToObject;
-    u32 skipInterpolationTimestamp;
     bool skipInViewCheck;
-
     bool inited;
 };
 
@@ -198,25 +233,73 @@ struct ObjectNode
 
 struct Object
 {
-    /*0x000*/ struct ObjectNode header;
-    /*0x068*/ struct Object *parentObj;
-    /*0x06C*/ struct Object *prevObj;
-    /*0x070*/ u32 collidedObjInteractTypes;
-    /*0x074*/ s16 activeFlags;
-    /*0x076*/ s16 numCollidedObjs;
-    /*0x078*/ struct Object *collidedObjs[4];
-    /*0x088*/
+    // For optimization reasons, See MarioState
+    
+    struct ObjectNode header;
+    struct Object *prevObj;
+    struct Object *parentObj;
+    struct Object *usingObj;
+    struct Object *platform;
+    struct Object *collidedObjs[4];
+    Collision *collisionData;
+    void *respawnInfo;
+    void (*areaTimerRunOnceCallback)(void);
+    const BehaviorScript *behavior;
+    const BehaviorScript *curBhvCommand;
+    uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
+    
+    u32 bhvStackIndex;
+    s16 bhvDelayTimer;
+    s16 activeFlags;
+    
+    u32 collidedObjInteractTypes;
+    s16 numCollidedObjs;
+    s16 respawnInfoType;
+    
+    f32 hitboxRadius;
+    f32 hitboxHeight;
+    
+    f32 hurtboxRadius;
+    f32 hurtboxHeight;
+    
+    f32 hitboxDownOffset;
+    u32 unused1;
+    
+    u32 areaTimer;
+    u32 areaTimerDuration;
+    enum AreaTimerType areaTimerType;
+    
+    Mat4 transform;
+    
+    u32 firstSurface;
+    u32 numSurfaces;
+    
+    u32 heldByPlayerIndex;
+    
+    u8 setHome;
+    u8 ctx;
+    u8 allowRemoteInteractions;
+    u8 globalPlayerIndex;
+    u8 coopFlags;
+    u8 hookRender;
+    
     union
     {
         // Object fields. See object_fields.h.
+        u16 asU16[OBJECT_NUM_FIELDS][2];
+        s16 asS16[OBJECT_NUM_FIELDS][2];
         u32 asU32[OBJECT_NUM_FIELDS];
         s32 asS32[OBJECT_NUM_FIELDS];
-        s16 asS16[OBJECT_NUM_FIELDS][2];
         f32 asF32[OBJECT_NUM_FIELDS];
     } rawData;
-    union {
+    
+    union
+    {
         s16 *asS16P[OBJECT_NUM_FIELDS];
+        u16 *asU16P[OBJECT_NUM_FIELDS];
         s32 *asS32P[OBJECT_NUM_FIELDS];
+        u32 *asU32P[OBJECT_NUM_FIELDS];
+        f32 *asF32P[OBJECT_NUM_FIELDS];
         struct AnimationTable *asAnims[OBJECT_NUM_FIELDS];
         struct Waypoint *asWaypoint[OBJECT_NUM_FIELDS];
         struct ChainSegment *asChainSegment[OBJECT_NUM_FIELDS];
@@ -225,49 +308,19 @@ struct Object
         void *asVoidPtr[OBJECT_NUM_FIELDS];
         const void *asConstVoidPtr[OBJECT_NUM_FIELDS];
     } ptrData;
-    /*0x1C8*/ u32 unused1;
-    /*0x1CC*/ const BehaviorScript *curBhvCommand;
-    /*0x1D0*/ u32 bhvStackIndex;
-    /*0x1D4*/ uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
-    /*0x1F4*/ s16 bhvDelayTimer;
-    /*0x1F6*/ s16 respawnInfoType;
-    /*0x1F8*/ f32 hitboxRadius;
-    /*0x1FC*/ f32 hitboxHeight;
-    /*0x200*/ f32 hurtboxRadius;
-    /*0x204*/ f32 hurtboxHeight;
-    /*0x208*/ f32 hitboxDownOffset;
-    /*0x20C*/ const BehaviorScript *behavior;
-    /*0x210*/ u32 heldByPlayerIndex;
-    /*0x214*/ struct Object *platform;
-    /*0x218*/ Collision *collisionData;
-    /*0x21C*/ Mat4 transform;
-    /*0x25C*/ void *respawnInfo;
-    /*?????*/ u8 coopFlags;
-    /*?????*/ enum AreaTimerType areaTimerType;
-    /*?????*/ u32 areaTimer;
-    /*?????*/ u32 areaTimerDuration;
-    /*?????*/ void (*areaTimerRunOnceCallback)(void);
-    /*?????*/ u8 globalPlayerIndex;
-    /*?????*/ struct Object* usingObj;
-    /*?????*/ u8 hookRender;
-    /*?????*/ u8 setHome;
-    /*?????*/ u8 allowRemoteInteractions;
-    /*?????*/ u8 ctx;
-    /*?????*/ u32 firstSurface;
-    /*?????*/ u32 numSurfaces;
 };
 
 struct ObjectHitbox
 {
-    /*0x00*/ u32 interactType;
-    /*0x04*/ u8 downOffset;
-    /*0x05*/ s8 damageOrCoinValue;
-    /*0x06*/ s8 health;
-    /*0x07*/ s8 numLootCoins;
-    /*0x08*/ s16 radius;
-    /*0x0A*/ s16 height;
-    /*0x0C*/ s16 hurtboxRadius;
-    /*0x0E*/ s16 hurtboxHeight;
+    u32 interactType;
+    s8 health;
+    s8 damageOrCoinValue;
+    s8 numLootCoins;
+    u8 downOffset;
+    s16 radius;
+    s16 height;
+    s16 hurtboxRadius;
+    s16 hurtboxHeight;
 };
 
 struct Waypoint
@@ -278,58 +331,99 @@ struct Waypoint
 
 struct Surface
 {
-    /*0x00*/ s16 type;
-    /*0x02*/ s16 force;
-    /*0x04*/ s8 flags;
-    /*0x05*/ s8 room;
-    /*0x06*/ s16 lowerY;
-    /*0x08*/ s16 upperY;
-    /*0x0A*/ Vec3s vertex1;
-    /*0x10*/ Vec3s vertex2;
-    /*0x16*/ Vec3s vertex3;
-    /*0x1C*/ struct {
-        f32 x;
-        f32 y;
-        f32 z;
-    } normal;
-    /*0x28*/ f32 originOffset;
-    /*0x2C*/ struct Object *object;
+    // For optimization reasons, See MarioState
+    
+    s16 type;
+    s8 flags;
+    s8 room;
+    s16 force;
+    s16 lowerY;
+    s16 upperY;
+    
+    Vec3s vertex1;
+    Vec3s vertex2;
+    Vec3s vertex3;
     Vec3s prevVertex1;
     Vec3s prevVertex2;
     Vec3s prevVertex3;
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+    } normal;
+    
+    f32 originOffset;
     u32 modifiedTimestamp;
+    
+    struct Object *object;
+};
+
+enum MarioAnimPart {
+    MARIO_ANIM_PART_NONE,
+
+    MARIO_ANIM_PART_ROOT,
+    MARIO_ANIM_PART_BUTT,
+    MARIO_ANIM_PART_TORSO,
+    MARIO_ANIM_PART_HEAD,
+    MARIO_ANIM_PART_UPPER_LEFT,
+    MARIO_ANIM_PART_LEFT_ARM,
+    MARIO_ANIM_PART_LEFT_FOREARM,
+    MARIO_ANIM_PART_LEFT_HAND,
+    MARIO_ANIM_PART_UPPER_RIGHT,
+    MARIO_ANIM_PART_RIGHT_ARM,
+    MARIO_ANIM_PART_RIGHT_FOREARM,
+    MARIO_ANIM_PART_RIGHT_HAND,
+    MARIO_ANIM_PART_LOWER_LEFT,
+    MARIO_ANIM_PART_LEFT_THIGH,
+    MARIO_ANIM_PART_LEFT_LEG,
+    MARIO_ANIM_PART_LEFT_FOOT,
+    MARIO_ANIM_PART_LOWER_RIGHT,
+    MARIO_ANIM_PART_RIGHT_THIGH,
+    MARIO_ANIM_PART_RIGHT_LEG,
+    MARIO_ANIM_PART_RIGHT_FOOT,
+
+    MARIO_ANIM_PART_MAX,
 };
 
 struct MarioBodyState
 {
-    /*0x00*/ u32 action;
-    /*0x04*/ s8 capState; /// see MarioCapGSCId
-    /*0x05*/ s8 eyeState;
-    /*0x06*/ s8 handState;
-    /*0x07*/ s8 wingFlutter; /// whether Mario's wing cap wings are fluttering
-    /*0x08*/ s16 modelState;
-    /*0x0A*/ s8 grabPos;
-    /*0x0B*/ u8 punchState; /// 2 bits for type of punch, 6 bits for punch animation timer
-    /*0x0C*/ Vec3s torsoAngle;
-    /*0x12*/ Vec3s headAngle;
-    /*0x18*/ Vec3f heldObjLastPosition; /// also known as HOLP
-    /*????*/ Vec3f torsoPos;
-    /*????*/ Vec3f handFootPos[4];
-    /*????*/ u32 updateTorsoTime;
-    /*????*/ Vec3f headPos;
-    /*????*/ u32 updateHeadPosTime;
-    /*????*/ u16 shadeR; /// shadow red value
-    /*????*/ u16 shadeG; /// shadow green value
-    /*????*/ u16 shadeB; /// shadow blue value
-    /*????*/ u16 lightR; /// light red value
-    /*????*/ u16 lightG; /// light green value
-    /*????*/ u16 lightB; /// light blue value
-    /*????*/ f32 lightingDirX;
-    /*????*/ f32 lightingDirY;
-    /*????*/ f32 lightingDirZ;
-    /*????*/ u8 allowPartRotation;
-    /*????*/ bool mirrorMario; // some of these fields are updated for Mirror Mario too
-    // u8 padding[4];
+    // For optimization reasons, See MarioState
+    
+    s8 capState; /// see MarioCapGSCId
+    s8 eyeState;
+    s8 handState;
+    u8 punchState; /// 2 bits for type of punch, 6 bits for punch animation timer
+    s16 modelState;
+    u8 allowPartRotation;
+    s8 grabPos;
+    
+    s8 wingFlutter; /// whether Mario's wing cap wings are fluttering
+    bool mirrorMario; // some of these fields are updated for Mirror Mario too
+    
+    Vec3s headAngle;
+    Vec3s torsoAngle;
+    
+    Vec3f headPos;
+    Vec3f torsoPos;
+    Vec3f heldObjLastPosition; /// also known as HOLP
+
+    Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
+    u32 currAnimPart;
+    
+    u32 updateTorsoTime;
+    u32 updateHeadPosTime;
+    
+    u32 action;
+    
+    u16 shadeR; /// shadow red value
+    u16 shadeG; /// shadow green value
+    u16 shadeB; /// shadow blue value
+    u16 lightR; /// light red value
+    u16 lightG; /// light green value
+    u16 lightB; /// light blue value
+    f32 lightingDirX;
+    f32 lightingDirY;
+    f32 lightingDirZ;
 };
 
 struct OffsetSizePair
@@ -350,7 +444,6 @@ struct MarioAnimation
     struct MarioAnimDmaRelatedThing *animDmaTable;
     u8 *currentAnimAddr;
     struct Animation *targetAnim;
-    u8 padding[4];
 };
 
 struct MarioState
@@ -472,11 +565,11 @@ struct MarioState
 
 struct TextureInfo
 {
-    u8* texture;
-    u8 bitSize;
+    u8 *texture;
+    const char *name;
     u32 width;
     u32 height;
-    const char* name;
+    u8 bitSize;
 };
 
 #define PLAY_MODE_NORMAL 0

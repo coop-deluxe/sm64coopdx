@@ -1081,7 +1081,7 @@ int smlua_func_gfx_set_command(lua_State* L) {
     }
 
     Gfx* gfx = smlua_to_cobject(L, 1, LOT_GFX);
-    if (!gSmLuaConvertSuccess) {
+    if (!gSmLuaConvertSuccess || !gfx) {
         LOG_LUA("gfx_set_command: Failed to convert parameter %u", 1);
         return 0;
     }

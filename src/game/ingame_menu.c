@@ -37,7 +37,6 @@
 #include "game/camera.h"
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "menu/ingame_text.h"
 
 u16 gDialogColorFadeTimer;

@@ -88,6 +88,20 @@
 #define OPTIMIZE_O3
 #endif
 
+#ifdef __clang__
+#define INLINE __attribute__((always_inline)) inline
+#define NOINLINE __attribute__((noinline))
+#elif __GNUC__
+#define INLINE __attribute__((always_inline)) inline
+#define NOINLINE __attribute__((noinline))
+#elif _MSC_VER
+#define INLINE __forceinline
+#define NOINLINE __noinline
+#else
+#define INLINE inline
+#define NOINLINE noinline
+#endif
+
 // Repeats the macro `ACTION(N)` `N` times (one per line)
 #define REPEAT_0(ACTION)
 #define REPEAT_1(ACTION) ACTION(1)

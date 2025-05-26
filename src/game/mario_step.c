@@ -11,14 +11,25 @@
 #include "pc/lua/smlua.h"
 #include "game/hardcoded.h"
 
-#define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
-
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 
 struct Surface gWaterSurfacePseudoFloor = {
-    SURFACE_VERY_SLIPPERY, 0,    0,    0, 0, 0, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
-    { 0.0f, 1.0f, 0.0f },  0.0f, NULL,
-    { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, 0
+    .type = SURFACE_VERY_SLIPPERY,
+    .flags = 0,
+    .room = 0,
+    .force = 0,
+    .lowerY = 0,
+    .upperY = 0,
+    .vertex1 = { 0, 0, 0 },
+    .vertex2 = { 0, 0, 0 },
+    .vertex3 = { 0, 0, 0 },
+    .prevVertex1 = { 0, 0, 0 },
+    .prevVertex2 = { 0, 0, 0 },
+    .prevVertex3 = { 0, 0, 0 },
+    .normal = { 0.0f, 1.0f, 0.0f },
+    .originOffset = 0.0f,
+    .modifiedTimestamp = 0,
+    .object = NULL
 };
 
 /**
@@ -303,7 +314,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     if (floor == NULL) {
         if (gServerSettings.bouncyLevelBounds != BOUNCY_LEVEL_BOUNDS_OFF) {
             m->faceAngle[1] += 0x8000;
-            mario_set_forward_vel(m, gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_ON_CAP ? CLAMP(1.5f * m->forwardVel, -500, 500) : 1.5f * m->forwardVel);
+            mario_set_forward_vel(m, gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_ON_CAP ? clamp(1.5f * m->forwardVel, -500, 500) : 1.5f * m->forwardVel);
         }
         smlua_call_event_hooks_mario_param(HOOK_ON_COLLIDE_LEVEL_BOUNDS, m);
         return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
@@ -492,7 +503,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         m->pos[1] = nextPos[1];
         if (gServerSettings.bouncyLevelBounds != BOUNCY_LEVEL_BOUNDS_OFF) {
             m->faceAngle[1] += 0x8000;
-            mario_set_forward_vel(m, gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_ON_CAP ? CLAMP(1.5f * m->forwardVel, -500, 500) : 1.5f * m->forwardVel);
+            mario_set_forward_vel(m, gServerSettings.bouncyLevelBounds == BOUNCY_LEVEL_BOUNDS_ON_CAP ? clamp(1.5f * m->forwardVel, -500, 500) : 1.5f * m->forwardVel);
         }
         smlua_call_event_hooks_mario_param(HOOK_ON_COLLIDE_LEVEL_BOUNDS, m);
         return AIR_STEP_HIT_WALL;

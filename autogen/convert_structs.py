@@ -70,9 +70,6 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 #endif
 """
 
-override_field_names = {
-}
-
 override_field_types = {
     "Surface": { "normal": "Vec3f" },
     "Object": { "oAnimations": "ObjectAnimPointer*" },
@@ -94,7 +91,7 @@ override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
-    "GraphNode": [ "_guard1", "_guard2" ],
+    "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
@@ -115,7 +112,7 @@ override_field_immutable = {
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
-    "MarioBodyState": [ "updateTorsoTime" ],
+    "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "currAnimPart" ],
     "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
@@ -415,7 +412,7 @@ def output_fuzz_file():
     global fuzz_structs_calls
     with open(fuzz_from) as f:
         file_str = f.read()
-    with open(fuzz_to, 'w') as f:
+    with open(fuzz_to, 'w', encoding='utf-8', newline='\n') as f:
         f.write(file_str.replace('-- $[STRUCTS]', fuzz_structs).replace('-- $[FUZZ-STRUCTS]', fuzz_structs_calls))
 
 ############################################################################
@@ -462,9 +459,6 @@ def get_struct_field_info(struct, field):
     fid = field['identifier']
     ftype = field['type']
     size = 1
-
-    if sid in override_field_names and fid in override_field_names[sid]:
-        fid = override_field_names[sid][fid]
 
     if sid in override_field_types and fid in override_field_types[sid]:
         ftype = override_field_types[sid][fid]
@@ -729,7 +723,7 @@ def doc_structs(structs):
             continue
         s += doc_struct(struct) + '\n'
 
-    with open(get_path(out_filename_docs), 'w', newline='\n') as out:
+    with open(get_path(out_filename_docs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -777,7 +771,7 @@ def def_structs(structs):
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
-    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
+    with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -799,11 +793,11 @@ def build_files():
     built_include = build_includes()
 
     out_c_filename = get_path(out_filename_c)
-    with open(out_c_filename, 'w', newline='\n') as out:
+    with open(out_c_filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(c_template.replace("$[BODY]", built_body).replace('$[INCLUDES]', built_include))
 
     out_h_filename = get_path(out_filename_h)
-    with open(out_h_filename, 'w', newline='\n') as out:
+    with open(out_h_filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(h_template.replace("$[BODY]", built_enum))
 
     doc_structs(parsed)

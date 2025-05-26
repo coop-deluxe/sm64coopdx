@@ -7,11 +7,6 @@
 
 #include "trig_tables.inc.c"
 
-// These functions have bogus return values.
-// Disable the compiler warning.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreturn-local-addr"
-
 inline f32 sins(s16 sm64Angle) {
     return gSineTable[(u16) (sm64Angle) >> 4];
 }
@@ -20,170 +15,237 @@ inline f32 coss(s16 sm64Angle) {
     return gCosineTable[(u16) (sm64Angle) >> 4];
 }
 
-/// Copy vector 'src' to 'dest'
-void *vec3f_copy(Vec3f dest, Vec3f src) {
-    dest[0] = src[0];
-    dest[1] = src[1];
-    dest[2] = src[2];
-    return dest;
-}
-
-/// Set vector 'dest' to (x, y, z)
-void *vec3f_set(Vec3f dest, f32 x, f32 y, f32 z) {
-    dest[0] = x;
-    dest[1] = y;
-    dest[2] = z;
-    return dest;
-}
-
-/// Add vector 'a' to 'dest'
-void *vec3f_add(Vec3f dest, Vec3f a) {
-    dest[0] += a[0];
-    dest[1] += a[1];
-    dest[2] += a[2];
-    return dest;
-}
-
-/// Make 'dest' the sum of vectors a and b.
-void *vec3f_sum(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[0] + b[0];
-    dest[1] = a[1] + b[1];
-    dest[2] = a[2] + b[2];
-    return dest;
-}
-
-/// Multiply vector 'dest' by a
-void *vec3f_mul(Vec3f dest, f32 a) {
-    dest[0] *= a;
-    dest[1] *= a;
-    dest[2] *= a;
-    return dest;
-}
-
-/// Copy vector src to dest
-void *vec3s_copy(Vec3s dest, Vec3s src) {
-    dest[0] = src[0];
-    dest[1] = src[1];
-    dest[2] = src[2];
-    return dest;
-}
-
-/// Set vector 'dest' to (x, y, z)
-void *vec3s_set(Vec3s dest, s16 x, s16 y, s16 z) {
-    dest[0] = x;
-    dest[1] = y;
-    dest[2] = z;
-    return dest;
-}
-
-/// Add vector a to 'dest'
-void *vec3s_add(Vec3s dest, Vec3s a) {
-    dest[0] += a[0];
-    dest[1] += a[1];
-    dest[2] += a[2];
-    return dest;
-}
-
-/// Make 'dest' the sum of vectors a and b.
-void *vec3s_sum(Vec3s dest, Vec3s a, Vec3s b) {
-    dest[0] = a[0] + b[0];
-    dest[1] = a[1] + b[1];
-    dest[2] = a[2] + b[2];
-    return dest;
-}
-
-/// Make 'dest' the difference of vectors a and b.
-void *vec3f_dif(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[0] - b[0];
-    dest[1] = a[1] - b[1];
-    dest[2] = a[2] - b[2];
-    return dest;
-}
-
-/// Convert short vector a to float vector 'dest'
-void *vec3s_to_vec3f(Vec3f dest, Vec3s a) {
-    dest[0] = a[0];
-    dest[1] = a[1];
-    dest[2] = a[2];
-    return dest;
+/**
+ * Helper function for atan2s. Does a look up of the arctangent of y/x assuming
+ * the resulting angle is in range [0, 0x2000] (1/8 of a circle).
+ */
+static OPTIMIZE_O3 u16 atan2_lookup(f32 y, f32 x) {
+    s16 idx = (s16)(y / x * 1024.0f + 0.5f);
+    idx = (idx >= 0 && idx < 0x401) ? idx : 0;
+    return gArctanTable[idx];
 }
 
 /**
- * Convert float vector a to a short vector 'dest' by rounding the components
- * to the nearest integer.
+ * Compute the angle from (0, 0) to (x, y) as a s16. Given that terrain is in
+ * the xz-plane, this is commonly called with (z, x) to get a yaw angle.
  */
-void *vec3f_to_vec3s(Vec3s dest, Vec3f a) {
-    // add/subtract 0.5 in order to round to the nearest s32 instead of truncating
-    dest[0] = a[0] + ((a[0] > 0) ? 0.5f : -0.5f);
-    dest[1] = a[1] + ((a[1] > 0) ? 0.5f : -0.5f);
-    dest[2] = a[2] + ((a[2] > 0) ? 0.5f : -0.5f);
-    return dest;
+inline s16 atan2s(f32 y, f32 x) {
+    // Extract sign bits: 1 if negative, 0 otherwise
+    u8 signx = (x < 0.0f);
+    u8 signy = (y < 0.0f);
+
+    // Take absolute values
+    f32 absx = absx(x);
+    f32 absy = absx(y);
+
+    // Compute the angle in the first octant
+    u16 angle = atan2_lookup(min(absx, absy), max(absy, absx));
+
+    // Create an index based on the signs and swap status
+    u8 idx = ((absy > absx) << 2) | (signx << 1) | signy;
+
+    // Combined lookup tables for offsets and sign multipliers
+    static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
+    static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
+
+    // Adjust output for (0, 0) edge case
+    s16 zeroAdj = (x == 0.0f && y == 0.0f) * -0x4000;
+
+    // Ensure the result fits into 16 bits via an explicit cast on angle
+    return ((offsets[idx] + (signs[idx] * (s16)angle)) + zeroAdj) & 0xFFFF;
 }
 
 /**
- * Set 'dest' the normal vector of a triangle with vertices a, b and c.
- * It is similar to vec3f_cross, but it calculates the vectors (c-b) and (b-a)
- * at the same time.
+ * Compute the atan2 in radians by calling atan2s and converting the result.
  */
-void *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
-    dest[0] = (b[1] - a[1]) * (c[2] - b[2]) - (c[1] - b[1]) * (b[2] - a[2]);
-    dest[1] = (b[2] - a[2]) * (c[0] - b[0]) - (c[2] - b[2]) * (b[0] - a[0]);
-    dest[2] = (b[0] - a[0]) * (c[1] - b[1]) - (c[0] - b[0]) * (b[1] - a[1]);
-    return dest;
+f32 atan2f(f32 y, f32 x) {
+    return (f32) atan2s(y, x) * M_PI / 0x8000;
 }
 
-/// Make vector 'dest' the cross product of vectors a and b.
-void *vec3f_cross(Vec3f dest, Vec3f a, Vec3f b) {
-    dest[0] = a[1] * b[2] - b[1] * a[2];
-    dest[1] = a[2] * b[0] - b[2] * a[0];
-    dest[2] = a[0] * b[1] - b[0] * a[1];
-    return dest;
+/**
+ * Return the value 'current' after it tries to approach target, going up at
+ * most 'inc' and going down at most 'dec'.
+ */
+OPTIMIZE_O3 s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec) {
+    //! If target is close to the max or min s32, then it's possible to overflow
+    // past it without stopping.
+
+    if (current < target) {
+        current += inc;
+        if (current > target) {
+            current = target;
+        }
+    } else {
+        current -= dec;
+        if (current < target) {
+            current = target;
+        }
+    }
+    return current;
 }
 
-/// Scale vector 'dest' so it has length 1
-void *vec3f_normalize(Vec3f dest) {
-    f32 div = sqrtf(dest[0] * dest[0] + dest[1] * dest[1] + dest[2] * dest[2]);
-    if (div == 0) {
-        dest[0] = 0;
-        dest[1] = 0;
-        dest[2] = 0;
-        return dest;
+/**
+ * Return the value 'current' after it tries to approach target, going up at
+ * most 'inc' and going down at most 'dec'.
+ */
+OPTIMIZE_O3 f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
+    if (current < target) {
+        current += inc;
+        if (current > target) {
+            current = target;
+        }
+    } else {
+        current -= dec;
+        if (current < target) {
+            current = target;
+        }
+    }
+    return current;
+}
+
+#define CURVE_BEGIN_1 1
+#define CURVE_BEGIN_2 2
+#define CURVE_MIDDLE 3
+#define CURVE_END_1 4
+#define CURVE_END_2 5
+
+/**
+ * Set 'result' to a 4-vector with weights corresponding to interpolation
+ * value t in [0, 1] and gSplineState. Given the current control point P, these
+ * weights are for P[0], P[1], P[2] and P[3] to obtain an interpolated point.
+ * The weights naturally sum to 1, and they are also always in range [0, 1] so
+ * the interpolated point will never overshoot. The curve is guaranteed to go
+ * through the first and last point, but not through intermediate points.
+ *
+ * gSplineState ensures that the curve is clamped: the first two points
+ * and last two points have different weight formulas. These are the weights
+ * just before gSplineState transitions:
+ * 1: [1, 0, 0, 0]
+ * 1->2: [0, 3/12, 7/12, 2/12]
+ * 2->3: [0, 1/6, 4/6, 1/6]
+ * 3->3: [0, 1/6, 4/6, 1/6] (repeats)
+ * 3->4: [0, 1/6, 4/6, 1/6]
+ * 4->5: [0, 2/12, 7/12, 3/12]
+ * 5: [0, 0, 0, 1]
+ *
+ * I suspect that the weight formulas will give a 3rd degree B-spline with the
+ * common uniform clamped knot vector, e.g. for n points:
+ * [0, 0, 0, 0, 1, 2, ... n-1, n, n, n, n]
+ * TODO: verify the classification of the spline / figure out how polynomials were computed
+ */
+OPTIMIZE_O3 void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
+    if (!m) { return; }
+    f32 tinv = 1 - t;
+    f32 tinv2 = tinv * tinv;
+    f32 tinv3 = tinv2 * tinv;
+    f32 t2 = t * t;
+    f32 t3 = t2 * t;
+
+    switch (m->splineState) {
+        case CURVE_BEGIN_1:
+            result[0] = tinv3;
+            result[1] = t3 * 1.75f - t2 * 4.5f + t * 3.0f;
+            result[2] = -t3 * (11 / 12.0f) + t2 * 1.5f;
+            result[3] = t3 * (1 / 6.0f);
+            break;
+        case CURVE_BEGIN_2:
+            result[0] = tinv3 * 0.25f;
+            result[1] = t3 * (7 / 12.0f) - t2 * 1.25f + t * 0.25f + (7 / 12.0f);
+            result[2] = -t3 * 0.5f + t2 * 0.5f + t * 0.5f + (1 / 6.0f);
+            result[3] = t3 * (1 / 6.0f);
+            break;
+        case CURVE_MIDDLE:
+            result[0] = tinv3 * (1 / 6.0f);
+            result[1] = t3 * 0.5f - t2 + (4 / 6.0f);
+            result[2] = -t3 * 0.5f + t2 * 0.5f + t * 0.5f + (1 / 6.0f);
+            result[3] = t3 * (1 / 6.0f);
+            break;
+        case CURVE_END_1:
+            result[0] = tinv3 * (1 / 6.0f);
+            result[1] = -tinv3 * 0.5f + tinv2 * 0.5f + tinv * 0.5f + (1 / 6.0f);
+            result[2] = tinv3 * (7 / 12.0f) - tinv2 * 1.25f + tinv * 0.25f + (7 / 12.0f);
+            result[3] = t3 * 0.25f;
+            break;
+        case CURVE_END_2:
+            result[0] = tinv3 * (1 / 6.0f);
+            result[1] = -tinv3 * (11 / 12.0f) + tinv2 * 1.5f;
+            result[2] = tinv3 * 1.75f - tinv2 * 4.5f + tinv * 3.0f;
+            result[3] = t3;
+            break;
+    }
+}
+
+/**
+ * Initialize a spline animation.
+ * 'keyFrames' should be an array of (s, x, y, z) vectors
+ *  s: the speed of the keyframe in 1000/frames, e.g. s=100 means the keyframe lasts 10 frames
+ *  (x, y, z): point in 3D space on the curve
+ * The array should end with three entries with s=0 (infinite keyframe duration).
+ * That's because the spline has a 3rd degree polynomial, so it looks 3 points ahead.
+ */
+OPTIMIZE_O3 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
+    if (!m) { return; }
+    m->splineKeyframe = keyFrames;
+    m->splineKeyframeFraction = 0;
+    m->splineState = 1;
+}
+
+/**
+ * Poll the next point from a spline animation.
+ * anim_spline_init should be called before polling for vectors.
+ * Returns TRUE when the last point is reached, FALSE otherwise.
+ */
+OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
+    if (!m) { return 0; }
+    Vec4f weights = { 0 };
+    s32 i;
+    s32 hasEnded = FALSE;
+
+    vec3f_copy(result, gVec3fZero);
+    spline_get_weights(m, weights, m->splineKeyframeFraction, m->splineState);
+
+    if (m->splineKeyframe == NULL) { return FALSE; }
+
+    for (i = 0; i < 4; i++) {
+        result[0] += weights[i] * m->splineKeyframe[i][1];
+        result[1] += weights[i] * m->splineKeyframe[i][2];
+        result[2] += weights[i] * m->splineKeyframe[i][3];
     }
 
-    f32 invsqrt = 1.0f / div;
-
-    dest[0] *= invsqrt;
-    dest[1] *= invsqrt;
-    dest[2] *= invsqrt;
-    return dest;
-}
-
-/// Get length of vector 'a'
-f32 vec3f_length(Vec3f a)
-{
-	return sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-}
-
-/// Get dot product of vectors 'a' and 'b'
-f32 vec3f_dot(Vec3f a, Vec3f b)
-{
-	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-}
-
-/// takes respective scales of vecA and vecB, and sums them
-void vec3f_combine(Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB) {
-    int i = 0;
-
-    for (i = 0; i < 3; ++i) {
-        dest[i] = vecA[i] * sclA + vecB[i] * sclB;
+    if ((m->splineKeyframeFraction += m->splineKeyframe[0][0] / 1000.0f) >= 1) {
+        m->splineKeyframe++;
+        m->splineKeyframeFraction--;
+        switch (m->splineState) {
+            case CURVE_END_2:
+                hasEnded = TRUE;
+                break;
+            case CURVE_MIDDLE:
+                if (m->splineKeyframe[2][0] == 0) {
+                    m->splineState = CURVE_END_1;
+                }
+                break;
+            default:
+                m->splineState++;
+                break;
+        }
     }
+
+    return hasEnded;
 }
+
+  ///////////
+ // Vec3f //
+///////////
+
+Vec3f gVec3fZero = { 0.0f, 0.0f, 0.0f };
+
+Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
 
 /**
  * Returns a vector rotated around the z axis, then the x axis, then the y
  * axis.
  */
-void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
+OPTIMIZE_O3 f32 *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
 
     f32 sx = sins(rotate[0]);
@@ -203,47 +265,122 @@ void *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     dest[0] = v[0] * ((sysz * sx) + cycz) + v[1] * ((sycz * sx) - cysz) + v[2] * (cx * sy);
     dest[1] = v[0] * (cx * sz) + v[1] * (cx * cz) + v[2] * -sx;
     dest[2] = v[0] * ((cysz * sx) - sycz) + v[1] * ((cycz * sx) + sysz) + v[2] * (cx * cy);
+    return dest;
+}
+
+// Rodrigues' formula
+// dest = v * cos(r) + (n x v) * sin(r) + n * (n . v) * (1 - cos(r))
+OPTIMIZE_O3 f32 *vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
+    Vec3f nvCross;
+    vec3f_cross(nvCross, n, v);
+    f32 nvDot = vec3f_dot(n, v);
+    f32 cosr = coss(r);
+    f32 sinr = sins(r);
+    dest[0] = v[0] * cosr + nvCross[0] * sinr + n[0] * nvDot * (1.f - cosr);
+    dest[1] = v[1] * cosr + nvCross[1] * sinr + n[1] * nvDot * (1.f - cosr);
+    dest[2] = v[2] * cosr + nvCross[2] * sinr + n[2] * nvDot * (1.f - cosr);
+    return dest;
+}
+
+OPTIMIZE_O3 f32 *vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
+    f32 numerator = vec3f_dot(v, onto);
+    f32 denominator = vec3f_dot(onto, onto);
+    if (denominator == 0) {
+        return vec3f_zero(dest);
+    }
+
+    vec3f_copy(dest, onto);
+    vec3f_mul(dest, numerator / denominator);
+    return dest;
+}
+
+OPTIMIZE_O3 f32 *vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale) {
+    vec3f_copy(dest, v);
+
+    // scale
+    dest[0] *= scale[0];
+    dest[1] *= scale[1];
+    dest[2] *= scale[2];
+
+    // rotation
+    vec3f_rotate_zxy(dest, rotation);
+
+    // translation
+    vec3f_add(dest, translation);
 
     return dest;
 }
 
-#pragma GCC diagnostic pop
+/**
+ * Take the vector starting at 'from' pointed at 'to' an retrieve the length
+ * of that vector, as well as the yaw and pitch angles.
+ * Basically it converts the direction to spherical coordinates.
+ */
+OPTIMIZE_O3 void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw) {
+    f32 x = to[0] - from[0];
+    f32 y = to[1] - from[1];
+    f32 z = to[2] - from[2];
 
-/// Copy matrix 'src' to 'dest'
-void mtxf_copy(Mat4 dest, Mat4 src) {
-    register s32 i;
-    register u32 *d = (u32 *) dest;
-    register u32 *s = (u32 *) src;
-
-    for (i = 0; i < 16; i++) {
-        *d++ = *s++;
-    }
+    *dist = sqrtf(x * x + y * y + z * z);
+    *pitch = atan2s(sqrtf(x * x + z * z), y);
+    *yaw = atan2s(z, x);
 }
 
 /**
- * Set mtx to the identity matrix
+ * Construct the 'to' point which is distance 'dist' away from the 'from' position,
+ * and has the angles pitch and yaw.
  */
-void mtxf_identity(Mat4 mtx) {
-    register s32 i;
-    register f32 *dest;
-    // These loops must be one line to match on -O2
-
-    // initialize everything except the first and last cells to 0
-    for (dest = (f32 *) mtx + 1, i = 0; i < 14; dest++, i++) *dest = 0;
-
-    // initialize the diagonal cells to 1
-    for (dest = (f32 *) mtx, i = 0; i < 4; dest += 5, i++) *dest = 1;
+OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw) {
+    to[0] = from[0] + dist * coss(pitch) * sins(yaw);
+    to[1] = from[1] + dist * sins(pitch);
+    to[2] = from[2] + dist * coss(pitch) * coss(yaw);
 }
 
 /**
- * Set dest to a translation matrix of vector b
+ * Set 'dest' the normal vector of a triangle with vertices a, b and c.
+ * It is similar to vec3f_cross, but it calculates the vectors (c-b) and (b-a)
+ * at the same time.
  */
-void mtxf_translate(Mat4 dest, Vec3f b) {
-    mtxf_identity(dest);
-    dest[3][0] = b[0];
-    dest[3][1] = b[1];
-    dest[3][2] = b[2];
+OPTIMIZE_O3 f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
+    dest[0] = (b[1] - a[1]) * (c[2] - b[2]) - (c[1] - b[1]) * (b[2] - a[2]);
+    dest[1] = (b[2] - a[2]) * (c[0] - b[0]) - (c[2] - b[2]) * (b[0] - a[0]);
+    dest[2] = (b[0] - a[0]) * (c[1] - b[1]) - (c[0] - b[0]) * (b[1] - a[1]);
+    return dest;
 }
+
+  ///////////
+ // Vec3i //
+///////////
+
+Vec3i gVec3iZero = { 0, 0, 0 };
+
+Vec3i gVec3iOne = { 1, 1, 1 };
+
+  ///////////
+ // Vec3s //
+///////////
+
+Vec3s gVec3sZero = { 0, 0, 0 };
+
+Vec3s gVec3sOne = { 1, 1, 1 };
+
+  //////////
+ // Mat4 //
+//////////
+
+Mat4 gMat4Identity = {
+    { 1, 0, 0, 0 },
+    { 0, 1, 0, 0 },
+    { 0, 0, 1, 0 },
+    { 0, 0, 0, 1 },
+};
+
+Mat4 gMat4Zero = {
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },
+};
 
 /**
  * Set mtx to a look-at matrix for the camera. The resulting transformation
@@ -251,7 +388,7 @@ void mtxf_translate(Mat4 dest, Vec3f b) {
  * at the position 'to'. The up-vector is assumed to be (0, 1, 0), but the 'roll'
  * angle allows a bank rotation of the camera.
  */
-void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
+OPTIMIZE_O3 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     Vec3f forward, right, up;
     f32 sinRoll, cosRoll;
     f32 dx, dz, xzDist;
@@ -319,15 +456,15 @@ void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
  * Build a matrix that rotates around the z axis, then the x axis, then the y
  * axis, and then translates.
  */
-void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate) {
-    register f32 sx = sins(rotate[0]);
-    register f32 cx = coss(rotate[0]);
+OPTIMIZE_O3 void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate) {
+    f32 sx = sins(rotate[0]);
+    f32 cx = coss(rotate[0]);
 
-    register f32 sy = sins(rotate[1]);
-    register f32 cy = coss(rotate[1]);
+    f32 sy = sins(rotate[1]);
+    f32 cy = coss(rotate[1]);
 
-    register f32 sz = sins(rotate[2]);
-    register f32 cz = coss(rotate[2]);
+    f32 sz = sins(rotate[2]);
+    f32 cz = coss(rotate[2]);
 
     dest[0][0] = cy * cz + sx * sy * sz;
     dest[1][0] = -cy * sz + sx * sy * cz;
@@ -352,15 +489,15 @@ void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate) {
  * Build a matrix that rotates around the x axis, then the y axis, then the z
  * axis, and then translates.
  */
-void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c) {
-    register f32 sx = sins(c[0]);
-    register f32 cx = coss(c[0]);
+OPTIMIZE_O3 void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c) {
+    f32 sx = sins(c[0]);
+    f32 cx = coss(c[0]);
 
-    register f32 sy = sins(c[1]);
-    register f32 cy = coss(c[1]);
+    f32 sy = sins(c[1]);
+    f32 cy = coss(c[1]);
 
-    register f32 sz = sins(c[2]);
-    register f32 cz = coss(c[2]);
+    f32 sz = sins(c[2]);
+    f32 cz = coss(c[2]);
 
     dest[0][0] = cy * cz;
     dest[0][1] = cy * sz;
@@ -389,7 +526,7 @@ void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c) {
  * 'position' is the position of the object in the world
  * 'angle' rotates the object while still facing the camera.
  */
-void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
+OPTIMIZE_O3 void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[0][0] = coss(angle);
     dest[0][1] = sins(angle);
     dest[0][2] = 0;
@@ -405,17 +542,14 @@ void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[2][2] = 1;
     dest[2][3] = 0;
 
-    dest[3][0] =
-        mtx[0][0] * position[0] + mtx[1][0] * position[1] + mtx[2][0] * position[2] + mtx[3][0];
-    dest[3][1] =
-        mtx[0][1] * position[0] + mtx[1][1] * position[1] + mtx[2][1] * position[2] + mtx[3][1];
-    dest[3][2] =
-        mtx[0][2] * position[0] + mtx[1][2] * position[1] + mtx[2][2] * position[2] + mtx[3][2];
+    dest[3][0] = mtx[0][0] * position[0] + mtx[1][0] * position[1] + mtx[2][0] * position[2] + mtx[3][0];
+    dest[3][1] = mtx[0][1] * position[0] + mtx[1][1] * position[1] + mtx[2][1] * position[2] + mtx[3][1];
+    dest[3][2] = mtx[0][2] * position[0] + mtx[1][2] * position[1] + mtx[2][2] * position[2] + mtx[3][2];
     dest[3][3] = 1;
 }
 
 // straight up mtxf_billboard but minus the dest[1][n] lines. transform for cylindrical billboards
-void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
+OPTIMIZE_O3 void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[0][0] = coss(angle);
     dest[0][1] = sins(angle);
     dest[0][2] = 0;
@@ -431,12 +565,9 @@ void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[2][2] = 1;
     dest[2][3] = 0;
 
-    dest[3][0] =
-        mtx[0][0] * position[0] + mtx[1][0] * position[1] + mtx[2][0] * position[2] + mtx[3][0];
-    dest[3][1] =
-        mtx[0][1] * position[0] + mtx[1][1] * position[1] + mtx[2][1] * position[2] + mtx[3][1];
-    dest[3][2] =
-        mtx[0][2] * position[0] + mtx[1][2] * position[1] + mtx[2][2] * position[2] + mtx[3][2];
+    dest[3][0] = mtx[0][0] * position[0] + mtx[1][0] * position[1] + mtx[2][0] * position[2] + mtx[3][0];
+    dest[3][1] = mtx[0][1] * position[0] + mtx[1][1] * position[1] + mtx[2][1] * position[2] + mtx[3][1];
+    dest[3][2] = mtx[0][2] * position[0] + mtx[1][2] * position[1] + mtx[2][2] * position[2] + mtx[3][2];
     dest[3][3] = 1;
 }
 
@@ -447,7 +578,7 @@ void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
  * 'yaw' is the angle which it should face
  * 'pos' is the object's position in the world
  */
-void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw) {
+OPTIMIZE_O3 void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw) {
     Vec3f lateralDir;
     Vec3f leftDir;
     Vec3f forwardDir;
@@ -490,7 +621,7 @@ void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw) {
  * 'pos' is the object's position in the world
  * 'radius' is the distance from each triangle vertex to the center
  */
-void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius) {
+OPTIMIZE_O3 void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius) {
     struct Surface *sp74;
     Vec3f point0;
     Vec3f point1;
@@ -557,69 +688,21 @@ void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius) {
 }
 
 /**
- * Sets matrix 'dest' to the matrix product b * a assuming they are both
- * transformation matrices with a w-component of 1. Since the bottom row
- * is assumed to equal [0, 0, 0, 1], it saves some multiplications and
- * addition.
+ * Sets matrix 'dest' to the matrix product b * a.
  * The resulting matrix represents first applying transformation b and
  * then a.
  */
-void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b) {
-    Mat4 temp;
-    register f32 entry0;
-    register f32 entry1;
-    register f32 entry2;
-
-    // column 0
-    entry0 = a[0][0];
-    entry1 = a[0][1];
-    entry2 = a[0][2];
-    temp[0][0] = entry0 * b[0][0] + entry1 * b[1][0] + entry2 * b[2][0];
-    temp[0][1] = entry0 * b[0][1] + entry1 * b[1][1] + entry2 * b[2][1];
-    temp[0][2] = entry0 * b[0][2] + entry1 * b[1][2] + entry2 * b[2][2];
-
-    // column 1
-    entry0 = a[1][0];
-    entry1 = a[1][1];
-    entry2 = a[1][2];
-    temp[1][0] = entry0 * b[0][0] + entry1 * b[1][0] + entry2 * b[2][0];
-    temp[1][1] = entry0 * b[0][1] + entry1 * b[1][1] + entry2 * b[2][1];
-    temp[1][2] = entry0 * b[0][2] + entry1 * b[1][2] + entry2 * b[2][2];
-
-    // column 2
-    entry0 = a[2][0];
-    entry1 = a[2][1];
-    entry2 = a[2][2];
-    temp[2][0] = entry0 * b[0][0] + entry1 * b[1][0] + entry2 * b[2][0];
-    temp[2][1] = entry0 * b[0][1] + entry1 * b[1][1] + entry2 * b[2][1];
-    temp[2][2] = entry0 * b[0][2] + entry1 * b[1][2] + entry2 * b[2][2];
-
-    // column 3
-    entry0 = a[3][0];
-    entry1 = a[3][1];
-    entry2 = a[3][2];
-    temp[3][0] = entry0 * b[0][0] + entry1 * b[1][0] + entry2 * b[2][0] + b[3][0];
-    temp[3][1] = entry0 * b[0][1] + entry1 * b[1][1] + entry2 * b[2][1] + b[3][1];
-    temp[3][2] = entry0 * b[0][2] + entry1 * b[1][2] + entry2 * b[2][2] + b[3][2];
-
-    temp[0][3] = temp[1][3] = temp[2][3] = 0;
-    temp[3][3] = 1;
-
-    mtxf_copy(dest, temp);
-}
-
-/**
- * Set matrix 'dest' to 'mtx' scaled by vector s
- */
-void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s) {
-    register s32 i;
-
-    for (i = 0; i < 4; i++) {
-        dest[0][i] = mtx[0][i] * s[0];
-        dest[1][i] = mtx[1][i] * s[1];
-        dest[2][i] = mtx[2][i] * s[2];
-        dest[3][i] = mtx[3][i];
+OPTIMIZE_O3 void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b) {
+    Mat4 tmp;
+    for (s32 i = 0; i < 4; i++) {
+        for (s32 j = 0; j < 4; j++) {
+            tmp[i][j] = a[i][0] * b[0][j] +
+                        a[i][1] * b[1][j] +
+                        a[i][2] * b[2][j] +
+                        a[i][3] * b[3][j];
+        }
     }
+    mtxf_copy(dest, tmp);
 }
 
 /**
@@ -627,57 +710,27 @@ void mtxf_scale_vec3f(Mat4 dest, Mat4 mtx, Vec3f s) {
  * to the point. Note that the bottom row is assumed to be [0, 0, 0, 1], which is
  * true for transformation matrices if the translation has a w component of 1.
  */
-void mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
-    register f32 x = b[0];
-    register f32 y = b[1];
-    register f32 z = b[2];
+OPTIMIZE_O3 s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
+    f32 x = b[0];
+    f32 y = b[1];
+    f32 z = b[2];
 
     b[0] = x * mtx[0][0] + y * mtx[1][0] + z * mtx[2][0] + mtx[3][0];
     b[1] = x * mtx[0][1] + y * mtx[1][1] + z * mtx[2][1] + mtx[3][1];
     b[2] = x * mtx[0][2] + y * mtx[1][2] + z * mtx[2][2] + mtx[3][2];
-}
-
-/**
- * Convert float matrix 'src' to fixed point matrix 'dest'.
- * The float matrix may not contain entries larger than 65536 or the console
- * crashes. The fixed point matrix has entries with a 16-bit integer part, so
- * the floating point numbers are multiplied by 2^16 before being cast to a s32
- * integer. If this doesn't fit, the N64 and iQue consoles will throw an
- * exception. On Wii and Wii U Virtual Console the value will simply be clamped
- * and no crashes occur.
- */
-void mtxf_to_mtx(Mtx *dest, Mat4 src) {
-#ifdef AVOID_UB
-    // Avoid type-casting which is technically UB by calling the equivalent
-    // guMtxF2L function. This helps little-endian systems, as well.
-    guMtxF2L(src, dest);
-#else
-    s32 asFixedPoint;
-    register s32 i;
-    register s16 *a3 = (s16 *) dest;      // all integer parts stored in first 16 bytes
-    register s16 *t0 = (s16 *) dest + 16; // all fraction parts stored in last 16 bytes
-    register f32 *t1 = (f32 *) src;
-
-    for (i = 0; i < 16; i++) {
-        asFixedPoint = *t1++ * (1 << 16); //! float-to-integer conversion responsible for PU crashes
-        *a3++ = GET_HIGH_S16_OF_32(asFixedPoint); // integer part
-        *t0++ = GET_LOW_S16_OF_32(asFixedPoint);  // fraction part
-    }
-#endif
+    
+    return b;
 }
 
 /**
  * Set 'mtx' to a transformation matrix that rotates around the z axis.
  */
-void mtxf_rotate_xy(Mtx *mtx, s16 angle) {
-    Mat4 temp;
-
-    mtxf_identity(temp);
-    temp[0][0] = coss(angle);
-    temp[0][1] = sins(angle);
-    temp[1][0] = -temp[0][1];
-    temp[1][1] = temp[0][0];
-    mtxf_to_mtx(mtx, temp);
+OPTIMIZE_O3 void mtxf_rotate_xy(Mat4 mtx, s16 angle) {
+    mtxf_identity(mtx);
+    mtx[0][0] = coss(angle);
+    mtx[0][1] = sins(angle);
+    mtx[1][0] = -mtx[0][1];
+    mtx[1][1] = mtx[0][0];
 }
 
 /**
@@ -693,12 +746,11 @@ void mtxf_rotate_xy(Mtx *mtx, s16 angle) {
  * furthermore, this is currently only used to get the inverse of the camera transform
  * because that is always orthonormal, the determinant will never be 0, so that check is removed
  */
-void mtxf_inverse(register Mat4 dest, register Mat4 src) {
-    register f32 det_1;
+OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src) {
     Mat4 buf;
 
     // calculating the determinant has been reduced since the check is removed
-    det_1 = 1.0f / (
+    f32 det_1 = 1.0f / (
           src[0][0] * src[1][1] * src[2][2]
         + src[0][1] * src[1][2] * src[2][0]
         + src[0][2] * src[1][0] * src[2][1]
@@ -726,7 +778,7 @@ void mtxf_inverse(register Mat4 dest, register Mat4 src) {
     buf[0][3] = buf[1][3] = buf[2][3] = 0.0f;
     buf[3][3] = 1.0f;
 
-    memcpy(dest, buf, sizeof(f32) * 4 * 4);
+    mtxf_copy(dest, buf);
 }
 
 /**
@@ -737,290 +789,14 @@ void mtxf_inverse(register Mat4 dest, register Mat4 src) {
  * objMtx back from screen orientation to world orientation, and then subtracting
  * the camera position.
  */
-void get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
+OPTIMIZE_O3 f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
     f32 camX = camMtx[3][0] * camMtx[0][0] + camMtx[3][1] * camMtx[0][1] + camMtx[3][2] * camMtx[0][2];
     f32 camY = camMtx[3][0] * camMtx[1][0] + camMtx[3][1] * camMtx[1][1] + camMtx[3][2] * camMtx[1][2];
     f32 camZ = camMtx[3][0] * camMtx[2][0] + camMtx[3][1] * camMtx[2][1] + camMtx[3][2] * camMtx[2][2];
 
-    dest[0] =
-        objMtx[3][0] * camMtx[0][0] + objMtx[3][1] * camMtx[0][1] + objMtx[3][2] * camMtx[0][2] - camX;
-    dest[1] =
-        objMtx[3][0] * camMtx[1][0] + objMtx[3][1] * camMtx[1][1] + objMtx[3][2] * camMtx[1][2] - camY;
-    dest[2] =
-        objMtx[3][0] * camMtx[2][0] + objMtx[3][1] * camMtx[2][1] + objMtx[3][2] * camMtx[2][2] - camZ;
-}
-
-/**
- * Take the vector starting at 'from' pointed at 'to' an retrieve the length
- * of that vector, as well as the yaw and pitch angles.
- * Basically it converts the direction to spherical coordinates.
- */
-void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *pitch, s16 *yaw) {
-    register f32 x = to[0] - from[0];
-    register f32 y = to[1] - from[1];
-    register f32 z = to[2] - from[2];
-
-    *dist = sqrtf(x * x + y * y + z * z);
-    *pitch = atan2s(sqrtf(x * x + z * z), y);
-    *yaw = atan2s(z, x);
-}
-
-/**
- * Construct the 'to' point which is distance 'dist' away from the 'from' position,
- * and has the angles pitch and yaw.
- */
-void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw) {
-    to[0] = from[0] + dist * coss(pitch) * sins(yaw);
-    to[1] = from[1] + dist * sins(pitch);
-    to[2] = from[2] + dist * coss(pitch) * coss(yaw);
-}
-
-/**
- * Return the value 'current' after it tries to approach target, going up at
- * most 'inc' and going down at most 'dec'.
- */
-s32 approach_s32(s32 current, s32 target, s32 inc, s32 dec) {
-    //! If target is close to the max or min s32, then it's possible to overflow
-    // past it without stopping.
-
-    if (current < target) {
-        current += inc;
-        if (current > target) {
-            current = target;
-        }
-    } else {
-        current -= dec;
-        if (current < target) {
-            current = target;
-        }
-    }
-    return current;
-}
-
-/**
- * Return the value 'current' after it tries to approach target, going up at
- * most 'inc' and going down at most 'dec'.
- */
-f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
-    if (current < target) {
-        current += inc;
-        if (current > target) {
-            current = target;
-        }
-    } else {
-        current -= dec;
-        if (current < target) {
-            current = target;
-        }
-    }
-    return current;
-}
-
-/**
- * Helper function for atan2s. Does a look up of the arctangent of y/x assuming
- * the resulting angle is in range [0, 0x2000] (1/8 of a circle).
- */
-static u16 atan2_lookup(f32 y, f32 x) {
-    s16 idx = (s16)(y / x * 1024.0f + 0.5f);
-    idx = (idx >= 0 && idx < 0x401) ? idx : 0;
-    return gArctanTable[idx];
-}
-
-/**
- * Compute the angle from (0, 0) to (x, y) as a s16. Given that terrain is in
- * the xz-plane, this is commonly called with (z, x) to get a yaw angle.
- */
-inline s16 atan2s(f32 y, f32 x) {
-    // Extract sign bits: 1 if negative, 0 otherwise
-    u8 signx = (x < 0.0f);
-    u8 signy = (y < 0.0f);
-
-    // Take absolute values
-    f32 absx = absx(x);
-    f32 absy = absx(y);
-
-    // Compute the angle in the first octant
-    u16 angle = atan2_lookup(min(absx, absy), max(absy, absx));
-
-    // Create an index based on the signs and swap status
-    u8 idx = ((absy > absx) << 2) | (signx << 1) | signy;
-
-    // Combined lookup tables for offsets and sign multipliers
-    static const s16 offsets[] = {0x4000, 0x4000, 0xC000, 0xC000, 0x0000, 0x8000, 0x0000, 0x8000};
-    static const s8 signs[] = {-1,  1,  1, -1, 1, -1, -1,  1};
-
-    // Adjust output for (0, 0) edge case
-    s16 zeroAdj = (x == 0.0f && y == 0.0f) * -0x4000;
-
-    // Ensure the result fits into 16 bits via an explicit cast on angle
-    return ((offsets[idx] + (signs[idx] * (s16)angle)) + zeroAdj) & 0xFFFF;
-}
-
-/**
- * Compute the atan2 in radians by calling atan2s and converting the result.
- */
-f32 atan2f(f32 y, f32 x) {
-    return (f32) atan2s(y, x) * M_PI / 0x8000;
-}
-
-#define CURVE_BEGIN_1 1
-#define CURVE_BEGIN_2 2
-#define CURVE_MIDDLE 3
-#define CURVE_END_1 4
-#define CURVE_END_2 5
-
-/**
- * Set 'result' to a 4-vector with weights corresponding to interpolation
- * value t in [0, 1] and gSplineState. Given the current control point P, these
- * weights are for P[0], P[1], P[2] and P[3] to obtain an interpolated point.
- * The weights naturally sum to 1, and they are also always in range [0, 1] so
- * the interpolated point will never overshoot. The curve is guaranteed to go
- * through the first and last point, but not through intermediate points.
- *
- * gSplineState ensures that the curve is clamped: the first two points
- * and last two points have different weight formulas. These are the weights
- * just before gSplineState transitions:
- * 1: [1, 0, 0, 0]
- * 1->2: [0, 3/12, 7/12, 2/12]
- * 2->3: [0, 1/6, 4/6, 1/6]
- * 3->3: [0, 1/6, 4/6, 1/6] (repeats)
- * 3->4: [0, 1/6, 4/6, 1/6]
- * 4->5: [0, 2/12, 7/12, 3/12]
- * 5: [0, 0, 0, 1]
- *
- * I suspect that the weight formulas will give a 3rd degree B-spline with the
- * common uniform clamped knot vector, e.g. for n points:
- * [0, 0, 0, 0, 1, 2, ... n-1, n, n, n, n]
- * TODO: verify the classification of the spline / figure out how polynomials were computed
- */
-void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
-    if (!m) { return; }
-    f32 tinv = 1 - t;
-    f32 tinv2 = tinv * tinv;
-    f32 tinv3 = tinv2 * tinv;
-    f32 t2 = t * t;
-    f32 t3 = t2 * t;
-
-    switch (m->splineState) {
-        case CURVE_BEGIN_1:
-            result[0] = tinv3;
-            result[1] = t3 * 1.75f - t2 * 4.5f + t * 3.0f;
-            result[2] = -t3 * (11 / 12.0f) + t2 * 1.5f;
-            result[3] = t3 * (1 / 6.0f);
-            break;
-        case CURVE_BEGIN_2:
-            result[0] = tinv3 * 0.25f;
-            result[1] = t3 * (7 / 12.0f) - t2 * 1.25f + t * 0.25f + (7 / 12.0f);
-            result[2] = -t3 * 0.5f + t2 * 0.5f + t * 0.5f + (1 / 6.0f);
-            result[3] = t3 * (1 / 6.0f);
-            break;
-        case CURVE_MIDDLE:
-            result[0] = tinv3 * (1 / 6.0f);
-            result[1] = t3 * 0.5f - t2 + (4 / 6.0f);
-            result[2] = -t3 * 0.5f + t2 * 0.5f + t * 0.5f + (1 / 6.0f);
-            result[3] = t3 * (1 / 6.0f);
-            break;
-        case CURVE_END_1:
-            result[0] = tinv3 * (1 / 6.0f);
-            result[1] = -tinv3 * 0.5f + tinv2 * 0.5f + tinv * 0.5f + (1 / 6.0f);
-            result[2] = tinv3 * (7 / 12.0f) - tinv2 * 1.25f + tinv * 0.25f + (7 / 12.0f);
-            result[3] = t3 * 0.25f;
-            break;
-        case CURVE_END_2:
-            result[0] = tinv3 * (1 / 6.0f);
-            result[1] = -tinv3 * (11 / 12.0f) + tinv2 * 1.5f;
-            result[2] = tinv3 * 1.75f - tinv2 * 4.5f + tinv * 3.0f;
-            result[3] = t3;
-            break;
-    }
-}
-
-/**
- * Initialize a spline animation.
- * 'keyFrames' should be an array of (s, x, y, z) vectors
- *  s: the speed of the keyframe in 1000/frames, e.g. s=100 means the keyframe lasts 10 frames
- *  (x, y, z): point in 3D space on the curve
- * The array should end with three entries with s=0 (infinite keyframe duration).
- * That's because the spline has a 3rd degree polynomial, so it looks 3 points ahead.
- */
-void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
-    if (!m) { return; }
-    m->splineKeyframe = keyFrames;
-    m->splineKeyframeFraction = 0;
-    m->splineState = 1;
-}
-
-/**
- * Poll the next point from a spline animation.
- * anim_spline_init should be called before polling for vectors.
- * Returns TRUE when the last point is reached, FALSE otherwise.
- */
-s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
-    if (!m) { return 0; }
-    Vec4f weights = { 0 };
-    s32 i;
-    s32 hasEnded = FALSE;
-
-    vec3f_copy(result, gVec3fZero);
-    spline_get_weights(m, weights, m->splineKeyframeFraction, m->splineState);
-
-    if (m->splineKeyframe == NULL) { return FALSE; }
-
-    for (i = 0; i < 4; i++) {
-        result[0] += weights[i] * m->splineKeyframe[i][1];
-        result[1] += weights[i] * m->splineKeyframe[i][2];
-        result[2] += weights[i] * m->splineKeyframe[i][3];
-    }
-
-    if ((m->splineKeyframeFraction += m->splineKeyframe[0][0] / 1000.0f) >= 1) {
-        m->splineKeyframe++;
-        m->splineKeyframeFraction--;
-        switch (m->splineState) {
-            case CURVE_END_2:
-                hasEnded = TRUE;
-                break;
-            case CURVE_MIDDLE:
-                if (m->splineKeyframe[2][0] == 0) {
-                    m->splineState = CURVE_END_1;
-                }
-                break;
-            default:
-                m->splineState++;
-                break;
-        }
-    }
-
-    return hasEnded;
-}
-
-/**
- * Returns the second value if it does not equal zero.
- */
-f32 not_zero(f32 value, f32 replacement) {
-    if (replacement != 0) {
-        return replacement;
-    }
-    return value;
-}
-
-void vec3f_project(Vec3f vec, Vec3f onto, Vec3f out) {
-    f32 numerator = vec3f_dot(vec, onto);
-    f32 denominator = vec3f_dot(onto, onto);
-    if (denominator == 0) {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        return;
-    }
-    vec3f_copy(out, onto);
-    vec3f_mul(out, numerator / denominator);
-}
-
-f32 vec3f_dist(Vec3f v1, Vec3f v2) {
-    Vec3f diff = {
-        v1[0] - v2[0],
-        v1[1] - v2[1],
-        v1[2] - v2[2],
-    };
-    return vec3f_length(diff);
+    dest[0] = objMtx[3][0] * camMtx[0][0] + objMtx[3][1] * camMtx[0][1] + objMtx[3][2] * camMtx[0][2] - camX;
+    dest[1] = objMtx[3][0] * camMtx[1][0] + objMtx[3][1] * camMtx[1][1] + objMtx[3][2] * camMtx[1][2] - camY;
+    dest[2] = objMtx[3][0] * camMtx[2][0] + objMtx[3][1] * camMtx[2][1] + objMtx[3][2] * camMtx[2][2] - camZ;
+        
+    return dest;
 }

@@ -18,15 +18,15 @@ static Trajectory sMantaRayTraj[] = {
 };
 
 static struct ObjectHitbox sMantaRayHitbox = {
-    /* interactType:      */ INTERACT_DAMAGE,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 0,
-    /* health:            */ 3,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 210,
-    /* height:            */ 60,
-    /* hurtboxRadius:     */ 200,
-    /* hurtboxHeight:     */ 50,
+    .interactType = INTERACT_DAMAGE,
+    .downOffset = 0,
+    .damageOrCoinValue = 0,
+    .health = 3,
+    .numLootCoins = 0,
+    .radius = 210,
+    .height = 60,
+    .hurtboxRadius = 200,
+    .hurtboxHeight = 50,
 };
 
 /**

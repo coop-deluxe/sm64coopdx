@@ -523,15 +523,15 @@ def main():
 
     built_c = build_to_c(built_files)
 
-    with open(get_path(out_filename), 'w') as out:
+    with open(get_path(out_filename), 'w', encoding='utf-8', newline='\n') as out:
         out.write(built_c)
 
     doc = doc_files(processed_files)
-    with open(get_path(out_filename_docs), 'w') as out:
+    with open(get_path(out_filename_docs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(doc)
 
     defs = build_to_def(processed_files)
-    with open(get_path(out_filename_defs), 'w') as out:
+    with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(defs)
 
     global totalConstants
