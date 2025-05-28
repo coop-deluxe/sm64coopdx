@@ -68,6 +68,7 @@ enum LuaHookedEventType {
     HOOK_ALLOW_FORCE_WATER_ACTION,
     HOOK_BEFORE_WARP,
     HOOK_ON_INSTANT_WARP,
+    HOOK_MARIO_OVERRIDE_FLOOR_CLASS,
     HOOK_MAX,
 };
 
@@ -128,6 +129,7 @@ static const char* LuaHookedEventTypeName[] = {
     "HOOK_ALLOW_FORCE_WATER_ACTION",
     "HOOK_BEFORE_WARP",
     "HOOK_ON_INSTANT_WARP",
+    "HOOK_MARIO_OVERRIDE_FLOOR_CLASS",
     "HOOK_MAX"
 };
 
