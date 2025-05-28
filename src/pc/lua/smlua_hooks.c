@@ -40,10 +40,8 @@ static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 static const char* sLuaHookedEventTypeName[] = {
 #define SMLUA_EVENT_HOOK(hookEventType, ...) #hookEventType,
-#define SMLUA_EVENT_HOOK_MANUAL(hookEventType, ...) #hookEventType,
 #include "smlua_hook_events.inl"
 #undef SMLUA_EVENT_HOOK
-#undef SMLUA_EVENT_HOOK_MANUAL
     "HOOK_MAX"
 };
 
@@ -107,59 +105,49 @@ int smlua_hook_event(lua_State* L) {
 
 #include "smlua_hook_events_autogen.inl"
 
-void smlua_call_event_hooks_HOOK_ON_HUD_RENDER(void (*resetFunc)(void)) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
+static bool smlua_call_event_hooks_on_hud_render(void (*resetFunc)(void), bool renderBehind) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+    bool hookResult = false;
+
     if (resetFunc) { resetFunc(); }
 
-    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        // support deprecated render behind hud
-        if (hook->mod[i]->renderBehindHud) { continue; }
+    const enum LuaHookedEventType renderHudHookTypes[] = {
+        HOOK_ON_HUD_RENDER_BEHIND,
+        HOOK_ON_HUD_RENDER,
+    };
+    for (s32 k = renderBehind ? 0 : 1; k != 2; ++k) {
+        enum LuaHookedEventType hookType = renderHudHookTypes[k];
+        struct LuaHookedEvent *hook = &sHookedEvents[hookType];
+        for (int i = 0; i < hook->count; i++) {
 
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+            // support deprecated render behind hud
+            if (hookType == HOOK_ON_HUD_RENDER && hook->mod[i]->renderBehindHud != renderBehind) {
+                continue;
+            }
 
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_HUD_RENDER]);
+            // push the callback onto the stack
+            lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+            // call the callback
+            if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+                LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[hookType]);
+            } else {
+                hookResult = true;
+            }
+
+            if (resetFunc) { resetFunc(); }
         }
-        if (resetFunc) { resetFunc(); }
     }
+    return hookResult;
 }
 
-void smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void)) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    if (resetFunc) { resetFunc(); }
+bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER(void (*resetFunc)(void)) {
+    return smlua_call_event_hooks_on_hud_render(resetFunc, false);
+}
 
-    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER_BEHIND];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_HUD_RENDER_BEHIND]);
-        }
-        if (resetFunc) { resetFunc(); }
-    }
-
-    // support deprecated render behind hud
-    hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        // support deprecated render behind hud
-        if (!hook->mod[i]->renderBehindHud) { continue; }
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_HUD_RENDER]);
-        }
-        if (resetFunc) { resetFunc(); }
-    }
+bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void)) {
+    return smlua_call_event_hooks_on_hud_render(resetFunc, true);
 }
 
   ////////////////////

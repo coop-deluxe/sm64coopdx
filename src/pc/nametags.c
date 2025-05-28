@@ -90,7 +90,7 @@ void nametags_render(void) {
 
             char name[MAX_CONFIG_STRING];
             const char* hookedString = NULL;
-            smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(i, &hookedString);
+            smlua_call_event_hooks(HOOK_ON_NAMETAGS_RENDER, i, &hookedString);
             if (hookedString) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {

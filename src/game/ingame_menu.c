@@ -1162,7 +1162,7 @@ void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
 bool handle_dialog_hook(s16 dialogId) {
     bool openDialogBox = true;
     const char *dialogTextOverride = NULL;
-    smlua_call_event_hooks_HOOK_ON_DIALOG(dialogId, &openDialogBox, &dialogTextOverride);
+    smlua_call_event_hooks(HOOK_ON_DIALOG, dialogId, &openDialogBox, &dialogTextOverride);
     if (!openDialogBox) {
         if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
         return false;
@@ -3108,7 +3108,7 @@ s16 render_pause_courses_and_castle(void) {
                 {
                     bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        smlua_call_event_hooks_HOOK_ON_PAUSE_EXIT(gDialogLineNum == 3, &allowExit);
+                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, gDialogLineNum == 3, &allowExit);
                     }
                     if (allowExit) {
                         level_set_transition(0, NULL);

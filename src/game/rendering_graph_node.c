@@ -1258,7 +1258,7 @@ static void geo_process_object(struct Object *node) {
     }
 
     if (node->hookRender) {
-        smlua_call_event_hooks_HOOK_ON_OBJECT_RENDER(node);
+        smlua_call_event_hooks(HOOK_ON_OBJECT_RENDER, node);
     }
 
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
@@ -1376,7 +1376,7 @@ static void geo_process_object(struct Object *node) {
         if (node->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node);
             geo_set_animation_globals(&node->header.gfx.animInfo, hasAnimation);
-            if (node->hookRender) smlua_call_event_hooks_HOOK_ON_OBJECT_ANIM_UPDATE(node);
+            if (node->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node);
             dynos_gfx_swap_animations(node);
         }
         if (obj_is_in_view(&node->header.gfx, gMatStack[gMatStackIndex])) {
@@ -1505,7 +1505,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         if (node->objNode->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node->objNode);
             geo_set_animation_globals(&node->objNode->header.gfx.animInfo, hasAnimation);
-            if (node->objNode->hookRender) smlua_call_event_hooks_HOOK_ON_OBJECT_ANIM_UPDATE(node->objNode);
+            if (node->objNode->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
             dynos_gfx_swap_animations(node->objNode);
         }
 
@@ -1555,7 +1555,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
 
-        if (parent->hookProcess) smlua_call_event_hooks_HOOK_ON_GEO_PROCESS_CHILDREN(parent, gMatStackIndex);
+        if (parent->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1584,7 +1584,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_HOOK_BEFORE_GEO_PROCESS(curGraphNode, gMatStackIndex);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1652,7 +1652,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_HOOK_ON_GEO_PROCESS(curGraphNode, gMatStackIndex + 1);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;

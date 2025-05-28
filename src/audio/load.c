@@ -1554,7 +1554,7 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync);
 
 void load_sequence(u32 player, u32 seqId, s32 loadAsync) {
     u32 seqIdOverride = 0;
-    if (smlua_call_event_hooks_HOOK_ON_SEQ_LOAD(player, seqId, loadAsync, &seqIdOverride)) {
+    if (smlua_call_event_hooks(HOOK_ON_SEQ_LOAD, player, seqId, loadAsync, &seqIdOverride)) {
         seqId = seqIdOverride;
     }
 

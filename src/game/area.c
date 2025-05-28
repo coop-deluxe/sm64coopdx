@@ -374,7 +374,7 @@ void area_update_objects(void) {
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue) {
     reset_screen_transition_timers();
     bool allowPlayTransition = true;
-    smlua_call_event_hooks_HOOK_ON_SCREEN_TRANSITION(transType, &allowPlayTransition);
+    smlua_call_event_hooks(HOOK_ON_SCREEN_TRANSITION, transType, &allowPlayTransition);
     if (!allowPlayTransition) { return; }
 
     gWarpTransition.isActive = TRUE;
@@ -456,7 +456,7 @@ void render_game(void) {
             if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
-            smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(djui_reset_hud_params);
+            smlua_call_event_hooks(HOOK_ON_HUD_RENDER_BEHIND, djui_reset_hud_params);
             djui_gfx_displaylist_end();
         }
         render_hud();

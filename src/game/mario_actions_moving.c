@@ -2182,7 +2182,7 @@ s32 check_common_moving_cancels(struct MarioState *m) {
     if (!m) { return FALSE; }
     if (m->pos[1] < m->waterLevel - 100) {
         bool allow = true;
-        smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(m, false, &allow);
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
         if (allow) {
             return set_water_plunge_action(m);
         }

@@ -1138,7 +1138,7 @@ static u32 set_mario_action_cutscene(struct MarioState *m, u32 action, UNUSED u3
 u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     if (!m) { return FALSE; }
     u32 actionOverride = 0;
-    smlua_call_event_hooks_HOOK_BEFORE_SET_MARIO_ACTION(m, action, actionArg, &actionOverride);
+    smlua_call_event_hooks(HOOK_BEFORE_SET_MARIO_ACTION, m, action, actionArg, &actionOverride);
     if (actionOverride == 1) { return TRUE; }
     if (actionOverride != 0) { action = actionOverride; }
 
@@ -1174,7 +1174,7 @@ u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     m->actionState = 0;
     m->actionTimer = 0;
 
-    smlua_call_event_hooks_HOOK_ON_SET_MARIO_ACTION(m);
+    smlua_call_event_hooks(HOOK_ON_SET_MARIO_ACTION, m);
 
     return TRUE;
 }
@@ -1518,7 +1518,7 @@ resetGoto:;
     f32 ceilToFloorDist;
 
     bool allow = true;
-    smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS(m, &allow);
+    smlua_call_event_hooks(HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS, m, &allow);
     if (!allow) { return; }
 
     f32_find_wall_collision(&m->pos[0], &m->pos[1], &m->pos[2], 60.0f, 50.0f);

@@ -548,7 +548,7 @@ void init_mario_after_warp(void) {
         gMarioState->skipWarpInteractionsTimer = 30;
     }
 
-    smlua_call_event_hooks_HOOK_ON_WARP(warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks(HOOK_ON_WARP, warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 }
 
 // used for warps inside one level
@@ -686,7 +686,7 @@ void check_instant_warp(void) {
                 skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
 
-                smlua_call_event_hooks_HOOK_ON_INSTANT_WARP(warp->area, warp->id, warp->displacement);
+                smlua_call_event_hooks(HOOK_ON_INSTANT_WARP, warp->area, warp->id, warp->displacement);
 
                 return;
             }
@@ -754,7 +754,7 @@ void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
         .areaIdx = destArea,
         .nodeId = destWarpNode,
     };
-    if (smlua_call_event_hooks_HOOK_BEFORE_WARP(destLevel, destArea, destWarpNode, arg, &warpDestOverride)) {
+    if (smlua_call_event_hooks(HOOK_BEFORE_WARP, destLevel, destArea, destWarpNode, arg, &warpDestOverride)) {
         destLevel = warpDestOverride.levelNum;
         destArea = warpDestOverride.areaIdx;
         destWarpNode = warpDestOverride.nodeId;
@@ -1852,7 +1852,7 @@ s32 init_level(void) {
     if (gNetworkPlayerLocal != NULL) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     }
-    smlua_call_event_hooks_HOOK_ON_LEVEL_INIT(sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks(HOOK_ON_LEVEL_INIT, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 
     // clear texture 1 on level init -- can linger and corrupt textures otherwise
     extern u8 gGfxPcResetTex1;
@@ -1935,7 +1935,7 @@ s32 lvl_set_current_level(s16 param, s16 levelNum) {
     gCurrCourseNum = get_level_course_num(level);
 
     bool hookUseActSelect = false;
-    bool foundHook = smlua_call_event_hooks_HOOK_USE_ACT_SELECT(level, &hookUseActSelect);
+    bool foundHook = smlua_call_event_hooks(HOOK_USE_ACT_SELECT, level, &hookUseActSelect);
 
     if (!foundHook || !hookUseActSelect) {
         if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {

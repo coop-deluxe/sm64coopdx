@@ -56,7 +56,7 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     }
 
     bool allowMessage = true;
-    smlua_call_event_hooks_HOOK_ON_CHAT_MESSAGE(&gMarioStates[np->localIndex], message, &allowMessage);
+    smlua_call_event_hooks(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &allowMessage);
     if (!allowMessage) {
         return;
     }

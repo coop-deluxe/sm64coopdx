@@ -112,7 +112,7 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
     }
     gDjuiChangingTheme = false;
 
-    smlua_call_event_hooks_HOOK_ON_DJUI_THEME_CHANGED();
+    smlua_call_event_hooks(HOOK_ON_DJUI_THEME_CHANGED);
 }
 
 void djui_panel_main_menu_create(struct DjuiBase* caller) {

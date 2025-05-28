@@ -121,14 +121,12 @@ extern int gHookedModMenuElementsCount;
 
 #define OUTPUT
 #define SMLUA_EVENT_HOOK(hookEventType, hookReturn, ...) bool smlua_call_event_hooks_##hookEventType(__VA_ARGS__);
-#define SMLUA_EVENT_HOOK_MANUAL(...) // Those are manually defined and cannot be autogened
 #include "smlua_hook_events.inl"
 #undef OUTPUT
 #undef SMLUA_EVENT_HOOK
-#undef SMLUA_EVENT_HOOK_MANUAL
 
-void smlua_call_event_hooks_HOOK_ON_HUD_RENDER(void (*resetFunc)(void));
-void smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void));
+#define smlua_call_event_hooks(hookEventType, ...) \
+    smlua_call_event_hooks_##hookEventType(__VA_ARGS__)
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName);
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior);

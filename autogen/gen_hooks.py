@@ -188,7 +188,7 @@ SMLUA_TYPES = {
 def extract_hook_event(line: str):
     if line.startswith("//"):
         return None
-    if not line.startswith("SMLUA_EVENT_HOOK") or line.startswith("SMLUA_EVENT_HOOK_MANUAL"):
+    if not line.startswith("SMLUA_EVENT_HOOK"):
         return None
 
     tokens = [token.strip() for token in line.replace('(', ',').replace(')', ',').split(',') if token.strip()]

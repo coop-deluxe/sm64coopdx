@@ -196,7 +196,7 @@ u32 perform_water_step(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
 
     s32 returnValue = 0;
-    if (smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(m, STEP_TYPE_WATER, 0, &returnValue)) return (u32) returnValue;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &returnValue)) return (u32) returnValue;
 
     vec3f_copy(step, m->vel);
 
@@ -210,7 +210,7 @@ u32 perform_water_step(struct MarioState *m) {
   
     if (nextPos[1] > m->waterLevel - 80) {
         bool allow = true;
-        smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(m, true, &allow);
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
         if (allow) {
           nextPos[1] = m->waterLevel - 80;
           m->vel[1] = 0.0f;
@@ -539,7 +539,7 @@ static s32 check_water_jump(struct MarioState *m) {
     if (m->input & INPUT_A_PRESSED) {
         if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
             bool allow = true;
-            smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(m, true, &allow); 
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
             if (!allow) { return FALSE; }
             vec3s_set(m->angleVel, 0, 0, 0);
 
@@ -997,7 +997,7 @@ static s32 act_drowning(struct MarioState *m) {
                     // do nothing
                 } else {
                     bool allowDeath = true;
-                    smlua_call_event_hooks_HOOK_ON_DEATH(m, &allowDeath);
+                    smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                     if (!allowDeath) { return FALSE; }
 
                     if (mario_can_bubble(m)) {
@@ -1032,7 +1032,7 @@ static s32 act_water_death(struct MarioState *m) {
             // do nothing
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_HOOK_ON_DEATH(m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {
@@ -1158,7 +1158,7 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
                 // do nothing
             } else {
                 bool allowDeath = true;
-                smlua_call_event_hooks_HOOK_ON_DEATH(m, &allowDeath);
+                smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { reset_rumble_timers(m); return FALSE; }
 
                 if (mario_can_bubble(m)) {
@@ -1627,7 +1627,7 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] > m->waterLevel - 80) {
         bool allow = true;
-        smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(m, true, &allow);
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
         if (allow) {
             if (m->waterLevel - 80 > m->floorHeight) {
                 m->pos[1] = m->waterLevel - 80;
