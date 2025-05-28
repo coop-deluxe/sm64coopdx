@@ -751,15 +751,21 @@ void smlua_logline(void) {
         // Get the folder and file
         // in the format: "folder/file.lua"
         const char* src = info.source;
-        int slashCount = 0;
         const char* folderStart = NULL;
-        for (const char* p = src + strlen(src); p > src; --p) {
-            if (*p == '/' || *p == '\\') {
-                if (++slashCount == 2) {
-                    folderStart = p + 1;
-                    break;
+        if (strlen(src) < SYS_MAX_PATH) {
+            int slashCount = 0;
+            for (const char* p = src + strlen(src); p > src; --p) {
+                if (*p == '/' || *p == '\\') {
+                    if (++slashCount == 2) {
+                        folderStart = p + 1;
+                        break;
+                    }
                 }
             }
+        } else {
+            // That's not a filepath
+            // It also explains why sometimes the whole gSmluaConstants string was printed to the console
+            snprintf(info.short_src, sizeof(info.short_src), "gSmluaConstants");
         }
 
         LOG_LUA("    [%d] '%s':%d -- %s [%s]",

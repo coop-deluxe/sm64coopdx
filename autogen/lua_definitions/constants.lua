@@ -48,7 +48,9 @@ function create_read_only_table(data)
     local t = {}
     local mt = {
         __index = data,
-        __newindex = function() end,
+        __newindex = function(_, k, _)
+            error('Attempting to modify key `' .. k .. '` of read-only table')
+        end,
         __call = function() return table_copy(data) end,
         __metatable = false
     }
