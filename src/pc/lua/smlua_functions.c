@@ -45,6 +45,8 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
 ///////////
 
 int smlua_func_table_copy(lua_State *L) {
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -69,6 +71,7 @@ int smlua_func_table_copy(lua_State *L) {
         lua_settable(L, 2);
     }
 
+    LUA_STACK_CHECK_END();
     return 1;
 }
 
@@ -126,6 +129,8 @@ static void table_deepcopy_table(lua_State *L, int idxTable, int idxCache) {
 }
 
 int smlua_func_table_deepcopy(lua_State *L) {
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -139,6 +144,9 @@ int smlua_func_table_deepcopy(lua_State *L) {
 
     table_deepcopy_table(L, 1, idxCache);
 
+    lua_remove(L, idxCache);
+
+    LUA_STACK_CHECK_END();
     return 1;
 }
 
