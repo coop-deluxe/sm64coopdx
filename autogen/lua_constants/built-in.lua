@@ -176,7 +176,7 @@ end
 --- Note: These functions don't exist in the Lua math library,
 --- and are useful enough to not have to redefine them in every mod
 
-local __math_min, __math_max, __math_sqrt = math.min, math.max, math.sqrt
+local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil = math.min, math.max, math.sqrt, math.floor, math.ceil
 
 --- @param x number
 --- @return number
@@ -216,38 +216,37 @@ function math.sign0(x)
     return x ~= 0 and (x > 0 and 1 or -1) or 0
 end
 
---- @param t number
 --- @param a number
 --- @param b number
+--- @param t number
 --- @return number
---- Linearly interpolates `t` between `a` and `b`
-function math.lerp(t, a, b)
+--- Linearly interpolates between `a` and `b` using delta `t`
+function math.lerp(a, b, t)
     return a + (b - a) * t
 end
 
---- @param x number
 --- @param a number
 --- @param b number
+--- @param x number
 --- @return number
 --- Determines where `x` linearly lies between `a` and `b`. It's the inverse of `math.lerp`
-function math.invlerp(x, a, b)
+function math.invlerp(a, b, x)
     return (x - a) / (b - a)
 end
 
---- @param x number
 --- @param a number
 --- @param b number
 --- @param c number
 --- @param d number
+--- @param x number
 --- @return number
 --- Linearly remaps `x` from the source range `[a, b]` to the destination range `[c, d]`
-function math.remap(x, a, b, c, d)
+function math.remap(a, b, c, d, x)
     return c + (d - c) * ((x - a) / (b - a))
 end
 
------------------
--- legacy font --
------------------
-
---- @type integer
-FONT_TINY = -1
+--- @param x number
+--- Rounds `x` to the nearest integer value
+function math.round(x)
+    return x > 0 and math.floor(x + 0.5) or math.ceil(x - 0.5)
+end

@@ -1,4 +1,7 @@
 --- @type integer
+FONT_TINY = -1
+
+--- @type integer
 ANIM_FLAG_FORWARD = (1 << 1)
 
 
