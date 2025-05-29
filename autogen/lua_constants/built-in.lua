@@ -248,5 +248,5 @@ end
 --- @param x number
 --- Rounds `x` to the nearest integer value
 function math.round(x)
-    return x > 0 and math.floor(x + 0.5) or math.ceil(x - 0.5)
+    return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
 end
