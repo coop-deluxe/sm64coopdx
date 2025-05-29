@@ -2115,6 +2115,7 @@
 <br />
 
 - sync_object.h
+   - [sync_object_get_object](functions-6.md#sync_object_get_object)
    - [sync_object_is_initialized](functions-6.md#sync_object_is_initialized)
    - [sync_object_is_owned_locally](functions-6.md#sync_object_is_owned_locally)
 
