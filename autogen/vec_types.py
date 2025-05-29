@@ -6,6 +6,10 @@ VEC_TYPES = {
             "x": "[0]",
             "y": "[1]",
         },
+        "constants": {
+            "Zero": [ 0, 0 ],
+            "One": [ 1, 1 ],
+        },
     },
     "Vec3f": {
         "field_c_type": "f32",
@@ -14,6 +18,13 @@ VEC_TYPES = {
             "x": "[0]",
             "y": "[1]",
             "z": "[2]",
+        },
+        "constants": {
+            "Zero": [ 0, 0, 0 ],
+            "One": [ 1, 1, 1 ],
+            "X": [ 1, 0, 0 ],
+            "Y": [ 0, 1, 0 ],
+            "Z": [ 0, 0, 1 ],
         },
     },
     "Vec4f": {
@@ -25,6 +36,10 @@ VEC_TYPES = {
             "z": "[2]",
             "w": "[3]",
         },
+        "constants": {
+            "Zero": [ 0, 0, 0, 0 ],
+            "One": [ 1, 1, 1, 1 ],
+        },
     },
     "Vec2i": {
         "field_c_type": "s32",
@@ -32,6 +47,10 @@ VEC_TYPES = {
         "fields_mapping": {
             "x": "[0]",
             "y": "[1]",
+        },
+        "constants": {
+            "Zero": [ 0, 0 ],
+            "One": [ 1, 1 ],
         },
     },
     "Vec3i": {
@@ -41,6 +60,10 @@ VEC_TYPES = {
             "x": "[0]",
             "y": "[1]",
             "z": "[2]",
+        },
+        "constants": {
+            "Zero": [ 0, 0, 0 ],
+            "One": [ 1, 1, 1 ],
         },
     },
     "Vec4i": {
@@ -52,6 +75,10 @@ VEC_TYPES = {
             "z": "[2]",
             "w": "[3]",
         },
+        "constants": {
+            "Zero": [ 0, 0, 0, 0 ],
+            "One": [ 1, 1, 1, 1 ],
+        },
     },
     "Vec2s": {
         "field_c_type": "s16",
@@ -59,6 +86,10 @@ VEC_TYPES = {
         "fields_mapping": {
             "x": "[0]",
             "y": "[1]",
+        },
+        "constants": {
+            "Zero": [ 0, 0 ],
+            "One": [ 1, 1 ],
         },
     },
     "Vec3s": {
@@ -69,6 +100,10 @@ VEC_TYPES = {
             "y": "[1]",
             "z": "[2]",
         },
+        "constants": {
+            "Zero": [ 0, 0, 0 ],
+            "One": [ 1, 1, 1 ],
+        },
     },
     "Vec4s": {
         "field_c_type": "s16",
@@ -78,6 +113,10 @@ VEC_TYPES = {
             "y": "[1]",
             "z": "[2]",
             "w": "[3]",
+        },
+        "constants": {
+            "Zero": [ 0, 0, 0, 0 ],
+            "One": [ 1, 1, 1, 1 ],
         },
     },
     "Mat4": {
@@ -119,6 +158,11 @@ VEC_TYPES = {
             "o": "[3][2]",
             "p": "[3][3]",
         },
+        "constants": {
+            "Zero": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+            "Identity": [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+            "Fullscreen": [ 2.0 / 320.0, 0, 0, 0, 0, 2.0 / 240.0, 0, 0, 0, 0, -1, 0, -1, -1, -1, 1 ]
+        },
     },
     "Color": {
         "field_c_type": "u8",
@@ -129,4 +173,9 @@ VEC_TYPES = {
             "b": "[2]",
         },
     },
+}
+
+VECP_TYPES = {
+    vec_type + "p": vec_type
+    for vec_type in VEC_TYPES
 }

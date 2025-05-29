@@ -297,7 +297,7 @@ void smlua_init(void) {
     luaL_requiref(L, "string", luaopen_string, 1);
     luaL_requiref(L, "table", luaopen_table, 1);
     luaL_requiref(L, "coroutine", luaopen_coroutine, 1);
-    // luaopen_utf8(L);
+    luaL_requiref(L, "utf8", luaopen_utf8, 1);
 
     smlua_bind_hooks();
     smlua_bind_cobject();

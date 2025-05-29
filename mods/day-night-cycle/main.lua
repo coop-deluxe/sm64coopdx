@@ -1,9 +1,9 @@
 -- name: Day Night Cycle DX
 -- incompatible: light day-night-cycle
--- description: Day Night Cycle DX v2.5\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
+-- description: Day Night Cycle DX v2.5.1\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
 
 -- localize functions to improve performance
-local network_is_server,mod_storage_load,tonumber,type,math_floor,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = network_is_server,mod_storage_load,tonumber,type,math.floor,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,clampf,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
+local network_is_server,mod_storage_load,tonumber,math_floor,type,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,math_lerp,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = network_is_server,mod_storage_load,tonumber,math.floor,type,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,math.lerp,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
 
 local init = false
 local timeModifier = 0
@@ -110,7 +110,7 @@ local function update()
     -- spawn skyboxes
     local skybox = get_skybox()
     if skybox >= BACKGROUND_CUSTOM then skybox = BACKGROUND_OCEAN_SKY end
-    if not _G.dayNightCycleApi.dddCeiling and in_vanilla_level(LEVEL_DDD) then skybox = BACKGROUND_OCEAN_SKY end
+    if not dayNightCycleApi.dddCeiling and in_vanilla_level(LEVEL_DDD) then skybox = BACKGROUND_OCEAN_SKY end
     if obj_get_first_with_behavior_id(bhvDNCSkybox) == nil and skybox ~= -1 and obj_get_first_with_behavior_id(bhvDNCNoSkybox) == nil then
         if show_day_night_cycle() and not is_static_skybox(skybox) then
             -- spawn day, sunset and night skyboxes
@@ -176,9 +176,9 @@ local function update()
         local t = (minutes - HOUR_SUNRISE_START) / HOUR_SUNRISE_DURATION
         color = color_lerp(COLOR_NIGHT, COLOR_SUNRISE, t)
         ambientColor = color_lerp(COLOR_AMBIENT_NIGHT, COLOR_AMBIENT_SUNRISE, t)
-        dir = lerp(DIR_DARK, DIR_BRIGHT, t)
+        dir = math_lerp(DIR_DARK, DIR_BRIGHT, t)
         fogColor = color_lerp(FOG_COLOR_NIGHT, COLOR_SUNRISE, t)
-        fogIntensity = lerp(FOG_INTENSITY_DENSE, FOG_INTENSITY_NORMAL, t)
+        fogIntensity = math_lerp(FOG_INTENSITY_DENSE, FOG_INTENSITY_NORMAL, t)
     elseif minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
         local t = (minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION
         color = color_lerp(COLOR_SUNRISE, COLOR_DAY, t)
@@ -190,7 +190,7 @@ local function update()
         local t = (minutes - HOUR_SUNSET_START) / HOUR_SUNSET_DURATION
         color = color_lerp(COLOR_DAY, COLOR_SUNSET, t)
         ambientColor = color_lerp(COLOR_AMBIENT_DAY, COLOR_AMBIENT_SUNSET, t)
-        dir = lerp(DIR_BRIGHT, DIR_DARK, t)
+        dir = math_lerp(DIR_BRIGHT, DIR_DARK, t)
         fogColor = color
         fogIntensity = FOG_INTENSITY_NORMAL
     elseif minutes >= HOUR_SUNSET_END and minutes <= HOUR_NIGHT_START then
@@ -199,7 +199,7 @@ local function update()
         ambientColor = color_lerp(COLOR_AMBIENT_SUNSET, COLOR_AMBIENT_NIGHT, t)
         dir = DIR_DARK
         fogColor = color_lerp(COLOR_SUNSET, FOG_COLOR_NIGHT, t)
-        fogIntensity = lerp(FOG_INTENSITY_NORMAL, FOG_INTENSITY_DENSE, t)
+        fogIntensity = math_lerp(FOG_INTENSITY_NORMAL, FOG_INTENSITY_DENSE, t)
     elseif minutes > HOUR_NIGHT_START or minutes < HOUR_SUNRISE_START then
         color = COLOR_NIGHT
         ambientColor = COLOR_AMBIENT_NIGHT
@@ -331,7 +331,7 @@ end
 
 --- @param msg string
 local function on_set_command(msg)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -371,7 +371,7 @@ end
 
 --- @param msg string
 local function on_add_command(msg)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -395,7 +395,7 @@ end
 
 --- @param msg string
 local function on_scale_command(msg)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -428,7 +428,7 @@ local function on_24h_command()
 end
 
 local function on_sync_command()
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -444,13 +444,13 @@ local function on_sync_command()
 end
 
 local function on_sync_sun_command()
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
     end
 
-    if _G.dayNightCycleApi.lockSunHours then
+    if dayNightCycleApi.lockSunHours then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] Changing sun hours has been locked by another mod.")
         return
@@ -473,7 +473,7 @@ local function on_sync_sun_command()
 end
 
 local function on_music_command()
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -487,7 +487,7 @@ local function on_music_command()
 end
 
 local function on_display_time_command()
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -538,7 +538,7 @@ local function on_time_command(msg)
         on_music_command()
     elseif args[1] == "display-time" then
         on_display_time_command()
-    elseif args[1] ~= "" then
+    elseif args[1] ~= nil then
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] Unrecognized command '" .. args[1] .. "'")
     else
         if not network_is_server() then
@@ -560,9 +560,9 @@ local function on_sunrise_changed(_, _, newVal)
 
     HOUR_DAY_START = HOUR_SUNRISE_END + HOUR_SUNRISE_DURATION
 
-    _G.dayNightCycleApi.constants.HOUR_SUNRISE_START = HOUR_SUNRISE_START
-    _G.dayNightCycleApi.constants.HOUR_SUNRISE_END = HOUR_SUNRISE_END
-    _G.dayNightCycleApi.constants.HOUR_DAY_START = HOUR_DAY_START
+    dayNightCycleApi.constants.HOUR_SUNRISE_START = HOUR_SUNRISE_START
+    dayNightCycleApi.constants.HOUR_SUNRISE_END = HOUR_SUNRISE_END
+    dayNightCycleApi.constants.HOUR_DAY_START = HOUR_DAY_START
 
     dnc_call_hook(DNC_HOOK_SUN_TIMES_CHANGED)
 end
@@ -574,9 +574,9 @@ local function on_sunset_changed(_, _, newVal)
 
     HOUR_NIGHT_START = HOUR_SUNSET_END + HOUR_SUNSET_DURATION
 
-    _G.dayNightCycleApi.constants.HOUR_SUNSET_START = HOUR_SUNSET_START
-    _G.dayNightCycleApi.constants.HOUR_SUNSET_END = HOUR_SUNSET_END
-    _G.dayNightCycleApi.constants.HOUR_NIGHT_START = HOUR_NIGHT_START
+    dayNightCycleApi.constants.HOUR_SUNSET_START = HOUR_SUNSET_START
+    dayNightCycleApi.constants.HOUR_SUNSET_END = HOUR_SUNSET_END
+    dayNightCycleApi.constants.HOUR_NIGHT_START = HOUR_NIGHT_START
 
     dnc_call_hook(DNC_HOOK_SUN_TIMES_CHANGED)
 end
@@ -584,7 +584,7 @@ end
 
 --- @param value boolean
 local function on_set_dnc_enabled(_, value)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -595,7 +595,7 @@ end
 
 --- @param value integer
 local function on_set_time_scale(index, value)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -608,7 +608,7 @@ end
 
 --- @param value string
 local function on_set_time_modifier(_, value)
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return
@@ -619,7 +619,7 @@ local function on_set_time_modifier(_, value)
 end
 
 local function on_add_hour()
-    if _G.dayNightCycleApi.lockTime then
+    if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         djui_chat_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.")
         return

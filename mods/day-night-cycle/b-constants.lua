@@ -1,7 +1,7 @@
 -- version
 DNC_VERSION_MAJOR = 2
 DNC_VERSION_MINOR = 5
-DNC_VERSION_PATCH = 0
+DNC_VERSION_PATCH = 1
 DNC_VERSION = math.tointeger(string.format("%d%d%d", DNC_VERSION_MAJOR, DNC_VERSION_MINOR, DNC_VERSION_PATCH))
 
 -- skybox constants

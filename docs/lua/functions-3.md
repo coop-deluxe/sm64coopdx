@@ -6425,7 +6425,7 @@ Calculates the lighting with `lightIntensityScalar` at a position and outputs th
 | Field | Type |
 | ----- | ---- |
 | pos | [Vec3f](structs.md#Vec3f) |
-| out | `Color` |
+| out | [Color](structs.md#Color) |
 | lightIntensityScalar | `number` |
 
 ### Returns
