@@ -11723,6 +11723,13 @@ function surface_has_force(surfaceType)
 end
 
 --- @param syncId integer
+--- @return Object
+--- Retrieves an object from a sync ID
+function sync_object_get_object(syncId)
+    -- ...
+end
+
+--- @param syncId integer
 --- @return boolean
 --- Checks if a sync object is initialized using a `syncId`
 function sync_object_is_initialized(syncId)

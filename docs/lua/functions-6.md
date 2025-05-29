@@ -7413,6 +7413,29 @@ Checks if a surface has force
 <br />
 
 
+## [sync_object_get_object](#sync_object_get_object)
+
+### Description
+Retrieves an object from a sync ID
+
+### Lua Example
+`local ObjectValue = sync_object_get_object(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* sync_object_get_object(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sync_object_is_initialized](#sync_object_is_initialized)
 
 ### Description
