@@ -22,11 +22,46 @@ _ReadOnlyTable = {
 }
 
 -----------
+-- table --
+-----------
+
+--- Creates a shallow copy of table `t`
+--- @param t table
+--- @return table
+function table.copy(t)
+    return table_copy(t)
+end
+
+--- Creates a deep copy of table `t`
+--- @param t table
+--- @return table
+function table.deepcopy(t)
+    return table_deepcopy(t)
+end
+
+--- Utility function to create a read-only table
+--- @param data table
+--- @return table
+function create_read_only_table(data)
+    local t = {}
+    local mt = {
+        __index = data,
+        __newindex = function(_, k, _)
+            error('Attempting to modify key `' .. k .. '` of read-only table')
+        end,
+        __call = function() return table_copy(data) end,
+        __metatable = false
+    }
+    setmetatable(t, mt)
+    return t
+end
+
+-----------
 -- sound --
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number
@@ -167,6 +202,48 @@ function math.hypot(a, b)
     return __math_sqrt(a * a + b * b)
 end
 
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive or zero, -1 otherwise
+function math.sign(x)
+    return x >= 0 and 1 or -1
+end
+
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive, 0 if it is zero, -1 otherwise
+function math.sign0(x)
+    return x ~= 0 and (x > 0 and 1 or -1) or 0
+end
+
+--- @param t number
+--- @param a number
+--- @param b number
+--- @return number
+--- Linearly interpolates `t` between `a` and `b`
+function math.lerp(t, a, b)
+    return a + (b - a) * t
+end
+
+--- @param x number
+--- @param a number
+--- @param b number
+--- @return number
+--- Determines where `x` linearly lies between `a` and `b`. It's the inverse of `math.lerp`
+function math.invlerp(x, a, b)
+    return (x - a) / (b - a)
+end
+
+--- @param x number
+--- @param a number
+--- @param b number
+--- @param c number
+--- @param d number
+--- @return number
+--- Linearly remaps `x` from the source range `[a, b]` to the destination range `[c, d]`
+function math.remap(x, a, b, c, d)
+    return c + (d - c) * ((x - a) / (b - a))
+end
 
 -----------------
 -- legacy font --
