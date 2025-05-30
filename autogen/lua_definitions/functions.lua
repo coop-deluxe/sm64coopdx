@@ -11014,18 +11014,6 @@ function geo_get_current_held_object()
     -- ...
 end
 
---- @param extId ModelExtendedId
---- @return integer
-function smlua_model_util_ext_id_to_id(extId)
-    -- ...
-end
-
---- @param id integer
---- @return ModelExtendedId
-function smlua_model_util_id_to_ext_id(id)
-    -- ...
-end
-
 --- @param name string
 --- @return ModelExtendedId
 --- Gets the extended model ID for the `name` of a `GeoLayout`

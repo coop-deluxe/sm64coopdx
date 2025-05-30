@@ -1990,8 +1990,6 @@
 <br />
 
 - smlua_model_utils.h
-   - [smlua_model_util_ext_id_to_id](functions-6.md#smlua_model_util_ext_id_to_id)
-   - [smlua_model_util_id_to_ext_id](functions-6.md#smlua_model_util_id_to_ext_id)
    - [smlua_model_util_get_id](functions-6.md#smlua_model_util_get_id)
 
 <br />
