@@ -5088,6 +5088,46 @@ Gets the current GraphNodeHeldObject
 <br />
 
 
+## [smlua_model_util_ext_id_to_id](#smlua_model_util_ext_id_to_id)
+
+### Lua Example
+`local integerValue = smlua_model_util_ext_id_to_id(extId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| extId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 smlua_model_util_ext_id_to_id(enum ModelExtendedId extId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_model_util_id_to_ext_id](#smlua_model_util_id_to_ext_id)
+
+### Lua Example
+`local enumValue = smlua_model_util_id_to_ext_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+
+### C Prototype
+`enum ModelExtendedId smlua_model_util_id_to_ext_id(u16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_model_util_get_id](#smlua_model_util_get_id)
 
 ### Description

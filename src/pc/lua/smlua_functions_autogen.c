@@ -33224,6 +33224,40 @@ int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
  // smlua_model_utils.h //
 /////////////////////////
 
+int smlua_func_smlua_model_util_ext_id_to_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_model_util_ext_id_to_id", 1, top);
+        return 0;
+    }
+
+    int extId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_model_util_ext_id_to_id"); return 0; }
+
+    lua_pushinteger(L, smlua_model_util_ext_id_to_id(extId));
+
+    return 1;
+}
+
+int smlua_func_smlua_model_util_id_to_ext_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_model_util_id_to_ext_id", 1, top);
+        return 0;
+    }
+
+    u16 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_model_util_id_to_ext_id"); return 0; }
+
+    lua_pushinteger(L, smlua_model_util_id_to_ext_id(id));
+
+    return 1;
+}
+
 int smlua_func_smlua_model_util_get_id(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37106,6 +37140,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
 
     // smlua_model_utils.h
+    smlua_bind_function(L, "smlua_model_util_ext_id_to_id", smlua_func_smlua_model_util_ext_id_to_id);
+    smlua_bind_function(L, "smlua_model_util_id_to_ext_id", smlua_func_smlua_model_util_id_to_ext_id);
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
 
     // smlua_obj_utils.h
