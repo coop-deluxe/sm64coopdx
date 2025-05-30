@@ -6,6 +6,7 @@
 
 #include "smlua.h"
 #include "pc/mods/mod.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 
 // forward declare
 struct Camera;
@@ -189,7 +190,7 @@ void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, st
 void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool* returnValue);
 void smlua_call_event_hooks_interact_params_no_ret(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType);
 void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj);
-void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID);
+void smlua_call_event_hooks_object_set_model(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID, enum ModelExtendedId modelExtendedId);
 bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue);
 void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue);
 void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue);

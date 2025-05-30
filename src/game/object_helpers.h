@@ -5,6 +5,7 @@
 
 #include "macros.h"
 #include "types.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 
 // used for chain chomp and wiggler
 struct ChainSegment
