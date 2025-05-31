@@ -206,7 +206,7 @@ void network_receive_level_macro(struct Packet* p) {
                     }
                 }
                 LOG_INFO("rx macro special: coin formation");
-            } else if (behavior == smlua_override_behavior(bhvGoombaTripletSpawner)) {
+            } else if (behavior == bhvGoombaTripletSpawner) {
                 for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
                     struct Object* o2 = &gObjectPool[i];
                     if (o2->parentObj != o) { continue; }
