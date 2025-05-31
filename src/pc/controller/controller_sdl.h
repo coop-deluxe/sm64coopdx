@@ -8,6 +8,8 @@
 // mouse buttons are also in the controller namespace, just offset 0x100
 #define VK_OFS_SDL_MOUSE 0x0100
 #define VK_BASE_SDL_MOUSE (VK_BASE_SDL_GAMEPAD + VK_OFS_SDL_MOUSE)
+#define MWHEELUP    0x20
+#define MWHEELDOWN  0x40
 
 extern struct ControllerAPI controller_sdl;
 

@@ -60,11 +60,11 @@ static s16 invert_s16(s16 val) {
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
         if (btns[i] >= VK_BASE_SDL_GAMEPAD && btns[i] <= VK_BASE_SDL_GAMEPAD + VK_SIZE) {
-            if (btns[i] >= VK_BASE_SDL_MOUSE && num_joy_binds < MAX_JOYBINDS) {
+            if (btns[i] >= VK_BASE_SDL_MOUSE && num_mouse_binds < MAX_JOYBINDS) {
                 mouse_binds[num_mouse_binds][0] = btns[i] - VK_BASE_SDL_MOUSE;
                 mouse_binds[num_mouse_binds][1] = mask;
                 ++num_mouse_binds;
-            } else if (num_mouse_binds < MAX_JOYBINDS) {
+            } else if (num_joy_binds < MAX_JOYBINDS) {
                 joy_binds[num_joy_binds][0] = btns[i] - VK_BASE_SDL_GAMEPAD;
                 joy_binds[num_joy_binds][1] = mask;
                 ++num_joy_binds;
@@ -285,9 +285,7 @@ static void controller_sdl_read(OSContPad *pad) {
     u32 buttons_down = 0;
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
-            buttons_down |= joy_binds[i][1];
-
-    pad->button |= buttons_down;
+            pad->button |= joy_binds[i][1];
 
     const u32 xstick = buttons_down & STICK_XMASK;
     const u32 ystick = buttons_down & STICK_YMASK;
