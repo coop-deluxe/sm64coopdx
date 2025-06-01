@@ -147,7 +147,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 step
 
         // return stepResult
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *stepResult = smlua_to_number(L, -1);
+            *stepResult = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -587,7 +587,7 @@ bool smlua_call_event_hooks_HOOK_GET_STAR_COLLECTION_DIALOG(s32 *dialogID) {
 
         // return dialogID
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *dialogID = smlua_to_number(L, -1);
+            *dialogID = smlua_to_integer(L, -1);
         }
 
         lua_settop(L, prevTop);
@@ -956,7 +956,7 @@ bool smlua_call_event_hooks_HOOK_CHARACTER_SOUND(struct MarioState *m, enum Char
 
         // return soundOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *soundOverride = smlua_to_number(L, -1);
+            *soundOverride = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -999,7 +999,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_SET_MARIO_ACTION(struct MarioState *m, u
 
         // return actionOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *actionOverride = smlua_to_number(L, -1);
+            *actionOverride = smlua_to_integer(L, -1);
         }
 
         lua_settop(L, prevTop);
@@ -1141,7 +1141,7 @@ bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride)
 
         // return speakerOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *speakerOverride = smlua_to_number(L, -1);
+            *speakerOverride = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -1310,7 +1310,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *so
 
         // return soundBitsOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *soundBitsOverride = smlua_to_number(L, -1);
+            *soundBitsOverride = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -1348,7 +1348,7 @@ bool smlua_call_event_hooks_HOOK_ON_SEQ_LOAD(u32 seqPlayer, u32 seqId, s32 loadA
 
         // return seqIdOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *seqIdOverride = smlua_to_number(L, -1);
+            *seqIdOverride = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -1797,4 +1797,42 @@ bool smlua_call_event_hooks_HOOK_ON_INSTANT_WARP(u8 areaIdx, u8 nodeId, Vec3s di
         lua_settop(L, prevTop);
     }
     return hookResult;
+}
+
+bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_FLOOR_CLASS(struct MarioState *m, s32 floorClass, s32 *floorClassOverride) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_MARIO_OVERRIDE_FLOOR_CLASS];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push m
+        lua_getglobal(L, "gMarioStates");
+        lua_pushinteger(L, m->playerIndex);
+        lua_gettable(L, -2);
+        lua_remove(L, -2);
+
+        // push floorClass
+        lua_pushinteger(L, floorClass);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_FLOOR_CLASS]);
+            continue;
+        }
+
+        // return floorClassOverride
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *floorClassOverride = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            return true;
+        }
+
+        lua_settop(L, prevTop);
+    }
+    return false;
 }
