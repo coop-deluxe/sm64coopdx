@@ -116,7 +116,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_MARIO_ACTION(struct MarioState *m) {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 stepType, u32 stepArg, s32 *stepResult) {
+bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 stepType, u32 stepArg, s32 *stepResultOverride) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -145,9 +145,9 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 step
             continue;
         }
 
-        // return stepResult
+        // return stepResultOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *stepResult = smlua_to_integer(L, -1);
+            *stepResultOverride = smlua_to_integer(L, -1);
             lua_settop(L, prevTop);
             return true;
         }
@@ -898,7 +898,7 @@ bool smlua_call_event_hooks_HOOK_ON_CHAT_MESSAGE(struct MarioState *m, const cha
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelID) {
+bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelID, enum ModelExtendedId modelExtendedId) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
     bool hookResult = false;
@@ -916,8 +916,11 @@ bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelI
         // push modelID
         lua_pushinteger(L, modelID);
 
+        // push modelExtendedId
+        lua_pushinteger(L, modelExtendedId);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_OBJECT_SET_MODEL]);
             continue;
         }

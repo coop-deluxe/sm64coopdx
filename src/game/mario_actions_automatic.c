@@ -353,9 +353,9 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 ceilOffset;
 
-    s32 stepResult = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, 0, &stepResult)) {
-        return stepResult;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, 0, &stepResultOverride)) {
+        return stepResultOverride;
     }
 
     struct WallCollisionData wcd = { 0 };

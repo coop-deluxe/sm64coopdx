@@ -195,9 +195,9 @@ u32 perform_water_step(struct MarioState *m) {
     Vec3f step;
     struct Object *marioObj = m->marioObj;
 
-    s32 stepResult = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &stepResult)) {
-        return (u32) stepResult;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &stepResultOverride)) {
+        return (u32) stepResultOverride;
     }
 
     vec3f_copy(step, m->vel);

@@ -6,6 +6,7 @@
 
 #include "smlua.h"
 #include "pc/mods/mod.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 
 // forward declare
 struct Camera;

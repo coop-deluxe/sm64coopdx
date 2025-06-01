@@ -373,11 +373,12 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 s32 perform_ground_step(struct MarioState *m) {
     if (!m) { return 0; }
     s32 i;
+    u32 stepResult;
     Vec3f intendedPos;
 
-    s32 stepResult = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_GROUND, 0, &stepResult)) {
-        return stepResult;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_GROUND, 0, &stepResultOverride)) {
+        return stepResultOverride;
     }
 
     for (i = 0; i < 4; i++) {
@@ -750,10 +751,11 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
     Vec3f intendedPos;
     s32 i;
     s32 quarterStepResult;
-
     s32 stepResult = AIR_STEP_NONE;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_AIR, stepArg, &stepResult)) {
-        return stepResult;
+
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_AIR, stepArg, &stepResultOverride)) {
+        return stepResultOverride;
     }
 
     m->wall = NULL;
