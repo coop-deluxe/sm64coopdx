@@ -135,14 +135,14 @@ s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
     return a * (1.0f - delta) + b * delta;
 }
 
-void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta) {
+void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));

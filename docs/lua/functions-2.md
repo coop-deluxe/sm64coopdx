@@ -205,30 +205,6 @@ Calculates the time it takes for the current object to follow an arc from `pos` 
 
 <br />
 
-## [vec3f_copy_2](#vec3f_copy_2)
-
-### Description
-Duplicate of vec3f_copy except without bad return
-
-### Lua Example
-`vec3f_copy_2(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| src | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_copy_2(Vec3f dest, Vec3f src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [tox_box_move](#tox_box_move)
 
 ### Description

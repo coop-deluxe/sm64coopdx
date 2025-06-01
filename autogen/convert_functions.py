@@ -902,8 +902,9 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
+    is_output = param.get('out', False)
 
-    if ptype in VEC_TYPES:
+    if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     else:
         return ''
@@ -997,9 +998,12 @@ def build_function(function, do_extern):
         i += 1
     s += '\n'
 
-    # To allow chaining vector functions calls, return the table corresponding to `dest` parameter
+    # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
     if function['type'] in VECP_TYPES:
-        s += '    lua_settop(L, 1);\n'
+        for i, param in enumerate(function['params']):
+            if param.get('out', False):
+                s += '    lua_settop(L, %d);\n' % (i + 1)
+                break
 
     s += '    return 1;\n}\n'
 
@@ -1099,6 +1103,11 @@ def process_function(fname, line, description):
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
+
+            if param_str.startswith('OUT '):
+                param['out'] = True
+                param_str = param_str[len('OUT'):].strip()
+
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index

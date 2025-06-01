@@ -214,7 +214,7 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 - None
 
 ### C Prototype
-`void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta);`
+`void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);`
 
 [:arrow_up_small:](#)
 
@@ -240,7 +240,7 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 - None
 
 ### C Prototype
-`void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);`
+`void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);`
 
 [:arrow_up_small:](#)
 
@@ -1615,7 +1615,7 @@ Finds any wall collisions and returns what the displacement vector would be.
 - `integer`
 
 ### C Prototype
-`s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
+`s8 obj_find_wall_displacement(OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -2929,7 +2929,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 - None
 
 ### C Prototype
-`void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src);`
+`void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src);`
 
 [:arrow_up_small:](#)
 
@@ -2951,7 +2951,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 - None
 
 ### C Prototype
-`void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2);`
+`void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2);`
 
 [:arrow_up_small:](#)
 
@@ -3625,7 +3625,7 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 - None
 
 ### C Prototype
-`void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);`
+`void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -3650,7 +3650,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 - None
 
 ### C Prototype
-`void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);`
+`void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -8077,7 +8077,7 @@ Retrieves the current position of Mario's cap, if it is on the ground in the cur
 - `integer`
 
 ### C Prototype
-`s32 save_file_get_cap_pos(Vec3s capPos);`
+`s32 save_file_get_cap_pos(OUT Vec3s capPos);`
 
 [:arrow_up_small:](#)
 

@@ -17,7 +17,7 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
     color[2] = b;
 }
 
-void le_calculate_vertex_lighting(Vtx_t* v, Color out) {
+void le_calculate_vertex_lighting(Vtx_t* v, OUT Color out) {
     if (sLights == NULL) { return; }
 
 #ifdef LE_TOTAL_WEIGHTED_LIGHTING
@@ -56,7 +56,7 @@ void le_calculate_vertex_lighting(Vtx_t* v, Color out) {
 #endif
 }
 
-void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar) {
+void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar) {
     if (sLights == NULL) { return; }
 
 #ifdef LE_TOTAL_WEIGHTED_LIGHTING
@@ -95,7 +95,7 @@ void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar)
 #endif
 }
 
-void le_calculate_lighting_dir(Vec3f pos, Vec3f out) {
+void le_calculate_lighting_dir(Vec3f pos, OUT Vec3f out) {
     if (sLights == NULL) { return; }
 
     Vec3f lightingDir = { 0, 0, 0 };

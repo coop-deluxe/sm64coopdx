@@ -4261,7 +4261,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 - `boolean`
 
 ### C Prototype
-`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);`
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -7327,7 +7327,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 - None
 
 ### C Prototype
-`void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out);`
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 

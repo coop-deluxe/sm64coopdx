@@ -109,13 +109,6 @@ function arc_to_goal_pos(goal, pos, yVel, gravity)
     -- ...
 end
 
---- @param dest Vec3f
---- @param src Vec3f
---- Duplicate of vec3f_copy except without bad return
-function vec3f_copy_2(dest, src)
-    -- ...
-end
-
 --- @param forwardVel number
 --- @param a1 number
 --- @param deltaPitch integer
@@ -3141,6 +3134,34 @@ end
 --- @param src Vec3f
 --- Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
 function vec3f_to_object_pos(o, src)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's face angle to a `Vec3s` format
+function object_face_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's face angle internal format
+function vec3s_to_object_face_angle(o, src)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's move angle to a `Vec3s` format
+function object_move_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's move angle internal format
+function vec3s_to_object_move_angle(o, src)
     -- ...
 end
 
@@ -6497,7 +6518,7 @@ end
 
 --- @param mtx Mat4
 --- @param b Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
 function mtxf_mul_vec3s(mtx, b)
     -- ...
@@ -6583,7 +6604,7 @@ end
 
 --- @param dest Mat4
 --- @param b Vec3f
---- Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
+--- Sets the 4x4 floating-point matrix `dest` to the translation matrix decribed by the 3D floating-point vector `b`. This matrix is used to shift any transformed point by `b`
 function mtxf_translate(dest, b)
     -- ...
 end
