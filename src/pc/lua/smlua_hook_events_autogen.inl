@@ -1656,7 +1656,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACTIONS(struct MarioState *m) {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(struct MarioState *m, bool isInWaterAction, bool *allowActionChange) {
+bool smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(struct MarioState *m, bool isInWaterAction, bool *allowForceAction) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
     bool hookResult = false;
@@ -1684,9 +1684,9 @@ bool smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(struct MarioState *m, 
         }
         hookResult = true;
 
-        // return allowActionChange
+        // return allowForceAction
         if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *allowActionChange = smlua_to_boolean(L, -1);
+            *allowForceAction = smlua_to_boolean(L, -1);
         }
 
         lua_settop(L, prevTop);

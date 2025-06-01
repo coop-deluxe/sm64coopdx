@@ -56,7 +56,7 @@ SMLUA_INTEGER_TYPES = {
 "output": """
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TNUMBER) {{
-            *{name} = smlua_to_number(L, -{output_index});{return_on_output_set}
+            *{name} = smlua_to_integer(L, -{output_index});{return_on_output_set}
         }}
 """
 }

@@ -123,10 +123,10 @@ void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed) {
 
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
     if (!m) { return 0; }
-    bool allow = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allow);
+    bool allowHazard = true;
+    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allowHazard);
     extern bool gDjuiInMainMenu;
-    if (m->action & ACT_FLAG_RIDING_SHELL || (!allow) || gDjuiInMainMenu) {
+    if (m->action & ACT_FLAG_RIDING_SHELL || (!allowHazard) || gDjuiInMainMenu) {
         m->quicksandDepth = 0.0f;
     } else {
         if (m->quicksandDepth < 1.1f) {
@@ -217,9 +217,9 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor = m->floor;
     if (!floor) { return 0; }
-    bool allow = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allow);
-    if (!allow) {
+    bool allowHazard = true;
+    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
+    if (!allowHazard) {
     	return FALSE;
     }
     
@@ -321,9 +321,9 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     }
 
     if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        bool allow = true;
-        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             floorHeight = waterLevel;
             floor = &gWaterSurfacePseudoFloor;
             floor->originOffset = floorHeight; //! Wrong origin offset (no effect)
@@ -373,11 +373,12 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 s32 perform_ground_step(struct MarioState *m) {
     if (!m) { return 0; }
     s32 i;
-    u32 stepResult;
     Vec3f intendedPos;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_GROUND, 0, &returnValue)) return returnValue;
+    s32 stepResult = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_GROUND, 0, &stepResult)) {
+        return stepResult;
+    }
 
     for (i = 0; i < 4; i++) {
         Vec3f step = { 0 };
@@ -508,9 +509,9 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
     }
 
     if ((m->action & ACT_FLAG_RIDING_SHELL) && floorHeight < waterLevel) {
-        bool allow = true;
-        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             floorHeight = waterLevel;
             floor = &gWaterSurfacePseudoFloor;
             floor->originOffset = floorHeight; //! Incorrect origin offset (no effect)
@@ -719,9 +720,9 @@ void apply_vertical_wind(struct MarioState *m) {
     if (!m) { return; }
     f32 maxVelY;
     f32 offsetY;
-    bool allow = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
-    if (m->action != ACT_GROUND_POUND && allow) {
+    bool allowHazard = true;
+    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allowHazard);
+    if (m->action != ACT_GROUND_POUND && allowHazard) {
         offsetY = m->pos[1] - -1500.0f;
 
         if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {
@@ -749,10 +750,11 @@ s32 perform_air_step(struct MarioState *m, u32 stepArg) {
     Vec3f intendedPos;
     s32 i;
     s32 quarterStepResult;
-    s32 stepResult = AIR_STEP_NONE;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_AIR, stepArg, &returnValue)) return returnValue;
+    s32 stepResult = AIR_STEP_NONE;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_AIR, stepArg, &stepResult)) {
+        return stepResult;
+    }
 
     m->wall = NULL;
 

@@ -1522,9 +1522,9 @@ resetGoto:;
     f32 gasLevel;
     f32 ceilToFloorDist;
 
-    bool allow = true;
-    smlua_call_event_hooks(HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS, m, &allow);
-    if (!allow) { return; }
+    bool allowUpdateGeometryInputs = true;
+    smlua_call_event_hooks(HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS, m, &allowUpdateGeometryInputs);
+    if (!allowUpdateGeometryInputs) { return; }
 
     f32_find_wall_collision(&m->pos[0], &m->pos[1], &m->pos[2], 60.0f, 50.0f);
     f32_find_wall_collision(&m->pos[0], &m->pos[1], &m->pos[2], 30.0f, 24.0f);

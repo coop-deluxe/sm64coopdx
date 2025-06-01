@@ -195,8 +195,10 @@ u32 perform_water_step(struct MarioState *m) {
     Vec3f step;
     struct Object *marioObj = m->marioObj;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &returnValue)) return (u32) returnValue;
+    s32 stepResult = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &stepResult)) {
+        return (u32) stepResult;
+    }
 
     vec3f_copy(step, m->vel);
 
@@ -209,11 +211,11 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[2] = m->pos[2] + step[2];
   
     if (nextPos[1] > m->waterLevel - 80) {
-        bool allow = true;
-        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
-        if (allow) {
-          nextPos[1] = m->waterLevel - 80;
-          m->vel[1] = 0.0f;
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
+        if (allowForceAction) {
+            nextPos[1] = m->waterLevel - 80;
+            m->vel[1] = 0.0f;
         }
     }
 
@@ -538,9 +540,10 @@ static s32 check_water_jump(struct MarioState *m) {
 
     if (m->input & INPUT_A_PRESSED) {
         if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
-            bool allow = true;
-            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
-            if (!allow) { return FALSE; }
+            bool allowForceAction = true;
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction); 
+            if (!allowForceAction) { return FALSE; }
+
             vec3s_set(m->angleVel, 0, 0, 0);
 
             m->vel[1] = 62.0f;
@@ -1626,9 +1629,9 @@ static s32 act_hold_metal_water_fall_land(struct MarioState *m) {
 static s32 check_common_submerged_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] > m->waterLevel - 80) {
-        bool allow = true;
-        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
+        if (allowForceAction) {
             if (m->waterLevel - 80 > m->floorHeight) {
                 m->pos[1] = m->waterLevel - 80;
             } else {
