@@ -245,7 +245,7 @@ Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
  * Returns a vector rotated around the z axis, then the x axis, then the y
  * axis.
  */
-OPTIMIZE_O3 f32 *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
+OPTIMIZE_O3 Vec3fp vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
 
     f32 sx = sins(rotate[0]);
@@ -270,7 +270,7 @@ OPTIMIZE_O3 f32 *vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
 
 // Rodrigues' formula
 // dest = v * cos(r) + (n x v) * sin(r) + n * (n . v) * (1 - cos(r))
-OPTIMIZE_O3 f32 *vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
+OPTIMIZE_O3 Vec3fp vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
     Vec3f nvCross;
     vec3f_cross(nvCross, n, v);
     f32 nvDot = vec3f_dot(n, v);
@@ -282,7 +282,7 @@ OPTIMIZE_O3 f32 *vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
     return dest;
 }
 
-OPTIMIZE_O3 f32 *vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
+OPTIMIZE_O3 Vec3fp vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
     f32 numerator = vec3f_dot(v, onto);
     f32 denominator = vec3f_dot(onto, onto);
     if (denominator == 0) {
@@ -294,7 +294,7 @@ OPTIMIZE_O3 f32 *vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
     return dest;
 }
 
-OPTIMIZE_O3 f32 *vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale) {
+OPTIMIZE_O3 Vec3fp vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale) {
     vec3f_copy(dest, v);
 
     // scale
@@ -341,7 +341,7 @@ OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pi
  * It is similar to vec3f_cross, but it calculates the vectors (c-b) and (b-a)
  * at the same time.
  */
-OPTIMIZE_O3 f32 *find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
+OPTIMIZE_O3 Vec3fp find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
     dest[0] = (b[1] - a[1]) * (c[2] - b[2]) - (c[1] - b[1]) * (b[2] - a[2]);
     dest[1] = (b[2] - a[2]) * (c[0] - b[0]) - (c[2] - b[2]) * (b[0] - a[0]);
     dest[2] = (b[0] - a[0]) * (c[1] - b[1]) - (c[0] - b[0]) * (b[1] - a[1]);
@@ -789,7 +789,7 @@ OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src) {
  * objMtx back from screen orientation to world orientation, and then subtracting
  * the camera position.
  */
-OPTIMIZE_O3 f32 *get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
+OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
     f32 camX = camMtx[3][0] * camMtx[0][0] + camMtx[3][1] * camMtx[0][1] + camMtx[3][2] * camMtx[0][2];
     f32 camY = camMtx[3][0] * camMtx[1][0] + camMtx[3][1] * camMtx[1][1] + camMtx[3][2] * camMtx[1][2];
     f32 camZ = camMtx[3][0] * camMtx[2][0] + camMtx[3][1] * camMtx[2][1] + camMtx[3][2] * camMtx[2][2];

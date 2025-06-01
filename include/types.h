@@ -50,6 +50,17 @@ typedef f32 Vec4f[4]; // X, Y, Z, W
 typedef s16 Vec4s[4];
 typedef s32 Vec4i[4];
 
+// Pointer types for return values
+typedef f32 *Vec2fp;
+typedef s16 *Vec2sp;
+typedef s32 *Vec2ip;
+typedef f32 *Vec3fp;
+typedef s16 *Vec3sp;
+typedef s32 *Vec3ip;
+typedef f32 *Vec4fp;
+typedef s16 *Vec4sp;
+typedef s32 *Vec4ip;
+
 typedef f32 Mat4[4][4];
 
 typedef uintptr_t GeoLayout;

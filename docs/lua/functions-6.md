@@ -6,6 +6,298 @@
 
 
 ---
+# functions from seqplayer.h
+
+<br />
+
+
+## [sequence_player_get_tempo](#sequence_player_get_tempo)
+
+### Description
+Gets the tempo of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_tempo(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempo(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempo](#sequence_player_set_tempo)
+
+### Description
+Sets the `tempo` of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_tempo(player, tempo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempo | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempo(u8 player, u16 tempo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
+
+### Description
+Gets the tempoAcc (tempo accumulation) of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_tempo_acc(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempo_acc(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
+
+### Description
+Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_tempo_acc(player, tempoAcc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempoAcc | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_transposition](#sequence_player_get_transposition)
+
+### Description
+Gets the transposition (pitch) of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_transposition(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_transposition(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_transposition](#sequence_player_set_transposition)
+
+### Description
+Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_transposition(player, transposition)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| transposition | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_transposition(u8 player, u16 transposition);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_volume](#sequence_player_get_volume)
+
+### Description
+Gets the volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
+
+### Description
+Gets the fade volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_fade_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_fade_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
+
+### Description
+Gets the mute volume scale of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_mute_volume_scale(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_mute_volume_scale(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_anim_utils.h
+
+<br />
+
+
+## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
+
+### Description
+Gets a vanilla mario Animation with `index`
+
+### Lua Example
+`local AnimationValue = get_mario_vanilla_animation(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+[Animation](structs.md#Animation)
+
+### C Prototype
+`struct Animation *get_mario_vanilla_animation(u16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_set_animation](#smlua_anim_util_set_animation)
+
+### Description
+Sets the animation of `obj` to the animation `name` corresponds to
+
+### Lua Example
+`smlua_anim_util_set_animation(obj, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
+
+### Description
+Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
+
+### Lua Example
+`local stringValue = smlua_anim_util_get_current_animation_name(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_audio_utils.h
 
 <br />
@@ -7110,6 +7402,81 @@ Checks if a surface has force
 
 ### C Prototype
 `bool surface_has_force(s16 surfaceType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from sync_object.h
+
+<br />
+
+
+## [sync_object_get_object](#sync_object_get_object)
+
+### Description
+Retrieves an object from a sync ID
+
+### Lua Example
+`local ObjectValue = sync_object_get_object(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* sync_object_get_object(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sync_object_is_initialized](#sync_object_is_initialized)
+
+### Description
+Checks if a sync object is initialized using a `syncId`
+
+### Lua Example
+`local booleanValue = sync_object_is_initialized(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool sync_object_is_initialized(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sync_object_is_owned_locally](#sync_object_is_owned_locally)
+
+### Description
+Checks if a sync object is owned locally using a `syncId`
+
+### Lua Example
+`local booleanValue = sync_object_is_owned_locally(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool sync_object_is_owned_locally(u32 syncId);`
 
 [:arrow_up_small:](#)
 

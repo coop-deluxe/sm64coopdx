@@ -59,8 +59,11 @@ void sync_object_init_field_with_size(struct Object *o, void* field, u8 size);
 struct SyncObject* sync_object_get(u32 syncId);
 struct SyncObject* sync_object_get_first(void);
 struct SyncObject* sync_object_get_next(void);
+/* |description|Retrieves an object from a sync ID|descriptionEnd| */
 struct Object* sync_object_get_object(u32 syncId);
+/* |description|Checks if a sync object is initialized using a `syncId`|descriptionEnd| */
 bool sync_object_is_initialized(u32 syncId);
+/* |description|Checks if a sync object is owned locally using a `syncId`|descriptionEnd| */
 bool sync_object_is_owned_locally(u32 syncId);
 struct Packet* sync_object_get_last_reliable_packet(u32 syncId);
 

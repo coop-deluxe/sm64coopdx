@@ -77,7 +77,8 @@ in_files = [
     "src/game/first_person_cam.h",
     "src/engine/behavior_script.h",
     "src/audio/seqplayer.h",
-    "src/engine/lighting_engine.h"
+    "src/engine/lighting_engine.h",
+    "src/pc/network/sync_object.h"
 ]
 
 override_allowed_functions = {
@@ -95,7 +96,8 @@ override_allowed_functions = {
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ]
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
+    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ]
 }
 
 override_disallowed_functions = {
@@ -919,6 +921,9 @@ def build_call(function):
     elif ftype == 'void *':
         return '    %s;\n' % ccall
 
+    if ftype in VECP_TYPES:
+        return '    %s;\n' % ccall
+
     flot = translate_type_to_lot(ftype)
 
     lfunc = 'UNIMPLEMENTED -->'
@@ -991,6 +996,10 @@ def build_function(function, do_extern):
         s += build_param_after(param, i)
         i += 1
     s += '\n'
+
+    # To allow chaining vector functions calls, return the table corresponding to `dest` parameter
+    if function['type'] in VECP_TYPES:
+        s += '    lua_settop(L, 1);\n'
 
     s += '    return 1;\n}\n'
 
@@ -1439,6 +1448,9 @@ def def_files(processed_files):
 
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
+
+    for vecp_type, vec_type in VECP_TYPES.items():
+        s += '--- @alias %s %s\n' % (vecp_type, vec_type)
 
     with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)

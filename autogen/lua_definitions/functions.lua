@@ -6360,7 +6360,7 @@ end
 
 --- @param v Vec3f
 --- @param rotate Vec3s
---- @return Pointer_number
+--- @return Vec3f
 --- Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
 function vec3f_rotate_zxy(v, rotate)
     -- ...
@@ -6370,7 +6370,7 @@ end
 --- @param v Vec3f
 --- @param n Vec3f
 --- @param r integer
---- @return Pointer_number
+--- @return Vec3f
 --- Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation `r` (in sm64 angle units), and stores the result in `dest`
 function vec3f_rotate_around_n(dest, v, n, r)
     -- ...
@@ -6379,7 +6379,7 @@ end
 --- @param dest Vec3f
 --- @param v Vec3f
 --- @param onto Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Projects the 3D floating-point vector `v` onto another 3D floating-point vector `onto`. The resulting projection, stored in `dest`, represents how much of `v` lies along the direction of `onto`
 function vec3f_project(dest, v, onto)
     -- ...
@@ -6390,7 +6390,7 @@ end
 --- @param translation Vec3f
 --- @param rotation Vec3s
 --- @param scale Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it by the rotation vector `rotation`, and finally translates it by the vector `translation`. The resulting vector is stored in `dest`
 function vec3f_transform(dest, v, translation, rotation, scale)
     -- ...
@@ -6420,7 +6420,7 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @param c Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 function find_vector_perpendicular_to_plane(dest, a, b, c)
     -- ...
@@ -6498,7 +6498,7 @@ end
 --- @param mtx Mat4
 --- @param b Vec3s
 --- @return Pointer_integer
---- Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
+--- Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
 function mtxf_mul_vec3s(mtx, b)
     -- ...
 end
@@ -6520,7 +6520,7 @@ end
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
---- @return Pointer_number
+--- @return Vec3f
 --- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
 function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
@@ -6597,7 +6597,7 @@ function mtxf_scale_vec3f(dest, mtx, s)
 end
 
 --- @param v Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Sets the components of the 3D floating-point vector `v` to 0
 function vec3f_zero(v)
     -- ...
@@ -6605,7 +6605,7 @@ end
 
 --- @param dest Vec3f
 --- @param src Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`)
 function vec3f_copy(dest, src)
     -- ...
@@ -6615,7 +6615,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return Pointer_number
+--- @return Vec3f
 --- Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values
 function vec3f_set(dest, x, y, z)
     -- ...
@@ -6623,7 +6623,7 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Adds the components of the 3D floating-point vector `a` to `dest`
 function vec3f_add(dest, a)
     -- ...
@@ -6632,7 +6632,7 @@ end
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Adds the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
 function vec3f_sum(dest, a, b)
     -- ...
@@ -6640,7 +6640,7 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Subtracts the components of the 3D floating-point vector `a` from `dest`
 function vec3f_sub(dest, a)
     -- ...
@@ -6649,7 +6649,7 @@ end
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`
 function vec3f_dif(dest, a, b)
     -- ...
@@ -6657,15 +6657,32 @@ end
 
 --- @param dest Vec3f
 --- @param a number
---- @return Pointer_number
+--- @return Vec3f
 --- Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`
 function vec3f_mul(dest, a)
     -- ...
 end
 
 --- @param dest Vec3f
+--- @param a Vec3f
+--- @return Vec3f
+--- Multiplies the components of the 3D floating-point vector `dest` with the components of `a`
+function vec3f_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
+--- Multiplies the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+function vec3f_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
 --- @param a number
---- @return Pointer_number
+--- @return Vec3f
 --- Divides each component of the 3D floating-point vector `dest` by the scalar value `a`
 function vec3f_div(dest, a)
     -- ...
@@ -6679,7 +6696,7 @@ function vec3f_length(a)
 end
 
 --- @param v Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Normalizes the 3D floating-point vector `v` so that its length (magnitude) becomes 1, while retaining its direction
 function vec3f_normalize(v)
     -- ...
@@ -6687,7 +6704,7 @@ end
 
 --- @param v Vec3f
 --- @param mag number
---- @return Pointer_number
+--- @return Vec3f
 --- Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its direction
 function vec3f_set_magnitude(v, mag)
     -- ...
@@ -6704,7 +6721,7 @@ end
 --- @param dest Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
---- @return Pointer_number
+--- @return Vec3f
 --- Computes the cross product of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
 function vec3f_cross(dest, a, b)
     -- ...
@@ -6715,7 +6732,7 @@ end
 --- @param vecB Vec3f
 --- @param sclA number
 --- @param sclB number
---- @return Pointer_number
+--- @return Vec3f
 --- Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
 function vec3f_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
@@ -6746,7 +6763,7 @@ end
 
 --- @param dest Vec3i
 --- @param a Vec3f
---- @return Pointer_integer
+--- @return Vec3i
 --- Converts a 3D floating-point vector `a` into a 3D integer vector and stores the result in `dest`
 function vec3f_to_vec3i(dest, a)
     -- ...
@@ -6754,14 +6771,14 @@ end
 
 --- @param dest Vec3s
 --- @param a Vec3f
---- @return Pointer_integer
+--- @return Vec3s
 --- Converts a 3D floating-point vector `a` into a 3D short integer vector and stores the result in `dest`
 function vec3f_to_vec3s(dest, a)
     -- ...
 end
 
 --- @param v Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Sets the components of the 3D integer vector `v` to 0
 function vec3i_zero(v)
     -- ...
@@ -6769,7 +6786,7 @@ end
 
 --- @param dest Vec3i
 --- @param src Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Copies the contents of a 3D integer vector (`src`) into another 3D integer vector (`dest`)
 function vec3i_copy(dest, src)
     -- ...
@@ -6779,7 +6796,7 @@ end
 --- @param x integer
 --- @param y integer
 --- @param z integer
---- @return Pointer_integer
+--- @return Vec3i
 --- Sets the values of the 3D integer vector `dest` to the given x, y, and z values
 function vec3i_set(dest, x, y, z)
     -- ...
@@ -6787,7 +6804,7 @@ end
 
 --- @param dest Vec3i
 --- @param a Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Adds the components of the 3D integer vector `a` to `dest`
 function vec3i_add(dest, a)
     -- ...
@@ -6796,7 +6813,7 @@ end
 --- @param dest Vec3i
 --- @param a Vec3i
 --- @param b Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Adds the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
 function vec3i_sum(dest, a, b)
     -- ...
@@ -6804,7 +6821,7 @@ end
 
 --- @param dest Vec3i
 --- @param a Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Subtracts the components of the 3D integer vector `a` from `dest`
 function vec3i_sub(dest, a)
     -- ...
@@ -6813,7 +6830,7 @@ end
 --- @param dest Vec3i
 --- @param a Vec3i
 --- @param b Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Subtracts the components of the 3D integer vector `b` from the components of `a` and stores the result in `dest`
 function vec3i_dif(dest, a, b)
     -- ...
@@ -6821,15 +6838,32 @@ end
 
 --- @param dest Vec3i
 --- @param a number
---- @return Pointer_integer
+--- @return Vec3i
 --- Multiplies each component of the 3D integer vector `dest` by the scalar value `a`
 function vec3i_mul(dest, a)
     -- ...
 end
 
 --- @param dest Vec3i
+--- @param a Vec3i
+--- @return Vec3i
+--- Multiplies the components of the 3D integer vector `dest` with the components of `a`
+function vec3i_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return Vec3i
+--- Multiplies the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+function vec3i_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
 --- @param a number
---- @return Pointer_integer
+--- @return Vec3i
 --- Divides each component of the 3D integer vector `dest` by the scalar value `a`
 function vec3i_div(dest, a)
     -- ...
@@ -6843,7 +6877,7 @@ function vec3i_length(a)
 end
 
 --- @param v Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
 function vec3i_normalize(v)
     -- ...
@@ -6851,7 +6885,7 @@ end
 
 --- @param v Vec3i
 --- @param mag number
---- @return Pointer_integer
+--- @return Vec3i
 --- Sets the length (magnitude) of 3D integer vector `v`, while retaining its direction
 function vec3i_set_magnitude(v, mag)
     -- ...
@@ -6868,7 +6902,7 @@ end
 --- @param dest Vec3i
 --- @param a Vec3i
 --- @param b Vec3i
---- @return Pointer_integer
+--- @return Vec3i
 --- Computes the cross product of two 3D integer vectors `a` and `b` and stores the result in `dest`
 function vec3i_cross(dest, a, b)
     -- ...
@@ -6879,7 +6913,7 @@ end
 --- @param vecB Vec3i
 --- @param sclA number
 --- @param sclB number
---- @return Pointer_integer
+--- @return Vec3i
 --- Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
 function vec3i_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
@@ -6910,7 +6944,7 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3i
---- @return Pointer_number
+--- @return Vec3f
 --- Converts a 3D integer vector `a` into a 3D floating-point vector and stores the result in `dest`
 function vec3i_to_vec3f(dest, a)
     -- ...
@@ -6918,14 +6952,14 @@ end
 
 --- @param dest Vec3s
 --- @param a Vec3i
---- @return Pointer_integer
+--- @return Vec3s
 --- Converts a 3D integer vector `a` into a 3D short integer vector and stores the result in `dest`
 function vec3i_to_vec3s(dest, a)
     -- ...
 end
 
 --- @param v Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Sets the components of the 3D short integer vector `v` to 0
 function vec3s_zero(v)
     -- ...
@@ -6933,7 +6967,7 @@ end
 
 --- @param dest Vec3s
 --- @param src Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
 function vec3s_copy(dest, src)
     -- ...
@@ -6943,7 +6977,7 @@ end
 --- @param x integer
 --- @param y integer
 --- @param z integer
---- @return Pointer_integer
+--- @return Vec3s
 --- Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
 function vec3s_set(dest, x, y, z)
     -- ...
@@ -6951,7 +6985,7 @@ end
 
 --- @param dest Vec3s
 --- @param a Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Adds the components of the 3D short integer vector `a` to `dest`
 function vec3s_add(dest, a)
     -- ...
@@ -6960,7 +6994,7 @@ end
 --- @param dest Vec3s
 --- @param a Vec3s
 --- @param b Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
 function vec3s_sum(dest, a, b)
     -- ...
@@ -6968,7 +7002,7 @@ end
 
 --- @param dest Vec3s
 --- @param a Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Subtracts the components of the 3D short integer vector `a` from `dest`
 function vec3s_sub(dest, a)
     -- ...
@@ -6977,7 +7011,7 @@ end
 --- @param dest Vec3s
 --- @param a Vec3s
 --- @param b Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
 function vec3s_dif(dest, a, b)
     -- ...
@@ -6985,15 +7019,32 @@ end
 
 --- @param dest Vec3s
 --- @param a number
---- @return Pointer_integer
+--- @return Vec3s
 --- Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
 function vec3s_mul(dest, a)
     -- ...
 end
 
 --- @param dest Vec3s
+--- @param a Vec3s
+--- @return Vec3s
+--- Multiplies the components of the 3D short integer vector `dest` with the components of `a`
+function vec3s_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
+--- Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+function vec3s_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
 --- @param a number
---- @return Pointer_integer
+--- @return Vec3s
 --- Divides each component of the 3D short integer vector `dest` by the scalar value `a`
 function vec3s_div(dest, a)
     -- ...
@@ -7007,7 +7058,7 @@ function vec3s_length(a)
 end
 
 --- @param v Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
 function vec3s_normalize(v)
     -- ...
@@ -7015,7 +7066,7 @@ end
 
 --- @param v Vec3s
 --- @param mag number
---- @return Pointer_integer
+--- @return Vec3s
 --- Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
 function vec3s_set_magnitude(v, mag)
     -- ...
@@ -7032,7 +7083,7 @@ end
 --- @param dest Vec3s
 --- @param a Vec3s
 --- @param b Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
 function vec3s_cross(dest, a, b)
     -- ...
@@ -7043,7 +7094,7 @@ end
 --- @param vecB Vec3s
 --- @param sclA number
 --- @param sclB number
---- @return Pointer_integer
+--- @return Vec3s
 --- Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
 function vec3s_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
@@ -7074,7 +7125,7 @@ end
 
 --- @param dest Vec3f
 --- @param a Vec3s
---- @return Pointer_number
+--- @return Vec3f
 --- Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
 function vec3s_to_vec3f(dest, a)
     -- ...
@@ -7082,7 +7133,7 @@ end
 
 --- @param dest Vec3i
 --- @param a Vec3s
---- @return Pointer_integer
+--- @return Vec3i
 --- Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
 function vec3s_to_vec3i(dest, a)
     -- ...
@@ -11671,6 +11722,27 @@ function surface_has_force(surfaceType)
     -- ...
 end
 
+--- @param syncId integer
+--- @return Object
+--- Retrieves an object from a sync ID
+function sync_object_get_object(syncId)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is initialized using a `syncId`
+function sync_object_is_initialized(syncId)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is owned locally using a `syncId`
+function sync_object_is_owned_locally(syncId)
+    -- ...
+end
+
 --- @alias Pointer_integer integer
 --- @alias Pointer_BehaviorScript BehaviorScript
 --- @alias Pointer_number number
@@ -11679,3 +11751,14 @@ end
 --- @alias Pointer_Collision Collision
 --- @alias Pointer_Gfx Gfx
 --- @alias Pointer_Vtx Vtx
+--- @alias Vec2fp Vec2f
+--- @alias Vec3fp Vec3f
+--- @alias Vec4fp Vec4f
+--- @alias Vec2ip Vec2i
+--- @alias Vec3ip Vec3i
+--- @alias Vec4ip Vec4i
+--- @alias Vec2sp Vec2s
+--- @alias Vec3sp Vec3s
+--- @alias Vec4sp Vec4s
+--- @alias Mat4p Mat4
+--- @alias Colorp Color
