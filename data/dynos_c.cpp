@@ -123,6 +123,10 @@ bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenI
     return DynOS_Actor_GetModIndexAndToken(graphNode, tokenIndex, modIndex, token);
 }
 
+void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
+    DynOS_Actor_RegisterModifiedGraphNode(node);
+}
+
 // -- collisions -- //
 
 void dynos_add_collision(const char *filePath, const char* collisionName) {

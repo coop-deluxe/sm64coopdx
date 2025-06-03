@@ -1098,7 +1098,7 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
 ////////////////
 
 typedef struct { s16 type; u16 lot; } GraphNodeLot;
-static GraphNodeLot graphNodeLots[23] = {
+static GraphNodeLot graphNodeLots[] = {
     { GRAPH_NODE_TYPE_ANIMATED_PART, LOT_GRAPHNODEANIMATEDPART },
     { GRAPH_NODE_TYPE_BACKGROUND, LOT_GRAPHNODEBACKGROUND },
     { GRAPH_NODE_TYPE_BILLBOARD, LOT_GRAPHNODEBILLBOARD },
@@ -1141,7 +1141,7 @@ int smlua_func_cast_graph_node(lua_State* L) {
     }
 
     u16 lot = 0;
-    for (u8 i = 0; i != 23; i++) {
+    for (u8 i = 0; i < ARRAY_COUNT(graphNodeLots); i++) {
         if (graphNode->type != graphNodeLots[i].type) continue;
         lot = graphNodeLots[i].lot;
         break;
@@ -1152,6 +1152,9 @@ int smlua_func_cast_graph_node(lua_State* L) {
     }
 
     smlua_push_object(L, lot, graphNode, NULL);
+
+    // Register this graph node as modified so it can be reset later
+    dynos_actor_register_modified_graph_node(graphNode);
 
     return 1;
 }
