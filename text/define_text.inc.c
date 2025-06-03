@@ -7,12 +7,12 @@
 #include "dialogs.h"
 
 #undef DEFINE_DIALOG
-#define DEFINE_DIALOG(id, _1, _2, _3, _4, _5) dialog_text_ ## id,
+#define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, _) \
+    static const struct DialogEntry dialog_entry_orig_ ## id = { \
+        unused, linesPerBox, leftOffset, width, dialog_text_ ## id \
+    };
 
-const u8* seg2_dialog_original[] = {
 #include "dialogs.h"
-    NULL
-};
 
 #undef DEFINE_DIALOG
 #define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, _) \
@@ -21,6 +21,14 @@ const u8* seg2_dialog_original[] = {
     };
 
 #include "dialogs.h"
+
+#undef DEFINE_DIALOG
+#define DEFINE_DIALOG(id, _1, _2, _3, _4, _5) &dialog_entry_orig_ ## id,
+
+const struct DialogEntry *const seg2_dialog_original[] = {
+#include "dialogs.h"
+    NULL
+};
 
 #undef DEFINE_DIALOG
 #define DEFINE_DIALOG(id, _1, _2, _3, _4, _5) &dialog_entry_ ## id,

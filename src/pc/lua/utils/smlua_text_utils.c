@@ -131,9 +131,10 @@ void smlua_text_utils_reset_all(void) {
 
     for (s32 i = 0; i < DIALOG_COUNT; i++) {
         if (!sReplacedDialog[i]) { continue; }
+        const struct DialogEntry *dialogOrig = segmented_to_virtual(dialogTableOrg[i]);
         struct DialogEntry *dialog = segmented_to_virtual(dialogTable[i]);
         free((u8*)dialog->str);
-        dialog->str = dialogTableOrg[i];
+        memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
         sReplacedDialog[i] = false;
     }
 
