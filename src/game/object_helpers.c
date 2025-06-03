@@ -30,6 +30,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -696,7 +697,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
     obj->globalPlayerIndex = 0;
 
     geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, dynos_model_get_geo(model), gVec3fZero, gVec3sZero);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
+    smlua_call_event_hooks_object_set_model(HOOK_OBJECT_SET_MODEL, obj, model, smlua_model_util_id_to_ext_id(model));
 
     return obj;
 }
@@ -1453,7 +1454,7 @@ void cur_obj_set_model(s32 modelID) {
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
+    smlua_call_event_hooks_object_set_model(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
 }
 
 void mario_set_flag(s32 flag) {
