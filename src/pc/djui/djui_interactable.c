@@ -438,6 +438,7 @@ void djui_interactable_update(void) {
     } else if ((padButtons & PAD_BUTTON_B) && !(sLastInteractablePad.button & PAD_BUTTON_B)) {
         // pressed back button on controller
         djui_panel_back();
+        return;
     } else if ((padButtons & PAD_BUTTON_START) && !(sLastInteractablePad.button & PAD_BUTTON_START)) {
         // pressed start button
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
