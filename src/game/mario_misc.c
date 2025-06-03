@@ -351,7 +351,7 @@ static u8 geo_get_processing_object_index(void) {
     return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
-s16 geo_get_processing_mario_index(void) {
+s8 geo_get_processing_mario_index(void) {
     if (gCurGraphNodeProcessingObject == NULL) { return -1; }
 
     s8 index = geo_get_processing_mirror_mario_index();

@@ -22,7 +22,7 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
     return sDynosCustomActors;
 }
 
-static std::map<struct GraphNode *, struct GraphNode *> sModifiedModels;
+static std::map<struct GraphNode *, struct GraphNode *> sModifiedGraphNodes;
 
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
@@ -237,7 +237,7 @@ void DynOS_Actor_Override_All(void) {
     }
 }
 
-std::unordered_map<uint16_t, size_t> graphNodeInitMap = {
+static std::unordered_map<s16, size_t> sGraphNodeSizeMap = {
     { GRAPH_NODE_TYPE_ROOT,                 sizeof(GraphNodeRoot) },
     { GRAPH_NODE_TYPE_ORTHO_PROJECTION,     sizeof(GraphNodeOrthoProjection) },
     { GRAPH_NODE_TYPE_PERSPECTIVE,          sizeof(GraphNodePerspective) },
@@ -262,17 +262,18 @@ std::unordered_map<uint16_t, size_t> graphNodeInitMap = {
     { GRAPH_NODE_TYPE_HELD_OBJ,             sizeof(GraphNodeHeldObject) },
 };
 
-size_t get_graph_node_size(uint16_t nodeType) {
-    auto it = graphNodeInitMap.find(nodeType);
-    return it != graphNodeInitMap.end() ? it->second : 0;
+size_t get_graph_node_size(s16 nodeType) {
+    auto it = sGraphNodeSizeMap.find(nodeType);
+    return it != sGraphNodeSizeMap.end() ? it->second : 0;
 }
 
 void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
-    if (sModifiedModels.find(aNode) == sModifiedModels.end()) {
+    if (sModifiedGraphNodes.find(aNode) == sModifiedGraphNodes.end()) {
         size_t size = get_graph_node_size(aNode->type);
+        if (size == 0) { return; } // Unexpected
         GraphNode *graphNodeCopy = (GraphNode *) malloc(size);
         memcpy(graphNodeCopy, aNode, size);
-        sModifiedModels[aNode] = graphNodeCopy;
+        sModifiedGraphNodes[aNode] = graphNodeCopy;
     }
 }
 
@@ -299,10 +300,11 @@ void DynOS_Actor_ModShutdown() {
     DynOS_Actor_Override_All();
 
     // Reset modified graph nodes
-    for (auto& node : sModifiedModels) {
+    for (auto& node : sModifiedGraphNodes) {
         size_t size = get_graph_node_size(node.second->type);
+        if (size == 0) { continue; } // Unexpected
         memcpy(node.first, node.second, size);
         free(node.second);
     }
-    sModifiedModels.clear();
+    sModifiedGraphNodes.clear();
 }
