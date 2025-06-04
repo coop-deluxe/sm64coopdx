@@ -198,12 +198,6 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    if (!gDjuiChatBoxFocus) {
-        for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
-        }
-    }
-
     bool keyFocused = (gInteractableFocus != NULL)
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_down != NULL);
@@ -288,6 +282,12 @@ void djui_interactable_on_key_up(int scancode) {
     bool keyFocused = (gInteractableFocus != NULL)
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_up != NULL);
+
+    if (!gDjuiChatBoxFocus) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
+        }
+    }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
