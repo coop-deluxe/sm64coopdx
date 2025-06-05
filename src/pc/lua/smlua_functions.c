@@ -1195,13 +1195,13 @@ int smlua_func_gfx_set_command(lua_State* L) {
 
     Gfx* gfx = smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess || !gfx) {
-        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 1);
+        LOG_LUA_LINE("gfx_set_command: Failed to convert parameter %u", 1);
         return 0;
     }
 
     const char *command = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 2);
+        LOG_LUA_LINE("gfx_set_command: Failed to convert parameter %u", 2);
         return 0;
     }
 
