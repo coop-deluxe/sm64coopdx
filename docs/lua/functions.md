@@ -1872,6 +1872,7 @@
    - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-6.md#gfx_get_texture)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)

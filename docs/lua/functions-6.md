@@ -2679,6 +2679,29 @@ Gets the number of vertices from a display list command if it has the op `G_VTX`
 
 <br />
 
+## [gfx_get_texture](#gfx_get_texture)
+
+### Description
+Gets the texture from a display list command if it has an image related op
+
+### Lua Example
+`local PointerValue = gfx_get_texture(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`u8 *gfx_get_texture(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_get_length](#gfx_get_length)
 
 ### Description

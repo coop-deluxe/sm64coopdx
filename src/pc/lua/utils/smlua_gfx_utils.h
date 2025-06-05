@@ -66,6 +66,8 @@ Gfx *gfx_get_display_list(Gfx *cmd);
 Vtx *gfx_get_vertex_buffer(Gfx *cmd);
 /* |description|Gets the number of vertices from a display list command if it has the op `G_VTX`|descriptionEnd| */
 u16 gfx_get_vertex_count(Gfx *cmd);
+/* |description|Gets the texture from a display list command if it has an image related op|descriptionEnd| */
+u8 *gfx_get_texture(Gfx *cmd);
 
 /* |description|Gets the max length of a display list|descriptionEnd| */
 u32 gfx_get_length(Gfx *gfx);

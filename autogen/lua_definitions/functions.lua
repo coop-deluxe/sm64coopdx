@@ -10307,6 +10307,13 @@ function gfx_get_vertex_count(cmd)
     -- ...
 end
 
+--- @param cmd Pointer_Gfx
+--- @return Pointer_integer
+--- Gets the texture from a display list command if it has an image related op
+function gfx_get_texture(cmd)
+    -- ...
+end
+
 --- @param gfx Pointer_Gfx
 --- @return integer
 --- Gets the max length of a display list

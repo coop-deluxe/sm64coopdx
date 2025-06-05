@@ -31406,6 +31406,23 @@ int smlua_func_gfx_get_vertex_count(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_get_texture(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_texture", 1, top);
+        return 0;
+    }
+
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_texture"); return 0; }
+
+    smlua_push_pointer(L, LVT_U8_P, (void*)gfx_get_texture(cmd), NULL);
+
+    return 1;
+}
+
 int smlua_func_gfx_get_length(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36994,6 +37011,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_get_display_list", smlua_func_gfx_get_display_list);
     smlua_bind_function(L, "gfx_get_vertex_buffer", smlua_func_gfx_get_vertex_buffer);
     smlua_bind_function(L, "gfx_get_vertex_count", smlua_func_gfx_get_vertex_count);
+    smlua_bind_function(L, "gfx_get_texture", smlua_func_gfx_get_texture);
     smlua_bind_function(L, "gfx_get_length", smlua_func_gfx_get_length);
     smlua_bind_function(L, "gfx_get_command", smlua_func_gfx_get_command);
     smlua_bind_function(L, "gfx_get_next_command", smlua_func_gfx_get_next_command);
