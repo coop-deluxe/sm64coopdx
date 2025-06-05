@@ -450,7 +450,7 @@ int smlua_func_texture_override_set(lua_State* L) {
     const char* textureName = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("texture_override_set: Failed to convert parameter 1"); return 0; }
 
-    struct TextureInfo *overrideTexInfo = get_texture_info_from_lua(L);
+    struct TextureInfo *overrideTexInfo = smlua_to_texture_info(L, 2);
     if (!overrideTexInfo || !gSmLuaConvertSuccess) { LOG_LUA("texture_override_set: Failed to convert parameter 2"); return 0; }
 
     dynos_texture_override_set(textureName, overrideTexInfo);

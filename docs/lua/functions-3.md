@@ -3367,7 +3367,7 @@ Renders a DJUI HUD texture onto the screen
 - None
 
 ### C Prototype
-`void djui_hud_render_texture(TEXINFO struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
 
 [:arrow_up_small:](#)
 
@@ -3398,7 +3398,7 @@ Renders a DJUI HUD texture tile onto the screen
 - None
 
 ### C Prototype
-`void djui_hud_render_texture_tile(TEXINFO struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 
@@ -3429,7 +3429,7 @@ Renders an interpolated DJUI HUD texture onto the screen
 - None
 
 ### C Prototype
-`void djui_hud_render_texture_interpolated(TEXINFO struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
 
 [:arrow_up_small:](#)
 
@@ -3464,7 +3464,7 @@ Renders an interpolated DJUI HUD texture tile onto the screen
 - None
 
 ### C Prototype
-`void djui_hud_render_texture_tile_interpolated(TEXINFO struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 
