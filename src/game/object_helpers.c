@@ -273,7 +273,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
 }
 
-void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
+void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src) {
     if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
     dst[1][0] = src[1][0] * obj->header.gfx.scale[1];
@@ -296,7 +296,7 @@ void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
     dst[3][3] = src[3][3];
 }
 
-void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2) {
+void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     f32 spC, sp8, sp4;
 
     spC = a2[3][0] * a2[0][0] + a2[3][1] * a2[0][1] + a2[3][2] * a2[0][2];
@@ -825,7 +825,7 @@ Multiplies a vector by a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[0][i] * v[0] + m[1][i] * v[1] + m[2][i] * v[2];
@@ -840,7 +840,7 @@ Multiplies a vector by the transpose of a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2];

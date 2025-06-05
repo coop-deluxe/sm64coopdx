@@ -646,7 +646,7 @@ f32 djui_hud_get_fov_coeff() {
     return (fovDefault / fovCurrent) * 1.13f;
 }
 
-bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
+bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out) {
     if (!gCamera) { return false; }
     hud_rotate_and_translate_vec3f(pos, &gCamera->mtx, out);
     if (out[2] >= 0.0f) {

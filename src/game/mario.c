@@ -200,7 +200,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
  * Rotates the animation's translation into the global coordinate system
  * and returns the animation's flags.
  */
-s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, Vec3s translation) {
+s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, OUT Vec3s translation) {
     if (!obj) { return 0; }
     f32 dx;
     f32 dz;
@@ -618,7 +618,7 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
 /**
  * Collides with walls and returns the most recent wall.
  */
-struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius) {
+struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f32 radius) {
     struct WallCollisionData collisionData;
     struct Surface *wall = NULL;
 
@@ -643,7 +643,7 @@ struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 ra
 /**
  * Collides with walls and returns the wall collision data.
  */
-void resolve_and_return_wall_collisions_data(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
+void resolve_and_return_wall_collisions_data(OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
     if (!collisionData || !pos) { return; }
 
     collisionData->x = pos[0];

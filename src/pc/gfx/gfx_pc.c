@@ -603,7 +603,7 @@ static void import_texture(int tile) {
     //printf("Time diff: %d\n", t1 - t0);
 }
 
-static void OPTIMIZE_O3 gfx_transposed_matrix_mul(Vec3f res, const Vec3f a, const Mat4 b) {
+static void OPTIMIZE_O3 gfx_transposed_matrix_mul(OUT Vec3f res, const Vec3f a, const Mat4 b) {
     res[0] = a[0] * b[0][0] + a[1] * b[0][1] + a[2] * b[0][2];
     res[1] = a[0] * b[1][0] + a[1] * b[1][1] + a[2] * b[1][2];
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
