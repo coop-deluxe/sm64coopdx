@@ -4003,6 +4003,62 @@ function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y
     -- ...
 end
 
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders a DJUI HUD texture onto the screen
+function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders a DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders an interpolated DJUI HUD texture onto the screen
+function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders an interpolated DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param width number

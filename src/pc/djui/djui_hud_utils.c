@@ -512,15 +512,15 @@ void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width,
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+void djui_hud_render_texture(TEXINFO struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH);
 }
 
-void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+void djui_hud_render_texture_tile(TEXINFO struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
 }
 
-void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+void djui_hud_render_texture_interpolated(TEXINFO struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
 
@@ -544,7 +544,7 @@ void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX
     interp->rotation = sRotation;
 }
 
-void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+void djui_hud_render_texture_tile_interpolated(TEXINFO struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
 

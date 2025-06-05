@@ -50,6 +50,8 @@ s64 smlua_get_any_integer_mod_variable(const char* variable);
 LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable);
 LuaFunction smlua_get_any_function_mod_variable(const char *variable);
 
+struct TextureInfo *get_texture_info_from_lua(lua_State *L);
+
 void smlua_logline(void);
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);

@@ -12710,6 +12710,138 @@ int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_render_texture(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture", 5, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture"); return 0; }
+    f32 scaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture"); return 0; }
+    f32 scaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture"); return 0; }
+
+    djui_hud_render_texture(texInfo, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_tile(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 9) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_tile", 9, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_tile"); return 0; }
+    f32 scaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_tile"); return 0; }
+    f32 scaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileX = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileY = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileW = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileH = smlua_to_integer(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_tile"); return 0; }
+
+    djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 9) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_interpolated", 9, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevScaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevScaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 x = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 y = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 scaleW = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 scaleH = smlua_to_number(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_interpolated"); return 0; }
+
+    djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_tile_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 13) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_tile_interpolated", 13, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevScaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevScaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 x = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 y = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 scaleW = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 scaleH = smlua_to_number(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileX = smlua_to_integer(L, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileY = smlua_to_integer(L, 11);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 11, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileW = smlua_to_integer(L, 12);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 12, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileH = smlua_to_integer(L, 13);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 13, "djui_hud_render_texture_tile_interpolated"); return 0; }
+
+    djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_render_rect(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35687,6 +35819,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
+    smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
+    smlua_bind_function(L, "djui_hud_render_texture_tile", smlua_func_djui_hud_render_texture_tile);
+    smlua_bind_function(L, "djui_hud_render_texture_interpolated", smlua_func_djui_hud_render_texture_interpolated);
+    smlua_bind_function(L, "djui_hud_render_texture_tile_interpolated", smlua_func_djui_hud_render_texture_tile_interpolated);
     smlua_bind_function(L, "djui_hud_render_rect", smlua_func_djui_hud_render_rect);
     smlua_bind_function(L, "djui_hud_render_rect_interpolated", smlua_func_djui_hud_render_rect_interpolated);
     smlua_bind_function(L, "get_current_fov", smlua_func_get_current_fov);
