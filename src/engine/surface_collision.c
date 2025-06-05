@@ -102,7 +102,7 @@ void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
     out[2] = v1[2] + s * edge0[2] + t * edge1[2];
 }
 
-u8 is_point_past_facing_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
+static bool resolve_point_near_surface_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
     f32 weight = (posRelToEdge[1] / edgePos[1]);
     const f32 corner_threshold = -0.9f;
     // Don't calculate if above edge
@@ -371,7 +371,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                     continue;
                 }
                 if (edge12[1] != 0.0f) {
-                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
+                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
                         hasCollision = TRUE;
                     }
                 }
@@ -380,7 +380,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             //Edge 1-3
             if (!hasCollision) {
                 if (edge13[1] != 0.0f) {
-                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
+                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
                         hasCollision = TRUE;
                     }
                 }
@@ -397,7 +397,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                 posRelToEdge[2] = z - (f32)surf->vertex2[2];
 
                 if (edge23[1] != 0.0f) {
-                    if (!is_point_past_facing_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
+                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
                         // do nothing (Collision found)
                     } else {
                         continue;
