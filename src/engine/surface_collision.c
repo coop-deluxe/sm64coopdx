@@ -193,8 +193,9 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             continue;
         }
 
-        // Used with fixWallOnSlope so it will be calculated regardless of roundedCorners
-        offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
+        if (!gLevelValues.fixCollision.roundedCorners || gFindWallDirectionAirborne || gLevelValues.fixCollision.fixWallOnSlope) {
+            offset = surf->normal.x * x + surf->normal.y * y + surf->normal.z * z + surf->originOffset;
+        }
 
         if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
             // Check AABB to exclude walls before doing expensive triangle check
@@ -239,7 +240,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
         } else {
 
-            // Used for walls near the edge of the slope, which roundedCorner handles (though less well)
             if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0.0f : -radius) || offset > radius) {
                 continue;
             }
@@ -399,19 +399,17 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
         //  multiple walls can push mario more than is required.
         //  <Fixed when gLevelValues.fixCollisionBugs != 0>
-        if (!gLevelValues.fixCollision.fixWallOnSlope) {
-            if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
-                data->x = cPos[0] + cNorm[0] * radius;
-                data->z = cPos[2] + cNorm[2] * radius;
-                x = data->x;
-                z = data->z;
-                data->normalAddition[0] += cNorm[0];
-                data->normalAddition[2] += cNorm[2];
-                data->normalCount++;
-            } else {
-                data->x += surf->normal.x * (radius - offset);
-                data->z += surf->normal.z * (radius - offset);
-            }
+        if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
+            data->x = cPos[0] + cNorm[0] * radius;
+            data->z = cPos[2] + cNorm[2] * radius;
+            x = data->x;
+            z = data->z;
+            data->normalAddition[0] += cNorm[0];
+            data->normalAddition[2] += cNorm[2];
+            data->normalCount++;
+        } else {
+            data->x += surf->normal.x * (radius - offset);
+            data->z += surf->normal.z * (radius - offset);
         }
 
         //! (Unreferenced Walls) Since this only returns the first four walls,
@@ -422,11 +420,6 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         }
 
         numCols++;
-    }
-
-    if (gLevelValues.fixCollision.fixWallOnSlope) {
-        data->x = x;
-        data->z = z;
     }
 
     return numCols;

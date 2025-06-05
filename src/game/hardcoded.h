@@ -325,7 +325,7 @@ extern struct PaintingValues gPaintingValues;
 
 void hardcoded_reset_default_values(void);
 /* |description|
-Sets all fields of `fixCollisionBugs`
+Sets all fields of `fixCollision`
 |descriptionEnd| */
 void fix_collision_bugs_set_all(bool enable);
 /* |description|

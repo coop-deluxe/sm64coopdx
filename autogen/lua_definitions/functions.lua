@@ -4319,7 +4319,7 @@ function first_person_reset()
 end
 
 --- @param enable boolean
---- Sets all fields of `fixCollisionBugs`
+--- Sets all fields of `fixCollision`
 function fix_collision_bugs_set_all(enable)
     -- ...
 end

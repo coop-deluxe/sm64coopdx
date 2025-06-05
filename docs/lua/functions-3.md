@@ -4458,7 +4458,7 @@ Resets first person
 ## [fix_collision_bugs_set_all](#fix_collision_bugs_set_all)
 
 ### Description
-Sets all fields of `fixCollisionBugs`
+Sets all fields of `fixCollision`
 
 ### Lua Example
 `fix_collision_bugs_set_all(enable)`
