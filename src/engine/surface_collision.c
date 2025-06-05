@@ -102,34 +102,53 @@ void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out) {
     out[2] = v1[2] + s * edge0[2] + t * edge1[2];
 }
 
-static bool resolve_point_near_surface_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* margin_radius) {
+static bool check_and_resolve_point_past_surface_edge(struct Surface* surf, Vec3f posRelToEdge, Vec3f edgePos, f32* returnX, f32* returnZ, f32* marginRadius) {
+    if (edgePos[1] == 0.0f) { return true; } // ! A point at y = 0 will never be considered
     f32 weight = (posRelToEdge[1] / edgePos[1]);
-    const f32 corner_threshold = -0.9f;
+    const f32 cornerThreshold = -0.9f;
     // Don't calculate if above edge
-    if (weight < 0.0f || weight > 1.0f) {
-        return TRUE;
-    } else {
-        f32 weightedDistToEdgeX = edgePos[0] * weight - posRelToEdge[0];
-        f32 weightedDistToEdgeZ = edgePos[2] * weight - posRelToEdge[2];
-        f32 invDenom = sqrtf(weightedDistToEdgeX * weightedDistToEdgeX + weightedDistToEdgeZ * weightedDistToEdgeZ);
-        f32 offset = invDenom - *margin_radius;
-        // Is the position further than the wall's hitbox?
-        if (offset > 0.0f) {
-            return TRUE;
-        } else {
-            invDenom = offset / invDenom;
-            *returnX += (weightedDistToEdgeX *= invDenom);
-            *returnZ += (weightedDistToEdgeZ *= invDenom);
-            *margin_radius += 0.01f;
+    if (weight < 0.0f || weight > 1.0f) { return true; }
 
-            // Is the position close to the corner?
-            if (weightedDistToEdgeX * surf->normal.x + weightedDistToEdgeZ * surf->normal.z < corner_threshold * offset) {
-                return TRUE;
-            }
-            return FALSE;
+    f32 weightedDistToEdgeX = edgePos[0] * weight - posRelToEdge[0];
+    f32 weightedDistToEdgeZ = edgePos[2] * weight - posRelToEdge[2];
+    f32 invDenom = sqrtf(weightedDistToEdgeX * weightedDistToEdgeX + weightedDistToEdgeZ * weightedDistToEdgeZ);
+    f32 offset = invDenom - *marginRadius;
+    // Is the position further than the wall's hitbox?
+    if (offset > 0.0f || invDenom == 0) { return true; }
+
+    invDenom = offset / invDenom;
+    *returnX += (weightedDistToEdgeX *= invDenom);
+    *returnZ += (weightedDistToEdgeZ *= invDenom);
+    *marginRadius += 0.01f;
+
+    // Is the position close to the corner?
+    if (weightedDistToEdgeX * surf->normal.x + weightedDistToEdgeZ * surf->normal.z < cornerThreshold * offset) {
+        return true;
+    }
+    return false;
+}
+
+static bool check_point_past_surface_face(Vec3f firstEdge, Vec3f secondEdge, Vec3f posRelToEdge) {
+    f32 dotEdge12 = vec3f_dot(firstEdge, firstEdge);
+    f32 dotEdge12_13 = vec3f_dot(firstEdge, secondEdge);
+    f32 dotEdge13 = vec3f_dot(secondEdge, secondEdge);
+    f32 dot = dotEdge12 * dotEdge13 - dotEdge12_13 * dotEdge12_13;
+    f32 invDenom;
+    if (dot == 0) { return false; }
+
+    invDenom = 1.0f / dot;
+    f32 dotPosWithEdge12 = vec3f_dot(posRelToEdge, firstEdge);
+    f32 dotPosWithEdge13 = vec3f_dot(posRelToEdge, secondEdge);
+    f32 vertex2Weight = (dotEdge13 * dotPosWithEdge12 - dotEdge12_13 * dotPosWithEdge13) * invDenom;
+    // Is the position within the 12 edge?
+    if (!(vertex2Weight < 0.0f || vertex2Weight > 1.0f)) {
+        f32 vertex3Weight = (dotEdge12 * dotPosWithEdge13 - dotEdge12_13 * dotPosWithEdge12) * invDenom;
+        // Is the position within the 13 edge?
+        if (!(vertex3Weight < 0.0f || vertex3Weight > 1.0f || vertex2Weight + vertex3Weight > 1.0f)) {
+            return true;
         }
     }
-    return TRUE;
+    return false;
 }
 
 /**************************************************
@@ -162,15 +181,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
     }
 
     // Used for fixWallOnSlope
-    Vec3f edge12;
-    Vec3f edge13;
-    Vec3f edge23;
-    Vec3f posRelToEdge;
-    f32 dotEdge12, dotEdge12_13, dotEdge13, dotPosWithEdge12, dotPosWithEdge13;
-    f32 invDenom;
-    f32 vertex2Weight, vertex3Weight;
-    f32 margin_radius = radius - 1.0f;
-    u8 hasCollision = FALSE;
+    f32 marginRadius = radius - 1.0f;
 
     // Stay in this loop until out of walls.
     while (surfaceNode != NULL) {
@@ -229,7 +240,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         } else {
 
             // Used for walls near the edge of the slope, which roundedCorner handles (though less well)
-            if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0 : -radius) || offset > radius) {
+            if (offset < (gLevelValues.fixCollision.fixWallOnSlope ? 0.0f : -radius) || offset > radius) {
                 continue;
             }
 
@@ -327,67 +338,50 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         }
 
         if (gLevelValues.fixCollision.fixWallOnSlope) {
-            hasCollision = FALSE;
+            bool hasCollision = false;
 
+            Vec3f edge12 = { 0 };
             edge12[0] = (f32)(surf->vertex2[0] - surf->vertex1[0]);
             edge12[1] = (f32)(surf->vertex2[1] - surf->vertex1[1]);
             edge12[2] = (f32)(surf->vertex2[2] - surf->vertex1[2]);
 
+            Vec3f edge13 = { 0 };
             edge13[0] = (f32)(surf->vertex3[0] - surf->vertex1[0]);
             edge13[1] = (f32)(surf->vertex3[1] - surf->vertex1[1]);
             edge13[2] = (f32)(surf->vertex3[2] - surf->vertex1[2]);
 
+            Vec3f posRelToEdge = { 0 };
             posRelToEdge[0] = x - (f32)surf->vertex1[0];
             posRelToEdge[1] = y - (f32)surf->vertex1[1];
             posRelToEdge[2] = z - (f32)surf->vertex1[2];
 
             // Face (Initial check)
-            dotEdge12 = edge12[0] * edge12[0] + edge12[1] * edge12[1] + edge12[2] * edge12[2];
-            dotEdge12_13 = edge12[0] * edge13[0] + edge12[1] * edge13[1] + edge12[2] * edge13[2];
-            dotEdge13 = edge13[0] * edge13[0] + edge13[1] * edge13[1] + edge13[2] * edge13[2];
-            dotPosWithEdge12 = posRelToEdge[0] * edge12[0] + posRelToEdge[1] * edge12[1] + posRelToEdge[2] * edge12[2];
-            dotPosWithEdge13 = posRelToEdge[0] * edge13[0] + posRelToEdge[1] * edge13[1] + posRelToEdge[2] * edge13[2];
-
-            invDenom = 1.0f / (dotEdge12 * dotEdge13 - dotEdge12_13 * dotEdge12_13);
-            vertex2Weight = (dotEdge13 * dotPosWithEdge12 - dotEdge12_13 * dotPosWithEdge13) * invDenom;
-            // Is the position outside the 12 edge?
-            if (vertex2Weight < 0.0f || vertex2Weight > 1.0f) {
-                // do nothing
-            } else {
-                vertex3Weight = (dotEdge12 * dotPosWithEdge13 - dotEdge12_13 * dotPosWithEdge12) * invDenom;
-                // Is the position outside the 13 edge?
-                if (vertex3Weight < 0.0f || vertex3Weight > 1.0f || vertex2Weight + vertex3Weight > 1.0f) {
-                    // do nothing
-                } else {
-                    x += surf->normal.x * (radius - offset);
-                    z += surf->normal.z * (radius - offset);
-                    hasCollision = TRUE;
-                }
+            if (check_point_past_surface_face(edge12, edge13, posRelToEdge)) {
+                x += surf->normal.x * (radius - offset);
+                z += surf->normal.z * (radius - offset);
+                hasCollision = true;
             }
 
             //Edge 1-2
             if (!hasCollision) {
-                if (offset < 0) {
+                if (offset < 0.0f) {
                     continue;
                 }
-                if (edge12[1] != 0.0f) {
-                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge12, &x, &z, &margin_radius)) {
-                        hasCollision = TRUE;
-                    }
+                if (!check_and_resolve_point_past_surface_edge(surf, posRelToEdge, edge12, &x, &z, &marginRadius)) {
+                    hasCollision = true;
                 }
             }
 
             //Edge 1-3
             if (!hasCollision) {
-                if (edge13[1] != 0.0f) {
-                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge13, &x, &z, &margin_radius)) {
-                        hasCollision = TRUE;
-                    }
+                if (!check_and_resolve_point_past_surface_edge(surf, posRelToEdge, edge13, &x, &z, &marginRadius)) {
+                    hasCollision = true;
                 }
             }
 
             //Edge 2-3
             if (!hasCollision) {
+                Vec3f edge23 = { 0 };
                 edge23[0] = (f32)(surf->vertex3[0] - surf->vertex2[0]);
                 edge23[1] = (f32)(surf->vertex3[1] - surf->vertex2[1]);
                 edge23[2] = (f32)(surf->vertex3[2] - surf->vertex2[2]);
@@ -396,13 +390,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
                 posRelToEdge[1] = y - (f32)surf->vertex2[1];
                 posRelToEdge[2] = z - (f32)surf->vertex2[2];
 
-                if (edge23[1] != 0.0f) {
-                    if (!resolve_point_near_surface_edge(surf, posRelToEdge, edge23, &x, &z, &margin_radius)) {
-                        // do nothing (Collision found)
-                    } else {
-                        continue;
-                    }
-                } else {
+                if (check_and_resolve_point_past_surface_edge(surf, posRelToEdge, edge23, &x, &z, &marginRadius)) {
                     continue;
                 }
             }
