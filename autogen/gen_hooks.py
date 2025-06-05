@@ -79,15 +79,18 @@ SMLUA_TYPES = {
         type_name: {
 "input": """
         // push {name}
-        lua_newtable(L);
-        int {name}TableIndex = lua_gettop(L);
-""" + "".join(["""
-        lua_pushstring(L, "%s");
-        lua_push%s(L, {name}%s);
-        lua_settable(L, {name}TableIndex);
-""" % (lua_field, vec_type["field_lua_type"], c_field) for lua_field, c_field in vec_type["fields_mapping"].items()])
+        extern void smlua_new_%s(%s src);
+        smlua_new_%s({name});
+""" % (type_name.lower(), type_name, type_name.lower()),
+"output": """
+        // return {name}
+        if (lua_type(L, -{output_index}) == LUA_TTABLE) {{
+            extern void smlua_get_%s(%s dest, int index);
+            smlua_get_%s(*{name}, -{output_index});{return_on_output_set}
+        }}
+""" % (type_name.lower(), type_name, type_name.lower())
         }
-        for type_name, vec_type in VEC_TYPES.items()
+        for type_name in VEC_TYPES
     },
     "u8": SMLUA_INTEGER_TYPES,
     "u16": SMLUA_INTEGER_TYPES,

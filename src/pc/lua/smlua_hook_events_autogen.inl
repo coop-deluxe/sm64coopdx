@@ -1290,20 +1290,8 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *so
         lua_pushinteger(L, soundBits);
 
         // push pos
-        lua_newtable(L);
-        int posTableIndex = lua_gettop(L);
-
-        lua_pushstring(L, "x");
-        lua_pushnumber(L, pos[0]);
-        lua_settable(L, posTableIndex);
-
-        lua_pushstring(L, "y");
-        lua_pushnumber(L, pos[1]);
-        lua_settable(L, posTableIndex);
-
-        lua_pushstring(L, "z");
-        lua_pushnumber(L, pos[2]);
-        lua_settable(L, posTableIndex);
+        extern void smlua_new_vec3f(Vec3f src);
+        smlua_new_vec3f(pos);
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
@@ -1446,38 +1434,6 @@ bool smlua_call_event_hooks_HOOK_ON_MODS_LOADED() {
         lua_settop(L, prevTop);
     }
     return hookResult;
-}
-
-bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, const char **playerNameOverride) {
-    lua_State *L = gLuaState;
-    if (L == NULL) { return false; }
-
-    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_NAMETAGS_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push playerIndex
-        lua_pushinteger(L, playerIndex);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_NAMETAGS_RENDER]);
-            continue;
-        }
-
-        // return playerNameOverride
-        if (lua_type(L, -1) == LUA_TSTRING) {
-            *playerNameOverride = smlua_to_string(L, -1);
-            lua_settop(L, prevTop);
-            return true;
-        }
-
-        lua_settop(L, prevTop);
-    }
-    return false;
 }
 
 bool smlua_call_event_hooks_HOOK_ON_DJUI_THEME_CHANGED() {
@@ -1775,20 +1731,8 @@ bool smlua_call_event_hooks_HOOK_ON_INSTANT_WARP(u8 areaIdx, u8 nodeId, Vec3s di
         lua_pushinteger(L, nodeId);
 
         // push displacement
-        lua_newtable(L);
-        int displacementTableIndex = lua_gettop(L);
-
-        lua_pushstring(L, "x");
-        lua_pushinteger(L, displacement[0]);
-        lua_settable(L, displacementTableIndex);
-
-        lua_pushstring(L, "y");
-        lua_pushinteger(L, displacement[1]);
-        lua_settable(L, displacementTableIndex);
-
-        lua_pushstring(L, "z");
-        lua_pushinteger(L, displacement[2]);
-        lua_settable(L, displacementTableIndex);
+        extern void smlua_new_vec3s(Vec3s src);
+        smlua_new_vec3s(displacement);
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {

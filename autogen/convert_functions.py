@@ -754,14 +754,25 @@ def build_vec_types():
     s = gen_comment_header("vec types")
     for type_name, vec_type in VEC_TYPES.items():
 
+        # New
+        s += "void smlua_new_%s(%s src) {\n" % (type_name.lower(), type_name)
+        s += "    struct lua_State *L = gLuaState;\n"
+        s += "    lua_newtable(L);\n"
+        s += "    int tableIndex = lua_gettop(L);\n"
+        for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    lua_pushstring(L, \"%s\");\n" % (lua_field)
+            s += "    lua_push%s(L, src%s);\n" % (vec_type["field_lua_type"], c_field)
+            s += "    lua_settable(L, tableIndex);\n"
+        s += "}\n\n"
+
         # Get
-        s += "static void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, vec_type["field_lua_type"], lua_field)
         s += "}\n\n"
 
         # Push
-        s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         for lua_field, c_field in vec_type.get('optional_fields_mapping', {}).items():

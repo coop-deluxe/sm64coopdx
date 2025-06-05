@@ -151,6 +151,69 @@ bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void)) {
     return smlua_call_event_hooks_on_hud_render(resetFunc, true);
 }
 
+bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, const char **playerNameOverride) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_NAMETAGS_RENDER];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push playerIndex
+        lua_pushinteger(L, playerIndex);
+
+        // push pos
+        extern void smlua_new_vec3f(Vec3f src);
+        smlua_new_vec3f(pos);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_NAMETAGS_RENDER]);
+            continue;
+        }
+
+        // return playerNameOverride
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *playerNameOverride = smlua_to_string(L, -1);
+            lua_settop(L, prevTop);
+            return true;
+        }
+
+        // if it's a table, override name, pos or both
+        if (lua_type(L, -1) == LUA_TTABLE) {
+            bool override = false;
+
+            // name
+            lua_getfield(L, -1, "name");
+            if (lua_type(L, -1) == LUA_TSTRING) {
+                *playerNameOverride = smlua_to_string(L, -1);
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            // pos
+            lua_getfield(L, -1, "pos");
+            if (lua_type(L, -1) == LUA_TTABLE) {
+                extern void smlua_get_vec3f(Vec3f dest, int index);
+                smlua_get_vec3f(pos, -1);
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            lua_settop(L, prevTop);
+            if (override) {
+                return true;
+            }
+        }
+
+        lua_settop(L, prevTop);
+    }
+    return false;
+}
+
   ////////////////////
  // hooked actions //
 ////////////////////

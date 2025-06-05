@@ -1454,11 +1454,7 @@ void cur_obj_set_model(s32 modelID) {
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
-<<<<<<< HEAD
     smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
-=======
-    smlua_call_event_hooks_object_set_model(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
->>>>>>> dev
 }
 
 void mario_set_flag(s32 flag) {
