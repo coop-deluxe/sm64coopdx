@@ -148,6 +148,10 @@ bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureIn
     return DynOS_Tex_Get(textureName, outTextureInfo);
 }
 
+bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo) {
+    return DynOS_Tex_GetFromData(tex, outTextureInfo);
+}
+
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo) {
     DynOS_Tex_Override_Set(textureName, overrideTextureInfo);
 }

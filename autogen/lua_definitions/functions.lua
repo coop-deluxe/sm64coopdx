@@ -11098,6 +11098,14 @@ function geo_get_current_held_object()
     -- ...
 end
 
+--- @param tex Pointer_integer
+--- @param out Color
+--- @return boolean
+--- Calculates the average color of a given texture. Returns true if success
+function get_texture_average_color(tex, out)
+    -- ...
+end
+
 --- @param name string
 --- @return ModelExtendedId
 --- Gets the extended model ID for the `name` of a `GeoLayout`

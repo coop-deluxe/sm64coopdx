@@ -5105,6 +5105,30 @@ Gets the current GraphNodeHeldObject
 
 <br />
 
+## [get_texture_average_color](#get_texture_average_color)
+
+### Description
+Calculates the average color of a given texture. Returns true if success
+
+### Lua Example
+`local booleanValue = get_texture_average_color(tex, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`integer`> |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_texture_average_color(const u8 *tex, OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 
