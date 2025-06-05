@@ -943,11 +943,9 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
     if (!m) { return 0; }
     play_character_sound_if_no_flag(m, CHAR_SOUND_DYING, MARIO_ACTION_SOUND_PLAYED);
     set_character_animation(m, CHAR_ANIM_A_POSE);
-
+    m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     if (m->actionTimer++ == 60) {
-        if (m->playerIndex != 0) {
-            // do nothing
-        } else {
+        if (m->playerIndex == 0) {
             bool allowDeath = true;
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
@@ -3006,7 +3004,7 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
         if (m->controller->buttonPressed & START_BUTTON) {
             lvl_skip_credits();
         }
-        
+
         sEndCutsceneVp.vp.vscale[0] = 640;
         sEndCutsceneVp.vp.vscale[1] = 360;
         sEndCutsceneVp.vp.vtrans[0] = 640;
@@ -3053,7 +3051,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
             stop_and_set_height_to_floor(m);
         }
     }
-    
+
     if (m->playerIndex == 0 && m->controller->buttonPressed & START_BUTTON) {
         lvl_skip_credits();
     }

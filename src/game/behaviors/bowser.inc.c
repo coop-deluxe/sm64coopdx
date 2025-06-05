@@ -1612,7 +1612,7 @@ void falling_bowser_plat_act_2(void) {
     if ((o->oTimer & 1) == 0 && o->oTimer < 14 && BHV_ARR_CHECK(D_8032F698, o->oBehParams2ndByte, struct Struct8032F698)) {
         sp22 = D_8032F698[o->oBehParams2ndByte].unk3 + (gDebugInfo[4][1] << 8);
         sp1C = -(o->oTimer / 2) * 290 + 1740;
-        vec3f_copy_2(sp24, &o->oPosX);
+        vec3f_copy(sp24, &o->oPosX);
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 + 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 + 5296) * sp1C;
         o->oPosY = 307.0f;
@@ -1620,7 +1620,7 @@ void falling_bowser_plat_act_2(void) {
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 - 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 - 5296) * sp1C;
         spawn_mist_particles_variable(4, 0, 100);
-        vec3f_copy_2(&o->oPosX, sp24);
+        vec3f_copy(&o->oPosX, sp24);
     }
     cur_obj_move_using_fvel_and_gravity();
     if (o->oTimer > 300)

@@ -791,7 +791,7 @@ void save_file_set_cap_pos(s16 x, s16 y, s16 z) {
     save_file_set_flags(SAVE_FLAG_CAP_ON_GROUND);
 }
 
-s32 save_file_get_cap_pos(Vec3s capPos) {
+s32 save_file_get_cap_pos(OUT Vec3s capPos) {
     if (INVALID_FILE_INDEX(gCurrSaveFileNum - 1)) { return 0; }
     if (INVALID_SRC_SLOT(gSaveFileUsingBackupSlot)) { return 0; }
     struct SaveFile *saveFile = &gSaveBuffer.files[gCurrSaveFileNum - 1][gSaveFileUsingBackupSlot];

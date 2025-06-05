@@ -218,6 +218,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             } else {
                 _Warp = DynOS_Level_GetWarp(gCurrLevelNum, gCurrAreaIndex, sDynosWarpNodeNum);
             }
+            if (!_Warp) { return NULL; }
             s16 sDynosWarpSpawnType = sSpawnTypeFromWarpBhv[_Warp[2]];
 
             // Init Mario

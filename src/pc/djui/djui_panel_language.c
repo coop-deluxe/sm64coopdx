@@ -33,7 +33,7 @@ static void select_language(struct DjuiBase* caller) {
         tmp->base.interactable->update_style(&tmp->base);
         child = child->next;
     }
-    
+
     char* langName = checkbox->text->message;
     char* key = djui_language_find_key("LANGUAGE",langName);
     if (key) langName = key;
@@ -137,9 +137,9 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             bool match = !strcmp(path, configLanguage);
             if (match) { foundMatch = true; }
-            
+
             struct DjuiCheckbox* checkbox = NULL;
-            
+
             char* displayName = djui_language_get("LANGUAGE",path);
             if (displayName != (char*)path) {
                 char newName[SYS_MAX_PATH + 32] = { 0 };
@@ -149,7 +149,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
             else {
                 checkbox = djui_checkbox_create(sLayoutBase, path, match ? &sTrue : &sFalse, select_language);
             }
-            
+
             if (!strcmp(path, "English")) { chkEnglish = checkbox; }
         }
 
@@ -168,6 +168,7 @@ skip_langs:
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
+    if (!p) { return; }
     p->on_panel_destroy = djui_panel_language_destroy;
 
 }
