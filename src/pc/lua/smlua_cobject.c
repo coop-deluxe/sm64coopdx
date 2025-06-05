@@ -470,6 +470,8 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
     return false;
 }
 
+//////// Legacy field support ////////
+
 static int smlua_get_field_deprecated(lua_State* L, enum LuaObjectType lot, const char* key, u64 pointer, UNUSED struct LuaObjectField* data) {
     // Legacy metadata fields support
     if (key[0] == '_') {
@@ -483,9 +485,7 @@ static int smlua_get_field_deprecated(lua_State* L, enum LuaObjectType lot, cons
         }
     }
 
-    // Legacy LevelValues support
     if (lot == (enum LuaObjectType)LOT_LEVELVALUES) {
-        // Legacy fixCollisionBugs support
         if (strncmp(key, "fixCollisionBugs", 16) == 0) {
             if (!strcmp(key, "fixCollisionBugs")) { lua_pushinteger(L, (u8)fix_collision_bugs_is_any_enabled()); }
             if (!strcmp(key, "fixCollisionBugsRoundedCorners"))          { lua_pushinteger(L, gLevelValues.fixCollision.roundedCorners); }
@@ -498,7 +498,6 @@ static int smlua_get_field_deprecated(lua_State* L, enum LuaObjectType lot, cons
     return -1;
 }
 
-
 static int smlua_set_field_deprecated(lua_State* L, enum LuaObjectType lot, const char* key, UNUSED u64 pointer, struct LuaObjectField* data) {
     // Legacy LevelValues support
     if (lot == (enum LuaObjectType)LOT_LEVELVALUES) {
@@ -506,6 +505,8 @@ static int smlua_set_field_deprecated(lua_State* L, enum LuaObjectType lot, cons
         if (!strncmp(key, "fixCollisionBugs", 16)) {
             int value = smlua_to_integer(L, 3);
             if (gSmLuaConvertSuccess) {
+                // ! Mods that set the fixCollisionBugs settings before enabling/disabling it
+                // will toggle all settings no matter what
                 if (!strcmp(key, "fixCollisionBugs")) { fix_collision_bugs_set_all(value); }
                 if (!strcmp(key, "fixCollisionBugsRoundedCorners"))          { gLevelValues.fixCollision.roundedCorners = value; }
                 if (!strcmp(key, "fixCollisionBugsDisableFalseLedgeGrab"))   { gLevelValues.fixCollision.disableFalseLedgeGrab = value; }
@@ -519,6 +520,8 @@ static int smlua_set_field_deprecated(lua_State* L, enum LuaObjectType lot, cons
     }
     return -1;
 }
+
+/////////////////////////////////////
 
 static int smlua__get_field(lua_State* L) {
     LUA_STACK_CHECK_BEGIN_NUM(1);
