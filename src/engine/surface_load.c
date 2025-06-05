@@ -110,7 +110,7 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
     //  many functions only use the first triangle in surface order that fits,
     //  missing higher surfaces.
     //  upperY would be a better sort method.
-    //  <Fixed when gLevelValues.fixCollisionBugs != 0>
+    //  <Fixed when gLevelValues.fixCollision.fixExposedCeilings == true || gLevelValues.fixCollision.fixFloorOvershadowing == true>
 
     surfacePriority = (gLevelValues.fixCollision.fixExposedCeilings || gLevelValues.fixCollision.fixFloorOvershadowing)
                     ? (surface->upperY * sortDir)

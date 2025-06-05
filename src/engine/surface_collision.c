@@ -398,7 +398,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
 
         //! (Wall Overlaps) Because this doesn't update the x and z local variables,
         //  multiple walls can push mario more than is required.
-        //  <Fixed when gLevelValues.fixCollisionBugs != 0>
+        //  <Fixed when gLevelValues.fixCollision.roundedCorners == true>
         if (gLevelValues.fixCollision.roundedCorners && !gFindWallDirectionAirborne) {
             data->x = cPos[0] + cNorm[0] * radius;
             data->z = cPos[2] + cNorm[2] * radius;
@@ -588,7 +588,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
             //! (Exposed Ceilings) Because any point above a ceiling counts
             //  as interacting with a ceiling, ceilings far below can cause
             // "invisible walls" that are really just exposed ceilings.
-            //  <Fixed when gLevelValues.fixCollisionBugs != 0>
+            //  <Fixed when gLevelValues.fixCollision.fixExposedCeilings == true>
             if (y - (height - -78.0f) > 0.0f) {
                 continue;
             }
@@ -604,7 +604,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
 
     //! (Surface Cucking) Since only the first ceil is returned and not the lowest,
     //  lower ceilings can be "cucked" by higher ceilings.
-    //  <Fixed when gLevelValues.fixCollisionBugs != 0>
+    //  <Fixed when gLevelValues.fixCollision.fixExposedCeilings == true>
     return ceil;
 }
 
@@ -881,7 +881,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
 
     //! (Surface Cucking) Since only the first floor is returned and not the highest,
     //  higher floors can be "cucked" by lower floors.
-    //  <Fixed when gLevelValues.fixCollisionBugs != 0>
+    //  <Fixed when gLevelValues.fixCollision.fixFloorOvershadowing == true>
     return floor;
 }
 
