@@ -896,6 +896,7 @@ void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
 void DynOS_Actor_Override(struct Object* obj, void** aSharedChild);
 void DynOS_Actor_Override_All(void);
+void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode);
 void DynOS_Actor_ModShutdown();
 
 //

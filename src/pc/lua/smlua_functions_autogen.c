@@ -19112,12 +19112,13 @@ int smlua_func_vec3f_rotate_zxy(lua_State* L) {
     smlua_get_vec3s(rotate, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_rotate_zxy"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_rotate_zxy(v, rotate), NULL);
+    vec3f_rotate_zxy(v, rotate);
 
     smlua_push_vec3f(v, 1);
 
     smlua_push_vec3s(rotate, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19145,7 +19146,7 @@ int smlua_func_vec3f_rotate_around_n(lua_State* L) {
     s16 r = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "vec3f_rotate_around_n"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_rotate_around_n(dest, v, n, r), NULL);
+    vec3f_rotate_around_n(dest, v, n, r);
 
     smlua_push_vec3f(dest, 1);
 
@@ -19153,6 +19154,7 @@ int smlua_func_vec3f_rotate_around_n(lua_State* L) {
 
     smlua_push_vec3f(n, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19178,7 +19180,7 @@ int smlua_func_vec3f_project(lua_State* L) {
     smlua_get_vec3f(onto, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_project"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_project(dest, v, onto), NULL);
+    vec3f_project(dest, v, onto);
 
     smlua_push_vec3f(dest, 1);
 
@@ -19186,6 +19188,7 @@ int smlua_func_vec3f_project(lua_State* L) {
 
     smlua_push_vec3f(onto, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19219,7 +19222,7 @@ int smlua_func_vec3f_transform(lua_State* L) {
     smlua_get_vec3f(scale, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "vec3f_transform"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_transform(dest, v, translation, rotation, scale), NULL);
+    vec3f_transform(dest, v, translation, rotation, scale);
 
     smlua_push_vec3f(dest, 1);
 
@@ -19231,6 +19234,7 @@ int smlua_func_vec3f_transform(lua_State* L) {
 
     smlua_push_vec3f(scale, 5);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19326,7 +19330,7 @@ int smlua_func_find_vector_perpendicular_to_plane(lua_State* L) {
     smlua_get_vec3f(c, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "find_vector_perpendicular_to_plane"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)find_vector_perpendicular_to_plane(dest, a, b, c), NULL);
+    find_vector_perpendicular_to_plane(dest, a, b, c);
 
     smlua_push_vec3f(dest, 1);
 
@@ -19336,6 +19340,7 @@ int smlua_func_find_vector_perpendicular_to_plane(lua_State* L) {
 
     smlua_push_vec3f(c, 4);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19708,7 +19713,7 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     smlua_get_mat4(camMtx, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_pos_from_transform_mtx"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)get_pos_from_transform_mtx(dest, objMtx, camMtx), NULL);
+    get_pos_from_transform_mtx(dest, objMtx, camMtx);
 
     smlua_push_vec3f(dest, 1);
 
@@ -19716,6 +19721,7 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
 
     smlua_push_mat4(camMtx, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -19986,10 +19992,11 @@ int smlua_func_vec3f_zero(lua_State* L) {
     smlua_get_vec3f(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_zero"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_zero(v), NULL);
+    vec3f_zero(v);
 
     smlua_push_vec3f(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20011,12 +20018,13 @@ int smlua_func_vec3f_copy(lua_State* L) {
     smlua_get_vec3f(src, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_copy"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_copy(dest, src), NULL);
+    vec3f_copy(dest, src);
 
     smlua_push_vec3f(dest, 1);
 
     smlua_push_vec3f(src, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20040,10 +20048,11 @@ int smlua_func_vec3f_set(lua_State* L) {
     f32 z = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "vec3f_set"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_set(dest, x, y, z), NULL);
+    vec3f_set(dest, x, y, z);
 
     smlua_push_vec3f(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20065,12 +20074,13 @@ int smlua_func_vec3f_add(lua_State* L) {
     smlua_get_vec3f(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_add"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_add(dest, a), NULL);
+    vec3f_add(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
     smlua_push_vec3f(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20096,7 +20106,7 @@ int smlua_func_vec3f_sum(lua_State* L) {
     smlua_get_vec3f(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_sum"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_sum(dest, a, b), NULL);
+    vec3f_sum(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
 
@@ -20104,6 +20114,7 @@ int smlua_func_vec3f_sum(lua_State* L) {
 
     smlua_push_vec3f(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20125,12 +20136,13 @@ int smlua_func_vec3f_sub(lua_State* L) {
     smlua_get_vec3f(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_sub"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_sub(dest, a), NULL);
+    vec3f_sub(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
     smlua_push_vec3f(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20156,7 +20168,7 @@ int smlua_func_vec3f_dif(lua_State* L) {
     smlua_get_vec3f(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_dif"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_dif(dest, a, b), NULL);
+    vec3f_dif(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
 
@@ -20164,6 +20176,7 @@ int smlua_func_vec3f_dif(lua_State* L) {
 
     smlua_push_vec3f(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20183,10 +20196,73 @@ int smlua_func_vec3f_mul(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_mul"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_mul(dest, a), NULL);
+    vec3f_mul(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3f_mult(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3f_mult", 2, top);
+        return 0;
+    }
+
+
+    Vec3f dest;
+    smlua_get_vec3f(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_mult"); return 0; }
+
+    Vec3f a;
+    smlua_get_vec3f(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_mult"); return 0; }
+
+    vec3f_mult(dest, a);
+
+    smlua_push_vec3f(dest, 1);
+
+    smlua_push_vec3f(a, 2);
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3f_prod(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3f_prod", 3, top);
+        return 0;
+    }
+
+
+    Vec3f dest;
+    smlua_get_vec3f(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_prod"); return 0; }
+
+    Vec3f a;
+    smlua_get_vec3f(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_prod"); return 0; }
+
+    Vec3f b;
+    smlua_get_vec3f(b, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_prod"); return 0; }
+
+    vec3f_prod(dest, a, b);
+
+    smlua_push_vec3f(dest, 1);
+
+    smlua_push_vec3f(a, 2);
+
+    smlua_push_vec3f(b, 3);
+
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20206,10 +20282,11 @@ int smlua_func_vec3f_div(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_div"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_div(dest, a), NULL);
+    vec3f_div(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20248,10 +20325,11 @@ int smlua_func_vec3f_normalize(lua_State* L) {
     smlua_get_vec3f(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_normalize"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_normalize(v), NULL);
+    vec3f_normalize(v);
 
     smlua_push_vec3f(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20271,10 +20349,11 @@ int smlua_func_vec3f_set_magnitude(lua_State* L) {
     f32 mag = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_set_magnitude"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_set_magnitude(v, mag), NULL);
+    vec3f_set_magnitude(v, mag);
 
     smlua_push_vec3f(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20327,7 +20406,7 @@ int smlua_func_vec3f_cross(lua_State* L) {
     smlua_get_vec3f(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_cross"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_cross(dest, a, b), NULL);
+    vec3f_cross(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
 
@@ -20335,6 +20414,7 @@ int smlua_func_vec3f_cross(lua_State* L) {
 
     smlua_push_vec3f(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20364,7 +20444,7 @@ int smlua_func_vec3f_combine(lua_State* L) {
     f32 sclB = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "vec3f_combine"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3f_combine(dest, vecA, vecB, sclA, sclB), NULL);
+    vec3f_combine(dest, vecA, vecB, sclA, sclB);
 
     smlua_push_vec3f(dest, 1);
 
@@ -20372,6 +20452,7 @@ int smlua_func_vec3f_combine(lua_State* L) {
 
     smlua_push_vec3f(vecB, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20468,12 +20549,13 @@ int smlua_func_vec3f_to_vec3i(lua_State* L) {
     smlua_get_vec3f(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_to_vec3i"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3f_to_vec3i(dest, a), NULL);
+    vec3f_to_vec3i(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
     smlua_push_vec3f(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20495,12 +20577,13 @@ int smlua_func_vec3f_to_vec3s(lua_State* L) {
     smlua_get_vec3f(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_to_vec3s"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3f_to_vec3s(dest, a), NULL);
+    vec3f_to_vec3s(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
     smlua_push_vec3f(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20522,10 +20605,11 @@ int smlua_func_vec3i_zero(lua_State* L) {
     smlua_get_vec3i(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_zero"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_zero(v), NULL);
+    vec3i_zero(v);
 
     smlua_push_vec3i(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20547,12 +20631,13 @@ int smlua_func_vec3i_copy(lua_State* L) {
     smlua_get_vec3i(src, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_copy"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_copy(dest, src), NULL);
+    vec3i_copy(dest, src);
 
     smlua_push_vec3i(dest, 1);
 
     smlua_push_vec3i(src, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20576,10 +20661,11 @@ int smlua_func_vec3i_set(lua_State* L) {
     s32 z = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "vec3i_set"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_set(dest, x, y, z), NULL);
+    vec3i_set(dest, x, y, z);
 
     smlua_push_vec3i(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20601,12 +20687,13 @@ int smlua_func_vec3i_add(lua_State* L) {
     smlua_get_vec3i(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_add"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_add(dest, a), NULL);
+    vec3i_add(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
     smlua_push_vec3i(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20632,7 +20719,7 @@ int smlua_func_vec3i_sum(lua_State* L) {
     smlua_get_vec3i(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3i_sum"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_sum(dest, a, b), NULL);
+    vec3i_sum(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
 
@@ -20640,6 +20727,7 @@ int smlua_func_vec3i_sum(lua_State* L) {
 
     smlua_push_vec3i(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20661,12 +20749,13 @@ int smlua_func_vec3i_sub(lua_State* L) {
     smlua_get_vec3i(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_sub"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_sub(dest, a), NULL);
+    vec3i_sub(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
     smlua_push_vec3i(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20692,7 +20781,7 @@ int smlua_func_vec3i_dif(lua_State* L) {
     smlua_get_vec3i(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3i_dif"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_dif(dest, a, b), NULL);
+    vec3i_dif(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
 
@@ -20700,6 +20789,7 @@ int smlua_func_vec3i_dif(lua_State* L) {
 
     smlua_push_vec3i(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20719,10 +20809,73 @@ int smlua_func_vec3i_mul(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_mul"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_mul(dest, a), NULL);
+    vec3i_mul(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3i_mult(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3i_mult", 2, top);
+        return 0;
+    }
+
+
+    Vec3i dest;
+    smlua_get_vec3i(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_mult"); return 0; }
+
+    Vec3i a;
+    smlua_get_vec3i(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_mult"); return 0; }
+
+    vec3i_mult(dest, a);
+
+    smlua_push_vec3i(dest, 1);
+
+    smlua_push_vec3i(a, 2);
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3i_prod(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3i_prod", 3, top);
+        return 0;
+    }
+
+
+    Vec3i dest;
+    smlua_get_vec3i(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_prod"); return 0; }
+
+    Vec3i a;
+    smlua_get_vec3i(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_prod"); return 0; }
+
+    Vec3i b;
+    smlua_get_vec3i(b, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3i_prod"); return 0; }
+
+    vec3i_prod(dest, a, b);
+
+    smlua_push_vec3i(dest, 1);
+
+    smlua_push_vec3i(a, 2);
+
+    smlua_push_vec3i(b, 3);
+
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20742,10 +20895,11 @@ int smlua_func_vec3i_div(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_div"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_div(dest, a), NULL);
+    vec3i_div(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20784,10 +20938,11 @@ int smlua_func_vec3i_normalize(lua_State* L) {
     smlua_get_vec3i(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_normalize"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_normalize(v), NULL);
+    vec3i_normalize(v);
 
     smlua_push_vec3i(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20807,10 +20962,11 @@ int smlua_func_vec3i_set_magnitude(lua_State* L) {
     f32 mag = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_set_magnitude"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_set_magnitude(v, mag), NULL);
+    vec3i_set_magnitude(v, mag);
 
     smlua_push_vec3i(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20863,7 +21019,7 @@ int smlua_func_vec3i_cross(lua_State* L) {
     smlua_get_vec3i(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3i_cross"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_cross(dest, a, b), NULL);
+    vec3i_cross(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
 
@@ -20871,6 +21027,7 @@ int smlua_func_vec3i_cross(lua_State* L) {
 
     smlua_push_vec3i(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -20900,7 +21057,7 @@ int smlua_func_vec3i_combine(lua_State* L) {
     f32 sclB = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "vec3i_combine"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3i_combine(dest, vecA, vecB, sclA, sclB), NULL);
+    vec3i_combine(dest, vecA, vecB, sclA, sclB);
 
     smlua_push_vec3i(dest, 1);
 
@@ -20908,6 +21065,7 @@ int smlua_func_vec3i_combine(lua_State* L) {
 
     smlua_push_vec3i(vecB, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21004,12 +21162,13 @@ int smlua_func_vec3i_to_vec3f(lua_State* L) {
     smlua_get_vec3i(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_to_vec3f"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3i_to_vec3f(dest, a), NULL);
+    vec3i_to_vec3f(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
     smlua_push_vec3i(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21031,12 +21190,13 @@ int smlua_func_vec3i_to_vec3s(lua_State* L) {
     smlua_get_vec3i(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3i_to_vec3s"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3i_to_vec3s(dest, a), NULL);
+    vec3i_to_vec3s(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
     smlua_push_vec3i(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21058,10 +21218,11 @@ int smlua_func_vec3s_zero(lua_State* L) {
     smlua_get_vec3s(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_zero"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_zero(v), NULL);
+    vec3s_zero(v);
 
     smlua_push_vec3s(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21083,12 +21244,13 @@ int smlua_func_vec3s_copy(lua_State* L) {
     smlua_get_vec3s(src, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_copy"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_copy(dest, src), NULL);
+    vec3s_copy(dest, src);
 
     smlua_push_vec3s(dest, 1);
 
     smlua_push_vec3s(src, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21112,10 +21274,11 @@ int smlua_func_vec3s_set(lua_State* L) {
     s16 z = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "vec3s_set"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_set(dest, x, y, z), NULL);
+    vec3s_set(dest, x, y, z);
 
     smlua_push_vec3s(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21137,12 +21300,13 @@ int smlua_func_vec3s_add(lua_State* L) {
     smlua_get_vec3s(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_add"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_add(dest, a), NULL);
+    vec3s_add(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
     smlua_push_vec3s(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21168,7 +21332,7 @@ int smlua_func_vec3s_sum(lua_State* L) {
     smlua_get_vec3s(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3s_sum"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_sum(dest, a, b), NULL);
+    vec3s_sum(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
 
@@ -21176,6 +21340,7 @@ int smlua_func_vec3s_sum(lua_State* L) {
 
     smlua_push_vec3s(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21197,12 +21362,13 @@ int smlua_func_vec3s_sub(lua_State* L) {
     smlua_get_vec3s(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_sub"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_sub(dest, a), NULL);
+    vec3s_sub(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
     smlua_push_vec3s(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21228,7 +21394,7 @@ int smlua_func_vec3s_dif(lua_State* L) {
     smlua_get_vec3s(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3s_dif"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_dif(dest, a, b), NULL);
+    vec3s_dif(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
 
@@ -21236,6 +21402,7 @@ int smlua_func_vec3s_dif(lua_State* L) {
 
     smlua_push_vec3s(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21255,10 +21422,73 @@ int smlua_func_vec3s_mul(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_mul"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_mul(dest, a), NULL);
+    vec3s_mul(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3s_mult(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3s_mult", 2, top);
+        return 0;
+    }
+
+
+    Vec3s dest;
+    smlua_get_vec3s(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_mult"); return 0; }
+
+    Vec3s a;
+    smlua_get_vec3s(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_mult"); return 0; }
+
+    vec3s_mult(dest, a);
+
+    smlua_push_vec3s(dest, 1);
+
+    smlua_push_vec3s(a, 2);
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+int smlua_func_vec3s_prod(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3s_prod", 3, top);
+        return 0;
+    }
+
+
+    Vec3s dest;
+    smlua_get_vec3s(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_prod"); return 0; }
+
+    Vec3s a;
+    smlua_get_vec3s(a, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_prod"); return 0; }
+
+    Vec3s b;
+    smlua_get_vec3s(b, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3s_prod"); return 0; }
+
+    vec3s_prod(dest, a, b);
+
+    smlua_push_vec3s(dest, 1);
+
+    smlua_push_vec3s(a, 2);
+
+    smlua_push_vec3s(b, 3);
+
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21278,10 +21508,11 @@ int smlua_func_vec3s_div(lua_State* L) {
     f32 a = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_div"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_div(dest, a), NULL);
+    vec3s_div(dest, a);
 
     smlua_push_vec3s(dest, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21320,10 +21551,11 @@ int smlua_func_vec3s_normalize(lua_State* L) {
     smlua_get_vec3s(v, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_normalize"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_normalize(v), NULL);
+    vec3s_normalize(v);
 
     smlua_push_vec3s(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21343,10 +21575,11 @@ int smlua_func_vec3s_set_magnitude(lua_State* L) {
     f32 mag = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_set_magnitude"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_set_magnitude(v, mag), NULL);
+    vec3s_set_magnitude(v, mag);
 
     smlua_push_vec3s(v, 1);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21399,7 +21632,7 @@ int smlua_func_vec3s_cross(lua_State* L) {
     smlua_get_vec3s(b, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3s_cross"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_cross(dest, a, b), NULL);
+    vec3s_cross(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
 
@@ -21407,6 +21640,7 @@ int smlua_func_vec3s_cross(lua_State* L) {
 
     smlua_push_vec3s(b, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21436,7 +21670,7 @@ int smlua_func_vec3s_combine(lua_State* L) {
     f32 sclB = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "vec3s_combine"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)vec3s_combine(dest, vecA, vecB, sclA, sclB), NULL);
+    vec3s_combine(dest, vecA, vecB, sclA, sclB);
 
     smlua_push_vec3s(dest, 1);
 
@@ -21444,6 +21678,7 @@ int smlua_func_vec3s_combine(lua_State* L) {
 
     smlua_push_vec3s(vecB, 3);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21540,12 +21775,13 @@ int smlua_func_vec3s_to_vec3f(lua_State* L) {
     smlua_get_vec3s(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_to_vec3f"); return 0; }
 
-    smlua_push_pointer(L, LVT_F32_P, (void*)vec3s_to_vec3f(dest, a), NULL);
+    vec3s_to_vec3f(dest, a);
 
     smlua_push_vec3f(dest, 1);
 
     smlua_push_vec3s(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -21567,12 +21803,13 @@ int smlua_func_vec3s_to_vec3i(lua_State* L) {
     smlua_get_vec3s(a, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_to_vec3i"); return 0; }
 
-    smlua_push_pointer(L, LVT_S32_P, (void*)vec3s_to_vec3i(dest, a), NULL);
+    vec3s_to_vec3i(dest, a);
 
     smlua_push_vec3i(dest, 1);
 
     smlua_push_vec3s(a, 2);
 
+    lua_settop(L, 1);
     return 1;
 }
 
@@ -31206,6 +31443,23 @@ int smlua_func_gfx_get_vertex_count(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_get_texture(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_texture", 1, top);
+        return 0;
+    }
+
+    Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_texture"); return 0; }
+
+    smlua_push_pointer(L, LVT_U8_P, (void*)gfx_get_texture(cmd), NULL);
+
+    return 1;
+}
+
 int smlua_func_gfx_get_length(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34967,6 +35221,23 @@ int smlua_func_surface_has_force(lua_State* L) {
  // sync_object.h //
 ///////////////////
 
+int smlua_func_sync_object_get_object(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sync_object_get_object", 1, top);
+        return 0;
+    }
+
+    u32 syncId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sync_object_get_object"); return 0; }
+
+    smlua_push_object(L, LOT_OBJECT, sync_object_get_object(syncId), NULL);
+
+    return 1;
+}
+
 int smlua_func_sync_object_is_initialized(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36175,6 +36446,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vec3f_sub", smlua_func_vec3f_sub);
     smlua_bind_function(L, "vec3f_dif", smlua_func_vec3f_dif);
     smlua_bind_function(L, "vec3f_mul", smlua_func_vec3f_mul);
+    smlua_bind_function(L, "vec3f_mult", smlua_func_vec3f_mult);
+    smlua_bind_function(L, "vec3f_prod", smlua_func_vec3f_prod);
     smlua_bind_function(L, "vec3f_div", smlua_func_vec3f_div);
     smlua_bind_function(L, "vec3f_length", smlua_func_vec3f_length);
     smlua_bind_function(L, "vec3f_normalize", smlua_func_vec3f_normalize);
@@ -36197,6 +36470,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vec3i_sub", smlua_func_vec3i_sub);
     smlua_bind_function(L, "vec3i_dif", smlua_func_vec3i_dif);
     smlua_bind_function(L, "vec3i_mul", smlua_func_vec3i_mul);
+    smlua_bind_function(L, "vec3i_mult", smlua_func_vec3i_mult);
+    smlua_bind_function(L, "vec3i_prod", smlua_func_vec3i_prod);
     smlua_bind_function(L, "vec3i_div", smlua_func_vec3i_div);
     smlua_bind_function(L, "vec3i_length", smlua_func_vec3i_length);
     smlua_bind_function(L, "vec3i_normalize", smlua_func_vec3i_normalize);
@@ -36219,6 +36494,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vec3s_sub", smlua_func_vec3s_sub);
     smlua_bind_function(L, "vec3s_dif", smlua_func_vec3s_dif);
     smlua_bind_function(L, "vec3s_mul", smlua_func_vec3s_mul);
+    smlua_bind_function(L, "vec3s_mult", smlua_func_vec3s_mult);
+    smlua_bind_function(L, "vec3s_prod", smlua_func_vec3s_prod);
     smlua_bind_function(L, "vec3s_div", smlua_func_vec3s_div);
     smlua_bind_function(L, "vec3s_length", smlua_func_vec3s_length);
     smlua_bind_function(L, "vec3s_normalize", smlua_func_vec3s_normalize);
@@ -36775,6 +37052,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_get_display_list", smlua_func_gfx_get_display_list);
     smlua_bind_function(L, "gfx_get_vertex_buffer", smlua_func_gfx_get_vertex_buffer);
     smlua_bind_function(L, "gfx_get_vertex_count", smlua_func_gfx_get_vertex_count);
+    smlua_bind_function(L, "gfx_get_texture", smlua_func_gfx_get_texture);
     smlua_bind_function(L, "gfx_get_length", smlua_func_gfx_get_length);
     smlua_bind_function(L, "gfx_get_command", smlua_func_gfx_get_command);
     smlua_bind_function(L, "gfx_get_next_command", smlua_func_gfx_get_next_command);
@@ -37002,6 +37280,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
     // sync_object.h
+    smlua_bind_function(L, "sync_object_get_object", smlua_func_sync_object_get_object);
     smlua_bind_function(L, "sync_object_is_initialized", smlua_func_sync_object_is_initialized);
     smlua_bind_function(L, "sync_object_is_owned_locally", smlua_func_sync_object_is_owned_locally);
 

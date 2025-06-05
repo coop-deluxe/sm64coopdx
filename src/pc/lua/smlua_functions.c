@@ -40,6 +40,116 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
     return true;
 }
 
+  ///////////
+ // table //
+///////////
+
+int smlua_func_table_copy(lua_State *L) {
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        LOG_LUA_LINE("table_copy() called with an invalid type for param 1: %s", luaL_typename(L, 1));
+        return 0;
+    }
+
+    // Create a new table that will be the copy
+    lua_newtable(L);
+
+    // Iterate through original table
+    lua_pushnil(L); // first key
+    while (lua_next(L, 1) != 0) {
+
+        // Stack at the start of iteration is orig_table, new_table, key, value
+        // At the end of iteration, we need the key on top of the stack
+        // But settable also needs the key, so we manipulate the stack to become:
+        // orig_table, new_table, key, key, value   (before settable)
+        // orig_table, new_table, key               (after settable)
+        lua_pushvalue(L, -2);
+        lua_insert(L, -2);
+        lua_settable(L, 2);
+    }
+
+    LUA_STACK_CHECK_END();
+    return 1;
+}
+
+static void table_deepcopy_table(lua_State *L, int idxTable, int idxCache);
+
+static void table_deepcopy_value(lua_State *L, int idx, int idxCache) {
+    idx = lua_absindex(L, idx);
+    if (lua_type(L, idx) == LUA_TTABLE) {
+        table_deepcopy_table(L, idx, idxCache);
+    } else {
+        lua_pushvalue(L, idx);
+    }
+}
+
+static void table_deepcopy_table(lua_State *L, int idxTable, int idxCache) {
+    idxTable = lua_absindex(L, idxTable);
+    idxCache = lua_absindex(L, idxCache);
+
+    // Check the cache to see if the table has already been copied
+    lua_pushvalue(L, idxTable);
+    lua_rawget(L, idxCache);
+    if (!lua_isnil(L, -1)) {
+        return;
+    }
+    lua_pop(L, 1);
+
+    // Create a new table that will be the copy and add it to the cache
+    lua_newtable(L);
+    int idxNewTable = lua_gettop(L);
+    lua_pushvalue(L, idxTable);
+    lua_pushvalue(L, idxNewTable);
+    lua_rawset(L, idxCache);
+
+    // Iterate through original table
+    lua_pushnil(L); // first key
+    while (lua_next(L, idxTable) != 0) {
+        int idxKey = lua_absindex(L, -2);
+        int idxValue = lua_absindex(L, -1);
+
+        // Copy key and value to new table
+        table_deepcopy_value(L, idxKey, idxCache);
+        table_deepcopy_value(L, idxValue, idxCache);
+        lua_settable(L, idxNewTable);
+
+        // Pop value to set key on top of the stack
+        lua_pop(L, 1);
+    }
+
+    // Copy metatable
+    if (lua_getmetatable(L, idxTable)) {
+        table_deepcopy_value(L, -1, idxCache);
+        lua_setmetatable(L, idxNewTable);
+        lua_pop(L, 1);
+    }
+}
+
+int smlua_func_table_deepcopy(lua_State *L) {
+    LUA_STACK_CHECK_BEGIN_NUM(1);
+
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        LOG_LUA_LINE("table_deepcopy() called with an invalid type for param 1: %s", luaL_typename(L, 1));
+        return 0;
+    }
+
+    // Cache to prevent copying the same table twice
+    lua_newtable(L);
+    int idxCache = lua_gettop(L);
+
+    table_deepcopy_table(L, 1, idxCache);
+
+    lua_remove(L, idxCache);
+
+    LUA_STACK_CHECK_END();
+    return 1;
+}
+
   //////////
  // misc //
 //////////
@@ -988,7 +1098,7 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
 ////////////////
 
 typedef struct { s16 type; u16 lot; } GraphNodeLot;
-static GraphNodeLot graphNodeLots[23] = {
+static GraphNodeLot graphNodeLots[] = {
     { GRAPH_NODE_TYPE_ANIMATED_PART, LOT_GRAPHNODEANIMATEDPART },
     { GRAPH_NODE_TYPE_BACKGROUND, LOT_GRAPHNODEBACKGROUND },
     { GRAPH_NODE_TYPE_BILLBOARD, LOT_GRAPHNODEBILLBOARD },
@@ -1031,7 +1141,7 @@ int smlua_func_cast_graph_node(lua_State* L) {
     }
 
     u16 lot = 0;
-    for (u8 i = 0; i != 23; i++) {
+    for (u8 i = 0; i < ARRAY_COUNT(graphNodeLots); i++) {
         if (graphNode->type != graphNodeLots[i].type) continue;
         lot = graphNodeLots[i].lot;
         break;
@@ -1042,6 +1152,9 @@ int smlua_func_cast_graph_node(lua_State* L) {
     }
 
     smlua_push_object(L, lot, graphNode, NULL);
+
+    // Register this graph node as modified so it can be reset later
+    dynos_actor_register_modified_graph_node(graphNode);
 
     return 1;
 }
@@ -1082,13 +1195,13 @@ int smlua_func_gfx_set_command(lua_State* L) {
 
     Gfx* gfx = smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess || !gfx) {
-        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 1);
+        LOG_LUA_LINE("gfx_set_command: Failed to convert parameter %u", 1);
         return 0;
     }
 
     const char *command = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) {
-        LOG_LUA("gfx_set_command: Failed to convert parameter %u", 2);
+        LOG_LUA_LINE("gfx_set_command: Failed to convert parameter %u", 2);
         return 0;
     }
 
@@ -1149,6 +1262,8 @@ void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 
     // misc
+    smlua_bind_function(L, "table_copy", smlua_func_table_copy);
+    smlua_bind_function(L, "table_deepcopy", smlua_func_table_deepcopy);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
     smlua_bind_function(L, "initiate_warp", smlua_func_initiate_warp);
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);

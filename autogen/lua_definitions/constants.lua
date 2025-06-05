@@ -24,6 +24,41 @@ _ReadOnlyTable = {
 }
 
 -----------
+-- table --
+-----------
+
+--- Creates a shallow copy of table `t`
+--- @param t table
+--- @return table
+function table.copy(t)
+    return table_copy(t)
+end
+
+--- Creates a deep copy of table `t`
+--- @param t table
+--- @return table
+function table.deepcopy(t)
+    return table_deepcopy(t)
+end
+
+--- Utility function to create a read-only table
+--- @param data table
+--- @return table
+function create_read_only_table(data)
+    local t = {}
+    local mt = {
+        __index = data,
+        __newindex = function(_, k, _)
+            error('Attempting to modify key `' .. k .. '` of read-only table')
+        end,
+        __call = function() return table_copy(data) end,
+        __metatable = false
+    }
+    setmetatable(t, mt)
+    return t
+end
+
+-----------
 -- sound --
 -----------
 
@@ -143,7 +178,7 @@ end
 --- Note: These functions don't exist in the Lua math library,
 --- and are useful enough to not have to redefine them in every mod
 
-local __math_min, __math_max, __math_sqrt = math.min, math.max, math.sqrt
+local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil = math.min, math.max, math.sqrt, math.floor, math.ceil
 
 --- @param x number
 --- @return number
@@ -169,13 +204,132 @@ function math.hypot(a, b)
     return __math_sqrt(a * a + b * b)
 end
 
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive or zero, -1 otherwise
+function math.sign(x)
+    return x >= 0 and 1 or -1
+end
 
------------------
--- legacy font --
------------------
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive, 0 if it is zero, -1 otherwise
+function math.sign0(x)
+    return x ~= 0 and (x > 0 and 1 or -1) or 0
+end
 
---- @type integer
-FONT_TINY = -1
+--- @param a number
+--- @param b number
+--- @param t number
+--- @return number
+--- Linearly interpolates between `a` and `b` using delta `t`
+function math.lerp(a, b, t)
+    return a + (b - a) * t
+end
+
+--- @param a number
+--- @param b number
+--- @param x number
+--- @return number
+--- Determines where `x` linearly lies between `a` and `b`. It's the inverse of `math.lerp`
+function math.invlerp(a, b, x)
+    return (x - a) / (b - a)
+end
+
+--- @param a number
+--- @param b number
+--- @param c number
+--- @param d number
+--- @param x number
+--- @return number
+--- Linearly remaps `x` from the source range `[a, b]` to the destination range `[c, d]`
+function math.remap(a, b, c, d, x)
+    return c + (d - c) * ((x - a) / (b - a))
+end
+
+--- @param x number
+--- Rounds `x` to the nearest integer value
+function math.round(x)
+    return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
+end
+
+
+-------------------------
+-- vec types constants --
+-------------------------
+
+--- @type Vec2f
+gVec2fZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2f
+gVec2fOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3f
+gVec3fZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3f
+gVec3fOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec3f
+gVec3fX = create_read_only_table({x=1,y=0,z=0})
+
+--- @type Vec3f
+gVec3fY = create_read_only_table({x=0,y=1,z=0})
+
+--- @type Vec3f
+gVec3fZ = create_read_only_table({x=0,y=0,z=1})
+
+--- @type Vec4f
+gVec4fZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4f
+gVec4fOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Vec2i
+gVec2iZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2i
+gVec2iOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3i
+gVec3iZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3i
+gVec3iOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec4i
+gVec4iZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4i
+gVec4iOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Vec2s
+gVec2sZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2s
+gVec2sOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3s
+gVec3sZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3s
+gVec3sOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec4s
+gVec4sZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4s
+gVec4sOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Mat4
+gMat4Zero = create_read_only_table({m00=0,m01=0,m02=0,m03=0,m10=0,m11=0,m12=0,m13=0,m20=0,m21=0,m22=0,m23=0,m30=0,m31=0,m32=0,m33=0})
+
+--- @type Mat4
+gMat4Identity = create_read_only_table({m00=1,m01=0,m02=0,m03=0,m10=0,m11=1,m12=0,m13=0,m20=0,m21=0,m22=1,m23=0,m30=0,m31=0,m32=0,m33=1})
+
+--- @type Mat4
+gMat4Fullscreen = create_read_only_table({m00=0.00625,m01=0,m02=0,m03=0,m10=0,m11=0.008333333333333333,m12=0,m13=0,m20=0,m21=0,m22=-1,m23=0,m30=-1,m31=-1,m32=-1,m33=1})
+
 
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
@@ -7667,7 +7821,8 @@ HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
 HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
 HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
-HOOK_MAX                                    = 56 --- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
+HOOK_MAX                                    = 57 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7726,6 +7881,7 @@ HOOK_MAX                                    = 56 --- @type LuaHookedEventType
 --- | `HOOK_ALLOW_FORCE_WATER_ACTION`
 --- | `HOOK_BEFORE_WARP`
 --- | `HOOK_ON_INSTANT_WARP`
+--- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
 --- | `HOOK_MAX`
 
 ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType

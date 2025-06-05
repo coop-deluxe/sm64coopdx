@@ -19,6 +19,7 @@
 #include "pc/djui/djui_panel.h"
 #include "pc/configfile.h"
 #include "pc/utils/misc.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 
 #include "../mods/mods.h"
 #include "game/print.h"
@@ -445,7 +446,7 @@ void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struc
     }
 }
 
-void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID) {
+void smlua_call_event_hooks_object_set_model(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID, enum ModelExtendedId modelExtendedId) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
@@ -456,9 +457,10 @@ void smlua_call_event_hooks_object_model_param(enum LuaHookedEventType hookType,
         // push params
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
         lua_pushinteger(L, modelID);
+        lua_pushinteger(L, modelExtendedId);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
             LOG_LUA("Failed to call the callback: %u", hookType);
             continue;
         }

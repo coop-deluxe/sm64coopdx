@@ -524,6 +524,9 @@ s32 mario_get_floor_class(struct MarioState *m) {
         floorClass = SURFACE_CLASS_NOT_SLIPPERY;
     }
 
+    s32 returnValue = 0;
+    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_MARIO_OVERRIDE_FLOOR_CLASS, m, floorClass, &returnValue)) return returnValue;
+
     return floorClass;
 }
 

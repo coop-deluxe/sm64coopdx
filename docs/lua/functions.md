@@ -1251,6 +1251,8 @@
    - [vec3f_sub](functions-4.md#vec3f_sub)
    - [vec3f_dif](functions-4.md#vec3f_dif)
    - [vec3f_mul](functions-4.md#vec3f_mul)
+   - [vec3f_mult](functions-4.md#vec3f_mult)
+   - [vec3f_prod](functions-4.md#vec3f_prod)
    - [vec3f_div](functions-4.md#vec3f_div)
    - [vec3f_length](functions-4.md#vec3f_length)
    - [vec3f_normalize](functions-4.md#vec3f_normalize)
@@ -1275,6 +1277,8 @@
    - [vec3i_sub](functions-4.md#vec3i_sub)
    - [vec3i_dif](functions-4.md#vec3i_dif)
    - [vec3i_mul](functions-4.md#vec3i_mul)
+   - [vec3i_mult](functions-4.md#vec3i_mult)
+   - [vec3i_prod](functions-4.md#vec3i_prod)
    - [vec3i_div](functions-4.md#vec3i_div)
    - [vec3i_length](functions-4.md#vec3i_length)
    - [vec3i_normalize](functions-4.md#vec3i_normalize)
@@ -1299,6 +1303,8 @@
    - [vec3s_sub](functions-4.md#vec3s_sub)
    - [vec3s_dif](functions-4.md#vec3s_dif)
    - [vec3s_mul](functions-4.md#vec3s_mul)
+   - [vec3s_mult](functions-4.md#vec3s_mult)
+   - [vec3s_prod](functions-4.md#vec3s_prod)
    - [vec3s_div](functions-4.md#vec3s_div)
    - [vec3s_length](functions-4.md#vec3s_length)
    - [vec3s_normalize](functions-4.md#vec3s_normalize)
@@ -1315,16 +1321,16 @@
 <br />
 
 - misc.h
-   - [smooth_step](functions-4.md#smooth_step)
-   - [update_all_mario_stars](functions-4.md#update_all_mario_stars)
-   - [clock_elapsed](functions-4.md#clock_elapsed)
-   - [clock_elapsed_f64](functions-4.md#clock_elapsed_f64)
-   - [clock_elapsed_ticks](functions-4.md#clock_elapsed_ticks)
-   - [clock_is_date](functions-4.md#clock_is_date)
-   - [delta_interpolate_f32](functions-4.md#delta_interpolate_f32)
-   - [delta_interpolate_s32](functions-4.md#delta_interpolate_s32)
-   - [delta_interpolate_vec3f](functions-4.md#delta_interpolate_vec3f)
-   - [delta_interpolate_vec3s](functions-4.md#delta_interpolate_vec3s)
+   - [smooth_step](functions-5.md#smooth_step)
+   - [update_all_mario_stars](functions-5.md#update_all_mario_stars)
+   - [clock_elapsed](functions-5.md#clock_elapsed)
+   - [clock_elapsed_f64](functions-5.md#clock_elapsed_f64)
+   - [clock_elapsed_ticks](functions-5.md#clock_elapsed_ticks)
+   - [clock_is_date](functions-5.md#clock_is_date)
+   - [delta_interpolate_f32](functions-5.md#delta_interpolate_f32)
+   - [delta_interpolate_s32](functions-5.md#delta_interpolate_s32)
+   - [delta_interpolate_vec3f](functions-5.md#delta_interpolate_vec3f)
+   - [delta_interpolate_vec3s](functions-5.md#delta_interpolate_vec3s)
 
 <br />
 
@@ -1732,22 +1738,22 @@
 <br />
 
 - seqplayer.h
-   - [sequence_player_get_tempo](functions-5.md#sequence_player_get_tempo)
-   - [sequence_player_set_tempo](functions-5.md#sequence_player_set_tempo)
-   - [sequence_player_get_tempo_acc](functions-5.md#sequence_player_get_tempo_acc)
-   - [sequence_player_set_tempo_acc](functions-5.md#sequence_player_set_tempo_acc)
-   - [sequence_player_get_transposition](functions-5.md#sequence_player_get_transposition)
-   - [sequence_player_set_transposition](functions-5.md#sequence_player_set_transposition)
-   - [sequence_player_get_volume](functions-5.md#sequence_player_get_volume)
-   - [sequence_player_get_fade_volume](functions-5.md#sequence_player_get_fade_volume)
-   - [sequence_player_get_mute_volume_scale](functions-5.md#sequence_player_get_mute_volume_scale)
+   - [sequence_player_get_tempo](functions-6.md#sequence_player_get_tempo)
+   - [sequence_player_set_tempo](functions-6.md#sequence_player_set_tempo)
+   - [sequence_player_get_tempo_acc](functions-6.md#sequence_player_get_tempo_acc)
+   - [sequence_player_set_tempo_acc](functions-6.md#sequence_player_set_tempo_acc)
+   - [sequence_player_get_transposition](functions-6.md#sequence_player_get_transposition)
+   - [sequence_player_set_transposition](functions-6.md#sequence_player_set_transposition)
+   - [sequence_player_get_volume](functions-6.md#sequence_player_get_volume)
+   - [sequence_player_get_fade_volume](functions-6.md#sequence_player_get_fade_volume)
+   - [sequence_player_get_mute_volume_scale](functions-6.md#sequence_player_get_mute_volume_scale)
 
 <br />
 
 - smlua_anim_utils.h
-   - [get_mario_vanilla_animation](functions-5.md#get_mario_vanilla_animation)
-   - [smlua_anim_util_set_animation](functions-5.md#smlua_anim_util_set_animation)
-   - [smlua_anim_util_get_current_animation_name](functions-5.md#smlua_anim_util_get_current_animation_name)
+   - [get_mario_vanilla_animation](functions-6.md#get_mario_vanilla_animation)
+   - [smlua_anim_util_set_animation](functions-6.md#smlua_anim_util_set_animation)
+   - [smlua_anim_util_get_current_animation_name](functions-6.md#smlua_anim_util_get_current_animation_name)
 
 <br />
 
@@ -1872,6 +1878,7 @@
    - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-6.md#gfx_get_texture)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
@@ -2115,6 +2122,7 @@
 <br />
 
 - sync_object.h
+   - [sync_object_get_object](functions-6.md#sync_object_get_object)
    - [sync_object_is_initialized](functions-6.md#sync_object_is_initialized)
    - [sync_object_is_owned_locally](functions-6.md#sync_object_is_owned_locally)
 

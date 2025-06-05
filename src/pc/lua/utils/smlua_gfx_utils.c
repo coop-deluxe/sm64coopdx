@@ -238,6 +238,15 @@ u16 gfx_get_vertex_count(Gfx *cmd) {
     return C0(cmd, 12, 8);
 }
 
+u8 *gfx_get_texture(Gfx *cmd) {
+    if (!cmd) { return 0; }
+    u32 op = GFX_OP(cmd);
+    if (op != G_SETCIMG && op != G_SETZIMG && op != G_SETTIMG) { return 0; }
+    if (cmd->words.w1 == 0) { return 0; }
+
+    return (u8 *) cmd->words.w1;
+}
+
 u32 gfx_get_length(Gfx *gfx) {
     if (!gfx) { return 0; }
 
