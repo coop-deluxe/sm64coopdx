@@ -270,21 +270,15 @@ struct TextureInfo *smlua_to_texture_info(lua_State *L, int index) {
 
         lua_pushstring(L, "texture");
         lua_gettable(L, top + 1);
-        tmpTexInfo.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        const u8 *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
         lua_pop(L, 1);
         if (!gSmLuaConvertSuccess) { return NULL; }
 
-        tmpTexInfo.bitSize = smlua_get_integer_field(top + 1, "bitSize");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.width = smlua_get_integer_field(top + 1, "width");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.height = smlua_get_integer_field(top + 1, "height");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.name = smlua_get_string_field(top + 1, "name");
-        if (!gSmLuaConvertSuccess) { return NULL; }
+        // Get the texInfo from DynOS so mods can't spoof it
+        if (!texPtr || !dynos_texture_get_from_data(texPtr, texInfo)) {
+            gSmLuaConvertSuccess = false;
+            return NULL;
+        }
 
         lua_settop(L, top);
     }
