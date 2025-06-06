@@ -18,6 +18,7 @@
 #include "game/first_person_cam.h"
 #include "course_table.h"
 #include "skybox.h"
+#include "mario.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -1227,12 +1228,8 @@ static void geo_sanitize_object_gfx(void) {
 }
 
 static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
-    for (s32 i = 0; i < MAX_PLAYERS; ++i) {
-        struct MarioState *m = &gMarioStates[i];
-        if (m->marioObj == marioObj) {
-            return m->marioBodyState;
-        }
-    }
+    struct MarioState *m = get_mario_state_from_object(marioObj);
+    if (m) { return m->marioBodyState; }
     return NULL;
 }
 
@@ -1262,13 +1259,7 @@ static void geo_process_object(struct Object *node) {
     }
 
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
-        gCurGraphNodeMarioState = NULL;
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == node) {
-                gCurGraphNodeMarioState = &gMarioStates[i];
-                break;
-            }
-        }
+        gCurGraphNodeMarioState = get_mario_state_from_object(node);
         if (gCurGraphNodeMarioState != NULL) {
             gCurGraphNodeMarioState->minimumBoneY = 9999;
         }
@@ -1390,9 +1381,11 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
-                gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
-                if (gCurMarioBodyState) {
-                    gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
+                    gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
+                    if (gCurMarioBodyState) {
+                        gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                    }
                 }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;

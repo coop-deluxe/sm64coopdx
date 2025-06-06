@@ -220,7 +220,7 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
     // Clear Mario object pointers
-    if (obj->behavior == smlua_override_behavior(bhvMario)) {
+    if (obj->behavior == bhvMario) {
         u8 playerIndex = obj->oBehParams - 1;
         if (playerIndex < MAX_PLAYERS) {
             gMarioObjects[playerIndex] = NULL;

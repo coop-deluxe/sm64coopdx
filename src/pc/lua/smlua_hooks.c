@@ -1518,6 +1518,12 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     }
 
     u32 originalBehaviorId = get_id_from_behavior(bhvScript);
+
+    if (originalBehaviorId == id_bhvMario) {
+        LOG_LUA_LINE("Cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
+        return 0;
+    }
+
     u8 newBehavior = originalBehaviorId >= id_bhv_max_count;
 
     struct LuaHookedBehavior *hooked = &sHookedBehaviors[sHookedBehaviorsCount];
@@ -1570,6 +1576,11 @@ int smlua_hook_behavior(lua_State* L) {
     lua_Integer overrideBehaviorId = noOverrideId ? 0xFFFFFF : smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Hook behavior: tried to override invalid behavior: %lld, %u", overrideBehaviorId, gSmLuaConvertSuccess);
+        return 0;
+    }
+
+    if (overrideBehaviorId == id_bhvMario) {
+        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
         return 0;
     }
 
