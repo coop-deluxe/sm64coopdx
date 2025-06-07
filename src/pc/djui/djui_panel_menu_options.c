@@ -106,9 +106,6 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_panel_options_create(NULL);
         djui_panel_misc_create(NULL);
         djui_panel_main_menu_create(NULL);
-
-        djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
-        djui_text_set_text(gDjuiPauseOptions, DLANG(MISC, R_BUTTON));
     }
     gDjuiChangingTheme = false;
 

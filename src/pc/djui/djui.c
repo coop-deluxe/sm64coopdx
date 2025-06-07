@@ -20,7 +20,6 @@
 static Gfx* sSavedDisplayListHead = NULL;
 
 struct DjuiRoot* gDjuiRoot = NULL;
-struct DjuiText* gDjuiPauseOptions = NULL;
 static struct DjuiText* sDjuiLuaError = NULL;
 static u32 sDjuiLuaErrorTimeout = 0;
 bool gDjuiInMainMenu = true;
@@ -29,7 +28,6 @@ bool gDjuiDisabled = false;
 bool gDjuiShuttingDown = false;
 bool gDjuiChangingTheme = false;
 static bool sDjuiInited = false;
-static struct DjuiRoot* sDjuiRootBehind = NULL;
 
 bool sDjuiRendered60fps = false;
 
@@ -38,9 +36,7 @@ void djui_shutdown(void) {
     djui_panel_shutdown();
 
     sSavedDisplayListHead = NULL;
-    if (gDjuiPauseOptions) djui_base_destroy(&gDjuiPauseOptions->base);
     if (sDjuiLuaError) djui_base_destroy(&sDjuiLuaError->base);
-    gDjuiPauseOptions = NULL;
     sDjuiLuaError = NULL;
     sDjuiLuaErrorTimeout = 0;
 
@@ -81,13 +77,6 @@ void patch_djui_interpolated(UNUSED f32 delta) {
 
 void djui_init(void) {
     gDjuiRoot = djui_root_create();
-    sDjuiRootBehind = djui_root_create();
-
-    gDjuiPauseOptions = djui_text_create(&sDjuiRootBehind->base, DLANG(MISC, R_BUTTON));
-    djui_base_set_size_type(&gDjuiPauseOptions->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&gDjuiPauseOptions->base, 1.0f, 32);
-    djui_base_set_location(&gDjuiPauseOptions->base, 0, 16);
-    djui_text_set_alignment(gDjuiPauseOptions, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
 
     sDjuiLuaError = djui_text_create(&gDjuiRoot->base, "");
     djui_base_set_size_type(&sDjuiLuaError->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -158,10 +147,6 @@ void djui_render(void) {
 
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
-
-    if (sDjuiRootBehind != NULL && (sCurrPlayMode == PLAY_MODE_PAUSED) && !gDjuiPanelPauseCreated) {
-        djui_base_render(&sDjuiRootBehind->base);
-    }
 
     smlua_call_event_on_hud_render(djui_reset_hud_params);
 
