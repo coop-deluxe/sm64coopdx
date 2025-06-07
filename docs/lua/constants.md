@@ -3439,7 +3439,9 @@
 | HOOK_BEFORE_WARP | 54 |
 | HOOK_ON_INSTANT_WARP | 55 |
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | 56 |
-| HOOK_MAX | 57 |
+| HOOK_ON_ADD_SURFACE | 57 |
+| HOOK_ON_CLEAR_AREAS | 58 |
+| HOOK_MAX | 59 |
 
 ### [enum LuaActionHookType](#LuaActionHookType)
 | Identifier | Value |
