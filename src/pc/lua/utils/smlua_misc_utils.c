@@ -322,7 +322,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
 }
 
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos) {
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
     if (!m) { return false; }
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
@@ -584,4 +584,26 @@ struct GraphNodeCamera* geo_get_current_camera(void) {
 
 struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
+}
+
+bool get_texture_average_color(const u8 *tex, OUT Color out) {
+    struct TextureInfo texInfo;
+    if (!tex) { return false; }
+    if (!dynos_texture_get_from_data(tex, &texInfo)) { return false; }
+    u32 w = texInfo.width;
+    u32 h = texInfo.height;
+    u32 texSize = w * h;
+    const u8 *data = texInfo.texture;
+    u32 r = 0;
+    u32 g = 0;
+    u32 b = 0;
+    for (u32 i = 0; i < texSize; i++) {
+        r += data[4 * i + 0];
+        g += data[4 * i + 1];
+        b += data[4 * i + 2];
+    }
+    out[0] = r / texSize;
+    out[1] = g / texSize;
+    out[2] = b / texSize;
+    return true;
 }

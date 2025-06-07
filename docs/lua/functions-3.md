@@ -537,7 +537,7 @@ Converts an object's position to a `Vec3f` format. Useful for aligning object be
 - None
 
 ### C Prototype
-`void object_pos_to_vec3f(Vec3f dst, struct Object *o);`
+`void object_pos_to_vec3f(OUT Vec3f dst, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -562,6 +562,102 @@ Converts a `Vec3f` position to an object's internal format. Useful for syncing 3
 
 ### C Prototype
 `void vec3f_to_object_pos(struct Object *o, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_face_angle_to_vec3s](#object_face_angle_to_vec3s)
+
+### Description
+Converts an object's face angle to a `Vec3s` format
+
+### Lua Example
+`object_face_angle_to_vec3s(dst, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3s](structs.md#Vec3s) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void object_face_angle_to_vec3s(OUT Vec3s dst, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_object_face_angle](#vec3s_to_object_face_angle)
+
+### Description
+Converts a `Vec3s` angle to an object's face angle internal format
+
+### Lua Example
+`vec3s_to_object_face_angle(o, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3s_to_object_face_angle(struct Object *o, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_move_angle_to_vec3s](#object_move_angle_to_vec3s)
+
+### Description
+Converts an object's move angle to a `Vec3s` format
+
+### Lua Example
+`object_move_angle_to_vec3s(dst, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3s](structs.md#Vec3s) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void object_move_angle_to_vec3s(OUT Vec3s dst, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_object_move_angle](#vec3s_to_object_move_angle)
+
+### Description
+Converts a `Vec3s` angle to an object's move angle internal format
+
+### Lua Example
+`vec3s_to_object_move_angle(o, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3s_to_object_move_angle(struct Object *o, Vec3s src);`
 
 [:arrow_up_small:](#)
 
@@ -654,7 +750,7 @@ Activates a handheld camera shake effect. Calculates positional and focus adjust
 - None
 
 ### C Prototype
-`void shake_camera_handheld(Vec3f pos, Vec3f focus);`
+`void shake_camera_handheld(Vec3f pos, OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -704,7 +800,7 @@ Checks for collisions between the camera and level geometry. Adjusts the camera'
 - `integer`
 
 ### C Prototype
-`s32 collide_with_walls(Vec3f pos, f32 offsetY, f32 radius);`
+`s32 collide_with_walls(OUT Vec3f pos, f32 offsetY, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -730,7 +826,7 @@ Clamps the camera's pitch angle between a maximum and minimum value. Prevents ov
 - `integer`
 
 ### C Prototype
-`s32 clamp_pitch(Vec3f from, Vec3f to, s16 maxPitch, s16 minPitch);`
+`s32 clamp_pitch(Vec3f from, OUT Vec3f to, s16 maxPitch, s16 minPitch);`
 
 [:arrow_up_small:](#)
 
@@ -907,7 +1003,7 @@ Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) 
 - None
 
 ### C Prototype
-`void approach_vec3f_asymptotic(Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
+`void approach_vec3f_asymptotic(OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -934,7 +1030,7 @@ Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) usi
 - None
 
 ### C Prototype
-`void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
+`void set_or_approach_vec3f_asymptotic(OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -1060,7 +1156,7 @@ Generates a random 3D vector with short integer components. Useful for randomize
 - None
 
 ### C Prototype
-`void random_vec3s(Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
+`void random_vec3s(OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
 
 [:arrow_up_small:](#)
 
@@ -1088,7 +1184,7 @@ Clamps a position within specified X and Z bounds and calculates the yaw angle f
 - `integer`
 
 ### C Prototype
-`s32 clamp_positions_and_find_yaw(Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
+`s32 clamp_positions_and_find_yaw(OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
 
 [:arrow_up_small:](#)
 
@@ -1141,7 +1237,7 @@ Scales a point along a line between two 3D points (`from` and `to`). The scaling
 - None
 
 ### C Prototype
-`void scale_along_line(Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
+`void scale_along_line(OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
 
 [:arrow_up_small:](#)
 
@@ -1288,7 +1384,7 @@ Rotates a vector around the XZ-plane by a specified yaw angle. The result is sto
 - None
 
 ### C Prototype
-`void rotate_in_xz(Vec3f dst, Vec3f src, s16 yaw);`
+`void rotate_in_xz(OUT Vec3f dst, Vec3f src, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1313,7 +1409,7 @@ Rotates a vector around the YZ-plane by a specified pitch angle. The result is s
 - None
 
 ### C Prototype
-`void rotate_in_yz(Vec3f dst, Vec3f src, s16 pitch);`
+`void rotate_in_yz(OUT Vec3f dst, Vec3f src, s16 pitch);`
 
 [:arrow_up_small:](#)
 
@@ -1441,7 +1537,7 @@ Activates a pitch-based shake effect. Adds vertical vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_pitch(Vec3f pos, Vec3f focus);`
+`void shake_camera_pitch(Vec3f pos, OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1465,7 +1561,7 @@ Activates a yaw-based shake effect. Adds horizontal vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_yaw(Vec3f pos, Vec3f focus);`
+`void shake_camera_yaw(Vec3f pos, OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1894,7 +1990,7 @@ Offsets a vector by rotating it in 3D space relative to a reference position. Th
 - None
 
 ### C Prototype
-`void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
+`void offset_rotated(OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
 
 [:arrow_up_small:](#)
 
@@ -1923,7 +2019,7 @@ Transitions the camera to the next Lakitu state, updating position and focus. Th
 - `integer`
 
 ### C Prototype
-`s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
+`s16 next_lakitu_state(OUT Vec3f newPos, OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1993,7 +2089,7 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 - None
 
 ### C Prototype
-`void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);`
+`void resolve_geometry_collisions(OUT Vec3f pos, UNUSED Vec3f lastGood);`
 
 [:arrow_up_small:](#)
 
@@ -3250,6 +3346,130 @@ Prints interpolated DJUI HUD text onto the screen
 
 <br />
 
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+### Description
+Renders a DJUI HUD texture onto the screen
+
+### Lua Example
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
+
+### Description
+Renders a DJUI HUD texture tile onto the screen
+
+### Lua Example
+`djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `integer` |
+| tileY | `integer` |
+| tileW | `integer` |
+| tileH | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD texture onto the screen
+
+### Lua Example
+`djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleW | `number` |
+| prevScaleH | `number` |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD texture tile onto the screen
+
+### Lua Example
+`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleW | `number` |
+| prevScaleH | `number` |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `integer` |
+| tileY | `integer` |
+| tileW | `integer` |
+| tileH | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_render_rect](#djui_hud_render_rect)
 
 ### Description
@@ -3366,7 +3586,7 @@ Converts a world position to screen position
 - `boolean`
 
 ### C Prototype
-`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
+`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -6432,7 +6652,7 @@ Calculates the lighting with `lightIntensityScalar` at a position and outputs th
 - None
 
 ### C Prototype
-`void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar);`
+`void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar);`
 
 [:arrow_up_small:](#)
 
@@ -6456,7 +6676,7 @@ Calculates the lighting direction from a position and outputs the result in `out
 - None
 
 ### C Prototype
-`void le_calculate_lighting_dir(Vec3f pos, Vec3f out);`
+`void le_calculate_lighting_dir(Vec3f pos, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 

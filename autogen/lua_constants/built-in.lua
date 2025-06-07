@@ -61,7 +61,7 @@ end
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number

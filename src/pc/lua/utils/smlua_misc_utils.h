@@ -136,7 +136,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 /* |description|
 Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);
@@ -230,5 +230,8 @@ struct GraphNodeCamera* geo_get_current_camera(void);
 
 /* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
+
+/* |description|Calculates the average color of a given texture. Returns true if success|descriptionEnd|*/
+bool get_texture_average_color(const u8 *tex, OUT Color out);
 
 #endif

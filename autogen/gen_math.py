@@ -5,7 +5,7 @@ VEC3X_TO_VEC3Y = """
 /* |description|
 Converts a 3D {{desc}} vector `a` into a 3D {{desc_2}} vector and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix_2}}p vec3{{suffix}}_to_vec3{{suffix_2}}(Vec3{{suffix_2}} dest, Vec3{{suffix}} a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix_2}}p vec3{{suffix}}_to_vec3{{suffix_2}}(OUT Vec3{{suffix_2}} dest, Vec3{{suffix}} a) {
     dest[0] = a[0]{{rounding_0}};
     dest[1] = a[1]{{rounding_1}};
     dest[2] = a[2]{{rounding_2}};
