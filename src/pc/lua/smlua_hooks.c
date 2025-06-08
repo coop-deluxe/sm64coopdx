@@ -164,7 +164,7 @@ void smlua_call_event_on_hud_render_behind(void (*resetFunc)(void)) {
 
 }
 
-void smlua_call_event_on_add_surface(struct Surface* surface, s32 dynamic) {
+void smlua_call_event_on_add_surface(struct Surface* surface, bool dynamic) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
 
@@ -175,7 +175,7 @@ void smlua_call_event_on_add_surface(struct Surface* surface, s32 dynamic) {
 
         // push surface and dynamic
         smlua_push_object(L, LOT_SURFACE, surface, NULL);
-        lua_pushinteger(L, dynamic);
+        lua_pushboolean(L, dynamic);
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
