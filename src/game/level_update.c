@@ -1109,74 +1109,78 @@ void initiate_delayed_warp(void) {
 
 void update_hud_values(void) {
     if (gCurrCreditsEntry == NULL) {
-        s16 numHealthWedges = gMarioState->health > 0 ? MIN(gMarioState->health >> 8, 8) : 0;
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i); // to swap gMarioState and gHudDisplay
 
-        if (gCurrCourseNum >= COURSE_MIN) {
-            gHudDisplay.flags |= HUD_DISPLAY_FLAG_COIN_COUNT;
-        } else {
-            gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_COIN_COUNT;
-        }
+            s16 numHealthWedges = gMarioState->health > 0 ? MIN(gMarioState->health >> 8, 8) : 0;
 
-        if (gHudDisplay.coins < gMarioState->numCoins) {
-            if (gGlobalTimer & 0x00000001) {
-                u32 coinSound;
-                if (gMarioState->action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER)) {
-                    coinSound = SOUND_GENERAL_COIN_WATER;
-                } else {
-                    coinSound = SOUND_GENERAL_COIN;
-                }
+            if (gCurrCourseNum >= COURSE_MIN) {
+                gHudDisplay.flags |= HUD_DISPLAY_FLAG_COIN_COUNT;
+            } else {
+                gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_COIN_COUNT;
+            }
 
-                gHudDisplay.coins += 1;
-                play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
-
-                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
-                    // retain vanilla behavior
-                    if (gLevelValues.numCoinsToLife == 50) {
-                        if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
-                            gMarioState->numLives++;
-                            play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
-                        }
+            if (gHudDisplay.coins < gMarioState->numCoins) {
+                if (gGlobalTimer & 0x00000001) {
+                    u32 coinSound;
+                    if (gMarioState->action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER)) {
+                        coinSound = SOUND_GENERAL_COIN_WATER;
                     } else {
-                        if (gLevelValues.numCoinsToLife != 0 && gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
-                            gMarioState->numLives++;
-                            play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                        coinSound = SOUND_GENERAL_COIN;
+                    }
+
+                    gHudDisplay.coins += 1;
+                    play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
+
+                    if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
+                        // retain vanilla behavior
+                        if (gLevelValues.numCoinsToLife == 50) {
+                            if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
+                                gMarioState->numLives++;
+                                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                            }
+                        } else {
+                            if (gLevelValues.numCoinsToLife != 0 && gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
+                                gMarioState->numLives++;
+                                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (gMarioState->numLives > gLevelValues.maxLives) {
-            gMarioState->numLives = gLevelValues.maxLives;
-        }
+            if (gMarioState->numLives > gLevelValues.maxLives) {
+                gMarioState->numLives = gLevelValues.maxLives;
+            }
 
 #if BUGFIX_MAX_LIVES
-        if (gMarioState->numCoins > gLevelValues.maxCoins) {
-            gMarioState->numCoins = gLevelValues.maxCoins;
-        }
+            if (gMarioState->numCoins > gLevelValues.maxCoins) {
+                gMarioState->numCoins = gLevelValues.maxCoins;
+            }
 
-        if (gHudDisplay.coins > gLevelValues.maxCoins) {
-            gHudDisplay.coins = gLevelValues.maxCoins;
-        }
+            if (gHudDisplay.coins > gLevelValues.maxCoins) {
+                gHudDisplay.coins = gLevelValues.maxCoins;
+            }
 #else
-        if (gMarioState->numCoins > gLevelValues.maxCoins) {
-            gMarioState->numLives = (s8) gLevelValues.maxCoins;
-        }
+            if (gMarioState->numCoins > gLevelValues.maxCoins) {
+                gMarioState->numLives = (s8) gLevelValues.maxCoins;
+            }
 #endif
 
-        gHudDisplay.stars = gMarioState->numStars;
-        gHudDisplay.lives = gMarioState->numLives;
-        gHudDisplay.keys = gMarioState->numKeys;
+            gHudDisplay.stars = gMarioState->numStars;
+            gHudDisplay.lives = gMarioState->numLives;
+            gHudDisplay.keys = gMarioState->numKeys;
 
-        if (numHealthWedges > gHudDisplay.wedges && !gDjuiInMainMenu) {
-            play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource);
-        }
-        gHudDisplay.wedges = numHealthWedges;
+            if (numHealthWedges > gHudDisplay.wedges && !gDjuiInMainMenu) {
+                play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource);
+            }
+            gHudDisplay.wedges = numHealthWedges;
 
-        if (gMarioState->hurtCounter > 0) {
-            gHudDisplay.flags |= HUD_DISPLAY_FLAG_EMPHASIZE_POWER;
-        } else {
-            gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_EMPHASIZE_POWER;
+            if (gMarioState->hurtCounter > 0) {
+                gHudDisplay.flags |= HUD_DISPLAY_FLAG_EMPHASIZE_POWER;
+            } else {
+                gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_EMPHASIZE_POWER;
+            }
         }
     }
 }
