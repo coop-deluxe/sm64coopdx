@@ -7,6 +7,7 @@
 #include "object_list_processor.h"
 #include "spawn_object.h"
 #include "pc/network/network_player.h"
+#include "local_multiplayer.h"
 
 struct Object *debug_print_obj_collision(struct Object *a) {
     if (!a) { return NULL; }
@@ -117,7 +118,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
     f32 sp28 = a->hurtboxRadius + b->hurtboxRadius;
     f32 sp24 = sqrtf(sp34 * sp34 + sp2C * sp2C);
 
-    if ((a->oInteractType & INTERACT_PLAYER) && a->oBehParams == 1) {
+    if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < numPlayersLocal) {
         b->oInteractionSubtype |= INT_SUBTYPE_DELAY_INVINCIBILITY;
     }
 
@@ -131,7 +132,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
         if (sp20 < sp38) {
             return 0;
         }
-        if ((a->oInteractType & INTERACT_PLAYER) && a->oBehParams == 1) {
+        if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < numPlayersLocal) {
             b->oInteractionSubtype &= ~INT_SUBTYPE_DELAY_INVINCIBILITY;
         }
         return 1;
@@ -192,16 +193,22 @@ void check_player_object_collision(void) {
     }
 
     extern struct MarioState gMarioStates[];
-    for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        if (detect_player_hitbox_overlap(&gMarioStates[0], &gMarioStates[i], 1.0f)) {
-            struct Object* a = gMarioStates[0].marioObj;
-            struct Object* b = gMarioStates[i].marioObj;
-            a->collidedObjs[a->numCollidedObjs] = b;
-            b->collidedObjs[b->numCollidedObjs] = a;
-            a->collidedObjInteractTypes |= b->oInteractType;
-            b->collidedObjInteractTypes |= a->oInteractType;
-            a->numCollidedObjs++;
-            b->numCollidedObjs++;
+    u16 interactLocalPlayer = 0;
+    for (u8 j = 0; j < numPlayersLocal; j++) {
+        if (j != 0 && interactLocalPlayer & j) { continue; }
+        for (s32 i = 1; i < MAX_PLAYERS; i++) {
+            if (j == i) { continue; }
+            if (detect_player_hitbox_overlap(&gMarioStates[j], &gMarioStates[i], 1.0f)) {
+                struct Object* a = gMarioStates[j].marioObj;
+                struct Object* b = gMarioStates[i].marioObj;
+                a->collidedObjs[a->numCollidedObjs] = b;
+                b->collidedObjs[b->numCollidedObjs] = a;
+                a->collidedObjInteractTypes |= b->oInteractType;
+                b->collidedObjInteractTypes |= a->oInteractType;
+                a->numCollidedObjs++;
+                b->numCollidedObjs++;
+                interactLocalPlayer |= i;
+            }
         }
     }
 }

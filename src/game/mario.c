@@ -2224,6 +2224,7 @@ void init_single_mario(struct MarioState* m) {
     if (playerIndex < numPlayersLocal) {
         gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
         m->area = &gCurrentAreaCopies[playerIndex];
+        m->area->localAreaTimer = 60;
     } else {
         m->area = gCurrentArea;
     }

@@ -549,7 +549,7 @@ u8 is_player_active(struct MarioState* m) {
     if (m->action == ACT_BUBBLED) { return FALSE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
-    if (np->type != NPT_LOCAL) {
+    if (np->type != NPT_LOCAL || np->localIndex < numPlayersLocal) {
         if (!np->connected) { return FALSE; }
         if (gNetworkPlayerLocal == NULL) { return FALSE; }
         bool levelAreaMismatch =
@@ -577,7 +577,7 @@ u8 is_player_in_local_area(struct MarioState* m) {
     if (gNetworkType == NT_NONE && m->playerIndex < numPlayersLocal) { return TRUE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
-    if (np->type != NPT_LOCAL) {
+    if (np->type != NPT_LOCAL || np->localIndex < numPlayersLocal) {
         if (!np->connected) { return FALSE; }
         if (gNetworkPlayerLocal == NULL) { return FALSE; }
         bool levelAreaMismatch =
