@@ -149,6 +149,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode`, to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |
 | HOOK_ON_INSTANT_WARP | Called when the local player goes through an instant warp.| `integer` area, `integer` id, `Vec3s` displacement|
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | Called when Mario's floor class logic updates, return a `SURFACE_CLASS_*` constant to override the type. | [MarioState](../structs.md#MarioState) mario, `integer` surfaceClass |
+| HOOK_ON_ADD_SURFACE | Called when collision surfaces are added. | [Surface](../structs.md#Surface) surface, `boolean` dynamic |
+| HOOK_ON_CLEAR_AREAS | Called when a level's areas are unloaded. | None |
 
 ### Parameters
 
