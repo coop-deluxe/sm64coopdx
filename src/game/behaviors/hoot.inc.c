@@ -209,7 +209,7 @@ void hoot_action_loop(void) {
             if (o->oPosY < 2700.0f) {
                 //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
 
-                if (marioState == &gMarioStates[0] && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.HootTiredDialog)) {
+                if (marioState->playerIndex < numPlayersLocal && cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.HootTiredDialog)) {
                     clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
 
                     o->oAction = HOOT_ACT_TIRED;
@@ -286,7 +286,7 @@ void bhv_hoot_loop(void) {
         case HOOT_AVAIL_WANTS_TO_TALK:
             hoot_awake_loop();
 
-            if (marioState == &gMarioStates[0] && localTalkToHoot == 0) {
+            if (marioState->playerIndex < numPlayersLocal && localTalkToHoot == 0) {
                 localTalkToHoot = 1;
             }
 

@@ -591,7 +591,7 @@ void envfx_set_max_bubble_particles(s32 mode) {
 Gfx *envfx_update_bubbles(s32 mode, Vec3s marioPos, Vec3s camTo, Vec3s camFrom) {
     Gfx *gfx;
 
-    if (gEnvFxMode == 0 && !envfx_init_bubble(mode)) {
+    if ((gEnvFxMode == 0 || !gEnvFxBuffer) && !envfx_init_bubble(mode)) {
         return NULL;
     }
 

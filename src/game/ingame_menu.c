@@ -38,6 +38,7 @@
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "menu/ingame_text.h"
+#include "local_multiplayer.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -930,19 +931,19 @@ void handle_menu_scrolling(s8 scrollDirection, s8 *currentIndex, s8 minIndex, s8
     u8 index = 0;
 
     if (scrollDirection == MENU_SCROLL_VERTICAL) {
-        if (gPlayer1Controller->rawStickY > 60) {
+        if (gSharedCtr->rawStickY > 60) {
             index++;
         }
 
-        if (gPlayer1Controller->rawStickY < -60) {
+        if (gSharedCtr->rawStickY < -60) {
             index += 2;
         }
     } else if (scrollDirection == MENU_SCROLL_HORIZONTAL) {
-        if (gPlayer1Controller->rawStickX > 60) {
+        if (gSharedCtr->rawStickX > 60) {
             index += 2;
         }
 
-        if (gPlayer1Controller->rawStickX < -60) {
+        if (gSharedCtr->rawStickX < -60) {
             index++;
         }
     }
@@ -2020,8 +2021,8 @@ void render_dialog_entries(void) {
         case DIALOG_STATE_VERTICAL:
             gDialogBoxOpenTimer = 0.0f;
 
-            if ((gPlayer1Controller->buttonPressed & A_BUTTON)
-                || (gPlayer1Controller->buttonPressed & B_BUTTON)) {
+            if ((gSharedCtr->buttonPressed & A_BUTTON)
+                || (gSharedCtr->buttonPressed & B_BUTTON)) {
                 if (gLastDialogPageStrPos == -1) {
                     handle_special_dialog_text(gDialogID);
                     gDialogBoxState = DIALOG_STATE_CLOSING;
@@ -3099,10 +3100,10 @@ s16 render_pause_courses_and_castle(void) {
                 }
 
 #ifdef VERSION_EU
-                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+                if (gSharedCtr->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
-                if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                if (gSharedCtr->buttonPressed & A_BUTTON
+                 || gSharedCtr->buttonPressed & START_BUTTON)
 #endif
                 {
                     bool allowExit = true;
@@ -3142,10 +3143,10 @@ s16 render_pause_courses_and_castle(void) {
                 }
 
 #ifdef VERSION_EU
-                if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
+                if (gSharedCtr->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
-                if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                if (gSharedCtr->buttonPressed & A_BUTTON
+                 || gSharedCtr->buttonPressed & START_BUTTON)
 #endif
                 {
                     level_set_transition(0, NULL);
@@ -3164,7 +3165,7 @@ s16 render_pause_courses_and_castle(void) {
     }
 
     if (gDjuiPanelPauseCreated && !gDjuiInPlayerMenu) { shade_screen(); }
-    if (gPlayer1Controller->buttonPressed & R_TRIG) {
+    if (gSharedCtr->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
     }
 
@@ -3495,10 +3496,10 @@ s16 render_course_complete_screen(void) {
             render_save_confirmation(100, 86, &gDialogLineNum, 20);
 #endif
             if (gCourseDoneMenuTimer > 110
-                && (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON
+                && (gSharedCtr->buttonPressed & A_BUTTON
+                 || gSharedCtr->buttonPressed & START_BUTTON
 #ifdef VERSION_EU
-                 || gPlayer1Controller->buttonPressed & Z_TRIG
+                 || gSharedCtr->buttonPressed & Z_TRIG
 #endif
                 )) {
                 level_set_transition(0, NULL);

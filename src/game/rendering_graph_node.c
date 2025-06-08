@@ -18,6 +18,7 @@
 #include "game/first_person_cam.h"
 #include "course_table.h"
 #include "skybox.h"
+#include "game/local_multiplayer.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -171,16 +172,18 @@ LookAt lookAt;
 #endif
 
 static struct GraphNodePerspective *sPerspectiveNode = NULL;
-static Gfx* sPerspectivePos   = NULL;
+static Gfx* sPerspectivePos[POSSIBLE_NUM_PLAYERS]   = { NULL };
 static Mtx* sPerspectiveMtx   = NULL;
 static f32 sPerspectiveAspect = 0;
 
 static Vp*  sViewport        = NULL;
-static Gfx* sViewportPos     = NULL;
-static Gfx* sViewportClipPos = NULL;
+static Gfx* sViewportPos[POSSIBLE_NUM_PLAYERS] = { NULL };
+static Gfx* sViewportClipPos[POSSIBLE_NUM_PLAYERS] = { NULL };
 static Vp   sViewportPrev    = { 0 };
 static Vp   sViewportInterp  = { 0 };
+static Gfx* sRootPos[POSSIBLE_NUM_PLAYERS] = { NULL };
 
+static Gfx* sBackgroundPos[POSSIBLE_NUM_PLAYERS] = { NULL };
 static struct GraphNodeBackground* sBackgroundNode = NULL;
 Gfx* gBackgroundSkyboxGfx = NULL;
 Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X] = { 0 };
@@ -194,14 +197,17 @@ static u8 sShadowInterpCount = 0;
 
 static struct GraphNodeCamera * sCameraNode = NULL;
 
-struct {
+struct MtxTable {
     Gfx *pos;
     Mtx *mtx;
     Mtx *mtxPrev;
     void *displayList;
     Mtx interp;
     u8 usingCamSpace;
-} gMtxTbl[6400];
+};
+#define MTX_TABLE_SIZE 6400
+struct MtxTable gMtxTblArray[POSSIBLE_NUM_PLAYERS][MTX_TABLE_SIZE];
+struct MtxTable *gMtxTbl = &gMtxTblArray[0][0];
 s32 gMtxTblSize = 0;
 
 struct Object* gCurGraphNodeProcessingObject = NULL;
@@ -222,13 +228,17 @@ void patch_mtx_before(void) {
     if (sViewport != NULL) {
         sViewportPrev    = *sViewport;
         sViewport        = NULL;
-        sViewportPos     = NULL;
-        sViewportClipPos = NULL;
+        memset(sViewportPos, 0, sizeof(Gfx*) * POSSIBLE_NUM_PLAYERS);
+        memset(sViewportClipPos, 0, sizeof(Gfx*) * POSSIBLE_NUM_PLAYERS);
     }
 
     if (sBackgroundNode != NULL) {
-        vec3f_copy(sBackgroundNode->prevCameraPos, gLakituState.pos);
-        vec3f_copy(sBackgroundNode->prevCameraFocus, gLakituState.focus);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            vec3f_copy(sBackgroundNode->prevCameraPos[i], gLakituState.pos);
+            vec3f_copy(sBackgroundNode->prevCameraFocus[i], gLakituState.focus);
+            sBackgroundPos[i] = NULL;
+        }
         sBackgroundNode->prevCameraTimestamp = gGlobalTimer;
         sBackgroundNode = NULL;
         gBackgroundSkyboxGfx = NULL;
@@ -237,8 +247,59 @@ void patch_mtx_before(void) {
     sShadowInterpCount = 0;
 }
 
+int gSx = 0;
+int gSy = 0;
+
+int gSw = 2;
+int gSh = 2;
+
+int numPlayersLocal = 4;
+
+bool twoPlayerLandscape = true;
+
+int gCurrPlayer = 0;
+
+bool isSafe = false;
+
+typedef struct { u8 w, h; f32 a; } ScreenSize;
+
+static const ScreenSize screenSizes[] = {
+    { 2, 2, 1.f },
+    { 2, 1, 2.f },
+    { 1, 1, 2.f },
+    { 1, 1, 1.f },
+};
+
+#include "pc/lua/utils/smlua_gfx_utils.h"
+
+float aspect_mask = 1.f;
+void set_screen_rendering(u16 index) {
+    gCurrPlayer = index;
+    switch (index) {
+        case 0: gSx = 0, gSy = 0; break;
+        case 1:
+            if (twoPlayerLandscape && numPlayersLocal == 2) {
+                gSx = 0, gSy = 1;
+            } else {
+                gSx = 1, gSy = 0;
+            }
+            break;
+        case 2: gSx = 0, gSy = 1; break;
+        case 3: gSx = 1, gSy = 1; break;
+    }
+
+    const ScreenSize *size = &screenSizes[numPlayersLocal - 1];
+    gSw = size->w;
+    gSh = size->h;
+    aspect_mask = size->a;
+}
+
 void patch_mtx_interpolated(f32 delta) {
     Mtx camTranfInv, prevCamTranfInv;
+
+    if (numPlayersLocal > 1) {
+        delta = 1.f;
+    }
 
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
@@ -251,20 +312,33 @@ void patch_mtx_interpolated(f32 delta) {
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
-    if (sViewportClipPos != NULL) {
+    // Splitscreen patch
+    if (sRootPos[gCurrPlayer] != NULL && numPlayersLocal > 1) {
+        Vp *vp = viewport_set_scale(SCREEN_WIDTH * gSx, SCREEN_HEIGHT * gSy, (SCREEN_WIDTH / 2) * gSw, (SCREEN_HEIGHT / 2) * gSh);
+        gSPViewport(sRootPos[gCurrPlayer], vp);
+    }
+
+    if (sViewportClipPos[gCurrPlayer] != NULL) {
         delta_interpolate_vec3s(sViewportInterp.vp.vtrans, sViewportPrev.vp.vtrans, sViewport->vp.vtrans, delta);
         delta_interpolate_vec3s(sViewportInterp.vp.vscale, sViewportPrev.vp.vscale, sViewport->vp.vscale, delta);
 
         Gfx *saved = gDisplayListHead;
 
-        gDisplayListHead = sViewportClipPos;
+        gDisplayListHead = sViewportClipPos[gCurrPlayer];
         make_viewport_clip_rect(&sViewportInterp);
         gSPViewport(gDisplayListHead, VIRTUAL_TO_PHYSICAL(&sViewportInterp));
 
         gDisplayListHead = saved;
     }
 
-    if (sBackgroundNode != NULL) {
+    if (sRenderBehindPos != NULL) {
+        struct GfxLoad *gfx = load_player_dl(gCurrPlayer);
+        // gSPDisplayList(sRenderBehindPos, gfx);
+        memcpy(sRenderBehindPos, gfx->gfx, gfx->len * sizeof(Gfx));
+    }
+
+    /*
+    if (sBackgroundNode != NULL && sBackgroundPos[gCurrPlayer]) {
         Vec3f posCopy;
         Vec3f focusCopy;
         struct GraphNodeRoot* rootCopy = gCurGraphNodeRoot;
@@ -273,15 +347,31 @@ void patch_mtx_interpolated(f32 delta) {
         vec3f_copy(posCopy, gLakituState.pos);
         vec3f_copy(focusCopy, gLakituState.focus);
         if (gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
-            delta_interpolate_vec3f(gLakituState.pos, sBackgroundNode->prevCameraPos, posCopy, delta);
-            delta_interpolate_vec3f(gLakituState.focus, sBackgroundNode->prevCameraFocus, focusCopy, delta);
+            delta_interpolate_vec3f(gLakituState.pos, sBackgroundNode->prevCameraPos[gCurrPlayer], posCopy, delta);
+            delta_interpolate_vec3f(gLakituState.focus, sBackgroundNode->prevCameraFocus[gCurrPlayer], focusCopy, delta);
         }
-        sBackgroundNode->fnNode.func(GEO_CONTEXT_RENDER, &sBackgroundNode->fnNode.node, NULL);
+        // Gfx *gfx = sBackgroundNode->fnNode.func(GEO_CONTEXT_RENDER, &sBackgroundNode->fnNode.node, NULL);
+
+        struct GraphNodeBackground *backgroundNode = (struct GraphNodeBackground *) &sBackgroundNode->fnNode.node;
+        struct GraphNodeCamera *camNode = (struct GraphNodeCamera *) gCurGraphNodeRoot->views[0];
+        struct GraphNodePerspective *camFrustum = (struct GraphNodePerspective *) camNode->fnNode.node.parent;
+        Gfx *gfx = create_skybox_facing_camera(
+            0, backgroundNode->background, camFrustum->fov,
+            gLakituState.pos[0], gLakituState.pos[1], gLakituState.pos[2],
+            gLakituState.focus[0], gLakituState.focus[1], gLakituState.focus[2]
+        );
+
+        size_t len = gfx_get_length_no_sentinel(gfx);
+        size_t len2 = gfx_get_length_no_sentinel(sBackgroundPos[gCurrPlayer]);
+        assert(len == len2);
+        memcpy(sBackgroundPos[gCurrPlayer], gfx, len * sizeof(Gfx));
+        printf("patch background %d, %ld, %f, %f\n", gCurrPlayer, len, sBackgroundNode->prevCameraPos[gCurrPlayer][0], sBackgroundNode->prevCameraPos[gCurrPlayer][2]);
 
         vec3f_copy(gLakituState.pos, posCopy);
         vec3f_copy(gLakituState.focus, focusCopy);
         gCurGraphNodeRoot = rootCopy;
     }
+    */
 
     struct GraphNodeObject* savedObj = gCurGraphNodeObject;
     for (s32 i = 0; i < sShadowInterpCount; i++) {
@@ -392,7 +482,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
                 detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
-                if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) {
+                if ((u32) gMtxTblSize < MTX_TABLE_SIZE) {
                     gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
                     gMtxTbl[gMtxTblSize].mtx = currList->transform;
                     gMtxTbl[gMtxTblSize].mtxPrev = currList->transformPrev;
@@ -502,7 +592,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;
-    sPerspectivePos = gDisplayListHead;
+    sPerspectivePos[gCurrPlayer] = gDisplayListHead;
     sPerspectiveAspect = aspect;
 
     gSPPerspNormalize(gDisplayListHead++, perspNorm);
@@ -564,10 +654,26 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     vec3f_copy(node->prevPos, node->pos);
     vec3f_copy(node->prevFocus, node->focus);
 
+    if (gCurrentArea && gCurrentArea->cameras[gCurrPlayer]) {
+        // struct Camera *c = gCurrentArea->cameras[gCurrPlayer];
+        vec3f_copy(node->prevPos, gLakituState.pos);
+        vec3f_copy(node->pos, gLakituState.pos);
+        vec3f_copy(node->prevFocus, gLakituState.focus);
+        vec3f_copy(node->focus, gLakituState.focus);
+    }
+
     if (node->fnNode.func != NULL) {
         node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
     }
     mtxf_rotate_xy(rollMtx->m, node->rollScreen);
+
+    if (gCurrentArea && gCurrentArea->cameras[gCurrPlayer]) {
+        // struct Camera *c = gCurrentArea->cameras[gCurrPlayer];
+        vec3f_copy(node->prevPos, gLakituState.pos);
+        vec3f_copy(node->pos, gLakituState.pos);
+        vec3f_copy(node->prevFocus, gLakituState.focus);
+        vec3f_copy(node->focus, gLakituState.focus);
+    }
 
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(rollMtx), G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 
@@ -837,8 +943,8 @@ static void geo_process_background(struct GraphNodeBackground *node) {
         vec3f_copy(posCopy, gLakituState.pos);
         vec3f_copy(focusCopy, gLakituState.focus);
         if (gGlobalTimer != gLakituState.skipCameraInterpolationTimestamp) {
-            vec3f_copy(gLakituState.pos, node->prevCameraPos);
-            vec3f_copy(gLakituState.focus, node->prevCameraFocus);
+            vec3f_copy(gLakituState.pos, node->prevCameraPos[gCurrPlayer]);
+            vec3f_copy(gLakituState.focus, node->prevCameraFocus[gCurrPlayer]);
             sBackgroundNode = node;
             sBackgroundNodeRoot = gCurGraphNodeRoot;
         }
@@ -848,6 +954,7 @@ static void geo_process_background(struct GraphNodeBackground *node) {
     }
 
     if (list != NULL) {
+        sBackgroundPos[gCurrPlayer] = list;
         geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(list), node->fnNode.node.flags >> 8);
     } else if (gCurGraphNodeMasterList != NULL) {
 #ifndef F3DEX_GBI_2E
@@ -1663,15 +1770,16 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
 
 static void geo_clear_interp_variables(void) {
     sPerspectiveNode = NULL;
-    sPerspectivePos   = NULL;
     sPerspectiveMtx   = NULL;
     sPerspectiveAspect = 0;
+    memset(sPerspectivePos, 0, sizeof(Gfx*) * POSSIBLE_NUM_PLAYERS);
 
     sViewport        = NULL;
-    sViewportPos     = NULL;
-    sViewportClipPos = NULL;
+    memset(sViewportPos, 0, sizeof(Gfx*) * POSSIBLE_NUM_PLAYERS);
+    memset(sViewportClipPos, 0, sizeof(Gfx*) * POSSIBLE_NUM_PLAYERS);
 
     sBackgroundNode = NULL;
+    // sBackgroundPos = NULL;
     gBackgroundSkyboxGfx = NULL;
     memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * SKYBOX_TILES_Y * SKYBOX_TILES_X);
     gBackgroundSkyboxMtx = NULL;
@@ -1709,10 +1817,11 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         vec3s_set(viewport->vp.vtrans, node->x * 4, node->y * 4, 511);
         vec3s_set(viewport->vp.vscale, node->width * 4, node->height * 4, 511);
 
+        sRootPos[gCurrPlayer] = gDisplayListHead;
         if (b != NULL) {
             clear_frame_buffer(clearColor);
 
-            sViewportClipPos = gDisplayListHead;
+            sViewportClipPos[gCurrPlayer] = gDisplayListHead;
             make_viewport_clip_rect(&sViewportPrev);
 
             *viewport = *b;
@@ -1726,7 +1835,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         gMatStackFixed[gMatStackIndex] = initialMatrix;
 
         sViewport = viewport;
-        sViewportPos = gDisplayListHead;
+        sViewportPos[gCurrPlayer] = gDisplayListHead;
 
         // vvv 60 FPS PATCH vvv
         mtxf_identity(gMatStackPrev[gMatStackIndex]);

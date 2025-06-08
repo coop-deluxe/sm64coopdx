@@ -12,6 +12,7 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "pc/network/packets/packet.h"
 #include "pc/lua/smlua_hooks.h"
+#include "game/local_multiplayer.h"
 extern s8 gDialogBoxState;
 extern s16 gMenuMode;
 extern s32 gWdwWaterLevelSet;
@@ -234,8 +235,11 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
 
             // Init transition
             if (gCurrentArea != NULL) {
-                reset_camera(gCurrentArea->camera);
-                init_camera(gCurrentArea->camera);
+                for (u8 i = 0; i < numPlayersLocal; i++) {
+                    set_local_player(i);
+                    reset_camera(gCurrentArea->camera);
+                    init_camera(gCurrentArea->camera);
+                }
             }
             sDelayedWarpOp = WARP_OP_NONE;
             switch (sDynosWarpSpawnType) {
@@ -398,8 +402,11 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
 
             // Init transition
             if (gCurrentArea != NULL) {
-                reset_camera(gCurrentArea->camera);
-                init_camera(gCurrentArea->camera);
+                for (u8 i = 0; i < numPlayersLocal; i++) {
+                    set_local_player(i);
+                    reset_camera(gCurrentArea->camera);
+                    init_camera(gCurrentArea->camera);
+                }
             }
             sDelayedWarpOp = WARP_OP_NONE;
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0x00, 0x00, 0x00);

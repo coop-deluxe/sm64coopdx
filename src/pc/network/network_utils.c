@@ -55,7 +55,7 @@ const char* network_get_player_text_color_string(u8 localIndex) {
 
 extern s16 gMenuMode;
 bool network_check_singleplayer_pause(void) {
-    return ((gMenuMode != -1) || (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) &&
+    return ((gMenuMode != -1) || (gCameraMovementFlags[0] & CAM_MOVE_PAUSE_SCREEN)) &&
         !gDjuiInPlayerMenu && network_player_connected_count() == 1 && mods_get_all_pausable();
 }
 

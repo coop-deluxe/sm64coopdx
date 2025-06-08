@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "envfx_snow.h"
 #include "level_geo.h"
+#include "local_multiplayer.h"
 
 u16 gReadOnlyEnvFx = 0;
 s32 gOverrideEnvFx = -1;
@@ -29,13 +30,12 @@ Gfx *geo_envfx_main(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtxf) {
                                             // casting to a local struct as necessary.
 
         if (GET_HIGH_U16_OF_32(*params) != gAreaUpdateCounter) {
-            UNUSED struct Camera *sp2C = gCurGraphNodeCamera->config.camera;
             gReadOnlyEnvFx = GET_LOW_U16_OF_32(*params);
             s32 snowMode = gOverrideEnvFx == -1 ? gReadOnlyEnvFx : gOverrideEnvFx;
 
             vec3f_to_vec3s(camTo, gCurGraphNodeCamera->focus);
             vec3f_to_vec3s(camFrom, gCurGraphNodeCamera->pos);
-            vec3f_to_vec3s(marioPos, gPlayerCameraState->pos);
+            vec3f_to_vec3s(marioPos, gPlayerCameraState[gCurrPlayer].pos);
             particleList = envfx_update_particles(snowMode, marioPos, camTo, camFrom);
             if (particleList != NULL) {
 #if 0
@@ -50,7 +50,9 @@ Gfx *geo_envfx_main(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtxf) {
 #endif
                 execNode->fnNode.node.flags = (execNode->fnNode.node.flags & 0xFF) | 0x400;
             }
-            SET_HIGH_U16_OF_32(*params, gAreaUpdateCounter);
+            if (gCurrPlayer == numPlayersLocal - 1) {
+                SET_HIGH_U16_OF_32(*params, gAreaUpdateCounter);
+            }
         }
     } else if (callContext == GEO_CONTEXT_AREA_INIT) {
         // Give these arguments some dummy values. Not used in ENVFX_MODE_NONE

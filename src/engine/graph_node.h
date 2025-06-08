@@ -6,6 +6,9 @@
 
 #include "types.h"
 #include "game/memory.h"
+#define GET_NUM_CONST
+#include "game/local_multiplayer.h"
+#undef GET_NUM_CONST
 #undef near
 #undef far
 
@@ -193,7 +196,7 @@ struct GraphNodeCamera
         // by a pointer to the struct. Gotta save those 4 bytes.
         s32 mode;
         struct Camera *camera;
-    } config;
+    } config[POSSIBLE_NUM_PLAYERS];
     /*0x1C*/ Vec3f pos;
     /*0x28*/ Vec3f focus;
     Vec3f prevPos;
@@ -340,8 +343,8 @@ struct GraphNodeBackground
     /*0x00*/ struct FnGraphNode fnNode;
     /*0x18*/ s32 unused;
     /*0x1C*/ s32 background; // background ID, or rgba5551 color if fnNode.func is null
-    Vec3f prevCameraPos;
-    Vec3f prevCameraFocus;
+    Vec3f prevCameraPos[POSSIBLE_NUM_PLAYERS];
+    Vec3f prevCameraFocus[POSSIBLE_NUM_PLAYERS];
     u32 prevCameraTimestamp;
 };
 

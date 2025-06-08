@@ -196,6 +196,8 @@ static s32 get_num_frames_to_draw(f64 t) {
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
+#include "game/local_multiplayer.h"
+
 void produce_interpolation_frames_and_delay(void) {
     bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
 
@@ -220,7 +222,10 @@ void produce_interpolation_frames_and_delay(void) {
         gRenderingDelta = delta;
 
         gfx_start_frame();
-        if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
+        for (int i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
+        }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
@@ -271,7 +276,7 @@ inline static void buffer_audio(void) {
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    
+
     if (!shouldMute) {
         for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
             sAudioBuffer[i] *= gMasterVolume;

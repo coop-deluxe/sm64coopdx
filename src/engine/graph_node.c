@@ -10,6 +10,7 @@
 #include "geo_layout.h"
 #include "include/geo_commands.h"
 #include "pc/debuglog.h"
+#include "game/local_multiplayer.h"
 
 /**
  * Initialize a geo node with a given type. Sets all links such that there
@@ -191,7 +192,9 @@ struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool,
                                                f32 *focus, GraphNodeFunc func, s32 mode) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeCamera));
-        graphNode->config.camera = NULL;
+        for (u16 i = 0; i < numPlayersLocal; i++) {
+            graphNode->config[i].camera = NULL;
+        }
     }
 
     if (graphNode != NULL) {
@@ -199,7 +202,9 @@ struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool,
         vec3f_copy(graphNode->pos, pos);
         vec3f_copy(graphNode->focus, focus);
         graphNode->fnNode.func = func;
-        graphNode->config.mode = mode;
+        for (u16 i = 0; i < numPlayersLocal; i++) {
+            graphNode->config[i].mode = mode;
+        }
         graphNode->roll = 0;
         graphNode->rollScreen = 0;
 

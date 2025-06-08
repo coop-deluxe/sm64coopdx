@@ -44,6 +44,7 @@
 #include "pc/network/socket/socket.h"
 #include "bettercamera.h"
 #include "first_person_cam.h"
+#include "local_multiplayer.h"
 
 #define MAX_HANG_PREVENTION 64
 
@@ -872,7 +873,7 @@ void update_mario_sound_and_camera(struct MarioState *m) {
     if (action == ACT_FIRST_PERSON) {
         if (m->playerIndex == 0) {
             raise_background_noise(2);
-            gCameraMovementFlags &= ~CAM_MOVE_C_UP_MODE;
+            gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_C_UP_MODE;
             // Go back to the last camera mode
             set_camera_mode(m->area->camera, -1, 1);
         }
@@ -1622,11 +1623,11 @@ void update_mario_inputs(struct MarioState *m) {
     /* End of developer stuff */
 
     if (m->playerIndex == 0) {
-        if (!localIsPaused && (gCameraMovementFlags & CAM_MOVE_C_UP_MODE)) {
+        if (!localIsPaused && (gCameraMovementFlags[gCurrPlayer] & CAM_MOVE_C_UP_MODE)) {
             if (m->action & ACT_FLAG_ALLOW_FIRST_PERSON) {
                 m->input |= INPUT_FIRST_PERSON;
             } else {
-                gCameraMovementFlags &= ~CAM_MOVE_C_UP_MODE;
+                gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_C_UP_MODE;
             }
         }
 
@@ -2221,6 +2222,8 @@ void init_single_mario(struct MarioState* m) {
     m->waterLevel = find_water_level(spawnInfo->startPos[0], spawnInfo->startPos[2]);
 
     m->area = gCurrentArea;
+    gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
+    m->area = &gCurrentAreaCopies[playerIndex];
     m->marioObj = gMarioObjects[m->playerIndex];
     if (m->marioObj == NULL) { return; }
     m->marioObj->header.gfx.shadowInvisible = false;

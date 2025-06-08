@@ -50,6 +50,7 @@
 #include "game/screen_transition.h"
 
 #include "engine/level_script.h"
+#include "local_multiplayer.h"
 
 #define MENU_LEVEL_MIN 0
 #define MENU_LEVEL_MAX 17
@@ -182,6 +183,7 @@ struct CreditsEntry sCreditsSequence[] = {
 };
 
 struct MarioState gMarioStates[MAX_PLAYERS] = { 0 };
+struct HudDisplay gHudDisplays[POSSIBLE_NUM_PLAYERS] = { 0 };
 struct HudDisplay gHudDisplay;
 s16 sCurrPlayMode;
 u16 D_80339ECA;
@@ -251,7 +253,7 @@ u16 level_control_timer(s32 timerOp) {
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
         if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
-            return gPlayer1Controller->buttonPressed & START_BUTTON;
+            return gSharedCtr->buttonPressed & START_BUTTON;
         }
     } else {
         u32 dialogActive = get_dialog_id() >= 0;
@@ -259,7 +261,7 @@ u32 pressed_pause(void) {
         u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 
         if (!intangible && !dialogActive && !firstPerson && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE) {
-            return (gPlayer1Controller->buttonPressed & START_BUTTON);
+            return (gSharedCtr->buttonPressed & START_BUTTON);
         }
     }
 
@@ -469,7 +471,10 @@ void init_mario_after_warp(void) {
     }
 
     if (gCurrentArea) {
-        reset_camera(gCurrentArea->camera);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            reset_camera(gCurrentArea->camera);
+        }
     }
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
@@ -619,7 +624,10 @@ void warp_credits(void) {
     set_mario_action(gMarioState, marioAction, 0);
 
     if (gCurrentArea) {
-        reset_camera(gCurrentArea->camera);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            reset_camera(gCurrentArea->camera);
+        }
     }
 
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
@@ -1184,7 +1192,10 @@ void basic_update(UNUSED s16 *arg) {
     update_hud_values();
 
     if (gCurrentArea != NULL) {
-        update_camera(gCurrentArea->camera);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            update_camera(gCurrentArea->camera);
+        }
     }
 }
 
@@ -1258,7 +1269,7 @@ s32 play_mode_normal(void) {
             print_intro_text();
             if (gPlayer1Controller->buttonPressed & END_DEMO) {
                 level_trigger_warp(gMarioState, gCurrLevelNum == LEVEL_PSS ? WARP_OP_DEMO_END : WARP_OP_DEMO_NEXT);
-            } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+            } else if (!gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE && (gSharedCtr->buttonPressed & START_BUTTON)) {
                 gPressedStart = 1;
                 level_trigger_warp(gMarioState, WARP_OP_DEMO_NEXT);
             }
@@ -1302,7 +1313,10 @@ s32 play_mode_normal(void) {
     update_hud_values();
 
     if (gCurrentArea != NULL) {
-        update_camera(gCurrentArea->camera);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            update_camera(gCurrentArea->camera);
+        }
     }
 
     initiate_painting_warp(-1);
@@ -1326,7 +1340,7 @@ s32 play_mode_normal(void) {
             } else if (sCurrPlayMode == PLAY_MODE_NORMAL && pressed_pause()) {
                 lower_background_noise(1);
                 cancel_rumble();
-                gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+                gCameraMovementFlags[gCurrPlayer] |= CAM_MOVE_PAUSE_SCREEN;
                 set_play_mode(PLAY_MODE_PAUSED);
             }
         }
@@ -1341,13 +1355,13 @@ s32 play_mode_paused(void) {
         set_menu_mode(RENDER_PAUSE_SCREEN);
     } else if (gPauseScreenMode == 1) {
         raise_background_noise(1);
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_PAUSE_SCREEN;
         set_play_mode(PLAY_MODE_NORMAL);
     } else if (gPauseScreenMode == 2) {
         extern s16 gPrevMenuMode;
         if (gPrevMenuMode > 1) { // Course complete screen
             raise_background_noise(1);
-            gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+            gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_PAUSE_SCREEN;
         } else { // Pause menu
             level_trigger_warp(&gMarioStates[0], WARP_OP_EXIT);
         }
@@ -1370,7 +1384,7 @@ s32 play_mode_paused(void) {
     }*/
 
     if (!gLevelValues.zoomOutCameraOnPause || !network_check_singleplayer_pause()) {
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_PAUSE_SCREEN;
     }
     return 0;
 }
@@ -1381,14 +1395,14 @@ s32 play_mode_paused(void) {
  */
 s32 play_mode_frame_advance(void) {
     if (gPlayer1Controller->buttonPressed & D_JPAD) {
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_PAUSE_SCREEN;
         play_mode_normal();
     } else if (gPlayer1Controller->buttonPressed & START_BUTTON) {
-        gCameraMovementFlags &= ~CAM_MOVE_PAUSE_SCREEN;
+        gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_PAUSE_SCREEN;
         raise_background_noise(1);
         set_play_mode(PLAY_MODE_NORMAL);
     } else {
-        gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+        gCameraMovementFlags[gCurrPlayer] |= CAM_MOVE_PAUSE_SCREEN;
     }
 
     return 0;
@@ -1416,7 +1430,10 @@ s32 play_mode_change_area(void) {
     //! This maybe was supposed to be sTransitionTimer == -1? sTransitionUpdate
     // is never set to -1.
     if (sTransitionUpdate == (void (*)(s16 *)) - 1) {
-        update_camera(gCurrentArea->camera);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            update_camera(gCurrentArea->camera);
+        }
     } else if (sTransitionUpdate != NULL) {
         sTransitionUpdate(&sTransitionTimer);
     }
@@ -1784,7 +1801,10 @@ s32 init_level(void) {
         }
 
         if (gCurrentArea != NULL) {
-            reset_camera(gCurrentArea->camera);
+            for (u8 i = 0; i < numPlayersLocal; i++) {
+                set_local_player(i);
+                reset_camera(gCurrentArea->camera);
+            }
 
             if (gCurrDemoInput != NULL) {
                 set_mario_action(gMarioState, ACT_IDLE, 0);

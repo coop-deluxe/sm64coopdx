@@ -36,6 +36,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
+#include "local_multiplayer.h"
 
 // TODO: put this elsewhere
 enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
@@ -2154,7 +2155,7 @@ static void intro_cutscene_set_mario_to_idle(struct MarioState *m) {
     if (!m || !gCamera) { return; }
     if (gCamera->cutscene == 0) {
         if (m->playerIndex == 0) {
-            gCameraMovementFlags &= ~CAM_MOVE_C_UP_MODE;
+            gCameraMovementFlags[gCurrPlayer] &= ~CAM_MOVE_C_UP_MODE;
         }
         set_mario_action(m, ACT_IDLE, 0);
     }

@@ -24,6 +24,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "data/dynos_mgr_builtin_externs.h"
+#include "local_multiplayer.h"
 
 extern bool gDjuiInMainMenu;
 u8 gOverrideHideHud;
@@ -69,7 +70,7 @@ s32 sPowerMeterVisibleTimer = 0;
 
 UNUSED static struct UnusedHUDStruct sUnusedHUDValues = { 0x00, 0x0A, 0x00 };
 
-static struct CameraHUD sCameraHUD = { CAM_STATUS_NONE };
+static struct CameraHUD sCameraHUD[POSSIBLE_NUM_PLAYERS] = { 0 };
 
 static u32 sPowerMeterPrevTimestamp;
 static f32 sPowerMeterPrevY;
@@ -293,6 +294,7 @@ void render_hud_power_meter(void) {
         default:
             break;
     }
+    transform_y_s16(&sPowerMeterHUD.y, RESOLUTION_N64);
 
     render_dl_power_meter(shownHealthWedges);
 
@@ -306,6 +308,7 @@ void render_hud_power_meter(void) {
 #endif
 
 void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH) {
+    subtract_y_s32(&y, RESOLUTION_N64);
     create_dl_ortho_matrix();
     if (!vtx) {
         vtx = alloc_display_list(sizeof(Vtx) * 4);
@@ -535,7 +538,7 @@ void render_hud_timer(void) {
 }
 
 s16 get_hud_camera_status(void) {
-    return sCameraHUD.status;
+    return sCameraHUD[gCurrPlayer].status;
 }
 
 /**
@@ -543,8 +546,13 @@ s16 get_hud_camera_status(void) {
  * defined in update_camera_status.
  */
 void set_hud_camera_status(s16 status) {
-    sCameraHUD.status = status;
+    sCameraHUD[gCurrPlayer].status = status;
 }
+
+#define GFX_DIMENSIONS_FROM_LEFT_EDGE2(v)  (SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 4 * (gfx_current_dimensions.aspect_ratio * aspect_mask) + (v))
+#define GFX_DIMENSIONS_FROM_RIGHT_EDGE2(v) (SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 4 * (gfx_current_dimensions.aspect_ratio * aspect_mask) - (v))
+#define GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE2(v)  ((int)floorf(GFX_DIMENSIONS_FROM_LEFT_EDGE2(v)))
+#define GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(v) ((int)ceilf(GFX_DIMENSIONS_FROM_RIGHT_EDGE2(v)))
 
 /**
  * Renders camera HUD glyphs using a table list, depending of
@@ -557,27 +565,31 @@ void render_hud_camera_status(void) {
 
     cameraLUT = segmented_to_virtual(&main_hud_camera_lut);
     x = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(54);
+    printf("subtract from x %d, %d, %d\n", x, GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(54), x / 2);
+    if (gSx == 0 && gSw == 1) { x = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(54) - 15; }
     y = 205;
 
-    if (sCameraHUD.status == CAM_STATUS_NONE) {
+    // subtract_x_s32(&x, RESOLUTION_N64);
+    subtract_y_s32(&y, RESOLUTION_N64);
+    if (sCameraHUD[gCurrPlayer].status == CAM_STATUS_NONE) {
         return;
     }
 
     if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
-        sCameraHUD.status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
+        sCameraHUD[gCurrPlayer].status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
         switch (gNewCamera.distanceTargetIndex) {
-            case 0: sCameraHUD.status |= CAM_STATUS_C_UP; break;
+            case 0: sCameraHUD[gCurrPlayer].status |= CAM_STATUS_C_UP; break;
             case 1: break;
-            case 2: sCameraHUD.status |= CAM_STATUS_C_DOWN; break;
+            case 2: sCameraHUD[gCurrPlayer].status |= CAM_STATUS_C_DOWN; break;
         }
     }
 
     gSPDisplayList(gDisplayListHead++, dl_hud_img_begin);
     render_hud_tex_lut(x, y, (*cameraLUT)[GLYPH_CAM_CAMERA]);
 
-    switch (sCameraHUD.status & CAM_STATUS_MODE_GROUP) {
+    switch (sCameraHUD[gCurrPlayer].status & CAM_STATUS_MODE_GROUP) {
         case CAM_STATUS_MARIO:
-            render_hud_tex_lut(x + 16, y, (*cameraLUT)[(gMarioStates[0].character) ? gMarioStates[0].character->cameraHudHead : GLYPH_CAM_MARIO_HEAD]);
+            render_hud_tex_lut(x + 16, y, (*cameraLUT)[(gMarioStates[gCurrPlayer].character) ? gMarioStates[gCurrPlayer].character->cameraHudHead : GLYPH_CAM_MARIO_HEAD]);
             break;
         case CAM_STATUS_LAKITU:
             render_hud_tex_lut(x + 16, y, (*cameraLUT)[GLYPH_CAM_LAKITU_HEAD]);
@@ -587,7 +599,7 @@ void render_hud_camera_status(void) {
             break;
     }
 
-    switch (sCameraHUD.status & CAM_STATUS_C_MODE_GROUP) {
+    switch (sCameraHUD[gCurrPlayer].status & CAM_STATUS_C_MODE_GROUP) {
         case CAM_STATUS_C_DOWN:
             render_hud_small_tex_lut(x + 4, y + 16, (*cameraLUT)[GLYPH_CAM_ARROW_DOWN]);
             break;

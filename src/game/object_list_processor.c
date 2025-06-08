@@ -24,6 +24,7 @@
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "local_multiplayer.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -274,6 +275,7 @@ void bhv_mario_update(void) {
     s32 stateIndex = (gCurrentObject->oBehParams - 1);
     if (stateIndex >= MAX_PLAYERS || stateIndex < 0) { return; }
     gMarioState = &gMarioStates[stateIndex];
+    set_local_player(stateIndex);
 
     // sanity check torsoPos, it isn't updated off-screen otherwise
     extern u32 gGlobalTimer;
@@ -281,14 +283,16 @@ void bhv_mario_update(void) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
-    if ((stateIndex == 0) || (!is_player_active(gMarioState))) {
+    if ((stateIndex == 0 || stateIndex < numPlayersLocal) || (!is_player_active(gMarioState))) {
         gMarioState->particleFlags = 0;
     }
 
+    patch_mario_state_player_index(stateIndex);
     smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
     u32 particleFlags = execute_mario_action(gCurrentObject);
     smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
+    unpatch_mario_state_player_index();
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
 

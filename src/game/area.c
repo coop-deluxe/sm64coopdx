@@ -28,6 +28,7 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/nametags.h"
+#include "local_multiplayer.h"
 #include "engine/lighting_engine.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
@@ -46,6 +47,7 @@ s16 gSaveOptSelectIndex;
 struct SpawnInfo *gMarioSpawnInfo = &gPlayerSpawnInfos[0];
 struct Area *gAreas = gAreaData;
 struct Area *gCurrentArea = NULL;
+struct Area gCurrentAreaCopies[MAX_PLAYERS] = { 0 };
 struct CreditsEntry *gCurrCreditsEntry = NULL;
 Vp *D_8032CE74 = NULL;
 Vp *D_8032CE78 = NULL;
@@ -242,7 +244,7 @@ void clear_areas(void) {
         gAreaData[i].paintingWarpNodes = NULL;
         gAreaData[i].instantWarps = NULL;
         gAreaData[i].objectSpawnInfos = NULL;
-        gAreaData[i].camera = NULL;
+        memset(&gAreas[i].camera, 0, sizeof(sizeof(struct Camera *) * numPlayersLocal));
         gAreaData[i].unused28 = NULL;
         gAreaData[i].whirlpools[0] = NULL;
         gAreaData[i].whirlpools[1] = NULL;
@@ -441,10 +443,35 @@ void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 b
     play_transition(transType, time, red, green, blue);
 }
 
+
+static void set_screen_area(f32 x, f32 y, f32 scaleW, f32 scaleH) {
+    struct GraphNodeRoot *root = gCurrentArea->root;
+    root->x = x / 2;
+    root->y = y / 2;
+    root->width = scaleW / 2;
+    root->height = scaleH / 2;
+}
+
+#include "engine/math_util.h"
+
+extern struct LakituState gLakituStates[];
+static void render_screen(u16 screen) {
+    if (numPlayersLocal > 1) { set_local_player(screen); }
+    set_screen_area(SCREEN_WIDTH * gSx, SCREEN_HEIGHT * gSy, (SCREEN_WIDTH / 2) * gSw, (SCREEN_HEIGHT / 2) * gSh);
+
+    set_local_player(screen);
+
+    geo_process_root(gCurrentArea->root, D_8032CE74, D_8032CE78, gFBSetColor);
+
+    gLuaState = NULL; // Hack to disable hooks being called more than once
+}
+
 void render_game(void) {
     dynos_update_gfx();
     if (gCurrentArea != NULL && !gWarpTransition.pauseRendering) {
-        geo_process_root(gCurrentArea->root, D_8032CE74, D_8032CE78, gFBSetColor);
+        lua_State *L = gLuaState;
+        for (int i = 0; i < numPlayersLocal; i++) { render_screen(i); }
+        gLuaState = L;
 
         gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
 
@@ -458,13 +485,38 @@ void render_game(void) {
             if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
-            smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
+            int largestSizeGfx = 0;
+            Gfx *pos = gDisplayListHead;
+            sRenderBehindPos = pos;
+            for (int i = 0; i < numPlayersLocal; i++) {
+                // gDisplayListHead = pos;
+                set_local_player(i);
+                patch_mario_state_player_index(i);
+                smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
+                unpatch_mario_state_player_index();
+                // int len = gDisplayListHead - pos;
+                // if (len > largestSizeGfx) { largestSizeGfx = len; }
+                // Gfx *gfx = malloc(sizeof(Gfx) * len);
+                // memcpy(gfx, pos, sizeof(Gfx) * len);
+                // save_player_dl(i, gfx, len);
+            }
+
+            // No Op the display list
+            // Gfx noOp[] = { gsSPNoOp() };
+            // for (int i = 0; i < largestSizeGfx; i++) {
+            //     memcpy(pos + i, &noOp, sizeof(Gfx));
+            // }
             djui_gfx_displaylist_end();
         }
-        render_hud();
+        for (int i = 0; i < numPlayersLocal; i++) {
+            set_local_player(i);
+            patch_mario_state_player_index(i);
+            render_hud();
+            gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            render_text_labels();
+            unpatch_mario_state_player_index();
+        }
 
-        gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        render_text_labels();
         do_cutscene_handler();
         if (!gDjuiInMainMenu) {
             print_displaying_credits_entry();

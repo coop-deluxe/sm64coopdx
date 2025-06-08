@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "lib/src/libultra_internal.h"
 #include "lib/src/osContInternal.h"
 #include "macros.h"
@@ -20,7 +22,7 @@ static struct ControllerAPI *controller_implementations[] = {
 };
 
 s32 osContInit(UNUSED OSMesgQueue *mq, u8 *controllerBits, UNUSED OSContStatus *status) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++)
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++)
         controller_implementations[i]->init();
     *controllerBits = 1;
     return 0;
@@ -48,21 +50,40 @@ s32 osContStartReadData(UNUSED OSMesgQueue *mesg) {
     return 0;
 }
 
-void osContGetReadData(OSContPad *pad) {
+void osContResetPad(OSContPad *pad) {
     pad->button = 0;
     pad->stick_x = 0;
     pad->stick_y = 0;
     pad->ext_stick_x = 0;
     pad->ext_stick_y = 0;
     pad->errnum = 0;
+}
 
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+void osContGetReadData(OSContPad *pad) {
+    osContResetPad(pad);
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         controller_implementations[i]->read(pad);
     }
 }
 
+void osContGetReadDataIndex(OSContPad *pad, int i) {
+    osContResetPad(pad);
+    if (i >= ARRAY_COUNT(controller_implementations)) {
+        return;
+    }
+    controller_implementations[i]->read(pad);
+}
+
+void osContGetReadDataIndexNoReset(OSContPad *pad, int i) {
+    if (i >= ARRAY_COUNT(controller_implementations)) {
+        return;
+    }
+
+    controller_implementations[i]->read(pad);
+}
+
 u32 controller_get_raw_key(void) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         u32 vk = controller_implementations[i]->rawkey();
         if (vk != VK_INVALID) return vk + controller_implementations[i]->vkbase;
     }
@@ -70,28 +91,28 @@ u32 controller_get_raw_key(void) {
 }
 
 void controller_shutdown(void) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         if (controller_implementations[i]->shutdown)
             controller_implementations[i]->shutdown();
     }
 }
 
 void controller_reconfigure(void) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         if (controller_implementations[i]->reconfig)
             controller_implementations[i]->reconfig();
     }
 }
 
 void controller_rumble_play(float str, float time) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         if (controller_implementations[i]->rumble_play)
             controller_implementations[i]->rumble_play(str, time);
     }
 }
 
 void controller_rumble_stop(void) {
-    for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
+    for (size_t i = 0; i < ARRAY_COUNT(controller_implementations); i++) {
         if (controller_implementations[i]->rumble_stop)
             controller_implementations[i]->rumble_stop();
     }

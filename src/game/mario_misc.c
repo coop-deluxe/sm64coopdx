@@ -27,6 +27,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mods.h"
+#include "local_multiplayer.h"
 
 #define TOAD_STAR_1_REQUIREMENT gBehaviorValues.ToadStar1Requirement
 #define TOAD_STAR_2_REQUIREMENT gBehaviorValues.ToadStar2Requirement
@@ -453,15 +454,20 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
 
+        // todo splitscreen fix this
+        if (gCurrPlayer != 0 && plrIdx == 0) {
+            return NULL;
+        }
+
         if (action != ACT_BUTT_SLIDE && action != ACT_HOLD_BUTT_SLIDE && action != ACT_WALKING && action != ACT_RIDING_SHELL_GROUND
-        && !bodyState->allowPartRotation) {
+        && !bodyState->allowPartRotation && plrIdx == gCurrPlayer) {
             vec3s_copy(bodyState->torsoAngle, gVec3sZero);
         }
         rotNode->rotation[0] = bodyState->torsoAngle[1] * character->torsoRotMult;
         rotNode->rotation[1] = bodyState->torsoAngle[2] * character->torsoRotMult;
         rotNode->rotation[2] = bodyState->torsoAngle[0] * character->torsoRotMult;
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
+        if (plrIdx >= numPlayersLocal) {
+            // only interpolate angles for local players
             vec3s_copy(rotNode->prevRotation, rotNode->rotation);
             rotNode->prevTimestamp = gGlobalTimer;
         }
@@ -485,7 +491,7 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
 
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
-        struct Camera* camera = gCurGraphNodeCamera->config.camera;
+        struct Camera* camera = gCurGraphNodeCamera->config[gCurrPlayer].camera;
 
         if (!marioActive) {
             node->flags &= ~GRAPH_RENDER_ACTIVE;
@@ -502,8 +508,8 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
             vec3s_set(rotNode->rotation, 0, 0, 0);
         }
 
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
+        if (plrIdx >= numPlayersLocal) {
+            // only interpolate angles for local players
             vec3s_copy(rotNode->prevRotation, rotNode->rotation);
             rotNode->prevTimestamp = gGlobalTimer;
         }

@@ -369,7 +369,7 @@ static void level_reset_globals(void) {
     }
 
     // reset envfx
-    gEnvFxBuffer = NULL;
+    memset(&gEnvFxBuffer, 0, sizeof(struct EnvFxParticle *));
     gEnvFxMode = ENVFX_MODE_NONE;
 
     // clear area's level pool pointers
@@ -428,6 +428,8 @@ static void level_cmd_free_level_pool(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+#include "game/local_multiplayer.h"
+
 static void level_cmd_begin_area(void) {
     u8 areaIndex = CMD_GET(u8, 2);
     void *geoLayoutAddr = CMD_GET(void *, 4);
@@ -445,9 +447,15 @@ static void level_cmd_begin_area(void) {
         gAreas[areaIndex].nextSyncID = 10;
 
         if (node != NULL) {
-            gAreas[areaIndex].camera = (struct Camera *) node->config.camera;
+            for (u8 i = 0; i < numPlayersLocal; i++) {
+                gAreas[areaIndex].cameras[i] = (struct Camera *) node->config[i].camera;
+            }
+            gAreas[areaIndex].camera = gAreas[areaIndex].cameras[0];
         } else {
             gAreas[areaIndex].camera = NULL;
+            for (u8 i = 0; i < numPlayersLocal; i++) {
+                memset(&gAreas[areaIndex].cameras[i], 0, sizeof(sizeof(struct Camera *) * numPlayersLocal)); // set them to null
+            }
         }
     }
 

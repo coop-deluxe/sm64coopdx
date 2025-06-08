@@ -597,6 +597,7 @@ struct Camera
     /*0x68*/ f32 areaCenY;
     /*????*/ Mat4 mtx;
     /*????*/ bool paletteEditorCap;
+    s16 movementFlags;
 };
 
 /**
@@ -698,12 +699,12 @@ struct LakituState
 // bss order hack to not affect BSS order. if possible, remove me, but it will be hard to match otherwise
 #ifndef INCLUDED_FROM_CAMERA_C
 // BSS
-extern s16 sSelectionFlags;
+extern s16 sSelectionFlags[];
 extern s16 sCameraSoundFlags;
 extern u16 sCButtonsPressed;
 extern struct PlayerCameraState gPlayerCameraState[MAX_PLAYERS];
 extern struct LakituState gLakituState;
-extern s16 gCameraMovementFlags;
+extern s16 gCameraMovementFlags[];
 extern s32 gObjCutsceneDone;
 extern struct Camera *gCamera;
 #endif

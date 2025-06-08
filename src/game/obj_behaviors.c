@@ -40,6 +40,7 @@
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "game/rng_position.h"
 #include "rumble_init.h"
+#include "local_multiplayer.h"
 
 /**
  * @file obj_behaviors.c
@@ -544,7 +545,7 @@ s8 is_point_within_radius_of_any_player(f32 x, f32 y, f32 z, s32 dist) {
 /* |description|Checks if `m` is in the current course/act/level/area and isn't bubbled|descriptionEnd| */
 u8 is_player_active(struct MarioState* m) {
     if (!m) { return FALSE; }
-    if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
+    if (gNetworkType == NT_NONE && m->playerIndex < numPlayersLocal) { return TRUE; }
     if (m->action == ACT_BUBBLED) { return FALSE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
@@ -573,7 +574,7 @@ u8 is_other_player_active(void) {
 /* |description|Checks if `m` is in the current course/act/level/area|descriptionEnd| */
 u8 is_player_in_local_area(struct MarioState* m) {
     if (!m) { return FALSE; }
-    if (gNetworkType == NT_NONE && m == &gMarioStates[0]) { return TRUE; }
+    if (gNetworkType == NT_NONE && m->playerIndex < numPlayersLocal) { return TRUE; }
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) { return FALSE; }
     if (np->type != NPT_LOCAL) {

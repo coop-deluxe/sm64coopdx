@@ -614,7 +614,7 @@ static void koopa_the_quick_act_wait_before_race(void) {
 
     if (o->oKoopaTheQuickInitTextboxCooldown != 0) {
         o->oKoopaTheQuickInitTextboxCooldown -= 1;
-    } else if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+    } else if (marioState->playerIndex < numPlayersLocal && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
         //! The next action doesn't execute until next frame, giving mario one
         //  frame where he can jump, and thus no longer be ready to speak.
         //  (On J, he has two frames and doing this enables time stop - see
@@ -847,7 +847,7 @@ static void koopa_the_quick_act_after_race(void) {
     if (!o->parentObj) { return; }
 
     if (o->parentObj->oKoopaRaceEndpointUnk100 == 0) {
-        if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+        if (marioState->playerIndex < numPlayersLocal && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
             stop_background_music(SEQUENCE_ARGS(4, SEQ_LEVEL_SLIDE));
 
             // Determine which text to display

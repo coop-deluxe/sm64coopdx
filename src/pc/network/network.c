@@ -36,6 +36,7 @@
 #include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
+#include "game/local_multiplayer.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -165,6 +166,11 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
+
+        extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
+        for (u8 i = 1; i < numPlayersLocal; i++) {
+            network_player_connected(NPT_LOCAL, i, 0, &DEFAULT_MARIO_PALETTE, "Mario", "0");
+        }
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
@@ -271,6 +277,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         // SOFT_ASSERT(false); - Crash?
         return;
     }
+    if (localIndex < numPlayersLocal) { return; } // sending to a local player (splitscreen)
 
     if (gNetworkType == NT_SERVER) {
         if (localIndex >= MAX_PLAYERS) {

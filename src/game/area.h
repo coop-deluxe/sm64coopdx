@@ -77,6 +77,7 @@ struct Area
     /*0x1C*/ struct InstantWarp *instantWarps;
     /*0x20*/ struct SpawnInfo *objectSpawnInfos;
     /*0x24*/ struct Camera *camera;
+    /*0x24*/ struct Camera *cameras[4];
     /*0x28*/ struct UnusedArea28 *unused28; // Filled by level script 0x3A, but is unused.
     /*0x2C*/ struct Whirlpool *whirlpools[2];
     /*0x34*/ u8 dialog[2]; // Level start dialog number (set by level script cmd 0x30)

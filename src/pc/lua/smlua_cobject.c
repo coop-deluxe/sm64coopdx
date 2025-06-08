@@ -15,6 +15,7 @@
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
+#include "game/local_multiplayer.h"
 
 extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
 
@@ -542,6 +543,54 @@ static int smlua__get_field(lua_State* L) {
         }
         if (strcmp(key, "_pointer") == 0) {
             lua_pushinteger(L, pointer);
+            return 1;
+        }
+    }
+
+    // Patch mods that access m.playerIndex
+    // so that anything that checks a Mario state playerIndex
+    // will be seen as a local player
+    if (lot == (enum LuaObjectType) LOT_MARIOSTATE && !strcmp(key, "playerIndex")) {
+        struct MarioState *m = (struct MarioState*)(intptr_t) pointer;
+        if (m->playerIndex < numPlayersLocal) {
+
+            // Always push 0 when dealing with Mario state 0
+            // this skips patching most other accesses to playerIndex
+            // but the playerIndex is 0 check is mostly done inside Mario update
+            if (realPlayerIndex == 0) {
+                lua_pushinteger(L, 0);
+                return 1;
+            }
+
+            bool isSafeToPush = true;
+
+            // OMM Rebirth patch, forces it's macro commands to get the correct playerIndex
+            // instead of the spoofed one.
+            {
+                LUA_STACK_CHECK_BEGIN();
+                lua_Debug ar;
+                if (lua_getstack(L, 1, &ar) && lua_getinfo(L, "fnu", &ar)) {
+                    if (ar.nparams == 1 && ar.nups == 1) {
+                        lua_newtable(L);
+                        lua_pushstring(L, "playerIndex");
+                        lua_pushinteger(L, 0);
+                        lua_settable(L, -3);
+
+                        if (lua_pcall(L, 1, 1, 0) == LUA_OK && lua_istable(L, -1)) {
+                            isSafeToPush = false;
+                        }
+                    }
+                    lua_pop(L, 1);
+                }
+                LUA_STACK_CHECK_END();
+            }
+
+            if (isSafeToPush) {
+                lua_pushinteger(L, 0);
+                return 1;
+            }
+
+            lua_pushinteger(L, realPlayerIndex);
             return 1;
         }
     }

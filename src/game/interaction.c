@@ -27,6 +27,7 @@
 #include "object_collision.h"
 #include "object_list_processor.h"
 #include "hardcoded.h"
+#include "local_multiplayer.h"
 
 #include "pc/configfile.h"
 #include "pc/network/network.h"
@@ -306,7 +307,7 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 
 void mario_stop_riding_object(struct MarioState *m) {
     if (!m || m->riddenObj == NULL || m->playerIndex != 0) { return; }
-    
+
     m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
     if (m->riddenObj->oSyncID != 0) {
         network_send_object_reliability(m->riddenObj, TRUE);
@@ -409,7 +410,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
-    
+
     m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
     m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
@@ -1567,7 +1568,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         victim->bounceSquishTimer = max(victim->bounceSquishTimer, 20);
     }
 
-    if (victim->playerIndex == 0) {
+    if (victim->playerIndex < numPlayersLocal) {
         victim->interactObj = attacker->marioObj;
         if (interaction & INT_KICK) {
             if (victim->action == ACT_FIRST_PERSON) {

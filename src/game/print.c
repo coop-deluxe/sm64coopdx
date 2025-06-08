@@ -7,6 +7,7 @@
 #include "print.h"
 #include "segment2.h"
 #include "game/rendering_graph_node.h"
+#include "local_multiplayer.h"
 
 /**
  * This file handles printing and formatting the colorful text that
@@ -446,6 +447,8 @@ void render_text_labels(void) {
     for (i = 0; i < sTextLabelsCount; i++) {
         for (j = 0; j < sTextLabels[i]->length; j++) {
             glyphIndex = char_to_glyph_index(sTextLabels[i]->buffer[j]);
+            subtract_x_u32(&sTextLabels[i]->x, RESOLUTION_N64);
+            subtract_y_u32(&sTextLabels[i]->y, RESOLUTION_N64);
 
             if (glyphIndex != GLYPH_SPACE) {
 #ifdef VERSION_EU

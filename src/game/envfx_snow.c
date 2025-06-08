@@ -12,6 +12,7 @@
 #include "audio/external.h"
 #include "obj_behaviors.h"
 #include "pc/utils/misc.h"
+#include "local_multiplayer.h"
 
 /**
  * This file contains the function that handles 'environment effects',
@@ -33,6 +34,7 @@ struct SnowFlakeVertex {
 };
 
 struct EnvFxParticle *gEnvFxBuffer;
+struct EnvFxParticle *gEnvFxBuffers[POSSIBLE_NUM_PLAYERS];
 Vec3i gSnowCylinderLastPos;
 s16 gSnowParticleCount;
 s16 gSnowParticleMaxCount;
@@ -58,24 +60,24 @@ extern void *tiny_bubble_dl_0B006CD8;
 Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec3s camTo, u8 interpolated);
 
 static s32   sSnowGfxMode;
-static Gfx*  sSnowGfxPos;
-static Vtx*  sSnowInternalGfxPos[140 / 5];
-static Vec3s sSnowGfxCamFrom;
-static Vec3s sSnowGfxCamTo;
-static Vec3s sSnowGfxMarioPos;
+static Gfx*  sSnowGfxPos[POSSIBLE_NUM_PLAYERS];
+static Vtx*  sSnowInternalGfxPos[POSSIBLE_NUM_PLAYERS][140 / 5];
+static Vec3s sSnowGfxCamFrom[POSSIBLE_NUM_PLAYERS];
+static Vec3s sSnowGfxCamTo[POSSIBLE_NUM_PLAYERS];
+static Vec3s sSnowGfxMarioPos[POSSIBLE_NUM_PLAYERS];
 
 void patch_snow_particles_before(void) {
-    if (sSnowGfxPos) {
+    if (sSnowGfxPos[gCurrPlayer]) {
         for (s32 i = 0; i < gSnowParticleCount; i++) {
             vec3s_set((gEnvFxBuffer + i)->prevPos, (gEnvFxBuffer + i)->xPos, (gEnvFxBuffer + i)->yPos, (gEnvFxBuffer + i)->zPos);
         }
-        sSnowGfxPos = NULL;
+        sSnowGfxPos[gCurrPlayer] = NULL;
     }
 }
 
 void patch_snow_particles_interpolated(UNUSED f32 delta) {
-    if (sSnowGfxPos) {
-        envfx_update_snow_internal(sSnowGfxMode, sSnowGfxMarioPos, sSnowGfxCamFrom, sSnowGfxCamTo, true);
+    if (sSnowGfxPos[gCurrPlayer]) {
+        envfx_update_snow_internal(sSnowGfxMode, sSnowGfxMarioPos[gCurrPlayer], sSnowGfxCamFrom[gCurrPlayer], sSnowGfxCamTo[gCurrPlayer], true);
     }
 }
 
@@ -372,10 +374,10 @@ void append_snowflake_vertex_buffer(Gfx *gfx, s32 index, Vec3s vertex1, Vec3s ve
     Vtx *vertBuf;
 
     if (interpolated) {
-        vertBuf = sSnowInternalGfxPos[index/5];
+        vertBuf = sSnowInternalGfxPos[gCurrPlayer][index/5];
     } else {
         vertBuf = (Vtx *) alloc_display_list(15 * sizeof(Vtx));
-        sSnowInternalGfxPos[index/5] = vertBuf;
+        sSnowInternalGfxPos[gCurrPlayer][index/5] = vertBuf;
     }
 
     if (vertBuf == NULL) {
@@ -433,15 +435,15 @@ Gfx *envfx_update_snow_internal(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec
     vertex2 = gSnowFlakeVertex2;
     vertex3 = gSnowFlakeVertex3;
 
-    if (interpolated && sSnowGfxPos) {
-        gfxStart = sSnowGfxPos;
+    if (interpolated && sSnowGfxPos[gCurrPlayer]) {
+        gfxStart = sSnowGfxPos[gCurrPlayer];
     } else {
         gfxStart = (Gfx *) alloc_display_list((gSnowParticleCount * 6 + 3) * sizeof(Gfx));
-        sSnowGfxPos = gfxStart;
+        sSnowGfxPos[gCurrPlayer] = gfxStart;
         sSnowGfxMode = snowMode;
-        vec3s_copy(sSnowGfxMarioPos, marioPos);
-        vec3s_copy(sSnowGfxCamFrom, camFrom);
-        vec3s_copy(sSnowGfxCamTo, camTo);
+        vec3s_copy(sSnowGfxMarioPos[gCurrPlayer], marioPos);
+        vec3s_copy(sSnowGfxCamFrom[gCurrPlayer], camFrom);
+        vec3s_copy(sSnowGfxCamTo[gCurrPlayer], camTo);
     }
 
     gfx = gfxStart;
@@ -544,7 +546,7 @@ Gfx *envfx_update_particles(s32 mode, Vec3s marioPos, Vec3s camTo, Vec3s camFrom
         return gfx;
     }
 
-    if (gEnvFxMode == 0 && envfx_init_snow(mode) == 0) {
+    if ((gEnvFxMode == 0 || !gEnvFxBuffer) && envfx_init_snow(mode) == 0) {
         return NULL;
     }
 

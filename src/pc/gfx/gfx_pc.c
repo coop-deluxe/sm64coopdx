@@ -1876,9 +1876,7 @@ void gfx_start_frame(void) {
     } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
     gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
     gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
-}
 
-void gfx_run(Gfx *commands) {
     gfx_sp_reset();
 
     //puts("New frame");
@@ -1891,15 +1889,18 @@ void gfx_run(Gfx *commands) {
 
     //double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
+}
+
+void gfx_run(Gfx *commands) {
     gfx_run_dl(commands);
-    gfx_flush();
     //double t1 = gfx_wapi->get_time();
     //printf("Process %f %f\n", t1, t1 - t0);
-    gfx_rapi->end_frame();
-    gfx_wapi->swap_buffers_begin();
 }
 
 void gfx_end_frame(void) {
+    gfx_flush();
+    gfx_rapi->end_frame();
+    gfx_wapi->swap_buffers_begin();
     if (!dropped_frame) {
         gfx_rapi->finish_render();
         gfx_wapi->swap_buffers_end();

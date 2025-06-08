@@ -457,17 +457,31 @@ void run_demo_inputs(void) {
     }
 }
 
+#include "local_multiplayer.h"
+
+void osContResetPad(OSContPad *pad);
+void osContGetReadDataIndex(OSContPad *pad, int i);
+void osContGetReadDataIndexNoReset(OSContPad *pad, int i);
+
 // update the controller struct with available inputs if present.
 void read_controller_inputs(void) {
     // If any controllers are plugged in, update the
     // controller information.
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
-        osContGetReadData(gInteractableOverridePad ? &gInteractablePad : &gControllerPads[0]);
+        if (gInteractableOverridePad) { osContResetPad(&gInteractablePad); }
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            if (gInteractableOverridePad) {
+                osContGetReadDataIndexNoReset(&gInteractablePad, i);
+            } else {
+                osContGetReadDataIndex(&gControllerPads[i], i);
+            }
+        }
     }
     run_demo_inputs();
 
-    for (s32 i = 0; i < 1; i++) {
+    memset(&gSharedController, 0, sizeof(struct Controller));
+    for (s32 i = 0; i < numPlayersLocal; i++) {
         struct Controller *controller = &gControllers[i];
 
         // if we're receiving inputs, update the controller struct
@@ -482,21 +496,16 @@ void read_controller_inputs(void) {
             // 0.5x A presses are a good meme
             controller->buttonDown = controller->controllerData->button;
             adjust_analog_stick(controller);
-        } else if (i != 0) {
-            // otherwise, if the controllerData is NULL, 0 out all of the inputs.
-            controller->rawStickX = 0;
-            controller->rawStickY = 0;
-            controller->extStickX = 0;
-            controller->extStickY = 0;
-            controller->buttonPressed = 0;
-            controller->buttonReleased = 0;
-            controller->buttonDown = 0;
-            controller->stickX = 0;
-            controller->stickY = 0;
-            controller->stickMag = 0;
-        }
 
+            gSharedController.stickX += controller->stickX;
+            gSharedController.stickY += controller->stickY;
+            gSharedController.buttonDown |= controller->buttonDown;
+            gSharedController.buttonPressed |= controller->buttonPressed;
+            gSharedController.buttonReleased |= controller->buttonReleased;
+        }
     }
+    gSharedController.stickX /= numPlayersLocal;
+    gSharedController.stickY /= numPlayersLocal;
 
     // For some reason, player 1's inputs are copied to player 3's port. This
     // potentially may have been a way the developers "recorded" the inputs
@@ -552,6 +561,10 @@ void init_controllers(void) {
             gControllers[cont].statusData = &gControllerStatuses[port];
             gControllers[cont++].controllerData = &gControllerPads[port];
         }
+    }
+
+    for (u8 i = 0; i < numPlayersLocal; i++) {
+        gControllers[i].controllerData = &gControllerPads[i];
     }
 
     // load bettercam settings from the config file

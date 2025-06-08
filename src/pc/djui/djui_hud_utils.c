@@ -23,6 +23,7 @@
 #include "pc/lua/smlua.h"
 
 #include "engine/math_util.h"
+#include "game/local_multiplayer.h"
 
 static enum HudUtilsResolution sResolution = RESOLUTION_DJUI;
 static enum HudUtilsFilter sFilter = FILTER_NEAREST;
@@ -74,6 +75,7 @@ static void djui_hud_position_translate(f32* x, f32* y) {
         *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
         *y = SCREEN_HEIGHT - *y;
     }
+    // transform_y_f32(y, sResolution);
 }
 
 static void djui_hud_size_translate(f32* size) {
@@ -248,7 +250,7 @@ u32 djui_hud_get_screen_width(void) {
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
     return (sResolution == RESOLUTION_N64)
-        ? GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT
+        ? gfx_current_dimensions.aspect_ratio * SCREEN_HEIGHT
         : (windowWidth / djui_gfx_get_scale());
 }
 
@@ -256,9 +258,11 @@ u32 djui_hud_get_screen_height(void) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    return (sResolution == RESOLUTION_N64)
+    u32 r = (sResolution == RESOLUTION_N64)
         ? SCREEN_HEIGHT
         : (windowHeight / djui_gfx_get_scale());
+    if (gSh == 1) { return r / 2; }
+    return r;
 }
 
 f32 djui_hud_get_mouse_x(void) {
