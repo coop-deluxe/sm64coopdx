@@ -7888,30 +7888,6 @@ HOOK_MAX                                    = 59 --- @type LuaHookedEventType
 --- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_MAX`
 
-ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
-ACTION_HOOK_GRAVITY     = 1 --- @type LuaActionHookType
-ACTION_HOOK_MAX         = 2 --- @type LuaActionHookType
-
---- @alias LuaActionHookType
---- | `ACTION_HOOK_EVERY_FRAME`
---- | `ACTION_HOOK_GRAVITY`
---- | `ACTION_HOOK_MAX`
-
-MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON   = 1 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 2 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER   = 3 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 4 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX      = 5 --- @type LuaModMenuElementType
-
---- @alias LuaModMenuElementType
---- | `MOD_MENU_ELEMENT_TEXT`
---- | `MOD_MENU_ELEMENT_BUTTON`
---- | `MOD_MENU_ELEMENT_CHECKBOX`
---- | `MOD_MENU_ELEMENT_SLIDER`
---- | `MOD_MENU_ELEMENT_INPUTBOX`
---- | `MOD_MENU_ELEMENT_MAX`
-
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue

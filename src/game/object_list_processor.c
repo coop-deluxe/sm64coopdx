@@ -285,10 +285,10 @@ void bhv_mario_update(void) {
         gMarioState->particleFlags = 0;
     }
 
-    smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
+    smlua_call_event_hooks(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
     u32 particleFlags = execute_mario_action(gCurrentObject);
-    smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
+    smlua_call_event_hooks(HOOK_MARIO_UPDATE, gMarioState);
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
 

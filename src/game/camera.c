@@ -2973,9 +2973,9 @@ void set_camera_mode(struct Camera *c, s16 mode, s16 frames) {
 
     if (c->mode == CAMERA_MODE_ROM_HACK && allow_romhack_camera_override_mode(mode)) { return; }
 
-    bool returnValue = true;
-    smlua_call_event_hooks_set_camera_mode_params(HOOK_ON_SET_CAMERA_MODE, c, mode, frames, &returnValue);
-    if (!returnValue) {
+    bool allowSetCameraMode = true;
+    smlua_call_event_hooks(HOOK_ON_SET_CAMERA_MODE, c, mode, frames, &allowSetCameraMode);
+    if (!allowSetCameraMode) {
         return;
     }
 
@@ -3186,15 +3186,15 @@ void update_camera(struct Camera *c) {
         // Only process R_TRIG if 'fixed' is not selected in the menu
         if (cam_select_alt_mode(0) == CAM_SELECTION_MARIO && c->mode != CAMERA_MODE_NEWCAM) {
             if ((sCurrPlayMode != PLAY_MODE_PAUSED) && gPlayer1Controller->buttonPressed & R_TRIG) {
-                bool returnValue = true;
+                bool allowSetCamAngle = true;
                 if (set_cam_angle(0) == CAM_ANGLE_LAKITU) {
-                    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_MARIO, &returnValue);
-                    if (returnValue) {
+                    smlua_call_event_hooks(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_MARIO, &allowSetCamAngle);
+                    if (allowSetCamAngle) {
                         set_cam_angle(CAM_ANGLE_MARIO);
                     }
                 } else {
-                    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_LAKITU, &returnValue);
-                    if (returnValue) {
+                    smlua_call_event_hooks(HOOK_ON_CHANGE_CAMERA_ANGLE, CAM_ANGLE_LAKITU, &allowSetCamAngle);
+                    if (allowSetCamAngle) {
                         set_cam_angle(CAM_ANGLE_LAKITU);
                     }
                 }
