@@ -12923,7 +12923,7 @@ int smlua_func_djui_hud_render_texture(lua_State* L) {
         return 0;
     }
 
-    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture"); return 0; }
     f32 x = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture"); return 0; }
@@ -12948,7 +12948,7 @@ int smlua_func_djui_hud_render_texture_tile(lua_State* L) {
         return 0;
     }
 
-    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile"); return 0; }
     f32 x = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile"); return 0; }
@@ -12981,7 +12981,7 @@ int smlua_func_djui_hud_render_texture_interpolated(lua_State* L) {
         return 0;
     }
 
-    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_interpolated"); return 0; }
     f32 prevX = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_interpolated"); return 0; }
@@ -13014,7 +13014,7 @@ int smlua_func_djui_hud_render_texture_tile_interpolated(lua_State* L) {
         return 0;
     }
 
-    struct TextureInfo *texInfo = get_texture_info_from_lua(L);
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile_interpolated"); return 0; }
     f32 prevX = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile_interpolated"); return 0; }

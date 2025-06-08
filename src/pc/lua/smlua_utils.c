@@ -258,6 +258,33 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     return lnt;
 }
 
+struct TextureInfo *smlua_to_texture_info(lua_State *L, int index) {
+    static struct TextureInfo tmpTexInfo = { 0 }; // Static should be okay
+    struct TextureInfo *texInfo = &tmpTexInfo;
+
+    if (smlua_is_cobject(L, index, LOT_TEXTUREINFO)) {
+        return smlua_to_cobject(L, index, LOT_TEXTUREINFO);
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, index);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top + 1);
+        const u8 *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { return NULL; }
+
+        // Get the texInfo from DynOS so mods can't spoof it
+        if (!texPtr || !dynos_texture_get_from_data(texPtr, texInfo)) {
+            gSmLuaConvertSuccess = false;
+            return NULL;
+        }
+
+        lua_settop(L, top);
+    }
+    return texInfo;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 bool packet_write_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
@@ -637,41 +664,6 @@ LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
     // return variable
     gSmLuaSuppressErrors = prevSuppress;
     return value;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-struct TextureInfo *get_texture_info_from_lua(lua_State *L) {
-    static struct TextureInfo tmpTexInfo = { 0 }; // Static should be okay
-    struct TextureInfo *texInfo = &tmpTexInfo;
-
-    if (smlua_is_cobject(L, 1, LOT_TEXTUREINFO)) {
-        return smlua_to_cobject(L, 1, LOT_TEXTUREINFO);
-    } else {
-        int top = lua_gettop(L);
-        lua_pushvalue(L, 1);
-
-        lua_pushstring(L, "texture");
-        lua_gettable(L, top + 1);
-        tmpTexInfo.texture = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
-        lua_pop(L, 1);
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.bitSize = smlua_get_integer_field(top + 1, "bitSize");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.width = smlua_get_integer_field(top + 1, "width");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.height = smlua_get_integer_field(top + 1, "height");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        tmpTexInfo.name = smlua_get_string_field(top + 1, "name");
-        if (!gSmLuaConvertSuccess) { return NULL; }
-
-        lua_settop(L, top);
-    }
-    return texInfo;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

@@ -787,8 +787,8 @@ def build_param(fid, param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
 
-    if param.get('texinfo', False):
-        return '    struct TextureInfo *texInfo = get_texture_info_from_lua(L);\n'
+    if "struct TextureInfo" in ptype and "*" in ptype:
+        return '    struct TextureInfo *texInfo = smlua_to_texture_info(L, %d);\n' % (i)
 
     if ptype in VEC_TYPES:
         if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
@@ -1027,10 +1027,6 @@ def process_function(fname, line, description):
             if param_str.startswith('OUT '):
                 param['out'] = True
                 param_str = param_str[len('OUT'):].strip()
-
-            if param_str.startswith('TEXINFO '):
-                param['texinfo'] = True
-                param_str = param_str[len('TEXINFO'):].strip()
 
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)

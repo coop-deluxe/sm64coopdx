@@ -215,6 +215,8 @@ void load_obj_warp_nodes(void) {
 }
 
 void clear_areas(void) {
+    smlua_call_event_hooks(HOOK_ON_CLEAR_AREAS);
+
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         np->currAreaSyncValid = false;
