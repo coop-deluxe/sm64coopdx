@@ -113,7 +113,7 @@ const char* translate_bind_to_name(int bind) {
             case 6: return "Scroll Up";
             case 7: return "Scroll Down";
             default: {
-                snprintf(name, 8, "Mouse %d", mouse_button);
+                snprintf(name, 11, "Mouse %d", mouse_button);
                 return name;
             }
         }
