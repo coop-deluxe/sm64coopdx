@@ -65,13 +65,7 @@ f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
         gfx_get_dimensions(&windowWidth, &windowHeight);
-        if (windowHeight < 768) {
-            return 0.5f;
-        } else if (windowHeight < 1440) {
-            return 1.0f;
-        } else {
-            return 1.5f;
-        }
+        return ((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f;
     } else {
         switch (configDjuiScale) {
             case 1:  return 0.5f;
