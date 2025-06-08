@@ -246,7 +246,7 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
         }
     }
 
-    smlua_call_event_on_add_surface(surface, dynamic);
+    smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, dynamic);
 }
 
 /**

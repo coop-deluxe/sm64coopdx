@@ -1,4 +1,5 @@
 import sys
+import re
 from vec_types import *
 
 
@@ -135,30 +136,6 @@ SMLUA_TYPES = {
         lua_remove(L, -2);
 """
     },
-    "structObject*": {
-"input": """
-        // push {name}
-        smlua_push_object(L, LOT_OBJECT, {name}, NULL);
-"""
-    },
-    "structCamera*": {
-"input": """
-        // push {name}
-        smlua_push_object(L, LOT_CAMERA, {name}, NULL);
-"""
-    },
-    "structGraphNode*": {
-"input": """
-        // push {name}
-        smlua_push_object(L, LOT_GRAPHNODE, {name}, NULL);
-"""
-    },
-    "structGraphNodeObject*": {
-"input": """
-        // push {name}
-        smlua_push_object(L, LOT_GRAPHNODEOBJECT, {name}, NULL);
-"""
-    },
     "structWarpDest": {
 "output": """
         // if the hook returns a table, use it to override the warp parameters
@@ -186,6 +163,26 @@ SMLUA_TYPES = {
 """
     },
 }
+
+
+def init():
+
+    # HACK: build LOT types from smlua_cobject_autogen.c
+    with open('src/pc/lua/smlua_cobject_autogen.c') as f:
+        file = f.read()
+        begin = file.find("const char *sLuaLotNames[] = {") + len("const char *sLuaLotNames[] = {")
+        end = file.find("};", begin)
+        types = [list(filter(None, re.split(r'\W+', line.strip()))) for line in file[begin:end].split('\n') if line.strip()]
+
+    for lot, name in types:
+        typename = f"struct{name}*"
+        if typename not in SMLUA_TYPES:
+            SMLUA_TYPES[typename] = {
+"input": """
+        // push {name}
+        smlua_push_object(L, %s, {name}, NULL);
+""" % (lot)
+            }
 
 
 def extract_hook_event(line: str):
@@ -308,4 +305,5 @@ def main():
 
 
 if __name__ == "__main__":
+    init()
     main()
