@@ -2221,9 +2221,12 @@ void init_single_mario(struct MarioState* m) {
 
     m->waterLevel = find_water_level(spawnInfo->startPos[0], spawnInfo->startPos[2]);
 
-    m->area = gCurrentArea;
-    gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
-    m->area = &gCurrentAreaCopies[playerIndex];
+    if (playerIndex < numPlayersLocal) {
+        gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
+        m->area = &gCurrentAreaCopies[playerIndex];
+    } else {
+        m->area = gCurrentArea;
+    }
     m->marioObj = gMarioObjects[m->playerIndex];
     if (m->marioObj == NULL) { return; }
     m->marioObj->header.gfx.shadowInvisible = false;

@@ -497,6 +497,8 @@ void read_controller_inputs(void) {
             controller->buttonDown = controller->controllerData->button;
             adjust_analog_stick(controller);
 
+            gSharedController.rawStickX += controller->rawStickX;
+            gSharedController.rawStickY += controller->rawStickY;
             gSharedController.stickX += controller->stickX;
             gSharedController.stickY += controller->stickY;
             gSharedController.buttonDown |= controller->buttonDown;
@@ -504,8 +506,14 @@ void read_controller_inputs(void) {
             gSharedController.buttonReleased |= controller->buttonReleased;
         }
     }
-    gSharedController.stickX /= numPlayersLocal;
-    gSharedController.stickY /= numPlayersLocal;
+    if (gSharedController.rawStickX > 64)  { gSharedController.rawStickX = 64;  }
+    if (gSharedController.rawStickX < -64) { gSharedController.rawStickX = -64; }
+    if (gSharedController.rawStickY > 64)  { gSharedController.rawStickY = 64;  }
+    if (gSharedController.rawStickY < -64) { gSharedController.rawStickY = -64; }
+    if (gSharedController.stickX > 64)  { gSharedController.stickX = 64;  }
+    if (gSharedController.stickX < -64) { gSharedController.stickX = -64; }
+    if (gSharedController.stickY > 64)  { gSharedController.stickY = 64;  }
+    if (gSharedController.stickY < -64) { gSharedController.stickY = -64; }
 
     // For some reason, player 1's inputs are copied to player 3's port. This
     // potentially may have been a way the developers "recorded" the inputs
