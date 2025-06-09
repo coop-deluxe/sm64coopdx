@@ -359,7 +359,7 @@ s8 geo_get_processing_mario_index(void) {
         return index;
     }
 
-    if (gCurGraphNodeProcessingObject->behavior != smlua_override_behavior(bhvMario)) {
+    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
         return -1;
     }
 

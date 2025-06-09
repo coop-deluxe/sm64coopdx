@@ -204,7 +204,7 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
-    if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
+    if (obj && (obj->behavior == bhvMario ||
             obj->behavior == smlua_override_behavior(bhvNormalCap) ||
             obj->behavior == smlua_override_behavior(bhvWingCap) ||
             obj->behavior == smlua_override_behavior(bhvMetalCap) ||

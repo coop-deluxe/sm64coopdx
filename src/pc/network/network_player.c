@@ -59,7 +59,7 @@ void network_player_update_model(u8 localIndex) {
     if (index >= CT_MAX) { index = 0; }
     m->character = &gCharacters[index];
 
-    if (m->marioObj == NULL || m->marioObj->behavior != smlua_override_behavior(bhvMario)) { return; }
+    if (m->marioObj == NULL || m->marioObj->behavior != bhvMario) { return; }
     obj_set_model(m->marioObj, m->character->modelId);
 }
 

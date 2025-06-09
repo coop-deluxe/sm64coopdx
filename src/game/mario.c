@@ -2404,11 +2404,10 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
 
 struct MarioState *get_mario_state_from_object(struct Object *o) {
     if (!o) { return NULL; }
-    for (s32 i = 0; i != MAX_PLAYERS; ++i) {
-        struct MarioState *m = &gMarioStates[i];
-        if (m->marioObj == o) {
-            return m;
-        }
+    if (o->behavior != bhvMario) { return NULL; }
+    s32 stateIndex = o->oBehParams - 1;
+    if (stateIndex >= 0 && stateIndex < MAX_PLAYERS) {
+        return &gMarioStates[stateIndex];
     }
     return NULL;
 }
