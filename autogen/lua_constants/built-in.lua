@@ -190,7 +190,7 @@ OUT_SINE       = function (x) return __math_sin((x * __math_pi) / 2) end
 IN_OUT_SINE    = function (x) return -(__math_cos(__math_pi * x) - 1) / 2 end
 ---@param x number
 ---@return number
-OUT_IN_SINE    = function (x) return x < 0.5 and 0.5 * __math_sin((x * 2) * (__math_pi / 2)) or 0.5 * (1 - __math_cos(((x * 2 - 1) * (__math_pi / 2)))) end
+OUT_IN_SINE    = function (x) return x < 0.5 and 0.5 * __math_sin(x * __math_pi) or 1 - 0.5 * __math_cos(((x * 2 - 1) * (__math_pi / 2))) end
 ---@param x number
 ---@return number
 IN_QUAD        = function (x) return x ^ 2 end
