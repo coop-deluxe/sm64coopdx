@@ -4134,21 +4134,6 @@ function djui_popup_create(message, lines)
     -- ...
 end
 
---- @param soundBits integer
---- @param pos Vec3f
---- Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
-function play_sound(soundBits, pos)
-    -- ...
-end
-
---- @param soundBits integer
---- @param pos Vec3f
---- @param freqScale number
---- Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
-function play_sound_with_freq_scale(soundBits, pos, freqScale)
-    -- ...
-end
-
 --- @param player integer
 --- @param fadeDuration integer
 --- Fades out `player` with `fadeDuration`

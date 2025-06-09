@@ -31,6 +31,7 @@
 
 --- @class Area
 --- @field public camera Camera
+--- @field public cameras Camera[]
 --- @field public dialog integer[]
 --- @field public flags integer
 --- @field public index integer
@@ -223,6 +224,7 @@
 --- @field public filler3C integer[]
 --- @field public focus Vec3f
 --- @field public mode integer
+--- @field public movementFlags integer
 --- @field public mtx Mat4
 --- @field public nextYaw integer
 --- @field public paletteEditorCap boolean
@@ -854,8 +856,6 @@
 --- @class GraphNodeBackground
 --- @field public background integer
 --- @field public fnNode FnGraphNode
---- @field public prevCameraFocus Vec3f
---- @field public prevCameraPos Vec3f
 --- @field public prevCameraTimestamp integer
 --- @field public unused integer
 

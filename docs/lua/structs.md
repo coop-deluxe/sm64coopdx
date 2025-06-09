@@ -181,6 +181,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | camera | [Camera](structs.md#Camera) |  |
+| cameras | `Array` <`Camera`> |  |
 | dialog | `Array` <`integer`> |  |
 | flags | `integer` |  |
 | index | `integer` |  |
@@ -408,6 +409,7 @@
 | filler3C | `Array` <`integer`> |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | mode | `integer` |  |
+| movementFlags | `integer` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
 | nextYaw | `integer` |  |
 | paletteEditorCap | `boolean` |  |
@@ -1254,8 +1256,6 @@
 | ----- | ---- | ------ |
 | background | `integer` |  |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| prevCameraFocus | [Vec3f](structs.md#Vec3f) | read-only |
-| prevCameraPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevCameraTimestamp | `integer` | read-only |
 | unused | `integer` | read-only |
 

@@ -13052,6 +13052,7 @@ int smlua_func_djui_popup_create(lua_State* L) {
  // external.h //
 ////////////////
 
+/*
 int smlua_func_play_sound(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -13063,16 +13064,16 @@ int smlua_func_play_sound(lua_State* L) {
 
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound"); return 0; }
-
-    f32 *pos = smlua_get_vec3f_from_buffer();
-    smlua_get_vec3f(pos, 2);
+//  struct GraphNodeObject* gfx = (struct GraphNodeObject*)smlua_to_cobject(L, 2, LOT_GRAPHNODEOBJECT); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound"); return 0; }
 
-    // play_sound(soundBits, pos);
+    play_sound(soundBits, gfx);
 
     return 1;
 }
+*/
 
+/*
 int smlua_func_play_sound_with_freq_scale(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -13084,17 +13085,16 @@ int smlua_func_play_sound_with_freq_scale(lua_State* L) {
 
     s32 soundBits = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound_with_freq_scale"); return 0; }
-
-    f32 *pos = smlua_get_vec3f_from_buffer();
-    smlua_get_vec3f(pos, 2);
+//  struct GraphNodeObject* gfx = (struct GraphNodeObject*)smlua_to_cobject(L, 2, LOT_GRAPHNODEOBJECT); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound_with_freq_scale"); return 0; }
     f32 freqScale = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "play_sound_with_freq_scale"); return 0; }
 
-    // play_sound_with_freq_scale(soundBits, pos, freqScale);
+    play_sound_with_freq_scale(soundBits, gfx, freqScale);
 
     return 1;
 }
+*/
 
 int smlua_func_seq_player_fade_out(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -35864,8 +35864,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
 
     // external.h
-    smlua_bind_function(L, "play_sound", smlua_func_play_sound);
-    smlua_bind_function(L, "play_sound_with_freq_scale", smlua_func_play_sound_with_freq_scale);
+    //smlua_bind_function(L, "play_sound", smlua_func_play_sound); <--- UNIMPLEMENTED
+    //smlua_bind_function(L, "play_sound_with_freq_scale", smlua_func_play_sound_with_freq_scale); <--- UNIMPLEMENTED
     smlua_bind_function(L, "seq_player_fade_out", smlua_func_seq_player_fade_out);
     smlua_bind_function(L, "fade_volume_scale", smlua_func_fade_volume_scale);
     smlua_bind_function(L, "seq_player_lower_volume", smlua_func_seq_player_lower_volume);

@@ -811,8 +811,6 @@
 <br />
 
 - external.h
-   - [play_sound](functions-3.md#play_sound)
-   - [play_sound_with_freq_scale](functions-3.md#play_sound_with_freq_scale)
    - [seq_player_fade_out](functions-3.md#seq_player_fade_out)
    - [fade_volume_scale](functions-3.md#fade_volume_scale)
    - [seq_player_lower_volume](functions-3.md#seq_player_lower_volume)

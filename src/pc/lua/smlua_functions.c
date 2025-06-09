@@ -1002,6 +1002,58 @@ int smlua_func_vtx_get_from_name(lua_State *L) {
     return 2;
 }
 
+int smlua_func_play_sound(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "play_sound", 2, top);
+        return 0;
+    }
+
+    s32 soundBits = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound"); return 0; }
+
+    f32 *pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    pos[1] = smlua_get_number_field(2, "y");
+    pos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound"); return 0; }
+
+    struct GraphNodeObject graphNodeObject;
+    vec3f_copy(graphNodeObject.pos, pos);
+    play_sound(soundBits, &graphNodeObject);
+
+    return 1;
+}
+
+int smlua_func_play_sound_with_freq_scale(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "play_sound_with_freq_scale", 3, top);
+        return 0;
+    }
+
+    s32 soundBits = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_sound_with_freq_scale"); return 0; }
+
+    f32 *pos = smlua_get_vec3f_from_buffer();
+    pos[0] = smlua_get_number_field(2, "x");
+    pos[1] = smlua_get_number_field(2, "y");
+    pos[2] = smlua_get_number_field(2, "z");
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound_with_freq_scale"); return 0; }
+    f32 freqScale = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "play_sound_with_freq_scale"); return 0; }
+
+    struct GraphNodeObject graphNodeObject;
+    vec3f_copy(graphNodeObject.pos, pos);
+    play_sound_with_freq_scale(soundBits, &graphNodeObject, freqScale);
+
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -1034,4 +1086,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
     smlua_bind_function(L, "gfx_get_from_name", smlua_func_gfx_get_from_name);
     smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
+    smlua_bind_function(L, "play_sound", smlua_func_play_sound);
+    smlua_bind_function(L, "play_sound_with_freq_scale", smlua_func_play_sound_with_freq_scale);
 }

@@ -197,9 +197,10 @@ static struct LuaObjectField sAnimationTableFields[LUA_ANIMATION_TABLE_FIELD_COU
     { "count",       LVT_U32, offsetof(struct AnimationTable, count),       true, LOT_NONE, 1, sizeof(u32)                        },
 };
 
-#define LUA_AREA_FIELD_COUNT 21
+#define LUA_AREA_FIELD_COUNT 22
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "camera",              LVT_COBJECT_P, offsetof(struct Area, camera),              false, LOT_CAMERA,         1, sizeof(struct Camera*)         },
+    { "cameras",             LVT_COBJECT_P, offsetof(struct Area, cameras),             false, LOT_CAMERA,         4, sizeof(struct Camera*)         },
     { "dialog",              LVT_U8,        offsetof(struct Area, dialog),              false, LOT_NONE,           2, sizeof(u8)                     },
     { "flags",               LVT_S8,        offsetof(struct Area, flags),               false, LOT_NONE,           1, sizeof(s8)                     },
     { "index",               LVT_S8,        offsetof(struct Area, index),               false, LOT_NONE,           1, sizeof(s8)                     },
@@ -391,7 +392,7 @@ static struct LuaObjectField sBullyCollisionDataFields[LUA_BULLY_COLLISION_DATA_
     { "velZ",            LVT_F32, offsetof(struct BullyCollisionData, velZ),            false, LOT_NONE, 1, sizeof(f32) },
 };
 
-#define LUA_CAMERA_FIELD_COUNT 16
+#define LUA_CAMERA_FIELD_COUNT 17
 static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "areaCenX",         LVT_F32,     offsetof(struct Camera, areaCenX),         false, LOT_NONE,  1,  sizeof(f32)   },
     { "areaCenY",         LVT_F32,     offsetof(struct Camera, areaCenY),         false, LOT_NONE,  1,  sizeof(f32)   },
@@ -403,6 +404,7 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "filler3C",         LVT_U8,      offsetof(struct Camera, filler3C),         false, LOT_NONE,  40, sizeof(u8)    },
     { "focus",            LVT_COBJECT, offsetof(struct Camera, focus),            true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
     { "mode",             LVT_U8,      offsetof(struct Camera, mode),             false, LOT_NONE,  1,  sizeof(u8)    },
+    { "movementFlags",    LVT_S16,     offsetof(struct Camera, movementFlags),    false, LOT_NONE,  1,  sizeof(s16)   },
     { "mtx",              LVT_COBJECT, offsetof(struct Camera, mtx),              true,  LOT_MAT4,  1,  sizeof(Mat4)  },
     { "nextYaw",          LVT_S16,     offsetof(struct Camera, nextYaw),          false, LOT_NONE,  1,  sizeof(s16)   },
     { "paletteEditorCap", LVT_BOOL,    offsetof(struct Camera, paletteEditorCap), false, LOT_NONE,  1,  sizeof(bool)  },
@@ -1098,12 +1100,12 @@ static struct LuaObjectField sGraphNodeAnimatedPartFields[LUA_GRAPH_NODE_ANIMATE
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeAnimatedPart, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
-#define LUA_GRAPH_NODE_BACKGROUND_FIELD_COUNT 6
+#define LUA_GRAPH_NODE_BACKGROUND_FIELD_COUNT 4
 static struct LuaObjectField sGraphNodeBackgroundFields[LUA_GRAPH_NODE_BACKGROUND_FIELD_COUNT] = {
     { "background",          LVT_S32,     offsetof(struct GraphNodeBackground, background),          false, LOT_NONE,        1, sizeof(s32)                },
     { "fnNode",              LVT_COBJECT, offsetof(struct GraphNodeBackground, fnNode),              true,  LOT_FNGRAPHNODE, 1, sizeof(struct FnGraphNode) },
-    { "prevCameraFocus",     LVT_COBJECT, offsetof(struct GraphNodeBackground, prevCameraFocus),     true,  LOT_VEC3F,       1, sizeof(Vec3f)              },
-    { "prevCameraPos",       LVT_COBJECT, offsetof(struct GraphNodeBackground, prevCameraPos),       true,  LOT_VEC3F,       1, sizeof(Vec3f)              },
+//  { "prevCameraFocus",     LVT_???,     offsetof(struct GraphNodeBackground, prevCameraFocus),     true,  LOT_???,         1, sizeof(Vec3f)              }, <--- UNIMPLEMENTED
+//  { "prevCameraPos",       LVT_???,     offsetof(struct GraphNodeBackground, prevCameraPos),       true,  LOT_???,         1, sizeof(Vec3f)              }, <--- UNIMPLEMENTED
     { "prevCameraTimestamp", LVT_U32,     offsetof(struct GraphNodeBackground, prevCameraTimestamp), true,  LOT_NONE,        1, sizeof(u32)                },
     { "unused",              LVT_S32,     offsetof(struct GraphNodeBackground, unused),              true,  LOT_NONE,        1, sizeof(s32)                },
 };

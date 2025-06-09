@@ -843,7 +843,7 @@ void play_sound_internal(s32 soundBits, struct GraphNodeObject *gfx, f32 freqSca
 
     f32 *pos = gGlobalSoundSource;
 
-    if (gfx) {
+    if (gfx && !memcmp(pos, gGlobalSoundSource, sizeof(Vec3f))) {
         struct Camera *closestCam = NULL;
         f32 closestDistSq = FLT_MAX;
         for (int i = 0; i < numPlayersLocal; i++) {
