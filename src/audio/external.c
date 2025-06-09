@@ -834,69 +834,63 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
  */
 extern f32 *smlua_get_vec3f_for_play_sound(f32 *pos);
 
+#include <float.h>
 #include "engine/math_util.h"
 #include "game/local_multiplayer.h"
 
-void play_sound(s32 soundBits, struct GraphNodeObject *gfx) {
+void play_sound_internal(s32 soundBits, struct GraphNodeObject *gfx, f32 freqScale) {
     MUTEX_LOCK(gAudioThread);
 
     f32 *pos = gGlobalSoundSource;
-    Vec3f camToObject;
-    for (int i = 0; i < numPlayersLocal; i++) {
-        if (gfx) {
-            struct Camera *c = gCurrentArea->cameras[i];
-            if (!c) { continue; }
 
-            // Calculate cameraToObject for this player's position
-            Mat4 mtx;
-            mtxf_translate(mtx, gfx->pos);
-            mtxf_mul(mtx, mtx, c->mtx);
-            camToObject[0] = mtx[3][0];
-            camToObject[1] = mtx[3][1];
-            camToObject[2] = mtx[3][2];
-            pos = camToObject;
+    if (gfx) {
+        struct Camera *closestCam = NULL;
+        f32 closestDistSq = FLT_MAX;
+        for (int i = 0; i < numPlayersLocal; i++) {
+            struct Camera *c = gCurrentArea->cameras[i];
+            if (!c) continue;
+
+            f32 dx = gfx->pos[0] - c->pos[0];
+            f32 dy = gfx->pos[1] - c->pos[1];
+            f32 dz = gfx->pos[2] - c->pos[2];
+            f32 distSq = dx * dx + dy * dy + dz * dz;
+
+            if (distSq < closestDistSq) {
+                closestDistSq = distSq;
+                closestCam = c;
+            }
+        }
+        if (!closestCam) {
+            MUTEX_UNLOCK(gAudioThread);
+            return;
         }
 
-        pos = smlua_get_vec3f_for_play_sound(pos);
-        smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
-        sSoundRequests[sSoundRequestCount].soundBits = soundBits;
-        vec3f_copy(sSoundRequests[sSoundRequestCount].position, pos);
-        sSoundRequests[sSoundRequestCount].customFreqScale = 0;
-        sSoundRequestCount++;
+        Mat4 mtx;
+        mtxf_translate(mtx, gfx->pos);
+        mtxf_mul(mtx, mtx, closestCam->mtx);
+        Vec3f camToObject;
+        camToObject[0] = mtx[3][0];
+        camToObject[1] = mtx[3][1];
+        camToObject[2] = mtx[3][2];
+        pos = camToObject;
     }
+
+    pos = smlua_get_vec3f_for_play_sound(pos);
+    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+    sSoundRequests[sSoundRequestCount].soundBits = soundBits;
+    vec3f_copy(sSoundRequests[sSoundRequestCount].position, pos);
+    sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
+    sSoundRequestCount++;
 
     MUTEX_UNLOCK(gAudioThread);
 }
 
+void play_sound(s32 soundBits, struct GraphNodeObject *gfx) {
+    play_sound_internal(soundBits, gfx, 0);
+}
+
 void play_sound_with_freq_scale(s32 soundBits, struct GraphNodeObject *gfx, f32 freqScale) {
-    MUTEX_LOCK(gAudioThread);
-
-    f32 *pos = gGlobalSoundSource;
-    Vec3f camToObject;
-    for (int i = 0; i < numPlayersLocal; i++) {
-        if (gfx) {
-            struct Camera *c = gCurrentArea->cameras[i];
-            if (!c) { continue; }
-
-            // Calculate cameraToObject for this player's position
-            Mat4 mtx;
-            mtxf_translate(mtx, gfx->pos);
-            mtxf_mul(mtx, mtx, c->mtx);
-            camToObject[0] = mtx[3][0];
-            camToObject[1] = mtx[3][1];
-            camToObject[2] = mtx[3][2];
-            pos = camToObject;
-        }
-
-        pos = smlua_get_vec3f_for_play_sound(pos);
-        smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
-        sSoundRequests[sSoundRequestCount].soundBits = soundBits;
-        vec3f_copy(sSoundRequests[sSoundRequestCount].position, pos);
-        sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
-        sSoundRequestCount++;
-    }
-
-    MUTEX_UNLOCK(gAudioThread);
+    play_sound_internal(soundBits, gfx, freqScale);
 }
 
 /**
