@@ -239,8 +239,6 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
-    Mtx camTranfInv, prevCamTranfInv;
-
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = sPerspectiveNode->fov;
@@ -303,36 +301,40 @@ void patch_mtx_interpolated(f32 delta) {
 
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
+    Mtx camTranfInv, prevCamTranfInv;
+    Mtx camInterp;
     bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
     if (translateCamSpace) {
+        // compute inverse camera matrix to transform out of camera space later
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
         mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+
+        // use camera node's stored information to calculate interpolated camera transform
+        Vec3f posInterp, focusInterp;
+        delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
+        delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
+        mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+        mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
     for (s32 i = 0; i < gMtxTblSize; i++) {
-        Mtx bufMtx, bufMtxPrev;
-
-        memcpy(bufMtx.m, ((Mtx*) gMtxTbl[i].mtx)->m, sizeof(f32) * 4 * 4);
-        memcpy(bufMtxPrev.m, ((Mtx*) gMtxTbl[i].mtxPrev)->m, sizeof(f32) * 4 * 4);
-
         Gfx *pos = gMtxTbl[i].pos;
+        Mtx *srcMtx = gMtxTbl[i].mtx;
+        Mtx *srcMtxPrev = gMtxTbl[i].mtxPrev;
 
         if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
+            Mtx bufMtx, bufMtxPrev;
+            mtxf_copy(bufMtx.m, srcMtx->m);
+            mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
             mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+            srcMtx = &bufMtx;
+            srcMtxPrev = &bufMtxPrev;
         }
-        delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
+        delta_interpolate_mtx(&gMtxTbl[i].interp, srcMtxPrev, srcMtx, delta);
         if (gMtxTbl[i].usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
-            Mtx camInterp;
-            Vec3f posInterp, focusInterp;
-
-            // use camera node's stored information to calculate interpolated camera transform
-            delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
-            delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
-            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
-            mtxf_to_mtx(&camInterp, camInterp.m);
             mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
         }
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
