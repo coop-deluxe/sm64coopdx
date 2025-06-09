@@ -143,7 +143,8 @@ void subtract_x_##type(type *x, enum HudUtilsResolution res) { \
         u32 windowWidth, windowHeight; \
         gfx_get_dimensions(&windowWidth, &windowHeight); \
         *x -= windowHeight * w; \
-    } else { \
+    } else if (gSx == 0) { /* checking this because for some reason it's inverted */ \
+        *x -= GFX_SCREEN_WIDTH(); \
     } \
 }
 

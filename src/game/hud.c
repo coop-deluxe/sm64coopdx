@@ -549,11 +549,6 @@ void set_hud_camera_status(s16 status) {
     sCameraHUD[gCurrPlayer].status = status;
 }
 
-#define GFX_DIMENSIONS_FROM_LEFT_EDGE2(v)  (SCREEN_WIDTH / 4 - SCREEN_HEIGHT / 4 * (gfx_current_dimensions.aspect_ratio * aspect_mask) + (v))
-#define GFX_DIMENSIONS_FROM_RIGHT_EDGE2(v) (SCREEN_WIDTH / 4 + SCREEN_HEIGHT / 4 * (gfx_current_dimensions.aspect_ratio * aspect_mask) - (v))
-#define GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE2(v)  ((int)floorf(GFX_DIMENSIONS_FROM_LEFT_EDGE2(v)))
-#define GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(v) ((int)ceilf(GFX_DIMENSIONS_FROM_RIGHT_EDGE2(v)))
-
 /**
  * Renders camera HUD glyphs using a table list, depending of
  * the camera status called, a defined glyph is rendered.
@@ -565,11 +560,9 @@ void render_hud_camera_status(void) {
 
     cameraLUT = segmented_to_virtual(&main_hud_camera_lut);
     x = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(54);
-    printf("subtract from x %d, %d, %d\n", x, GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(54), x / 2);
-    if (gSx == 0 && gSw == 1) { x = GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE2(54) - 15; }
     y = 205;
 
-    // subtract_x_s32(&x, RESOLUTION_N64);
+    subtract_x_s32(&x, RESOLUTION_N64);
     subtract_y_s32(&y, RESOLUTION_N64);
     if (sCameraHUD[gCurrPlayer].status == CAM_STATUS_NONE) {
         return;
