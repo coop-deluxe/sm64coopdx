@@ -63,19 +63,19 @@ static f32 sWigglerSpeeds[] = { 2.0f, 40.0f, 30.0f, 16.0f };
  */
 void bhv_wiggler_body_part_update(void) {
     if (o == NULL) { return; }
-    
+
     struct Object *parent = o->parentObj;
-    
+
     if (parent == NULL) { return; }
-    
+
     // Sanity check the array size of our segments,
     // This should never be higher then 3
     // in normal circumstances.
     if (o->oBehParams2ndByte > 3 || o->oBehParams2ndByte < 0) { return; }
     if (!parent->oWigglerSegments) { return; }
-    
+
     struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
-    
+
     if (segment == NULL) { return; }
 
     cur_obj_scale(parent->header.gfx.scale[0]);
@@ -378,13 +378,13 @@ static void wiggler_act_shrink(void) {
 
             f32* starPos = gLevelValues.starPositions.WigglerStarPos;
             struct Object *star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
-            
+
             // If we're not the closet to Wiggler,
             // Don't play this cutscene!
-            if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
+            if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= numPlayersLocal) {
                 star->oStarSpawnExtCutsceneFlags = 0;
             }
-            
+
             o->oAction = WIGGLER_ACT_FALL_THROUGH_FLOOR;
         }
 

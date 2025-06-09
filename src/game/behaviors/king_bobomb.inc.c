@@ -230,7 +230,7 @@ void king_bobomb_act_7(void) {
 void king_bobomb_act_8(void) {
     if (!(o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE)) {
         struct Object *star = NULL;
-        
+
         create_sound_spawner(SOUND_OBJ_KING_WHOMP_DEATH);
         cur_obj_hide();
         cur_obj_become_intangible();
@@ -253,7 +253,7 @@ void king_bobomb_act_8(void) {
 #endif
         // If we're not the closet to King-Bombomb,
         // Don't play this cutscene!
-        if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
+        if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= numPlayersLocal) {
             star->oStarSpawnExtCutsceneFlags = 0;
         }
     }
