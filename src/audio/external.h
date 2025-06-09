@@ -58,9 +58,9 @@ struct SPTask *create_next_audio_frame_task(void);
 struct SPTask *func_sh_802f5a80(void);
 #endif
 /* |description|Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
-void play_sound(s32 soundBits, f32 *pos);
+void play_sound(s32 soundBits, struct GraphNodeObject *gfx);
 /* |description|Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)|descriptionEnd| */
-void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale);
+void play_sound_with_freq_scale(s32 soundBits, struct GraphNodeObject *gfx, f32 freqScale);
 void audio_signal_game_loop_tick(void);
 /* |description|Fades out `player` with `fadeDuration`|descriptionEnd| */
 void seq_player_fade_out(u8 player, u16 fadeDuration);

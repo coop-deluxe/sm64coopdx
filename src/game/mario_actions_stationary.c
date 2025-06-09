@@ -197,7 +197,7 @@ void play_anim_sound(struct MarioState *m, u32 actionState, s32 animFrame, u32 s
     if (!m) { return; }
     if (!m->marioObj) { return; }
     if (m->actionState == actionState && m->marioObj->header.gfx.animInfo.animFrame == animFrame) {
-        play_sound(sound, m->marioObj->header.gfx.cameraToObject);
+        play_sound(sound, &m->marioObj->header.gfx);
     }
 }
 
@@ -432,7 +432,7 @@ s32 act_shivering(struct MarioState *m) {
                 play_character_sound(m, CHAR_SOUND_PANTING_COLD);
             }
             if (animFrame == 7 || animFrame == 81) {
-                play_sound(SOUND_ACTION_CLAP_HANDS_COLD, m->marioObj->header.gfx.cameraToObject);
+                play_sound(SOUND_ACTION_CLAP_HANDS_COLD, &m->marioObj->header.gfx);
             }
             if (is_anim_past_end(m)) {
                 m->actionState = 1;
@@ -442,7 +442,7 @@ s32 act_shivering(struct MarioState *m) {
         case 1:
             animFrame = set_character_animation(m, CHAR_ANIM_SHIVERING);
             if (animFrame == 9 || animFrame == 25 || animFrame == 44) {
-                play_sound(SOUND_ACTION_CLAP_HANDS_COLD, m->marioObj->header.gfx.cameraToObject);
+                play_sound(SOUND_ACTION_CLAP_HANDS_COLD, &m->marioObj->header.gfx);
             }
             break;
 

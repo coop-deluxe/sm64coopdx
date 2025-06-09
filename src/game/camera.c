@@ -5137,23 +5137,23 @@ void play_camera_buzz_if_c_sideways(void) {
 }
 
 void play_sound_cbutton_up(void) {
-    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, NULL);
 }
 
 void play_sound_cbutton_down(void) {
-    play_sound(SOUND_MENU_CAMERA_ZOOM_OUT, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CAMERA_ZOOM_OUT, NULL);
 }
 
 void play_sound_cbutton_side(void) {
-    play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CAMERA_TURN, NULL);
 }
 
 void play_sound_button_change_blocked(void) {
-    play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CAMERA_BUZZ, NULL);
 }
 
 void play_sound_rbutton_changed(void) {
-    play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, NULL);
 }
 
 void play_sound_if_cam_switched_to_lakitu_or_mario(void) {
@@ -10087,7 +10087,7 @@ BAD_RETURN(s32) peach_letter_text(UNUSED struct Camera *c) {
 
 #ifndef VERSION_JP
 BAD_RETURN(s32) play_sound_peach_reading_letter(UNUSED struct Camera *c) {
-    play_sound(SOUND_PEACH_DEAR_MARIO, gGlobalSoundSource);
+    play_sound(SOUND_PEACH_DEAR_MARIO, NULL);
 }
 #endif
 

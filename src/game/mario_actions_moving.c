@@ -91,7 +91,7 @@ void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2) {
                 play_sound_and_spawn_particles(m, SOUND_ACTION_METAL_STEP, 0);
             }
         } else if (m->quicksandDepth > 50.0f) {
-            play_sound(SOUND_ACTION_QUICKSAND_STEP, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_QUICKSAND_STEP, &m->marioObj->header.gfx);
         } else if (m->marioObj->header.gfx.animInfo.animID == get_character_anim(m, CHAR_ANIM_TIPTOE)) {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_STEP_TIPTOE, 0);
         } else {
@@ -824,7 +824,7 @@ void push_or_sidle_wall(struct MarioState *m, Vec3f startPos) {
         }
 
         if (m->marioObj->header.gfx.animInfo.animFrame < 20) {
-            play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
             set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
         }
 
@@ -1122,7 +1122,7 @@ s32 act_turning_around(struct MarioState *m) {
         return begin_walking_action(m, 8.0f, ACT_FINISH_TURNING_AROUND, 0);
     }
 
-    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
 
     adjust_sound_for_speed(m);
 
@@ -1207,7 +1207,7 @@ s32 act_braking(struct MarioState *m) {
             break;
     }
 
-    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
     adjust_sound_for_speed(m);
     set_character_animation(m, CHAR_ANIM_SKID_ON_GROUND);
     return FALSE;
@@ -1260,7 +1260,7 @@ s32 act_decelerating(struct MarioState *m) {
 
     if (slopeClass == SURFACE_CLASS_VERY_SLIPPERY) {
         set_character_animation(m, CHAR_ANIM_IDLE_HEAD_LEFT);
-        play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
         adjust_sound_for_speed(m);
         set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     } else {
@@ -1327,7 +1327,7 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
     if (slopeClass == SURFACE_CLASS_VERY_SLIPPERY) {
         set_character_animation(m, CHAR_ANIM_IDLE_WITH_LIGHT_OBJ);
-        play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
         adjust_sound_for_speed(m);
         set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     } else {
@@ -1345,7 +1345,7 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
 s32 act_riding_shell_ground(struct MarioState *m) {
     if (!m) { return FALSE; }
-    
+
     // If we don't have an object we're riding or if the interaction was with something
     // not a Koopa Shell-Then we abort the riding state.
     if (gLevelValues.fixInvalidShellRides && (m->riddenObj == NULL || m->riddenObj->oInteractType != INTERACT_KOOPA_SHELL)) {
@@ -1375,8 +1375,7 @@ s32 act_riding_shell_ground(struct MarioState *m) {
 
         case GROUND_STEP_HIT_WALL:
             mario_stop_riding_object(m);
-            play_sound(m->flags & MARIO_METAL_CAP ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK,
-                       m->marioObj->header.gfx.cameraToObject);
+            play_sound(m->flags & MARIO_METAL_CAP ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK, &m->marioObj->header.gfx);
             set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
             set_mario_action(m, ACT_BACKWARD_GROUND_KB, 0);
             break;
@@ -1384,10 +1383,9 @@ s32 act_riding_shell_ground(struct MarioState *m) {
 
     tilt_body_ground_shell(m, startYaw);
     if (m->floor && m->floor->type == SURFACE_BURNING) {
-        play_sound(SOUND_MOVING_RIDING_SHELL_LAVA, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MOVING_RIDING_SHELL_LAVA, &m->marioObj->header.gfx);
     } else {
-        play_sound(SOUND_MOVING_TERRAIN_RIDING_SHELL + m->terrainSoundAddend,
-                   m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_MOVING_TERRAIN_RIDING_SHELL + m->terrainSoundAddend, &m->marioObj->header.gfx);
     }
 
     adjust_sound_for_speed(m);
@@ -1462,7 +1460,7 @@ s32 act_burning_ground(struct MarioState *m) {
     }
 
     if (m->waterLevel - m->floorHeight > 50.0f) {
-        play_sound(SOUND_GENERAL_FLAME_OUT, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_GENERAL_FLAME_OUT, &m->marioObj->header.gfx);
         return set_mario_action(m, ACT_WALKING, 0);
     }
 
@@ -1490,7 +1488,7 @@ s32 act_burning_ground(struct MarioState *m) {
     play_step_sound(m, 9, 45);
 
     set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
-    play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_LAVA_BURN, &m->marioObj->header.gfx);
 
     m->health -= 10;
     if (m->health < 0x100) {
@@ -1526,7 +1524,7 @@ void common_slide_action(struct MarioState *m, u32 endAction, u32 airAction, s32
     Vec3f pos;
 
     vec3f_copy(pos, m->pos);
-    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
 
     reset_rumble_timers(m);
 
@@ -1687,7 +1685,7 @@ s32 act_slide_kick_slide(struct MarioState *m) {
             break;
     }
 
-    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_TERRAIN_SLIDE + m->terrainSoundAddend, &m->marioObj->header.gfx);
     set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     return FALSE;
 }

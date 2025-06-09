@@ -34,9 +34,9 @@ void bhv_treasure_chest_top_loop(void) {
             if (o->oTimer == 0) {
                 if (rootParent->oTreasureChestIsAboveWater == 0) {
                     spawn_object_relative(0, 0, -80, 120, o, MODEL_BUBBLE, bhvWaterAirBubble);
-                    play_sound(SOUND_GENERAL_CLAM_SHELL1, o->header.gfx.cameraToObject);
+                    play_sound(SOUND_GENERAL_CLAM_SHELL1, &o->header.gfx);
                 } else {
-                    play_sound(SOUND_GENERAL_OPEN_CHEST, o->header.gfx.cameraToObject);
+                    play_sound(SOUND_GENERAL_OPEN_CHEST, &o->header.gfx);
                 }
             }
 
@@ -74,8 +74,8 @@ void bhv_treasure_chest_bottom_loop(void) {
     if (!o->parentObj) { return; }
     if (o->parentObj != NULL && o->parentObj->oTreasureChestSound != 0) {
         switch (o->parentObj->oTreasureChestSound) {
-            case 1: play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gGlobalSoundSource); break;
-            case 2: play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);      break;
+            case 1: play_sound(SOUND_GENERAL2_RIGHT_ANSWER, NULL); break;
+            case 2: play_sound(SOUND_MENU_CAMERA_BUZZ, NULL);      break;
             case 3: play_puzzle_jingle(); fade_volume_scale(0, 127, 1000);       break;
             case 4: play_puzzle_jingle();                                        break;
         }
@@ -88,7 +88,7 @@ void bhv_treasure_chest_bottom_loop(void) {
                 if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 150)) {
                     if (!o->parentObj->oTreasureChestIsLastInteractionIncorrect) {
                         if (o->parentObj->oTreasureChestCurrentAnswer == o->oBehParams2ndByte) {
-                            play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gGlobalSoundSource);
+                            play_sound(SOUND_GENERAL2_RIGHT_ANSWER, NULL);
                             o->parentObj->oTreasureChestCurrentAnswer++;
                             o->oAction = 1;
                             o->parentObj->oTreasureChestSound = 1;
@@ -97,7 +97,7 @@ void bhv_treasure_chest_bottom_loop(void) {
                             o->parentObj->oTreasureChestIsLastInteractionIncorrect = 1;
                             o->oAction = 2;
                             cur_obj_become_tangible();
-                            play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
+                            play_sound(SOUND_MENU_CAMERA_BUZZ, NULL);
                             o->parentObj->oTreasureChestSound = 2;
                         }
                         o->parentObj->oTreasureChestLastNetworkPlayerIndex = gNetworkPlayers[player->playerIndex].globalIndex;
@@ -138,10 +138,10 @@ void bhv_treasure_chest_ship_init(void) {
     chests[1] = spawn_treasure_chest(2, 650, -350, -940, -0x6001);
     chests[2] = spawn_treasure_chest(3, -550, -350, -770, 0x5FFF);
     chests[3] = spawn_treasure_chest(4, 100, -350, -1700, 0);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -188,7 +188,7 @@ void bhv_treasure_chest_ship_loop(void) {
         case 1:
             if (gEnvironmentRegions != NULL && gEnvironmentRegionsLength > 6) {
                 gEnvironmentRegions[6] += -5;
-                play_sound(SOUND_ENV_WATER_DRAIN, gGlobalSoundSource);
+                play_sound(SOUND_ENV_WATER_DRAIN, NULL);
                 set_environmental_camera_shake(SHAKE_ENV_JRB_SHIP_DRAIN);
                 if (gEnvironmentRegions[6] < -335) {
                     gEnvironmentRegions[6] = -335;
@@ -208,10 +208,10 @@ void bhv_treasure_chest_jrb_init(void) {
     chests[1] = spawn_treasure_chest(2, -1150, -2812, -1550, 0x7FFF);
     chests[2] = spawn_treasure_chest(3, -2400, -2812, -1800, 0x7FFF);
     chests[3] = spawn_treasure_chest(4, -1800, -2812, -2100, 0x7FFF);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 1;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -279,7 +279,7 @@ void bhv_treasure_chest_init(void) {
 
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.

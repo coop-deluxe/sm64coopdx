@@ -442,11 +442,11 @@ s32 act_holding_bowser(struct MarioState *m) {
     // play sound on overflow
     if (m->angleVel[1] <= -0x100 && spin < m->faceAngle[1]) {
         queue_rumble_data_mario(m, 4, 20);
-        play_sound(SOUND_OBJ_BOWSER_SPINNING, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_OBJ_BOWSER_SPINNING, &m->marioObj->header.gfx);
     }
     if (m->angleVel[1] >= 0x100 && spin > m->faceAngle[1]) {
         queue_rumble_data_mario(m, 4, 20);
-        play_sound(SOUND_OBJ_BOWSER_SPINNING, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_OBJ_BOWSER_SPINNING, &m->marioObj->header.gfx);
     }
 
     stationary_ground_step(m);

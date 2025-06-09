@@ -187,7 +187,7 @@ static void newcam_rotate_button(void) {
     // Standard camera movement
     // Buzz if the camera can't move due to being locked
     if (gPlayer1Controller->buttonPressed & (L_CBUTTONS | R_CBUTTONS) && gNewCamera.directionLocked) {
-        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
+        play_sound(SOUND_MENU_CAMERA_BUZZ, NULL);
     }
 
     if (!gNewCamera.isAnalogue) {
@@ -218,7 +218,7 @@ static void newcam_rotate_button(void) {
                 if (gNewCamera.framesSinceCButtons[0] < 6) {
                     gNewCamera.yawTarget = gNewCamera.yaw + (newcam_ivrt(0) * NEWCAM_YAW_STEP);
                     gNewCamera.centering = true;
-                    play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+                    play_sound(SOUND_MENU_CAMERA_TURN, NULL);
                 }
                 gNewCamera.framesSinceCButtons[0] = 0;
             }
@@ -226,7 +226,7 @@ static void newcam_rotate_button(void) {
                 if (gNewCamera.framesSinceCButtons[1] < 6) {
                     gNewCamera.yawTarget = gNewCamera.yaw - (newcam_ivrt(0) * NEWCAM_YAW_STEP);
                     gNewCamera.centering = true;
-                    play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+                    play_sound(SOUND_MENU_CAMERA_TURN, NULL);
                 }
                 gNewCamera.framesSinceCButtons[1] = 0;
             }
@@ -272,10 +272,10 @@ static void newcam_rotate_button(void) {
         // Make dpad left/right increment 45 degrees
         else if (gPlayer1Controller->buttonPressed & L_JPAD) {
             gNewCamera.yaw += newcam_ivrt(0) * DEGREES(45);
-            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+            play_sound(SOUND_MENU_CAMERA_TURN, NULL);
         } else if (gPlayer1Controller->buttonPressed & R_JPAD) {
             gNewCamera.yaw -= newcam_ivrt(0) * DEGREES(45);
-            play_sound(SOUND_MENU_CAMERA_TURN, gGlobalSoundSource);
+            play_sound(SOUND_MENU_CAMERA_TURN, NULL);
         }
 
         // Make dpad down lock the current camera direction
@@ -319,7 +319,7 @@ static void newcam_zoom_button(void) {
 
     // Each time the player presses R, but NOT L the camera zooms out more, until it hits the limit and resets back to close view.
     else if (gPlayer1Controller->buttonPressed & R_TRIG) {
-        play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, gGlobalSoundSource);
+        play_sound(SOUND_MENU_CLICK_CHANGE_VIEW, NULL);
         gNewCamera.distanceTargetIndex = (gNewCamera.distanceTargetIndex + 1) % NEWCAM_NUM_DISTANCES;
     }
 

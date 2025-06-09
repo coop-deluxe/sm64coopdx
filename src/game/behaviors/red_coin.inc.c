@@ -29,7 +29,7 @@ void bhv_red_coin_init(void) {
     if (hiddenRedCoinStar == NULL) {
         hiddenRedCoinStar = cur_obj_nearest_object_with_behavior(bhvBowserCourseRedCoinStar);
     }
-    
+
     // If we found a red coin star, It's our parent.
     if (hiddenRedCoinStar != NULL) {
         o->parentObj = hiddenRedCoinStar;
@@ -53,8 +53,8 @@ void bhv_red_coin_loop(void) {
             if (gCurrentArea) {
                 o->parentObj->oHiddenStarTriggerCounter = gCurrentArea->numRedCoins - redCoins;
             }
-            
-            // Set the last person who interacted with a red coin to the 
+
+            // Set the last person who interacted with a red coin to the
             // parent so only they get the star cutscene.
             struct MarioState *player = nearest_mario_state_to_object(o);
             if (player) {
@@ -71,9 +71,9 @@ void bhv_red_coin_loop(void) {
             // On all versions but the JP version, each coin collected plays a higher noise.
 #ifndef VERSION_JP
             if (redCoins < 8) {
-                play_sound(SOUND_MENU_COLLECT_RED_COIN + ((7 - redCoins) << 16), gGlobalSoundSource);
+                play_sound(SOUND_MENU_COLLECT_RED_COIN + ((7 - redCoins) << 16), NULL);
             } else {
-                play_sound(SOUND_MENU_COLLECT_RED_COIN, gGlobalSoundSource);
+                play_sound(SOUND_MENU_COLLECT_RED_COIN, NULL);
             }
 #endif
         }

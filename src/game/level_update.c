@@ -531,12 +531,12 @@ void init_mario_after_warp(void) {
             && sWarpDest.nodeId == 31
 #endif
         )
-            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
+            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, NULL);
 #ifndef VERSION_JP
         if (sWarpDest.levelNum == LEVEL_CASTLE_GROUNDS && sWarpDest.areaIdx == 1
             && (sWarpDest.nodeId == 7 || sWarpDest.nodeId == 10 || sWarpDest.nodeId == 20
                 || sWarpDest.nodeId == 30)) {
-            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
+            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, NULL);
         }
 #endif
     }
@@ -817,7 +817,7 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     }
     level_set_transition(74, basic_update);
 
-    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+    play_sound(SOUND_MENU_STAR_SOUND, NULL);
     fadeout_music(398);
     queue_rumble_data(80, 70);
     func_sh_8024C89C(1);
@@ -839,7 +839,7 @@ void initiate_painting_warp(s16 paintingIndex) {
                 set_mario_action(gMarioState, ACT_DISAPPEARED, 0);
                 gMarioState->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-                play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+                play_sound(SOUND_MENU_STAR_SOUND, NULL);
                 fadeout_music(398);
 #ifdef VERSION_SH
                 queue_rumble_data(80, 70);
@@ -927,7 +927,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 sDelayedWarpTimer = 48;
                 sSourceWarpNodeId = WARP_NODE_DEATH;
                 play_transition(WARP_TRANSITION_FADE_INTO_BOWSER, 0x30, 0x00, 0x00, 0x00);
-                play_sound(SOUND_MENU_BOWSER_LAUGH, gGlobalSoundSource);
+                play_sound(SOUND_MENU_BOWSER_LAUGH, NULL);
                 break;
 
             case WARP_OP_EXIT:
@@ -950,7 +950,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 verify_warp(m, false);
                 play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 0x1E, 0xFF, 0xFF, 0xFF);
 #ifndef VERSION_JP
-                play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+                play_sound(SOUND_MENU_STAR_SOUND, NULL);
 #endif
                 break;
 
@@ -1132,19 +1132,19 @@ void update_hud_values(void) {
                     }
 
                     gHudDisplay.coins += 1;
-                    play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
+                    play_sound(coinSound, &gMarioState->marioObj->header.gfx);
 
                     if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
                         // retain vanilla behavior
                         if (gLevelValues.numCoinsToLife == 50) {
                             if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
                                 gMarioState->numLives++;
-                                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                                play_sound(SOUND_GENERAL_COLLECT_1UP, NULL);
                             }
                         } else {
                             if (gLevelValues.numCoinsToLife != 0 && gHudDisplay.coins % gLevelValues.numCoinsToLife == 0 && gHudDisplay.coins > 0) {
                                 gMarioState->numLives++;
-                                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+                                play_sound(SOUND_GENERAL_COLLECT_1UP, NULL);
                             }
                         }
                     }
@@ -1174,7 +1174,7 @@ void update_hud_values(void) {
             gHudDisplay.keys = gMarioState->numKeys;
 
             if (numHealthWedges > gHudDisplay.wedges && !gDjuiInMainMenu) {
-                play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource);
+                play_sound(SOUND_MENU_POWER_METER, NULL);
             }
             gHudDisplay.wedges = numHealthWedges;
 
@@ -2009,7 +2009,7 @@ s32 lvl_set_current_level(s16 param, s16 levelNum) {
  * Play the "thank you so much for to playing my game" sound.
  */
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1) {
-    play_sound(SOUND_MENU_THANK_YOU_PLAYING_MY_GAME, gGlobalSoundSource);
+    play_sound(SOUND_MENU_THANK_YOU_PLAYING_MY_GAME, NULL);
     return 1;
 }
 

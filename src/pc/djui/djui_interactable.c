@@ -469,7 +469,7 @@ void djui_interactable_update(void) {
         djui_interactable_cursor_update_active(&gDjuiRoot->base);
         if (lastHovered != gDjuiHovered) {
             djui_interactable_on_hover_end(lastHovered);
-            play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, gGlobalSoundSource);
+            play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, NULL);
         }
         djui_interactable_on_hover(gDjuiHovered);
     }

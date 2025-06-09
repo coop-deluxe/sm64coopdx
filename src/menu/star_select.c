@@ -479,11 +479,11 @@ s32 lvl_update_obj_and_load_act_button_actions(UNUSED s32 arg, UNUSED s32 unused
 
 void star_select_finish_selection(void) {
 #if defined(VERSION_JP)
-    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+    play_sound(SOUND_MENU_STAR_SOUND, NULL);
 #else
     if (gMarioState->marioObj) vec3f_copy(gMarioState->marioObj->header.gfx.cameraToObject, gGlobalSoundSource);
     gDelayedInitSound = CHAR_SOUND_LETS_A_GO;
-    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+    play_sound(SOUND_MENU_STAR_SOUND, NULL);
 #endif
 #ifdef VERSION_SH
     queue_rumble_data(60, 70);

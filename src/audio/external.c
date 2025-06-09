@@ -38,7 +38,7 @@
 
 struct Sound {
     s32 soundBits;
-    f32 *position;
+    Vec3f position;
     f32 customFreqScale;
 }; // size = 0x8
 
@@ -834,29 +834,68 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
  */
 extern f32 *smlua_get_vec3f_for_play_sound(f32 *pos);
 
-void play_sound(s32 soundBits, f32 *pos) {
+#include "engine/math_util.h"
+#include "game/local_multiplayer.h"
+
+void play_sound(s32 soundBits, struct GraphNodeObject *gfx) {
     MUTEX_LOCK(gAudioThread);
-    
-    pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
-    sSoundRequests[sSoundRequestCount].soundBits = soundBits;
-    sSoundRequests[sSoundRequestCount].position = pos;
-    sSoundRequests[sSoundRequestCount].customFreqScale = 0;
-    sSoundRequestCount++;
-    
+
+    f32 *pos = gGlobalSoundSource;
+    Vec3f camToObject;
+    for (int i = 0; i < numPlayersLocal; i++) {
+        if (gfx) {
+            struct Camera *c = gCurrentArea->cameras[i];
+            if (!c) { continue; }
+
+            // Calculate cameraToObject for this player's position
+            Mat4 mtx;
+            mtxf_translate(mtx, gfx->pos);
+            mtxf_mul(mtx, mtx, c->mtx);
+            camToObject[0] = mtx[3][0];
+            camToObject[1] = mtx[3][1];
+            camToObject[2] = mtx[3][2];
+            pos = camToObject;
+        }
+
+        pos = smlua_get_vec3f_for_play_sound(pos);
+        smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+        sSoundRequests[sSoundRequestCount].soundBits = soundBits;
+        vec3f_copy(sSoundRequests[sSoundRequestCount].position, pos);
+        sSoundRequests[sSoundRequestCount].customFreqScale = 0;
+        sSoundRequestCount++;
+    }
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
-void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
+void play_sound_with_freq_scale(s32 soundBits, struct GraphNodeObject *gfx, f32 freqScale) {
     MUTEX_LOCK(gAudioThread);
-    
-    pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
-    sSoundRequests[sSoundRequestCount].soundBits = soundBits;
-    sSoundRequests[sSoundRequestCount].position = pos;
-    sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
-    sSoundRequestCount++;
-    
+
+    f32 *pos = gGlobalSoundSource;
+    Vec3f camToObject;
+    for (int i = 0; i < numPlayersLocal; i++) {
+        if (gfx) {
+            struct Camera *c = gCurrentArea->cameras[i];
+            if (!c) { continue; }
+
+            // Calculate cameraToObject for this player's position
+            Mat4 mtx;
+            mtxf_translate(mtx, gfx->pos);
+            mtxf_mul(mtx, mtx, c->mtx);
+            camToObject[0] = mtx[3][0];
+            camToObject[1] = mtx[3][1];
+            camToObject[2] = mtx[3][2];
+            pos = camToObject;
+        }
+
+        pos = smlua_get_vec3f_for_play_sound(pos);
+        smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+        sSoundRequests[sSoundRequestCount].soundBits = soundBits;
+        vec3f_copy(sSoundRequests[sSoundRequestCount].position, pos);
+        sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
+        sSoundRequestCount++;
+    }
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -995,13 +1034,13 @@ static void delete_sound_from_bank(u8 bank, u8 soundIndex) {
  */
 static void update_background_music_after_sound(u8 bank, u8 soundIndex) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (bank >= SOUND_BANK_COUNT || soundIndex >= SOUND_INDEX_COUNT) { return; }
     if (sSoundBanks[bank][soundIndex].soundBits & SOUND_LOWER_BACKGROUND_MUSIC) {
         sSoundBanksThatLowerBackgroundMusic &= (1 << bank) ^ 0xffff;
         begin_background_music_fade(50);
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -1774,7 +1813,7 @@ static void update_game_sound(void) {
  */
 static void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (player >= SEQUENCE_PLAYERS) { return; }
     u8 targetVolume;
     u8 i;
@@ -1824,7 +1863,7 @@ static void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2) {
  */
 void seq_player_fade_out(u8 player, u16 fadeDuration) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (player >= SEQUENCE_PLAYERS) { return; }
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #ifdef VERSION_EU
@@ -1861,7 +1900,7 @@ void fade_volume_scale(u8 player, u8 targetScale, u16 fadeDuration) {
  */
 static void fade_channel_volume_scale(u8 player, u8 channelIndex, u8 targetScale, u16 fadeDuration) {
     MUTEX_LOCK(gAudioThread);
-    
+
     struct ChannelVolumeScaleFade *temp;
     if (player >= SEQUENCE_PLAYERS) { return; }
     if (channelIndex >= CHANNELS_MAX) { return; }
@@ -1875,7 +1914,7 @@ static void fade_channel_volume_scale(u8 player, u8 channelIndex, u8 targetScale
         temp->target = targetScale;
         temp->current = gSequencePlayers[player].channels[channelIndex]->volumeScale;
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2084,7 +2123,7 @@ void unused_8031FED0(u8 player, u32 bits, s8 arg2) {
  */
 void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (player >= SEQUENCE_PLAYERS) { return; }
     if (player == SEQ_PLAYER_LEVEL) {
         sLowerBackgroundMusicVolume = TRUE;
@@ -2092,7 +2131,7 @@ void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage) {
     } else if (gSequencePlayers[player].enabled == TRUE) {
         seq_player_fade_to_percentage_of_volume(player, fadeDuration, percentage);
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2106,7 +2145,7 @@ void seq_player_lower_volume(u8 player, u16 fadeDuration, u8 percentage) {
  */
 void seq_player_unlower_volume(u8 player, u16 fadeDuration) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (player >= SEQUENCE_PLAYERS) { return; }
     sLowerBackgroundMusicVolume = FALSE;
     if (player == SEQ_PLAYER_LEVEL) {
@@ -2118,7 +2157,7 @@ void seq_player_unlower_volume(u8 player, u16 fadeDuration) {
             seq_player_fade_to_normal_volume(player, fadeDuration);
         }
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2138,7 +2177,7 @@ static u8 begin_background_music_fade(u16 fadeDuration) {
         || sCurrentBackgroundMusicSeqId == SEQ_EVENT_CUTSCENE_CREDITS) {
         return 0xff;
     }
-    
+
     MUTEX_LOCK(gAudioThread);
 
     if (gSequencePlayers[SEQ_PLAYER_LEVEL].volume == 0.0f && fadeDuration) {
@@ -2175,7 +2214,7 @@ static u8 begin_background_music_fade(u16 fadeDuration) {
             seq_player_fade_to_normal_volume(SEQ_PLAYER_LEVEL, fadeDuration);
         }
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 
     return targetVolume;
@@ -2186,7 +2225,7 @@ static u8 begin_background_music_fade(u16 fadeDuration) {
  */
 void set_audio_muted(u8 muted) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 i;
 
     for (i = 0; i < SEQUENCE_PLAYERS; i++) {
@@ -2199,7 +2238,7 @@ void set_audio_muted(u8 muted) {
         gSequencePlayers[i].muted = muted;
 #endif
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2208,7 +2247,7 @@ void set_audio_muted(u8 muted) {
  */
 void sound_init(void) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 i;
     u8 j;
 
@@ -2267,7 +2306,7 @@ void sound_init(void) {
     sCurrentSecondaryMusicVolume = 0;
     sNumProcessedSoundRequests = 0;
     sSoundRequestCount = 0;
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2298,7 +2337,7 @@ void get_currently_playing_sound(u8 bank, u8 *numPlayingSounds, u8 *numSoundsInB
  */
 void stop_sound(u32 soundBits, f32 *pos) {
     MUTEX_LOCK(gAudioThread);
-    
+
     pos = smlua_get_vec3f_for_play_sound(pos);
     u8 bank = (soundBits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
     if (bank >= SOUND_BANK_COUNT) { return; }
@@ -2321,7 +2360,7 @@ void stop_sound(u32 soundBits, f32 *pos) {
             soundIndex = sSoundBanks[bank][soundIndex].next;
         }
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2330,7 +2369,7 @@ void stop_sound(u32 soundBits, f32 *pos) {
  */
 void stop_sounds_from_source(f32 *pos) {
     MUTEX_LOCK(gAudioThread);
-    
+
     pos = smlua_get_vec3f_for_play_sound(pos);
     u8 bank;
     u8 soundIndex;
@@ -2345,7 +2384,7 @@ void stop_sounds_from_source(f32 *pos) {
             soundIndex = sSoundBanks[bank][soundIndex].next;
         }
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2354,7 +2393,7 @@ void stop_sounds_from_source(f32 *pos) {
  */
 static void stop_sounds_in_bank(u8 bank) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (bank >= SOUND_BANK_COUNT) { return; }
     u8 soundIndex = sSoundBanks[bank][0].next;
 
@@ -2363,7 +2402,7 @@ static void stop_sounds_in_bank(u8 bank) {
         sSoundBanks[bank][soundIndex].soundBits = NO_SOUND;
         soundIndex = sSoundBanks[bank][soundIndex].next;
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2385,7 +2424,7 @@ void stop_sounds_in_continuous_banks(void) {
  */
 void sound_banks_disable(UNUSED u8 player, u16 bankMask) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 i;
 
     for (i = 0; i < SOUND_BANK_COUNT; i++) {
@@ -2394,7 +2433,7 @@ void sound_banks_disable(UNUSED u8 player, u16 bankMask) {
         }
         bankMask = bankMask >> 1;
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2403,13 +2442,13 @@ void sound_banks_disable(UNUSED u8 player, u16 bankMask) {
  */
 static void disable_all_sequence_players(void) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 i;
 
     for (i = 0; i < SEQUENCE_PLAYERS; i++) {
         sequence_player_disable(&gSequencePlayers[i]);
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2418,7 +2457,7 @@ static void disable_all_sequence_players(void) {
  */
 void sound_banks_enable(UNUSED u8 player, u16 bankMask) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 i;
 
     for (i = 0; i < SOUND_BANK_COUNT; i++) {
@@ -2427,7 +2466,7 @@ void sound_banks_enable(UNUSED u8 player, u16 bankMask) {
         }
         bankMask = bankMask >> 1;
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2465,7 +2504,7 @@ void play_dialog_sound(u8 dialogID) {
     speaker = sDialogSpeaker[dialogID];
     smlua_call_event_hooks_int_params_ret_int(HOOK_DIALOG_SOUND, speaker, &speaker);
     if (speaker < DS_MAX && speaker != 0xff) {
-        play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
+        play_sound(sDialogSpeakerVoice[speaker], NULL);
 
         // Play music during bowser message that appears when first entering the
         // castle or when trying to enter a door without enough stars
@@ -2506,7 +2545,7 @@ void set_sequence_player_volume(s32 player, f32 volume) {
  */
 void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (player >= SEQUENCE_PLAYERS) { return; }
     u8 seqId = seqArgs & 0xff;
     u8 priority = seqArgs >> 8;
@@ -2569,7 +2608,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
     // Insert item into queue.
     sBackgroundMusicQueue[foundIndex].priority = priority;
     sBackgroundMusicQueue[foundIndex].seqId = seqId;
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2578,7 +2617,7 @@ void play_music(u8 player, u16 seqArgs, u16 fadeTimer) {
  */
 void stop_background_music(u16 seqId) {
     MUTEX_LOCK(gAudioThread);
-    
+
     u8 foundIndex;
     u8 i;
 
@@ -2634,7 +2673,7 @@ void stop_background_music(u16 seqId) {
     // @bug? If the sequence queue is full and we attempt to stop a sequence
     // that isn't in the queue, this writes out of bounds. Can that happen?
     sBackgroundMusicQueue[i].priority = 0;
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2720,7 +2759,7 @@ void fade_in_env_music(void) {
  */
 void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer) {
     MUTEX_LOCK(gAudioThread);
-    
+
     UNUSED u32 dummy;
 
     sUnused80332118 = 0;
@@ -2743,7 +2782,7 @@ void play_secondary_music(u8 seqId, u8 bgMusicVolume, u8 volume, u16 fadeTimer) 
         seq_player_fade_to_target_volume(SEQ_PLAYER_ENV, fadeTimer, volume);
         sCurrentSecondaryMusicVolume = volume;
     }
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2765,7 +2804,7 @@ void stop_secondary_music(u16 fadeTimer) {
  */
 void set_audio_fadeout(u16 fadeDuration) {
     MUTEX_LOCK(gAudioThread);
-    
+
     if (sHasStartedFadeOut) {
         return;
     }
@@ -2793,7 +2832,7 @@ void set_audio_fadeout(u16 fadeDuration) {
     }
 
     sHasStartedFadeOut = TRUE;
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 
@@ -2893,7 +2932,7 @@ void play_toads_jingle(void) {
  */
 void sound_reset(u8 presetId) {
     MUTEX_LOCK(gAudioThread);
-    
+
 #ifndef VERSION_JP
     if (presetId >= 8) {
         presetId = 0;
@@ -2921,7 +2960,7 @@ void sound_reset(u8 presetId) {
     D_80332108 = (D_80332108 & 0xf0) + presetId;
     gSoundMode = D_80332108 >> 4;
     sHasStartedFadeOut = FALSE;
-    
+
     MUTEX_UNLOCK(gAudioThread);
 }
 

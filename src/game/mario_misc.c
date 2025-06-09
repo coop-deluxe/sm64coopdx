@@ -277,8 +277,7 @@ void bhv_unlock_door_star_loop(void) {
             gCurrentObject->oMoveAngleYaw +=
                 gCurrentObject->oUnlockDoorStarYawVel; // Apply yaw velocity
             if (++gCurrentObject->oUnlockDoorStarTimer == 30) {
-                play_sound(SOUND_MENU_STAR_SOUND,
-                           gCurrentObject->header.gfx.cameraToObject); // Play final sound
+                play_sound(SOUND_MENU_STAR_SOUND, &gCurrentObject->header.gfx); // Play final sound
                 cur_obj_hide();                                            // Hide the object
                 gCurrentObject->oUnlockDoorStarTimer = 0;
                 gCurrentObject
@@ -304,9 +303,7 @@ void bhv_unlock_door_star_loop(void) {
     // Checks if the angle has cycled back to 0.
     // This means that the code will execute when the star completes a full revolution.
     if (prevYaw > (s16) gCurrentObject->oMoveAngleYaw) {
-        play_sound(
-            SOUND_GENERAL_SHORT_STAR,
-            gCurrentObject->header.gfx.cameraToObject); // Play a sound every time the star spins once
+        play_sound(SOUND_GENERAL_SHORT_STAR, &gCurrentObject->header.gfx); // Play a sound every time the star spins once
     }
 }
 

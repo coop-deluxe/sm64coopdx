@@ -265,7 +265,7 @@ s16 return_mario_anim_y_translation(struct MarioState *m) {
 void play_sound_if_no_flag(struct MarioState *m, u32 soundBits, u32 flags) {
     if (!m) { return; }
     if (!(m->flags & flags)) {
-        play_sound(soundBits, m->marioObj->header.gfx.cameraToObject);
+        play_sound(soundBits, &m->marioObj->header.gfx);
         m->flags |= flags;
     }
 }
@@ -323,9 +323,9 @@ void play_sound_and_spawn_particles(struct MarioState *m, u32 soundBits, u32 wav
     }
 
     if ((m->flags & MARIO_METAL_CAP) || soundBits == SOUND_ACTION_UNSTUCK_FROM_GROUND) {
-        play_sound(soundBits, m->marioObj->header.gfx.cameraToObject);
+        play_sound(soundBits, &m->marioObj->header.gfx);
     } else {
-        play_sound(m->terrainSoundAddend + soundBits, m->marioObj->header.gfx.cameraToObject);
+        play_sound(m->terrainSoundAddend + soundBits, &m->marioObj->header.gfx);
     }
 }
 
@@ -1747,7 +1747,7 @@ void update_mario_health(struct MarioState *m) {
         if (m->playerIndex == 0) {
             // Play a noise to alert the player when Mario is close to drowning.
             if (((m->action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) && (m->health < 0x300)) {
-                play_sound(SOUND_MOVING_ALMOST_DROWNING, gGlobalSoundSource);
+                play_sound(SOUND_MOVING_ALMOST_DROWNING, NULL);
                 if (!gRumblePakTimer) {
                     gRumblePakTimer = 36;
                     if (is_rumble_finished_and_queue_empty()) {
@@ -2136,14 +2136,14 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         if (gMarioState->floor && gMarioState->floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
             spawn_wind_particles(0, (gMarioState->floor->force << 8));
 #ifndef VERSION_JP
-            play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ENV_WIND2, &gMarioState->marioObj->header.gfx);
 #endif
         }
 
         if (gMarioState->floor && gMarioState->floor->type == SURFACE_VERTICAL_WIND) {
             spawn_wind_particles(1, 0);
 #ifndef VERSION_JP
-            play_sound(SOUND_ENV_WIND2, gMarioState->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ENV_WIND2, &gMarioState->marioObj->header.gfx);
 #endif
         }
 

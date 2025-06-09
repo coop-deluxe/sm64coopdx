@@ -13068,7 +13068,7 @@ int smlua_func_play_sound(lua_State* L) {
     smlua_get_vec3f(pos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "play_sound"); return 0; }
 
-    play_sound(soundBits, pos);
+    // play_sound(soundBits, pos);
 
     return 1;
 }
@@ -13091,7 +13091,7 @@ int smlua_func_play_sound_with_freq_scale(lua_State* L) {
     f32 freqScale = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "play_sound_with_freq_scale"); return 0; }
 
-    play_sound_with_freq_scale(soundBits, pos, freqScale);
+    // play_sound_with_freq_scale(soundBits, pos, freqScale);
 
     return 1;
 }

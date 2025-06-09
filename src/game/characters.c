@@ -441,8 +441,7 @@ static void play_character_sound_internal(struct MarioState *m, enum CharacterSo
         s32 sound = get_character_sound(m, characterSound);
         if (sound != 0) {
             struct Character* character = get_character(m);
-            f32 *pos = (m->marioObj != NULL ? m->marioObj->header.gfx.cameraToObject : gGlobalSoundSource);
-            play_sound_with_freq_scale(sound + offset, pos, character->soundFreqScale);
+            play_sound_with_freq_scale(sound + offset, m->marioObj != NULL ? &m->marioObj->header.gfx : NULL, character->soundFreqScale);
         }
         m->flags |= flags;
     }

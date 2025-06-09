@@ -108,10 +108,9 @@ void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed) {
         s16 wallAngle = atan2s(m->wallNormal[2], m->wallNormal[0]);
         m->faceAngle[1] = wallAngle - (s16)(m->faceAngle[1] - wallAngle);
 
-        play_sound((m->flags & MARIO_METAL_CAP) ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK,
-                   m->marioObj->header.gfx.cameraToObject);
+        play_sound((m->flags & MARIO_METAL_CAP) ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK, &m->marioObj->header.gfx);
     } else {
-        play_sound(SOUND_ACTION_HIT, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_HIT, &m->marioObj->header.gfx);
     }
 
     if (negateSpeed) {
@@ -222,7 +221,7 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!allow) {
     	return FALSE;
     }
-    
+
     extern bool gDjuiInMainMenu;
     if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
         f32 pushSpeed;
@@ -246,7 +245,7 @@ u32 mario_update_windy_ground(struct MarioState *m) {
         m->vel[2] += pushSpeed * coss(pushAngle);
 
 #ifdef VERSION_JP
-        play_sound(SOUND_ENV_WIND2, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ENV_WIND2, &m->marioObj->header.gfx);
 #endif
         return TRUE;
     }
@@ -669,7 +668,7 @@ void apply_gravity(struct MarioState *m) {
     s32 result;
 
     if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
-        
+
     } else if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
         apply_twirl_gravity(m);
     } else if (m->action == ACT_SHOT_FROM_CANNON) {
@@ -740,7 +739,7 @@ void apply_vertical_wind(struct MarioState *m) {
             }
 
 #ifdef VERSION_JP
-            play_sound(SOUND_ENV_WIND2, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ENV_WIND2, &m->marioObj->header.gfx);
 #endif
         }
     }

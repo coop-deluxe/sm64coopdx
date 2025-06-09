@@ -882,9 +882,9 @@ void bowser_spawn_grand_star_key(void) {
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
             reward->oHomeZ = reward->oPosZ;
-            
+
             sync_object_set_id(reward);
-            
+
             struct Object* spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
             network_send_spawn_objects(spawn_objects, models, 1);
@@ -1010,7 +1010,7 @@ u8 bowser_dead_bits_end_continue_dialog(void) { return o->oAction == 4 && o->oBo
 
 s32 bowser_dead_bits_end(void) {
     struct MarioState *marioState = nearest_mario_state_to_object(o);
-    
+
     if (o->oBowserUnkF8 < 2) {
         s32 dialogID = gBehaviorValues.dialogs.Bowser3Defeated120StarsDialog;
         if (gHudDisplay.stars < 120) {
@@ -1108,7 +1108,7 @@ void bowser_act_ride_tilting_platform(void) {
                     sp28 = (o->oTimer - D_8032F520[i - 1][2]) * sp28;
                 bowser_tilt_platform(platform, sp28);
                 if (sp28 != 0)
-                    play_sound(SOUND_ENV_UNKNOWN4, platform->header.gfx.cameraToObject);
+                    play_sound(SOUND_ENV_UNKNOWN4, &platform->header.gfx);
                 sp1C = 0;
                 break;
             }
@@ -1126,7 +1126,7 @@ void bowser_act_ride_tilting_platform(void) {
 }
 
 void bowser_act_nothing(void) {
-    
+
 }
 
 s32 bowser_check_fallen_off_stage(void) // bowser off stage?
@@ -1367,7 +1367,7 @@ void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
         *shouldOwn = FALSE;
         return;
     }
-    
+
     // tilting platform
     static u8 tiltingTimer = 0;
     if (o->oAction == 19) { tiltingTimer = 5; }
@@ -1404,7 +1404,7 @@ void bhv_bowser_init(void) {
     o->oBowserUnk1AE = 0;
     o->oBowserEyesShut = 0;
     bowserCutscenePlayed = FALSE;
-    
+
     // Make sure we're the first to trigger Bowser.
     if (!is_other_player_active()) {
         bowserIsCutscenePlayer = TRUE;
@@ -1413,7 +1413,7 @@ void bhv_bowser_init(void) {
         bowserIsCutscenePlayer = FALSE;
         o->oAction = 20; // bowser_act_nothing
     }
-    
+
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 8000.0f);
         if (so) {

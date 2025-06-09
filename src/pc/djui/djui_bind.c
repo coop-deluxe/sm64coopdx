@@ -39,7 +39,7 @@ static void djui_bind_button_on_bind(struct DjuiBase* caller) {
     djui_text_set_text(button->text, "???");
 #endif
     djui_interactable_set_binding(NULL);
-    play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource);
+    play_sound(SOUND_MENU_CHANGE_SELECT, NULL);
     controller_reconfigure();
 }
 

@@ -11,7 +11,7 @@ void bhv_hidden_star_init(void) {
     if (gCurrentArea) {
         o->oHiddenStarTriggerCounter = gCurrentArea->numSecrets - count;
     }
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -19,7 +19,7 @@ void bhv_hidden_star_init(void) {
     // and if it wasn't. You couldn't of possibly been the one
     // who last interacted to begin with.
     o->oHiddenStarLastInteractedObject = NULL;
-    
+
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -68,8 +68,8 @@ void bhv_hidden_star_trigger_loop(void) {
                 hiddenStar->oHiddenStarTriggerCounter = gCurrentArea->numSecrets - count;
             }
             spawn_orange_number(hiddenStar->oHiddenStarTriggerCounter, 0, 0, 0);
-            
-            // Set the last person who interacted with a secret to the 
+
+            // Set the last person who interacted with a secret to the
             // parent so only they get the star cutscene.
             struct MarioState *player = nearest_mario_state_to_object(o);
             if (player) {
@@ -77,12 +77,12 @@ void bhv_hidden_star_trigger_loop(void) {
             }
 
 #ifdef VERSION_JP
-            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+            play_sound(SOUND_MENU_STAR_SOUND, NULL);
 #else
             if (count < 5) {
-                play_sound(SOUND_MENU_COLLECT_SECRET + ((4 - count) << 16), gGlobalSoundSource);
+                play_sound(SOUND_MENU_COLLECT_SECRET + ((4 - count) << 16), NULL);
             } else {
-                play_sound(SOUND_MENU_COLLECT_SECRET, gGlobalSoundSource);
+                play_sound(SOUND_MENU_COLLECT_SECRET, NULL);
             }
 #endif
         }

@@ -410,7 +410,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             }
             sDelayedWarpOp = WARP_OP_NONE;
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0x00, 0x00, 0x00);
-            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gGlobalSoundSource);
+            play_sound(SOUND_MENU_MARIO_CASTLE_WARP, NULL);
 
             // Set music
             if (gCurrentArea != NULL) {

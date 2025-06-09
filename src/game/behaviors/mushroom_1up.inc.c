@@ -3,7 +3,7 @@
 void bhv_1up_interact(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (marioState && marioState->playerIndex == 0 && obj_check_if_collided_with_object(o, marioState->marioObj) == 1) {
-        play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
+        play_sound(SOUND_GENERAL_COLLECT_1UP, NULL);
         marioState->numLives++;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         if (gLevelValues.mushroom1UpHeal) {
@@ -94,7 +94,7 @@ void bhv_1up_walking_loop(void) {
                 spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
 
             if (o->oTimer == 0)
-                play_sound(SOUND_GENERAL2_1UP_APPEAR, gGlobalSoundSource);
+                play_sound(SOUND_GENERAL2_1UP_APPEAR, NULL);
 
             one_up_loop_in_air();
 
@@ -131,7 +131,7 @@ void bhv_1up_running_away_loop(void) {
                 spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
 
             if (o->oTimer == 0)
-                play_sound(SOUND_GENERAL2_1UP_APPEAR, gGlobalSoundSource);
+                play_sound(SOUND_GENERAL2_1UP_APPEAR, NULL);
 
             one_up_loop_in_air();
 
@@ -255,7 +255,7 @@ void bhv_1up_hidden_loop(void) {
                 o->oVelY = 40.0f;
                 o->oAction = 3;
                 o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-                play_sound(SOUND_GENERAL2_1UP_APPEAR, gGlobalSoundSource);
+                play_sound(SOUND_GENERAL2_1UP_APPEAR, NULL);
             }
             break;
 
@@ -333,7 +333,7 @@ void bhv_1up_hidden_in_pole_loop(void) {
                 o->oVelY = 40.0f;
                 o->oAction = 3;
                 o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-                play_sound(SOUND_GENERAL2_1UP_APPEAR, gGlobalSoundSource);
+                play_sound(SOUND_GENERAL2_1UP_APPEAR, NULL);
             }
             break;
 

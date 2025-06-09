@@ -59,7 +59,7 @@ void djui_popup_create(const char* message, int lines) {
 
     sPopupListY -= height + 4;
     djui_popup_add_to_list(popup);
-    play_sound(SOUND_MENU_PINCH_MARIO_FACE, gGlobalSoundSource);
+    play_sound(SOUND_MENU_PINCH_MARIO_FACE, NULL);
 }
 
 void djui_popup_update(void) {

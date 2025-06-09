@@ -49,7 +49,7 @@ void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     if (atSurface) {
         set_mario_particle_flags(m, particleFlag, FALSE);
         if (atSurface ^ sWasAtSurface[pIndex]) {
-            play_sound(SOUND_ACTION_UNKNOWN431, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_UNKNOWN431, &m->marioObj->header.gfx);
         }
     }
 
@@ -207,7 +207,7 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-  
+
     if (nextPos[1] > m->waterLevel - 80) {
         bool allow = true;
         smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
@@ -529,7 +529,7 @@ static void play_swimming_noise(struct MarioState *m) {
     s16 animFrame = m->marioObj->header.gfx.animInfo.animFrame;
 
     // This must be one line to match on -O2
-    if (animFrame == 0 || animFrame == 12) play_sound(SOUND_ACTION_UNKNOWN434, m->marioObj->header.gfx.cameraToObject);
+    if (animFrame == 0 || animFrame == 12) play_sound(SOUND_ACTION_UNKNOWN434, &m->marioObj->header.gfx);
 }
 
 static s32 check_water_jump(struct MarioState *m) {
@@ -537,9 +537,9 @@ static s32 check_water_jump(struct MarioState *m) {
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
-        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
+        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
             bool allow = true;
-            smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
+            smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
             if (!allow) { return FALSE; }
             vec3s_set(m->angleVel, 0, 0, 0);
 
@@ -602,8 +602,7 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer == 1) {
-        play_sound(sSwimStrength[pIndex] == MIN_SWIM_STRENGTH ? SOUND_ACTION_SWIM : SOUND_ACTION_SWIM_FAST,
-                   m->marioObj->header.gfx.cameraToObject);
+        play_sound(sSwimStrength[pIndex] == MIN_SWIM_STRENGTH ? SOUND_ACTION_SWIM : SOUND_ACTION_SWIM_FAST, &m->marioObj->header.gfx);
         reset_float_globals(m);
     }
 
@@ -732,7 +731,7 @@ static s32 act_hold_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer == 1) {
-        play_sound(SOUND_ACTION_SWIM, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_SWIM, &m->marioObj->header.gfx);
         reset_float_globals(m);
     }
 
@@ -959,7 +958,7 @@ static s32 act_forward_water_kb(struct MarioState *m) {
 static s32 act_water_shocked(struct MarioState *m) {
     if (!m) { return 0; }
     play_character_sound_if_no_flag(m, CHAR_SOUND_WAAAOOOW, MARIO_MARIO_SOUND_PLAYED);
-    play_sound(SOUND_MOVING_SHOCKED, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_SHOCKED, &m->marioObj->header.gfx);
     if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_SHOCK); }
 
     if (set_character_animation(m, CHAR_ANIM_SHOCKED) == 0) {
@@ -1071,7 +1070,7 @@ static s32 act_water_plunge(struct MarioState *m) {
     stepResult = perform_water_step(m);
 
     if (m->actionState == 0) {
-        play_sound(SOUND_ACTION_UNKNOWN430, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_UNKNOWN430, &m->marioObj->header.gfx);
         if (m->peakHeight - m->pos[1] > 1150.0f) {
             play_character_sound(m, CHAR_SOUND_HAHA_2);
         }
@@ -1220,7 +1219,7 @@ static void play_metal_water_jumping_sound(struct MarioState *m, u32 landing) {
 
 static void play_metal_water_walking_sound(struct MarioState *m) {
     if (is_anim_past_frame(m, 10) || is_anim_past_frame(m, 49)) {
-        play_sound(SOUND_ACTION_METAL_STEP_WATER, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_METAL_STEP_WATER, &m->marioObj->header.gfx);
         set_mario_particle_flags(m, PARTICLE_DUST, FALSE);
     }
 }
@@ -1641,7 +1640,7 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
                   m->heldObj = NULL;
                   stop_shell_music();
               }
-  
+
               return transition_submerged_to_walking(m);
           }
         }

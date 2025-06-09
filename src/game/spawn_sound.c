@@ -65,14 +65,14 @@ void create_sound_spawner(s32 soundMagic) {
 void cur_obj_play_sound_1(s32 soundMagic) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
-        play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);
+        play_sound(soundMagic, &gCurrentObject->header.gfx);
     }
 }
 
 void cur_obj_play_sound_2(s32 soundMagic) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
-        play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);
+        play_sound(soundMagic, &gCurrentObject->header.gfx);
 
         if (soundMagic == SOUND_OBJ_BOWSER_WALK) {
             queue_rumble_data(3, 60);

@@ -30,7 +30,7 @@ void play_flip_sounds(struct MarioState *m, s16 frame1, s16 frame2, s16 frame3) 
     if (!m) { return; }
     s32 animFrame = m->marioObj->header.gfx.animInfo.animFrame;
     if (animFrame == frame1 || animFrame == frame2 || animFrame == frame3) {
-        play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
     }
 }
 
@@ -98,7 +98,7 @@ Useful for determining if Mario's fall warrants a health penalty or a special la
 |descriptionEnd| */
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
-    
+
     f32 fallHeight;
     f32 damageHeight;
 
@@ -213,7 +213,7 @@ s32 check_horizontal_wind(struct MarioState *m) {
     }
 
     floor = m->floor;
-    
+
 
     if (floor && floor->type == SURFACE_HORIZONTAL_WIND) {
         pushAngle = floor->force << 8;
@@ -237,7 +237,7 @@ s32 check_horizontal_wind(struct MarioState *m) {
         m->forwardVel = speed * coss(m->faceAngle[1] - m->slideYaw);
 
 #ifdef VERSION_JP
-        play_sound(SOUND_ENV_WIND2, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ENV_WIND2, &m->marioObj->header.gfx);
 #endif
         return TRUE;
     }
@@ -720,7 +720,7 @@ s32 act_side_flip(struct MarioState *m) {
 
     // This must be one line to match on -O2
     // clang-format off
-    if (m->marioObj->header.gfx.animInfo.animFrame == 6) play_sound(SOUND_ACTION_SIDE_FLIP_UNK, m->marioObj->header.gfx.cameraToObject);
+    if (m->marioObj->header.gfx.animInfo.animFrame == 6) play_sound(SOUND_ACTION_SIDE_FLIP_UNK, &m->marioObj->header.gfx);
     // clang-format on
     return FALSE;
 }
@@ -809,7 +809,7 @@ s32 act_twirling(struct MarioState *m) {
     }
 
     if (startTwirlYaw > m->twirlYaw) {
-        play_sound(SOUND_ACTION_TWIRL, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_TWIRL, &m->marioObj->header.gfx);
     }
 
     update_lava_boost_or_twirling(m);
@@ -1058,7 +1058,7 @@ s32 act_ground_pound(struct MarioState *m) {
         set_character_animation(m, m->actionArg == 0 ? CHAR_ANIM_START_GROUND_POUND
                                                  : CHAR_ANIM_TRIPLE_JUMP_GROUND_POUND);
         if (m->actionTimer == 0) {
-            play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
         }
 
         m->actionTimer++;
@@ -1118,7 +1118,7 @@ s32 act_burning_jump(struct MarioState *m) {
 
     set_character_animation(m, m->actionArg == 0 ? CHAR_ANIM_SINGLE_JUMP : CHAR_ANIM_FIRE_LAVA_BURN);
     set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
-    play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_LAVA_BURN, &m->marioObj->header.gfx);
 
     m->marioObj->oMarioBurnTimer += 3;
 
@@ -1185,8 +1185,7 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
                 break;
         }
 
-        play_sound(minSpeed < 40.0f ? SOUND_GENERAL_BOING1 : SOUND_GENERAL_BOING2,
-                   m->marioObj->header.gfx.cameraToObject);
+        play_sound(minSpeed < 40.0f ? SOUND_GENERAL_BOING1 : SOUND_GENERAL_BOING2, &m->marioObj->header.gfx);
 
         if (m->forwardVel < minSpeed) {
             mario_set_forward_vel(m, minSpeed);
@@ -1520,7 +1519,7 @@ s32 act_forward_rollout(struct MarioState *m) {
         case AIR_STEP_NONE:
             if (m->actionState == 1) {
                 if (set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING) == 4) {
-                    play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+                    play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
                 }
             } else {
                 set_character_animation(m, CHAR_ANIM_GENERAL_FALL);
@@ -1563,7 +1562,7 @@ s32 act_backward_rollout(struct MarioState *m) {
         case AIR_STEP_NONE:
             if (m->actionState == 1) {
                 if (set_character_animation(m, CHAR_ANIM_BACKWARD_SPINNING) == 4) {
-                    play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+                    play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
                 }
             } else {
                 set_character_animation(m, CHAR_ANIM_GENERAL_FALL);
@@ -1723,7 +1722,7 @@ s32 act_lava_boost(struct MarioState *m) {
         && m->vel[1] > 0.0f) {
         set_mario_particle_flags(m, PARTICLE_FIRE, FALSE);
         if (m->actionState == 0) {
-            play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_MOVING_LAVA_BURN, &m->marioObj->header.gfx);
         }
     }
 
@@ -1972,7 +1971,7 @@ s32 act_flying(struct MarioState *m) {
         } else {
             set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING_FLIP);
             if (m->marioObj->header.gfx.animInfo.animFrame == 1) {
-                play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+                play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
             }
         }
 
@@ -2027,8 +2026,7 @@ s32 act_flying(struct MarioState *m) {
                 }
 
                 play_sound((m->flags & MARIO_METAL_CAP) ? SOUND_ACTION_METAL_BONK
-                                                        : SOUND_ACTION_BONK,
-                           m->marioObj->header.gfx.cameraToObject);
+                                                        : SOUND_ACTION_BONK, &m->marioObj->header.gfx);
 
                 set_mario_particle_flags(m, PARTICLE_VERTICAL_STAR, FALSE);
                 set_mario_action(m, ACT_BACKWARD_AIR_KB, 0);
@@ -2043,7 +2041,7 @@ s32 act_flying(struct MarioState *m) {
                 }
             } else {
                 if (m->actionTimer++ == 0) {
-                    play_sound(SOUND_ACTION_HIT, m->marioObj->header.gfx.cameraToObject);
+                    play_sound(SOUND_ACTION_HIT, &m->marioObj->header.gfx);
                 }
 
                 if (m->actionTimer == 30) {
@@ -2070,14 +2068,14 @@ s32 act_flying(struct MarioState *m) {
     }
 
     if (startPitch <= 0 && m->faceAngle[0] > 0 && m->forwardVel >= 48.0f) {
-        play_sound(SOUND_ACTION_FLYING_FAST, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_FLYING_FAST, &m->marioObj->header.gfx);
 #ifndef VERSION_JP
         play_character_sound_offset(m, CHAR_SOUND_YAHOO_WAHA_YIPPEE, ((gAudioRandom % 5) << 16));
 #endif
         queue_rumble_data_mario(m, 50, 40);
     }
 
-    play_sound(SOUND_MOVING_FLYING, m->marioObj->header.gfx.cameraToObject);
+    play_sound(SOUND_MOVING_FLYING, &m->marioObj->header.gfx);
     adjust_sound_for_speed(m);
     return FALSE;
 }
@@ -2154,7 +2152,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
         set_character_animation(m, CHAR_ANIM_TRIPLE_JUMP_FLY);
 
         if (m->marioObj->header.gfx.animInfo.animFrame == 7) {
-            play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
         }
 
         if (is_anim_past_end(m)) {
@@ -2165,7 +2163,7 @@ s32 act_flying_triple_jump(struct MarioState *m) {
     }
 
     if (m->actionState == 1 && m->marioObj->header.gfx.animInfo.animFrame == 1) {
-        play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
     }
 
     if (m->vel[1] < 4.0f) {
@@ -2221,7 +2219,7 @@ s32 act_vertical_wind(struct MarioState *m) {
     if (m->actionState == 0) {
         set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING_FLIP);
         if (m->marioObj->header.gfx.animInfo.animFrame == 1) {
-            play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
             queue_rumble_data_mario(m, 8, 80);
         }
 
@@ -2280,7 +2278,7 @@ s32 act_special_triple_jump(struct MarioState *m) {
 
     if (m->actionState == 0 || m->vel[1] > 0.0f) {
         if (set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING) == 0) {
-            play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+            play_sound(SOUND_ACTION_SPIN, &m->marioObj->header.gfx);
         }
     } else {
         set_character_animation(m, CHAR_ANIM_GENERAL_FALL);
@@ -2310,7 +2308,7 @@ s32 check_common_airborne_cancels(struct MarioState *m) {
         return drop_and_set_mario_action(m, ACT_SQUISHED, 0);
     }
 
-    
+
     if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && (m->action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)) {
         smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
         if (allow) {

@@ -65,7 +65,7 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
     char chatMsg[MAX_CHAT_MSG_LENGTH] = { 0 };
     snprintf(chatMsg, MAX_CHAT_MSG_LENGTH, "%s%s\\#dcdcdc\\: %s", playerColorString, (np != NULL) ? np->name : "Player", message);
 
-    play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource);
+    play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, NULL);
     djui_chat_message_create(chatMsg);
 }
 

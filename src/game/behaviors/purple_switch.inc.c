@@ -61,9 +61,9 @@ void bhv_purple_switch_loop(void) {
                     o->oAction++;
                 } else {
                     if (o->oTimer < 360) {
-                        play_sound(SOUND_GENERAL2_SWITCH_TICK_FAST, gGlobalSoundSource);
+                        play_sound(SOUND_GENERAL2_SWITCH_TICK_FAST, NULL);
                     } else {
-                        play_sound(SOUND_GENERAL2_SWITCH_TICK_SLOW, gGlobalSoundSource);
+                        play_sound(SOUND_GENERAL2_SWITCH_TICK_SLOW, NULL);
                     }
                     if (o->oTimer > 400) {
                         o->oAction = PURPLE_SWITCH_WAIT_FOR_MARIO_TO_GET_OFF;
