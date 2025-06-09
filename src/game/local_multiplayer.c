@@ -20,6 +20,29 @@ enum NetworkType nType = NT_NONE;
 
 u16 realPlayerIndex = 0;
 
+int gSx = 0;
+int gSy = 0;
+
+int gSw = 2;
+int gSh = 2;
+
+int numPlayersLocal = 4;
+
+bool twoPlayerLandscape = true;
+
+int gCurrPlayer = 0;
+
+bool isSafe = false;
+
+static const ScreenSize screenSizes[] = {
+    { 2, 2, 1.f },
+    { 2, 1, 2.f },
+    { 1, 1, 2.f },
+    { 1, 1, 1.f },
+};
+
+float aspect_mask = 1.f;
+
 static int patchCurState = -1;
 static bool patchAwait = false;
 void patch_mario_state_player_index(u8 index) {
@@ -171,4 +194,25 @@ Vp *viewport_set_scale(f32 x, f32 y, f32 scaleW, f32 scaleH) {
     viewport->vtrans[0] = (scaleW + x) * 2.0f;
     viewport->vtrans[1] = (scaleH + y) * 2.0f;
     return vp;
+}
+
+void set_screen_rendering(u16 index) {
+    gCurrPlayer = index;
+    switch (index) {
+        case 0: gSx = 0, gSy = 0; break;
+        case 1:
+            if (twoPlayerLandscape && numPlayersLocal == 2) {
+                gSx = 0, gSy = 1;
+            } else {
+                gSx = 1, gSy = 0;
+            }
+            break;
+        case 2: gSx = 0, gSy = 1; break;
+        case 3: gSx = 1, gSy = 1; break;
+    }
+
+    const ScreenSize *size = &screenSizes[numPlayersLocal - 1];
+    gSw = size->w;
+    gSh = size->h;
+    aspect_mask = size->a;
 }

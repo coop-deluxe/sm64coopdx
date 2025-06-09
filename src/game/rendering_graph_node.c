@@ -247,52 +247,7 @@ void patch_mtx_before(void) {
     sShadowInterpCount = 0;
 }
 
-int gSx = 0;
-int gSy = 0;
-
-int gSw = 2;
-int gSh = 2;
-
-int numPlayersLocal = 4;
-
-bool twoPlayerLandscape = true;
-
-int gCurrPlayer = 0;
-
-bool isSafe = false;
-
-typedef struct { u8 w, h; f32 a; } ScreenSize;
-
-static const ScreenSize screenSizes[] = {
-    { 2, 2, 1.f },
-    { 2, 1, 2.f },
-    { 1, 1, 2.f },
-    { 1, 1, 1.f },
-};
-
 #include "pc/lua/utils/smlua_gfx_utils.h"
-
-float aspect_mask = 1.f;
-void set_screen_rendering(u16 index) {
-    gCurrPlayer = index;
-    switch (index) {
-        case 0: gSx = 0, gSy = 0; break;
-        case 1:
-            if (twoPlayerLandscape && numPlayersLocal == 2) {
-                gSx = 0, gSy = 1;
-            } else {
-                gSx = 1, gSy = 0;
-            }
-            break;
-        case 2: gSx = 0, gSy = 1; break;
-        case 3: gSx = 1, gSy = 1; break;
-    }
-
-    const ScreenSize *size = &screenSizes[numPlayersLocal - 1];
-    gSw = size->w;
-    gSh = size->h;
-    aspect_mask = size->a;
-}
 
 void patch_mtx_interpolated(f32 delta) {
     Mtx camTranfInv, prevCamTranfInv;

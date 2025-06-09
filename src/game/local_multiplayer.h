@@ -32,6 +32,13 @@ extern struct HudDisplay gHudDisplays[];
 extern struct Controller gSharedController;
 extern struct Controller *gSharedCtr;
 
+typedef struct { u8 w, h; f32 a; } ScreenSize;
+
+struct GfxLoad {
+    int len;
+    Gfx *gfx;
+};
+
 extern void set_screen_rendering(u16 index);
 
 void swap_lakitu_state(u8 index);
@@ -41,11 +48,6 @@ void unpatch_mario_state_player_index();
 
 void set_local_player(u8 index);
 void unset_local_player();
-
-struct GfxLoad {
-    int len;
-    Gfx *gfx;
-};
 
 void save_player_dl(u8 index, Gfx *gl, int len);
 struct GfxLoad *load_player_dl(u8 index);
