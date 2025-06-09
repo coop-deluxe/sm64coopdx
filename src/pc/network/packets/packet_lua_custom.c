@@ -129,6 +129,6 @@ void network_receive_lua_custom(struct Packet* p) {
         lua_settable(L, -3);
     }
 
-    smlua_call_event_hooks_value_param(HOOK_ON_PACKET_RECEIVE, modIndex, tableIndex);
+    smlua_call_event_hooks(HOOK_ON_PACKET_RECEIVE, modIndex, tableIndex);
     lua_pop(L, 1); // pop table
 }

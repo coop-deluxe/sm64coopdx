@@ -59,115 +59,304 @@
  // vec types //
 ///////////////
 
-static void smlua_get_vec2f(Vec2f dest, int index) {
+void smlua_new_vec2f(Vec2f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2f(Vec2f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
 }
 
-static void smlua_push_vec2f(Vec2f src, int index) {
+void smlua_push_vec2f(Vec2f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3f(Vec3f dest, int index) {
+void smlua_new_vec3f(Vec3f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushnumber(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3f(Vec3f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
     dest[2] = smlua_get_number_field(index, "z");
 }
 
-static void smlua_push_vec3f(Vec3f src, int index) {
+void smlua_push_vec3f(Vec3f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
     smlua_push_number_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4f(Vec4f dest, int index) {
+void smlua_new_vec4f(Vec4f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushnumber(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushnumber(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4f(Vec4f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
     dest[2] = smlua_get_number_field(index, "z");
     dest[3] = smlua_get_number_field(index, "w");
 }
 
-static void smlua_push_vec4f(Vec4f src, int index) {
+void smlua_push_vec4f(Vec4f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
     smlua_push_number_field(index, "z", src[2]);
     smlua_push_number_field(index, "w", src[3]);
 }
 
-static void smlua_get_vec2i(Vec2i dest, int index) {
+void smlua_new_vec2i(Vec2i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2i(Vec2i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
 }
 
-static void smlua_push_vec2i(Vec2i src, int index) {
+void smlua_push_vec2i(Vec2i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3i(Vec3i dest, int index) {
+void smlua_new_vec3i(Vec3i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3i(Vec3i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
 }
 
-static void smlua_push_vec3i(Vec3i src, int index) {
+void smlua_push_vec3i(Vec3i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4i(Vec4i dest, int index) {
+void smlua_new_vec4i(Vec4i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushinteger(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4i(Vec4i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
     dest[3] = smlua_get_integer_field(index, "w");
 }
 
-static void smlua_push_vec4i(Vec4i src, int index) {
+void smlua_push_vec4i(Vec4i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
     smlua_push_integer_field(index, "w", src[3]);
 }
 
-static void smlua_get_vec2s(Vec2s dest, int index) {
+void smlua_new_vec2s(Vec2s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2s(Vec2s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
 }
 
-static void smlua_push_vec2s(Vec2s src, int index) {
+void smlua_push_vec2s(Vec2s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3s(Vec3s dest, int index) {
+void smlua_new_vec3s(Vec3s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3s(Vec3s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
 }
 
-static void smlua_push_vec3s(Vec3s src, int index) {
+void smlua_push_vec3s(Vec3s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4s(Vec4s dest, int index) {
+void smlua_new_vec4s(Vec4s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushinteger(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4s(Vec4s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
     dest[3] = smlua_get_integer_field(index, "w");
 }
 
-static void smlua_push_vec4s(Vec4s src, int index) {
+void smlua_push_vec4s(Vec4s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
     smlua_push_integer_field(index, "w", src[3]);
 }
 
-static void smlua_get_mat4(Mat4 dest, int index) {
+void smlua_new_mat4(Mat4 src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "m00");
+    lua_pushnumber(L, src[0][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m01");
+    lua_pushnumber(L, src[0][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m02");
+    lua_pushnumber(L, src[0][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m03");
+    lua_pushnumber(L, src[0][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m10");
+    lua_pushnumber(L, src[1][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m11");
+    lua_pushnumber(L, src[1][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m12");
+    lua_pushnumber(L, src[1][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m13");
+    lua_pushnumber(L, src[1][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m20");
+    lua_pushnumber(L, src[2][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m21");
+    lua_pushnumber(L, src[2][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m22");
+    lua_pushnumber(L, src[2][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m23");
+    lua_pushnumber(L, src[2][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m30");
+    lua_pushnumber(L, src[3][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m31");
+    lua_pushnumber(L, src[3][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m32");
+    lua_pushnumber(L, src[3][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m33");
+    lua_pushnumber(L, src[3][3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_mat4(Mat4 dest, int index) {
     dest[0][0] = smlua_get_number_field(index, "m00");
     dest[0][1] = smlua_get_number_field(index, "m01");
     dest[0][2] = smlua_get_number_field(index, "m02");
@@ -186,7 +375,7 @@ static void smlua_get_mat4(Mat4 dest, int index) {
     dest[3][3] = smlua_get_number_field(index, "m33");
 }
 
-static void smlua_push_mat4(Mat4 src, int index) {
+void smlua_push_mat4(Mat4 src, int index) {
     smlua_push_number_field(index, "m00", src[0][0]);
     smlua_push_number_field(index, "m01", src[0][1]);
     smlua_push_number_field(index, "m02", src[0][2]);
@@ -221,13 +410,28 @@ static void smlua_push_mat4(Mat4 src, int index) {
     smlua_push_number_field(index, "p", src[3][3]);
 }
 
-static void smlua_get_color(Color dest, int index) {
+void smlua_new_color(Color src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "r");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "g");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "b");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_color(Color dest, int index) {
     dest[0] = smlua_get_integer_field(index, "r");
     dest[1] = smlua_get_integer_field(index, "g");
     dest[2] = smlua_get_integer_field(index, "b");
 }
 
-static void smlua_push_color(Color src, int index) {
+void smlua_push_color(Color src, int index) {
     smlua_push_integer_field(index, "r", src[0]);
     smlua_push_integer_field(index, "g", src[1]);
     smlua_push_integer_field(index, "b", src[2]);
@@ -33075,25 +33279,19 @@ int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_texture_average_color(lua_State* L) {
+int smlua_func_texture_to_lua_table(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_texture_average_color", 2, top);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "texture_to_lua_table", 1, top);
         return 0;
     }
 
     u8 * tex = (u8 *)smlua_to_cpointer(L, 1, LVT_U8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_texture_average_color"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "texture_to_lua_table"); return 0; }
 
-    Color out;
-    smlua_get_color(out, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_texture_average_color"); return 0; }
-
-    lua_pushboolean(L, get_texture_average_color(tex, out));
-
-    smlua_push_color(out, 2);
+    texture_to_lua_table(tex);
 
     return 1;
 }
@@ -36980,7 +37178,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "geo_get_current_perspective", smlua_func_geo_get_current_perspective);
     smlua_bind_function(L, "geo_get_current_camera", smlua_func_geo_get_current_camera);
     smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
-    smlua_bind_function(L, "get_texture_average_color", smlua_func_get_texture_average_color);
+    smlua_bind_function(L, "texture_to_lua_table", smlua_func_texture_to_lua_table);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

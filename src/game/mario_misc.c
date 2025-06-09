@@ -359,7 +359,7 @@ s8 geo_get_processing_mario_index(void) {
         return index;
     }
 
-    if (gCurGraphNodeProcessingObject->behavior != smlua_override_behavior(bhvMario)) {
+    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
         return -1;
     }
 
@@ -725,7 +725,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].scale[0] *= -1.0f;
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
 
-                    smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
+                    smlua_call_event_hooks(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }

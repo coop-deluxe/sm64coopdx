@@ -257,7 +257,7 @@ s32 get_star_collection_dialog(struct MarioState *m) {
     if (!m) { return 0; }
     s32 dialogID = 0;
 
-    if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
+    if (smlua_call_event_hooks(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
         m->prevNumStarsForDialog = m->numStars;
         return dialogID;
     }
@@ -849,7 +849,7 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
             // do nothing
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return animFrame; }
 
             if (mario_can_bubble(m)) {
@@ -923,7 +923,7 @@ s32 act_quicksand_death(struct MarioState *m) {
             } else {
                 m->actionState = 2;
                 bool allowDeath = true;
-                smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { return FALSE; }
 
                 if (mario_can_bubble(m)) {
@@ -947,7 +947,7 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
     if (m->actionTimer++ == 60) {
         if (m->playerIndex == 0) {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {
@@ -1874,7 +1874,7 @@ s32 act_squished(struct MarioState *m) {
             m->health = 0x100;
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {

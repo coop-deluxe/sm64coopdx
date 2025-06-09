@@ -231,7 +231,7 @@ struct GraphNodeCamera* geo_get_current_camera(void);
 /* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
 
-/* |description|Calculates the average color of a given texture. Returns true if success|descriptionEnd|*/
-bool get_texture_average_color(const u8 *tex, OUT Color out);
+/* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.|descriptionEnd|*/
+void texture_to_lua_table(const u8 *tex);
 
 #endif

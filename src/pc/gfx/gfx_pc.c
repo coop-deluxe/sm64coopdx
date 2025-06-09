@@ -58,15 +58,15 @@ static struct RSP {
     ALIGNED16 Mat4 P_matrix;
     ALIGNED16 Mat4 modelview_matrix_stack[MAX_MATRIX_STACK_SIZE];
     uint32_t modelview_matrix_stack_size;
-    
+
     uint32_t geometry_mode;
     int16_t fog_mul, fog_offset;
-    
+
     struct {
         // U0.16
         uint16_t s, t;
     } texture_scaling_factor;
-    
+
     bool lights_changed;
     uint8_t current_num_lights; // includes ambient light
     Vec3f current_lights_coeffs[MAX_LIGHTS];
@@ -691,7 +691,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
     }
 
     if (luaVertexColor) {
-        if ((rsp.geometry_mode & G_PACKED_NORMALS_EXT) || (!(rsp.geometry_mode & G_LIGHTING))) {
+        if (!(rsp.geometry_mode & G_LIGHTING)) {
             for (int i = 0; i < 3; i ++) {
                 vertexColorCached[i] = gVertexColor[i] / 255.0f;
             }
@@ -796,15 +796,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 float vtxR = (v->cn[0] / 255.0f);
                 float vtxG = (v->cn[1] / 255.0f);
                 float vtxB = (v->cn[2] / 255.0f);
-                if (luaVertexColor) {
-                    d->color.r *= vtxR * vertexColorCached[0];
-                    d->color.g *= vtxG * vertexColorCached[1];
-                    d->color.b *= vtxB * vertexColorCached[2];
-                } else {
-                    d->color.r *= vtxR;
-                    d->color.g *= vtxG;
-                    d->color.b *= vtxB;
-                }
+                d->color.r *= vtxR;
+                d->color.g *= vtxG;
+                d->color.b *= vtxB;
             }
 
             if (rsp.geometry_mode & G_TEXTURE_GEN) {

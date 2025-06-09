@@ -148,7 +148,7 @@ void djui_render(void) {
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 
-    smlua_call_event_on_hud_render(djui_reset_hud_params);
+    smlua_call_event_hooks(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
 
     djui_panel_update();
     djui_popup_update();

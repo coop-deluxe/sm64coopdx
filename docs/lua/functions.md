@@ -1990,7 +1990,7 @@
    - [geo_get_current_perspective](functions-6.md#geo_get_current_perspective)
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
-   - [get_texture_average_color](functions-6.md#get_texture_average_color)
+   - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
 
 <br />
 

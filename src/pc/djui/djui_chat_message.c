@@ -55,9 +55,9 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
         return;
     }
 
-    bool returnValue = true;
-    smlua_call_event_hooks_on_chat_message(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &returnValue);
-    if (!returnValue) {
+    bool allowMessage = true;
+    smlua_call_event_hooks(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &allowMessage);
+    if (!allowMessage) {
         return;
     }
 
