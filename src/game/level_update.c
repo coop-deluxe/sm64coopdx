@@ -542,7 +542,9 @@ void init_mario_after_warp(void) {
     }
 
     if (gNetworkPlayerLocal != NULL) {
-        network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            network_player_update_course_level(&gNetworkPlayers[i], gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        }
     }
 
     if (gMarioState && gMarioState->health <= 0x110) {
@@ -1866,7 +1868,9 @@ s32 init_level(void) {
     }
 
     if (gNetworkPlayerLocal != NULL) {
-        network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        for (u8 i = 0; i < numPlayersLocal; i++) {
+            network_player_update_course_level(&gNetworkPlayers[i], gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
+        }
     }
     smlua_call_event_hooks_warp_params(HOOK_ON_LEVEL_INIT, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 

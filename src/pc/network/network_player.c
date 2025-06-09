@@ -17,6 +17,7 @@
 #endif
 #include "game/mario.h"
 #include "pc/djui/djui_unicode.h"
+#include "game/local_multiplayer.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -404,7 +405,9 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
-        construct_player_popup(np, DLANG(NOTIF, DISCONNECTED), NULL);
+        if (np->localIndex >= numPlayersLocal) {
+            construct_player_popup(np, DLANG(NOTIF, DISCONNECTED), NULL);
+        }
 
         packet_ordered_clear(globalIndex);
 
@@ -449,7 +452,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     // display popup
     bool inCredits = (np->currActNum == 99);
 
-    if (np->currCourseNum != courseNum && np->localIndex != 0 && !inCredits) {
+    if (np->currCourseNum != courseNum && np->localIndex >= numPlayersLocal && !inCredits) {
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
 
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {
