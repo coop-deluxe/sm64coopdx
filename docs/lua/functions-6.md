@@ -5105,25 +5105,24 @@ Gets the current GraphNodeHeldObject
 
 <br />
 
-## [get_texture_average_color](#get_texture_average_color)
+## [texture_to_lua_table](#texture_to_lua_table)
 
 ### Description
-Calculates the average color of a given texture. Returns true if success
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
 
 ### Lua Example
-`local booleanValue = get_texture_average_color(tex, out)`
+`texture_to_lua_table(tex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | tex | `Pointer` <`integer`> |
-| out | [Color](structs.md#Color) |
 
 ### Returns
-- `boolean`
+- None
 
 ### C Prototype
-`bool get_texture_average_color(const u8 *tex, OUT Color out);`
+`void texture_to_lua_table(const u8 *tex);`
 
 [:arrow_up_small:](#)
 

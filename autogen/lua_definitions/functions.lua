@@ -11099,10 +11099,8 @@ function geo_get_current_held_object()
 end
 
 --- @param tex Pointer_integer
---- @param out Color
---- @return boolean
---- Calculates the average color of a given texture. Returns true if success
-function get_texture_average_color(tex, out)
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+function texture_to_lua_table(tex)
     -- ...
 end
 

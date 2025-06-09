@@ -33279,25 +33279,19 @@ int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_texture_average_color(lua_State* L) {
+int smlua_func_texture_to_lua_table(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_texture_average_color", 2, top);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "texture_to_lua_table", 1, top);
         return 0;
     }
 
     u8 * tex = (u8 *)smlua_to_cpointer(L, 1, LVT_U8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_texture_average_color"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "texture_to_lua_table"); return 0; }
 
-    Color out;
-    smlua_get_color(out, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_texture_average_color"); return 0; }
-
-    lua_pushboolean(L, get_texture_average_color(tex, out));
-
-    smlua_push_color(out, 2);
+    texture_to_lua_table(tex);
 
     return 1;
 }
@@ -37184,7 +37178,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "geo_get_current_perspective", smlua_func_geo_get_current_perspective);
     smlua_bind_function(L, "geo_get_current_camera", smlua_func_geo_get_current_camera);
     smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
-    smlua_bind_function(L, "get_texture_average_color", smlua_func_get_texture_average_color);
+    smlua_bind_function(L, "texture_to_lua_table", smlua_func_texture_to_lua_table);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
