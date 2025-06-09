@@ -485,27 +485,14 @@ void render_game(void) {
             if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
-            int largestSizeGfx = 0;
             Gfx *pos = gDisplayListHead;
             sRenderBehindPos = pos;
             for (int i = 0; i < numPlayersLocal; i++) {
-                // gDisplayListHead = pos;
                 set_local_player(i);
                 patch_mario_state_player_index(i);
                 smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
                 unpatch_mario_state_player_index();
-                // int len = gDisplayListHead - pos;
-                // if (len > largestSizeGfx) { largestSizeGfx = len; }
-                // Gfx *gfx = malloc(sizeof(Gfx) * len);
-                // memcpy(gfx, pos, sizeof(Gfx) * len);
-                // save_player_dl(i, gfx, len);
             }
-
-            // No Op the display list
-            // Gfx noOp[] = { gsSPNoOp() };
-            // for (int i = 0; i < largestSizeGfx; i++) {
-            //     memcpy(pos + i, &noOp, sizeof(Gfx));
-            // }
             djui_gfx_displaylist_end();
         }
         for (int i = 0; i < numPlayersLocal; i++) {
