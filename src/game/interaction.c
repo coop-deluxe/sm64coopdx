@@ -1568,7 +1568,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         victim->bounceSquishTimer = max(victim->bounceSquishTimer, 20);
     }
 
-    if (victim->playerIndex < numPlayersLocal) {
+    if (victim->playerIndex < gNumPlayersLocal) {
         victim->interactObj = attacker->marioObj;
         if (interaction & INT_KICK) {
             if (victim->action == ACT_FIRST_PERSON) {

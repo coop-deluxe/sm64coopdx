@@ -381,7 +381,7 @@ static void wiggler_act_shrink(void) {
 
             // If we're not the closet to Wiggler,
             // Don't play this cutscene!
-            if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= numPlayersLocal) {
+            if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= gNumPlayersLocal) {
                 star->oStarSpawnExtCutsceneFlags = 0;
             }
 

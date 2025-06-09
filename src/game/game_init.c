@@ -469,19 +469,23 @@ void read_controller_inputs(void) {
     // controller information.
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
-        if (gInteractableOverridePad) { osContResetPad(&gInteractablePad); }
-        for (u8 i = 0; i < numPlayersLocal; i++) {
-            if (gInteractableOverridePad) {
-                osContGetReadDataIndexNoReset(&gInteractablePad, i);
-            } else {
-                osContGetReadDataIndex(&gControllerPads[i], i);
+        if (gNumPlayersLocal > 1) {
+            if (gInteractableOverridePad) { osContResetPad(&gInteractablePad); }
+            for (u8 i = 0; i < gNumPlayersLocal; i++) {
+                if (gInteractableOverridePad) {
+                    osContGetReadDataIndexNoReset(&gInteractablePad, i);
+                } else {
+                    osContGetReadDataIndex(&gControllerPads[i], i);
+                }
             }
+        } else {
+            osContGetReadData(gInteractableOverridePad ? &gInteractablePad : &gControllerPads[0]);
         }
     }
     run_demo_inputs();
 
     memset(&gSharedController, 0, sizeof(struct Controller));
-    for (s32 i = 0; i < numPlayersLocal; i++) {
+    for (s32 i = 0; i < gNumPlayersLocal; i++) {
         struct Controller *controller = &gControllers[i];
 
         // if we're receiving inputs, update the controller struct
@@ -571,7 +575,7 @@ void init_controllers(void) {
         }
     }
 
-    for (u8 i = 0; i < numPlayersLocal; i++) {
+    for (u8 i = 0; i < gNumPlayersLocal; i++) {
         gControllers[i].controllerData = &gControllerPads[i];
     }
 

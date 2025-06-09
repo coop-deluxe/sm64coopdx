@@ -50,7 +50,7 @@ Gfx *geo_envfx_main(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtxf) {
 #endif
                 execNode->fnNode.node.flags = (execNode->fnNode.node.flags & 0xFF) | 0x400;
             }
-            if (gCurrPlayer == numPlayersLocal - 1) {
+            if (gCurrPlayer == gNumPlayersLocal - 1) {
                 SET_HIGH_U16_OF_32(*params, gAreaUpdateCounter);
             }
         }

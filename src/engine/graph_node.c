@@ -192,7 +192,7 @@ struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool,
                                                f32 *focus, GraphNodeFunc func, s32 mode) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeCamera));
-        for (u16 i = 0; i < numPlayersLocal; i++) {
+        for (u16 i = 0; i < gNumPlayersLocal; i++) {
             graphNode->config[i].camera = NULL;
         }
     }
@@ -202,7 +202,7 @@ struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool,
         vec3f_copy(graphNode->pos, pos);
         vec3f_copy(graphNode->focus, focus);
         graphNode->fnNode.func = func;
-        for (u16 i = 0; i < numPlayersLocal; i++) {
+        for (u16 i = 0; i < gNumPlayersLocal; i++) {
             graphNode->config[i].mode = mode;
         }
         graphNode->roll = 0;

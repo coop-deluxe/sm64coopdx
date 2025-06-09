@@ -235,7 +235,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
 
             // Init transition
             if (gCurrentArea != NULL) {
-                for (u8 i = 0; i < numPlayersLocal; i++) {
+                for (u8 i = 0; i < gNumPlayersLocal; i++) {
                     set_local_player(i);
                     reset_camera(gCurrentArea->camera);
                     init_camera(gCurrentArea->camera);
@@ -402,7 +402,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
 
             // Init transition
             if (gCurrentArea != NULL) {
-                for (u8 i = 0; i < numPlayersLocal; i++) {
+                for (u8 i = 0; i < gNumPlayersLocal; i++) {
                     set_local_player(i);
                     reset_camera(gCurrentArea->camera);
                     init_camera(gCurrentArea->camera);

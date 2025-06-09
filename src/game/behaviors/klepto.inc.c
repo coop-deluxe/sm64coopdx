@@ -435,7 +435,7 @@ void bhv_klepto_update(void) {
 
                 // If we're not the closet to Klepto,
                 // Don't play the cutscene!
-                if (star != NULL && marioState->playerIndex >= numPlayersLocal) {
+                if (star != NULL && marioState->playerIndex >= gNumPlayersLocal) {
                     star->oStarSpawnExtCutsceneFlags = 0;
                 }
             }

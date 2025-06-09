@@ -1,14 +1,4 @@
-#define POSSIBLE_NUM_PLAYERS 4
-
-#ifndef GET_NUM_CONST
-
-#define GFX_SCREEN_WIDTH()  (((GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 2) * gSw)
-#define GFX_SCREEN_HEIGHT() ((SCREEN_HEIGHT / 2) * gSh)
-#define GFX_SCREEN_WIDTH_PLAYER()  (((GFX_DIMENSIONS_FROM_RIGHT_EDGE(0) + GFX_DIMENSIONS_FROM_LEFT_EDGE(0)) / 2) * gSw)
-#define GFX_HALF_SCREEN_WIDTH()  (GFX_SCREEN_WIDTH()  / 2)
-#define GFX_HALF_SCREEN_HEIGHT() (GFX_SCREEN_HEIGHT() / 2)
-#define GFX_SCREEN_X() (GFX_SCREEN_WIDTH()  * gSx)
-#define GFX_SCREEN_Y() (GFX_SCREEN_HEIGHT() * gSy)
+#include "local_multiplayer_const.h"
 
 #include <PR/ultratypes.h>
 
@@ -23,9 +13,9 @@ extern int gSy;
 extern int gSw;
 extern int gSh;
 
-extern int numPlayersLocal;
+extern u16 gNumPlayersLocal;
 
-extern int gCurrPlayer;
+extern u16 gCurrPlayer;
 
 extern u16 realPlayerIndex;
 
@@ -73,5 +63,3 @@ sub(u32)
 sub(f32)
 
 Vp *viewport_set_scale(f32 x, f32 y, f32 scaleW, f32 scaleH);
-
-#endif

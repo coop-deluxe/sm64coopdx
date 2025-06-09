@@ -2221,7 +2221,7 @@ void init_single_mario(struct MarioState* m) {
 
     m->waterLevel = find_water_level(spawnInfo->startPos[0], spawnInfo->startPos[2]);
 
-    if (playerIndex < numPlayersLocal) {
+    if (playerIndex < gNumPlayersLocal) {
         gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
         m->area = &gCurrentAreaCopies[playerIndex];
         m->area->localAreaTimer = 60;

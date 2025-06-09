@@ -552,7 +552,7 @@ static int smlua__get_field(lua_State* L) {
     // will be seen as a local player
     if (lot == (enum LuaObjectType) LOT_MARIOSTATE && !strcmp(key, "playerIndex")) {
         struct MarioState *m = (struct MarioState*)(intptr_t) pointer;
-        if (m->playerIndex < numPlayersLocal) {
+        if (m->playerIndex < gNumPlayersLocal) {
 
             // Always push 0 when dealing with Mario state 0
             // this skips patching most other accesses to playerIndex

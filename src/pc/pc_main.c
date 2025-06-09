@@ -222,7 +222,7 @@ void produce_interpolation_frames_and_delay(void) {
         gRenderingDelta = delta;
 
         gfx_start_frame();
-        for (int i = 0; i < numPlayersLocal; i++) {
+        for (int i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         }

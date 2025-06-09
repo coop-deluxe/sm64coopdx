@@ -283,7 +283,7 @@ void bhv_mario_update(void) {
         vec3f_copy(gMarioState->marioBodyState->torsoPos, gMarioState->pos);
     }
 
-    if ((stateIndex == 0 || stateIndex < numPlayersLocal) || (!is_player_active(gMarioState))) {
+    if ((stateIndex == 0 || stateIndex < gNumPlayersLocal) || (!is_player_active(gMarioState))) {
         gMarioState->particleFlags = 0;
     }
 

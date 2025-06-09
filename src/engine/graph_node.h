@@ -6,9 +6,7 @@
 
 #include "types.h"
 #include "game/memory.h"
-#define GET_NUM_CONST
-#include "game/local_multiplayer.h"
-#undef GET_NUM_CONST
+#include "game/local_multiplayer_const.h"
 #undef near
 #undef far
 

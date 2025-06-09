@@ -244,7 +244,7 @@ void clear_areas(void) {
         gAreaData[i].paintingWarpNodes = NULL;
         gAreaData[i].instantWarps = NULL;
         gAreaData[i].objectSpawnInfos = NULL;
-        memset(&gAreas[i].camera, 0, sizeof(sizeof(struct Camera *) * numPlayersLocal));
+        memset(&gAreas[i].camera, 0, sizeof(sizeof(struct Camera *) * gNumPlayersLocal));
         gAreaData[i].unused28 = NULL;
         gAreaData[i].whirlpools[0] = NULL;
         gAreaData[i].whirlpools[1] = NULL;
@@ -456,7 +456,7 @@ static void set_screen_area(f32 x, f32 y, f32 scaleW, f32 scaleH) {
 
 extern struct LakituState gLakituStates[];
 static void render_screen(u16 screen) {
-    if (numPlayersLocal > 1) { set_local_player(screen); }
+    set_local_player(screen);
     set_screen_area(SCREEN_WIDTH * gSx, SCREEN_HEIGHT * gSy, (SCREEN_WIDTH / 2) * gSw, (SCREEN_HEIGHT / 2) * gSh);
 
     set_local_player(screen);
@@ -470,7 +470,7 @@ void render_game(void) {
     dynos_update_gfx();
     if (gCurrentArea != NULL && !gWarpTransition.pauseRendering) {
         lua_State *L = gLuaState;
-        for (int i = 0; i < numPlayersLocal; i++) { render_screen(i); }
+        for (int i = 0; i < gNumPlayersLocal; i++) { render_screen(i); }
         gLuaState = L;
 
         gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
@@ -487,7 +487,7 @@ void render_game(void) {
             }
             Gfx *pos = gDisplayListHead;
             sRenderBehindPos = pos;
-            for (int i = 0; i < numPlayersLocal; i++) {
+            for (int i = 0; i < gNumPlayersLocal; i++) {
                 set_local_player(i);
                 patch_mario_state_player_index(i);
                 smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
@@ -495,7 +495,7 @@ void render_game(void) {
             }
             djui_gfx_displaylist_end();
         }
-        for (int i = 0; i < numPlayersLocal; i++) {
+        for (int i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             patch_mario_state_player_index(i);
             render_hud();

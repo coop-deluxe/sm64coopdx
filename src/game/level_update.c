@@ -471,7 +471,7 @@ void init_mario_after_warp(void) {
     }
 
     if (gCurrentArea) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             reset_camera(gCurrentArea->camera);
         }
@@ -542,7 +542,7 @@ void init_mario_after_warp(void) {
     }
 
     if (gNetworkPlayerLocal != NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             network_player_update_course_level(&gNetworkPlayers[i], gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
         }
     }
@@ -626,7 +626,7 @@ void warp_credits(void) {
     set_mario_action(gMarioState, marioAction, 0);
 
     if (gCurrentArea) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             reset_camera(gCurrentArea->camera);
         }
@@ -880,7 +880,7 @@ void verify_warp(struct MarioState *m, bool killMario) {
  */
 s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
     // only allow for local player
-    if (m->playerIndex >= numPlayersLocal) { return 0; }
+    if (m->playerIndex >= gNumPlayersLocal) { return 0; }
 
     s32 val04 = TRUE;
 
@@ -1111,7 +1111,7 @@ void initiate_delayed_warp(void) {
 
 void update_hud_values(void) {
     if (gCurrCreditsEntry == NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i); // to swap gMarioState and gHudDisplay
 
             s16 numHealthWedges = gMarioState->health > 0 ? MIN(gMarioState->health >> 8, 8) : 0;
@@ -1198,7 +1198,7 @@ void basic_update(UNUSED s16 *arg) {
     update_hud_values();
 
     if (gCurrentArea != NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             update_camera(gCurrentArea->camera);
         }
@@ -1319,7 +1319,7 @@ s32 play_mode_normal(void) {
     update_hud_values();
 
     if (gCurrentArea != NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             update_camera(gCurrentArea->camera);
         }
@@ -1436,7 +1436,7 @@ s32 play_mode_change_area(void) {
     //! This maybe was supposed to be sTransitionTimer == -1? sTransitionUpdate
     // is never set to -1.
     if (sTransitionUpdate == (void (*)(s16 *)) - 1) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             update_camera(gCurrentArea->camera);
         }
@@ -1807,7 +1807,7 @@ s32 init_level(void) {
         }
 
         if (gCurrentArea != NULL) {
-            for (u8 i = 0; i < numPlayersLocal; i++) {
+            for (u8 i = 0; i < gNumPlayersLocal; i++) {
                 set_local_player(i);
                 reset_camera(gCurrentArea->camera);
             }
@@ -1868,7 +1868,7 @@ s32 init_level(void) {
     }
 
     if (gNetworkPlayerLocal != NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             network_player_update_course_level(&gNetworkPlayers[i], gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
         }
     }

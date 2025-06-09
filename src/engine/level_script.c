@@ -447,14 +447,14 @@ static void level_cmd_begin_area(void) {
         gAreas[areaIndex].nextSyncID = 10;
 
         if (node != NULL) {
-            for (u8 i = 0; i < numPlayersLocal; i++) {
+            for (u8 i = 0; i < gNumPlayersLocal; i++) {
                 gAreas[areaIndex].cameras[i] = (struct Camera *) node->config[i].camera;
             }
             gAreas[areaIndex].camera = gAreas[areaIndex].cameras[0];
         } else {
             gAreas[areaIndex].camera = NULL;
-            for (u8 i = 0; i < numPlayersLocal; i++) {
-                memset(&gAreas[areaIndex].cameras[i], 0, sizeof(sizeof(struct Camera *) * numPlayersLocal)); // set them to null
+            for (u8 i = 0; i < gNumPlayersLocal; i++) {
+                memset(&gAreas[areaIndex].cameras[i], 0, sizeof(sizeof(struct Camera *) * gNumPlayersLocal)); // set them to null
             }
         }
     }

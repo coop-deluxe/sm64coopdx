@@ -249,9 +249,11 @@ u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    return (sResolution == RESOLUTION_N64)
+    u32 r = (sResolution == RESOLUTION_N64)
         ? gfx_current_dimensions.aspect_ratio * SCREEN_HEIGHT
         : (windowWidth / djui_gfx_get_scale());
+    if (gSw == 1) { return r / 2; }
+    return r;
 }
 
 u32 djui_hud_get_screen_height(void) {

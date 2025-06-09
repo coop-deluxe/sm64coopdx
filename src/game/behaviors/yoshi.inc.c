@@ -95,7 +95,7 @@ void yoshi_talk_loop(void) {
     struct Object* player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    if (marioState->playerIndex >= numPlayersLocal) {
+    if (marioState->playerIndex >= gNumPlayersLocal) {
         return;
     }
 

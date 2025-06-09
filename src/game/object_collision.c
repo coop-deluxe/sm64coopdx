@@ -118,7 +118,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
     f32 sp28 = a->hurtboxRadius + b->hurtboxRadius;
     f32 sp24 = sqrtf(sp34 * sp34 + sp2C * sp2C);
 
-    if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < numPlayersLocal) {
+    if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < gNumPlayersLocal) {
         b->oInteractionSubtype |= INT_SUBTYPE_DELAY_INVINCIBILITY;
     }
 
@@ -132,7 +132,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
         if (sp20 < sp38) {
             return 0;
         }
-        if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < numPlayersLocal) {
+        if ((a->oInteractType & INTERACT_PLAYER) && (a->oBehParams - 1) < gNumPlayersLocal) {
             b->oInteractionSubtype &= ~INT_SUBTYPE_DELAY_INVINCIBILITY;
         }
         return 1;
@@ -194,7 +194,7 @@ void check_player_object_collision(void) {
 
     extern struct MarioState gMarioStates[];
     u16 interactLocalPlayer = 0;
-    for (u8 j = 0; j < numPlayersLocal; j++) {
+    for (u8 j = 0; j < gNumPlayersLocal; j++) {
         if (j != 0 && interactLocalPlayer & j) { continue; }
         for (s32 i = 1; i < MAX_PLAYERS; i++) {
             if (j == i) { continue; }

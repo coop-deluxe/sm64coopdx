@@ -405,7 +405,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
-        if (np->localIndex >= numPlayersLocal) {
+        if (np->localIndex >= gNumPlayersLocal) {
             construct_player_popup(np, DLANG(NOTIF, DISCONNECTED), NULL);
         }
 
@@ -452,7 +452,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
     // display popup
     bool inCredits = (np->currActNum == 99);
 
-    if (np->currCourseNum != courseNum && np->localIndex >= numPlayersLocal && !inCredits) {
+    if (np->currCourseNum != courseNum && np->localIndex >= gNumPlayersLocal && !inCredits) {
         bool matchingLocal = (np->currCourseNum == gNetworkPlayerLocal->currCourseNum) && (np->currActNum == gNetworkPlayerLocal->currActNum);
 
         if (matchingLocal && gNetworkPlayerLocal->currCourseNum != 0) {

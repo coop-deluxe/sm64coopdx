@@ -3764,7 +3764,7 @@ void zoom_out_if_paused_and_outside(struct GraphNodeCamera *camera) {
 }
 
 void select_mario_cam_mode(void) {
-    for (u8 i = 0; i < numPlayersLocal; i++) {
+    for (u8 i = 0; i < gNumPlayersLocal; i++) {
         sSelectionFlags[i] = CAM_MODE_MARIO_SELECTED;
     }
 }
@@ -3791,7 +3791,7 @@ void create_camera_internal(struct GraphNodeCamera *gc, struct DynamicPool *pool
  */
 void create_camera(struct GraphNodeCamera *gc, struct DynamicPool *pool) {
     if (!gc) { return; }
-    for (u8 i = 0; i < numPlayersLocal; i++) {
+    for (u8 i = 0; i < gNumPlayersLocal; i++) {
         create_camera_internal(gc, pool, i);
     }
 }

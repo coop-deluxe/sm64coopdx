@@ -57,7 +57,7 @@ void bhv_water_level_diamond_loop(void) {
                     o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE:
-                if (marioState->playerIndex < numPlayersLocal && player && obj_check_if_collided_with_object(o, player)) {
+                if (marioState->playerIndex < gNumPlayersLocal && player && obj_check_if_collided_with_object(o, player)) {
                     if (gWDWWaterLevelChanging == 0) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL
                         gWDWWaterLevelChanging = 1;

@@ -55,7 +55,7 @@ void exclamation_box_act_2(void) {
         o->oGraphYOffset = 0.0f;
     }
 
-    u8 isNearest = (nearest_mario_state_to_object(o)->playerIndex < numPlayersLocal);
+    u8 isNearest = (nearest_mario_state_to_object(o)->playerIndex < gNumPlayersLocal);
     if (o->oExclamationBoxForce || isNearest) {
         if (o->oExclamationBoxForce || (isNearest && cur_obj_was_attacked_or_ground_pounded())) {
             if (!o->oExclamationBoxForce) {

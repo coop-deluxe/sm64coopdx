@@ -168,7 +168,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
 
         extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
-        for (u8 i = 1; i < numPlayersLocal; i++) {
+        for (u8 i = 1; i < gNumPlayersLocal; i++) {
             network_player_connected(NPT_LOCAL, i, 0, &DEFAULT_MARIO_PALETTE, "Mario", "0");
         }
         extern u8* gOverrideEeprom;
@@ -277,7 +277,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         // SOFT_ASSERT(false); - Crash?
         return;
     }
-    if (localIndex < numPlayersLocal) { return; } // sending to a local player (splitscreen)
+    if (localIndex < gNumPlayersLocal) { return; } // sending to a local player (splitscreen)
 
     if (gNetworkType == NT_SERVER) {
         if (localIndex >= MAX_PLAYERS) {

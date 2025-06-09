@@ -26,13 +26,11 @@ int gSy = 0;
 int gSw = 2;
 int gSh = 2;
 
-int numPlayersLocal = 4;
+u16 gNumPlayersLocal = 1;
+
+u16 gCurrPlayer = 0;
 
 bool twoPlayerLandscape = true;
-
-int gCurrPlayer = 0;
-
-bool isSafe = false;
 
 static const ScreenSize screenSizes[] = {
     { 2, 2, 1.f },
@@ -46,7 +44,7 @@ float aspect_mask = 1.f;
 static int patchCurState = -1;
 static bool patchAwait = false;
 void patch_mario_state_player_index(u8 index) {
-    if (index != 0 && index < numPlayersLocal) {
+    if (index != 0 && index < gNumPlayersLocal) {
         realPlayerIndex = index; // Make sure we can still know what player it really is
 
         // Swap player indexes, so treat this Mario as the local Mario
@@ -100,7 +98,7 @@ extern struct EnvFxParticle *gEnvFxBuffer;
 
 void set_local_player(u8 index) {
     static int lastIndex = -1;
-    if (index >= numPlayersLocal) { return; } // Only allowed splitscreen players
+    if (index >= gNumPlayersLocal) { return; } // Only allowed splitscreen players
     memcpy(&gHudDisplays[index], &gHudDisplay, sizeof(struct HudDisplay)); // why does lastIndex not work? it's using index now (guess: there's probably more to it than i thought)
     memcpy(&gHudDisplay, &gHudDisplays[index], sizeof(struct HudDisplay));
     set_screen_rendering(index);
@@ -202,7 +200,7 @@ void set_screen_rendering(u16 index) {
     switch (index) {
         case 0: gSx = 0, gSy = 0; break;
         case 1:
-            if (twoPlayerLandscape && numPlayersLocal == 2) {
+            if (twoPlayerLandscape && gNumPlayersLocal == 2) {
                 gSx = 0, gSy = 1;
             } else {
                 gSx = 1, gSy = 0;
@@ -212,7 +210,7 @@ void set_screen_rendering(u16 index) {
         case 3: gSx = 1, gSy = 1; break;
     }
 
-    const ScreenSize *size = &screenSizes[numPlayersLocal - 1];
+    const ScreenSize *size = &screenSizes[gNumPlayersLocal - 1];
     gSw = size->w;
     gSh = size->h;
     aspect_mask = size->a;

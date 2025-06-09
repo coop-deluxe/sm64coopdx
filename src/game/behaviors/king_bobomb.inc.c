@@ -253,7 +253,7 @@ void king_bobomb_act_8(void) {
 #endif
         // If we're not the closet to King-Bombomb,
         // Don't play this cutscene!
-        if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= numPlayersLocal) {
+        if (star != NULL && nearest_mario_state_to_object(o)->playerIndex >= gNumPlayersLocal) {
             star->oStarSpawnExtCutsceneFlags = 0;
         }
     }

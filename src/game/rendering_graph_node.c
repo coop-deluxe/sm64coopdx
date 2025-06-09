@@ -195,7 +195,7 @@ struct ShadowInterp sShadowInterp[MAX_SHADOW_NODES] = { 0 };
 struct ShadowInterp* gShadowInterpCurrent = NULL;
 static u8 sShadowInterpCount = 0;
 
-static struct GraphNodeCamera * sCameraNode = NULL;
+static struct GraphNodeCamera * sCameraNode[POSSIBLE_NUM_PLAYERS] = { 0 };
 
 struct MtxTable {
     Gfx *pos;
@@ -233,7 +233,7 @@ void patch_mtx_before(void) {
     }
 
     if (sBackgroundNode != NULL) {
-        for (u8 i = 0; i < numPlayersLocal; i++) {
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
             set_local_player(i);
             vec3f_copy(sBackgroundNode->prevCameraPos[i], gLakituState.pos);
             vec3f_copy(sBackgroundNode->prevCameraFocus[i], gLakituState.focus);
@@ -252,10 +252,6 @@ void patch_mtx_before(void) {
 void patch_mtx_interpolated(f32 delta) {
     Mtx camTranfInv, prevCamTranfInv;
 
-    if (numPlayersLocal > 1) {
-        delta = 1.f;
-    }
-
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = sPerspectiveNode->fov;
@@ -268,7 +264,7 @@ void patch_mtx_interpolated(f32 delta) {
     }
 
     // Splitscreen patch
-    if (sRootPos[gCurrPlayer] != NULL && numPlayersLocal > 1) {
+    if (sRootPos[gCurrPlayer] != NULL) {
         Vp *vp = viewport_set_scale(SCREEN_WIDTH * gSx, SCREEN_HEIGHT * gSy, (SCREEN_WIDTH / 2) * gSw, (SCREEN_HEIGHT / 2) * gSh);
         gSPViewport(sRootPos[gCurrPlayer], vp);
     }
@@ -346,10 +342,10 @@ void patch_mtx_interpolated(f32 delta) {
 
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
-    bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
+    bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode[gCurrPlayer] && (sCameraNode[gCurrPlayer]->matrixPtr != NULL) && (sCameraNode[gCurrPlayer]->matrixPtrPrev != NULL);
     if (translateCamSpace) {
-        mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
-        mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+        mtxf_inverse(camTranfInv.m, *sCameraNode[gCurrPlayer]->matrixPtr);
+        mtxf_inverse(prevCamTranfInv.m, *sCameraNode[gCurrPlayer]->matrixPtrPrev);
     }
 
     for (s32 i = 0; i < gMtxTblSize; i++) {
@@ -366,15 +362,15 @@ void patch_mtx_interpolated(f32 delta) {
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
         }
         delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
-        if (gMtxTbl[i].usingCamSpace) {
+        if (gMtxTbl[i].usingCamSpace && sCameraNode[gCurrPlayer]) {
             // transform back to camera space, respecting camera interpolation
             Mtx camInterp;
             Vec3f posInterp, focusInterp;
 
             // use camera node's stored information to calculate interpolated camera transform
-            delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
-            delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
-            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+            delta_interpolate_vec3f(posInterp, sCameraNode[gCurrPlayer]->prevPos, sCameraNode[gCurrPlayer]->pos, delta);
+            delta_interpolate_vec3f(focusInterp, sCameraNode[gCurrPlayer]->prevFocus, sCameraNode[gCurrPlayer]->focus, delta);
+            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode[gCurrPlayer]->roll);
             mtxf_to_mtx(&camInterp, camInterp.m);
             mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
         }
@@ -655,7 +651,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
         mtxf_mul(gMatStackPrev[gMatStackIndex + 1], cameraTransform, gMatStackPrev[gMatStackIndex]);
     }
     node->prevTimestamp = gGlobalTimer;
-    sCameraNode = node;
+    sCameraNode[gCurrPlayer] = node;
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
@@ -1746,7 +1742,7 @@ static void geo_clear_interp_variables(void) {
     gShadowInterpCurrent = NULL;
     sShadowInterpCount = 0;
 
-    sCameraNode = NULL;
+    memset(sCameraNode, 0, sizeof(struct GraphNodeCamera *) * POSSIBLE_NUM_PLAYERS);
     gMtxTblSize = 0;
     gCurGraphNodeProcessingObject = NULL;
     gCurGraphNodeMarioState = NULL;
