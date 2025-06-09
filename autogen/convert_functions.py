@@ -128,7 +128,7 @@ override_disallowed_functions = {
     "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture_raw", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
@@ -212,10 +212,6 @@ manual_index_documentation = """
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
    - [get_texture_info](#get_texture_info)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
-   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-   - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
-   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
@@ -367,96 +363,6 @@ Retrieves a texture by name.
 
 ### C Prototype
 `N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-
-Renders a tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
-
-Renders an interpolated tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleW | `number` |
-| prevScaleH | `number` |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 
@@ -848,14 +754,25 @@ def build_vec_types():
     s = gen_comment_header("vec types")
     for type_name, vec_type in VEC_TYPES.items():
 
+        # New
+        s += "void smlua_new_%s(%s src) {\n" % (type_name.lower(), type_name)
+        s += "    struct lua_State *L = gLuaState;\n"
+        s += "    lua_newtable(L);\n"
+        s += "    int tableIndex = lua_gettop(L);\n"
+        for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    lua_pushstring(L, \"%s\");\n" % (lua_field)
+            s += "    lua_push%s(L, src%s);\n" % (vec_type["field_lua_type"], c_field)
+            s += "    lua_settable(L, tableIndex);\n"
+        s += "}\n\n"
+
         # Get
-        s += "static void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, vec_type["field_lua_type"], lua_field)
         s += "}\n\n"
 
         # Push
-        s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         for lua_field, c_field in vec_type.get('optional_fields_mapping', {}).items():
@@ -869,6 +786,9 @@ def build_vec_types():
 def build_param(fid, param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
+
+    if "struct TextureInfo" in ptype and "*" in ptype:
+        return '    struct TextureInfo *texInfo = smlua_to_texture_info(L, %d);\n' % (i)
 
     if ptype in VEC_TYPES:
         if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
@@ -902,8 +822,9 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
+    is_output = param.get('out', False)
 
-    if ptype in VEC_TYPES:
+    if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     else:
         return ''
@@ -997,9 +918,12 @@ def build_function(function, do_extern):
         i += 1
     s += '\n'
 
-    # To allow chaining vector functions calls, return the table corresponding to `dest` parameter
+    # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
     if function['type'] in VECP_TYPES:
-        s += '    lua_settop(L, 1);\n'
+        for i, param in enumerate(function['params']):
+            if param.get('out', False):
+                s += '    lua_settop(L, %d);\n' % (i + 1)
+                break
 
     s += '    return 1;\n}\n'
 
@@ -1099,6 +1023,11 @@ def process_function(fname, line, description):
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
+
+            if param_str.startswith('OUT '):
+                param['out'] = True
+                param_str = param_str[len('OUT'):].strip()
+
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index

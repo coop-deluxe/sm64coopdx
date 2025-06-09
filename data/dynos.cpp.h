@@ -862,6 +862,7 @@ const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
+const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
@@ -896,6 +897,7 @@ void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
 void DynOS_Actor_Override(struct Object* obj, void** aSharedChild);
 void DynOS_Actor_Override_All(void);
+void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode);
 void DynOS_Actor_ModShutdown();
 
 //
@@ -917,6 +919,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
 void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
+bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo);
 void DynOS_Tex_Override_Set(const char* textureName, struct TextureInfo* aOverrideTexInfo);
 void DynOS_Tex_Override_Reset(const char* textureName);
 void DynOS_Tex_ModShutdown();

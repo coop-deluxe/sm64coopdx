@@ -18,6 +18,7 @@
 #include "game/first_person_cam.h"
 #include "course_table.h"
 #include "skybox.h"
+#include "mario.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -238,16 +239,15 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
-    Mtx camTranfInv, prevCamTranfInv;
-
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = sPerspectiveNode->fov;
         }
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
-        f32 near = MIN(sPerspectiveNode->near, gProjectionMaxNearValue);
-        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, get_first_person_enabled() ? 1 : replace_value_if_not_zero(near, gOverrideNear), replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
+        f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
+        f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -301,36 +301,40 @@ void patch_mtx_interpolated(f32 delta) {
 
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
+    Mtx camTranfInv, prevCamTranfInv;
+    Mtx camInterp;
     bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
     if (translateCamSpace) {
+        // compute inverse camera matrix to transform out of camera space later
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
         mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+
+        // use camera node's stored information to calculate interpolated camera transform
+        Vec3f posInterp, focusInterp;
+        delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
+        delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
+        mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+        mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
     for (s32 i = 0; i < gMtxTblSize; i++) {
-        Mtx bufMtx, bufMtxPrev;
-
-        memcpy(bufMtx.m, ((Mtx*) gMtxTbl[i].mtx)->m, sizeof(f32) * 4 * 4);
-        memcpy(bufMtxPrev.m, ((Mtx*) gMtxTbl[i].mtxPrev)->m, sizeof(f32) * 4 * 4);
-
         Gfx *pos = gMtxTbl[i].pos;
+        Mtx *srcMtx = gMtxTbl[i].mtx;
+        Mtx *srcMtxPrev = gMtxTbl[i].mtxPrev;
 
         if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
+            Mtx bufMtx, bufMtxPrev;
+            mtxf_copy(bufMtx.m, srcMtx->m);
+            mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
             mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+            srcMtx = &bufMtx;
+            srcMtxPrev = &bufMtxPrev;
         }
-        delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
+        delta_interpolate_mtx(&gMtxTbl[i].interp, srcMtxPrev, srcMtx, delta);
         if (gMtxTbl[i].usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
-            Mtx camInterp;
-            Vec3f posInterp, focusInterp;
-
-            // use camera node's stored information to calculate interpolated camera transform
-            delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
-            delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
-            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
-            mtxf_to_mtx(&camInterp, camInterp.m);
             mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
         }
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
@@ -497,8 +501,9 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
 
     gProjectionVanillaNearValue = node->near;
     gProjectionVanillaFarValue = node->far;
-    f32 near = MIN(node->near, gProjectionMaxNearValue);
-    guPerspective(mtx, &perspNorm, node->prevFov, aspect, get_first_person_enabled() ? 1 : replace_value_if_not_zero(near, gOverrideNear), replace_value_if_not_zero(node->far, gOverrideFar), 1.0f);
+    f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(node->near, gProjectionMaxNearValue), gOverrideNear);
+    f32 far = replace_value_if_not_zero(node->far, gOverrideFar);
+    guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;
@@ -1227,12 +1232,8 @@ static void geo_sanitize_object_gfx(void) {
 }
 
 static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
-    for (s32 i = 0; i < MAX_PLAYERS; ++i) {
-        struct MarioState *m = &gMarioStates[i];
-        if (m->marioObj == marioObj) {
-            return m->marioBodyState;
-        }
-    }
+    struct MarioState *m = get_mario_state_from_object(marioObj);
+    if (m) { return m->marioBodyState; }
     return NULL;
 }
 
@@ -1258,17 +1259,11 @@ static void geo_process_object(struct Object *node) {
     }
 
     if (node->hookRender) {
-        smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_RENDER, node);
+        smlua_call_event_hooks(HOOK_ON_OBJECT_RENDER, node);
     }
 
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
-        gCurGraphNodeMarioState = NULL;
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == node) {
-                gCurGraphNodeMarioState = &gMarioStates[i];
-                break;
-            }
-        }
+        gCurGraphNodeMarioState = get_mario_state_from_object(node);
         if (gCurGraphNodeMarioState != NULL) {
             gCurGraphNodeMarioState->minimumBoneY = 9999;
         }
@@ -1376,7 +1371,7 @@ static void geo_process_object(struct Object *node) {
         if (node->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node);
             geo_set_animation_globals(&node->header.gfx.animInfo, hasAnimation);
-            if (node->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node);
+            if (node->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node);
             dynos_gfx_swap_animations(node);
         }
         if (obj_is_in_view(&node->header.gfx, gMatStack[gMatStackIndex])) {
@@ -1390,9 +1385,11 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
-                gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
-                if (gCurMarioBodyState) {
-                    gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
+                    gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
+                    if (gCurMarioBodyState) {
+                        gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                    }
                 }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
@@ -1505,7 +1502,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         if (node->objNode->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node->objNode);
             geo_set_animation_globals(&node->objNode->header.gfx.animInfo, hasAnimation);
-            if (node->objNode->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
+            if (node->objNode->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
             dynos_gfx_swap_animations(node->objNode);
         }
 
@@ -1555,7 +1552,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
 
-        if (parent->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
+        if (parent->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1584,7 +1581,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1652,7 +1649,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;

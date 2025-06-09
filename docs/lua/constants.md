@@ -72,6 +72,7 @@
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+    - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
@@ -3439,24 +3440,9 @@
 | HOOK_BEFORE_WARP | 54 |
 | HOOK_ON_INSTANT_WARP | 55 |
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | 56 |
-| HOOK_MAX | 57 |
-
-### [enum LuaActionHookType](#LuaActionHookType)
-| Identifier | Value |
-| :--------- | :---- |
-| ACTION_HOOK_EVERY_FRAME | 0 |
-| ACTION_HOOK_GRAVITY | 1 |
-| ACTION_HOOK_MAX | 2 |
-
-### [enum LuaModMenuElementType](#LuaModMenuElementType)
-| Identifier | Value |
-| :--------- | :---- |
-| MOD_MENU_ELEMENT_TEXT | 0 |
-| MOD_MENU_ELEMENT_BUTTON | 1 |
-| MOD_MENU_ELEMENT_CHECKBOX | 2 |
-| MOD_MENU_ELEMENT_SLIDER | 3 |
-| MOD_MENU_ELEMENT_INPUTBOX | 4 |
-| MOD_MENU_ELEMENT_MAX | 5 |
+| HOOK_ON_ADD_SURFACE | 57 |
+| HOOK_ON_CLEAR_AREAS | 58 |
+| HOOK_MAX | 59 |
 
 [:arrow_up_small:](#)
 

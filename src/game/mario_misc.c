@@ -333,18 +333,38 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
     return gfxHead;
 }
 
+// Calculates if the processing geo is a mirror mario
+static s8 geo_get_processing_mirror_mario_index() {
+    ptrdiff_t ptrDiff = (struct GraphNodeObject *) gCurGraphNodeProcessingObject - gMirrorMario;
+    return (ptrDiff >= 0 && ptrDiff < MAX_PLAYERS) ? ptrDiff : -1;
+}
+
 static u8 geo_get_processing_object_index(void) {
-    // sloppy way to fix mirror marios
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if ((struct GraphNodeObject*)gCurGraphNodeObject == &gMirrorMario[i]) {
-            return i;
-        }
+    s8 index = geo_get_processing_mirror_mario_index();
+    if (index != -1) {
+        return index;
     }
     if (gCurGraphNodeProcessingObject == NULL) { return 0; }
 
     struct NetworkPlayer* np = network_player_from_global_index(gCurGraphNodeProcessingObject->globalPlayerIndex);
-    u8 index = (np == NULL) ? 0 : np->localIndex;
+    index = (np == NULL) ? 0 : np->localIndex;
     return (index >= MAX_PLAYERS) ? 0 : index;
+}
+
+s8 geo_get_processing_mario_index(void) {
+    if (gCurGraphNodeProcessingObject == NULL) { return -1; }
+
+    s8 index = geo_get_processing_mirror_mario_index();
+    if (index != -1) {
+        return index;
+    }
+
+    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
+        return -1;
+    }
+
+    index = gCurGraphNodeProcessingObject->oBehParams - 1;
+    return (index >= MAX_PLAYERS) ? -1 : index;
 }
 
 struct MarioState *geo_get_mario_state(void) {
@@ -705,7 +725,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].scale[0] *= -1.0f;
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
 
-                    smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
+                    smlua_call_event_hooks(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }

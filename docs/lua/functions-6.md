@@ -2679,6 +2679,29 @@ Gets the number of vertices from a display list command if it has the op `G_VTX`
 
 <br />
 
+## [gfx_get_texture](#gfx_get_texture)
+
+### Description
+Gets the texture from a display list command if it has an image related op
+
+### Lua Example
+`local PointerValue = gfx_get_texture(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`u8 *gfx_get_texture(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_get_length](#gfx_get_length)
 
 ### Description
@@ -4261,7 +4284,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 - `boolean`
 
 ### C Prototype
-`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);`
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -5077,6 +5100,29 @@ Gets the current GraphNodeHeldObject
 
 ### C Prototype
 `struct GraphNodeHeldObject* geo_get_current_held_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [texture_to_lua_table](#texture_to_lua_table)
+
+### Description
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+
+### Lua Example
+`texture_to_lua_table(tex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void texture_to_lua_table(const u8 *tex);`
 
 [:arrow_up_small:](#)
 
@@ -7327,7 +7373,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 - None
 
 ### C Prototype
-`void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out);`
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 

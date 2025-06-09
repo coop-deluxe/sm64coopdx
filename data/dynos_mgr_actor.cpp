@@ -1,5 +1,6 @@
 #include <map>
 #include <algorithm>
+#include <unordered_map>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -20,6 +21,8 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
     static Array<Pair<const char*, void *>> sDynosCustomActors;
     return sDynosCustomActors;
 }
+
+static std::map<struct GraphNode *, struct GraphNode *> sModifiedGraphNodes;
 
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
@@ -201,7 +204,7 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
-    if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
+    if (obj && (obj->behavior == bhvMario ||
             obj->behavior == smlua_override_behavior(bhvNormalCap) ||
             obj->behavior == smlua_override_behavior(bhvWingCap) ||
             obj->behavior == smlua_override_behavior(bhvMetalCap) ||
@@ -234,6 +237,46 @@ void DynOS_Actor_Override_All(void) {
     }
 }
 
+static std::unordered_map<s16, size_t> sGraphNodeSizeMap = {
+    { GRAPH_NODE_TYPE_ROOT,                 sizeof(GraphNodeRoot) },
+    { GRAPH_NODE_TYPE_ORTHO_PROJECTION,     sizeof(GraphNodeOrthoProjection) },
+    { GRAPH_NODE_TYPE_PERSPECTIVE,          sizeof(GraphNodePerspective) },
+    { GRAPH_NODE_TYPE_START,                sizeof(GraphNodeStart) },
+    { GRAPH_NODE_TYPE_MASTER_LIST,          sizeof(GraphNodeMasterList) },
+    { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL,      sizeof(GraphNodeLevelOfDetail) },
+    { GRAPH_NODE_TYPE_SWITCH_CASE,          sizeof(GraphNodeSwitchCase) },
+    { GRAPH_NODE_TYPE_CAMERA,               sizeof(GraphNodeCamera) },
+    { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, sizeof(GraphNodeTranslationRotation) },
+    { GRAPH_NODE_TYPE_TRANSLATION,          sizeof(GraphNodeTranslation) },
+    { GRAPH_NODE_TYPE_ROTATION,             sizeof(GraphNodeRotation) },
+    { GRAPH_NODE_TYPE_SCALE,                sizeof(GraphNodeScale) },
+    { GRAPH_NODE_TYPE_OBJECT,               sizeof(GraphNodeObject) },
+    { GRAPH_NODE_TYPE_CULLING_RADIUS,       sizeof(GraphNodeCullingRadius) },
+    { GRAPH_NODE_TYPE_ANIMATED_PART,        sizeof(GraphNodeAnimatedPart) },
+    { GRAPH_NODE_TYPE_BILLBOARD,            sizeof(GraphNodeBillboard) },
+    { GRAPH_NODE_TYPE_DISPLAY_LIST,         sizeof(GraphNodeDisplayList) },
+    { GRAPH_NODE_TYPE_SHADOW,               sizeof(GraphNodeShadow) },
+    { GRAPH_NODE_TYPE_OBJECT_PARENT,        sizeof(GraphNodeObjectParent) },
+    { GRAPH_NODE_TYPE_GENERATED_LIST,       sizeof(GraphNodeGenerated) },
+    { GRAPH_NODE_TYPE_BACKGROUND,           sizeof(GraphNodeBackground) },
+    { GRAPH_NODE_TYPE_HELD_OBJ,             sizeof(GraphNodeHeldObject) },
+};
+
+size_t get_graph_node_size(s16 nodeType) {
+    auto it = sGraphNodeSizeMap.find(nodeType);
+    return it != sGraphNodeSizeMap.end() ? it->second : 0;
+}
+
+void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
+    if (sModifiedGraphNodes.find(aNode) == sModifiedGraphNodes.end()) {
+        size_t size = get_graph_node_size(aNode->type);
+        if (size == 0) { return; } // Unexpected
+        GraphNode *graphNodeCopy = (GraphNode *) malloc(size);
+        memcpy(graphNodeCopy, aNode, size);
+        sModifiedGraphNodes[aNode] = graphNodeCopy;
+    }
+}
+
 void DynOS_Actor_ModShutdown() {
     auto& _DynosCustomActors = DynosCustomActors();
     while (_DynosCustomActors.Count() > 0) {
@@ -255,4 +298,13 @@ void DynOS_Actor_ModShutdown() {
     }
 
     DynOS_Actor_Override_All();
+
+    // Reset modified graph nodes
+    for (auto& node : sModifiedGraphNodes) {
+        size_t size = get_graph_node_size(node.second->type);
+        if (size == 0) { continue; } // Unexpected
+        memcpy(node.first, node.second, size);
+        free(node.second);
+    }
+    sModifiedGraphNodes.clear();
 }

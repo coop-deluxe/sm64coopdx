@@ -15,10 +15,6 @@
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
    - [get_texture_info](#get_texture_info)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
-   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-   - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
-   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
@@ -51,7 +47,6 @@
    - [spawn_wind_particles](functions-2.md#spawn_wind_particles)
    - [check_if_moving_over_floor](functions-2.md#check_if_moving_over_floor)
    - [arc_to_goal_pos](functions-2.md#arc_to_goal_pos)
-   - [vec3f_copy_2](functions-2.md#vec3f_copy_2)
    - [tox_box_move](functions-2.md#tox_box_move)
    - [play_penguin_walking_sound](functions-2.md#play_penguin_walking_sound)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
@@ -654,6 +649,10 @@
    - [select_mario_cam_mode](functions-3.md#select_mario_cam_mode)
    - [object_pos_to_vec3f](functions-3.md#object_pos_to_vec3f)
    - [vec3f_to_object_pos](functions-3.md#vec3f_to_object_pos)
+   - [object_face_angle_to_vec3s](functions-3.md#object_face_angle_to_vec3s)
+   - [vec3s_to_object_face_angle](functions-3.md#vec3s_to_object_face_angle)
+   - [object_move_angle_to_vec3s](functions-3.md#object_move_angle_to_vec3s)
+   - [vec3s_to_object_move_angle](functions-3.md#vec3s_to_object_move_angle)
    - [cam_select_alt_mode](functions-3.md#cam_select_alt_mode)
    - [set_cam_angle](functions-3.md#set_cam_angle)
    - [set_handheld_shake](functions-3.md#set_handheld_shake)
@@ -782,6 +781,10 @@
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
+   - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
+   - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
+   - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
+   - [djui_hud_render_texture_tile_interpolated](functions-3.md#djui_hud_render_texture_tile_interpolated)
    - [djui_hud_render_rect](functions-3.md#djui_hud_render_rect)
    - [djui_hud_render_rect_interpolated](functions-3.md#djui_hud_render_rect_interpolated)
    - [get_current_fov](functions-3.md#get_current_fov)
@@ -1872,6 +1875,7 @@
    - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-6.md#gfx_get_texture)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
@@ -1986,6 +1990,7 @@
    - [geo_get_current_perspective](functions-6.md#geo_get_current_perspective)
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
+   - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
 
 <br />
 
@@ -2258,96 +2263,6 @@ Retrieves a texture by name.
 
 ### C Prototype
 `N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-
-Renders a tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
-
-Renders an interpolated tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleW | `number` |
-| prevScaleH | `number` |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 

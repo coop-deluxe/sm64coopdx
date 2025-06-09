@@ -3,7 +3,7 @@
 /* |description|
 Sets the components of the 3D {{desc}} vector `v` to 0
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_zero(Vec3{{suffix}} v) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_zero(OUT Vec3{{suffix}} v) {
     memset(v, 0, sizeof(Vec3{{suffix}}));
     return v;
 }
@@ -11,7 +11,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_zero(Vec3{{suffix}} v) {
 /* |description|
 Copies the contents of a 3D {{desc}} vector (`src`) into another 3D {{desc}} vector (`dest`)
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_copy(Vec3{{suffix}} dest, Vec3{{suffix}} src) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_copy(OUT Vec3{{suffix}} dest, Vec3{{suffix}} src) {
     dest[0] = src[0];
     dest[1] = src[1];
     dest[2] = src[2];
@@ -21,7 +21,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_copy(Vec3{{suffix}} dest, Vec3
 /* |description|
 Sets the values of the 3D {{desc}} vector `dest` to the given x, y, and z values
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_set(Vec3{{suffix}} dest, {{type}} x, {{type}} y, {{type}} z) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_set(OUT Vec3{{suffix}} dest, {{type}} x, {{type}} y, {{type}} z) {
     dest[0] = x;
     dest[1] = y;
     dest[2] = z;
@@ -31,7 +31,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_set(Vec3{{suffix}} dest, {{typ
 /* |description|
 Adds the components of the 3D {{desc}} vector `a` to `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_add(Vec3{{suffix}} dest, Vec3{{suffix}} a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_add(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a) {
     dest[0] += a[0];
     dest[1] += a[1];
     dest[2] += a[2];
@@ -41,7 +41,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_add(Vec3{{suffix}} dest, Vec3{
 /* |description|
 Adds the components of two 3D {{desc}} vectors `a` and `b` and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sum(Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sum(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
     dest[0] = a[0] + b[0];
     dest[1] = a[1] + b[1];
     dest[2] = a[2] + b[2];
@@ -51,7 +51,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sum(Vec3{{suffix}} dest, Vec3{
 /* |description|
 Subtracts the components of the 3D {{desc}} vector `a` from `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sub(Vec3{{suffix}} dest, Vec3{{suffix}} a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sub(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a) {
     dest[0] -= a[0];
     dest[1] -= a[1];
     dest[2] -= a[2];
@@ -61,7 +61,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_sub(Vec3{{suffix}} dest, Vec3{
 /* |description|
 Subtracts the components of the 3D {{desc}} vector `b` from the components of `a` and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_dif(Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_dif(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
     dest[0] = a[0] - b[0];
     dest[1] = a[1] - b[1];
     dest[2] = a[2] - b[2];
@@ -71,7 +71,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_dif(Vec3{{suffix}} dest, Vec3{
 /* |description|
 Multiplies each component of the 3D {{desc}} vector `dest` by the scalar value `a`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mul(Vec3{{suffix}} dest, f32 a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mul(OUT Vec3{{suffix}} dest, f32 a) {
     dest[0] *= a;
     dest[1] *= a;
     dest[2] *= a;
@@ -81,7 +81,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mul(Vec3{{suffix}} dest, f32 a
 /* |description|
 Multiplies the components of the 3D {{desc}} vector `dest` with the components of `a`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mult(Vec3{{suffix}} dest, Vec3{{suffix}} a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mult(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a) {
     dest[0] *= a[0];
     dest[1] *= a[1];
     dest[2] *= a[2];
@@ -91,7 +91,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_mult(Vec3{{suffix}} dest, Vec3
 /* |description|
 Multiplies the components of two 3D {{desc}} vectors `a` and `b` and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_prod(Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_prod(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
     dest[0] = a[0] * b[0];
     dest[1] = a[1] * b[1];
     dest[2] = a[2] * b[2];
@@ -101,7 +101,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_prod(Vec3{{suffix}} dest, Vec3
 /* |description|
 Divides each component of the 3D {{desc}} vector `dest` by the scalar value `a`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_div(Vec3{{suffix}} dest, f32 a) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_div(OUT Vec3{{suffix}} dest, f32 a) {
     if (a == 0) { return dest; }
     dest[0] /= a;
     dest[1] /= a;
@@ -119,7 +119,7 @@ INLINE OPTIMIZE_O3 f32 vec3{{suffix}}_length(Vec3{{suffix}} a) {
 /* |description|
 Normalizes the 3D {{desc}} vector `v` so that its length (magnitude) becomes 1, while retaining its direction
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_normalize(Vec3{{suffix}} v) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_normalize(OUT Vec3{{suffix}} v) {
     f32 mag = vec3{{suffix}}_length(v);
     vec3{{suffix}}_div(v, mag);
     return v;
@@ -128,7 +128,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_normalize(Vec3{{suffix}} v) {
 /* |description|
 Sets the length (magnitude) of 3D {{desc}} vector `v`, while retaining its direction
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_set_magnitude(Vec3{{suffix}} v, f32 mag) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_set_magnitude(OUT Vec3{{suffix}} v, f32 mag) {
     vec3{{suffix}}_normalize(v);
     vec3{{suffix}}_mul(v, mag);
     return v;
@@ -144,7 +144,7 @@ INLINE OPTIMIZE_O3 f32 vec3{{suffix}}_dot(Vec3{{suffix}} a, Vec3{{suffix}} b) {
 /* |description|
 Computes the cross product of two 3D {{desc}} vectors `a` and `b` and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_cross(Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_cross(OUT Vec3{{suffix}} dest, Vec3{{suffix}} a, Vec3{{suffix}} b) {
     dest[0] = a[1] * b[2] - b[1] * a[2];
     dest[1] = a[2] * b[0] - b[2] * a[0];
     dest[2] = a[0] * b[1] - b[0] * a[1];
@@ -154,7 +154,7 @@ INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_cross(Vec3{{suffix}} dest, Vec
 /* |description|
 Takes two 3D {{desc}} vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_combine(Vec3{{suffix}} dest, Vec3{{suffix}} vecA, Vec3{{suffix}} vecB, f32 sclA, f32 sclB) {
+INLINE OPTIMIZE_O3 Vec3{{suffix}}p vec3{{suffix}}_combine(OUT Vec3{{suffix}} dest, Vec3{{suffix}} vecA, Vec3{{suffix}} vecB, f32 sclA, f32 sclB) {
     dest[0] = vecA[0] * sclA + vecB[0] * sclB;
     dest[1] = vecA[1] * sclA + vecB[1] * sclB;
     dest[2] = vecA[2] * sclA + vecB[2] * sclB;

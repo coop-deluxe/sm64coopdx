@@ -21,8 +21,6 @@ void spawn_wind_particles(s16 pitch, s16 yaw);
 s32 check_if_moving_over_floor(f32 a0, f32 a1);
 /* |description|Calculates the time it takes for the current object to follow an arc from `pos` to `goal`|descriptionEnd| */
 s32 arc_to_goal_pos(Vec3f goal, Vec3f pos, f32 yVel, f32 gravity);
-/* |description|Duplicate of vec3f_copy except without bad return|descriptionEnd| */
-void vec3f_copy_2(Vec3f dest, Vec3f src);
 /* |description|Moves Tox Box|descriptionEnd| */
 void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll);
 /* |description|Plays the penguin walking sound|descriptionEnd| */

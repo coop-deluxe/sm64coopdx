@@ -39,6 +39,7 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild);
 void dynos_add_actor_custom(s32 modIndex, const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, const char **token);
+void dynos_actor_register_modified_graph_node(struct GraphNode *node);
 
 // -- collisions -- //
 void dynos_add_collision(const char *filePath, const char* collisionName);
@@ -47,6 +48,7 @@ Collision* dynos_collision_get(const char* collisionName);
 // -- textures -- //
 void dynos_add_texture(const char *filePath, const char* textureName);
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo);
+bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo);
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo);
 void dynos_texture_override_reset(const char* textureName);
 

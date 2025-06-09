@@ -344,7 +344,7 @@ s32 act_top_of_pole(struct MarioState *m) {
 /* |description|
 Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
 |descriptionEnd| */
-s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
+s32 perform_hanging_step(struct MarioState *m, OUT Vec3f nextPos) {
     if (!m) { return 0; }
     UNUSED s32 unused;
     struct Surface *ceil;
@@ -353,8 +353,10 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 ceilOffset;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, &returnValue)) return returnValue;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, 0, &stepResultOverride)) {
+        return stepResultOverride;
+    }
 
     struct WallCollisionData wcd = { 0 };
     resolve_and_return_wall_collisions_data(nextPos, 50.0f, 50.0f, &wcd);
@@ -1170,9 +1172,9 @@ Checks if Mario should cancel his current automatic action, primarily by detecti
 s32 check_common_automatic_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] < m->waterLevel - 100) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             return set_water_plunge_action(m);
         }
     }

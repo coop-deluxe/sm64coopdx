@@ -123,6 +123,10 @@ bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenI
     return DynOS_Actor_GetModIndexAndToken(graphNode, tokenIndex, modIndex, token);
 }
 
+void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
+    DynOS_Actor_RegisterModifiedGraphNode(node);
+}
+
 // -- collisions -- //
 
 void dynos_add_collision(const char *filePath, const char* collisionName) {
@@ -142,6 +146,10 @@ void dynos_add_texture(const char *filePath, const char* textureName) {
 
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {
     return DynOS_Tex_Get(textureName, outTextureInfo);
+}
+
+bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo) {
+    return DynOS_Tex_GetFromData(tex, outTextureInfo);
 }
 
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo) {

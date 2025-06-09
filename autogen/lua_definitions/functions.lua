@@ -109,13 +109,6 @@ function arc_to_goal_pos(goal, pos, yVel, gravity)
     -- ...
 end
 
---- @param dest Vec3f
---- @param src Vec3f
---- Duplicate of vec3f_copy except without bad return
-function vec3f_copy_2(dest, src)
-    -- ...
-end
-
 --- @param forwardVel number
 --- @param a1 number
 --- @param deltaPitch integer
@@ -3144,6 +3137,34 @@ function vec3f_to_object_pos(o, src)
     -- ...
 end
 
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's face angle to a `Vec3s` format
+function object_face_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's face angle internal format
+function vec3s_to_object_face_angle(o, src)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's move angle to a `Vec3s` format
+function object_move_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's move angle internal format
+function vec3s_to_object_move_angle(o, src)
+    -- ...
+end
+
 --- @param angle integer
 --- @return integer
 --- Selects an alternate camera mode based on the given angle. Used to toggle between predefined camera modes dynamically
@@ -3979,6 +4000,62 @@ end
 --- @param scale number
 --- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders a DJUI HUD texture onto the screen
+function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders a DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders an interpolated DJUI HUD texture onto the screen
+function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders an interpolated DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
 
@@ -6497,7 +6574,7 @@ end
 
 --- @param mtx Mat4
 --- @param b Vec3s
---- @return Pointer_integer
+--- @return Vec3s
 --- Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
 function mtxf_mul_vec3s(mtx, b)
     -- ...
@@ -6583,7 +6660,7 @@ end
 
 --- @param dest Mat4
 --- @param b Vec3f
---- Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
+--- Sets the 4x4 floating-point matrix `dest` to the translation matrix decribed by the 3D floating-point vector `b`. This matrix is used to shift any transformed point by `b`
 function mtxf_translate(dest, b)
     -- ...
 end
@@ -10307,6 +10384,13 @@ function gfx_get_vertex_count(cmd)
     -- ...
 end
 
+--- @param cmd Pointer_Gfx
+--- @return Pointer_integer
+--- Gets the texture from a display list command if it has an image related op
+function gfx_get_texture(cmd)
+    -- ...
+end
+
 --- @param gfx Pointer_Gfx
 --- @return integer
 --- Gets the max length of a display list
@@ -11011,6 +11095,12 @@ end
 --- @return GraphNodeHeldObject
 --- Gets the current GraphNodeHeldObject
 function geo_get_current_held_object()
+    -- ...
+end
+
+--- @param tex Pointer_integer
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+function texture_to_lua_table(tex)
     -- ...
 end
 

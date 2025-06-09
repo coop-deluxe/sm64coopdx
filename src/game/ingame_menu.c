@@ -1160,14 +1160,15 @@ static u8 sHookString[255];
 static bool sOverrideDialogString = false;
 void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
 bool handle_dialog_hook(s16 dialogId) {
-    bool open = false;
-    const char *str = smlua_call_event_hooks_int_ret_bool_and_string(HOOK_ON_DIALOG, dialogId, &open);
-    if (!open) {
+    bool openDialogBox = true;
+    const char *dialogTextOverride = NULL;
+    smlua_call_event_hooks(HOOK_ON_DIALOG, dialogId, &openDialogBox, &dialogTextOverride);
+    if (!openDialogBox) {
         if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
         return false;
     }
-    sOverrideDialogString = str != NULL;
-    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, str, false); }
+    sOverrideDialogString = dialogTextOverride != NULL;
+    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, dialogTextOverride, false); }
     return true;
 }
 
@@ -3107,7 +3108,7 @@ s16 render_pause_courses_and_castle(void) {
                 {
                     bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, (gDialogLineNum == 3), &allowExit);
+                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, gDialogLineNum == 3, &allowExit);
                     }
                     if (allowExit) {
                         level_set_transition(0, NULL);

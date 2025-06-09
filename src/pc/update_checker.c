@@ -25,15 +25,19 @@ void show_update_popup(void) {
 }
 
 #if !(defined(_WIN32) || defined(_WIN64))
-size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
+typedef struct { char *str; size_t size; } Buffer;
+size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
     size_t realsize = size * nmemb;
+    Buffer *buf = (Buffer *) userdata;
 
     // allocate memory for the received data and copy it into the buffer
-    *data = realloc(*data, realsize + 1);
-    if (*data == NULL) { return 0; }
+    char *data = realloc(buf->str, buf->size + realsize + 1);
+    if (data == NULL) { return 0; }
 
-    memcpy(*data, ptr, realsize);
-    (*data)[realsize] = '\0'; // null-terminate the string
+    memcpy(&data[buf->size], ptr, realsize);
+    buf->size += realsize;
+    buf->str = data;
+    buf->str[buf->size] = '\0'; // null-terminate the string
 
     return realsize;
 }
@@ -92,7 +96,7 @@ void get_version_remote(void) {
     InternetCloseHandle(hUrl);
     InternetCloseHandle(hInternet);
 #else
-    char* buffer = NULL;
+    Buffer data = { .str = NULL, .size = 0 };
 
     // initialize libcurl
     CURL *curl = curl_easy_init();
@@ -103,7 +107,7 @@ void get_version_remote(void) {
 
     // set properties
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 3); // only allow 3 seconds
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 3);
     curl_easy_setopt(curl, CURLOPT_URL, URL);
@@ -115,15 +119,15 @@ void get_version_remote(void) {
         curl_easy_cleanup(curl);
         return;
     }
-
-    if (!buffer) { return; }
-
-    snprintf(sRemoteVersion, 8, "%s", buffer);
+    char* buffer = data.str;
 
     // Clean up
     curl_easy_cleanup(curl);
 #endif
     parse_version(buffer);
+#if !(defined(_WIN32) || defined(_WIN64))
+    free(buffer);
+#endif
 }
 
 void check_for_updates(void) {
