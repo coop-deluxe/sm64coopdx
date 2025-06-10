@@ -35,9 +35,9 @@ struct EnvFxParticle {
 extern s8 gEnvFxMode;
 extern UNUSED s32 D_80330644;
 
-extern struct EnvFxParticle *gEnvFxBuffer;
-extern Vec3i gSnowCylinderLastPos;
-extern s16 gSnowParticleCount;
+extern struct EnvFxParticle *gEnvFxBuffer[];
+extern Vec3i gSnowCylinderLastPos[];
+extern s16 gSnowParticleCount[];
 
 Gfx *envfx_update_particles(s32 snowMode, Vec3s marioPos, Vec3s camTo, Vec3s camFrom);
 void orbit_from_positions(Vec3s from, Vec3s to, s16 *radius, s16 *pitch, s16 *yaw);

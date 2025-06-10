@@ -93,9 +93,6 @@ void unpatch_mario_state_player_index() {
     }
 }
 
-extern struct EnvFxParticle *gEnvFxBuffers[];
-extern struct EnvFxParticle *gEnvFxBuffer;
-
 void set_local_player(u8 index) {
     static int lastIndex = -1;
     if (index >= gNumPlayersLocal) { return; } // Only allowed splitscreen players
@@ -103,8 +100,6 @@ void set_local_player(u8 index) {
     memcpy(&gHudDisplay, &gHudDisplays[index], sizeof(struct HudDisplay));
     set_screen_rendering(index);
     swap_lakitu_state(index);
-    // gEnvFxBuffers[lastIndex] = gEnvFxBuffer;
-    // gEnvFxBuffer = gEnvFxBuffers[index];
     lastIndex = index;
 }
 

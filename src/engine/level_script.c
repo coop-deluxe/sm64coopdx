@@ -369,7 +369,7 @@ static void level_reset_globals(void) {
     }
 
     // reset envfx
-    memset(&gEnvFxBuffer, 0, sizeof(struct EnvFxParticle *));
+    memset(gEnvFxBuffer, 0, sizeof(struct EnvFxParticle *) * POSSIBLE_NUM_PLAYERS);
     gEnvFxMode = ENVFX_MODE_NONE;
 
     // clear area's level pool pointers
