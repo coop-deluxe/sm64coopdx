@@ -195,7 +195,8 @@ struct ShadowInterp sShadowInterp[MAX_SHADOW_NODES] = { 0 };
 struct ShadowInterp* gShadowInterpCurrent = NULL;
 static u8 sShadowInterpCount = 0;
 
-static struct GraphNodeCamera * sCameraNode[POSSIBLE_NUM_PLAYERS] = { 0 };
+static struct GraphNodeCamera * sCameraNode = NULL;
+static struct GraphNodeCamera sCameraNodes[POSSIBLE_NUM_PLAYERS] = { 0 };
 
 struct MtxTable {
     Gfx *pos;
@@ -208,7 +209,7 @@ struct MtxTable {
 #define MTX_TABLE_SIZE 6400
 struct MtxTable gMtxTblArray[POSSIBLE_NUM_PLAYERS][MTX_TABLE_SIZE];
 struct MtxTable *gMtxTbl = &gMtxTblArray[0][0];
-s32 gMtxTblSize = 0;
+s32 gMtxTblSize[POSSIBLE_NUM_PLAYERS] = { 0 };
 
 struct Object* gCurGraphNodeProcessingObject = NULL;
 struct MarioState* gCurGraphNodeMarioState = NULL;
@@ -218,7 +219,7 @@ f32 gOverrideNear = 0;
 f32 gOverrideFar = 0;
 
 void patch_mtx_before(void) {
-    gMtxTblSize = 0;
+    memset(&gMtxTblSize, 0, sizeof(s32) * POSSIBLE_NUM_PLAYERS);
 
     if (sPerspectiveNode != NULL) {
         sPerspectiveNode->prevFov = sPerspectiveNode->fov;
@@ -250,8 +251,6 @@ void patch_mtx_before(void) {
 #include "pc/lua/utils/smlua_gfx_utils.h"
 
 void patch_mtx_interpolated(f32 delta) {
-    Mtx camTranfInv, prevCamTranfInv;
-
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = sPerspectiveNode->fov;
@@ -340,38 +339,45 @@ void patch_mtx_interpolated(f32 delta) {
     }
     gCurGraphNodeObject = savedObj;
 
+    sCameraNode = &sCameraNodes[gCurrPlayer];
+    gMtxTbl = &gMtxTblArray[gCurrPlayer][0];
+
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
-    bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode[gCurrPlayer] && (sCameraNode[gCurrPlayer]->matrixPtr != NULL) && (sCameraNode[gCurrPlayer]->matrixPtrPrev != NULL);
+    Mtx camTranfInv, prevCamTranfInv;
+    Mtx camInterp;
+    bool translateCamSpace = (gMtxTblSize[gCurrPlayer] > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
     if (translateCamSpace) {
-        mtxf_inverse(camTranfInv.m, *sCameraNode[gCurrPlayer]->matrixPtr);
-        mtxf_inverse(prevCamTranfInv.m, *sCameraNode[gCurrPlayer]->matrixPtrPrev);
+        // compute inverse camera matrix to transform out of camera space later
+        mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
+        mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+
+        // use camera node's stored information to calculate interpolated camera transform
+        Vec3f posInterp, focusInterp;
+        delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
+        delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
+        mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+        mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
-    for (s32 i = 0; i < gMtxTblSize; i++) {
-        Mtx bufMtx, bufMtxPrev;
-
-        memcpy(bufMtx.m, ((Mtx*) gMtxTbl[i].mtx)->m, sizeof(f32) * 4 * 4);
-        memcpy(bufMtxPrev.m, ((Mtx*) gMtxTbl[i].mtxPrev)->m, sizeof(f32) * 4 * 4);
-
+    for (s32 i = 0; i < gMtxTblSize[gCurrPlayer]; i++) {
         Gfx *pos = gMtxTbl[i].pos;
+        Mtx *srcMtx = gMtxTbl[i].mtx;
+        Mtx *srcMtxPrev = gMtxTbl[i].mtxPrev;
 
         if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
+            Mtx bufMtx, bufMtxPrev;
+            mtxf_copy(bufMtx.m, srcMtx->m);
+            mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
             mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+            srcMtx = &bufMtx;
+            srcMtxPrev = &bufMtxPrev;
         }
-        delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
-        if (gMtxTbl[i].usingCamSpace && sCameraNode[gCurrPlayer]) {
+        delta_interpolate_mtx(&gMtxTbl[i].interp, srcMtxPrev, srcMtx, delta);
+        if (gMtxTbl[i].usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
-            Mtx camInterp;
-            Vec3f posInterp, focusInterp;
-
-            // use camera node's stored information to calculate interpolated camera transform
-            delta_interpolate_vec3f(posInterp, sCameraNode[gCurrPlayer]->prevPos, sCameraNode[gCurrPlayer]->pos, delta);
-            delta_interpolate_vec3f(focusInterp, sCameraNode[gCurrPlayer]->prevFocus, sCameraNode[gCurrPlayer]->focus, delta);
-            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode[gCurrPlayer]->roll);
-            mtxf_to_mtx(&camInterp, camInterp.m);
             mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
         }
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
@@ -433,12 +439,12 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
                 detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
-                if ((u32) gMtxTblSize < MTX_TABLE_SIZE) {
-                    gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
-                    gMtxTbl[gMtxTblSize].mtx = currList->transform;
-                    gMtxTbl[gMtxTblSize].mtxPrev = currList->transformPrev;
-                    gMtxTbl[gMtxTblSize].displayList = currList->displayList;
-                    gMtxTbl[gMtxTblSize++].usingCamSpace = currList->usingCamSpace;
+                if ((u32) gMtxTblSize[gCurrPlayer] < MTX_TABLE_SIZE) {
+                    gMtxTbl[gMtxTblSize[gCurrPlayer]].pos = gDisplayListHead;
+                    gMtxTbl[gMtxTblSize[gCurrPlayer]].mtx = currList->transform;
+                    gMtxTbl[gMtxTblSize[gCurrPlayer]].mtxPrev = currList->transformPrev;
+                    gMtxTbl[gMtxTblSize[gCurrPlayer]].displayList = currList->displayList;
+                    gMtxTbl[gMtxTblSize[gCurrPlayer]++].usingCamSpace = currList->usingCamSpace;
                 }
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -605,26 +611,22 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     vec3f_copy(node->prevPos, node->pos);
     vec3f_copy(node->prevFocus, node->focus);
 
-    if (gCurrentArea && gCurrentArea->cameras[gCurrPlayer]) {
-        // struct Camera *c = gCurrentArea->cameras[gCurrPlayer];
-        vec3f_copy(node->prevPos, gLakituState.pos);
-        vec3f_copy(node->pos, gLakituState.pos);
-        vec3f_copy(node->prevFocus, gLakituState.focus);
-        vec3f_copy(node->focus, gLakituState.focus);
+    if (memcmp(sCameraNodes[gCurrPlayer].pos, gVec3fZero, sizeof(Vec3f)) != 0 && memcmp(sCameraNodes[gCurrPlayer].focus, gVec3fZero, sizeof(Vec3f)) != 0) {
+        vec3f_copy(sCameraNodes[gCurrPlayer].pos, node->pos);
+        vec3f_copy(sCameraNodes[gCurrPlayer].focus, node->focus);
     }
+
+    vec3f_copy(node->prevPos, sCameraNodes[gCurrPlayer].pos);
+    vec3f_copy(node->prevFocus, sCameraNodes[gCurrPlayer].focus);
 
     if (node->fnNode.func != NULL) {
         node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
     }
     mtxf_rotate_xy(rollMtx->m, node->rollScreen);
 
-    if (gCurrentArea && gCurrentArea->cameras[gCurrPlayer]) {
-        // struct Camera *c = gCurrentArea->cameras[gCurrPlayer];
-        vec3f_copy(node->prevPos, gLakituState.pos);
-        vec3f_copy(node->pos, gLakituState.pos);
-        vec3f_copy(node->prevFocus, gLakituState.focus);
-        vec3f_copy(node->focus, gLakituState.focus);
-    }
+    // forces camera interpolation off but fixes graphical bugs
+    vec3f_copy(node->prevPos, node->pos);
+    vec3f_copy(node->prevFocus, node->focus);
 
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(rollMtx), G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 
@@ -651,7 +653,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
         mtxf_mul(gMatStackPrev[gMatStackIndex + 1], cameraTransform, gMatStackPrev[gMatStackIndex]);
     }
     node->prevTimestamp = gGlobalTimer;
-    sCameraNode[gCurrPlayer] = node;
+    sCameraNode = node;
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
@@ -666,6 +668,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
         sUsingCamSpace = TRUE;
         node->matrixPtr = &gMatStack[gMatStackIndex];
         node->matrixPtrPrev = &gMatStackPrev[gMatStackIndex];
+        memcpy(&sCameraNodes[gCurrPlayer], node, sizeof(struct GraphNodeCamera));
         geo_process_node_and_siblings(node->fnNode.node.children);
         gCurGraphNodeCamera = NULL;
         sUsingCamSpace = FALSE;
@@ -1742,8 +1745,8 @@ static void geo_clear_interp_variables(void) {
     gShadowInterpCurrent = NULL;
     sShadowInterpCount = 0;
 
-    memset(sCameraNode, 0, sizeof(struct GraphNodeCamera *) * POSSIBLE_NUM_PLAYERS);
-    gMtxTblSize = 0;
+    gMtxTbl = &gMtxTblArray[gCurrPlayer][0];
+    memset(&gMtxTblSize, 0, sizeof(s32) * POSSIBLE_NUM_PLAYERS);
     gCurGraphNodeProcessingObject = NULL;
     gCurGraphNodeMarioState = NULL;
 }

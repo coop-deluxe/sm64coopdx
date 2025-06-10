@@ -609,7 +609,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
     f32 oo;
     f32 height;
     struct Surface *floor = NULL;
-    s32 interpolate;
+    s32 interpolate = gInterpolatingSurfaces;
 
     // set pheight to lowest value
     if (gLevelValues.fixCollisionBugs) {
@@ -621,7 +621,6 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         surf = surfaceNode->surface;
         if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
-        interpolate = gInterpolatingSurfaces;
 
         if (gCheckingSurfaceCollisionsForObject != NULL) {
             if (surf->object != gCheckingSurfaceCollisionsForObject) {
@@ -637,7 +636,6 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
             f32 diff = (surf->prevVertex1[0] - x1) * (surf->prevVertex1[0] - x1);
             diff += (surf->prevVertex1[1] - surf->vertex1[1]) * (surf->prevVertex1[1] - surf->vertex1[1]);
             diff += (surf->prevVertex1[2] - z1) * (surf->prevVertex1[2] - z1);
-            //printf("%f\n", sqrtf(diff));
             if (diff > 10000) {
                 interpolate = FALSE;
             } else {

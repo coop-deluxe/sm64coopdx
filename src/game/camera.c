@@ -205,7 +205,7 @@ extern struct CutsceneSplinePoint sCurCreditsSplineFocus[32];
 extern s16 sCutsceneSplineSegment;
 extern f32 sCutsceneSplineSegmentProgress;
 extern s16 unused8033B6E8;
-extern s16 sCutsceneShot;
+extern s16 sCutsceneShot[];
 extern s16 gCutsceneTimer;
 extern struct CutsceneVariable sCutsceneVars[10];
 extern s32 gObjCutsceneDone;
@@ -309,7 +309,7 @@ s16 sCutsceneDialogID;
 /**
  * The currently playing shot in the cutscene.
  */
-s16 sCutsceneShot;
+s16 sCutsceneShot[POSSIBLE_NUM_PLAYERS];
 /**
  * The current frame of the cutscene shot.
  */
@@ -498,6 +498,7 @@ void swap_lakitu_state(u8 index) {
     // Load
     memcpy(&gLakituState, &gLakituStates[index], sizeof(struct LakituState));
     gMarioState = &gMarioStates[index];
+    gMarioObject = gMarioState->marioObj;
     sMarioCamState = &gPlayerCameraState[index];
     gPlayer1Controller = &gControllers[index]; // camera needs this for inputs
     if (gCurrentArea) {
@@ -3455,7 +3456,7 @@ void reset_camera(struct Camera *c) {
     s2ndRotateFlags = 0;
     sStatusFlags[gCurrPlayer] = 0;
     gCutsceneTimer = 0;
-    sCutsceneShot = 0;
+    sCutsceneShot[gCurrPlayer] = 0;
     gCutsceneObjSpawn = 0;
     gObjCutsceneDone = FALSE;
     gCutsceneFocus = NULL;
@@ -11849,8 +11850,8 @@ void play_cutscene(struct Camera *c) {
 
 #define CUTSCENE(id, cutscene)                                                                            \
     case id:                                                                                              \
-        cutsceneDuration = cutscene[sCutsceneShot].duration;                                              \
-        cutscene[sCutsceneShot].shot(c);                                                                  \
+        cutsceneDuration = cutscene[sCutsceneShot[gCurrPlayer]].duration;                                              \
+        cutscene[sCutsceneShot[gCurrPlayer]].shot(c);                                                                  \
         break;
 
     switch (c->cutscene) {
@@ -11913,12 +11914,12 @@ void play_cutscene(struct Camera *c) {
         //! Because gCutsceneTimer is often set to 0x7FFF (CUTSCENE_LOOP), this conditional can only
         //! check for == due to overflow
         if (gCutsceneTimer == cutsceneDuration) {
-            sCutsceneShot += 1;
+            sCutsceneShot[gCurrPlayer] += 1;
             gCutsceneTimer = 0;
         }
     } else {
         sMarioCamState->cameraEvent = 0;
-        sCutsceneShot = 0;
+        sCutsceneShot[gCurrPlayer] = 0;
         gCutsceneTimer = 0;
     }
 

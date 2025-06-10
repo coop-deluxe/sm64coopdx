@@ -26,7 +26,7 @@ int gSy = 0;
 int gSw = 2;
 int gSh = 2;
 
-u16 gNumPlayersLocal = 1;
+u16 gNumPlayersLocal = 2;
 
 u16 gCurrPlayer = 0;
 
