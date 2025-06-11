@@ -575,7 +575,7 @@ void init_controllers(void) {
         }
     }
 
-    for (u8 i = 0; i < gNumPlayersLocal; i++) {
+    for (u8 i = 0; i < POSSIBLE_NUM_PLAYERS; i++) {
         gControllers[i].controllerData = &gControllerPads[i];
     }
 

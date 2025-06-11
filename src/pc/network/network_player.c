@@ -18,6 +18,7 @@
 #include "game/mario.h"
 #include "pc/djui/djui_unicode.h"
 #include "game/local_multiplayer.h"
+#include "pc/controller/controller_system.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -207,6 +208,7 @@ void network_player_update(void) {
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected && i > 0) { continue; }
+        if (i < gNumPlayersLocal) { continue; }
         float elapsed = (clock_elapsed() - np->lastPingSent);
         if (elapsed > NETWORK_PLAYER_PING_TIMEOUT) {
             network_send_ping(np);
@@ -218,6 +220,7 @@ void network_player_update(void) {
         for (s32 i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer *np = &gNetworkPlayers[i];
             if (!np->connected && i > 0) { continue; }
+            if (i < gNumPlayersLocal) { continue; }
 
             float elapsed = (clock_elapsed() - np->lastReceived);
 #ifdef DEVELOPMENT
@@ -352,7 +355,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     }
 
     // display connected popup
-    if (!gCurrentlyJoining && type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL)) {
+    if (!gCurrentlyJoining && type != NPT_SERVER && (gNetworkType != NT_SERVER || type != NPT_LOCAL || !gSuppressConnectedPopup)) {
         construct_player_popup(np, DLANG(NOTIF, CONNECTED), NULL);
     }
     LOG_INFO("player connected, local %d, global %d", localIndex, np->globalIndex);
@@ -405,7 +408,7 @@ u8 network_player_disconnected(u8 globalIndex) {
         LOG_INFO("player disconnected, local %d, global %d", i, globalIndex);
 
         // display popup
-        if (np->localIndex >= gNumPlayersLocal) {
+        if (np->type != NPT_LOCAL || !gSuppressConnectedPopup) {
             construct_player_popup(np, DLANG(NOTIF, DISCONNECTED), NULL);
         }
 

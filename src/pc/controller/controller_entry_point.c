@@ -69,21 +69,24 @@ void osContGetReadData(OSContPad *pad) {
 
 void osContGetReadDataIndex(OSContPad *pad, int i) {
     osContResetPad(pad);
-    struct ControllerPlace *cntr = &gPlayerControllerInfos[i];
-    if (!cntr->connected) { return; }
+    struct ControllerInfo *cntr = &gPlayerControllerInfos[i];
     if (cntr->type >= ARRAY_COUNT(controller_implementations)) {
         return;
     }
+    gReadingController = cntr;
     controller_implementations[cntr->type]->read(pad);
+    gReadingController = NULL;
 }
 
 void osContGetReadDataIndexNoReset(OSContPad *pad, int i) {
-    struct ControllerPlace *cntr = &gPlayerControllerInfos[i];
+    struct ControllerInfo *cntr = &gPlayerControllerInfos[i];
     if (!cntr->connected) { return; }
     if (cntr->type >= ARRAY_COUNT(controller_implementations)) {
         return;
     }
+    gReadingController = cntr;
     controller_implementations[cntr->type]->read(pad);
+    gReadingController = NULL;
 }
 
 u32 controller_get_raw_key(void) {

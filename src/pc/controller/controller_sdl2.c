@@ -16,10 +16,12 @@
 #include "controller_api.h"
 #include "controller_sdl.h"
 #include "controller_mouse.h"
+#include "controller_system.h"
 #include "pc/pc_main.h"
 #include "pc/configfile.h"
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
+#include "game/local_multiplayer.h"
 
 #include "game/level_update.h"
 #include "game/first_person_cam.h"
@@ -205,6 +207,14 @@ static void controller_sdl_read(OSContPad *pad) {
 
     if (configDisableGamepads) { return; }
 
+    u8 readController = configGamepadNumber;
+    if (gNumPlayersLocal > 1 && gReadingController) {
+        readController = gReadingController->index;
+        sdl_cntrl = gReadingController->sdl_cntrl;
+        sdl_haptic = gReadingController->sdl_haptic;
+        sdl_joystick = gReadingController->sdl_joystick;
+    }
+
     SDL_GameControllerUpdate();
 
     if (sdl_cntrl != NULL && !SDL_GameControllerGetAttached(sdl_cntrl)) {
@@ -214,20 +224,25 @@ static void controller_sdl_read(OSContPad *pad) {
         sdl_haptic = NULL;
     }
 
-    if ((!sdl_cntrl && !sdl_joystick) || last_gamepad != configGamepadNumber) {
+    if ((!sdl_cntrl && !sdl_joystick)) {
         if (sdl_haptic) { SDL_HapticClose(sdl_haptic); sdl_haptic = NULL; }
         if (sdl_cntrl) { SDL_GameControllerClose(sdl_cntrl); sdl_cntrl = NULL; }
         if (sdl_joystick) { SDL_JoystickClose(sdl_joystick); sdl_joystick = NULL; }
-        last_gamepad = configGamepadNumber;
-        if (SDL_IsGameController(configGamepadNumber)) {
-            sdl_cntrl = SDL_GameControllerOpen(configGamepadNumber);
+        last_gamepad = readController;
+        if (SDL_IsGameController(readController)) {
+            sdl_cntrl = SDL_GameControllerOpen(readController);
             if (sdl_cntrl != NULL) {
-                sdl_haptic = controller_sdl_init_haptics(configGamepadNumber);
+                sdl_haptic = controller_sdl_init_haptics(readController);
             }
         } else {
-            sdl_joystick = SDL_JoystickOpen(configGamepadNumber);
+            sdl_joystick = SDL_JoystickOpen(readController);
             if (!sdl_joystick) { return; }
         }
+    }
+    if (gReadingController) {
+        gReadingController->sdl_cntrl = sdl_cntrl;
+        gReadingController->sdl_haptic = sdl_haptic;
+        gReadingController->sdl_joystick = sdl_joystick;
     }
 
     int16_t leftx = 0, lefty = 0, rightx = 0, righty = 0;

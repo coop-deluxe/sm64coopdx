@@ -72,15 +72,21 @@ static void djui_hud_position_translate(f32* x, f32* y) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_position_translate(x, y);
     } else {
+        *x *= ((gSw == 1 && gSw == 1) ? 0.5f : 1.f);
+        *y *= ((gSh == 1 && gSw == 1) ? 0.5f : 1.f);
+        *x += (gfx_current_dimensions.aspect_ratio * SCREEN_HEIGHT * 0.5f) * gSx;
+        *y += (SCREEN_HEIGHT / 2) * gSy;
+
         *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x;
         *y = SCREEN_HEIGHT - *y;
     }
-    // transform_y_f32(y, sResolution);
 }
 
 static void djui_hud_size_translate(f32* size) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_size_translate(size);
+    } else {
+        *size *= ((gSh == 1 && gSw == 1) ? 0.5f : 1.f);
     }
 }
 
@@ -252,7 +258,7 @@ u32 djui_hud_get_screen_width(void) {
     u32 r = (sResolution == RESOLUTION_N64)
         ? gfx_current_dimensions.aspect_ratio * SCREEN_HEIGHT
         : (windowWidth / djui_gfx_get_scale());
-    if (gSw == 1) { return r / 2; }
+    if (gSw == 1 && gSh != 1) { return r / 2; }
     return r;
 }
 
@@ -263,7 +269,7 @@ u32 djui_hud_get_screen_height(void) {
     u32 r = (sResolution == RESOLUTION_N64)
         ? SCREEN_HEIGHT
         : (windowHeight / djui_gfx_get_scale());
-    if (gSh == 1) { return r / 2; }
+    if (gSh == 1 && gSw != 1) { return r / 2; }
     return r;
 }
 

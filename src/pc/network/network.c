@@ -102,8 +102,6 @@ bool network_is_online() {
 void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
 
-    if (!network_is_online()) { gNetworkSystem = NULL; }
-
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
 #ifdef COOPNET
@@ -111,6 +109,7 @@ void network_set_system(enum NetworkSystemType nsType) {
 #endif
         default: gNetworkSystem = &gNetworkSystemSocket; LOG_ERROR("Unknown network system: %d", nsType); break;
     }
+    if (!network_is_online()) { gNetworkSystem = &gNetworkSystemDummy; }
 }
 
 bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
@@ -174,6 +173,14 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
+
+        extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
+        for (u8 i = 1; i < gNumPlayersLocal; i++) {
+            char name[10];
+            snprintf(name, 10, "Player-%d", i);
+            network_player_connected(NPT_LOCAL, i, 0, &DEFAULT_MARIO_PALETTE, name, "0");
+        }
+
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 

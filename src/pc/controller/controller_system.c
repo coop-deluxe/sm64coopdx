@@ -8,6 +8,7 @@
 #include "pc/djui/djui_panel_splitscreen.h"
 #include "engine/math_util.h"
 #include "pc/network/network.h"
+#include "pc/pc_main.h"
 
 // Constants for clarity
 #define MAX_GAMEPADS 10
@@ -17,8 +18,10 @@
 char gGamepadChoicesBuffer[MAX_GAMEPADS][MAX_NAME_LEN] = { 0 };
 char *gGamepadChoices[MAX_GAMEPADS] = { 0 };
 int gNumJoys = 0;
+bool gSuppressConnectedPopup = true;
+struct ControllerInfo *gReadingController = NULL;
 
-struct ControllerPlace gPlayerControllerInfos[POSSIBLE_NUM_PLAYERS] = {{
+struct ControllerInfo gPlayerControllerInfos[POSSIBLE_NUM_PLAYERS] = {{
     .index = 0,
     .type = 1, // Make player 1 the keyboard by default
     .connected = true
@@ -42,9 +45,8 @@ void controller_update_gamepad_choices() {
     if (gNumJoys <= 0) { gNumJoys = 1; }
     if (gNumJoys > MAX_GAMEPADS) { gNumJoys = MAX_GAMEPADS; }
 
-    gGamepadChoices[0] = gGamepadChoicesBuffer[0];
-
     for (int i = 0; i < gNumJoys; i++) {
+        gGamepadChoices[i] = gGamepadChoicesBuffer[i];
         const char *joystickName = SDL_JoystickNameForIndex(i);
         snprintf(gGamepadChoices[i], MAX_NAME_LEN, "%s", joystickName ? joystickName : "Unknown");
 
@@ -69,21 +71,29 @@ void controller_update_gamepad_choices() {
 void controller_update_controller_count() {
     static u16 prevNumPlayers = 1;
     gNumPlayersLocal = clamp(SDL_NumJoysticks() + 1, 1, POSSIBLE_NUM_PLAYERS);
-    for (u16 i = 1; i < POSSIBLE_NUM_PLAYERS; i++) {
-        struct ControllerPlace *c = &gPlayerControllerInfos[i];
-        if (c->type == 1) {
+    for (u16 i = 0, index = 0; i < gNumPlayersLocal; i++) {
+        struct ControllerInfo *c = &gPlayerControllerInfos[i];
+        if (gNumPlayersLocal == 1 && c->type == 1 && i != 0) {
             ++gNumPlayersLocal;
-            break;
         }
+        c->connected = true;
+        c->index = index;
+        if (c->type == 1) { continue; }
+        index++;
     }
+
+    gSuppressConnectedPopup = gGameInited;
     if (gNumPlayersLocal > prevNumPlayers) {
         extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
-        network_player_connected(NPT_LOCAL, gNumPlayersLocal - 1, 0, &DEFAULT_MARIO_PALETTE, "Mario", "0");
+        char name[10];
+        snprintf(name, 10, "Player-%d", gNumPlayersLocal);
+        network_player_connected(NPT_LOCAL, gNumPlayersLocal - 1, 0, &DEFAULT_MARIO_PALETTE, name, "0");
     } else if (gNumPlayersLocal < prevNumPlayers) {
         u8 index = gNetworkPlayers[prevNumPlayers].globalIndex;
         if (index == 0) { index = prevNumPlayers; }
         network_player_disconnected(index);
     }
+    gSuppressConnectedPopup = true;
     prevNumPlayers = gNumPlayersLocal;
 }
 

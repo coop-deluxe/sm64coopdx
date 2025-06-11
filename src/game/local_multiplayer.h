@@ -30,6 +30,8 @@ extern struct HudDisplay gHudDisplays[];
 extern struct Controller gSharedController;
 extern struct Controller *gSharedCtr;
 
+extern struct NetworkSystem gNetworkSystemDummy;
+
 typedef struct { u8 w, h; f32 a; } ScreenSize;
 
 struct GfxLoad {

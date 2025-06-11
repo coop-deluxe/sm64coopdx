@@ -360,7 +360,6 @@ void patch_mtx_interpolated(f32 delta) {
         delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
         mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
         mtxf_to_mtx(&camInterp, camInterp.m);
-        printf("%d interp (%d, %d), curr: (%d, %d), interp: (%d, %d)\n", gCurrPlayer, (int) sCameraNode->prevPos[0], (int) sCameraNode->prevPos[2], (int) sCameraNode->pos[0], (int) sCameraNode->pos[2], (int) posInterp[0], (int) posInterp[2]);
         // printf("%d interp (%d, %d), real: (%d, %d)\n", gCurrPlayer, (int) sCameraNode->focus[0], (int) sCameraNode->focus[2], (int) sCameraNode->prevFocus[0], (int) sCameraNode->prevFocus[2]);
     }
 
@@ -615,7 +614,6 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     vec3f_copy(node->pos, sCameraNodes[gCurrPlayer].pos);
     vec3f_copy(node->focus, sCameraNodes[gCurrPlayer].focus);
 
-    printf("%d cam (%d, %d), real: (%d, %d)\n", gCurrPlayer, (int) node->pos[0], (int) node->pos[2], (int) gLakituState.pos[0], (int) gLakituState.pos[2]);
     // printf("%d cam (%d, %d), real: (%d, %d)\n", gCurrPlayer, (int) node->focus[0], (int) node->focus[2], (int) gLakituState.focus[0], (int) gLakituState.focus[2]);
 
     vec3f_copy(node->prevPos, node->pos);

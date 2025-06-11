@@ -14,20 +14,11 @@ struct DjuiSplitScreenWindow {
 static struct DjuiSplitScreenWindow *sDjuiSplitScreenWindows[POSSIBLE_NUM_PLAYERS] = { 0 };
 
 static void djui_panel_splitscreen_window_update_controller_text(struct DjuiSplitScreenWindow *window, u16 index) {
-
-    // Update the index translation
-    for (u16 i = 0, index = 0; i < POSSIBLE_NUM_PLAYERS; i++) {
-        struct ControllerPlace *c = &gPlayerControllerInfos[i];
-        c->index = index;
-        if (c->type == 1) { continue; }
-        index++;
-    }
-
-    struct ControllerPlace *cntr = &gPlayerControllerInfos[index];
+    struct ControllerInfo *cntr = &gPlayerControllerInfos[index];
     const char *name = "Main Keyboard";
     if (cntr->type != 1) {
         name = SDL_JoystickNameForIndex(cntr->index);
-        name = name ? name : "Disconnected";
+        name = (name) ? name : "Disconnected";
     }
     djui_text_set_text(window->ctrText, name);
 
@@ -54,13 +45,13 @@ void djui_panel_splitscreen_selection_box_changed(struct DjuiBase *caller) {
         struct DjuiSplitScreenWindow *window = sDjuiSplitScreenWindows[i];
         if (!window || window->selectionBox != selectionBox) { continue; }
 
-        struct ControllerPlace *cntr = &gPlayerControllerInfos[i];
+        struct ControllerInfo *cntr = &gPlayerControllerInfos[i];
         if (cntr->type != 1) { continue; }
 
         // This player is a keyboard
         for (u16 j = 0; j < POSSIBLE_NUM_PLAYERS; j++) {
             if (i == j) { continue; }
-            struct ControllerPlace *c = &gPlayerControllerInfos[j];
+            struct ControllerInfo *c = &gPlayerControllerInfos[j];
             if (c->type == 1) {
                 c->type = 0;
                 struct DjuiSplitScreenWindow *window2 = sDjuiSplitScreenWindows[j];
@@ -75,7 +66,7 @@ void djui_panel_splitscreen_selection_box_changed(struct DjuiBase *caller) {
 
 static struct DjuiSplitScreenWindow *djui_panel_splitscreen_controller_window_create(struct DjuiBase *parent, u16 index) {
     struct DjuiSplitScreenWindow *window = calloc(1, sizeof(struct DjuiSplitScreenWindow));
-    struct ControllerPlace *cntr = &gPlayerControllerInfos[index];
+    struct ControllerInfo *cntr = &gPlayerControllerInfos[index];
 
     // Border
     window->rect = djui_rect_create(parent);
@@ -129,6 +120,7 @@ void djui_panel_splitscreen_options_create(struct DjuiBase* caller) {
     struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(HOST, SPLITSCREEN), false);
     struct DjuiBase *body = djui_three_panel_get_body(panel);
 
+    controller_update_controller_count();
     {
         for (u16 i = 0; i < POSSIBLE_NUM_PLAYERS; i += 2) {
             struct DjuiFlowLayout* row = djui_flow_layout_create(body);
