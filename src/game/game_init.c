@@ -470,11 +470,11 @@ void read_controller_inputs(void) {
     if (gControllerBits) {
         osRecvMesg(&gSIEventMesgQueue, &D_80339BEC, OS_MESG_BLOCK);
         if (gNumPlayersLocal > 1) {
-            if (gInteractableOverridePad) { osContResetPad(&gInteractablePad); }
-            for (u8 i = 0; i < gNumPlayersLocal; i++) {
-                if (gInteractableOverridePad) {
-                    osContGetReadDataIndexNoReset(&gInteractablePad, i);
-                } else {
+            if (gInteractableOverridePad) {
+                osContResetPad(&gInteractablePad);
+                osContGetReadDataIndexNoReset(&gInteractablePad, 0);
+            } else {
+                for (u8 i = 0; i < gNumPlayersLocal; i++) {
                     osContGetReadDataIndex(&gControllerPads[i], i);
                 }
             }

@@ -1611,7 +1611,7 @@ void update_mario_inputs(struct MarioState *m) {
 
     /* Developer stuff */
 #ifdef DEVELOPMENT
-    if (gNetworkSystem == &gNetworkSystemSocket) {
+    if (gNetworkSystem == &gNetworkSystemSocket || gNetworkSystem == NULL) {
         if (m->playerIndex == 0) {
             if (m->action != ACT_DEBUG_FREE_MOVE && m->controller->buttonPressed & L_TRIG && m->controller->buttonDown & Z_TRIG) {
                 set_mario_action(m, ACT_DEBUG_FREE_MOVE, 0);
@@ -2221,13 +2221,7 @@ void init_single_mario(struct MarioState* m) {
 
     m->waterLevel = find_water_level(spawnInfo->startPos[0], spawnInfo->startPos[2]);
 
-    if (playerIndex < gNumPlayersLocal) {
-        gCurrentAreaCopies[playerIndex].camera = gCurrentArea->cameras[playerIndex];
-        m->area = &gCurrentAreaCopies[playerIndex];
-        m->area->localAreaTimer = 60;
-    } else {
-        m->area = gCurrentArea;
-    }
+    m->area = gCurrentArea;
     m->marioObj = gMarioObjects[m->playerIndex];
     if (m->marioObj == NULL) { return; }
     m->marioObj->header.gfx.shadowInvisible = false;

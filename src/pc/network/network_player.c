@@ -282,7 +282,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     if (modelIndex >= CT_MAX) { modelIndex = 0; }
 
     // if already connected, update a few things
-    if (np->connected) {
+    if (np->connected && type != NPT_LOCAL) {
         np->lastReceived = clock_elapsed();
         np->lastSent = clock_elapsed();
         if ((type != NPT_LOCAL) && (gNetworkType == NT_SERVER || type == NPT_SERVER)) { gNetworkSystem->save_id(localIndex, 0); }

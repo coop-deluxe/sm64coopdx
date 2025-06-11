@@ -8,6 +8,7 @@
 
 #include "controller_keyboard.h"
 #include "controller_sdl.h"
+#include "controller_system.h"
 
 // Analog camera movement by Pathétique (github.com/vrmiguel), y0shin and Mors
 // Contribute or communicate bugs at github.com/vrmiguel/sm64-analog-camera
@@ -68,18 +69,21 @@ void osContGetReadData(OSContPad *pad) {
 
 void osContGetReadDataIndex(OSContPad *pad, int i) {
     osContResetPad(pad);
-    if (i >= ARRAY_COUNT(controller_implementations)) {
+    struct ControllerPlace *cntr = &gPlayerControllerInfos[i];
+    if (!cntr->connected) { return; }
+    if (cntr->type >= ARRAY_COUNT(controller_implementations)) {
         return;
     }
-    controller_implementations[i]->read(pad);
+    controller_implementations[cntr->type]->read(pad);
 }
 
 void osContGetReadDataIndexNoReset(OSContPad *pad, int i) {
-    if (i >= ARRAY_COUNT(controller_implementations)) {
+    struct ControllerPlace *cntr = &gPlayerControllerInfos[i];
+    if (!cntr->connected) { return; }
+    if (cntr->type >= ARRAY_COUNT(controller_implementations)) {
         return;
     }
-
-    controller_implementations[i]->read(pad);
+    controller_implementations[cntr->type]->read(pad);
 }
 
 u32 controller_get_raw_key(void) {

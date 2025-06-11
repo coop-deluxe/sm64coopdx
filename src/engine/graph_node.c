@@ -183,6 +183,7 @@ struct GraphNodeSwitchCase *init_graph_node_switch_case(struct DynamicPool *pool
 
     return graphNode;
 }
+extern struct GraphNodeCamera sCameraNodes[];
 
 /**
  * Allocates and returns a newly created camera node
@@ -210,6 +211,9 @@ struct GraphNodeCamera *init_graph_node_camera(struct DynamicPool *pool,
 
         if (func != NULL) {
             func(GEO_CONTEXT_CREATE, &graphNode->fnNode.node, pool);
+        }
+        for (u16 i = 0; i < gNumPlayersLocal; i++) {
+            memcpy(&sCameraNodes[i], graphNode, sizeof(struct GraphNodeCamera));
         }
     }
 

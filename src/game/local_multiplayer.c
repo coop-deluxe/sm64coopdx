@@ -26,7 +26,7 @@ int gSy = 0;
 int gSw = 2;
 int gSh = 2;
 
-u16 gNumPlayersLocal = 2;
+u16 gNumPlayersLocal = 1;
 
 u16 gCurrPlayer = 0;
 
@@ -60,7 +60,6 @@ void patch_mario_state_player_index(u8 index) {
 
         // Network hacks to make things behave
         nType = gNetworkType;
-        gNetworkType = NT_CLIENT;
         gNetworkPlayerServer = &gNetworkPlayers[index];
         gNetworkPlayerLocal = &gNetworkPlayers[index];
 
@@ -209,4 +208,9 @@ void set_screen_rendering(u16 index) {
     gSw = size->w;
     gSh = size->h;
     aspect_mask = size->a;
+
+    if (gNumPlayersLocal == 3 && index == 2) {
+        gSw = 2;
+        aspect_mask = 1.f;
+    }
 }

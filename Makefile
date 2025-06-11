@@ -919,7 +919,7 @@ ifeq ($(ASAN),1)
   ifeq ($(COMPILER),gcc)
     EXTRA_CFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
     EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
-    LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan
+    LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan -D_FORTIFY_SOURCE=2
   else ifeq ($(COMPILER),clang)
     EXTRA_CFLAGS += -fsanitize=address -fsanitize=undefined -ggdb
     EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=undefined -ggdb

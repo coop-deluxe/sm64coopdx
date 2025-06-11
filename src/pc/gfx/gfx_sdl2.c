@@ -43,6 +43,7 @@
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
+#include "pc/controller/controller_system.h"
 
 #ifndef GL_MAX_SAMPLES
 #define GL_MAX_SAMPLES 0x8D57
@@ -246,6 +247,11 @@ static void gfx_sdl_handle_events(void) {
                 break;
             case SDL_DROPFILE:
                 gfx_sdl_ondropfile(event.drop.file);
+                break;
+
+            case SDL_CONTROLLERDEVICEADDED:
+            case SDL_CONTROLLERDEVICEREMOVED:
+                controller_update_connected_controllers();
                 break;
             case SDL_QUIT:
                 game_exit();

@@ -109,7 +109,9 @@ bool exec_chat_command(char* command) {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected) { continue; }
-            if (gNetworkSystem == &gNetworkSystemSocket) {
+            if (gNetworkSystem == NULL) {
+                snprintf(line, 127, "\\#fff982\\%s%s\n", network_get_player_text_color_string(np->localIndex), np->name);
+            } else if (gNetworkSystem == &gNetworkSystemSocket) {
                 snprintf(line, 127, "\\#82f9ff\\%u\\#fff982\\ - %s%s\n", np->globalIndex, network_get_player_text_color_string(np->localIndex), np->name);
             } else {
                 snprintf(line, 127, "\\#82f9ff\\%u\\#fff982\\ - \\#82f9ff\\%s\\#fff982\\ - %s%s\n", np->globalIndex, gNetworkSystem->get_id_str(np->localIndex), network_get_player_text_color_string(np->localIndex), np->name);
@@ -123,7 +125,7 @@ bool exec_chat_command(char* command) {
         djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
         return true;
     }
-  
+
     if (str_starts_with("/kick ", command)) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
@@ -208,7 +210,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/moderator ", command)) {     
+    if (str_starts_with("/moderator ", command)) {
         if (gNetworkType != NT_SERVER) {
             djui_chat_message_create(DLANG(CHAT, SERVER_ONLY));
             return true;

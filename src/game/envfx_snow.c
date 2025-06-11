@@ -67,7 +67,7 @@ static Vec3s sSnowGfxCamTo[POSSIBLE_NUM_PLAYERS];
 static Vec3s sSnowGfxMarioPos[POSSIBLE_NUM_PLAYERS];
 
 void patch_snow_particles_before(void) {
-    if (sSnowGfxPos[gCurrPlayer]) {
+    if (sSnowGfxPos[gCurrPlayer] && gEnvFxBuffer[gCurrPlayer]) {
         for (s32 i = 0; i < gSnowParticleCount[gCurrPlayer]; i++) {
             vec3s_set((gEnvFxBuffer[gCurrPlayer] + i)->prevPos, (gEnvFxBuffer[gCurrPlayer] + i)->xPos, (gEnvFxBuffer[gCurrPlayer] + i)->yPos, (gEnvFxBuffer[gCurrPlayer] + i)->zPos);
         }

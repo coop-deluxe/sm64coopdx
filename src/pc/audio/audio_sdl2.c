@@ -8,6 +8,10 @@
 static SDL_AudioDeviceID dev;
 
 static bool audio_sdl_init(void) {
+    if (!getenv("SDL_AUDIODRIVER")) {
+        setenv("SDL_AUDIODRIVER", "alsa", 1);
+    }
+
     if (SDL_Init(SDL_INIT_AUDIO) != 0) {
         fprintf(stderr, "SDL init error: %s\n", SDL_GetError());
         return false;
@@ -44,7 +48,7 @@ static void audio_sdl_play(const uint8_t *buf, size_t len) {
     }
 }
 
-static void audio_sdl_shutdown(void) 
+static void audio_sdl_shutdown(void)
 {
     if (SDL_WasInit(SDL_INIT_AUDIO)) {
         if (dev != 0) {

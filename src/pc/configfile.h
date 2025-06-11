@@ -131,6 +131,7 @@ extern unsigned int configHostSaveSlot;
 extern char         configJoinIp[MAX_CONFIG_STRING];
 extern unsigned int configJoinPort;
 extern unsigned int configNetworkSystem;
+extern bool         configNetworkOnline;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;

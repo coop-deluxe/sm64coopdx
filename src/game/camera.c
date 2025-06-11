@@ -504,7 +504,10 @@ void swap_lakitu_state(u8 index) {
     if (gCurrentArea) {
         gCurrentArea->camera = gCurrentArea->cameras[index];
         gCamera = gCurrentArea->cameras[index];
+        gCurrentAreaCopies[index].camera = gCurrentArea->cameras[index];
     }
+    gMarioState->area = &gCurrentAreaCopies[index];
+    gMarioState->area->localAreaTimer = 60; // Local players don't need this
 }
 
 s32 update_radial_camera(struct Camera *c, Vec3f, Vec3f);
@@ -3792,7 +3795,7 @@ void create_camera_internal(struct GraphNodeCamera *gc, struct DynamicPool *pool
  */
 void create_camera(struct GraphNodeCamera *gc, struct DynamicPool *pool) {
     if (!gc) { return; }
-    for (u8 i = 0; i < gNumPlayersLocal; i++) {
+    for (u8 i = 0; i < POSSIBLE_NUM_PLAYERS; i++) {
         create_camera_internal(gc, pool, i);
     }
 }

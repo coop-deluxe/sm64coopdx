@@ -52,11 +52,14 @@ void patch_screen_transition_interpolated(f32 delta) {
     }
 }
 
+#include "local_multiplayer.h"
+
 s32 set_and_reset_transition_fade_timer(s8 fadeTimer, u8 transTime) {
     s32 reset = FALSE;
 
     sTransitionColorFadeCount[fadeTimer]++;
 
+    printf("%d update %d, %d\n", gCurrPlayer, sTransitionColorFadeCount[fadeTimer], gGlobalTimer);
     if (sTransitionColorFadeCount[fadeTimer] == transTime) {
         sTransitionColorFadeCount[fadeTimer] = 0;
         sTransitionTextureFadeCount[fadeTimer] = 0;
@@ -356,7 +359,7 @@ Gfx *render_cannon_circle_base(void) {
         make_vertex(verts, 1, SCREEN_WIDTH, 0, -1, 1152, 1824, 0, 0, 0, 255);
         make_vertex(verts, 2, SCREEN_WIDTH, SCREEN_HEIGHT, -1, 1152, 192, 0, 0, 0, 255);
         make_vertex(verts, 3, 0, SCREEN_HEIGHT, -1, -1152, 192, 0, 0, 0, 255);
-    
+
         // render black rectangles outside the 4:3 area.
         make_vertex(verts, 4, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 0, -1, 0, 0, 0, 0, 0, 255);
         make_vertex(verts, 5, GFX_DIMENSIONS_FROM_RIGHT_EDGE(0), 0, -1, 0, 0, 0, 0, 0, 255);

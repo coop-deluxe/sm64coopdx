@@ -95,8 +95,14 @@ struct NametagsSettings gNametagsSettings = {
     .showSelfTag = false,
 };
 
+bool network_is_online() {
+    return (configNetworkOnline || gNetworkType == NT_CLIENT) && configAmountOfPlayers > 1;
+}
+
 void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
+
+    if (!network_is_online()) { gNetworkSystem = NULL; }
 
     switch (nsType) {
         case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
@@ -114,7 +120,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNetworkStartupTimer = 5 * 30;
 
     // sanity check network system
-    if (gNetworkSystem == NULL) {
+    if (gNetworkSystem == NULL && network_is_online()) {
         LOG_ERROR("no network system attached");
         return false;
     }
@@ -141,12 +147,14 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNametagsSettings.showSelfTag = false;
 
     // initialize the network system
-    gNetworkSentJoin = false;
-    int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
-    if (!rc && inNetworkType != NT_NONE) {
-        LOG_ERROR("failed to initialize network system");
-        djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 2);
-        return false;
+    if (network_is_online()) {
+        gNetworkSentJoin = false;
+        int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);
+        if (!rc && inNetworkType != NT_NONE) {
+            LOG_ERROR("failed to initialize network system");
+            djui_popup_create(DLANG(NOTIF, DISCONNECT_CLOSED), 2);
+            return false;
+        }
     }
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);
@@ -166,11 +174,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
-
-        extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
-        for (u8 i = 1; i < gNumPlayersLocal; i++) {
-            network_player_connected(NPT_LOCAL, i, 0, &DEFAULT_MARIO_PALETTE, "Mario", "0");
-        }
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
@@ -190,7 +193,9 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     }
 #endif
 
-    LOG_INFO("initialized");
+    if (network_is_online()) {
+        LOG_INFO("initialized");
+    }
 
     return true;
 }
@@ -271,13 +276,13 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     // sanity checks
     if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
     if (p->error) { LOG_ERROR("packet error!"); return; }
-    if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
+    if (gNetworkSystem == NULL) { if (network_is_online()) { LOG_ERROR("no network system attached"); } return; }
     if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
         LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
         // SOFT_ASSERT(false); - Crash?
         return;
     }
-    if (localIndex < gNumPlayersLocal) { return; } // sending to a local player (splitscreen)
+    if (localIndex > 0 && localIndex < gNumPlayersLocal) { return; } // sending to a local player (splitscreen)
 
     if (gNetworkType == NT_SERVER) {
         if (localIndex >= MAX_PLAYERS) {
@@ -656,7 +661,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
 
     network_forget_all_reliable();
     if (gNetworkSystem == NULL) {
-        LOG_ERROR("no network system attached");
+        if (network_is_online()) { LOG_ERROR("no network system attached"); }
     } else {
         if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
         network_player_shutdown(popup);
