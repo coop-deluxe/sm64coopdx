@@ -171,6 +171,10 @@ static int smlua_custom_require(lua_State* L) {
     }
     lua_pop(L, 1); // pop nil value
 
+    // mark module as "loading" to prevent recursion
+    lua_pushboolean(L, 1);
+    lua_setfield(L, -2, file->relativePath);
+
     // load the file
     int loadResult = smlua_load_mod_file(L, file);
     if (loadResult != LUA_OK) {
