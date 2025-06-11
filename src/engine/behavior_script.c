@@ -1014,7 +1014,7 @@ static s32 bhv_cmd_call_native_ext(void) {
     smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject, NULL);
 
     // Call the callback
-    if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod)) {
+    if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod, NULL)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 

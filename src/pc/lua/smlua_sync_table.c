@@ -143,14 +143,20 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         struct Mod* mod = gActiveMods.entries[modRemoteIndex];
 
         // call hook
-        struct Mod* prev = gLuaActiveMod;
+        struct Mod* prevActiveMod = gLuaActiveMod;
+        struct ModFile* prevActiveModFile = gLuaActiveModFile;
+
         gLuaActiveMod = mod;
+        gLuaActiveModFile = NULL;
         gLuaLastHookMod = mod;
         gPcDebug.lastModRun = mod;
+
         if (0 != smlua_pcall(L, 3, 0, 0)) {
             LOG_LUA_LINE("Failed to call the hook_on_changed callback");
         }
-        gLuaActiveMod = prev;
+
+        gLuaActiveMod = prevActiveMod;
+        prevActiveModFile = prevActiveModFile;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value

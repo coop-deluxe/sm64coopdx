@@ -636,7 +636,7 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
     }
 
     // call the callback
-    if (0 != smlua_call_hook(L, 5, 0, 0, preprocess->mod)) {
+    if (0 != smlua_call_hook(L, 5, 0, 0, preprocess->mod, NULL)) {
         LOG_LUA("Failed to call the callback behaviors: %u", type);
         return 0;
     }

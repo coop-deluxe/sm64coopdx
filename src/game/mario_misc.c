@@ -912,7 +912,7 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     lua_pushinteger(L, gMatStackIndex);
 
     // Call the callback
-    if (0 != smlua_call_hook(L, 2, 0, 0, mod)) {
+    if (0 != smlua_call_hook(L, 2, 0, 0, mod, NULL)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 

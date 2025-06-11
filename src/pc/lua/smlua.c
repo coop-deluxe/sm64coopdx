@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "pc/lua/smlua_require.h"
 #include "game/hardcoded.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
@@ -16,6 +17,7 @@ u8 gLuaInitializingScript = 0;
 u8 gSmLuaSuppressErrors = 0;
 struct Mod* gLuaLoadingMod = NULL;
 struct Mod* gLuaActiveMod = NULL;
+struct ModFile* gLuaActiveModFile = NULL;
 struct Mod* gLuaLastHookMod = NULL;
 
 void smlua_mod_error(void) {
@@ -304,6 +306,7 @@ void smlua_init(void) {
     smlua_bind_functions();
     smlua_bind_functions_autogen();
     smlua_bind_sync_table();
+    smlua_init_require_system();
 
     extern char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
@@ -324,9 +327,17 @@ void smlua_init(void) {
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
+            gLuaActiveModFile = file;
+            // skip loading non-lua files
             if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) {
                 continue;
             }
+
+            // skip loading scripts in subdirectories
+            if (strchr(file->relativePath, '/') != NULL || strchr(file->relativePath, '\\') != NULL) {
+                continue;
+            }
+
             smlua_load_script(mod, file, i);
         }
         gLuaActiveMod = NULL;
@@ -374,5 +385,6 @@ void smlua_shutdown(void) {
     }
     gLuaLoadingMod = NULL;
     gLuaActiveMod = NULL;
+    gLuaActiveModFile = NULL;
     gLuaLastHookMod = NULL;
 }

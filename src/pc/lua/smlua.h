@@ -38,6 +38,7 @@ extern u8 gLuaInitializingScript;
 extern u8 gSmLuaSuppressErrors;
 extern struct Mod* gLuaLoadingMod;
 extern struct Mod* gLuaActiveMod;
+extern struct ModFile* gLuaActiveModFile;
 extern struct Mod* gLuaLastHookMod;
 
 void smlua_mod_error(void);
