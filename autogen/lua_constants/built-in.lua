@@ -286,7 +286,7 @@ OUT_ELASTIC    = function (x) return (x == 0 or x == 1) and x or (2 ^ (-10 * x))
 IN_OUT_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and (-0.5 * (2 ^ (20 * x - 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)))) or (0.5 * (2 ^ (-20 * x + 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)) + 1) end
 ---@param x number
 ---@return number
-OUT_IN_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and 0.5 * (__math_sin((13 * __math_pi / 2) * (2 * x)) * 2 ^ (-10 * 2 * x) + 1)) or (0.5 + 0.5 * (-__math_sin((-13 * __math_pi / 2) * (2 * x - 1)) * 2 ^ (10 * (2 * x - 1)))) end
+OUT_IN_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and 0.5 * ((2 ^ (-10 * (x * 2))) * __math_sin(((x * 2) * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1)) or 0.5 + 0.5 * (-(2 ^ (10 * ((x - 0.5) * 2) - 10)) * __math_sin((((x - 0.5) * 2) * 10 - 10.75) * ((2 * __math_pi) / 3))) end
 ---@param x number
 ---@return number
 IN_BOUNCE      = function (x) return 1 - OUT_BOUNCE(1 - x) end
