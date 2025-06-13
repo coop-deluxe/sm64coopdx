@@ -222,6 +222,7 @@ manual_index_documentation = """
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [get_lua_function_id](#get_lua_function_id)
 
 <br />
 
@@ -707,6 +708,47 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### Returns
 - None
+
+### C Prototype
+N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_lua_function_id](#get_lua_function_id)
+
+Returns a number that uniquely identifies a lua function that called `get_lua_function_id(stack_depth)`, or returns 0 on failure.
+
+A `stack_depth` of 0 returns an identifer for the function that called `get_lua_function_id(0)`.
+
+A `stack_depth` of 1 returns an identifier for the function that called the function that called `get_lua_function_id(1)`. etc.
+
+### Lua Example
+```lua
+function foo()
+    print('foo: ' .. get_lua_function_id(0))
+end
+
+function bar()
+    print('bar: ' .. get_lua_function_id(0))
+end
+
+local a = foo()
+local b = bar()
+
+if a == foo() and b == bar() then
+    print('it works!')
+end
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| stack_depth | `number` |
+
+### Returns
+- `number`
 
 ### C Prototype
 N/A

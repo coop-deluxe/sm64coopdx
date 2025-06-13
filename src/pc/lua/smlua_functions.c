@@ -154,6 +154,27 @@ int smlua_func_table_deepcopy(lua_State *L) {
  // misc //
 //////////
 
+static int smlua_func_get_lua_function_id(lua_State *L) {
+    // get the depth
+    lua_Integer depth = luaL_checkinteger(L, 1);
+    if (depth < 0) { depth = 0; }
+
+    // attempt to get the stack frame and function
+    lua_Debug ar;
+    if (lua_getstack(L, (int)(depth + 1), &ar) == 0 || lua_getinfo (L, "f", &ar) == 0) {
+        lua_pushinteger(L, 0);
+        return 1;
+    }
+
+    // target function is on top, pop it
+    void *func_ptr = (void*)lua_topointer(L, -1);
+    lua_pop(L, 1);
+
+    // return the value as an integer
+    lua_pushinteger(L, (lua_Integer)(uintptr_t)func_ptr);
+    return 1;
+}
+
 int smlua_func_init_mario_after_warp(lua_State* L) {
     if (network_player_connected_count() >= 2) {
         LOG_LUA_LINE("init_mario_after_warp() can only be used in singleplayer");
@@ -1012,6 +1033,7 @@ void smlua_bind_functions(void) {
     // misc
     smlua_bind_function(L, "table_copy", smlua_func_table_copy);
     smlua_bind_function(L, "table_deepcopy", smlua_func_table_deepcopy);
+    smlua_bind_function(L, "get_lua_function_id", smlua_func_get_lua_function_id);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
     smlua_bind_function(L, "initiate_warp", smlua_func_initiate_warp);
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);

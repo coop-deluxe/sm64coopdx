@@ -390,6 +390,16 @@ function log_to_console(message, level)
     -- ...
 end
 
+--- @param stack_depth integer The stack depth of the function to produce an identifier for
+--- @return integer
+--- Returns a unique identifier for a function, or 0 on failure.
+--- A stack_depth of 0 will return an identifer for the function that called get_lua_function_id(0).
+--- A stack_depth of 1st will return an identifer for the function that called the function that called get_lua_function_id(1).
+--- etc.
+function get_lua_function_id(stack_depth)
+    -- ...
+end
+
 --- @param index integer The index of the scroll target, should match up with the behavior param of `RM_Scroll_Texture` or `editor_Scroll_Texture`
 --- @param name string The name of the vertex buffer that should be used while scrolling the texture
 --- Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
