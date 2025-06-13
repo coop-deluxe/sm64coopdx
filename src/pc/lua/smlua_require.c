@@ -115,7 +115,8 @@ static int smlua_custom_require(lua_State* L) {
     // find the file in mod files
     struct ModFile* file = smlua_find_mod_file(moduleName);
     if (!file) {
-        LOG_LUA("module '%s' not found in mod files", moduleName)
+        LOG_LUA("module '%s' not found in mod files", moduleName);
+        lua_pop(L, 1); // pop table
         return 0;
     }
 
