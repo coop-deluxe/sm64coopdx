@@ -40,9 +40,13 @@ static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
         g++;
     }
 
+    // get mod file index
+    s32 fileIndex = (file - &mod->files[0]);
+    if (fileIndex < 0 || fileIndex >= mod->fileCount) { fileIndex = 0; }
+
     // Add to custom actors
     LOG_INFO("Activating DynOS bin: '%s', '%s'", file->cachedPath, geoName);
-    dynos_add_actor_custom(mod->index, file->cachedPath, geoName);
+    dynos_add_actor_custom(mod->index, fileIndex, file->cachedPath, geoName);
 }
 
 static void mod_activate_col(struct ModFile* file) {
