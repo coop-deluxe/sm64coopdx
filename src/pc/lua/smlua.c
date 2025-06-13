@@ -1,5 +1,6 @@
 #include "smlua.h"
 #include "pc/lua/smlua_require.h"
+#include "pc/lua/smlua_live_reload.h"
 #include "game/hardcoded.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
@@ -369,6 +370,8 @@ void smlua_init(void) {
 void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
+
+    smlua_live_reload_update(L);
 
     audio_sample_destroy_pending_copies();
 
