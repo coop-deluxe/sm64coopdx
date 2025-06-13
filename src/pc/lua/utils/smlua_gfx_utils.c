@@ -382,7 +382,7 @@ void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
 
     u32 destLength = vtx_get_count(dest);
     if (count > destLength) {
-        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, srcLength);
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, destLength);
         return;
     }
 
