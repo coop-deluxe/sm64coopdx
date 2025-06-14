@@ -11118,7 +11118,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -11130,7 +11130,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end

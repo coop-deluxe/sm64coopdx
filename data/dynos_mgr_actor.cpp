@@ -31,7 +31,7 @@ std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
     return DynosValidActors();
 }
 
-void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
+void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
@@ -45,6 +45,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *
         return;
     }
     _GfxData->mModIndex = aModIndex;
+    _GfxData->mModFileIndex = aModFileIndex;
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
@@ -117,13 +118,16 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     return NULL;
 }
 
-bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken) {
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken) {
     ActorGfx *_ActorGfx = DynOS_Actor_GetActorGfx(aGraphNode);
     if (_ActorGfx) {
         GfxData *_GfxData = _ActorGfx->mGfxData;
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
@@ -138,6 +142,9 @@ bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenInde
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {

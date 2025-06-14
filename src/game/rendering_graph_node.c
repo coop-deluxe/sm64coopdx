@@ -1233,8 +1233,7 @@ static void geo_sanitize_object_gfx(void) {
 
 static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
     struct MarioState *m = get_mario_state_from_object(marioObj);
-    if (m) { return m->marioBodyState; }
-    return NULL;
+    return m ? m->marioBodyState : NULL;
 }
 
 /**
@@ -1385,11 +1384,9 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
-                if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
-                    gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
-                    if (gCurMarioBodyState) {
-                        gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
-                    }
+                gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
+                if (gCurMarioBodyState) {
+                    gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
                 }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;

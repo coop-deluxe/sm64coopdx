@@ -19,7 +19,6 @@
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
 #include "game/hardcoded.h"
-#include "gfx_symbols.h"
 #include "include/macros.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
@@ -476,6 +475,7 @@ int smlua_func_texture_override_reset(lua_State* L) {
 struct LuaLevelScriptParse {
     int reference;
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 struct LuaLevelScriptParse sLevelScriptParse = { 0 };
@@ -636,7 +636,7 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
     }
 
     // call the callback
-    if (0 != smlua_call_hook(L, 5, 0, 0, preprocess->mod)) {
+    if (0 != smlua_call_hook(L, 5, 0, 0, preprocess->mod, preprocess->modFile)) {
         LOG_LUA("Failed to call the callback behaviors: %u", type);
         return 0;
     }
@@ -665,6 +665,7 @@ void smlua_func_level_script_parse(lua_State* L) {
 
     preprocess->reference = ref;
     preprocess->mod = gLuaActiveMod;
+    preprocess->modFile = gLuaActiveModFile;
 
     void *script = dynos_level_get_script(levelNum);
     if (script == NULL) {

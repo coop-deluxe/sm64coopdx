@@ -6,12 +6,12 @@
 #include "game/object_list_processor.h"
 
 /* |description|
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
 struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 /* |description|
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
 struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);

@@ -5166,7 +5166,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 ## [spawn_sync_object](#spawn_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -5194,7 +5194,7 @@ Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the lo
 ## [spawn_non_sync_object](#spawn_non_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
