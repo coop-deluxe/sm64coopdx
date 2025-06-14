@@ -1596,14 +1596,16 @@ static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_CO
 //  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???,                  1, sizeof(ma_sound)                     }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_FILE_FIELD_COUNT 4
+#define LUA_MOD_FILE_FIELD_COUNT 6
 static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
-    { "cachedPath",   LVT_STRING_P, offsetof(struct ModFile, cachedPath),   true, LOT_NONE, 1,  sizeof(char*)  },
-    { "dataHash",     LVT_U8,       offsetof(struct ModFile, dataHash),     true, LOT_NONE, 16, sizeof(u8)     },
-//  { "fp",           LVT_???,      offsetof(struct ModFile, fp),           true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
-    { "relativePath", LVT_STRING,   offsetof(struct ModFile, relativePath), true, LOT_NONE, 1,  sizeof(char)   },
-//  { "size",         LVT_???,      offsetof(struct ModFile, size),         true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
-    { "wroteBytes",   LVT_U64,      offsetof(struct ModFile, wroteBytes),   true, LOT_NONE, 1,  sizeof(u64)    },
+    { "cachedPath",        LVT_STRING_P, offsetof(struct ModFile, cachedPath),        true, LOT_NONE, 1,  sizeof(char*)  },
+    { "dataHash",          LVT_U8,       offsetof(struct ModFile, dataHash),          true, LOT_NONE, 16, sizeof(u8)     },
+//  { "fp",                LVT_???,      offsetof(struct ModFile, fp),                true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
+    { "isLoadedLuaModule", LVT_BOOL,     offsetof(struct ModFile, isLoadedLuaModule), true, LOT_NONE, 1,  sizeof(bool)   },
+    { "modifiedTimestamp", LVT_U64,      offsetof(struct ModFile, modifiedTimestamp), true, LOT_NONE, 1,  sizeof(u64)    },
+    { "relativePath",      LVT_STRING,   offsetof(struct ModFile, relativePath),      true, LOT_NONE, 1,  sizeof(char)   },
+//  { "size",              LVT_???,      offsetof(struct ModFile, size),              true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
+    { "wroteBytes",        LVT_U64,      offsetof(struct ModFile, wroteBytes),        true, LOT_NONE, 1,  sizeof(u64)    },
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6

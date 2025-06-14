@@ -1275,6 +1275,8 @@
 --- @class ModFile
 --- @field public cachedPath string
 --- @field public dataHash integer[]
+--- @field public isLoadedLuaModule boolean
+--- @field public modifiedTimestamp integer
 --- @field public relativePath string
 --- @field public wroteBytes integer
 

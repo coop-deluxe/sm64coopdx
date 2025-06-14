@@ -1938,6 +1938,8 @@
 | ----- | ---- | ------ |
 | cachedPath | `string` | read-only |
 | dataHash | `Array` <`integer`> | read-only |
+| isLoadedLuaModule | `boolean` | read-only |
+| modifiedTimestamp | `integer` | read-only |
 | relativePath | `string` | read-only |
 | wroteBytes | `integer` | read-only |
 
