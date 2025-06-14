@@ -255,7 +255,7 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 ## [mod_fs_exists](#mod_fs_exists)
 
 ### Description
-Checks the existence of a modfs at path `modPath` or for the active mod if not provided
+Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 
 ### Lua Example
 `local booleanValue = mod_fs_exists(modPath)`
@@ -278,7 +278,7 @@ Checks the existence of a modfs at path `modPath` or for the active mod if not p
 ## [mod_fs_get](#mod_fs_get)
 
 ### Description
-Gets the modfs object at path `modPath` or the active mod one if not provided
+Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 
 ### Lua Example
 `local ModFsValue = mod_fs_get(modPath)`
@@ -301,7 +301,7 @@ Gets the modfs object at path `modPath` or the active mod one if not provided
 ## [mod_fs_create](#mod_fs_create)
 
 ### Description
-Creates a modfs object for the active mod if it doesn't exist
+Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 
 ### Lua Example
 `local ModFsValue = mod_fs_create()`
@@ -322,19 +322,19 @@ Creates a modfs object for the active mod if it doesn't exist
 ## [mod_fs_delete](#mod_fs_delete)
 
 ### Description
-Deletes the modfs object of the active mod if it exists
+Deletes the modfs object of the active mod if it exists. Returns true on success
 
 ### Lua Example
-`mod_fs_delete()`
+`local booleanValue = mod_fs_delete()`
 
 ### Parameters
 - None
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_delete();`
+`bool mod_fs_delete();`
 
 [:arrow_up_small:](#)
 
@@ -343,19 +343,19 @@ Deletes the modfs object of the active mod if it exists
 ## [mod_fs_save](#mod_fs_save)
 
 ### Description
-Saves the modfs object of the active mod if it exists
+Saves the modfs object of the active mod if it exists. Returns true on success
 
 ### Lua Example
-`mod_fs_save()`
+`local booleanValue = mod_fs_save()`
 
 ### Parameters
 - None
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_save();`
+`bool mod_fs_save();`
 
 [:arrow_up_small:](#)
 
@@ -364,10 +364,10 @@ Saves the modfs object of the active mod if it exists
 ## [mod_fs_set_public](#mod_fs_set_public)
 
 ### Description
-Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists
+Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
 
 ### Lua Example
-`mod_fs_set_public(pub)`
+`local booleanValue = mod_fs_set_public(pub)`
 
 ### Parameters
 | Field | Type |
@@ -375,16 +375,19 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | pub | `boolean` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_set_public(bool pub);`
+`bool mod_fs_set_public(bool pub);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [mod_fs_get_filename](#mod_fs_get_filename)
+
+### Description
+Gets the filename at position `index` of the provided `modFs`
 
 ### Lua Example
 `local stringValue = mod_fs_get_filename(modFs, index)`
@@ -407,6 +410,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_get_file](#mod_fs_get_file)
 
+### Description
+Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
+
 ### Lua Example
 `local ModFsFileValue = mod_fs_get_file(modFs, filepath)`
 
@@ -427,6 +433,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 <br />
 
 ## [mod_fs_create_file](#mod_fs_create_file)
+
+### Description
+Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 
 ### Lua Example
 `local ModFsFileValue = mod_fs_create_file(modFs, filepath, text)`
@@ -450,8 +459,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_move_file](#mod_fs_move_file)
 
+### Description
+Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
+
 ### Lua Example
-`mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
+`local booleanValue = mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
 
 ### Parameters
 | Field | Type |
@@ -462,10 +474,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | overwriteExisting | `boolean` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);`
+`bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);`
 
 [:arrow_up_small:](#)
 
@@ -473,8 +485,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_copy_file](#mod_fs_copy_file)
 
+### Description
+Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
+
 ### Lua Example
-`mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
+`local booleanValue = mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
 
 ### Parameters
 | Field | Type |
@@ -485,10 +500,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | overwriteExisting | `boolean` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);`
+`bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);`
 
 [:arrow_up_small:](#)
 
@@ -496,8 +511,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_delete_file](#mod_fs_delete_file)
 
+### Description
+Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
+
 ### Lua Example
-`mod_fs_delete_file(modFs, filepath)`
+`local booleanValue = mod_fs_delete_file(modFs, filepath)`
 
 ### Parameters
 | Field | Type |
@@ -506,10 +524,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | filepath | `string` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_delete_file(struct ModFs *modFs, const char *filepath);`
+`bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath);`
 
 [:arrow_up_small:](#)
 
@@ -517,8 +535,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_clear](#mod_fs_clear)
 
+### Description
+Deletes all files of the provided `modFs`. Returns true on success
+
 ### Lua Example
-`mod_fs_clear(modFs)`
+`local booleanValue = mod_fs_clear(modFs)`
 
 ### Parameters
 | Field | Type |
@@ -526,16 +547,19 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | modFs | [ModFs](structs.md#ModFs) |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_clear(struct ModFs *modFs);`
+`bool mod_fs_clear(struct ModFs *modFs);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [mod_fs_file_read_bool](#mod_fs_file_read_bool)
+
+### Description
+Reads a boolean from a binary modfs `file`
 
 ### Lua Example
 `local booleanValue = mod_fs_file_read_bool(file)`
@@ -556,6 +580,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 <br />
 
 ## [mod_fs_file_read_integer](#mod_fs_file_read_integer)
+
+### Description
+Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 
 ### Lua Example
 `local integerValue = mod_fs_file_read_integer(file, intType)`
@@ -578,6 +605,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_read_number](#mod_fs_file_read_number)
 
+### Description
+Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
+
 ### Lua Example
 `local numberValue = mod_fs_file_read_number(file, floatType)`
 
@@ -599,6 +629,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_read_string](#mod_fs_file_read_string)
 
+### Description
+Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
+
 ### Lua Example
 `local stringValue = mod_fs_file_read_string(file)`
 
@@ -618,6 +651,9 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 <br />
 
 ## [mod_fs_file_read_line](#mod_fs_file_read_line)
+
+### Description
+Reads a line from a text modfs `file`
 
 ### Lua Example
 `local stringValue = mod_fs_file_read_line(file)`
@@ -639,8 +675,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_write_bool](#mod_fs_file_write_bool)
 
+### Description
+Writes a boolean to a binary modfs `file`. Returns true on success
+
 ### Lua Example
-`mod_fs_file_write_bool(file, value)`
+`local booleanValue = mod_fs_file_write_bool(file, value)`
 
 ### Parameters
 | Field | Type |
@@ -649,10 +688,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | value | `boolean` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_write_bool(struct ModFsFile *file, bool value);`
+`bool mod_fs_file_write_bool(struct ModFsFile *file, bool value);`
 
 [:arrow_up_small:](#)
 
@@ -660,8 +699,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_write_integer](#mod_fs_file_write_integer)
 
+### Description
+Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
+
 ### Lua Example
-`mod_fs_file_write_integer(file, value, intType)`
+`local booleanValue = mod_fs_file_write_integer(file, value, intType)`
 
 ### Parameters
 | Field | Type |
@@ -671,10 +713,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | intType | [enum ModFsFileIntType](constants.md#enum-ModFsFileIntType) |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);`
+`bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);`
 
 [:arrow_up_small:](#)
 
@@ -682,8 +724,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_write_number](#mod_fs_file_write_number)
 
+### Description
+Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
+
 ### Lua Example
-`mod_fs_file_write_number(file, value, floatType)`
+`local booleanValue = mod_fs_file_write_number(file, value, floatType)`
 
 ### Parameters
 | Field | Type |
@@ -693,10 +738,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | floatType | [enum ModFsFileFloatType](constants.md#enum-ModFsFileFloatType) |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
+`bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
 
 [:arrow_up_small:](#)
 
@@ -704,8 +749,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_write_string](#mod_fs_file_write_string)
 
+### Description
+Writes a string to a modfs `file`. Returns true on success
+
 ### Lua Example
-`mod_fs_file_write_string(file, str)`
+`local booleanValue = mod_fs_file_write_string(file, str)`
 
 ### Parameters
 | Field | Type |
@@ -714,10 +762,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | str | `string` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_write_string(struct ModFsFile *file, const char *str);`
+`bool mod_fs_file_write_string(struct ModFsFile *file, const char *str);`
 
 [:arrow_up_small:](#)
 
@@ -725,8 +773,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_write_line](#mod_fs_file_write_line)
 
+### Description
+Writes a line to a text modfs `file`. Returns true on success
+
 ### Lua Example
-`mod_fs_file_write_line(file, str)`
+`local booleanValue = mod_fs_file_write_line(file, str)`
 
 ### Parameters
 | Field | Type |
@@ -735,10 +786,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | str | `string` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_write_line(struct ModFsFile *file, const char *str);`
+`bool mod_fs_file_write_line(struct ModFsFile *file, const char *str);`
 
 [:arrow_up_small:](#)
 
@@ -746,8 +797,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_seek](#mod_fs_file_seek)
 
+### Description
+Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+
 ### Lua Example
-`mod_fs_file_seek(file, offset, origin)`
+`local booleanValue = mod_fs_file_seek(file, offset, origin)`
 
 ### Parameters
 | Field | Type |
@@ -757,16 +811,19 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | origin | [enum ModFsFileSeek](constants.md#enum-ModFsFileSeek) |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);`
+`bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);`
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## [mod_fs_file_is_eof](#mod_fs_file_is_eof)
+
+### Description
+Returns true if the provided modfs `file` has reached its end of file
 
 ### Lua Example
 `local booleanValue = mod_fs_file_is_eof(file)`
@@ -788,8 +845,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_erase](#mod_fs_file_erase)
 
+### Description
+Erases `length` bytes or characters from a modfs `file`. Returns true on success
+
 ### Lua Example
-`mod_fs_file_erase(file, length)`
+`local booleanValue = mod_fs_file_erase(file, length)`
 
 ### Parameters
 | Field | Type |
@@ -798,10 +858,10 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | length | `integer` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void mod_fs_file_erase(struct ModFsFile *file, u32 length);`
+`bool mod_fs_file_erase(struct ModFsFile *file, u32 length);`
 
 [:arrow_up_small:](#)
 
@@ -809,8 +869,11 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 
 ## [mod_fs_file_set_public](#mod_fs_file_set_public)
 
+### Description
+Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
+
 ### Lua Example
-`mod_fs_file_set_public(file, pub)`
+`local booleanValue = mod_fs_file_set_public(file, pub)`
 
 ### Parameters
 | Field | Type |
@@ -819,10 +882,54 @@ Marks the modfs object of the active mod as public (i.e. readable by other mods)
 | pub | `boolean` |
 
 ### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_hide_errors](#mod_fs_hide_errors)
+
+### Description
+Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
+
+### Lua Example
+`mod_fs_hide_errors(hide)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| hide | `boolean` |
+
+### Returns
 - None
 
 ### C Prototype
-`void mod_fs_file_set_public(struct ModFsFile *file, bool pub);`
+`void mod_fs_hide_errors(bool hide);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_last_error](#mod_fs_get_last_error)
+
+### Description
+Returns the last error message generated by `mod_fs` functions
+
+### Lua Example
+`local stringValue = mod_fs_get_last_error()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_get_last_error();`
 
 [:arrow_up_small:](#)
 
@@ -8057,133 +8164,6 @@ Apply one frame of platform rotation to the object using the given platform
 
 ### C Prototype
 `void apply_platform_displacement(struct Object *o, struct Object *platform);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from rumble_init.h
-
-<br />
-
-
-## [queue_rumble_data](#queue_rumble_data)
-
-### Description
-Queues rumble data
-
-### Lua Example
-`queue_rumble_data(a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data(s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_object](#queue_rumble_data_object)
-
-### Description
-Queues rumble data for object, factoring in its distance from Mario
-
-### Lua Example
-`queue_rumble_data_object(object, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| object | [Object](structs.md#Object) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_mario](#queue_rumble_data_mario)
-
-### Description
-Queues rumble data for Mario
-
-### Lua Example
-`queue_rumble_data_mario(m, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [reset_rumble_timers](#reset_rumble_timers)
-
-### Description
-Resets rumble timers
-
-### Lua Example
-`reset_rumble_timers(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void reset_rumble_timers(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [reset_rumble_timers_2](#reset_rumble_timers_2)
-
-### Description
-Resets rumble timers and sets a field based on `a0`
-
-### Lua Example
-`reset_rumble_timers_2(m, a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
 
 [:arrow_up_small:](#)
 

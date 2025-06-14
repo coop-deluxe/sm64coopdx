@@ -6,6 +6,133 @@
 
 
 ---
+# functions from rumble_init.h
+
+<br />
+
+
+## [queue_rumble_data](#queue_rumble_data)
+
+### Description
+Queues rumble data
+
+### Lua Example
+`queue_rumble_data(a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data(s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_object](#queue_rumble_data_object)
+
+### Description
+Queues rumble data for object, factoring in its distance from Mario
+
+### Lua Example
+`queue_rumble_data_object(object, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| object | [Object](structs.md#Object) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_mario](#queue_rumble_data_mario)
+
+### Description
+Queues rumble data for Mario
+
+### Lua Example
+`queue_rumble_data_mario(m, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_rumble_timers](#reset_rumble_timers)
+
+### Description
+Resets rumble timers
+
+### Lua Example
+`reset_rumble_timers(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_rumble_timers_2](#reset_rumble_timers_2)
+
+### Description
+Resets rumble timers and sets a field based on `a0`
+
+### Lua Example
+`reset_rumble_timers_2(m, a0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from save_file.h
 
 <br />

@@ -1359,6 +1359,8 @@
    - [mod_fs_file_is_eof](functions-5.md#mod_fs_file_is_eof)
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
 
@@ -1732,11 +1734,11 @@
 <br />
 
 - rumble_init.h
-   - [queue_rumble_data](functions-5.md#queue_rumble_data)
-   - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
-   - [queue_rumble_data_mario](functions-5.md#queue_rumble_data_mario)
-   - [reset_rumble_timers](functions-5.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-5.md#reset_rumble_timers_2)
+   - [queue_rumble_data](functions-6.md#queue_rumble_data)
+   - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
+   - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
+   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
 
 <br />
 

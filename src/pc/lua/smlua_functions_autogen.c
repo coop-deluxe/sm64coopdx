@@ -22132,7 +22132,7 @@ int smlua_func_mod_fs_delete(UNUSED lua_State* L) {
     }
 
 
-    mod_fs_delete();
+    lua_pushboolean(L, mod_fs_delete());
 
     return 1;
 }
@@ -22147,7 +22147,7 @@ int smlua_func_mod_fs_save(UNUSED lua_State* L) {
     }
 
 
-    mod_fs_save();
+    lua_pushboolean(L, mod_fs_save());
 
     return 1;
 }
@@ -22164,7 +22164,7 @@ int smlua_func_mod_fs_set_public(lua_State* L) {
     bool pub = smlua_to_boolean(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_set_public"); return 0; }
 
-    mod_fs_set_public(pub);
+    lua_pushboolean(L, mod_fs_set_public(pub));
 
     return 1;
 }
@@ -22246,7 +22246,7 @@ int smlua_func_mod_fs_move_file(lua_State* L) {
     bool overwriteExisting = smlua_to_boolean(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_move_file"); return 0; }
 
-    mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting);
+    lua_pushboolean(L, mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting));
 
     return 1;
 }
@@ -22269,7 +22269,7 @@ int smlua_func_mod_fs_copy_file(lua_State* L) {
     bool overwriteExisting = smlua_to_boolean(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_copy_file"); return 0; }
 
-    mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting);
+    lua_pushboolean(L, mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting));
 
     return 1;
 }
@@ -22288,7 +22288,7 @@ int smlua_func_mod_fs_delete_file(lua_State* L) {
     const char* filepath = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_delete_file"); return 0; }
 
-    mod_fs_delete_file(modFs, filepath);
+    lua_pushboolean(L, mod_fs_delete_file(modFs, filepath));
 
     return 1;
 }
@@ -22305,7 +22305,7 @@ int smlua_func_mod_fs_clear(lua_State* L) {
     struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_clear"); return 0; }
 
-    mod_fs_clear(modFs);
+    lua_pushboolean(L, mod_fs_clear(modFs));
 
     return 1;
 }
@@ -22413,7 +22413,7 @@ int smlua_func_mod_fs_file_write_bool(lua_State* L) {
     bool value = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_bool"); return 0; }
 
-    mod_fs_file_write_bool(file, value);
+    lua_pushboolean(L, mod_fs_file_write_bool(file, value));
 
     return 1;
 }
@@ -22434,7 +22434,7 @@ int smlua_func_mod_fs_file_write_integer(lua_State* L) {
     int intType = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_integer"); return 0; }
 
-    mod_fs_file_write_integer(file, value, intType);
+    lua_pushboolean(L, mod_fs_file_write_integer(file, value, intType));
 
     return 1;
 }
@@ -22455,7 +22455,7 @@ int smlua_func_mod_fs_file_write_number(lua_State* L) {
     int floatType = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_number"); return 0; }
 
-    mod_fs_file_write_number(file, value, floatType);
+    lua_pushboolean(L, mod_fs_file_write_number(file, value, floatType));
 
     return 1;
 }
@@ -22474,7 +22474,7 @@ int smlua_func_mod_fs_file_write_string(lua_State* L) {
     const char* str = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_string"); return 0; }
 
-    mod_fs_file_write_string(file, str);
+    lua_pushboolean(L, mod_fs_file_write_string(file, str));
 
     return 1;
 }
@@ -22493,7 +22493,7 @@ int smlua_func_mod_fs_file_write_line(lua_State* L) {
     const char* str = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_line"); return 0; }
 
-    mod_fs_file_write_line(file, str);
+    lua_pushboolean(L, mod_fs_file_write_line(file, str));
 
     return 1;
 }
@@ -22514,7 +22514,7 @@ int smlua_func_mod_fs_file_seek(lua_State* L) {
     int origin = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_seek"); return 0; }
 
-    mod_fs_file_seek(file, offset, origin);
+    lua_pushboolean(L, mod_fs_file_seek(file, offset, origin));
 
     return 1;
 }
@@ -22550,7 +22550,7 @@ int smlua_func_mod_fs_file_erase(lua_State* L) {
     u32 length = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_erase"); return 0; }
 
-    mod_fs_file_erase(file, length);
+    lua_pushboolean(L, mod_fs_file_erase(file, length));
 
     return 1;
 }
@@ -22569,7 +22569,39 @@ int smlua_func_mod_fs_file_set_public(lua_State* L) {
     bool pub = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_public"); return 0; }
 
-    mod_fs_file_set_public(file, pub);
+    lua_pushboolean(L, mod_fs_file_set_public(file, pub));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_hide_errors(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_hide_errors", 1, top);
+        return 0;
+    }
+
+    bool hide = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_hide_errors"); return 0; }
+
+    mod_fs_hide_errors(hide);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_get_last_error(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_get_last_error", 0, top);
+        return 0;
+    }
+
+
+    lua_pushstring(L, mod_fs_get_last_error());
 
     return 1;
 }
@@ -37076,6 +37108,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_is_eof", smlua_func_mod_fs_file_is_eof);
     smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);
     smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
+    smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
+    smlua_bind_function(L, "mod_fs_get_last_error", smlua_func_mod_fs_get_last_error);
 
     // mod_storage.h
     smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);
