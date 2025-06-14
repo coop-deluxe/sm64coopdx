@@ -15,7 +15,7 @@ bool smlua_call_event_hooks_HOOK_UPDATE() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_UPDATE]);
             continue;
         }
@@ -45,7 +45,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_UPDATE(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_UPDATE]);
             continue;
         }
@@ -75,7 +75,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_MARIO_UPDATE(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_MARIO_UPDATE]);
             continue;
         }
@@ -105,7 +105,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_MARIO_ACTION(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SET_MARIO_ACTION]);
             continue;
         }
@@ -140,7 +140,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 step
         lua_pushinteger(L, stepArg);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_PHYS_STEP]);
             continue;
         }
@@ -185,7 +185,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_PVP_ATTACK(struct MarioState *attacker, s
         lua_pushinteger(L, interaction);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_PVP_ATTACK]);
             continue;
         }
@@ -229,7 +229,7 @@ bool smlua_call_event_hooks_HOOK_ON_PVP_ATTACK(struct MarioState *attacker, stru
         lua_pushinteger(L, interaction);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PVP_ATTACK]);
             continue;
         }
@@ -259,7 +259,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAYER_CONNECTED(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAYER_CONNECTED]);
             continue;
         }
@@ -289,7 +289,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAYER_DISCONNECTED(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAYER_DISCONNECTED]);
             continue;
         }
@@ -325,7 +325,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_INTERACT(struct MarioState *m, struct Obj
         lua_pushinteger(L, interactType);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_INTERACT]);
             continue;
         }
@@ -369,7 +369,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACT(struct MarioState *m, struct Object
         lua_pushboolean(L, interactValue);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 4, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 4, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INTERACT]);
             continue;
         }
@@ -408,7 +408,7 @@ bool smlua_call_event_hooks_HOOK_ON_LEVEL_INIT(u8 warpType, s16 levelNum, u8 are
         lua_pushinteger(L, warpArg);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_LEVEL_INIT]);
             continue;
         }
@@ -447,7 +447,7 @@ bool smlua_call_event_hooks_HOOK_ON_WARP(u8 warpType, s16 levelNum, u8 areaIdx, 
         lua_pushinteger(L, warpArg);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_WARP]);
             continue;
         }
@@ -471,7 +471,7 @@ bool smlua_call_event_hooks_HOOK_ON_SYNC_VALID() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SYNC_VALID]);
             continue;
         }
@@ -498,7 +498,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_UNLOAD(struct Object *obj) {
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_UNLOAD]);
             continue;
         }
@@ -525,7 +525,7 @@ bool smlua_call_event_hooks_HOOK_ON_SYNC_OBJECT_UNLOAD(struct Object *obj) {
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SYNC_OBJECT_UNLOAD]);
             continue;
         }
@@ -552,7 +552,7 @@ bool smlua_call_event_hooks_HOOK_ON_PAUSE_EXIT(bool usedExitToCastle, bool *allo
         lua_pushboolean(L, usedExitToCastle);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PAUSE_EXIT]);
             continue;
         }
@@ -580,7 +580,7 @@ bool smlua_call_event_hooks_HOOK_GET_STAR_COLLECTION_DIALOG(s32 *dialogID) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_GET_STAR_COLLECTION_DIALOG]);
             continue;
         }
@@ -618,7 +618,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_CAMERA_MODE(struct Camera *c, s16 mode, 
         lua_pushinteger(L, frames);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SET_CAMERA_MODE]);
             continue;
         }
@@ -650,7 +650,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_RENDER(struct Object *obj) {
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_RENDER]);
             continue;
         }
@@ -680,7 +680,7 @@ bool smlua_call_event_hooks_HOOK_ON_DEATH(struct MarioState *m, bool *allowDeath
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DEATH]);
             continue;
         }
@@ -715,7 +715,7 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_RECEIVE(s32 modIndex, s32 valueIndex)
         lua_pushinteger(L, valueIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PACKET_RECEIVE]);
             continue;
         }
@@ -741,7 +741,7 @@ bool smlua_call_event_hooks_HOOK_USE_ACT_SELECT(s32 levelNum, bool *useActSelect
         lua_pushinteger(L, levelNum);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_USE_ACT_SELECT]);
             continue;
         }
@@ -774,7 +774,7 @@ bool smlua_call_event_hooks_HOOK_ON_CHANGE_CAMERA_ANGLE(s32 camAngleType, bool *
         lua_pushinteger(L, camAngleType);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CHANGE_CAMERA_ANGLE]);
             continue;
         }
@@ -806,7 +806,7 @@ bool smlua_call_event_hooks_HOOK_ON_SCREEN_TRANSITION(s32 transitionType, bool *
         lua_pushinteger(L, transitionType);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SCREEN_TRANSITION]);
             continue;
         }
@@ -844,7 +844,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_HAZARD_SURFACE(struct MarioState *m, s32 
         lua_pushinteger(L, hazardType);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_HAZARD_SURFACE]);
             continue;
         }
@@ -882,7 +882,7 @@ bool smlua_call_event_hooks_HOOK_ON_CHAT_MESSAGE(struct MarioState *m, const cha
         lua_pushstring(L, message);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CHAT_MESSAGE]);
             continue;
         }
@@ -920,7 +920,7 @@ bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelI
         lua_pushinteger(L, modelExtendedId);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_OBJECT_SET_MODEL]);
             continue;
         }
@@ -952,7 +952,7 @@ bool smlua_call_event_hooks_HOOK_CHARACTER_SOUND(struct MarioState *m, enum Char
         lua_pushinteger(L, characterSound);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_CHARACTER_SOUND]);
             continue;
         }
@@ -994,7 +994,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_SET_MARIO_ACTION(struct MarioState *m, u
         lua_pushinteger(L, actionArg);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_SET_MARIO_ACTION]);
             continue;
         }
@@ -1023,7 +1023,7 @@ bool smlua_call_event_hooks_HOOK_JOINED_GAME() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_JOINED_GAME]);
             continue;
         }
@@ -1050,7 +1050,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_ANIM_UPDATE(struct Object *obj) {
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_ANIM_UPDATE]);
             continue;
         }
@@ -1077,7 +1077,7 @@ bool smlua_call_event_hooks_HOOK_ON_DIALOG(s32 dialogID, bool *openDialogBox, co
         lua_pushinteger(L, dialogID);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 2, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 2, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DIALOG]);
             continue;
         }
@@ -1111,7 +1111,7 @@ bool smlua_call_event_hooks_HOOK_ON_EXIT() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_EXIT]);
             continue;
         }
@@ -1137,7 +1137,7 @@ bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride)
         lua_pushinteger(L, speaker);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_DIALOG_SOUND]);
             continue;
         }
@@ -1173,7 +1173,7 @@ bool smlua_call_event_hooks_HOOK_ON_COLLIDE_LEVEL_BOUNDS(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_COLLIDE_LEVEL_BOUNDS]);
             continue;
         }
@@ -1203,7 +1203,7 @@ bool smlua_call_event_hooks_HOOK_MIRROR_MARIO_RENDER(struct GraphNodeObject *mir
         lua_pushinteger(L, playerIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MIRROR_MARIO_RENDER]);
             continue;
         }
@@ -1232,7 +1232,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED(struct M
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED]);
             continue;
         }
@@ -1264,7 +1264,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_LOAD(struct Object *obj) {
         smlua_push_object(L, LOT_OBJECT, obj, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_LOAD]);
             continue;
         }
@@ -1294,7 +1294,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *so
         smlua_new_vec3f(pos);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAY_SOUND]);
             continue;
         }
@@ -1332,7 +1332,7 @@ bool smlua_call_event_hooks_HOOK_ON_SEQ_LOAD(u32 seqPlayer, u32 seqId, s32 loadA
         lua_pushinteger(L, loadAsync);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SEQ_LOAD]);
             continue;
         }
@@ -1374,7 +1374,7 @@ bool smlua_call_event_hooks_HOOK_ON_ATTACK_OBJECT(struct MarioState *m, struct O
         lua_pushinteger(L, interaction);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_ATTACK_OBJECT]);
             continue;
         }
@@ -1401,7 +1401,7 @@ bool smlua_call_event_hooks_HOOK_ON_LANGUAGE_CHANGED(const char *langName) {
         lua_pushstring(L, langName);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_LANGUAGE_CHANGED]);
             continue;
         }
@@ -1425,7 +1425,7 @@ bool smlua_call_event_hooks_HOOK_ON_MODS_LOADED() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_MODS_LOADED]);
             continue;
         }
@@ -1449,7 +1449,7 @@ bool smlua_call_event_hooks_HOOK_ON_DJUI_THEME_CHANGED() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DJUI_THEME_CHANGED]);
             continue;
         }
@@ -1479,7 +1479,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS(struct GraphNode *node, s32 matS
         lua_pushinteger(L, matStackIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS]);
             continue;
         }
@@ -1509,7 +1509,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_GEO_PROCESS(struct GraphNode *node, s32 
         lua_pushinteger(L, matStackIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_GEO_PROCESS]);
             continue;
         }
@@ -1539,7 +1539,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS_CHILDREN(struct GraphNode *paren
         lua_pushinteger(L, matStackIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS_CHILDREN]);
             continue;
         }
@@ -1569,7 +1569,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS(struct MarioStat
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS]);
             continue;
         }
@@ -1604,7 +1604,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACTIONS(struct MarioState *m) {
         lua_remove(L, -2);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INTERACTIONS]);
             continue;
         }
@@ -1637,7 +1637,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(struct MarioState *m, 
         lua_pushboolean(L, isInWaterAction);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_FORCE_WATER_ACTION]);
             continue;
         }
@@ -1677,7 +1677,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_WARP(s16 destLevel, s16 destArea, s16 de
         lua_pushinteger(L, arg);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 4, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 4, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_WARP]);
             continue;
         }
@@ -1735,7 +1735,7 @@ bool smlua_call_event_hooks_HOOK_ON_INSTANT_WARP(u8 areaIdx, u8 nodeId, Vec3s di
         smlua_new_vec3s(displacement);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INSTANT_WARP]);
             continue;
         }
@@ -1767,7 +1767,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_FLOOR_CLASS(struct MarioState *m
         lua_pushinteger(L, floorClass);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_FLOOR_CLASS]);
             continue;
         }
@@ -1803,7 +1803,7 @@ bool smlua_call_event_hooks_HOOK_ON_ADD_SURFACE(struct Surface *surface, bool dy
         lua_pushboolean(L, dynamic);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_ADD_SURFACE]);
             continue;
         }
@@ -1827,7 +1827,7 @@ bool smlua_call_event_hooks_HOOK_ON_CLEAR_AREAS() {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CLEAR_AREAS]);
             continue;
         }

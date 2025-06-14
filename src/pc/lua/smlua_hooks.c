@@ -34,6 +34,7 @@ u64* gBehaviorOffset = &gPcDebug.bhvOffset;
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
     struct Mod* mod[MAX_HOOKED_REFERENCES];
+    struct ModFile* modFile[MAX_HOOKED_REFERENCES];
     int count;
 };
 
@@ -46,11 +47,14 @@ static const char* sLuaHookedEventTypeName[] = {
     "HOOK_MAX"
 };
 
-int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod) {
+int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod, struct ModFile* activeModFile) {
     if (!gGameInited) { return 0; } // Don't call hooks while the game is booting
 
-    struct Mod* prev = gLuaActiveMod;
+    struct Mod* prevActiveMod = gLuaActiveMod;
+    struct ModFile* prevActiveModFile = gLuaActiveModFile;
+
     gLuaActiveMod = activeMod;
+    gLuaActiveModFile = activeModFile;
     gLuaLastHookMod = activeMod;
     gPcDebug.lastModRun = activeMod;
 
@@ -62,7 +66,8 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
 
     lua_profiler_stop_counter(activeMod);
 
-    gLuaActiveMod = prev;
+    gLuaActiveMod = prevActiveMod;
+    gLuaActiveModFile = prevActiveModFile;
     return rc;
 }
 
@@ -131,7 +136,7 @@ static bool smlua_call_event_hooks_on_hud_render(void (*resetFunc)(void), bool r
             lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
             // call the callback
-            if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
+            if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
                 LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[hookType]);
             } else {
                 hookResult = true;
@@ -170,7 +175,7 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
         smlua_new_vec3f(pos);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_NAMETAGS_RENDER]);
             continue;
         }
@@ -223,6 +228,7 @@ struct LuaHookedMarioAction {
     u32 interactionType;
     int actionHookRefs[ACTION_HOOK_MAX];
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_ACTIONS (ACT_NUM_GROUPS * ACT_NUM_ACTIONS_PER_GROUP)
@@ -311,6 +317,7 @@ int smlua_hook_mario_action(lua_State* L) {
     hooked->action = action;
     hooked->interactionType = interactionType;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedMarioActionsCount++;
     return 1;
@@ -334,7 +341,7 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
             lua_remove(L, -2);
 
             // call the callback
-            if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod)) {
+            if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
                 LOG_LUA("Failed to call the action callback: %u", m->action);
                 continue;
             }
@@ -381,6 +388,7 @@ struct LuaHookedBehavior {
     bool replace;
     bool luaBehavior;
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_BEHAVIORS 1024
@@ -474,6 +482,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->replace = true;
     hooked->luaBehavior = false;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedBehaviorsCount++;
 
@@ -620,6 +629,7 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->replace = replaceBehavior;
     hooked->luaBehavior = true;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedBehaviorsCount++;
 
@@ -677,7 +687,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         smlua_push_object(L, LOT_OBJECT, object, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod, hooked->modFile)) {
             LOG_LUA("Failed to call the behavior callback: %u", hooked->behaviorId);
             return true;
         }
@@ -698,6 +708,7 @@ struct LuaHookedChatCommand {
     char* description;
     int reference;
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_CHAT_COMMANDS 512
@@ -742,6 +753,7 @@ int smlua_hook_chat_command(lua_State* L) {
     hooked->description = strdup(description);
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedChatCommandsCount++;
     return 1;
@@ -805,7 +817,7 @@ bool smlua_call_chat_command_hook(char* command) {
         lua_pushstring(L, params);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod)) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
             LOG_LUA("Failed to call the chat command callback: %s", command);
             continue;
         }
@@ -1108,6 +1120,7 @@ int smlua_hook_mod_menu_text(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = 0;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -1146,6 +1159,7 @@ int smlua_hook_mod_menu_button(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -1190,6 +1204,7 @@ int smlua_hook_mod_menu_checkbox(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -1246,6 +1261,7 @@ int smlua_hook_mod_menu_slider(lua_State* L) {
     hooked->sliderMax = sliderMax;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -1297,6 +1313,7 @@ int smlua_hook_mod_menu_inputbox(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -1428,7 +1445,7 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
     }
 
     // call the callback
-    if (0 != smlua_call_hook(L, params, 1, 0, hooked->mod)) {
+    if (0 != smlua_call_hook(L, params, 1, 0, hooked->mod, hooked->modFile)) {
         LOG_LUA("Failed to call the mod menu element callback: %s", hooked->name);
         return;
     }
@@ -1453,6 +1470,7 @@ void smlua_clear_hooks(void) {
         struct LuaHookedMarioAction* hooked = &sHookedMarioActions[i];
         hooked->action = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
         memset(hooked->actionHookRefs, 0, sizeof(hooked->actionHookRefs));
     }
     sHookedMarioActionsCount = 0;
@@ -1467,6 +1485,7 @@ void smlua_clear_hooks(void) {
 
         hooked->reference = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     sHookedChatCommandsCount = 0;
 
@@ -1482,6 +1501,7 @@ void smlua_clear_hooks(void) {
         hooked->sliderMax = 0;
         hooked->reference = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     gHookedModMenuElementsCount = 0;
 
@@ -1510,6 +1530,7 @@ void smlua_clear_hooks(void) {
         hooked->replace = false;
         hooked->luaBehavior = false;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     sHookedBehaviorsCount = 0;
     memset(gLuaMarioActionIndex, 0, sizeof(gLuaMarioActionIndex));
