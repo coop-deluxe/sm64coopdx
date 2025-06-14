@@ -371,7 +371,7 @@ void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
 
-    smlua_live_reload_update(L);
+    if (network_allow_mod_dev_mode()) { smlua_live_reload_update(L); }
 
     audio_sample_destroy_pending_copies();
 
