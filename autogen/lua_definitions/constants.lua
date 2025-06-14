@@ -4364,6 +4364,50 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_BOWSER`
 
 --- @type integer
+MOD_FS_MAX_SIZE = 0x1000000
+
+--- @type integer
+MOD_FS_MAX_FILES = 0x100
+
+--- @type integer
+MOD_FS_MAX_PATH = 0x100
+
+INT_TYPE_U8  = 0 --- @type ModFsFileIntType
+INT_TYPE_U16 = 1 --- @type ModFsFileIntType
+INT_TYPE_U32 = 2 --- @type ModFsFileIntType
+INT_TYPE_U64 = 3 --- @type ModFsFileIntType
+INT_TYPE_S8  = 4 --- @type ModFsFileIntType
+INT_TYPE_S16 = 5 --- @type ModFsFileIntType
+INT_TYPE_S32 = 6 --- @type ModFsFileIntType
+INT_TYPE_S64 = 7 --- @type ModFsFileIntType
+
+--- @alias ModFsFileIntType
+--- | `INT_TYPE_U8`
+--- | `INT_TYPE_U16`
+--- | `INT_TYPE_U32`
+--- | `INT_TYPE_U64`
+--- | `INT_TYPE_S8`
+--- | `INT_TYPE_S16`
+--- | `INT_TYPE_S32`
+--- | `INT_TYPE_S64`
+
+FLOAT_TYPE_F32 = 0 --- @type ModFsFileFloatType
+FLOAT_TYPE_F64 = 1 --- @type ModFsFileFloatType
+
+--- @alias ModFsFileFloatType
+--- | `FLOAT_TYPE_F32`
+--- | `FLOAT_TYPE_F64`
+
+FILE_SEEK_SET = 0 --- @type ModFsFileSeek
+FILE_SEEK_CUR = 1 --- @type ModFsFileSeek
+FILE_SEEK_END = 2 --- @type ModFsFileSeek
+
+--- @alias ModFsFileSeek
+--- | `FILE_SEEK_SET`
+--- | `FILE_SEEK_CUR`
+--- | `FILE_SEEK_END`
+
+--- @type integer
 MAX_KEYS = 4096
 
 --- @type integer

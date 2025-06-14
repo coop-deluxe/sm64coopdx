@@ -7292,6 +7292,180 @@ function delta_interpolate_vec3s(res, a, b, delta)
     -- ...
 end
 
+--- @param modPath string
+--- @return boolean
+--- Checks the existence of a modfs at path `modPath` or for the active mod if not provided
+function mod_fs_exists(modPath)
+    -- ...
+end
+
+--- @param modPath string
+--- @return ModFs
+--- Gets the modfs object at path `modPath` or the active mod one if not provided
+function mod_fs_get(modPath)
+    -- ...
+end
+
+--- @return ModFs
+--- Creates a modfs object for the active mod if it doesn't exist
+function mod_fs_create()
+    -- ...
+end
+
+--- Deletes the modfs object of the active mod if it exists
+function mod_fs_delete()
+    -- ...
+end
+
+--- Saves the modfs object of the active mod if it exists
+function mod_fs_save()
+    -- ...
+end
+
+--- @param pub boolean
+--- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists
+function mod_fs_set_public(pub)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param index integer
+--- @return string
+function mod_fs_get_filename(modFs, index)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @return ModFsFile
+function mod_fs_get_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @param text boolean
+--- @return ModFsFile
+function mod_fs_create_file(modFs, filepath, text)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param oldpath string
+--- @param newpath string
+--- @param overwriteExisting boolean
+function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param srcpath string
+--- @param dstpath string
+--- @param overwriteExisting boolean
+function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+function mod_fs_delete_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+function mod_fs_file_read_bool(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param intType ModFsFileIntType
+--- @return integer
+function mod_fs_file_read_integer(file, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param floatType ModFsFileFloatType
+--- @return number
+function mod_fs_file_read_number(file, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+function mod_fs_file_read_string(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+function mod_fs_file_read_line(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value boolean
+function mod_fs_file_write_bool(file, value)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value integer
+--- @param intType ModFsFileIntType
+function mod_fs_file_write_integer(file, value, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value number
+--- @param floatType ModFsFileFloatType
+function mod_fs_file_write_number(file, value, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+function mod_fs_file_write_string(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+function mod_fs_file_write_line(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param offset integer
+--- @param origin ModFsFileSeek
+function mod_fs_file_seek(file, offset, origin)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+function mod_fs_file_is_eof(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param length integer
+function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param pub boolean
+function mod_fs_file_set_public(file, pub)
+    -- ...
+end
+
 --- @param key string
 --- @param value string
 --- @return boolean

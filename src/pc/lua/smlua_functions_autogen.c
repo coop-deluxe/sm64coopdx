@@ -43,6 +43,7 @@
 #include "src/game/behavior_actions.h"
 #include "src/game/mario_misc.h"
 #include "src/pc/mods/mod_storage.h"
+#include "src/pc/mods/mod_fs.h"
 #include "src/pc/utils/misc.h"
 #include "src/game/level_update.h"
 #include "src/game/area.h"
@@ -22062,6 +22063,517 @@ int smlua_func_delta_interpolate_vec3s(lua_State* L) {
     return 1;
 }
 
+  //////////////
+ // mod_fs.h //
+//////////////
+
+int smlua_func_mod_fs_exists(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 0 || top > 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_fs_exists", 0, 1, top);
+        return 0;
+    }
+
+    const char* modPath = (const char*) NULL;
+    if (top >= 1) {
+        modPath = smlua_to_string(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_exists"); return 0; }
+    }
+
+    lua_pushboolean(L, mod_fs_exists(modPath));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_get(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 0 || top > 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_fs_get", 0, 1, top);
+        return 0;
+    }
+
+    const char* modPath = (const char*) NULL;
+    if (top >= 1) {
+        modPath = smlua_to_string(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_get"); return 0; }
+    }
+
+    smlua_push_object(L, LOT_MODFS, mod_fs_get(modPath), NULL);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_create(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_create", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_MODFS, mod_fs_create(), NULL);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_delete(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_delete", 0, top);
+        return 0;
+    }
+
+
+    mod_fs_delete();
+
+    return 1;
+}
+
+int smlua_func_mod_fs_save(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_save", 0, top);
+        return 0;
+    }
+
+
+    mod_fs_save();
+
+    return 1;
+}
+
+int smlua_func_mod_fs_set_public(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_set_public", 1, top);
+        return 0;
+    }
+
+    bool pub = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_set_public"); return 0; }
+
+    mod_fs_set_public(pub);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_get_filename(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_get_filename", 2, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_get_filename"); return 0; }
+    u16 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_get_filename"); return 0; }
+
+    lua_pushstring(L, mod_fs_get_filename(modFs, index));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_get_file(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_get_file", 2, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_get_file"); return 0; }
+    const char* filepath = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_get_file"); return 0; }
+
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_get_file(modFs, filepath), NULL);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_create_file(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_create_file", 3, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_create_file"); return 0; }
+    const char* filepath = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_create_file"); return 0; }
+    bool text = smlua_to_boolean(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_create_file"); return 0; }
+
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_create_file(modFs, filepath, text), NULL);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_move_file(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_move_file", 4, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_move_file"); return 0; }
+    const char* oldpath = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_move_file"); return 0; }
+    const char* newpath = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_move_file"); return 0; }
+    bool overwriteExisting = smlua_to_boolean(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_move_file"); return 0; }
+
+    mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_copy_file(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_copy_file", 4, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_copy_file"); return 0; }
+    const char* srcpath = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_copy_file"); return 0; }
+    const char* dstpath = smlua_to_string(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_copy_file"); return 0; }
+    bool overwriteExisting = smlua_to_boolean(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_copy_file"); return 0; }
+
+    mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_delete_file(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_delete_file", 2, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_delete_file"); return 0; }
+    const char* filepath = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_delete_file"); return 0; }
+
+    mod_fs_delete_file(modFs, filepath);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_clear(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_clear", 1, top);
+        return 0;
+    }
+
+    struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_clear"); return 0; }
+
+    mod_fs_clear(modFs);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_read_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_bool", 1, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_bool"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_read_bool(file));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_read_integer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_integer", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_integer"); return 0; }
+    int intType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_integer"); return 0; }
+
+    lua_pushinteger(L, mod_fs_file_read_integer(file, intType));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_read_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_number", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_number"); return 0; }
+    int floatType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_number"); return 0; }
+
+    lua_pushnumber(L, mod_fs_file_read_number(file, floatType));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_read_string(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_string", 1, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_string"); return 0; }
+
+    lua_pushstring(L, mod_fs_file_read_string(file));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_read_line(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_line", 1, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_line"); return 0; }
+
+    lua_pushstring(L, mod_fs_file_read_line(file));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_bool", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_bool"); return 0; }
+    bool value = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_bool"); return 0; }
+
+    mod_fs_file_write_bool(file, value);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_integer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_integer", 3, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_integer"); return 0; }
+    lua_Integer value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_integer"); return 0; }
+    int intType = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_integer"); return 0; }
+
+    mod_fs_file_write_integer(file, value, intType);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_number(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_number", 3, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_number"); return 0; }
+    lua_Number value = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_number"); return 0; }
+    int floatType = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_number"); return 0; }
+
+    mod_fs_file_write_number(file, value, floatType);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_string(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_string", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_string"); return 0; }
+    const char* str = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_string"); return 0; }
+
+    mod_fs_file_write_string(file, str);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_line(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_line", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_line"); return 0; }
+    const char* str = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_line"); return 0; }
+
+    mod_fs_file_write_line(file, str);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_seek(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_seek", 3, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_seek"); return 0; }
+    s32 offset = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_seek"); return 0; }
+    int origin = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_seek"); return 0; }
+
+    mod_fs_file_seek(file, offset, origin);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_is_eof(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_is_eof", 1, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_is_eof"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_is_eof(file));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_erase(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_erase", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_erase"); return 0; }
+    u32 length = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_erase"); return 0; }
+
+    mod_fs_file_erase(file, length);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_set_public(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_set_public", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_set_public"); return 0; }
+    bool pub = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_public"); return 0; }
+
+    mod_fs_file_set_public(file, pub);
+
+    return 1;
+}
+
   ///////////////////
  // mod_storage.h //
 ///////////////////
@@ -36535,6 +37047,35 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "delta_interpolate_s32", smlua_func_delta_interpolate_s32);
     smlua_bind_function(L, "delta_interpolate_vec3f", smlua_func_delta_interpolate_vec3f);
     smlua_bind_function(L, "delta_interpolate_vec3s", smlua_func_delta_interpolate_vec3s);
+
+    // mod_fs.h
+    smlua_bind_function(L, "mod_fs_exists", smlua_func_mod_fs_exists);
+    smlua_bind_function(L, "mod_fs_get", smlua_func_mod_fs_get);
+    smlua_bind_function(L, "mod_fs_create", smlua_func_mod_fs_create);
+    smlua_bind_function(L, "mod_fs_delete", smlua_func_mod_fs_delete);
+    smlua_bind_function(L, "mod_fs_save", smlua_func_mod_fs_save);
+    smlua_bind_function(L, "mod_fs_set_public", smlua_func_mod_fs_set_public);
+    smlua_bind_function(L, "mod_fs_get_filename", smlua_func_mod_fs_get_filename);
+    smlua_bind_function(L, "mod_fs_get_file", smlua_func_mod_fs_get_file);
+    smlua_bind_function(L, "mod_fs_create_file", smlua_func_mod_fs_create_file);
+    smlua_bind_function(L, "mod_fs_move_file", smlua_func_mod_fs_move_file);
+    smlua_bind_function(L, "mod_fs_copy_file", smlua_func_mod_fs_copy_file);
+    smlua_bind_function(L, "mod_fs_delete_file", smlua_func_mod_fs_delete_file);
+    smlua_bind_function(L, "mod_fs_clear", smlua_func_mod_fs_clear);
+    smlua_bind_function(L, "mod_fs_file_read_bool", smlua_func_mod_fs_file_read_bool);
+    smlua_bind_function(L, "mod_fs_file_read_integer", smlua_func_mod_fs_file_read_integer);
+    smlua_bind_function(L, "mod_fs_file_read_number", smlua_func_mod_fs_file_read_number);
+    smlua_bind_function(L, "mod_fs_file_read_string", smlua_func_mod_fs_file_read_string);
+    smlua_bind_function(L, "mod_fs_file_read_line", smlua_func_mod_fs_file_read_line);
+    smlua_bind_function(L, "mod_fs_file_write_bool", smlua_func_mod_fs_file_write_bool);
+    smlua_bind_function(L, "mod_fs_file_write_integer", smlua_func_mod_fs_file_write_integer);
+    smlua_bind_function(L, "mod_fs_file_write_number", smlua_func_mod_fs_file_write_number);
+    smlua_bind_function(L, "mod_fs_file_write_string", smlua_func_mod_fs_file_write_string);
+    smlua_bind_function(L, "mod_fs_file_write_line", smlua_func_mod_fs_file_write_line);
+    smlua_bind_function(L, "mod_fs_file_seek", smlua_func_mod_fs_file_seek);
+    smlua_bind_function(L, "mod_fs_file_is_eof", smlua_func_mod_fs_file_is_eof);
+    smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);
+    smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
 
     // mod_storage.h
     smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);

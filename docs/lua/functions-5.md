@@ -247,6 +247,588 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 <br />
 
 ---
+# functions from mod_fs.h
+
+<br />
+
+
+## [mod_fs_exists](#mod_fs_exists)
+
+### Description
+Checks the existence of a modfs at path `modPath` or for the active mod if not provided
+
+### Lua Example
+`local booleanValue = mod_fs_exists(modPath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modPath | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_exists(OPTIONAL const char *modPath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get](#mod_fs_get)
+
+### Description
+Gets the modfs object at path `modPath` or the active mod one if not provided
+
+### Lua Example
+`local ModFsValue = mod_fs_get(modPath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modPath | `string` |
+
+### Returns
+[ModFs](structs.md#ModFs)
+
+### C Prototype
+`struct ModFs *mod_fs_get(OPTIONAL const char *modPath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_create](#mod_fs_create)
+
+### Description
+Creates a modfs object for the active mod if it doesn't exist
+
+### Lua Example
+`local ModFsValue = mod_fs_create()`
+
+### Parameters
+- None
+
+### Returns
+[ModFs](structs.md#ModFs)
+
+### C Prototype
+`struct ModFs *mod_fs_create();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_delete](#mod_fs_delete)
+
+### Description
+Deletes the modfs object of the active mod if it exists
+
+### Lua Example
+`mod_fs_delete()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_delete();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_save](#mod_fs_save)
+
+### Description
+Saves the modfs object of the active mod if it exists
+
+### Lua Example
+`mod_fs_save()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_save();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_set_public](#mod_fs_set_public)
+
+### Description
+Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists
+
+### Lua Example
+`mod_fs_set_public(pub)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pub | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_set_public(bool pub);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_filename](#mod_fs_get_filename)
+
+### Lua Example
+`local stringValue = mod_fs_get_filename(modFs, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| index | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_get_filename(struct ModFs *modFs, u16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_file](#mod_fs_get_file)
+
+### Lua Example
+`local ModFsFileValue = mod_fs_get_file(modFs, filepath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+
+### Returns
+[ModFsFile](structs.md#ModFsFile)
+
+### C Prototype
+`struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_create_file](#mod_fs_create_file)
+
+### Lua Example
+`local ModFsFileValue = mod_fs_create_file(modFs, filepath, text)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+| text | `boolean` |
+
+### Returns
+[ModFsFile](structs.md#ModFsFile)
+
+### C Prototype
+`struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_move_file](#mod_fs_move_file)
+
+### Lua Example
+`mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| oldpath | `string` |
+| newpath | `string` |
+| overwriteExisting | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_copy_file](#mod_fs_copy_file)
+
+### Lua Example
+`mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| srcpath | `string` |
+| dstpath | `string` |
+| overwriteExisting | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_delete_file](#mod_fs_delete_file)
+
+### Lua Example
+`mod_fs_delete_file(modFs, filepath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_delete_file(struct ModFs *modFs, const char *filepath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_clear](#mod_fs_clear)
+
+### Lua Example
+`mod_fs_clear(modFs)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_clear(struct ModFs *modFs);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_bool](#mod_fs_file_read_bool)
+
+### Lua Example
+`local booleanValue = mod_fs_file_read_bool(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_read_bool(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_integer](#mod_fs_file_read_integer)
+
+### Lua Example
+`local integerValue = mod_fs_file_read_integer(file, intType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| intType | [enum ModFsFileIntType](constants.md#enum-ModFsFileIntType) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_number](#mod_fs_file_read_number)
+
+### Lua Example
+`local numberValue = mod_fs_file_read_number(file, floatType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| floatType | [enum ModFsFileFloatType](constants.md#enum-ModFsFileFloatType) |
+
+### Returns
+- `number`
+
+### C Prototype
+`lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_string](#mod_fs_file_read_string)
+
+### Lua Example
+`local stringValue = mod_fs_file_read_string(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_file_read_string(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_line](#mod_fs_file_read_line)
+
+### Lua Example
+`local stringValue = mod_fs_file_read_line(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_file_read_line(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_bool](#mod_fs_file_write_bool)
+
+### Lua Example
+`mod_fs_file_write_bool(file, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_write_bool(struct ModFsFile *file, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_integer](#mod_fs_file_write_integer)
+
+### Lua Example
+`mod_fs_file_write_integer(file, value, intType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `integer` |
+| intType | [enum ModFsFileIntType](constants.md#enum-ModFsFileIntType) |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_number](#mod_fs_file_write_number)
+
+### Lua Example
+`mod_fs_file_write_number(file, value, floatType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `number` |
+| floatType | [enum ModFsFileFloatType](constants.md#enum-ModFsFileFloatType) |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_string](#mod_fs_file_write_string)
+
+### Lua Example
+`mod_fs_file_write_string(file, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| str | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_write_string(struct ModFsFile *file, const char *str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_line](#mod_fs_file_write_line)
+
+### Lua Example
+`mod_fs_file_write_line(file, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| str | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_write_line(struct ModFsFile *file, const char *str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_seek](#mod_fs_file_seek)
+
+### Lua Example
+`mod_fs_file_seek(file, offset, origin)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| offset | `integer` |
+| origin | [enum ModFsFileSeek](constants.md#enum-ModFsFileSeek) |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_is_eof](#mod_fs_file_is_eof)
+
+### Lua Example
+`local booleanValue = mod_fs_file_is_eof(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_is_eof(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_erase](#mod_fs_file_erase)
+
+### Lua Example
+`mod_fs_file_erase(file, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| length | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_erase(struct ModFsFile *file, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_set_public](#mod_fs_file_set_public)
+
+### Lua Example
+`mod_fs_file_set_public(file, pub)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| pub | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_file_set_public(struct ModFsFile *file, bool pub);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mod_storage.h
 
 <br />
@@ -7602,503 +8184,6 @@ Resets rumble timers and sets a field based on `a0`
 
 ### C Prototype
 `void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from save_file.h
-
-<br />
-
-
-## [get_level_num_from_course_num](#get_level_num_from_course_num)
-
-### Description
-Gets the course number's corresponding level number
-
-### Lua Example
-`local integerValue = get_level_num_from_course_num(courseNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 get_level_num_from_course_num(s16 courseNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_level_course_num](#get_level_course_num)
-
-### Description
-Gets the level number's corresponding course number
-
-### Lua Example
-`local integerValue = get_level_course_num(levelNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| levelNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 get_level_course_num(s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [touch_coin_score_age](#touch_coin_score_age)
-
-### Description
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
-
-### Lua Example
-`touch_coin_score_age(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_do_save](#save_file_do_save)
-
-### Description
-Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
-
-### Lua Example
-`save_file_do_save(fileIndex, forceSave)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| forceSave | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_do_save(s32 fileIndex, s8 forceSave);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_erase](#save_file_erase)
-
-### Description
-Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
-
-### Lua Example
-`save_file_erase(fileIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_erase(s32 fileIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
-
-### Description
-Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
-
-### Lua Example
-`save_file_erase_current_backup_save()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_erase_current_backup_save(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_reload](#save_file_reload)
-
-### Description
-Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
-
-### Lua Example
-`save_file_reload(load_all)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| load_all | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_reload(u8 load_all);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
-
-### Description
-Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
-
-### Lua Example
-`local integerValue = save_file_get_max_coin_score(courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_max_coin_score(s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_course_star_count](#save_file_get_course_star_count)
-
-### Description
-Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
-
-### Lua Example
-`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_total_star_count](#save_file_get_total_star_count)
-
-### Description
-Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
-
-### Lua Example
-`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| minCourse | `integer` |
-| maxCourse | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_flags](#save_file_set_flags)
-
-### Description
-Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
-
-### Lua Example
-`save_file_set_flags(flags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| flags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_flags(u32 flags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_clear_flags](#save_file_clear_flags)
-
-### Description
-Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
-
-### Lua Example
-`save_file_clear_flags(flags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| flags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_clear_flags(u32 flags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_flags](#save_file_get_flags)
-
-### Description
-Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
-
-### Lua Example
-`local integerValue = save_file_get_flags()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_flags(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_star_flags](#save_file_get_star_flags)
-
-### Description
-Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
-
-### Lua Example
-`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_star_flags](#save_file_set_star_flags)
-
-### Description
-Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
-
-### Lua Example
-`save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| starFlags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_remove_star_flags](#save_file_remove_star_flags)
-
-### Description
-Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
-
-### Lua Example
-`save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| starFlagsToRemove | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
-
-### Description
-Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
-
-### Lua Example
-`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
-
-### Description
-Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
-
-### Lua Example
-`save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| coinScore | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
-
-### Description
-Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
-
-### Lua Example
-`local integerValue = save_file_is_cannon_unlocked(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_cap_pos](#save_file_get_cap_pos)
-
-### Description
-Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
-
-### Lua Example
-`local integerValue = save_file_get_cap_pos(capPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| capPos | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_cap_pos(OUT Vec3s capPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_sound_mode](#save_file_get_sound_mode)
-
-### Description
-Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
-
-### Lua Example
-`local integerValue = save_file_get_sound_mode()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 save_file_get_sound_mode(void);`
 
 [:arrow_up_small:](#)
 

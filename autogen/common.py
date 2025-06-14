@@ -253,7 +253,13 @@ def translate_type_to_lua(ptype):
     if ptype == 'int':
         return '`integer`', None
 
+    if ptype == 'lua_Integer':
+        return '`integer`', None
+
     if ptype == 'float':
+        return '`number`', None
+
+    if ptype == 'lua_Number':
         return '`number`', None
 
     if ptype == 'double':

@@ -6,6 +6,503 @@
 
 
 ---
+# functions from save_file.h
+
+<br />
+
+
+## [get_level_num_from_course_num](#get_level_num_from_course_num)
+
+### Description
+Gets the course number's corresponding level number
+
+### Lua Example
+`local integerValue = get_level_num_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_num_from_course_num(s16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_level_course_num](#get_level_course_num)
+
+### Description
+Gets the level number's corresponding course number
+
+### Lua Example
+`local integerValue = get_level_course_num(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_course_num(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [touch_coin_score_age](#touch_coin_score_age)
+
+### Description
+Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
+
+### Lua Example
+`touch_coin_score_age(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_do_save](#save_file_do_save)
+
+### Description
+Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
+
+### Lua Example
+`save_file_do_save(fileIndex, forceSave)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| forceSave | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_do_save(s32 fileIndex, s8 forceSave);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_erase](#save_file_erase)
+
+### Description
+Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
+
+### Lua Example
+`save_file_erase(fileIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase(s32 fileIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
+
+### Description
+Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
+
+### Lua Example
+`save_file_erase_current_backup_save()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase_current_backup_save(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_reload](#save_file_reload)
+
+### Description
+Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
+
+### Lua Example
+`save_file_reload(load_all)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| load_all | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_reload(u8 load_all);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
+
+### Description
+Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
+
+### Lua Example
+`local integerValue = save_file_get_max_coin_score(courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_max_coin_score(s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_course_star_count](#save_file_get_course_star_count)
+
+### Description
+Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
+
+### Lua Example
+`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_total_star_count](#save_file_get_total_star_count)
+
+### Description
+Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
+
+### Lua Example
+`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| minCourse | `integer` |
+| maxCourse | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_flags](#save_file_set_flags)
+
+### Description
+Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
+
+### Lua Example
+`save_file_set_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_clear_flags](#save_file_clear_flags)
+
+### Description
+Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
+
+### Lua Example
+`save_file_clear_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_clear_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_flags](#save_file_get_flags)
+
+### Description
+Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
+
+### Lua Example
+`local integerValue = save_file_get_flags()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_flags(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_star_flags](#save_file_get_star_flags)
+
+### Description
+Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
+
+### Lua Example
+`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_star_flags](#save_file_set_star_flags)
+
+### Description
+Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
+
+### Lua Example
+`save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_remove_star_flags](#save_file_remove_star_flags)
+
+### Description
+Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
+
+### Lua Example
+`save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlagsToRemove | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
+
+### Description
+Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
+
+### Lua Example
+`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
+
+### Description
+Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
+
+### Lua Example
+`save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| coinScore | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
+
+### Description
+Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
+
+### Lua Example
+`local integerValue = save_file_is_cannon_unlocked(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_cap_pos](#save_file_get_cap_pos)
+
+### Description
+Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
+
+### Lua Example
+`local integerValue = save_file_get_cap_pos(capPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| capPos | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_cap_pos(OUT Vec3s capPos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_sound_mode](#save_file_get_sound_mode)
+
+### Description
+Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
+
+### Lua Example
+`local integerValue = save_file_get_sound_mode()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 save_file_get_sound_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from seqplayer.h
 
 <br />

@@ -7,8 +7,8 @@ from vec_types import *
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
-integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
-number_types = ["f32", "float", "f64", "double"]
+integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int", "lua_Integer"]
+number_types = ["f32", "float", "f64", "double", "lua_Number"]
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
@@ -69,6 +69,7 @@ in_files = [
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
     "src/pc/mods/mod_storage.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
@@ -155,6 +156,11 @@ override_function_version_excludes = {
 lua_function_params = {
     "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
 }
+
+parameter_keywords = [
+    "OUT",
+    "OPTIONAL"
+]
 
 ###########################################################
 
@@ -822,7 +828,7 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
-    is_output = param.get('out', False)
+    is_output = 'OUT' in param
 
     if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
@@ -884,19 +890,39 @@ def build_function(function, do_extern):
         if 'bhv_' in fid:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    s += """    if (L == NULL) { return 0; }\n
+    params_max = len(function['params'])
+    params_min = len([param for param in function['params'] if 'OPTIONAL' not in param])
+    if params_min == params_max:
+        s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
-    }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
+    }\n\n""" % (params_max, function['identifier'], params_max)
+    else:
+        s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (top < %d || top > %d) {
+        LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
+        return 0;
+    }\n\n""" % (params_min, params_max, function['identifier'], params_min, params_max)
 
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
     i = 1
     for param in function['params']:
-        if is_interact_func and param['identifier'] == 'interactType':
+        pid = param['identifier']
+        if is_interact_func and pid == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
+        elif 'OPTIONAL' in param:
+            sparam = build_param(fid, param, i)
+            param_var, param_value = sparam.split('=')
+            param_type = param_var.replace(pid, '').strip()
+            s += '    %s = (%s) NULL;\n' % (param_var.strip(), param_type)
+            s += '    if (top >= %d) {\n' % (i)
+            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
+            s += '    }\n'
         else:
             s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
@@ -921,7 +947,7 @@ def build_function(function, do_extern):
     # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
     if function['type'] in VECP_TYPES:
         for i, param in enumerate(function['params']):
-            if param.get('out', False):
+            if 'OUT' in param:
                 s += '    lua_settop(L, %d);\n' % (i + 1)
                 break
 
@@ -1020,13 +1046,16 @@ def process_function(fname, line, description):
         pass
     else:
         param_index = 0
+        last_param_optional = None
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
 
-            if param_str.startswith('OUT '):
-                param['out'] = True
-                param_str = param_str[len('OUT'):].strip()
+            for param_keyword in parameter_keywords:
+                keyword_index = param_str.find(param_keyword + ' ')
+                if keyword_index != -1:
+                    param[param_keyword] = True
+                    param_str = (param_str[:keyword_index] + param_str[keyword_index+len(param_keyword)+1:]).strip()
 
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)
@@ -1037,6 +1066,12 @@ def process_function(fname, line, description):
                     return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])
                 param['identifier'] = match.group()
+
+            if 'OPTIONAL' in param:
+                last_param_optional = param['identifier']
+            elif last_param_optional is not None:
+                print(f"REJECTED: {function['identifier']} -> mandatory parameter `{param['identifier']}` is following optional parameter `{last_param_optional}`")
+                return None
 
             # override Vec3s/f
             if param['identifier'] == 'pos':

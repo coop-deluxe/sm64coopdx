@@ -48,6 +48,10 @@
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
     - [enum MarioCapGSCId](#enum-MarioCapGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
+- [mod_fs.h](#mod_fsh)
+    - [enum ModFsFileIntType](#enum-ModFsFileIntType)
+    - [enum ModFsFileFloatType](#enum-ModFsFileFloatType)
+    - [enum ModFsFileSeek](#enum-ModFsFileSeek)
 - [mod_storage.h](#mod_storageh)
 - [network.h](#networkh)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
@@ -2092,6 +2096,40 @@
 | GRAB_POS_LIGHT_OBJ | 1 |
 | GRAB_POS_HEAVY_OBJ | 2 |
 | GRAB_POS_BOWSER | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs.h](#mod_fs.h)
+- MOD_FS_MAX_SIZE
+- MOD_FS_MAX_FILES
+- MOD_FS_MAX_PATH
+
+### [enum ModFsFileIntType](#ModFsFileIntType)
+| Identifier | Value |
+| :--------- | :---- |
+| INT_TYPE_U8 | 0 |
+| INT_TYPE_U16 | 1 |
+| INT_TYPE_U32 | 2 |
+| INT_TYPE_U64 | 3 |
+| INT_TYPE_S8 | 4 |
+| INT_TYPE_S16 | 5 |
+| INT_TYPE_S32 | 6 |
+| INT_TYPE_S64 | 7 |
+
+### [enum ModFsFileFloatType](#ModFsFileFloatType)
+| Identifier | Value |
+| :--------- | :---- |
+| FLOAT_TYPE_F32 | 0 |
+| FLOAT_TYPE_F64 | 1 |
+
+### [enum ModFsFileSeek](#ModFsFileSeek)
+| Identifier | Value |
+| :--------- | :---- |
+| FILE_SEEK_SET | 0 |
+| FILE_SEEK_CUR | 1 |
+| FILE_SEEK_END | 2 |
 
 [:arrow_up_small:](#)
 
