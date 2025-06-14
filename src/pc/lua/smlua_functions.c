@@ -19,7 +19,6 @@
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
 #include "game/hardcoded.h"
-#include "gfx_symbols.h"
 #include "include/macros.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
