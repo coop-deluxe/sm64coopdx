@@ -29,7 +29,7 @@ SMLUA_CALL_EVENT_HOOKS_SET_HOOK_RESULT = """
 
 SMLUA_CALL_EVENT_HOOKS_CALLBACK = """
         // call the callback
-        if (0 != smlua_call_hook(L, {n_inputs}, {n_outputs}, 0, hook->mod[i])) {{
+        if (0 != smlua_call_hook(L, {n_inputs}, {n_outputs}, 0, hook->mod[i], hook->modFile[i])) {{
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[{hook_type}]);
             continue;
         }}{set_hook_result}

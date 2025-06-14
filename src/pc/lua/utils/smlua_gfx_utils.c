@@ -280,7 +280,7 @@ void gfx_copy(Gfx *dest, Gfx *src, u32 length) {
 
     u32 destLength = gfx_get_length(dest);
     if (length > destLength) {
-        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands to a display list of length: %u", length, srcLength);
+        LOG_LUA_LINE("gfx_copy: Cannot copy %u commands to a display list of length: %u", length, destLength);
         return;
     }
 
@@ -382,7 +382,7 @@ void vtx_copy(Vtx *dest, Vtx *src, u32 count) {
 
     u32 destLength = vtx_get_count(dest);
     if (count > destLength) {
-        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, srcLength);
+        LOG_LUA_LINE("vtx_copy: Cannot copy %u vertices to a vertex buffer of count: %u", count, destLength);
         return;
     }
 
