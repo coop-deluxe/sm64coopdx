@@ -627,5 +627,5 @@ void texture_to_lua_table(const u8 *tex) {
 }
 
 u64 get_game_tick_counter(void) {
-    return gGameTickCounter;
+    return gGlobalTimer;
 }
