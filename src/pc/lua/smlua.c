@@ -193,8 +193,10 @@ static bool smlua_check_binary_header(struct ModFile *file) {
     return false;
 }
 
-void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bool isModInit) {
-    if (!smlua_check_binary_header(file)) return;
+int smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bool isModInit) {
+    int rc = LUA_OK;
+    if (!smlua_check_binary_header(file)) { return LUA_ERRMEM; }
+
     lua_State* L = gLuaState;
 
     s32 prevTop = lua_gettop(L);
@@ -208,7 +210,7 @@ void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, b
         LOG_LUA("Failed to load lua script '%s': File not found.", file->cachedPath);
         gLuaInitializingScript = 0;
         lua_settop(L, prevTop);
-        return;
+        return LUA_ERRFILE;
     }
 
     f_seek(f, 0, SEEK_END);
@@ -218,7 +220,7 @@ void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, b
         LOG_LUA("Failed to load lua script '%s': Cannot allocate buffer.", file->cachedPath);
         gLuaInitializingScript = 0;
         lua_settop(L, prevTop);
-        return;
+        return LUA_ERRMEM;
     }
 
     f_rewind(f);
@@ -226,18 +228,19 @@ void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, b
         LOG_LUA("Failed to load lua script '%s': Unexpected early end of file.", file->cachedPath);
         gLuaInitializingScript = 0;
         lua_settop(L, prevTop);
-        return;
+        return LUA_ERRFILE;
     }
     f_close(f);
     f_delete(f);
 
-    if (luaL_loadbuffer(L, buffer, length, file->cachedPath) != LUA_OK) { // only run on success
+    rc = luaL_loadbuffer(L, buffer, length, file->cachedPath);
+    if (rc != LUA_OK) { // only run on success
         LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
         LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
         gLuaInitializingScript = 0;
         free(buffer);
         lua_settop(L, prevTop);
-        return;
+        return rc;
     }
     free(buffer);
 
@@ -285,18 +288,21 @@ void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, b
             lua_pop(L, 1);
             LOG_LUA("mod environment not found");
             lua_settop(L, prevTop);
-            return;
+            return LUA_ERRRUN;
         }
         lua_setupvalue(L, -2, 1); // set _ENV
     }
 
     // run chunks
     LOG_INFO("Executing '%s'", file->relativePath);
-    if (smlua_pcall(L, 0, 1, 0) != LUA_OK) {
+    rc = smlua_pcall(L, 0, 1, 0);
+    if (rc != LUA_OK) {
         LOG_LUA("Failed to execute lua script '%s'.", file->cachedPath);
     }
 
     gLuaInitializingScript = 0;
+
+    return rc;
 }
 
 void smlua_init(void) {

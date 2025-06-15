@@ -324,8 +324,15 @@ static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *f
     // load & execute the new script -> pushes new module table
     struct ModFile *prevFile = gLuaActiveModFile;
     gLuaActiveModFile = file;
-    smlua_load_script(mod, file, mod->index, false);      // ..., loadedTable, oldMod, newMod
+    int rc = smlua_load_script(mod, file, mod->index, false);      // ..., loadedTable, oldMod, newMod
     gLuaActiveModFile = prevFile;
+
+    // exit on error
+    if (rc != LUA_OK) {
+        lua_pop(L, 3);
+        return;
+    }
+
     int moduleIdxNew = lua_gettop(L);
 
     // merge functions and join upvalues
