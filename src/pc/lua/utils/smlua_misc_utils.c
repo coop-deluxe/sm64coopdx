@@ -625,7 +625,3 @@ void texture_to_lua_table(const u8 *tex) {
         lua_rawseti(L, -2, i / bytesPerPixel + 1);
     }
 }
-
-u64 get_game_tick_counter(void) {
-    return gGlobalTimer;
-}

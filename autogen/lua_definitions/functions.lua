@@ -11104,12 +11104,6 @@ function texture_to_lua_table(tex)
     -- ...
 end
 
---- @return integer
---- Gets the total number of game ticks since the game was launched. Wraps around at U32_MAX.
-function get_game_tick_counter()
-    -- ...
-end
-
 --- @param name string
 --- @return ModelExtendedId
 --- Gets the extended model ID for the `name` of a `GeoLayout`

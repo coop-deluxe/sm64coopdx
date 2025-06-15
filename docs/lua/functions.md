@@ -1991,7 +1991,6 @@
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
    - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
-   - [get_game_tick_counter](functions-6.md#get_game_tick_counter)
 
 <br />
 
