@@ -728,6 +728,9 @@ C_DEFINE bool mod_fs_clear(struct ModFs *modFs) {
 static bool mod_fs_file_read_check_eof(struct ModFsFile *file, u32 size) {
     if (file->offset + size > file->size) {
         file->offset = file->size;
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - reached end of file", file->modFs->modPath, file->filepath
+        );
         return true;
     }
     return false;
