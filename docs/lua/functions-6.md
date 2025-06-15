@@ -5128,6 +5128,27 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 
 <br />
 
+## [get_game_tick_counter](#get_game_tick_counter)
+
+### Description
+Gets the total number of game ticks since the game was launched. Wraps around at U64_MAX.
+
+### Lua Example
+`local integerValue = get_game_tick_counter()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u64 get_game_tick_counter(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 

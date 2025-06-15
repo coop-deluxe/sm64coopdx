@@ -63,6 +63,7 @@ struct Controller *gPlayer3Controller = &gControllers[2];
 struct DemoInput *gCurrDemoInput = NULL; // demo input sequence
 u16 gDemoInputListID = 0;
 struct DemoInput gRecordedDemoInput = { 0 }; // possibly removed in EU. TODO: Check
+u64 gGameTickCounter = 0;
 
 /**
  * Initializes the Reality Display Processor (RDP).
@@ -601,6 +602,8 @@ void thread5_game_loop(UNUSED void *arg) {
 
 void game_loop_one_iteration(void) {
     profiler_log_thread5_time(THREAD5_START);
+
+    gGameTickCounter++;
 
     // if any controllers are plugged in, start read the data for when
     // read_controller_inputs is called later.
