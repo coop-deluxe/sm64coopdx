@@ -547,6 +547,9 @@ bool mod_refresh_files(struct Mod* mod) {
     mod->fileCapacity = 0;
     mod->size = 0;
 
+    // generate packs
+    dynos_generate_mod_pack(mod->basePath);
+
     // read files
     if (!mod_load_files(mod, mod->name, mod->basePath)) {
         LOG_ERROR("Failed to load mod files for '%s'", mod->name);
