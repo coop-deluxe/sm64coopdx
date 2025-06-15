@@ -748,6 +748,24 @@ void smlua_dump_table(int index) {
     lua_State* L = gLuaState;
     printf("--------------\n");
 
+    if (lua_getmetatable(L, index)) {
+        lua_pushnil(L);  // first key
+        while (lua_next(L, -2) != 0) {
+            if (lua_type(L, -2) == LUA_TSTRING) {
+                printf("[meta] %s - %s\n",
+                    lua_tostring(L, -2),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            else {
+                printf("[meta] %s - %s\n",
+                    lua_typename(L, lua_type(L, -2)),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+    }
+
     // table is in the stack at index 't'
     lua_pushnil(L);  // first key
     while (lua_next(L, index) != 0) {

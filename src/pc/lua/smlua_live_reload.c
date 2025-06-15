@@ -8,8 +8,8 @@
 typedef struct UpvalRecord {
     char *funcKeyStr;   // the table key under which the function lived
     int funcKeyRef;     // registry ref for the key
-    char *name;         // the upvalue’s name
-    int   ref;          // registry reference to the upvalue’s value
+    char *name;         // the upvalue's name
+    int   ref;          // registry reference to the upvalue's value
     const void *id;     // the opaque upvalue‐cell pointer
     int type;           // the Lua type code of that value (LUA_T*)
     struct UpvalRecord *next;
@@ -96,7 +96,7 @@ static void upvalues_free(lua_State *L, UpvalRecord *upvalsHead) {
             free(cur->funcKeyStr);
         }
 
-        // unref the upvalue’s value
+        // unref the upvalue's value
         luaL_unref(L, LUA_REGISTRYINDEX, cur->ref);
 
         // free the upvalue name
@@ -109,80 +109,89 @@ static void upvalues_free(lua_State *L, UpvalRecord *upvalsHead) {
     }
 }
 
+static void upvalues_collect_from_function(lua_State *L, UpvalRecord **upvalsHead, bool isOld) {
+    LUA_STACK_CHECK_BEGIN();
+
+    // stack: ..., key, val
+    if (lua_type(L, -1) != LUA_TFUNCTION) {
+        return;
+    }
+
+    // read key string
+    static char sFuncKeyStr[128] = "";
+    const char *kstr = lua_tostring(L, -2);
+    if (kstr) {
+        snprintf(sFuncKeyStr, 128, "%s", kstr);
+    }
+    // read key ref
+    lua_pushvalue(L, -1);  // duplicate the function closure (val)
+    // stack: ..., key, val, val_copy
+
+    int refRegistered = luaL_ref(L, LUA_REGISTRYINDEX);
+    // luaL_ref pops the copy, leaving the original 'val' in place
+    // stack: ..., key, val
+
+    int funcKeyRef = upval_references_deduplicate(L, sFuncKeyStr, refRegistered, isOld);
+
+    // now fnIdx points to the real function
+    int fnIdx = lua_gettop(L);
+
+    // walk its upvalues
+    for (int uv = 1;; uv++) {
+        const char *uvName = lua_getupvalue(L, fnIdx, uv);
+        if (!uvName) { break; }
+
+        // get the upvalue‐cell identifier
+        const void *upvalId = lua_upvalueid(L, fnIdx, uv);
+
+        // get its type
+        int uvType = lua_type(L, -1);
+
+        // now on top of the stack is the upvalue's 'value'
+        // we pin it in the registry
+        lua_pushvalue(L, -1);
+        int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+        // pop the original
+        lua_pop(L, 1);
+
+        // allocate a new record
+        UpvalRecord *rec = calloc(1, sizeof(struct UpvalRecord));
+        rec->funcKeyStr  = kstr ? strdup(sFuncKeyStr) : NULL;
+        rec->funcKeyRef  = funcKeyRef;
+        rec->name        = strdup(uvName);
+        rec->ref         = ref;
+        rec->id          = upvalId;
+        rec->type        = uvType;
+        rec->next        = *upvalsHead;
+        *upvalsHead = rec;
+    }
+
+    LUA_STACK_CHECK_END();
+}
+
 static void upvalues_collect(lua_State *L, UpvalRecord **upvalsHead, int moduleIdx, bool isOld) {
     LUA_STACK_CHECK_BEGIN();
 
-    // make moduleIdx absolute so pushes don’t shift it
+    // make moduleIdx absolute so pushes don't shift it
     int absMod = lua_absindex(L, moduleIdx);
-    UpvalRecord *prev = NULL;
 
-    // iterate old module table
+    // iterate module metatable
+    if (lua_getmetatable(L, absMod)) {
+        lua_pushnil(L);  // first key
+        while (lua_next(L, -2) != 0) {
+            upvalues_collect_from_function(L, upvalsHead, isOld);
+            lua_pop(L, 1);  // pop val, keep key
+        }
+        lua_pop(L, 1); // pop metatable
+    }
+
+    // iterate module table
     lua_pushnil(L);
     while (lua_next(L, absMod) != 0) {
-        // stack: ..., module, key, val
-        if (lua_type(L, -1) != LUA_TFUNCTION) {
-            lua_pop(L, 1);  // pop val, keep key
-            continue;
-        }
-
-        // read key string
-        static char sFuncKeyStr[128] = "";
-        const char *kstr = lua_tostring(L, -2);
-        if (kstr) {
-            snprintf(sFuncKeyStr, 128, "%s", kstr);
-        }
-        // read key ref
-        lua_pushvalue(L, -1);  // duplicate the function closure (val)
-        // stack: ..., module, key, val, val_copy
-
-        int refRegistered = luaL_ref(L, LUA_REGISTRYINDEX);
-        // luaL_ref pops the copy, leaving the original 'val' in place
-        // stack: ..., module, key, val
-
-        int funcKeyRef = upval_references_deduplicate(L, sFuncKeyStr, refRegistered, isOld);
-
-        // now fnIdx points to the real function
-        int fnIdx = lua_gettop(L);
-
-        // walk its upvalues
-        for (int uv = 1;; uv++) {
-            const char *uvName = lua_getupvalue(L, fnIdx, uv);
-            if (!uvName) { break; }
-
-            // get the upvalue‐cell identifier
-            const void *upvalId = lua_upvalueid(L, fnIdx, uv);
-
-            // get its type
-            int uvType = lua_type(L, -1);
-
-            // now on top of the stack is the upvalue’s 'value'
-            // we pin it in the registry
-            lua_pushvalue(L, -1);
-            int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-            // pop the original
-            lua_pop(L, 1);
-
-            // allocate a new record
-            UpvalRecord *rec = calloc(1, sizeof(struct UpvalRecord));
-            rec->funcKeyStr  = kstr ? strdup(sFuncKeyStr) : NULL;
-            rec->funcKeyRef  = funcKeyRef;
-            rec->name        = strdup(uvName);
-            rec->ref         = ref;
-            rec->id          = upvalId;
-            rec->type        = uvType;
-            rec->next        = NULL;
-
-            // link it in
-            if (!prev) {
-                *upvalsHead = rec;
-            } else {
-                prev->next = rec;
-            }
-            prev = rec;
-        }
-
+        upvalues_collect_from_function(L, upvalsHead, isOld);
         lua_pop(L, 1);  // pop val, keep key
     }
+
     LUA_STACK_CHECK_END();
 }
 
@@ -296,6 +305,39 @@ static void upvalues_print(UpvalRecord *upvalsHead) {
     }
 }
 
+static void overwrite_module_functions(lua_State *L, int dstIdx, int srcIdx) {
+    srcIdx = lua_absindex(L, srcIdx);
+    dstIdx = lua_absindex(L, dstIdx);
+
+    lua_pushnil(L);  // first key for iteration
+    while (lua_next(L, srcIdx) != 0) {
+        // stack: ..., dstTable?, srcTable?, key, newVal
+
+        int typeNew = lua_type(L, -1);
+
+        // lookup oldVal = dstTable[key]
+        lua_pushvalue(L, -2);      // copy key
+        lua_gettable(L, dstIdx);   // push oldVal
+        int typeOld = lua_type(L, -1);
+
+        bool shouldOverride =
+          (typeNew == LUA_TFUNCTION && typeOld == LUA_TFUNCTION) ||
+          (typeNew != LUA_TNIL     && typeOld == LUA_TNIL);
+
+        if (shouldOverride) {
+            int idxNewVal = lua_gettop(L) - 1; // index of newVal
+
+            // overwrite oldMod[key] = newVal
+            lua_pushvalue(L, -3); // key
+            lua_pushvalue(L, idxNewVal); // newVal
+            lua_settable(L, dstIdx);  // dstTable[key] = newVal
+        }
+
+        // pop oldVal and newVal (leave key for next lua_next)
+        lua_pop(L, 2);
+    }
+}
+
 static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *file) {
     LUA_STACK_CHECK_BEGIN();
 
@@ -359,31 +401,17 @@ static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *f
         upval_references_free(L);
 
         // overwrite any functions in oldMod with newMod equivalents
-        lua_pushnil(L);  // iterator over newMod
-        while (lua_next(L, moduleIdxNew) != 0) {
-            // stack: ..., oldMod, newMod, key, newVal
+        overwrite_module_functions(L, moduleIdxOld, moduleIdxNew);
 
-            // get new type
-            int typeNew = lua_type(L, -1);
-
-            // get old type
-            lua_pushvalue(L, -2);            // copy key
-            lua_gettable(L, moduleIdxOld);   // push oldVal
-            int typeOld = lua_type(L, -1);
-
-            bool shouldOverride = (typeNew == LUA_TFUNCTION && typeOld == LUA_TFUNCTION) ||
-                                  (typeNew != LUA_TNIL && typeOld == LUA_TNIL);
-
-            if (shouldOverride) {
-                int idxNewVal = lua_gettop(L) - 1; // index of newVal
-
-                // overwrite oldMod[key] = newVal
-                lua_pushvalue(L, -3);            // key
-                lua_pushvalue(L, idxNewVal);     // newVal
-                lua_settable(L, moduleIdxOld);   // oldMod[key] = newVal
+        // now do the same for metatables
+        if (lua_getmetatable(L, moduleIdxNew)) {      // pushes newMod's metatable
+            int mtNewIdx = lua_gettop(L);
+            if (lua_getmetatable(L, moduleIdxOld)) {  // pushes oldMod's metatable
+                int mtOldIdx = lua_gettop(L);
+                overwrite_module_functions(L, mtOldIdx, mtNewIdx);
+                lua_pop(L, 1);  // pop oldMod's mt
             }
-
-            lua_pop(L, 2); // pop oldVal, newVal (keep key)
+            lua_pop(L, 1);      // pop newMod's mt
         }
 
         // cleanup: replace newMod on stack with oldMod as return value
