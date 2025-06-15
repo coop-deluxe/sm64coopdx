@@ -7292,14 +7292,14 @@ function delta_interpolate_vec3s(res, a, b, delta)
     -- ...
 end
 
---- @param modPath string
+--- @param modPath? string
 --- @return boolean
 --- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 function mod_fs_exists(modPath)
     -- ...
 end
 
---- @param modPath string
+--- @param modPath? string
 --- @return ModFs
 --- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 function mod_fs_get(modPath)

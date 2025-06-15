@@ -66,13 +66,20 @@ static bool mod_fs_get_modpath(const char *modPath, char *dest) {
     return true;
 }
 
-static FILE *mod_fs_get_file_handle(const char *modPath, const char *mode) {
+static bool mod_fs_get_physical_filename(const char *modPath, char *dest) {
     char realModPath[SYS_MAX_PATH];
     if (mod_fs_get_modpath(modPath, realModPath)) {
         const char *path = fs_get_write_path(MOD_FS_DIRECTORY);
-        char filename[SYS_MAX_PATH];
-        snprintf(filename, SYS_MAX_PATH, "%s/%s" MOD_FS_EXTENSION, path, realModPath);
-        normalize_path(filename);
+        snprintf(dest, SYS_MAX_PATH, "%s/%s" MOD_FS_EXTENSION, path, realModPath);
+        normalize_path(dest);
+        return true;
+    }
+    return false;
+}
+
+static FILE *mod_fs_get_file_handle(const char *modPath, const char *mode) {
+    char filename[SYS_MAX_PATH];
+    if (mod_fs_get_physical_filename(modPath, filename)) {
         return fopen(filename, mode);
     }
     return NULL;
@@ -97,12 +104,14 @@ static struct ModFs *mod_fs_new() {
 }
 
 static void mod_fs_file_destroy(struct ModFsFile *file) {
-    free(file->data.bin);
-    memset(file, 0, sizeof(struct ModFsFile));
+    if (file) {
+        free(file->data.bin);
+        memset(file, 0, sizeof(struct ModFsFile));
+    }
 }
 
 static void mod_fs_destroy(struct ModFs *modFs) {
-    for (u16 i = 0; i != modFs->numFiles; ++i) {
+    for (u16 i = 0; modFs->files && i != modFs->numFiles; ++i) {
         mod_fs_file_destroy(modFs->files[i]);
         free(modFs->files[i]);
     }
@@ -317,10 +326,39 @@ static bool mod_fs_write(struct ModFs *modFs) {
 // FS management
 //
 
+static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound) {
+    for (auto &item : sModFsList) {
+
+        // active mod fs
+        if (!modPath && mod_fs_is_active_mod(item)) {
+            return item;
+        }
+
+        if (modPath && strcmp(modPath, item->modPath) == 0) {
+            return item;
+        }
+    }
+
+    // try to load it
+    if (loadIfNotFound) {
+        struct ModFs temp = {0};
+        if (mod_fs_read(modPath, &temp, false)) {
+            struct ModFs *modFs = (struct ModFs *) memcpy(malloc(sizeof(struct ModFs)), &temp, sizeof(struct ModFs));
+            for (u16 i = 0; i != modFs->numFiles; ++i) {
+                modFs->files[i]->modFs = modFs;
+            }
+            sModFsList.push_back(modFs);
+            return modFs;
+        }
+    }
+
+    return NULL;
+}
+
 C_DEFINE bool mod_fs_exists(OPTIONAL const char *modPath) {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get(modPath);
+    struct ModFs *modFs = mod_fs_get_or_load(modPath, false);
     if (modFs) {
         return true;
     }
@@ -336,36 +374,13 @@ C_DEFINE bool mod_fs_exists(OPTIONAL const char *modPath) {
 C_DEFINE struct ModFs *mod_fs_get(OPTIONAL const char *modPath) {
     mod_fs_reset_last_error();
 
-    for (auto &item : sModFsList) {
-
-        // active mod fs
-        if (!modPath && mod_fs_is_active_mod(item)) {
-            return item;
-        }
-
-        if (modPath && strcmp(modPath, item->modPath) == 0) {
-            return item;
-        }
-    }
-
-    // try to load it
-    struct ModFs temp = {0};
-    if (mod_fs_read(modPath, &temp, false)) {
-        struct ModFs *modFs = (struct ModFs *) memcpy(malloc(sizeof(struct ModFs)), &temp, sizeof(struct ModFs));
-        for (u16 i = 0; i != modFs->numFiles; ++i) {
-            modFs->files[i]->modFs = modFs;
-        }
-        sModFsList.push_back(modFs);
-        return modFs;
-    }
-
-    return NULL;
+    return mod_fs_get_or_load(modPath, true);
 }
 
 C_DEFINE struct ModFs *mod_fs_create() {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get(NULL);
+    struct ModFs *modFs = mod_fs_get_or_load(NULL, false);
     if (!modFs) {
         modFs = mod_fs_new();
         if (!modFs) {
@@ -388,8 +403,13 @@ C_DEFINE struct ModFs *mod_fs_create() {
 C_DEFINE bool mod_fs_delete() {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get(NULL);
+    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
     if (modFs) {
+        char filename[SYS_MAX_PATH];
+        if (mod_fs_get_physical_filename(modFs->modPath, filename) && fs_sys_file_exists(filename)) {
+            remove(filename);
+        }
+
         sModFsList.erase(std::find(sModFsList.begin(), sModFsList.end(), modFs));
         mod_fs_destroy(modFs);
         free(modFs);
@@ -405,7 +425,7 @@ C_DEFINE bool mod_fs_delete() {
 C_DEFINE bool mod_fs_save() {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get(NULL);
+    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
     if (modFs) {
         if (!mod_fs_write(modFs)) {
             mod_fs_raise_error(
@@ -425,7 +445,7 @@ C_DEFINE bool mod_fs_save() {
 C_DEFINE bool mod_fs_set_public(bool pub) {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get(NULL);
+    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
     if (modFs) {
         modFs->isPublic = pub;
         return true;

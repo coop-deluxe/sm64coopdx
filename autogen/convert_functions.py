@@ -1389,7 +1389,7 @@ def def_function(fname, function):
         if ptype.startswith('Pointer_') and ptype not in def_pointers:
             def_pointers.append(ptype)
 
-        s += '--- @param %s %s\n' % (pid, ptype)
+        s += '--- @param %s%s %s\n' % (pid, ('?' if 'OPTIONAL' in param else ''), ptype)
 
     rtype = translate_to_def(rtype)
     if rtype.startswith('Pointer_') and rtype not in def_pointers:
