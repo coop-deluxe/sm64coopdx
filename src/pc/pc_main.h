@@ -71,6 +71,9 @@ extern u8 gLuaVolumeLevel;
 extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
+extern u64 gFrameCounterGame;
+extern u64 gFrameCounterRender;
+
 extern struct GfxWindowManagerAPI* wm_api;
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
 void game_deinit(void);

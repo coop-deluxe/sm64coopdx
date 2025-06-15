@@ -625,3 +625,11 @@ void texture_to_lua_table(const u8 *tex) {
         lua_rawseti(L, -2, i / bytesPerPixel + 1);
     }
 }
+
+u64 get_frame_counter_game(void) {
+    return gFrameCounterGame;
+}
+
+u64 get_frame_counter_render(void) {
+    return gFrameCounterRender;
+}

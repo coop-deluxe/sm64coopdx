@@ -234,4 +234,10 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void);
 /* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.|descriptionEnd|*/
 void texture_to_lua_table(const u8 *tex);
 
+/* |description|Gets the total number of game frames, aka ticks, since the game was launched. Wraps around at U64_MAX.|descriptionEnd|*/
+u64 get_frame_counter_game(void);
+
+/* |description|Gets the total number of render frames since the game was launched. Wraps around at U64_MAX.|descriptionEnd|*/
+u64 get_frame_counter_render(void);
+
 #endif

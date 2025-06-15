@@ -5128,6 +5128,48 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 
 <br />
 
+## [get_frame_counter_game](#get_frame_counter_game)
+
+### Description
+Gets the total number of game frames, aka ticks, since the game was launched. Wraps around at U64_MAX.
+
+### Lua Example
+`local integerValue = get_frame_counter_game()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u64 get_frame_counter_game(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_frame_counter_render](#get_frame_counter_render)
+
+### Description
+Gets the total number of render frames since the game was launched. Wraps around at U64_MAX.
+
+### Lua Example
+`local integerValue = get_frame_counter_render()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u64 get_frame_counter_render(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 

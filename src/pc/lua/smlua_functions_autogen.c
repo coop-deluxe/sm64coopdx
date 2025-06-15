@@ -33296,6 +33296,36 @@ int smlua_func_texture_to_lua_table(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_frame_counter_game(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_frame_counter_game", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_frame_counter_game());
+
+    return 1;
+}
+
+int smlua_func_get_frame_counter_render(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_frame_counter_render", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_frame_counter_render());
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_model_utils.h //
 /////////////////////////
@@ -37179,6 +37209,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "geo_get_current_camera", smlua_func_geo_get_current_camera);
     smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
     smlua_bind_function(L, "texture_to_lua_table", smlua_func_texture_to_lua_table);
+    smlua_bind_function(L, "get_frame_counter_game", smlua_func_get_frame_counter_game);
+    smlua_bind_function(L, "get_frame_counter_render", smlua_func_get_frame_counter_render);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);
