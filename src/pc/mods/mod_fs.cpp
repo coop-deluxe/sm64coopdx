@@ -823,7 +823,9 @@ C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 
     memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
-    mod_fs_file_read_check_eof(file, 0);
+    if (mod_fs_file_read_check_eof(file, 1)) {
+        return NULL;
+    }
 
     // for text files, returns the whole content from offset
     if (file->isText) {
@@ -838,6 +840,7 @@ C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
         *buf = *c;
     }
     *buf = 0;
+    file->offset = MIN(file->offset + 1, file->size);
     return sModFsFileReadStringBuf;
 }
 
@@ -845,7 +848,9 @@ C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 
     memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
-    mod_fs_file_read_check_eof(file, 0);
+    if (mod_fs_file_read_check_eof(file, 1)) {
+        return NULL;
+    }
 
     // text only
     if (!file->isText) {
