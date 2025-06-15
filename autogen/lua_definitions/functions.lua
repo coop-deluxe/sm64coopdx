@@ -11105,14 +11105,8 @@ function texture_to_lua_table(tex)
 end
 
 --- @return integer
---- Gets the total number of game frames, aka ticks, since the game was launched. Wraps around at U64_MAX.
-function get_frame_counter_game()
-    -- ...
-end
-
---- @return integer
---- Gets the total number of render frames since the game was launched. Wraps around at U64_MAX.
-function get_frame_counter_render()
+--- Gets the total number of game ticks since the game was launched. Wraps around at U64_MAX.
+function get_game_tick_counter()
     -- ...
 end
 

@@ -104,9 +104,6 @@ u8 gLuaVolumeLevel = 127;
 u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
-u64 gFrameCounterGame = 0;
-u64 gFrameCounterRender = 0;
-
 static struct AudioAPI *audio_api;
 struct GfxWindowManagerAPI *wm_api = &WAPI;
 
@@ -222,7 +219,6 @@ void produce_interpolation_frames_and_delay(void) {
         );
         gRenderingDelta = delta;
 
-        gFrameCounterRender++;
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
@@ -316,7 +312,6 @@ void produce_one_frame(void) {
 
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
 
-    gFrameCounterGame++;
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
     CTX_EXTENT(CTX_SMLUA, smlua_update);

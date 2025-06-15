@@ -626,10 +626,6 @@ void texture_to_lua_table(const u8 *tex) {
     }
 }
 
-u64 get_frame_counter_game(void) {
-    return gFrameCounterGame;
-}
-
-u64 get_frame_counter_render(void) {
-    return gFrameCounterRender;
+u64 get_game_tick_counter(void) {
+    return gGameTickCounter;
 }

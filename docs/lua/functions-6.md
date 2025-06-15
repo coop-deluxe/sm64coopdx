@@ -5128,13 +5128,13 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 
 <br />
 
-## [get_frame_counter_game](#get_frame_counter_game)
+## [get_game_tick_counter](#get_game_tick_counter)
 
 ### Description
-Gets the total number of game frames, aka ticks, since the game was launched. Wraps around at U64_MAX.
+Gets the total number of game ticks since the game was launched. Wraps around at U64_MAX.
 
 ### Lua Example
-`local integerValue = get_frame_counter_game()`
+`local integerValue = get_game_tick_counter()`
 
 ### Parameters
 - None
@@ -5143,28 +5143,7 @@ Gets the total number of game frames, aka ticks, since the game was launched. Wr
 - `integer`
 
 ### C Prototype
-`u64 get_frame_counter_game(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_frame_counter_render](#get_frame_counter_render)
-
-### Description
-Gets the total number of render frames since the game was launched. Wraps around at U64_MAX.
-
-### Lua Example
-`local integerValue = get_frame_counter_render()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u64 get_frame_counter_render(void);`
+`u64 get_game_tick_counter(void);`
 
 [:arrow_up_small:](#)
 
