@@ -432,9 +432,10 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
     String _Arg("%s%s", aPrefix, _Token.begin());
     bool isPtrType = (type == 'p' || type == 't' || type == 'g' || type == 'v');
+    bool isIntOrConstant = (type == 's' || type == 'i'); // Allow strings as constants for integer parameters
 
     // Integers
-    if (type == 'i') {
+    if (isIntOrConstant) {
         bool integerFound = false;
         s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
         if (integerFound) {
@@ -581,7 +582,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     }
 
     // Recursive descent parsing
-    if (type == 'i') {
+    if (isIntOrConstant) {
         bool rdSuccess = false;
         s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
         if (rdSuccess) {
@@ -1226,6 +1227,21 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
     struct ParamInfo *paramInfo = get_gfx_command_param_data(command);
     if (!paramInfo) { PrintDataErrorGfx("  ERROR: Unknown gfx command: %s", command); return ""; }
 
+    // Count parameters
+    u16 count = 0;
+    bool inBrackets = false;
+    for (const char* str = command; *str; str++) {
+        if (*str == '(') { inBrackets = true; }
+        if (*str == ')') { inBrackets = false; }
+        if (*str == ',' && inBrackets) { count++; }
+    }
+    count++;
+
+    if (count != paramInfo->count) {
+        PrintDataErrorGfx("  ERROR: Incorrect parameter count. Got %d, expected %d.", count, paramInfo->count);
+        return "";
+    }
+
     std::string output;
     u8 paramNum = 0;
     for (u32 paramIndex = 3; *command; command++) {
@@ -1237,7 +1253,9 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
                 PrintDataErrorGfx("  ERROR: Gfx macro has unsupported type, this macro is not useable.");
                 return "";
             }
-            if (paramNum <= paramInfo->count && expectedType != paramType) {
+            if (expectedType != paramType &&
+                (expectedType != 'i' || paramType == 's' || paramType == 'i') // Allow strings as constants for integer parameters
+            ) {
                 PrintDataErrorGfx("  ERROR: Unexpected value type for parameter %d. Got '%c', expected '%c'", paramNum, paramType, expectedType);
                 return "";
             }
@@ -1250,10 +1268,6 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
         } else {
             output += c;
         }
-    }
-    if (paramNum > paramInfo->count) {
-        PrintDataErrorGfx("  ERROR: Incorrect parameter count. Got %d, expected %d", paramNum, paramInfo->count);
-        return "";
     }
     return output;
 }
