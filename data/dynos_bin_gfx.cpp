@@ -431,6 +431,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     if (pTokenIndex != NULL) { CHECK_TOKEN_INDEX(*pTokenIndex, 0); }
     String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
     String _Arg("%s%s", aPrefix, _Token.begin());
+    bool isPtrType = (type == 'p' || type == 't' || type == 'g' || type == 'v');
 
     // Integers
     if (type == 'i') {
@@ -448,7 +449,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     }
 
     // Pointers
-    if (type == 'p') {
+    if (isPtrType) {
         for (auto& _Node : aGfxData->mRawPointers) {
             if (_Arg == _Node->mName) {
                 return (s64) _Node->mData;
@@ -589,8 +590,8 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     }
 
     // Allow NULL for pointer types
-    if ((type == 'p' || type == 't' || type == 'g' || type == 'v') && _Arg == "NULL") {
-        return 0;
+    if (isPtrType && _Arg == "NULL") {
+        return (s64) NULL;
     }
 
     // Unknown
@@ -744,19 +745,18 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
 #define HANDLE_PARAM(paramNum) s64 _Arg##paramNum = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", types[paramNum - 1]);
 #define GET_ARG(paramNum) _Arg##paramNum
 #define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
-#define define_gfx_symbol(symb, params, addPtr, ...)                                                 \
-if (_Symbol == #symb) {                                                                              \
-    static const char types[] = { __VA_ARGS__ };                                              \
-    REPEAT(HANDLE_PARAM, params);                                                      \
-    if (addPtr) { aGfxData->mPointerList.Add(aHead); }                                               \
-    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };                                    \
-    memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-    aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-    return;                                                                                          \
+#define define_gfx_symbol(symb, params, addPtr, ...)                \
+if (_Symbol == #symb) {                                             \
+    static const char types[] = { __VA_ARGS__ };                    \
+    REPEAT(HANDLE_PARAM, params);                                   \
+    if (addPtr) { aGfxData->mPointerList.Add(aHead); }              \
+    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };   \
+    memcpy(aHead, _Gfx, sizeof(_Gfx));                              \
+    aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                      \
+    return;                                                         \
 }
 #define define_gfx_symbol_manual(...)
 #include "gfx_symbols.h"
-define_gfx_symbol(gsSPVertexNonGlobal, 3, true, 'v', 'i', 'i');
 #undef HANDLE_PARAM
 #undef GET_ARG
 #undef CALL_SYMB
@@ -870,9 +870,9 @@ define_gfx_symbol(gsSPVertexNonGlobal, 3, true, 'v', 'i', 'i');
 
     // TexData symbols
     if (_Symbol == "gsDPSetTextureImage") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", 'i');
         s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", 'i');
         s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", 'i');
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", 'i');
         s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", 't');
         UpdateTextureInfo(aGfxData, &_Arg3, (s32) _Arg0, (s32) _Arg1, -1, -1);
         aGfxData->mPointerList.Add(aHead);
@@ -1211,10 +1211,10 @@ struct ParamInfo {
 };
 
 static struct ParamInfo *get_gfx_command_param_data(const char *command) {
-#define define_gfx_symbol(symb, params, addPtr, ...)                                                       \
-static struct ParamInfo info_##symb = { .count = params, .types = { __VA_ARGS__ } };                       \
-static_assert(COUNT_ARGS(__VA_ARGS__) == (params + 1), "Parameter count does not match for gfx command."); \
-if (!strncmp(#symb, command, strlen(#symb))) { return &info_##symb; }
+#define define_gfx_symbol(symb, params, addPtr, ...)                                                            \
+    static struct ParamInfo info_##symb = { .count = params, .types = { __VA_ARGS__ } };                        \
+    static_assert(COUNT_ARGS(__VA_ARGS__) == (params + 1), "Parameter count does not match for gfx command.");  \
+    if (!strncmp(#symb, command, strlen(#symb))) { return &info_##symb; }
 #define define_gfx_symbol_manual(...) define_gfx_symbol(__VA_ARGS__)
 #include "gfx_symbols.h"
 #undef define_gfx_symbol
@@ -1233,6 +1233,10 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
         if (c == '%') {
             char paramType = *(++command);
             char expectedType = paramInfo->types[paramNum];
+            if (expectedType == 'p') {
+                PrintDataErrorGfx("  ERROR: Gfx macro has unsupported type, this macro is not useable.");
+                return "";
+            }
             if (paramNum <= paramInfo->count && expectedType != paramType) {
                 PrintDataErrorGfx("  ERROR: Unexpected value type for parameter %d. Got '%c', expected '%c'", paramNum, paramType, expectedType);
                 return "";
