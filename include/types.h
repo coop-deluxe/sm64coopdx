@@ -589,7 +589,7 @@ struct TextureInfo
 #define PLAY_MODE_CHANGE_LEVEL 4
 #define PLAY_MODE_FRAME_ADVANCE 5
 
-#define MAX_PLAYERS 16
+#define MAX_PLAYERS 64
 
 #define COOP_OBJ_FLAG_NETWORK     (1 << 0)
 #define COOP_OBJ_FLAG_LUA         (1 << 1)
