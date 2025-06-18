@@ -1,5 +1,3 @@
-#define MINIAUDIO_IMPLEMENTATION // required by miniaudio
-
 // enable Vorbis decoding (provides ogg audio decoding support) for miniaudio
 #define STB_VORBIS_HEADER_ONLY
 #include "pc/utils/stb_vorbis.c"
@@ -158,19 +156,15 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
  // mod audio //
 ///////////////
 
-// Optimization: disable spatialization for everything as it's not used
-#define MA_SOUND_STREAM_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_STREAM)
-#define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
-
 static ma_engine sModAudioEngine;
 static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
     sModAudioPool = dynamic_pool_init();
 
-    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+    ma_result result = ma_initalize(NULL, &sModAudioEngine);
     if (result != MA_SUCCESS) {
-        LOG_ERROR("failed to init Miniaudio: %d", result);
+        LOG_ERROR("Failed to init Miniaudio: %d", result);
     }
 }
 
@@ -291,23 +285,11 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
     f_close(f);
     f_delete(f);
-
-    // decode the audio buffer
-    ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
+    
+    ma_result result = ma_sound_from_buffer(&sModAudioEngine, &audio->sound, &audio->decoder, buffer, size, isStream);
     if (result != MA_SUCCESS) {
         free(buffer);
-        LOG_ERROR("failed to load audio file '%s': failed to decode raw audio: %d", filename, result);
-        return NULL;
-    }
-
-    result = ma_sound_init_from_data_source(
-        &sModAudioEngine, &audio->decoder,
-        isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        NULL, &audio->sound
-    );
-    if (result != MA_SUCCESS) {
-        free(buffer);
-        LOG_ERROR("failed to load audio file '%s': %d", filename, result);
+        LOG_ERROR("Failed to load audio file '%s': Failed to decode raw audio: %d", filename, result);
         return NULL;
     }
 
@@ -531,9 +513,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     ma_sound *sound = &audio->sound;
     if (ma_sound_is_playing(sound)) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
-        ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
-        if (result != MA_SUCCESS) { return; }
-        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        ma_result result = ma_sound_from_buffer(&sModAudioEngine, &copy->sound, &copy->decoder, audio->buffer, audio->bufferSize, false);
         if (result != MA_SUCCESS) { return; }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
@@ -615,7 +595,7 @@ void smlua_audio_custom_deinit(void) {
     if (sModAudioPool) {
         audio_custom_shutdown();
         free(sModAudioPool);
-        ma_engine_uninit(&sModAudioEngine);
+        ma_uninitalize(&sModAudioEngine);
         sModAudioPool = NULL;
     }
 }

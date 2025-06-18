@@ -350,7 +350,7 @@ else ifeq ($(TARGET_NX),1) # Nintendo Switch
     STRIP := $(CROSS)strip
 
     OPT_FLAGS := -ffunction-sections -fdata-sections -march=armv8-a+crc+crypto+simd -mtune=cortex-a57 -mtp=soft -ftls-model=local-exec -fwrapv -fPIC
-    DEFINES += __SWITCH__=1 __CONSOLE__=1 MA_NO_RUNTIME_LINKING=1 USE_GLES=1
+    DEFINES += __SWITCH__=1 __CONSOLE__=1 USE_GLES=1
     
     ifeq ($(BUILD_NRO),1)
         DEFINES += BUILD_NRO=1
