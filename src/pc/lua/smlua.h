@@ -24,13 +24,13 @@
 #define LOG_LUA_LINE_WARNING(...)  { if (!gLuaActiveMod->showedScriptWarning) { gLuaActiveMod->showedScriptWarning = true; smlua_mod_warning(); snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), sys_swap_backslashes(gDjuiConsoleTmpBuffer), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_WARNING); } }
 
 #ifdef DEVELOPMENT
-#define LUA_STACK_CHECK_BEGIN_NUM(n) int __LUA_STACK_TOP = lua_gettop(gLuaState) + (n)
-#define LUA_STACK_CHECK_BEGIN() LUA_STACK_CHECK_BEGIN_NUM(0)
-#define LUA_STACK_CHECK_END() if ((__LUA_STACK_TOP) != lua_gettop(gLuaState)) { smlua_dump_stack(); fflush(stdout); } assert((__LUA_STACK_TOP) == lua_gettop(gLuaState))
+#define LUA_STACK_CHECK_BEGIN_NUM(state, n) int __LUA_STACK_TOP = lua_gettop(state) + (n)
+#define LUA_STACK_CHECK_BEGIN(state) LUA_STACK_CHECK_BEGIN_NUM(state, 0)
+#define LUA_STACK_CHECK_END(state) if ((__LUA_STACK_TOP) != lua_gettop(state)) { smlua_dump_stack(); fflush(stdout); } assert((__LUA_STACK_TOP) == lua_gettop(state))
 #else
-#define LUA_STACK_CHECK_BEGIN_NUM(n)
-#define LUA_STACK_CHECK_BEGIN()
-#define LUA_STACK_CHECK_END()
+#define LUA_STACK_CHECK_BEGIN_NUM(state, n)
+#define LUA_STACK_CHECK_BEGIN(state)
+#define LUA_STACK_CHECK_END(state)
 #endif
 
 extern lua_State* gLuaState;

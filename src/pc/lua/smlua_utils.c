@@ -380,7 +380,7 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
         lua_pushnil(L);
         return NULL;
     }
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     uintptr_t key = (lot * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
@@ -407,7 +407,7 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 
     return cobject;
 }
@@ -417,7 +417,7 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
         lua_pushnil(L);
         return NULL;
     }
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     uintptr_t key = (lvt * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
@@ -443,7 +443,7 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_pushvalue(L, -2); // Duplicate userdata
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCPointers table
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 
     return cpointer;
 }
@@ -808,7 +808,7 @@ void smlua_logline(void) {
 void smlua_free(void *ptr) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;
-        LUA_STACK_CHECK_BEGIN();
+        LUA_STACK_CHECK_BEGIN(L);
         u16 lot = LOT_SURFACE; // Assuming this is a surface
         uintptr_t key = lot ^ (uintptr_t) ptr;
         lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
@@ -825,7 +825,7 @@ void smlua_free(void *ptr) {
             lua_pop(L, 1);
         }
         lua_pop(L, 1);
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
     }
     free(ptr);
 }
