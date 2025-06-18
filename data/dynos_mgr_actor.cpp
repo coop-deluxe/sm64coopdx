@@ -276,6 +276,7 @@ size_t get_graph_node_size(s16 nodeType) {
 
 void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
     if (sModifiedGraphNodes.find(aNode) == sModifiedGraphNodes.end()) {
+        if (DynOS_Model_GetModelPoolFromGraphNode(aNode) != MODEL_POOL_PERMANENT) { return; } // Only need to reset permanent models
         size_t size = get_graph_node_size(aNode->type);
         if (size == 0) { return; } // Unexpected
         GraphNode *graphNodeCopy = (GraphNode *) malloc(size);
