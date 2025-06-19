@@ -4284,7 +4284,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 - `boolean`
 
 ### C Prototype
-`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);`
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -5105,6 +5105,29 @@ Gets the current GraphNodeHeldObject
 
 <br />
 
+## [texture_to_lua_table](#texture_to_lua_table)
+
+### Description
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+
+### Lua Example
+`texture_to_lua_table(tex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void texture_to_lua_table(const u8 *tex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 
@@ -5143,7 +5166,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 ## [spawn_sync_object](#spawn_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -5171,7 +5194,7 @@ Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the lo
 ## [spawn_non_sync_object](#spawn_non_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -7350,7 +7373,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 - None
 
 ### C Prototype
-`void closest_point_to_triangle(struct Surface* surf, Vec3f src, Vec3f out);`
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 

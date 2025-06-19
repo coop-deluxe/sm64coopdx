@@ -163,7 +163,7 @@ void djui_render(void) {
         djui_base_render(&sDjuiRootBehind->base);
     }
 
-    smlua_call_event_on_hud_render(djui_reset_hud_params);
+    smlua_call_event_hooks(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
 
     djui_panel_update();
     djui_popup_update();

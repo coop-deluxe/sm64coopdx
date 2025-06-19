@@ -6,6 +6,7 @@ extern "C" {
 #include "include/textures.h"
 #include "src/pc/lua/smlua.h"
 #include "src/pc/lua/utils/smlua_gfx_utils.h"
+#include "include/macros.h"
 }
 
 static std::map<std::string, std::pair<Gfx *, u32>> sGfxCommandCache;
@@ -574,117 +575,6 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     return 0;
 }
 
-#define gfx_symbol_0(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        Gfx _Gfx[] = { symb() };                                                                        \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_1(symb, ptr)                                                                        \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        if (ptr) { aGfxData->mPointerList.Add(aHead); }                                         \
-        Gfx _Gfx[] = { symb(_Arg0) };                                                                    \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_2(symb, ptr)                                                                        \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        if (ptr) { aGfxData->mPointerList.Add(aHead); }                                         \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1) };                                                              \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_3(symb, ptr)                                                                        \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        if (ptr) { aGfxData->mPointerList.Add(aHead); }                                         \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2) };                                                        \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_4(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3) };                                                  \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_5(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) };                                            \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_6(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5) };                                      \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_7(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6) };                                \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
-#define gfx_symbol_8(symb)                                                                             \
-    if (_Symbol == #symb) {                                                                       \
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");                                \
-        Gfx _Gfx[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7) };                          \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-        return;                                                                                        \
-    }
-
 #define gfx_arg_with_suffix(argname, suffix)                                                        \
     CHECK_TOKEN_INDEX(aTokenIndex,);                                                                \
     const String& argname##_token = aNode->mTokens[aTokenIndex];                                    \
@@ -822,17 +712,29 @@ static void SetCurrentTextureAsPalette(GfxData* aGfxData) {
     }
 }
 
-extern "C" {
-#include "gfx_symbols.h"
-}
-#define define_gfx_symbol(symb, params, ...) gfx_symbol_##params(symb, ##__VA_ARGS__)
-
 static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead, u64& aTokenIndex) {
     CHECK_TOKEN_INDEX(aTokenIndex,);
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
     // Simple symbols
-    GFX_SYMBOLS();
+    // Uses macro iterators to dynamically handle the correct number of parameters
+#define HANDLE_PARAM(paramNum) s64 _Arg##paramNum = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+#define GET_ARG(paramNum) _Arg##paramNum
+#define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
+#define define_gfx_symbol(symb, params, addPtr, ...)                                                 \
+if (_Symbol == #symb) {                                                                              \
+    REPEAT(HANDLE_PARAM, params);                                                                    \
+    if (addPtr) { aGfxData->mPointerList.Add(aHead); }                                               \
+    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };                                    \
+    memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
+    aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
+    return;                                                                                          \
+}
+#include "gfx_symbols.h"
+#undef HANDLE_PARAM
+#undef GET_ARG
+#undef CALL_SYMB
+#undef define_gfx_symbol
 
     // Special symbols
     if (_Symbol == "gsSPTexture") {

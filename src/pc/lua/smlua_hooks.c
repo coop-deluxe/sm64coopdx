@@ -9,6 +9,7 @@
 #include "pc/djui/djui_chat_message.h"
 #include "pc/crash_handler.h"
 #include "game/hud.h"
+#include "game/level_update.h"
 #include "pc/debug_context.h"
 #include "pc/network/network.h"
 #include "pc/network/network_player.h"
@@ -33,16 +34,27 @@ u64* gBehaviorOffset = &gPcDebug.bhvOffset;
 struct LuaHookedEvent {
     int reference[MAX_HOOKED_REFERENCES];
     struct Mod* mod[MAX_HOOKED_REFERENCES];
+    struct ModFile* modFile[MAX_HOOKED_REFERENCES];
     int count;
 };
 
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
-int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod) {
+static const char* sLuaHookedEventTypeName[] = {
+#define SMLUA_EVENT_HOOK(hookEventType, ...) #hookEventType,
+#include "smlua_hook_events.inl"
+#undef SMLUA_EVENT_HOOK
+    "HOOK_MAX"
+};
+
+int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod, struct ModFile* activeModFile) {
     if (!gGameInited) { return 0; } // Don't call hooks while the game is booting
 
-    struct Mod* prev = gLuaActiveMod;
+    struct Mod* prevActiveMod = gLuaActiveMod;
+    struct ModFile* prevActiveModFile = gLuaActiveModFile;
+
     gLuaActiveMod = activeMod;
+    gLuaActiveModFile = activeModFile;
     gLuaLastHookMod = activeMod;
     gPcDebug.lastModRun = activeMod;
 
@@ -54,7 +66,8 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
 
     lua_profiler_stop_counter(activeMod);
 
-    gLuaActiveMod = prev;
+    gLuaActiveMod = prevActiveMod;
+    gLuaActiveModFile = prevActiveModFile;
     return rc;
 }
 
@@ -75,13 +88,13 @@ int smlua_hook_event(lua_State* L) {
 
     struct LuaHookedEvent* hook = &sHookedEvents[hookType];
     if (hook->count >= MAX_HOOKED_REFERENCES) {
-        LOG_LUA_LINE("Hook Type: %s exceeded maximum references!", LuaHookedEventTypeName[hookType]);
+        LOG_LUA_LINE("Hook Type: %s exceeded maximum references!", sLuaHookedEventTypeName[hookType]);
         return 0;
     }
 
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     if (ref == -1) {
-        LOG_LUA_LINE("Tried to hook undefined function to '%s'", LuaHookedEventTypeName[hookType]);
+        LOG_LUA_LINE("Tried to hook undefined function to '%s'", sLuaHookedEventTypeName[hookType]);
         return 0;
     }
 
@@ -92,1192 +105,118 @@ int smlua_hook_event(lua_State* L) {
     return 1;
 }
 
-void smlua_call_event_hooks(enum LuaHookedEventType hookType) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+  ///////////////////
+ // hooked events //
+///////////////////
 
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the event_hook callback: %u", hookType);
-            continue;
-        }
-    }
-}
+#include "smlua_hook_events_autogen.inl"
 
-void smlua_call_event_on_hud_render(void (*resetFunc)(void)) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    if (resetFunc) { resetFunc(); }
-
-    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        // support deprecated render behind hud
-        if (hook->mod[i]->renderBehindHud) { continue; }
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER);
-        }
-        if (resetFunc) { resetFunc(); }
-    }
-}
-
-void smlua_call_event_on_hud_render_behind(void (*resetFunc)(void)) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    if (resetFunc) { resetFunc(); }
-
-    struct LuaHookedEvent* hook = &sHookedEvents[HOOK_ON_HUD_RENDER_BEHIND];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER_BEHIND);
-        }
-        if (resetFunc) { resetFunc(); }
-    }
-
-    // support deprecated render behind hud
-    hook = &sHookedEvents[HOOK_ON_HUD_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        // support deprecated render behind hud
-        if (!hook->mod[i]->renderBehindHud) { continue; }
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the event_hook callback: %u", HOOK_ON_HUD_RENDER);
-        }
-        if (resetFunc) { resetFunc(); }
-    }
-
-}
-
-void smlua_call_event_hooks_bool_param(enum LuaHookedEventType hookType, bool value) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push value
-        lua_pushboolean(L, value);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_bool_param_ret_bool(enum LuaHookedEventType hookType, bool value, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push value
-        lua_pushboolean(L, value);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_mario_param(enum LuaHookedEventType hookType, struct MarioState* m) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_mario_param_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_mario_params(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, u32 interaction) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m1->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m2->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push interaction
-        lua_pushinteger(L, interaction);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_mario_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m1, struct MarioState* m2, u32 interaction, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m1->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m2->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push interaction
-        lua_pushinteger(L, interaction);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_interact_params(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool interactValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push object
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-
-        // push interact type
-        lua_pushinteger(L, interactType);
-
-        // push interact value
-        lua_pushboolean(L, interactValue);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 4, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_interact_params_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push object
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-
-        // push interact type
-        lua_pushinteger(L, interactType);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_interact_params_no_ret(enum LuaHookedEventType hookType, struct MarioState* m, struct Object* obj, u32 interactType) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push object
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-
-        // push interact type
-        lua_pushinteger(L, interactType);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_object_param(enum LuaHookedEventType hookType, struct Object* obj) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push object
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_object_set_model(enum LuaHookedEventType hookType, struct Object* obj, s32 modelID, enum ModelExtendedId modelExtendedId) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-        lua_pushinteger(L, modelID);
-        lua_pushinteger(L, modelExtendedId);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-bool smlua_call_event_hooks_ret_int(enum LuaHookedEventType hookType, s32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return false; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-        }
-        lua_settop(L, prevTop);
-        return true;
-    }
-    return false;
-}
-
-void smlua_call_event_hooks_ret_bool(enum LuaHookedEventType hookType, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    *returnValue = true;
-
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN && *returnValue) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_network_player_param(enum LuaHookedEventType hookType, struct NetworkPlayer* np) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gNetworkPlayers");
-        lua_pushinteger(L, np->localIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_set_camera_mode_params(enum LuaHookedEventType hookType, struct Camera *c, s16 mode, s16 frames, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    *returnValue = true;
-
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        smlua_push_object(L, LOT_CAMERA, c, NULL);
-        lua_pushinteger(L, mode);
-        lua_pushinteger(L, frames);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN && *returnValue) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_int_params_ret_bool(enum LuaHookedEventType hookType, s16 param, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    *returnValue = true;
-
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_int_params_ret_int(enum LuaHookedEventType hookType, s32 param, s32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return;
-        } else {
-            lua_settop(L, prevTop);
-        }
-    }
-}
-
-void smlua_call_event_hooks_warp_params(enum LuaHookedEventType hookType, u8 type, s16 levelNum, u8 areaIdx, u8 nodeId, u32 arg) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        lua_pushinteger(L, type);
-        lua_pushinteger(L, levelNum);
-        lua_pushinteger(L, areaIdx);
-        lua_pushinteger(L, nodeId);
-        lua_pushinteger(L, arg);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_instant_warp_params(enum LuaHookedEventType hookType, u8 area, u8 warpId, Vec3s displacement) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        lua_pushinteger(L, area);
-        lua_pushinteger(L, warpId);
-
-        lua_newtable(L);
-        int tbl = lua_gettop(L);
-
-        lua_pushstring(L, "x");
-        lua_pushinteger(L, displacement[0]);
-        lua_settable(L, tbl);
-
-        lua_pushstring(L, "y");
-        lua_pushinteger(L, displacement[1]);
-        lua_settable(L, tbl);
-
-        lua_pushstring(L, "z");
-        lua_pushinteger(L, displacement[2]);
-        lua_settable(L, tbl);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_int_params_ret_string(enum LuaHookedEventType hookType, s32 param, char** returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push params
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TSTRING) {
-            *returnValue = (char *)smlua_to_string(L, -1);
-            lua_settop(L, prevTop);
-            return;
-        } else {
-            lua_settop(L, prevTop);
-        }
-    }
-}
-
-void smlua_call_event_hooks_value_param(enum LuaHookedEventType hookType, int modIndex, int valueIndex) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        if (hook->mod[i]->index != modIndex) { continue; }
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push value
-        lua_pushvalue(L, valueIndex);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_on_play_sound(enum LuaHookedEventType hookType, s32 soundBits, f32* pos, s32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push sound bits
-        lua_pushinteger(L, soundBits);
-
-        // push vec3f
-        lua_newtable(L);
-        int valTableIndex = lua_gettop(L);
-
-        lua_pushstring(L, "x");
-        lua_pushnumber(L, pos[0]);
-        lua_settable(L, valTableIndex);
-
-        lua_pushstring(L, "y");
-        lua_pushnumber(L, pos[1]);
-        lua_settable(L, valTableIndex);
-
-        lua_pushstring(L, "z");
-        lua_pushnumber(L, pos[2]);
-        lua_settable(L, valTableIndex);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return;
-        } else {
-            lua_settop(L, prevTop);
-        }
-    }
-}
-
-void smlua_call_event_hooks_before_warp(enum LuaHookedEventType hookType, s16 *destLevel, s16 *destArea, s16 *destWarpNode, s32 *arg) {
+static bool smlua_call_event_hooks_on_hud_render(void (*resetFunc)(void), bool renderBehind) {
     lua_State *L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        int prevTop = lua_gettop(L);
+    if (L == NULL) { return false; }
+    bool hookResult = false;
 
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+    if (resetFunc) { resetFunc(); }
 
-        lua_pushinteger(L, *destLevel);
-        lua_pushinteger(L, *destArea);
-        lua_pushinteger(L, *destWarpNode);
-        lua_pushinteger(L, *arg);
+    const enum LuaHookedEventType renderHudHookTypes[] = {
+        HOOK_ON_HUD_RENDER_BEHIND,
+        HOOK_ON_HUD_RENDER,
+    };
+    for (s32 k = renderBehind ? 0 : 1; k != 2; ++k) {
+        enum LuaHookedEventType hookType = renderHudHookTypes[k];
+        struct LuaHookedEvent *hook = &sHookedEvents[hookType];
+        for (int i = 0; i < hook->count; i++) {
 
-        if (smlua_call_hook(L, 4, 1, 0, hook->mod[i]) != 0) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            lua_settop(L, prevTop);
-            continue;
-        }
-
-        // if the hook returns a table, use it to override the warp parameters
-        if (lua_istable(L, -1)) {
-
-            lua_getfield(L, -1, "destLevel");
-            if (lua_isnumber(L, -1)) {
-                *destLevel = (s16)lua_tointeger(L, -1);
+            // support deprecated render behind hud
+            if (hookType == HOOK_ON_HUD_RENDER && hook->mod[i]->renderBehindHud != renderBehind) {
+                continue;
             }
-            lua_pop(L, 1);
 
-            lua_getfield(L, -1, "destArea");
-            if (lua_isnumber(L, -1)) {
-                *destArea = (s16)lua_tointeger(L, -1);
+            // push the callback onto the stack
+            lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+            // call the callback
+            if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
+                LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[hookType]);
+            } else {
+                hookResult = true;
             }
-            lua_pop(L, 1);
 
-            lua_getfield(L, -1, "destWarpNode");
-            if (lua_isnumber(L, -1)) {
-                *destWarpNode = (s16)lua_tointeger(L, -1);
-            }
-            lua_pop(L, 1);
-
-            lua_settop(L, prevTop);
-            return;
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_on_seq_load(enum LuaHookedEventType hookType, u32 player, u32 seqId, s32 loadAsync, s16* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-        lua_pushinteger(L, player);
-        lua_pushinteger(L, seqId);
-        lua_pushinteger(L, loadAsync);
-
-        // Call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // Output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return;
-        } else {
-            lua_settop(L, prevTop);
+            if (resetFunc) { resetFunc(); }
         }
     }
+    return hookResult;
 }
 
-void smlua_call_event_hooks_use_act_select(enum LuaHookedEventType hookType, int value, bool* foundHook, bool* returnValue) {
-    lua_State* L = gLuaState;
-    *foundHook = false;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push value
-        lua_pushinteger(L, value);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *foundHook = true;
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
+bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER(void (*resetFunc)(void)) {
+    return smlua_call_event_hooks_on_hud_render(resetFunc, false);
 }
 
-void smlua_call_event_hooks_on_chat_message(enum LuaHookedEventType hookType, struct MarioState* m, const char* message, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push the string
-        lua_pushstring(L, message);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
+bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void)) {
+    return smlua_call_event_hooks_on_hud_render(resetFunc, true);
 }
 
-bool smlua_call_event_hooks_mario_character_sound_param_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, enum CharacterSound characterSound, s32* returnValue) {
-    lua_State* L = gLuaState;
+bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, const char **playerNameOverride) {
+    lua_State *L = gLuaState;
     if (L == NULL) { return false; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_NAMETAGS_RENDER];
     for (int i = 0; i < hook->count; i++) {
         s32 prevTop = lua_gettop(L);
 
         // push the callback onto the stack
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
+        // push playerIndex
+        lua_pushinteger(L, playerIndex);
 
-        // push character sound
-        lua_pushinteger(L, characterSound);
+        // push pos
+        extern void smlua_new_vec3f(Vec3f src);
+        smlua_new_vec3f(pos);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_NAMETAGS_RENDER]);
             continue;
         }
 
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
-        } else {
-            lua_settop(L, prevTop);
-        }
-    }
-    return false;
-}
-
-void smlua_call_event_hooks_mario_action_and_arg_ret_int(enum LuaHookedEventType hookType, struct MarioState *m, u32 action, u32 arg, u32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push action
-        lua_pushinteger(L, action);
-
-        // push arg
-        lua_pushinteger(L, arg);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-void smlua_call_event_hooks_mario_param_and_int_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push param
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-bool smlua_call_event_hooks_mario_param_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, s32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return false; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push param
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
-        }
-        lua_settop(L, prevTop);
-    }
-    return false;
-}
-
-void smlua_call_event_hooks_mario_param_and_bool_ret_bool(enum LuaHookedEventType hookType, struct MarioState* m, bool param, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push param
-        lua_pushboolean(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -1);
-        }
-        lua_settop(L, prevTop);
-    }
-}
-
-bool smlua_call_event_hooks_mario_param_ret_float(enum LuaHookedEventType hookType, struct MarioState* m, f32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return false; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_number(L, -1);
-        }
-        lua_settop(L, prevTop);
-
-        return true;
-    }
-
-    return false;
-}
-
-bool smlua_call_event_hooks_mario_param_and_int_and_int_ret_int(enum LuaHookedEventType hookType, struct MarioState* m, s32 param, u32 args, s32* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return false; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mario state
-        lua_getglobal(L, "gMarioStates");
-        lua_pushinteger(L, m->playerIndex);
-        lua_gettable(L, -2);
-        lua_remove(L, -2);
-
-        // push param
-        lua_pushinteger(L, param);
-
-        // push args
-        lua_pushinteger(L, args);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return value
-        if (lua_type(L, -1) == LUA_TNUMBER) {
-            *returnValue = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
-        }
-        lua_settop(L, prevTop);
-    }
-    return false;
-}
-
-void smlua_call_event_hooks_graph_node_object_and_int_param(enum LuaHookedEventType hookType, struct GraphNodeObject* node, s32 param) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push graph node object
-        smlua_push_object(L, LOT_GRAPHNODEOBJECT, node, NULL);
-
-        // push param
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-void smlua_call_event_hooks_graph_node_and_int_param(enum LuaHookedEventType hookType, struct GraphNode* node, s16 matIndex) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push graph node
-        smlua_push_object(L, LOT_GRAPHNODE, node, NULL);
-
-        // push mat index
-        lua_pushinteger(L, matIndex);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
-}
-
-const char *smlua_call_event_hooks_int_ret_bool_and_string(enum LuaHookedEventType hookType, s32 param, bool* returnValue) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return NULL; }
-    *returnValue = true;
-    const char *retString = NULL;
-
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push param
-        lua_pushinteger(L, param);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 2, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-
-        // output the return values
-        if (lua_type(L, -2) == LUA_TBOOLEAN) {
-            *returnValue = smlua_to_boolean(L, -2);
-        }
+        // return playerNameOverride
         if (lua_type(L, -1) == LUA_TSTRING) {
-            retString = smlua_to_string(L, -1);
+            *playerNameOverride = smlua_to_string(L, -1);
             lua_settop(L, prevTop);
-            return retString;
+            return true;
         }
+
+        // if it's a table, override name, pos or both
+        if (lua_type(L, -1) == LUA_TTABLE) {
+            bool override = false;
+
+            // name
+            lua_getfield(L, -1, "name");
+            if (lua_type(L, -1) == LUA_TSTRING) {
+                *playerNameOverride = smlua_to_string(L, -1);
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            // pos
+            lua_getfield(L, -1, "pos");
+            if (lua_type(L, -1) == LUA_TTABLE) {
+                extern void smlua_get_vec3f(Vec3f dest, int index);
+                smlua_get_vec3f(pos, -1);
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            lua_settop(L, prevTop);
+            if (override) {
+                return true;
+            }
+        }
+
         lua_settop(L, prevTop);
     }
-    return NULL;
-}
-
-void smlua_call_event_hooks_string_param(enum LuaHookedEventType hookType, const char* string) {
-    lua_State* L = gLuaState;
-    if (L == NULL) { return; }
-    struct LuaHookedEvent* hook = &sHookedEvents[hookType];
-    for (int i = 0; i < hook->count; i++) {
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push string
-        lua_pushstring(L, string);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i])) {
-            LOG_LUA("Failed to call the callback: %u", hookType);
-            continue;
-        }
-    }
+    return false;
 }
 
   ////////////////////
@@ -1289,6 +228,7 @@ struct LuaHookedMarioAction {
     u32 interactionType;
     int actionHookRefs[ACTION_HOOK_MAX];
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_ACTIONS (ACT_NUM_GROUPS * ACT_NUM_ACTIONS_PER_GROUP)
@@ -1377,6 +317,7 @@ int smlua_hook_mario_action(lua_State* L) {
     hooked->action = action;
     hooked->interactionType = interactionType;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedMarioActionsCount++;
     return 1;
@@ -1400,7 +341,7 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
             lua_remove(L, -2);
 
             // call the callback
-            if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod)) {
+            if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
                 LOG_LUA("Failed to call the action callback: %u", m->action);
                 continue;
             }
@@ -1447,6 +388,7 @@ struct LuaHookedBehavior {
     bool replace;
     bool luaBehavior;
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_BEHAVIORS 1024
@@ -1518,6 +460,12 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     }
 
     u32 originalBehaviorId = get_id_from_behavior(bhvScript);
+
+    if (originalBehaviorId == id_bhvMario) {
+        LOG_LUA_LINE("Cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
+        return 0;
+    }
+
     u8 newBehavior = originalBehaviorId >= id_bhv_max_count;
 
     struct LuaHookedBehavior *hooked = &sHookedBehaviors[sHookedBehaviorsCount];
@@ -1534,6 +482,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->replace = true;
     hooked->luaBehavior = false;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedBehaviorsCount++;
 
@@ -1570,6 +519,11 @@ int smlua_hook_behavior(lua_State* L) {
     lua_Integer overrideBehaviorId = noOverrideId ? 0xFFFFFF : smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Hook behavior: tried to override invalid behavior: %lld, %u", overrideBehaviorId, gSmLuaConvertSuccess);
+        return 0;
+    }
+
+    if (overrideBehaviorId == id_bhvMario) {
+        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
         return 0;
     }
 
@@ -1675,6 +629,7 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->replace = replaceBehavior;
     hooked->luaBehavior = true;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedBehaviorsCount++;
 
@@ -1732,7 +687,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         smlua_push_object(L, LOT_OBJECT, object, NULL);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod)) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod, hooked->modFile)) {
             LOG_LUA("Failed to call the behavior callback: %u", hooked->behaviorId);
             return true;
         }
@@ -1753,6 +708,7 @@ struct LuaHookedChatCommand {
     char* description;
     int reference;
     struct Mod* mod;
+    struct ModFile* modFile;
 };
 
 #define MAX_HOOKED_CHAT_COMMANDS 512
@@ -1797,6 +753,7 @@ int smlua_hook_chat_command(lua_State* L) {
     hooked->description = strdup(description);
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     sHookedChatCommandsCount++;
     return 1;
@@ -1860,7 +817,7 @@ bool smlua_call_chat_command_hook(char* command) {
         lua_pushstring(L, params);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod)) {
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
             LOG_LUA("Failed to call the chat command callback: %s", command);
             continue;
         }
@@ -2075,7 +1032,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
 //////////////////////////////
 
 int smlua_hook_on_sync_table_change(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     if (L == NULL) { return 0; }
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -2125,7 +1082,7 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     lua_remove(L, hookOnChangedIndex);
     lua_remove(L, valTableIndex);
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
@@ -2163,6 +1120,7 @@ int smlua_hook_mod_menu_text(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = 0;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -2201,6 +1159,7 @@ int smlua_hook_mod_menu_button(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -2245,6 +1204,7 @@ int smlua_hook_mod_menu_checkbox(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -2301,6 +1261,7 @@ int smlua_hook_mod_menu_slider(lua_State* L) {
     hooked->sliderMax = sliderMax;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -2352,6 +1313,7 @@ int smlua_hook_mod_menu_inputbox(lua_State* L) {
     hooked->sliderMax = 0;
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
+    hooked->modFile = gLuaActiveModFile;
 
     lua_pushinteger(L, gHookedModMenuElementsCount);
     gHookedModMenuElementsCount++;
@@ -2483,7 +1445,7 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
     }
 
     // call the callback
-    if (0 != smlua_call_hook(L, params, 1, 0, hooked->mod)) {
+    if (0 != smlua_call_hook(L, params, 1, 0, hooked->mod, hooked->modFile)) {
         LOG_LUA("Failed to call the mod menu element callback: %s", hooked->name);
         return;
     }
@@ -2508,6 +1470,7 @@ void smlua_clear_hooks(void) {
         struct LuaHookedMarioAction* hooked = &sHookedMarioActions[i];
         hooked->action = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
         memset(hooked->actionHookRefs, 0, sizeof(hooked->actionHookRefs));
     }
     sHookedMarioActionsCount = 0;
@@ -2522,6 +1485,7 @@ void smlua_clear_hooks(void) {
 
         hooked->reference = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     sHookedChatCommandsCount = 0;
 
@@ -2537,6 +1501,7 @@ void smlua_clear_hooks(void) {
         hooked->sliderMax = 0;
         hooked->reference = 0;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     gHookedModMenuElementsCount = 0;
 
@@ -2565,6 +1530,7 @@ void smlua_clear_hooks(void) {
         hooked->replace = false;
         hooked->luaBehavior = false;
         hooked->mod = NULL;
+        hooked->modFile = NULL;
     }
     sHookedBehaviorsCount = 0;
     memset(gLuaMarioActionIndex, 0, sizeof(gLuaMarioActionIndex));

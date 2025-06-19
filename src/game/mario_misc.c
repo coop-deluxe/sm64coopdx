@@ -359,7 +359,7 @@ s8 geo_get_processing_mario_index(void) {
         return index;
     }
 
-    if (gCurGraphNodeProcessingObject->behavior != smlua_override_behavior(bhvMario)) {
+    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
         return -1;
     }
 
@@ -725,7 +725,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].scale[0] *= -1.0f;
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
 
-                    smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
+                    smlua_call_event_hooks(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }
@@ -877,8 +877,9 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
 
     // Retrieve mod index and function name
     s32 modIndex = -1;
+    s32 modFileIndex = -1;
     const char *funcStr = NULL;
-    if (!dynos_actor_get_mod_index_and_token(sharedChild, fnNode->luaTokenIndex, &modIndex, &funcStr)) {
+    if (!dynos_actor_get_mod_index_and_token(sharedChild, fnNode->luaTokenIndex, &modIndex, &modFileIndex, &funcStr)) {
         if (modIndex == -1) {
             LOG_ERROR("Could not find graph node mod index");
         } else if (funcStr == NULL) {
@@ -895,16 +896,24 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
         funcRef = smlua_get_any_function_mod_variable(funcStr);
     }
     if (!gSmLuaConvertSuccess || funcRef == 0) {
-        LOG_LUA("Failed to call lua function, could not find lua function '%s'", funcStr);
+        LOG_LUA("Failed to call lua geo function, could not find lua function '%s'", funcStr);
         return NULL;
     }
 
     // Get the mod
-    if (modIndex >= gActiveMods.entryCount) {
-        LOG_LUA("Failed to call lua function, could not find mod");
+    if (modIndex < 0 || modIndex >= gActiveMods.entryCount) {
+        LOG_LUA("Failed to call lua geo function, could not find mod");
         return NULL;
     }
     struct Mod *mod = gActiveMods.entries[modIndex];
+
+    // Get our mod file
+    if (modFileIndex < 0 || modFileIndex >= mod->fileCount) {
+        LOG_LUA("Failed to call lua geo function, could not find mod file %d", modFileIndex);
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+    struct ModFile *modFile = &mod->files[modFileIndex];
 
     // Push the callback, the graph node and the current matrix stack index
     lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
@@ -912,7 +921,7 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     lua_pushinteger(L, gMatStackIndex);
 
     // Call the callback
-    if (0 != smlua_call_hook(L, 2, 0, 0, mod)) {
+    if (0 != smlua_call_hook(L, 2, 0, 0, mod, modFile)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 

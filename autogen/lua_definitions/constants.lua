@@ -63,7 +63,7 @@ end
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number
@@ -251,6 +251,58 @@ end
 --- Rounds `x` to the nearest integer value
 function math.round(x)
     return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
+end
+
+local __common_signed_conversion = function (x, size)
+    x = __math_floor(x) & (1 << size) - 1
+    return x - ((x & (1 << (size - 1))) << 1)
+end
+
+local __common_unsigned_conversion = function (x, size)
+    return __math_floor(x) & (1 << size) - 1
+end
+
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s8` range
+--- - `[-128, 127]`
+function math.s8(x)
+    return __common_signed_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s16` range
+--- - `[-32768, 32767]`
+function math.s16(x)
+    return __common_signed_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s32` range
+--- - `[-2147483648, 2147483647]`
+function math.s32(x)
+    return __common_signed_conversion(x, 32)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u8` range
+--- - `[0, 255]`
+function math.u8(x)
+    return __common_unsigned_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u16` range
+--- - `[0, 65535]`
+function math.u16(x)
+    return __common_unsigned_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u32` range
+--- - `[0, 4294967295]`
+function math.u32(x)
+    return __common_unsigned_conversion(x, 32)
 end
 
 
@@ -7822,7 +7874,9 @@ HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
 HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
-HOOK_MAX                                    = 57 --- @type LuaHookedEventType
+HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
+HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
+HOOK_MAX                                    = 59 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7882,31 +7936,9 @@ HOOK_MAX                                    = 57 --- @type LuaHookedEventType
 --- | `HOOK_BEFORE_WARP`
 --- | `HOOK_ON_INSTANT_WARP`
 --- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
+--- | `HOOK_ON_ADD_SURFACE`
+--- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_MAX`
-
-ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
-ACTION_HOOK_GRAVITY     = 1 --- @type LuaActionHookType
-ACTION_HOOK_MAX         = 2 --- @type LuaActionHookType
-
---- @alias LuaActionHookType
---- | `ACTION_HOOK_EVERY_FRAME`
---- | `ACTION_HOOK_GRAVITY`
---- | `ACTION_HOOK_MAX`
-
-MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON   = 1 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 2 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER   = 3 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 4 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX      = 5 --- @type LuaModMenuElementType
-
---- @alias LuaModMenuElementType
---- | `MOD_MENU_ELEMENT_TEXT`
---- | `MOD_MENU_ELEMENT_BUTTON`
---- | `MOD_MENU_ELEMENT_CHECKBOX`
---- | `MOD_MENU_ELEMENT_SLIDER`
---- | `MOD_MENU_ELEMENT_INPUTBOX`
---- | `MOD_MENU_ELEMENT_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue

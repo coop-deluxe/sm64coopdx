@@ -41,7 +41,7 @@ static void select_language(struct DjuiBase* caller) {
     if (strcmp(configLanguage, langName)) {
         snprintf(configLanguage, MAX_CONFIG_STRING, "%s", langName);
         sLanguageChanged = true;
-        smlua_call_event_hooks_string_param(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
+        smlua_call_event_hooks(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
     }
 
     checkbox->value = &sTrue;

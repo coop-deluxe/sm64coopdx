@@ -62,7 +62,7 @@ exclude_constants = {
     "src/game/save_file.h": [ "EEPROM_SIZE" ],
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
-    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS" ],
+    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ]
 }
 

@@ -572,6 +572,7 @@ struct GfxData : NoCopy {
     s32 mErrorCount = 0;
     u32 mModelIdentifier = 0;
     s32 mModIndex = 0;
+    s32 mModFileIndex = 0;
     SysPath mPackFolder;
     Array<void *> mPointerList;
     Array<Pair<const void*, const void*>> mPointerOffsetList;
@@ -862,6 +863,7 @@ const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
+const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
 const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
@@ -888,9 +890,9 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 //
 
 std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
-void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName);
+void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
-bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken);
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
 void DynOS_Actor_Invalid(const void* aGeoref, s32 aPackIndex);
@@ -918,6 +920,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
 void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
+bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo);
 void DynOS_Tex_Override_Set(const char* textureName, struct TextureInfo* aOverrideTexInfo);
 void DynOS_Tex_Override_Reset(const char* textureName);
 void DynOS_Tex_ModShutdown();
@@ -944,7 +947,7 @@ void DynOS_Lvl_ModShutdown();
 Array<Pair<const char *, GfxData *>> &DynOS_Bhv_GetArray();
 void DynOS_Bhv_Activate(s32 modIndex, const SysPath &aFilename, const char *aBehaviorName);
 GfxData *DynOS_Bhv_GetActiveGfx(BehaviorScript *bhvScript);
-s32 DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript);
+bool DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript, s32 *modIndex, s32 *modFileIndex);
 const char *DynOS_Bhv_GetToken(BehaviorScript *bhvScript, u32 index);
 void DynOS_Bhv_HookAllCustomBehaviors();
 void DynOS_Bhv_ModShutdown();
@@ -976,6 +979,7 @@ struct GraphNode* DynOS_Model_StoreGeo(u32* aId, enum ModelPool aModelPool, void
 struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
+enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 

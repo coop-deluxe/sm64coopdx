@@ -60,115 +60,304 @@
  // vec types //
 ///////////////
 
-static void smlua_get_vec2f(Vec2f dest, int index) {
+void smlua_new_vec2f(Vec2f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2f(Vec2f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
 }
 
-static void smlua_push_vec2f(Vec2f src, int index) {
+void smlua_push_vec2f(Vec2f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3f(Vec3f dest, int index) {
+void smlua_new_vec3f(Vec3f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushnumber(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3f(Vec3f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
     dest[2] = smlua_get_number_field(index, "z");
 }
 
-static void smlua_push_vec3f(Vec3f src, int index) {
+void smlua_push_vec3f(Vec3f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
     smlua_push_number_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4f(Vec4f dest, int index) {
+void smlua_new_vec4f(Vec4f src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushnumber(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushnumber(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4f(Vec4f dest, int index) {
     dest[0] = smlua_get_number_field(index, "x");
     dest[1] = smlua_get_number_field(index, "y");
     dest[2] = smlua_get_number_field(index, "z");
     dest[3] = smlua_get_number_field(index, "w");
 }
 
-static void smlua_push_vec4f(Vec4f src, int index) {
+void smlua_push_vec4f(Vec4f src, int index) {
     smlua_push_number_field(index, "x", src[0]);
     smlua_push_number_field(index, "y", src[1]);
     smlua_push_number_field(index, "z", src[2]);
     smlua_push_number_field(index, "w", src[3]);
 }
 
-static void smlua_get_vec2i(Vec2i dest, int index) {
+void smlua_new_vec2i(Vec2i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2i(Vec2i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
 }
 
-static void smlua_push_vec2i(Vec2i src, int index) {
+void smlua_push_vec2i(Vec2i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3i(Vec3i dest, int index) {
+void smlua_new_vec3i(Vec3i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3i(Vec3i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
 }
 
-static void smlua_push_vec3i(Vec3i src, int index) {
+void smlua_push_vec3i(Vec3i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4i(Vec4i dest, int index) {
+void smlua_new_vec4i(Vec4i src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushinteger(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4i(Vec4i dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
     dest[3] = smlua_get_integer_field(index, "w");
 }
 
-static void smlua_push_vec4i(Vec4i src, int index) {
+void smlua_push_vec4i(Vec4i src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
     smlua_push_integer_field(index, "w", src[3]);
 }
 
-static void smlua_get_vec2s(Vec2s dest, int index) {
+void smlua_new_vec2s(Vec2s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec2s(Vec2s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
 }
 
-static void smlua_push_vec2s(Vec2s src, int index) {
+void smlua_push_vec2s(Vec2s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
 }
 
-static void smlua_get_vec3s(Vec3s dest, int index) {
+void smlua_new_vec3s(Vec3s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec3s(Vec3s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
 }
 
-static void smlua_push_vec3s(Vec3s src, int index) {
+void smlua_push_vec3s(Vec3s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
 }
 
-static void smlua_get_vec4s(Vec4s dest, int index) {
+void smlua_new_vec4s(Vec4s src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "x");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "y");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "z");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "w");
+    lua_pushinteger(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_vec4s(Vec4s dest, int index) {
     dest[0] = smlua_get_integer_field(index, "x");
     dest[1] = smlua_get_integer_field(index, "y");
     dest[2] = smlua_get_integer_field(index, "z");
     dest[3] = smlua_get_integer_field(index, "w");
 }
 
-static void smlua_push_vec4s(Vec4s src, int index) {
+void smlua_push_vec4s(Vec4s src, int index) {
     smlua_push_integer_field(index, "x", src[0]);
     smlua_push_integer_field(index, "y", src[1]);
     smlua_push_integer_field(index, "z", src[2]);
     smlua_push_integer_field(index, "w", src[3]);
 }
 
-static void smlua_get_mat4(Mat4 dest, int index) {
+void smlua_new_mat4(Mat4 src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "m00");
+    lua_pushnumber(L, src[0][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m01");
+    lua_pushnumber(L, src[0][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m02");
+    lua_pushnumber(L, src[0][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m03");
+    lua_pushnumber(L, src[0][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m10");
+    lua_pushnumber(L, src[1][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m11");
+    lua_pushnumber(L, src[1][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m12");
+    lua_pushnumber(L, src[1][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m13");
+    lua_pushnumber(L, src[1][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m20");
+    lua_pushnumber(L, src[2][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m21");
+    lua_pushnumber(L, src[2][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m22");
+    lua_pushnumber(L, src[2][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m23");
+    lua_pushnumber(L, src[2][3]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m30");
+    lua_pushnumber(L, src[3][0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m31");
+    lua_pushnumber(L, src[3][1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m32");
+    lua_pushnumber(L, src[3][2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "m33");
+    lua_pushnumber(L, src[3][3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_mat4(Mat4 dest, int index) {
     dest[0][0] = smlua_get_number_field(index, "m00");
     dest[0][1] = smlua_get_number_field(index, "m01");
     dest[0][2] = smlua_get_number_field(index, "m02");
@@ -187,7 +376,7 @@ static void smlua_get_mat4(Mat4 dest, int index) {
     dest[3][3] = smlua_get_number_field(index, "m33");
 }
 
-static void smlua_push_mat4(Mat4 src, int index) {
+void smlua_push_mat4(Mat4 src, int index) {
     smlua_push_number_field(index, "m00", src[0][0]);
     smlua_push_number_field(index, "m01", src[0][1]);
     smlua_push_number_field(index, "m02", src[0][2]);
@@ -222,13 +411,28 @@ static void smlua_push_mat4(Mat4 src, int index) {
     smlua_push_number_field(index, "p", src[3][3]);
 }
 
-static void smlua_get_color(Color dest, int index) {
+void smlua_new_color(Color src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "r");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "g");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "b");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_color(Color dest, int index) {
     dest[0] = smlua_get_integer_field(index, "r");
     dest[1] = smlua_get_integer_field(index, "g");
     dest[2] = smlua_get_integer_field(index, "b");
 }
 
-static void smlua_push_color(Color src, int index) {
+void smlua_push_color(Color src, int index) {
     smlua_push_integer_field(index, "r", src[0]);
     smlua_push_integer_field(index, "g", src[1]);
     smlua_push_integer_field(index, "b", src[2]);
@@ -521,37 +725,6 @@ int smlua_func_arc_to_goal_pos(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "arc_to_goal_pos"); return 0; }
 
     lua_pushinteger(L, arc_to_goal_pos(goal, pos, yVel, gravity));
-
-    smlua_push_vec3f(goal, 1);
-
-    smlua_push_vec3f(pos, 2);
-
-    return 1;
-}
-
-int smlua_func_vec3f_copy_2(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3f_copy_2", 2, top);
-        return 0;
-    }
-
-
-    Vec3f dest;
-    smlua_get_vec3f(dest, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_copy_2"); return 0; }
-
-    Vec3f src;
-    smlua_get_vec3f(src, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3f_copy_2"); return 0; }
-
-    vec3f_copy_2(dest, src);
-
-    smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(src, 2);
 
     return 1;
 }
@@ -9630,8 +9803,6 @@ int smlua_func_geo_move_mario_part_from_parent(lua_State* L) {
 
     smlua_push_object(L, LOT_GFX, geo_move_mario_part_from_parent(run, node, mtx), NULL);
 
-    smlua_push_mat4(mtx, 3);
-
     return 1;
 }
 */
@@ -9679,8 +9850,6 @@ int smlua_func_geo_update_body_rot_from_parent(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_body_rot_from_parent"); return 0; }
 
     smlua_push_object(L, LOT_GFX, geo_update_body_rot_from_parent(run, node, mtx), NULL);
-
-    smlua_push_mat4(mtx, 3);
 
     return 1;
 }
@@ -9752,8 +9921,6 @@ int smlua_func_geo_update_held_mario_pos(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "geo_update_held_mario_pos"); return 0; }
 
     smlua_push_object(L, LOT_GFX, geo_update_held_mario_pos(run, node, mtx), NULL);
-
-    smlua_push_mat4(mtx, 3);
 
     return 1;
 }
@@ -10337,7 +10504,93 @@ int smlua_func_vec3f_to_object_pos(lua_State* L) {
 
     vec3f_to_object_pos(o, src);
 
-    smlua_push_vec3f(src, 2);
+    return 1;
+}
+
+int smlua_func_object_face_angle_to_vec3s(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "object_face_angle_to_vec3s", 2, top);
+        return 0;
+    }
+
+
+    Vec3s dst;
+    smlua_get_vec3s(dst, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "object_face_angle_to_vec3s"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "object_face_angle_to_vec3s"); return 0; }
+
+    object_face_angle_to_vec3s(dst, o);
+
+    smlua_push_vec3s(dst, 1);
+
+    return 1;
+}
+
+int smlua_func_vec3s_to_object_face_angle(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3s_to_object_face_angle", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_to_object_face_angle"); return 0; }
+
+    Vec3s src;
+    smlua_get_vec3s(src, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_to_object_face_angle"); return 0; }
+
+    vec3s_to_object_face_angle(o, src);
+
+    return 1;
+}
+
+int smlua_func_object_move_angle_to_vec3s(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "object_move_angle_to_vec3s", 2, top);
+        return 0;
+    }
+
+
+    Vec3s dst;
+    smlua_get_vec3s(dst, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "object_move_angle_to_vec3s"); return 0; }
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "object_move_angle_to_vec3s"); return 0; }
+
+    object_move_angle_to_vec3s(dst, o);
+
+    smlua_push_vec3s(dst, 1);
+
+    return 1;
+}
+
+int smlua_func_vec3s_to_object_move_angle(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vec3s_to_object_move_angle", 2, top);
+        return 0;
+    }
+
+    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_to_object_move_angle"); return 0; }
+
+    Vec3s src;
+    smlua_get_vec3s(src, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vec3s_to_object_move_angle"); return 0; }
+
+    vec3s_to_object_move_angle(o, src);
 
     return 1;
 }
@@ -10413,8 +10666,6 @@ int smlua_func_shake_camera_handheld(lua_State* L) {
 
     shake_camera_handheld(pos, focus);
 
-    smlua_push_vec3f(pos, 1);
-
     smlua_push_vec3f(focus, 2);
 
     return 1;
@@ -10489,8 +10740,6 @@ int smlua_func_clamp_pitch(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "clamp_pitch"); return 0; }
 
     lua_pushinteger(L, clamp_pitch(from, to, maxPitch, minPitch));
-
-    smlua_push_vec3f(from, 1);
 
     smlua_push_vec3f(to, 2);
 
@@ -10651,8 +10900,6 @@ int smlua_func_approach_vec3f_asymptotic(lua_State* L) {
 
     smlua_push_vec3f(current, 1);
 
-    smlua_push_vec3f(target, 2);
-
     return 1;
 }
 
@@ -10683,8 +10930,6 @@ int smlua_func_set_or_approach_vec3f_asymptotic(lua_State* L) {
     set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul);
 
     smlua_push_vec3f(dst, 1);
-
-    smlua_push_vec3f(goal, 2);
 
     return 1;
 }
@@ -10830,8 +11075,6 @@ int smlua_func_clamp_positions_and_find_yaw(lua_State* L) {
 
     smlua_push_vec3f(pos, 1);
 
-    smlua_push_vec3f(origin, 2);
-
     return 1;
 }
 
@@ -10860,10 +11103,6 @@ int smlua_func_is_range_behind_surface(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "is_range_behind_surface"); return 0; }
 
     lua_pushinteger(L, is_range_behind_surface(from, to, surf, range, surfType));
-
-    smlua_push_vec3f(from, 1);
-
-    smlua_push_vec3f(to, 2);
 
     return 1;
 }
@@ -10896,10 +11135,6 @@ int smlua_func_scale_along_line(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(from, 2);
-
-    smlua_push_vec3f(to, 3);
-
     return 1;
 }
 
@@ -10923,10 +11158,6 @@ int smlua_func_calculate_pitch(lua_State* L) {
 
     lua_pushinteger(L, calculate_pitch(from, to));
 
-    smlua_push_vec3f(from, 1);
-
-    smlua_push_vec3f(to, 2);
-
     return 1;
 }
 
@@ -10949,10 +11180,6 @@ int smlua_func_calculate_yaw(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "calculate_yaw"); return 0; }
 
     lua_pushinteger(L, calculate_yaw(from, to));
-
-    smlua_push_vec3f(from, 1);
-
-    smlua_push_vec3f(to, 2);
 
     return 1;
 }
@@ -10981,10 +11208,6 @@ int smlua_func_calculate_angles(lua_State* L) {
 
     calculate_angles(from, to, pitch, yaw);
 
-    smlua_push_vec3f(from, 1);
-
-    smlua_push_vec3f(to, 2);
-
     return 1;
 }
 
@@ -11008,10 +11231,6 @@ int smlua_func_calc_abs_dist(lua_State* L) {
 
     lua_pushnumber(L, calc_abs_dist(a, b));
 
-    smlua_push_vec3f(a, 1);
-
-    smlua_push_vec3f(b, 2);
-
     return 1;
 }
 
@@ -11034,10 +11253,6 @@ int smlua_func_calc_hor_dist(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "calc_hor_dist"); return 0; }
 
     lua_pushnumber(L, calc_hor_dist(a, b));
-
-    smlua_push_vec3f(a, 1);
-
-    smlua_push_vec3f(b, 2);
 
     return 1;
 }
@@ -11066,8 +11281,6 @@ int smlua_func_rotate_in_xz(lua_State* L) {
 
     smlua_push_vec3f(dst, 1);
 
-    smlua_push_vec3f(src, 2);
-
     return 1;
 }
 
@@ -11094,8 +11307,6 @@ int smlua_func_rotate_in_yz(lua_State* L) {
     rotate_in_yz(dst, src, pitch);
 
     smlua_push_vec3f(dst, 1);
-
-    smlua_push_vec3f(src, 2);
 
     return 1;
 }
@@ -11212,8 +11423,6 @@ int smlua_func_shake_camera_pitch(lua_State* L) {
 
     shake_camera_pitch(pos, focus);
 
-    smlua_push_vec3f(pos, 1);
-
     smlua_push_vec3f(focus, 2);
 
     return 1;
@@ -11238,8 +11447,6 @@ int smlua_func_shake_camera_yaw(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "shake_camera_yaw"); return 0; }
 
     shake_camera_yaw(pos, focus);
-
-    smlua_push_vec3f(pos, 1);
 
     smlua_push_vec3f(focus, 2);
 
@@ -11578,12 +11785,6 @@ int smlua_func_offset_rotated(lua_State* L) {
 
     smlua_push_vec3f(dst, 1);
 
-    smlua_push_vec3f(from, 2);
-
-    smlua_push_vec3f(to, 3);
-
-    smlua_push_vec3s(rotation, 4);
-
     return 1;
 }
 
@@ -11628,14 +11829,6 @@ int smlua_func_next_lakitu_state(lua_State* L) {
     smlua_push_vec3f(newPos, 1);
 
     smlua_push_vec3f(newFoc, 2);
-
-    smlua_push_vec3f(curPos, 3);
-
-    smlua_push_vec3f(curFoc, 4);
-
-    smlua_push_vec3f(oldPos, 5);
-
-    smlua_push_vec3f(oldFoc, 6);
 
     return 1;
 }
@@ -11696,8 +11889,6 @@ int smlua_func_resolve_geometry_collisions(lua_State* L) {
 
     smlua_push_vec3f(pos, 1);
 
-    smlua_push_vec3f(lastGood, 2);
-
     return 1;
 }
 
@@ -11722,8 +11913,6 @@ int smlua_func_rotate_camera_around_walls(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "rotate_camera_around_walls"); return 0; }
 
     lua_pushinteger(L, rotate_camera_around_walls(c, cPos, avoidYaw, yawRange));
-
-    smlua_push_vec3f(cPos, 2);
 
     return 1;
 }
@@ -11985,8 +12174,6 @@ int smlua_func_obj_rotate_towards_point(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "obj_rotate_towards_point"); return 0; }
 
     obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv);
-
-    smlua_push_vec3f(point, 2);
 
     return 1;
 }
@@ -12728,6 +12915,138 @@ int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_render_texture(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture", 5, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture"); return 0; }
+    f32 scaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture"); return 0; }
+    f32 scaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture"); return 0; }
+
+    djui_hud_render_texture(texInfo, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_tile(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 9) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_tile", 9, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_tile"); return 0; }
+    f32 scaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_tile"); return 0; }
+    f32 scaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileX = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileY = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileW = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_tile"); return 0; }
+    u32 tileH = smlua_to_integer(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_tile"); return 0; }
+
+    djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 9) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_interpolated", 9, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevScaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 prevScaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 x = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 y = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 scaleW = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_interpolated"); return 0; }
+    f32 scaleH = smlua_to_number(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_interpolated"); return 0; }
+
+    djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_render_texture_tile_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 13) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_render_texture_tile_interpolated", 13, top);
+        return 0;
+    }
+
+    struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevX = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevY = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevScaleW = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 prevScaleH = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 x = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 y = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 scaleW = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    f32 scaleH = smlua_to_number(L, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileX = smlua_to_integer(L, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileY = smlua_to_integer(L, 11);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 11, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileW = smlua_to_integer(L, 12);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 12, "djui_hud_render_texture_tile_interpolated"); return 0; }
+    u32 tileH = smlua_to_integer(L, 13);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 13, "djui_hud_render_texture_tile_interpolated"); return 0; }
+
+    djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_render_rect(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -12831,8 +13150,6 @@ int smlua_func_djui_hud_world_pos_to_screen_pos(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_world_pos_to_screen_pos"); return 0; }
 
     lua_pushboolean(L, djui_hud_world_pos_to_screen_pos(pos, out));
-
-    smlua_push_vec3f(pos, 1);
 
     smlua_push_vec3f(out, 2);
 
@@ -12958,8 +13275,6 @@ int smlua_func_play_sound(lua_State* L) {
 
     play_sound(soundBits, pos);
 
-    smlua_push_vec3f(pos, 2);
-
     return 1;
 }
 
@@ -12982,8 +13297,6 @@ int smlua_func_play_sound_with_freq_scale(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "play_sound_with_freq_scale"); return 0; }
 
     play_sound_with_freq_scale(soundBits, pos, freqScale);
-
-    smlua_push_vec3f(pos, 2);
 
     return 1;
 }
@@ -13103,8 +13416,6 @@ int smlua_func_stop_sound(lua_State* L) {
 
     stop_sound(soundBits, pos);
 
-    smlua_push_vec3f(pos, 2);
-
     return 1;
 }
 
@@ -13123,8 +13434,6 @@ int smlua_func_stop_sounds_from_source(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "stop_sounds_from_source"); return 0; }
 
     stop_sounds_from_source(pos);
-
-    smlua_push_vec3f(pos, 1);
 
     return 1;
 }
@@ -15265,8 +15574,6 @@ int smlua_func_le_calculate_lighting_color(lua_State* L) {
 
     le_calculate_lighting_color(pos, out, lightIntensityScalar);
 
-    smlua_push_vec3f(pos, 1);
-
     smlua_push_color(out, 2);
 
     return 1;
@@ -15291,8 +15598,6 @@ int smlua_func_le_calculate_lighting_dir(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_calculate_lighting_dir"); return 0; }
 
     le_calculate_lighting_dir(pos, out);
-
-    smlua_push_vec3f(pos, 1);
 
     smlua_push_vec3f(out, 2);
 
@@ -16070,8 +16375,6 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
 
     lua_pushnumber(L, vec3f_find_ceil(pos, height, ceil));
 
-    smlua_push_vec3f(pos, 1);
-
     return 1;
 }
 */
@@ -16096,8 +16399,6 @@ int smlua_func_vec3f_mario_ceil(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "vec3f_mario_ceil"); return 0; }
 
     lua_pushnumber(L, vec3f_mario_ceil(pos, height, ceil));
-
-    smlua_push_vec3f(pos, 1);
 
     return 1;
 }
@@ -17015,7 +17316,7 @@ int smlua_func_perform_hanging_step(lua_State* L) {
     smlua_get_vec3f(nextPos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "perform_hanging_step"); return 0; }
 
-    extern s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos);
+    extern s32 perform_hanging_step(struct MarioState *m, OUT Vec3f nextPos);
     lua_pushinteger(L, perform_hanging_step(m, nextPos));
 
     smlua_push_vec3f(nextPos, 2);
@@ -17936,8 +18237,6 @@ int smlua_func_push_or_sidle_wall(lua_State* L) {
     extern void push_or_sidle_wall(struct MarioState *m, Vec3f startPos);
     push_or_sidle_wall(m, startPos);
 
-    smlua_push_vec3f(startPos, 2);
-
     return 1;
 }
 
@@ -18495,7 +18794,7 @@ int smlua_func_perform_water_full_step(lua_State* L) {
     smlua_get_vec3f(nextPos, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "perform_water_full_step"); return 0; }
 
-    extern u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos);
+    extern u32 perform_water_full_step(struct MarioState *m, OUT Vec3f nextPos);
     lua_pushinteger(L, perform_water_full_step(m, nextPos));
 
     smlua_push_vec3f(nextPos, 2);
@@ -18519,7 +18818,7 @@ int smlua_func_apply_water_current(lua_State* L) {
     smlua_get_vec3f(step, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "apply_water_current"); return 0; }
 
-    extern void apply_water_current(struct MarioState *m, Vec3f step);
+    extern void apply_water_current(struct MarioState *m, OUT Vec3f step);
     apply_water_current(m, step);
 
     smlua_push_vec3f(step, 2);
@@ -19116,8 +19415,6 @@ int smlua_func_vec3f_rotate_zxy(lua_State* L) {
 
     smlua_push_vec3f(v, 1);
 
-    smlua_push_vec3s(rotate, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -19150,10 +19447,6 @@ int smlua_func_vec3f_rotate_around_n(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(v, 2);
-
-    smlua_push_vec3f(n, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -19183,10 +19476,6 @@ int smlua_func_vec3f_project(lua_State* L) {
     vec3f_project(dest, v, onto);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(v, 2);
-
-    smlua_push_vec3f(onto, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -19226,14 +19515,6 @@ int smlua_func_vec3f_transform(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(v, 2);
-
-    smlua_push_vec3f(translation, 3);
-
-    smlua_push_vec3s(rotation, 4);
-
-    smlua_push_vec3f(scale, 5);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -19264,10 +19545,6 @@ int smlua_func_vec3f_get_dist_and_angle(lua_State* L) {
 
     vec3f_get_dist_and_angle(from, to, dist, pitch, yaw);
 
-    smlua_push_vec3f(from, 1);
-
-    smlua_push_vec3f(to, 2);
-
     return 1;
 }
 
@@ -19296,8 +19573,6 @@ int smlua_func_vec3f_set_dist_and_angle(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "vec3f_set_dist_and_angle"); return 0; }
 
     vec3f_set_dist_and_angle(from, to, dist, pitch, yaw);
-
-    smlua_push_vec3f(from, 1);
 
     smlua_push_vec3f(to, 2);
 
@@ -19334,12 +19609,6 @@ int smlua_func_find_vector_perpendicular_to_plane(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
-
-    smlua_push_vec3f(c, 4);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -19372,10 +19641,6 @@ int smlua_func_mtxf_lookat(lua_State* L) {
 
     smlua_push_mat4(mtx, 1);
 
-    smlua_push_vec3f(from, 2);
-
-    smlua_push_vec3f(to, 3);
-
     return 1;
 }
 
@@ -19405,10 +19670,6 @@ int smlua_func_mtxf_rotate_zxy_and_translate(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_vec3f(translate, 2);
-
-    smlua_push_vec3s(rotate, 3);
-
     return 1;
 }
 
@@ -19437,10 +19698,6 @@ int smlua_func_mtxf_rotate_xyz_and_translate(lua_State* L) {
     mtxf_rotate_xyz_and_translate(dest, b, c);
 
     smlua_push_mat4(dest, 1);
-
-    smlua_push_vec3f(b, 2);
-
-    smlua_push_vec3s(c, 3);
 
     return 1;
 }
@@ -19473,10 +19730,6 @@ int smlua_func_mtxf_billboard(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_mat4(mtx, 2);
-
-    smlua_push_vec3f(position, 3);
-
     return 1;
 }
 
@@ -19507,10 +19760,6 @@ int smlua_func_mtxf_cylboard(lua_State* L) {
     mtxf_cylboard(dest, mtx, position, angle);
 
     smlua_push_mat4(dest, 1);
-
-    smlua_push_mat4(mtx, 2);
-
-    smlua_push_vec3f(position, 3);
 
     return 1;
 }
@@ -19543,10 +19792,6 @@ int smlua_func_mtxf_align_terrain_normal(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_vec3f(upDir, 2);
-
-    smlua_push_vec3f(pos, 3);
-
     return 1;
 }
 
@@ -19575,8 +19820,6 @@ int smlua_func_mtxf_align_terrain_triangle(lua_State* L) {
     mtxf_align_terrain_triangle(mtx, pos, yaw, radius);
 
     smlua_push_mat4(mtx, 1);
-
-    smlua_push_vec3f(pos, 2);
 
     return 1;
 }
@@ -19607,10 +19850,6 @@ int smlua_func_mtxf_mul(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_mat4(a, 2);
-
-    smlua_push_mat4(b, 3);
-
     return 1;
 }
 
@@ -19632,12 +19871,11 @@ int smlua_func_mtxf_mul_vec3s(lua_State* L) {
     smlua_get_vec3s(b, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mtxf_mul_vec3s"); return 0; }
 
-    smlua_push_pointer(L, LVT_S16_P, (void*)mtxf_mul_vec3s(mtx, b), NULL);
-
-    smlua_push_mat4(mtx, 1);
+    mtxf_mul_vec3s(mtx, b);
 
     smlua_push_vec3s(b, 2);
 
+    lua_settop(L, 2);
     return 1;
 }
 
@@ -19686,8 +19924,6 @@ int smlua_func_mtxf_inverse(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_mat4(src, 2);
-
     return 1;
 }
 
@@ -19716,10 +19952,6 @@ int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     get_pos_from_transform_mtx(dest, objMtx, camMtx);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_mat4(objMtx, 2);
-
-    smlua_push_mat4(camMtx, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -19863,8 +20095,6 @@ int smlua_func_mtxf_copy(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_mat4(src, 2);
-
     return 1;
 }
 
@@ -19911,8 +20141,6 @@ int smlua_func_mtxf_translate(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_vec3f(b, 2);
-
     return 1;
 }
 
@@ -19942,10 +20170,6 @@ int smlua_func_mtxf_scale_vec3f(lua_State* L) {
 
     smlua_push_mat4(dest, 1);
 
-    smlua_push_mat4(mtx, 2);
-
-    smlua_push_vec3f(s, 3);
-
     return 1;
 }
 
@@ -19967,8 +20191,6 @@ int smlua_func_mtxf_to_mtx(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mtxf_to_mtx"); return 0; }
 
     mtxf_to_mtx(dest, src);
-
-    smlua_push_mat4(src, 2);
 
     return 1;
 }
@@ -20021,8 +20243,6 @@ int smlua_func_vec3f_copy(lua_State* L) {
     vec3f_copy(dest, src);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(src, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -20078,8 +20298,6 @@ int smlua_func_vec3f_add(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20110,10 +20328,6 @@ int smlua_func_vec3f_sum(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20139,8 +20353,6 @@ int smlua_func_vec3f_sub(lua_State* L) {
     vec3f_sub(dest, a);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -20171,10 +20383,6 @@ int smlua_func_vec3f_dif(lua_State* L) {
     vec3f_dif(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -20226,8 +20434,6 @@ int smlua_func_vec3f_mult(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20257,10 +20463,6 @@ int smlua_func_vec3f_prod(lua_State* L) {
     vec3f_prod(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -20305,8 +20507,6 @@ int smlua_func_vec3f_length(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_length"); return 0; }
 
     lua_pushnumber(L, vec3f_length(a));
-
-    smlua_push_vec3f(a, 1);
 
     return 1;
 }
@@ -20377,10 +20577,6 @@ int smlua_func_vec3f_dot(lua_State* L) {
 
     lua_pushnumber(L, vec3f_dot(a, b));
 
-    smlua_push_vec3f(a, 1);
-
-    smlua_push_vec3f(b, 2);
-
     return 1;
 }
 
@@ -20409,10 +20605,6 @@ int smlua_func_vec3f_cross(lua_State* L) {
     vec3f_cross(dest, a, b);
 
     smlua_push_vec3f(dest, 1);
-
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -20448,10 +20640,6 @@ int smlua_func_vec3f_combine(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3f(vecA, 2);
-
-    smlua_push_vec3f(vecB, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20476,10 +20664,6 @@ int smlua_func_vec3f_dist(lua_State* L) {
 
     lua_pushnumber(L, vec3f_dist(v1, v2));
 
-    smlua_push_vec3f(v1, 1);
-
-    smlua_push_vec3f(v2, 2);
-
     return 1;
 }
 
@@ -20503,10 +20687,6 @@ int smlua_func_vec3f_hdist(lua_State* L) {
 
     lua_pushnumber(L, vec3f_hdist(v1, v2));
 
-    smlua_push_vec3f(v1, 1);
-
-    smlua_push_vec3f(v2, 2);
-
     return 1;
 }
 
@@ -20525,8 +20705,6 @@ int smlua_func_vec3f_is_zero(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3f_is_zero"); return 0; }
 
     lua_pushboolean(L, vec3f_is_zero(v));
-
-    smlua_push_vec3f(v, 1);
 
     return 1;
 }
@@ -20553,8 +20731,6 @@ int smlua_func_vec3f_to_vec3i(lua_State* L) {
 
     smlua_push_vec3i(dest, 1);
 
-    smlua_push_vec3f(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20580,8 +20756,6 @@ int smlua_func_vec3f_to_vec3s(lua_State* L) {
     vec3f_to_vec3s(dest, a);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3f(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -20634,8 +20808,6 @@ int smlua_func_vec3i_copy(lua_State* L) {
     vec3i_copy(dest, src);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3i(src, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -20691,8 +20863,6 @@ int smlua_func_vec3i_add(lua_State* L) {
 
     smlua_push_vec3i(dest, 1);
 
-    smlua_push_vec3i(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20723,10 +20893,6 @@ int smlua_func_vec3i_sum(lua_State* L) {
 
     smlua_push_vec3i(dest, 1);
 
-    smlua_push_vec3i(a, 2);
-
-    smlua_push_vec3i(b, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20752,8 +20918,6 @@ int smlua_func_vec3i_sub(lua_State* L) {
     vec3i_sub(dest, a);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3i(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -20784,10 +20948,6 @@ int smlua_func_vec3i_dif(lua_State* L) {
     vec3i_dif(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3i(a, 2);
-
-    smlua_push_vec3i(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -20839,8 +20999,6 @@ int smlua_func_vec3i_mult(lua_State* L) {
 
     smlua_push_vec3i(dest, 1);
 
-    smlua_push_vec3i(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -20870,10 +21028,6 @@ int smlua_func_vec3i_prod(lua_State* L) {
     vec3i_prod(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3i(a, 2);
-
-    smlua_push_vec3i(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -20918,8 +21072,6 @@ int smlua_func_vec3i_length(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_length"); return 0; }
 
     lua_pushnumber(L, vec3i_length(a));
-
-    smlua_push_vec3i(a, 1);
 
     return 1;
 }
@@ -20990,10 +21142,6 @@ int smlua_func_vec3i_dot(lua_State* L) {
 
     lua_pushnumber(L, vec3i_dot(a, b));
 
-    smlua_push_vec3i(a, 1);
-
-    smlua_push_vec3i(b, 2);
-
     return 1;
 }
 
@@ -21022,10 +21170,6 @@ int smlua_func_vec3i_cross(lua_State* L) {
     vec3i_cross(dest, a, b);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3i(a, 2);
-
-    smlua_push_vec3i(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -21061,10 +21205,6 @@ int smlua_func_vec3i_combine(lua_State* L) {
 
     smlua_push_vec3i(dest, 1);
 
-    smlua_push_vec3i(vecA, 2);
-
-    smlua_push_vec3i(vecB, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21089,10 +21229,6 @@ int smlua_func_vec3i_dist(lua_State* L) {
 
     lua_pushnumber(L, vec3i_dist(v1, v2));
 
-    smlua_push_vec3i(v1, 1);
-
-    smlua_push_vec3i(v2, 2);
-
     return 1;
 }
 
@@ -21116,10 +21252,6 @@ int smlua_func_vec3i_hdist(lua_State* L) {
 
     lua_pushnumber(L, vec3i_hdist(v1, v2));
 
-    smlua_push_vec3i(v1, 1);
-
-    smlua_push_vec3i(v2, 2);
-
     return 1;
 }
 
@@ -21138,8 +21270,6 @@ int smlua_func_vec3i_is_zero(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3i_is_zero"); return 0; }
 
     lua_pushboolean(L, vec3i_is_zero(v));
-
-    smlua_push_vec3i(v, 1);
 
     return 1;
 }
@@ -21166,8 +21296,6 @@ int smlua_func_vec3i_to_vec3f(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3i(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21193,8 +21321,6 @@ int smlua_func_vec3i_to_vec3s(lua_State* L) {
     vec3i_to_vec3s(dest, a);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3i(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -21247,8 +21373,6 @@ int smlua_func_vec3s_copy(lua_State* L) {
     vec3s_copy(dest, src);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3s(src, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -21304,8 +21428,6 @@ int smlua_func_vec3s_add(lua_State* L) {
 
     smlua_push_vec3s(dest, 1);
 
-    smlua_push_vec3s(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21336,10 +21458,6 @@ int smlua_func_vec3s_sum(lua_State* L) {
 
     smlua_push_vec3s(dest, 1);
 
-    smlua_push_vec3s(a, 2);
-
-    smlua_push_vec3s(b, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21365,8 +21483,6 @@ int smlua_func_vec3s_sub(lua_State* L) {
     vec3s_sub(dest, a);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3s(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -21397,10 +21513,6 @@ int smlua_func_vec3s_dif(lua_State* L) {
     vec3s_dif(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3s(a, 2);
-
-    smlua_push_vec3s(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -21452,8 +21564,6 @@ int smlua_func_vec3s_mult(lua_State* L) {
 
     smlua_push_vec3s(dest, 1);
 
-    smlua_push_vec3s(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21483,10 +21593,6 @@ int smlua_func_vec3s_prod(lua_State* L) {
     vec3s_prod(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3s(a, 2);
-
-    smlua_push_vec3s(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -21531,8 +21637,6 @@ int smlua_func_vec3s_length(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_length"); return 0; }
 
     lua_pushnumber(L, vec3s_length(a));
-
-    smlua_push_vec3s(a, 1);
 
     return 1;
 }
@@ -21603,10 +21707,6 @@ int smlua_func_vec3s_dot(lua_State* L) {
 
     lua_pushnumber(L, vec3s_dot(a, b));
 
-    smlua_push_vec3s(a, 1);
-
-    smlua_push_vec3s(b, 2);
-
     return 1;
 }
 
@@ -21635,10 +21735,6 @@ int smlua_func_vec3s_cross(lua_State* L) {
     vec3s_cross(dest, a, b);
 
     smlua_push_vec3s(dest, 1);
-
-    smlua_push_vec3s(a, 2);
-
-    smlua_push_vec3s(b, 3);
 
     lua_settop(L, 1);
     return 1;
@@ -21674,10 +21770,6 @@ int smlua_func_vec3s_combine(lua_State* L) {
 
     smlua_push_vec3s(dest, 1);
 
-    smlua_push_vec3s(vecA, 2);
-
-    smlua_push_vec3s(vecB, 3);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21702,10 +21794,6 @@ int smlua_func_vec3s_dist(lua_State* L) {
 
     lua_pushnumber(L, vec3s_dist(v1, v2));
 
-    smlua_push_vec3s(v1, 1);
-
-    smlua_push_vec3s(v2, 2);
-
     return 1;
 }
 
@@ -21729,10 +21817,6 @@ int smlua_func_vec3s_hdist(lua_State* L) {
 
     lua_pushnumber(L, vec3s_hdist(v1, v2));
 
-    smlua_push_vec3s(v1, 1);
-
-    smlua_push_vec3s(v2, 2);
-
     return 1;
 }
 
@@ -21751,8 +21835,6 @@ int smlua_func_vec3s_is_zero(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vec3s_is_zero"); return 0; }
 
     lua_pushboolean(L, vec3s_is_zero(v));
-
-    smlua_push_vec3s(v, 1);
 
     return 1;
 }
@@ -21779,8 +21861,6 @@ int smlua_func_vec3s_to_vec3f(lua_State* L) {
 
     smlua_push_vec3f(dest, 1);
 
-    smlua_push_vec3s(a, 2);
-
     lua_settop(L, 1);
     return 1;
 }
@@ -21806,8 +21886,6 @@ int smlua_func_vec3s_to_vec3i(lua_State* L) {
     vec3s_to_vec3i(dest, a);
 
     smlua_push_vec3i(dest, 1);
-
-    smlua_push_vec3s(a, 2);
 
     lua_settop(L, 1);
     return 1;
@@ -21987,10 +22065,6 @@ int smlua_func_delta_interpolate_vec3f(lua_State* L) {
 
     smlua_push_vec3f(res, 1);
 
-    smlua_push_vec3f(a, 2);
-
-    smlua_push_vec3f(b, 3);
-
     return 1;
 }
 
@@ -22021,10 +22095,6 @@ int smlua_func_delta_interpolate_vec3s(lua_State* L) {
     delta_interpolate_vec3s(res, a, b, delta);
 
     smlua_push_vec3s(res, 1);
-
-    smlua_push_vec3s(a, 2);
-
-    smlua_push_vec3s(b, 3);
 
     return 1;
 }
@@ -22392,8 +22462,6 @@ int smlua_func_network_player_set_override_palette_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_set_override_palette_color"); return 0; }
 
     network_player_set_override_palette_color(np, part, color);
-
-    smlua_push_color(color, 3);
 
     return 1;
 }
@@ -23213,7 +23281,7 @@ int smlua_func_obj_find_wall_displacement(lua_State* L) {
     f32 radius = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "obj_find_wall_displacement"); return 0; }
 
-    extern s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);
+    extern s8 obj_find_wall_displacement(OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radius);
     lua_pushinteger(L, obj_find_wall_displacement(dist, x, y, z, radius));
 
     smlua_push_vec3f(dist, 1);
@@ -24313,8 +24381,6 @@ int smlua_func_geo_update_projectile_pos_from_parent(lua_State* L) {
     extern Gfx *geo_update_projectile_pos_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
     smlua_push_object(L, LOT_GFX, geo_update_projectile_pos_from_parent(callContext, node, mtx), NULL);
 
-    smlua_push_mat4(mtx, 3);
-
     return 1;
 }
 */
@@ -24427,8 +24493,6 @@ int smlua_func_geo_choose_area_ext(lua_State* L) {
     extern Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
     smlua_push_object(L, LOT_GFX, geo_choose_area_ext(callContext, node, mtx), NULL);
 
-    smlua_push_mat4(mtx, 3);
-
     return 1;
 }
 */
@@ -24451,8 +24515,6 @@ int smlua_func_obj_update_pos_from_parent_transformation(lua_State* L) {
 
     extern void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);
     obj_update_pos_from_parent_transformation(a0, a1);
-
-    smlua_push_mat4(a0, 1);
 
     return 1;
 }
@@ -24477,12 +24539,10 @@ int smlua_func_obj_apply_scale_to_matrix(lua_State* L) {
     smlua_get_mat4(src, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_apply_scale_to_matrix"); return 0; }
 
-    extern void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src);
+    extern void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src);
     obj_apply_scale_to_matrix(obj, dst, src);
 
     smlua_push_mat4(dst, 2);
-
-    smlua_push_mat4(src, 3);
 
     return 1;
 }
@@ -24509,14 +24569,10 @@ int smlua_func_create_transformation_from_matrices(lua_State* L) {
     smlua_get_mat4(a2, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "create_transformation_from_matrices"); return 0; }
 
-    extern void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2);
+    extern void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2);
     create_transformation_from_matrices(a0, a1, a2);
 
     smlua_push_mat4(a0, 1);
-
-    smlua_push_mat4(a1, 2);
-
-    smlua_push_mat4(a2, 3);
 
     return 1;
 }
@@ -25183,14 +25239,10 @@ int smlua_func_linear_mtxf_mul_vec3f(lua_State* L) {
     smlua_get_vec3f(v, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "linear_mtxf_mul_vec3f"); return 0; }
 
-    extern void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);
+    extern void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);
     linear_mtxf_mul_vec3f(m, dst, v);
 
-    smlua_push_mat4(m, 1);
-
     smlua_push_vec3f(dst, 2);
-
-    smlua_push_vec3f(v, 3);
 
     return 1;
 }
@@ -25217,14 +25269,10 @@ int smlua_func_linear_mtxf_transpose_mul_vec3f(lua_State* L) {
     smlua_get_vec3f(v, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "linear_mtxf_transpose_mul_vec3f"); return 0; }
 
-    extern void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);
+    extern void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);
     linear_mtxf_transpose_mul_vec3f(m, dst, v);
 
-    smlua_push_mat4(m, 1);
-
     smlua_push_vec3f(dst, 2);
-
-    smlua_push_vec3f(v, 3);
 
     return 1;
 }
@@ -28203,8 +28251,6 @@ int smlua_func_geo_offset_klepto_held_object(lua_State* L) {
     extern Gfx *geo_offset_klepto_held_object(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
     smlua_push_object(L, LOT_GFX, geo_offset_klepto_held_object(callContext, node, mtx), NULL);
 
-    smlua_push_mat4(mtx, 3);
-
     return 1;
 }
 */
@@ -29906,8 +29952,6 @@ int smlua_func_audio_sample_play(lua_State* L) {
 
     audio_sample_play(audio, position, volume);
 
-    smlua_push_vec3f(position, 2);
-
     return 1;
 }
 
@@ -30990,8 +31034,6 @@ int smlua_func_network_player_color_to_palette(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "network_player_color_to_palette"); return 0; }
 
     network_player_color_to_palette(np, part, color);
-
-    smlua_push_color(color, 3);
 
     return 1;
 }
@@ -33274,6 +33316,23 @@ int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_texture_to_lua_table(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "texture_to_lua_table", 1, top);
+        return 0;
+    }
+
+    u8 * tex = (u8 *)smlua_to_cpointer(L, 1, LVT_U8_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "texture_to_lua_table"); return 0; }
+
+    texture_to_lua_table(tex);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_model_utils.h //
 /////////////////////////
@@ -35098,12 +35157,6 @@ int smlua_func_find_surface_on_ray(lua_State* L) {
 
     find_surface_on_ray(orig, dir, hit_surface, hit_pos, precision);
 
-    smlua_push_vec3f(orig, 1);
-
-    smlua_push_vec3f(dir, 2);
-
-    smlua_push_vec3f(hit_pos, 4);
-
     return 1;
 }
 */
@@ -35127,8 +35180,6 @@ int smlua_func_set_find_wall_direction(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_find_wall_direction"); return 0; }
 
     set_find_wall_direction(dir, active, airborne);
-
-    smlua_push_vec3f(dir, 1);
 
     return 1;
 }
@@ -35154,8 +35205,6 @@ int smlua_func_closest_point_to_triangle(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "closest_point_to_triangle"); return 0; }
 
     closest_point_to_triangle(surf, src, out);
-
-    smlua_push_vec3f(src, 2);
 
     smlua_push_vec3f(out, 3);
 
@@ -35294,7 +35343,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "spawn_wind_particles", smlua_func_spawn_wind_particles);
     smlua_bind_function(L, "check_if_moving_over_floor", smlua_func_check_if_moving_over_floor);
     smlua_bind_function(L, "arc_to_goal_pos", smlua_func_arc_to_goal_pos);
-    smlua_bind_function(L, "vec3f_copy_2", smlua_func_vec3f_copy_2);
     smlua_bind_function(L, "tox_box_move", smlua_func_tox_box_move);
     smlua_bind_function(L, "play_penguin_walking_sound", smlua_func_play_penguin_walking_sound);
     smlua_bind_function(L, "update_angle_from_move_flags", smlua_func_update_angle_from_move_flags);
@@ -35903,6 +35951,10 @@ void smlua_bind_functions_autogen(void) {
     //smlua_bind_function(L, "geo_camera_main", smlua_func_geo_camera_main); <--- UNIMPLEMENTED
     smlua_bind_function(L, "object_pos_to_vec3f", smlua_func_object_pos_to_vec3f);
     smlua_bind_function(L, "vec3f_to_object_pos", smlua_func_vec3f_to_object_pos);
+    smlua_bind_function(L, "object_face_angle_to_vec3s", smlua_func_object_face_angle_to_vec3s);
+    smlua_bind_function(L, "vec3s_to_object_face_angle", smlua_func_vec3s_to_object_face_angle);
+    smlua_bind_function(L, "object_move_angle_to_vec3s", smlua_func_object_move_angle_to_vec3s);
+    smlua_bind_function(L, "vec3s_to_object_move_angle", smlua_func_vec3s_to_object_move_angle);
     smlua_bind_function(L, "cam_select_alt_mode", smlua_func_cam_select_alt_mode);
     smlua_bind_function(L, "set_cam_angle", smlua_func_set_cam_angle);
     smlua_bind_function(L, "set_handheld_shake", smlua_func_set_handheld_shake);
@@ -36025,6 +36077,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
+    smlua_bind_function(L, "djui_hud_render_texture", smlua_func_djui_hud_render_texture);
+    smlua_bind_function(L, "djui_hud_render_texture_tile", smlua_func_djui_hud_render_texture_tile);
+    smlua_bind_function(L, "djui_hud_render_texture_interpolated", smlua_func_djui_hud_render_texture_interpolated);
+    smlua_bind_function(L, "djui_hud_render_texture_tile_interpolated", smlua_func_djui_hud_render_texture_tile_interpolated);
     smlua_bind_function(L, "djui_hud_render_rect", smlua_func_djui_hud_render_rect);
     smlua_bind_function(L, "djui_hud_render_rect_interpolated", smlua_func_djui_hud_render_rect_interpolated);
     smlua_bind_function(L, "get_current_fov", smlua_func_get_current_fov);
@@ -37163,6 +37219,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "geo_get_current_perspective", smlua_func_geo_get_current_perspective);
     smlua_bind_function(L, "geo_get_current_camera", smlua_func_geo_get_current_camera);
     smlua_bind_function(L, "geo_get_current_held_object", smlua_func_geo_get_current_held_object);
+    smlua_bind_function(L, "texture_to_lua_table", smlua_func_texture_to_lua_table);
 
     // smlua_model_utils.h
     smlua_bind_function(L, "smlua_model_util_get_id", smlua_func_smlua_model_util_get_id);

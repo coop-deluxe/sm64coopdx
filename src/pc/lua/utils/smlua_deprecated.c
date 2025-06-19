@@ -34,7 +34,7 @@ void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart p
     np->overridePalette = np->palette;
 }
 
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out) {
+void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, OUT Color out) {
     LOG_LUA_LINE_WARNING("[LUA] network_player_palette_to_color() is deprecated! Use network_player_get_palette_color() or network_player_get_override_palette_color() instead.");
     if (np == NULL || !(part < PLAYER_PART_MAX && part >= 0)) {
         if (np == NULL) { // output config palette instead if np is NULL

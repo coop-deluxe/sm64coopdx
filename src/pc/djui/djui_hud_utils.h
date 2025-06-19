@@ -131,7 +131,7 @@ f32 get_current_fov();
 /* |description|Gets the camera FOV coefficient|descriptionEnd| */
 f32 djui_hud_get_fov_coeff();
 /* |description|Converts a world position to screen position|descriptionEnd| */
-bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);
+bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out);
 /* |description|Checks if the DJUI pause menu is created|descriptionEnd| */
 bool djui_hud_is_pause_menu_created(void);
 

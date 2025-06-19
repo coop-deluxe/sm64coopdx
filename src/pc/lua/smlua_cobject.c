@@ -183,7 +183,7 @@ static const char *smlua_get_custom_field_type_name(enum LuaValueType lvt) {
 }
 
 static int smlua_func_define_custom_obj_fields(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -295,12 +295,12 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     lua_pop(L, 1); // pop key
     lua_pop(L, 1); // pop _custom_object_fields
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
 struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyIndex) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     static struct LuaObjectField lof = { 0 };
     if (lot != LOT_OBJECT) { return NULL; }
 
@@ -323,7 +323,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (lua_type(L, -1) != LUA_TTABLE) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -336,7 +336,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (!gSmLuaConvertSuccess || !validFieldIndex) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -349,7 +349,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (!gSmLuaConvertSuccess || !validLvt) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -363,7 +363,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lua_pop(L, 1); // pop value table
     lua_pop(L, 1); // pop _custom_fields
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return &lof;
 }
 
@@ -524,7 +524,7 @@ static int smlua_set_field_deprecated(lua_State* L, enum LuaObjectType lot, cons
 /////////////////////////////////////
 
 static int smlua__get_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
@@ -577,7 +577,7 @@ static int smlua__get_field(lua_State* L) {
             return 0;
         }
 
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return 1;
     }
 
@@ -616,12 +616,12 @@ static int smlua__get_field(lua_State* L) {
         }
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
 static int smlua__set_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
 
     const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
@@ -657,7 +657,7 @@ static int smlua__set_field(lua_State* L) {
             return 0;
         }
 
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return 1;
     }
 
@@ -697,7 +697,7 @@ static int smlua__set_field(lua_State* L) {
         return 0;
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 

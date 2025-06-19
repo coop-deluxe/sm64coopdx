@@ -31,7 +31,7 @@ std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
     return DynosValidActors();
 }
 
-void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
+void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
@@ -45,6 +45,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *
         return;
     }
     _GfxData->mModIndex = aModIndex;
+    _GfxData->mModFileIndex = aModFileIndex;
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
@@ -117,13 +118,16 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     return NULL;
 }
 
-bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken) {
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken) {
     ActorGfx *_ActorGfx = DynOS_Actor_GetActorGfx(aGraphNode);
     if (_ActorGfx) {
         GfxData *_GfxData = _ActorGfx->mGfxData;
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
@@ -138,6 +142,9 @@ bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenInde
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
@@ -204,7 +211,7 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
-    if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
+    if (obj && (obj->behavior == bhvMario ||
             obj->behavior == smlua_override_behavior(bhvNormalCap) ||
             obj->behavior == smlua_override_behavior(bhvWingCap) ||
             obj->behavior == smlua_override_behavior(bhvMetalCap) ||
@@ -269,6 +276,8 @@ size_t get_graph_node_size(s16 nodeType) {
 
 void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
     if (sModifiedGraphNodes.find(aNode) == sModifiedGraphNodes.end()) {
+        struct GraphNode *sharedChild = geo_find_shared_child(aNode);
+        if (DynOS_Model_GetModelPoolFromGraphNode(sharedChild) != MODEL_POOL_PERMANENT) { return; } // Only need to reset permanent models
         size_t size = get_graph_node_size(aNode->type);
         if (size == 0) { return; } // Unexpected
         GraphNode *graphNodeCopy = (GraphNode *) malloc(size);

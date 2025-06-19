@@ -237,6 +237,17 @@ u32 DynOS_Model_GetIdFromAsset(void* asset) {
     return MODEL_ERROR_MODEL;
 }
 
+enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode) {
+    for (auto& it : sIdMap) {
+        if (!it.second.size() || it.second.empty()) { continue; }
+        auto& node = it.second.back();
+        if (aNode == node.graphNode) {
+            return node.modelPool;
+        }
+    }
+    return MODEL_POOL_MAX;
+}
+
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {
     sOverwriteMap[srcSlot] = dstSlot;
 }
