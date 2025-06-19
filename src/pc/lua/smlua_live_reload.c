@@ -18,7 +18,7 @@ typedef struct UpvalRecord {
 typedef struct UpvalReference {
     char *name;
     int reference;
-    int active;
+    bool active;
     bool isOld;
     struct UpvalReference *next;
 } UpvalReference;
@@ -67,7 +67,7 @@ static int upval_references_deduplicate(lua_State *L, char* name, int reference,
     lua_pop(L, 1); // pop newFunc
 
     // allocate
-    UpvalReference *ref = calloc(1, sizeof(struct UpvalReference));
+    UpvalReference *ref = malloc(sizeof(struct UpvalReference));
     ref->name      = name ? strdup(name) : NULL;
     ref->reference = reference;
     ref->active    = false;
@@ -110,7 +110,7 @@ static void upvalues_free(lua_State *L, UpvalRecord *upvalsHead) {
 }
 
 static void upvalues_collect_from_function(lua_State *L, UpvalRecord **upvalsHead, bool isOld) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
 
     // stack: ..., key, val
     if (lua_type(L, -1) != LUA_TFUNCTION) {
@@ -133,8 +133,7 @@ static void upvalues_collect_from_function(lua_State *L, UpvalRecord **upvalsHea
 
     int funcKeyRef = upval_references_deduplicate(L, sFuncKeyStr, refRegistered, isOld);
 
-    // now fnIdx points to the real function
-    int fnIdx = lua_gettop(L);
+    int fnIdx = lua_gettop(L); // the stack index of the reference to the function we're processing
 
     // walk its upvalues
     for (int uv = 1;; uv++) {
@@ -155,7 +154,7 @@ static void upvalues_collect_from_function(lua_State *L, UpvalRecord **upvalsHea
         lua_pop(L, 1);
 
         // allocate a new record
-        UpvalRecord *rec = calloc(1, sizeof(struct UpvalRecord));
+        UpvalRecord *rec = malloc(sizeof(struct UpvalRecord));
         rec->funcKeyStr  = kstr ? strdup(sFuncKeyStr) : NULL;
         rec->funcKeyRef  = funcKeyRef;
         rec->name        = strdup(uvName);
@@ -166,11 +165,11 @@ static void upvalues_collect_from_function(lua_State *L, UpvalRecord **upvalsHea
         *upvalsHead = rec;
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 static void upvalues_collect(lua_State *L, UpvalRecord **upvalsHead, int moduleIdx, bool isOld) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
 
     // make moduleIdx absolute so pushes don't shift it
     int absMod = lua_absindex(L, moduleIdx);
@@ -192,7 +191,7 @@ static void upvalues_collect(lua_State *L, UpvalRecord **upvalsHead, int moduleI
         lua_pop(L, 1);  // pop val, keep key
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 const UpvalRecord *upvalues_find(UpvalRecord *searchList, UpvalRecord *searchFor) {
@@ -339,7 +338,7 @@ static void overwrite_module_functions(lua_State *L, int dstIdx, int srcIdx) {
 }
 
 static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *file) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
 
     // only handle loaded Lua modules
     if (!file->isLoadedLuaModule) { return; }
@@ -422,7 +421,7 @@ static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *f
         lua_pop(L, 3);                    // pop loadedTable, oldMod, newMod
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 void smlua_live_reload_update(lua_State* L) {

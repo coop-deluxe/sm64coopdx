@@ -29,8 +29,8 @@ u64 mod_get_file_mtime_seconds(struct ModFile* file) {
     ull.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
     ull.HighPart = fad.ftLastWriteTime.dwHighDateTime;
 
-    const uint64_t EPOCH_DIFF = 116444736000000000ULL; // 100-ns from 1601 to 1970
-    uint64_t time100ns = ull.QuadPart;
+    const u64 EPOCH_DIFF = 116444736000000000ULL; // 100-ns from 1601 to 1970
+    u64 time100ns = ull.QuadPart;
     return (time100ns - EPOCH_DIFF) / 10000000ULL;    // to seconds
 #else
     struct stat st;
@@ -38,7 +38,7 @@ u64 mod_get_file_mtime_seconds(struct ModFile* file) {
         // error; errno is set
         return 0;
     }
-    return (uint64_t)st.st_mtime;
+    return (u64)st.st_mtime;
 #endif
 }
 
