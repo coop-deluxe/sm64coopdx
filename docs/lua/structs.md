@@ -1650,6 +1650,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | bubbleOnDeathBarrierInCapStages | `integer` |  |
+| ceilNormalMaxY | `number` |  |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
 | disableActs | `integer` |  |
@@ -1669,6 +1670,7 @@
 | floorLowerLimit | `integer` |  |
 | floorLowerLimitMisc | `integer` |  |
 | floorLowerLimitShadow | `integer` |  |
+| floorNormalMinY | `number` |  |
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |

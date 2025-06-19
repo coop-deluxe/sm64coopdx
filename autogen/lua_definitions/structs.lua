@@ -1068,6 +1068,7 @@
 
 --- @class LevelValues
 --- @field public bubbleOnDeathBarrierInCapStages integer
+--- @field public ceilNormalMaxY number
 --- @field public cellHeightLimit integer
 --- @field public coinsRequiredForCoinStar integer
 --- @field public disableActs integer
@@ -1087,6 +1088,7 @@
 --- @field public floorLowerLimit integer
 --- @field public floorLowerLimitMisc integer
 --- @field public floorLowerLimitShadow integer
+--- @field public floorNormalMinY number
 --- @field public hudCapTimer integer
 --- @field public hudRedCoinsRadar integer
 --- @field public hudSecretsRadar integer

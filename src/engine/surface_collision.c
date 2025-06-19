@@ -163,7 +163,7 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
             closest_point_to_triangle(surf, src, cPos);
 
             // Exclude triangles where y isn't inside of it
-            if (fabs(cPos[1] - y) > 1) { continue; }
+            if (cPos[1] < surf->lowerY || cPos[1] > surf->upperY) { continue; }
 
             // Figure out normal
             f32 dX = src[0] - cPos[0];
