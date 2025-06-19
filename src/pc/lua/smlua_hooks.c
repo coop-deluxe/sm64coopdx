@@ -1032,7 +1032,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
 //////////////////////////////
 
 int smlua_hook_on_sync_table_change(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     if (L == NULL) { return 0; }
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -1082,7 +1082,7 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     lua_remove(L, hookOnChangedIndex);
     lua_remove(L, valTableIndex);
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
