@@ -2798,6 +2798,17 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileNum, s16 courseNum) 
     print_generic_string(x + 14, y + 13, str);
 }
 
+void render_pause_options_string() {
+    u8 textOptions[] = { 0x58, 0x9E, 0x9F, 0x9E, ASCII_TO_DIALOG('O'), ASCII_TO_DIALOG('P'), ASCII_TO_DIALOG('T'), ASCII_TO_DIALOG('I'), ASCII_TO_DIALOG('O'), ASCII_TO_DIALOG('N'), ASCII_TO_DIALOG('S'), DIALOG_CHAR_TERMINATOR };
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+
+    print_generic_string(get_str_x_pos_from_center(SCREEN_WIDTH / 2, textOptions, 1.0f), SCREEN_HEIGHT - 31, textOptions);
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
+
 void render_pause_castle_main_strings(s16 x, s16 y) {
 #ifdef VERSION_EU
     u8 textCoin[] = { TEXT_COIN };
@@ -3091,6 +3102,7 @@ s16 render_pause_courses_and_castle(void) {
         case DIALOG_STATE_VERTICAL:
             if (!gDjuiPanelPauseCreated) {
                 shade_screen();
+                render_pause_options_string();
                 render_pause_my_score_coins();
                 render_pause_red_coins();
 
@@ -3132,6 +3144,7 @@ s16 render_pause_courses_and_castle(void) {
         case DIALOG_STATE_HORIZONTAL:
             if (!gDjuiPanelPauseCreated) {
                 shade_screen();
+                render_pause_options_string();
                 print_hud_pause_colorful_str();
 
                 if (gLevelValues.extendedPauseDisplay) {
