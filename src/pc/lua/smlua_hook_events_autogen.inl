@@ -703,19 +703,17 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_RECEIVE(s32 modIndex, s32 valueIndex)
 
     struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_PACKET_RECEIVE];
     for (int i = 0; i < hook->count; i++) {
+        if (hook->mod[i]->index != modIndex) { continue; }
         s32 prevTop = lua_gettop(L);
 
         // push the callback onto the stack
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
-        // push modIndex
-        lua_pushinteger(L, modIndex);
-
         // push valueIndex
-        lua_pushinteger(L, valueIndex);
+        lua_pushvalue(L, valueIndex);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PACKET_RECEIVE]);
             continue;
         }
