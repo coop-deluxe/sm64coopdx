@@ -119,13 +119,20 @@ lua_Number smlua_to_number(lua_State* L, int index) {
 }
 
 const char* smlua_to_string(lua_State* L, int index) {
-    if (lua_type(L, index) != LUA_TSTRING) {
-        LOG_LUA_LINE("smlua_to_string received improper type '%s'", luaL_typename(L, index));
+    const char* str = luaL_tolstring(L, index, NULL);
+
+    if (!str) {
+        LOG_LUA_LINE("smlua_to_string failed to convert value of type '%s'", luaL_typename(L, index));
         gSmLuaConvertSuccess = false;
         return 0;
     }
+
     gSmLuaConvertSuccess = true;
-    return lua_tostring(L, index);
+
+    // Pop the string that luaL_tolstring pushed
+    lua_pop(L, 1);
+
+    return str;
 }
 
 LuaFunction smlua_to_lua_function(lua_State* L, int index) {
