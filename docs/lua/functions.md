@@ -1334,6 +1334,7 @@
 - mod_fs.h
    - [mod_fs_exists](functions-5.md#mod_fs_exists)
    - [mod_fs_get](functions-5.md#mod_fs_get)
+   - [mod_fs_reload](functions-5.md#mod_fs_reload)
    - [mod_fs_create](functions-5.md#mod_fs_create)
    - [mod_fs_delete](functions-5.md#mod_fs_delete)
    - [mod_fs_save](functions-5.md#mod_fs_save)
@@ -1357,6 +1358,7 @@
    - [mod_fs_file_write_line](functions-5.md#mod_fs_file_write_line)
    - [mod_fs_file_seek](functions-5.md#mod_fs_file_seek)
    - [mod_fs_file_is_eof](functions-5.md#mod_fs_file_is_eof)
+   - [mod_fs_file_fill](functions-5.md#mod_fs_file_fill)
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)

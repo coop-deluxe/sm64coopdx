@@ -22107,6 +22107,26 @@ int smlua_func_mod_fs_get(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_fs_reload(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 0 || top > 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_fs_reload", 0, 1, top);
+        return 0;
+    }
+
+    const char* modPath = (const char*) NULL;
+    if (top >= 1) {
+        modPath = smlua_to_string(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_reload"); return 0; }
+    }
+
+    smlua_push_object(L, LOT_MODFS, mod_fs_reload(modPath), NULL);
+
+    return 1;
+}
+
 int smlua_func_mod_fs_create(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -22532,6 +22552,27 @@ int smlua_func_mod_fs_file_is_eof(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_is_eof"); return 0; }
 
     lua_pushboolean(L, mod_fs_file_is_eof(file));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_fill(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_fill", 3, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_fill"); return 0; }
+    u8 byte = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_fill"); return 0; }
+    u32 length = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_fill"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_fill(file, byte, length));
 
     return 1;
 }
@@ -37083,6 +37124,7 @@ void smlua_bind_functions_autogen(void) {
     // mod_fs.h
     smlua_bind_function(L, "mod_fs_exists", smlua_func_mod_fs_exists);
     smlua_bind_function(L, "mod_fs_get", smlua_func_mod_fs_get);
+    smlua_bind_function(L, "mod_fs_reload", smlua_func_mod_fs_reload);
     smlua_bind_function(L, "mod_fs_create", smlua_func_mod_fs_create);
     smlua_bind_function(L, "mod_fs_delete", smlua_func_mod_fs_delete);
     smlua_bind_function(L, "mod_fs_save", smlua_func_mod_fs_save);
@@ -37106,6 +37148,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_write_line", smlua_func_mod_fs_file_write_line);
     smlua_bind_function(L, "mod_fs_file_seek", smlua_func_mod_fs_file_seek);
     smlua_bind_function(L, "mod_fs_file_is_eof", smlua_func_mod_fs_file_is_eof);
+    smlua_bind_function(L, "mod_fs_file_fill", smlua_func_mod_fs_file_fill);
     smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);
     smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
     smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
