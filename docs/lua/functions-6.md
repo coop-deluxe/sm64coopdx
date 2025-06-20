@@ -6383,29 +6383,6 @@ Gets the DialogEntry struct for the given `dialogId`
 
 <br />
 
-## [smlua_text_utils_dialog_get_text](#smlua_text_utils_dialog_get_text)
-
-### Description
-Returns the ASCII string of the dialog's content.
-
-### Lua Example
-`local stringValue = smlua_text_utils_dialog_get_text(dialogId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dialogId | [enum DialogId](constants.md#enum-DialogId) |
-
-### Returns
-- `string`
-
-### C Prototype
-`void smlua_text_utils_dialog_get_text(enum DialogId dialogId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
 
 ### Description

@@ -25,6 +25,34 @@ static bool sReplacedActName[(COURSE_RR+2)*6] = { 0 };
 extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
 void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 
+static size_t measure_converted_sm64_string(const u8* str64) {
+    size_t len = 0;
+    
+    for (size_t i = 0; str64[i] != 0xFF; i++) {
+        for (int j = 0; sSm64CharMap[j].str != NULL; j++) {
+            if (sSm64CharMap[j].c == str64[i]) {
+                len += strlen(sSm64CharMap[j].str);
+                break;
+            }
+        }
+    }
+
+    return len;
+}
+
+char* get_dialog_text_ascii(struct DialogEntry *dialog) {
+    if (!dialog) { return NULL; }
+
+    size_t len = measure_converted_sm64_string(dialog->str);
+
+    char* asciiStr = malloc(len + 1);
+    if (!asciiStr) return NULL;
+
+    convert_string_sm64_to_ascii(asciiStr, dialog->str);
+
+    return asciiStr;
+}
+
 struct CourseName *gReplacedActNameTable[COURSE_END];
 
 static bool sSmluaTextUtilsInited = false;
@@ -58,6 +86,16 @@ void smlua_text_utils_init(void) {
             courseActNames->actName[MAX_ACTS_AND_100_COINS - 1].modIndex = -1;
         }
     }
+
+    for (s32 i = 0; i < DIALOG_COUNT; i++) {
+        struct DialogEntry *dialog = smlua_text_utils_dialog_get(i);
+        char* dialogText = get_dialog_text_ascii(dialog);
+
+        free(dialog->text);
+
+        dialog->text = dialogText;
+    }
+
     sSmluaTextUtilsInited = true;
 }
 
@@ -135,7 +173,10 @@ void smlua_text_utils_reset_all(void) {
         const struct DialogEntry *dialogOrig = segmented_to_virtual(dialogTableOrg[i]);
         struct DialogEntry *dialog = segmented_to_virtual(dialogTable[i]);
         free((u8*)dialog->str);
+        free(dialog->text);
+
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
+        dialog->text = get_dialog_text_ascii(dialog); 
         sReplacedDialog[i] = false;
     }
 
@@ -195,41 +236,6 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
     return dialog;
 }
 
-static size_t measure_sm64_string(const u8* str64) {
-    size_t len = 0;
-    
-    for (size_t i = 0; str64[i] != 0xFF; i++) {
-        for (int j = 0; sSm64CharMap[j].str != NULL; j++) {
-            if (sSm64CharMap[j].c == str64[i]) {
-                len += strlen(sSm64CharMap[j].str);
-                break;
-            }
-        }
-    }
-
-    return len;
-}
-
-void smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
-    lua_State* L = gLuaState;
-    if (!L) { return; }
-
-    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
-
-    if (!dialog) { return; }
-
-    size_t len = measure_sm64_string(dialog->str);
-
-    char *asciiStr = malloc(len + 1);
-    if (!asciiStr) { return; }
-
-    convert_string_sm64_to_ascii(asciiStr, dialog->str);
-
-    lua_pushstring(L, asciiStr);
-
-    free(asciiStr);
-}
-
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
@@ -239,11 +245,14 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
         free((u8*)dialog->str);
     }
 
+    free(dialog->text);
+
     dialog->unused = unused;
     dialog->linesPerBox = linesPerBox;
     dialog->leftOffset = leftOffset;
     dialog->width = width;
     dialog->str = smlua_text_utils_convert(str);
+    dialog->text = get_dialog_text_ascii(dialog);
     sReplacedDialog[dialogId] = true;
 }
 

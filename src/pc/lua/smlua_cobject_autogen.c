@@ -806,11 +806,11 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
 
 #define LUA_DIALOG_ENTRY_FIELD_COUNT 5
 static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
-    { "leftOffset",  LVT_S16,  offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE,    1, sizeof(s16)       },
-    { "linesPerBox", LVT_S8,   offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE,    1, sizeof(s8)        },
-    { "str",         LVT_U8_P, offsetof(struct DialogEntry, str),         true, LOT_POINTER, 1, sizeof(const u8*) },
-    { "unused",      LVT_U32,  offsetof(struct DialogEntry, unused),      true, LOT_NONE,    1, sizeof(u32)       },
-    { "width",       LVT_S16,  offsetof(struct DialogEntry, width),       true, LOT_NONE,    1, sizeof(s16)       },
+    { "leftOffset",  LVT_S16,      offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE, 1, sizeof(s16)   },
+    { "linesPerBox", LVT_S8,       offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE, 1, sizeof(s8)    },
+    { "text",        LVT_STRING_P, offsetof(struct DialogEntry, text),        true, LOT_NONE, 1, sizeof(char*) },
+    { "unused",      LVT_U32,      offsetof(struct DialogEntry, unused),      true, LOT_NONE, 1, sizeof(u32)   },
+    { "width",       LVT_S16,      offsetof(struct DialogEntry, width),       true, LOT_NONE, 1, sizeof(s16)   },
 };
 
 #define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 3

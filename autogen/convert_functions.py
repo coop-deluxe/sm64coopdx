@@ -152,11 +152,6 @@ override_function_version_excludes = {
     "cur_obj_spawn_star_at_y_offset": "VERSION_JP"
 }
 
-# Override the return type that will be displayed in the doc files. Does not affect autogened C files.
-override_return_types = {
-    "smlua_text_utils_dialog_get_text" : "const char*"
-}
-
 lua_function_params = {
     "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
 }
@@ -1212,12 +1207,7 @@ def doc_function(fname, function):
 
     description = function.get('description', "")
 
-    override_type = function['type']
-
-    if function['identifier'] in override_return_types:
-        override_type = override_return_types[function['identifier']]
-
-    rtype, rlink = translate_type_to_lua(override_type)
+    rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
     if description != "":
@@ -1345,14 +1335,8 @@ def def_function(fname, function):
     fid = function['identifier']
     if not doc_should_document(fname, fid):
         return ''
-    
-    override_type = function['type']
 
-    if function['identifier'] in override_return_types:
-        override_type = override_return_types[function['identifier']]
-
-    rtype, rlink = translate_type_to_lua(override_type)
-
+    rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
     if rtype == None:

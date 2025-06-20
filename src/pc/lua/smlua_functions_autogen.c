@@ -34288,23 +34288,6 @@ int smlua_func_smlua_text_utils_dialog_get(lua_State* L) {
     return 1;
 }
 
-int smlua_func_smlua_text_utils_dialog_get_text(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_get_text", 1, top);
-        return 0;
-    }
-
-    int dialogId = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_get_text"); return 0; }
-
-    smlua_text_utils_dialog_get_text(dialogId);
-
-    return 1;
-}
-
 int smlua_func_smlua_text_utils_dialog_replace(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37288,7 +37271,6 @@ void smlua_bind_functions_autogen(void) {
     // smlua_text_utils.h
     smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);
     smlua_bind_function(L, "smlua_text_utils_dialog_get", smlua_func_smlua_text_utils_dialog_get);
-    smlua_bind_function(L, "smlua_text_utils_dialog_get_text", smlua_func_smlua_text_utils_dialog_get_text);
     smlua_bind_function(L, "smlua_text_utils_dialog_replace", smlua_func_smlua_text_utils_dialog_replace);
     smlua_bind_function(L, "smlua_text_utils_dialog_is_replaced", smlua_func_smlua_text_utils_dialog_is_replaced);
     smlua_bind_function(L, "smlua_text_utils_course_acts_replace", smlua_func_smlua_text_utils_course_acts_replace);

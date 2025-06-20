@@ -97,6 +97,7 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "DialogEntry": [ "str" ]
 }
 
 override_field_deprecated = {
@@ -136,7 +137,7 @@ override_field_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
-    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str"]
+    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"]
 }
 
 override_field_version_excludes = {

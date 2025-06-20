@@ -884,7 +884,7 @@
 | ----- | ---- | ------ |
 | leftOffset | `integer` | read-only |
 | linesPerBox | `integer` | read-only |
-| str | `Pointer` <`integer`> | read-only |
+| text | `string` | read-only |
 | unused | `integer` | read-only |
 | width | `integer` | read-only |
 
