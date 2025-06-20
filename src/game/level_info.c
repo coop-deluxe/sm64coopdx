@@ -19,7 +19,7 @@ extern u8 *seg2_course_name_table[];
 extern u8 *seg2_act_name_table[];
 #endif
 
-static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
+const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
 
     // Digits
     { "0", 0x00, 1 }, { "1", 0x01, 1 }, { "2", 0x02, 1 }, { "3", 0x03, 1 }, { "4", 0x04, 1 },

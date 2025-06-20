@@ -22,6 +22,7 @@ static bool sReplacedActName[(COURSE_RR+2)*6] = { 0 };
 
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
+extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
 void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 
 struct CourseName *gReplacedActNameTable[COURSE_END];
@@ -194,24 +195,32 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
     return dialog;
 }
 
+static size_t measure_sm64_string(const u8* str64) {
+    size_t len = 0;
+    
+    for (size_t i = 0; str64[i] != 0xFF; i++) {
+        for (int j = 0; sSm64CharMap[j].str != NULL; j++) {
+            if (sSm64CharMap[j].c == str64[i]) {
+                len += strlen(sSm64CharMap[j].str);
+                break;
+            }
+        }
+    }
+
+    return len;
+}
+
 char* smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
     if (!dialog) { return NULL; }
 
-    const u8* dialogStr = dialog->str;
-    size_t len = 0;
-
-    while (dialogStr[len] != 0xFF) {
-        len++;
-    }
+    size_t len = measure_sm64_string(dialog->str);
 
     char* asciiStr = malloc(len + 1);
-    if (!asciiStr) {
-        return NULL;
-    }
+    if (!asciiStr) return NULL;
 
-    convert_string_sm64_to_ascii(asciiStr, dialogStr);
+    convert_string_sm64_to_ascii(asciiStr, dialog->str);
 
     return asciiStr;
 }
