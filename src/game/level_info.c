@@ -63,7 +63,7 @@ const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "/",   0xD0, 0 },
     { "the", 0xD1, 0 },
     { "you", 0xD2, 0 },
-    { "[%]", 0xE0, 0 }, // The number of stars required to unlock a star door
+    { "[%]", 0xE0, 0 }, // The number of extra stars required to unlock a star door
     { "[A]", 0x54, 0 }, // bold A
     { "[B]", 0x55, 0 }, // bold B
     { "[C]", 0x56, 0 }, // bold C
