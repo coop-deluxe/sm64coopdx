@@ -18,6 +18,7 @@
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
+#include "utils/smlua_text_utils.h"
 #include "game/hardcoded.h"
 #include "include/macros.h"
 
@@ -1003,6 +1004,25 @@ int smlua_func_vtx_get_from_name(lua_State *L) {
     return 2;
 }
 
+int smlua_func_get_dialog_text(lua_State *L){
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_get_text", 1, top);
+        return 0;
+    }
+
+    s16 dialogId = smlua_to_integer(L, 1);
+
+    char* str = smlua_text_utils_dialog_get_text(dialogId);
+
+    lua_pushstring(L, str);
+
+    free(str);
+    return 1;
+}
+
   //////////
  // bind //
 //////////
@@ -1035,4 +1055,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
     smlua_bind_function(L, "gfx_get_from_name", smlua_func_gfx_get_from_name);
     smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
+    smlua_bind_function(L, "smlua_text_utils_dialog_get_text", smlua_func_get_dialog_text);
 }

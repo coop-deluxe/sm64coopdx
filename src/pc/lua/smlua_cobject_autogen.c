@@ -11,6 +11,7 @@
 #include "src/pc/djui/djui_theme.h"
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
+#include "src/game/ingame_menu.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_camera_utils.h"
@@ -801,6 +802,15 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "month",  LVT_S32, offsetof(struct DateTime, month),  false, LOT_NONE, 1, sizeof(s32) },
     { "second", LVT_S32, offsetof(struct DateTime, second), false, LOT_NONE, 1, sizeof(s32) },
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE, 1, sizeof(s32) },
+};
+
+#define LUA_DIALOG_ENTRY_FIELD_COUNT 5
+static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
+    { "leftOffset",  LVT_S16,  offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE,    1, sizeof(s16)       },
+    { "linesPerBox", LVT_S8,   offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE,    1, sizeof(s8)        },
+    { "str",         LVT_U8_P, offsetof(struct DialogEntry, str),         true, LOT_POINTER, 1, sizeof(const u8*) },
+    { "unused",      LVT_U32,  offsetof(struct DialogEntry, unused),      true, LOT_NONE,    1, sizeof(u32)       },
+    { "width",       LVT_S16,  offsetof(struct DialogEntry, width),       true, LOT_NONE,    1, sizeof(s16)       },
 };
 
 #define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 3
@@ -2861,6 +2871,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENESPLINEPOINT,          sCutsceneSplinePointFields,          LUA_CUTSCENE_SPLINE_POINT_FIELD_COUNT           },
     { LOT_CUTSCENEVARIABLE,             sCutsceneVariableFields,             LUA_CUTSCENE_VARIABLE_FIELD_COUNT               },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
+    { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
     { LOT_DISPLAYLISTNODE,              sDisplayListNodeFields,              LUA_DISPLAY_LIST_NODE_FIELD_COUNT               },
     { LOT_DJUICOLOR,                    sDjuiColorFields,                    LUA_DJUI_COLOR_FIELD_COUNT                      },
     { LOT_DJUIINTERACTABLETHEME,        sDjuiInteractableThemeFields,        LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT         },
@@ -2986,6 +2997,7 @@ const char *sLuaLotNames[] = {
 	[LOT_CUTSCENESPLINEPOINT] = "CutsceneSplinePoint",
 	[LOT_CUTSCENEVARIABLE] = "CutsceneVariable",
 	[LOT_DATETIME] = "DateTime",
+	[LOT_DIALOGENTRY] = "DialogEntry",
 	[LOT_DISPLAYLISTNODE] = "DisplayListNode",
 	[LOT_DJUICOLOR] = "DjuiColor",
 	[LOT_DJUIINTERACTABLETHEME] = "DjuiInteractableTheme",

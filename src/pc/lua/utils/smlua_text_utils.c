@@ -169,8 +169,8 @@ void smlua_text_utils_reset_all(void) {
     }
 }
 
-void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
-    if (dialogId >= DIALOG_COUNT) { return; }
+struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
+    if (dialogId >= DIALOG_COUNT) { return NULL; }
 
     void **dialogTable = NULL;
 
@@ -191,6 +191,35 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
 #endif
 
     struct DialogEntry *dialog = segmented_to_virtual(dialogTable[dialogId]);
+    return dialog;
+}
+
+char* smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
+    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
+
+    if (!dialog) { return NULL; }
+
+    const u8* dialogStr = dialog->str;
+    size_t len = 0;
+
+    while (dialogStr[len] != 0xFF) {
+        len++;
+    }
+
+    char* asciiStr = malloc(len + 1);
+    if (!asciiStr) {
+        return NULL;
+    }
+
+    convert_string_sm64_to_ascii(asciiStr, dialogStr);
+
+    return asciiStr;
+}
+
+void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
+    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
+
+    if (!dialog) { return; }
 
     if (sReplacedDialog[dialogId]) {
         free((u8*)dialog->str);
@@ -202,6 +231,14 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     dialog->width = width;
     dialog->str = smlua_text_utils_convert(str);
     sReplacedDialog[dialogId] = true;
+}
+
+bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
+    if (dialogId >= DIALOG_COUNT) {
+        return false;
+    }
+
+    return sReplacedDialog[dialogId];
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

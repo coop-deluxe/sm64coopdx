@@ -6360,6 +6360,29 @@ Resets every modified dialog back to vanilla
 
 <br />
 
+## [smlua_text_utils_dialog_get](#smlua_text_utils_dialog_get)
+
+### Description
+Gets the DialogEntry struct for the given `dialogId`
+
+### Lua Example
+`local DialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+[DialogEntry](structs.md#DialogEntry)
+
+### C Prototype
+`struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
 
 ### Description
@@ -6383,6 +6406,29 @@ Replaces `dialogId` with a custom one
 
 ### C Prototype
 `void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
+
+### Description
+Returns whether the dialog with the given ID has been replaced
+
+### Lua Example
+`local booleanValue = smlua_text_utils_dialog_is_replaced(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);`
 
 [:arrow_up_small:](#)
 

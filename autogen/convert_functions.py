@@ -130,7 +130,7 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture_raw", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_text"],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
@@ -222,6 +222,7 @@ manual_index_documentation = """
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [smlua_text_utils_dialog_get_text](#smlua_text_utils_dialog_get_text)
 
 <br />
 
@@ -714,6 +715,27 @@ N/A
 [:arrow_up_small:](#)
 
 <br />
+
+## [smlua_text_utils_dialog_get_text](#smlua_text_utils_dialog_get_text)
+
+Returns the text of the given `DialogEntry`.
+
+### Lua Examples
+
+```lua
+smlua_text_utils_dialog_get_text(dialogId)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- `string`
+
+### C Prototype
+N/A
 
 """
 
