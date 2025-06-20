@@ -218,7 +218,7 @@ char* smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
     size_t len = measure_sm64_string(dialog->str);
 
     char* asciiStr = malloc(len + 1);
-    if (!asciiStr) return NULL;
+    if (!asciiStr) { return NULL; }
 
     convert_string_sm64_to_ascii(asciiStr, dialog->str);
 
