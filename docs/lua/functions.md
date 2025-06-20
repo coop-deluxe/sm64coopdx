@@ -25,7 +25,6 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
-   - [smlua_text_utils_dialog_get_text](#smlua_text_utils_dialog_get_text)
 
 <br />
 
@@ -2056,6 +2055,7 @@
 - smlua_text_utils.h
    - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
    - [smlua_text_utils_dialog_get](functions-6.md#smlua_text_utils_dialog_get)
+   - [smlua_text_utils_dialog_get_text](functions-6.md#smlua_text_utils_dialog_get_text)
    - [smlua_text_utils_dialog_replace](functions-6.md#smlua_text_utils_dialog_replace)
    - [smlua_text_utils_dialog_is_replaced](functions-6.md#smlua_text_utils_dialog_is_replaced)
    - [smlua_text_utils_course_acts_replace](functions-6.md#smlua_text_utils_course_acts_replace)
@@ -2617,27 +2617,6 @@ N/A
 [:arrow_up_small:](#)
 
 <br />
-
-## [smlua_text_utils_dialog_get_text](#smlua_text_utils_dialog_get_text)
-
-Returns the text of the given `DialogEntry`.
-
-### Lua Examples
-
-```lua
-smlua_text_utils_dialog_get_text(dialogId)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dialogId | [enum DialogId](constants.md#enum-DialogId) |
-
-### Returns
-- `string`
-
-### C Prototype
-N/A
 
 
 ---

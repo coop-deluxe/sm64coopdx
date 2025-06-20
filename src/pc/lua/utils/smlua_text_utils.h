@@ -28,7 +28,8 @@ void smlua_text_utils_shutdown(void);
 void smlua_text_utils_reset_all(void);
 /* |description|Gets the DialogEntry struct for the given `dialogId`|descriptionEnd| */
 struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
-char* smlua_text_utils_dialog_get_text(enum DialogId dialogId);
+/* |description|Returns the ASCII string of the dialog's content.|descriptionEnd| */
+void smlua_text_utils_dialog_get_text(enum DialogId dialogId);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
 /* |description|Returns whether the dialog with the given ID has been replaced|descriptionEnd| */

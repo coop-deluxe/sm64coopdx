@@ -11508,6 +11508,12 @@ function smlua_text_utils_dialog_get(dialogId)
 end
 
 --- @param dialogId DialogId
+--- Returns the ASCII string of the dialog's content.
+function smlua_text_utils_dialog_get_text(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
 --- @param unused integer
 --- @param linesPerBox integer
 --- @param leftOffset integer

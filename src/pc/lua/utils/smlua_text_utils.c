@@ -210,19 +210,24 @@ static size_t measure_sm64_string(const u8* str64) {
     return len;
 }
 
-char* smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
+void smlua_text_utils_dialog_get_text(enum DialogId dialogId) {
+    lua_State* L = gLuaState;
+    if (!L) { return; }
+
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
-    if (!dialog) { return NULL; }
+    if (!dialog) { return; }
 
     size_t len = measure_sm64_string(dialog->str);
 
-    char* asciiStr = malloc(len + 1);
-    if (!asciiStr) { return NULL; }
+    char *asciiStr = malloc(len + 1);
+    if (!asciiStr) { return; }
 
     convert_string_sm64_to_ascii(asciiStr, dialog->str);
 
-    return asciiStr;
+    lua_pushstring(L, asciiStr);
+
+    free(asciiStr);
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
