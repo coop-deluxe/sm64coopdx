@@ -60,6 +60,10 @@ static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "~",   0xF7, 0 }, // tilde
 
     // Symbols
+    { "/",   0xD0, 0 },
+    { "the", 0xD1, 0 },
+    { "you", 0xD2, 0 },
+    { "[%]", 0xE0, 0 }, // The number of stars required to unlock a star door
     { "[A]", 0x54, 0 }, // bold A
     { "[B]", 0x55, 0 }, // bold B
     { "[C]", 0x56, 0 }, // bold C
@@ -73,6 +77,7 @@ static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "+",   0xF9, 1 }, // coin
     { "@",   0xFA, 1 }, // star filled
     { "*",   0xFB, 1 }, // multiply
+    { "•",   0xFC, 0 },
     { "$",   0xFD, 0 }, // star empty
     { "\n",  0xFE, 1 }, // New line
     { NULL,  0xFF, 1 }, // Null terminator
