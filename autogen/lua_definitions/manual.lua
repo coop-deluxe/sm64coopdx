@@ -264,7 +264,7 @@ end
 
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param dataTable table<string, number|boolean|string|nil> Table of values to be included in the packet
---- Sends a global Lua packet with the values of `dataTable`
+--- Sends a global Lua packet with the values of `dataTable`. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
 function network_send(reliable, dataTable)
     -- ...
 end
@@ -272,8 +272,23 @@ end
 --- @param toLocalIndex integer The local index to send the packet to
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param dataTable table Table of values to be included in the packet
---- Sends a Lua packet with the values of `dataTable` to a specific client through local indices
+--- Sends a Lua packet with the values of `dataTable` to a specific client through local indices. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
 function network_send_to(toLocalIndex, reliable, dataTable)
+    -- ...
+end
+
+--- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
+--- @param bytestring string The bytestring to be included in the packet
+--- Sends a global Lua packet with the bytestring of `bytestring`. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+function network_send_bytestring(reliable, bytestring)
+    -- ...
+end
+
+--- @param toLocalIndex integer The local index to send the packet to
+--- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
+--- @param bytestring string The bytestring to be included in the packet
+--- Sends a Lua packet with the bytestring of `bytestring` to a specific client through local indices. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+function network_send_bytestring_to(toLocalIndex, reliable, bytestring)
     -- ...
 end
 

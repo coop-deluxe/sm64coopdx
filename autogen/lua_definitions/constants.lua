@@ -7876,7 +7876,8 @@ HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
 HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
 HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
-HOOK_MAX                                    = 59 --- @type LuaHookedEventType
+HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
+HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7938,6 +7939,7 @@ HOOK_MAX                                    = 59 --- @type LuaHookedEventType
 --- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
 --- | `HOOK_ON_ADD_SURFACE`
 --- | `HOOK_ON_CLEAR_AREAS`
+--- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
