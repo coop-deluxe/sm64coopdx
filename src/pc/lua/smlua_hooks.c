@@ -1451,6 +1451,123 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
     }
 }
 
+  //////////////////////
+ // hooked intervals //
+//////////////////////
+
+struct LuaHookedInterval {
+    f64 interval;
+    f64 timer;
+    bool cumulative;
+    int reference;
+    struct Mod* mod;
+};
+
+#define MAX_HOOKED_INTERVALS 512
+
+static struct LuaHookedInterval sHookedIntervals[MAX_HOOKED_INTERVALS] = { 0 };
+static int sHookedIntervalsCount = 0;
+
+int smlua_hook_interval(lua_State* L) {
+    if (L == NULL) { return 0; }
+    if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
+
+    if (gLuaLoadingMod == NULL) {
+        LOG_LUA_LINE("hook_interval() can only be called on load.");
+        return 0;
+    }
+
+    if (sHookedIntervalsCount >= MAX_HOOKED_INTERVALS) {
+        LOG_LUA_LINE("Hooked interval exceeded maximum references!");
+        return 0;
+    }
+
+    f64 interval = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Hook interval: tried to hook invalid interval");
+        return 0;
+    }
+
+    bool cumulative = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA_LINE("Hook interval: tried to hook invalid cumulative");
+        return 0;
+    }
+
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (ref == -1) {
+        LOG_LUA_LINE("Hook interval: tried to hook undefined function '%s'", gLuaActiveMod->name);
+        return 0;
+    }
+
+    struct LuaHookedInterval* hook = &sHookedIntervals[sHookedIntervalsCount];
+    hook->interval = interval;
+    hook->timer = 0;
+    hook->cumulative = cumulative;
+    hook->reference = ref;
+    hook->mod = gLuaActiveMod;
+
+    lua_pushinteger(L, sHookedIntervalsCount);
+    sHookedIntervalsCount++;
+    return 1;
+}
+
+void smlua_update_interval_hooks() {
+    lua_State* L = gLuaState;
+    if (L == NULL) { return; }
+    if (sHookedIntervalsCount == 0) { return; }
+
+    static f64 sLastIntervalUpdate;
+    f64 now = clock_elapsed_f64();
+    f64 deltaTime = now - sLastIntervalUpdate;
+    if (sLastIntervalUpdate == 0) { deltaTime = 0; }
+    sLastIntervalUpdate = now;
+
+    for (int i = 0; i < sHookedIntervalsCount; i++) {
+        struct LuaHookedInterval* hook = &sHookedIntervals[i];
+        hook->timer += deltaTime;
+        if (hook->timer < hook->interval) {
+            continue;
+        }
+
+        f64 hookDeltaTime = hook->timer;
+
+        if (!hook->cumulative) {
+            do {
+                hookDeltaTime = MIN(hook->timer, hook->interval);
+                hook->timer -= hook->interval;
+
+                // push the callback onto the stack
+                lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
+
+                // push parameters
+                lua_pushnumber(L, hookDeltaTime);
+
+                // call the callback
+                if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod)) {
+                    LOG_LUA("Failed to call the interval callback: %s", hook->mod->name);
+                    break;
+                }
+            } while (hook->timer > hook->interval);
+            continue;
+        }
+
+        hook->timer -= hook->interval * (int)(hook->timer / hook->interval);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
+
+        // push parameters
+        lua_pushnumber(L, hookDeltaTime);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod)) {
+            LOG_LUA("Failed to call the interval callback: %s", hook->mod->name);
+            continue;
+        }
+    }
+}
+
 
   //////////
  // misc //
@@ -1505,6 +1622,16 @@ void smlua_clear_hooks(void) {
     }
     gHookedModMenuElementsCount = 0;
 
+    for (int i = 0; i < sHookedIntervalsCount; i++) {
+        struct LuaHookedInterval* hook = &sHookedIntervals[i];
+        hook->interval = 0;
+        hook->timer = 0;
+        hook->cumulative = false;
+        hook->reference = 0;
+        hook->mod = NULL;
+    }
+    sHookedIntervalsCount = 0;
+
     for (int i = 0; i < sHookedBehaviorsCount; i++) {
         struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
 
@@ -1555,4 +1682,5 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "update_mod_menu_element_checkbox", smlua_update_mod_menu_element_checkbox);
     smlua_bind_function(L, "update_mod_menu_element_slider", smlua_update_mod_menu_element_slider);
     smlua_bind_function(L, "update_mod_menu_element_inputbox", smlua_update_mod_menu_element_inputbox);
+    smlua_bind_function(L, "hook_interval", smlua_hook_interval);
 }

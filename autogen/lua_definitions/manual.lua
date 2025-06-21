@@ -237,6 +237,16 @@ function update_mod_menu_element_inputbox(index, value)
     -- ...
 end
 
+---@param interval number How often the callback is run
+---@param cumulative boolean How the hook makes up for lost time
+---@param callback fun(delta: number) The callback to run
+--- Set a callback to run every `interval` seconds
+--- - When `cumulative` is true, the callback is only run once to make up for skipped intervals, and the delta time is summed
+--- - NOTE: Delta time is always the interval when `cumulative` is false
+function hook_interval(interval, cumulative, callback)
+    -- ...
+end
+
 ---------------
 -- functions --
 ---------------
