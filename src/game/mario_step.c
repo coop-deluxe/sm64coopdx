@@ -133,21 +133,8 @@ u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
 
         u32 floorType = m->floor ? m->floor->type : SURFACE_DEFAULT;
 
-        bool isOnQuicksand = false;
-        switch (floorType) {
-            case SURFACE_SHALLOW_QUICKSAND:
-            case SURFACE_SHALLOW_MOVING_QUICKSAND:
-            case SURFACE_QUICKSAND:
-            case SURFACE_MOVING_QUICKSAND:
-            case SURFACE_DEEP_QUICKSAND:
-            case SURFACE_DEEP_MOVING_QUICKSAND:
-            case SURFACE_INSTANT_QUICKSAND:
-            case SURFACE_INSTANT_MOVING_QUICKSAND:
-                isOnQuicksand = true;
-        }
-
         // Only run the hook if the player is actually on quicksand
-        if (isOnQuicksand) {
+        if (SURFACE_IS_QUICKSAND(floorType)) {
             bool allowHazard = true;
             smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allowHazard);
             if (!allowHazard) {
