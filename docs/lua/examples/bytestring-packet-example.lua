@@ -1,6 +1,10 @@
 -- name: Bytestring Packet Example
 -- description: Shows a way to send and receive bytestring packets. Send a packet with /example [1|2].
 
+-- Here is the lua documentation for string.pack() and string.unpack():
+--    https://www.lua.org/manual/5.3/manual.html#6.4.2
+-- It explains the different format strings used in this example mod.
+
 ---------------------------------------------------------------------------------------------------
 
 local PACKET_EXAMPLE_1 = 1
