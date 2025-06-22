@@ -22385,6 +22385,25 @@ int smlua_func_mod_fs_file_read_number(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_fs_file_read_bytes(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_read_bytes", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_bytes"); return 0; }
+    u32 length = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_bytes"); return 0; }
+
+    smlua_push_bytestring(L, mod_fs_file_read_bytes(file, length));
+
+    return 1;
+}
+
 int smlua_func_mod_fs_file_read_string(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -22476,6 +22495,25 @@ int smlua_func_mod_fs_file_write_number(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_number"); return 0; }
 
     lua_pushboolean(L, mod_fs_file_write_number(file, value, floatType));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_write_bytes(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_write_bytes", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_write_bytes"); return 0; }
+    ByteString bytestring = smlua_to_bytestring(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_bytes"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_write_bytes(file, bytestring));
 
     return 1;
 }
@@ -37139,11 +37177,13 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_read_bool", smlua_func_mod_fs_file_read_bool);
     smlua_bind_function(L, "mod_fs_file_read_integer", smlua_func_mod_fs_file_read_integer);
     smlua_bind_function(L, "mod_fs_file_read_number", smlua_func_mod_fs_file_read_number);
+    smlua_bind_function(L, "mod_fs_file_read_bytes", smlua_func_mod_fs_file_read_bytes);
     smlua_bind_function(L, "mod_fs_file_read_string", smlua_func_mod_fs_file_read_string);
     smlua_bind_function(L, "mod_fs_file_read_line", smlua_func_mod_fs_file_read_line);
     smlua_bind_function(L, "mod_fs_file_write_bool", smlua_func_mod_fs_file_write_bool);
     smlua_bind_function(L, "mod_fs_file_write_integer", smlua_func_mod_fs_file_write_integer);
     smlua_bind_function(L, "mod_fs_file_write_number", smlua_func_mod_fs_file_write_number);
+    smlua_bind_function(L, "mod_fs_file_write_bytes", smlua_func_mod_fs_file_write_bytes);
     smlua_bind_function(L, "mod_fs_file_write_string", smlua_func_mod_fs_file_write_string);
     smlua_bind_function(L, "mod_fs_file_write_line", smlua_func_mod_fs_file_write_line);
     smlua_bind_function(L, "mod_fs_file_seek", smlua_func_mod_fs_file_seek);

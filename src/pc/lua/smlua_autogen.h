@@ -2,6 +2,16 @@
 #define SMLUA_AUTOGEN_H
 
 //
+// Autogen types
+//
+
+// Allows to read and return strings of arbitrary length, not limited by the NULL-terminator ('\0')
+typedef struct ByteString {
+    const char *bytes;
+    size_t length;
+} ByteString;
+
+//
 // Autogen macros
 //
 

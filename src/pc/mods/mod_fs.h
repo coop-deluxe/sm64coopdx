@@ -150,6 +150,11 @@ Reads an floating-point number from a binary modfs `file`. `floatType` must be o
 lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType);
 
 /* |description|
+Reads a bytestring of `length` bytes from a binary modfs `file`
+|descriptionEnd| */
+ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length);
+
+/* |description|
 Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 |descriptionEnd| */
 const char *mod_fs_file_read_string(struct ModFsFile *file);
@@ -173,6 +178,11 @@ bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum M
 Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 |descriptionEnd| */
 bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);
+
+/* |description|
+Writes a bytestring to a modfs `file`. Returns true on success
+|descriptionEnd| */
+bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring);
 
 /* |description|
 Writes a string to a modfs `file`. Returns true on success

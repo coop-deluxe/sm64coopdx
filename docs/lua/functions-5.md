@@ -650,6 +650,30 @@ Reads an floating-point number from a binary modfs `file`. `floatType` must be o
 
 <br />
 
+## [mod_fs_file_read_bytes](#mod_fs_file_read_bytes)
+
+### Description
+Reads a bytestring of `length` bytes from a binary modfs `file`
+
+### Lua Example
+`local stringValue = mod_fs_file_read_bytes(file, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| length | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_fs_file_read_string](#mod_fs_file_read_string)
 
 ### Description
@@ -765,6 +789,30 @@ Writes an floating-point number to a binary modfs `file`. `floatType` must be on
 
 ### C Prototype
 `bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_bytes](#mod_fs_file_write_bytes)
+
+### Description
+Writes a bytestring to a modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_bytes(file, bytestring)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| bytestring | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring);`
 
 [:arrow_up_small:](#)
 
@@ -8152,66 +8200,6 @@ Gets a trajectory's length
 
 ### C Prototype
 `s32 get_trajectory_length(Trajectory* trajectory);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from object_list_processor.h
-
-<br />
-
-
-## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
-
-### Description
-Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
-
-### Lua Example
-`set_object_respawn_info_bits(obj, bits)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| bits | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_object_respawn_info_bits(struct Object *obj, u8 bits);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from platform_displacement.h
-
-<br />
-
-
-## [apply_platform_displacement](#apply_platform_displacement)
-
-### Description
-Apply one frame of platform rotation to the object using the given platform
-
-### Lua Example
-`apply_platform_displacement(o, platform)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| o | [Object](structs.md#Object) |
-| platform | [Object](structs.md#Object) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_platform_displacement(struct Object *o, struct Object *platform);`
 
 [:arrow_up_small:](#)
 

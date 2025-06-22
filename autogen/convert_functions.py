@@ -809,6 +809,8 @@ def build_param(fid, param, i):
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'const char*':
         return '    %s %s = smlua_to_string(L, %d);\n' % (ptype, pid, i)
+    elif ptype == 'ByteString':
+        return '    %s %s = smlua_to_bytestring(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'LuaFunction':
         return '    %s %s = smlua_to_lua_function(L, %d);\n' % (ptype, pid, i)
     elif translate_type_to_lot(ptype) == 'LOT_POINTER':
@@ -864,6 +866,8 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif ftype == 'const char*':
         lfunc = 'lua_pushstring'
+    elif ftype == 'ByteString':
+        lfunc = 'smlua_push_bytestring'
     elif translate_type_to_lot(ftype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ftype)
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)

@@ -6,6 +6,66 @@
 
 
 ---
+# functions from object_list_processor.h
+
+<br />
+
+
+## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
+
+### Description
+Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
+
+### Lua Example
+`set_object_respawn_info_bits(obj, bits)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| bits | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_object_respawn_info_bits(struct Object *obj, u8 bits);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from platform_displacement.h
+
+<br />
+
+
+## [apply_platform_displacement](#apply_platform_displacement)
+
+### Description
+Apply one frame of platform rotation to the object using the given platform
+
+### Lua Example
+`apply_platform_displacement(o, platform)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| platform | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void apply_platform_displacement(struct Object *o, struct Object *platform);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from rumble_init.h
 
 <br />

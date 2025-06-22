@@ -1011,6 +1011,30 @@ C_DEFINE lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFi
     return 0;
 }
 
+C_DEFINE ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length) {
+    mod_fs_reset_last_error();
+    ByteString bytestring = { NULL, 0 };
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return bytestring;
+    }
+
+    // binary only
+    if (!mod_fs_file_check_file_type(file, false, false, "bytes")) {
+        return bytestring;
+    }
+
+    // check eof
+    if (mod_fs_file_read_check_eof(file, length)) {
+        return bytestring;
+    }
+
+    bytestring.bytes = (const char *) (file->data.bin + file->offset);
+    bytestring.length = length;
+    file->offset += length;
+    return bytestring;
+}
+
 C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 
@@ -1191,6 +1215,32 @@ C_DEFINE bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value,
     switch (floatType) {
         case FLOAT_TYPE_F32: return mod_fs_file_write_data<f32>(file, value);
         case FLOAT_TYPE_F64: return mod_fs_file_write_data<f64>(file, value);
+    }
+    return false;
+}
+
+C_DEFINE bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    // cannot write to files in other mods modfs
+    if (!mod_fs_file_check_write(file)) {
+        return false;
+    }
+
+    // binary only
+    if (!mod_fs_file_check_file_type(file, false, true, "bytes")) {
+        return false;
+    }
+
+    u32 length = bytestring.length;
+    if (mod_fs_file_write_resize_buffer(file, length)) {
+        memcpy(file->data.bin + file->offset, bytestring.bytes, length);
+        file->offset += length;
+        return true;
     }
     return false;
 }

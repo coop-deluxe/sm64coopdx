@@ -1349,11 +1349,13 @@
    - [mod_fs_file_read_bool](functions-5.md#mod_fs_file_read_bool)
    - [mod_fs_file_read_integer](functions-5.md#mod_fs_file_read_integer)
    - [mod_fs_file_read_number](functions-5.md#mod_fs_file_read_number)
+   - [mod_fs_file_read_bytes](functions-5.md#mod_fs_file_read_bytes)
    - [mod_fs_file_read_string](functions-5.md#mod_fs_file_read_string)
    - [mod_fs_file_read_line](functions-5.md#mod_fs_file_read_line)
    - [mod_fs_file_write_bool](functions-5.md#mod_fs_file_write_bool)
    - [mod_fs_file_write_integer](functions-5.md#mod_fs_file_write_integer)
    - [mod_fs_file_write_number](functions-5.md#mod_fs_file_write_number)
+   - [mod_fs_file_write_bytes](functions-5.md#mod_fs_file_write_bytes)
    - [mod_fs_file_write_string](functions-5.md#mod_fs_file_write_string)
    - [mod_fs_file_write_line](functions-5.md#mod_fs_file_write_line)
    - [mod_fs_file_seek](functions-5.md#mod_fs_file_seek)
@@ -1726,12 +1728,12 @@
 <br />
 
 - object_list_processor.h
-   - [set_object_respawn_info_bits](functions-5.md#set_object_respawn_info_bits)
+   - [set_object_respawn_info_bits](functions-6.md#set_object_respawn_info_bits)
 
 <br />
 
 - platform_displacement.h
-   - [apply_platform_displacement](functions-5.md#apply_platform_displacement)
+   - [apply_platform_displacement](functions-6.md#apply_platform_displacement)
 
 <br />
 

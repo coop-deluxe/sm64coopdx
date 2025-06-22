@@ -7422,6 +7422,14 @@ function mod_fs_file_read_number(file, floatType)
 end
 
 --- @param file ModFsFile
+--- @param length integer
+--- @return string
+--- Reads a bytestring of `length` bytes from a binary modfs `file`
+function mod_fs_file_read_bytes(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
 --- @return string
 --- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 function mod_fs_file_read_string(file)
@@ -7458,6 +7466,14 @@ end
 --- @return boolean
 --- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_number(file, value, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param bytestring string
+--- @return boolean
+--- Writes a bytestring to a modfs `file`. Returns true on success
+function mod_fs_file_write_bytes(file, bytestring)
     -- ...
 end
 
