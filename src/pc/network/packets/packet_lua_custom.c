@@ -6,7 +6,6 @@
 #include "pc/debuglog.h"
 
 void network_send_lua_custom(bool broadcast) {
-    LOG_INFO("Sending lua custom packet");
     lua_State* L = gLuaState;
     u16 zero = 0;
     s32 paramIndex = 1;
@@ -97,7 +96,6 @@ void network_send_lua_custom(bool broadcast) {
 }
 
 void network_receive_lua_custom(struct Packet* p) {
-    LOG_INFO("Receiving lua custom packet");
     lua_State* L = gLuaState;
     u16 modIndex = 0;
     u8  keyCount = 0;
@@ -140,7 +138,6 @@ void network_receive_lua_custom(struct Packet* p) {
 #define MAX_BYTESTRING_LENGTH (PACKET_LENGTH - 15)
 
 void network_send_lua_custom_bytestring(bool broadcast) {
-    LOG_INFO("Sending lua custom bytestring packet");
     lua_State* L = gLuaState;
     s32 paramIndex = 1;
 
@@ -214,7 +211,6 @@ void network_send_lua_custom_bytestring(bool broadcast) {
 }
 
 void network_receive_lua_custom_bytestring(struct Packet* p) {
-    LOG_INFO("Receiving lua custom bytestring packet");
     lua_State* L = gLuaState;
     u16 modIndex = 0;
     u16 bytestringLength = 0;
