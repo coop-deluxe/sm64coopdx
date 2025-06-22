@@ -1013,6 +1013,7 @@ void DynOS_Gfx_ModShutdown();
 typedef s64 (*RDConstantFunc)(const String& _Arg, bool* found);
 
 u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& token);
+void DynOS_Gfx_GenerateModPacks(char* modPath);
 void DynOS_Gfx_GeneratePacks(const char* directory);
 s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);

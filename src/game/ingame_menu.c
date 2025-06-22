@@ -3168,6 +3168,9 @@ s16 render_pause_courses_and_castle(void) {
     if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
     }
+    if ((gPlayer1Controller->buttonPressed & L_TRIG) && network_allow_mod_dev_mode()) {
+        network_mod_dev_mode_reload();
+    }
 
     return 0;
 }

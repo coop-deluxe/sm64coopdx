@@ -4,7 +4,6 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/fs/fmem.h"
 
-
 // table to track loaded modules per mod
 static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
     // Create a unique registry key for this mod's loaded table
@@ -135,6 +134,9 @@ static int smlua_custom_require(lua_State* L) {
     // cache the previous mod file
     struct ModFile* prevModFile = gLuaActiveModFile;
     s32 prevTop = lua_gettop(L);
+
+    // tag it as a loaded lua module
+    file->isLoadedLuaModule = true;
 
     // load and execute
     gLuaActiveModFile = file;

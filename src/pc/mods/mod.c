@@ -8,6 +8,39 @@
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
+#include <stdint.h>
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <sys/stat.h>
+#endif
+
+u64 mod_get_file_mtime_seconds(struct ModFile* file) {
+#ifdef _WIN32
+    WIN32_FILE_ATTRIBUTE_DATA fad;
+    if (!GetFileAttributesExA(file->cachedPath, GetFileExInfoStandard, &fad)) {
+        // error; you could also GetLastError() here
+        return 0;
+    }
+    // FILETIME is 100-ns intervals since 1601-01-01 UTC
+    ULARGE_INTEGER ull;
+    ull.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
+    ull.HighPart = fad.ftLastWriteTime.dwHighDateTime;
+
+    const u64 EPOCH_DIFF = 116444736000000000ULL; // 100-ns from 1601 to 1970
+    u64 time100ns = ull.QuadPart;
+    return (time100ns - EPOCH_DIFF) / 10000000ULL;    // to seconds
+#else
+    struct stat st;
+    if (stat(file->cachedPath, &st) != 0) {
+        // error; errno is set
+        return 0;
+    }
+    return (u64)st.st_mtime;
+#endif
+}
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
@@ -145,6 +178,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
+        file->modifiedTimestamp = mod_get_file_mtime_seconds(file);
         mod_cache_add(mod, file, false);
 
         // forcefully update md5 hash
@@ -485,6 +519,52 @@ static void mod_extract_fields(struct Mod* mod) {
     fclose(f);
 }
 
+bool mod_refresh_files(struct Mod* mod) {
+    if (!mod) { return false; }
+
+    // clear files
+    if (mod->files) {
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (file->fp != NULL) {
+                f_close(file->fp);
+                f_delete(file->fp);
+                file->fp = NULL;
+            }
+            if (file->cachedPath != NULL) {
+                free((char*)file->cachedPath);
+                file->cachedPath = NULL;
+            }
+        }
+    }
+
+    if (mod->files != NULL) {
+        free(mod->files);
+        mod->files = NULL;
+    }
+
+    mod->fileCount = 0;
+    mod->fileCapacity = 0;
+    mod->size = 0;
+
+    // generate packs
+    dynos_generate_mod_pack(mod->basePath);
+
+    // read files
+    if (!mod_load_files(mod, mod->name, mod->basePath)) {
+        LOG_ERROR("Failed to load mod files for '%s'", mod->name);
+        return false;
+    }
+
+    // update cache
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        mod_cache_add(mod, file, true);
+    }
+
+    return true;
+}
+
 bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     bool valid = false;
 
@@ -530,6 +610,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return false;
     }
     mods->entries[modIndex] = calloc(1, sizeof(struct Mod));
+
     struct Mod* mod = mods->entries[modIndex];
     if (mod == NULL) {
         LOG_ERROR("Failed to allocate mod!");
