@@ -46,7 +46,6 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     snprintf(luaName, SYS_MAX_PATH, "/%s.lua", moduleName);
     snprintf(luacName, SYS_MAX_PATH, "/%s.luac", moduleName);
 
-    LOG_INFO("finding module %s...", moduleName);
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
 
@@ -90,7 +89,6 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
     }
 
-    LOG_INFO("    picked %s", bestPick->relativePath);
     return bestPick;
 }
 
