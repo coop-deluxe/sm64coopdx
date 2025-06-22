@@ -39,11 +39,14 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     int bestTotalDepth = INT_MAX;
     bool foundRelativeFile = false;
 
+    char rawName[SYS_MAX_PATH] = "";
     char luaName[SYS_MAX_PATH] = "";
     char luacName[SYS_MAX_PATH] = "";
-    snprintf(luaName, SYS_MAX_PATH, "%s.lua", moduleName);
-    snprintf(luacName, SYS_MAX_PATH, "%s.luac", moduleName);
+    snprintf(rawName, SYS_MAX_PATH, "/%s", moduleName);
+    snprintf(luaName, SYS_MAX_PATH, "/%s.lua", moduleName);
+    snprintf(luacName, SYS_MAX_PATH, "/%s.luac", moduleName);
 
+    LOG_INFO("finding module %s...", moduleName);
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
 
@@ -58,7 +61,7 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // check for match
-        if (!str_ends_with(file->relativePath, moduleName) && !str_ends_with(file->relativePath, luaName) && !str_ends_with(file->relativePath, luacName)) {
+        if (!str_ends_with(file->relativePath, rawName) && !str_ends_with(file->relativePath, luaName) && !str_ends_with(file->relativePath, luacName)) {
             continue;
         }
 
@@ -87,6 +90,7 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
     }
 
+    LOG_INFO("    picked %s", bestPick->relativePath);
     return bestPick;
 }
 
