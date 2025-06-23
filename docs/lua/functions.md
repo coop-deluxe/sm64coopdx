@@ -2061,7 +2061,13 @@
    - [smlua_text_utils_act_name_mod_index](functions-6.md#smlua_text_utils_act_name_mod_index)
    - [smlua_text_utils_act_name_reset](functions-6.md#smlua_text_utils_act_name_reset)
    - [smlua_text_utils_castle_secret_stars_replace](functions-6.md#smlua_text_utils_castle_secret_stars_replace)
+   - [smlua_text_utils_castle_secret_stars_get](functions-6.md#smlua_text_utils_castle_secret_stars_get)
+   - [smlua_text_utils_castle_secret_stars_mod_index](functions-6.md#smlua_text_utils_castle_secret_stars_mod_index)
+   - [smlua_text_utils_castle_secret_stars_reset](functions-6.md#smlua_text_utils_castle_secret_stars_reset)
    - [smlua_text_utils_extra_text_replace](functions-6.md#smlua_text_utils_extra_text_replace)
+   - [smlua_text_utils_extra_text_get](functions-6.md#smlua_text_utils_extra_text_get)
+   - [smlua_text_utils_extra_text_mod_index](functions-6.md#smlua_text_utils_extra_text_mod_index)
+   - [smlua_text_utils_extra_text_reset](functions-6.md#smlua_text_utils_extra_text_reset)
    - [smlua_text_utils_get_language](functions-6.md#smlua_text_utils_get_language)
 
 <br />
