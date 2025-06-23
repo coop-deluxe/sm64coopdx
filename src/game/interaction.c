@@ -172,79 +172,80 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     // Attacks
     if (action & ACT_FLAG_ATTACKING) {
-        if (action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK) {
-            s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
-            // Punch
-            if (m->flags & MARIO_PUNCHING) {
-                // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    return INT_PUNCH;
-                }
-            }
+        s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
 
-            // Kick
-            if (m->flags & MARIO_KICKING) {
-                // 120 degrees total, or 60 each way
-                if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
-                    return INT_KICK;
-                }
+        // Punch
+        if (m->flags & MARIO_PUNCHING) {
+            // 120 degrees total, or 60 each way
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+                return INT_PUNCH;
             }
+        }
 
-            // Trip
-            if (m->flags & MARIO_TRIPPING) {
-                // 180 degrees total, or 90 each way
-                if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
-                    return INT_TRIP;
-                }
+        // Kick
+        if (m->flags & MARIO_KICKING) {
+            // 120 degrees total, or 60 each way
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
+                return INT_KICK;
             }
-        } else {
-            // Ground pound
-            if (action == ACT_GROUND_POUND) {
-                if (m->vel[1] < 0.0f) {
-                    return INT_GROUND_POUND;
-                }
-            }
+        }
 
-            // Twirl
-            if (action == ACT_TWIRLING) {
-                if (m->vel[1] < 0.0f) {
-                    return INT_TWIRL;
-                }
+        // Trip
+        if (m->flags & MARIO_TRIPPING) {
+            // 180 degrees total, or 90 each way
+            if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
+                return INT_TRIP;
             }
+        }
 
-            // Ground pound land
-            if (action == ACT_GROUND_POUND_LAND) {
-                // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
-                // so the speed check is nearly always true (perhaps not if you land while going upwards?)
-                // Additionally, actionState it set on each first thing in their action, so this is
-                // only true prior to the very first frame (i.e. active 1 frame prior to it run).
-                if (m->vel[1] < 0.0f && m->actionState == 0) {
-                    return INT_GROUND_POUND;
-                }
+        // Ground pound
+        if (action == ACT_GROUND_POUND) {
+            if (m->vel[1] < 0.0f) {
+                return INT_GROUND_POUND;
             }
+        }
 
-            // Twirl land
-            if (action == ACT_TWIRL_LAND) {
-                // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
-                // so the speed check is nearly always true (perhaps not if you land while going upwards?)
-                // Additionally, actionState it set on each first thing in their action, so this is
-                // only true prior to the very first frame (i.e. active 1 frame prior to it run).
-                if (m->vel[1] < 0.0f && m->actionState == 0) {
-                    return INT_TWIRL;
-                }
+        // Twirl
+        if (action == ACT_TWIRLING) {
+            if (m->vel[1] < 0.0f) {
+                return INT_TWIRL;
             }
+        }
 
-            // Slide kick
-            if (action == ACT_SLIDE_KICK || action == ACT_SLIDE_KICK_SLIDE) {
-                return INT_SLIDE_KICK;
+        // Ground pound land
+        if (action == ACT_GROUND_POUND_LAND) {
+            // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
+            // so the speed check is nearly always true (perhaps not if you land while going upwards?)
+            // Additionally, actionState it set on each first thing in their action, so this is
+            // only true prior to the very first frame (i.e. active 1 frame prior to it run).
+            if (m->vel[1] < 0.0f && m->actionState == 0) {
+                return INT_GROUND_POUND;
             }
+        }
 
-            // Shell riding
-            if (action & ACT_FLAG_RIDING_SHELL) {
-                return INT_FAST_ATTACK_OR_SHELL;
+        // Twirl land
+        if (action == ACT_TWIRL_LAND) {
+            // Neither ground pounding nor twirling change Mario's vertical speed on landing.,
+            // so the speed check is nearly always true (perhaps not if you land while going upwards?)
+            // Additionally, actionState it set on each first thing in their action, so this is
+            // only true prior to the very first frame (i.e. active 1 frame prior to it run).
+            if (m->vel[1] < 0.0f && m->actionState == 0) {
+                return INT_TWIRL;
             }
+        }
 
-            // Fast attack
+        // Slide kick
+        if (action == ACT_SLIDE_KICK || action == ACT_SLIDE_KICK_SLIDE) {
+            return INT_SLIDE_KICK;
+        }
+
+        // Shell riding
+        if (action & ACT_FLAG_RIDING_SHELL) {
+            return INT_FAST_ATTACK_OR_SHELL;
+        }
+
+        // Fast attack
+        if (!(action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK)) {
             if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
                 return INT_FAST_ATTACK_OR_SHELL;
             }
