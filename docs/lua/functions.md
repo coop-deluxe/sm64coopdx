@@ -1843,6 +1843,9 @@
    - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
    - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
    - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
+   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
 
 <br />
 

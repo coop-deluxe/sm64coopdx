@@ -10223,6 +10223,27 @@ function smlua_collision_util_find_surface_types(data)
     -- ...
 end
 
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is quicksand
+function surface_is_quicksand(surf)
+    -- ...
+end
+
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is not a hard surface
+function surface_is_not_hard(surf)
+    -- ...
+end
+
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is a painting warp
+function surface_is_painting_warp(surf)
+    -- ...
+end
+
 --- @param fov number
 --- Sets the override FOV
 function set_override_fov(fov)

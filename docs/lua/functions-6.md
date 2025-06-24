@@ -2112,6 +2112,75 @@ Gets a table of the surface types from `data`
 
 <br />
 
+## [surface_is_quicksand](#surface_is_quicksand)
+
+### Description
+Checks if the surface is quicksand
+
+### Lua Example
+`local booleanValue = surface_is_quicksand(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_quicksand(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_not_hard](#surface_is_not_hard)
+
+### Description
+Checks if the surface is not a hard surface
+
+### Lua Example
+`local booleanValue = surface_is_not_hard(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_not_hard(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_painting_warp](#surface_is_painting_warp)
+
+### Description
+Checks if the surface is a painting warp
+
+### Lua Example
+`local booleanValue = surface_is_painting_warp(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_painting_warp(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_deprecated.h
 
