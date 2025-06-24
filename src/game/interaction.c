@@ -245,8 +245,10 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         }
 
         // Fast attack
-        if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
-            return INT_FAST_ATTACK_OR_SHELL;
+        if (!(action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK)) {
+            if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
+                return INT_FAST_ATTACK_OR_SHELL;
+            }
         }
     }
 
