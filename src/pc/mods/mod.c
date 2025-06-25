@@ -556,6 +556,9 @@ bool mod_refresh_files(struct Mod* mod) {
         return false;
     }
 
+    // set loading order
+    mod_set_loading_order(mod);
+
     // update cache
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
