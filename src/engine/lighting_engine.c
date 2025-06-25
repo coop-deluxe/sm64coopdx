@@ -107,7 +107,7 @@ static inline void le_calculate_light_contribution(struct LELight* light, Vec3f 
     *weight += brightness;
 }
 
-void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, Vec3f normal, OUT Color out) {
+void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, OUT Color out) {
     if (sLights == NULL) { return; }
 
     // clear color
@@ -116,7 +116,7 @@ void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, Vec3f normal, OUT Color o
     // accumulate lighting
     f32 weight = 1.0f;
     for (struct LELight* light = hmap_begin(sLights); light != NULL; light = hmap_next(sLights)) {
-        le_calculate_light_contribution(light, pos, normal, 1, color, &weight);
+        le_calculate_light_contribution(light, pos, NULL, 1, color, &weight);
     }
 
     // tone map and output
@@ -148,7 +148,7 @@ void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color 
     if (sLights == NULL) { return; }
 
     // normalize normal
-    vec3f_normalize(normal);
+    if (normal) { vec3f_normalize(normal); }
 
     // clear color
     Vec3f color = { 0 };

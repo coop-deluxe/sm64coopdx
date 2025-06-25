@@ -706,13 +706,15 @@ static OPTIMIZE_O3 void gfx_apply_object_matrix(Mat4 mtx, OUT Vec3f pos, OUT Vec
     pos[1] = px * mtx[0][1] + py * mtx[1][1] + pz * mtx[2][1] + mtx[3][1];
     pos[2] = px * mtx[0][2] + py * mtx[1][2] + pz * mtx[2][2] + mtx[3][2];
 
-    f32 nx = normal[0];
-    f32 ny = normal[1];
-    f32 nz = normal[2];
+    if (normal) {
+        f32 nx = normal[0];
+        f32 ny = normal[1];
+        f32 nz = normal[2];
 
-    normal[0] = nx * mtx[0][0] + ny * mtx[1][0] + nz * mtx[2][0];
-    normal[1] = nx * mtx[0][1] + ny * mtx[1][1] + nz * mtx[2][1];
-    normal[2] = nx * mtx[0][2] + ny * mtx[1][2] + nz * mtx[2][2];
+        normal[0] = nx * mtx[0][0] + ny * mtx[1][0] + nz * mtx[2][0];
+        normal[1] = nx * mtx[0][1] + ny * mtx[1][1] + nz * mtx[2][1];
+        normal[2] = nx * mtx[0][2] + ny * mtx[1][2] + nz * mtx[2][2];
+    }
 }
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
@@ -863,7 +865,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                     gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, vnormal);
                 }
 
-                le_calculate_lighting_color_with_normal(vpos, vnormal, color, 1.0f);
+                le_calculate_lighting_color_with_normal(vpos, (rsp.geometry_mode & G_PACKED_NORMALS_EXT) ? NULL : vnormal, color, 1.0f);
 
                 CTX_END(CTX_LIGHTING);
 
@@ -875,15 +877,14 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             Color color;
             CTX_BEGIN(CTX_LIGHTING);
 
-            Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
-            Vec3f vnormal = { vn->n[0] / 127.0f, vn->n[1] / 127.0f, vn->n[2] / 127.0f };
+            Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
 
             // transform vpos and vnormal to world space
             if (sObjMatrixCount > 0) {
-                gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, vnormal);
+                gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, NULL);
             }
 
-            le_calculate_vertex_lighting((Vtx_t*)v, vpos, vnormal, color);
+            le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
 
             CTX_END(CTX_LIGHTING);
 

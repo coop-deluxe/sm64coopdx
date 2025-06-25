@@ -35,7 +35,7 @@ enum LEMode le_get_mode(void);
 /* |description|Sets the lighting engine's tone mapping mode to `toneMapping`|descriptionEnd|*/
 void le_set_tone_mapping(enum LEToneMapping toneMapping);
 
-void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, Vec3f normal, OUT Color out);
+void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, OUT Color out);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`|descriptionEnd|*/
 void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`|descriptionEnd|*/
