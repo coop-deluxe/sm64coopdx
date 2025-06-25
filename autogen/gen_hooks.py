@@ -14,7 +14,7 @@ bool smlua_call_event_hooks_{hook_type}({parameters}) {{
     if (L == NULL) {{ return false; }}{define_hook_result}
 
     struct LuaHookedEvent *hook = &sHookedEvents[{hook_type}];
-    for (int i = 0; i < hook->count; i++) {{
+    for (int i = 0; i < hook->count; i++) {{{check_mod_index}
         s32 prevTop = lua_gettop(L);
 
         // push the callback onto the stack
@@ -48,6 +48,9 @@ SMLUA_CALL_EVENT_HOOKS_END = """
     return {hook_result};
 }}
 """
+
+SMLUA_CALL_EVENT_HOOKS_MOD_INDEX_CHECK = """
+        if (hook->mod[i]->index != modIndex) { continue; }"""
 
 SMLUA_INTEGER_TYPES = {
 "input": """
@@ -164,6 +167,19 @@ SMLUA_TYPES = {
     },
 }
 
+SMLUA_NAMES = {
+    "valueIndex": {
+        "input": """
+        // push {name}
+        lua_pushvalue(L, {name});
+""",
+        "output": ""
+    },
+    "modIndex": {
+        "input": "",
+        "output": ""
+    },
+}
 
 def init():
 
@@ -270,19 +286,31 @@ def main():
         return_on_output_set = SMLUA_CALL_EVENT_HOOKS_RETURN_ON_OUTPUT_SET if hook_return == HOOK_RETURN_ON_OUTPUT_SET else ""
         hook_result = "hookResult" if hook_return == HOOK_RETURN_NEVER else "false"
 
+        mod_index_found = False
+        for input in hook_event["inputs"]:
+            if input["name"] == "modIndex":
+                mod_index_found = True
+                break
+
         generated += SMLUA_CALL_EVENT_HOOKS_BEGIN.format(
             hook_type=hook_event["type"],
             parameters=hook_event["parameters"],
+            check_mod_index=SMLUA_CALL_EVENT_HOOKS_MOD_INDEX_CHECK if mod_index_found else "",
             define_hook_result=define_hook_result
         )
 
         for input in hook_event["inputs"]:
+            if input["name"] in SMLUA_NAMES:
+                generated += SMLUA_NAMES[input["name"]]["input"].format(
+                    name=input["name"]
+                )
+                continue
             generated += SMLUA_TYPES[input["type"]]["input"].format(
                 name=input["name"]
             )
 
         generated += SMLUA_CALL_EVENT_HOOKS_CALLBACK.format(
-            n_inputs=len(hook_event["inputs"]),
+            n_inputs=len(hook_event["inputs"]) - mod_index_found,
             n_outputs=len(hook_event["outputs"]),
             hook_type=hook_event["type"],
             set_hook_result=set_hook_result

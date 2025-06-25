@@ -206,16 +206,16 @@ s32 check_horizontal_wind(struct MarioState *m) {
     struct Surface *floor;
     f32 speed;
     s16 pushAngle;
-    bool allowHazard = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
-    if (!allowHazard) {
-    	return FALSE;
-    }
 
     floor = m->floor;
-    
 
     if (floor && floor->type == SURFACE_HORIZONTAL_WIND) {
+        bool allowHazard = true;
+        smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
+        if (!allowHazard) {
+            return FALSE;
+        }
+
         pushAngle = floor->force << 8;
 
         m->slideVelX += 1.2f * sins(pushAngle);

@@ -1652,6 +1652,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | bubbleOnDeathBarrierInCapStages | `integer` |  |
+| ceilNormalMaxY | `number` |  |
 | cellHeightLimit | `integer` |  |
 | coinsRequiredForCoinStar | `integer` |  |
 | disableActs | `integer` |  |
@@ -1671,6 +1672,7 @@
 | floorLowerLimit | `integer` |  |
 | floorLowerLimitMisc | `integer` |  |
 | floorLowerLimitShadow | `integer` |  |
+| floorNormalMinY | `number` |  |
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
@@ -1940,6 +1942,8 @@
 | ----- | ---- | ------ |
 | cachedPath | `string` | read-only |
 | dataHash | `Array` <`integer`> | read-only |
+| isLoadedLuaModule | `boolean` | read-only |
+| modifiedTimestamp | `integer` | read-only |
 | relativePath | `string` | read-only |
 | wroteBytes | `integer` | read-only |
 

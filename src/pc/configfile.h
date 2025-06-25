@@ -135,6 +135,7 @@ extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
+extern bool         configModDevMode;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;

@@ -1032,7 +1032,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
 //////////////////////////////
 
 int smlua_hook_on_sync_table_change(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     if (L == NULL) { return 0; }
     if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
 
@@ -1082,7 +1082,7 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
     lua_remove(L, hookOnChangedIndex);
     lua_remove(L, valTableIndex);
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
@@ -1455,6 +1455,53 @@ void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, in
   //////////
  // misc //
 //////////
+
+static void smlua_hook_replace_function_reference(lua_State* L, int* hookedReference, int oldReference, int newReference) {
+    lua_rawgeti(L, LUA_REGISTRYINDEX, *hookedReference);   // stack: ..., hookedFunc
+    int hookedIdx = lua_gettop(L);
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, oldReference);    // stack: ..., hookedFunc, oldFunc
+    int oldIdx = lua_gettop(L);
+
+    if (lua_rawequal(L, hookedIdx, oldIdx)) {
+        luaL_unref(L, LUA_REGISTRYINDEX, *hookedReference);
+        *hookedReference = newReference;
+    }
+
+    lua_pop(L, 2);
+}
+
+void smlua_hook_replace_function_references(lua_State* L, int oldReference, int newReference) {
+    for (int i = 0; i < HOOK_MAX; i++) {
+        struct LuaHookedEvent* hooked = &sHookedEvents[i];
+        for (int j = 0; j < hooked->count; j++) {
+            smlua_hook_replace_function_reference(L, &hooked->reference[j], oldReference, newReference);
+        }
+    }
+
+    for (int i = 0; i < sHookedMarioActionsCount; i++) {
+        struct LuaHookedMarioAction* hooked = &sHookedMarioActions[i];
+        for (int j = 0; j < ACTION_HOOK_MAX; j++) {
+            smlua_hook_replace_function_reference(L, &hooked->actionHookRefs[j], oldReference, newReference);
+        }
+    }
+
+    for (int i = 0; i < sHookedChatCommandsCount; i++) {
+        struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
+        smlua_hook_replace_function_reference(L, &hooked->reference, oldReference, newReference);
+    }
+
+    for (int i = 0; i < gHookedModMenuElementsCount; i++) {
+        struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[i];
+        smlua_hook_replace_function_reference(L, &hooked->reference, oldReference, newReference);
+    }
+
+    for (int i = 0; i < sHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+        smlua_hook_replace_function_reference(L, &hooked->initReference, oldReference, newReference);
+        smlua_hook_replace_function_reference(L, &hooked->loopReference, oldReference, newReference);
+    }
+}
 
 void smlua_clear_hooks(void) {
     for (int i = 0; i < HOOK_MAX; i++) {

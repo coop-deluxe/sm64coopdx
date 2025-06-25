@@ -15,6 +15,8 @@ struct Mods;
 struct ModFile {
     char relativePath[SYS_MAX_PATH];
     size_t size;
+    u64 modifiedTimestamp;
+    bool isLoadedLuaModule;
 
     FILE* fp;
     u64 wroteBytes;
@@ -44,9 +46,11 @@ struct Mod {
     u8 customBehaviorIndex;
 };
 
+u64 mod_get_file_mtime_seconds(struct ModFile* file);
 size_t mod_get_lua_size(struct Mod* mod);
 void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
+bool mod_refresh_files(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
 
 #endif

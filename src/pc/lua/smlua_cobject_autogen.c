@@ -1370,9 +1370,10 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 53
+#define LUA_LEVEL_VALUES_FIELD_COUNT 55
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE,          1, sizeof(u8)                   },
+    { "ceilNormalMaxY",                   LVT_F32,     offsetof(struct LevelValues, ceilNormalMaxY),                   false, LOT_NONE,          1, sizeof(f32)                  },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
     { "coinsRequiredForCoinStar",         LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar),         false, LOT_NONE,          1, sizeof(s16)                  },
     { "disableActs",                      LVT_U8,      offsetof(struct LevelValues, disableActs),                      false, LOT_NONE,          1, sizeof(u8)                   },
@@ -1392,6 +1393,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "floorLowerLimit",                  LVT_S16,     offsetof(struct LevelValues, floorLowerLimit),                  false, LOT_NONE,          1, sizeof(s16)                  },
     { "floorLowerLimitMisc",              LVT_S16,     offsetof(struct LevelValues, floorLowerLimitMisc),              false, LOT_NONE,          1, sizeof(s16)                  },
     { "floorLowerLimitShadow",            LVT_S16,     offsetof(struct LevelValues, floorLowerLimitShadow),            false, LOT_NONE,          1, sizeof(s16)                  },
+    { "floorNormalMinY",                  LVT_F32,     offsetof(struct LevelValues, floorNormalMinY),                  false, LOT_NONE,          1, sizeof(f32)                  },
     { "hudCapTimer",                      LVT_U8,      offsetof(struct LevelValues, hudCapTimer),                      false, LOT_NONE,          1, sizeof(u8)                   },
     { "hudRedCoinsRadar",                 LVT_U8,      offsetof(struct LevelValues, hudRedCoinsRadar),                 false, LOT_NONE,          1, sizeof(u8)                   },
     { "hudSecretsRadar",                  LVT_U8,      offsetof(struct LevelValues, hudSecretsRadar),                  false, LOT_NONE,          1, sizeof(u8)                   },
@@ -1597,14 +1599,16 @@ static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_CO
 //  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???,                  1, sizeof(ma_sound)                     }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_FILE_FIELD_COUNT 4
+#define LUA_MOD_FILE_FIELD_COUNT 6
 static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
-    { "cachedPath",   LVT_STRING_P, offsetof(struct ModFile, cachedPath),   true, LOT_NONE, 1,  sizeof(char*)  },
-    { "dataHash",     LVT_U8,       offsetof(struct ModFile, dataHash),     true, LOT_NONE, 16, sizeof(u8)     },
-//  { "fp",           LVT_???,      offsetof(struct ModFile, fp),           true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
-    { "relativePath", LVT_STRING,   offsetof(struct ModFile, relativePath), true, LOT_NONE, 1,  sizeof(char)   },
-//  { "size",         LVT_???,      offsetof(struct ModFile, size),         true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
-    { "wroteBytes",   LVT_U64,      offsetof(struct ModFile, wroteBytes),   true, LOT_NONE, 1,  sizeof(u64)    },
+    { "cachedPath",        LVT_STRING_P, offsetof(struct ModFile, cachedPath),        true, LOT_NONE, 1,  sizeof(char*)  },
+    { "dataHash",          LVT_U8,       offsetof(struct ModFile, dataHash),          true, LOT_NONE, 16, sizeof(u8)     },
+//  { "fp",                LVT_???,      offsetof(struct ModFile, fp),                true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
+    { "isLoadedLuaModule", LVT_BOOL,     offsetof(struct ModFile, isLoadedLuaModule), true, LOT_NONE, 1,  sizeof(bool)   },
+    { "modifiedTimestamp", LVT_U64,      offsetof(struct ModFile, modifiedTimestamp), true, LOT_NONE, 1,  sizeof(u64)    },
+    { "relativePath",      LVT_STRING,   offsetof(struct ModFile, relativePath),      true, LOT_NONE, 1,  sizeof(char)   },
+//  { "size",              LVT_???,      offsetof(struct ModFile, size),              true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
+    { "wroteBytes",        LVT_U64,      offsetof(struct ModFile, wroteBytes),        true, LOT_NONE, 1,  sizeof(u64)    },
 };
 
 #define LUA_MOD_FS_FIELD_COUNT 5

@@ -38,6 +38,7 @@
 
 extern struct DjuiRoot* gDjuiRoot;
 extern struct DjuiText* gDjuiPauseOptions;
+extern struct DjuiText* gDjuiModReload;
 extern bool gDjuiInMainMenu;
 extern bool gDjuiInPlayerMenu;
 extern bool gDjuiDisabled;
