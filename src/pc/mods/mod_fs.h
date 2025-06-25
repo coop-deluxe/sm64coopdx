@@ -2,7 +2,7 @@
 #define MOD_FS_H
 
 #include "types.h"
-#include "lib/lua/include/lua.h"
+#include "src/pc/lua/smlua.h"
 
 #define MOD_FS_MAX_SIZE     0x1000000 // 16 MB
 #define MOD_FS_MAX_FILES    0x100

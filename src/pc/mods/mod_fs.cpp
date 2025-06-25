@@ -1,6 +1,5 @@
 extern "C" {
 #include "mod_fs.h"
-#include "src/pc/lua/smlua.h"
 #include "src/pc/fs/fs.h"
 #include "src/pc/mods/mods_utils.h"
 }
@@ -654,7 +653,7 @@ C_DEFINE const char *mod_fs_get_filename(struct ModFs *modFs, u16 index) {
 
     if (index >= modFs->numFiles) {
         mod_fs_raise_error(
-            "modPath: %s - file index out of bounds: %u (max: %u)", modFs->modPath, index, modFs->numFiles - 1
+            "modPath: %s - file index out of bounds: %u (num files: %u)", modFs->modPath, index, modFs->numFiles
         );
         return NULL;
     }

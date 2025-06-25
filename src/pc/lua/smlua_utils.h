@@ -6,6 +6,11 @@ typedef int LuaFunction;
 struct Packet;
 struct LSTNetworkType;
 
+typedef struct ByteString {
+    const char *bytes;
+    size_t length;
+} ByteString;
+
 f32* smlua_get_vec3f_from_buffer(void);
 s16* smlua_get_vec3s_from_buffer(void);
 f32* smlua_get_vec4f_from_buffer(void);
