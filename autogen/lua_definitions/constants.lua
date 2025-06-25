@@ -3608,6 +3608,24 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_NONE`
 --- | `HUD_DISPLAY_DEFAULT`
 
+LE_MODE_DEFAULT           = 0 --- @type LEMode
+LE_MODE_AFFECT_ALL_SHADED = 1 --- @type LEMode
+
+--- @alias LEMode
+--- | `LE_MODE_DEFAULT`
+--- | `LE_MODE_AFFECT_ALL_SHADED`
+
+LE_TONE_MAPPING_TOTAL_WEIGHTED = 0 --- @type LEToneMapping
+LE_TONE_MAPPING_WEIGHTED       = 1 --- @type LEToneMapping
+LE_TONE_MAPPING_CLAMP          = 2 --- @type LEToneMapping
+LE_TONE_MAPPING_REINHARD       = 3 --- @type LEToneMapping
+
+--- @alias LEToneMapping
+--- | `LE_TONE_MAPPING_TOTAL_WEIGHTED`
+--- | `LE_TONE_MAPPING_WEIGHTED`
+--- | `LE_TONE_MAPPING_CLAMP`
+--- | `LE_TONE_MAPPING_REINHARD`
+
 MARIO_ANIM_SLOW_LEDGE_GRAB                      =   0 --- @type MarioAnimID
 MARIO_ANIM_FALL_OVER_BACKWARDS                  =   1 --- @type MarioAnimID
 MARIO_ANIM_BACKWARD_AIR_KB                      =   2 --- @type MarioAnimID

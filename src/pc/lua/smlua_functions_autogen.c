@@ -15515,6 +15515,55 @@ int smlua_func_lvl_set_current_level(lua_State* L) {
  // lighting_engine.h //
 ///////////////////////
 
+int smlua_func_le_set_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_mode", 1, top);
+        return 0;
+    }
+
+    int mode = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_mode"); return 0; }
+
+    le_set_mode(mode);
+
+    return 1;
+}
+
+int smlua_func_le_get_mode(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_mode", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, le_get_mode());
+
+    return 1;
+}
+
+int smlua_func_le_set_tone_mapping(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_tone_mapping", 1, top);
+        return 0;
+    }
+
+    int toneMapping = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_tone_mapping"); return 0; }
+
+    le_set_tone_mapping(toneMapping);
+
+    return 1;
+}
+
 int smlua_func_le_calculate_lighting_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15538,6 +15587,37 @@ int smlua_func_le_calculate_lighting_color(lua_State* L) {
     le_calculate_lighting_color(pos, out, lightIntensityScalar);
 
     smlua_push_color(out, 2);
+
+    return 1;
+}
+
+int smlua_func_le_calculate_lighting_color_with_normal(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_calculate_lighting_color_with_normal", 4, top);
+        return 0;
+    }
+
+
+    Vec3f pos;
+    smlua_get_vec3f(pos, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_calculate_lighting_color_with_normal"); return 0; }
+
+    Vec3f normal;
+    smlua_get_vec3f(normal, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_calculate_lighting_color_with_normal"); return 0; }
+
+    Color out;
+    smlua_get_color(out, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_calculate_lighting_color_with_normal"); return 0; }
+    f32 lightIntensityScalar = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "le_calculate_lighting_color_with_normal"); return 0; }
+
+    le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar);
+
+    smlua_push_color(out, 3);
 
     return 1;
 }
@@ -15731,6 +15811,25 @@ int smlua_func_le_set_light_intensity(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_intensity"); return 0; }
 
     le_set_light_intensity(id, intensity);
+
+    return 1;
+}
+
+int smlua_func_le_set_light_use_surface_normals(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_light_use_surface_normals", 2, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_light_use_surface_normals"); return 0; }
+    bool useSurfaceNormals = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_use_surface_normals"); return 0; }
+
+    le_set_light_use_surface_normals(id, useSurfaceNormals);
 
     return 1;
 }
@@ -36250,7 +36349,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
 
     // lighting_engine.h
+    smlua_bind_function(L, "le_set_mode", smlua_func_le_set_mode);
+    smlua_bind_function(L, "le_get_mode", smlua_func_le_get_mode);
+    smlua_bind_function(L, "le_set_tone_mapping", smlua_func_le_set_tone_mapping);
     smlua_bind_function(L, "le_calculate_lighting_color", smlua_func_le_calculate_lighting_color);
+    smlua_bind_function(L, "le_calculate_lighting_color_with_normal", smlua_func_le_calculate_lighting_color_with_normal);
     smlua_bind_function(L, "le_calculate_lighting_dir", smlua_func_le_calculate_lighting_dir);
     smlua_bind_function(L, "le_add_light", smlua_func_le_add_light);
     smlua_bind_function(L, "le_remove_light", smlua_func_le_remove_light);
@@ -36260,6 +36363,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "le_set_light_color", smlua_func_le_set_light_color);
     smlua_bind_function(L, "le_set_light_radius", smlua_func_le_set_light_radius);
     smlua_bind_function(L, "le_set_light_intensity", smlua_func_le_set_light_intensity);
+    smlua_bind_function(L, "le_set_light_use_surface_normals", smlua_func_le_set_light_use_surface_normals);
 
     // mario.h
     smlua_bind_function(L, "is_anim_at_end", smlua_func_is_anim_at_end);

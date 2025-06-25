@@ -6633,6 +6633,73 @@ Sets the level number and handles the act select screen. `param` is used for ove
 <br />
 
 
+## [le_set_mode](#le_set_mode)
+
+### Description
+Sets the lighting engine mode to `mode`
+
+### Lua Example
+`le_set_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | [enum LEMode](constants.md#enum-LEMode) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_mode(enum LEMode mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_mode](#le_get_mode)
+
+### Description
+Gets the lighting engine mode
+
+### Lua Example
+`local enumValue = le_get_mode()`
+
+### Parameters
+- None
+
+### Returns
+[enum LEMode](constants.md#enum-LEMode)
+
+### C Prototype
+`enum LEMode le_get_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_tone_mapping](#le_set_tone_mapping)
+
+### Description
+Sets the lighting engine's tone mapping mode to `toneMapping`
+
+### Lua Example
+`le_set_tone_mapping(toneMapping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description
@@ -6653,6 +6720,32 @@ Calculates the lighting with `lightIntensityScalar` at a position and outputs th
 
 ### C Prototype
 `void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_calculate_lighting_color_with_normal](#le_calculate_lighting_color_with_normal)
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| normal | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color out, f32 lightIntensityScalar);`
 
 [:arrow_up_small:](#)
 
@@ -6876,6 +6969,30 @@ Sets a lighting engine point light's `intensity`
 
 ### C Prototype
 `void le_set_light_intensity(s32 id, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_light_use_surface_normals](#le_set_light_use_surface_normals)
+
+### Description
+Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`le_set_light_use_surface_normals(id, useSurfaceNormals)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| useSurfaceNormals | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_use_surface_normals(s32 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 

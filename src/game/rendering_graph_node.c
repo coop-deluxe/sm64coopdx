@@ -2,6 +2,7 @@
 
 #include "area.h"
 #include "engine/math_util.h"
+#include "engine/lighting_engine.h"
 #include "game_init.h"
 #include "gfx_dimensions.h"
 #include "main.h"
@@ -212,6 +213,9 @@ f32 gOverrideFOV = 0;
 f32 gOverrideNear = 0;
 f32 gOverrideFar = 0;
 
+// remember current object model matrix for the lighting engine
+static Mtx* sObjectTransformExt = NULL;
+
 void patch_mtx_before(void) {
     gMtxTblSize = 0;
 
@@ -396,6 +400,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
                 detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
+                Mtx* objTransformExt = currList->objTransformExt;
                 if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) {
                     gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
                     gMtxTbl[gMtxTblSize].mtx = currList->transform;
@@ -403,9 +408,18 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
                     gMtxTbl[gMtxTblSize].displayList = currList->displayList;
                     gMtxTbl[gMtxTblSize++].usingCamSpace = currList->usingCamSpace;
                 }
+
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
+
+                // send the object model matrix
+                if (objTransformExt) { gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(objTransformExt), G_MTX_OBJECT_EXT); }
+
                 gSPDisplayList(gDisplayListHead++, currList->displayList);
+
+                // forget the object model matrix
+                if (objTransformExt) { gSPMatrix(gDisplayListHead++, NULL, G_MTX_OBJECT_EXT); }
+
                 currList = currList->next;
             }
         }
@@ -431,6 +445,7 @@ static void geo_append_display_list(void *displayList, s16 layer) {
 
         listNode->transform = gMatStackFixed[gMatStackIndex];
         listNode->transformPrev = gMatStackPrevFixed[gMatStackIndex];
+        listNode->objTransformExt = sObjectTransformExt;
         listNode->displayList = displayList;
         listNode->next = 0;
         listNode->usingCamSpace = sUsingCamSpace;
@@ -1247,6 +1262,14 @@ static void geo_process_object(struct Object *node) {
     s32 hasAnimation = (node->header.gfx.node.flags & GRAPH_RENDER_HAS_ANIMATION) != 0;
     Vec3f scalePrev;
 
+    // calculate current object model matrix for the lighting engine
+    Mtx* prevObjectTransformExt = sObjectTransformExt;
+    if (le_get_mode() == LE_MODE_AFFECT_ALL_SHADED) {
+        sObjectTransformExt = alloc_display_list(sizeof(Mtx));
+        mtxf_rotate_zxy_and_translate(mtxf, node->header.gfx.pos, node->header.gfx.angle);
+        mtxf_to_mtx(sObjectTransformExt, mtxf);
+    }
+
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
 
@@ -1414,6 +1437,8 @@ static void geo_process_object(struct Object *node) {
     }
     gCurGraphNodeProcessingObject = lastProcessingObject;
     gCurGraphNodeMarioState = lastMarioState;
+
+    sObjectTransformExt = prevObjectTransformExt;
 }
 
 /**

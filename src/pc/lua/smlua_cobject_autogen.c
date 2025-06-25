@@ -805,11 +805,12 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
 
 #define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 3
 static struct LuaObjectField sDisplayListNodeFields[LUA_DISPLAY_LIST_NODE_FIELD_COUNT] = {
-    { "displayList",   LVT_COBJECT_P, offsetof(struct DisplayListNode, displayList),   false, LOT_GFX,             1, sizeof(Gfx*)                    },
-    { "next",          LVT_COBJECT_P, offsetof(struct DisplayListNode, next),          false, LOT_DISPLAYLISTNODE, 1, sizeof(struct DisplayListNode*) },
-//  { "transform",     LVT_???,       offsetof(struct DisplayListNode, transform),     false, LOT_???,             1, sizeof(Mtx*)                    }, <--- UNIMPLEMENTED
-//  { "transformPrev", LVT_???,       offsetof(struct DisplayListNode, transformPrev), false, LOT_???,             1, sizeof(Mtx*)                    }, <--- UNIMPLEMENTED
-    { "usingCamSpace", LVT_U8,        offsetof(struct DisplayListNode, usingCamSpace), false, LOT_NONE,            1, sizeof(u8)                      },
+    { "displayList",     LVT_COBJECT_P, offsetof(struct DisplayListNode, displayList),     false, LOT_GFX,             1, sizeof(Gfx*)                    },
+    { "next",            LVT_COBJECT_P, offsetof(struct DisplayListNode, next),            false, LOT_DISPLAYLISTNODE, 1, sizeof(struct DisplayListNode*) },
+//  { "objTransformExt", LVT_???,       offsetof(struct DisplayListNode, objTransformExt), false, LOT_???,             1, sizeof(Mtx*)                    }, <--- UNIMPLEMENTED
+//  { "transform",       LVT_???,       offsetof(struct DisplayListNode, transform),       false, LOT_???,             1, sizeof(Mtx*)                    }, <--- UNIMPLEMENTED
+//  { "transformPrev",   LVT_???,       offsetof(struct DisplayListNode, transformPrev),   false, LOT_???,             1, sizeof(Mtx*)                    }, <--- UNIMPLEMENTED
+    { "usingCamSpace",   LVT_U8,        offsetof(struct DisplayListNode, usingCamSpace),   false, LOT_NONE,            1, sizeof(u8)                      },
 };
 
 #define LUA_DJUI_COLOR_FIELD_COUNT 4

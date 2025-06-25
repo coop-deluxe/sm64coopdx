@@ -964,7 +964,11 @@
 <br />
 
 - lighting_engine.h
+   - [le_set_mode](functions-3.md#le_set_mode)
+   - [le_get_mode](functions-3.md#le_get_mode)
+   - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
    - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
+   - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
    - [le_add_light](functions-3.md#le_add_light)
    - [le_remove_light](functions-3.md#le_remove_light)
@@ -974,6 +978,7 @@
    - [le_set_light_color](functions-3.md#le_set_light_color)
    - [le_set_light_radius](functions-3.md#le_set_light_radius)
    - [le_set_light_intensity](functions-3.md#le_set_light_intensity)
+   - [le_set_light_use_surface_normals](functions-3.md#le_set_light_use_surface_normals)
 
 <br />
 
