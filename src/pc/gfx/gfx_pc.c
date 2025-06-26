@@ -858,14 +858,14 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 CTX_BEGIN(CTX_LIGHTING);
 
                 Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
-                Vec3f vnormal = { vn->n[0] / 127.0f, vn->n[1] / 127.0f, vn->n[2] / 127.0f };
+                Vec3f vnormal = { nx / 127.0f, ny / 127.0f, nz / 127.0f };
 
                 // transform vpos and vnormal to world space
                 if (sObjMatrixCount > 0) {
                     gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, vnormal);
                 }
 
-                le_calculate_lighting_color_with_normal(vpos, (rsp.geometry_mode & G_PACKED_NORMALS_EXT) ? NULL : vnormal, color, 1.0f);
+                le_calculate_lighting_color_with_normal(vpos, vnormal, color, 1.0f);
 
                 CTX_END(CTX_LIGHTING);
 
