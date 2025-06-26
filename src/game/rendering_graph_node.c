@@ -1264,7 +1264,7 @@ static void geo_process_object(struct Object *node) {
 
     // calculate current object model matrix for the lighting engine
     Mtx* prevObjectTransformExt = sObjectTransformExt;
-    if (le_get_mode() == LE_MODE_AFFECT_ALL_SHADED) {
+    if (le_get_light_count() > 0) {
         sObjectTransformExt = alloc_display_list(sizeof(Mtx));
         mtxf_rotate_zxy_and_translate(mtxf, node->header.gfx.pos, node->header.gfx.angle);
         mtxf_to_mtx(sObjectTransformExt, mtxf);

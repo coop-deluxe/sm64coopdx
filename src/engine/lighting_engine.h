@@ -17,8 +17,8 @@ struct LELight
 };
 
 enum LEMode {
-    LE_MODE_DEFAULT,
     LE_MODE_AFFECT_ALL_SHADED,
+    LE_MODE_AFFECT_ONLY_GEOMETRY_MODE,
 };
 
 enum LEToneMapping {

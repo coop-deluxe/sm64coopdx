@@ -1627,8 +1627,8 @@
 ### [enum LEMode](#LEMode)
 | Identifier | Value |
 | :--------- | :---- |
-| LE_MODE_DEFAULT | 0 |
-| LE_MODE_AFFECT_ALL_SHADED | 1 |
+| LE_MODE_AFFECT_ALL_SHADED | 0 |
+| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 1 |
 
 ### [enum LEToneMapping](#LEToneMapping)
 | Identifier | Value |
