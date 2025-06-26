@@ -20004,6 +20004,31 @@ int smlua_func_mtxf_inverse(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mtxf_inverse_non_affine(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mtxf_inverse_non_affine", 2, top);
+        return 0;
+    }
+
+
+    Mat4 dest;
+    smlua_get_mat4(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mtxf_inverse_non_affine"); return 0; }
+
+    Mat4 src;
+    smlua_get_mat4(src, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mtxf_inverse_non_affine"); return 0; }
+
+    lua_pushboolean(L, mtxf_inverse_non_affine(dest, src));
+
+    smlua_push_mat4(dest, 1);
+
+    return 1;
+}
+
 int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36606,6 +36631,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mtxf_mul_vec3s", smlua_func_mtxf_mul_vec3s);
     smlua_bind_function(L, "mtxf_rotate_xy", smlua_func_mtxf_rotate_xy);
     smlua_bind_function(L, "mtxf_inverse", smlua_func_mtxf_inverse);
+    smlua_bind_function(L, "mtxf_inverse_non_affine", smlua_func_mtxf_inverse_non_affine);
     smlua_bind_function(L, "get_pos_from_transform_mtx", smlua_func_get_pos_from_transform_mtx);
 
     // math_util.inl

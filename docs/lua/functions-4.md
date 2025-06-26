@@ -4803,7 +4803,7 @@ Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the X
 ## [mtxf_inverse](#mtxf_inverse)
 
 ### Description
-Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
+Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
 
 ### Lua Example
 `mtxf_inverse(dest, src)`
@@ -4819,6 +4819,30 @@ Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Ap
 
 ### C Prototype
 `void mtxf_inverse(OUT Mat4 dest, Mat4 src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mtxf_inverse_non_affine](#mtxf_inverse_non_affine)
+
+### Description
+Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
+
+### Lua Example
+`local booleanValue = mtxf_inverse_non_affine(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Mat4](structs.md#Mat4) |
+| src | [Mat4](structs.md#Mat4) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mtxf_inverse_non_affine(OUT Mat4 dest, Mat4 src);`
 
 [:arrow_up_small:](#)
 

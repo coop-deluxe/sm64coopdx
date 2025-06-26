@@ -1223,6 +1223,7 @@
    - [mtxf_mul_vec3s](functions-4.md#mtxf_mul_vec3s)
    - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
+   - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
 
 <br />

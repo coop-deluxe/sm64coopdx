@@ -6629,8 +6629,16 @@ end
 
 --- @param dest Mat4
 --- @param src Mat4
---- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
 function mtxf_inverse(dest, src)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- @return boolean
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
+function mtxf_inverse_non_affine(dest, src)
     -- ...
 end
 
