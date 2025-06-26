@@ -128,7 +128,6 @@ struct DisplayListNode
 {
     Mtx *transform;
     Mtx *transformPrev;
-    Mtx *objTransformExt;
     Gfx *displayList;
     struct DisplayListNode *next;
     u8 usingCamSpace;

@@ -19,7 +19,7 @@
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
 
-# define G_MTX_OBJECT_EXT   0x08
+#define G_MTX_INVERSE_CAMERA_EXT   0x08
 
 #define	gsSPTextureAddrDjui(c) \
 {{ \

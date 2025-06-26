@@ -782,6 +782,63 @@ OPTIMIZE_O3 void mtxf_inverse(OUT Mat4 dest, Mat4 src) {
 }
 
 /**
+ * Compute the inverse of 'src' and put it into 'dest' but it can be a non-affine matrix.
+ */
+OPTIMIZE_O3 bool mtxf_inverse_non_affine(OUT Mat4 dest, Mat4 src) {
+    // augmented matrix [ src | I ]
+    f32 aug[4][8];
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            aug[i][j]     = src[i][j];
+            aug[i][j + 4] = (i == j) ? 1.0f : 0.0f;
+        }
+    }
+
+    // forward elimination
+    for (int k = 0; k < 4; k++) {
+        // find pivot row
+        int piv = k;
+        for (int i = k + 1; i < 4; i++) {
+            if (fabsf(aug[i][k]) > fabsf(aug[piv][k])) { piv = i; }
+        }
+
+        if (fabsf(aug[piv][k]) < 1e-6f) { return false; }
+
+        // swap pivot row into place
+        if (piv != k) {
+            for (int j = 0; j < 8; j++) {
+                f32 tmp     = aug[k][j];
+                aug[k][j]   = aug[piv][j];
+                aug[piv][j] = tmp;
+            }
+        }
+
+        // scale pivot row to make pivot = 1
+        f32 inv_p = 1.0f / aug[k][k];
+        for (int j = k; j < 8; j++) { aug[k][j] *= inv_p; }
+
+        // eliminate below
+        for (int i = k+1; i < 4; i++) {
+            f32 f = aug[i][k];
+            for (int j = k; j < 8; j++) { aug[i][j] -= f * aug[k][j]; }
+        }
+    }
+
+    // backward substitution
+    for (int k = 3; k >= 0; k--) {
+        for (int i = 0; i < k; i++) {
+            f32 f = aug[i][k];
+            for (int j = k; j < 8; j++) { aug[i][j] -= f * aug[k][j]; }
+        }
+    }
+
+    // copy right half (the inverse) into dest
+    for (int i = 0; i < 4; i++) { memcpy(dest[i], &aug[i][4], 4 * sizeof(f32)); }
+
+    return true;
+}
+
+/**
  * Extract a position given an object's transformation matrix and a camera matrix.
  * This is used for determining the world position of the held object: since objMtx
  * inherits the transformation from both the camera and Mario, it calculates this
@@ -800,3 +857,4 @@ OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(OUT Vec3f dest, Mat4 objMtx, Mat4 
         
     return dest;
 }
+

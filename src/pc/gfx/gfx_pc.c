@@ -124,6 +124,10 @@ Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
+// need inverse camera matrix to compute world space for lighting engine
+static Mat4 sInverseCameraMatrix;
+static bool sHasInverseCameraMatrix = false;
+
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -135,11 +139,6 @@ static const uint8_t missing_texture[MISSING_W * MISSING_H * 4] = {
 };
 
 static bool sOnlyTextureChangeOnAddrChange = false;
-
-// object model matrices need to be used for the lighting engine
-#define MAX_OBJ_MATRIX_MAX 8
-static s8 sObjMatrixCount = 0;
-static Mat4 sObjMatrix[MAX_OBJ_MATRIX_MAX];
 
 static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, const uint8_t* addr) {
     if (tile_number >= RDP_TILES) { return; }
@@ -632,20 +631,18 @@ static void calculate_normal_dir(const Light_t *light, Vec3f coeffs, bool applyL
 }
 
 static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
-    // remember object model matrices to use for the lighting engine
-    if (parameters == G_MTX_OBJECT_EXT) {
-        if (addr == NULL) {
-            sObjMatrixCount--;
-            if (sObjMatrixCount < 0) { sObjMatrixCount = 0; }
-        } else {
-            memcpy(sObjMatrix, addr, sizeof(sObjMatrix[sObjMatrixCount]));
-            sObjMatrixCount++;
-            if (sObjMatrixCount >= MAX_OBJ_MATRIX_MAX) { sObjMatrixCount = (MAX_OBJ_MATRIX_MAX - 1); }
+
+    Mat4 matrix;
+
+    // remember inverse camera matrix to use for the lighting engine
+    if (parameters == G_MTX_INVERSE_CAMERA_EXT) {
+        if (addr) {
+            memcpy(sInverseCameraMatrix, addr, sizeof(matrix));
+            sHasInverseCameraMatrix = true;
         }
         return;
     }
 
-    Mat4 matrix;
 #if 0
     // Original code when fixed point matrices were used
     for (int32_t i = 0; i < 4; i++) {
@@ -697,25 +694,36 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * gfx_current_dimensions.x_adjust_ratio;
 }
 
-static OPTIMIZE_O3 void gfx_apply_object_matrix(Mat4 mtx, OUT Vec3f pos, OUT Vec3f normal) {
-    f32 px = pos[0];
-    f32 py = pos[1];
-    f32 pz = pos[2];
+#include "src/game/camera.h"
 
-    pos[0] = px * mtx[0][0] + py * mtx[1][0] + pz * mtx[2][0] + mtx[3][0];
-    pos[1] = px * mtx[0][1] + py * mtx[1][1] + pz * mtx[2][1] + mtx[3][1];
-    pos[2] = px * mtx[0][2] + py * mtx[1][2] + pz * mtx[2][2] + mtx[3][2];
+static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal) {
+    if (!sHasInverseCameraMatrix) { return; }
 
-    if (normal) {
-        f32 nx = normal[0];
-        f32 ny = normal[1];
-        f32 nz = normal[2];
+    // strip view matrix off of the model-view matrix
+    Mat4 model;
+    mtxf_mul(model, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size-1], sInverseCameraMatrix);
 
-        normal[0] = nx * mtx[0][0] + ny * mtx[1][0] + nz * mtx[2][0];
-        normal[1] = nx * mtx[0][1] + ny * mtx[1][1] + nz * mtx[2][1];
-        normal[2] = nx * mtx[0][2] + ny * mtx[1][2] + nz * mtx[2][2];
-    }
+    // transform position to world
+    Vec3f worldPos;
+    worldPos[0] = pos[0] * model[0][0] + pos[1] * model[1][0] + pos[2] * model[2][0] + model[3][0];
+    worldPos[1] = pos[0] * model[0][1] + pos[1] * model[1][1] + pos[2] * model[2][1] + model[3][1];
+    worldPos[2] = pos[0] * model[0][2] + pos[1] * model[1][2] + pos[2] * model[2][2] + model[3][2];
+
+    pos[0] = worldPos[0];
+    pos[1] = worldPos[1];
+    pos[2] = worldPos[2];
+
+    // transform normal to world
+    Vec3f worldNormal;
+    worldNormal[0] = normal[0] * model[0][0] + normal[1] * model[1][0] + normal[2] * model[2][0];
+    worldNormal[1] = normal[0] * model[0][1] + normal[1] * model[1][1] + normal[2] * model[2][1];
+    worldNormal[2] = normal[0] * model[0][2] + normal[1] * model[1][2] + normal[2] * model[2][2];
+
+    normal[0] = worldNormal[0];
+    normal[1] = worldNormal[1];
+    normal[2] = worldNormal[2];
 }
+
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     if (!vertices) { return; }
@@ -861,9 +869,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 Vec3f vnormal = { nx / 127.0f, ny / 127.0f, nz / 127.0f };
 
                 // transform vpos and vnormal to world space
-                if (sObjMatrixCount > 0) {
-                    gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, vnormal);
-                }
+                gfx_local_to_world_space(vpos, vnormal);
 
                 le_calculate_lighting_color_with_normal(vpos, vnormal, color, 1.0f);
 
@@ -879,10 +885,8 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
             Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
 
-            // transform vpos and vnormal to world space
-            if (sObjMatrixCount > 0) {
-                gfx_apply_object_matrix(sObjMatrix[sObjMatrixCount-1], vpos, NULL);
-            }
+            // transform vpos to world space
+            gfx_local_to_world_space(vpos, NULL);
 
             le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
 
@@ -1933,6 +1937,8 @@ void gfx_start_frame(void) {
 
 void gfx_run(Gfx *commands) {
     gfx_sp_reset();
+
+    sHasInverseCameraMatrix = false;
 
     //puts("New frame");
 
