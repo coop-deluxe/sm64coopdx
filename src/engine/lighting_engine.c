@@ -213,7 +213,7 @@ s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensit
     light->colorB = b;
     light->radius = radius;
     light->intensity = intensity;
-    light->useSurfaceNormals = false;
+    light->useSurfaceNormals = true;
     hmap_put(sLights, ++sLightID, light);
     return sLightID;
 }
