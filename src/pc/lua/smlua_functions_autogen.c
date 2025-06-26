@@ -15564,6 +15564,21 @@ int smlua_func_le_set_tone_mapping(lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_is_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_is_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, le_is_enabled());
+
+    return 1;
+}
+
 int smlua_func_le_calculate_lighting_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36352,6 +36367,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "le_set_mode", smlua_func_le_set_mode);
     smlua_bind_function(L, "le_get_mode", smlua_func_le_get_mode);
     smlua_bind_function(L, "le_set_tone_mapping", smlua_func_le_set_tone_mapping);
+    smlua_bind_function(L, "le_is_enabled", smlua_func_le_is_enabled);
     smlua_bind_function(L, "le_calculate_lighting_color", smlua_func_le_calculate_lighting_color);
     smlua_bind_function(L, "le_calculate_lighting_color_with_normal", smlua_func_le_calculate_lighting_color_with_normal);
     smlua_bind_function(L, "le_calculate_lighting_dir", smlua_func_le_calculate_lighting_dir);

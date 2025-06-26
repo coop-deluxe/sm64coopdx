@@ -5040,6 +5040,12 @@ function le_set_tone_mapping(toneMapping)
     -- ...
 end
 
+--- @return boolean
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.
+function le_is_enabled()
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number

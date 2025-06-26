@@ -967,6 +967,7 @@
    - [le_set_mode](functions-3.md#le_set_mode)
    - [le_get_mode](functions-3.md#le_get_mode)
    - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
+   - [le_is_enabled](functions-3.md#le_is_enabled)
    - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)

@@ -853,7 +853,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
 
-            if ((le_get_mode() == LE_MODE_AFFECT_ALL_SHADED) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+            if (le_is_enabled() && ((le_get_mode() == LE_MODE_AFFECT_ALL_SHADED) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
                 Color color;
                 CTX_BEGIN(CTX_LIGHTING);
 
@@ -873,7 +873,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.g *= color[1] / 255.0f;
                 d->color.b *= color[2] / 255.0f;
             }
-        } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
+        } else if (le_is_enabled() && (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
             Color color;
             CTX_BEGIN(CTX_LIGHTING);
 

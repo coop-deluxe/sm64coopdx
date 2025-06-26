@@ -34,6 +34,8 @@ void le_set_mode(enum LEMode mode);
 enum LEMode le_get_mode(void);
 /* |description|Sets the lighting engine's tone mapping mode to `toneMapping`|descriptionEnd|*/
 void le_set_tone_mapping(enum LEToneMapping toneMapping);
+/* |description|Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.|descriptionEnd|*/
+bool le_is_enabled(void);
 
 void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, OUT Color out);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`|descriptionEnd|*/

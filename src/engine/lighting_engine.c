@@ -6,11 +6,12 @@
 
 #define LE_MAX_LIGHTS 256
 
-static Color sAmbientColor;
+static Color sAmbientColor = { 127, 127, 127 };
 static void* sLights = NULL;
 static s32 sLightID = 0;
-static enum LEMode sLEMode = LE_MODE_AFFECT_ALL_SHADED;
-static enum LEToneMapping sLEToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
+static enum LEMode sMode = LE_MODE_AFFECT_ALL_SHADED;
+static enum LEToneMapping sToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
+static bool sEnabled = false;
 
 static inline void color_set(Color color, u8 r, u8 g, u8 b) {
     color[0] = r;
@@ -18,16 +19,23 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
     color[2] = b;
 }
 
+bool le_is_enabled(void) {
+    // this is needed because we don't want to make vanilla darker,
+    // and we don't want to set the ambient color to { 255, 255, 255 }
+    // because then no one could see the effect of their lights
+    return sEnabled;
+}
+
 void le_set_mode(enum LEMode mode) {
-    sLEMode = mode;
+    sMode = mode;
 }
 
 enum LEMode le_get_mode(void) {
-    return sLEMode;
+    return sMode;
 }
 
 void le_set_tone_mapping(enum LEToneMapping toneMapping) {
-    sLEToneMapping = toneMapping;
+    sToneMapping = toneMapping;
 }
 
 static inline void le_tone_map_total_weighted(OUT Color out, Color in_ambient, Vec3f in_color, float weight) {
@@ -59,7 +67,7 @@ static inline void le_tone_map_reinhard(OUT Color out, Color in_ambient, Vec3f i
 }
 
 static inline void le_tone_map(OUT Color out, Color in_ambient, Vec3f in_color, float weight) {
-    switch (sLEToneMapping) {
+    switch (sToneMapping) {
         case LE_TONE_MAPPING_TOTAL_WEIGHTED: le_tone_map_total_weighted(out, in_ambient, in_color, weight); break;
         case LE_TONE_MAPPING_WEIGHTED:       le_tone_map_weighted(out, in_ambient, in_color, weight);       break;
         case LE_TONE_MAPPING_CLAMP:          le_tone_map_clamp(out, in_ambient, in_color);                  break;
@@ -215,6 +223,8 @@ s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensit
     light->intensity = intensity;
     light->useSurfaceNormals = true;
     hmap_put(sLights, ++sLightID, light);
+
+    sEnabled = true;
     return sLightID;
 }
 
@@ -286,16 +296,17 @@ void le_clear(void) {
     }
     hmap_clear(sLights);
     sLightID = 0;
-    sAmbientColor[0] = 0;
-    sAmbientColor[1] = 0;
-    sAmbientColor[2] = 0;
+    sAmbientColor[0] = 127;
+    sAmbientColor[1] = 127;
+    sAmbientColor[2] = 127;
 }
 
 void le_shutdown(void) {
     if (sLights == NULL) { return; }
 
-    sLEMode = LE_MODE_AFFECT_ALL_SHADED;
-    sLEToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
+    sEnabled = false;
+    sMode = LE_MODE_AFFECT_ALL_SHADED;
+    sToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
     le_clear();
     hmap_destroy(sLights);
     sLights = NULL;

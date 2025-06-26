@@ -6700,6 +6700,27 @@ Sets the lighting engine's tone mapping mode to `toneMapping`
 
 <br />
 
+## [le_is_enabled](#le_is_enabled)
+
+### Description
+Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.
+
+### Lua Example
+`local booleanValue = le_is_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_is_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description
