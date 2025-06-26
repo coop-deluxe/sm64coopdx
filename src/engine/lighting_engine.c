@@ -10,7 +10,7 @@ static Color sAmbientColor = { 127, 127, 127 };
 static void* sLights = NULL;
 static s32 sLightID = 0;
 static enum LEMode sMode = LE_MODE_AFFECT_ALL_SHADED;
-static enum LEToneMapping sToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
+static enum LEToneMapping sToneMapping = LE_TONE_MAPPING_WEIGHTED;
 static bool sEnabled = false;
 
 static inline void color_set(Color color, u8 r, u8 g, u8 b) {
@@ -242,6 +242,7 @@ s32 le_get_light_count(void) {
 
 void le_set_ambient_color(u8 r, u8 g, u8 b) {
     color_set(sAmbientColor, r, g, b);
+    sEnabled = true;
 }
 
 void le_set_light_pos(s32 id, f32 x, f32 y, f32 z) {
@@ -306,7 +307,7 @@ void le_shutdown(void) {
 
     sEnabled = false;
     sMode = LE_MODE_AFFECT_ALL_SHADED;
-    sToneMapping = LE_TONE_MAPPING_TOTAL_WEIGHTED;
+    sToneMapping = LE_TONE_MAPPING_WEIGHTED;
     le_clear();
     hmap_destroy(sLights);
     sLights = NULL;

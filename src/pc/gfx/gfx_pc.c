@@ -714,14 +714,16 @@ static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal
     pos[2] = worldPos[2];
 
     // transform normal to world
-    Vec3f worldNormal;
-    worldNormal[0] = normal[0] * model[0][0] + normal[1] * model[1][0] + normal[2] * model[2][0];
-    worldNormal[1] = normal[0] * model[0][1] + normal[1] * model[1][1] + normal[2] * model[2][1];
-    worldNormal[2] = normal[0] * model[0][2] + normal[1] * model[1][2] + normal[2] * model[2][2];
+    if (normal) {
+        Vec3f worldNormal;
+        worldNormal[0] = normal[0] * model[0][0] + normal[1] * model[1][0] + normal[2] * model[2][0];
+        worldNormal[1] = normal[0] * model[0][1] + normal[1] * model[1][1] + normal[2] * model[2][1];
+        worldNormal[2] = normal[0] * model[0][2] + normal[1] * model[1][2] + normal[2] * model[2][2];
 
-    normal[0] = worldNormal[0];
-    normal[1] = worldNormal[1];
-    normal[2] = worldNormal[2];
+        normal[0] = worldNormal[0];
+        normal[1] = worldNormal[1];
+        normal[2] = worldNormal[2];
+    }
 }
 
 
