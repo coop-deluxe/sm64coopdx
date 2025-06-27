@@ -637,7 +637,7 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
     // remember inverse camera matrix to use for the lighting engine
     if (parameters == G_MTX_INVERSE_CAMERA_EXT) {
         if (addr) {
-            memcpy(sInverseCameraMatrix, addr, sizeof(matrix));
+            memcpy(sInverseCameraMatrix, addr, sizeof(sInverseCameraMatrix));
             sHasInverseCameraMatrix = true;
         }
         return;
@@ -693,8 +693,6 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * gfx_current_dimensions.x_adjust_ratio;
 }
-
-#include "src/game/camera.h"
 
 static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal) {
     if (!sHasInverseCameraMatrix) { return; }
@@ -868,7 +866,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 CTX_BEGIN(CTX_LIGHTING);
 
                 Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
-                Vec3f vnormal = { nx / 127.0f, ny / 127.0f, nz / 127.0f };
+                Vec3f vnormal = { nx, ny, nz };
 
                 // transform vpos and vnormal to world space
                 gfx_local_to_world_space(vpos, vnormal);
