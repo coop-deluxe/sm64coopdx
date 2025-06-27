@@ -11616,10 +11616,47 @@ function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
 
+--- @return string
+--- Gets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_get()
+    -- ...
+end
+
+--- @return integer
+--- Gets the index of the mod that replaced the castle secret stars text
+function smlua_text_utils_castle_secret_stars_mod_index()
+    -- ...
+end
+
+--- Resets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_reset()
+    -- ...
+end
+
 --- @param index integer
 --- @param text string
 --- Replace extra text (e.g. one of the castle's secret stars) with `text`
 function smlua_text_utils_extra_text_replace(index, text)
+    -- ...
+end
+
+--- @param index integer
+--- @return string
+--- Gets the extra text at `index`
+function smlua_text_utils_extra_text_get(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+--- Gets the index of the mod that replaced the extra text at `index`
+function smlua_text_utils_extra_text_mod_index(index)
+    -- ...
+end
+
+--- @param index integer
+--- Resets the extra text at `index`
+function smlua_text_utils_extra_text_reset(index)
     -- ...
 end
 
