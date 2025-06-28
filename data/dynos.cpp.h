@@ -1019,6 +1019,11 @@ s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 
+bool DynOS_ShouldGeneratePack(const SysPath &aPackFolder, const char * const aGenFileExtensions[], s32 aGenFileExtensionCount);
+bool DynOS_ShouldGeneratePack2Ext(const SysPath &aPackFolder, const char *aGenExtension, const char *aSrcExtension);
+bool DynOS_GenFileExistsAndIsNewerThanFile(const SysPath &aGenFile, const SysPath &aSrcFile);
+bool DynOS_GenFileExistsAndIsNewerThanFolder(const SysPath &aGenFile, const SysPath &aSrcFolder);
+
 s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found);
 
 void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder);

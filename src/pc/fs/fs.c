@@ -346,6 +346,25 @@ bool fs_sys_dir_is_empty(const char *name) {
     return ret;
 }
 
+uint64_t fs_sys_get_modified_time(const char *path) {
+#ifdef _WIN32
+    WIN32_FILE_ATTRIBUTE_DATA fad;
+    if (!GetFileAttributesExA(path, GetFileExInfoStandard, &fad)) { return 0; }
+
+    ULARGE_INTEGER ull;
+    ull.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
+    ull.HighPart = fad.ftLastWriteTime.dwHighDateTime;
+
+    const uint64_t EPOCH_DIFF = 116444736000000000ULL;
+    uint64_t time100ns = ull.QuadPart;
+    return (time100ns - EPOCH_DIFF) / 10000000ULL;
+#else
+    struct stat st;
+    if (stat(path, &st) != 0) { return 0; }
+    return (uint64_t)st.st_mtime;
+#endif
+}
+
 bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur) {
 #ifdef DOCKERBUILD
     return false;
