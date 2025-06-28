@@ -261,12 +261,10 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
             // Compress .bin files to gain some space
-            if (configCompressOnStartup) {
-                SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-                if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
-                    DynOS_Bin_Compress(_Filename);
-                    continue;
-                }
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                if (configCompressOnStartup) { DynOS_Bin_Compress(_Filename); }
+                continue;
             }
 
             // For each subfolder, read tokens from model.inc.c and geo.inc.c

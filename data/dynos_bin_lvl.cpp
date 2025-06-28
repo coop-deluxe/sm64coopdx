@@ -1256,12 +1256,10 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
             // Compress .lvl files to gain some space
-            if (configCompressOnStartup) {
-                SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-                if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
-                    DynOS_Bin_Compress(_Filename);
-                    continue;
-                }
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                if (configCompressOnStartup) { DynOS_Bin_Compress(_Filename); }
+                continue;
             }
 
             // For each subfolder, read tokens from script.c
