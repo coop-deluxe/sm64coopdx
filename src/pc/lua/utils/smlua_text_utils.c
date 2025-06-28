@@ -27,7 +27,7 @@ static size_t measure_converted_sm64_string(const u8* str64) {
     size_t len = 0;
     
     for (size_t i = 0; str64[i] != 0xFF; i++) {
-        for (int j = 0; sSm64CharMap[j].str != NULL; j++) {
+        for (s32 j = 0; sSm64CharMap[j].str != NULL; j++) {
             if (sSm64CharMap[j].c == str64[i]) {
                 len += strlen(sSm64CharMap[j].str);
                 break;
@@ -280,7 +280,8 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     dialog->leftOffset = leftOffset;
     dialog->width = width;
     dialog->str = smlua_text_utils_convert(str);
-    dialog->text = get_dialog_text_ascii(dialog);
+    dialog->text = strdup(str);
+
     sReplacedDialog[dialogId] = true;
 }
 
