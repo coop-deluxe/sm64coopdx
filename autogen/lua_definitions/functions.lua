@@ -11776,6 +11776,13 @@ function smlua_text_utils_reset_all()
 end
 
 --- @param dialogId DialogId
+--- @return DialogEntry
+--- Gets the DialogEntry struct for the given `dialogId`
+function smlua_text_utils_dialog_get(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
 --- @param unused integer
 --- @param linesPerBox integer
 --- @param leftOffset integer
@@ -11783,6 +11790,13 @@ end
 --- @param str string
 --- Replaces `dialogId` with a custom one
 function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @return boolean
+--- Returns whether the dialog with the given ID has been replaced
+function smlua_text_utils_dialog_is_replaced(dialogId)
     -- ...
 end
 
@@ -11870,10 +11884,47 @@ function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
 
+--- @return string
+--- Gets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_get()
+    -- ...
+end
+
+--- @return integer
+--- Gets the index of the mod that replaced the castle secret stars text
+function smlua_text_utils_castle_secret_stars_mod_index()
+    -- ...
+end
+
+--- Resets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_reset()
+    -- ...
+end
+
 --- @param index integer
 --- @param text string
 --- Replace extra text (e.g. one of the castle's secret stars) with `text`
 function smlua_text_utils_extra_text_replace(index, text)
+    -- ...
+end
+
+--- @param index integer
+--- @return string
+--- Gets the extra text at `index`
+function smlua_text_utils_extra_text_get(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+--- Gets the index of the mod that replaced the extra text at `index`
+function smlua_text_utils_extra_text_mod_index(index)
+    -- ...
+end
+
+--- @param index integer
+--- Resets the extra text at `index`
+function smlua_text_utils_extra_text_reset(index)
     -- ...
 end
 

@@ -4,6 +4,7 @@
 #include "course_table.h"
 #include "game/hardcoded.h"
 #include "game/memory.h"
+#include "game/segment2.h"
 #include "level_info.h"
 #include "level_table.h"
 #include "save_file.h"
@@ -14,12 +15,9 @@
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
 #include "eu_translation.h"
-#else
-extern u8 *seg2_course_name_table[];
-extern u8 *seg2_act_name_table[];
 #endif
 
-static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
+const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
 
     // Digits
     { "0", 0x00, 1 }, { "1", 0x01, 1 }, { "2", 0x02, 1 }, { "3", 0x03, 1 }, { "4", 0x04, 1 },
@@ -60,6 +58,10 @@ static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "~",   0xF7, 0 }, // tilde
 
     // Symbols
+    { "/",   0xD0, 0 },
+    { "the", 0xD1, 0 },
+    { "you", 0xD2, 0 },
+    { "[%]", 0xE0, 0 }, // The number of extra stars required to unlock a star door
     { "[A]", 0x54, 0 }, // bold A
     { "[B]", 0x55, 0 }, // bold B
     { "[C]", 0x56, 0 }, // bold C
@@ -73,6 +75,7 @@ static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "+",   0xF9, 1 }, // coin
     { "@",   0xFA, 1 }, // star filled
     { "*",   0xFB, 1 }, // multiply
+    { "•",   0xFC, 0 },
     { "$",   0xFD, 0 }, // star empty
     { "\n",  0xFE, 1 }, // New line
     { NULL,  0xFF, 1 }, // Null terminator
@@ -160,7 +163,7 @@ static void decapitalize_string_sm64(u8 *str64) {
     }
 }
 
-void *get_course_name_table(void) {
+void **get_course_name_table(void) {
     void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
 
 #ifdef VERSION_EU
@@ -174,7 +177,21 @@ void *get_course_name_table(void) {
     return courseNameTbl;
 }
 
-void *get_act_name_table(void) {
+void **get_course_name_table_original(void) {
+    void **courseNameTblOrig = segmented_to_virtual(seg2_course_name_table_original);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: courseNameTblOrig = segmented_to_virtual(course_name_table_eu_en_original); break;
+        case LANGUAGE_FRENCH:  courseNameTblOrig = segmented_to_virtual(course_name_table_eu_fr_original); break;
+        case LANGUAGE_GERMAN:  courseNameTblOrig = segmented_to_virtual(course_name_table_eu_de_original); break;
+    }
+#endif
+
+    return courseNameTblOrig;
+}
+
+void **get_act_name_table(void) {
     void **actNameTbl = segmented_to_virtual(seg2_act_name_table);
 
 #ifdef VERSION_EU
@@ -186,6 +203,20 @@ void *get_act_name_table(void) {
 #endif
 
     return actNameTbl;
+}
+
+void **get_act_name_table_original(void) {
+    void **actNameTblOrig = segmented_to_virtual(seg2_act_name_table_original);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: actNameTblOrig = segmented_to_virtual(act_name_table_eu_en_original); break;
+        case LANGUAGE_FRENCH:  actNameTblOrig = segmented_to_virtual(act_name_table_eu_fr_original); break;
+        case LANGUAGE_GERMAN:  actNameTblOrig = segmented_to_virtual(act_name_table_eu_de_original); break;
+    }
+#endif
+
+    return actNameTblOrig;
 }
 
 const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
@@ -201,8 +232,8 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
         }
     }
 
-    if (courseNum >= 0 && courseNum <= COURSE_MAX && gReplacedActNameTable[courseNum]->modIndex != -1) {
-        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->name);
+    if (courseNum >= 0 && courseNum <= COURSE_MAX && gReplacedCourseActNameTable[courseNum].courseName.modNum != 0) {
+        snprintf(output, 256, "%s", gReplacedCourseActNameTable[courseNum].courseName.name.value);
     }
 
     else if (!hasCustomName) {
@@ -266,9 +297,9 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
 
     s16 starIndex = starNum - 1;
     if (starIndex >= 0 && starIndex < MAX_ACTS_AND_100_COINS &&
-        courseNum >= 0 && courseNum < COURSE_END &&
-        gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].modIndex != -1) {
-        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starIndex].name);
+        courseNum >= 0 && courseNum <= COURSE_MAX &&
+        gReplacedCourseActNameTable[courseNum].actName[starIndex].modNum != 0) {
+        snprintf(output, 256, "%s", gReplacedCourseActNameTable[courseNum].actName[starIndex].name.value);
     }
 
     // Main courses: BOB to RR

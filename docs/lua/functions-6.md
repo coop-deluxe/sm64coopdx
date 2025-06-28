@@ -7113,6 +7113,29 @@ Resets every modified dialog back to vanilla
 
 <br />
 
+## [smlua_text_utils_dialog_get](#smlua_text_utils_dialog_get)
+
+### Description
+Gets the DialogEntry struct for the given `dialogId`
+
+### Lua Example
+`local DialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+[DialogEntry](structs.md#DialogEntry)
+
+### C Prototype
+`struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
 
 ### Description
@@ -7136,6 +7159,29 @@ Replaces `dialogId` with a custom one
 
 ### C Prototype
 `void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
+
+### Description
+Returns whether the dialog with the given ID has been replaced
+
+### Lua Example
+`local booleanValue = smlua_text_utils_dialog_is_replaced(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);`
 
 [:arrow_up_small:](#)
 
@@ -7408,6 +7454,69 @@ Replaces the castle secret stars text with `name`
 
 <br />
 
+## [smlua_text_utils_castle_secret_stars_get](#smlua_text_utils_castle_secret_stars_get)
+
+### Description
+Gets the castle secret stars text
+
+### Lua Example
+`local stringValue = smlua_text_utils_castle_secret_stars_get()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_castle_secret_stars_get();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_mod_index](#smlua_text_utils_castle_secret_stars_mod_index)
+
+### Description
+Gets the index of the mod that replaced the castle secret stars text
+
+### Lua Example
+`local integerValue = smlua_text_utils_castle_secret_stars_mod_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_castle_secret_stars_mod_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_reset](#smlua_text_utils_castle_secret_stars_reset)
+
+### Description
+Resets the castle secret stars text
+
+### Lua Example
+`smlua_text_utils_castle_secret_stars_reset()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_castle_secret_stars_reset();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
 
 ### Description
@@ -7427,6 +7536,75 @@ Replace extra text (e.g. one of the castle's secret stars) with `text`
 
 ### C Prototype
 `void smlua_text_utils_extra_text_replace(s16 index, const char* text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_get](#smlua_text_utils_extra_text_get)
+
+### Description
+Gets the extra text at `index`
+
+### Lua Example
+`local stringValue = smlua_text_utils_extra_text_get(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_extra_text_get(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_mod_index](#smlua_text_utils_extra_text_mod_index)
+
+### Description
+Gets the index of the mod that replaced the extra text at `index`
+
+### Lua Example
+`local integerValue = smlua_text_utils_extra_text_mod_index(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_extra_text_mod_index(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_reset](#smlua_text_utils_extra_text_reset)
+
+### Description
+Resets the extra text at `index`
+
+### Lua Example
+`smlua_text_utils_extra_text_reset(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_extra_text_reset(s16 index);`
 
 [:arrow_up_small:](#)
 
