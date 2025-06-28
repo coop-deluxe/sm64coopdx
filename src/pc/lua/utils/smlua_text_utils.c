@@ -51,34 +51,6 @@ char* get_dialog_text_ascii(struct DialogEntry *dialog) {
     return asciiStr;
 }
 
-static size_t measure_converted_sm64_string(const u8* str64) {
-    size_t len = 0;
-    
-    for (size_t i = 0; str64[i] != 0xFF; i++) {
-        for (int j = 0; sSm64CharMap[j].str != NULL; j++) {
-            if (sSm64CharMap[j].c == str64[i]) {
-                len += strlen(sSm64CharMap[j].str);
-                break;
-            }
-        }
-    }
-
-    return len;
-}
-
-char* get_dialog_text_ascii(struct DialogEntry *dialog) {
-    if (!dialog) { return NULL; }
-
-    size_t len = measure_converted_sm64_string(dialog->str);
-
-    char* asciiStr = malloc(len + 1);
-    if (!asciiStr) return NULL;
-
-    convert_string_sm64_to_ascii(asciiStr, dialog->str);
-
-    return asciiStr;
-}
-
 /*
 ---------------------------------------------------
 Mapping gReplacedCourseActNameTable <-> seg2 tables
