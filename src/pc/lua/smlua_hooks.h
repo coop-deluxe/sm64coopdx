@@ -155,6 +155,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand);
 
 void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, int index);
 
+void smlua_hook_replace_function_references(lua_State* L, int oldReference, int newReference);
 void smlua_clear_hooks(void);
 void smlua_bind_hooks(void);
 

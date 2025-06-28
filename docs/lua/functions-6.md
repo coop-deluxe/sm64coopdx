@@ -2112,6 +2112,75 @@ Gets a table of the surface types from `data`
 
 <br />
 
+## [surface_is_quicksand](#surface_is_quicksand)
+
+### Description
+Checks if the surface is quicksand
+
+### Lua Example
+`local booleanValue = surface_is_quicksand(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_quicksand(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_not_hard](#surface_is_not_hard)
+
+### Description
+Checks if the surface is not a hard surface
+
+### Lua Example
+`local booleanValue = surface_is_not_hard(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_not_hard(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_painting_warp](#surface_is_painting_warp)
+
+### Description
+Checks if the surface is a painting warp
+
+### Lua Example
+`local booleanValue = surface_is_painting_warp(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_painting_warp(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_deprecated.h
 
@@ -6701,6 +6770,69 @@ Replaces the castle secret stars text with `name`
 
 <br />
 
+## [smlua_text_utils_castle_secret_stars_get](#smlua_text_utils_castle_secret_stars_get)
+
+### Description
+Gets the castle secret stars text
+
+### Lua Example
+`local stringValue = smlua_text_utils_castle_secret_stars_get()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_castle_secret_stars_get();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_mod_index](#smlua_text_utils_castle_secret_stars_mod_index)
+
+### Description
+Gets the index of the mod that replaced the castle secret stars text
+
+### Lua Example
+`local integerValue = smlua_text_utils_castle_secret_stars_mod_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_castle_secret_stars_mod_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_reset](#smlua_text_utils_castle_secret_stars_reset)
+
+### Description
+Resets the castle secret stars text
+
+### Lua Example
+`smlua_text_utils_castle_secret_stars_reset()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_castle_secret_stars_reset();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
 
 ### Description
@@ -6720,6 +6852,75 @@ Replace extra text (e.g. one of the castle's secret stars) with `text`
 
 ### C Prototype
 `void smlua_text_utils_extra_text_replace(s16 index, const char* text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_get](#smlua_text_utils_extra_text_get)
+
+### Description
+Gets the extra text at `index`
+
+### Lua Example
+`local stringValue = smlua_text_utils_extra_text_get(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_extra_text_get(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_mod_index](#smlua_text_utils_extra_text_mod_index)
+
+### Description
+Gets the index of the mod that replaced the extra text at `index`
+
+### Lua Example
+`local integerValue = smlua_text_utils_extra_text_mod_index(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_extra_text_mod_index(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_reset](#smlua_text_utils_extra_text_reset)
+
+### Description
+Resets the extra text at `index`
+
+### Lua Example
+`smlua_text_utils_extra_text_reset(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_extra_text_reset(s16 index);`
 
 [:arrow_up_small:](#)
 

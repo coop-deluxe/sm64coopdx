@@ -126,6 +126,8 @@ void network_reset_reconnect_and_rehost(void);
 void network_reconnect_begin(void);
 bool network_is_reconnecting(void);
 void network_rehost_begin(void);
+bool network_allow_mod_dev_mode(void);
+void network_mod_dev_mode_reload(void);
 void network_update(void);
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting);
 

@@ -101,6 +101,10 @@ bool dynos_pack_get_exists(s32 index) {
     return false;
 }
 
+void dynos_generate_mod_pack(char* modPath) {
+    DynOS_Gfx_GenerateModPacks(modPath);
+}
+
 void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }

@@ -3,8 +3,10 @@
 
 #include <PR/ultratypes.h>
 
-void *get_course_name_table(void);
-void *get_act_name_table(void);
+void **get_course_name_table(void);
+void **get_course_name_table_original(void);
+void **get_act_name_table(void);
+void **get_act_name_table_original(void);
 /* |description|
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string.
 Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string

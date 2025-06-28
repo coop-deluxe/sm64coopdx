@@ -47,7 +47,7 @@ int smlua_error_handler(UNUSED lua_State* L);
 int smlua_pcall(lua_State* L, int nargs, int nresults, int errfunc);
 void smlua_exec_file(const char* path);
 void smlua_exec_str(const char* str);
-void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bool isModInit);
+int smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bool isModInit);
 
 void smlua_init(void);
 void smlua_update(void);
