@@ -206,6 +206,9 @@ bool         configDjuiThemeCenter                = true;
 bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
+unsigned int configDjuiChatAlpha                  = 255;
+unsigned int configDjuiBaseAlpha                  = 127;
+unsigned int configDjuiChatSize                   = 100;
 // other
 unsigned int configRulesVersion                   = 0;
 bool         configCompressOnStartup              = false;
@@ -360,6 +363,9 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
+    {.name = "djui_chat_alpha",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiChatAlpha},
+    {.name = "djui_base_alpha",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiBaseAlpha},
+    {.name = "djui_chat_size",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiChatSize},
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
     {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
@@ -785,6 +791,10 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
+
+    if (configDjuiChatAlpha > 255) { configDjuiChatAlpha = 255; }
+    if (configDjuiBaseAlpha > 255) { configDjuiBaseAlpha = 255; }
+    if (configDjuiChatSize > 200) { configDjuiChatSize = 200; }
 
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
