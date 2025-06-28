@@ -2057,7 +2057,9 @@
 
 - smlua_text_utils.h
    - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
+   - [smlua_text_utils_dialog_get](functions-6.md#smlua_text_utils_dialog_get)
    - [smlua_text_utils_dialog_replace](functions-6.md#smlua_text_utils_dialog_replace)
+   - [smlua_text_utils_dialog_is_replaced](functions-6.md#smlua_text_utils_dialog_is_replaced)
    - [smlua_text_utils_course_acts_replace](functions-6.md#smlua_text_utils_course_acts_replace)
    - [smlua_text_utils_secret_star_replace](functions-6.md#smlua_text_utils_secret_star_replace)
    - [smlua_text_utils_course_name_replace](functions-6.md#smlua_text_utils_course_name_replace)

@@ -23,6 +23,7 @@
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
+- [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
 - [DjuiColor](#DjuiColor)
 - [DjuiInteractableTheme](#DjuiInteractableTheme)
@@ -872,6 +873,20 @@
 | month | `integer` |  |
 | second | `integer` |  |
 | year | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DialogEntry](#DialogEntry)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| leftOffset | `integer` | read-only |
+| linesPerBox | `integer` | read-only |
+| text | `string` | read-only |
+| unused | `integer` | read-only |
+| width | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

@@ -30,8 +30,12 @@ void smlua_text_utils_init(void);
 void smlua_text_utils_shutdown(void);
 /* |description|Resets every modified dialog back to vanilla|descriptionEnd|*/
 void smlua_text_utils_reset_all(void);
+/* |description|Gets the DialogEntry struct for the given `dialogId`|descriptionEnd| */
+struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
+/* |description|Returns whether the dialog with the given ID has been replaced|descriptionEnd| */
+bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);
 /* |description|Replaces the act names of `courseNum`|descriptionEnd| */
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);
 /* |description|Replaces the secret star course name of `courseNum` with `courseName`|descriptionEnd| */

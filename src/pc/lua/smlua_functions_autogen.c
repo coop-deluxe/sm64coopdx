@@ -34322,6 +34322,23 @@ int smlua_func_smlua_text_utils_reset_all(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_text_utils_dialog_get(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_get", 1, top);
+        return 0;
+    }
+
+    int dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_get"); return 0; }
+
+    smlua_push_object(L, LOT_DIALOGENTRY, smlua_text_utils_dialog_get(dialogId), NULL);
+
+    return 1;
+}
+
 int smlua_func_smlua_text_utils_dialog_replace(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34345,6 +34362,23 @@ int smlua_func_smlua_text_utils_dialog_replace(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "smlua_text_utils_dialog_replace"); return 0; }
 
     smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_dialog_is_replaced(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_is_replaced", 1, top);
+        return 0;
+    }
+
+    int dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_is_replaced"); return 0; }
+
+    lua_pushboolean(L, smlua_text_utils_dialog_is_replaced(dialogId));
 
     return 1;
 }
@@ -37386,7 +37420,9 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_text_utils.h
     smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);
+    smlua_bind_function(L, "smlua_text_utils_dialog_get", smlua_func_smlua_text_utils_dialog_get);
     smlua_bind_function(L, "smlua_text_utils_dialog_replace", smlua_func_smlua_text_utils_dialog_replace);
+    smlua_bind_function(L, "smlua_text_utils_dialog_is_replaced", smlua_func_smlua_text_utils_dialog_is_replaced);
     smlua_bind_function(L, "smlua_text_utils_course_acts_replace", smlua_func_smlua_text_utils_course_acts_replace);
     smlua_bind_function(L, "smlua_text_utils_secret_star_replace", smlua_func_smlua_text_utils_secret_star_replace);
     smlua_bind_function(L, "smlua_text_utils_course_name_replace", smlua_func_smlua_text_utils_course_name_replace);

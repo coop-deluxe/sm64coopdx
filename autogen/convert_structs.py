@@ -17,6 +17,7 @@ in_files = [
     "src/pc/djui/djui_theme.h",
     "src/game/object_helpers.h",
     "src/game/mario_step.h",
+    "src/game/ingame_menu.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
     "src/pc/lua/utils/smlua_camera_utils.h",
@@ -96,6 +97,7 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "DialogEntry": [ "str" ]
 }
 
 override_field_deprecated = {
@@ -135,6 +137,7 @@ override_field_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
+    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"]
 }
 
 override_field_version_excludes = {
@@ -146,6 +149,7 @@ override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
+    "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ]
 }
 

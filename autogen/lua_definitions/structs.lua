@@ -592,6 +592,13 @@
 --- @field public second integer
 --- @field public year integer
 
+--- @class DialogEntry
+--- @field public leftOffset integer
+--- @field public linesPerBox integer
+--- @field public text string
+--- @field public unused integer
+--- @field public width integer
+
 --- @class DisplayListNode
 --- @field public displayList Pointer_Gfx
 --- @field public next DisplayListNode
