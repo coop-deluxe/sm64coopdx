@@ -4670,6 +4670,56 @@ Resets first person
 <br />
 
 ---
+# functions from hardcoded.h
+
+<br />
+
+
+## [fix_collision_bugs_set_all](#fix_collision_bugs_set_all)
+
+### Description
+Sets all fields of `fixCollision`
+
+### Lua Example
+`fix_collision_bugs_set_all(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void fix_collision_bugs_set_all(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [fix_collision_bugs_is_any_enabled](#fix_collision_bugs_is_any_enabled)
+
+### Description
+Returns `true` if any fields of `fixCollision` are enabled
+
+### Lua Example
+`local booleanValue = fix_collision_bugs_is_any_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool fix_collision_bugs_is_any_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from ingame_menu.h
 
 <br />

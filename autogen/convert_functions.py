@@ -78,7 +78,8 @@ in_files = [
     "src/engine/behavior_script.h",
     "src/audio/seqplayer.h",
     "src/engine/lighting_engine.h",
-    "src/pc/network/sync_object.h"
+    "src/game/hardcoded.h",
+    "src/pc/network/sync_object.h",
 ]
 
 override_allowed_functions = {
@@ -138,7 +139,8 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ],
-    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
+    "src/game/hardcoded.h":                     [ "hardcoded_reset_default_values" ]
 }
 
 override_hide_functions = {

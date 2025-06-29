@@ -652,6 +652,18 @@
 --- @field public pitch integer
 --- @field public yaw integer
 
+--- @class FixCollisionBugs
+--- @field public disableFalseLedgeGrab boolean
+--- @field public disableGroundPoundBonks boolean
+--- @field public fixExposedCeilings boolean
+--- @field public fixFloorOvershadowing boolean
+--- @field public fixObjectOobPush boolean
+--- @field public fixOnlyFirstWall boolean
+--- @field public fixWallOnSlope boolean
+--- @field public pickBestWall boolean
+--- @field public roundedCorners boolean
+--- @field public throwaway boolean
+
 --- @class FloorGeometry
 --- @field public normalX number
 --- @field public normalY number
@@ -1084,11 +1096,7 @@
 --- @field public exitCastleLevel LevelNum
 --- @field public exitCastleWarpNode integer
 --- @field public extendedPauseDisplay integer
---- @field public fixCollisionBugs integer
---- @field public fixCollisionBugsFalseLedgeGrab integer
---- @field public fixCollisionBugsGroundPoundBonks integer
---- @field public fixCollisionBugsPickBestWall integer
---- @field public fixCollisionBugsRoundedCorners integer
+--- @field public fixCollision FixCollisionBugs
 --- @field public fixInvalidShellRides integer
 --- @field public fixVanishFloors integer
 --- @field public floatingStarDance integer

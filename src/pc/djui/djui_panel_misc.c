@@ -30,6 +30,10 @@ static void djui_panel_options_open_user_folder(UNUSED struct DjuiBase* caller) 
 }
 
 #ifdef DEVELOPMENT
+void fix_collision_bugs_wrapper(UNUSED struct DjuiBase* caller) {
+    fix_collision_bugs_set_all(gLevelValues.fixCollision.throwaway);
+}
+
 void djui_panel_options_debug_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, DEBUG_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);

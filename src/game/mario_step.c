@@ -360,7 +360,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
 
     if (upperWcd.numWalls > 0) {
         for (u8 i = 0; i < upperWcd.numWalls; i++) {
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollision.fixOnlyFirstWall) {
                 i = (upperWcd.numWalls - 1);
             }
             struct Surface* wall = upperWcd.walls[i];
@@ -454,7 +454,7 @@ u32 check_ledge_grab(struct MarioState *m, struct Surface *wall, Vec3f intendedP
 
     if (!ledgeFloor) { return FALSE; }
 
-    if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsFalseLedgeGrab) {
+    if (gLevelValues.fixCollision.disableFalseLedgeGrab) {
         // fix false ledge grabs
         if (!ledgeFloor || ledgeFloor->normal.y < 0.90630779f) {
             return FALSE;
@@ -571,7 +571,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
     // misalignment, you can activate these conditions in unexpected situations
     if ((stepArg & AIR_STEP_CHECK_LEDGE_GRAB) && upperWcd.numWalls == 0 && lowerWcd.numWalls > 0) {
         for (u8 i = 0; i < lowerWcd.numWalls; i++) {
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollision.fixOnlyFirstWall) {
                 i = (lowerWcd.numWalls - 1);
             }
             struct Surface* wall = lowerWcd.walls[i];
@@ -594,7 +594,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         mario_update_wall(m, &upperWcd);
 
         for (u8 i = 0; i < upperWcd.numWalls; i++) {
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollision.fixOnlyFirstWall) {
                 i = (upperWcd.numWalls - 1);
             }
 
@@ -616,7 +616,7 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
         mario_update_wall(m, &lowerWcd);
 
         for (u8 i = 0; i < lowerWcd.numWalls; i++) {
-            if (!gLevelValues.fixCollisionBugs) {
+            if (!gLevelValues.fixCollision.fixOnlyFirstWall) {
                 i = (lowerWcd.numWalls - 1);
             }
 

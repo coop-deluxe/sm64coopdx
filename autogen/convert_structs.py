@@ -101,7 +101,8 @@ override_field_invisible = {
 }
 
 override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
+    "FixCollisionBugs": ["throwaway"],
 }
 
 override_field_immutable = {

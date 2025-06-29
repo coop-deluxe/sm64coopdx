@@ -4395,6 +4395,18 @@ function first_person_reset()
     -- ...
 end
 
+--- @param enable boolean
+--- Sets all fields of `fixCollision`
+function fix_collision_bugs_set_all(enable)
+    -- ...
+end
+
+--- @return boolean
+--- Returns `true` if any fields of `fixCollision` are enabled
+function fix_collision_bugs_is_any_enabled()
+    -- ...
+end
+
 --- @param dialog integer
 --- Creates a dialog box with a dialog ID that rotates into view
 function create_dialog_box(dialog)

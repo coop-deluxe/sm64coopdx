@@ -44,11 +44,18 @@ extern Trajectory sThiTinyMetalBallTraj[];
 ////////////
 
 struct LevelValues gDefaultLevelValues = {
-    .fixCollisionBugs                 = FALSE,
-    .fixCollisionBugsRoundedCorners   = TRUE,
-    .fixCollisionBugsFalseLedgeGrab   = TRUE,
-    .fixCollisionBugsGroundPoundBonks = TRUE,
-    .fixCollisionBugsPickBestWall     = TRUE,
+    .fixCollision = {
+        .roundedCorners = FALSE,
+        .disableFalseLedgeGrab = FALSE,
+        .disableGroundPoundBonks = FALSE,
+        .pickBestWall = FALSE,
+        .fixExposedCeilings = FALSE,
+        .fixFloorOvershadowing = FALSE,
+        .fixOnlyFirstWall = FALSE,
+        .fixObjectOobPush = FALSE,
+        .fixWallOnSlope = FALSE,
+        .throwaway = FALSE,
+    },
     .fixVanishFloors                  = FALSE,
     .fixInvalidShellRides             = TRUE,
     .hudCapTimer                      = FALSE,
@@ -372,4 +379,30 @@ AT_STARTUP void hardcoded_reset_default_values(void) {
     gExclamationBoxSize = 15;
 
     gPaintingValues = gDefaultPaintingValues;
+}
+
+void fix_collision_bugs_set_all(bool enable) {
+    gLevelValues.fixCollision.roundedCorners = enable;
+    gLevelValues.fixCollision.disableFalseLedgeGrab = enable;
+    gLevelValues.fixCollision.disableGroundPoundBonks = enable;
+    gLevelValues.fixCollision.pickBestWall = enable;
+    gLevelValues.fixCollision.fixExposedCeilings = enable;
+    gLevelValues.fixCollision.fixFloorOvershadowing = enable;
+    gLevelValues.fixCollision.fixOnlyFirstWall = enable;
+    gLevelValues.fixCollision.fixObjectOobPush = enable;
+    gLevelValues.fixCollision.fixWallOnSlope = enable;
+    gLevelValues.fixCollision.throwaway = enable;
+}
+
+bool fix_collision_bugs_is_any_enabled(void) {
+    return gLevelValues.fixCollision.roundedCorners ||
+    gLevelValues.fixCollision.disableFalseLedgeGrab ||
+    gLevelValues.fixCollision.disableGroundPoundBonks ||
+    gLevelValues.fixCollision.pickBestWall ||
+    gLevelValues.fixCollision.fixExposedCeilings ||
+    gLevelValues.fixCollision.fixFloorOvershadowing ||
+    gLevelValues.fixCollision.fixOnlyFirstWall ||
+    gLevelValues.fixCollision.fixObjectOobPush ||
+    gLevelValues.fixCollision.fixWallOnSlope ||
+    gLevelValues.fixCollision.throwaway;
 }

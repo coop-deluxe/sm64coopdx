@@ -52,6 +52,7 @@
 #include "src/engine/behavior_script.h"
 #include "src/audio/seqplayer.h"
 #include "src/engine/lighting_engine.h"
+#include "src/game/hardcoded.h"
 #include "src/pc/network/sync_object.h"
 
 
@@ -13973,6 +13974,42 @@ int smlua_func_first_person_reset(UNUSED lua_State* L) {
 
 
     first_person_reset();
+
+    return 1;
+}
+
+  /////////////////
+ // hardcoded.h //
+/////////////////
+
+int smlua_func_fix_collision_bugs_set_all(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "fix_collision_bugs_set_all", 1, top);
+        return 0;
+    }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fix_collision_bugs_set_all"); return 0; }
+
+    fix_collision_bugs_set_all(enable);
+
+    return 1;
+}
+
+int smlua_func_fix_collision_bugs_is_any_enabled(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "fix_collision_bugs_is_any_enabled", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, fix_collision_bugs_is_any_enabled());
 
     return 1;
 }
@@ -36425,6 +36462,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_first_person_enabled", smlua_func_get_first_person_enabled);
     smlua_bind_function(L, "set_first_person_enabled", smlua_func_set_first_person_enabled);
     smlua_bind_function(L, "first_person_reset", smlua_func_first_person_reset);
+
+    // hardcoded.h
+    smlua_bind_function(L, "fix_collision_bugs_set_all", smlua_func_fix_collision_bugs_set_all);
+    smlua_bind_function(L, "fix_collision_bugs_is_any_enabled", smlua_func_fix_collision_bugs_is_any_enabled);
 
     // ingame_menu.h
     smlua_bind_function(L, "create_dialog_box", smlua_func_create_dialog_box);

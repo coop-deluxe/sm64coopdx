@@ -859,6 +859,12 @@
 
 <br />
 
+- hardcoded.h
+   - [fix_collision_bugs_set_all](functions-3.md#fix_collision_bugs_set_all)
+   - [fix_collision_bugs_is_any_enabled](functions-3.md#fix_collision_bugs_is_any_enabled)
+
+<br />
+
 - ingame_menu.h
    - [create_dialog_box](functions-3.md#create_dialog_box)
    - [create_dialog_box_with_var](functions-3.md#create_dialog_box_with_var)
