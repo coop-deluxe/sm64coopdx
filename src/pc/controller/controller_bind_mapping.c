@@ -1,18 +1,13 @@
 #include <stdio.h>
 #ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
-#else
-#ifdef HAVE_SDL
-
-#include <SDL/SDL.h>
-#endif
 #endif
 
 #include "controller_bind_mapping.h"
 #include "controller_api.h"
 #include "controller_sdl.h"
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+#if defined(CAPI_SDL2)
 
 static int inverted_scancode_table[512];
 static SDL_Scancode bind_to_sdl_scancode[512] = { 0 };
