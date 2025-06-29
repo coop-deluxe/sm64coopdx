@@ -402,15 +402,20 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
 
         // Check if we're warping to a level we've already loaded into a slot
         if (mCustomLevelSlot[0] == aLevel) {
-            sDynosCurrentLevelNum = 1;
+            sDynosCurrentLevelNum = LEVEL_UNKNOWN_1;
         } else if (mCustomLevelSlot[1] == aLevel) {
-            sDynosCurrentLevelNum = 2;
+            sDynosCurrentLevelNum = LEVEL_UNKNOWN_2;
         } else {
-            // If we haven't loaded this level, use a slot that is no longer
-            // used. And then parse the script into the slot.
-            sDynosCurrentLevelNum = (mCustomLevelSlot[0] == gCurrLevelNum) ? 2 : 1;
-            mCustomLevelSlot[sDynosCurrentLevelNum-1] = aLevel;
+            // If we haven't loaded this level, use a slot that is no longer used.
+            sDynosCurrentLevelNum = (mCustomLevelSlot[0] == gCurrLevelNum) ? LEVEL_UNKNOWN_2 : LEVEL_UNKNOWN_1;
+
+            // Remember that the custom level is loaded into the slot
+            mCustomLevelSlot[sDynosCurrentLevelNum - LEVEL_UNKNOWN_1] = aLevel;
+
+            // Clear cached level warps from the slot to be loaded
             sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
+
+            // Parse the custom level to fill in the level warps
             DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
         }
 
