@@ -40,6 +40,9 @@
 - [level_update.h](#level_updateh)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
+- [lighting_engine.h](#lighting_engineh)
+    - [enum LEMode](#enum-LEMode)
+    - [enum LEToneMapping](#enum-LEToneMapping)
 - [mario_animation_ids.h](#mario_animation_idsh)
     - [enum MarioAnimID](#enum-MarioAnimID)
     - [enum CharacterAnimID](#enum-CharacterAnimID)
@@ -1614,6 +1617,26 @@
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
 | HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lighting_engine.h](#lighting_engine.h)
+
+### [enum LEMode](#LEMode)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_MODE_AFFECT_ALL_SHADED | 0 |
+| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 1 |
+
+### [enum LEToneMapping](#LEToneMapping)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_TONE_MAPPING_TOTAL_WEIGHTED | 0 |
+| LE_TONE_MAPPING_WEIGHTED | 1 |
+| LE_TONE_MAPPING_CLAMP | 2 |
+| LE_TONE_MAPPING_REINHARD | 3 |
 
 [:arrow_up_small:](#)
 

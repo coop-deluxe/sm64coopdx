@@ -5022,11 +5022,44 @@ function lvl_set_current_level(param, levelNum)
     -- ...
 end
 
+--- @param mode LEMode
+--- Sets the lighting engine mode to `mode`
+function le_set_mode(mode)
+    -- ...
+end
+
+--- @return LEMode
+--- Gets the lighting engine mode
+function le_get_mode()
+    -- ...
+end
+
+--- @param toneMapping LEToneMapping
+--- Sets the lighting engine's tone mapping mode to `toneMapping`
+function le_set_tone_mapping(toneMapping)
+    -- ...
+end
+
+--- @return boolean
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.
+function le_is_enabled()
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number
 --- Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
 function le_calculate_lighting_color(pos, out, lightIntensityScalar)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param normal Vec3f
+--- @param out Color
+--- @param lightIntensityScalar number
+--- Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+function le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)
     -- ...
 end
 
@@ -5100,6 +5133,13 @@ end
 --- @param intensity number
 --- Sets a lighting engine point light's `intensity`
 function le_set_light_intensity(id, intensity)
+    -- ...
+end
+
+--- @param id integer
+--- @param useSurfaceNormals boolean
+--- Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+function le_set_light_use_surface_normals(id, useSurfaceNormals)
     -- ...
 end
 
@@ -6589,8 +6629,16 @@ end
 
 --- @param dest Mat4
 --- @param src Mat4
---- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
 function mtxf_inverse(dest, src)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- @return boolean
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
+function mtxf_inverse_non_affine(dest, src)
     -- ...
 end
 

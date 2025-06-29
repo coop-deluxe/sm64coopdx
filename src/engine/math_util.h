@@ -253,9 +253,14 @@ Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the X
 OPTIMIZE_O3 void mtxf_rotate_xy(OUT Mat4 mtx, s16 angle);
 
 /* |description|
-Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
+Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
 |descriptionEnd| */
 OPTIMIZE_O3 void mtxf_inverse(OUT Mat4 dest, Mat4 src);
+
+/* |description|
+Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
+|descriptionEnd| */
+OPTIMIZE_O3 bool mtxf_inverse_non_affine(OUT Mat4 dest, Mat4 src);
 
 /* |description|
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
