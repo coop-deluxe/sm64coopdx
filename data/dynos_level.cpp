@@ -66,7 +66,7 @@ LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
 // Init
 //
 
-static s32 sDynosCurrentLevelNum;
+static s32 sDynosCurrentLevelNum = 0;
 static u8 sDynosAreaIndex = 0;
 
 inline static DynosWarp *DynOS_Level_GetWarpStruct(s8 aId) {
@@ -381,13 +381,40 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
 // Level Script Utilities
 //
 
+static s32 mCustomLevelSlot[2] = { 0 };
+
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
     if (aLevel >= CUSTOM_LEVEL_NUM_START) {
         struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
         if (!info || !info->script) { return NULL; }
-        sDynosCurrentLevelNum = 1;
-        DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
-        for (const auto &_Warp : sDynosLevelWarps[1]) {
+
+        // This requires some explaination...
+        // It's a bit of a hack but it works.
+
+        // DynOS's arrays for level information are LEVEL_MAX in size.
+        // LEVEL_MAX is based on the max number of vanilla levels.
+
+        // So when we want to warp to a custom level we load the
+        // data into a slot that vanilla left unused.
+
+        // We need two unused slots because we may warp from one
+        // custom level to another.
+
+        // Check if we're warping to a level we've already loaded into a slot
+        if (mCustomLevelSlot[0] == aLevel) {
+            sDynosCurrentLevelNum = 1;
+        } else if (mCustomLevelSlot[1] == aLevel) {
+            sDynosCurrentLevelNum = 2;
+        } else {
+            // If we haven't loaded this level, use a slot that is no longer
+            // used. And then parse the script into the slot.
+            sDynosCurrentLevelNum = (mCustomLevelSlot[0] == gCurrLevelNum) ? 2 : 1;
+            mCustomLevelSlot[sDynosCurrentLevelNum-1] = aLevel;
+            DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
+        }
+
+        // find the custom level warp
+        for (const auto &_Warp : sDynosLevelWarps[sDynosCurrentLevelNum]) {
             if (_Warp.mArea == aArea && _Warp.mId == aWarpId) {
                 return (s16 *) &_Warp;
             }
