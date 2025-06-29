@@ -410,6 +410,7 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
             // used. And then parse the script into the slot.
             sDynosCurrentLevelNum = (mCustomLevelSlot[0] == gCurrLevelNum) ? 2 : 1;
             mCustomLevelSlot[sDynosCurrentLevelNum-1] = aLevel;
+            sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
             DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
         }
 
