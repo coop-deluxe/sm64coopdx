@@ -381,7 +381,7 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
 // Level Script Utilities
 //
 
-static s32 mCustomLevelSlot[2] = { 0 };
+static s32 mCustomLevelSlot[LEVEL_UNKNOWN_2 + 1] = { 0 };
 
 s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
     if (aLevel >= CUSTOM_LEVEL_NUM_START) {
@@ -401,16 +401,19 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
         // custom level to another.
 
         // Check if we're warping to a level we've already loaded into a slot
-        if (mCustomLevelSlot[0] == aLevel) {
+        if (mCustomLevelSlot[LEVEL_UNKNOWN_1] == aLevel) {
             sDynosCurrentLevelNum = LEVEL_UNKNOWN_1;
-        } else if (mCustomLevelSlot[1] == aLevel) {
+        } else if (mCustomLevelSlot[LEVEL_UNKNOWN_2] == aLevel) {
             sDynosCurrentLevelNum = LEVEL_UNKNOWN_2;
         } else {
-            // If we haven't loaded this level, use a slot that is no longer used.
-            sDynosCurrentLevelNum = (mCustomLevelSlot[0] == gCurrLevelNum) ? LEVEL_UNKNOWN_2 : LEVEL_UNKNOWN_1;
+            // Pick the unused slot
+            s32 unusedSlot = (mCustomLevelSlot[LEVEL_UNKNOWN_1] == gCurrLevelNum) ? LEVEL_UNKNOWN_2 : LEVEL_UNKNOWN_1;
+
+            // Assign it to dynos
+            sDynosCurrentLevelNum = unusedSlot;
 
             // Remember that the custom level is loaded into the slot
-            mCustomLevelSlot[sDynosCurrentLevelNum - LEVEL_UNKNOWN_1] = aLevel;
+            mCustomLevelSlot[sDynosCurrentLevelNum] = aLevel;
 
             // Clear cached level warps from the slot to be loaded
             sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
