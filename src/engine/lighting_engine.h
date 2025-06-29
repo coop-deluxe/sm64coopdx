@@ -17,6 +17,7 @@ struct LELight
 };
 
 enum LEMode {
+    LE_MODE_AFFECT_ALL_SHADED_AND_COLORED,
     LE_MODE_AFFECT_ALL_SHADED,
     LE_MODE_AFFECT_ONLY_GEOMETRY_MODE,
 };
@@ -27,6 +28,8 @@ enum LEToneMapping {
     LE_TONE_MAPPING_CLAMP,
     LE_TONE_MAPPING_REINHARD,
 };
+
+extern Color gLEAmbientColor;
 
 /* |description|Sets the lighting engine mode to `mode`|descriptionEnd|*/
 void le_set_mode(enum LEMode mode);

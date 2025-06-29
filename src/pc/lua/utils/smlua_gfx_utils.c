@@ -223,7 +223,7 @@ Gfx *gfx_get_display_list(Gfx *cmd) {
 Vtx *gfx_get_vertex_buffer(Gfx *cmd) {
     if (!cmd) { return NULL; }
     u32 op = GFX_OP(cmd);
-    if (op != G_VTX) { return NULL; }
+    if (op != G_VTX && op != G_VTX_EXT) { return NULL; }
     if (cmd->words.w1 == 0) { return NULL; }
 
     return (Vtx *) cmd->words.w1;
@@ -232,7 +232,7 @@ Vtx *gfx_get_vertex_buffer(Gfx *cmd) {
 u16 gfx_get_vertex_count(Gfx *cmd) {
     if (!cmd) { return 0; }
     u32 op = GFX_OP(cmd);
-    if (op != G_VTX) { return 0; }
+    if (op != G_VTX && op != G_VTX_EXT) { return 0; }
     if (cmd->words.w1 == 0) { return 0; }
 
     return C0(cmd, 12, 8);

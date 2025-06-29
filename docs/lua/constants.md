@@ -26,6 +26,7 @@
     - [enum DialogSound](#enum-DialogSound)
 - [first_person_cam.h](#first_person_camh)
 - [gbi.h](#gbih)
+- [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
 - [graph_node.h](#graph_nodeh)
@@ -1289,6 +1290,13 @@
 
 <br />
 
+## [gbi_extension.h](#gbi_extension.h)
+- G_VTX_EXT
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [geo_commands.h](#geo_commands.h)
 
 ### [enum SkyBackgroundParams](#SkyBackgroundParams)
@@ -1627,8 +1635,9 @@
 ### [enum LEMode](#LEMode)
 | Identifier | Value |
 | :--------- | :---- |
-| LE_MODE_AFFECT_ALL_SHADED | 0 |
-| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 1 |
+| LE_MODE_AFFECT_ALL_SHADED_AND_COLORED | 0 |
+| LE_MODE_AFFECT_ALL_SHADED | 1 |
+| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 2 |
 
 ### [enum LEToneMapping](#LEToneMapping)
 | Identifier | Value |

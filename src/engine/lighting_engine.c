@@ -6,10 +6,10 @@
 
 #define LE_MAX_LIGHTS 256
 
-static Color sAmbientColor = { 127, 127, 127 };
+Color gLEAmbientColor = { 127, 127, 127 };
 static void* sLights = NULL;
 static s32 sLightID = 0;
-static enum LEMode sMode = LE_MODE_AFFECT_ALL_SHADED;
+static enum LEMode sMode = LE_MODE_AFFECT_ALL_SHADED_AND_COLORED;
 static enum LEToneMapping sToneMapping = LE_TONE_MAPPING_WEIGHTED;
 static bool sEnabled = false;
 
@@ -129,9 +129,9 @@ void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, OUT Color out) {
 
     // tone map and output
     Color vtxAmbient = {
-        v->cn[0] * (sAmbientColor[0] / 255.0f),
-        v->cn[1] * (sAmbientColor[1] / 255.0f),
-        v->cn[2] * (sAmbientColor[2] / 255.0f),
+        v->cn[0] * (gLEAmbientColor[0] / 255.0f),
+        v->cn[1] * (gLEAmbientColor[1] / 255.0f),
+        v->cn[2] * (gLEAmbientColor[2] / 255.0f),
     };
     le_tone_map(out, vtxAmbient, color, weight);
 }
@@ -149,7 +149,7 @@ void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensitySca
     }
 
     // tone map and output
-    le_tone_map(out, sAmbientColor, color, weight);
+    le_tone_map(out, gLEAmbientColor, color, weight);
 }
 
 void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color out, f32 lightIntensityScalar) {
@@ -168,7 +168,7 @@ void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color 
     }
 
     // tone map and output
-    le_tone_map(out, sAmbientColor, color, weight);
+    le_tone_map(out, gLEAmbientColor, color, weight);
 }
 
 void le_calculate_lighting_dir(Vec3f pos, OUT Vec3f out) {
@@ -241,7 +241,7 @@ s32 le_get_light_count(void) {
 }
 
 void le_set_ambient_color(u8 r, u8 g, u8 b) {
-    color_set(sAmbientColor, r, g, b);
+    color_set(gLEAmbientColor, r, g, b);
     sEnabled = true;
 }
 
@@ -297,16 +297,16 @@ void le_clear(void) {
     }
     hmap_clear(sLights);
     sLightID = 0;
-    sAmbientColor[0] = 127;
-    sAmbientColor[1] = 127;
-    sAmbientColor[2] = 127;
+    gLEAmbientColor[0] = 127;
+    gLEAmbientColor[1] = 127;
+    gLEAmbientColor[2] = 127;
 }
 
 void le_shutdown(void) {
     if (sLights == NULL) { return; }
 
     sEnabled = false;
-    sMode = LE_MODE_AFFECT_ALL_SHADED;
+    sMode = LE_MODE_AFFECT_ALL_SHADED_AND_COLORED;
     sToneMapping = LE_TONE_MAPPING_WEIGHTED;
     le_clear();
     hmap_destroy(sLights);

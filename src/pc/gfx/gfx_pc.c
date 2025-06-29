@@ -724,7 +724,6 @@ static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal
     }
 }
 
-
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     if (!vertices) { return; }
 
@@ -778,6 +777,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
         short U = v->tc[0] * rsp.texture_scaling_factor.s >> 16;
         short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
+
+        // are we on affect all shaded surfaces mode and on a vertex colorable surface
+        bool affectAllVertexColored = (le_get_mode() == LE_MODE_AFFECT_ALL_SHADED_AND_COLORED && luaVertexColor);
 
         if (rsp.geometry_mode & G_LIGHTING) {
             if (rsp.lights_changed) {
@@ -861,8 +863,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
 
-            if (le_is_enabled() && ((le_get_mode() == LE_MODE_AFFECT_ALL_SHADED) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
-                Color color;
+            // if lighting engine is enabled and either we want to affect all shaded surfaces or the lighting engine geometry mode is on
+            if (le_is_enabled() && ((le_get_mode() != LE_MODE_AFFECT_ONLY_GEOMETRY_MODE) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+                Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
                 CTX_BEGIN(CTX_LIGHTING);
 
                 Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
@@ -879,8 +882,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.g *= color[1] / 255.0f;
                 d->color.b *= color[2] / 255.0f;
             }
-        } else if (le_is_enabled() && (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
-            Color color;
+        // if lighting engine is enabled and we should affect all vertex colored surfaces or the lighting engine geometry mode is on
+        } else if (le_is_enabled() && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+            Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
             CTX_BEGIN(CTX_LIGHTING);
 
             Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
@@ -888,18 +892,33 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             // transform vpos to world space
             gfx_local_to_world_space(vpos, NULL);
 
-            le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+            // do multiplication based lighting instead of additive based lighting if we're not using the lighting engine geometry mode,
+            // this is my compromise for retaining vertex colors vs lighting up darker surfaces.
+            // if retaining color is the most important like on a red coin, don't use the lighting engine geometry mode.
+            // if lighting up darker surfaces like in a map with prebaked lighting is the most important, use the lighting engine geometry mode.
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                le_calculate_lighting_color(vpos, color, 1.0f);
+            } else {
+                le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+            }
 
             CTX_END(CTX_LIGHTING);
 
-            if (luaVertexColor) {
-                d->color.r = color[0] * vertexColorCached[0];
-                d->color.g = color[1] * vertexColorCached[1];
-                d->color.b = color[2] * vertexColorCached[2];
+            // combine the colors
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                d->color.r = (v->cn[0] * color[0] / 255.0f) * vertexColorCached[0];
+                d->color.g = (v->cn[1] * color[1] / 255.0f) * vertexColorCached[1];
+                d->color.b = (v->cn[2] * color[2] / 255.0f) * vertexColorCached[2];
             } else {
-                d->color.r = color[0];
-                d->color.g = color[1];
-                d->color.b = color[2];
+                if (luaVertexColor) {
+                    d->color.r = color[0] * vertexColorCached[0];
+                    d->color.g = color[1] * vertexColorCached[1];
+                    d->color.b = color[2] * vertexColorCached[2];
+                } else {
+                    d->color.r = color[0];
+                    d->color.g = color[1];
+                    d->color.b = color[2];
+                }
             }
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {

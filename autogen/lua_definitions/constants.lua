@@ -2933,6 +2933,9 @@ G_TEXRECTFLIP = 0xe5
 --- @type integer
 G_TEXRECT = 0xe4
 
+--- @type integer
+G_VTX_EXT = 0x11
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -3608,10 +3611,12 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_NONE`
 --- | `HUD_DISPLAY_DEFAULT`
 
-LE_MODE_AFFECT_ALL_SHADED         = 0 --- @type LEMode
-LE_MODE_AFFECT_ONLY_GEOMETRY_MODE = 1 --- @type LEMode
+LE_MODE_AFFECT_ALL_SHADED_AND_COLORED = 0 --- @type LEMode
+LE_MODE_AFFECT_ALL_SHADED             = 1 --- @type LEMode
+LE_MODE_AFFECT_ONLY_GEOMETRY_MODE     = 2 --- @type LEMode
 
 --- @alias LEMode
+--- | `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED`
 --- | `LE_MODE_AFFECT_ALL_SHADED`
 --- | `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE`
 

@@ -52,7 +52,8 @@ in_files = [
     "src/pc/network/lag_compensation.h",
     "src/pc/djui/djui_panel_menu.h",
     "src/engine/lighting_engine.h",
-    "include/PR/gbi.h"
+    "include/PR/gbi.h",
+    "include/PR/gbi_extension.h"
 ]
 
 exclude_constants = {
@@ -106,7 +107,8 @@ include_constants = {
         "^G_SETSCISSOR$",
         "^G_TEXRECTFLIP$",
         "^G_TEXRECT$",
-    ]
+    ],
+    "include/PR/gbi_extension.h": [ "G_VTX_EXT" ]
 }
 
 # Constants that exist in the source code but should not appear
