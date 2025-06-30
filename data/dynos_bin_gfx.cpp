@@ -9,6 +9,27 @@ extern "C" {
 #include "include/macros.h"
 }
 
+#define GFX_PARAM_TYPE_INT 'i'
+#define GFX_PARAM_TYPE_STR 's'
+#define GFX_PARAM_TYPE_PTR 'p'
+#define GFX_PARAM_TYPE_VTX 'v'
+#define GFX_PARAM_TYPE_TEX 't'
+#define GFX_PARAM_TYPE_GFX 'g'
+
+#define GFX_PARAM_TYPE_IS_POINTER(paramType) ( \
+    paramType == GFX_PARAM_TYPE_PTR || \
+    paramType == GFX_PARAM_TYPE_VTX || \
+    paramType == GFX_PARAM_TYPE_TEX || \
+    paramType == GFX_PARAM_TYPE_GFX    \
+)
+
+#define GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(paramType) ( \
+    paramType == GFX_PARAM_TYPE_INT || \
+    paramType == GFX_PARAM_TYPE_STR    \
+)
+
+typedef char GfxParamType;
+
 static std::map<std::string, std::pair<Gfx *, u32>> sGfxCommandCache;
 static char *sGfxCommandErrorMsg = NULL;
 static u32 sGfxCommandErrorSize = 0;
@@ -426,29 +447,40 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     return 0;
 }
 
-static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex, const char *aPrefix) {
+static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pTokenIndex, const char *aPrefix, const GfxParamType aParamType) {
     assert(aPrefix != NULL);
     if (pTokenIndex != NULL) { CHECK_TOKEN_INDEX(*pTokenIndex, 0); }
     String _Token = (pTokenIndex != NULL ? aNode->mTokens[(*pTokenIndex)++] : "");
     String _Arg("%s%s", aPrefix, _Token.begin());
 
     // Integers
-    bool integerFound = false;
-    s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
-    if (integerFound) {
-        return integerValue;
-    }
+    if (GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(aParamType)) {
+        bool integerFound = false;
+        s64 integerValue = DynOS_Misc_ParseInteger(_Arg, &integerFound);
+        if (integerFound) {
+            return integerValue;
+        }
 
-    bool constantFound = false;
-    s64 constantValue = DynOS_Gfx_ParseGfxConstants(_Arg, &constantFound);
-    if (constantFound) {
-        return constantValue;
+        bool constantFound = false;
+        s64 constantValue = DynOS_Gfx_ParseGfxConstants(_Arg, &constantFound);
+        if (constantFound) {
+            return constantValue;
+        }
     }
 
     // Pointers
-    for (auto& _Node : aGfxData->mRawPointers) {
-        if (_Arg == _Node->mName) {
-            return (s64) _Node->mData;
+    if (GFX_PARAM_TYPE_IS_POINTER(aParamType)) {
+
+        // NULL pointer
+        if (_Arg == "NULL" || _Arg == "0") {
+            return (s64) NULL;
+        }
+
+        // Raw pointers
+        for (auto& _Node : aGfxData->mRawPointers) {
+            if (_Arg == _Node->mName) {
+                return (s64) _Node->mData;
+            }
         }
     }
 
@@ -461,113 +493,127 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     }
 
     // Lights
-    for (auto& _Node : aGfxData->mLights) {
-        // Light pointer
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Lights_Parse(aGfxData, _Node)->mData;
-        }
+    if (aParamType == GFX_PARAM_TYPE_PTR) {
+        for (auto& _Node : aGfxData->mLights) {
+            // Light pointer
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_Lights_Parse(aGfxData, _Node)->mData;
+            }
 
-        // Ambient pointer
-        String _Ambient("&%s.a", _Node->mName.begin());
-        if (_Arg == _Ambient) {
-            return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->a);
-        }
+            // Ambient pointer
+            String _Ambient("&%s.a", _Node->mName.begin());
+            if (_Arg == _Ambient) {
+                return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->a);
+            }
 
-        // Diffuse pointer
-        String _Diffuse("&%s.l", _Node->mName.begin());
-        if (_Arg == _Diffuse) {
-            return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->l[0]);
+            // Diffuse pointer
+            String _Diffuse("&%s.l", _Node->mName.begin());
+            if (_Arg == _Diffuse) {
+                return (s64) &(DynOS_Lights_Parse(aGfxData, _Node)->mData->l[0]);
+            }
         }
     }
 
     // Textures
-    for (auto& _Node : aGfxData->mTextures) {
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Tex_Parse(aGfxData, _Node);
+    if (aParamType == GFX_PARAM_TYPE_TEX) {
+        for (auto& _Node : aGfxData->mTextures) {
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_Tex_Parse(aGfxData, _Node);
+            }
         }
     }
 
     // Vertex arrays
-    for (auto& _Node : aGfxData->mVertices) {
-        if (_Arg == _Node->mName) {
-            auto base = DynOS_Vtx_Parse(aGfxData, _Node)->mData;
-            auto data = (u8*)base + _Offset;
-            if (_Offset != 0) {
-                aGfxData->mPointerOffsetList.Add({ (const void*)data, (const void*)base });
+    if (aParamType == GFX_PARAM_TYPE_VTX) {
+        for (auto& _Node : aGfxData->mVertices) {
+            if (_Arg == _Node->mName) {
+                auto base = DynOS_Vtx_Parse(aGfxData, _Node)->mData;
+                auto data = (u8*)base + _Offset;
+                if (_Offset != 0) {
+                    aGfxData->mPointerOffsetList.Add({ (const void*)data, (const void*)base });
+                }
+                return (s64) data;
             }
-            return (s64) data;
         }
     }
 
     // Display lists
-    for (auto& _Node : aGfxData->mDisplayLists) {
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Gfx_Parse(aGfxData, _Node);
+    if (aParamType == GFX_PARAM_TYPE_GFX) {
+        for (auto& _Node : aGfxData->mDisplayLists) {
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_Gfx_Parse(aGfxData, _Node);
+            }
         }
     }
 
-    for (auto& _Node : aGfxData->mLight0s) {
-        // Light pointer
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_Light0_Parse(aGfxData, _Node)->mData;
-        }
-    }
-
-    for (auto& _Node : aGfxData->mLightTs) {
-        // Light pointer
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_LightT_Parse(aGfxData, _Node)->mData;
+    if (aParamType == GFX_PARAM_TYPE_PTR) {
+        for (auto& _Node : aGfxData->mLight0s) {
+            // Light pointer
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_Light0_Parse(aGfxData, _Node)->mData;
+            }
         }
 
-        // Diffuse pointer
-        String _Diffuse("&%s.col", _Node->mName.begin());
-        if (_Arg == _Diffuse) {
-            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->col[0]);
+        for (auto& _Node : aGfxData->mLightTs) {
+            // Light pointer
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_LightT_Parse(aGfxData, _Node)->mData;
+            }
+
+            // Diffuse pointer
+            String _Diffuse("&%s.col", _Node->mName.begin());
+            if (_Arg == _Diffuse) {
+                return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->col[0]);
+            }
+
+            // Diffuse copy pointer
+            String _DiffuseC("&%s.colc", _Node->mName.begin());
+            if (_Arg == _DiffuseC) {
+                return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->colc[0]);
+            }
+
+            // Dir pointer
+            String _Dir("&%s.dir", _Node->mName.begin());
+            if (_Arg == _Dir) {
+                return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->dir[0]);
+            }
         }
 
-        // Diffuse copy pointer
-        String _DiffuseC("&%s.colc", _Node->mName.begin());
-        if (_Arg == _DiffuseC) {
-            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->colc[0]);
-        }
+        for (auto& _Node : aGfxData->mAmbientTs) {
+            // Light pointer
+            if (_Arg == _Node->mName) {
+                return (s64) DynOS_AmbientT_Parse(aGfxData, _Node)->mData;
+            }
 
-        // Dir pointer
-        String _Dir("&%s.dir", _Node->mName.begin());
-        if (_Arg == _Dir) {
-            return (s64) &(DynOS_LightT_Parse(aGfxData, _Node)->mData->dir[0]);
-        }
-    }
+            // Diffuse pointer
+            String _Diffuse("&%s.col", _Node->mName.begin());
+            if (_Arg == _Diffuse) {
+                return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->col[0]);
+            }
 
-    for (auto& _Node : aGfxData->mAmbientTs) {
-        // Light pointer
-        if (_Arg == _Node->mName) {
-            return (s64) DynOS_AmbientT_Parse(aGfxData, _Node)->mData;
-        }
-
-        // Diffuse pointer
-        String _Diffuse("&%s.col", _Node->mName.begin());
-        if (_Arg == _Diffuse) {
-            return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->col[0]);
-        }
-
-        // Diffuse copy pointer
-        String _DiffuseC("&%s.colc", _Node->mName.begin());
-        if (_Arg == _DiffuseC) {
-            return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->colc[0]);
+            // Diffuse copy pointer
+            String _DiffuseC("&%s.colc", _Node->mName.begin());
+            if (_Arg == _DiffuseC) {
+                return (s64) &(DynOS_AmbientT_Parse(aGfxData, _Node)->mData->colc[0]);
+            }
         }
     }
 
     // Built-in textures
-    auto builtinTex = DynOS_Builtin_Tex_GetFromName(_Arg.begin());
-    if (builtinTex != NULL) {
-        return (s64)builtinTex;
+    if (aParamType == GFX_PARAM_TYPE_TEX) {
+        auto builtinTex = DynOS_Builtin_Tex_GetFromName(_Arg.begin());
+        if (builtinTex != NULL) {
+            return (s64)builtinTex;
+        }
     }
 
     // Recursive descent parsing
-    bool rdSuccess = false;
-    s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
-    if (rdSuccess) {
-        return rdValue;
+    if (GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(aParamType)) {
+        bool rdSuccess = false;
+        s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
+        if (rdSuccess) {
+            return rdValue;
+        }
     }
 
     // Unknown
@@ -575,11 +621,11 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     return 0;
 }
 
-#define gfx_arg_with_suffix(argname, suffix)                                                        \
+#define gfx_arg_with_suffix(argname, suffix, paramtype)                                             \
     CHECK_TOKEN_INDEX(aTokenIndex,);                                                                \
     const String& argname##_token = aNode->mTokens[aTokenIndex];                                    \
     String _Token##suffix = String("%s%s", argname##_token.begin(), #suffix);                       \
-    s64 argname = ParseGfxSymbolArg(aGfxData, aNode, NULL, _Token##suffix.begin());                 \
+    s64 argname = ParseGfxSymbolArg(aGfxData, aNode, NULL, _Token##suffix.begin(), paramtype);      \
 
 #define STR_VALUE_2(...) #__VA_ARGS__
 #define STR_VALUE(...) STR_VALUE_2(__VA_ARGS__)
@@ -667,7 +713,7 @@ static Array<s64> ParseGfxSetCombineMode(GfxData* aGfxData, DataNode<Gfx>* aNode
         if (i == n || _Buffer[i] == ' ' || _Buffer[i] == '\t' || _Buffer[i] == ',') {
             if (_Token.Length() != 0) {
                 String _Arg("%s%s", (_Args.Count() < 4 ? "G_CCMUX_" : "G_ACMUX_"), _Token.begin());
-                _Args.Add(ParseGfxSymbolArg(aGfxData, aNode, NULL, _Arg.begin()));
+                _Args.Add(ParseGfxSymbolArg(aGfxData, aNode, NULL, _Arg.begin(), GFX_PARAM_TYPE_INT));
                 _Token.Clear();
             }
         } else {
@@ -718,52 +764,55 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
 
     // Simple symbols
     // Uses macro iterators to dynamically handle the correct number of parameters
-#define HANDLE_PARAM(paramNum) s64 _Arg##paramNum = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+#define HANDLE_PARAM(paramNum) s64 _Arg##paramNum = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", paramTypes[paramNum - 1]);
 #define GET_ARG(paramNum) _Arg##paramNum
 #define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
-#define define_gfx_symbol(symb, params, addPtr, ...)                                                 \
-if (_Symbol == #symb) {                                                                              \
-    REPEAT(HANDLE_PARAM, params);                                                                    \
-    if (addPtr) { aGfxData->mPointerList.Add(aHead); }                                               \
-    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };                                    \
-    memcpy(aHead, _Gfx, sizeof(_Gfx));                                                               \
-    aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                                       \
-    return;                                                                                          \
+#define define_gfx_symbol(symb, params, addPtr, ...)                \
+if (_Symbol == #symb) {                                             \
+    static const GfxParamType paramTypes[] = { __VA_ARGS__ };       \
+    REPEAT(HANDLE_PARAM, params);                                   \
+    if (addPtr) { aGfxData->mPointerList.Add(aHead); }              \
+    Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };   \
+    memcpy(aHead, _Gfx, sizeof(_Gfx));                              \
+    aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                      \
+    return;                                                         \
 }
+#define define_gfx_symbol_manual(...)
 #include "gfx_symbols.h"
 #undef HANDLE_PARAM
 #undef GET_ARG
 #undef CALL_SYMB
 #undef define_gfx_symbol
+#undef define_gfx_symbol_manual
 
     // Special symbols
     if (_Symbol == "gsSPTexture") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         gSPTexture(aHead++, _Arg0, _Arg1, _Arg2, _Arg3, _Arg4);
         return;
     }
     if (_Symbol == "gsSPSetGeometryMode") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         gSPSetGeometryMode(aHead++, _Arg0);
         return;
     }
     if (_Symbol == "gsSPClearGeometryMode") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         gSPClearGeometryMode(aHead++, _Arg0);
         return;
     }
     if (_Symbol == "gsSPDisplayList") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_GFX);
         aGfxData->mPointerList.Add(aHead);
         gSPDisplayList(aHead++, _Arg0);
         return;
     }
     if (_Symbol == "gsSPBranchList") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_GFX);
         aGfxData->mPointerList.Add(aHead);
         gSPBranchList(aHead++, _Arg0);
         return;
@@ -789,7 +838,7 @@ if (_Symbol == #symb) {                                                         
 
     // Complex symbols
     if (_Symbol == "gsSPSetLights0") {
-        Lights0 *_Light = (Lights0 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        Lights0 *_Light = (Lights0 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_PTR);
         gSPNumLights(aHead++, NUMLIGHTS_0);
         aGfxData->mPointerList.Add(aHead);
         gSPLight(aHead++, &_Light->l[0], 1);
@@ -798,7 +847,7 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsSPSetLights1") {
-        Lights1 *_Light = (Lights1 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        Lights1 *_Light = (Lights1 *) ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_PTR);
         gSPNumLights(aHead++, NUMLIGHTS_1);
         aGfxData->mPointerList.Add(aHead);
         gSPLight(aHead++, &_Light->l[0], 1);
@@ -817,22 +866,22 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsDPSetCombineLERP") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_");
-        s64 _ArgC = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _ArgD = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _ArgE = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
-        s64 _ArgF = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_CCMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgC = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgD = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgE = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
+        s64 _ArgF = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "G_ACMUX_", GFX_PARAM_TYPE_INT);
         Gfx _Gfx = {{
             _SHIFTL(G_SETCOMBINE, 24, 8) | _SHIFTL(GCCc0w0(_Arg0, _Arg2, _Arg4, _Arg6) | GCCc1w0(_Arg8, _ArgA), 0, 24),
             (u32) (GCCc0w1(_Arg1, _Arg3, _Arg5, _Arg7) | GCCc1w1(_Arg9, _ArgC, _ArgE, _ArgB, _ArgD, _ArgF))
@@ -843,70 +892,70 @@ if (_Symbol == #symb) {                                                         
 
     // TexData symbols
     if (_Symbol == "gsDPSetTextureImage") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_TEX);
         UpdateTextureInfo(aGfxData, &_Arg3, (s32) _Arg0, (s32) _Arg1, -1, -1);
         aGfxData->mPointerList.Add(aHead);
         gDPSetTextureImage(aHead++, _Arg0, _Arg1, _Arg2, _Arg3);
         return;
     }
     if (_Symbol == "gsDPSetTile") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, NULL, (s32) _Arg0, (s32) _Arg1, -1, -1);
         gDPSetTile(aHead++, _Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7, _Arg8, _Arg9, _ArgA, _ArgB);
         return;
     }
     if (_Symbol == "gsDPLoadTile") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, NULL, -1, -1, (s32) (_Arg3 >> G_TEXTURE_IMAGE_FRAC) + 1, (s32) (_Arg4 >> G_TEXTURE_IMAGE_FRAC) + 1);
         gDPLoadTile(aHead++, _Arg0, _Arg1, _Arg2, _Arg3, _Arg4);
         return;
     }
     if (_Symbol == "gsDPSetTileSize") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, NULL, -1, -1, (s32) (_Arg3 >> G_TEXTURE_IMAGE_FRAC) + 1, (s32) (_Arg4 >> G_TEXTURE_IMAGE_FRAC) + 1);
         gDPSetTileSize(aHead++, _Arg0, _Arg1, _Arg2, _Arg3, _Arg4);
         return;
     }
     if (_Symbol == "gsDPLoadTextureBlock") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        gfx_arg_with_suffix(arg2_0, _LOAD_BLOCK);
-        gfx_arg_with_suffix(arg2_1, _INCR);
-        gfx_arg_with_suffix(arg2_2, _SHIFT);
-        gfx_arg_with_suffix(arg2_3, _BYTES);
-        gfx_arg_with_suffix(arg2_4, _LINE_BYTES);
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_TEX);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        gfx_arg_with_suffix(arg2_0, _LOAD_BLOCK, GFX_PARAM_TYPE_INT);
+        gfx_arg_with_suffix(arg2_1, _INCR, GFX_PARAM_TYPE_INT);
+        gfx_arg_with_suffix(arg2_2, _SHIFT, GFX_PARAM_TYPE_INT);
+        gfx_arg_with_suffix(arg2_3, _BYTES, GFX_PARAM_TYPE_INT);
+        gfx_arg_with_suffix(arg2_4, _LINE_BYTES, GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _ArgB = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, &_Arg0, (s32) _Arg1, (s32) _Arg2, (s32) _Arg3, (s32) _Arg4);
 
         aGfxData->mPointerList.Add(aHead);
@@ -920,16 +969,16 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsDPLoadTLUTCmd") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         SetCurrentTextureAsPalette(aGfxData);
 
         gDPLoadTLUTCmd(aHead++, _Arg0, _Arg1);
         return;
     }
     if (_Symbol == "gsDPLoadTLUT_pal16") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, &_Arg1, G_IM_FMT_RGBA, G_IM_SIZ_16b, -1, -1);
         SetCurrentTextureAsPalette(aGfxData);
 
@@ -943,7 +992,7 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsDPLoadTLUT_pal256") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, &_Arg0, G_IM_FMT_RGBA, G_IM_SIZ_16b, -1, -1);
         SetCurrentTextureAsPalette(aGfxData);
 
@@ -957,17 +1006,17 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsDPLoadTextureBlock_4b") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_TEX);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg4 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg5 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg6 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg7 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg8 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg9 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _ArgA = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         UpdateTextureInfo(aGfxData, &_Arg0, (s32) _Arg1, G_IM_SIZ_4b, (s32) _Arg2, (s32) _Arg3);
 
         aGfxData->mPointerList.Add(aHead);
@@ -981,8 +1030,8 @@ if (_Symbol == #symb) {                                                         
         return;
     }
     if (_Symbol == "gsSPLightColor") {
-        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
-        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "");
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_TYPE_INT);
         // due to the function taking in the variable name instead of the actual value
         // as a parameter, we need to do this. LIGHT_1 to LIGHT_8 go from actual 1-8
         // where as G_MWO_a*/G_MWO_b* are hex numbers without a linear pattern of
@@ -1129,7 +1178,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
     switch (paramType) {
 
         // Integer
-        case 'i': return ConvertParam<s64>(
+        case GFX_PARAM_TYPE_INT: return ConvertParam<s64>(
             L, aGfxData, paramIndex,
             "integer",
             [] (lua_State *L, u32 paramIndex) { return smlua_to_integer(L, paramIndex); },
@@ -1137,7 +1186,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         );
 
         // String
-        case 's': return ConvertParam<const char *>(
+        case GFX_PARAM_TYPE_STR: return ConvertParam<const char *>(
             L, aGfxData, paramIndex,
             "string",
             [] (lua_State *L, u32 paramIndex) { return smlua_to_string(L, paramIndex); },
@@ -1145,7 +1194,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         );
 
         // Vtx pointer
-        case 'v': return ConvertParam<Vtx *>(
+        case GFX_PARAM_TYPE_VTX: return ConvertParam<Vtx *>(
             L, aGfxData, paramIndex,
             "Vtx pointer",
             [] (lua_State *L, u32 paramIndex) { return (Vtx *) smlua_to_cobject(L, paramIndex, LOT_VTX); },
@@ -1153,7 +1202,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         );
 
         // Texture pointer
-        case 't': return ConvertParam<Texture *>(
+        case GFX_PARAM_TYPE_TEX: return ConvertParam<Texture *>(
             L, aGfxData, paramIndex,
             "Texture pointer",
             [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_U8_P); },
@@ -1161,7 +1210,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         );
 
         // Gfx pointer
-        case 'g': return ConvertParam<Gfx *>(
+        case GFX_PARAM_TYPE_GFX: return ConvertParam<Gfx *>(
             L, aGfxData, paramIndex,
             "Gfx pointer",
             [] (lua_State *L, u32 paramIndex) { return (Gfx *) smlua_to_cobject(L, paramIndex, LOT_GFX); },
@@ -1172,12 +1221,62 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
     return "";
 }
 
+struct GfxParamInfo {
+    u8 count;
+    const GfxParamType *types;
+};
+
+static const struct GfxParamInfo *GetGfxParamInfo(const char *command) {
+#define define_gfx_symbol(symb, params, addPtr, ...)                                                    \
+    static const GfxParamType types_##symb[] = { __VA_ARGS__ };                                         \
+    static struct GfxParamInfo info_##symb = { .count = params, .types = types_##symb };                \
+    static_assert(sizeof(types_##symb) == params, "Parameter count does not match for gfx command.");   \
+    if (!strncmp(#symb, command, strlen(#symb))) { return &info_##symb; }
+#define define_gfx_symbol_manual(...) define_gfx_symbol(__VA_ARGS__)
+#include "gfx_symbols.h"
+#undef define_gfx_symbol
+#undef define_gfx_symbol_manual
+    return NULL;
+}
+
 static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char *command) {
+    const struct GfxParamInfo *paramInfo = GetGfxParamInfo(command);
+    if (!paramInfo) { PrintDataErrorGfx("  ERROR: Unknown gfx command: %s", command); return ""; }
+
+    // Count parameters
+    // Find the position of each % to retrieve the correct expected type from the command paramInfo
+    u8 paramPos[paramInfo->count] = { 0 };
+    u8 paramPosIndex = 0;
+    u8 paramCount = 1;
+    bool inBrackets = false;
+    for (const char* str = command; *str; str++) {
+        if (*str == '(') { inBrackets = true; }
+        if (*str == ')') { inBrackets = false; }
+        if (*str == ',' && inBrackets) { paramCount++; }
+        if (*str == '%' && paramPosIndex < paramInfo->count) { paramPos[paramPosIndex++] = paramCount - 1; }
+    }
+    if (paramCount != paramInfo->count) {
+        PrintDataErrorGfx("  ERROR: Incorrect parameter count. Got %d, expected %d.", paramCount, paramInfo->count);
+        return "";
+    }
+
     std::string output;
     for (u32 paramIndex = 3; *command; command++) {
         char c = *command;
         if (c == '%') {
-            char paramType = *(++command);
+            u8 paramNum = paramPos[paramIndex - 3];
+            const GfxParamType paramType = *(++command);
+            const GfxParamType expectedType = paramInfo->types[paramNum];
+            if (expectedType == GFX_PARAM_TYPE_PTR) {
+                PrintDataErrorGfx("  ERROR: Gfx macro has unsupported type, this macro is not usable");
+                return "";
+            }
+            if (expectedType != paramType &&
+                (expectedType != GFX_PARAM_TYPE_INT || !GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(paramType)) // Allow strings as constants for integer parameters
+            ) {
+                PrintDataErrorGfx("  ERROR: Unexpected value type for parameter %d. Got '%c', expected '%c'", paramNum, paramType, expectedType);
+                return "";
+            }
             String value = ResolveParam(L, aGfxData, paramIndex++, paramType);
             if (aGfxData->mErrorCount > 0) {
                 return "";
