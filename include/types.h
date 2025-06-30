@@ -40,10 +40,6 @@ struct Controller
     OSContPad *controllerData;
 };
 
-// A macro to tell autogen which function parameters are modified during the function call and should be pushed again
-// Only works with Vec3, Mat4 and Color types
-#define OUT
-
 typedef f32 Vec2f[2]; // X, Y
 typedef s16 Vec2s[2];
 typedef s32 Vec2i[2];
@@ -602,5 +598,6 @@ struct TextureInfo
 
 #include "game/characters.h"
 #include "data/dynos.c.h"
+#include "src/pc/lua/smlua_autogen.h"
 
 #endif // _SM64_TYPES_H_

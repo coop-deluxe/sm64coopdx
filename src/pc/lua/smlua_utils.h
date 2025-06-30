@@ -6,6 +6,11 @@ typedef int LuaFunction;
 struct Packet;
 struct LSTNetworkType;
 
+typedef struct ByteString {
+    const char *bytes;
+    size_t length;
+} ByteString;
+
 f32* smlua_get_vec3f_from_buffer(void);
 s16* smlua_get_vec3s_from_buffer(void);
 f32* smlua_get_vec4f_from_buffer(void);
@@ -19,6 +24,7 @@ bool smlua_to_boolean(lua_State* L, int index);
 lua_Integer smlua_to_integer(lua_State* L, int index);
 lua_Number smlua_to_number(lua_State* L, int index);
 const char* smlua_to_string(lua_State* L, int index);
+ByteString smlua_to_bytestring(lua_State* L, int index);
 LuaFunction smlua_to_lua_function(lua_State* L, int index);
 bool smlua_is_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
@@ -37,6 +43,7 @@ void smlua_push_string_field(int index, const char* name, const char* val);
 void smlua_push_nil_field(int index, const char* name);
 void smlua_push_table_field(int index, const char* name);
 
+void smlua_push_bytestring(lua_State* L, ByteString bytestring);
 void smlua_push_lnt(struct LSTNetworkType* lnt);
 
 lua_Integer smlua_get_integer_field(int index, const char* name);

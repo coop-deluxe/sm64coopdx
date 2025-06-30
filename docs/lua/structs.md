@@ -77,6 +77,8 @@
 - [ModAudio](#ModAudio)
 - [ModAudioSampleCopies](#ModAudioSampleCopies)
 - [ModFile](#ModFile)
+- [ModFs](#ModFs)
+- [ModFsFile](#ModFsFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
@@ -1959,6 +1961,35 @@
 | modifiedTimestamp | `integer` | read-only |
 | relativePath | `string` | read-only |
 | wroteBytes | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModFs](#ModFs)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| isPublic | `boolean` | read-only |
+| mod | [Mod](structs.md#Mod) | read-only |
+| modPath | `string` | read-only |
+| numFiles | `integer` | read-only |
+| totalSize | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModFsFile](#ModFsFile)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| filepath | `string` | read-only |
+| isPublic | `boolean` | read-only |
+| isText | `boolean` | read-only |
+| modFs | [ModFs](structs.md#ModFs) | read-only |
+| offset | `integer` | read-only |
+| size | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

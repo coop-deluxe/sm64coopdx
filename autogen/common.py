@@ -148,6 +148,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
     if ptype == 'const char*':
         return 'LOT_NONE'
 
+    if ptype == 'ByteString':
+        return 'LOT_NONE'
+
     if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return 'LOT_NONE'
 
@@ -215,6 +218,9 @@ def translate_type_to_lua(ptype):
     if ptype == 'const char*':
         return '`string`', None
 
+    if ptype == 'ByteString':
+        return '`string`', None
+
     if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return '`string`', None
 
@@ -253,7 +259,13 @@ def translate_type_to_lua(ptype):
     if ptype == 'int':
         return '`integer`', None
 
+    if ptype == 'lua_Integer':
+        return '`integer`', None
+
     if ptype == 'float':
+        return '`number`', None
+
+    if ptype == 'lua_Number':
         return '`number`', None
 
     if ptype == 'double':
