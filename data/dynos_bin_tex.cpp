@@ -409,19 +409,11 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
             continue;
         }
 
-
         size_t nameLen = strlen(_PackEnt->d_name);
         if (nameLen < 4) continue;
 
         // skip files that don't end in '.png'
         if (strcmp(&_PackEnt->d_name[nameLen - 4], ".png")) {
-            continue;
-        }
-
-        // skip files that have already been generated
-        char buffer[SYS_MAX_PATH];
-        snprintf(buffer, SYS_MAX_PATH, "%s.tex", _Path.substr(0, _Path.size() - 4).c_str());
-        if (fs_sys_file_exists(buffer)) {
             continue;
         }
 
@@ -460,6 +452,12 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
 
         SysPath _OutputPath = fstring("%s/%s.tex", aOutputFolder.c_str(), _BaseName.begin());
 
+        // skip files that have already been generated
+        if (DynOS_GenFileExistsAndIsNewerThanFile(_OutputPath, _Path)) {
+            Delete<TexData>(_TexData);
+            continue;
+        }
+
         // create output dir if it doesn't exist
         if (!fs_sys_dir_exists(aOutputFolder.c_str())) {
             fs_sys_mkdir(aOutputFolder.c_str());
@@ -476,6 +474,10 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
 
 void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures) {
     Print("Processing textures: \"%s\"", aPackFolder.c_str());
+
+    if (!DynOS_ShouldGeneratePack2Ext(aPackFolder, ".tex", ".png")) {
+        return;
+    }
 
     GfxData *_GfxData = New<GfxData>();
     _GfxData->mModelIdentifier = 0;

@@ -17,31 +17,6 @@
 #include <sys/stat.h>
 #endif
 
-u64 mod_get_file_mtime_seconds(struct ModFile* file) {
-#ifdef _WIN32
-    WIN32_FILE_ATTRIBUTE_DATA fad;
-    if (!GetFileAttributesExA(file->cachedPath, GetFileExInfoStandard, &fad)) {
-        // error; you could also GetLastError() here
-        return 0;
-    }
-    // FILETIME is 100-ns intervals since 1601-01-01 UTC
-    ULARGE_INTEGER ull;
-    ull.LowPart  = fad.ftLastWriteTime.dwLowDateTime;
-    ull.HighPart = fad.ftLastWriteTime.dwHighDateTime;
-
-    const u64 EPOCH_DIFF = 116444736000000000ULL; // 100-ns from 1601 to 1970
-    u64 time100ns = ull.QuadPart;
-    return (time100ns - EPOCH_DIFF) / 10000000ULL;    // to seconds
-#else
-    struct stat st;
-    if (stat(file->cachedPath, &st) != 0) {
-        // error; errno is set
-        return 0;
-    }
-    return (u64)st.st_mtime;
-#endif
-}
-
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
     size_t size = 0;
@@ -178,7 +153,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        file->modifiedTimestamp = mod_get_file_mtime_seconds(file);
+        file->modifiedTimestamp = fs_sys_get_modified_time(file->cachedPath);
         mod_cache_add(mod, file, false);
 
         // forcefully update md5 hash

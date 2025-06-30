@@ -443,7 +443,7 @@ void smlua_live_reload_update(lua_State* L) {
             struct ModFile* file = &mod->files[j];
 
             // check modified time
-            u64 timestamp = mod_get_file_mtime_seconds(file);
+            u64 timestamp = fs_sys_get_modified_time(file->cachedPath);
             if (timestamp <= file->modifiedTimestamp) { continue; }
 
             // update modified time and reload the module

@@ -2602,18 +2602,6 @@ static String GetBehaviorFolder(const Array<Pair<u64, String>> &aBehaviorsFolder
 }
 
 static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _BehaviorsFolders, GfxData *_GfxData) {
-    // do not regen this folder if we find any existing bins
-    for (s32 bhvIndex = _GfxData->mBehaviorScripts.Count() - 1; bhvIndex >= 0; bhvIndex--) {
-        auto &_BhvNode = _GfxData->mBehaviorScripts[bhvIndex];
-        String _BhvRootName = _BhvNode->mName;
-
-        // If there is an existing binary file for this layout, skip and go to the next behavior.
-        SysPath _BinFilename = fstring("%s/%s.bhv", aPackFolder.c_str(), _BhvRootName.begin());
-        if (fs_sys_file_exists(_BinFilename.c_str())) {
-            return;
-        }
-    }
-
     // generate in reverse order to detect children
     for (s32 bhvIndex = _GfxData->mBehaviorScripts.Count() - 1; bhvIndex >= 0; bhvIndex--) {
         auto &_BhvNode = _GfxData->mBehaviorScripts[bhvIndex];
@@ -2660,6 +2648,11 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
 
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing behaviors: \"%s\"", aPackFolder.c_str());
+
+    if (!DynOS_ShouldGeneratePack2Ext(aPackFolder, ".bhv", ".c")) {
+        return;
+    }
+
     Array<Pair<u64, String>> _BehaviorsFolders;
     GfxData *_GfxData = New<GfxData>();
 
