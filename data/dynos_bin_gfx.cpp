@@ -472,7 +472,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     if (GFX_PARAM_TYPE_IS_POINTER(aParamType)) {
 
         // NULL pointer
-        if (_Arg == "NULL") {
+        if (_Arg == "NULL" || _Arg == "0") {
             return (s64) NULL;
         }
 
