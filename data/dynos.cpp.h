@@ -1023,6 +1023,7 @@ bool DynOS_ShouldGeneratePack(const SysPath &aPackFolder, const char * const aGe
 bool DynOS_ShouldGeneratePack2Ext(const SysPath &aPackFolder, const char *aGenExtension, const char *aSrcExtension);
 bool DynOS_GenFileExistsAndIsNewerThanFile(const SysPath &aGenFile, const SysPath &aSrcFile);
 bool DynOS_GenFileExistsAndIsNewerThanFolder(const SysPath &aGenFile, const SysPath &aSrcFolder);
+String DynOS_GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 aModelIdentifier);
 
 s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found);
 

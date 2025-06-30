@@ -152,6 +152,15 @@ bool DynOS_GenFileExistsAndIsNewerThanFolder(const SysPath &aGenFile, const SysP
     return false;
 }
 
+String DynOS_GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 aModelIdentifier) {
+    for (const auto &_Pair : aActorsFolders) {
+        if (_Pair.first == aModelIdentifier) {
+            return _Pair.second;
+        }
+    }
+    return String();
+}
+
   //////////
  // Misc //
 //////////

@@ -684,22 +684,13 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const ch
  // Generate //
 //////////////
 
-static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 aModelIdentifier) {
-    for (const auto &_Pair : aActorsFolders) {
-        if (_Pair.first == aModelIdentifier) {
-            return _Pair.second;
-        }
-    }
-    return String();
-}
-
 void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     for (auto &_ColNode : _GfxData->mCollisions) {
         String _ColRootName = _ColNode->mName;
         SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
 
         // If there is an existing binary file for this collision, skip and go to the next collision
-        String _ActorFolder = GetActorFolder(_ActorsFolders, _ColNode->mModelIdentifier);
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _ColNode->mModelIdentifier);
         SysPath _SrcFilename = fstring("%s/%s/collision.inc.c", aPackFolder.c_str(), _ActorFolder.begin());
         if (DynOS_GenFileExistsAndIsNewerThanFile(_ColFilename, _SrcFilename)) {
             continue;

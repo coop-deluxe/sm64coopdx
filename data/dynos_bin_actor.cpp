@@ -131,15 +131,6 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
  // Generate //
 //////////////
 
-static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 aModelIdentifier) {
-    for (const auto &_Pair : aActorsFolders) {
-        if (_Pair.first == aModelIdentifier) {
-            return _Pair.second;
-        }
-    }
-    return String();
-}
-
 static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     Array<String> _SkipActorFolders;
 
@@ -158,7 +149,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
 
         // If there is an existing binary file for this actor, skip and go to the next actor
-        String _ActorFolder = GetActorFolder(_ActorsFolders, _GeoNode->mModelIdentifier);
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _GeoNode->mModelIdentifier);
         SysPath _SrcFolder = fstring("%s/%s", aPackFolder.c_str(), _ActorFolder.begin());
         if (DynOS_GenFileExistsAndIsNewerThanFolder(_BinFilename, _SrcFolder)) {
             // Remember that we skipped this folder, so we can skip it again in the future.
