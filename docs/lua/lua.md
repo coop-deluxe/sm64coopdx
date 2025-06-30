@@ -69,6 +69,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Custom HUD Texture](examples/custom-hud-texture)
 - [Custom Audio Test](examples/audio-test)
 - [Custom Texture Overriding](examples/texture-override)
+- [Bytestring Packet Example](examples/bytestring-packet-example.lua)
 
 ## Example Lua mods (large)
 - [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
