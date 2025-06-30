@@ -1289,6 +1289,21 @@
 --- @field public relativePath string
 --- @field public wroteBytes integer
 
+--- @class ModFs
+--- @field public isPublic boolean
+--- @field public mod Mod
+--- @field public modPath string
+--- @field public numFiles integer
+--- @field public totalSize integer
+
+--- @class ModFsFile
+--- @field public filepath string
+--- @field public isPublic boolean
+--- @field public isText boolean
+--- @field public modFs ModFs
+--- @field public offset integer
+--- @field public size integer
+
 --- @class ModeTransitionInfo
 --- @field public frame integer
 --- @field public lastMode integer

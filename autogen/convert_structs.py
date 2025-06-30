@@ -27,6 +27,7 @@ in_files = [
     "src/pc/network/network.h",
     "src/game/hardcoded.h",
     "src/pc/mods/mod.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
@@ -97,7 +98,9 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
-    "DialogEntry": [ "str" ]
+    "DialogEntry": [ "str" ],
+    "ModFsFile": [ "data", "capacity" ],
+    "ModFs": [ "files" ],
 }
 
 override_field_deprecated = {
@@ -137,7 +140,9 @@ override_field_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
-    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"]
+    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"],
+    "ModFsFile": [ "*" ],
+    "ModFs": [ "*" ],
 }
 
 override_field_version_excludes = {
