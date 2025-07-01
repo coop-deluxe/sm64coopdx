@@ -5073,7 +5073,7 @@ end
 
 --- @param id integer
 --- @return boolean
---- Checks if a lighting engine point light exists
+--- Checks if a lighting engine point light corresponding to `id` exists
 function le_light_exists(id)
     -- ...
 end
@@ -11157,6 +11157,25 @@ end
 --- @param value integer
 --- Sets if the star counter on the HUD should flash
 function hud_set_flash(value)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- Hides part of the Act Select HUD
+function act_select_hud_hide(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- Shows part of the Act Select HUD
+function act_select_hud_show(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- @return boolean
+--- Checks if part of the Act Select HUD is hidden
+function act_select_hud_is_hidden(part)
     -- ...
 end
 

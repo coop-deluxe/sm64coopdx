@@ -8203,6 +8203,23 @@ HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
 --- | `HUD_DISPLAY_FLAGS_POWER`
 --- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
 
+ACT_SELECT_HUD_ALL              = 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_SCORE            = 1 --- @type ActSelectHudPart
+ACT_SELECT_HUD_LEVEL_NAME       = 2 --- @type ActSelectHudPart
+ACT_SELECT_HUD_COURSE_NUM       = 3 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ACT_NAME         = 4 --- @type ActSelectHudPart
+ACT_SELECT_HUD_STAR_NUM         = 5 --- @type ActSelectHudPart
+ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 6 --- @type ActSelectHudPart
+
+--- @alias ActSelectHudPart
+--- | `ACT_SELECT_HUD_ALL`
+--- | `ACT_SELECT_HUD_SCORE`
+--- | `ACT_SELECT_HUD_LEVEL_NAME`
+--- | `ACT_SELECT_HUD_COURSE_NUM`
+--- | `ACT_SELECT_HUD_ACT_NAME`
+--- | `ACT_SELECT_HUD_STAR_NUM`
+--- | `ACT_SELECT_HUD_PLAYERS_IN_LEVEL`
+
 E_MODEL_NONE                               =   0 --- @type ModelExtendedId
 E_MODEL_MARIO                              =   1 --- @type ModelExtendedId
 E_MODEL_SMOKE                              =   2 --- @type ModelExtendedId
