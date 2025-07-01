@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "game/hardcoded.h"
 #include "game/hud.h"
+#include "menu/star_select.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
@@ -209,6 +210,43 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
         case HUD_DISPLAY_FLAGS:         gHudDisplay.flags  = value;   break;
         case HUD_DISPLAY_TIMER:         gHudDisplay.timer  = value;   break;
         case HUD_DISPLAY_CAMERA_STATUS: set_hud_camera_status(value); break;
+    }
+}
+
+void act_select_hud_hide(enum ActSelectHudPart part) {
+    switch (part) {
+        case ACT_SELECT_HUD_ALL:        gOverrideHideActSelectHud.all  = TRUE; gOverrideHideActSelectHud.score  = TRUE; gOverrideHideActSelectHud.levelName  = TRUE; gOverrideHideActSelectHud.courseNum  = TRUE; gOverrideHideActSelectHud.actName  = TRUE; gOverrideHideActSelectHud.starNum  = TRUE; gOverrideHideActSelectHud.playersInLevel  = TRUE;   break;
+        case ACT_SELECT_HUD_SCORE:      gOverrideHideActSelectHud.score  = TRUE;   break;
+        case ACT_SELECT_HUD_LEVEL_NAME:      gOverrideHideActSelectHud.levelName  = TRUE;   break;
+        case ACT_SELECT_HUD_COURSE_NUM:      gOverrideHideActSelectHud.courseNum  = TRUE;   break;
+        case ACT_SELECT_HUD_ACT_NAME:      gOverrideHideActSelectHud.actName  = TRUE;   break;
+        case ACT_SELECT_HUD_STAR_NUM:      gOverrideHideActSelectHud.starNum  = TRUE;   break;
+        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      gOverrideHideActSelectHud.playersInLevel  = TRUE;   break;
+    }
+}
+
+void act_select_hud_show(enum ActSelectHudPart part) {
+    switch (part) {
+        case ACT_SELECT_HUD_ALL:        gOverrideHideActSelectHud.all  = FALSE; gOverrideHideActSelectHud.score  = FALSE; gOverrideHideActSelectHud.levelName  = FALSE; gOverrideHideActSelectHud.courseNum  = FALSE; gOverrideHideActSelectHud.actName  = FALSE; gOverrideHideActSelectHud.starNum  = FALSE; gOverrideHideActSelectHud.playersInLevel  = FALSE;   break;
+        case ACT_SELECT_HUD_SCORE:      gOverrideHideActSelectHud.score  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+        case ACT_SELECT_HUD_LEVEL_NAME:      gOverrideHideActSelectHud.levelName  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+        case ACT_SELECT_HUD_COURSE_NUM:      gOverrideHideActSelectHud.courseNum  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+        case ACT_SELECT_HUD_ACT_NAME:      gOverrideHideActSelectHud.actName  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+        case ACT_SELECT_HUD_STAR_NUM:      gOverrideHideActSelectHud.starNum  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      gOverrideHideActSelectHud.playersInLevel  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+    }
+}
+
+bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
+	if (gOverrideHideActSelectHud.all) { return TRUE; }
+    switch (part) {
+        case ACT_SELECT_HUD_ALL:        return FALSE;
+        case ACT_SELECT_HUD_SCORE:      return gOverrideHideActSelectHud.score;
+        case ACT_SELECT_HUD_LEVEL_NAME:      return gOverrideHideActSelectHud.levelName;
+        case ACT_SELECT_HUD_COURSE_NUM:      return gOverrideHideActSelectHud.courseNum;
+        case ACT_SELECT_HUD_ACT_NAME:      return gOverrideHideActSelectHud.actName;
+        case ACT_SELECT_HUD_STAR_NUM:      return gOverrideHideActSelectHud.starNum;
+        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      return gOverrideHideActSelectHud.playersInLevel;
     }
 }
 
