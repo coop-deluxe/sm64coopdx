@@ -35,6 +35,9 @@
  * strings, act values, and star selector model rendering if a star is collected or not.
  */
 
+// Which parts of the HUD have been hidden.
+struct OverrideHideActSelectHud gOverrideHideActSelectHud;
+
 // Star Selector count models printed in the act selector menu.
 static struct Object *sStarSelectorModels[8] = { 0 };
 
@@ -225,7 +228,6 @@ void print_course_number(s16 language) {
 void print_course_number(void) {
 #endif
     u8 courseNum[4];
-
     create_dl_translation_matrix(MENU_MTX_PUSH, 158.0f, 81.0f, 0.0f);
 
     // Full wood texture in JP & US, lower part of it on EU
@@ -273,135 +275,142 @@ void print_course_number(void) {
  * Print act selector strings, some with special checks.
  */
 void print_act_selector_strings(void) {
+	if (!gOverrideHideActSelectHud.all) {
 #ifdef VERSION_EU
-    unsigned char myScore[][10] = { {TEXT_MYSCORE}, {TEXT_MY_SCORE_FR}, {TEXT_MY_SCORE_DE} };
+		unsigned char myScore[][10] = { {TEXT_MYSCORE}, {TEXT_MY_SCORE_FR}, {TEXT_MY_SCORE_DE} };
 #else
-    INGAME_TEXT_COPY(myScore, TEXT_MYSCORE);
+		INGAME_TEXT_COPY(myScore, TEXT_MYSCORE);
 #endif
-    INGAME_TEXT_COPY(starNumbers, TEXT_ZERO);
+		INGAME_TEXT_COPY(starNumbers, TEXT_ZERO);
 
-    const u8 *currLevelName = get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
-    const u8 *selectedActName = get_star_name_sm64(gCurrCourseNum, sSelectedActIndex + 1, 1);
+		const u8 *currLevelName = get_level_name_sm64(gCurrCourseNum, gCurrLevelNum, gCurrAreaIndex, 1);
+		const u8 *selectedActName = get_star_name_sm64(gCurrCourseNum, sSelectedActIndex + 1, 1);
 #ifndef VERSION_EU
-    s16 lvlNameX;
-    s16 actNameX;
+		s16 lvlNameX;
+		s16 actNameX;
 #endif
-    s8 i;
+		s8 i;
 #ifdef VERSION_EU
-    s16 language = eu_get_language();
+		s16 language = eu_get_language();
 #endif
 
-    create_dl_ortho_matrix();
-
-    // Print the coin highscore.
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
-    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-    print_hud_my_score_coins(1, gCurrSaveFileNum - 1, gCurrCourseNum - 1, 155, 106);
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
-
-    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
-    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
-    // Print the "MY SCORE" text if the coin score is more than 0
-    if (save_file_get_course_coin_score(gCurrSaveFileNum - 1, gCurrCourseNum - 1) != 0) {
+		create_dl_ortho_matrix();
+		if (!gOverrideHideActSelectHud.score) {
+			// Print the coin highscore.
+			gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+			gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+			print_hud_my_score_coins(1, gCurrSaveFileNum - 1, gCurrCourseNum - 1, 155, 106);
+			gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+		}
+		gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+		gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+		// Print the "MY SCORE" text if the coin score is more than 0
+		if (!gOverrideHideActSelectHud.score && save_file_get_course_coin_score(gCurrSaveFileNum - 1, gCurrCourseNum - 1) != 0) {
 #ifdef VERSION_EU
-        print_generic_string(95, 118, myScore[language]);
+			print_generic_string(95, 118, myScore[language]);
 #else
-        print_generic_string(102, 118, myScore);
+			print_generic_string(102, 118, myScore);
 #endif
-    }
+		}
 
-    if (currLevelName != NULL) {
+		if (!gOverrideHideActSelectHud.levelName && currLevelName != NULL) {
 #ifdef VERSION_EU
-        print_generic_string(get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f), 33, currLevelName + 3);
+			print_generic_string(get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f), 33, currLevelName + 3);
 #else
-        lvlNameX = get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f);
-        print_generic_string(lvlNameX, 33, currLevelName + 3);
+			lvlNameX = get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f);
+			print_generic_string(lvlNameX, 33, currLevelName + 3);
 #endif
-    }
+		}
 
-    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
-
+		gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+		if (!gOverrideHideActSelectHud.courseNum) {
 #ifdef VERSION_EU
-    print_course_number(language);
+			print_course_number(language);
 #else
-    print_course_number();
+			print_course_number();
 #endif
+		}
 
-    gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_begin);
-    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
-    // Print the name of the selected act.
-    if (sVisibleStars != 0) {
+		gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_begin);
+		gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+		// Print the name of the selected act.
+		if (!gOverrideHideActSelectHud.actName && sVisibleStars != 0) {
 #ifdef VERSION_EU
-        print_menu_generic_string(get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f), 81, selectedActName);
+			print_menu_generic_string(get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f), 81, selectedActName);
 #else
-        actNameX = get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f);
-        print_menu_generic_string(actNameX, 81, selectedActName);
+			actNameX = get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f);
+			print_menu_generic_string(actNameX, 81, selectedActName);
 #endif
-    }
+		}
 
-    // Print the numbers above each star.
-    for (i = 1; i <= sVisibleStars; i++) {
-        starNumbers[0] = i;
-        s16 x = 0;
+		// Print the numbers above each star.
+		for (i = 1; i <= sVisibleStars; i++) {
+			starNumbers[0] = i;
+			s16 x = 0;
 #ifdef VERSION_EU
-        x = 143 - sVisibleStars * 15 + i * 30;
-        print_menu_generic_string(x, 38, starNumbers);
+			x = 143 - sVisibleStars * 15 + i * 30;
+			if (!gOverrideHideActSelectHud.starNum) {
+				print_menu_generic_string(x, 38, starNumbers);
+			}
 #else
-        x = 139 - sVisibleStars * 17 + i * 34;
-        print_menu_generic_string(x, 38, starNumbers);
+			x = 139 - sVisibleStars * 17 + i * 34;
+			if (!gOverrideHideActSelectHud.starNum) {
+				print_menu_generic_string(x, 38, starNumbers);
+			}
 #endif
-        // display player HUD head if they're in that act
-        if (gServerSettings.enablePlayersInLevelDisplay) {
-            for (int j = 0; j < MAX_PLAYERS; j++) {
-                struct NetworkPlayer* np = &gNetworkPlayers[j];
-                if (np == NULL || !np->connected) { continue; }
-                if (np->currCourseNum != gCurrCourseNum) { continue; }
-                if (np->currActNum != i) { continue; }
+			// display player HUD head if they're in that act
+			if (!gOverrideHideActSelectHud.playersInLevel && gServerSettings.enablePlayersInLevelDisplay) {
+				for (int j = 0; j < MAX_PLAYERS; j++) {
+					struct NetworkPlayer* np = &gNetworkPlayers[j];
+					if (np == NULL || !np->connected) { continue; }
+					if (np->currCourseNum != gCurrCourseNum) { continue; }
+					if (np->currActNum != i) { continue; }
 
-                gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-                render_hud_icon(NULL, gMarioStates[j].character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x - 4, 223, 16, 16, 0, 0, 16, 16);
-                break;
-            }
-        }
-    }
+					gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+					render_hud_icon(NULL, gMarioStates[j].character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x - 4, 223, 16, 16, 0, 0, 16, 16);
+					break;
+				}
+			}
+		}
 
-    // print the number of players in the selected act
-    if (sVisibleStars > 0) {
-        u8 playersInAct = 0;
-        for (int j = 0; j < MAX_PLAYERS; j++) {
-            struct NetworkPlayer* np = &gNetworkPlayers[j];
-            if (np == NULL || !np->connected) { continue; }
-            if (np->currCourseNum != gCurrCourseNum) { continue; }
-            if (np->currActNum != sSelectedActIndex + 1) { continue; }
-            playersInAct++;
-        }
+		// print the number of players in the selected act
+		if (!gOverrideHideActSelectHud.playersInLevel && sVisibleStars > 0) {
+			u8 playersInAct = 0;
+			for (int j = 0; j < MAX_PLAYERS; j++) {
+				struct NetworkPlayer* np = &gNetworkPlayers[j];
+				if (np == NULL || !np->connected) { continue; }
+				if (np->currCourseNum != gCurrCourseNum) { continue; }
+				if (np->currActNum != sSelectedActIndex + 1) { continue; }
+				playersInAct++;
+			}
 
-        if (playersInAct > 0 && gServerSettings.enablePlayersInLevelDisplay) {
-            char message[16] = { 0 };
-            if (playersInAct == 1) {
-                if (snprintf(message, 16, "     Join      ") < 0) {
-                    // do nothing
-                }
-            } else {
-                if (snprintf(message, 16, "%d Players", playersInAct) < 0) {
-                    // do nothing
-                }
-            }
+			if (playersInAct > 0 && gServerSettings.enablePlayersInLevelDisplay) {
+				char message[16] = { 0 };
+				if (playersInAct == 1) {
+					if (snprintf(message, 16, "     Join      ") < 0) {
+						// do nothing
+					}
+				} else {
+					if (snprintf(message, 16, "%d Players", playersInAct) < 0) {
+						// do nothing
+					}
+				}
 
-            gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
-            f32 textWidth = get_generic_ascii_string_width(message);
+				gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+				f32 textWidth = get_generic_ascii_string_width(message);
 
-            f32 xPos = (sSelectedActIndex + 1) * 34 - sVisibleStars * 17 + 139 - (textWidth / 2.0f) + 4;
-            f32 yPos = 224;
+				f32 xPos = (sSelectedActIndex + 1) * 34 - sVisibleStars * 17 + 139 - (textWidth / 2.0f) + 4;
+				f32 yPos = 224;
 
-            gDPSetEnvColor(gDisplayListHead++, 100, 100, 100, 255);
-            print_generic_ascii_string(xPos, yPos, message);
+				gDPSetEnvColor(gDisplayListHead++, 100, 100, 100, 255);
+				print_generic_ascii_string(xPos, yPos, message);
 
-            gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
-        }
-    }
+				gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+			}
+		}
 
-    gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+		gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+	}
  }
 
 /**
