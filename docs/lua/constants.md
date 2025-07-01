@@ -1635,6 +1635,7 @@
 <br />
 
 ## [lighting_engine.h](#lighting_engine.h)
+- LE_MAX_LIGHTS
 
 ### [enum LEMode](#LEMode)
 | Identifier | Value |

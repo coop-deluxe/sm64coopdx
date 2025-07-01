@@ -79,7 +79,7 @@ in_files = [
     "src/engine/behavior_script.h",
     "src/audio/seqplayer.h",
     "src/engine/lighting_engine.h",
-    "src/pc/network/sync_object.h"
+    "src/pc/network/sync_object.h",
 ]
 
 override_allowed_functions = {
@@ -98,7 +98,7 @@ override_allowed_functions = {
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
-    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ]
+    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
 }
 
 override_disallowed_functions = {
@@ -139,22 +139,22 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ],
-    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ],
 }
 
 override_function_version_excludes = {
     "bhv_play_music_track_when_touched_loop": "VERSION_JP",
     "play_knockback_sound": "VERSION_JP",
-    "cur_obj_spawn_star_at_y_offset": "VERSION_JP"
+    "cur_obj_spawn_star_at_y_offset": "VERSION_JP",
 }
 
 lua_function_params = {
-    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
+    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ],
 }
 
 parameter_keywords = [

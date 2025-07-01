@@ -6440,9 +6440,7 @@ const BehaviorScript editor_Scroll_Texture[] = {
 const BehaviorScript bhvAmbientLight[] = {
     BEGIN(OBJ_LIST_DEFAULT),
     ID(id_bhvAmbientLight),
-    BEGIN_LOOP(),
-        CALL_NATIVE(bhv_ambient_light_update),
-    END_LOOP(),
+    CALL_NATIVE(bhv_ambient_light_init),
 };
 
 const BehaviorScript bhvPointLight[] = {

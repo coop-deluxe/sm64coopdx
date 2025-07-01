@@ -9678,74 +9678,18 @@ int smlua_func_uv_update_scroll(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_spawn_ambient_light(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 6) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_ambient_light", 6, top);
-        return 0;
-    }
-
-    f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "spawn_ambient_light"); return 0; }
-    f32 y = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_ambient_light"); return 0; }
-    f32 z = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_ambient_light"); return 0; }
-    u8 r = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_ambient_light"); return 0; }
-    u8 g = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_ambient_light"); return 0; }
-    u8 b = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_ambient_light"); return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, spawn_ambient_light(x, y, z, r, g, b), NULL);
-
-    return 1;
-}
-
-int smlua_func_spawn_point_light(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 7) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "spawn_point_light", 7, top);
-        return 0;
-    }
-
-    f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "spawn_point_light"); return 0; }
-    f32 y = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_point_light"); return 0; }
-    f32 z = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_point_light"); return 0; }
-    u8 r = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "spawn_point_light"); return 0; }
-    u8 g = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "spawn_point_light"); return 0; }
-    u8 b = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_point_light"); return 0; }
-    f32 radius = smlua_to_number(L, 7);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "spawn_point_light"); return 0; }
-
-    smlua_push_object(L, LOT_OBJECT, spawn_point_light(x, y, z, r, g, b, radius), NULL);
-
-    return 1;
-}
-
-int smlua_func_bhv_ambient_light_update(UNUSED lua_State* L) {
+int smlua_func_bhv_ambient_light_init(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ambient_light_update", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ambient_light_init", 0, top);
         return 0;
     }
 
 
-    bhv_ambient_light_update();
+    bhv_ambient_light_init();
 
     return 1;
 }
@@ -15726,6 +15670,44 @@ int smlua_func_le_get_light_count(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_light_exists(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_light_exists", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_light_exists"); return 0; }
+
+    lua_pushboolean(L, le_light_exists(id));
+
+    return 1;
+}
+
+int smlua_func_le_get_ambient_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_ambient_color", 1, top);
+        return 0;
+    }
+
+
+    Color out;
+    smlua_get_color(out, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_ambient_color"); return 0; }
+
+    le_get_ambient_color(out);
+
+    smlua_push_color(out, 1);
+
+    return 1;
+}
+
 int smlua_func_le_set_ambient_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15743,6 +15725,29 @@ int smlua_func_le_set_ambient_color(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "le_set_ambient_color"); return 0; }
 
     le_set_ambient_color(r, g, b);
+
+    return 1;
+}
+
+int smlua_func_le_get_light_pos(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_pos", 2, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_light_pos"); return 0; }
+
+    Vec3f out;
+    smlua_get_vec3f(out, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_get_light_pos"); return 0; }
+
+    le_get_light_pos(id, out);
+
+    smlua_push_vec3f(out, 2);
 
     return 1;
 }
@@ -15770,6 +15775,29 @@ int smlua_func_le_set_light_pos(lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_get_light_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_color", 2, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_light_color"); return 0; }
+
+    Color out;
+    smlua_get_color(out, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_get_light_color"); return 0; }
+
+    le_get_light_color(id, out);
+
+    smlua_push_color(out, 2);
+
+    return 1;
+}
+
 int smlua_func_le_set_light_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15793,6 +15821,23 @@ int smlua_func_le_set_light_color(lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_get_light_radius(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_radius", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_light_radius"); return 0; }
+
+    lua_pushnumber(L, le_get_light_radius(id));
+
+    return 1;
+}
+
 int smlua_func_le_set_light_radius(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15812,6 +15857,23 @@ int smlua_func_le_set_light_radius(lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_get_light_intensity(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_intensity", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_light_intensity"); return 0; }
+
+    lua_pushnumber(L, le_get_light_intensity(id));
+
+    return 1;
+}
+
 int smlua_func_le_set_light_intensity(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15827,6 +15889,23 @@ int smlua_func_le_set_light_intensity(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_intensity"); return 0; }
 
     le_set_light_intensity(id, intensity);
+
+    return 1;
+}
+
+int smlua_func_le_get_light_use_surface_normals(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_get_light_use_surface_normals", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_get_light_use_surface_normals"); return 0; }
+
+    lua_pushboolean(L, le_get_light_use_surface_normals(id));
 
     return 1;
 }
@@ -36809,9 +36888,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_yoshi_loop", smlua_func_bhv_yoshi_loop);
     smlua_bind_function(L, "bhv_volcano_trap_loop", smlua_func_bhv_volcano_trap_loop);
     smlua_bind_function(L, "uv_update_scroll", smlua_func_uv_update_scroll);
-    smlua_bind_function(L, "spawn_ambient_light", smlua_func_spawn_ambient_light);
-    smlua_bind_function(L, "spawn_point_light", smlua_func_spawn_point_light);
-    smlua_bind_function(L, "bhv_ambient_light_update", smlua_func_bhv_ambient_light_update);
+    smlua_bind_function(L, "bhv_ambient_light_init", smlua_func_bhv_ambient_light_init);
     smlua_bind_function(L, "bhv_point_light_init", smlua_func_bhv_point_light_init);
     smlua_bind_function(L, "bhv_point_light_loop", smlua_func_bhv_point_light_loop);
     //smlua_bind_function(L, "geo_move_mario_part_from_parent", smlua_func_geo_move_mario_part_from_parent); <--- UNIMPLEMENTED
@@ -37152,11 +37229,18 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "le_add_light", smlua_func_le_add_light);
     smlua_bind_function(L, "le_remove_light", smlua_func_le_remove_light);
     smlua_bind_function(L, "le_get_light_count", smlua_func_le_get_light_count);
+    smlua_bind_function(L, "le_light_exists", smlua_func_le_light_exists);
+    smlua_bind_function(L, "le_get_ambient_color", smlua_func_le_get_ambient_color);
     smlua_bind_function(L, "le_set_ambient_color", smlua_func_le_set_ambient_color);
+    smlua_bind_function(L, "le_get_light_pos", smlua_func_le_get_light_pos);
     smlua_bind_function(L, "le_set_light_pos", smlua_func_le_set_light_pos);
+    smlua_bind_function(L, "le_get_light_color", smlua_func_le_get_light_color);
     smlua_bind_function(L, "le_set_light_color", smlua_func_le_set_light_color);
+    smlua_bind_function(L, "le_get_light_radius", smlua_func_le_get_light_radius);
     smlua_bind_function(L, "le_set_light_radius", smlua_func_le_set_light_radius);
+    smlua_bind_function(L, "le_get_light_intensity", smlua_func_le_get_light_intensity);
     smlua_bind_function(L, "le_set_light_intensity", smlua_func_le_set_light_intensity);
+    smlua_bind_function(L, "le_get_light_use_surface_normals", smlua_func_le_get_light_use_surface_normals);
     smlua_bind_function(L, "le_set_light_use_surface_normals", smlua_func_le_set_light_use_surface_normals);
 
     // mario.h

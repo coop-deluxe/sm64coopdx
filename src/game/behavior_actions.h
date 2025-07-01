@@ -1145,12 +1145,8 @@ void bhv_yoshi_loop(void);
 void bhv_volcano_trap_loop(void);
 /* |description|Behavior loop function for UV texture scrolling|descriptionEnd| */
 void uv_update_scroll(void);
-/* |description|Spawns a lighting engine point light|descriptionEnd| */
-struct Object* spawn_ambient_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b);
-/* |description|Spawns a lighting engine ambient light|descriptionEnd| */
-struct Object* spawn_point_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius);
-/* |description|Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color|descriptionEnd| */
-void bhv_ambient_light_update(void);
+/* |description|Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color|descriptionEnd| */
+void bhv_ambient_light_init(void);
 /* |description|Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius|descriptionEnd| */
 void bhv_point_light_init(void);
 /* |description|Behavior loop function for the lighting engine point light|descriptionEnd| */

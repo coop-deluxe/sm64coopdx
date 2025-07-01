@@ -34,7 +34,7 @@ in_files = [
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
-    "include/PR/gbi.h"
+    "include/PR/gbi.h",
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -81,7 +81,7 @@ override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
         "overridePalette",
-        "overridePaletteIndex"
+        "overridePaletteIndex",
     ],
     "Animation": [
         "values",
@@ -104,7 +104,7 @@ override_field_invisible = {
 }
 
 override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
 }
 
 override_field_immutable = {
@@ -147,7 +147,7 @@ override_field_immutable = {
 
 override_field_version_excludes = {
     "oCameraLakituUnk104": "VERSION_JP",
-    "oCoinUnk1B0": "VERSION_JP"
+    "oCoinUnk1B0": "VERSION_JP",
 }
 
 override_allowed_structs = {
@@ -155,7 +155,7 @@ override_allowed_structs = {
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
-    "include/PR/gbi.h": [ "Gfx", "Vtx" ]
+    "include/PR/gbi.h": [ "Gfx", "Vtx" ],
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -173,7 +173,7 @@ sLuaManuallyDefinedStructs = [{
 
 override_types = {
     "Gwords": "Gfx",
-    "Vtx_L": "Vtx"
+    "Vtx_L": "Vtx",
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 

@@ -11942,70 +11942,13 @@ Behavior loop function for UV texture scrolling
 
 <br />
 
-## [spawn_ambient_light](#spawn_ambient_light)
+## [bhv_ambient_light_init](#bhv_ambient_light_init)
 
 ### Description
-Spawns a lighting engine point light
+Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
 
 ### Lua Example
-`local ObjectValue = spawn_ambient_light(x, y, z, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* spawn_ambient_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spawn_point_light](#spawn_point_light)
-
-### Description
-Spawns a lighting engine ambient light
-
-### Lua Example
-`local ObjectValue = spawn_point_light(x, y, z, r, g, b, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* spawn_point_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bhv_ambient_light_update](#bhv_ambient_light_update)
-
-### Description
-Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-
-### Lua Example
-`bhv_ambient_light_update()`
+`bhv_ambient_light_init()`
 
 ### Parameters
 - None
@@ -12014,7 +11957,7 @@ Behavior loop function for the lighting engine ambient light. Takes the first 3 
 - None
 
 ### C Prototype
-`void bhv_ambient_light_update(void);`
+`void bhv_ambient_light_init(void);`
 
 [:arrow_up_small:](#)
 

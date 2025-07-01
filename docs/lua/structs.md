@@ -2833,7 +2833,6 @@
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
 | oLightID | `integer` |  |
-| oLightRadius | `number` |  |
 
 [:arrow_up_small:](#)
 

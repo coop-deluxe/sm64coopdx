@@ -2915,33 +2915,8 @@ function uv_update_scroll()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @return Object
---- Spawns a lighting engine point light
-function spawn_ambient_light(x, y, z, r, g, b)
-    -- ...
-end
-
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @param radius number
---- @return Object
---- Spawns a lighting engine ambient light
-function spawn_point_light(x, y, z, r, g, b, radius)
-    -- ...
-end
-
---- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-function bhv_ambient_light_update()
+--- Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+function bhv_ambient_light_init()
     -- ...
 end
 
@@ -5041,7 +5016,7 @@ function le_set_tone_mapping(toneMapping)
 end
 
 --- @return boolean
---- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
 function le_is_enabled()
     -- ...
 end
@@ -5096,11 +5071,31 @@ function le_get_light_count()
     -- ...
 end
 
+--- @param id integer
+--- @return boolean
+--- Checks if a lighting engine point light exists
+function le_light_exists(id)
+    -- ...
+end
+
+--- @param out Color
+--- Outputs the lighting engine's ambient color to `out`
+function le_get_ambient_color(out)
+    -- ...
+end
+
 --- @param r integer
 --- @param g integer
 --- @param b integer
 --- Sets the lighting engine ambient color
 function le_set_ambient_color(r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @param out Vec3f
+--- Outputs a lighting engine point light's position to `out`
+function le_get_light_pos(id, out)
     -- ...
 end
 
@@ -5114,11 +5109,25 @@ function le_set_light_pos(id, x, y, z)
 end
 
 --- @param id integer
+--- @param out Color
+--- Outputs a lighting engine point light's color to `out`
+function le_get_light_color(id, out)
+    -- ...
+end
+
+--- @param id integer
 --- @param r integer
 --- @param g integer
 --- @param b integer
 --- Sets a lighting engine point light's color to `r`, `g`, `b`
 function le_set_light_color(id, r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `radius`
+function le_get_light_radius(id)
     -- ...
 end
 
@@ -5130,9 +5139,23 @@ function le_set_light_radius(id, radius)
 end
 
 --- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `intensity`
+function le_get_light_intensity(id)
+    -- ...
+end
+
+--- @param id integer
 --- @param intensity number
 --- Sets a lighting engine point light's `intensity`
 function le_set_light_intensity(id, intensity)
+    -- ...
+end
+
+--- @param id integer
+--- @return boolean
+--- Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+function le_get_light_use_surface_normals(id)
     -- ...
 end
 
