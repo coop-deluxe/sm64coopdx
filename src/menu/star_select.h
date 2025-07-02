@@ -13,17 +13,7 @@ enum StarSelectorTypes
     STAR_SELECTOR_100_COINS
 };
 
-struct OverrideHideActSelectHud {
-    /*0x00*/ u8 all;
-    /*0x02*/ u8 score;
-    /*0x04*/ u8 levelName;
-    /*0x06*/ u8 courseNum;
-    /*0x08*/ u8 actName;
-    /*0x0A*/ u8 starNum;
-    /*0x0C*/ u8 playersInLevel;
-};
-
-extern struct OverrideHideActSelectHud gOverrideHideActSelectHud;
+extern u32 gOverrideHideActSelectHud;
 
 
 #ifdef AVOID_UB
