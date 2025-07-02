@@ -15,9 +15,9 @@ static bool DynOS_PathHasExtension(const char *aPath, const char *aExtension) {
     return strcmp(aPath + (_LenStr - _LenSuffix), aExtension) == 0;
 }
 
-static bool DynOS_PathHasExtensions(const char *aPath, const char * const aExtensions[], s32 aExtensionCount) {
-    for (s32 i = 0; i < aExtensionCount; i++) {
-        if (DynOS_PathHasExtension(aPath, aExtensions[i])) {
+static bool DynOS_PathHasExtensions(const char *aPath, std::initializer_list<const char*> aExtensions) {
+    for (auto _Ext : aExtensions) {
+        if (DynOS_PathHasExtension(aPath, _Ext)) {
             return true;
         }
     }
@@ -25,7 +25,7 @@ static bool DynOS_PathHasExtensions(const char *aPath, const char * const aExten
     return false;
 }
 
-static void DynOS_GetMTimeInFolderSplitByExtensions(const SysPath &aPath, const char * const aExtensions[], s32 aExtensionCount, u64 *aLatestMTimeExt, u64 *aLatestMTimeNonExt) {
+static void DynOS_GetMTimeInFolderSplitByExtensions(const SysPath &aPath, std::initializer_list<const char*> aExtensions, u64 *aLatestMTimeExt, u64 *aLatestMTimeNonExt) {
     DIR *_DirPath = opendir(aPath.c_str());
     if (_DirPath) {
         struct dirent *_DirEnt = NULL;
@@ -39,13 +39,13 @@ static void DynOS_GetMTimeInFolderSplitByExtensions(const SysPath &aPath, const 
 
             // Recursively accumulate maximum mtimes
             if (fs_sys_dir_exists(_Path.c_str())) {
-                DynOS_GetMTimeInFolderSplitByExtensions(_Path, aExtensions, aExtensionCount, aLatestMTimeExt, aLatestMTimeNonExt);
+                DynOS_GetMTimeInFolderSplitByExtensions(_Path, aExtensions, aLatestMTimeExt, aLatestMTimeNonExt);
                 continue;
             }
 
             // Accumulate max mtime in the correct slot
             u64 _PathMTime = fs_sys_get_modified_time(_Path.c_str());
-            if (DynOS_PathHasExtensions(_Path.c_str(), aExtensions, aExtensionCount)) {
+            if (DynOS_PathHasExtensions(_Path.c_str(), aExtensions)) {
                 *aLatestMTimeExt = MAX(*aLatestMTimeExt, _PathMTime);
             } else {
                 *aLatestMTimeNonExt = MAX(*aLatestMTimeNonExt, _PathMTime);
@@ -113,11 +113,11 @@ static u64 DynOS_GetMTimeInFolder(const SysPath &aPath) {
     return _LatestMTimeSubDir;
 }
 
-bool DynOS_ShouldGeneratePack(const SysPath &aPackFolder, const char * const aGenFileExtensions[], s32 aGenFileExtensionCount) {
+bool DynOS_ShouldGeneratePack(const SysPath &aPackFolder, std::initializer_list<const char*> aExtensions) {
     u64 _LatestMTimeExt = 0;
     u64 _LatestMTimeNonExt = 0;
 
-    DynOS_GetMTimeInFolderSplitByExtensions(aPackFolder, aGenFileExtensions, aGenFileExtensionCount, &_LatestMTimeExt, &_LatestMTimeNonExt);
+    DynOS_GetMTimeInFolderSplitByExtensions(aPackFolder, aExtensions, &_LatestMTimeExt, &_LatestMTimeNonExt);
 
     return _LatestMTimeExt < _LatestMTimeNonExt;
 }

@@ -233,8 +233,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing actors: \"%s\"", aPackFolder.c_str());
 
-    const char * const _GeneratedExtensions[] = { ".bin", ".col" };
-    if (!DynOS_ShouldGeneratePack(aPackFolder, _GeneratedExtensions, ARRAY_COUNT(_GeneratedExtensions))) {
+    if (!DynOS_ShouldGeneratePack(aPackFolder,  { ".bin", ".col" })) {
         return;
     }
 

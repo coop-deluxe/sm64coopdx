@@ -1233,8 +1233,7 @@ static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing levels: \"%s\"", aPackFolder.c_str());
 
-    const char * const _GeneratedExtensions[] = { ".lvl" };
-    if (!DynOS_ShouldGeneratePack(aPackFolder, _GeneratedExtensions, ARRAY_COUNT(_GeneratedExtensions))) {
+    if (!DynOS_ShouldGeneratePack(aPackFolder, { ".lvl" })) {
         return;
     }
 
