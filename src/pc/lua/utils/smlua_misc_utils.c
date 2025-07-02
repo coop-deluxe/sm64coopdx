@@ -214,40 +214,24 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
 }
 
 void act_select_hud_hide(enum ActSelectHudPart part) {
-    switch (part) {
-        case ACT_SELECT_HUD_ALL:        gOverrideHideActSelectHud.all  = TRUE; gOverrideHideActSelectHud.score  = TRUE; gOverrideHideActSelectHud.levelName  = TRUE; gOverrideHideActSelectHud.courseNum  = TRUE; gOverrideHideActSelectHud.actName  = TRUE; gOverrideHideActSelectHud.starNum  = TRUE; gOverrideHideActSelectHud.playersInLevel  = TRUE;   break;
-        case ACT_SELECT_HUD_SCORE:      gOverrideHideActSelectHud.score  = TRUE;   break;
-        case ACT_SELECT_HUD_LEVEL_NAME:      gOverrideHideActSelectHud.levelName  = TRUE;   break;
-        case ACT_SELECT_HUD_COURSE_NUM:      gOverrideHideActSelectHud.courseNum  = TRUE;   break;
-        case ACT_SELECT_HUD_ACT_NAME:      gOverrideHideActSelectHud.actName  = TRUE;   break;
-        case ACT_SELECT_HUD_STAR_NUM:      gOverrideHideActSelectHud.starNum  = TRUE;   break;
-        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      gOverrideHideActSelectHud.playersInLevel  = TRUE;   break;
+    if (part == ACT_SELECT_HUD_ALL) {
+        gOverrideHideActSelectHud = ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL;
+    } else {
+        gOverrideHideActSelectHud |= part;
     }
-}
+ }
 
 void act_select_hud_show(enum ActSelectHudPart part) {
-    switch (part) {
-        case ACT_SELECT_HUD_ALL:        gOverrideHideActSelectHud.all  = FALSE; gOverrideHideActSelectHud.score  = FALSE; gOverrideHideActSelectHud.levelName  = FALSE; gOverrideHideActSelectHud.courseNum  = FALSE; gOverrideHideActSelectHud.actName  = FALSE; gOverrideHideActSelectHud.starNum  = FALSE; gOverrideHideActSelectHud.playersInLevel  = FALSE;   break;
-        case ACT_SELECT_HUD_SCORE:      gOverrideHideActSelectHud.score  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
-        case ACT_SELECT_HUD_LEVEL_NAME:      gOverrideHideActSelectHud.levelName  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
-        case ACT_SELECT_HUD_COURSE_NUM:      gOverrideHideActSelectHud.courseNum  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
-        case ACT_SELECT_HUD_ACT_NAME:      gOverrideHideActSelectHud.actName  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
-        case ACT_SELECT_HUD_STAR_NUM:      gOverrideHideActSelectHud.starNum  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
-        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      gOverrideHideActSelectHud.playersInLevel  = FALSE; gOverrideHideActSelectHud.all  = FALSE;   break;
+    if (part == ACT_SELECT_HUD_ALL) {
+        gOverrideHideActSelectHud = 0;
+    } else {
+        gOverrideHideActSelectHud &= ~part;
+        gOverrideHideActSelectHud &= ~ACT_SELECT_HUD_ALL;
     }
 }
 
 bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
-	if (gOverrideHideActSelectHud.all) { return TRUE; }
-    switch (part) {
-        case ACT_SELECT_HUD_ALL:        return FALSE;
-        case ACT_SELECT_HUD_SCORE:      return gOverrideHideActSelectHud.score;
-        case ACT_SELECT_HUD_LEVEL_NAME:      return gOverrideHideActSelectHud.levelName;
-        case ACT_SELECT_HUD_COURSE_NUM:      return gOverrideHideActSelectHud.courseNum;
-        case ACT_SELECT_HUD_ACT_NAME:      return gOverrideHideActSelectHud.actName;
-        case ACT_SELECT_HUD_STAR_NUM:      return gOverrideHideActSelectHud.starNum;
-        case ACT_SELECT_HUD_PLAYERS_IN_LEVEL:      return gOverrideHideActSelectHud.playersInLevel;
-    }
+    return ((gOverrideHideActSelectHud & ACT_SELECT_HUD_ALL) != 0) || ((gOverrideHideActSelectHud & part) != 0);
 }
 
 extern const u8 texture_power_meter_left_side[];
