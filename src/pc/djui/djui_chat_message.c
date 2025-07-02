@@ -14,6 +14,7 @@
 static bool djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
     struct DjuiBase* ctBase = &chatMessage->message->base;
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
 
     f32 seconds = clock_elapsed() - chatMessage->createTime;
     f32 f = 1.0f;
@@ -24,15 +25,15 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     }
 
     if (gDjuiChatBoxFocus) {
-        djui_base_set_color(base, 0, 0, 0, 120);
-        djui_base_set_color(ctBase, 255, 255, 255, 255);
+        djui_base_set_color(base, theme->threePanels.rectColor.r, theme->threePanels.rectColor.g, theme->threePanels.rectColor.b, configDjuiBaseAlpha);
+        djui_base_set_color(ctBase, theme->interactables.textColor.r, theme->interactables.textColor.g, theme->interactables.textColor.b, configDjuiChatAlpha);
         djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
     } else if (f <= 0.1f) {
         return false;
     } else {
-        djui_base_set_color(base, 0, 0, 0, 180 * f);
-        djui_base_set_color(ctBase, 255, 255, 255, 255 * f);
+        djui_base_set_color(base, theme->threePanels.rectColor.r, theme->threePanels.rectColor.g, theme->threePanels.rectColor.b, configDjuiBaseAlpha * f);
+        djui_base_set_color(ctBase, theme->interactables.textColor.r, theme->interactables.textColor.g, theme->interactables.textColor.b, configDjuiChatAlpha * f);
         djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
     }
@@ -73,10 +74,11 @@ void djui_chat_message_create(const char* message) {
     if (gDjuiChatBox == NULL || gDjuiChatBox->chatFlow == NULL) { return; }
     struct DjuiChatMessage* chatMessage = calloc(1, sizeof(struct DjuiChatMessage));
     struct DjuiBase* base = &chatMessage->base;
+    f32 chatScale = (configDjuiChatSize * 0.01);
     djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 1.0f, 0);
-    djui_base_set_color(base, 0, 0, 0, 64);
+    djui_base_set_size(base, chatScale, 0);
+    djui_base_set_color(base, 0, 0, 0, configDjuiBaseAlpha);
     djui_base_set_padding(base, 2, 4, 2, 4);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
 
@@ -86,15 +88,17 @@ void djui_chat_message_create(const char* message) {
     struct DjuiBase* ctBase = &chatText->base;
     djui_base_set_size_type(ctBase, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
     djui_base_set_size(ctBase, maxTextWidth, 1.0f);
-    djui_base_set_color(ctBase, 255, 255, 255, 255);
     djui_base_set_location(ctBase, 0, 0);
     djui_text_set_alignment(chatText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    djui_base_set_color(&chatText->base, 255, 255, 255, configDjuiChatAlpha);
+
     chatMessage->message = chatText;
+    chatText->fontScale *= chatScale;
     chatMessage->createTime = clock_elapsed();
 
     // figure out chat message height
     chatText->base.comp.width = maxTextWidth;
-    f32 messageHeight = djui_text_count_lines(chatText, 10) * (chatText->font->lineHeight * chatText->font->defaultFontScale) + 8;
+    f32 messageHeight = djui_text_count_lines(chatText, 10) * (chatText->font->lineHeight * chatText->font->defaultFontScale * chatScale) + 8 * chatScale;
     djui_base_set_size(base, 1.0f, messageHeight);
     gDjuiChatBox->chatFlow->base.height.value += messageHeight + gDjuiChatBox->chatFlow->margin.value;
     if (!gDjuiChatBox->scrolling) {

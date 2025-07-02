@@ -160,6 +160,9 @@ extern bool         configDjuiThemeCenter;
 extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
+extern unsigned int configDjuiChatAlpha;
+extern unsigned int configDjuiBaseAlpha;
+extern unsigned int configDjuiChatSize;
 // other
 extern unsigned int configRulesVersion;
 extern bool         configCompressOnStartup;
