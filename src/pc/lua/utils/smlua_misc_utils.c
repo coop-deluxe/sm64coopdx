@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "game/hardcoded.h"
 #include "game/hud.h"
+#include "menu/star_select.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
@@ -210,6 +211,27 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
         case HUD_DISPLAY_TIMER:         gHudDisplay.timer  = value;   break;
         case HUD_DISPLAY_CAMERA_STATUS: set_hud_camera_status(value); break;
     }
+}
+
+void act_select_hud_hide(enum ActSelectHudPart part) {
+    if (part == ACT_SELECT_HUD_ALL) {
+        gOverrideHideActSelectHud = ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL;
+    } else {
+        gOverrideHideActSelectHud |= part;
+    }
+ }
+
+void act_select_hud_show(enum ActSelectHudPart part) {
+    if (part == ACT_SELECT_HUD_ALL) {
+        gOverrideHideActSelectHud = 0;
+    } else {
+        gOverrideHideActSelectHud &= ~part;
+        gOverrideHideActSelectHud &= ~ACT_SELECT_HUD_ALL;
+    }
+}
+
+bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
+    return ((gOverrideHideActSelectHud & ACT_SELECT_HUD_ALL) != 0) || ((gOverrideHideActSelectHud & part) != 0);
 }
 
 extern const u8 texture_power_meter_left_side[];

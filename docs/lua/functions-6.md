@@ -4881,6 +4881,75 @@ Sets if the star counter on the HUD should flash
 
 <br />
 
+## [act_select_hud_hide](#act_select_hud_hide)
+
+### Description
+Hides part of the Act Select HUD
+
+### Lua Example
+`act_select_hud_hide(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- None
+
+### C Prototype
+`void act_select_hud_hide(enum ActSelectHudPart part);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [act_select_hud_show](#act_select_hud_show)
+
+### Description
+Shows part of the Act Select HUD
+
+### Lua Example
+`act_select_hud_show(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- None
+
+### C Prototype
+`void act_select_hud_show(enum ActSelectHudPart part);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [act_select_hud_is_hidden](#act_select_hud_is_hidden)
+
+### Description
+Checks if part of the Act Select HUD is hidden
+
+### Lua Example
+`local booleanValue = act_select_hud_is_hidden(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool act_select_hud_is_hidden(enum ActSelectHudPart part);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_game_paused](#is_game_paused)
 
 ### Description
