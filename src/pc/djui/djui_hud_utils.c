@@ -548,6 +548,12 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
 
+    // apply scale correction for tiles
+    scaleW *= ((float)tileW / (float)texInfo->width);
+    scaleH *= ((float)tileH / (float)texInfo->height);
+    prevScaleW *= ((float)tileW / (float)texInfo->width);
+    prevScaleH *= ((float)tileH / (float)texInfo->height);
+
     djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH, tileX, tileY, tileW, tileH);
 
     if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
