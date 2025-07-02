@@ -1245,7 +1245,8 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
 
     // Count parameters
     // Find the position of each % to retrieve the correct expected type from the command paramInfo
-    u8 paramPos[paramInfo->count] = { 0 };
+    u8 paramPos[paramInfo->count];
+    memset(paramPos, 0, sizeof(u8) * paramInfo->count);
     u8 paramPosIndex = 0;
     u8 paramCount = 1;
     bool inBrackets = false;

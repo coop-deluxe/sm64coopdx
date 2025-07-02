@@ -43,9 +43,9 @@ struct Object *get_cutscene_focus(void);
 /* |description|Gets the secondary camera focus object|descriptionEnd| */
 struct Object *get_secondary_camera_focus(void);
 /* |description|Sets the cutscene focus object|descriptionEnd| */
-void *set_cutscene_focus(struct Object *o);
+void set_cutscene_focus(struct Object *o);
 /* |description|Sets the secondary camera focus object|descriptionEnd| */
-void *set_secondary_camera_focus(struct Object *o);
+void set_secondary_camera_focus(struct Object *o);
 
 //
 // Helpers to iterate through the object table

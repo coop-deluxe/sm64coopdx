@@ -118,11 +118,9 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
     {
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;
-        s32 count = 0;
         for (int i = 0; i < gHookedModMenuElementsCount; i++) {
             if (gHookedModMenuElements[i].mod == mod) {
                 djui_panel_mod_menu_mod_create_element(layoutBase, i);
-                count++;
             }
         }
         djui_paginated_calculate_height(paginated);

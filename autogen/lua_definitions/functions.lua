@@ -5073,7 +5073,7 @@ end
 
 --- @param id integer
 --- @return boolean
---- Checks if a lighting engine point light exists
+--- Checks if a lighting engine point light corresponding to `id` exists
 function le_light_exists(id)
     -- ...
 end
@@ -11549,14 +11549,12 @@ function get_secondary_camera_focus()
 end
 
 --- @param o Object
---- @return void*
 --- Sets the cutscene focus object
 function set_cutscene_focus(o)
     -- ...
 end
 
 --- @param o Object
---- @return void*
 --- Sets the secondary camera focus object
 function set_secondary_camera_focus(o)
     -- ...

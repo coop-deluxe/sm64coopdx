@@ -6873,7 +6873,7 @@ Gets the total number of lights currently loaded in the lighting engine
 ## [le_light_exists](#le_light_exists)
 
 ### Description
-Checks if a lighting engine point light exists
+Checks if a lighting engine point light corresponding to `id` exists
 
 ### Lua Example
 `local booleanValue = le_light_exists(id)`

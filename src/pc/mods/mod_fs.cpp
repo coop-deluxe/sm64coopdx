@@ -982,8 +982,8 @@ C_DEFINE lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFs
         case INT_TYPE_S16: return mod_fs_file_read_data<s16>(file, 0);
         case INT_TYPE_S32: return mod_fs_file_read_data<s32>(file, 0);
         case INT_TYPE_S64: return mod_fs_file_read_data<s64>(file, 0);
+        default:           return 0;
     }
-    return 0;
 }
 
 C_DEFINE lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType) {
@@ -1006,8 +1006,8 @@ C_DEFINE lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFi
     switch (floatType) {
         case FLOAT_TYPE_F32: return mod_fs_file_read_data<f32>(file, 0);
         case FLOAT_TYPE_F64: return mod_fs_file_read_data<f64>(file, 0);
+        default:             return 0;
     }
-    return 0;
 }
 
 C_DEFINE ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length) {
@@ -1185,8 +1185,8 @@ C_DEFINE bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer valu
         case INT_TYPE_S16: return mod_fs_file_write_data<s16>(file, value);
         case INT_TYPE_S32: return mod_fs_file_write_data<s32>(file, value);
         case INT_TYPE_S64: return mod_fs_file_write_data<s64>(file, value);
+        default:           return false;
     }
-    return false;
 }
 
 C_DEFINE bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType) {
@@ -1214,8 +1214,8 @@ C_DEFINE bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value,
     switch (floatType) {
         case FLOAT_TYPE_F32: return mod_fs_file_write_data<f32>(file, value);
         case FLOAT_TYPE_F64: return mod_fs_file_write_data<f64>(file, value);
+        default:             return false;
     }
-    return false;
 }
 
 C_DEFINE bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring) {
@@ -1308,11 +1308,12 @@ C_DEFINE bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFil
         return false;
     }
 
-    s32 start = 0;
+    s32 start;
     switch (origin) {
         case FILE_SEEK_SET: start = 0; break;
         case FILE_SEEK_CUR: start = file->offset; break;
         case FILE_SEEK_END: start = file->size; break;
+        default:            start = 0; break;
     }
     file->offset = MIN(MAX(start + offset, 0), (s32) file->size);
     return true;

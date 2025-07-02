@@ -1,10 +1,10 @@
 #ifndef SMLUA_UTILS_H
 #define SMLUA_UTILS_H
 
+#include "src/pc/network/packets/packet.h"
+
 extern u8 gSmLuaConvertSuccess;
 typedef int LuaFunction;
-struct Packet;
-struct LSTNetworkType;
 
 typedef struct ByteString {
     const char *bytes;

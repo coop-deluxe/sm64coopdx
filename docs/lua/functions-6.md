@@ -6201,7 +6201,7 @@ Gets the secondary camera focus object
 Sets the cutscene focus object
 
 ### Lua Example
-`local voidValue = set_cutscene_focus(o)`
+`set_cutscene_focus(o)`
 
 ### Parameters
 | Field | Type |
@@ -6209,10 +6209,10 @@ Sets the cutscene focus object
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- `void *`
+- None
 
 ### C Prototype
-`void *set_cutscene_focus(struct Object *o);`
+`void set_cutscene_focus(struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -6224,7 +6224,7 @@ Sets the cutscene focus object
 Sets the secondary camera focus object
 
 ### Lua Example
-`local voidValue = set_secondary_camera_focus(o)`
+`set_secondary_camera_focus(o)`
 
 ### Parameters
 | Field | Type |
@@ -6232,10 +6232,10 @@ Sets the secondary camera focus object
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- `void *`
+- None
 
 ### C Prototype
-`void *set_secondary_camera_focus(struct Object *o);`
+`void set_secondary_camera_focus(struct Object *o);`
 
 [:arrow_up_small:](#)
 
