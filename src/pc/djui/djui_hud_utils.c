@@ -560,12 +560,12 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 
     // apply scale correction for tiles
     if (texInfo->width != 0) {
-        scaleW *= ((float)tileW / (float)texInfo->width);
-        prevScaleW *= ((float)tileW / (float)texInfo->width);
+        scaleW *= ((f32)tileW / (f32)texInfo->width);
+        prevScaleW *= ((f32)tileW / (f32)texInfo->width);
     }
     if (texInfo->height != 0) {
-        scaleH *= ((float)tileH / (float)texInfo->height);
-        prevScaleH *= ((float)tileH / (float)texInfo->height);
+        scaleH *= ((f32)tileH / (f32)texInfo->height);
+        prevScaleH *= ((f32)tileH / (f32)texInfo->height);
     }
 
     djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH, tileX, tileY, tileW, tileH);
