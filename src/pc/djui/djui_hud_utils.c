@@ -446,6 +446,8 @@ void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 
         return;
     }
 
+    if (!texture) { return; }
+
     gDjuiHudUtilsZ += 0.01f;
 
     // translate position
@@ -478,9 +480,11 @@ void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 
 }
 
 void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+    if (!texture) { return; }
+
     gDjuiHudUtilsZ += 0.01f;
-    scaleW *= (f32) tileW / (f32) width;
-    scaleH *= (f32) tileH / (f32) height;
+    if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
+    if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
 
     // translate position
     f32 translatedX = x;
@@ -513,16 +517,20 @@ void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width,
 }
 
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+    if (!texInfo) { return; }
     djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH);
 }
 
 void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+    if (!texInfo) { return; }
     djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
 }
 
 void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
+
+    if (!texInfo) { return; }
 
     djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH);
 
@@ -547,6 +555,18 @@ void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX
 void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
+
+    if (!texInfo) { return; }
+
+    // apply scale correction for tiles
+    if (texInfo->width != 0) {
+        scaleW *= ((f32)tileW / (f32)texInfo->width);
+        prevScaleW *= ((f32)tileW / (f32)texInfo->width);
+    }
+    if (texInfo->height != 0) {
+        scaleH *= ((f32)tileH / (f32)texInfo->height);
+        prevScaleH *= ((f32)tileH / (f32)texInfo->height);
+    }
 
     djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH, tileX, tileY, tileW, tileH);
 
