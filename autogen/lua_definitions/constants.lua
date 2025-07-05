@@ -1113,7 +1113,10 @@ id_bhvBlueCoinNumber                      = 537 --- @type BehaviorId
 id_bhvStarNumber                          = 538 --- @type BehaviorId
 id_bhvAmbientLight                        = 539 --- @type BehaviorId
 id_bhvPointLight                          = 540 --- @type BehaviorId
-id_bhv_max_count                          = 541 --- @type BehaviorId
+id_bhvMirror                              = 541 --- @type BehaviorId
+id_bhvHorizontalMirror                    = 542 --- @type BehaviorId
+id_bhvVerticalMirror                      = 543 --- @type BehaviorId
+id_bhv_max_count                          = 544 --- @type BehaviorId
 
 --- @alias BehaviorId
 --- | `id_bhv1Up`
@@ -1657,6 +1660,9 @@ id_bhv_max_count                          = 541 --- @type BehaviorId
 --- | `id_bhvStarNumber`
 --- | `id_bhvAmbientLight`
 --- | `id_bhvPointLight`
+--- | `id_bhvMirror`
+--- | `id_bhvHorizontalMirror`
+--- | `id_bhvVerticalMirror`
 --- | `id_bhv_max_count`
 
 RCO_ALL                       = 0 --- @type RomhackCameraOverride
@@ -6490,6 +6496,12 @@ MR_BLIZZARD_STYPE_NO_CAP = 0
 MR_BLIZZARD_STYPE_JUMPING = 1
 
 --- @type integer
+MIRROR_TYPE_HORIZONTAL = 1
+
+--- @type integer
+MIRROR_TYPE_VERTICAL = 2
+
+--- @type integer
 TIME_STOP_UNKNOWN_0 = (1 << 0)
 
 --- @type integer
@@ -8046,7 +8058,8 @@ HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
 HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
 HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
-HOOK_MAX                                    = 59 --- @type LuaHookedEventType
+HOOK_ON_MIRROR_OBJECT_RENDER                = 59 --- @type LuaHookedEventType
+HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8108,6 +8121,7 @@ HOOK_MAX                                    = 59 --- @type LuaHookedEventType
 --- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
 --- | `HOOK_ON_ADD_SURFACE`
 --- | `HOOK_ON_CLEAR_AREAS`
+--- | `HOOK_ON_MIRROR_OBJECT_RENDER`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue

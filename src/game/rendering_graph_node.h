@@ -41,6 +41,8 @@ extern f32 gOverrideFOV;
 extern f32 gOverrideNear;
 extern f32 gOverrideFar;
 
+void geo_append_display_list(void *displayList, s16 layer);
+void geo_process_object(struct Object *node);
 void geo_process_node_and_siblings(struct GraphNode *firstNode);
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
 

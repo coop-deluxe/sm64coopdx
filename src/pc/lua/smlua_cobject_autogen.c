@@ -346,7 +346,7 @@ static struct LuaObjectField sBehaviorTrajectoriesFields[LUA_BEHAVIOR_TRAJECTORI
     { "UnagiTrajectory",               LVT_TRAJECTORY_P, offsetof(struct BehaviorTrajectories, UnagiTrajectory),               false, LOT_POINTER, 1, sizeof(Trajectory*) },
 };
 
-#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 32
+#define LUA_BEHAVIOR_VALUES_FIELD_COUNT 33
 static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COUNT] = {
     { "BowlingBallBob2Speed",     LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBob2Speed),     false, LOT_NONE,                 1, sizeof(f32)                         },
     { "BowlingBallBobSpeed",      LVT_F32,     offsetof(struct BehaviorValues, BowlingBallBobSpeed),      false, LOT_NONE,                 1, sizeof(f32)                         },
@@ -366,6 +366,7 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "KoopaThiAgility",          LVT_F32,     offsetof(struct BehaviorValues, KoopaThiAgility),          false, LOT_NONE,                 1, sizeof(f32)                         },
     { "MipsStar1Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar1Requirement),     false, LOT_NONE,                 1, sizeof(s16)                         },
     { "MipsStar2Requirement",     LVT_S16,     offsetof(struct BehaviorValues, MipsStar2Requirement),     false, LOT_NONE,                 1, sizeof(s16)                         },
+    { "MirrorsMaxReflections",    LVT_U8,      offsetof(struct BehaviorValues, MirrorsMaxReflections),    false, LOT_NONE,                 1, sizeof(u8)                          },
     { "MultipleCapCollection",    LVT_U8,      offsetof(struct BehaviorValues, MultipleCapCollection),    false, LOT_NONE,                 1, sizeof(u8)                          },
     { "RacingPenguinBigHeight",   LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigHeight),   false, LOT_NONE,                 1, sizeof(f32)                         },
     { "RacingPenguinBigRadius",   LVT_F32,     offsetof(struct BehaviorValues, RacingPenguinBigRadius),   false, LOT_NONE,                 1, sizeof(f32)                         },
@@ -1454,7 +1455,7 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION, 1, sizeof(struct Animation*)                },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 27
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 26
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE,  1, sizeof(u32)   },
     { "allowPartRotation",   LVT_U8,      offsetof(struct MarioBodyState, allowPartRotation),   false, LOT_NONE,  1, sizeof(u8)    },
@@ -1473,7 +1474,6 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "lightingDirX",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirX),        false, LOT_NONE,  1, sizeof(f32)   },
     { "lightingDirY",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirY),        false, LOT_NONE,  1, sizeof(f32)   },
     { "lightingDirZ",        LVT_F32,     offsetof(struct MarioBodyState, lightingDirZ),        false, LOT_NONE,  1, sizeof(f32)   },
-    { "mirrorMario",         LVT_BOOL,    offsetof(struct MarioBodyState, mirrorMario),         false, LOT_NONE,  1, sizeof(bool)  },
     { "modelState",          LVT_S16,     offsetof(struct MarioBodyState, modelState),          false, LOT_NONE,  1, sizeof(s16)   },
     { "punchState",          LVT_U8,      offsetof(struct MarioBodyState, punchState),          false, LOT_NONE,  1, sizeof(u8)    },
     { "shadeB",              LVT_U16,     offsetof(struct MarioBodyState, shadeB),              false, LOT_NONE,  1, sizeof(u16)   },
@@ -1674,7 +1674,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 763
+#define LUA_OBJECT_FIELD_COUNT 771
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2123,6 +2123,14 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oMipsForwardVelocity",                       LVT_F32,                 offsetof(struct Object, oMipsForwardVelocity),                       false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMipsStarStatus",                            LVT_S32,                 offsetof(struct Object, oMipsStarStatus),                            false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMipsStartWaypointIndex",                    LVT_S32,                 offsetof(struct Object, oMipsStartWaypointIndex),                    false, LOT_NONE,         1, sizeof(s32)                   },
+    { "oMirrorHeight",                              LVT_F32,                 offsetof(struct Object, oMirrorHeight),                              false, LOT_NONE,         1, sizeof(f32)                   },
+    { "oMirrorMaxDistance",                         LVT_F32,                 offsetof(struct Object, oMirrorMaxDistance),                         false, LOT_NONE,         1, sizeof(f32)                   },
+    { "oMirrorObjInvertCulling",                    LVT_U32,                 offsetof(struct Object, oMirrorObjInvertCulling),                    true,  LOT_NONE,         1, sizeof(u32)                   },
+    { "oMirrorObjMirror",                           LVT_COBJECT_P,           offsetof(struct Object, oMirrorObjMirror),                           true,  LOT_OBJECT,       1, sizeof(struct Object*)        },
+    { "oMirrorObjPrevObj",                          LVT_COBJECT_P,           offsetof(struct Object, oMirrorObjPrevObj),                          true,  LOT_OBJECT,       1, sizeof(struct Object*)        },
+    { "oMirrorObjRealObj",                          LVT_COBJECT_P,           offsetof(struct Object, oMirrorObjRealObj),                          true,  LOT_OBJECT,       1, sizeof(struct Object*)        },
+    { "oMirrorType",                                LVT_U32,                 offsetof(struct Object, oMirrorType),                                false, LOT_NONE,         1, sizeof(u32)                   },
+    { "oMirrorWidth",                               LVT_F32,                 offsetof(struct Object, oMirrorWidth),                               false, LOT_NONE,         1, sizeof(f32)                   },
     { "oMoneybagJumpState",                         LVT_S32,                 offsetof(struct Object, oMoneybagJumpState),                         false, LOT_NONE,         1, sizeof(s32)                   },
     { "oMontyMoleCurrentHole",                      LVT_COBJECT_P,           offsetof(struct Object, oMontyMoleCurrentHole),                      false, LOT_OBJECT,       1, sizeof(struct Object*)        },
     { "oMontyMoleHeightRelativeToFloor",            LVT_F32,                 offsetof(struct Object, oMontyMoleHeightRelativeToFloor),            false, LOT_NONE,         1, sizeof(f32)                   },

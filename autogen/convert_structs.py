@@ -111,7 +111,7 @@ override_field_immutable = {
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
+    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "oMirrorObjInvertCulling", "oMirrorObjPrevObj", "oMirrorObjRealObj", "oMirrorObjMirror" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "currAnimPart" ],

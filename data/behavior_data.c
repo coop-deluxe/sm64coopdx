@@ -10,6 +10,7 @@
 #include "game/mario_misc.h"
 #include "game/object_helpers.h"
 #include "game/debug.h"
+#include "game/mirror.h"
 #include "menu/file_select.h"
 #include "engine/surface_load.h"
 
@@ -6453,4 +6454,32 @@ const BehaviorScript bhvPointLight[] = {
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_point_light_loop),
     END_LOOP(),
+};
+
+const BehaviorScript bhvMirror[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvMirror),
+    CALL_NATIVE(bhv_mirror_init),
+    BREAK(),
+};
+
+const BehaviorScript bhvHorizontalMirror[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvHorizontalMirror),
+    SET_INT(oMirrorType, MIRROR_TYPE_HORIZONTAL),
+    GOTO(bhvMirror),
+};
+
+const BehaviorScript bhvVerticalMirror[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvVerticalMirror),
+    SET_INT(oMirrorType, MIRROR_TYPE_VERTICAL),
+    GOTO(bhvMirror),
+};
+
+// Not a real behavior, used to identify mirror reflections
+const BehaviorScript bhvMirrorObject[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhv_max_count),
+    BREAK(),
 };

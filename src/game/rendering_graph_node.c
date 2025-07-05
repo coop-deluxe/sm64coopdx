@@ -20,6 +20,7 @@
 #include "course_table.h"
 #include "skybox.h"
 #include "mario.h"
+#include "mirror.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -425,7 +426,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
  * parameter. Look at the RenderModeContainer struct to see the corresponding
  * render modes of layers.
  */
-static void geo_append_display_list(void *displayList, s16 layer) {
+void geo_append_display_list(void *displayList, s16 layer) {
 
 #ifdef F3DEX_GBI_2
     gSPLookAt(gDisplayListHead++, &lookAt);
@@ -784,11 +785,14 @@ static void geo_process_billboard(struct GraphNodeBillboard *node) {
                    gCurGraphNodeCamera->roll);
     mtxf_billboard(gMatStackPrev[nextMatStackIndex], gMatStackPrev[gMatStackIndex], translation,
                    gCurGraphNodeCamera->roll);
+
+    bool isHeldObjMirrorObj = false;
     if (gCurGraphNodeHeldObject != NULL) {
         mtxf_scale_vec3f(gMatStack[nextMatStackIndex], gMatStack[nextMatStackIndex],
                          gCurGraphNodeHeldObject->objNode->header.gfx.scale);
         mtxf_scale_vec3f(gMatStackPrev[nextMatStackIndex], gMatStackPrev[nextMatStackIndex],
                          gCurGraphNodeHeldObject->objNode->header.gfx.scale);
+        isHeldObjMirrorObj = geo_is_mirror_object((struct Object *) gCurGraphNodeObject);
     } else if (gCurGraphNodeObject != NULL) {
         mtxf_scale_vec3f(gMatStack[nextMatStackIndex], gMatStack[nextMatStackIndex],
                          gCurGraphNodeObject->scale);
@@ -801,12 +805,19 @@ static void geo_process_billboard(struct GraphNodeBillboard *node) {
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
 
+    if (isHeldObjMirrorObj) {
+        geo_invert_culling(gCurGraphNodeHeldObject->objNode->oMirrorObjInvertCulling);
+    }
     if (node->displayList != NULL) {
         geo_append_display_list(node->displayList, node->node.flags >> 8);
     }
     if (node->node.children != NULL) {
         geo_process_node_and_siblings(node->node.children);
     }
+    if (isHeldObjMirrorObj) {
+        geo_invert_culling(!gCurGraphNodeHeldObject->objNode->oMirrorObjInvertCulling);
+    }
+
     gMatStackIndex--;
 }
 
@@ -1057,6 +1068,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             }
             shadowScale = node->shadowScale * gCurGraphNodeObject->scale[0];
         }
+        shadowScale *= geo_process_shadow_apply_mirror_transform(gCurGraphNodeObject);
 
         f32 objScale = 1.0f;
         if (gCurAnimEnabled) {
@@ -1253,7 +1265,7 @@ static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Obje
 /**
  * Process an object node.
  */
-static void geo_process_object(struct Object *node) {
+void geo_process_object(struct Object *node) {
     struct Object* lastProcessingObject = gCurGraphNodeProcessingObject;
     struct MarioState* lastMarioState = gCurGraphNodeMarioState;
     gCurGraphNodeProcessingObject = node;
@@ -1272,7 +1284,11 @@ static void geo_process_object(struct Object *node) {
     }
 
     if (node->hookRender) {
-        smlua_call_event_hooks(HOOK_ON_OBJECT_RENDER, node);
+        if (geo_is_mirror_object(node)) {
+            smlua_call_event_hooks(HOOK_ON_MIRROR_OBJECT_RENDER, node);
+        } else {
+            smlua_call_event_hooks(HOOK_ON_OBJECT_RENDER, node);
+        }
     }
 
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
@@ -1284,6 +1300,10 @@ static void geo_process_object(struct Object *node) {
 
     bool noBillboard = (node->header.gfx.sharedChild && node->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_FORCE_3D);
     if (node->header.gfx.areaIndex == gCurGraphNodeRoot->areaIndex) {
+
+        // render object reflections
+        geo_process_mirrors(node);
+
         if (node->header.gfx.throwMatrix != NULL) {
 
             mtxf_mul(gMatStack[gMatStackIndex + 1], *node->header.gfx.throwMatrix,
@@ -1544,6 +1564,10 @@ void geo_try_process_children(struct GraphNode *node) {
     }
 }
 
+INLINE static bool geo_process_can_call_hook(struct GraphNode *node) {
+    return node->hookProcess && !geo_is_mirror_object((struct Object *) gCurGraphNodeObject);
+}
+
 #define MAX_GRAPH_NODE_DEPTH 5000
 /**
  * Process a generic geo node and its siblings.
@@ -1563,7 +1587,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
 
-        if (parent->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
+        if (geo_process_can_call_hook(parent)) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1592,7 +1616,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
-            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
+            if (geo_process_can_call_hook(curGraphNode)) smlua_call_event_hooks(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1660,7 +1684,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
-            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
+            if (geo_process_can_call_hook(curGraphNode)) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;
@@ -1744,6 +1768,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&sViewportPrev));
         gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(gMatStackFixed[gMatStackIndex]), G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
 
+        geo_reset_mirrors();
         gCurGraphNodeRoot = node;
         if (node->node.children != NULL) {
             geo_process_node_and_siblings(node->node.children);

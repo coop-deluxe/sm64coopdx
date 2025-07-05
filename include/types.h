@@ -22,7 +22,7 @@
 struct Controller
 {
     // For optimization reasons, See MarioState
-    
+
     s32 port;
     f32 stickX;        // [-64, 64] positive is right
     f32 stickY;        // [-64, 64] positive is up
@@ -31,7 +31,7 @@ struct Controller
     s16 rawStickY;
     s16 extStickX;       // additional (right) stick values
     s16 extStickY;
-    
+
     u16 buttonDown;
     u16 buttonPressed;
     u16 buttonReleased;
@@ -118,7 +118,7 @@ struct VblankHandler
 
 struct Animation {
     // TODO: Optimize this later if possible.
-    
+
     s16 flags;
     s16 animYTransDivisor;
     s16 startFrame;
@@ -145,7 +145,7 @@ struct AnimationTable {
 struct GraphNode
 {
     // For optimization reasons, See MarioState
-    
+
 #ifdef DEBUG
     uintptr_t _guard1;
 #endif
@@ -154,13 +154,13 @@ struct GraphNode
     struct GraphNode *parent;
     struct GraphNode *children;
     const void *georef;
-    
+
     s16 type; // structure type
     s16 flags; // hi = drawing layer, lo = rendering modes
     u8 extraFlags;
     u8 hookProcess;
     s16 padding;
-    
+
 #ifdef DEBUG
     uintptr_t _guard2;
 #endif
@@ -169,19 +169,19 @@ struct GraphNode
 struct AnimInfo
 {
     // For optimization reasons, See MarioState
-    
+
     struct Animation *curAnim;
     struct Animation *prevAnimPtr;
-    
+
     s16 animID;
     s16 prevAnimID;
-    
+
     s16 animFrame;
     s16 prevAnimFrame;
-    
+
     u32 prevAnimFrameTimestamp;
     s32 animFrameAccelAssist;
-    
+
     s32 animAccel;
     u16 animTimer;
     s16 animYTrans;
@@ -190,40 +190,40 @@ struct AnimInfo
 struct GraphNodeObject
 {
     // For optimization reasons, See MarioState
-    
+
     struct GraphNode node;
     struct GraphNode *sharedChild;
     struct SpawnInfo *unk4C;
-    
+
     Mat4 *throwMatrix; // matrix ptr
     Mat4 *throwMatrixPrev;
     Mat4 prevThrowMatrix;
-    
+
     Vec3s angle;
     Vec3s prevAngle;
-    
+
     Vec3f pos;
     Vec3f prevPos;
-    
+
     Vec3f shadowPos;
     Vec3f prevShadowPos;
-    
+
     Vec3f scale;
     Vec3f prevScale;
-    
+
     Vec3f cameraToObject;
-    
+
     u32 prevTimestamp;
     u32 prevShadowPosTimestamp;
     u32 prevScaleTimestamp;
     u32 prevThrowMatrixTimestamp;
     u32 skipInterpolationTimestamp;
-    
+
     struct AnimInfo animInfo;
-    
+
     s8 areaIndex;
     s8 activeAreaIndex;
-    
+
     bool shadowInvisible;
     bool disableAutomaticShadowPos;
     bool skipInViewCheck;
@@ -249,7 +249,7 @@ struct ObjectNode
 struct Object
 {
     // For optimization reasons, See MarioState
-    
+
     struct ObjectNode header;
     struct Object *prevObj;
     struct Object *parentObj;
@@ -262,42 +262,42 @@ struct Object
     const BehaviorScript *behavior;
     const BehaviorScript *curBhvCommand;
     uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
-    
+
     u32 bhvStackIndex;
     s16 bhvDelayTimer;
     s16 activeFlags;
-    
+
     u32 collidedObjInteractTypes;
     s16 numCollidedObjs;
     s16 respawnInfoType;
-    
+
     f32 hitboxRadius;
     f32 hitboxHeight;
-    
+
     f32 hurtboxRadius;
     f32 hurtboxHeight;
-    
+
     f32 hitboxDownOffset;
     u32 unused1;
-    
+
     u32 areaTimer;
     u32 areaTimerDuration;
     enum AreaTimerType areaTimerType;
-    
+
     Mat4 transform;
-    
+
     u32 firstSurface;
     u32 numSurfaces;
-    
+
     u32 heldByPlayerIndex;
-    
+
     u8 setHome;
     u8 ctx;
     u8 allowRemoteInteractions;
     u8 globalPlayerIndex;
     u8 coopFlags;
     u8 hookRender;
-    
+
     union
     {
         // Object fields. See object_fields.h.
@@ -307,7 +307,7 @@ struct Object
         s32 asS32[OBJECT_NUM_FIELDS];
         f32 asF32[OBJECT_NUM_FIELDS];
     } rawData;
-    
+
     union
     {
         s16 *asS16P[OBJECT_NUM_FIELDS];
@@ -347,14 +347,14 @@ struct Waypoint
 struct Surface
 {
     // For optimization reasons, See MarioState
-    
+
     s16 type;
     s8 flags;
     s8 room;
     s16 force;
     s16 lowerY;
     s16 upperY;
-    
+
     Vec3s vertex1;
     Vec3s vertex2;
     Vec3s vertex3;
@@ -366,10 +366,10 @@ struct Surface
       f32 y;
       f32 z;
     } normal;
-    
+
     f32 originOffset;
     u32 modifiedTimestamp;
-    
+
     struct Object *object;
 };
 
@@ -403,7 +403,7 @@ enum MarioAnimPart {
 struct MarioBodyState
 {
     // For optimization reasons, See MarioState
-    
+
     s8 capState; /// see MarioCapGSCId
     s8 eyeState;
     s8 handState;
@@ -411,25 +411,24 @@ struct MarioBodyState
     s16 modelState;
     u8 allowPartRotation;
     s8 grabPos;
-    
+
     s8 wingFlutter; /// whether Mario's wing cap wings are fluttering
-    bool mirrorMario; // some of these fields are updated for Mirror Mario too
-    
+
     Vec3s headAngle;
     Vec3s torsoAngle;
-    
+
     Vec3f headPos;
     Vec3f torsoPos;
     Vec3f heldObjLastPosition; /// also known as HOLP
 
     Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
     u32 currAnimPart;
-    
+
     u32 updateTorsoTime;
     u32 updateHeadPosTime;
-    
+
     u32 action;
-    
+
     u16 shadeR; /// shadow red value
     u16 shadeG; /// shadow green value
     u16 shadeB; /// shadow blue value
@@ -473,12 +472,12 @@ struct MarioState
     //
     // I personally also find it easier to read now.
     // - Prince Frizzy
-    
+
     u16 playerIndex;
     u16 input;
     s16 numCoins;
     s16 numStars;
-    
+
     s8 numLives;
     s8 numKeys; // Unused key mechanic
     s16 health;
@@ -486,11 +485,11 @@ struct MarioState
     u8 healCounter;
     u8 isSnoring;
     u8 freeze;
-    
+
     u32 cap;
     u16 capTimer;
     s16 invincTimer;
-    
+
     u8 skipWarpInteractionsTimer;
     u8 squishTimer;
     u8 bounceSquishTimer;
@@ -499,47 +498,47 @@ struct MarioState
     u8 doubleJumpTimer;
     u8 specialTripleJump;
     u8 fadeWarpOpacity;
-    
+
     u8 visibleToEnemies;
     u8 wasNetworkVisible;
     s16 dialogId;
     s16 prevNumStarsForDialog;
     s16 unkB0;
-    
+
     u32 action;
     u32 prevAction;
-    
+
     u32 actionArg;
     u16 actionTimer;
     u16 actionState;
-    
+
     u32 flags;
     f32 quicksandDepth;
-    
+
     struct Controller *controller;
     struct MarioBodyState *marioBodyState;
     struct Character *character;
-    
+
     u32 terrainSoundAddend;
-    
+
     Vec3f pos;
     Vec3f nonInstantWarpPos;
     Vec3f vel;
     f32 slideVelX;
     f32 slideVelZ;
     f32 forwardVel;
-    
+
     f32 peakHeight;
     f32 intendedMag;
     s16 intendedYaw;
     u8 framesSinceA;
     u8 framesSinceB;
-    
+
     Vec3s faceAngle;
     Vec3s angleVel;
     s16 slideYaw;
     s16 twirlYaw;
-    
+
     struct Object *heldObj;
     struct Object *heldByObj;
     struct Object *interactObj;
@@ -547,32 +546,32 @@ struct MarioState
     struct Object *usedObj;
     struct Object *marioObj;
     struct Object *bubbleObj;
-    
+
     u32 collidedObjInteractTypes;
     u32 particleFlags;
-    
+
     struct MarioAnimation *animation;
     // Variables for a spline curve animation (used for the flight path in the grand star cutscene)
     Vec4s *splineKeyframe;
     f32 splineKeyframeFraction;
     s32 splineState;
     f32 curAnimOffset;
-    
+
     f32 minimumBoneY;
-    
+
     struct Surface *wall;
     struct Surface *ceil;
     struct Surface *floor;
     struct SpawnInfo *spawnInfo;
     struct Area *area;
     struct PlayerCameraState *statusForCamera;
-    
+
     f32 ceilHeight;
     f32 floorHeight;
-    
+
     Vec3f wallNormal;
     f32 unkC4;
-    
+
     s16 floorAngle;
     s16 waterLevel;
     s16 currentRoom;

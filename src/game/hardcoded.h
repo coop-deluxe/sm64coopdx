@@ -265,6 +265,7 @@ struct BehaviorValues {
     u8  MultipleCapCollection;
     u8  InfiniteRenderDistance;
     s16 CourtyardBoosRequirement;
+    u8  MirrorsMaxReflections;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;
     struct BehaviorTrajectories trajectories;

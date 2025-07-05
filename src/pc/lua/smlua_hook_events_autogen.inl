@@ -1182,36 +1182,6 @@ bool smlua_call_event_hooks_HOOK_ON_COLLIDE_LEVEL_BOUNDS(struct MarioState *m) {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_MIRROR_MARIO_RENDER(struct GraphNodeObject *mirrorMario, s32 playerIndex) {
-    lua_State *L = gLuaState;
-    if (L == NULL) { return false; }
-    bool hookResult = false;
-
-    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_MIRROR_MARIO_RENDER];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push mirrorMario
-        smlua_push_object(L, LOT_GRAPHNODEOBJECT, mirrorMario, NULL);
-
-        // push playerIndex
-        lua_pushinteger(L, playerIndex);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MIRROR_MARIO_RENDER]);
-            continue;
-        }
-        hookResult = true;
-
-        lua_settop(L, prevTop);
-    }
-    return hookResult;
-}
-
 bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED(struct MarioState *m, f32 *floorNormalY) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
@@ -1827,6 +1797,33 @@ bool smlua_call_event_hooks_HOOK_ON_CLEAR_AREAS() {
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CLEAR_AREAS]);
+            continue;
+        }
+        hookResult = true;
+
+        lua_settop(L, prevTop);
+    }
+    return hookResult;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_MIRROR_OBJECT_RENDER(struct Object *mirrorObj) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+    bool hookResult = false;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_MIRROR_OBJECT_RENDER];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push mirrorObj
+        smlua_push_object(L, LOT_OBJECT, mirrorObj, NULL);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_MIRROR_OBJECT_RENDER]);
             continue;
         }
         hookResult = true;

@@ -361,6 +361,7 @@
 | KoopaThiAgility | `number` |  |
 | MipsStar1Requirement | `integer` |  |
 | MipsStar2Requirement | `integer` |  |
+| MirrorsMaxReflections | `integer` |  |
 | MultipleCapCollection | `integer` |  |
 | RacingPenguinBigHeight | `number` |  |
 | RacingPenguinBigRadius | `number` |  |
@@ -1769,7 +1770,6 @@
 | lightingDirX | `number` |  |
 | lightingDirY | `number` |  |
 | lightingDirZ | `number` |  |
-| mirrorMario | `boolean` |  |
 | modelState | `integer` |  |
 | punchState | `integer` |  |
 | shadeB | `integer` |  |
@@ -2803,6 +2803,14 @@
 | oBreakableWallForce | `integer` |  |
 | oLightID | `integer` |  |
 | oLightRadius | `number` |  |
+| oMirrorType | `integer` |  |
+| oMirrorWidth | `number` |  |
+| oMirrorHeight | `number` |  |
+| oMirrorMaxDistance | `number` |  |
+| oMirrorObjInvertCulling | `integer` | read-only |
+| oMirrorObjPrevObj | [Object](structs.md#Object) | read-only |
+| oMirrorObjRealObj | [Object](structs.md#Object) | read-only |
+| oMirrorObjMirror | [Object](structs.md#Object) | read-only |
 
 [:arrow_up_small:](#)
 

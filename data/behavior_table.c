@@ -553,7 +553,10 @@ const struct BehaviorTableEntry gBehaviorTable[id_bhv_max_count] = {
     BHV_ENTRY(RM_Scroll_Texture),
     BHV_ENTRY(editor_Scroll_Texture),
     BHV_ENTRY(bhvAmbientLight),
-    BHV_ENTRY(bhvPointLight)
+    BHV_ENTRY(bhvPointLight),
+    BHV_ENTRY(bhvMirror),
+    BHV_ENTRY(bhvHorizontalMirror),
+    BHV_ENTRY(bhvVerticalMirror),
 };
 
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior) {

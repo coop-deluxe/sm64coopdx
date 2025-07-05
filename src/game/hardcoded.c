@@ -168,6 +168,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,
     .CourtyardBoosRequirement = 12,
+    .MirrorsMaxReflections    = 8,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {
         .BobombBuddyBob1Dialog         = DIALOG_004,

@@ -552,6 +552,9 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_constant(editor_Scroll_Texture);
     common_constant(bhvAmbientLight);
     common_constant(bhvPointLight);
+    common_constant(bhvMirror);
+    common_constant(bhvHorizontalMirror);
+    common_constant(bhvVerticalMirror);
 
     // Legacy behavior names
     common_legacy_constant(bhvFish2, bhvManyBlueFishSpawner);

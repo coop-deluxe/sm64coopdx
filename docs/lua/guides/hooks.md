@@ -113,7 +113,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_PAUSE_EXIT | Called when the local player exits through the pause screen, return `false` to prevent the exit |  `boolean` usedExitToCastle |
 | HOOK_GET_STAR_COLLECTION_DIALOG | Called when the local player collects a star, return a [DialogId](../constants.md#enum-DialogId) to show a message | None |
 | HOOK_ON_SET_CAMERA_MODE | Called when the camera mode gets set, return `false` to prevent the camera mode from being set | [Camera](../structs.md#Camera), `integer` mode, `integer` frames |
-| HOOK_ON_OBJECT_RENDER | Called right before an object is rendered **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](../structs.md#Object) renderedObj |
+| HOOK_ON_OBJECT_RENDER | Called right before an object is rendered. **Note:** You must set the `hookRender` field of the object to a non-zero value | [Object](../structs.md#Object) renderedObj |
 | HOOK_ON_DEATH | Called when the local player dies, return `false` to prevent normal death sequence | [MarioState](../structs.md#MarioState) localMario |
 | HOOK_ON_PACKET_RECEIVE | Called when the mod receives a packet that used `network_send()` or `network_send_to()` | `table` dataTable |
 | HOOK_USE_ACT_SELECT | Called when the level changes, return `true` to show act selection screen and `false` otherwise | `integer` levelNum |
@@ -130,7 +130,6 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_EXIT | Called before the game shuts down | None |
 | HOOK_DIALOG_SOUND | Called when a dialog box sound is going to play, return a `DS_*` constant to override the sound | `integer` dialogSound |
 | HOOK_ON_COLLIDE_LEVEL_BOUNDS | Called when a mario collides with the level boundaries | [MarioState](../structs.md#MarioState) mario |
-| HOOK_MIRROR_MARIO_RENDER | Called when a Mirror Mario is rendered | [GraphNodeObject](../structs.md#GraphNodeObject) mirrorMario | `integer` mirrorMarioIndex |
 | HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED | Called when slope defacto speed for walking is being calculated, overrides the floor normal in the equation | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ON_OBJECT_LOAD | Called when an object is spawned in | [Object](../structs.md#Object) obj |
 | HOOK_ON_PLAY_SOUND | Called when a sound is going to play, return a `SOUND_*` constant or `NO_SOUND` to override the sound | `integer` soundBits, `Vec3f` pos |
@@ -140,17 +139,18 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_MODS_LOADED | Called directly after every mod file is loaded in by smlua | None |
 | HOOK_ON_NAMETAGS_RENDER | Called when nametags are rendered. Return a table with `name` and/or `pos` to override the nametag text and/or position. | `string` playerIndex, `Vec3f` pos |
 | HOOK_ON_DJUI_THEME_CHANGED | Called when the DJUI theme is changed. Run `djui_menu_get_theme()` to get the new theme. | None |
-| HOOK_ON_GEO_PROCESS | Called when a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
-| HOOK_BEFORE_GEO_PROCESS | Called before a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
-| HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
-| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m | 
+| HOOK_ON_GEO_PROCESS | Called when a GeoLayout is processed. **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
+| HOOK_BEFORE_GEO_PROCESS | Called before a GeoLayout is processed. **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
+| HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed. **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it | [MarioState](../structs.md) m | 
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
-| HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode`, to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |
+| HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode` to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |
 | HOOK_ON_INSTANT_WARP | Called when the local player goes through an instant warp.| `integer` area, `integer` id, `Vec3s` displacement|
-| HOOK_MARIO_OVERRIDE_FLOOR_CLASS | Called when Mario's floor class logic updates, return a `SURFACE_CLASS_*` constant to override the type. | [MarioState](../structs.md#MarioState) mario, `integer` surfaceClass |
-| HOOK_ON_ADD_SURFACE | Called when collision surfaces are added. | [Surface](../structs.md#Surface) surface, `boolean` dynamic |
-| HOOK_ON_CLEAR_AREAS | Called when a level's areas are unloaded. | None |
+| HOOK_MARIO_OVERRIDE_FLOOR_CLASS | Called when Mario's floor class logic updates, return a `SURFACE_CLASS_*` constant to override the type | [MarioState](../structs.md#MarioState) mario, `integer` surfaceClass |
+| HOOK_ON_ADD_SURFACE | Called when collision surfaces are added | [Surface](../structs.md#Surface) surface, `boolean` dynamic |
+| HOOK_ON_CLEAR_AREAS | Called when a level's areas are unloaded | None |
+| HOOK_ON_MIRROR_OBJECT_RENDER | Called right before a mirror object is rendered. **Note:** You must set the `hookRender` field of the original object to a non-zero value; To prevent the mirror object from being rendered and reflected, unset its `GRAPH_RENDER_ACTIVE` flag (`mirrorObj.header.gfx.node.flags = mirrorObj.header.gfx.node.flags & ~GRAPH_RENDER_ACTIVE`) | [Object](../structs.md#Object) mirrorObj |
 
 ### Parameters
 

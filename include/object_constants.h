@@ -1000,4 +1000,9 @@
     #define MR_BLIZZARD_STYPE_NO_CAP 0
     #define MR_BLIZZARD_STYPE_JUMPING 1
 
+/* Mirrors */
+    /* oMirrorType */
+    #define MIRROR_TYPE_HORIZONTAL 1
+    #define MIRROR_TYPE_VERTICAL 2
+
 #endif // OBJECT_CONSTANTS_H

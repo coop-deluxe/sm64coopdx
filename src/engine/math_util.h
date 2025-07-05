@@ -87,6 +87,12 @@ extern f32 gCosineTable[];
 
 #endif
 
+extern Vec2f gVec2fZero;
+extern Vec2i gVec2iZero;
+extern Vec2s gVec2sZero;
+extern Vec2f gVec2fOne;
+extern Vec2i gVec2iOne;
+extern Vec2s gVec2sOne;
 extern Vec3f gVec3fZero;
 extern Vec3i gVec3iZero;
 extern Vec3s gVec3sZero;
@@ -142,6 +148,24 @@ OPTIMIZE_O3 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames);
 Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
 |descriptionEnd| */
 OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, OUT Vec3f result);
+
+  ///////////
+ // Vec2f //
+///////////
+
+#include "math_util_vec2f.inl"
+
+  ///////////
+ // Vec2i //
+///////////
+
+#include "math_util_vec2i.inl"
+
+  ///////////
+ // Vec2s //
+///////////
+
+#include "math_util_vec2s.inl"
 
   ///////////
  // Vec3f //

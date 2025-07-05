@@ -1,0 +1,3 @@
+-- name: Mirrors Demo
+-- incompatible: romhack
+-- description: This example mod features three different levels with mirrors. Open the mod menu to warp directly to them.\n\n- First level has three mirrors, two on walls and one on ceiling.\n- Second level has three mirrors, two on walls and one on floor.\n- Third level is the SM64 mirror room, but with a twist (enable "Strange reflections" in mod menu).\n\nAlso features a debug display toggle to show mirror hitboxes.

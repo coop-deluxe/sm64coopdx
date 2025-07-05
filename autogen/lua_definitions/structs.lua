@@ -189,6 +189,7 @@
 --- @field public KoopaThiAgility number
 --- @field public MipsStar1Requirement integer
 --- @field public MipsStar2Requirement integer
+--- @field public MirrorsMaxReflections integer
 --- @field public MultipleCapCollection integer
 --- @field public RacingPenguinBigHeight number
 --- @field public RacingPenguinBigRadius number
@@ -1158,7 +1159,6 @@
 --- @field public lightingDirX number
 --- @field public lightingDirY number
 --- @field public lightingDirZ number
---- @field public mirrorMario boolean
 --- @field public modelState integer
 --- @field public punchState integer
 --- @field public shadeB integer
@@ -1774,6 +1774,14 @@
 --- @field public oMipsForwardVelocity number
 --- @field public oMipsStarStatus integer
 --- @field public oMipsStartWaypointIndex integer
+--- @field public oMirrorHeight number
+--- @field public oMirrorMaxDistance number
+--- @field public oMirrorObjInvertCulling integer
+--- @field public oMirrorObjMirror Object
+--- @field public oMirrorObjPrevObj Object
+--- @field public oMirrorObjRealObj Object
+--- @field public oMirrorType integer
+--- @field public oMirrorWidth number
 --- @field public oMoneybagJumpState integer
 --- @field public oMontyMoleCurrentHole Object
 --- @field public oMontyMoleHeightRelativeToFloor number

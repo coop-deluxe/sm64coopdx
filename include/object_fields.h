@@ -1179,4 +1179,16 @@
 #define /*0x0F4*/ oLightID        OBJECT_FIELD_S32(0x1B)
 #define /*0x0F8*/ oLightRadius    OBJECT_FIELD_F32(0x1C)
 
+/* Mirrors */
+#define /*0x0F4*/ oMirrorType               OBJECT_FIELD_U32(0x1B)
+#define /*0x0F8*/ oMirrorWidth              OBJECT_FIELD_F32(0x1C)
+#define /*0x0FC*/ oMirrorHeight             OBJECT_FIELD_F32(0x1D)
+#define /*0x100*/ oMirrorMaxDistance        OBJECT_FIELD_F32(0x1E)
+
+/* Mirror object */
+#define /*0x110*/ oMirrorObjInvertCulling   OBJECT_FIELD_U32(0x22)
+#define /*0x1A8*/ oMirrorObjPrevObj         OBJECT_FIELD_OBJ(0x48)
+#define /*0x1AC*/ oMirrorObjRealObj         OBJECT_FIELD_OBJ(0x49)
+#define /*0x1B0*/ oMirrorObjMirror          OBJECT_FIELD_OBJ(0x4A)
+
 #endif // OBJECT_FIELDS_H

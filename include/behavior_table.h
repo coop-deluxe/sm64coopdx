@@ -545,6 +545,9 @@ enum BehaviorId {
     id_bhvStarNumber,
     id_bhvAmbientLight,
     id_bhvPointLight,
+    id_bhvMirror,
+    id_bhvHorizontalMirror,
+    id_bhvVerticalMirror,
 
     id_bhv_max_count // must be the last in the list
 };
