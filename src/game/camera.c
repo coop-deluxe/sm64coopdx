@@ -10011,7 +10011,7 @@ s32 intro_peach_move_camera_start_to_pipe(struct Camera *c, struct CutsceneSplin
                   struct CutsceneSplinePoint focusSpline[]) {
     if (!c) { return 0; }
     Vec3f offset;
-    s32 posReturn = 0;
+    UNUSED s32 posReturn = 0;
     s32 focusReturn = 0;
 
     /**

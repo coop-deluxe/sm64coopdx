@@ -605,9 +605,7 @@
    - [bhv_yoshi_loop](functions-2.md#bhv_yoshi_loop)
    - [bhv_volcano_trap_loop](functions-2.md#bhv_volcano_trap_loop)
    - [uv_update_scroll](functions-2.md#uv_update_scroll)
-   - [spawn_ambient_light](functions-2.md#spawn_ambient_light)
-   - [spawn_point_light](functions-2.md#spawn_point_light)
-   - [bhv_ambient_light_update](functions-2.md#bhv_ambient_light_update)
+   - [bhv_ambient_light_init](functions-2.md#bhv_ambient_light_init)
    - [bhv_point_light_init](functions-2.md#bhv_point_light_init)
    - [bhv_point_light_loop](functions-2.md#bhv_point_light_loop)
    - [spawn_default_star](functions-2.md#spawn_default_star)
@@ -974,11 +972,18 @@
    - [le_add_light](functions-3.md#le_add_light)
    - [le_remove_light](functions-3.md#le_remove_light)
    - [le_get_light_count](functions-3.md#le_get_light_count)
+   - [le_light_exists](functions-3.md#le_light_exists)
+   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
+   - [le_get_light_pos](functions-3.md#le_get_light_pos)
    - [le_set_light_pos](functions-3.md#le_set_light_pos)
+   - [le_get_light_color](functions-3.md#le_get_light_color)
    - [le_set_light_color](functions-3.md#le_set_light_color)
+   - [le_get_light_radius](functions-3.md#le_get_light_radius)
    - [le_set_light_radius](functions-3.md#le_set_light_radius)
+   - [le_get_light_intensity](functions-3.md#le_get_light_intensity)
    - [le_set_light_intensity](functions-3.md#le_set_light_intensity)
+   - [le_get_light_use_surface_normals](functions-3.md#le_get_light_use_surface_normals)
    - [le_set_light_use_surface_normals](functions-3.md#le_set_light_use_surface_normals)
 
 <br />
@@ -1335,6 +1340,43 @@
    - [delta_interpolate_s32](functions-5.md#delta_interpolate_s32)
    - [delta_interpolate_vec3f](functions-5.md#delta_interpolate_vec3f)
    - [delta_interpolate_vec3s](functions-5.md#delta_interpolate_vec3s)
+
+<br />
+
+- mod_fs.h
+   - [mod_fs_exists](functions-5.md#mod_fs_exists)
+   - [mod_fs_get](functions-5.md#mod_fs_get)
+   - [mod_fs_reload](functions-5.md#mod_fs_reload)
+   - [mod_fs_create](functions-5.md#mod_fs_create)
+   - [mod_fs_delete](functions-5.md#mod_fs_delete)
+   - [mod_fs_save](functions-5.md#mod_fs_save)
+   - [mod_fs_set_public](functions-5.md#mod_fs_set_public)
+   - [mod_fs_get_filename](functions-5.md#mod_fs_get_filename)
+   - [mod_fs_get_file](functions-5.md#mod_fs_get_file)
+   - [mod_fs_create_file](functions-5.md#mod_fs_create_file)
+   - [mod_fs_move_file](functions-5.md#mod_fs_move_file)
+   - [mod_fs_copy_file](functions-5.md#mod_fs_copy_file)
+   - [mod_fs_delete_file](functions-5.md#mod_fs_delete_file)
+   - [mod_fs_clear](functions-5.md#mod_fs_clear)
+   - [mod_fs_file_read_bool](functions-5.md#mod_fs_file_read_bool)
+   - [mod_fs_file_read_integer](functions-5.md#mod_fs_file_read_integer)
+   - [mod_fs_file_read_number](functions-5.md#mod_fs_file_read_number)
+   - [mod_fs_file_read_bytes](functions-5.md#mod_fs_file_read_bytes)
+   - [mod_fs_file_read_string](functions-5.md#mod_fs_file_read_string)
+   - [mod_fs_file_read_line](functions-5.md#mod_fs_file_read_line)
+   - [mod_fs_file_write_bool](functions-5.md#mod_fs_file_write_bool)
+   - [mod_fs_file_write_integer](functions-5.md#mod_fs_file_write_integer)
+   - [mod_fs_file_write_number](functions-5.md#mod_fs_file_write_number)
+   - [mod_fs_file_write_bytes](functions-5.md#mod_fs_file_write_bytes)
+   - [mod_fs_file_write_string](functions-5.md#mod_fs_file_write_string)
+   - [mod_fs_file_write_line](functions-5.md#mod_fs_file_write_line)
+   - [mod_fs_file_seek](functions-5.md#mod_fs_file_seek)
+   - [mod_fs_file_is_eof](functions-5.md#mod_fs_file_is_eof)
+   - [mod_fs_file_fill](functions-5.md#mod_fs_file_fill)
+   - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
+   - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
 
@@ -1698,46 +1740,46 @@
 <br />
 
 - object_list_processor.h
-   - [set_object_respawn_info_bits](functions-5.md#set_object_respawn_info_bits)
+   - [set_object_respawn_info_bits](functions-6.md#set_object_respawn_info_bits)
 
 <br />
 
 - platform_displacement.h
-   - [apply_platform_displacement](functions-5.md#apply_platform_displacement)
+   - [apply_platform_displacement](functions-6.md#apply_platform_displacement)
 
 <br />
 
 - rumble_init.h
-   - [queue_rumble_data](functions-5.md#queue_rumble_data)
-   - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
-   - [queue_rumble_data_mario](functions-5.md#queue_rumble_data_mario)
-   - [reset_rumble_timers](functions-5.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-5.md#reset_rumble_timers_2)
+   - [queue_rumble_data](functions-6.md#queue_rumble_data)
+   - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
+   - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
+   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
 
 <br />
 
 - save_file.h
-   - [get_level_num_from_course_num](functions-5.md#get_level_num_from_course_num)
-   - [get_level_course_num](functions-5.md#get_level_course_num)
-   - [touch_coin_score_age](functions-5.md#touch_coin_score_age)
-   - [save_file_do_save](functions-5.md#save_file_do_save)
-   - [save_file_erase](functions-5.md#save_file_erase)
-   - [save_file_erase_current_backup_save](functions-5.md#save_file_erase_current_backup_save)
-   - [save_file_reload](functions-5.md#save_file_reload)
-   - [save_file_get_max_coin_score](functions-5.md#save_file_get_max_coin_score)
-   - [save_file_get_course_star_count](functions-5.md#save_file_get_course_star_count)
-   - [save_file_get_total_star_count](functions-5.md#save_file_get_total_star_count)
-   - [save_file_set_flags](functions-5.md#save_file_set_flags)
-   - [save_file_clear_flags](functions-5.md#save_file_clear_flags)
-   - [save_file_get_flags](functions-5.md#save_file_get_flags)
-   - [save_file_get_star_flags](functions-5.md#save_file_get_star_flags)
-   - [save_file_set_star_flags](functions-5.md#save_file_set_star_flags)
-   - [save_file_remove_star_flags](functions-5.md#save_file_remove_star_flags)
-   - [save_file_get_course_coin_score](functions-5.md#save_file_get_course_coin_score)
-   - [save_file_set_course_coin_score](functions-5.md#save_file_set_course_coin_score)
-   - [save_file_is_cannon_unlocked](functions-5.md#save_file_is_cannon_unlocked)
-   - [save_file_get_cap_pos](functions-5.md#save_file_get_cap_pos)
-   - [save_file_get_sound_mode](functions-5.md#save_file_get_sound_mode)
+   - [get_level_num_from_course_num](functions-6.md#get_level_num_from_course_num)
+   - [get_level_course_num](functions-6.md#get_level_course_num)
+   - [touch_coin_score_age](functions-6.md#touch_coin_score_age)
+   - [save_file_do_save](functions-6.md#save_file_do_save)
+   - [save_file_erase](functions-6.md#save_file_erase)
+   - [save_file_erase_current_backup_save](functions-6.md#save_file_erase_current_backup_save)
+   - [save_file_reload](functions-6.md#save_file_reload)
+   - [save_file_get_max_coin_score](functions-6.md#save_file_get_max_coin_score)
+   - [save_file_get_course_star_count](functions-6.md#save_file_get_course_star_count)
+   - [save_file_get_total_star_count](functions-6.md#save_file_get_total_star_count)
+   - [save_file_set_flags](functions-6.md#save_file_set_flags)
+   - [save_file_clear_flags](functions-6.md#save_file_clear_flags)
+   - [save_file_get_flags](functions-6.md#save_file_get_flags)
+   - [save_file_get_star_flags](functions-6.md#save_file_get_star_flags)
+   - [save_file_set_star_flags](functions-6.md#save_file_set_star_flags)
+   - [save_file_remove_star_flags](functions-6.md#save_file_remove_star_flags)
+   - [save_file_get_course_coin_score](functions-6.md#save_file_get_course_coin_score)
+   - [save_file_set_course_coin_score](functions-6.md#save_file_set_course_coin_score)
+   - [save_file_is_cannon_unlocked](functions-6.md#save_file_is_cannon_unlocked)
+   - [save_file_get_cap_pos](functions-6.md#save_file_get_cap_pos)
+   - [save_file_get_sound_mode](functions-6.md#save_file_get_sound_mode)
 
 <br />
 

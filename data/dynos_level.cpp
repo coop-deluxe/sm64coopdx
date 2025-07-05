@@ -50,6 +50,7 @@ struct DynosLevelScript {
 static DynosLevelScript sDynosLevelScripts[LEVEL_COUNT] = { { NULL, DYNOS_LEVEL_MOD_INDEX_VANILLA } };
 static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Collision *sDynosLevelCollision[LEVEL_COUNT][MAX_AREAS] = { NULL };
+static s32 sDynosCustomLevelSlot[LEVEL_UNKNOWN_2 + 1] = { 0 };
 
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
     u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
@@ -66,7 +67,7 @@ LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
 // Init
 //
 
-static s32 sDynosCurrentLevelNum;
+static s32 sDynosCurrentLevelNum = 0;
 static u8 sDynosAreaIndex = 0;
 
 inline static DynosWarp *DynOS_Level_GetWarpStruct(s8 aId) {
@@ -189,6 +190,10 @@ void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex) {
 }
 
 void DynOS_Level_Unoverride() {
+    // clear custom level slots
+    sDynosCustomLevelSlot[LEVEL_UNKNOWN_1] = 0;
+    sDynosCustomLevelSlot[LEVEL_UNKNOWN_2] = 0;
+
     for (s32 i = 0; i < LEVEL_COUNT; i++) {
         sDynosCurrentLevelNum = i;
         sDynosLevelWarps[i].Clear();
@@ -385,9 +390,43 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId) {
     if (aLevel >= CUSTOM_LEVEL_NUM_START) {
         struct CustomLevelInfo* info = smlua_level_util_get_info(aLevel);
         if (!info || !info->script) { return NULL; }
-        sDynosCurrentLevelNum = 1;
-        DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
-        for (const auto &_Warp : sDynosLevelWarps[1]) {
+
+        // This requires some explaination...
+        // It's a bit of a hack but it works.
+
+        // DynOS's arrays for level information are LEVEL_MAX in size.
+        // LEVEL_MAX is based on the max number of vanilla levels.
+
+        // So when we want to warp to a custom level we load the
+        // data into a slot that vanilla left unused.
+
+        // We need two unused slots because we may warp from one
+        // custom level to another.
+
+        // Check if we're warping to a level we've already loaded into a slot
+        if (sDynosCustomLevelSlot[LEVEL_UNKNOWN_1] == aLevel) {
+            sDynosCurrentLevelNum = LEVEL_UNKNOWN_1;
+        } else if (sDynosCustomLevelSlot[LEVEL_UNKNOWN_2] == aLevel) {
+            sDynosCurrentLevelNum = LEVEL_UNKNOWN_2;
+        } else {
+            // Pick the unused slot
+            s32 unusedSlot = (sDynosCustomLevelSlot[LEVEL_UNKNOWN_1] == gCurrLevelNum) ? LEVEL_UNKNOWN_2 : LEVEL_UNKNOWN_1;
+
+            // Assign it to dynos
+            sDynosCurrentLevelNum = unusedSlot;
+
+            // Remember that the custom level is loaded into the slot
+            sDynosCustomLevelSlot[sDynosCurrentLevelNum] = aLevel;
+
+            // Clear cached level warps from the slot to be loaded
+            sDynosLevelWarps[sDynosCurrentLevelNum].Clear();
+
+            // Parse the custom level to fill in the level warps
+            DynOS_Level_ParseScript(info->script, DynOS_Level_PreprocessScript);
+        }
+
+        // find the custom level warp
+        for (const auto &_Warp : sDynosLevelWarps[sDynosCurrentLevelNum]) {
             if (_Warp.mArea == aArea && _Warp.mId == aWarpId) {
                 return (s16 *) &_Warp;
             }

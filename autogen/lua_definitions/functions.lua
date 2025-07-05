@@ -2915,33 +2915,8 @@ function uv_update_scroll()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @return Object
---- Spawns a lighting engine point light
-function spawn_ambient_light(x, y, z, r, g, b)
-    -- ...
-end
-
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @param radius number
---- @return Object
---- Spawns a lighting engine ambient light
-function spawn_point_light(x, y, z, r, g, b, radius)
-    -- ...
-end
-
---- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-function bhv_ambient_light_update()
+--- Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+function bhv_ambient_light_init()
     -- ...
 end
 
@@ -5041,7 +5016,7 @@ function le_set_tone_mapping(toneMapping)
 end
 
 --- @return boolean
---- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added.
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
 function le_is_enabled()
     -- ...
 end
@@ -5096,11 +5071,31 @@ function le_get_light_count()
     -- ...
 end
 
+--- @param id integer
+--- @return boolean
+--- Checks if a lighting engine point light corresponding to `id` exists
+function le_light_exists(id)
+    -- ...
+end
+
+--- @param out Color
+--- Outputs the lighting engine's ambient color to `out`
+function le_get_ambient_color(out)
+    -- ...
+end
+
 --- @param r integer
 --- @param g integer
 --- @param b integer
 --- Sets the lighting engine ambient color
 function le_set_ambient_color(r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @param out Vec3f
+--- Outputs a lighting engine point light's position to `out`
+function le_get_light_pos(id, out)
     -- ...
 end
 
@@ -5114,11 +5109,25 @@ function le_set_light_pos(id, x, y, z)
 end
 
 --- @param id integer
+--- @param out Color
+--- Outputs a lighting engine point light's color to `out`
+function le_get_light_color(id, out)
+    -- ...
+end
+
+--- @param id integer
 --- @param r integer
 --- @param g integer
 --- @param b integer
 --- Sets a lighting engine point light's color to `r`, `g`, `b`
 function le_set_light_color(id, r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `radius`
+function le_get_light_radius(id)
     -- ...
 end
 
@@ -5130,9 +5139,23 @@ function le_set_light_radius(id, radius)
 end
 
 --- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `intensity`
+function le_get_light_intensity(id)
+    -- ...
+end
+
+--- @param id integer
 --- @param intensity number
 --- Sets a lighting engine point light's `intensity`
 function le_set_light_intensity(id, intensity)
+    -- ...
+end
+
+--- @param id integer
+--- @return boolean
+--- Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+function le_get_light_use_surface_normals(id)
     -- ...
 end
 
@@ -7337,6 +7360,260 @@ end
 --- @param delta number
 --- Linearly interpolates `res` between `a` and `b` with `delta`
 function delta_interpolate_vec3s(res, a, b, delta)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return boolean
+--- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
+function mod_fs_exists(modPath)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return ModFs
+--- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
+function mod_fs_get(modPath)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return ModFs
+--- Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
+function mod_fs_reload(modPath)
+    -- ...
+end
+
+--- @return ModFs
+--- Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
+function mod_fs_create()
+    -- ...
+end
+
+--- @return boolean
+--- Deletes the modfs object of the active mod if it exists. Returns true on success
+function mod_fs_delete()
+    -- ...
+end
+
+--- @return boolean
+--- Saves the modfs object of the active mod if it exists. Returns true on success
+function mod_fs_save()
+    -- ...
+end
+
+--- @param pub boolean
+--- @return boolean
+--- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
+function mod_fs_set_public(pub)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param index integer
+--- @return string
+--- Gets the filename at position `index` of the provided `modFs`
+function mod_fs_get_filename(modFs, index)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @return ModFsFile
+--- Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
+function mod_fs_get_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @param text boolean
+--- @return ModFsFile
+--- Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
+function mod_fs_create_file(modFs, filepath, text)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param oldpath string
+--- @param newpath string
+--- @param overwriteExisting boolean
+--- @return boolean
+--- Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
+function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param srcpath string
+--- @param dstpath string
+--- @param overwriteExisting boolean
+--- @return boolean
+--- Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
+function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @return boolean
+--- Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
+function mod_fs_delete_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Deletes all files of the provided `modFs`. Returns true on success
+function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+--- Reads a boolean from a binary modfs `file`
+function mod_fs_file_read_bool(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param intType ModFsFileIntType
+--- @return integer
+--- Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
+function mod_fs_file_read_integer(file, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param floatType ModFsFileFloatType
+--- @return number
+--- Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
+function mod_fs_file_read_number(file, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param length integer
+--- @return string
+--- Reads a bytestring of `length` bytes from a binary modfs `file`
+function mod_fs_file_read_bytes(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+--- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
+function mod_fs_file_read_string(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+--- Reads a line from a text modfs `file`
+function mod_fs_file_read_line(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value boolean
+--- @return boolean
+--- Writes a boolean to a binary modfs `file`. Returns true on success
+function mod_fs_file_write_bool(file, value)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value integer
+--- @param intType ModFsFileIntType
+--- @return boolean
+--- Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
+function mod_fs_file_write_integer(file, value, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value number
+--- @param floatType ModFsFileFloatType
+--- @return boolean
+--- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
+function mod_fs_file_write_number(file, value, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param bytestring string
+--- @return boolean
+--- Writes a bytestring to a modfs `file`. Returns true on success
+function mod_fs_file_write_bytes(file, bytestring)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+--- @return boolean
+--- Writes a string to a modfs `file`. Returns true on success
+function mod_fs_file_write_string(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+--- @return boolean
+--- Writes a line to a text modfs `file`. Returns true on success
+function mod_fs_file_write_line(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param offset integer
+--- @param origin ModFsFileSeek
+--- @return boolean
+--- Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+function mod_fs_file_seek(file, offset, origin)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+--- Returns true if the provided modfs `file` has reached its end of file
+function mod_fs_file_is_eof(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param byte integer
+--- @param length integer
+--- @return boolean
+--- Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
+function mod_fs_file_fill(file, byte, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param length integer
+--- @return boolean
+--- Erases `length` bytes or characters from a modfs `file`. Returns true on success
+function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_file_set_public(file, pub)
+    -- ...
+end
+
+--- @param hide boolean
+--- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
+function mod_fs_hide_errors(hide)
+    -- ...
+end
+
+--- @return string
+--- Returns the last error message generated by `mod_fs` functions or nil if no error occurred
+function mod_fs_get_last_error()
     -- ...
 end
 
@@ -11272,14 +11549,12 @@ function get_secondary_camera_focus()
 end
 
 --- @param o Object
---- @return void*
 --- Sets the cutscene focus object
 function set_cutscene_focus(o)
     -- ...
 end
 
 --- @param o Object
---- @return void*
 --- Sets the secondary camera focus object
 function set_secondary_camera_focus(o)
     -- ...

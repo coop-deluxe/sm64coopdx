@@ -7,8 +7,8 @@ from vec_types import *
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
-integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
-number_types = ["f32", "float", "f64", "double"]
+integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int", "lua_Integer"]
+number_types = ["f32", "float", "f64", "double", "lua_Number"]
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
@@ -69,6 +69,7 @@ in_files = [
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
     "src/pc/mods/mod_storage.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
@@ -78,7 +79,7 @@ in_files = [
     "src/engine/behavior_script.h",
     "src/audio/seqplayer.h",
     "src/engine/lighting_engine.h",
-    "src/pc/network/sync_object.h"
+    "src/pc/network/sync_object.h",
 ]
 
 override_allowed_functions = {
@@ -97,7 +98,7 @@ override_allowed_functions = {
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
-    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ]
+    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
 }
 
 override_disallowed_functions = {
@@ -138,23 +139,28 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ],
-    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ],
 }
 
 override_function_version_excludes = {
     "bhv_play_music_track_when_touched_loop": "VERSION_JP",
     "play_knockback_sound": "VERSION_JP",
-    "cur_obj_spawn_star_at_y_offset": "VERSION_JP"
+    "cur_obj_spawn_star_at_y_offset": "VERSION_JP",
 }
 
 lua_function_params = {
-    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
+    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ],
 }
+
+parameter_keywords = [
+    "OUT",
+    "OPTIONAL"
+]
 
 ###########################################################
 
@@ -803,6 +809,8 @@ def build_param(fid, param, i):
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'const char*':
         return '    %s %s = smlua_to_string(L, %d);\n' % (ptype, pid, i)
+    elif ptype == 'ByteString':
+        return '    %s %s = smlua_to_bytestring(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'LuaFunction':
         return '    %s %s = smlua_to_lua_function(L, %d);\n' % (ptype, pid, i)
     elif translate_type_to_lot(ptype) == 'LOT_POINTER':
@@ -822,7 +830,7 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
-    is_output = param.get('out', False)
+    is_output = 'OUT' in param
 
     if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
@@ -858,6 +866,8 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif ftype == 'const char*':
         lfunc = 'lua_pushstring'
+    elif ftype == 'ByteString':
+        lfunc = 'smlua_push_bytestring'
     elif translate_type_to_lot(ftype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ftype)
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)
@@ -884,19 +894,39 @@ def build_function(function, do_extern):
         if 'bhv_' in fid:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    s += """    if (L == NULL) { return 0; }\n
+    params_max = len(function['params'])
+    params_min = len([param for param in function['params'] if 'OPTIONAL' not in param])
+    if params_min == params_max:
+        s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
-    }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
+    }\n\n""" % (params_max, function['identifier'], params_max)
+    else:
+        s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (top < %d || top > %d) {
+        LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
+        return 0;
+    }\n\n""" % (params_min, params_max, function['identifier'], params_min, params_max)
 
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
     i = 1
     for param in function['params']:
-        if is_interact_func and param['identifier'] == 'interactType':
+        pid = param['identifier']
+        if is_interact_func and pid == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
+        elif 'OPTIONAL' in param:
+            sparam = build_param(fid, param, i)
+            param_var, param_value = sparam.split('=')
+            param_type = param_var.replace(pid, '').strip()
+            s += '    %s = (%s) NULL;\n' % (param_var.strip(), param_type)
+            s += '    if (top >= %d) {\n' % (i)
+            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
+            s += '    }\n'
         else:
             s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
@@ -921,7 +951,7 @@ def build_function(function, do_extern):
     # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
     if function['type'] in VECP_TYPES:
         for i, param in enumerate(function['params']):
-            if param.get('out', False):
+            if 'OUT' in param:
                 s += '    lua_settop(L, %d);\n' % (i + 1)
                 break
 
@@ -1020,13 +1050,16 @@ def process_function(fname, line, description):
         pass
     else:
         param_index = 0
+        last_param_optional = None
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
 
-            if param_str.startswith('OUT '):
-                param['out'] = True
-                param_str = param_str[len('OUT'):].strip()
+            for param_keyword in parameter_keywords:
+                keyword_index = param_str.find(param_keyword + ' ')
+                if keyword_index != -1:
+                    param[param_keyword] = True
+                    param_str = (param_str[:keyword_index] + param_str[keyword_index+len(param_keyword)+1:]).strip()
 
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)
@@ -1037,6 +1070,12 @@ def process_function(fname, line, description):
                     return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])
                 param['identifier'] = match.group()
+
+            if 'OPTIONAL' in param:
+                last_param_optional = param['identifier']
+            elif last_param_optional is not None:
+                print(f"REJECTED: {function['identifier']} -> mandatory parameter `{param['identifier']}` is following optional parameter `{last_param_optional}`")
+                return None
 
             # override Vec3s/f
             if param['identifier'] == 'pos':
@@ -1354,7 +1393,7 @@ def def_function(fname, function):
         if ptype.startswith('Pointer_') and ptype not in def_pointers:
             def_pointers.append(ptype)
 
-        s += '--- @param %s %s\n' % (pid, ptype)
+        s += '--- @param %s%s %s\n' % (pid, ('?' if 'OPTIONAL' in param else ''), ptype)
 
     rtype = translate_to_def(rtype)
     if rtype.startswith('Pointer_') and rtype not in def_pointers:

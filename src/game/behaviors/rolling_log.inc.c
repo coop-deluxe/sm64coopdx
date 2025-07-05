@@ -38,7 +38,7 @@ void rolling_log_roll_log(void) {
     f32 sp24;
 
     f32 x = 0;
-    f32 y = 0;
+    UNUSED f32 y = 0;
     f32 z = 0;
 
     u8 playersTouched = 0;

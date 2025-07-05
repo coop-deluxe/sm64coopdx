@@ -21,6 +21,7 @@
 #include "src/pc/network/network.h"
 #include "src/game/hardcoded.h"
 #include "src/pc/mods/mod.h"
+#include "src/pc/mods/mod_fs.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
@@ -1620,6 +1621,25 @@ static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
     { "wroteBytes",        LVT_U64,      offsetof(struct ModFile, wroteBytes),        true, LOT_NONE, 1,  sizeof(u64)    },
 };
 
+#define LUA_MOD_FS_FIELD_COUNT 5
+static struct LuaObjectField sModFsFields[LUA_MOD_FS_FIELD_COUNT] = {
+    { "isPublic",  LVT_BOOL,      offsetof(struct ModFs, isPublic),  true, LOT_NONE, 1, sizeof(bool)        },
+    { "mod",       LVT_COBJECT_P, offsetof(struct ModFs, mod),       true, LOT_MOD,  1, sizeof(struct Mod*) },
+    { "modPath",   LVT_STRING,    offsetof(struct ModFs, modPath),   true, LOT_NONE, 1, sizeof(char)        },
+    { "numFiles",  LVT_U16,       offsetof(struct ModFs, numFiles),  true, LOT_NONE, 1, sizeof(u16)         },
+    { "totalSize", LVT_U32,       offsetof(struct ModFs, totalSize), true, LOT_NONE, 1, sizeof(u32)         },
+};
+
+#define LUA_MOD_FS_FILE_FIELD_COUNT 6
+static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
+    { "filepath", LVT_STRING,    offsetof(struct ModFsFile, filepath), true, LOT_NONE,  1, sizeof(char)          },
+    { "isPublic", LVT_BOOL,      offsetof(struct ModFsFile, isPublic), true, LOT_NONE,  1, sizeof(bool)          },
+    { "isText",   LVT_BOOL,      offsetof(struct ModFsFile, isText),   true, LOT_NONE,  1, sizeof(bool)          },
+    { "modFs",    LVT_COBJECT_P, offsetof(struct ModFsFile, modFs),    true, LOT_MODFS, 1, sizeof(struct ModFs*) },
+    { "offset",   LVT_U32,       offsetof(struct ModFsFile, offset),   true, LOT_NONE,  1, sizeof(u32)           },
+    { "size",     LVT_U32,       offsetof(struct ModFsFile, size),     true, LOT_NONE,  1, sizeof(u32)           },
+};
+
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6
 static struct LuaObjectField sModeTransitionInfoFields[LUA_MODE_TRANSITION_INFO_FIELD_COUNT] = {
     { "frame",           LVT_S16,     offsetof(struct ModeTransitionInfo, frame),           false, LOT_NONE,                  1, sizeof(s16)                          },
@@ -1674,7 +1694,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 771
+#define LUA_OBJECT_FIELD_COUNT 770
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2080,7 +2100,6 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oKoopaTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oKoopaTurningAwayFromWall),                  false, LOT_NONE,         1, sizeof(s32)                   },
     { "oKoopaUnshelledTimeUntilTurn",               LVT_S32,                 offsetof(struct Object, oKoopaUnshelledTimeUntilTurn),               false, LOT_NONE,         1, sizeof(s32)                   },
     { "oLightID",                                   LVT_S32,                 offsetof(struct Object, oLightID),                                   false, LOT_NONE,         1, sizeof(s32)                   },
-    { "oLightRadius",                               LVT_F32,                 offsetof(struct Object, oLightRadius),                               false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF4",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF4),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF8",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF8),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkFC",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkFC),                  false, LOT_NONE,         1, sizeof(f32)                   },
@@ -2933,6 +2952,8 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MODAUDIO,                     sModAudioFields,                     LUA_MOD_AUDIO_FIELD_COUNT                       },
     { LOT_MODAUDIOSAMPLECOPIES,         sModAudioSampleCopiesFields,         LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT         },
     { LOT_MODFILE,                      sModFileFields,                      LUA_MOD_FILE_FIELD_COUNT                        },
+    { LOT_MODFS,                        sModFsFields,                        LUA_MOD_FS_FIELD_COUNT                          },
+    { LOT_MODFSFILE,                    sModFsFileFields,                    LUA_MOD_FS_FILE_FIELD_COUNT                     },
     { LOT_MODETRANSITIONINFO,           sModeTransitionInfoFields,           LUA_MODE_TRANSITION_INFO_FIELD_COUNT            },
     { LOT_NAMETAGSSETTINGS,             sNametagsSettingsFields,             LUA_NAMETAGS_SETTINGS_FIELD_COUNT               },
     { LOT_NETWORKPLAYER,                sNetworkPlayerFields,                LUA_NETWORK_PLAYER_FIELD_COUNT                  },
@@ -3059,6 +3080,8 @@ const char *sLuaLotNames[] = {
 	[LOT_MODAUDIO] = "ModAudio",
 	[LOT_MODAUDIOSAMPLECOPIES] = "ModAudioSampleCopies",
 	[LOT_MODFILE] = "ModFile",
+	[LOT_MODFS] = "ModFs",
+	[LOT_MODFSFILE] = "ModFsFile",
 	[LOT_MODETRANSITIONINFO] = "ModeTransitionInfo",
 	[LOT_NAMETAGSSETTINGS] = "NametagsSettings",
 	[LOT_NETWORKPLAYER] = "NetworkPlayer",

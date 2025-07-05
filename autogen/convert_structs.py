@@ -27,13 +27,14 @@ in_files = [
     "src/pc/network/network.h",
     "src/game/hardcoded.h",
     "src/pc/mods/mod.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
-    "include/PR/gbi.h"
+    "include/PR/gbi.h",
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -80,7 +81,7 @@ override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
         "overridePalette",
-        "overridePaletteIndex"
+        "overridePaletteIndex",
     ],
     "Animation": [
         "values",
@@ -97,11 +98,13 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
-    "DialogEntry": [ "str" ]
+    "DialogEntry": [ "str" ],
+    "ModFsFile": [ "data", "capacity" ],
+    "ModFs": [ "files" ],
 }
 
 override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
 }
 
 override_field_immutable = {
@@ -137,12 +140,14 @@ override_field_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
-    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"]
+    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"],
+    "ModFsFile": [ "*" ],
+    "ModFs": [ "*" ],
 }
 
 override_field_version_excludes = {
     "oCameraLakituUnk104": "VERSION_JP",
-    "oCoinUnk1B0": "VERSION_JP"
+    "oCoinUnk1B0": "VERSION_JP",
 }
 
 override_allowed_structs = {
@@ -150,7 +155,7 @@ override_allowed_structs = {
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
-    "include/PR/gbi.h": [ "Gfx", "Vtx" ]
+    "include/PR/gbi.h": [ "Gfx", "Vtx" ],
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -168,7 +173,7 @@ sLuaManuallyDefinedStructs = [{
 
 override_types = {
     "Gwords": "Gfx",
-    "Vtx_L": "Vtx"
+    "Vtx_L": "Vtx",
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 

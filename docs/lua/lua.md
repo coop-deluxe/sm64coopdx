@@ -71,6 +71,7 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Custom Texture Overriding](examples/texture-override)
 - [Custom Animations (DynOS)](examples/custom-animations-dynos)
 - [Custom Animations (Lua)](examples/custom-animations-lua)
+- [Bytestring Packet Example](examples/bytestring-packet-example.lua)
 - [Gfx/Vtx Demo](examples/gfx-vtx-demo)
 - [Lighting Engine Demo](examples/lighting-engine-demo)
 - [Mirrors Demo](examples/mirrors-demo/README.md)

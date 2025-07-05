@@ -1126,15 +1126,6 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         if (_LvlRootName.Find("_entry") == -1) { continue; }
         // If there is an existing binary file for this level, skip and go to the next level
         SysPath _LvlFilename = fstring("%s/%s.lvl", aPackFolder.c_str(), _LvlRootName.begin());
-        if (fs_sys_file_exists(_LvlFilename.c_str())) {
-
-            // Compress file to gain some space
-            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_LvlFilename)) {
-                DynOS_Bin_Compress(_LvlFilename);
-            }
-
-            continue;
-        }
 
         // Init
         _GfxData->mLoadIndex                  = 0;
@@ -1241,6 +1232,11 @@ static void DynOS_Lvl_GeneratePack_Recursive(const SysPath &directory, GfxData *
 
 void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing levels: \"%s\"", aPackFolder.c_str());
+
+    if (!DynOS_ShouldGeneratePack(aPackFolder, { ".lvl" })) {
+        return;
+    }
+
     Array<Pair<u64, String>> _ActorsFolders;
 
     GfxData *_GfxData = New<GfxData>();
@@ -1256,8 +1252,9 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
             // Compress .lvl files to gain some space
+            bool _IsLvl = (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos);
             SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-            if (SysPath(_PackEnt->d_name).find(".lvl") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+            if (_IsLvl && !DynOS_Bin_IsCompressed(_Filename)) {
                 if (configCompressOnStartup) { DynOS_Bin_Compress(_Filename); }
                 continue;
             }
@@ -1266,12 +1263,20 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder) {
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (!fs_sys_dir_exists(_Folder.c_str())) continue;
 
+            // Only parse folders with a 'script.c'
+            SysPath _ScriptFile = fstring("%s/script.c", _Folder.c_str());
+            if (!fs_sys_file_exists(_ScriptFile.c_str())) {
+                _ScriptFile = fstring("%s/custom.script.c", _Folder.c_str());
+                if (!fs_sys_file_exists(_ScriptFile.c_str())) {
+                    continue;
+                }
+            }
+
             // Prevent generating from folders that likely already generated
             SysPath _LvlFile = fstring("%s/level_%s_entry.lvl", aPackFolder.c_str(), _PackEnt->d_name);
-            if (fs_sys_file_exists(_LvlFile.c_str())) continue;
-
-            // Only parse folders with a 'script.c'
-            if (!fs_sys_file_exists(fstring("%s/script.c", _Folder.c_str()).c_str()) && !fs_sys_file_exists(fstring("%s/custom.script.c", _Folder.c_str()).c_str())) continue;
+            if (DynOS_GenFileExistsAndIsNewerThanFolder(_LvlFile, _Folder)) {
+                continue;
+            }
 
             _GfxData->mModelIdentifier++;
             DynOS_Lvl_GeneratePack_Recursive(_Folder, _GfxData);
