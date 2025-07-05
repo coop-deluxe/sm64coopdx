@@ -17,24 +17,27 @@ static void print_help(void) {
 #if defined(_WIN32) || defined(_WIN64)
     printf("--console                 Enables the Windows console.\n");
 #endif
-    printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
-    printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
-    printf("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
-    printf("--fullscreen              Starts the game in full screen mode.\n");
-    printf("--windowed                Starts the game in windowed mode.\n");
-    printf("--width WIDTH             Sets the window width.\n");
-    printf("--height HEIGHT           Sets the window height.\n");
-    printf("--skip-intro              Skips the Peach and Lakitu intros when on a zero star save.\n");
-    printf("--server PORT             Starts the game and creates a new server on PORT.\n");
-    printf("--client IP PORT          Starts the game and joins an existing server.\n");
-    printf("--coopnet PASSWORD        Starts the game and creates a new CoopNet server.\n");
-    printf("--playername PLAYERNAME   Starts the game with a specific playername.\n");
-    printf("--playercount PLAYERCOUNT Starts the game with a specific player count limit.\n");
-    printf("--skip-update-check       Skips the update check when loading the game.\n");
-    printf("--no-discord              Disables discord integration.\n");
-    printf("--disable-mods            Disables all mods that are already enabled.\n");
-    printf("--enable-mod MODNAME      Enables a mod.\n");
-    printf("--headless                Enable Headless mode.");
+    printf("--savepath SAVEPATH                       Overrides the default save/config path ('!' expands to executable path).\n");
+    printf("--configfile CONFIGNAME                   Saves the configuration file as CONFIGNAME.\n");
+    printf("--hide-loading-screen                     Hides the loading screen before the menu boots up.\n");
+    printf("--fullscreen                              Starts the game in full screen mode.\n");
+    printf("--windowed                                Starts the game in windowed mode.\n");
+    printf("--width WIDTH                             Sets the window width.\n");
+    printf("--height HEIGHT                           Sets the window height.\n");
+    printf("--skip-intro                              Skips the Peach and Lakitu intros when on a zero star save.\n");
+    printf("--server PORT                             Starts the game and creates a new server on PORT.\n");
+    printf("--client IP PORT                          Starts the game and joins an existing server.\n");
+    printf("--coopnet PASSWORD                        Starts the game and creates a new CoopNet server.\n");
+    printf("--playername PLAYERNAME                   Starts the game with a specific playername.\n");
+    printf("--playercount PLAYERCOUNT                 Starts the game with a specific player count limit.\n");
+    printf("--skip-update-check                       Skips the update check when loading the game.\n");
+    printf("--no-discord                              Disables discord integration.\n");
+    printf("--disable-mods                            Disables all mods that are already enabled.\n");
+    printf("--enable-mod MODNAME                      Enables a mod.\n");
+    printf("--headless                                Enable headless mode.\n");
+    printf("--render-api [GL|D3D11|DUMMY]             Runs game using a specific render api.\n");
+    printf("--window-api [SDL2|DXGI|DUMMY]            Runs game using a specific window api.\n");
+    printf("--audio-api [SDL2|DUMMY]                  Runs game using a specific audio api.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -57,6 +60,11 @@ bool parse_cli_opts(int argc, char* argv[]) {
     // initialize options with false values
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
     gCLIOpts.enableMods = NULL;
+
+    // Set default backend values
+    gCLIOpts.renderApi = RENDER_API_GL;
+    gCLIOpts.windowApi = WINDOW_API_SDL2;
+    gCLIOpts.audioApi = AUDIO_API_SDL2;
 
     for (int i = 1; i < argc; i++) {
 #if defined(_WIN32) || defined(_WIN64)
@@ -115,6 +123,40 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--headless")) {
             gCLIOpts.headless = true;
+        } else if (strcmp(argv[i], "--render-api") == 0 && (i + 1)< argc) {
+            printf("Render Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "GL") == 0) {
+                gCLIOpts.renderApi = RENDER_API_GL;
+            } else if (strcmp(argv[i+1], "D3D11") == 0) {
+                gCLIOpts.renderApi = RENDER_API_D3D11;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.renderApi = RENDER_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown rendering API: %s\n", argv[i+1]);
+            }
+            i++;
+        } else if (strcmp(argv[i], "--window-api") == 0 && (i + 1) < argc) {
+            printf("Window Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "SDL2") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_SDL2;
+            } else if (strcmp(argv[i+1], "DXGI") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_DXGI;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.windowApi = WINDOW_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown window API: %s\n", argv[i+1]);
+            }
+            i++;
+        } else if (strcmp(argv[i], "--audio-api") == 0 && (i + 1) < argc) {
+            printf("Audio Api: %s\n", argv[i+1]);
+            if (strcmp(argv[i+1], "SDL2") == 0) {
+                gCLIOpts.audioApi = AUDIO_API_SDL2;
+            } else if (strcmp(argv[i+1], "DUMMY") == 0) {
+                gCLIOpts.audioApi = AUDIO_API_DUMMY;
+            } else {
+                fprintf(stderr, "Unknown audio API: %s\n", argv[i+1]);
+            }
+            i++;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

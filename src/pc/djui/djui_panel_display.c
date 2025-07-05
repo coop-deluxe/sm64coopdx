@@ -97,7 +97,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FILTERING), filterChoices, 3, &configFiltering, NULL);
 
-        int maxMsaa = wm_api->get_max_msaa();
+        int maxMsaa = gWindowApi->get_max_msaa();
         if (maxMsaa >= 2) {
             if      (configWindow.msaa >= 16) { sMsaaSelection = 4; }
             else if (configWindow.msaa >=  8) { sMsaaSelection = 3; }
