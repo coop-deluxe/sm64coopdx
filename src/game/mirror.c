@@ -441,14 +441,16 @@ void geo_reset_mirrors() {
 }
 
 // Backwards recursion to apply the transforms from the first to the last reflection
-static void mirror_transform_shadow(struct Object *obj, Vec3f pos) {
+static void mirror_transform_shadow(struct Object *obj, Vec3f pos, Vec3f scale) {
     if (geo_is_mirror_object(obj->oMirrorObjPrevObj)) {
-        mirror_transform_shadow(obj->oMirrorObjPrevObj, pos);
+        mirror_transform_shadow(obj->oMirrorObjPrevObj, pos, scale);
     }
-    mirror_transform(obj->oMirrorObjMirror, pos, NULL, NULL);
+    mirror_transform(obj->oMirrorObjMirror, pos, NULL, scale);
 }
 
-f32 geo_process_shadow_apply_mirror_transform(struct GraphNodeObject *node) {
+f32 geo_process_shadow_apply_mirror_transform(struct GraphNodeObject *node, Vec3f outScale) {
+    vec3f_copy(outScale, gVec3fOne);
+
     struct Object *mirrorObj = (struct Object *) node;
     if (geo_is_mirror_object(mirrorObj)) {
 
@@ -462,7 +464,9 @@ f32 geo_process_shadow_apply_mirror_transform(struct GraphNodeObject *node) {
         // At this point in geo processing, manual shadowPos is at the real object position.
         // We need to apply all mirrors transforms to get the reflected shadow position.
         if (!gCurGraphNodeHeldObject && node->disableAutomaticShadowPos) {
-            mirror_transform_shadow(mirrorObj, node->shadowPos);
+            mirror_transform_shadow(mirrorObj, node->shadowPos, outScale);
+        } else {
+            mirror_transform_shadow(mirrorObj, NULL, outScale);
         }
     }
     return 1.f;

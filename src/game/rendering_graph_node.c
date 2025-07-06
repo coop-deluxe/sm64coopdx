@@ -1052,6 +1052,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
     Mat4 mtxf;
     Vec3f shadowPosPrev;
     Vec3f animOffset;
+    Vec3f shadowMirrorScale;
     f32 shadowScale;
 
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
@@ -1068,7 +1069,7 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             }
             shadowScale = node->shadowScale * gCurGraphNodeObject->scale[0];
         }
-        shadowScale *= geo_process_shadow_apply_mirror_transform(gCurGraphNodeObject);
+        shadowScale *= geo_process_shadow_apply_mirror_transform(gCurGraphNodeObject, shadowMirrorScale);
 
         f32 objScale = 1.0f;
         if (gCurAnimEnabled) {
@@ -1141,9 +1142,10 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
         }
 
         if (shadowListPrev != NULL) {
-            mtxf_translate(mtxf, gCurGraphNodeObject->shadowPos);
+            mtxf_scale_vec3f(mtxf, gMat4Identity, shadowMirrorScale);
+            vec3f_copy(mtxf[3], gCurGraphNodeObject->shadowPos);
             mtxf_mul(gMatStack[gMatStackIndex + 1], mtxf, *gCurGraphNodeCamera->matrixPtr);
-            mtxf_translate(mtxf, shadowPosPrev);
+            vec3f_copy(mtxf[3], shadowPosPrev);
             mtxf_mul(gMatStackPrev[gMatStackIndex + 1], mtxf, *gCurGraphNodeCamera->matrixPtrPrev);
 
             // Increment the matrix stack, If we fail to do so. Just return.
