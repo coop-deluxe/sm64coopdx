@@ -778,6 +778,9 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(id_editor_Scroll_Texture);
     bhv_constant(id_bhvAmbientLight);
     bhv_constant(id_bhvPointLight);
+    bhv_constant(id_bhvMirror);
+    bhv_constant(id_bhvHorizontalMirror);
+    bhv_constant(id_bhvVerticalMirror);
 
     // Define a special type for new ids that don't override.
     if (_Arg == "id_bhvNewId") { return (BehaviorScript) (0xFFFF); }
@@ -1888,6 +1891,18 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
 
     /* PointLight */
     bhv_constant(oLightID);
+
+    /* Mirrors */
+    bhv_constant(oMirrorType);
+    bhv_constant(oMirrorWidth);
+    bhv_constant(oMirrorHeight);
+    bhv_constant(oMirrorMaxDistance);
+
+    /* Mirror object */
+    bhv_constant(oMirrorObjInvertCulling);
+    bhv_constant(oMirrorObjPrevObj);
+    bhv_constant(oMirrorObjRealObj);
+    bhv_constant(oMirrorObjMirror);
 
     *found = false;
     return 0;

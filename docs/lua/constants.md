@@ -664,7 +664,10 @@
 | id_bhvStarNumber | 538 |
 | id_bhvAmbientLight | 539 |
 | id_bhvPointLight | 540 |
-| id_bhv_max_count | 541 |
+| id_bhvMirror | 541 |
+| id_bhvHorizontalMirror | 542 |
+| id_bhvVerticalMirror | 543 |
+| id_bhv_max_count | 544 |
 
 [:arrow_up_small:](#)
 
@@ -2871,6 +2874,8 @@
 - MR_BLIZZARD_ACT_JUMP
 - MR_BLIZZARD_STYPE_NO_CAP
 - MR_BLIZZARD_STYPE_JUMPING
+- MIRROR_TYPE_HORIZONTAL
+- MIRROR_TYPE_VERTICAL
 
 [:arrow_up_small:](#)
 
@@ -3514,7 +3519,8 @@
 | HOOK_ON_ADD_SURFACE | 57 |
 | HOOK_ON_CLEAR_AREAS | 58 |
 | HOOK_ON_PACKET_BYTESTRING_RECEIVE | 59 |
-| HOOK_MAX | 60 |
+| HOOK_ON_MIRROR_OBJECT_RENDER | 60 |
+| HOOK_MAX | 61 |
 
 [:arrow_up_small:](#)
 

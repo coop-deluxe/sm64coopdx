@@ -16,6 +16,13 @@
 #include "make_const_nonconst.h"
 #include "levels/castle_inside/header.h"
 
+// Behavior params for Castle upstairs mirror room's mirror
+#define MIRROR_ROOM_BEH_PARAMS ( \
+/* oMirrorWidth       */ (((4250 / 10) & 0x7FF) << 21) | \
+/* oMirrorHeight      */ (((1200 / 10) & 0x7FF) << 10) | \
+/* oMirrorMaxDistance */ (((2600 / 10) & 0x3FF) << 0)    \
+)
+
 static const LevelScript script_func_local_1[] = {
     WARP_NODE(/*id*/ 0x00, /*destLevel*/ LEVEL_CASTLE_GROUNDS, /*destArea*/ 0x01, /*destNode*/ 0x00, /*flags*/ WARP_NO_CHECKPOINT),
     WARP_NODE(/*id*/ 0x01, /*destLevel*/ LEVEL_CASTLE_GROUNDS, /*destArea*/ 0x01, /*destNode*/ 0x01, /*flags*/ WARP_NO_CHECKPOINT),
@@ -274,6 +281,7 @@ const LevelScript level_castle_inside_entry[] = {
         OBJECT(/*model*/ MODEL_CASTLE_CLOCK_HOUR_HAND,   /*pos*/  -205, 2918, 7222, /*angle*/ 0, 180, 0, /*behParam*/ 0x00000000, /*beh*/ bhvClockHourHand),
         OBJECT(/*model*/ MODEL_CASTLE_CLOCK_PENDULUM,    /*pos*/  -205, 2611, 7140, /*angle*/ 0,   0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvDecorativePendulum),
         OBJECT(/*model*/ MODEL_LAKITU,                   /*pos*/  4231, 1408, 1601, /*angle*/ 0,   0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvCameraLakitu),
+        OBJECT(/*model*/ MODEL_NONE,                     /*pos*/  4331, 1800, 1825, /*angle*/ 0, 270, 0, /*behParam*/ MIRROR_ROOM_BEH_PARAMS, /*beh*/ bhvHorizontalMirror),
         OBJECT(/*model*/ MODEL_TOAD,                     /*pos*/  -977, 1203, 2569, /*angle*/ 0,   0, 0, /*behParam*/ DIALOG_076 << 24, /*beh*/ bhvToadMessage),
         OBJECT(/*model*/ MODEL_TOAD,                     /*pos*/ -1584, 2253, 7157, /*angle*/ 0, 136, 0, /*behParam*/ DIALOG_083 << 24, /*beh*/ bhvToadMessage),
         OBJECT(/*model*/ MODEL_TOAD,                     /*pos*/   837, 1203, 3020, /*angle*/ 0, 180, 0, /*behParam*/ DIALOG_137 << 24, /*beh*/ bhvToadMessage),

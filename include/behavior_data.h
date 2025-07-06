@@ -545,5 +545,9 @@ extern const BehaviorScript RM_Scroll_Texture[];
 extern const BehaviorScript editor_Scroll_Texture[];
 extern const BehaviorScript bhvAmbientLight[];
 extern const BehaviorScript bhvPointLight[];
+extern const BehaviorScript bhvMirror[];
+extern const BehaviorScript bhvHorizontalMirror[];
+extern const BehaviorScript bhvVerticalMirror[];
+extern const BehaviorScript bhvMirrorObject[];
 
 #endif // BEHAVIOR_DATA_H

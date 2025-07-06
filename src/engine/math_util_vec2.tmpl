@@ -1,0 +1,157 @@
+#pragma once
+
+/* |description|
+Sets the components of the 2D {{desc}} vector `v` to 0
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_zero(OUT Vec2{{suffix}} v) {
+    memset(v, 0, sizeof(Vec2{{suffix}}));
+    return v;
+}
+
+/* |description|
+Copies the contents of a 2D {{desc}} vector (`src`) into another 2D {{desc}} vector (`dest`)
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_copy(OUT Vec2{{suffix}} dest, Vec2{{suffix}} src) {
+    dest[0] = src[0];
+    dest[1] = src[1];
+    return dest;
+}
+
+/* |description|
+Sets the values of the 2D {{desc}} vector `dest` to the given x and y values
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_set(OUT Vec2{{suffix}} dest, {{type}} x, {{type}} y) {
+    dest[0] = x;
+    dest[1] = y;
+    return dest;
+}
+
+/* |description|
+Adds the components of the 2D {{desc}} vector `a` to `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_add(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a) {
+    dest[0] += a[0];
+    dest[1] += a[1];
+    return dest;
+}
+
+/* |description|
+Adds the components of two 2D {{desc}} vectors `a` and `b` and stores the result in `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_sum(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a, Vec2{{suffix}} b) {
+    dest[0] = a[0] + b[0];
+    dest[1] = a[1] + b[1];
+    return dest;
+}
+
+/* |description|
+Subtracts the components of the 2D {{desc}} vector `a` from `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_sub(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a) {
+    dest[0] -= a[0];
+    dest[1] -= a[1];
+    return dest;
+}
+
+/* |description|
+Subtracts the components of the 2D {{desc}} vector `b` from the components of `a` and stores the result in `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_dif(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a, Vec2{{suffix}} b) {
+    dest[0] = a[0] - b[0];
+    dest[1] = a[1] - b[1];
+    return dest;
+}
+
+/* |description|
+Multiplies each component of the 2D {{desc}} vector `dest` by the scalar value `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_mul(OUT Vec2{{suffix}} dest, f32 a) {
+    dest[0] *= a;
+    dest[1] *= a;
+    return dest;
+}
+
+/* |description|
+Multiplies the components of the 2D {{desc}} vector `dest` with the components of `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_mult(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a) {
+    dest[0] *= a[0];
+    dest[1] *= a[1];
+    return dest;
+}
+
+/* |description|
+Multiplies the components of two 2D {{desc}} vectors `a` and `b` and stores the result in `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_prod(OUT Vec2{{suffix}} dest, Vec2{{suffix}} a, Vec2{{suffix}} b) {
+    dest[0] = a[0] * b[0];
+    dest[1] = a[1] * b[1];
+    return dest;
+}
+
+/* |description|
+Divides each component of the 2D {{desc}} vector `dest` by the scalar value `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_div(OUT Vec2{{suffix}} dest, f32 a) {
+    if (a == 0) { return dest; }
+    dest[0] /= a;
+    dest[1] /= a;
+    return dest;
+}
+
+/* |description|
+Calculates the length (magnitude) of the 2D {{desc}} vector `a`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 f32 vec2{{suffix}}_length(Vec2{{suffix}} a) {
+    return sqrtf(a[0] * a[0] + a[1] * a[1]);
+}
+
+/* |description|
+Normalizes the 2D {{desc}} vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_normalize(OUT Vec2{{suffix}} v) {
+    f32 mag = vec2{{suffix}}_length(v);
+    vec2{{suffix}}_div(v, mag);
+    return v;
+}
+
+/* |description|
+Sets the length (magnitude) of 2D {{desc}} vector `v`, while retaining its direction
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_set_magnitude(OUT Vec2{{suffix}} v, f32 mag) {
+    vec2{{suffix}}_normalize(v);
+    vec2{{suffix}}_mul(v, mag);
+    return v;
+}
+
+/* |description|
+Computes the dot product of the two 2D {{desc}} vectors `a` and `b`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 f32 vec2{{suffix}}_dot(Vec2{{suffix}} a, Vec2{{suffix}} b) {
+    return (f32) (a[0] * b[0] + a[1] * b[1]);
+}
+
+/* |description|
+Takes two 2D {{desc}} vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 Vec2{{suffix}}p vec2{{suffix}}_combine(OUT Vec2{{suffix}} dest, Vec2{{suffix}} vecA, Vec2{{suffix}} vecB, f32 sclA, f32 sclB) {
+    dest[0] = vecA[0] * sclA + vecB[0] * sclB;
+    dest[1] = vecA[1] * sclA + vecB[1] * sclB;
+    return dest;
+}
+
+/* |description|
+Calculates the distance between two 2D {{desc}} vectors `v1` and `v2`
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 f32 vec2{{suffix}}_dist(Vec2{{suffix}} v1, Vec2{{suffix}} v2) {
+    Vec2{{suffix}} diff;
+    vec2{{suffix}}_dif(diff, v1, v2);
+    return vec2{{suffix}}_length(diff);
+}
+
+/* |description|
+Returns `true` if all components of the 2D {{desc}} vector `v` are zero
+|descriptionEnd| */
+INLINE OPTIMIZE_O3 bool vec2{{suffix}}_is_zero(Vec2{{suffix}} v) {
+    return memcmp(v, gVec2{{suffix}}Zero, sizeof(Vec2{{suffix}})) == 0;
+}
