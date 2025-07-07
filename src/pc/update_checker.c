@@ -49,8 +49,10 @@ void parse_version(const char *data) {
     u8 len = strlen(VERSION_IDENTIFIER);
     version += len;
     const char *end = strchr(version, '"');
-    memcpy(sRemoteVersion, version, end - version);
-    sRemoteVersion[end - version] = '\0';
+    size_t version_length = (size_t)(end - version);
+    if (version_length > sizeof(sRemoteVersion) - 1) { return; }
+    memcpy(sRemoteVersion, version, version_length);
+    sRemoteVersion[version_length] = '\0';
 }
 
 // function to download a text file from the internet
