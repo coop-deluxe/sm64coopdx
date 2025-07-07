@@ -76,9 +76,9 @@ void get_version_remote(void) {
     DWORD dwSize = sizeof(contentLength);
     HttpQueryInfo(hUrl, HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER, &contentLength, &dwSize, NULL);
 
-    // read data from the URL
+    // read data from the URL, making room in the buffer for the null-terminator
     DWORD bytesRead;
-    if (!InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead)) {
+    if (!InternetReadFile(hUrl, buffer, sizeof(buffer) - 1, &bytesRead)) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
