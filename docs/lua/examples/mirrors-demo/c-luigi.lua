@@ -1,5 +1,6 @@
 local strange_reflections = false
 local inside_mirror_room = false
+local mirror_room_rotation = false
 
 local CHARACTERS = {
     [CT_MARIO] = {
@@ -99,14 +100,22 @@ hook_event(HOOK_MARIO_UPDATE, function (m)
     if m.playerIndex ~= 0 then return end
 
     inside_mirror_room = (
-        strange_reflections and
         np.currLevelNum == LEVEL_CASTLE and
         np.currAreaIndex == 2 and
         m.pos.x >= 1730
     )
 
+    local mirror = obj_get_first_with_behavior_id(id_bhvMirror)
+    if mirror then
+        if inside_mirror_room and mirror_room_rotation then
+            mirror.oFaceAngleYaw = mirror.oFaceAngleYaw + 0x80
+        else
+            mirror.oFaceAngleYaw = 0xC000
+        end
+    end
+
     local bigBoo = obj_get_first_with_behavior_id(id_bhvBalconyBigBoo)
-    if inside_mirror_room then
+    if inside_mirror_room and strange_reflections then
         if not bigBoo then
             bigBoo = spawn_non_sync_object(id_bhvBalconyBigBoo, E_MODEL_BOO, 3500, 1408, 1825, nil)
         end
@@ -119,7 +128,7 @@ hook_event(HOOK_MARIO_UPDATE, function (m)
 end)
 
 local function before_geo_process(node, matStackIndex)
-    if inside_mirror_room then
+    if inside_mirror_room and strange_reflections then
 
         -- Set the character palette
         local m = geo_get_mario_state()
@@ -137,7 +146,7 @@ local function before_geo_process(node, matStackIndex)
 end
 
 local function on_mirror_object_render(mirrorObj)
-    if inside_mirror_room then
+    if inside_mirror_room and strange_reflections then
         local realObj = mirrorObj.oMirrorObjRealObj
 
         if obj_has_behavior_id(realObj, id_bhvBalconyBigBoo) == 1 then
@@ -173,6 +182,10 @@ end
 
 hook_event(HOOK_BEFORE_GEO_PROCESS, before_geo_process)
 hook_event(HOOK_ON_MIRROR_OBJECT_RENDER, on_mirror_object_render)
+
+hook_mod_menu_checkbox("Mirror room rotation", false, function (index, value)
+    mirror_room_rotation = value
+end)
 
 hook_mod_menu_checkbox("Strange reflections", false, function (index, value)
     strange_reflections = value

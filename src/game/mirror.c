@@ -63,54 +63,132 @@ void bhv_mirror_init(void) {
  // Mirror objects //
 ////////////////////
 
-static struct {
-    struct Object **buffer;
-    u32 count;
-    u32 capacity;
-} sMirrorObjects = {0};
+struct MirrorObject {
+    struct Object obj[1];
+    struct Object *mirror;
+    struct MirrorObject *next;
+    struct MirrorObject *children;
+    u8 reflection;
+    bool rendered;
+};
 
-static struct Object *allocate_mirror_object() {
+static struct GrowingArray *sMirrorObjectPool = NULL;
+static struct MirrorObject *sMirrorObjects[OBJECT_POOL_CAPACITY] = {[0 ... OBJECT_POOL_CAPACITY - 1] = NULL};
 
-    // Increase capacity if needed
-    if (sMirrorObjects.count == sMirrorObjects.capacity) {
-        u32 newCapacity = MAX(sMirrorObjects.capacity * 2, 64);
-        sMirrorObjects.buffer = realloc(sMirrorObjects.buffer, newCapacity * sizeof(struct Object *));
-        memset(sMirrorObjects.buffer + sMirrorObjects.capacity, 0, (newCapacity - sMirrorObjects.capacity) * sizeof(struct Object *));
-        sMirrorObjects.capacity = newCapacity;
+INLINE static s32 get_object_slot(struct Object *obj) {
+    if (obj < gObjectPool || obj >= gObjectPool + OBJECT_POOL_CAPACITY) {
+        return -1;
     }
-
-    // Create new object if slot is empty
-    struct Object *obj = sMirrorObjects.buffer[sMirrorObjects.count];
-    if (!obj) {
-        obj = sMirrorObjects.buffer[sMirrorObjects.count] = calloc(1, sizeof(struct Object));
-    }
-
-    // Increase object count
-    sMirrorObjects.count++;
-    return obj;
+    return (s32) (obj - gObjectPool);
 }
 
-static struct Object *get_mirror_object(struct Object *mirror, struct Object *obj) {
-    struct Object *mirrorObj = allocate_mirror_object();
+static struct MirrorObject *allocate_mirror_object() {
+
+    // Allocate pool
+    if (!sMirrorObjectPool) {
+        sMirrorObjectPool = growing_array_init(sMirrorObjectPool, 0x100);
+    }
+
+    // Find a free slot in the pool
+    for (u32 i = 0; i != sMirrorObjectPool->count; ++i) {
+        struct MirrorObject *mobj = sMirrorObjectPool->buffer[i];
+        if (mobj->mirror == NULL) {
+            return mobj;
+        }
+    }
+
+    // Create new item
+    return growing_array_alloc(sMirrorObjectPool, sizeof(struct MirrorObject));
+}
+
+static struct MirrorObject *find_mirror_object(struct Object *mirror, struct Object *obj) {
+    struct MirrorObject *firstMirrorObj = NULL;
+
+    // Real object
+    if (!geo_is_mirror_object(obj)) {
+        s32 slot = get_object_slot(obj);
+        if (slot == -1) {
+            return NULL;
+        }
+
+        firstMirrorObj = sMirrorObjects[slot];
+
+        // If there is no mirror object for this real object, create a new list
+        if (!firstMirrorObj) {
+            struct MirrorObject *mirrorObj = allocate_mirror_object();
+            if (!mirrorObj) {
+                return NULL;
+            }
+
+            mirrorObj->mirror = mirror;
+            mirrorObj->next = NULL;
+            mirrorObj->children = NULL;
+            mirrorObj->reflection = 1;
+            mirrorObj->rendered = false;
+            sMirrorObjects[slot] = mirrorObj;
+            return mirrorObj;
+        }
+    }
+
+    // Mirror object
+    else {
+        struct MirrorObject *mirrorObjRef = obj->oMirrorObjRef;
+        firstMirrorObj = mirrorObjRef->children;
+
+        // If there is no mirror object for this reflection, create a new list
+        if (!firstMirrorObj) {
+            struct MirrorObject *mirrorObj = allocate_mirror_object();
+            if (!mirrorObj) {
+                return NULL;
+            }
+
+            mirrorObj->mirror = mirror;
+            mirrorObj->next = NULL;
+            mirrorObj->children = NULL;
+            mirrorObj->reflection = mirrorObjRef->reflection + 1;
+            mirrorObj->rendered = false;
+            mirrorObjRef->children = mirrorObj;
+            return mirrorObj;
+        }
+    }
+
+    // Find the mirror object corresponding to mirror
+    struct MirrorObject *lastMirrorObj = firstMirrorObj;
+    for (struct MirrorObject *mirrorObj = firstMirrorObj; mirrorObj != NULL; lastMirrorObj = mirrorObj, mirrorObj = mirrorObj->next) {
+        if (mirrorObj->mirror == mirror) {
+            return mirrorObj;
+        }
+    }
+
+    // No mirror object for this mirror, create a new item
+    struct MirrorObject *mirrorObj = allocate_mirror_object();
     if (!mirrorObj) {
         return NULL;
     }
 
-    // For the interpolation to work on mirror objects, they need to get the same object pointer everytime,
-    // in order to reuse their previous frame non-interpolated values.
-    // That's why sMirrorObjects is a strictly growing array, it ensures that allocate_mirror_object()
-    // will always return the same pointer at a given index, without clearing memory.
-    // This works most of the time, since the order of processing objects is deterministic.
-    // In case a mirror object doesn't retrieve its previous state, just clear the memory to disable
-    // interpolation this frame.
+    mirrorObj->mirror = mirror;
+    mirrorObj->next = NULL;
+    lastMirrorObj->next = mirrorObj;
+    mirrorObj->children = NULL;
+    mirrorObj->reflection = lastMirrorObj->reflection;
+    mirrorObj->rendered = false;
+    return mirrorObj;
+}
 
-    bool isMirrorObject = geo_is_mirror_object(obj);
-    if ((isMirrorObject && mirrorObj->oMirrorObjRealObj != obj->oMirrorObjRealObj) ||
-        (!isMirrorObject && mirrorObj->oMirrorObjRealObj != obj)) {
-        memset(mirrorObj, 0, sizeof(struct Object));
+static struct MirrorObject *get_mirror_object(struct Object *mirror, struct Object *obj) {
+    struct MirrorObject *mirrorObj = find_mirror_object(mirror, obj);
+    if (!mirrorObj) {
+        return NULL;
     }
 
-    struct GraphNodeObject *mirrorNode = &mirrorObj->header.gfx;
+    // Check behavior
+    // If it's not the same, the original object has changed from the last frame,
+    // so reset all object fields to restart interpolation
+    if (mirrorObj->obj->behavior != obj->behavior) {
+        memset(mirrorObj->obj, 0, sizeof(mirrorObj->obj));
+    }
+
+    struct GraphNodeObject *mirrorNode = &mirrorObj->obj->header.gfx;
     struct AnimInfo *mirrorAnimInfo = &mirrorNode->animInfo;
 
     // Backup interpolation fields
@@ -130,7 +208,7 @@ static struct Object *get_mirror_object(struct Object *mirror, struct Object *ob
     u32 prevAnimFrameTimestamp = mirrorAnimInfo->prevAnimFrameTimestamp;
 
     // Copy object
-    *mirrorObj = *obj;
+    *mirrorObj->obj = *obj;
 
     // Restore interpolation fields
     mtxf_copy(mirrorNode->prevThrowMatrix, prevThrowMatrix);
@@ -149,11 +227,13 @@ static struct Object *get_mirror_object(struct Object *mirror, struct Object *ob
     mirrorAnimInfo->prevAnimFrameTimestamp = prevAnimFrameTimestamp;
 
     // Mirror object
-    mirrorObj->behavior = bhvMirrorObject;
-    mirrorObj->oMirrorObjPrevObj = obj;
-    mirrorObj->oMirrorObjRealObj = isMirrorObject ? obj->oMirrorObjRealObj : obj;
-    mirrorObj->oMirrorObjMirror = mirror;
-    mirrorObj->oMirrorObjInvertCulling = isMirrorObject ? !obj->oMirrorObjInvertCulling : TRUE;
+    bool isMirrorObject = geo_is_mirror_object(obj);
+    mirrorObj->obj->curBhvCommand = bhvMirrorObject;
+    mirrorObj->obj->oMirrorObjPrevObj = obj;
+    mirrorObj->obj->oMirrorObjRealObj = isMirrorObject ? obj->oMirrorObjRealObj : obj;
+    mirrorObj->obj->oMirrorObjMirror = mirror;
+    mirrorObj->obj->oMirrorObjInvertCulling = isMirrorObject ? !obj->oMirrorObjInvertCulling : TRUE;
+    mirrorObj->obj->oMirrorObjRef = mirrorObj;
     mirrorNode->throwMatrix = NULL;
     return mirrorObj;
 }
@@ -214,7 +294,7 @@ static void mirror_transform(struct Object *mirror, Vec3f pos, Vec3s angle, Vec3
     }
 }
 
-static bool mirror_check_range(struct Object *mirror, struct Object *obj) {
+static bool mirror_is_in_range(struct Object *mirror, struct Object *obj) {
     switch (mirror->oMirrorType) {
         case MIRROR_TYPE_VERTICAL: {
 
@@ -287,7 +367,7 @@ static bool mirror_check_range(struct Object *mirror, struct Object *obj) {
     return false;
 }
 
-static bool mirror_check_direction(struct Object *mirror, struct Object *obj) {
+static bool mirror_is_direction_valid(struct Object *mirror, struct Object *obj) {
     struct Object *real = obj->oMirrorObjRealObj;
     switch (mirror->oMirrorType) {
         case MIRROR_TYPE_VERTICAL: {
@@ -313,40 +393,43 @@ static bool mirror_check_direction(struct Object *mirror, struct Object *obj) {
     return false;
 }
 
-OPTIMIZE_O3 static bool mirror_check_duplicate(struct Object *obj) {
+OPTIMIZE_O3 static bool mirror_is_duplicate(struct Object *obj, Vec3f pos, Vec3s angle, Vec3f scale) {
+    for (u32 i = 0; i != sMirrorObjectPool->count; ++i) {
+        struct MirrorObject *mirrorObj = sMirrorObjectPool->buffer[i];
+        struct GraphNodeObject *mirrorNode = &mirrorObj->obj->header.gfx;
 
-    // First reflection cannot be a duplicate
-    if (obj->oMirrorObjPrevObj == obj->oMirrorObjRealObj) {
-        return false;
-    }
+        // Not an actual mirror object (free slot)
+        if (!mirrorObj->mirror) {
+            continue;
+        }
 
-    struct GraphNodeObject *node = &obj->header.gfx;
-    for (u32 i = 0; i != sMirrorObjects.count - 1; ++i) {
-        struct Object *mirrorObj = sMirrorObjects.buffer[i];
-        struct GraphNodeObject *mirrorNode = &mirrorObj->header.gfx;
+        // Not rendered yet, cannot count as a duplicate
+        if (!mirrorObj->rendered) {
+            continue;
+        }
 
         // Not the same real object
-        if (mirrorObj->oMirrorObjRealObj != obj->oMirrorObjRealObj) {
+        if (obj != mirrorObj->obj->oMirrorObjRealObj) {
             continue;
         }
 
         // Scale check
         // Inverted scales: not a duplicate
-        if (node->scale[0] * mirrorNode->scale[0] < 0.f ||
-            node->scale[1] * mirrorNode->scale[1] < 0.f) {
+        if (scale[0] * mirrorNode->scale[0] < 0.f ||
+            scale[1] * mirrorNode->scale[1] < 0.f) {
             continue;
         }
 
         // Angle check
         // Different yaws: not a duplicate
-        if (abs(node->angle[1] - mirrorNode->angle[1]) > 0x10) {
+        if (abs(angle[1] - mirrorNode->angle[1]) > 0x10) {
             continue;
         }
 
         // Position check
         // Same position: it's a duplicate
         // Use squared distance for faster iteration
-        Vec3f diff; vec3f_dif(diff, node->pos, mirrorNode->pos);
+        Vec3f diff; vec3f_dif(diff, pos, mirrorNode->pos);
         if (vec3f_dot(diff, diff) < 4.f) {
             return true;
         }
@@ -369,7 +452,7 @@ static void geo_process_mirror(struct Object *mirror, struct Object *obj) {
     }
 
     // Reject objects out of range
-    if (!mirror_check_range(mirror, obj)) {
+    if (!mirror_is_in_range(mirror, obj)) {
         return;
     }
 
@@ -382,25 +465,38 @@ static void geo_process_mirror(struct Object *mirror, struct Object *obj) {
         }
 
         // Check the direction of the reflection
-        if (!mirror_check_direction(mirror, obj)) {
+        if (!mirror_is_direction_valid(mirror, obj)) {
             return;
         }
     }
 
-    struct Object *mirrorObj = get_mirror_object(mirror, obj);
-    if (mirrorObj) {
-        struct GraphNodeObject *mirrorNode = &mirrorObj->header.gfx;
+    // Apply mirror transform
+    Vec3f pos; vec3f_copy(pos, obj->header.gfx.pos);
+    Vec3s angle; vec3s_copy(angle, obj->header.gfx.angle);
+    Vec3f scale; vec3f_copy(scale, obj->header.gfx.scale);
+    mirror_transform(mirror, pos, angle, scale);
 
-        mirror_transform(mirror, mirrorNode->pos, mirrorNode->angle, mirrorNode->scale);
-        vec3f_copy(&mirrorObj->oPosX, mirrorNode->pos);
-
-        // Don't render duplicated mirror objects
-        if (!mirror_check_duplicate(mirrorObj)) {
-            geo_invert_culling(mirrorObj->oMirrorObjInvertCulling);
-            geo_process_object(mirrorObj);
-            geo_invert_culling(!mirrorObj->oMirrorObjInvertCulling);
-        }
+    // Check duplicate
+    // First reflection cannot be a duplicate
+    if (geo_is_mirror_object(obj) && mirror_is_duplicate(obj->oMirrorObjRealObj, pos, angle, scale)) {
+        return;
     }
+
+    // Create and process mirror object
+    struct MirrorObject *mirrorObj = get_mirror_object(mirror, obj);
+    if (!mirrorObj) {
+        return;
+    }
+
+    vec3f_copy(mirrorObj->obj->header.gfx.pos, pos);
+    vec3s_copy(mirrorObj->obj->header.gfx.angle, angle);
+    vec3f_copy(mirrorObj->obj->header.gfx.scale, scale);
+    vec3f_copy(&mirrorObj->obj->oPosX, pos);
+    mirrorObj->rendered = true;
+
+    geo_invert_culling(mirrorObj->obj->oMirrorObjInvertCulling);
+    geo_process_object(mirrorObj->obj);
+    geo_invert_culling(!mirrorObj->obj->oMirrorObjInvertCulling);
 }
 
 void geo_process_mirrors(struct Object *obj) {
@@ -411,8 +507,10 @@ void geo_process_mirrors(struct Object *obj) {
         return;
     }
 
-    // Reject mirrors and camera lakitu
+    // Reject mirrors, lights and camera lakitu
     if (obj->behavior == bhvMirror ||
+        obj->behavior == bhvPointLight ||
+        obj->behavior == bhvAmbientLight ||
         obj->behavior == bhvCameraLakitu ||
         (obj->behavior == bhvCloud && obj->parentObj && obj->parentObj->behavior == bhvCameraLakitu) ||
         (obj->behavior == bhvCloudPart && obj->parentObj && obj->parentObj->behavior == bhvCloud && obj->parentObj->parentObj && obj->parentObj->parentObj->behavior == bhvCameraLakitu)) {
@@ -420,12 +518,14 @@ void geo_process_mirrors(struct Object *obj) {
     }
 
     // Reject reflection above limit
-    u8 numReflections = 0;
-    for (struct Object *mirrorObj = obj; geo_is_mirror_object(mirrorObj); mirrorObj = mirrorObj->oMirrorObjPrevObj) {
-        numReflections++;
-    }
-    if (numReflections >= gBehaviorValues.MirrorsMaxReflections) {
+    if (gBehaviorValues.MirrorsMaxReflections == 0) {
         return;
+    }
+    if (geo_is_mirror_object(obj)) {
+        struct MirrorObject *mirrorObjRef = obj->oMirrorObjRef;
+        if (mirrorObjRef->reflection >= gBehaviorValues.MirrorsMaxReflections) {
+            return;
+        }
     }
 
     // Process mirrors
@@ -436,8 +536,55 @@ void geo_process_mirrors(struct Object *obj) {
     }
 }
 
+static void geo_unload_mirror_object(struct MirrorObject *mirrorObj) {
+    if (!mirrorObj) {
+        return;
+    }
+
+    geo_unload_mirror_object(mirrorObj->children);
+    geo_unload_mirror_object(mirrorObj->next);
+    memset(mirrorObj, 0, sizeof(*mirrorObj));
+}
+
+void geo_unload_mirror_objects(struct Object *obj) {
+    s32 slot = get_object_slot(obj);
+    if (slot == -1) {
+        return;
+    }
+
+    geo_unload_mirror_object(sMirrorObjects[slot]);
+    sMirrorObjects[slot] = NULL;
+}
+
+void geo_unload_all_mirror_objects() {
+    if (!sMirrorObjectPool) {
+        return;
+    }
+
+    growing_array_free(&sMirrorObjectPool);
+    memset(sMirrorObjects, 0, sizeof(sMirrorObjects));
+}
+
 void geo_reset_mirrors() {
-    sMirrorObjects.count = 0;
+    if (!sMirrorObjectPool) {
+        return;
+    }
+
+    // Shrink buffer if the last objects are unused
+    // Reduces the amount of objects to check in mirror_is_duplicate
+    for (u32 i = sMirrorObjectPool->count; i > 0; --i) {
+        struct MirrorObject *mirrorObj = sMirrorObjectPool->buffer[i - 1];
+        if (mirrorObj->mirror) {
+            break;
+        }
+        sMirrorObjectPool->count--;
+    }
+
+    // Unset rendered flag
+    for (u32 i = 0; i != sMirrorObjectPool->count; ++i) {
+        struct MirrorObject *mirrorObj = sMirrorObjectPool->buffer[i];
+        mirrorObj->rendered = false;
+    }
 }
 
 // Backwards recursion to apply the transforms from the first to the last reflection
@@ -473,7 +620,13 @@ f32 geo_process_shadow_apply_mirror_transform(struct GraphNodeObject *node, Vec3
 }
 
 bool geo_is_mirror_object(struct Object *obj) {
-    return obj && obj->behavior == bhvMirrorObject;
+    return obj && obj->curBhvCommand == bhvMirrorObject;
+}
+
+static bool sGeoIsCullingInverted = false;
+
+bool geo_is_culling_inverted() {
+    return sGeoIsCullingInverted;
 }
 
 void geo_invert_culling(bool invert) {
@@ -484,4 +637,5 @@ void geo_invert_culling(bool invert) {
     for (s16 layer = 0; layer != 8; ++layer) {
         geo_append_display_list(sObjCullInvertGfx[invert], layer);
     }
+    sGeoIsCullingInverted = invert;
 }

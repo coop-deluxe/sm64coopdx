@@ -787,6 +787,8 @@ static void geo_process_billboard(struct GraphNodeBillboard *node) {
                    gCurGraphNodeCamera->roll);
 
     bool isHeldObjMirrorObj = false;
+    bool isCullingInverted = geo_is_culling_inverted();
+
     if (gCurGraphNodeHeldObject != NULL) {
         mtxf_scale_vec3f(gMatStack[nextMatStackIndex], gMatStack[nextMatStackIndex],
                          gCurGraphNodeHeldObject->objNode->header.gfx.scale);
@@ -815,7 +817,7 @@ static void geo_process_billboard(struct GraphNodeBillboard *node) {
         geo_process_node_and_siblings(node->node.children);
     }
     if (isHeldObjMirrorObj) {
-        geo_invert_culling(!gCurGraphNodeHeldObject->objNode->oMirrorObjInvertCulling);
+        geo_invert_culling(isCullingInverted);
     }
 
     gMatStackIndex--;

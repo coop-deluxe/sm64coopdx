@@ -24,6 +24,7 @@
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "mirror.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -624,6 +625,7 @@ void clear_objects(void) {
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();
+    geo_unload_all_mirror_objects();
 }
 
 /**

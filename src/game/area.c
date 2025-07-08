@@ -29,6 +29,7 @@
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/nametags.h"
 #include "engine/lighting_engine.h"
+#include "mirror.h"
 
 struct SpawnInfo gPlayerSpawnInfos[MAX_PLAYERS];
 struct Area gAreaData[MAX_AREAS];
@@ -253,6 +254,7 @@ void clear_areas(void) {
     }
 
     le_clear();
+    geo_unload_all_mirror_objects();
 }
 
 void clear_area_graph_nodes(void) {
@@ -311,6 +313,7 @@ void unload_area(void) {
     }
 
     le_clear();
+    geo_unload_all_mirror_objects();
 }
 
 void load_mario_area(void) {

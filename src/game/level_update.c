@@ -35,6 +35,7 @@
 #include "rumble_init.h"
 #include "game/interaction.h"
 #include "menu/intro_geo.h"
+#include "mirror.h"
 
 #include "pc/pc_main.h"
 #include "pc/cliopts.h"
@@ -1750,6 +1751,7 @@ s32 update_level(void) {
 s32 init_level(void) {
     sync_objects_clear();
     reset_dialog_render_state();
+    geo_unload_all_mirror_objects();
 
     s32 val4 = 0;
 

@@ -1185,6 +1185,7 @@
 #define /*0x100*/ oMirrorMaxDistance        OBJECT_FIELD_F32(0x1E)
 
 /* Mirror object */
+#define /*0x000*/ oMirrorObjRef             OBJECT_FIELD_VPTR(0x00) // internal reference to struct MirrorObject, hidden
 #define /*0x110*/ oMirrorObjInvertCulling   OBJECT_FIELD_U32(0x22)
 #define /*0x1A8*/ oMirrorObjPrevObj         OBJECT_FIELD_OBJ(0x48)
 #define /*0x1AC*/ oMirrorObjRealObj         OBJECT_FIELD_OBJ(0x49)

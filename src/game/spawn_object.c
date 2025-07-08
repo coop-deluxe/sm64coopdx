@@ -16,6 +16,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/debug_context.h"
+#include "mirror.h"
 
 /**
  * An unused linked list struct that seems to have been replaced by ObjectNode.
@@ -246,6 +247,8 @@ void unload_object(struct Object *obj) {
     obj->numSurfaces = 0;
 
     smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
+
+    geo_unload_mirror_objects(obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
 }
