@@ -14,6 +14,7 @@
 #include "menu/file_select.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
+#include "src/pc/lua/smlua_hooks.h"
 
 static int keyboard_buttons_down;
 
@@ -34,6 +35,8 @@ static int keyboard_map_scancode(int scancode) {
 }
 
 bool keyboard_on_key_down(int scancode) {
+    smlua_call_event_hooks(HOOK_ON_KEY_PRESSED, scancode);
+
     djui_panel_pause_disconnect_key_update(scancode);
 
     // see if interactable captures this scancode
@@ -49,6 +52,8 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
+    smlua_call_event_hooks(HOOK_ON_KEY_RELEASED, scancode);
+
     djui_interactable_on_key_up(scancode);
 
     int mapped = keyboard_map_scancode(scancode);

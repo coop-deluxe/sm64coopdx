@@ -8100,7 +8100,9 @@ HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
 HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
 HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
 HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
-HOOK_MAX                                    = 60 --- @type LuaHookedEventType
+HOOK_ON_KEY_PRESSED                         = 60 --- @type LuaHookedEventType
+HOOK_ON_KEY_RELEASED                        = 61 --- @type LuaHookedEventType
+HOOK_MAX                                    = 62 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8163,6 +8165,8 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_ADD_SURFACE`
 --- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
+--- | `HOOK_ON_KEY_PRESSED`
+--- | `HOOK_ON_KEY_RELEASED`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
