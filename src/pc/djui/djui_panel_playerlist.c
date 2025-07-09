@@ -57,7 +57,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
         djuiPingImages[i]->texture = texture_ping_two;
     } else if (np->ping < 750) {
         djuiPingImages[i]->texture = texture_ping_one;
-    } else if (np->ping > 750) {
+    } else {
         djuiPingImages[i]->texture = texture_ping_empty;
     }
 
