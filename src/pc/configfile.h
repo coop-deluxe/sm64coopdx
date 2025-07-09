@@ -43,6 +43,7 @@ extern ConfigWindow configWindow;
 extern ConfigStick configStick;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
+extern bool         configShowPing;
 extern bool         configUncappedFramerate;
 extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
