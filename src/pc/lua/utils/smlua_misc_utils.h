@@ -67,6 +67,8 @@ u8 djui_get_playerlist_page_index(void);
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
 struct DjuiTheme* djui_menu_get_theme(void);
+/* |description|Checks if the DJUI playerlist ping icon is visible|descriptionEnd| */
+bool djui_is_playerlist_ping_visible(void);
 
 /* |description|Gets the current state of the dialog box|descriptionEnd| */
 s8 get_dialog_box_state(void);

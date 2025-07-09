@@ -1977,6 +1977,7 @@
    - [djui_get_playerlist_page_index](functions-6.md#djui_get_playerlist_page_index)
    - [djui_menu_get_font](functions-6.md#djui_menu_get_font)
    - [djui_menu_get_theme](functions-6.md#djui_menu_get_theme)
+   - [djui_is_playerlist_ping_visible](functions-6.md#djui_is_playerlist_ping_visible)
    - [get_dialog_box_state](functions-6.md#get_dialog_box_state)
    - [get_dialog_id](functions-6.md#get_dialog_id)
    - [get_last_star_or_key](functions-6.md#get_last_star_or_key)

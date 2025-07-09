@@ -11022,6 +11022,12 @@ function djui_menu_get_theme()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the DJUI playerlist ping icon is visible
+function djui_is_playerlist_ping_visible()
+    -- ...
+end
+
 --- @return integer
 --- Gets the current state of the dialog box
 function get_dialog_box_state()
