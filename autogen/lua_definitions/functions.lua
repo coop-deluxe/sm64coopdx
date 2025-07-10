@@ -10181,8 +10181,8 @@ function audio_sample_play(audio, position, volume)
 end
 
 --- @return integer
---- Allocates an `audio` sequence
-function allocate_seq()
+--- Allocates an `audio` sequence ID
+function allocate_sequence()
     -- ...
 end
 

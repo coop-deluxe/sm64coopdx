@@ -1458,13 +1458,13 @@ Plays an `audio` sample at `position` with `volume`
 
 <br />
 
-## [allocate_seq](#allocate_seq)
+## [allocate_sequence](#allocate_sequence)
 
 ### Description
-Allocates an `audio` sequence
+Allocates an `audio` sequence ID
 
 ### Lua Example
-`local integerValue = allocate_seq()`
+`local integerValue = allocate_sequence()`
 
 ### Parameters
 - None
@@ -1473,7 +1473,7 @@ Allocates an `audio` sequence
 - `integer`
 
 ### C Prototype
-`u32 allocate_seq(void);`
+`u32 allocate_sequence(void);`
 
 [:arrow_up_small:](#)
 

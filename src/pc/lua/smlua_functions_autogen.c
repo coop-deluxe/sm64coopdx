@@ -30759,17 +30759,17 @@ int smlua_func_audio_sample_play(lua_State* L) {
     return 1;
 }
 
-int smlua_func_allocate_seq(UNUSED lua_State* L) {
+int smlua_func_allocate_sequence(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "allocate_seq", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "allocate_sequence", 0, top);
         return 0;
     }
 
 
-    lua_pushinteger(L, allocate_seq());
+    lua_pushinteger(L, allocate_sequence());
 
     return 1;
 }
@@ -38053,7 +38053,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);
     smlua_bind_function(L, "audio_sample_stop", smlua_func_audio_sample_stop);
     smlua_bind_function(L, "audio_sample_play", smlua_func_audio_sample_play);
-    smlua_bind_function(L, "allocate_seq", smlua_func_allocate_seq);
+    smlua_bind_function(L, "allocate_sequence", smlua_func_allocate_sequence);
 
     // smlua_camera_utils.h
     smlua_bind_function(L, "camera_reset_overrides", smlua_func_camera_reset_overrides);

@@ -626,7 +626,7 @@ void smlua_audio_custom_deinit(void) {
 }
 
 
-u32 allocate_seq() {
+u32 allocate_sequence() {
     if ((sCustomSeqsCount + SEQ_COUNT) < MAX_CUSTOM_SEQS) {
         return (++sCustomSeqsCount + SEQ_COUNT);   
     }
