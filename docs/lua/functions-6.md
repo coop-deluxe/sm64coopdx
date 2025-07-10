@@ -1458,6 +1458,27 @@ Plays an `audio` sample at `position` with `volume`
 
 <br />
 
+## [allocate_seq](#allocate_seq)
+
+### Description
+Allocates an `audio` sequence
+
+### Lua Example
+`local integerValue = allocate_seq()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 allocate_seq(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_camera_utils.h
 

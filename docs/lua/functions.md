@@ -1824,6 +1824,7 @@
    - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
    - [audio_sample_stop](functions-6.md#audio_sample_stop)
    - [audio_sample_play](functions-6.md#audio_sample_play)
+   - [allocate_seq](functions-6.md#allocate_seq)
 
 <br />
 

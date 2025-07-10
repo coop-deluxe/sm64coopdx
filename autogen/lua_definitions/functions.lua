@@ -10180,6 +10180,12 @@ function audio_sample_play(audio, position, volume)
     -- ...
 end
 
+--- @return integer
+--- Allocates an `audio` sequence
+function allocate_seq()
+    -- ...
+end
+
 --- Resets camera config overrides
 function camera_reset_overrides()
     -- ...
