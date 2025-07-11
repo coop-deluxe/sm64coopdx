@@ -85,6 +85,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
           : np->overrideLocation
     );
     djui_text_set_text(djuiTextAct[i], sActNum);
+    djui_base_set_size(&djuiTextAct[i]->base, configShowPing ? 65 : 100, 32.0f);
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
@@ -119,7 +120,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     // delete old player list
     if (gDjuiPlayerList != NULL) {
         djui_base_destroy(&gDjuiPlayerList->base);
-        gDjuiPlayerList= NULL;
+        gDjuiPlayerList = NULL;
     }
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS), false);
@@ -143,7 +144,6 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_flow_layout_set_margin(row, 8);
         djui_base_set_visible(&row->base, false);
         djuiRow[i] = row;
-
     
         struct DjuiImage* i1 = djui_image_create(&row->base, texture_ping_empty, 16, 16, 8);
         djui_base_set_size(&i1->base, 32, 32);
@@ -176,7 +176,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
 
         struct DjuiText* t5 = djui_text_create(&row->base, DLANG(PLAYER_LIST, ACT));
         djui_base_set_size_type(&t5->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&t5->base, configShowPing ? 65 : 100, 32.0f);
+        djui_base_set_size(&t5->base, 100, 32.0f);
         djui_base_set_color(&t5->base, t, t, t, 255);
         djui_text_set_alignment(t5, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         djuiTextAct[i] = t5;
