@@ -40,7 +40,7 @@ const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "z", 0x3D, 0 },
 
     // Punctuation
-    { "...", 0xE6, 0 }, // ellipsis
+    { ":",   0xE6, 0 }, // colon
     { ")(",  0xE2, 0 }, // close-open parentheses
     { "<<",  0xF5, 0 }, // double quote open
     { ">>",  0xF6, 0 }, // double quote close
