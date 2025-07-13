@@ -13,8 +13,7 @@ enum StarSelectorTypes
     STAR_SELECTOR_100_COINS
 };
 
-extern u32 gOverrideHideActSelectHud;
-
+extern u8 gOverrideHideActSelectHud;
 
 #ifdef AVOID_UB
 Gfx *geo_act_selector_strings(s16 callContext, UNUSED struct GraphNode *node, UNUSED void *context);
