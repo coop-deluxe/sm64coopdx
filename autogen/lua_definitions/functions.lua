@@ -10056,6 +10056,12 @@ function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m
     -- ...
 end
 
+--- @return integer
+--- Allocates an `audio` sequence ID
+function smlua_audio_utils_allocate_sequence()
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` stream by `filename` (with extension)
@@ -10177,12 +10183,6 @@ end
 --- @param volume number
 --- Plays an `audio` sample at `position` with `volume`
 function audio_sample_play(audio, position, volume)
-    -- ...
-end
-
---- @return integer
---- Allocates an `audio` sequence ID
-function allocate_sequence()
     -- ...
 end
 

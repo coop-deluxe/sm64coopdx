@@ -1034,6 +1034,27 @@ Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m6
 
 <br />
 
+## [smlua_audio_utils_allocate_sequence](#smlua_audio_utils_allocate_sequence)
+
+### Description
+Allocates an `audio` sequence ID
+
+### Lua Example
+`local integerValue = smlua_audio_utils_allocate_sequence()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 smlua_audio_utils_allocate_sequence(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_stream_load](#audio_stream_load)
 
 ### Description
@@ -1453,27 +1474,6 @@ Plays an `audio` sample at `position` with `volume`
 
 ### C Prototype
 `void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [allocate_sequence](#allocate_sequence)
-
-### Description
-Allocates an `audio` sequence ID
-
-### Lua Example
-`local integerValue = allocate_sequence()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 allocate_sequence(void);`
 
 [:arrow_up_small:](#)
 

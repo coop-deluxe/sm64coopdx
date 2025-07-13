@@ -4,8 +4,6 @@
 #define STB_VORBIS_HEADER_ONLY
 #include "pc/utils/stb_vorbis.c"
 
-#define MAX_CUSTOM_SEQS 1024
-
 #include "types.h"
 #include "seq_ids.h"
 #include "audio/external.h"
@@ -31,7 +29,7 @@ struct AudioOverride {
 
 struct AudioOverride sAudioOverrides[MAX_AUDIO_OVERRIDE] = { 0 };
 
-static u32 sCustomSeqsCount = 0;
+static u8 sCustomSeqIndex = SEQ_COUNT;
 
 static void smlua_audio_utils_reset(struct AudioOverride* override) {
     if (override == NULL) { return; }
@@ -69,7 +67,7 @@ void smlua_audio_utils_reset_all(void) {
 #endif
         smlua_audio_utils_reset(&sAudioOverrides[i]);
     }
-    sCustomSeqsCount = 0;
+    sCustomSeqIndex = SEQ_COUNT;
 }
 
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
@@ -157,6 +155,14 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
     }
 
     LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
+}
+
+u8 smlua_audio_utils_allocate_sequence(void) {
+    if (sCustomSeqIndex< MAX_AUDIO_OVERRIDE) {
+        return sCustomSeqIndex++;   
+    }
+    LOG_ERROR("Cannot allocate more custom sequences.");
+    return 0;
 }
 
   ///////////////
@@ -623,13 +629,4 @@ void smlua_audio_custom_deinit(void) {
         ma_engine_uninit(&sModAudioEngine);
         sModAudioPool = NULL;
     }
-}
-
-
-u32 allocate_sequence(void) {
-    if ((sCustomSeqsCount + SEQ_COUNT) < MAX_CUSTOM_SEQS) {
-        return (++sCustomSeqsCount + SEQ_COUNT);   
-    }
-    LOG_ERROR("Cannot allocate more custom sequences.");
-    return 0;
 }

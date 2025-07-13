@@ -8,6 +8,8 @@ void smlua_audio_utils_reset_all(void);
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData);
 /* |description|Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`|descriptionEnd| */
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);
+/* |description|Allocates an `audio` sequence ID|descriptionEnd| */
+u8 smlua_audio_utils_allocate_sequence(void);
 
   ////////////////
  // mod sounds //
@@ -75,8 +77,5 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
 void audio_custom_update_volume(void);
 void audio_custom_shutdown(void);
 void smlua_audio_custom_deinit(void);
-
-/* |description|Allocates an `audio` sequence ID|descriptionEnd| */
-u32 allocate_sequence(void);
 
 #endif
