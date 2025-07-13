@@ -718,11 +718,6 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
             else if ((m2->flags & MARIO_PUNCHING)) { revampedPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED && m2->forwardVel < 12.0f; }
             else if (m2->flags & MARIO_TRIPPING) { revampedTripped = TRUE; }
 
-            if (m->playerIndex == 0) { // Since sync isn't perfect, only let the local player determine the knockback scaling
-                // Negative speed not being checked is intentional
-                scaler += m2->forwardVel * 0.008f;
-                scaler -= m->forwardVel * 0.008f;
-            }
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
         }
@@ -1391,7 +1386,8 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
 u8 determine_player_damage_value(struct MarioState* attacker, u32 interaction) {
     if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
         if (attacker->action == ACT_GROUND_POUND_LAND) { return 2; }
-        else if (interaction & INT_GROUND_POUND) { return (u8)(MAX((attacker->peakHeight - attacker->pos[1]) / 750.0f, 0)) + 3; }
+        else if (attacker->action == ACT_SHOT_FROM_CANNON) { return 4; }
+        else if (interaction & INT_GROUND_POUND) { return (u8)(MAX((attacker->peakHeight - attacker->pos[1]) / 500.0f, 0)) + 3; }
         else if (interaction & INT_SLIDE_KICK) { return (u8)(MAX((attacker->forwardVel - 30.0f) / 13.0f, 0)) + 1; }
         else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return attacker->forwardVel > 12.0f ? 3 : 2; }
         else if (attacker->action == ACT_FLYING) { return (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)) + 1; }
@@ -1525,7 +1521,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         return FALSE;
     }
 
-#define PLAYER_IN_ROLLOUT_ATTACK(m) ((m->action == ACT_FORWARD_ROLLOUT || m->action == ACT_BACKWARD_ROLLOUT) && m->vel[1] > 0 && m->actionState == 1)
+#define PLAYER_IN_ROLLOUT_ATTACK(m) ((m->action == ACT_FORWARD_ROLLOUT || m->action == ACT_BACKWARD_ROLLOUT) && m->vel[1] > 0.0f && m->actionState == 1)
 
     // see if it was an attack
     u32 interaction = determine_interaction(attacker, cVictim->marioObj);
