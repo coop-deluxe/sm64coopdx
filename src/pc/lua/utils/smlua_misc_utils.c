@@ -214,24 +214,15 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
 }
 
 void act_select_hud_hide(enum ActSelectHudPart part) {
-    if (part == ACT_SELECT_HUD_ALL) {
-        gOverrideHideActSelectHud = ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL;
-    } else {
-        gOverrideHideActSelectHud |= part;
-    }
- }
+    gOverrideHideActSelectHud |= part;
+}
 
 void act_select_hud_show(enum ActSelectHudPart part) {
-    if (part == ACT_SELECT_HUD_ALL) {
-        gOverrideHideActSelectHud = 0;
-    } else {
-        gOverrideHideActSelectHud &= ~part;
-        gOverrideHideActSelectHud &= ~ACT_SELECT_HUD_ALL;
-    }
+    gOverrideHideActSelectHud &= ~part;
 }
 
 bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
-    return ((gOverrideHideActSelectHud & ACT_SELECT_HUD_ALL) != 0) || ((gOverrideHideActSelectHud & part) != 0);
+    return (gOverrideHideActSelectHud & part) != 0;
 }
 
 extern const u8 texture_power_meter_left_side[];
