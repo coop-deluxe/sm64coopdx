@@ -494,9 +494,6 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
         } else if (!strncmp(c, "[R]", 3)) {
             *d = 0x58;
             c += 2;
-        } else if (!strncmp(c, "[Z]", 3)) {
-            *d = 0x57;
-            c += 2;
         } else if (!strncmp(c, "[C]", 3)) {
             *d = 0x56;
             c += 2;
@@ -515,10 +512,21 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
         } else if (!strncmp(c, "[%]", 3)) {
             *d = 0xE0;
             c += 2;
-        } else if (!strncmp(c, "★", 2)) {
+        } else if (!strncmp(c, "★", 3)) {
             *d = 0xFA;
             c += 2;
-        } else {
+        } else if (!strncmp(c, ">>", 2)){
+            *d = 0xF5;
+            c += 1;
+        } else if (!strncmp(c, "<<", 2)) {
+            *d = 0xF6;
+            c += 1;
+        }
+        else if (!strncmp(c, "•", 3)) {
+            *d = 0xFC;
+            c += 2;
+        }
+        else {
             *d = str_ascii_char_to_dialog(*c);
         }
         d++;
