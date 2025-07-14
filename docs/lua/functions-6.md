@@ -1037,7 +1037,7 @@ Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m6
 ## [smlua_audio_utils_allocate_sequence](#smlua_audio_utils_allocate_sequence)
 
 ### Description
-Allocates an `audio` sequence ID
+Allocates a new sequence ID
 
 ### Lua Example
 `local integerValue = smlua_audio_utils_allocate_sequence()`

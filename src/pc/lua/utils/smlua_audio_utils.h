@@ -8,7 +8,7 @@ void smlua_audio_utils_reset_all(void);
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData);
 /* |description|Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`|descriptionEnd| */
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);
-/* |description|Allocates an `audio` sequence ID|descriptionEnd| */
+/* |description|Allocates a new sequence ID|descriptionEnd| */
 u8 smlua_audio_utils_allocate_sequence(void);
 
   ////////////////

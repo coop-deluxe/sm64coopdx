@@ -10057,7 +10057,7 @@ function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m
 end
 
 --- @return integer
---- Allocates an `audio` sequence ID
+--- Allocates a new sequence ID
 function smlua_audio_utils_allocate_sequence()
     -- ...
 end
