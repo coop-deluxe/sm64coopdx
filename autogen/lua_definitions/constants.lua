@@ -72,7 +72,7 @@ gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 --- @return number
 function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
-    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
+    return math.s32((bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING)
 end
 
 -------------
