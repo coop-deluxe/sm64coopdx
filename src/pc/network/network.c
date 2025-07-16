@@ -86,7 +86,7 @@ struct ServerSettings gServerSettings = {
     .nametags = TRUE,
     .maxPlayers = MAX_PLAYERS,
     .pauseAnywhere = FALSE,
-    .pvpType = PLAYER_PVP_CLASSIC,
+    .pvpType = PLAYER_PVP_DEFAULT,
 };
 
 struct NametagsSettings gNametagsSettings = {

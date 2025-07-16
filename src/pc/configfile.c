@@ -190,7 +190,7 @@ bool         configDisablePopups                  = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
 bool         configForce4By3                      = false;
 bool         configDynosLocalPlayerModelOnly      = false;
-unsigned int configPvpType                        = PLAYER_PVP_CLASSIC;
+unsigned int configPvpType                        = PLAYER_PVP_DEFAULT;
 // CoopNet settings
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;

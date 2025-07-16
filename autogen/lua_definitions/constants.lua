@@ -4628,10 +4628,12 @@ BOUNCY_LEVEL_BOUNDS_ON_CAP = 2 --- @type BouncyLevelBounds
 --- | `BOUNCY_LEVEL_BOUNDS_ON`
 --- | `BOUNCY_LEVEL_BOUNDS_ON_CAP`
 
-PLAYER_PVP_CLASSIC  = 0 --- @type PvpType
-PLAYER_PVP_REVAMPED = 1 --- @type PvpType
+PLAYER_PVP_DEFAULT  = 0 --- @type PvpType
+PLAYER_PVP_CLASSIC  = 1 --- @type PvpType
+PLAYER_PVP_REVAMPED = 2 --- @type PvpType
 
 --- @alias PvpType
+--- | `PLAYER_PVP_DEFAULT`
 --- | `PLAYER_PVP_CLASSIC`
 --- | `PLAYER_PVP_REVAMPED`
 
