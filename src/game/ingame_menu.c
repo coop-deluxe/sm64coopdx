@@ -516,7 +516,7 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
             *d = 0xFA;
             c += 2;
         } else if (!strncmp(c, ">>", 2)){
-            *d = 0xF4;
+            *d = 0xF6;
             c += 1;
         } else if (!strncmp(c, "<<", 2)) {
             *d = 0xF5;
