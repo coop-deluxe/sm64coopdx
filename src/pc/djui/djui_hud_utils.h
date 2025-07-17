@@ -105,6 +105,9 @@ f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
 
+void djui_hud_get_keys_down(void);
+void djui_hud_get_keys_released(void);
+
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);
 /* |description|Prints DJUI HUD text onto the screen|descriptionEnd| */

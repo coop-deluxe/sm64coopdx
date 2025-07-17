@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "pc/controller/controller_mouse.h"
+#include "pc/controller/controller_keyboard.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
@@ -301,6 +302,44 @@ f32 djui_hud_get_mouse_scroll_x(void) {
 
 f32 djui_hud_get_mouse_scroll_y(void) {
     return mouse_scroll_y;
+}
+
+void djui_hud_get_keys_down(void) {
+    lua_State* L = gLuaState;
+
+    if (gKeysDown.counter > 0) {
+        lua_newtable(L);
+        s32 t = lua_gettop(gLuaState);
+
+        for (int i = 0; i < gKeysDown.counter; i++) {
+            lua_pushinteger(L, i);
+            lua_pushinteger(L, gKeysDown.keys[i]);
+            lua_settable(L, t);
+        }
+
+        return;
+    }
+
+    lua_pushnil(L);
+}
+
+void djui_hud_get_keys_released(void) {
+    lua_State* L = gLuaState;
+
+    if (gKeysReleased.counter > 0) {
+        lua_newtable(L);
+        s32 t = lua_gettop(gLuaState);
+
+        for (int i = 0; i < gKeysReleased.counter; i++) {
+            lua_pushinteger(L, i);
+            lua_pushinteger(L, gKeysReleased.keys[i]);
+            lua_settable(L, t);
+        }
+
+        return;
+    }
+
+    lua_pushnil(L);
 }
 
 f32 djui_hud_measure_text(const char* message) {

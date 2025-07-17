@@ -24,6 +24,16 @@ static int num_keybinds = 0;
 
 static u32 keyboard_lastkey = VK_INVALID;
 
+struct KeysPerFrame gKeysDown = { .keys = { 0 }, .counter = 0 };
+struct KeysPerFrame gKeysReleased = { .keys = { 0 }, .counter = 0 };
+
+void reset_keys_down_released(void) {
+    gKeysDown.counter = 0;
+    gKeysReleased.counter = 0;
+    memset(gKeysDown.keys, 0, sizeof(gKeysDown.keys));
+    memset(gKeysReleased.keys, 0, sizeof(gKeysReleased.keys));
+}
+
 static int keyboard_map_scancode(int scancode) {
     int ret = 0;
     for (int i = 0; i < num_keybinds; i++) {
@@ -35,8 +45,9 @@ static int keyboard_map_scancode(int scancode) {
 }
 
 bool keyboard_on_key_down(int scancode) {
-    smlua_call_event_hooks(HOOK_ON_KEY_PRESSED, scancode);
-
+    if (gKeysDown.counter < MAX_KEYS_PER_FRAME) {
+        gKeysDown.keys[gKeysDown.counter++] = scancode;
+    }
     djui_panel_pause_disconnect_key_update(scancode);
 
     // see if interactable captures this scancode
@@ -52,7 +63,9 @@ bool keyboard_on_key_down(int scancode) {
 }
 
 bool keyboard_on_key_up(int scancode) {
-    smlua_call_event_hooks(HOOK_ON_KEY_RELEASED, scancode);
+    if (gKeysReleased.counter < MAX_KEYS_PER_FRAME) {
+        gKeysReleased.keys[gKeysReleased.counter++] = scancode;
+    }
 
     djui_interactable_on_key_up(scancode);
 

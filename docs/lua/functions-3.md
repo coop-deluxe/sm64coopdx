@@ -3268,6 +3268,42 @@ Returns the amount scrolled vertically (-down/up+)
 
 <br />
 
+## [djui_hud_get_keys_down](#djui_hud_get_keys_down)
+
+### Lua Example
+`djui_hud_get_keys_down()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_down(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_keys_released](#djui_hud_get_keys_released)
+
+### Lua Example
+`djui_hud_get_keys_released()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_released(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description
