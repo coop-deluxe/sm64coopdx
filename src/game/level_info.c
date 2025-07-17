@@ -74,7 +74,7 @@ const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { ">",   0x53, 0 }, // right arrow
     { "$",   0xF9, 1 }, // coin
     { "★",   0xFA, 1 }, // star filled
-    { "@",   0xFA, 1 }, // star filled (both ★ and @ match to 0xFA)
+    { "@",   0xFA, 1 }, // star filled (both ★ and @ match 0xFA)
     { "*",   0xFB, 1 }, // multiply
     { "•",   0xFC, 0 }, // interpunct (unused)
     { "=",   0xFD, 0 }, // star empty
