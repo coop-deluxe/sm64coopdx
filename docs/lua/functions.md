@@ -605,7 +605,7 @@
    - [bhv_yoshi_loop](functions-2.md#bhv_yoshi_loop)
    - [bhv_volcano_trap_loop](functions-2.md#bhv_volcano_trap_loop)
    - [uv_update_scroll](functions-2.md#uv_update_scroll)
-   - [bhv_ambient_light_init](functions-2.md#bhv_ambient_light_init)
+   - [bhv_ambient_light_update](functions-2.md#bhv_ambient_light_update)
    - [bhv_point_light_init](functions-2.md#bhv_point_light_init)
    - [bhv_point_light_loop](functions-2.md#bhv_point_light_loop)
    - [spawn_default_star](functions-2.md#spawn_default_star)
@@ -962,10 +962,12 @@
 <br />
 
 - lighting_engine.h
+   - [le_is_enabled](functions-3.md#le_is_enabled)
    - [le_set_mode](functions-3.md#le_set_mode)
    - [le_get_mode](functions-3.md#le_get_mode)
    - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
-   - [le_is_enabled](functions-3.md#le_is_enabled)
+   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
+   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
    - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
@@ -973,8 +975,6 @@
    - [le_remove_light](functions-3.md#le_remove_light)
    - [le_get_light_count](functions-3.md#le_get_light_count)
    - [le_light_exists](functions-3.md#le_light_exists)
-   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
-   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
    - [le_get_light_pos](functions-3.md#le_get_light_pos)
    - [le_set_light_pos](functions-3.md#le_set_light_pos)
    - [le_get_light_color](functions-3.md#le_get_light_color)

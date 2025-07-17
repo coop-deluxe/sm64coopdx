@@ -11942,13 +11942,13 @@ Behavior loop function for UV texture scrolling
 
 <br />
 
-## [bhv_ambient_light_init](#bhv_ambient_light_init)
+## [bhv_ambient_light_update](#bhv_ambient_light_update)
 
 ### Description
-Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
 
 ### Lua Example
-`bhv_ambient_light_init()`
+`bhv_ambient_light_update()`
 
 ### Parameters
 - None
@@ -11957,7 +11957,7 @@ Behavior init function for the lighting engine ambient light. Takes the first 3 
 - None
 
 ### C Prototype
-`void bhv_ambient_light_init(void);`
+`void bhv_ambient_light_update(void);`
 
 [:arrow_up_small:](#)
 

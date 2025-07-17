@@ -1,4 +1,4 @@
-void bhv_ambient_light_init(void) {
+void bhv_ambient_light_update(void) {
     le_set_ambient_color(
         (o->oBehParams >> 24) & 0xFF,
         (o->oBehParams >> 16) & 0xFF,
