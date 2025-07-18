@@ -26,6 +26,7 @@
     - [enum DialogSound](#enum-DialogSound)
 - [first_person_cam.h](#first_person_camh)
 - [gbi.h](#gbih)
+- [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
 - [graph_node.h](#graph_nodeh)
@@ -40,6 +41,9 @@
 - [level_update.h](#level_updateh)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
+- [lighting_engine.h](#lighting_engineh)
+    - [enum LEMode](#enum-LEMode)
+    - [enum LEToneMapping](#enum-LEToneMapping)
 - [mario_animation_ids.h](#mario_animation_idsh)
     - [enum MarioAnimID](#enum-MarioAnimID)
     - [enum CharacterAnimID](#enum-CharacterAnimID)
@@ -48,6 +52,10 @@
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
     - [enum MarioCapGSCId](#enum-MarioCapGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
+- [mod_fs.h](#mod_fsh)
+    - [enum ModFsFileIntType](#enum-ModFsFileIntType)
+    - [enum ModFsFileFloatType](#enum-ModFsFileFloatType)
+    - [enum ModFsFileSeek](#enum-ModFsFileSeek)
 - [mod_storage.h](#mod_storageh)
 - [network.h](#networkh)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
@@ -1286,6 +1294,13 @@
 
 <br />
 
+## [gbi_extension.h](#gbi_extension.h)
+- G_VTX_EXT
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [geo_commands.h](#geo_commands.h)
 
 ### [enum SkyBackgroundParams](#SkyBackgroundParams)
@@ -1614,6 +1629,28 @@
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
 | HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lighting_engine.h](#lighting_engine.h)
+- LE_MAX_LIGHTS
+
+### [enum LEMode](#LEMode)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_MODE_AFFECT_ALL_SHADED_AND_COLORED | 0 |
+| LE_MODE_AFFECT_ALL_SHADED | 1 |
+| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 2 |
+
+### [enum LEToneMapping](#LEToneMapping)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_TONE_MAPPING_TOTAL_WEIGHTED | 0 |
+| LE_TONE_MAPPING_WEIGHTED | 1 |
+| LE_TONE_MAPPING_CLAMP | 2 |
+| LE_TONE_MAPPING_REINHARD | 3 |
 
 [:arrow_up_small:](#)
 
@@ -2092,6 +2129,40 @@
 | GRAB_POS_LIGHT_OBJ | 1 |
 | GRAB_POS_HEAVY_OBJ | 2 |
 | GRAB_POS_BOWSER | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs.h](#mod_fs.h)
+- MOD_FS_MAX_SIZE
+- MOD_FS_MAX_FILES
+- MOD_FS_MAX_PATH
+
+### [enum ModFsFileIntType](#ModFsFileIntType)
+| Identifier | Value |
+| :--------- | :---- |
+| INT_TYPE_U8 | 0 |
+| INT_TYPE_U16 | 1 |
+| INT_TYPE_U32 | 2 |
+| INT_TYPE_U64 | 3 |
+| INT_TYPE_S8 | 4 |
+| INT_TYPE_S16 | 5 |
+| INT_TYPE_S32 | 6 |
+| INT_TYPE_S64 | 7 |
+
+### [enum ModFsFileFloatType](#ModFsFileFloatType)
+| Identifier | Value |
+| :--------- | :---- |
+| FLOAT_TYPE_F32 | 0 |
+| FLOAT_TYPE_F64 | 1 |
+
+### [enum ModFsFileSeek](#ModFsFileSeek)
+| Identifier | Value |
+| :--------- | :---- |
+| FILE_SEEK_SET | 0 |
+| FILE_SEEK_CUR | 1 |
+| FILE_SEEK_END | 2 |
 
 [:arrow_up_small:](#)
 
@@ -3442,7 +3513,8 @@
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | 56 |
 | HOOK_ON_ADD_SURFACE | 57 |
 | HOOK_ON_CLEAR_AREAS | 58 |
-| HOOK_MAX | 59 |
+| HOOK_ON_PACKET_BYTESTRING_RECEIVE | 59 |
+| HOOK_MAX | 60 |
 
 [:arrow_up_small:](#)
 
@@ -3878,6 +3950,7 @@
 - SOUNDARGS_MASK_SOUNDID
 - SOUNDARGS_MASK_PRIORITY
 - SOUNDARGS_MASK_STATUS
+- SOUNDARGS_MASK_BITFLAGS
 - SOUNDARGS_SHIFT_BANK
 - SOUNDARGS_SHIFT_SOUNDID
 - SOUNDARGS_SHIFT_PRIORITY

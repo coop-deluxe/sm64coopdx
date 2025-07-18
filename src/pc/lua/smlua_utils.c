@@ -128,6 +128,18 @@ const char* smlua_to_string(lua_State* L, int index) {
     return lua_tostring(L, index);
 }
 
+ByteString smlua_to_bytestring(lua_State* L, int index) {
+    ByteString bytestring = { NULL, 0 };
+    if (lua_type(L, index) != LUA_TSTRING) {
+        LOG_LUA_LINE("smlua_to_string received improper type '%s'", luaL_typename(L, index));
+        gSmLuaConvertSuccess = false;
+        return bytestring;
+    }
+    gSmLuaConvertSuccess = true;
+    bytestring.bytes = lua_tolstring(L, index, &bytestring.length);
+    return bytestring;
+}
+
 LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     if (lua_type(L, index) == LUA_TNIL) {
         return 0;
@@ -475,6 +487,14 @@ void smlua_push_table_field(int index, const char* name) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+void smlua_push_bytestring(lua_State* L, ByteString bytestring) {
+    if (bytestring.bytes) {
+        lua_pushlstring(L, bytestring.bytes, bytestring.length);
+    } else {
+        lua_pushnil(L);
+    }
+}
+
 void smlua_push_lnt(struct LSTNetworkType* lnt) {
     lua_State* L = gLuaState;
     switch (lnt->type) {
@@ -747,6 +767,24 @@ void smlua_dump_globals(void) {
 void smlua_dump_table(int index) {
     lua_State* L = gLuaState;
     printf("--------------\n");
+
+    if (lua_getmetatable(L, index)) {
+        lua_pushnil(L);  // first key
+        while (lua_next(L, -2) != 0) {
+            if (lua_type(L, -2) == LUA_TSTRING) {
+                printf("[meta] %s - %s\n",
+                    lua_tostring(L, -2),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            else {
+                printf("[meta] %s - %s\n",
+                    lua_typename(L, lua_type(L, -2)),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+    }
 
     // table is in the stack at index 't'
     lua_pushnil(L);  // first key

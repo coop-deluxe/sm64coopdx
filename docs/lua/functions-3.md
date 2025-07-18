@@ -6683,6 +6683,142 @@ Sets the level number and handles the act select screen. `param` is used for ove
 <br />
 
 
+## [le_is_enabled](#le_is_enabled)
+
+### Description
+Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+
+### Lua Example
+`local booleanValue = le_is_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_is_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_mode](#le_set_mode)
+
+### Description
+Sets the lighting engine mode to `mode`
+
+### Lua Example
+`le_set_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | [enum LEMode](constants.md#enum-LEMode) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_mode(enum LEMode mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_mode](#le_get_mode)
+
+### Description
+Gets the lighting engine mode
+
+### Lua Example
+`local enumValue = le_get_mode()`
+
+### Parameters
+- None
+
+### Returns
+[enum LEMode](constants.md#enum-LEMode)
+
+### C Prototype
+`enum LEMode le_get_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_tone_mapping](#le_set_tone_mapping)
+
+### Description
+Sets the lighting engine's tone mapping mode to `toneMapping`
+
+### Lua Example
+`le_set_tone_mapping(toneMapping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_ambient_color](#le_get_ambient_color)
+
+### Description
+Outputs the lighting engine's ambient color to `out`
+
+### Lua Example
+`le_get_ambient_color(out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_ambient_color(OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_ambient_color](#le_set_ambient_color)
+
+### Description
+Sets the lighting engine ambient color
+
+### Lua Example
+`le_set_ambient_color(r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_ambient_color(u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description
@@ -6703,6 +6839,32 @@ Calculates the lighting with `lightIntensityScalar` at a position and outputs th
 
 ### C Prototype
 `void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_calculate_lighting_color_with_normal](#le_calculate_lighting_color_with_normal)
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| normal | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color out, f32 lightIntensityScalar);`
 
 [:arrow_up_small:](#)
 
@@ -6756,7 +6918,7 @@ Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and
 - `integer`
 
 ### C Prototype
-`s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
+`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
 
 [:arrow_up_small:](#)
 
@@ -6779,7 +6941,7 @@ Removes a lighting engine point light corresponding to `id`
 - None
 
 ### C Prototype
-`void le_remove_light(s32 id);`
+`void le_remove_light(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -6800,32 +6962,54 @@ Gets the total number of lights currently loaded in the lighting engine
 - `integer`
 
 ### C Prototype
-`s32 le_get_light_count(void);`
+`s16 le_get_light_count(void);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [le_set_ambient_color](#le_set_ambient_color)
+## [le_light_exists](#le_light_exists)
 
 ### Description
-Sets the lighting engine ambient color
+Checks if a lighting engine point light corresponding to `id` exists
 
 ### Lua Example
-`le_set_ambient_color(r, g, b)`
+`local booleanValue = le_light_exists(id)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_light_exists(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_light_pos](#le_get_light_pos)
+
+### Description
+Outputs a lighting engine point light's position to `out`
+
+### Lua Example
+`le_get_light_pos(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
+`void le_get_light_pos(s16 id, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -6851,7 +7035,31 @@ Sets a lighting engine point light's position to `x`, `y`, `z`
 - None
 
 ### C Prototype
-`void le_set_light_pos(s32 id, f32 x, f32 y, f32 z);`
+`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_light_color](#le_get_light_color)
+
+### Description
+Outputs a lighting engine point light's color to `out`
+
+### Lua Example
+`le_get_light_color(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_light_color(s16 id, OUT Color out);`
 
 [:arrow_up_small:](#)
 
@@ -6877,7 +7085,30 @@ Sets a lighting engine point light's color to `r`, `g`, `b`
 - None
 
 ### C Prototype
-`void le_set_light_color(s32 id, u8 r, u8 g, u8 b);`
+`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_light_radius](#le_get_light_radius)
+
+### Description
+Gets a lighting engine point light's `radius`
+
+### Lua Example
+`local numberValue = le_get_light_radius(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_radius(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -6901,7 +7132,30 @@ Sets a lighting engine point light's `radius`
 - None
 
 ### C Prototype
-`void le_set_light_radius(s32 id, f32 radius);`
+`void le_set_light_radius(s16 id, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_light_intensity](#le_get_light_intensity)
+
+### Description
+Gets a lighting engine point light's `intensity`
+
+### Lua Example
+`local numberValue = le_get_light_intensity(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_intensity(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -6925,7 +7179,54 @@ Sets a lighting engine point light's `intensity`
 - None
 
 ### C Prototype
-`void le_set_light_intensity(s32 id, f32 intensity);`
+`void le_set_light_intensity(s16 id, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_get_light_use_surface_normals](#le_get_light_use_surface_normals)
+
+### Description
+Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`local booleanValue = le_get_light_use_surface_normals(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_get_light_use_surface_normals(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_light_use_surface_normals](#le_set_light_use_surface_normals)
+
+### Description
+Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`le_set_light_use_surface_normals(id, useSurfaceNormals)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| useSurfaceNormals | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 

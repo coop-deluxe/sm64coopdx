@@ -8,6 +8,14 @@
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
+#include <stdint.h>
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <sys/stat.h>
+#endif
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
@@ -145,6 +153,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
+        file->modifiedTimestamp = fs_sys_get_modified_time(file->cachedPath);
         mod_cache_add(mod, file, false);
 
         // forcefully update md5 hash
@@ -485,6 +494,55 @@ static void mod_extract_fields(struct Mod* mod) {
     fclose(f);
 }
 
+bool mod_refresh_files(struct Mod* mod) {
+    if (!mod) { return false; }
+
+    // clear files
+    if (mod->files) {
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (file->fp != NULL) {
+                f_close(file->fp);
+                f_delete(file->fp);
+                file->fp = NULL;
+            }
+            if (file->cachedPath != NULL) {
+                free((char*)file->cachedPath);
+                file->cachedPath = NULL;
+            }
+        }
+    }
+
+    if (mod->files != NULL) {
+        free(mod->files);
+        mod->files = NULL;
+    }
+
+    mod->fileCount = 0;
+    mod->fileCapacity = 0;
+    mod->size = 0;
+
+    // generate packs
+    dynos_generate_mod_pack(mod->basePath);
+
+    // read files
+    if (!mod_load_files(mod, mod->name, mod->basePath)) {
+        LOG_ERROR("Failed to load mod files for '%s'", mod->name);
+        return false;
+    }
+
+    // set loading order
+    mod_set_loading_order(mod);
+
+    // update cache
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        mod_cache_add(mod, file, true);
+    }
+
+    return true;
+}
+
 bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     bool valid = false;
 
@@ -530,6 +588,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return false;
     }
     mods->entries[modIndex] = calloc(1, sizeof(struct Mod));
+
     struct Mod* mod = mods->entries[modIndex];
     if (mod == NULL) {
         LOG_ERROR("Failed to allocate mod!");

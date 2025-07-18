@@ -121,8 +121,8 @@ struct Object *get_current_object(void) { return gCurrentObject; }
 struct Object *get_dialog_object(void) { return gContinueDialogFunctionObject; }
 struct Object *get_cutscene_focus(void) { return gCutsceneFocus; }
 struct Object *get_secondary_camera_focus(void) { return gSecondCameraFocus; }
-void *set_cutscene_focus(struct Object *o) { gCutsceneFocus = o; }
-void *set_secondary_camera_focus(struct Object *o) { gSecondCameraFocus = o; }
+void set_cutscene_focus(struct Object *o) { gCutsceneFocus = o; }
+void set_secondary_camera_focus(struct Object *o) { gSecondCameraFocus = o; }
 
 //
 // Helpers to iterate through the object table

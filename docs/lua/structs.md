@@ -23,6 +23,7 @@
 - [CutsceneSplinePoint](#CutsceneSplinePoint)
 - [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
+- [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
 - [DjuiColor](#DjuiColor)
 - [DjuiInteractableTheme](#DjuiInteractableTheme)
@@ -77,6 +78,8 @@
 - [ModAudio](#ModAudio)
 - [ModAudioSampleCopies](#ModAudioSampleCopies)
 - [ModFile](#ModFile)
+- [ModFs](#ModFs)
+- [ModFsFile](#ModFsFile)
 - [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
@@ -878,6 +881,20 @@
 
 <br />
 
+## [DialogEntry](#DialogEntry)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| leftOffset | `integer` | read-only |
+| linesPerBox | `integer` | read-only |
+| text | `string` | read-only |
+| unused | `integer` | read-only |
+| width | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [DisplayListNode](#DisplayListNode)
 
 | Field | Type | Access |
@@ -1000,6 +1017,7 @@
 | fixWallOnSlope | `boolean` |  |
 | pickBestWall | `boolean` |  |
 | roundedCorners | `boolean` |  |
+| throwaway | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -1955,8 +1973,39 @@
 | ----- | ---- | ------ |
 | cachedPath | `string` | read-only |
 | dataHash | `Array` <`integer`> | read-only |
+| isLoadedLuaModule | `boolean` | read-only |
+| modifiedTimestamp | `integer` | read-only |
 | relativePath | `string` | read-only |
 | wroteBytes | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModFs](#ModFs)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| isPublic | `boolean` | read-only |
+| mod | [Mod](structs.md#Mod) | read-only |
+| modPath | `string` | read-only |
+| numFiles | `integer` | read-only |
+| totalSize | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ModFsFile](#ModFsFile)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| filepath | `string` | read-only |
+| isPublic | `boolean` | read-only |
+| isText | `boolean` | read-only |
+| modFs | [ModFs](structs.md#ModFs) | read-only |
+| offset | `integer` | read-only |
+| size | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2800,7 +2849,6 @@
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
 | oLightID | `integer` |  |
-| oLightRadius | `number` |  |
 
 [:arrow_up_small:](#)
 

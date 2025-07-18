@@ -124,6 +124,10 @@ Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
+// need inverse camera matrix to compute world space for lighting engine
+static Mat4 sInverseCameraMatrix;
+static bool sHasInverseCameraMatrix = false;
+
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -627,7 +631,18 @@ static void calculate_normal_dir(const Light_t *light, Vec3f coeffs, bool applyL
 }
 
 static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
+
     Mat4 matrix;
+
+    // remember inverse camera matrix to use for the lighting engine
+    if (parameters == G_MTX_INVERSE_CAMERA_EXT) {
+        if (addr) {
+            memcpy(sInverseCameraMatrix, addr, sizeof(sInverseCameraMatrix));
+            sHasInverseCameraMatrix = true;
+        }
+        return;
+    }
+
 #if 0
     // Original code when fixed point matrices were used
     for (int32_t i = 0; i < 4; i++) {
@@ -641,6 +656,7 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
 #else
     memcpy(matrix, addr, sizeof(matrix));
 #endif
+
 
     if (parameters & G_MTX_PROJECTION) {
         if (parameters & G_MTX_LOAD) {
@@ -676,6 +692,36 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 
 static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * gfx_current_dimensions.x_adjust_ratio;
+}
+
+static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal) {
+    if (!sHasInverseCameraMatrix) { return; }
+
+    // strip view matrix off of the model-view matrix
+    Mat4 model;
+    mtxf_mul(model, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size-1], sInverseCameraMatrix);
+
+    // transform position to world
+    Vec3f worldPos;
+    worldPos[0] = pos[0] * model[0][0] + pos[1] * model[1][0] + pos[2] * model[2][0] + model[3][0];
+    worldPos[1] = pos[0] * model[0][1] + pos[1] * model[1][1] + pos[2] * model[2][1] + model[3][1];
+    worldPos[2] = pos[0] * model[0][2] + pos[1] * model[1][2] + pos[2] * model[2][2] + model[3][2];
+
+    pos[0] = worldPos[0];
+    pos[1] = worldPos[1];
+    pos[2] = worldPos[2];
+
+    // transform normal to world
+    if (normal) {
+        Vec3f worldNormal;
+        worldNormal[0] = normal[0] * model[0][0] + normal[1] * model[1][0] + normal[2] * model[2][0];
+        worldNormal[1] = normal[0] * model[0][1] + normal[1] * model[1][1] + normal[2] * model[2][1];
+        worldNormal[2] = normal[0] * model[0][2] + normal[1] * model[1][2] + normal[2] * model[2][2];
+
+        normal[0] = worldNormal[0];
+        normal[1] = worldNormal[1];
+        normal[2] = worldNormal[2];
+    }
 }
 
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
@@ -731,6 +777,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
         short U = v->tc[0] * rsp.texture_scaling_factor.s >> 16;
         short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
+
+        // are we on affect all shaded surfaces mode and on a vertex colorable surface
+        bool affectAllVertexColored = (le_get_mode() == LE_MODE_AFFECT_ALL_SHADED_AND_COLORED && luaVertexColor);
 
         if (rsp.geometry_mode & G_LIGHTING) {
             if (rsp.lights_changed) {
@@ -814,29 +863,62 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
 
-            if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
-                Color color;
+            // if lighting engine is enabled and either we want to affect all shaded surfaces or the lighting engine geometry mode is on
+            if (le_is_enabled() && ((le_get_mode() != LE_MODE_AFFECT_ONLY_GEOMETRY_MODE) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+                Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
                 CTX_BEGIN(CTX_LIGHTING);
-                le_calculate_lighting_color(((Vtx_t*)v)->ob, color, 1.0f);
+
+                Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
+                Vec3f vnormal = { nx, ny, nz };
+
+                // transform vpos and vnormal to world space
+                gfx_local_to_world_space(vpos, vnormal);
+
+                le_calculate_lighting_color_with_normal(vpos, vnormal, color, 1.0f);
+
                 CTX_END(CTX_LIGHTING);
 
                 d->color.r *= color[0] / 255.0f;
                 d->color.g *= color[1] / 255.0f;
                 d->color.b *= color[2] / 255.0f;
             }
-        } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
-            Color color;
+        // if lighting engine is enabled and we should affect all vertex colored surfaces or the lighting engine geometry mode is on
+        } else if (le_is_enabled() && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+            Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
             CTX_BEGIN(CTX_LIGHTING);
-            le_calculate_vertex_lighting((Vtx_t*)v, color);
-            CTX_END(CTX_LIGHTING);
-            if (luaVertexColor) {
-                d->color.r = color[0] * vertexColorCached[0];
-                d->color.g = color[1] * vertexColorCached[1];
-                d->color.b = color[2] * vertexColorCached[2];
+
+            Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
+
+            // transform vpos to world space
+            gfx_local_to_world_space(vpos, NULL);
+
+            // do multiplication based lighting instead of additive based lighting if we're not using the lighting engine geometry mode,
+            // this is my compromise for retaining vertex colors vs lighting up darker surfaces.
+            // if retaining color is the most important like on a red coin, don't use the lighting engine geometry mode.
+            // if lighting up darker surfaces like in a map with prebaked lighting is the most important, use the lighting engine geometry mode.
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                le_calculate_lighting_color(vpos, color, 1.0f);
             } else {
-                d->color.r = color[0];
-                d->color.g = color[1];
-                d->color.b = color[2];
+                le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+            }
+
+            CTX_END(CTX_LIGHTING);
+
+            // combine the colors
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                d->color.r = (v->cn[0] * color[0] / 255.0f) * vertexColorCached[0];
+                d->color.g = (v->cn[1] * color[1] / 255.0f) * vertexColorCached[1];
+                d->color.b = (v->cn[2] * color[2] / 255.0f) * vertexColorCached[2];
+            } else {
+                if (luaVertexColor) {
+                    d->color.r = color[0] * vertexColorCached[0];
+                    d->color.g = color[1] * vertexColorCached[1];
+                    d->color.b = color[2] * vertexColorCached[2];
+                } else {
+                    d->color.r = color[0];
+                    d->color.g = color[1];
+                    d->color.b = color[2];
+                }
             }
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
@@ -1874,6 +1956,8 @@ void gfx_start_frame(void) {
 
 void gfx_run(Gfx *commands) {
     gfx_sp_reset();
+
+    sHasInverseCameraMatrix = false;
 
     //puts("New frame");
 

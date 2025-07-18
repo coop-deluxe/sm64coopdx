@@ -11,6 +11,7 @@
 #include "src/pc/djui/djui_theme.h"
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
+#include "src/game/ingame_menu.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
 #include "src/pc/lua/utils/smlua_camera_utils.h"
@@ -20,6 +21,7 @@
 #include "src/pc/network/network.h"
 #include "src/game/hardcoded.h"
 #include "src/pc/mods/mod.h"
+#include "src/pc/mods/mod_fs.h"
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
@@ -801,6 +803,15 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "month",  LVT_S32, offsetof(struct DateTime, month),  false, LOT_NONE, 1, sizeof(s32) },
     { "second", LVT_S32, offsetof(struct DateTime, second), false, LOT_NONE, 1, sizeof(s32) },
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE, 1, sizeof(s32) },
+};
+
+#define LUA_DIALOG_ENTRY_FIELD_COUNT 5
+static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
+    { "leftOffset",  LVT_S16,      offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE, 1, sizeof(s16)   },
+    { "linesPerBox", LVT_S8,       offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE, 1, sizeof(s8)    },
+    { "text",        LVT_STRING_P, offsetof(struct DialogEntry, text),        true, LOT_NONE, 1, sizeof(char*) },
+    { "unused",      LVT_U32,      offsetof(struct DialogEntry, unused),      true, LOT_NONE, 1, sizeof(u32)   },
+    { "width",       LVT_S16,      offsetof(struct DialogEntry, width),       true, LOT_NONE, 1, sizeof(s16)   },
 };
 
 #define LUA_DISPLAY_LIST_NODE_FIELD_COUNT 3
@@ -1608,14 +1619,35 @@ static struct LuaObjectField sModAudioSampleCopiesFields[LUA_MOD_AUDIO_SAMPLE_CO
 //  { "sound",   LVT_???,       offsetof(struct ModAudioSampleCopies, sound),   false, LOT_???,                  1, sizeof(ma_sound)                     }, <--- UNIMPLEMENTED
 };
 
-#define LUA_MOD_FILE_FIELD_COUNT 4
+#define LUA_MOD_FILE_FIELD_COUNT 6
 static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
-    { "cachedPath",   LVT_STRING_P, offsetof(struct ModFile, cachedPath),   true, LOT_NONE, 1,  sizeof(char*)  },
-    { "dataHash",     LVT_U8,       offsetof(struct ModFile, dataHash),     true, LOT_NONE, 16, sizeof(u8)     },
-//  { "fp",           LVT_???,      offsetof(struct ModFile, fp),           true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
-    { "relativePath", LVT_STRING,   offsetof(struct ModFile, relativePath), true, LOT_NONE, 1,  sizeof(char)   },
-//  { "size",         LVT_???,      offsetof(struct ModFile, size),         true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
-    { "wroteBytes",   LVT_U64,      offsetof(struct ModFile, wroteBytes),   true, LOT_NONE, 1,  sizeof(u64)    },
+    { "cachedPath",        LVT_STRING_P, offsetof(struct ModFile, cachedPath),        true, LOT_NONE, 1,  sizeof(char*)  },
+    { "dataHash",          LVT_U8,       offsetof(struct ModFile, dataHash),          true, LOT_NONE, 16, sizeof(u8)     },
+//  { "fp",                LVT_???,      offsetof(struct ModFile, fp),                true, LOT_???,  1,  sizeof(FILE*)  }, <--- UNIMPLEMENTED
+    { "isLoadedLuaModule", LVT_BOOL,     offsetof(struct ModFile, isLoadedLuaModule), true, LOT_NONE, 1,  sizeof(bool)   },
+    { "modifiedTimestamp", LVT_U64,      offsetof(struct ModFile, modifiedTimestamp), true, LOT_NONE, 1,  sizeof(u64)    },
+    { "relativePath",      LVT_STRING,   offsetof(struct ModFile, relativePath),      true, LOT_NONE, 1,  sizeof(char)   },
+//  { "size",              LVT_???,      offsetof(struct ModFile, size),              true, LOT_???,  1,  sizeof(size_t) }, <--- UNIMPLEMENTED
+    { "wroteBytes",        LVT_U64,      offsetof(struct ModFile, wroteBytes),        true, LOT_NONE, 1,  sizeof(u64)    },
+};
+
+#define LUA_MOD_FS_FIELD_COUNT 5
+static struct LuaObjectField sModFsFields[LUA_MOD_FS_FIELD_COUNT] = {
+    { "isPublic",  LVT_BOOL,      offsetof(struct ModFs, isPublic),  true, LOT_NONE, 1, sizeof(bool)        },
+    { "mod",       LVT_COBJECT_P, offsetof(struct ModFs, mod),       true, LOT_MOD,  1, sizeof(struct Mod*) },
+    { "modPath",   LVT_STRING,    offsetof(struct ModFs, modPath),   true, LOT_NONE, 1, sizeof(char)        },
+    { "numFiles",  LVT_U16,       offsetof(struct ModFs, numFiles),  true, LOT_NONE, 1, sizeof(u16)         },
+    { "totalSize", LVT_U32,       offsetof(struct ModFs, totalSize), true, LOT_NONE, 1, sizeof(u32)         },
+};
+
+#define LUA_MOD_FS_FILE_FIELD_COUNT 6
+static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
+    { "filepath", LVT_STRING,    offsetof(struct ModFsFile, filepath), true, LOT_NONE,  1, sizeof(char)          },
+    { "isPublic", LVT_BOOL,      offsetof(struct ModFsFile, isPublic), true, LOT_NONE,  1, sizeof(bool)          },
+    { "isText",   LVT_BOOL,      offsetof(struct ModFsFile, isText),   true, LOT_NONE,  1, sizeof(bool)          },
+    { "modFs",    LVT_COBJECT_P, offsetof(struct ModFsFile, modFs),    true, LOT_MODFS, 1, sizeof(struct ModFs*) },
+    { "offset",   LVT_U32,       offsetof(struct ModFsFile, offset),   true, LOT_NONE,  1, sizeof(u32)           },
+    { "size",     LVT_U32,       offsetof(struct ModFsFile, size),     true, LOT_NONE,  1, sizeof(u32)           },
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6
@@ -1672,7 +1704,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 763
+#define LUA_OBJECT_FIELD_COUNT 762
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1, sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1, sizeof(u8)                    },
@@ -2078,7 +2110,6 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oKoopaTurningAwayFromWall",                  LVT_S32,                 offsetof(struct Object, oKoopaTurningAwayFromWall),                  false, LOT_NONE,         1, sizeof(s32)                   },
     { "oKoopaUnshelledTimeUntilTurn",               LVT_S32,                 offsetof(struct Object, oKoopaUnshelledTimeUntilTurn),               false, LOT_NONE,         1, sizeof(s32)                   },
     { "oLightID",                                   LVT_S32,                 offsetof(struct Object, oLightID),                                   false, LOT_NONE,         1, sizeof(s32)                   },
-    { "oLightRadius",                               LVT_F32,                 offsetof(struct Object, oLightRadius),                               false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF4",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF4),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkF8",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkF8),                  false, LOT_NONE,         1, sizeof(f32)                   },
     { "oLllRotatingHexFlameUnkFC",                  LVT_F32,                 offsetof(struct Object, oLllRotatingHexFlameUnkFC),                  false, LOT_NONE,         1, sizeof(f32)                   },
@@ -2871,6 +2902,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CUTSCENESPLINEPOINT,          sCutsceneSplinePointFields,          LUA_CUTSCENE_SPLINE_POINT_FIELD_COUNT           },
     { LOT_CUTSCENEVARIABLE,             sCutsceneVariableFields,             LUA_CUTSCENE_VARIABLE_FIELD_COUNT               },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
+    { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
     { LOT_DISPLAYLISTNODE,              sDisplayListNodeFields,              LUA_DISPLAY_LIST_NODE_FIELD_COUNT               },
     { LOT_DJUICOLOR,                    sDjuiColorFields,                    LUA_DJUI_COLOR_FIELD_COUNT                      },
     { LOT_DJUIINTERACTABLETHEME,        sDjuiInteractableThemeFields,        LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT         },
@@ -2923,6 +2955,8 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MODAUDIO,                     sModAudioFields,                     LUA_MOD_AUDIO_FIELD_COUNT                       },
     { LOT_MODAUDIOSAMPLECOPIES,         sModAudioSampleCopiesFields,         LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT         },
     { LOT_MODFILE,                      sModFileFields,                      LUA_MOD_FILE_FIELD_COUNT                        },
+    { LOT_MODFS,                        sModFsFields,                        LUA_MOD_FS_FIELD_COUNT                          },
+    { LOT_MODFSFILE,                    sModFsFileFields,                    LUA_MOD_FS_FILE_FIELD_COUNT                     },
     { LOT_MODETRANSITIONINFO,           sModeTransitionInfoFields,           LUA_MODE_TRANSITION_INFO_FIELD_COUNT            },
     { LOT_NAMETAGSSETTINGS,             sNametagsSettingsFields,             LUA_NAMETAGS_SETTINGS_FIELD_COUNT               },
     { LOT_NETWORKPLAYER,                sNetworkPlayerFields,                LUA_NETWORK_PLAYER_FIELD_COUNT                  },
@@ -2997,6 +3031,7 @@ const char *sLuaLotNames[] = {
 	[LOT_CUTSCENESPLINEPOINT] = "CutsceneSplinePoint",
 	[LOT_CUTSCENEVARIABLE] = "CutsceneVariable",
 	[LOT_DATETIME] = "DateTime",
+	[LOT_DIALOGENTRY] = "DialogEntry",
 	[LOT_DISPLAYLISTNODE] = "DisplayListNode",
 	[LOT_DJUICOLOR] = "DjuiColor",
 	[LOT_DJUIINTERACTABLETHEME] = "DjuiInteractableTheme",
@@ -3049,6 +3084,8 @@ const char *sLuaLotNames[] = {
 	[LOT_MODAUDIO] = "ModAudio",
 	[LOT_MODAUDIOSAMPLECOPIES] = "ModAudioSampleCopies",
 	[LOT_MODFILE] = "ModFile",
+	[LOT_MODFS] = "ModFs",
+	[LOT_MODFSFILE] = "ModFsFile",
 	[LOT_MODETRANSITIONINFO] = "ModeTransitionInfo",
 	[LOT_NAMETAGSSETTINGS] = "NametagsSettings",
 	[LOT_NETWORKPLAYER] = "NetworkPlayer",

@@ -103,7 +103,6 @@ void sync_object_forget(u32 syncId) {
     so->forgetting = true;
 
     // add it to a list to free later
-    s32 forgetCount = 1;
     struct SyncObjectForgetEntry* newEntry = calloc(1, sizeof(struct SyncObjectForgetEntry));
     newEntry->so = so;
     newEntry->forgetTimer = FORGET_TIMEOUT;
@@ -113,7 +112,6 @@ void sync_object_forget(u32 syncId) {
         struct SyncObjectForgetEntry* entry = sForgetList;
         while (entry->next != NULL) {
             entry = entry->next;
-            forgetCount++;
         }
         entry->next = newEntry;
     }

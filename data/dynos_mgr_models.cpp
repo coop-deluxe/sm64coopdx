@@ -91,7 +91,7 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
 
     // check maps, permanent pool is always checked
     struct GraphNode *node = NULL;
-    #define CHECK_POOL(pool) if (node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) { return node; }
+    #define CHECK_POOL(pool) if ((node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) != NULL) { return node; }
     CHECK_POOL(MODEL_POOL_PERMANENT);
     if (aModelPool == MODEL_POOL_SESSION) {
         CHECK_POOL(MODEL_POOL_SESSION);

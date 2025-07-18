@@ -592,6 +592,13 @@
 --- @field public second integer
 --- @field public year integer
 
+--- @class DialogEntry
+--- @field public leftOffset integer
+--- @field public linesPerBox integer
+--- @field public text string
+--- @field public unused integer
+--- @field public width integer
+
 --- @class DisplayListNode
 --- @field public displayList Pointer_Gfx
 --- @field public next DisplayListNode
@@ -1285,8 +1292,25 @@
 --- @class ModFile
 --- @field public cachedPath string
 --- @field public dataHash integer[]
+--- @field public isLoadedLuaModule boolean
+--- @field public modifiedTimestamp integer
 --- @field public relativePath string
 --- @field public wroteBytes integer
+
+--- @class ModFs
+--- @field public isPublic boolean
+--- @field public mod Mod
+--- @field public modPath string
+--- @field public numFiles integer
+--- @field public totalSize integer
+
+--- @class ModFsFile
+--- @field public filepath string
+--- @field public isPublic boolean
+--- @field public isText boolean
+--- @field public modFs ModFs
+--- @field public offset integer
+--- @field public size integer
 
 --- @class ModeTransitionInfo
 --- @field public frame integer
@@ -1730,7 +1754,6 @@
 --- @field public oKoopaTurningAwayFromWall integer
 --- @field public oKoopaUnshelledTimeUntilTurn integer
 --- @field public oLightID integer
---- @field public oLightRadius number
 --- @field public oLllRotatingHexFlameUnkF4 number
 --- @field public oLllRotatingHexFlameUnkF8 number
 --- @field public oLllRotatingHexFlameUnkFC number

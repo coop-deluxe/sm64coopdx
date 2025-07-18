@@ -46,12 +46,15 @@ in_files = [
     "src/audio/external.h",
     "src/game/envfx_snow.h",
     "src/pc/mods/mod_storage.h",
+    "src/pc/mods/mod_fs.h",
     "src/game/first_person_cam.h",
     "src/pc/djui/djui_console.h",
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
     "src/pc/djui/djui_panel_menu.h",
-    "include/PR/gbi.h"
+    "src/engine/lighting_engine.h",
+    "include/PR/gbi.h",
+    "include/PR/gbi_extension.h",
 ]
 
 exclude_constants = {
@@ -63,7 +66,8 @@ exclude_constants = {
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
-    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ]
+    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
+    "src/pc/mods/mod_fs.h": [ "MOD_FS_DIRECTORY", "MOD_FS_EXTENSION", "MOD_FS_VERSION", "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
 }
 
 include_constants = {
@@ -105,7 +109,8 @@ include_constants = {
         "^G_SETSCISSOR$",
         "^G_TEXRECTFLIP$",
         "^G_TEXRECT$",
-    ]
+    ],
+    "include/PR/gbi_extension.h": [ "G_VTX_EXT" ],
 }
 
 # Constants that exist in the source code but should not appear
@@ -115,7 +120,7 @@ hide_constants = {
 }
 
 pretend_find = [
-    "SOUND_ARG_LOAD"
+    "SOUND_ARG_LOAD",
 ]
 ############################################################################
 

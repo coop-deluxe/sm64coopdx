@@ -123,10 +123,8 @@ void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed) {
 
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
     if (!m) { return 0; }
-    bool allowHazard = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allowHazard);
     extern bool gDjuiInMainMenu;
-    if (m->action & ACT_FLAG_RIDING_SHELL || (!allowHazard) || gDjuiInMainMenu) {
+    if (m->action & ACT_FLAG_RIDING_SHELL || gDjuiInMainMenu) {
         m->quicksandDepth = 0.0f;
     } else {
         if (m->quicksandDepth < 1.1f) {
@@ -134,6 +132,16 @@ u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed) {
         }
 
         u32 floorType = m->floor ? m->floor->type : SURFACE_DEFAULT;
+
+        // Only run the hook if the player is actually on quicksand
+        if (SURFACE_IS_QUICKSAND(floorType)) {
+            bool allowHazard = true;
+            smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_QUICKSAND, &allowHazard);
+            if (!allowHazard) {
+                m->quicksandDepth = 0;
+                return FALSE;
+            }
+        }
 
         switch (floorType) {
             case SURFACE_SHALLOW_QUICKSAND:
@@ -217,14 +225,15 @@ u32 mario_update_windy_ground(struct MarioState *m) {
     if (!m) { return 0; }
     struct Surface *floor = m->floor;
     if (!floor) { return 0; }
-    bool allowHazard = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
-    if (!allowHazard) {
-    	return FALSE;
-    }
     
     extern bool gDjuiInMainMenu;
     if (floor->type == SURFACE_HORIZONTAL_WIND && !gDjuiInMainMenu) {
+        bool allowHazard = true;
+        smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
+        if (!allowHazard) {
+            return FALSE;
+        }
+
         f32 pushSpeed;
         s16 pushAngle = floor->force << 8;
 
@@ -721,12 +730,14 @@ void apply_vertical_wind(struct MarioState *m) {
     if (!m) { return; }
     f32 maxVelY;
     f32 offsetY;
-    bool allowHazard = true;
-    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allowHazard);
-    if (m->action != ACT_GROUND_POUND && allowHazard) {
+    if (m->action != ACT_GROUND_POUND) {
         offsetY = m->pos[1] - -1500.0f;
 
         if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && -3000.0f < offsetY && offsetY < 2000.0f) {
+            bool allowHazard = true;
+            smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allowHazard);
+            if (!allowHazard) { return; }
+
             if (offsetY >= 0.0f) {
                 maxVelY = 10000.0f / (offsetY + 200.0f);
             } else {
