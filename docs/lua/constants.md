@@ -2206,8 +2206,7 @@
 | Identifier | Value |
 | :--------- | :---- |
 | PLAYER_PVP_DEFAULT | 0 |
-| PLAYER_PVP_CLASSIC | 1 |
-| PLAYER_PVP_REVAMPED | 2 |
+| PLAYER_PVP_REVAMPED | 1 |
 
 [:arrow_up_small:](#)
 

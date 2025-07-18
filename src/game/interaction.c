@@ -160,9 +160,6 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
 
     // PvP water punch
     if (action == ACT_WATER_PUNCH && o->oInteractType & INTERACT_PLAYER) {
-        if (gServerSettings.pvpType == PLAYER_PVP_CLASSIC) {
-            return INT_PUNCH;
-        }
         f32 cossPitch = coss(m->faceAngle[0]);
         Vec3f facing = { sins(m->faceAngle[1])*cossPitch, sins(m->faceAngle[0]), coss(m->faceAngle[1])*cossPitch };
         Vec3f dif = { o->oPosX - m->pos[0], (o->oPosY + o->hitboxHeight * 0.5) - (m->pos[1] + m->marioObj->hitboxHeight * 0.5), o->oPosZ - m->pos[2] };
@@ -176,12 +173,11 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
     // Attacks
     if (action & ACT_FLAG_ATTACKING) {
         s16 dYawToObject = mario_obj_angle_to_object(m, o) - m->faceAngle[1];
-        u8 isClassicPVP = gServerSettings.pvpType == PLAYER_PVP_CLASSIC && o->oInteractType & INTERACT_PLAYER;
 
         // Punch
         if (m->flags & MARIO_PUNCHING) {
             // 120 degrees total, or 60 each way
-            if ((-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) || isClassicPVP) {
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
                 return INT_PUNCH;
             }
         }
@@ -189,7 +185,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         // Kick
         if (m->flags & MARIO_KICKING) {
             // 120 degrees total, or 60 each way
-            if ((-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) || isClassicPVP) {
+            if (-0x2AAA <= dYawToObject && dYawToObject <= 0x2AAA) {
                 return INT_KICK;
             }
         }
@@ -197,7 +193,7 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         // Trip
         if (m->flags & MARIO_TRIPPING) {
             // 180 degrees total, or 90 each way
-            if ((-0x4000 <= dYawToObject && dYawToObject <= 0x4000) || isClassicPVP) {
+            if (-0x4000 <= dYawToObject && dYawToObject <= 0x4000) {
                 return INT_TRIP;
             }
         }
@@ -1397,10 +1393,6 @@ u8 determine_player_damage_value(struct MarioState* attacker, u32 interaction) {
         else if (attacker->action == ACT_FLYING) { return (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)) + 1; }
         else if (interaction & (INT_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
         return 1;
-    } else if (gServerSettings.pvpType == PLAYER_PVP_CLASSIC) {
-        if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
-        else if (interaction & INT_KICK) { return 2; }
-        else if (interaction & INT_ATTACK_SLIDE) { return 1; }
         return 2;
     } else {
         if (interaction & INT_GROUND_POUND) { return 3; }
@@ -1524,9 +1516,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     // make sure we overlap
     f32 overlapScale = (attacker->playerIndex == 0) ? 0.6f : 1.0f;
-    if (gServerSettings.pvpType == PLAYER_PVP_CLASSIC) {
-        overlapScale += 0.285714f; // Match the overlap that was in v36.1
-    } else if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && attacker->action == ACT_GROUND_POUND_LAND) {
+    if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && attacker->action == ACT_GROUND_POUND_LAND) {
         overlapScale += 0.3f;
     }
     if (!detect_player_hitbox_overlap(attacker, cVictim, overlapScale)) {
