@@ -307,13 +307,13 @@ f32 djui_hud_get_mouse_scroll_y(void) {
 void djui_hud_get_keys_down(void) {
     lua_State* L = gLuaState;
 
-    if (gKeysDown.counter > 0) {
+    if (gKeysPerFrame.counterDown > 0) {
         lua_newtable(L);
         s32 t = lua_gettop(gLuaState);
 
-        for (int i = 0; i < gKeysDown.counter; i++) {
+        for (int i = 0; i < gKeysPerFrame.counterDown; i++) {
             lua_pushinteger(L, i);
-            lua_pushinteger(L, gKeysDown.keys[i]);
+            lua_pushinteger(L, gKeysPerFrame.keysDown[i]);
             lua_settable(L, t);
         }
 
@@ -326,13 +326,13 @@ void djui_hud_get_keys_down(void) {
 void djui_hud_get_keys_released(void) {
     lua_State* L = gLuaState;
 
-    if (gKeysReleased.counter > 0) {
+    if (gKeysPerFrame.counterReleased > 0) {
         lua_newtable(L);
         s32 t = lua_gettop(gLuaState);
 
-        for (int i = 0; i < gKeysReleased.counter; i++) {
+        for (int i = 0; i < gKeysPerFrame.counterReleased; i++) {
             lua_pushinteger(L, i);
-            lua_pushinteger(L, gKeysReleased.keys[i]);
+            lua_pushinteger(L, gKeysPerFrame.keysReleased[i]);
             lua_settable(L, t);
         }
 

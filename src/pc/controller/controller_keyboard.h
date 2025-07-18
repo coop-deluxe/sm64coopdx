@@ -53,11 +53,12 @@ extern struct ControllerAPI controller_keyboard;
 #define MAX_KEYS_PER_FRAME 15
 
 struct KeysPerFrame {
-    int keys[MAX_KEYS_PER_FRAME];
-    int counter;
+    int keysDown[MAX_KEYS_PER_FRAME];
+    int keysReleased[MAX_KEYS_PER_FRAME];
+    int counterDown;
+    int counterReleased;
 };
-extern struct KeysPerFrame gKeysDown;
-extern struct KeysPerFrame gKeysReleased;
-void reset_keys_down_released(void);
+extern struct KeysPerFrame gKeysPerFrame;
+void reset_keys_state(void);
 
 #endif

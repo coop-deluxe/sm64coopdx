@@ -315,7 +315,7 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
     CTX_EXTENT(CTX_SMLUA, smlua_update);
-    reset_keys_down_released();
+    reset_keys_state();
 
     // If we aren't threaded
     if (gAudioThread.state == INVALID) {
