@@ -158,7 +158,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 }
 
 u8 smlua_audio_utils_allocate_sequence(void) {
-    if (sCustomSeqIndex< MAX_AUDIO_OVERRIDE) {
+    if (sCustomSeqIndex < MAX_AUDIO_OVERRIDE) {
         return sCustomSeqIndex++;   
     }
     LOG_ERROR("Cannot allocate more custom sequences.");
