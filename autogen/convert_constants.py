@@ -403,6 +403,14 @@ def build_to_c(built_files):
     lines = txt.splitlines()
     txt = 'char gSmluaConstants[] = ""\n'
     for line in lines:
+        if line.find("%") != -1:
+            line = line.replace("%", r"%%")
+        if line.find("\\\\") != -1:
+            line = line.replace("\\\\", "\\\\")
+        if line.find("\\\'") != -1:
+            line = line.replace("\\\'", "\\\\\\\'")
+        if line.find("\\\"") != -1:
+            line = line.replace("\\\"", "\\\\\\\"")
         if line.startswith("#"):
             txt += '%s\n' % line
             continue

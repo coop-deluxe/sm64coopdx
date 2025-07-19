@@ -313,7 +313,7 @@ static void get_keys_internal(struct KPFInternal* keys, bool translate) {
         s32 t = lua_gettop(gLuaState);
 
         for (u32 i = 0; i < keys->counter; i++) {
-            lua_pushinteger(L, i);
+            lua_pushinteger(L, i + 1);
             if (translate) {
                 lua_pushstring(L, translate_bind_to_name(keys->keys[i]));
             } else {

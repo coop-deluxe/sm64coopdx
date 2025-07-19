@@ -454,3 +454,405 @@ end
 function math.u32(x)
     return __common_unsigned_conversion(x, 32)
 end
+
+------------------------------
+----- User input helpers -----
+------------------------------
+
+local __table_insert = table.insert
+
+--- @param t string[]
+--- @return string[]
+function table.lowerAll(t)
+    for key, value in pairs(t) do
+        t[key] = value:lower()
+    end
+    return t
+end
+
+---@param keys_down string[]
+---@param modifier_names string[]
+---@return boolean
+local function __get_modifier_held(keys_down, modifier_names)
+    if not keys_down or not modifier_names then return false end
+    local modifier_names_length = #modifier_names
+    for i = 1, #keys_down do
+        local current_key = keys_down[i]
+        for j = 1, modifier_names_length do
+            if current_key == modifier_names[j] then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+--- @param keys string[]
+--- @param modifier_table {[string]: any}
+--- @param exclude boolean
+--- @return string[]
+local function __modify_keys(keys, modifier_table, exclude)
+    if not keys then return {} end
+    local new_keys = {}
+    local keys_length = #keys
+    for i = 1, keys_length do
+        local current_key = keys[i]
+        if exclude then
+            if not modifier_table[current_key] then
+                __table_insert(new_keys, current_key)
+            end
+        else
+            if modifier_table[current_key] then
+                __table_insert(new_keys, current_key)
+            end
+        end
+    end
+    return new_keys
+end
+
+local _key_modifiers = {
+    ['LShift'] = true,
+    ['RShift'] = true,
+    ['Left Ctrl'] = true,
+    ['Right Ctrl'] = true,
+    ['Left Alt'] = true,
+    ['Right Alt'] = true,
+    ['LWindows'] = true,
+    ['RWindows'] = true,
+}
+
+local _key_alphabet = {
+    ['a'] = true, ['b'] = true, ['c'] = true, ['d'] = true,
+    ['e'] = true, ['f'] = true, ['g'] = true, ['h'] = true,
+    ['i'] = true, ['j'] = true, ['k'] = true, ['l'] = true,
+    ['m'] = true, ['n'] = true, ['o'] = true, ['p'] = true,
+    ['q'] = true, ['r'] = true, ['s'] = true, ['t'] = true,
+    ['u'] = true, ['v'] = true, ['w'] = true, ['x'] = true,
+    ['y'] = true, ['z'] = true,
+    ['A'] = true, ['B'] = true, ['C'] = true, ['D'] = true,
+    ['E'] = true, ['F'] = true, ['G'] = true, ['H'] = true,
+    ['I'] = true, ['J'] = true, ['K'] = true, ['L'] = true,
+    ['M'] = true, ['N'] = true, ['O'] = true, ['P'] = true,
+    ['Q'] = true, ['R'] = true, ['S'] = true, ['T'] = true,
+    ['U'] = true, ['V'] = true, ['W'] = true, ['X'] = true,
+    ['Y'] = true, ['Z'] = true,
+    [' '] = true,
+}
+
+local _key_numbers = {
+    ['1'] = true, ['2'] = true, ['3'] = true, ['4'] = true,
+    ['5'] = true, ['6'] = true, ['7'] = true, ['8'] = true,
+    ['9'] = true, ['0'] = true,
+    [' '] = true,
+}
+
+local _key_symbols = {
+    ['!'] = true, ['@'] = true, ['#'] = true, ['$'] = true,
+    ['%'] = true, ['^'] = true, ['&'] = true, ['*'] = true,
+    ['('] = true, [')'] = true,
+    ['-'] = true, ['_'] = true, ['='] = true, ['+'] = true,
+    ['['] = true, ['{'] = true, [']'] = true, ['}'] = true,
+    ['\\'] = true, ['|'] = true,
+    [';'] = true, [':'] = true, ['\''] = true, ['\"'] = true,
+    [','] = true, ['<'] = true, ['.'] = true, ['>'] = true, ['/'] = true, ['?'] = true,
+    ['`'] = true, ['~'] = true,
+    [' '] = true,
+}
+
+local _key_alphanumeric = {
+    ['a'] = true, ['b'] = true, ['c'] = true, ['d'] = true,
+    ['e'] = true, ['f'] = true, ['g'] = true, ['h'] = true,
+    ['i'] = true, ['j'] = true, ['k'] = true, ['l'] = true,
+    ['m'] = true, ['n'] = true, ['o'] = true, ['p'] = true,
+    ['q'] = true, ['r'] = true, ['s'] = true, ['t'] = true,
+    ['u'] = true, ['v'] = true, ['w'] = true, ['x'] = true,
+    ['y'] = true, ['z'] = true,
+    ['A'] = true, ['B'] = true, ['C'] = true, ['D'] = true,
+    ['E'] = true, ['F'] = true, ['G'] = true, ['H'] = true,
+    ['I'] = true, ['J'] = true, ['K'] = true, ['L'] = true,
+    ['M'] = true, ['N'] = true, ['O'] = true, ['P'] = true,
+    ['Q'] = true, ['R'] = true, ['S'] = true, ['T'] = true,
+    ['U'] = true, ['V'] = true, ['W'] = true, ['X'] = true,
+    ['Y'] = true, ['Z'] = true,
+    ['1'] = true, ['2'] = true, ['3'] = true, ['4'] = true,
+    ['5'] = true, ['6'] = true, ['7'] = true, ['8'] = true,
+    ['9'] = true, ['0'] = true,
+    [' '] = true,
+}
+
+local _key_alphanumeric_symbolic = {
+    ['a'] = true, ['b'] = true, ['c'] = true, ['d'] = true,
+    ['e'] = true, ['f'] = true, ['g'] = true, ['h'] = true,
+    ['i'] = true, ['j'] = true, ['k'] = true, ['l'] = true,
+    ['m'] = true, ['n'] = true, ['o'] = true, ['p'] = true,
+    ['q'] = true, ['r'] = true, ['s'] = true, ['t'] = true,
+    ['u'] = true, ['v'] = true, ['w'] = true, ['x'] = true,
+    ['y'] = true, ['z'] = true,
+    ['A'] = true, ['B'] = true, ['C'] = true, ['D'] = true,
+    ['E'] = true, ['F'] = true, ['G'] = true, ['H'] = true,
+    ['I'] = true, ['J'] = true, ['K'] = true, ['L'] = true,
+    ['M'] = true, ['N'] = true, ['O'] = true, ['P'] = true,
+    ['Q'] = true, ['R'] = true, ['S'] = true, ['T'] = true,
+    ['U'] = true, ['V'] = true, ['W'] = true, ['X'] = true,
+    ['Y'] = true, ['Z'] = true,
+    ['1'] = true, ['2'] = true, ['3'] = true, ['4'] = true,
+    ['5'] = true, ['6'] = true, ['7'] = true, ['8'] = true,
+    ['9'] = true, ['0'] = true,
+    ['!'] = true, ['@'] = true, ['#'] = true, ['$'] = true,
+    ['%'] = true, ['^'] = true, ['&'] = true, ['*'] = true,
+    ['('] = true, [')'] = true,
+    ['-'] = true, ['_'] = true, ['='] = true, ['+'] = true,
+    ['['] = true, ['{'] = true, [']'] = true, ['}'] = true,
+    ['\\'] = true, ['|'] = true,
+    [';'] = true, [':'] = true, ['\''] = true, ['\"'] = true,
+    [','] = true, ['<'] = true, ['.'] = true, ['>'] = true, ['/'] = true, ['?'] = true,
+    ['`'] = true, ['~'] = true,
+    [' '] = true,
+}
+
+local _key_US_shift_change = {
+    -- Numbers
+    ['1'] = '!', ['2'] = '@', ['3'] = '#', ['4'] = '$',
+    ['5'] = '%', ['6'] = '^', ['7'] = '&', ['8'] = '*',
+    ['9'] = '(', ['0'] = ')',
+
+    -- Symbols (U.S. layout)
+    ['-'] = '_', ['='] = '+',
+    ['['] = '{', [']'] = '}',
+    ['\\'] = '|',
+    [';'] = ':', ['\''] = '\"',
+    [','] = '<', ['.'] = '>', ['/'] = '?',
+    ['`'] = '~',
+
+    -- Letters
+    ['a'] = 'A', ['b'] = 'B', ['c'] = 'C', ['d'] = 'D',
+    ['e'] = 'E', ['f'] = 'F', ['g'] = 'G', ['h'] = 'H',
+    ['i'] = 'I', ['j'] = 'J', ['k'] = 'K', ['l'] = 'L',
+    ['m'] = 'M', ['n'] = 'N', ['o'] = 'O', ['p'] = 'P',
+    ['q'] = 'Q', ['r'] = 'R', ['s'] = 'S', ['t'] = 'T',
+    ['u'] = 'U', ['v'] = 'V', ['w'] = 'W', ['x'] = 'X',
+    ['y'] = 'Y', ['z'] = 'Z',
+}
+
+--- @param keys_down string[]
+--- @return boolean
+--- Checks if the Shift modifier exists within the specified keys
+function djui_hud_get_keys_contains_shift(keys_down)
+    if not keys_down then return false end
+    return __get_modifier_held(keys_down, {'LShift', 'RShift'})
+end
+
+--- @param keys_down string[]
+--- @return boolean
+--- Checks if the Ctrl modifier exists within the specified keys
+function djui_hud_get_keys_contains_ctrl(keys_down)
+    if not keys_down then return false end
+    return __get_modifier_held(keys_down, {'Left Ctrl', 'Right Ctrl'})
+end
+
+--- @param keys_down string[]
+--- @return boolean
+--- Checks if the Alt modifier exists within the specified keys
+function djui_hud_get_keys_contains_alt(keys_down)
+    if not keys_down then return false end
+    return __get_modifier_held(keys_down, {'Left Alt', 'Right Alt'})
+end
+
+--- @param keys_down string[]
+--- @return boolean
+--- Checks if the Win modifier exists within the specified keys
+function djui_hud_get_keys_contains_win(keys_down)
+    if not keys_down then return false end
+    return __get_modifier_held(keys_down, {'LWindows', 'RWindows'})
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only modifiers
+function djui_hud_get_keys_make_modifiers(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_modifiers, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any modifiers
+function djui_hud_get_keys_remove_modifiers(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_modifiers, true)
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the specified keys contain any characters that are in the alphabet
+function djui_hud_get_keys_contains_alphabet(keys)
+    if not keys then return false end
+    return _key_alphabet[keys] or false
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only the alphabet
+function djui_hud_get_keys_make_alphabet(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphabet, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any of the alphabet
+function djui_hud_get_keys_remove_alphabet(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphabet, true)
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the specified keys contain any numbers
+function djui_hud_get_keys_contains_numeric(keys)
+    if not keys then return false end
+    return _key_numbers[keys] or false
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only numbers
+function djui_hud_get_keys_make_numeric(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_numbers, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any numbers
+function djui_hud_get_keys_remove_numeric(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_numbers, true)
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the specified keys contain any characters that are symbols
+function djui_hud_get_keys_contains_symbolic(keys)
+    if not keys then return false end
+    return _key_symbols[keys] or false
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only symbols
+function djui_hud_get_keys_make_symbolic(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_symbols, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any symbols
+function djui_hud_get_keys_remove_symbolic(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_symbols, true)
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the specified keys contain any characters that are alphanumeric
+function djui_hud_get_keys_contains_alphanumeric(keys)
+    if not keys then return false end
+    return _key_alphanumeric[keys] or false
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only alphanumeric characters
+function djui_hud_get_keys_make_alphanumeric(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphanumeric, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any alphanumeric characters
+function djui_hud_get_keys_remove_alphanumeric(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphanumeric, true)
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the specified keys contain any characters that are alphanumeric or symbolic
+function djui_hud_get_keys_contains_alphanumeric_symbolic(keys)
+    if not keys then return false end
+    return _key_alphanumeric_symbolic[keys] or false
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they contain only alphanumeric or symboic characters
+function djui_hud_get_keys_make_alphanumeric_symbolic(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphanumeric_symbolic, false)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any alphanumeric or symbolic characters
+function djui_hud_get_keys_remove_alphanumeric_symbolic(keys)
+    if not keys then return {} end
+    return __modify_keys(keys, _key_alphanumeric_symbolic, true)
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Recreates the specified keys so that they don't contain any modifiers or other special meaning keys
+function djui_hud_get_keys_make_standardized_english(keys)
+    if not keys then return {} end
+    return djui_hud_get_keys_make_alphanumeric_symbolic(djui_hud_get_keys_replace_space(keys))
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Replaces the specified keys into their shifted varient. USES STANDARD QWERTY US KEYBOARD
+function djui_hud_get_keys_common_us_shift_behavior(keys)
+    if not keys then return {} end
+    local new_keys = {}
+    for i = 1, #keys do
+        local current_key = keys[i]
+        local shifted_key = _key_US_shift_change[current_key] or current_key
+        new_keys[i] = shifted_key
+    end
+    return new_keys
+end
+
+--- @param keys string[]
+--- @return string[]
+--- Replaces each Space word with an actual space
+function djui_hud_get_keys_replace_space(keys)
+    if not keys then return {} end
+    for i = 1, #keys do
+        if keys[i] == 'Space' then keys[i] = ' ' end
+    end
+    return keys
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the Backspace key is used
+function djui_hud_get_keys_backspace_used(keys)
+    if not keys then return false end
+    for i = 1, #keys do
+        if keys[i] == 'Backspace' then return true end
+    end
+    return false
+end
+
+--- @param keys string[]
+--- @return boolean
+--- Checks if the Return key is used
+function djui_hud_get_keys_return_used(keys)
+    if not keys then return false end
+    for i = 1, #keys do
+        if keys[i] == 'Return' then return true end
+    end
+    return false
+end
