@@ -10,6 +10,7 @@
 #include "../smlua.h"
 #include "smlua_level_utils.h"
 #include "smlua_text_utils.h"
+#include "pc/dialog_table.h"
 
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
@@ -223,6 +224,8 @@ void smlua_text_utils_reset_all(void) {
         sReplacedDialog[i] = false;
     }
 
+    dialog_table_reset();
+
     if (sSmluaTextUtilsInited) {
         for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
 
@@ -240,27 +243,7 @@ void smlua_text_utils_reset_all(void) {
 }
 
 struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
-    if (dialogId >= DIALOG_COUNT) { return NULL; }
-
-    void **dialogTable = NULL;
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-
-    struct DialogEntry *dialog = segmented_to_virtual(dialogTable[dialogId]);
+    struct DialogEntry* dialog = dialog_table_get(dialogId);
     return dialog;
 }
 
@@ -269,11 +252,18 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
 
     if (!dialog) { return; }
 
-    if (sReplacedDialog[dialogId]) {
+    if (dialogId < DIALOG_COUNT) {
+        if (sReplacedDialog[dialogId]) {
+            free((u8*)dialog->str);
+        }
+    }
+    if (dialogId >= DIALOG_COUNT && dialog->str) {
         free((u8*)dialog->str);
     }
 
-    free(dialog->text);
+    if (dialog->text) {
+        free(dialog->text);
+    }
 
     dialog->unused = unused;
     dialog->linesPerBox = linesPerBox;
@@ -291,6 +281,24 @@ bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
     }
 
     return sReplacedDialog[dialogId];
+}
+
+u32 smlua_text_utils_allocate_dialog(void) {
+    struct DialogEntry* dialog = malloc(sizeof(struct DialogEntry));
+    
+    // will crash if i dont do this
+    // ???
+    dialog->unused = 0;
+    dialog->linesPerBox = 0;
+    dialog->leftOffset = 0;
+    dialog->width = 0;
+    dialog->str = NULL;
+    dialog->text = NULL;
+
+
+    size_t index = dialog_table_add(dialog);
+
+    return (u32)index;
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

@@ -11869,6 +11869,11 @@ function smlua_text_utils_dialog_is_replaced(dialogId)
     -- ...
 end
 
+--- @return integer
+function smlua_text_utils_allocate_dialog()
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- @param act1 string

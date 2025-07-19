@@ -7187,6 +7187,24 @@ Returns whether the dialog with the given ID has been replaced
 
 <br />
 
+## [smlua_text_utils_allocate_dialog](#smlua_text_utils_allocate_dialog)
+
+### Lua Example
+`local integerValue = smlua_text_utils_allocate_dialog()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 smlua_text_utils_allocate_dialog(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
 
 ### Description
