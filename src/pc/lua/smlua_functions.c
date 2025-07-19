@@ -1,5 +1,6 @@
 #include "smlua.h"
 #include "smlua_cobject.h"
+#include "smlua_mod_funcs.h"
 
 #include <PR/gbi.h>
 
@@ -21,6 +22,8 @@
 #include "game/hardcoded.h"
 #include "gfx_symbols.h"
 #include "include/macros.h"
+#include "pc/mods/mods.h"
+#include "pc/network/network.h"
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -1287,4 +1290,10 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
     smlua_bind_function(L, "gfx_get_from_name", smlua_func_gfx_get_from_name);
     smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
+
+    // Mod management functions
+    smlua_bind_function(L, "mods_enable", smlua_func_mods_enable);
+    smlua_bind_function(L, "mods_disable", smlua_func_mods_disable);
+    smlua_bind_function(L, "mods_get_list", smlua_func_mods_get_list);
+    smlua_bind_function(L, "network_reconnect", smlua_func_network_reconnect);
 }

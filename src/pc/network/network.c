@@ -11,6 +11,7 @@
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_main.h"
+#include "pc/djui/djui_panel_modlist.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
@@ -555,6 +556,28 @@ void network_update_coopnet(void) {
 void network_update(void) {
     if (gNetworkStartupTimer > 0) {
         gNetworkStartupTimer--;
+    }
+
+    // Handle Lua reconnection requests
+    if (gReconnectRequested) {
+        gReconnectRequested = false;
+        if (gNetworkType == NT_SERVER) {
+            mods_activate(&gLocalMods);
+            
+            for (int i = 1; i < MAX_PLAYERS; i++) {
+                struct NetworkPlayer* np = &gNetworkPlayers[i];
+                if (!np->connected) { continue; }
+                
+                network_send_kick(i, EKT_REJOIN);
+            }
+            LOG_INFO("Sent reconnect signals to all clients");
+            
+            network_shutdown(false, false, false, true);
+            
+            extern void djui_panel_do_host(bool reconnecting, bool playSound);
+            djui_panel_do_host(true, false);
+            LOG_INFO("Server restarted to apply mod changes");
+        }
     }
 
     network_rehost_update();
