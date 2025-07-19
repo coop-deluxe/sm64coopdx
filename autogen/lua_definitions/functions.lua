@@ -3950,11 +3950,33 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
+--- Returns a table of the keyboard keys that were pressed this frame
+function djui_hud_get_keys_pressed()
+    -- ...
+end
+
+--- Returns a table of the keyboard keys are currently held
 function djui_hud_get_keys_down()
     -- ...
 end
 
+--- Returns a table of the keyboard keys have been released
 function djui_hud_get_keys_released()
+    -- ...
+end
+
+--- Returns a table of the raw scancode of the keyboard keys that were pressed this frame
+function djui_hud_get_keys_pressed_raw()
+    -- ...
+end
+
+--- Returns a table of the raw scancode of the keyboard keys are currently held
+function djui_hud_get_keys_down_raw()
+    -- ...
+end
+
+--- Returns a table of the raw scancode of the keyboard keys have been released
+function djui_hud_get_keys_released_raw()
     -- ...
 end
 

@@ -50,15 +50,18 @@ void keyboard_on_text_editing(char* text, int cursorPos);
 
 extern struct ControllerAPI controller_keyboard;
 
-#define MAX_KEYS_PER_FRAME 15
+#define MAX_KEYS_PER_FRAME 30
 
+struct KPFInternal {
+    u32 keys[MAX_KEYS_PER_FRAME];
+    u32 counter;
+};
 struct KeysPerFrame {
-    int keysDown[MAX_KEYS_PER_FRAME];
-    int keysReleased[MAX_KEYS_PER_FRAME];
-    int counterDown;
-    int counterReleased;
+    struct KPFInternal pressed;
+    struct KPFInternal down;
+    struct KPFInternal released;
 };
 extern struct KeysPerFrame gKeysPerFrame;
-void reset_keys_state(void);
+void reset_keys_state(bool full);
 
 #endif

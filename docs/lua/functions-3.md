@@ -3268,7 +3268,31 @@ Returns the amount scrolled vertically (-down/up+)
 
 <br />
 
+## [djui_hud_get_keys_pressed](#djui_hud_get_keys_pressed)
+
+### Description
+Returns a table of the keyboard keys that were pressed this frame
+
+### Lua Example
+`djui_hud_get_keys_pressed()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_pressed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_keys_down](#djui_hud_get_keys_down)
+
+### Description
+Returns a table of the keyboard keys are currently held
 
 ### Lua Example
 `djui_hud_get_keys_down()`
@@ -3288,6 +3312,9 @@ Returns the amount scrolled vertically (-down/up+)
 
 ## [djui_hud_get_keys_released](#djui_hud_get_keys_released)
 
+### Description
+Returns a table of the keyboard keys have been released
+
 ### Lua Example
 `djui_hud_get_keys_released()`
 
@@ -3299,6 +3326,69 @@ Returns the amount scrolled vertically (-down/up+)
 
 ### C Prototype
 `void djui_hud_get_keys_released(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_keys_pressed_raw](#djui_hud_get_keys_pressed_raw)
+
+### Description
+Returns a table of the raw scancode of the keyboard keys that were pressed this frame
+
+### Lua Example
+`djui_hud_get_keys_pressed_raw()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_pressed_raw(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_keys_down_raw](#djui_hud_get_keys_down_raw)
+
+### Description
+Returns a table of the raw scancode of the keyboard keys are currently held
+
+### Lua Example
+`djui_hud_get_keys_down_raw()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_down_raw(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_keys_released_raw](#djui_hud_get_keys_released_raw)
+
+### Description
+Returns a table of the raw scancode of the keyboard keys have been released
+
+### Lua Example
+`djui_hud_get_keys_released_raw()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_get_keys_released_raw(void);`
 
 [:arrow_up_small:](#)
 

@@ -12790,6 +12790,21 @@ int smlua_func_djui_hud_get_mouse_scroll_y(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_get_keys_pressed(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_keys_pressed", 0, top);
+        return 0;
+    }
+
+
+    djui_hud_get_keys_pressed();
+
+    return 1;
+}
+
 int smlua_func_djui_hud_get_keys_down(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -12816,6 +12831,51 @@ int smlua_func_djui_hud_get_keys_released(UNUSED lua_State* L) {
 
 
     djui_hud_get_keys_released();
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_keys_pressed_raw(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_keys_pressed_raw", 0, top);
+        return 0;
+    }
+
+
+    djui_hud_get_keys_pressed_raw();
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_keys_down_raw(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_keys_down_raw", 0, top);
+        return 0;
+    }
+
+
+    djui_hud_get_keys_down_raw();
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_keys_released_raw(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_keys_released_raw", 0, top);
+        return 0;
+    }
+
+
+    djui_hud_get_keys_released_raw();
 
     return 1;
 }
@@ -37087,8 +37147,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_mouse_buttons_released", smlua_func_djui_hud_get_mouse_buttons_released);
     smlua_bind_function(L, "djui_hud_get_mouse_scroll_x", smlua_func_djui_hud_get_mouse_scroll_x);
     smlua_bind_function(L, "djui_hud_get_mouse_scroll_y", smlua_func_djui_hud_get_mouse_scroll_y);
+    smlua_bind_function(L, "djui_hud_get_keys_pressed", smlua_func_djui_hud_get_keys_pressed);
     smlua_bind_function(L, "djui_hud_get_keys_down", smlua_func_djui_hud_get_keys_down);
     smlua_bind_function(L, "djui_hud_get_keys_released", smlua_func_djui_hud_get_keys_released);
+    smlua_bind_function(L, "djui_hud_get_keys_pressed_raw", smlua_func_djui_hud_get_keys_pressed_raw);
+    smlua_bind_function(L, "djui_hud_get_keys_down_raw", smlua_func_djui_hud_get_keys_down_raw);
+    smlua_bind_function(L, "djui_hud_get_keys_released_raw", smlua_func_djui_hud_get_keys_released_raw);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);

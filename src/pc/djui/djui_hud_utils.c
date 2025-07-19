@@ -5,6 +5,7 @@
 
 #include "pc/controller/controller_mouse.h"
 #include "pc/controller/controller_keyboard.h"
+#include "pc/controller/controller_bind_mapping.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
@@ -304,16 +305,20 @@ f32 djui_hud_get_mouse_scroll_y(void) {
     return mouse_scroll_y;
 }
 
-void djui_hud_get_keys_down(void) {
+static void get_keys_internal(struct KPFInternal* keys, bool translate) {
     lua_State* L = gLuaState;
 
-    if (gKeysPerFrame.counterDown > 0) {
+    if (keys->counter > 0) {
         lua_newtable(L);
         s32 t = lua_gettop(gLuaState);
 
-        for (int i = 0; i < gKeysPerFrame.counterDown; i++) {
+        for (u32 i = 0; i < keys->counter; i++) {
             lua_pushinteger(L, i);
-            lua_pushinteger(L, gKeysPerFrame.keysDown[i]);
+            if (translate) {
+                lua_pushstring(L, translate_bind_to_name(keys->keys[i]));
+            } else {
+                lua_pushinteger(L, keys->keys[i]);
+            }
             lua_settable(L, t);
         }
 
@@ -323,23 +328,28 @@ void djui_hud_get_keys_down(void) {
     lua_pushnil(L);
 }
 
+void djui_hud_get_keys_pressed(void) {
+    get_keys_internal(&gKeysPerFrame.pressed, true);
+}
+
+void djui_hud_get_keys_down(void) {
+    get_keys_internal(&gKeysPerFrame.down, true);
+}
+
 void djui_hud_get_keys_released(void) {
-    lua_State* L = gLuaState;
+    get_keys_internal(&gKeysPerFrame.released, true);
+}
 
-    if (gKeysPerFrame.counterReleased > 0) {
-        lua_newtable(L);
-        s32 t = lua_gettop(gLuaState);
+void djui_hud_get_keys_pressed_raw(void) {
+    get_keys_internal(&gKeysPerFrame.pressed, false);
+}
 
-        for (int i = 0; i < gKeysPerFrame.counterReleased; i++) {
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, gKeysPerFrame.keysReleased[i]);
-            lua_settable(L, t);
-        }
+void djui_hud_get_keys_down_raw(void) {
+    get_keys_internal(&gKeysPerFrame.down, false);
+}
 
-        return;
-    }
-
-    lua_pushnil(L);
+void djui_hud_get_keys_released_raw(void) {
+    get_keys_internal(&gKeysPerFrame.released, false);
 }
 
 f32 djui_hud_measure_text(const char* message) {

@@ -105,8 +105,18 @@ f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
 
+/* |description|Returns a table of the keyboard keys that were pressed this frame|descriptionEnd| */
+void djui_hud_get_keys_pressed(void);
+/* |description|Returns a table of the keyboard keys are currently held|descriptionEnd| */
 void djui_hud_get_keys_down(void);
+/* |description|Returns a table of the keyboard keys have been released|descriptionEnd| */
 void djui_hud_get_keys_released(void);
+/* |description|Returns a table of the raw scancode of the keyboard keys that were pressed this frame|descriptionEnd| */
+void djui_hud_get_keys_pressed_raw(void);
+/* |description|Returns a table of the raw scancode of the keyboard keys are currently held|descriptionEnd| */
+void djui_hud_get_keys_down_raw(void);
+/* |description|Returns a table of the raw scancode of the keyboard keys have been released|descriptionEnd| */
+void djui_hud_get_keys_released_raw(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);

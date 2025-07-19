@@ -36,6 +36,7 @@
 #include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
+#include "pc/controller/controller_keyboard.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -798,4 +799,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     packet_ordered_clear_all();
 
     djui_reset_popup_disabled_override();
+
+    reset_keys_state(true);
 }
