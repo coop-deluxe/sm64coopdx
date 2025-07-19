@@ -563,20 +563,9 @@ void network_update(void) {
         gReconnectRequested = false;
         if (gNetworkType == NT_SERVER) {
             mods_activate(&gLocalMods);
-            
-            for (int i = 1; i < MAX_PLAYERS; i++) {
-                struct NetworkPlayer* np = &gNetworkPlayers[i];
-                if (!np->connected) { continue; }
-                
-                network_send_kick(i, EKT_REJOIN);
-            }
+
+            network_rehost_begin();
             LOG_INFO("Sent reconnect signals to all clients");
-            
-            network_shutdown(false, false, false, true);
-            
-            extern void djui_panel_do_host(bool reconnecting, bool playSound);
-            djui_panel_do_host(true, false);
-            LOG_INFO("Server restarted to apply mod changes");
         }
     }
 
