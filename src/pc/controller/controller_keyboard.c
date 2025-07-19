@@ -23,7 +23,6 @@ static int keyboard_mapping[MAX_KEYBINDS][2];
 static int num_keybinds = 0;
 
 static u32 keyboard_lastkey = VK_INVALID;
-static u32 prev_keyboard_lastkey = VK_INVALID;
 
 struct KeysPerFrame gKeysPerFrame = { 0 };
 
@@ -70,34 +69,38 @@ static int keyboard_map_scancode(int scancode) {
     return ret;
 }
 
-bool keyboard_on_key_down(int scancode) {
-    if (gKeysPerFrame.down.counter < MAX_KEYS_PER_FRAME) {
+static void key_was_pressed(int scancode, struct KPFInternal* keys, bool check_is_down) {
+    if (keys->counter < MAX_KEYS_PER_FRAME) {
         bool found_scancode = false;
         for (u8 i = 0; i < MAX_KEYS_PER_FRAME; i++) {
-            if (gKeysPerFrame.down.keys[i]) {
-                gKeysPerFrame.down.counter = i + 1;
+            if (keys->keys[i]) {
+                keys->counter = i + 1;
             }
-            if (gKeysPerFrame.down.keys[i] == (u32)scancode) {
+            if ((keys->keys[i] == (u32)scancode) || (check_is_down && (u32)scancode == gKeysPerFrame.down.keys[i])) {
                 found_scancode = true;
             }
         }
         if (!found_scancode) {
-            gKeysPerFrame.down.keys[gKeysPerFrame.down.counter] = scancode;
+            keys->keys[keys->counter] = scancode;
+            keys->counter++;
         }
     }
+}
+
+bool keyboard_on_key_down(int scancode) {
+    key_was_pressed(scancode, &gKeysPerFrame.pressed, true);
+    key_was_pressed(scancode, &gKeysPerFrame.down, false);
 
     djui_panel_pause_disconnect_key_update(scancode);
 
     // see if interactable captures this scancode
     if (djui_interactable_on_key_down(scancode)) {
-        prev_keyboard_lastkey = keyboard_lastkey;
         keyboard_lastkey = scancode;
         return FALSE;
     }
 
     int mapped = keyboard_map_scancode(scancode);
     keyboard_buttons_down |= mapped;
-    prev_keyboard_lastkey = keyboard_lastkey;
     keyboard_lastkey = scancode;
     return mapped != 0;
 }
@@ -112,7 +115,6 @@ bool keyboard_on_key_up(int scancode) {
     int mapped = keyboard_map_scancode(scancode);
     keyboard_buttons_down &= ~mapped;
     if (keyboard_lastkey == (u32) scancode) {
-        prev_keyboard_lastkey = keyboard_lastkey;
         keyboard_lastkey = VK_INVALID;
     }
 
@@ -183,11 +185,6 @@ static void keyboard_read(OSContPad *pad) {
         pad->stick_y = -128;
     else if (ystick == STICK_UP)
         pad->stick_y = 127;
-
-    if (keyboard_lastkey != VK_INVALID && prev_keyboard_lastkey != keyboard_lastkey && gKeysPerFrame.pressed.counter < MAX_KEYS_PER_FRAME) {
-        gKeysPerFrame.pressed.keys[gKeysPerFrame.pressed.counter++] = keyboard_lastkey;
-        prev_keyboard_lastkey = keyboard_lastkey;
-    }
 }
 
 static u32 keyboard_rawkey(void) {
