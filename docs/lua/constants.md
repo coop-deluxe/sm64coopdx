@@ -2207,6 +2207,7 @@
 | :--------- | :---- |
 | PLAYER_PVP_DEFAULT | 0 |
 | PLAYER_PVP_REVAMPED | 1 |
+| PLAYER_PVP_CLASSIC | 0 |
 
 [:arrow_up_small:](#)
 
