@@ -521,12 +521,10 @@ void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
         } else if (!strncmp(c, "<<", 2)) {
             *d = 0xF5;
             c += 1;
-        }
-        else if (!strncmp(c, "•", 3)) {
+        } else if (!strncmp(c, "•", 3)) {
             *d = 0xFC;
             c += 2;
-        }
-        else {
+        } else {
             *d = str_ascii_char_to_dialog(*c);
         }
         d++;
