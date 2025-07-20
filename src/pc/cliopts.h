@@ -10,6 +10,23 @@ enum NetworkType {
     NT_CLIENT
 };
 
+enum RenderApiType {
+    RENDER_API_GL,
+    RENDER_API_D3D11,
+    RENDER_API_DUMMY
+};
+
+enum WindowApiType {
+    WINDOW_API_SDL2,
+    WINDOW_API_DXGI,
+    WINDOW_API_DUMMY
+};
+
+enum AudioApiType {
+    AUDIO_API_SDL2,
+    AUDIO_API_DUMMY
+};
+
 #define IP_MAX_LEN 32
 #define PORT_MAX_LEN 16
 
@@ -37,6 +54,9 @@ struct CLIOptions {
     int enabledModsCount;
     char** enableMods;
     bool headless;
+    enum RenderApiType renderApi;
+    enum WindowApiType windowApi;
+    enum AudioApiType audioApi;
 };
 
 extern struct CLIOptions gCLIOpts;

@@ -105,7 +105,10 @@ u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
 static struct AudioAPI *audio_api;
-struct GfxWindowManagerAPI *wm_api = &WAPI;
+
+struct GfxWindowManagerAPI* gWindowApi = NULL;
+struct GfxRenderingAPI* gRenderApi = NULL;
+const char* renderApiName = "Dummy";
 
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
@@ -187,6 +190,71 @@ static void compute_fps(f64 curTime) {
     sDrawnFrames = 0;
 }
 
+static void select_api_implementations(void) {
+    if (gCLIOpts.headless) {
+        gCLIOpts.renderApi = RENDER_API_DUMMY;
+        gCLIOpts.windowApi = WINDOW_API_DUMMY;
+        gCLIOpts.audioApi = AUDIO_API_DUMMY;
+        gWindowApi = &gfx_dummy_wm_api;
+        gRenderApi = &gfx_dummy_renderer_api;
+        renderApiName = "Dummy";
+        audio_api = &audio_null;
+        return;
+    }
+
+    if (gCLIOpts.windowApi == WINDOW_API_DXGI) {
+        gWindowApi = &gfx_dxgi;
+    } else if (gCLIOpts.windowApi == WINDOW_API_SDL2) {
+        gWindowApi = &gfx_sdl2;
+    } else if (gCLIOpts.windowApi == WINDOW_API_DUMMY) {
+        gWindowApi = &gfx_dummy_wm_api;
+    } else {
+        // Default to SDL2
+        gWindowApi = &gfx_sdl2;
+    }
+
+    if (gCLIOpts.renderApi == RENDER_API_D3D11) {
+        gRenderApi = &gfx_direct3d11_api;
+        renderApiName = "DirectX 11";
+    } else if (gCLIOpts.renderApi == RENDER_API_GL) {
+        gRenderApi = &gfx_opengl_api;
+        renderApiName = "OpenGL";
+    } else if (gCLIOpts.renderApi == RENDER_API_DUMMY) {
+        gRenderApi = &gfx_dummy_renderer_api;
+        renderApiName = "Dummy";
+    } else {
+        // Default to GL
+        gRenderApi = &gfx_opengl_api;
+        renderApiName = "OpenGL";
+    }
+
+    if (gCLIOpts.renderApi == RENDER_API_D3D11 && gCLIOpts.windowApi != WINDOW_API_DXGI) {
+        fprintf(stderr, "Render api D3D11 requires DXGI as window api, forcing window api to DXGI.\n");
+        gCLIOpts.windowApi = WINDOW_API_DXGI;
+        gWindowApi = &gfx_dxgi;
+    }
+
+    if (gCLIOpts.windowApi == WINDOW_API_DXGI && gCLIOpts.renderApi != RENDER_API_D3D11) {
+        fprintf(stderr, "Window api DXGI requires D3D11 as render api, forcing render api to D3D11.\n");
+        gCLIOpts.renderApi = RENDER_API_D3D11;
+        gRenderApi = &gfx_direct3d11_api;
+        renderApiName = "DirectX 11";
+    }
+
+    if (gCLIOpts.renderApi == RENDER_API_DUMMY && gCLIOpts.windowApi != WINDOW_API_DUMMY) {
+        fprintf(stderr, "Render api DUMMY requires DUMMY as window api, forcing window api to D3D11.\n");
+        gCLIOpts.windowApi = WINDOW_API_DUMMY;
+        gWindowApi = &gfx_dummy_wm_api;
+    }
+
+    if (gCLIOpts.windowApi == WINDOW_API_DUMMY && gCLIOpts.renderApi != RENDER_API_DUMMY) {
+        fprintf(stderr, "Window api DUMMY requires DUMMY as render api, forcing render api to DUMMY.\n");
+        gCLIOpts.renderApi = RENDER_API_DUMMY;
+        gRenderApi = &gfx_dummy_renderer_api;
+        renderApiName = "Dummy";
+    }
+}
+
 static s32 get_num_frames_to_draw(f64 t) {
     if (configFrameLimit % FRAMERATE == 0) {
         return configFrameLimit / FRAMERATE;
@@ -234,7 +302,7 @@ void produce_interpolation_frames_and_delay(void) {
         expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
         f64 delay = (expectedTime - elapsedTime) * 1000.0;
         if (delay > 0.0) {
-            WAPI.delay((u32)delay);
+            gWindowApi->delay((u32)delay);
         }
         numFramesToDraw--;
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
@@ -259,7 +327,7 @@ void produce_interpolation_frames_and_delay(void) {
 static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
 
 inline static void buffer_audio(void) {
-    bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus()) || (gMasterVolume == 0);
+    bool shouldMute = (configMuteFocusLoss && !gWindowApi->has_focus()) || (gMasterVolume == 0);
     if (!shouldMute) {
         set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f);
         set_sequence_player_volume(SEQ_PLAYER_SFX,   (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
@@ -297,7 +365,7 @@ void *audio_thread(UNUSED void *arg) {
         f64 actualDelta = now - curTime;
         if (actualDelta < targetDelta) {
             f64 delay = ((targetDelta - actualDelta) * 1000.0);
-            WAPI.delay((u32)delay);
+            gWindowApi->delay((u32)delay);
         }
     }
 
@@ -322,6 +390,10 @@ void produce_one_frame(void) {
     }
 
     CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
+}
+
+static void gfx_d3d11_main_loop(void (*run_one_game_iter)(void)) {
+    run_one_game_iter();
 }
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
@@ -422,9 +494,7 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
-#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
-    gCLIOpts.headless = true;
-#endif
+    select_api_implementations();
 
 #ifdef _WIN32
     // handle Windows console
@@ -448,23 +518,16 @@ int main(int argc, char *argv[]) {
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
 #endif
 
-#if !defined(RAPI_DUMMY) && !defined(WAPI_DUMMY)
-    if (gCLIOpts.headless) {
-        memcpy(&WAPI, &gfx_dummy_wm_api, sizeof(struct GfxWindowManagerAPI));
-        memcpy(&RAPI, &gfx_dummy_renderer_api, sizeof(struct GfxRenderingAPI));
-    }
-#endif
-
     configfile_load();
 
     legacy_folder_handler();
 
     // create the window almost straight away
     if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(gWindowApi, gRenderApi, TITLE);
+        gWindowApi->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        WAPI.set_scroll_callback(mouse_on_scroll);
+        gWindowApi->set_scroll_callback(mouse_on_scroll);
     }
 
     // render the rom setup screen
@@ -500,11 +563,11 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-    if (gCLIOpts.headless) audio_api = &audio_null;
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
-#endif
-    if (!audio_api) audio_api = &audio_null;
+    if (!gCLIOpts.headless && gCLIOpts.audioApi == AUDIO_API_SDL2 && audio_sdl2.init()) {
+        audio_api = &audio_sdl2;
+    } else {
+        audio_api = &audio_null;
+    }
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -552,7 +615,7 @@ int main(int argc, char *argv[]) {
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
-        WAPI.main_loop(produce_one_frame);
+        gWindowApi->main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
 #endif

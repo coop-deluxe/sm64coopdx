@@ -11,6 +11,14 @@ void ThrowIfFailed(HRESULT res);
 void ThrowIfFailed(HRESULT res, HWND h_wnd, const char *message);
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct GfxWindowManagerAPI gfx_dxgi;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

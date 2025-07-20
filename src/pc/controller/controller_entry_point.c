@@ -13,7 +13,7 @@
 // moved these from sdl controller implementations
 
 static struct ControllerAPI *controller_implementations[] = {
-#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2)
     &controller_sdl,
 #endif
     &controller_keyboard,

@@ -11,7 +11,9 @@
 #include <limits.h>
 #include <dirent.h>
 #ifdef HAVE_SDL2
+#ifndef DYNOS_SDL_INCLUDED
 #include <SDL2/SDL.h>
+#endif
 #endif
 #ifdef __cplusplus
 #include <new>

@@ -79,13 +79,13 @@ NO_LDIV ?= 0
 
 # Backend selection
 
-# Renderers: GL, GL_LEGACY, D3D11, DUMMY
+# Renderers: GL, D3D11, DUMMY
 RENDER_API ?= GL
-# Window managers: SDL1, SDL2, DXGI (forced if RENDER_API is D3D11), DUMMY (forced if RENDER_API is DUMMY)
+# Window managers: SDL2, DXGI (forced if RENDER_API is D3D11), DUMMY (forced if RENDER_API is DUMMY)
 WINDOW_API ?= SDL2
-# Audio backends: SDL1, SDL2, DUMMY
+# Audio backends: SDL2, DUMMY
 AUDIO_API ?= SDL2
-# Controller backends (can have multiple, space separated): SDL2, SDL1
+# Controller backends (can have multiple, space separated): SDL2
 CONTROLLER_API ?= SDL2
 
 # Automatic settings for PC port(s)
@@ -766,7 +766,6 @@ BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_A
 BACKEND_CFLAGS += $(foreach capi,$(CONTROLLER_API),-DCAPI_$(capi)=1)
 BACKEND_LDFLAG0S :=
 
-SDL1_USED := 0
 SDL2_USED := 0
 
 # for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
@@ -799,25 +798,14 @@ ifneq (,$(findstring SDL2,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
   SDL2_USED := 1
 endif
 
-ifneq (,$(findstring SDL1,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
-  SDL1_USED := 1
-endif
-
-ifeq ($(SDL1_USED)$(SDL2_USED),11)
-  $(error Cannot link both SDL1 and SDL2 at the same time)
-endif
-
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
 ifeq ($(SDL2_USED),1)
   SDLCONFIG := $(CROSS)sdl2-config
   BACKEND_CFLAGS += -DHAVE_SDL2=1
-else ifeq ($(SDL1_USED),1)
-  SDLCONFIG := $(CROSS)sdl-config
-  BACKEND_CFLAGS += -DHAVE_SDL1=1
 endif
 
-ifneq ($(SDL1_USED)$(SDL2_USED),00)
+ifneq ($(SDL2_USED),0)
   ifeq ($(OSX_BUILD),1)
     # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
     OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)

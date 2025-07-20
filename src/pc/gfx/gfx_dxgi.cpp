@@ -1,5 +1,3 @@
-#ifdef WAPI_DXGI
-
 #include <stdint.h>
 #include <math.h>
 
@@ -813,5 +811,3 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_reset_window_title,
     gfx_dxgi_has_focus
 };
-
-#endif
