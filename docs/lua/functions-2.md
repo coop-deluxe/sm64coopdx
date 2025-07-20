@@ -205,30 +205,6 @@ Calculates the time it takes for the current object to follow an arc from `pos` 
 
 <br />
 
-## [vec3f_copy_2](#vec3f_copy_2)
-
-### Description
-Duplicate of vec3f_copy except without bad return
-
-### Lua Example
-`vec3f_copy_2(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| src | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void vec3f_copy_2(Vec3f dest, Vec3f src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [tox_box_move](#tox_box_move)
 
 ### Description
@@ -11961,63 +11937,6 @@ Behavior loop function for UV texture scrolling
 
 ### C Prototype
 `void uv_update_scroll(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spawn_ambient_light](#spawn_ambient_light)
-
-### Description
-Spawns a lighting engine point light
-
-### Lua Example
-`local ObjectValue = spawn_ambient_light(x, y, z, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* spawn_ambient_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [spawn_point_light](#spawn_point_light)
-
-### Description
-Spawns a lighting engine ambient light
-
-### Lua Example
-`local ObjectValue = spawn_point_light(x, y, z, r, g, b, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* spawn_point_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius);`
 
 [:arrow_up_small:](#)
 

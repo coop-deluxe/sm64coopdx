@@ -24,9 +24,6 @@
 #else
 # define FRAMERATE 30
 #endif
-// time between consequtive game frames
-static const f64 sFrameTime = 1.0 / ((double)FRAMERATE);
-static f64 sFrameTargetTime = 0;
 
 static void sleep_ms(int milliseconds) { // cross-platform sleep function
     // from StackOverflow user Bernardo Ramos: https://stackoverflow.com/a/28827188
@@ -52,9 +49,6 @@ static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down
 }
 
 static void gfx_dummy_wm_set_scroll_callback(UNUSED void (*on_scroll)(float, float)) {
-}
-
-static void gfx_dummy_wm_set_fullscreen_changed_callback(UNUSED void (*on_fullscreen_changed)(bool is_now_fullscreen)) {
 }
 
 static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {

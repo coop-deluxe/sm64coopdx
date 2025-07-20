@@ -23,176 +23,39 @@ _ReadOnlyTable = {
     end
 }
 
+-----------
+-- table --
+-----------
 
---------------------
--- math functions --
---------------------
-
---- @param dest Vec3f
---- @param src Vec3f
---- @return Vec3f
-function vec3f_copy(dest, src)
-    dest.x = src.x
-    dest.y = src.y
-    dest.z = src.z
-    return dest
+--- Creates a shallow copy of table `t`
+--- @param t table
+--- @return table
+function table.copy(t)
+    return table_copy(t)
 end
 
---- @param dest Vec3f
---- @param x number
---- @param y number
---- @param z number
---- @return Vec3f
-function vec3f_set(dest, x, y, z)
-    dest.x = x
-    dest.y = y
-    dest.z = z
-    return dest
+--- Creates a deep copy of table `t`
+--- @param t table
+--- @return table
+function table.deepcopy(t)
+    return table_deepcopy(t)
 end
 
---- @param dest Vec3f
---- @param a Vec3f
---- @return Vec3f
-function vec3f_add(dest, a)
-    dest.x = dest.x + a.x
-    dest.y = dest.y + a.y
-    dest.z = dest.z + a.z
-    return dest
-end
-
---- @param dest Vec3f
---- @param a Vec3f
---- @param b Vec3f
---- @return Vec3f
-function vec3f_sum(dest, a, b)
-    dest.x = a.x + b.x
-    dest.y = a.y + b.y
-    dest.z = a.z + b.z
-    return dest
-end
-
---- @param dest Vec3f
---- @param a number
---- @return Vec3f
-function vec3f_mul(dest, a)
-    dest.x = dest.x * a
-    dest.y = dest.y * a
-    dest.z = dest.z * a
-    return dest
-end
-
---- @param dest Vec3f
---- @return Vec3f
-function vec3f_normalize(dest)
-    local divisor = math.sqrt(dest.x * dest.x + dest.y * dest.y + dest.z * dest.z)
-    if divisor == 0 then
-        return dest
-    end
-
-    local invsqrt = 1.0 / divisor
-    dest.x = dest.x * invsqrt
-    dest.y = dest.y * invsqrt
-    dest.z = dest.z * invsqrt
-
-    return dest
-end
-
---- @param a Vec3f
---- @return number
-function vec3f_length(a)
-    return math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
-end
-
---- @param a Vec3f
---- @param b Vec3f
---- @return number
-function vec3f_dot(a, b)
-    return a.x * b.x + a.y * b.y + a.z * b.z
-end
-
---- @param vec Vec3f
---- @param onto Vec3f
---- @return Vec3f
-function vec3f_project(vec, onto)
-  local numerator = vec3f_dot(vec, onto)
-  local denominator = vec3f_dot(onto, onto)
-  local out = {}
-  vec3f_copy(out, onto)
-  vec3f_mul(out, numerator / denominator)
-  return out
-end
-
---- @param v1 Vec3f
---- @param v2 Vec3f
---- @return number
-function vec3f_dist(v1, v2)
-    dx = v1.x - v2.x
-    dy = v1.y - v2.y
-    dz = v1.z - v2.z
-    return math.sqrt(dx * dx + dy * dy + dz * dz)
-end
-
---- @param dest Vec3s
---- @param src Vec3s
---- @return Vec3s
-function vec3s_copy(dest, src)
-    dest.x = src.x
-    dest.y = src.y
-    dest.z = src.z
-    return dest
-end
-
---- @param dest Vec3s
---- @param x number
---- @param y number
---- @param z number
---- @return Vec3s
-function vec3s_set(dest, x, y, z)
-    dest.x = x
-    dest.y = y
-    dest.z = z
-    return dest
-end
-
---- @param dest Vec3s
---- @param a Vec3s
---- @return Vec3s
-function vec3s_add(dest, a)
-    dest.x = dest.x + a.x
-    dest.y = dest.y + a.y
-    dest.z = dest.z + a.z
-    return dest
-end
-
---- @param dest Vec3s
---- @param a Vec3s
---- @param b Vec3s
---- @return Vec3s
-function vec3s_sum(dest, a, b)
-    dest.x = a.x + b.x
-    dest.y = a.y + b.y
-    dest.z = a.z + b.z
-    return dest
-end
-
---- @param dest Vec3s
---- @param a number
---- @return Vec3s
-function vec3s_mul(dest, a)
-    dest.x = dest.x * a
-    dest.y = dest.y * a
-    dest.z = dest.z * a
-    return dest
-end
-
---- @param v1 Vec3s
---- @param v2 Vec3s
---- @return number
-function vec3s_dist(v1, v2)
-    dx = v1.x - v2.x
-    dy = v1.y - v2.y
-    dz = v1.z - v2.z
-    return math.sqrt(dx * dx + dy * dy + dz * dz)
+--- Utility function to create a read-only table
+--- @param data table
+--- @return table
+function create_read_only_table(data)
+    local t = {}
+    local mt = {
+        __index = data,
+        __newindex = function(_, k, _)
+            error('Attempting to modify key `' .. k .. '` of read-only table')
+        end,
+        __call = function() return table_copy(data) end,
+        __metatable = false
+    }
+    setmetatable(t, mt)
+    return t
 end
 
 -----------
@@ -200,7 +63,7 @@ end
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number
@@ -209,7 +72,13 @@ gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 --- @return number
 function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
-    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
+    return math.s32(
+        ((bank << SOUNDARGS_SHIFT_BANK) & SOUNDARGS_MASK_BANK) |
+        ((soundID << SOUNDARGS_SHIFT_SOUNDID) & SOUNDARGS_MASK_SOUNDID) |
+        ((priority << SOUNDARGS_SHIFT_PRIORITY) & SOUNDARGS_MASK_PRIORITY) |
+        (flags & SOUNDARGS_MASK_BITFLAGS) |
+        SOUND_STATUS_WAITING
+    )
 end
 
 -------------
@@ -308,13 +177,364 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
+--------------------------
+-- local math functions --
+--------------------------
+local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
 
------------------
--- legacy font --
------------------
+------------
+-- tweens --
+------------
+-- Unrelated to SM64, but these are for `math.tween`
 
---- @type integer
-FONT_TINY = -1
+---@param x number
+---@return number
+IN_SINE        = function (x) return 1 - __math_cos((x * __math_pi) / 2) end
+---@param x number
+---@return number
+OUT_SINE       = function (x) return __math_sin((x * __math_pi) / 2) end
+---@param x number
+---@return number
+IN_OUT_SINE    = function (x) return -(__math_cos(__math_pi * x) - 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_SINE    = function (x) return x < 0.5 and 0.5 * __math_sin(x * __math_pi) or 1 - 0.5 * __math_cos(((x * 2 - 1) * (__math_pi / 2))) end
+---@param x number
+---@return number
+IN_QUAD        = function (x) return x ^ 2 end
+---@param x number
+---@return number
+OUT_QUAD       = function (x) return 1 - ((1 - x) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_QUAD    = function (x) return x < 0.5 and 2 * (x ^ 2) or 1 - ((-2 * x + 2) ^ 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUAD    = function (x) return x < 0.5 and 0.5 * (-(2 * x) * ((2 * x) - 2)) or 0.5 + 0.5 * (2 * x - 1) ^ 2 end
+---@param x number
+---@return number
+IN_CUBIC       = function (x) return x ^ 3 end
+---@param x number
+---@return number
+OUT_CUBIC      = function (x) return 1 - ((1 - x) ^ 3) end
+---@param x number
+---@return number
+IN_OUT_CUBIC   = function (x) return x < 0.5 and 4 * (x ^ 3) or 1 - ((-2 * x + 2) ^ 3) / 2 end
+---@param x number
+---@return number
+OUT_IN_CUBIC   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 3) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 3 end
+---@param x number
+---@return number
+IN_QUART       = function (x) return x ^ 4 end
+---@param x number
+---@return number
+OUT_QUART      = function (x) return 1 - ((1 - x) ^ 4) end
+---@param x number
+---@return number
+IN_OUT_QUART   = function (x) return x < 0.5 and 8 * (x ^ 4) or 1 - ((-2 * x + 2) ^ 4) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUART   = function (x) return x < 0.5 and 0.5 * (1 - ((2 * x - 1) ^ 4)) or 0.5 + 0.5 * (2 * x - 1) ^ 4 end
+---@param x number
+---@return number
+IN_QUINT       = function (x) return x ^ 5 end
+---@param x number
+---@return number
+OUT_QUINT      = function (x) return 1 - ((1 - x) ^ 5) end
+---@param x number
+---@return number
+IN_OUT_QUINT   = function (x) return x < 0.5 and 16 * (x ^ 5) or 1 - ((-2 * x + 2) ^ 5) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUINT   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 5) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 5 end
+---@param x number
+---@return number
+IN_EXPO        = function (x) return x == 0 and x or 2 ^ (10 * x - 10) end
+---@param x number
+---@return number
+OUT_EXPO       = function (x) return x == 1 and x or 1 - (2 ^ (-10 * x)) end
+---@param x number
+---@return number
+IN_OUT_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and (2 ^ (20 * x - 10)) / 2 or (2 - (2 ^ (-20 * x + 10))) / 2 end
+---@param x number
+---@return number
+OUT_IN_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and 0.5 * (1 - 2 ^ (-20 * x)) or 0.5 + 0.5 * (2 ^ (20 * x - 20)) end
+---@param x number
+---@return number
+IN_CIRC        = function (x) return 1 - __math_sqrt(1 - (x ^ 2)) end
+---@param x number
+---@return number
+OUT_CIRC       = function (x) return __math_sqrt(1 - ((x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_OUT_CIRC    = function (x) return x < 0.5 and (1 - __math_sqrt(1 - ((2 * x) ^ 2))) / 2 or (__math_sqrt(1 - ((-2 * x + 2) ^ 2)) + 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_CIRC    = function (x) return x < 0.5 and 0.5 * __math_sqrt(1 - (2 * x - 1) ^ 2) or 0.5 + 0.5 * (1 - __math_sqrt(1 - (2 * x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_BACK        = function (x) return (1.70158 + 1) * (x ^ 3) - 1.70158 * (x ^ 2) end
+---@param x number
+---@return number
+OUT_BACK       = function (x) return 1 + (1.70158 + 1) * ((x - 1) ^ 3) + 1.70158 * ((x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_BACK    = function (x) return x < 0.5 and (((2 * x) ^ 2) * (((1.70158 * 1.525) + 1) * 2 * x - (1.70158 * 1.525))) / 2 or (((2 * x - 2) ^ 2) * (((1.70158 * 1.525) + 1) * (x * 2 - 2) + (1.70158 * 1.525)) + 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_BACK    = function (x) return x < 0.5 and 0.5 * (1 + (1.70158 + 1) * ((2 * x) - 1) ^ 3 + 1.70158 * ((2 * x) - 1) ^ 2) or 0.5 + 0.5 * ((1.70158 + 1) * (2 * x - 1) ^ 3 - 1.70158 * (2 * x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_ELASTIC     = function (x) return (x == 0 or x == 1) and x or -(2 ^ (10 * x - 10)) * __math_sin((x * 10 - 10.75) * ((2 * __math_pi) / 3)) end
+---@param x number
+---@return number
+OUT_ELASTIC    = function (x) return (x == 0 or x == 1) and x or (2 ^ (-10 * x)) * __math_sin((x * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1 end
+---@param x number
+---@return number
+IN_OUT_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and (-0.5 * (2 ^ (20 * x - 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)))) or (0.5 * (2 ^ (-20 * x + 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)) + 1) end
+---@param x number
+---@return number
+OUT_IN_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and 0.5 * ((2 ^ (-10 * (x * 2))) * __math_sin(((x * 2) * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1)) or 0.5 + 0.5 * (-(2 ^ (10 * ((x - 0.5) * 2) - 10)) * __math_sin((((x - 0.5) * 2) * 10 - 10.75) * ((2 * __math_pi) / 3))) end
+---@param x number
+---@return number
+IN_BOUNCE      = function (x) return 1 - OUT_BOUNCE(1 - x) end
+---@param x number
+---@return number
+OUT_BOUNCE     = function (x) if x < 1 / 2.75 then return 7.5625 * (x ^ 2) elseif x < 2 / 2.75 then x = x - 1.5 / 2.75 return 7.5625 * (x ^ 2) + 0.75 elseif x < 2.5 / 2.75 then x = x - 2.25 / 2.75 return 7.5625 * (x ^ 2) + 0.9375 else x = x - 2.625 / 2.75 return 7.5625 * (x ^ 2) + 0.984375 end end
+---@param x number
+---@return number
+IN_OUT_BOUNCE  = function (x) return x < 0.5 and (1 - OUT_BOUNCE(1 - 2 * x)) / 2 or (1 + OUT_BOUNCE(2 * x - 1)) / 2 end
+---@param x number
+---@return number
+OUT_IN_BOUNCE  = function (x) return x < 0.5 and 0.5 * OUT_BOUNCE(x * 2) or 0.5 + 0.5 * IN_BOUNCE(2 * x - 1) end
+
+--------------------
+-- math functions --
+--------------------
+--- Note: These functions don't exist in the Lua math library,
+--- and are useful enough to not have to redefine them in every mod
+
+--- @param x number
+--- @return number
+--- Computes the square of the number `x`
+function math.sqr(x)
+    return x * x
+end
+
+--- @param x number
+--- @param a number
+--- @param b number
+--- @return number
+--- Clamps the number `x` between bounds `a` (minimum) and `b` (maximum)
+function math.clamp(x, a, b)
+    return __math_min(__math_max(x, a), b)
+end
+
+--- @param a number
+--- @param b number
+--- @return number
+--- Computes the hypotenuse of a right-angled triangle given sides `a` and `b` using the Pythagorean theorem
+function math.hypot(a, b)
+    return __math_sqrt(a * a + b * b)
+end
+
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive or zero, -1 otherwise
+function math.sign(x)
+    return x >= 0 and 1 or -1
+end
+
+--- @param x number
+--- @return number
+--- Returns 1 if `x` is positive, 0 if it is zero, -1 otherwise
+function math.sign0(x)
+    return x ~= 0 and (x > 0 and 1 or -1) or 0
+end
+
+--- @param a number
+--- @param b number
+--- @param t number
+--- @return number
+--- Linearly interpolates between `a` and `b` using delta `t`
+function math.lerp(a, b, t)
+    return a + (b - a) * t
+end
+
+--- @param a number
+--- @param b number
+--- @param x number
+--- @return number
+--- Determines where `x` linearly lies between `a` and `b`. It's the inverse of `math.lerp`
+function math.invlerp(a, b, x)
+    return (x - a) / (b - a)
+end
+
+--- @param a number
+--- @param b number
+--- @param c number
+--- @param d number
+--- @param x number
+--- @return number
+--- Linearly remaps `x` from the source range `[a, b]` to the destination range `[c, d]`
+function math.remap(a, b, c, d, x)
+    return c + (d - c) * ((x - a) / (b - a))
+end
+
+--- @param x number
+--- Rounds `x` to the nearest integer value
+function math.round(x)
+    return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
+end
+
+--- @param t function | number
+--- @param a number
+--- @param b number
+--- @param x number
+--- @return number
+--- Interpolates between `a` and `b` using delta `x` and a tweening or easing math function `t`
+function math.tween(t, a, b, x)
+    local y
+
+    if type(t) == 'function' then
+        y = a + t(x) * (b - a)
+    else
+        y = a + t * (b - a)
+    end
+
+    return y
+end
+
+local __common_signed_conversion = function (x, size)
+    x = __math_floor(x) & (1 << size) - 1
+    return x - ((x & (1 << (size - 1))) << 1)
+end
+
+local __common_unsigned_conversion = function (x, size)
+    return __math_floor(x) & (1 << size) - 1
+end
+
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s8` range
+--- - `[-128, 127]`
+function math.s8(x)
+    return __common_signed_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s16` range
+--- - `[-32768, 32767]`
+function math.s16(x)
+    return __common_signed_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s32` range
+--- - `[-2147483648, 2147483647]`
+function math.s32(x)
+    return __common_signed_conversion(x, 32)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u8` range
+--- - `[0, 255]`
+function math.u8(x)
+    return __common_unsigned_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u16` range
+--- - `[0, 65535]`
+function math.u16(x)
+    return __common_unsigned_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u32` range
+--- - `[0, 4294967295]`
+function math.u32(x)
+    return __common_unsigned_conversion(x, 32)
+end
+
+
+
+-------------------------
+-- vec types constants --
+-------------------------
+
+--- @type Vec2f
+gVec2fZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2f
+gVec2fOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3f
+gVec3fZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3f
+gVec3fOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec3f
+gVec3fX = create_read_only_table({x=1,y=0,z=0})
+
+--- @type Vec3f
+gVec3fY = create_read_only_table({x=0,y=1,z=0})
+
+--- @type Vec3f
+gVec3fZ = create_read_only_table({x=0,y=0,z=1})
+
+--- @type Vec4f
+gVec4fZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4f
+gVec4fOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Vec2i
+gVec2iZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2i
+gVec2iOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3i
+gVec3iZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3i
+gVec3iOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec4i
+gVec4iZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4i
+gVec4iOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Vec2s
+gVec2sZero = create_read_only_table({x=0,y=0})
+
+--- @type Vec2s
+gVec2sOne = create_read_only_table({x=1,y=1})
+
+--- @type Vec3s
+gVec3sZero = create_read_only_table({x=0,y=0,z=0})
+
+--- @type Vec3s
+gVec3sOne = create_read_only_table({x=1,y=1,z=1})
+
+--- @type Vec4s
+gVec4sZero = create_read_only_table({x=0,y=0,z=0,w=0})
+
+--- @type Vec4s
+gVec4sOne = create_read_only_table({x=1,y=1,z=1,w=1})
+
+--- @type Mat4
+gMat4Zero = create_read_only_table({m00=0,m01=0,m02=0,m03=0,m10=0,m11=0,m12=0,m13=0,m20=0,m21=0,m22=0,m23=0,m30=0,m31=0,m32=0,m33=0})
+
+--- @type Mat4
+gMat4Identity = create_read_only_table({m00=1,m01=0,m02=0,m03=0,m10=0,m11=1,m12=0,m13=0,m20=0,m21=0,m22=1,m23=0,m30=0,m31=0,m32=0,m33=1})
+
+--- @type Mat4
+gMat4Fullscreen = create_read_only_table({m00=0.00625,m01=0,m02=0,m03=0,m10=0,m11=0.008333333333333333,m12=0,m13=0,m20=0,m21=0,m22=-1,m23=0,m30=-1,m31=-1,m32=-1,m33=1})
+
 
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
@@ -2719,6 +2939,9 @@ G_TEXRECTFLIP = 0xe5
 --- @type integer
 G_TEXRECT = 0xe4
 
+--- @type integer
+G_VTX_EXT = 0x11
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -3393,6 +3616,29 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_FLAG_EMPHASIZE_POWER`
 --- | `HUD_DISPLAY_NONE`
 --- | `HUD_DISPLAY_DEFAULT`
+
+--- @type integer
+LE_MAX_LIGHTS = 256
+
+LE_MODE_AFFECT_ALL_SHADED_AND_COLORED = 0 --- @type LEMode
+LE_MODE_AFFECT_ALL_SHADED             = 1 --- @type LEMode
+LE_MODE_AFFECT_ONLY_GEOMETRY_MODE     = 2 --- @type LEMode
+
+--- @alias LEMode
+--- | `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED`
+--- | `LE_MODE_AFFECT_ALL_SHADED`
+--- | `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE`
+
+LE_TONE_MAPPING_TOTAL_WEIGHTED = 0 --- @type LEToneMapping
+LE_TONE_MAPPING_WEIGHTED       = 1 --- @type LEToneMapping
+LE_TONE_MAPPING_CLAMP          = 2 --- @type LEToneMapping
+LE_TONE_MAPPING_REINHARD       = 3 --- @type LEToneMapping
+
+--- @alias LEToneMapping
+--- | `LE_TONE_MAPPING_TOTAL_WEIGHTED`
+--- | `LE_TONE_MAPPING_WEIGHTED`
+--- | `LE_TONE_MAPPING_CLAMP`
+--- | `LE_TONE_MAPPING_REINHARD`
 
 MARIO_ANIM_SLOW_LEDGE_GRAB                      =   0 --- @type MarioAnimID
 MARIO_ANIM_FALL_OVER_BACKWARDS                  =   1 --- @type MarioAnimID
@@ -4295,6 +4541,50 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_LIGHT_OBJ`
 --- | `GRAB_POS_HEAVY_OBJ`
 --- | `GRAB_POS_BOWSER`
+
+--- @type integer
+MOD_FS_MAX_SIZE = 0x1000000
+
+--- @type integer
+MOD_FS_MAX_FILES = 0x100
+
+--- @type integer
+MOD_FS_MAX_PATH = 0x100
+
+INT_TYPE_U8  = 0 --- @type ModFsFileIntType
+INT_TYPE_U16 = 1 --- @type ModFsFileIntType
+INT_TYPE_U32 = 2 --- @type ModFsFileIntType
+INT_TYPE_U64 = 3 --- @type ModFsFileIntType
+INT_TYPE_S8  = 4 --- @type ModFsFileIntType
+INT_TYPE_S16 = 5 --- @type ModFsFileIntType
+INT_TYPE_S32 = 6 --- @type ModFsFileIntType
+INT_TYPE_S64 = 7 --- @type ModFsFileIntType
+
+--- @alias ModFsFileIntType
+--- | `INT_TYPE_U8`
+--- | `INT_TYPE_U16`
+--- | `INT_TYPE_U32`
+--- | `INT_TYPE_U64`
+--- | `INT_TYPE_S8`
+--- | `INT_TYPE_S16`
+--- | `INT_TYPE_S32`
+--- | `INT_TYPE_S64`
+
+FLOAT_TYPE_F32 = 0 --- @type ModFsFileFloatType
+FLOAT_TYPE_F64 = 1 --- @type ModFsFileFloatType
+
+--- @alias ModFsFileFloatType
+--- | `FLOAT_TYPE_F32`
+--- | `FLOAT_TYPE_F64`
+
+FILE_SEEK_SET = 0 --- @type ModFsFileSeek
+FILE_SEEK_CUR = 1 --- @type ModFsFileSeek
+FILE_SEEK_END = 2 --- @type ModFsFileSeek
+
+--- @alias ModFsFileSeek
+--- | `FILE_SEEK_SET`
+--- | `FILE_SEEK_CUR`
+--- | `FILE_SEEK_END`
 
 --- @type integer
 MAX_KEYS = 4096
@@ -7806,7 +8096,11 @@ HOOK_ON_INTERACTIONS                        = 52 --- @type LuaHookedEventType
 HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
 HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
-HOOK_MAX                                    = 56 --- @type LuaHookedEventType
+HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
+HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
+HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
+HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
+HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7865,31 +8159,11 @@ HOOK_MAX                                    = 56 --- @type LuaHookedEventType
 --- | `HOOK_ALLOW_FORCE_WATER_ACTION`
 --- | `HOOK_BEFORE_WARP`
 --- | `HOOK_ON_INSTANT_WARP`
+--- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
+--- | `HOOK_ON_ADD_SURFACE`
+--- | `HOOK_ON_CLEAR_AREAS`
+--- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
-
-ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
-ACTION_HOOK_GRAVITY     = 1 --- @type LuaActionHookType
-ACTION_HOOK_MAX         = 2 --- @type LuaActionHookType
-
---- @alias LuaActionHookType
---- | `ACTION_HOOK_EVERY_FRAME`
---- | `ACTION_HOOK_GRAVITY`
---- | `ACTION_HOOK_MAX`
-
-MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON   = 1 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 2 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER   = 3 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 4 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX      = 5 --- @type LuaModMenuElementType
-
---- @alias LuaModMenuElementType
---- | `MOD_MENU_ELEMENT_TEXT`
---- | `MOD_MENU_ELEMENT_BUTTON`
---- | `MOD_MENU_ELEMENT_CHECKBOX`
---- | `MOD_MENU_ELEMENT_SLIDER`
---- | `MOD_MENU_ELEMENT_INPUTBOX`
---- | `MOD_MENU_ELEMENT_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
@@ -8713,6 +8987,9 @@ SOUNDARGS_MASK_PRIORITY = 0x0000FF00
 
 --- @type integer
 SOUNDARGS_MASK_STATUS = 0x0000000F
+
+--- @type integer
+SOUNDARGS_MASK_BITFLAGS = 0x0F0000F0
 
 --- @type integer
 SOUNDARGS_SHIFT_BANK = 28
@@ -10764,6 +11041,53 @@ OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
 --- @type integer
 OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
 
+MARIO_ANIM_PART_NONE          =  0 --- @type MarioAnimPart
+MARIO_ANIM_PART_ROOT          =  1 --- @type MarioAnimPart
+MARIO_ANIM_PART_BUTT          =  2 --- @type MarioAnimPart
+MARIO_ANIM_PART_TORSO         =  3 --- @type MarioAnimPart
+MARIO_ANIM_PART_HEAD          =  4 --- @type MarioAnimPart
+MARIO_ANIM_PART_UPPER_LEFT    =  5 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_ARM      =  6 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_FOREARM  =  7 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_HAND     =  8 --- @type MarioAnimPart
+MARIO_ANIM_PART_UPPER_RIGHT   =  9 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_ARM     = 10 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_FOREARM = 11 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_HAND    = 12 --- @type MarioAnimPart
+MARIO_ANIM_PART_LOWER_LEFT    = 13 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_THIGH    = 14 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_LEG      = 15 --- @type MarioAnimPart
+MARIO_ANIM_PART_LEFT_FOOT     = 16 --- @type MarioAnimPart
+MARIO_ANIM_PART_LOWER_RIGHT   = 17 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_THIGH   = 18 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_LEG     = 19 --- @type MarioAnimPart
+MARIO_ANIM_PART_RIGHT_FOOT    = 20 --- @type MarioAnimPart
+MARIO_ANIM_PART_MAX           = 21 --- @type MarioAnimPart
+
+--- @alias MarioAnimPart
+--- | `MARIO_ANIM_PART_NONE`
+--- | `MARIO_ANIM_PART_ROOT`
+--- | `MARIO_ANIM_PART_BUTT`
+--- | `MARIO_ANIM_PART_TORSO`
+--- | `MARIO_ANIM_PART_HEAD`
+--- | `MARIO_ANIM_PART_UPPER_LEFT`
+--- | `MARIO_ANIM_PART_LEFT_ARM`
+--- | `MARIO_ANIM_PART_LEFT_FOREARM`
+--- | `MARIO_ANIM_PART_LEFT_HAND`
+--- | `MARIO_ANIM_PART_UPPER_RIGHT`
+--- | `MARIO_ANIM_PART_RIGHT_ARM`
+--- | `MARIO_ANIM_PART_RIGHT_FOREARM`
+--- | `MARIO_ANIM_PART_RIGHT_HAND`
+--- | `MARIO_ANIM_PART_LOWER_LEFT`
+--- | `MARIO_ANIM_PART_LEFT_THIGH`
+--- | `MARIO_ANIM_PART_LEFT_LEG`
+--- | `MARIO_ANIM_PART_LEFT_FOOT`
+--- | `MARIO_ANIM_PART_LOWER_RIGHT`
+--- | `MARIO_ANIM_PART_RIGHT_THIGH`
+--- | `MARIO_ANIM_PART_RIGHT_LEG`
+--- | `MARIO_ANIM_PART_RIGHT_FOOT`
+--- | `MARIO_ANIM_PART_MAX`
+
 --- @type integer
 PLAY_MODE_NORMAL = 0
 
@@ -10795,16 +11119,16 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.3.2"
+SM64COOPDX_VERSION = "v1.4"
 
 --- @type string
 VERSION_TEXT = "v"
 
 --- @type integer
-VERSION_NUMBER = 40
+VERSION_NUMBER = 41
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

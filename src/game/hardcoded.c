@@ -126,7 +126,10 @@ struct LevelValues gDefaultLevelValues = {
     .wdwWaterLevelSpeed               = 10.0f,
     .useGlobalStarIds                 = FALSE,
     .zoomOutCameraOnPause             = TRUE,
-    .jrbDarkenSkybox                  = TRUE
+    .jrbDarkenSkybox                  = TRUE,
+    .wallMaxRadius                    = 200.0f,
+    .floorNormalMinY                  = 0.01,
+    .ceilNormalMaxY                   = -0.01,
 };
 
 struct LevelValues gLevelValues = { 0 };

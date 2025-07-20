@@ -6,6 +6,1652 @@
 
 
 ---
+# functions from misc.h
+
+<br />
+
+
+## [smooth_step](#smooth_step)
+
+### Description
+Smoothly steps between `edge0` and `edge1` with `x` as delta
+
+### Lua Example
+`local numberValue = smooth_step(edge0, edge1, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| edge0 | `number` |
+| edge1 | `number` |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`float smooth_step(float edge0, float edge1, float x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_all_mario_stars](#update_all_mario_stars)
+
+### Description
+Updates every Mario state's star count with the save file total star count
+
+### Lua Example
+`update_all_mario_stars()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void update_all_mario_stars(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed](#clock_elapsed)
+
+### Description
+Gets the current clock elapsed time
+
+### Lua Example
+`local numberValue = clock_elapsed()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clock_elapsed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_f64](#clock_elapsed_f64)
+
+### Description
+Gets the current clock elapsed time with double precision
+
+### Lua Example
+`local numberValue = clock_elapsed_f64()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f64 clock_elapsed_f64(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_elapsed_ticks](#clock_elapsed_ticks)
+
+### Description
+Gets the current clock elapsed time in frames
+
+### Lua Example
+`local integerValue = clock_elapsed_ticks()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 clock_elapsed_ticks(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [clock_is_date](#clock_is_date)
+
+### Description
+Checks whether it is the day given
+
+### Lua Example
+`local booleanValue = clock_is_date(month, day)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| month | `integer` |
+| day | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool clock_is_date(u8 month, u8 day);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_f32](#delta_interpolate_f32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local numberValue = delta_interpolate_f32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| delta | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_s32](#delta_interpolate_s32)
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_s32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3f](#delta_interpolate_vec3f)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3f(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [delta_interpolate_vec3s](#delta_interpolate_vec3s)
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3s(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from mod_fs.h
+
+<br />
+
+
+## [mod_fs_exists](#mod_fs_exists)
+
+### Description
+Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
+
+### Lua Example
+`local booleanValue = mod_fs_exists(modPath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modPath | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_exists(OPTIONAL const char *modPath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get](#mod_fs_get)
+
+### Description
+Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
+
+### Lua Example
+`local ModFsValue = mod_fs_get(modPath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modPath | `string` |
+
+### Returns
+[ModFs](structs.md#ModFs)
+
+### C Prototype
+`struct ModFs *mod_fs_get(OPTIONAL const char *modPath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_reload](#mod_fs_reload)
+
+### Description
+Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
+
+### Lua Example
+`local ModFsValue = mod_fs_reload(modPath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modPath | `string` |
+
+### Returns
+[ModFs](structs.md#ModFs)
+
+### C Prototype
+`struct ModFs *mod_fs_reload(OPTIONAL const char *modPath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_create](#mod_fs_create)
+
+### Description
+Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
+
+### Lua Example
+`local ModFsValue = mod_fs_create()`
+
+### Parameters
+- None
+
+### Returns
+[ModFs](structs.md#ModFs)
+
+### C Prototype
+`struct ModFs *mod_fs_create();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_delete](#mod_fs_delete)
+
+### Description
+Deletes the modfs object of the active mod if it exists. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_delete()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_delete();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_save](#mod_fs_save)
+
+### Description
+Saves the modfs object of the active mod if it exists. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_save()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_save();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_set_public](#mod_fs_set_public)
+
+### Description
+Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_set_public(pub)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pub | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_set_public(bool pub);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_filename](#mod_fs_get_filename)
+
+### Description
+Gets the filename at position `index` of the provided `modFs`
+
+### Lua Example
+`local stringValue = mod_fs_get_filename(modFs, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| index | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_get_filename(struct ModFs *modFs, u16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_file](#mod_fs_get_file)
+
+### Description
+Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
+
+### Lua Example
+`local ModFsFileValue = mod_fs_get_file(modFs, filepath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+
+### Returns
+[ModFsFile](structs.md#ModFsFile)
+
+### C Prototype
+`struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_create_file](#mod_fs_create_file)
+
+### Description
+Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
+
+### Lua Example
+`local ModFsFileValue = mod_fs_create_file(modFs, filepath, text)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+| text | `boolean` |
+
+### Returns
+[ModFsFile](structs.md#ModFsFile)
+
+### C Prototype
+`struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_move_file](#mod_fs_move_file)
+
+### Description
+Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| oldpath | `string` |
+| newpath | `string` |
+| overwriteExisting | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_copy_file](#mod_fs_copy_file)
+
+### Description
+Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| srcpath | `string` |
+| dstpath | `string` |
+| overwriteExisting | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_delete_file](#mod_fs_delete_file)
+
+### Description
+Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_delete_file(modFs, filepath)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| filepath | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_clear](#mod_fs_clear)
+
+### Description
+Deletes all files of the provided `modFs`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_clear(modFs)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_clear(struct ModFs *modFs);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_bool](#mod_fs_file_read_bool)
+
+### Description
+Reads a boolean from a binary modfs `file`
+
+### Lua Example
+`local booleanValue = mod_fs_file_read_bool(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_read_bool(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_integer](#mod_fs_file_read_integer)
+
+### Description
+Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
+
+### Lua Example
+`local integerValue = mod_fs_file_read_integer(file, intType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| intType | [enum ModFsFileIntType](constants.md#enum-ModFsFileIntType) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_number](#mod_fs_file_read_number)
+
+### Description
+Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
+
+### Lua Example
+`local numberValue = mod_fs_file_read_number(file, floatType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| floatType | [enum ModFsFileFloatType](constants.md#enum-ModFsFileFloatType) |
+
+### Returns
+- `number`
+
+### C Prototype
+`lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_bytes](#mod_fs_file_read_bytes)
+
+### Description
+Reads a bytestring of `length` bytes from a binary modfs `file`
+
+### Lua Example
+`local stringValue = mod_fs_file_read_bytes(file, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| length | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_string](#mod_fs_file_read_string)
+
+### Description
+Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
+
+### Lua Example
+`local stringValue = mod_fs_file_read_string(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_file_read_string(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_read_line](#mod_fs_file_read_line)
+
+### Description
+Reads a line from a text modfs `file`
+
+### Lua Example
+`local stringValue = mod_fs_file_read_line(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_file_read_line(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_bool](#mod_fs_file_write_bool)
+
+### Description
+Writes a boolean to a binary modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_bool(file, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_bool(struct ModFsFile *file, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_integer](#mod_fs_file_write_integer)
+
+### Description
+Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_integer(file, value, intType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `integer` |
+| intType | [enum ModFsFileIntType](constants.md#enum-ModFsFileIntType) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_number](#mod_fs_file_write_number)
+
+### Description
+Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_number(file, value, floatType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| value | `number` |
+| floatType | [enum ModFsFileFloatType](constants.md#enum-ModFsFileFloatType) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_bytes](#mod_fs_file_write_bytes)
+
+### Description
+Writes a bytestring to a modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_bytes(file, bytestring)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| bytestring | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_string](#mod_fs_file_write_string)
+
+### Description
+Writes a string to a modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_string(file, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| str | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_string(struct ModFsFile *file, const char *str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_write_line](#mod_fs_file_write_line)
+
+### Description
+Writes a line to a text modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_write_line(file, str)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| str | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_write_line(struct ModFsFile *file, const char *str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_seek](#mod_fs_file_seek)
+
+### Description
+Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_seek(file, offset, origin)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| offset | `integer` |
+| origin | [enum ModFsFileSeek](constants.md#enum-ModFsFileSeek) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_is_eof](#mod_fs_file_is_eof)
+
+### Description
+Returns true if the provided modfs `file` has reached its end of file
+
+### Lua Example
+`local booleanValue = mod_fs_file_is_eof(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_is_eof(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_fill](#mod_fs_file_fill)
+
+### Description
+Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_fill(file, byte, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| byte | `integer` |
+| length | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_erase](#mod_fs_file_erase)
+
+### Description
+Erases `length` bytes or characters from a modfs `file`. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_erase(file, length)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| length | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_erase(struct ModFsFile *file, u32 length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_file_set_public](#mod_fs_file_set_public)
+
+### Description
+Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_set_public(file, pub)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| pub | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_hide_errors](#mod_fs_hide_errors)
+
+### Description
+Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
+
+### Lua Example
+`mod_fs_hide_errors(hide)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| hide | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_fs_hide_errors(bool hide);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_last_error](#mod_fs_get_last_error)
+
+### Description
+Returns the last error message generated by `mod_fs` functions or nil if no error occurred
+
+### Lua Example
+`local stringValue = mod_fs_get_last_error()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_fs_get_last_error();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from mod_storage.h
+
+<br />
+
+
+## [mod_storage_save](#mod_storage_save)
+
+### Description
+Saves a `key` corresponding to a string `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save(const char* key, const char* value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_save_number](#mod_storage_save_number)
+
+### Description
+Saves a `key` corresponding to a float `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save_number(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `number` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save_number(const char* key, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_save_bool](#mod_storage_save_bool)
+
+### Description
+Saves a `key` corresponding to a bool `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save_bool(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save_bool(const char* key, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load](#mod_storage_load)
+
+### Description
+Loads a string `value` from a `key` in mod storage
+
+### Lua Example
+`local stringValue = mod_storage_load(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *mod_storage_load(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load_number](#mod_storage_load_number)
+
+### Description
+Loads a float `value` from a `key` in mod storage
+
+### Lua Example
+`local numberValue = mod_storage_load_number(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 mod_storage_load_number(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_load_bool](#mod_storage_load_bool)
+
+### Description
+Loads a bool `value` from a `key` in mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_load_bool(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_load_bool(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_exists](#mod_storage_exists)
+
+### Description
+Checks if a `key` is in mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_exists(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_exists(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_remove](#mod_storage_remove)
+
+### Description
+Removes a `key` from mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_remove(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_remove(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_storage_clear](#mod_storage_clear)
+
+### Description
+Clears the mod's data from mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_clear()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_clear(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_player.h
+
+<br />
+
+
+## [network_player_connected_count](#network_player_connected_count)
+
+### Description
+Gets the amount of players connected
+
+### Lua Example
+`local integerValue = network_player_connected_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_player_connected_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_description](#network_player_set_description)
+
+### Description
+Sets the description field of `np`
+
+### Lua Example
+`network_player_set_description(np, description, r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| description | `string` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_description(struct NetworkPlayer* np, const char* description, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_location](#network_player_set_override_location)
+
+### Description
+Overrides the location of `np`
+
+### Lua Example
+`network_player_set_override_location(np, location)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| location | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_location(struct NetworkPlayer *np, const char *location);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_from_global_index](#network_player_from_global_index)
+
+### Description
+Gets a network player from `globalIndex`
+
+### Lua Example
+`local NetworkPlayerValue = network_player_from_global_index(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_from_level](#get_network_player_from_level)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_level(courseNum, actNum, levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_from_area](#get_network_player_from_area)
+
+### Description
+Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_from_area(courseNum, actNum, levelNum, areaIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+| actNum | `integer` |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_player_smallest_global](#get_network_player_smallest_global)
+
+### Description
+Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
+
+### Lua Example
+`local NetworkPlayerValue = get_network_player_smallest_global()`
+
+### Parameters
+- None
+
+### Returns
+[NetworkPlayer](structs.md#NetworkPlayer)
+
+### C Prototype
+`struct NetworkPlayer* get_network_player_smallest_global(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
+
+### Description
+Sets the `part in `np`'s override color palette`
+
+### Lua Example
+`network_player_set_override_palette_color(np, part, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+| part | [enum PlayerPart](constants.md#enum-PlayerPart) |
+| color | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_set_override_palette_color(struct NetworkPlayer *np, enum PlayerPart part, Color color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_reset_override_palette](#network_player_reset_override_palette)
+
+### Description
+Resets `np`'s override color palette
+
+### Lua Example
+`network_player_reset_override_palette(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- None
+
+### C Prototype
+`void network_player_reset_override_palette(struct NetworkPlayer *np);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
+
+### Description
+Checks if `np`'s override color palette is identical to the regular color palette
+
+### Lua Example
+`local booleanValue = network_player_is_override_palette_same(np)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| np | [NetworkPlayer](structs.md#NetworkPlayer) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_player_is_override_palette_same(struct NetworkPlayer *np);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from network_utils.h
+
+<br />
+
+
+## [network_global_index_from_local](#network_global_index_from_local)
+
+### Description
+Gets a player's global index from their local index
+
+### Lua Example
+`local integerValue = network_global_index_from_local(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_global_index_from_local(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_local_index_from_global](#network_local_index_from_global)
+
+### Description
+Gets a player's local index from their global index
+
+### Lua Example
+`local integerValue = network_local_index_from_global(globalIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| globalIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 network_local_index_from_global(u8 globalIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_server](#network_is_server)
+
+### Description
+Checks if you are hosting the current lobby, this value doesn't change
+
+### Lua Example
+`local booleanValue = network_is_server()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_server(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_is_moderator](#network_is_moderator)
+
+### Description
+Checks if you are a moderator in the current lobby
+
+### Lua Example
+`local booleanValue = network_is_moderator()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_is_moderator(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_get_player_text_color_string](#network_get_player_text_color_string)
+
+### Description
+Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
+
+### Lua Example
+`local stringValue = network_get_player_text_color_string(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_get_player_text_color_string(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
+
+### Description
+Checks if the game can currently be paused in singleplayer
+
+### Lua Example
+`local booleanValue = network_check_singleplayer_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool network_check_singleplayer_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
+
+### Description
+Gets a Discord ID corresponding to the network player with `localIndex`
+
+### Lua Example
+`local stringValue = network_discord_id_from_local_index(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_discord_id_from_local_index(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from obj_behaviors.c
 
 <br />
@@ -754,7 +2400,7 @@ Finds any wall collisions and returns what the displacement vector would be.
 - `integer`
 
 ### C Prototype
-`s8 obj_find_wall_displacement(Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
+`s8 obj_find_wall_displacement(OUT Vec3f dist, f32 x, f32 y, f32 z, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -2039,7 +3685,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `Mat4` |
+| a0 | [Mat4](structs.md#Mat4) |
 | a1 | [Object](structs.md#Object) |
 
 ### Returns
@@ -2061,14 +3707,14 @@ Overrides the current room Mario is in. Set to -1 to reset override
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
-| dst | `Mat4` |
-| src | `Mat4` |
+| dst | [Mat4](structs.md#Mat4) |
+| src | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src);`
+`void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src);`
 
 [:arrow_up_small:](#)
 
@@ -2082,15 +3728,15 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `Mat4` |
-| a1 | `Mat4` |
-| a2 | `Mat4` |
+| a0 | [Mat4](structs.md#Mat4) |
+| a1 | [Mat4](structs.md#Mat4) |
+| a2 | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2);`
+`void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2);`
 
 [:arrow_up_small:](#)
 
@@ -2756,7 +4402,7 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| m | `Mat4` |
+| m | [Mat4](structs.md#Mat4) |
 | dst | [Vec3f](structs.md#Vec3f) |
 | v | [Vec3f](structs.md#Vec3f) |
 
@@ -2764,7 +4410,7 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 - None
 
 ### C Prototype
-`void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);`
+`void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -2781,7 +4427,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| m | `Mat4` |
+| m | [Mat4](structs.md#Mat4) |
 | dst | [Vec3f](structs.md#Vec3f) |
 | v | [Vec3f](structs.md#Vec3f) |
 
@@ -2789,7 +4435,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 - None
 
 ### C Prototype
-`void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v);`
+`void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -6554,1459 +8200,6 @@ Gets a trajectory's length
 
 ### C Prototype
 `s32 get_trajectory_length(Trajectory* trajectory);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from object_list_processor.h
-
-<br />
-
-
-## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
-
-### Description
-Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
-
-### Lua Example
-`set_object_respawn_info_bits(obj, bits)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| bits | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_object_respawn_info_bits(struct Object *obj, u8 bits);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from platform_displacement.h
-
-<br />
-
-
-## [apply_platform_displacement](#apply_platform_displacement)
-
-### Description
-Apply one frame of platform rotation to the object using the given platform
-
-### Lua Example
-`apply_platform_displacement(o, platform)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| o | [Object](structs.md#Object) |
-| platform | [Object](structs.md#Object) |
-
-### Returns
-- None
-
-### C Prototype
-`void apply_platform_displacement(struct Object *o, struct Object *platform);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from rumble_init.h
-
-<br />
-
-
-## [queue_rumble_data](#queue_rumble_data)
-
-### Description
-Queues rumble data
-
-### Lua Example
-`queue_rumble_data(a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data(s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_object](#queue_rumble_data_object)
-
-### Description
-Queues rumble data for object, factoring in its distance from Mario
-
-### Lua Example
-`queue_rumble_data_object(object, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| object | [Object](structs.md#Object) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [queue_rumble_data_mario](#queue_rumble_data_mario)
-
-### Description
-Queues rumble data for Mario
-
-### Lua Example
-`queue_rumble_data_mario(m, a0, a1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-| a1 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [reset_rumble_timers](#reset_rumble_timers)
-
-### Description
-Resets rumble timers
-
-### Lua Example
-`reset_rumble_timers(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void reset_rumble_timers(struct MarioState* m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [reset_rumble_timers_2](#reset_rumble_timers_2)
-
-### Description
-Resets rumble timers and sets a field based on `a0`
-
-### Lua Example
-`reset_rumble_timers_2(m, a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from save_file.h
-
-<br />
-
-
-## [get_level_num_from_course_num](#get_level_num_from_course_num)
-
-### Description
-Gets the course number's corresponding level number
-
-### Lua Example
-`local integerValue = get_level_num_from_course_num(courseNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 get_level_num_from_course_num(s16 courseNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_level_course_num](#get_level_course_num)
-
-### Description
-Gets the level number's corresponding course number
-
-### Lua Example
-`local integerValue = get_level_course_num(levelNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| levelNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s8 get_level_course_num(s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [touch_coin_score_age](#touch_coin_score_age)
-
-### Description
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
-
-### Lua Example
-`touch_coin_score_age(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_do_save](#save_file_do_save)
-
-### Description
-Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
-
-### Lua Example
-`save_file_do_save(fileIndex, forceSave)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| forceSave | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_do_save(s32 fileIndex, s8 forceSave);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_erase](#save_file_erase)
-
-### Description
-Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
-
-### Lua Example
-`save_file_erase(fileIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_erase(s32 fileIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
-
-### Description
-Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
-
-### Lua Example
-`save_file_erase_current_backup_save()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_erase_current_backup_save(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_reload](#save_file_reload)
-
-### Description
-Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
-
-### Lua Example
-`save_file_reload(load_all)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| load_all | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_reload(u8 load_all);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
-
-### Description
-Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
-
-### Lua Example
-`local integerValue = save_file_get_max_coin_score(courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_max_coin_score(s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_course_star_count](#save_file_get_course_star_count)
-
-### Description
-Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
-
-### Lua Example
-`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_total_star_count](#save_file_get_total_star_count)
-
-### Description
-Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
-
-### Lua Example
-`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| minCourse | `integer` |
-| maxCourse | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_flags](#save_file_set_flags)
-
-### Description
-Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
-
-### Lua Example
-`save_file_set_flags(flags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| flags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_flags(u32 flags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_clear_flags](#save_file_clear_flags)
-
-### Description
-Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
-
-### Lua Example
-`save_file_clear_flags(flags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| flags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_clear_flags(u32 flags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_flags](#save_file_get_flags)
-
-### Description
-Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
-
-### Lua Example
-`local integerValue = save_file_get_flags()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_flags(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_star_flags](#save_file_get_star_flags)
-
-### Description
-Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
-
-### Lua Example
-`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_star_flags](#save_file_set_star_flags)
-
-### Description
-Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
-
-### Lua Example
-`save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| starFlags | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_remove_star_flags](#save_file_remove_star_flags)
-
-### Description
-Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
-
-### Lua Example
-`save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| starFlagsToRemove | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
-
-### Description
-Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
-
-### Lua Example
-`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
-
-### Description
-Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
-
-### Lua Example
-`save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-| coinScore | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
-
-### Description
-Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
-
-### Lua Example
-`local integerValue = save_file_is_cannon_unlocked(fileIndex, courseIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fileIndex | `integer` |
-| courseIndex | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_cap_pos](#save_file_get_cap_pos)
-
-### Description
-Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
-
-### Lua Example
-`local integerValue = save_file_get_cap_pos(capPos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| capPos | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 save_file_get_cap_pos(Vec3s capPos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [save_file_get_sound_mode](#save_file_get_sound_mode)
-
-### Description
-Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
-
-### Lua Example
-`local integerValue = save_file_get_sound_mode()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 save_file_get_sound_mode(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from seqplayer.h
-
-<br />
-
-
-## [sequence_player_get_tempo](#sequence_player_get_tempo)
-
-### Description
-Gets the tempo of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_tempo(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_tempo(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_tempo](#sequence_player_set_tempo)
-
-### Description
-Sets the `tempo` of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_tempo(player, tempo)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| tempo | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_tempo(u8 player, u16 tempo);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
-
-### Description
-Gets the tempoAcc (tempo accumulation) of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_tempo_acc(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_tempo_acc(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
-
-### Description
-Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_tempo_acc(player, tempoAcc)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| tempoAcc | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_transposition](#sequence_player_get_transposition)
-
-### Description
-Gets the transposition (pitch) of `player`
-
-### Lua Example
-`local integerValue = sequence_player_get_transposition(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`u16 sequence_player_get_transposition(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_set_transposition](#sequence_player_set_transposition)
-
-### Description
-Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
-
-### Lua Example
-`sequence_player_set_transposition(player, transposition)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-| transposition | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void sequence_player_set_transposition(u8 player, u16 transposition);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_volume](#sequence_player_get_volume)
-
-### Description
-Gets the volume of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_volume(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_volume(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
-
-### Description
-Gets the fade volume of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_fade_volume(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_fade_volume(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
-
-### Description
-Gets the mute volume scale of `player`
-
-### Lua Example
-`local numberValue = sequence_player_get_mute_volume_scale(player)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| player | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sequence_player_get_mute_volume_scale(u8 player);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_anim_utils.h
-
-<br />
-
-
-## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
-
-### Description
-Gets a vanilla mario Animation with `index`
-
-### Lua Example
-`local AnimationValue = get_mario_vanilla_animation(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-[Animation](structs.md#Animation)
-
-### C Prototype
-`struct Animation *get_mario_vanilla_animation(u16 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_anim_util_set_animation](#smlua_anim_util_set_animation)
-
-### Description
-Sets the animation of `obj` to the animation `name` corresponds to
-
-### Lua Example
-`smlua_anim_util_set_animation(obj, name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
-
-### Description
-Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
-
-### Lua Example
-`local stringValue = smlua_anim_util_get_current_animation_name(obj)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-
-### Returns
-- `string`
-
-### C Prototype
-`const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_audio_utils.h
-
-<br />
-
-
-## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
-
-### Description
-Resets all custom sequences back to vanilla
-
-### Lua Example
-`smlua_audio_utils_reset_all()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_reset_all(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
-
-### Description
-Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
-
-### Lua Example
-`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sequenceId | `integer` |
-| bankId | `integer` |
-| defaultVolume | `integer` |
-| m64Name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_load](#audio_stream_load)
-
-### Description
-Loads an `audio` stream by `filename` (with extension)
-
-### Lua Example
-`local ModAudioValue = audio_stream_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_destroy](#audio_stream_destroy)
-
-### Description
-Destroys an `audio` stream
-
-### Lua Example
-`audio_stream_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_play](#audio_stream_play)
-
-### Description
-Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-
-### Lua Example
-`audio_stream_play(audio, restart, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| restart | `boolean` |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_pause](#audio_stream_pause)
-
-### Description
-Pauses an `audio` stream
-
-### Lua Example
-`audio_stream_pause(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_pause(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_stop](#audio_stream_stop)
-
-### Description
-Stops an `audio` stream
-
-### Lua Example
-`audio_stream_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_position](#audio_stream_get_position)
-
-### Description
-Gets the position of an `audio` stream in seconds
-
-### Lua Example
-`local numberValue = audio_stream_get_position(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_position(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_position](#audio_stream_set_position)
-
-### Description
-Sets the position of an `audio` stream in seconds
-
-### Lua Example
-`audio_stream_set_position(audio, pos)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| pos | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_looping](#audio_stream_get_looping)
-
-### Description
-Gets if an `audio` stream is looping or not
-
-### Lua Example
-`local booleanValue = audio_stream_get_looping(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool audio_stream_get_looping(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_looping](#audio_stream_set_looping)
-
-### Description
-Sets if an `audio` stream is looping or not
-
-### Lua Example
-`audio_stream_set_looping(audio, looping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| looping | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
-
-### Description
-Sets an `audio` stream's loop points in samples
-
-### Lua Example
-`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| loopStart | `integer` |
-| loopEnd | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_frequency](#audio_stream_get_frequency)
-
-### Description
-Gets the frequency of an `audio` stream
-
-### Lua Example
-`local numberValue = audio_stream_get_frequency(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_frequency(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_frequency](#audio_stream_set_frequency)
-
-### Description
-Sets the frequency of an `audio` stream
-
-### Lua Example
-`audio_stream_set_frequency(audio, freq)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| freq | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_volume](#audio_stream_get_volume)
-
-### Description
-Gets the volume of an `audio` stream
-
-### Lua Example
-`local numberValue = audio_stream_get_volume(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_volume(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_volume](#audio_stream_set_volume)
-
-### Description
-Sets the volume of an `audio` stream
-
-### Lua Example
-`audio_stream_set_volume(audio, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_load](#audio_sample_load)
-
-### Description
-Loads an `audio` sample
-
-### Lua Example
-`local ModAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-[ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_destroy](#audio_sample_destroy)
-
-### Description
-Destroys an `audio` sample
-
-### Lua Example
-`audio_sample_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_stop](#audio_sample_stop)
-
-### Description
-Stops an `audio` sample
-
-### Lua Example
-`audio_sample_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
-### Description
-Plays an `audio` sample at `position` with `volume`
-
-### Lua Example
-`audio_sample_play(audio, position, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| position | [Vec3f](structs.md#Vec3f) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
 
 [:arrow_up_small:](#)
 

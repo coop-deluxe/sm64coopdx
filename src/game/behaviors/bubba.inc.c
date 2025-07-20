@@ -1,15 +1,15 @@
 // bubba.inc.c
 
 static struct ObjectHitbox sBubbaHitbox = {
-    /* interactType:      */ INTERACT_CLAM_OR_BUBBA,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 99,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 300,
-    /* height:            */ 200,
-    /* hurtboxRadius:     */ 300,
-    /* hurtboxHeight:     */ 200,
+    .interactType = INTERACT_CLAM_OR_BUBBA,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 99,
+    .numLootCoins = 0,
+    .radius = 300,
+    .height = 200,
+    .hurtboxRadius = 300,
+    .hurtboxHeight = 200,
 };
 
 void bubba_act_0(void) {

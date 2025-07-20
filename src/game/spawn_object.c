@@ -220,7 +220,7 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
     // Clear Mario object pointers
-    if (obj->behavior == smlua_override_behavior(bhvMario)) {
+    if (obj->behavior == bhvMario) {
         u8 playerIndex = obj->oBehParams - 1;
         if (playerIndex < MAX_PLAYERS) {
             gMarioObjects[playerIndex] = NULL;
@@ -239,13 +239,13 @@ void unload_object(struct Object *obj) {
             sync_object_forget(so->id);
         }
 
-        smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
+        smlua_call_event_hooks(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
 
     obj->firstSurface = 0;
     obj->numSurfaces = 0;
 
-    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_UNLOAD, obj);
+    smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
 }
@@ -291,10 +291,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->collidedObjInteractTypes = 0;
     obj->numCollidedObjs = 0;
 
-    for (s32 i = 0; i < OBJECT_NUM_FIELDS; i++) {
-        obj->rawData.asS32[i] = 0;
-        obj->ptrData.asVoidPtr[i] = NULL;
-    }
+    memset(&obj->rawData, 0, sizeof(obj->rawData));
+    memset(&obj->ptrData, 0, sizeof(obj->ptrData));
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;
@@ -329,13 +327,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->oRoom = -1;
 
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-    obj->header.gfx.pos[0] = -10000.0f;
-    obj->header.gfx.pos[1] = -10000.0f;
-    obj->header.gfx.pos[2] = -10000.0f;
+    vec3f_set(obj->header.gfx.pos, -10000.0f, -10000.0f, -10000.0f);
+    vec3s_zero(obj->header.gfx.angle);
     obj->header.gfx.throwMatrix = NULL;
-    obj->header.gfx.angle[0] = 0;
-    obj->header.gfx.angle[1] = 0;
-    obj->header.gfx.angle[2] = 0;
     obj->header.gfx.inited = false;
 
     obj->coopFlags = 0;
@@ -417,7 +411,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
             break;
     }
 
-    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_LOAD, obj);
+    smlua_call_event_hooks(HOOK_ON_OBJECT_LOAD, obj);
 
     return obj;
 }

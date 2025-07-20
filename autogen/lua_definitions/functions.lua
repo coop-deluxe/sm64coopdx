@@ -109,13 +109,6 @@ function arc_to_goal_pos(goal, pos, yVel, gravity)
     -- ...
 end
 
---- @param dest Vec3f
---- @param src Vec3f
---- Duplicate of vec3f_copy except without bad return
-function vec3f_copy_2(dest, src)
-    -- ...
-end
-
 --- @param forwardVel number
 --- @param a1 number
 --- @param deltaPitch integer
@@ -2922,31 +2915,6 @@ function uv_update_scroll()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @return Object
---- Spawns a lighting engine point light
-function spawn_ambient_light(x, y, z, r, g, b)
-    -- ...
-end
-
---- @param x number
---- @param y number
---- @param z number
---- @param r integer
---- @param g integer
---- @param b integer
---- @param radius number
---- @return Object
---- Spawns a lighting engine ambient light
-function spawn_point_light(x, y, z, r, g, b, radius)
-    -- ...
-end
-
 --- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
 function bhv_ambient_light_update()
     -- ...
@@ -3131,13 +3099,6 @@ function select_mario_cam_mode()
 end
 
 --- @param dst Vec3f
---- @param src Vec3f
---- Subtracts one 3D vector (`src`) from another (`dst`). Stores the result in the destination vector
-function vec3f_sub(dst, src)
-    -- ...
-end
-
---- @param dst Vec3f
 --- @param o Object
 --- Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
 function object_pos_to_vec3f(dst, o)
@@ -3148,6 +3109,34 @@ end
 --- @param src Vec3f
 --- Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
 function vec3f_to_object_pos(o, src)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's face angle to a `Vec3s` format
+function object_face_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's face angle internal format
+function vec3s_to_object_face_angle(o, src)
+    -- ...
+end
+
+--- @param dst Vec3s
+--- @param o Object
+--- Converts an object's move angle to a `Vec3s` format
+function object_move_angle_to_vec3s(dst, o)
+    -- ...
+end
+
+--- @param o Object
+--- @param src Vec3s
+--- Converts a `Vec3s` angle to an object's move angle internal format
+function vec3s_to_object_move_angle(o, src)
     -- ...
 end
 
@@ -3986,6 +3975,62 @@ end
 --- @param scale number
 --- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders a DJUI HUD texture onto the screen
+function djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders a DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- Renders an interpolated DJUI HUD texture onto the screen
+function djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleW number
+--- @param prevScaleH number
+--- @param x number
+--- @param y number
+--- @param scaleW number
+--- @param scaleH number
+--- @param tileX integer
+--- @param tileY integer
+--- @param tileW integer
+--- @param tileH integer
+--- Renders an interpolated DJUI HUD texture tile onto the screen
+function djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)
     -- ...
 end
 
@@ -4952,11 +4997,58 @@ function lvl_set_current_level(param, levelNum)
     -- ...
 end
 
+--- @return boolean
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+function le_is_enabled()
+    -- ...
+end
+
+--- @param mode LEMode
+--- Sets the lighting engine mode to `mode`
+function le_set_mode(mode)
+    -- ...
+end
+
+--- @return LEMode
+--- Gets the lighting engine mode
+function le_get_mode()
+    -- ...
+end
+
+--- @param toneMapping LEToneMapping
+--- Sets the lighting engine's tone mapping mode to `toneMapping`
+function le_set_tone_mapping(toneMapping)
+    -- ...
+end
+
+--- @param out Color
+--- Outputs the lighting engine's ambient color to `out`
+function le_get_ambient_color(out)
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Sets the lighting engine ambient color
+function le_set_ambient_color(r, g, b)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number
 --- Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
 function le_calculate_lighting_color(pos, out, lightIntensityScalar)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param normal Vec3f
+--- @param out Color
+--- @param lightIntensityScalar number
+--- Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+function le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)
     -- ...
 end
 
@@ -4993,11 +5085,17 @@ function le_get_light_count()
     -- ...
 end
 
---- @param r integer
---- @param g integer
---- @param b integer
---- Sets the lighting engine ambient color
-function le_set_ambient_color(r, g, b)
+--- @param id integer
+--- @return boolean
+--- Checks if a lighting engine point light corresponding to `id` exists
+function le_light_exists(id)
+    -- ...
+end
+
+--- @param id integer
+--- @param out Vec3f
+--- Outputs a lighting engine point light's position to `out`
+function le_get_light_pos(id, out)
     -- ...
 end
 
@@ -5011,11 +5109,25 @@ function le_set_light_pos(id, x, y, z)
 end
 
 --- @param id integer
+--- @param out Color
+--- Outputs a lighting engine point light's color to `out`
+function le_get_light_color(id, out)
+    -- ...
+end
+
+--- @param id integer
 --- @param r integer
 --- @param g integer
 --- @param b integer
 --- Sets a lighting engine point light's color to `r`, `g`, `b`
 function le_set_light_color(id, r, g, b)
+    -- ...
+end
+
+--- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `radius`
+function le_get_light_radius(id)
     -- ...
 end
 
@@ -5027,9 +5139,30 @@ function le_set_light_radius(id, radius)
 end
 
 --- @param id integer
+--- @return number
+--- Gets a lighting engine point light's `intensity`
+function le_get_light_intensity(id)
+    -- ...
+end
+
+--- @param id integer
 --- @param intensity number
 --- Sets a lighting engine point light's `intensity`
 function le_set_light_intensity(id, intensity)
+    -- ...
+end
+
+--- @param id integer
+--- @return boolean
+--- Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+function le_get_light_use_surface_normals(id)
+    -- ...
+end
+
+--- @param id integer
+--- @param useSurfaceNormals boolean
+--- Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+function le_set_light_use_surface_normals(id, useSurfaceNormals)
     -- ...
 end
 
@@ -5127,7 +5260,7 @@ function play_sound_if_no_flag(m, soundBits, flags)
 end
 
 --- @param m MarioState
---- Plays Mario’s jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
+--- Plays Mario's jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
 function play_mario_jump_sound(m)
     -- ...
 end
@@ -5233,7 +5366,7 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Computes a value added to terrain sounds, depending on the floor’s type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
+--- Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
 function mario_get_terrain_sound_addend(m)
     -- ...
 end
@@ -5242,7 +5375,7 @@ end
 --- @param offset number
 --- @param radius number
 --- @return Surface
---- Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario’s movement or adjusting his position
+--- Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario's movement or adjusting his position
 function resolve_and_return_wall_collisions(pos, offset, radius)
     -- ...
 end
@@ -5424,7 +5557,7 @@ end
 
 --- @param m MarioState
 --- @param wcd WallCollisionData
---- Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level’s collision fix settings
+--- Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
 function mario_update_wall(m, wcd)
     -- ...
 end
@@ -5645,6 +5778,12 @@ end
 --- @param endAction integer
 --- Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
 function update_ledge_climb(m, animation, endAction)
+    -- ...
+end
+
+--- @param m MarioState
+--- Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+function mario_pop_bubble(m)
     -- ...
 end
 
@@ -6299,106 +6438,121 @@ function coss(sm64Angle)
     -- ...
 end
 
---- @param dest Vec3f
---- @param src Vec3f
---- @return void*
---- Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`). After this operation, `dest` will have the same x, y, and z values as `src`
-function vec3f_copy(dest, src)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param x number
 --- @param y number
---- @param z number
---- @return void*
---- Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values. After this function, `dest` will have values (x, y, z)
-function vec3f_set(dest, x, y, z)
+--- @param x number
+--- @return integer
+--- Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
+function atan2s(y, x)
     -- ...
 end
 
---- @param dest Vec3f
---- @param a Vec3f
---- @return void*
---- Adds the components of the 3D floating-point vector `a` to `dest`. After this operation, `dest.x` will be `dest.x + a.x`, and similarly for the y and z components
-function vec3f_add(dest, a)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param a Vec3f
---- @param b Vec3f
---- @return void*
---- Adds the corresponding components of two 3D floating-point vectors `a` and `b`, and stores the result in `dest`. For example, `dest.x = a.x + b.x`, `dest.y = a.y + b.y`, and `dest.z = a.z + b.z`
-function vec3f_sum(dest, a, b)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param a Vec3f
---- @param b Vec3f
---- @return void*
---- Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`. For example, `dest.x = a.x - b.x` This results in a vector that represents the difference between `a` and `b`.
-function vec3f_dif(dest, a, b)
-    -- ...
-end
-
---- @param dest Vec3f
 --- @param a number
---- @return void*
---- Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`. For instance, `dest.x = dest.x * a`, and similarly for y and z. This scales the vector `dest` by `a`
-function vec3f_mul(dest, a)
+--- @param b number
+--- @return number
+--- Computes the arctangent of a/b and returns it as a floating-point angle in radians. This is the floating-point equivalent of `atan2s`, allowing more precise angle calculations
+function atan2f(a, b)
     -- ...
 end
 
---- @param dest Vec3s
---- @param src Vec3s
---- @return void*
---- Copies the components of one 3D signed-integer vector (`src`) to another (`dest`). After this function, `dest` will have the same x, y, and z integer values as `src`
-function vec3s_copy(dest, src)
+--- @param current integer
+--- @param target integer
+--- @param inc integer
+--- @param dec integer
+--- @return integer
+--- Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
+function approach_s32(current, target, inc, dec)
     -- ...
 end
 
---- @param dest Vec3s
---- @param x integer
---- @param y integer
---- @param z integer
---- @return void*
---- Sets the 3D signed-integer vector `dest` to the specified integer values (x, y, z), so that `dest` becomes (x, y, z).
-function vec3s_set(dest, x, y, z)
+--- @param current number
+--- @param target number
+--- @param inc number
+--- @param dec number
+--- @return number
+--- Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
+function approach_f32(current, target, inc, dec)
     -- ...
 end
 
---- @param dest Vec3s
---- @param a Vec3s
---- @return void*
---- Adds the components of a 3D signed-integer vector `a` to the corresponding components of `dest`. After this operation, each component of `dest` is increased by the corresponding component in `a`
-function vec3s_add(dest, a)
+--- @param m MarioState
+--- @param result Vec4f
+--- @param t number
+--- @param c integer
+--- Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
+function spline_get_weights(m, result, t, c)
     -- ...
 end
 
---- @param dest Vec3s
---- @param a Vec3s
---- @param b Vec3s
---- @return void*
---- Adds the components of two 3D signed-integer vectors `a` and `b` together and stores the resulting vector in `dest`. For example, `dest.x = a.x + b.x`, and similarly for y and z
-function vec3s_sum(dest, a, b)
+--- @param m MarioState
+--- @param keyFrames Pointer_Vec4s
+--- Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
+function anim_spline_init(m, keyFrames)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param result Vec3f
+--- @return integer
+--- Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
+function anim_spline_poll(m, result)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @param rotate Vec3s
+--- @return Vec3f
+--- Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
+function vec3f_rotate_zxy(v, rotate)
     -- ...
 end
 
 --- @param dest Vec3f
---- @param a Vec3s
---- @return void*
---- Converts a 3D signed-integer vector `a` (vec3s) into a 3D floating-point vector and stores it in `dest`. After this operation, `dest` will contain the floating-point equivalents of `a`'s integer components
-function vec3s_to_vec3f(dest, a)
+--- @param v Vec3f
+--- @param n Vec3f
+--- @param r integer
+--- @return Vec3f
+--- Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation `r` (in sm64 angle units), and stores the result in `dest`
+function vec3f_rotate_around_n(dest, v, n, r)
     -- ...
 end
 
---- @param dest Vec3s
---- @param a Vec3f
---- @return void*
---- Converts a 3D floating-point vector `a` (Vec3f) into a 3D signed-integer vector and stores it in `dest`. After this operation, `dest` will contain the integer versions of `a`'s floating-point components
-function vec3f_to_vec3s(dest, a)
+--- @param dest Vec3f
+--- @param v Vec3f
+--- @param onto Vec3f
+--- @return Vec3f
+--- Projects the 3D floating-point vector `v` onto another 3D floating-point vector `onto`. The resulting projection, stored in `dest`, represents how much of `v` lies along the direction of `onto`
+function vec3f_project(dest, v, onto)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param v Vec3f
+--- @param translation Vec3f
+--- @param rotation Vec3s
+--- @param scale Vec3f
+--- @return Vec3f
+--- Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it by the rotation vector `rotation`, and finally translates it by the vector `translation`. The resulting vector is stored in `dest`
+function vec3f_transform(dest, v, translation, rotation, scale)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist Pointer_number
+--- @param pitch Pointer_integer
+--- @param yaw Pointer_integer
+--- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
+function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
+    -- ...
+end
+
+--- @param from Vec3f
+--- @param to Vec3f
+--- @param dist number
+--- @param pitch integer
+--- @param yaw integer
+--- Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
+function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
     -- ...
 end
 
@@ -6406,78 +6560,9 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @param c Vec3f
---- @return void*
+--- @return Vec3f
 --- Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
 function find_vector_perpendicular_to_plane(dest, a, b, c)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param a Vec3f
---- @param b Vec3f
---- @return void*
---- Computes the cross product of two 3D floating-point vectors `a` and `b`. The cross product is a vector perpendicular to both `a` and `b`. The result is stored in `dest`
-function vec3f_cross(dest, a, b)
-    -- ...
-end
-
---- @param dest Vec3f
---- @return void*
---- Normalizes the 3D floating-point vector `dest` so that its length (magnitude) becomes 1, while retaining its direction. This effectively scales `dest` so that it lies on the unit sphere
-function vec3f_normalize(dest)
-    -- ...
-end
-
---- @param a Vec3f
---- @return number
---- Calculates the length (magnitude) of the 3D floating-point vector `a`. The length is defined as sqrt(x² + y² + z²) for the vector components (x, y, z)
-function vec3f_length(a)
-    -- ...
-end
-
---- @param a Vec3f
---- @param b Vec3f
---- @return number
---- Computes the dot product of the two 3D floating-point vectors `a` and `b`. The dot product is a scalar value defined by (a.x * b.x + a.y * b.y + a.z * b.z), representing how aligned the two vectors are
-function vec3f_dot(a, b)
-    -- ...
-end
-
---- @param dest Vec3f
---- @param vecA Vec3f
---- @param vecB Vec3f
---- @param sclA number
---- @param sclB number
---- Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, and then adds the scaled vectors together. The final combined vector is stored in `dest`
-function vec3f_combine(dest, vecA, vecB, sclA, sclB)
-    -- ...
-end
-
---- @param v Vec3f
---- @param rotate Vec3s
---- @return void*
---- Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
-function vec3f_rotate_zxy(v, rotate)
-    -- ...
-end
-
---- @param dest Mat4
---- @param src Mat4
---- Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
-function mtxf_copy(dest, src)
-    -- ...
-end
-
---- @param mtx Mat4
---- Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
-function mtxf_identity(mtx)
-    -- ...
-end
-
---- @param dest Mat4
---- @param b Vec3f
---- Applies a translation to the 4x4 floating-point matrix `dest` by adding the coordinates in the 3D floating-point vector `b`. This shifts any transformed point by `b`
-function mtxf_translate(dest, b)
     -- ...
 end
 
@@ -6550,6 +6635,107 @@ function mtxf_mul(dest, a, b)
     -- ...
 end
 
+--- @param mtx Mat4
+--- @param b Vec3s
+--- @return Vec3s
+--- Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
+function mtxf_mul_vec3s(mtx, b)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- @param angle integer
+--- Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
+function mtxf_rotate_xy(mtx, angle)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
+function mtxf_inverse(dest, src)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- @return boolean
+--- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
+function mtxf_inverse_non_affine(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param objMtx Mat4
+--- @param camMtx Mat4
+--- @return Vec3f
+--- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
+function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+    -- ...
+end
+
+--- @param value number
+--- @param replacement number
+--- @return number
+--- Returns `replacement` if `replacement` is not zero. Otherwise, returns `value`
+function replace_value_if_not_zero(value, replacement)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+--- Converts an angle from SM64 format to radians
+function sm64_to_radians(sm64Angle)
+    -- ...
+end
+
+--- @param radiansAngle number
+--- @return integer
+--- Converts an angle from radians to SM64 format
+function radians_to_sm64(radiansAngle)
+    -- ...
+end
+
+--- @param sm64Angle integer
+--- @return number
+--- Converts an angle from SM64 format to degrees
+function sm64_to_degrees(sm64Angle)
+    -- ...
+end
+
+--- @param degreesAngle number
+--- @return integer
+--- Converts an angle from degrees to SM64 format
+function degrees_to_sm64(degreesAngle)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+function mtxf_zero(mtx)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param src Mat4
+--- Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
+function mtxf_copy(dest, src)
+    -- ...
+end
+
+--- @param mtx Mat4
+--- Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
+function mtxf_identity(mtx)
+    -- ...
+end
+
+--- @param dest Mat4
+--- @param b Vec3f
+--- Sets the 4x4 floating-point matrix `dest` to the translation matrix decribed by the 3D floating-point vector `b`. This matrix is used to shift any transformed point by `b`
+function mtxf_translate(dest, b)
+    -- ...
+end
+
 --- @param dest Mat4
 --- @param mtx Mat4
 --- @param s Vec3f
@@ -6558,121 +6744,546 @@ function mtxf_scale_vec3f(dest, mtx, s)
     -- ...
 end
 
---- @param mtx Mat4
---- @param b Vec3s
---- Multiplies the 4x4 floating-point matrix `mtx` by a 3D signed-integer vector `b`, potentially interpreting `b` as angles or translations depending on usage, and modifies `mtx` accordingly
-function mtxf_mul_vec3s(mtx, b)
-    -- ...
-end
-
---- @param dest Mat4
---- @param src Mat4
---- Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space
-function mtxf_inverse(dest, src)
+--- @param v Vec3f
+--- @return Vec3f
+--- Sets the components of the 3D floating-point vector `v` to 0
+function vec3f_zero(v)
     -- ...
 end
 
 --- @param dest Vec3f
---- @param objMtx Mat4
---- @param camMtx Mat4
---- Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
-function get_pos_from_transform_mtx(dest, objMtx, camMtx)
+--- @param src Vec3f
+--- @return Vec3f
+--- Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`)
+function vec3f_copy(dest, src)
     -- ...
 end
 
---- @param from Vec3f
---- @param to Vec3f
---- @param dist Pointer_number
---- @param pitch Pointer_integer
---- @param yaw Pointer_integer
---- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
-function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
-    -- ...
-end
-
---- @param from Vec3f
---- @param to Vec3f
---- @param dist number
---- @param pitch integer
---- @param yaw integer
---- Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
-function vec3f_set_dist_and_angle(from, to, dist, pitch, yaw)
-    -- ...
-end
-
---- @param current integer
---- @param target integer
---- @param inc integer
---- @param dec integer
---- @return integer
---- Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
-function approach_s32(current, target, inc, dec)
-    -- ...
-end
-
---- @param current number
---- @param target number
---- @param inc number
---- @param dec number
---- @return number
---- Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
-function approach_f32(current, target, inc, dec)
-    -- ...
-end
-
---- @param y number
+--- @param dest Vec3f
 --- @param x number
---- @return integer
---- Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
-function atan2s(y, x)
+--- @param y number
+--- @param z number
+--- @return Vec3f
+--- Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values
+function vec3f_set(dest, x, y, z)
     -- ...
 end
 
---- @param m MarioState
---- @param result Vec4f
---- @param t number
---- @param c integer
---- Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
-function spline_get_weights(m, result, t, c)
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @return Vec3f
+--- Adds the components of the 3D floating-point vector `a` to `dest`
+function vec3f_add(dest, a)
     -- ...
 end
 
---- @param m MarioState
---- @param keyFrames Pointer_Vec4s
---- Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
-function anim_spline_init(m, keyFrames)
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
+--- Adds the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+function vec3f_sum(dest, a, b)
     -- ...
 end
 
---- @param m MarioState
---- @param result Vec3f
---- @return integer
---- Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
-function anim_spline_poll(m, result)
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @return Vec3f
+--- Subtracts the components of the 3D floating-point vector `a` from `dest`
+function vec3f_sub(dest, a)
     -- ...
 end
 
---- @param value number
---- @param replacement number
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
+--- Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`
+function vec3f_dif(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a number
+--- @return Vec3f
+--- Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`
+function vec3f_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @return Vec3f
+--- Multiplies the components of the 3D floating-point vector `dest` with the components of `a`
+function vec3f_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
+--- Multiplies the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+function vec3f_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a number
+--- @return Vec3f
+--- Divides each component of the 3D floating-point vector `dest` by the scalar value `a`
+function vec3f_div(dest, a)
+    -- ...
+end
+
+--- @param a Vec3f
 --- @return number
---- Checks if `value` is zero. If not, it returns `value`. If it is zero, it returns the `replacement` value. This function ensures that a zero value can be substituted with a fallback value if needed
-function not_zero(value, replacement)
+--- Calculates the length (magnitude) of the 3D floating-point vector `a`
+function vec3f_length(a)
     -- ...
 end
 
---- @param vec Vec3f
---- @param onto Vec3f
---- @param out Vec3f
---- Projects the 3D floating-point vector `vec` onto another 3D floating-point vector `onto`. The resulting projection, stored in `out`, represents how much of `vec` lies along the direction of `onto`
-function vec3f_project(vec, onto, out)
+--- @param v Vec3f
+--- @return Vec3f
+--- Normalizes the 3D floating-point vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+function vec3f_normalize(v)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @param mag number
+--- @return Vec3f
+--- Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its direction
+function vec3f_set_magnitude(v, mag)
+    -- ...
+end
+
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return number
+--- Computes the dot product of the two 3D floating-point vectors `a` and `b`
+function vec3f_dot(a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3f
+--- @param b Vec3f
+--- @return Vec3f
+--- Computes the cross product of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
+function vec3f_cross(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param vecA Vec3f
+--- @param vecB Vec3f
+--- @param sclA number
+--- @param sclB number
+--- @return Vec3f
+--- Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+function vec3f_combine(dest, vecA, vecB, sclA, sclB)
     -- ...
 end
 
 --- @param v1 Vec3f
 --- @param v2 Vec3f
 --- @return number
---- Calculates the distance between two 3D floating-point points `v1` and `v2`. The distance is the length of the vector `v2 - v1`, i.e., sqrt((v2.x - v1.x)² + (v2.y - v1.y)² + (v2.z - v1.z)²)
+--- Calculates the distance between two 3D floating-point vectors `v1` and `v2`
 function vec3f_dist(v1, v2)
+    -- ...
+end
+
+--- @param v1 Vec3f
+--- @param v2 Vec3f
+--- @return number
+--- Calculates the horizontal distance between two 3D floating-point vectors `v1` and `v2`, as if their y component was 0
+function vec3f_hdist(v1, v2)
+    -- ...
+end
+
+--- @param v Vec3f
+--- @return boolean
+--- Returns `true` if all components of the 3D floating-point vector `v` are zero
+function vec3f_is_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3f
+--- @return Vec3i
+--- Converts a 3D floating-point vector `a` into a 3D integer vector and stores the result in `dest`
+function vec3f_to_vec3i(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3f
+--- @return Vec3s
+--- Converts a 3D floating-point vector `a` into a 3D short integer vector and stores the result in `dest`
+function vec3f_to_vec3s(dest, a)
+    -- ...
+end
+
+--- @param v Vec3i
+--- @return Vec3i
+--- Sets the components of the 3D integer vector `v` to 0
+function vec3i_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param src Vec3i
+--- @return Vec3i
+--- Copies the contents of a 3D integer vector (`src`) into another 3D integer vector (`dest`)
+function vec3i_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param x integer
+--- @param y integer
+--- @param z integer
+--- @return Vec3i
+--- Sets the values of the 3D integer vector `dest` to the given x, y, and z values
+function vec3i_set(dest, x, y, z)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @return Vec3i
+--- Adds the components of the 3D integer vector `a` to `dest`
+function vec3i_add(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return Vec3i
+--- Adds the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+function vec3i_sum(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @return Vec3i
+--- Subtracts the components of the 3D integer vector `a` from `dest`
+function vec3i_sub(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return Vec3i
+--- Subtracts the components of the 3D integer vector `b` from the components of `a` and stores the result in `dest`
+function vec3i_dif(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a number
+--- @return Vec3i
+--- Multiplies each component of the 3D integer vector `dest` by the scalar value `a`
+function vec3i_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @return Vec3i
+--- Multiplies the components of the 3D integer vector `dest` with the components of `a`
+function vec3i_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return Vec3i
+--- Multiplies the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+function vec3i_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a number
+--- @return Vec3i
+--- Divides each component of the 3D integer vector `dest` by the scalar value `a`
+function vec3i_div(dest, a)
+    -- ...
+end
+
+--- @param a Vec3i
+--- @return number
+--- Calculates the length (magnitude) of the 3D integer vector `a`
+function vec3i_length(a)
+    -- ...
+end
+
+--- @param v Vec3i
+--- @return Vec3i
+--- Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+function vec3i_normalize(v)
+    -- ...
+end
+
+--- @param v Vec3i
+--- @param mag number
+--- @return Vec3i
+--- Sets the length (magnitude) of 3D integer vector `v`, while retaining its direction
+function vec3i_set_magnitude(v, mag)
+    -- ...
+end
+
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return number
+--- Computes the dot product of the two 3D integer vectors `a` and `b`
+function vec3i_dot(a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3i
+--- @param b Vec3i
+--- @return Vec3i
+--- Computes the cross product of two 3D integer vectors `a` and `b` and stores the result in `dest`
+function vec3i_cross(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param vecA Vec3i
+--- @param vecB Vec3i
+--- @param sclA number
+--- @param sclB number
+--- @return Vec3i
+--- Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+function vec3i_combine(dest, vecA, vecB, sclA, sclB)
+    -- ...
+end
+
+--- @param v1 Vec3i
+--- @param v2 Vec3i
+--- @return number
+--- Calculates the distance between two 3D integer vectors `v1` and `v2`
+function vec3i_dist(v1, v2)
+    -- ...
+end
+
+--- @param v1 Vec3i
+--- @param v2 Vec3i
+--- @return number
+--- Calculates the horizontal distance between two 3D integer vectors `v1` and `v2`, as if their y component was 0
+function vec3i_hdist(v1, v2)
+    -- ...
+end
+
+--- @param v Vec3i
+--- @return boolean
+--- Returns `true` if all components of the 3D integer vector `v` are zero
+function vec3i_is_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3i
+--- @return Vec3f
+--- Converts a 3D integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+function vec3i_to_vec3f(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3i
+--- @return Vec3s
+--- Converts a 3D integer vector `a` into a 3D short integer vector and stores the result in `dest`
+function vec3i_to_vec3s(dest, a)
+    -- ...
+end
+
+--- @param v Vec3s
+--- @return Vec3s
+--- Sets the components of the 3D short integer vector `v` to 0
+function vec3s_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param src Vec3s
+--- @return Vec3s
+--- Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
+function vec3s_copy(dest, src)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param x integer
+--- @param y integer
+--- @param z integer
+--- @return Vec3s
+--- Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
+function vec3s_set(dest, x, y, z)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return Vec3s
+--- Adds the components of the 3D short integer vector `a` to `dest`
+function vec3s_add(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
+--- Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+function vec3s_sum(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return Vec3s
+--- Subtracts the components of the 3D short integer vector `a` from `dest`
+function vec3s_sub(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
+--- Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
+function vec3s_dif(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a number
+--- @return Vec3s
+--- Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
+function vec3s_mul(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @return Vec3s
+--- Multiplies the components of the 3D short integer vector `dest` with the components of `a`
+function vec3s_mult(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
+--- Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+function vec3s_prod(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a number
+--- @return Vec3s
+--- Divides each component of the 3D short integer vector `dest` by the scalar value `a`
+function vec3s_div(dest, a)
+    -- ...
+end
+
+--- @param a Vec3s
+--- @return number
+--- Calculates the length (magnitude) of the 3D short integer vector `a`
+function vec3s_length(a)
+    -- ...
+end
+
+--- @param v Vec3s
+--- @return Vec3s
+--- Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+function vec3s_normalize(v)
+    -- ...
+end
+
+--- @param v Vec3s
+--- @param mag number
+--- @return Vec3s
+--- Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
+function vec3s_set_magnitude(v, mag)
+    -- ...
+end
+
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return number
+--- Computes the dot product of the two 3D short integer vectors `a` and `b`
+function vec3s_dot(a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param a Vec3s
+--- @param b Vec3s
+--- @return Vec3s
+--- Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+function vec3s_cross(dest, a, b)
+    -- ...
+end
+
+--- @param dest Vec3s
+--- @param vecA Vec3s
+--- @param vecB Vec3s
+--- @param sclA number
+--- @param sclB number
+--- @return Vec3s
+--- Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+function vec3s_combine(dest, vecA, vecB, sclA, sclB)
+    -- ...
+end
+
+--- @param v1 Vec3s
+--- @param v2 Vec3s
+--- @return number
+--- Calculates the distance between two 3D short integer vectors `v1` and `v2`
+function vec3s_dist(v1, v2)
+    -- ...
+end
+
+--- @param v1 Vec3s
+--- @param v2 Vec3s
+--- @return number
+--- Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
+function vec3s_hdist(v1, v2)
+    -- ...
+end
+
+--- @param v Vec3s
+--- @return boolean
+--- Returns `true` if all components of the 3D short integer vector `v` are zero
+function vec3s_is_zero(v)
+    -- ...
+end
+
+--- @param dest Vec3f
+--- @param a Vec3s
+--- @return Vec3f
+--- Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+function vec3s_to_vec3f(dest, a)
+    -- ...
+end
+
+--- @param dest Vec3i
+--- @param a Vec3s
+--- @return Vec3i
+--- Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
+function vec3s_to_vec3i(dest, a)
     -- ...
 end
 
@@ -6749,6 +7360,260 @@ end
 --- @param delta number
 --- Linearly interpolates `res` between `a` and `b` with `delta`
 function delta_interpolate_vec3s(res, a, b, delta)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return boolean
+--- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
+function mod_fs_exists(modPath)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return ModFs
+--- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
+function mod_fs_get(modPath)
+    -- ...
+end
+
+--- @param modPath? string
+--- @return ModFs
+--- Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
+function mod_fs_reload(modPath)
+    -- ...
+end
+
+--- @return ModFs
+--- Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
+function mod_fs_create()
+    -- ...
+end
+
+--- @return boolean
+--- Deletes the modfs object of the active mod if it exists. Returns true on success
+function mod_fs_delete()
+    -- ...
+end
+
+--- @return boolean
+--- Saves the modfs object of the active mod if it exists. Returns true on success
+function mod_fs_save()
+    -- ...
+end
+
+--- @param pub boolean
+--- @return boolean
+--- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
+function mod_fs_set_public(pub)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param index integer
+--- @return string
+--- Gets the filename at position `index` of the provided `modFs`
+function mod_fs_get_filename(modFs, index)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @return ModFsFile
+--- Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
+function mod_fs_get_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @param text boolean
+--- @return ModFsFile
+--- Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
+function mod_fs_create_file(modFs, filepath, text)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param oldpath string
+--- @param newpath string
+--- @param overwriteExisting boolean
+--- @return boolean
+--- Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
+function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param srcpath string
+--- @param dstpath string
+--- @param overwriteExisting boolean
+--- @return boolean
+--- Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
+function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param filepath string
+--- @return boolean
+--- Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
+function mod_fs_delete_file(modFs, filepath)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Deletes all files of the provided `modFs`. Returns true on success
+function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+--- Reads a boolean from a binary modfs `file`
+function mod_fs_file_read_bool(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param intType ModFsFileIntType
+--- @return integer
+--- Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
+function mod_fs_file_read_integer(file, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param floatType ModFsFileFloatType
+--- @return number
+--- Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
+function mod_fs_file_read_number(file, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param length integer
+--- @return string
+--- Reads a bytestring of `length` bytes from a binary modfs `file`
+function mod_fs_file_read_bytes(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+--- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
+function mod_fs_file_read_string(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return string
+--- Reads a line from a text modfs `file`
+function mod_fs_file_read_line(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value boolean
+--- @return boolean
+--- Writes a boolean to a binary modfs `file`. Returns true on success
+function mod_fs_file_write_bool(file, value)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value integer
+--- @param intType ModFsFileIntType
+--- @return boolean
+--- Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
+function mod_fs_file_write_integer(file, value, intType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param value number
+--- @param floatType ModFsFileFloatType
+--- @return boolean
+--- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
+function mod_fs_file_write_number(file, value, floatType)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param bytestring string
+--- @return boolean
+--- Writes a bytestring to a modfs `file`. Returns true on success
+function mod_fs_file_write_bytes(file, bytestring)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+--- @return boolean
+--- Writes a string to a modfs `file`. Returns true on success
+function mod_fs_file_write_string(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param str string
+--- @return boolean
+--- Writes a line to a text modfs `file`. Returns true on success
+function mod_fs_file_write_line(file, str)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param offset integer
+--- @param origin ModFsFileSeek
+--- @return boolean
+--- Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+function mod_fs_file_seek(file, offset, origin)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
+--- Returns true if the provided modfs `file` has reached its end of file
+function mod_fs_file_is_eof(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param byte integer
+--- @param length integer
+--- @return boolean
+--- Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
+function mod_fs_file_fill(file, byte, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param length integer
+--- @return boolean
+--- Erases `length` bytes or characters from a modfs `file`. Returns true on success
+function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_file_set_public(file, pub)
+    -- ...
+end
+
+--- @param hide boolean
+--- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
+function mod_fs_hide_errors(hide)
+    -- ...
+end
+
+--- @return string
+--- Returns the last error message generated by `mod_fs` functions or nil if no error occurred
+function mod_fs_get_last_error()
     -- ...
 end
 
@@ -9683,6 +10548,27 @@ function smlua_collision_util_find_surface_types(data)
     -- ...
 end
 
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is quicksand
+function surface_is_quicksand(surf)
+    -- ...
+end
+
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is not a hard surface
+function surface_is_not_hard(surf)
+    -- ...
+end
+
+--- @param surf Surface
+--- @return boolean
+--- Checks if the surface is a painting warp
+function surface_is_painting_warp(surf)
+    -- ...
+end
+
 --- @param fov number
 --- Sets the override FOV
 function set_override_fov(fov)
@@ -9841,6 +10727,13 @@ end
 --- @return integer
 --- Gets the number of vertices from a display list command if it has the op `G_VTX`
 function gfx_get_vertex_count(cmd)
+    -- ...
+end
+
+--- @param cmd Pointer_Gfx
+--- @return Pointer_integer
+--- Gets the texture from a display list command if it has an image related op
+function gfx_get_texture(cmd)
     -- ...
 end
 
@@ -10049,106 +10942,6 @@ function warp_to_castle(aLevel)
     -- ...
 end
 
---- @param a integer
---- @param b integer
---- @return integer
---- Finds the minimum of two signed 32-bit integers
-function min(a, b)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @return integer
---- Finds the maximum of two signed 32-bit integers
-function max(a, b)
-    -- ...
-end
-
---- @param x integer
---- @return integer
---- Computes the square of a signed 32-bit integer
-function sqr(x)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
---- Finds the minimum of two floating-point numbers
-function minf(a, b)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
---- Finds the maximum of two floating-point numbers
-function maxf(a, b)
-    -- ...
-end
-
---- @param x number
---- @return number
---- Computes the square of a floating-point number
-function sqrf(x)
-    -- ...
-end
-
---- @param sm64Angle integer
---- @return number
---- Converts an angle from SM64 format to radians
-function sm64_to_radians(sm64Angle)
-    -- ...
-end
-
---- @param radiansAngle number
---- @return integer
---- Converts an angle from radians to SM64 format
-function radians_to_sm64(radiansAngle)
-    -- ...
-end
-
---- @param sm64Angle integer
---- @return number
---- Converts an angle from SM64 format to degrees
-function sm64_to_degrees(sm64Angle)
-    -- ...
-end
-
---- @param degreesAngle number
---- @return integer
---- Converts an angle from degrees to SM64 format
-function degrees_to_sm64(degreesAngle)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @return number
---- Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
-function hypotf(a, b)
-    -- ...
-end
-
---- @param a integer
---- @param b integer
---- @param c integer
---- @return integer
---- Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
-function clamp(a, b, c)
-    -- ...
-end
-
---- @param a number
---- @param b number
---- @param c number
---- @return number
---- Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
-function clampf(a, b, c)
-    -- ...
-end
-
 --- @return integer
 --- Gets the current area's networked timer
 function get_network_area_timer()
@@ -10158,6 +10951,20 @@ end
 --- @return integer
 --- Gets the area update counter incremented when objects are updated
 function get_area_update_counter()
+    -- ...
+end
+
+--- @param initialValue integer
+--- @return Pointer_integer
+--- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+function get_temp_s32_pointer(initialValue)
+    -- ...
+end
+
+--- @param pointer Pointer_integer
+--- @return integer
+--- Gets the signed 32-bit integer value from `pointer`
+function deref_s32_pointer(pointer)
     -- ...
 end
 
@@ -10396,6 +11203,15 @@ function get_hand_foot_pos_z(m, index)
     -- ...
 end
 
+--- @param m MarioState
+--- @param animPart integer
+--- @param pos Vec3f
+--- @return boolean
+--- Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+function get_mario_anim_part_pos(m, animPart, pos)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
@@ -10628,6 +11444,12 @@ function geo_get_current_held_object()
     -- ...
 end
 
+--- @param tex Pointer_integer
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+function texture_to_lua_table(tex)
+    -- ...
+end
+
 --- @param name string
 --- @return ModelExtendedId
 --- Gets the extended model ID for the `name` of a `GeoLayout`
@@ -10642,7 +11464,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -10654,7 +11476,7 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 function spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -10727,14 +11549,12 @@ function get_secondary_camera_focus()
 end
 
 --- @param o Object
---- @return void*
 --- Sets the cutscene focus object
 function set_cutscene_focus(o)
     -- ...
 end
 
 --- @param o Object
---- @return void*
 --- Sets the secondary camera focus object
 function set_secondary_camera_focus(o)
     -- ...
@@ -11025,6 +11845,13 @@ function smlua_text_utils_reset_all()
 end
 
 --- @param dialogId DialogId
+--- @return DialogEntry
+--- Gets the DialogEntry struct for the given `dialogId`
+function smlua_text_utils_dialog_get(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
 --- @param unused integer
 --- @param linesPerBox integer
 --- @param leftOffset integer
@@ -11032,6 +11859,13 @@ end
 --- @param str string
 --- Replaces `dialogId` with a custom one
 function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffset, width, str)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @return boolean
+--- Returns whether the dialog with the given ID has been replaced
+function smlua_text_utils_dialog_is_replaced(dialogId)
     -- ...
 end
 
@@ -11119,10 +11953,47 @@ function smlua_text_utils_castle_secret_stars_replace(name)
     -- ...
 end
 
+--- @return string
+--- Gets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_get()
+    -- ...
+end
+
+--- @return integer
+--- Gets the index of the mod that replaced the castle secret stars text
+function smlua_text_utils_castle_secret_stars_mod_index()
+    -- ...
+end
+
+--- Resets the castle secret stars text
+function smlua_text_utils_castle_secret_stars_reset()
+    -- ...
+end
+
 --- @param index integer
 --- @param text string
 --- Replace extra text (e.g. one of the castle's secret stars) with `text`
 function smlua_text_utils_extra_text_replace(index, text)
+    -- ...
+end
+
+--- @param index integer
+--- @return string
+--- Gets the extra text at `index`
+function smlua_text_utils_extra_text_get(index)
+    -- ...
+end
+
+--- @param index integer
+--- @return integer
+--- Gets the index of the mod that replaced the extra text at `index`
+function smlua_text_utils_extra_text_mod_index(index)
+    -- ...
+end
+
+--- @param index integer
+--- Resets the extra text at `index`
+function smlua_text_utils_extra_text_reset(index)
     -- ...
 end
 
@@ -11308,6 +12179,14 @@ function set_find_wall_direction(dir, active, airborne)
     -- ...
 end
 
+--- @param surf Surface
+--- @param src Vec3f
+--- @param out Vec3f
+--- Gets the closest point of the triangle to `src` and returns it in `out`.
+function closest_point_to_triangle(surf, src, out)
+    -- ...
+end
+
 --- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
     -- ...
@@ -11328,6 +12207,27 @@ function surface_has_force(surfaceType)
     -- ...
 end
 
+--- @param syncId integer
+--- @return Object
+--- Retrieves an object from a sync ID
+function sync_object_get_object(syncId)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is initialized using a `syncId`
+function sync_object_is_initialized(syncId)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return boolean
+--- Checks if a sync object is owned locally using a `syncId`
+function sync_object_is_owned_locally(syncId)
+    -- ...
+end
+
 --- @alias Pointer_integer integer
 --- @alias Pointer_BehaviorScript BehaviorScript
 --- @alias Pointer_number number
@@ -11336,3 +12236,14 @@ end
 --- @alias Pointer_Collision Collision
 --- @alias Pointer_Gfx Gfx
 --- @alias Pointer_Vtx Vtx
+--- @alias Vec2fp Vec2f
+--- @alias Vec3fp Vec3f
+--- @alias Vec4fp Vec4f
+--- @alias Vec2ip Vec2i
+--- @alias Vec3ip Vec3i
+--- @alias Vec4ip Vec4i
+--- @alias Vec2sp Vec2s
+--- @alias Vec3sp Vec3s
+--- @alias Vec4sp Vec4s
+--- @alias Mat4p Mat4
+--- @alias Colorp Color

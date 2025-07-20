@@ -131,33 +131,8 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
  // Generate //
 //////////////
 
-static String GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 aModelIdentifier) {
-    for (const auto &_Pair : aActorsFolders) {
-        if (_Pair.first == aModelIdentifier) {
-            return _Pair.second;
-        }
-    }
-    return String();
-}
-
 static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
-    // do not regen this folder if we find any existing bins
-    for (s32 geoIndex = _GfxData->mGeoLayouts.Count() - 1; geoIndex >= 0; geoIndex--) {
-        auto &_GeoNode = _GfxData->mGeoLayouts[geoIndex];
-        String _GeoRootName = _GeoNode->mName;
-
-        // If there is an existing binary file for this layout, skip and go to the next actor
-        SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
-        if (fs_sys_file_exists(_BinFilename.c_str())) {
-
-            // Compress file to gain some space
-            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_BinFilename)) {
-                DynOS_Bin_Compress(_BinFilename);
-            }
-
-            return;
-        }
-    }
+    Array<String> _SkipActorFolders;
 
     // generate in reverse order to detect children
     for (s32 geoIndex = _GfxData->mGeoLayouts.Count() - 1; geoIndex >= 0; geoIndex--) {
@@ -172,6 +147,18 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 
         // If there is an existing binary file for this layout, skip and go to the next actor
         SysPath _BinFilename = fstring("%s/%s.bin", aPackFolder.c_str(), _GeoRootName.begin());
+
+        // If there is an existing binary file for this actor, skip and go to the next actor
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _GeoNode->mModelIdentifier);
+        SysPath _SrcFolder = fstring("%s/%s", aPackFolder.c_str(), _ActorFolder.begin());
+        if (DynOS_GenFileExistsAndIsNewerThanFolder(_BinFilename, _SrcFolder)) {
+            // Remember that we skipped this folder, so we can skip it again in the future.
+            // This prevents generating child geo bins when we shouldn't.
+            _SkipActorFolders.Add(_ActorFolder);
+            continue;
+        } else if (_SkipActorFolders.Find(_ActorFolder) != -1) {
+            continue;
+        }
 
         // Init
         _GfxData->mLoadIndex                  = 0;
@@ -201,7 +188,6 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mAnimationTable.Clear();
 
         // Scan anims folder for animation data
-        String _ActorFolder = GetActorFolder(_ActorsFolders, _GfxData->mModelIdentifier);
         SysPath _AnimsFolder = fstring("%s/%s/anims", aPackFolder.c_str(), _ActorFolder.begin());
         DynOS_Anim_ScanFolder(_GfxData, _AnimsFolder);
 
@@ -246,6 +232,11 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing actors: \"%s\"", aPackFolder.c_str());
+
+    if (!DynOS_ShouldGeneratePack(aPackFolder,  { ".bin", ".col" })) {
+        return;
+    }
+
     Array<Pair<u64, String>> _ActorsFolders;
     GfxData *_GfxData = New<GfxData>();
 
@@ -261,12 +252,10 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             if (SysPath(_PackEnt->d_name) == "..") continue;
 
             // Compress .bin files to gain some space
-            if (configCompressOnStartup) {
-                SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
-                if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
-                    DynOS_Bin_Compress(_Filename);
-                    continue;
-                }
+            SysPath _Filename = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
+            if (SysPath(_PackEnt->d_name).find(".bin") != SysPath::npos && !DynOS_Bin_IsCompressed(_Filename)) {
+                if (configCompressOnStartup) { DynOS_Bin_Compress(_Filename); }
+                continue;
             }
 
             // For each subfolder, read tokens from model.inc.c and geo.inc.c

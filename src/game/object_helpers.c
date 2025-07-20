@@ -30,6 +30,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -272,7 +273,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
 }
 
-void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
+void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src) {
     if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
     dst[1][0] = src[1][0] * obj->header.gfx.scale[1];
@@ -295,7 +296,7 @@ void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
     dst[3][3] = src[3][3];
 }
 
-void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2) {
+void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     f32 spC, sp8, sp4;
 
     spC = a2[3][0] * a2[0][0] + a2[3][1] * a2[0][1] + a2[3][2] * a2[0][2];
@@ -528,8 +529,8 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
             break;
     }
 
-    startAngle = o->rawData.asU32[angleIndex];
-    o->rawData.asU32[angleIndex] = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
+    startAngle = o->OBJECT_FIELD_U32(angleIndex);
+    o->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
     return targetAngle;
 }
 
@@ -696,7 +697,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
     obj->globalPlayerIndex = 0;
 
     geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, dynos_model_get_geo(model), gVec3fZero, gVec3sZero);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
+    smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, model, smlua_model_util_id_to_ext_id(model));
 
     return obj;
 }
@@ -824,7 +825,7 @@ Multiplies a vector by a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[0][i] * v[0] + m[1][i] * v[1] + m[2][i] * v[2];
@@ -839,7 +840,7 @@ Multiplies a vector by the transpose of a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2];
@@ -1453,7 +1454,7 @@ void cur_obj_set_model(s32 modelID) {
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
+    smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
 }
 
 void mario_set_flag(s32 flag) {
@@ -2319,15 +2320,15 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 |descriptionEnd| */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
     if (obj == NULL) { return; }
-    f32 dx = obj->rawData.asF32[localTranslateIndex + 0];
-    f32 dy = obj->rawData.asF32[localTranslateIndex + 1];
-    f32 dz = obj->rawData.asF32[localTranslateIndex + 2];
+    f32 dx = obj->OBJECT_FIELD_F32(localTranslateIndex + 0);
+    f32 dy = obj->OBJECT_FIELD_F32(localTranslateIndex + 1);
+    f32 dz = obj->OBJECT_FIELD_F32(localTranslateIndex + 2);
 
-    obj->rawData.asF32[posIndex + 0] +=
+    obj->OBJECT_FIELD_F32(posIndex + 0) +=
         obj->transform[0][0] * dx + obj->transform[1][0] * dy + obj->transform[2][0] * dz;
-    obj->rawData.asF32[posIndex + 1] +=
+    obj->OBJECT_FIELD_F32(posIndex + 1) +=
         obj->transform[0][1] * dx + obj->transform[1][1] * dy + obj->transform[2][1] * dz;
-    obj->rawData.asF32[posIndex + 2] +=
+    obj->OBJECT_FIELD_F32(posIndex + 2) +=
         obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz;
 }
 
@@ -2336,13 +2337,13 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
     f32 translate[3];
     s16 rotation[3];
 
-    translate[0] = obj->rawData.asF32[posIndex + 0];
-    translate[1] = obj->rawData.asF32[posIndex + 1];
-    translate[2] = obj->rawData.asF32[posIndex + 2];
+    translate[0] = obj->OBJECT_FIELD_F32(posIndex + 0);
+    translate[1] = obj->OBJECT_FIELD_F32(posIndex + 1);
+    translate[2] = obj->OBJECT_FIELD_F32(posIndex + 2);
 
-    rotation[0] = obj->rawData.asS32[angleIndex + 0];
-    rotation[1] = obj->rawData.asS32[angleIndex + 1];
-    rotation[2] = obj->rawData.asS32[angleIndex + 2];
+    rotation[0] = obj->OBJECT_FIELD_S32(angleIndex + 0);
+    rotation[1] = obj->OBJECT_FIELD_S32(angleIndex + 1);
+    rotation[2] = obj->OBJECT_FIELD_S32(angleIndex + 2);
 
     mtxf_rotate_zxy_and_translate(obj->transform, translate, rotation);
 }

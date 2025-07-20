@@ -179,7 +179,7 @@ static void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
     djui_paginated_calculate_height(sModPaginated);
 }
 
-static void* threaded_mod_refresh(void*) {
+static void* threaded_mod_refresh(UNUSED void* unused) {
     mods_refresh_local();
 
     if (gModRefreshThread.state == RUNNING) { join_thread(&gModRefreshThread); }

@@ -344,7 +344,7 @@ s32 act_top_of_pole(struct MarioState *m) {
 /* |description|
 Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
 |descriptionEnd| */
-s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
+s32 perform_hanging_step(struct MarioState *m, OUT Vec3f nextPos) {
     if (!m) { return 0; }
     UNUSED s32 unused;
     struct Surface *ceil;
@@ -353,8 +353,10 @@ s32 perform_hanging_step(struct MarioState *m, Vec3f nextPos) {
     f32 floorHeight;
     f32 ceilOffset;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, &returnValue)) return returnValue;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_HANG, 0, &stepResultOverride)) {
+        return stepResultOverride;
+    }
 
     struct WallCollisionData wcd = { 0 };
     resolve_and_return_wall_collisions_data(nextPos, 50.0f, 50.0f, &wcd);
@@ -1024,6 +1026,29 @@ static struct MarioState* nearest_antibubble_mario_state_to_object(struct Object
     return nearest;
 }
 
+/* |description|
+Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+|descriptionEnd| */
+void mario_pop_bubble(struct MarioState* m) {
+    if (!m) { return; }
+    m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
+    m->hurtCounter = 0;
+    m->healCounter = 31;
+    m->health = 0x100;
+    m->marioObj->oIntangibleTimer = 0;
+    m->peakHeight = m->pos[1];
+    mario_set_forward_vel(m, 0.0f);
+    m->vel[1] = 0.0f;
+    m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+    m->invincTimer = 30 * 3;
+    if (m->playerIndex == 0) {
+        if (m->statusForCamera) { m->statusForCamera->action = m->action; }
+        soft_reset_camera(m->area->camera);
+    }
+    u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
+    set_mario_action(m, underWater ? ACT_WATER_IDLE : ACT_FREEFALL, 0);
+}
+
 s32 act_bubbled(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->playerIndex == 0 && m->area->camera->mode == CAMERA_MODE_WATER_SURFACE) {
@@ -1134,22 +1159,8 @@ s32 act_bubbled(struct MarioState* m) {
 
     // pop bubble
     if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && gLocalBubbleCounter == 0) {
-        m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
-        m->hurtCounter = 0;
-        m->healCounter = 31;
-        m->health = 0x100;
-        m->marioObj->oIntangibleTimer = 0;
-        m->peakHeight = m->pos[1];
-        mario_set_forward_vel(m, 0.0f);
-        m->vel[1] = 0.0f;
-        m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-        m->invincTimer = 30 * 3;
-        if (m->playerIndex == 0) {
-            if (m->statusForCamera) { m->statusForCamera->action = m->action; }
-            soft_reset_camera(m->area->camera);
-        }
-        u8 underWater = (m->pos[1] < ((f32)m->waterLevel));
-        return set_mario_action(m, underWater ? ACT_WATER_IDLE : ACT_FREEFALL, 0);
+        mario_pop_bubble(m);
+        return TRUE;
     }
 
     return FALSE;
@@ -1161,9 +1172,9 @@ Checks if Mario should cancel his current automatic action, primarily by detecti
 s32 check_common_automatic_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] < m->waterLevel - 100) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             return set_water_plunge_action(m);
         }
     }

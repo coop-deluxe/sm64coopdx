@@ -2,6 +2,7 @@
 
 #include "area.h"
 #include "engine/math_util.h"
+#include "engine/lighting_engine.h"
 #include "game_init.h"
 #include "gfx_dimensions.h"
 #include "main.h"
@@ -18,6 +19,7 @@
 #include "game/first_person_cam.h"
 #include "course_table.h"
 #include "skybox.h"
+#include "mario.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -163,6 +165,7 @@ struct GraphNodePerspective *gCurGraphNodeCamFrustum = NULL;
 struct GraphNodeCamera *gCurGraphNodeCamera = NULL;
 struct GraphNodeObject *gCurGraphNodeObject = NULL;
 struct GraphNodeHeldObject *gCurGraphNodeHeldObject = NULL;
+struct MarioBodyState *gCurMarioBodyState = NULL;
 u16 gAreaUpdateCounter = 0;
 
 #ifdef F3DEX_GBI_2
@@ -237,16 +240,15 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
-    Mtx camTranfInv, prevCamTranfInv;
-
     if (sPerspectiveNode != NULL) {
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = sPerspectiveNode->fov;
         }
         u16 perspNorm;
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
-        f32 near = MIN(sPerspectiveNode->near, gProjectionMaxNearValue);
-        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(sPerspectiveNode->far, gOverrideFar), 1.0f);
+        f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
+        f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -300,36 +302,40 @@ void patch_mtx_interpolated(f32 delta) {
 
     // calculate outside of for loop to reduce overhead
     // technically this is improper use of mtxf functions, but coop doesn't target N64
+    Mtx camTranfInv, prevCamTranfInv;
+    Mtx camInterp;
     bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
     if (translateCamSpace) {
+        // compute inverse camera matrix to transform out of camera space later
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
         mtxf_inverse(prevCamTranfInv.m, *sCameraNode->matrixPtrPrev);
+
+        // use camera node's stored information to calculate interpolated camera transform
+        Vec3f posInterp, focusInterp;
+        delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
+        delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
+        mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
+        mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
     for (s32 i = 0; i < gMtxTblSize; i++) {
-        Mtx bufMtx, bufMtxPrev;
-
-        memcpy(bufMtx.m, ((Mtx*) gMtxTbl[i].mtx)->m, sizeof(f32) * 4 * 4);
-        memcpy(bufMtxPrev.m, ((Mtx*) gMtxTbl[i].mtxPrev)->m, sizeof(f32) * 4 * 4);
-
         Gfx *pos = gMtxTbl[i].pos;
+        Mtx *srcMtx = gMtxTbl[i].mtx;
+        Mtx *srcMtxPrev = gMtxTbl[i].mtxPrev;
 
         if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
+            Mtx bufMtx, bufMtxPrev;
+            mtxf_copy(bufMtx.m, srcMtx->m);
+            mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
             mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
             mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+            srcMtx = &bufMtx;
+            srcMtxPrev = &bufMtxPrev;
         }
-        delta_interpolate_mtx(&gMtxTbl[i].interp, &bufMtxPrev, &bufMtx, delta);
+        delta_interpolate_mtx(&gMtxTbl[i].interp, srcMtxPrev, srcMtx, delta);
         if (gMtxTbl[i].usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
-            Mtx camInterp;
-            Vec3f posInterp, focusInterp;
-
-            // use camera node's stored information to calculate interpolated camera transform
-            delta_interpolate_vec3f(posInterp, sCameraNode->prevPos, sCameraNode->pos, delta);
-            delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
-            mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
-            mtxf_to_mtx(&camInterp, camInterp.m);
             mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
         }
         gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
@@ -398,9 +404,12 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
                     gMtxTbl[gMtxTblSize].displayList = currList->displayList;
                     gMtxTbl[gMtxTblSize++].usingCamSpace = currList->usingCamSpace;
                 }
+
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
+
                 gSPDisplayList(gDisplayListHead++, currList->displayList);
+
                 currList = currList->next;
             }
         }
@@ -496,8 +505,9 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
 
     gProjectionVanillaNearValue = node->near;
     gProjectionVanillaFarValue = node->far;
-    f32 near = MIN(node->near, gProjectionMaxNearValue);
-    guPerspective(mtx, &perspNorm, node->prevFov, aspect, get_first_person_enabled() ? 1 : not_zero(near, gOverrideNear), not_zero(node->far, gOverrideFar), 1.0f);
+    f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(node->near, gProjectionMaxNearValue), gOverrideNear);
+    f32 far = replace_value_if_not_zero(node->far, gOverrideFar);
+    guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
 
     sPerspectiveNode = node;
     sPerspectiveMtx = mtx;
@@ -566,7 +576,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     if (node->fnNode.func != NULL) {
         node->fnNode.func(GEO_CONTEXT_RENDER, &node->fnNode.node, gMatStack[gMatStackIndex]);
     }
-    mtxf_rotate_xy(rollMtx, node->rollScreen);
+    mtxf_rotate_xy(rollMtx->m, node->rollScreen);
 
     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(rollMtx), G_MTX_PROJECTION | G_MTX_MUL | G_MTX_NOPUSH);
 
@@ -601,6 +611,16 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     // save the camera matrix
     if (gCamera) {
         mtxf_copy(gCamera->mtx, gMatStack[gMatStackIndex]);
+    }
+
+    // compute inverse matrix for lighting engine
+    if (le_is_enabled()) {
+        Mat4 invCameraMatrix;
+        if (mtxf_inverse_non_affine(invCameraMatrix, gCamera->mtx)) {
+            Mtx *invMtx = alloc_display_list(sizeof(Mtx));
+            mtxf_to_mtx(invMtx, invCameraMatrix);
+            gSPMatrix(gDisplayListHead++, invMtx, G_MTX_INVERSE_CAMERA_EXT);
+        }
     }
 
     if (node->fnNode.node.children != 0) {
@@ -911,6 +931,10 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
  * but set in global variables. If an animated part is skipped, everything afterwards desyncs.
  */
 static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
+        gCurMarioBodyState->currAnimPart++;
+    }
+
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
@@ -940,6 +964,15 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
+
+    // Mario anim part pos
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
+        get_pos_from_transform_mtx(
+            gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
+            gMatStack[gMatStackIndex],
+            *gCurGraphNodeCamera->matrixPtr
+        );
+    }
 
     if (gCurGraphNodeMarioState != NULL) {
         Vec3f translated = { 0 };
@@ -1212,6 +1245,11 @@ static void geo_sanitize_object_gfx(void) {
     geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
 }
 
+static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
+    struct MarioState *m = get_mario_state_from_object(marioObj);
+    return m ? m->marioBodyState : NULL;
+}
+
 /**
  * Process an object node.
  */
@@ -1234,17 +1272,11 @@ static void geo_process_object(struct Object *node) {
     }
 
     if (node->hookRender) {
-        smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_RENDER, node);
+        smlua_call_event_hooks(HOOK_ON_OBJECT_RENDER, node);
     }
 
     if (node->header.gfx.node.flags & GRAPH_RENDER_PLAYER) {
-        gCurGraphNodeMarioState = NULL;
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == node) {
-                gCurGraphNodeMarioState = &gMarioStates[i];
-                break;
-            }
-        }
+        gCurGraphNodeMarioState = get_mario_state_from_object(node);
         if (gCurGraphNodeMarioState != NULL) {
             gCurGraphNodeMarioState->minimumBoneY = 9999;
         }
@@ -1352,7 +1384,7 @@ static void geo_process_object(struct Object *node) {
         if (node->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node);
             geo_set_animation_globals(&node->header.gfx.animInfo, hasAnimation);
-            if (node->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node);
+            if (node->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node);
             dynos_gfx_swap_animations(node);
         }
         if (obj_is_in_view(&node->header.gfx, gMatStack[gMatStackIndex])) {
@@ -1366,12 +1398,17 @@ static void geo_process_object(struct Object *node) {
             gMatStackPrevFixed[gMatStackIndex] = mtxPrev;
 
             if (node->header.gfx.sharedChild != NULL) {
+                gCurMarioBodyState = get_mario_body_state_from_mario_object(node);
+                if (gCurMarioBodyState) {
+                    gCurMarioBodyState->currAnimPart = MARIO_ANIM_PART_NONE;
+                }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
                 geo_sanitize_object_gfx();
                 geo_process_node_and_siblings(node->header.gfx.sharedChild);
                 node->header.gfx.sharedChild->parent = NULL;
                 gCurGraphNodeObject = NULL;
+                gCurMarioBodyState = NULL;
             }
 
             if (node->header.gfx.node.children != NULL) {
@@ -1476,7 +1513,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         if (node->objNode->header.gfx.animInfo.curAnim != NULL) {
             dynos_gfx_swap_animations(node->objNode);
             geo_set_animation_globals(&node->objNode->header.gfx.animInfo, hasAnimation);
-            if (node->objNode->hookRender) smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
+            if (node->objNode->hookRender) smlua_call_event_hooks(HOOK_ON_OBJECT_ANIM_UPDATE, node->objNode);
             dynos_gfx_swap_animations(node->objNode);
         }
 
@@ -1526,7 +1563,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     if (parent != NULL) {
         iterateChildren = (parent->type != GRAPH_NODE_TYPE_SWITCH_CASE);
 
-        if (parent->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
+        if (parent->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS_CHILDREN, parent, gMatStackIndex);
     }
 
     do {
@@ -1535,10 +1572,12 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
             break;
         }
 
+#ifdef DEBUG
         if (curGraphNode->_guard1 != GRAPH_NODE_GUARD || curGraphNode->_guard2 != GRAPH_NODE_GUARD) {
             LOG_ERROR("Graph Node corrupted!");
             break;
         }
+#endif
 
         // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
         if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) {
@@ -1553,7 +1592,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
         }
 
         if (curGraphNode->flags & GRAPH_RENDER_ACTIVE) {
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_BEFORE_GEO_PROCESS, curGraphNode, gMatStackIndex);
             if (curGraphNode->flags & GRAPH_RENDER_CHILDREN_FIRST) {
                 geo_try_process_children(curGraphNode);
             } else {
@@ -1621,7 +1660,7 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                 }
             }
-            if (curGraphNode->hookProcess) smlua_call_event_hooks_graph_node_and_int_param(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
+            if (curGraphNode->hookProcess) smlua_call_event_hooks(HOOK_ON_GEO_PROCESS, curGraphNode, gMatStackIndex + 1);
         } else {
             if (curGraphNode && curGraphNode->type == GRAPH_NODE_TYPE_OBJECT) {
                 ((struct GraphNodeObject *) curGraphNode)->throwMatrix = NULL;

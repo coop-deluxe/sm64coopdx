@@ -87,6 +87,7 @@ extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
+extern bool         configSmoothScrolling;
 // free camera settings
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
@@ -134,6 +135,7 @@ extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
+extern bool         configModDevMode;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;

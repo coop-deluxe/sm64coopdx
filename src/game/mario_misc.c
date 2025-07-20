@@ -333,18 +333,38 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
     return gfxHead;
 }
 
+// Calculates if the processing geo is a mirror mario
+static s8 geo_get_processing_mirror_mario_index() {
+    ptrdiff_t ptrDiff = (struct GraphNodeObject *) gCurGraphNodeProcessingObject - gMirrorMario;
+    return (ptrDiff >= 0 && ptrDiff < MAX_PLAYERS) ? ptrDiff : -1;
+}
+
 static u8 geo_get_processing_object_index(void) {
-    // sloppy way to fix mirror marios
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if ((struct GraphNodeObject*)gCurGraphNodeObject == &gMirrorMario[i]) {
-            return i;
-        }
+    s8 index = geo_get_processing_mirror_mario_index();
+    if (index != -1) {
+        return index;
     }
     if (gCurGraphNodeProcessingObject == NULL) { return 0; }
 
     struct NetworkPlayer* np = network_player_from_global_index(gCurGraphNodeProcessingObject->globalPlayerIndex);
-    u8 index = (np == NULL) ? 0 : np->localIndex;
+    index = (np == NULL) ? 0 : np->localIndex;
     return (index >= MAX_PLAYERS) ? 0 : index;
+}
+
+s8 geo_get_processing_mario_index(void) {
+    if (gCurGraphNodeProcessingObject == NULL) { return -1; }
+
+    s8 index = geo_get_processing_mirror_mario_index();
+    if (index != -1) {
+        return index;
+    }
+
+    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
+        return -1;
+    }
+
+    index = gCurGraphNodeProcessingObject->oBehParams - 1;
+    return (index >= MAX_PLAYERS) ? -1 : index;
 }
 
 struct MarioState *geo_get_mario_state(void) {
@@ -532,8 +552,7 @@ Gfx* geo_switch_mario_hand(s32 callContext, struct GraphNode* node, UNUSED Mat4*
  * ! Since the animation gets updated in GEO_CONTEXT_RENDER, drawing Mario multiple times
  * (such as in the mirror room) results in a faster and desynced punch / kick animation.
  */
-Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* mtx) {
-    Mat4 * curTransform = mtx;
+Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, UNUSED Mat4* mtx) {
     static s16 sMarioAttackAnimCounter[MAX_PLAYERS] = { 0 };
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*) node;
     struct GraphNodeScale* scaleNode = (struct GraphNodeScale*) node->next;
@@ -551,11 +570,6 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, Mat4* m
                 gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
                 / 10.0f;
         }
-        // update hand/foot position in bodyState
-        get_pos_from_transform_mtx(bodyState->handFootPos[(asGenerated->parameter & 0x03)],
-                                   *curTransform,
-                                   *gCurGraphNodeCamera->matrixPtr);
-
     }
     return NULL;
 }
@@ -711,7 +725,7 @@ Gfx* geo_render_mirror_mario(s32 callContext, struct GraphNode* node, UNUSED Mat
                     gMirrorMario[i].scale[0] *= -1.0f;
                     gMirrorMario[i].node.flags |= GRAPH_RENDER_ACTIVE;
 
-                    smlua_call_event_hooks_graph_node_object_and_int_param(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
+                    smlua_call_event_hooks(HOOK_MIRROR_MARIO_RENDER, &gMirrorMario[i], i);
                 } else {
                     gMirrorMario[i].node.flags &= ~GRAPH_RENDER_ACTIVE;
                 }
@@ -863,8 +877,9 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
 
     // Retrieve mod index and function name
     s32 modIndex = -1;
+    s32 modFileIndex = -1;
     const char *funcStr = NULL;
-    if (!dynos_actor_get_mod_index_and_token(sharedChild, fnNode->luaTokenIndex, &modIndex, &funcStr)) {
+    if (!dynos_actor_get_mod_index_and_token(sharedChild, fnNode->luaTokenIndex, &modIndex, &modFileIndex, &funcStr)) {
         if (modIndex == -1) {
             LOG_ERROR("Could not find graph node mod index");
         } else if (funcStr == NULL) {
@@ -881,16 +896,24 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
         funcRef = smlua_get_any_function_mod_variable(funcStr);
     }
     if (!gSmLuaConvertSuccess || funcRef == 0) {
-        LOG_LUA("Failed to call lua function, could not find lua function '%s'", funcStr);
+        LOG_LUA("Failed to call lua geo function, could not find lua function '%s'", funcStr);
         return NULL;
     }
 
     // Get the mod
-    if (modIndex >= gActiveMods.entryCount) {
-        LOG_LUA("Failed to call lua function, could not find mod");
+    if (modIndex < 0 || modIndex >= gActiveMods.entryCount) {
+        LOG_LUA("Failed to call lua geo function, could not find mod");
         return NULL;
     }
     struct Mod *mod = gActiveMods.entries[modIndex];
+
+    // Get our mod file
+    if (modFileIndex < 0 || modFileIndex >= mod->fileCount) {
+        LOG_LUA("Failed to call lua geo function, could not find mod file %d", modFileIndex);
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+    struct ModFile *modFile = &mod->files[modFileIndex];
 
     // Push the callback, the graph node and the current matrix stack index
     lua_rawgeti(L, LUA_REGISTRYINDEX, funcRef);
@@ -898,7 +921,7 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     lua_pushinteger(L, gMatStackIndex);
 
     // Call the callback
-    if (0 != smlua_call_hook(L, 2, 0, 0, mod)) {
+    if (0 != smlua_call_hook(L, 2, 0, 0, mod, modFile)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 

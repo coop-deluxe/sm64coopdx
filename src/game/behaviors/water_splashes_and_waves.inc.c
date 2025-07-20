@@ -93,7 +93,7 @@ void bhv_water_droplet_loop(void) {
 }
 
 void bhv_idle_water_wave_loop(void) {
-    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvMario)) {
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvMario) {
         obj_mark_for_deletion(o);
         return;
     }

@@ -415,6 +415,7 @@ void* main_game_init(UNUSED void* dummy) {
     mumble_init();
 
     gGameInited = true;
+    return NULL;
 }
 
 int main(int argc, char *argv[]) {

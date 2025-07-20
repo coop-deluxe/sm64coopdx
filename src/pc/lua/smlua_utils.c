@@ -128,6 +128,18 @@ const char* smlua_to_string(lua_State* L, int index) {
     return lua_tostring(L, index);
 }
 
+ByteString smlua_to_bytestring(lua_State* L, int index) {
+    ByteString bytestring = { NULL, 0 };
+    if (lua_type(L, index) != LUA_TSTRING) {
+        LOG_LUA_LINE("smlua_to_string received improper type '%s'", luaL_typename(L, index));
+        gSmLuaConvertSuccess = false;
+        return bytestring;
+    }
+    gSmLuaConvertSuccess = true;
+    bytestring.bytes = lua_tolstring(L, index, &bytestring.length);
+    return bytestring;
+}
+
 LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     if (lua_type(L, index) == LUA_TNIL) {
         return 0;
@@ -150,12 +162,10 @@ bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
     s32 indexType = lua_type(L, index);
+    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
-        // suppress script errors
-        if (indexType != LUA_TNIL) {
-            LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
-            gSmLuaConvertSuccess = false;
-        }
+        LOG_LUA_LINE("smlua_to_cobject received improper type '%s'", lua_typename(L, indexType));
+        gSmLuaConvertSuccess = false;
         return NULL;
     }
 
@@ -179,6 +189,7 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     s32 indexType = lua_type(L, index);
+    if (indexType == LUA_TNIL) { return NULL; }
     if (indexType != LUA_TUSERDATA) {
         LOG_LUA_LINE("smlua_to_cpointer received improper type '%s'", lua_typename(L, indexType));
         gSmLuaConvertSuccess = false;
@@ -257,6 +268,33 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     LOG_LUA_LINE("smlua_to_lnt on invalid type: '%d'", valueType);
     gSmLuaConvertSuccess = false;
     return lnt;
+}
+
+struct TextureInfo *smlua_to_texture_info(lua_State *L, int index) {
+    static struct TextureInfo tmpTexInfo = { 0 }; // Static should be okay
+    struct TextureInfo *texInfo = &tmpTexInfo;
+
+    if (smlua_is_cobject(L, index, LOT_TEXTUREINFO)) {
+        return smlua_to_cobject(L, index, LOT_TEXTUREINFO);
+    } else {
+        int top = lua_gettop(L);
+        lua_pushvalue(L, index);
+
+        lua_pushstring(L, "texture");
+        lua_gettable(L, top + 1);
+        const u8 *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        lua_pop(L, 1);
+        if (!gSmLuaConvertSuccess) { return NULL; }
+
+        // Get the texInfo from DynOS so mods can't spoof it
+        if (!texPtr || !dynos_texture_get_from_data(texPtr, texInfo)) {
+            gSmLuaConvertSuccess = false;
+            return NULL;
+        }
+
+        lua_settop(L, top);
+    }
+    return texInfo;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +392,7 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
         lua_pushnil(L);
         return NULL;
     }
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     uintptr_t key = (lot * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
@@ -381,7 +419,7 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 
     return cobject;
 }
@@ -391,7 +429,7 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
         lua_pushnil(L);
         return NULL;
     }
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     uintptr_t key = (lvt * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
@@ -417,7 +455,7 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     lua_pushvalue(L, -2); // Duplicate userdata
     lua_settable(L, -4);
     lua_remove(L, -2); // Remove gSmLuaCPointers table
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 
     return cpointer;
 }
@@ -448,6 +486,14 @@ void smlua_push_table_field(int index, const char* name) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+void smlua_push_bytestring(lua_State* L, ByteString bytestring) {
+    if (bytestring.bytes) {
+        lua_pushlstring(L, bytestring.bytes, bytestring.length);
+    } else {
+        lua_pushnil(L);
+    }
+}
 
 void smlua_push_lnt(struct LSTNetworkType* lnt) {
     lua_State* L = gLuaState;
@@ -722,6 +768,24 @@ void smlua_dump_table(int index) {
     lua_State* L = gLuaState;
     printf("--------------\n");
 
+    if (lua_getmetatable(L, index)) {
+        lua_pushnil(L);  // first key
+        while (lua_next(L, -2) != 0) {
+            if (lua_type(L, -2) == LUA_TSTRING) {
+                printf("[meta] %s - %s\n",
+                    lua_tostring(L, -2),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            else {
+                printf("[meta] %s - %s\n",
+                    lua_typename(L, lua_type(L, -2)),
+                    lua_typename(L, lua_type(L, -1)));
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);
+    }
+
     // table is in the stack at index 't'
     lua_pushnil(L);  // first key
     while (lua_next(L, index) != 0) {
@@ -752,15 +816,21 @@ void smlua_logline(void) {
         // Get the folder and file
         // in the format: "folder/file.lua"
         const char* src = info.source;
-        int slashCount = 0;
         const char* folderStart = NULL;
-        for (const char* p = src + strlen(src); p > src; --p) {
-            if (*p == '/' || *p == '\\') {
-                if (++slashCount == 2) {
-                    folderStart = p + 1;
-                    break;
+        if (strlen(src) < SYS_MAX_PATH) {
+            int slashCount = 0;
+            for (const char* p = src + strlen(src); p > src; --p) {
+                if (*p == '/' || *p == '\\') {
+                    if (++slashCount == 2) {
+                        folderStart = p + 1;
+                        break;
+                    }
                 }
             }
+        } else {
+            // That's not a filepath
+            // It also explains why sometimes the whole gSmluaConstants string was printed to the console
+            snprintf(info.short_src, sizeof(info.short_src), "gSmluaConstants");
         }
 
         LOG_LUA("    [%d] '%s':%d -- %s [%s]",
@@ -776,7 +846,7 @@ void smlua_logline(void) {
 void smlua_free(void *ptr) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;
-        LUA_STACK_CHECK_BEGIN();
+        LUA_STACK_CHECK_BEGIN(L);
         u16 lot = LOT_SURFACE; // Assuming this is a surface
         uintptr_t key = lot ^ (uintptr_t) ptr;
         lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
@@ -793,7 +863,7 @@ void smlua_free(void *ptr) {
             lua_pop(L, 1);
         }
         lua_pop(L, 1);
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
     }
     free(ptr);
 }

@@ -1,15 +1,15 @@
 // switch_hidden_objects.c.inc
 
 struct ObjectHitbox sBreakableBoxHitbox = {
-    /* interactType: */ INTERACT_BREAKABLE,
-    /* downOffset: */ 20,
-    /* damageOrCoinValue: */ 0,
-    /* health: */ 1,
-    /* numLootCoins: */ 0,
-    /* radius: */ 150,
-    /* height: */ 200,
-    /* hurtboxRadius: */ 150,
-    /* hurtboxHeight: */ 200,
+    .interactType = INTERACT_BREAKABLE,
+    .downOffset = 20,
+    .damageOrCoinValue = 0,
+    .health = 1,
+    .numLootCoins = 0,
+    .radius = 150,
+    .height = 200,
+    .hurtboxRadius = 150,
+    .hurtboxHeight = 200,
 };
 
 void breakable_box_init(void) {

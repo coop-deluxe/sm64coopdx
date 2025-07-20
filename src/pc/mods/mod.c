@@ -1,3 +1,4 @@
+#include <sys/stat.h>
 #include "mod.h"
 #include "mods.h"
 #include "mods_utils.h"
@@ -7,6 +8,14 @@
 #include "pc/utils/md5.h"
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
+#include <stdint.h>
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include <sys/stat.h>
+#endif
 
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
@@ -39,9 +48,13 @@ static void mod_activate_bin(struct Mod* mod, struct ModFile* file) {
         g++;
     }
 
+    // get mod file index
+    s32 fileIndex = (file - &mod->files[0]);
+    if (fileIndex < 0 || fileIndex >= mod->fileCount) { fileIndex = 0; }
+
     // Add to custom actors
     LOG_INFO("Activating DynOS bin: '%s', '%s'", file->cachedPath, geoName);
-    dynos_add_actor_custom(mod->index, file->cachedPath, geoName);
+    dynos_add_actor_custom(mod->index, fileIndex, file->cachedPath, geoName);
 }
 
 static void mod_activate_col(struct ModFile* file) {
@@ -140,6 +153,7 @@ void mod_activate(struct Mod* mod) {
     // activate dynos models
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
+        file->modifiedTimestamp = fs_sys_get_modified_time(file->cachedPath);
         mod_cache_add(mod, file, false);
 
         // forcefully update md5 hash
@@ -261,7 +275,7 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     return file;
 }
 
-static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, const char** fileTypes) {
+static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, const char** fileTypes, bool recursive) {
 
     // concat directory
     char dirPath[SYS_MAX_PATH] = { 0 };
@@ -285,13 +299,31 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         if (strlen(subDir) > 0) {
             if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s/%s", subDir, dir->d_name) < 0) {
                 LOG_ERROR("Could not concat %s path!", subDir);
+                closedir(d);
                 return false;
             }
         } else {
             if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s", dir->d_name) < 0) {
                 LOG_ERROR("Could not concat %s path!", subDir);
+                closedir(d);
                 return false;
             }
+        }
+
+        // Check if this is a directory
+        struct stat st = { 0 };
+        if (recursive && stat(path, &st) == 0 && S_ISDIR(st.st_mode)) {
+            // Skip . and .. directories
+            if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) {
+                continue;
+            }
+
+            // Recursively process subdirectory
+            if (!mod_load_files_dir(mod, fullPath, relativePath, fileTypes, recursive)) {
+                closedir(d);
+                return false;
+            }
+            continue;
         }
 
         // only consider certain file types
@@ -325,37 +357,37 @@ static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
     // deal with mod directory
     {
         const char* fileTypes[] = { ".lua", ".luac", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "", fileTypes, true)) { return false; }
     }
 
     // deal with actors directory
     {
         const char* fileTypes[] = { ".bin", ".col", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes, false)) { return false; }
     }
 
     // deal with behaviors directory
     {
         const char* fileTypes[] = { ".bhv", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "data", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "data", fileTypes, false)) { return false; }
     }
 
     // deal with textures directory
     {
         const char* fileTypes[] = { ".tex", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes, false)) { return false; }
     }
 
     // deal with levels directory
     {
         const char* fileTypes[] = { ".lvl", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes, false)) { return false; }
     }
 
     // deal with sound directory
     {
         const char* fileTypes[] = { ".m64", ".mp3", ".aiff", ".ogg", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes, false)) { return false; }
     }
 
     return true;
@@ -462,6 +494,55 @@ static void mod_extract_fields(struct Mod* mod) {
     fclose(f);
 }
 
+bool mod_refresh_files(struct Mod* mod) {
+    if (!mod) { return false; }
+
+    // clear files
+    if (mod->files) {
+        for (int j = 0; j < mod->fileCount; j++) {
+            struct ModFile* file = &mod->files[j];
+            if (file->fp != NULL) {
+                f_close(file->fp);
+                f_delete(file->fp);
+                file->fp = NULL;
+            }
+            if (file->cachedPath != NULL) {
+                free((char*)file->cachedPath);
+                file->cachedPath = NULL;
+            }
+        }
+    }
+
+    if (mod->files != NULL) {
+        free(mod->files);
+        mod->files = NULL;
+    }
+
+    mod->fileCount = 0;
+    mod->fileCapacity = 0;
+    mod->size = 0;
+
+    // generate packs
+    dynos_generate_mod_pack(mod->basePath);
+
+    // read files
+    if (!mod_load_files(mod, mod->name, mod->basePath)) {
+        LOG_ERROR("Failed to load mod files for '%s'", mod->name);
+        return false;
+    }
+
+    // set loading order
+    mod_set_loading_order(mod);
+
+    // update cache
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        mod_cache_add(mod, file, true);
+    }
+
+    return true;
+}
+
 bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     bool valid = false;
 
@@ -507,6 +588,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return false;
     }
     mods->entries[modIndex] = calloc(1, sizeof(struct Mod));
+
     struct Mod* mod = mods->entries[modIndex];
     if (mod == NULL) {
         LOG_ERROR("Failed to allocate mod!");

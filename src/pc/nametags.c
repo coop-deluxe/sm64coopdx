@@ -6,11 +6,8 @@
 #include "engine/math_util.h"
 #include "game/obj_behaviors.h"
 #include "game/camera.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
-
-#define CLAMP(_val, _min, _max) MAX(MIN((_val), _max), _min)
 
 #define FADE_SCALE 4.f
 
@@ -87,25 +84,28 @@ void nametags_render(void) {
         vec3f_copy(pos, m->marioBodyState->headPos);
         pos[1] += 100;
 
-        if (djui_hud_world_pos_to_screen_pos(pos, out) &&
-            (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
-            f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
+        if ((i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON)) &&
+            djui_hud_world_pos_to_screen_pos(pos, out)) {
 
             char name[MAX_CONFIG_STRING];
-            char* hookedString = NULL;
-            smlua_call_event_hooks_int_params_ret_string(HOOK_ON_NAMETAGS_RENDER, i, &hookedString);
+            const char* hookedString = NULL;
+            smlua_call_event_hooks(HOOK_ON_NAMETAGS_RENDER, i, pos, &hookedString);
             if (hookedString) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {
                 snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
                 name_without_hex(name);
             }
+            if (!djui_hud_world_pos_to_screen_pos(pos, out)) {
+                continue;
+            }
             u8* color = network_get_player_text_color(m->playerIndex);
 
+            f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
             out[1] -= 16 * scale;
 
-            u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * CLAMP(FADE_SCALE - scale, 0.f, 1.f);
+            u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - scale, 0.f, 1.f);
 
             struct StateExtras* e = &sStateExtras[i];
             if (!e->inited) {

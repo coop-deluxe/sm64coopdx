@@ -17,6 +17,7 @@ in_files = [
     "src/pc/djui/djui_theme.h",
     "src/game/object_helpers.h",
     "src/game/mario_step.h",
+    "src/game/ingame_menu.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
     "src/pc/lua/utils/smlua_camera_utils.h",
@@ -26,13 +27,14 @@ in_files = [
     "src/pc/network/network.h",
     "src/game/hardcoded.h",
     "src/pc/mods/mod.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
-    "include/PR/gbi.h"
+    "include/PR/gbi.h",
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -70,9 +72,6 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 #endif
 """
 
-override_field_names = {
-}
-
 override_field_types = {
     "Surface": { "normal": "Vec3f" },
     "Object": { "oAnimations": "ObjectAnimPointer*" },
@@ -82,7 +81,7 @@ override_field_mutable = {
     "NetworkPlayer": [
         "overrideModelIndex",
         "overridePalette",
-        "overridePaletteIndex"
+        "overridePaletteIndex",
     ],
     "Animation": [
         "values",
@@ -94,15 +93,18 @@ override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId" ],
-    "GraphNode": [ "_guard1", "_guard2" ],
+    "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "DialogEntry": [ "str" ],
+    "ModFsFile": [ "data", "capacity" ],
+    "ModFs": [ "files" ],
 }
 
 override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ]
+    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
 }
 
 override_field_immutable = {
@@ -115,7 +117,7 @@ override_field_immutable = {
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
-    "MarioBodyState": [ "updateTorsoTime" ],
+    "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "currAnimPart" ],
     "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
     "Mod": [ "*" ],
     "ModFile": [ "*" ],
@@ -138,18 +140,22 @@ override_field_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
+    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text"],
+    "ModFsFile": [ "*" ],
+    "ModFs": [ "*" ],
 }
 
 override_field_version_excludes = {
     "oCameraLakituUnk104": "VERSION_JP",
-    "oCoinUnk1B0": "VERSION_JP"
+    "oCoinUnk1B0": "VERSION_JP",
 }
 
 override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
-    "include/PR/gbi.h": [ "Gfx", "Vtx" ]
+    "src/game/ingame_menu.h" : [ "DialogEntry" ],
+    "include/PR/gbi.h": [ "Gfx", "Vtx" ],
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -167,7 +173,7 @@ sLuaManuallyDefinedStructs = [{
 
 override_types = {
     "Gwords": "Gfx",
-    "Vtx_L": "Vtx"
+    "Vtx_L": "Vtx",
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 
@@ -415,7 +421,7 @@ def output_fuzz_file():
     global fuzz_structs_calls
     with open(fuzz_from) as f:
         file_str = f.read()
-    with open(fuzz_to, 'w') as f:
+    with open(fuzz_to, 'w', encoding='utf-8', newline='\n') as f:
         f.write(file_str.replace('-- $[STRUCTS]', fuzz_structs).replace('-- $[FUZZ-STRUCTS]', fuzz_structs_calls))
 
 ############################################################################
@@ -462,9 +468,6 @@ def get_struct_field_info(struct, field):
     fid = field['identifier']
     ftype = field['type']
     size = 1
-
-    if sid in override_field_names and fid in override_field_names[sid]:
-        fid = override_field_names[sid][fid]
 
     if sid in override_field_types and fid in override_field_types[sid]:
         ftype = override_field_types[sid][fid]
@@ -729,7 +732,7 @@ def doc_structs(structs):
             continue
         s += doc_struct(struct) + '\n'
 
-    with open(get_path(out_filename_docs), 'w', newline='\n') as out:
+    with open(get_path(out_filename_docs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -777,7 +780,7 @@ def def_structs(structs):
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
-    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
+    with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -799,11 +802,11 @@ def build_files():
     built_include = build_includes()
 
     out_c_filename = get_path(out_filename_c)
-    with open(out_c_filename, 'w', newline='\n') as out:
+    with open(out_c_filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(c_template.replace("$[BODY]", built_body).replace('$[INCLUDES]', built_include))
 
     out_h_filename = get_path(out_filename_h)
-    with open(out_h_filename, 'w', newline='\n') as out:
+    with open(out_h_filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(h_template.replace("$[BODY]", built_enum))
 
     doc_structs(parsed)

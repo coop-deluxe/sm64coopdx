@@ -7,8 +7,8 @@ from vec_types import *
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
-integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int"]
-number_types = ["f32", "float", "f64", "double"]
+integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int", "lua_Integer"]
+number_types = ["f32", "float", "f64", "double", "lua_Number"]
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
@@ -16,6 +16,11 @@ out_filename_defs = 'autogen/lua_definitions/functions.lua'
 in_files = [
     "src/audio/external.h",
     "src/engine/math_util.h",
+    "src/engine/math_util.inl",
+    "src/engine/math_util_vec3f.inl",
+    "src/engine/math_util_vec3i.inl",
+    "src/engine/math_util_vec3s.inl",
+    "src/engine/math_util_mat4.inl",
     "src/engine/surface_collision.h",
     "src/engine/surface_load.h",
     "src/game/camera.h",
@@ -49,7 +54,6 @@ in_files = [
     "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_gfx_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
-    "src/pc/lua/utils/smlua_math_utils.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
@@ -65,6 +69,7 @@ in_files = [
     "src/game/behavior_actions.h",
     "src/game/mario_misc.h",
     "src/pc/mods/mod_storage.h",
+    "src/pc/mods/mod_fs.h",
     "src/pc/utils/misc.h",
     "src/game/level_update.h",
     "src/game/area.h",
@@ -73,7 +78,8 @@ in_files = [
     "src/game/first_person_cam.h",
     "src/engine/behavior_script.h",
     "src/audio/seqplayer.h",
-    "src/engine/lighting_engine.h"
+    "src/engine/lighting_engine.h",
+    "src/pc/network/sync_object.h",
 ]
 
 override_allowed_functions = {
@@ -91,12 +97,12 @@ override_allowed_functions = {
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ]
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
+    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
 }
 
 override_disallowed_functions = {
     "src/audio/external.h":                     [ " func_" ],
-    "src/engine/math_util.h":                   [ "atan2f", "vec3s_sub" ],
     "src/engine/surface_load.h":                [ "load_area_terrain", "alloc_surface_pools", "clear_dynamic_surfaces", "get_area_terrain_size" ],
     "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
     "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
@@ -123,7 +129,7 @@ override_disallowed_functions = {
     "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture", "djui_hud_render_texture_raw", "djui_hud_render_texture_tile", "djui_hud_render_texture_tile_raw" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture_raw", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
@@ -133,23 +139,28 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation" ],
-    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ]
+    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
 
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
-    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ]
+    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ],
 }
 
 override_function_version_excludes = {
     "bhv_play_music_track_when_touched_loop": "VERSION_JP",
     "play_knockback_sound": "VERSION_JP",
-    "cur_obj_spawn_star_at_y_offset": "VERSION_JP"
+    "cur_obj_spawn_star_at_y_offset": "VERSION_JP",
 }
 
 lua_function_params = {
-    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ]
+    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ],
 }
+
+parameter_keywords = [
+    "OUT",
+    "OPTIONAL"
+]
 
 ###########################################################
 
@@ -207,10 +218,6 @@ manual_index_documentation = """
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
    - [get_texture_info](#get_texture_info)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
-   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-   - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
-   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
@@ -362,96 +369,6 @@ Retrieves a texture by name.
 
 ### C Prototype
 `N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-
-Renders a tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
-
-Renders an interpolated tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleW | `number` |
-| prevScaleH | `number` |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 
@@ -843,14 +760,25 @@ def build_vec_types():
     s = gen_comment_header("vec types")
     for type_name, vec_type in VEC_TYPES.items():
 
+        # New
+        s += "void smlua_new_%s(%s src) {\n" % (type_name.lower(), type_name)
+        s += "    struct lua_State *L = gLuaState;\n"
+        s += "    lua_newtable(L);\n"
+        s += "    int tableIndex = lua_gettop(L);\n"
+        for lua_field, c_field in vec_type["fields_mapping"].items():
+            s += "    lua_pushstring(L, \"%s\");\n" % (lua_field)
+            s += "    lua_push%s(L, src%s);\n" % (vec_type["field_lua_type"], c_field)
+            s += "    lua_settable(L, tableIndex);\n"
+        s += "}\n\n"
+
         # Get
-        s += "static void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_get_%s(%s dest, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    dest%s = smlua_get_%s_field(index, \"%s\");\n" % (c_field, vec_type["field_lua_type"], lua_field)
         s += "}\n\n"
 
         # Push
-        s += "static void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
+        s += "void smlua_push_%s(%s src, int index) {\n" % (type_name.lower(), type_name)
         for lua_field, c_field in vec_type["fields_mapping"].items():
             s += "    smlua_push_%s_field(index, \"%s\", src%s);\n" % (vec_type["field_lua_type"], lua_field, c_field)
         for lua_field, c_field in vec_type.get('optional_fields_mapping', {}).items():
@@ -865,6 +793,9 @@ def build_param(fid, param, i):
     ptype = alter_type(param['type'])
     pid = param['identifier']
 
+    if "struct TextureInfo" in ptype and "*" in ptype:
+        return '    struct TextureInfo *texInfo = smlua_to_texture_info(L, %d);\n' % (i)
+
     if ptype in VEC_TYPES:
         if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
             return vec3f_sound_before.replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
@@ -878,6 +809,8 @@ def build_param(fid, param, i):
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'const char*':
         return '    %s %s = smlua_to_string(L, %d);\n' % (ptype, pid, i)
+    elif ptype == 'ByteString':
+        return '    %s %s = smlua_to_bytestring(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'LuaFunction':
         return '    %s %s = smlua_to_lua_function(L, %d);\n' % (ptype, pid, i)
     elif translate_type_to_lot(ptype) == 'LOT_POINTER':
@@ -897,8 +830,9 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
+    is_output = 'OUT' in param
 
-    if ptype in VEC_TYPES:
+    if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     else:
         return ''
@@ -916,6 +850,9 @@ def build_call(function):
     elif ftype == 'void *':
         return '    %s;\n' % ccall
 
+    if ftype in VECP_TYPES:
+        return '    %s;\n' % ccall
+
     flot = translate_type_to_lot(ftype)
 
     lfunc = 'UNIMPLEMENTED -->'
@@ -929,6 +866,8 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif ftype == 'const char*':
         lfunc = 'lua_pushstring'
+    elif ftype == 'ByteString':
+        lfunc = 'smlua_push_bytestring'
     elif translate_type_to_lot(ftype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ftype)
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)
@@ -955,19 +894,39 @@ def build_function(function, do_extern):
         if 'bhv_' in fid:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    s += """    if (L == NULL) { return 0; }\n
+    params_max = len(function['params'])
+    params_min = len([param for param in function['params'] if 'OPTIONAL' not in param])
+    if params_min == params_max:
+        s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
-    }\n\n""" % (len(function['params']), function['identifier'], len(function['params']))
+    }\n\n""" % (params_max, function['identifier'], params_max)
+    else:
+        s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (top < %d || top > %d) {
+        LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
+        return 0;
+    }\n\n""" % (params_min, params_max, function['identifier'], params_min, params_max)
 
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
     i = 1
     for param in function['params']:
-        if is_interact_func and param['identifier'] == 'interactType':
+        pid = param['identifier']
+        if is_interact_func and pid == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
+        elif 'OPTIONAL' in param:
+            sparam = build_param(fid, param, i)
+            param_var, param_value = sparam.split('=')
+            param_type = param_var.replace(pid, '').strip()
+            s += '    %s = (%s) NULL;\n' % (param_var.strip(), param_type)
+            s += '    if (top >= %d) {\n' % (i)
+            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
+            s += '    }\n'
         else:
             s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
@@ -988,6 +947,13 @@ def build_function(function, do_extern):
         s += build_param_after(param, i)
         i += 1
     s += '\n'
+
+    # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
+    if function['type'] in VECP_TYPES:
+        for i, param in enumerate(function['params']):
+            if 'OUT' in param:
+                s += '    lua_settop(L, %d);\n' % (i + 1)
+                break
 
     s += '    return 1;\n}\n'
 
@@ -1084,9 +1050,17 @@ def process_function(fname, line, description):
         pass
     else:
         param_index = 0
+        last_param_optional = None
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
+
+            for param_keyword in parameter_keywords:
+                keyword_index = param_str.find(param_keyword + ' ')
+                if keyword_index != -1:
+                    param[param_keyword] = True
+                    param_str = (param_str[:keyword_index] + param_str[keyword_index+len(param_keyword)+1:]).strip()
+
             if param_str.endswith('*') or ' ' not in param_str:
                 param['type'] = normalize_type(param_str)
                 param['identifier'] = 'arg%d' % param_index
@@ -1096,6 +1070,12 @@ def process_function(fname, line, description):
                     return None
                 param['type'] = normalize_type(param_str[0:match.span()[0]])
                 param['identifier'] = match.group()
+
+            if 'OPTIONAL' in param:
+                last_param_optional = param['identifier']
+            elif last_param_optional is not None:
+                print(f"REJECTED: {function['identifier']} -> mandatory parameter `{param['identifier']}` is following optional parameter `{last_param_optional}`")
+                return None
 
             # override Vec3s/f
             if param['identifier'] == 'pos':
@@ -1190,7 +1170,7 @@ def output_fuzz_file():
     global fuzz_functions
     with open(fuzz_from) as f:
         file_str = f.read()
-    with open(fuzz_to, 'w') as f:
+    with open(fuzz_to, 'w', encoding='utf-8', newline='\n') as f:
         f.write(file_str.replace('-- $[FUNCS]', fuzz_functions))
 
 ############################################################################
@@ -1379,7 +1359,7 @@ def doc_files(processed_files):
 
         buffer = buffer.replace('$[FUNCTION_NAV_HERE', function_nav)
 
-        with open(get_path(out_filename_docs % page_name), 'w', newline='\n') as out:
+        with open(get_path(out_filename_docs % page_name), 'w', encoding='utf-8', newline='\n') as out:
             out.write(buffer)
 
 ############################################################################
@@ -1413,7 +1393,7 @@ def def_function(fname, function):
         if ptype.startswith('Pointer_') and ptype not in def_pointers:
             def_pointers.append(ptype)
 
-        s += '--- @param %s %s\n' % (pid, ptype)
+        s += '--- @param %s%s %s\n' % (pid, ('?' if 'OPTIONAL' in param else ''), ptype)
 
     rtype = translate_to_def(rtype)
     if rtype.startswith('Pointer_') and rtype not in def_pointers:
@@ -1437,7 +1417,10 @@ def def_files(processed_files):
     for def_pointer in def_pointers:
         s += '--- @alias %s %s\n' % (def_pointer, def_pointer[8:])
 
-    with open(get_path(out_filename_defs), 'w', newline='\n') as out:
+    for vecp_type, vec_type in VECP_TYPES.items():
+        s += '--- @alias %s %s\n' % (vecp_type, vec_type)
+
+    with open(get_path(out_filename_defs), 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
 
 ############################################################################
@@ -1458,7 +1441,7 @@ def main():
         .replace("$[BINDS]", built_binds)         \
         .replace("$[INCLUDES]", built_includes)
 
-    with open(filename, 'w', newline='\n') as out:
+    with open(filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(gen)
 
     if rejects != "":

@@ -29,7 +29,7 @@
 #include "rumble_init.h"
 #include "obj_behaviors.h"
 #include "hardcoded.h"
-#include "../../include/libc/stdlib.h"
+#include "libc/stdlib.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/configfile.h"
@@ -257,7 +257,7 @@ s32 get_star_collection_dialog(struct MarioState *m) {
     if (!m) { return 0; }
     s32 dialogID = 0;
 
-    if (smlua_call_event_hooks_ret_int(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
+    if (smlua_call_event_hooks(HOOK_GET_STAR_COLLECTION_DIALOG, &dialogID)) {
         m->prevNumStarsForDialog = m->numStars;
         return dialogID;
     }
@@ -849,7 +849,7 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
             // do nothing
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return animFrame; }
 
             if (mario_can_bubble(m)) {
@@ -923,7 +923,7 @@ s32 act_quicksand_death(struct MarioState *m) {
             } else {
                 m->actionState = 2;
                 bool allowDeath = true;
-                smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { return FALSE; }
 
                 if (mario_can_bubble(m)) {
@@ -943,13 +943,11 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
     if (!m) { return 0; }
     play_character_sound_if_no_flag(m, CHAR_SOUND_DYING, MARIO_ACTION_SOUND_PLAYED);
     set_character_animation(m, CHAR_ANIM_A_POSE);
-
+    m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     if (m->actionTimer++ == 60) {
-        if (m->playerIndex != 0) {
-            // do nothing
-        } else {
+        if (m->playerIndex == 0) {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {
@@ -1876,7 +1874,7 @@ s32 act_squished(struct MarioState *m) {
             m->health = 0x100;
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {
@@ -2247,7 +2245,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
 
     if (m->actionState == 0) {
         set_character_animation(m, CHAR_ANIM_FINAL_BOWSER_RAISE_HAND_SPIN);
-        marioObj->rawData.asF32[0x22] = 0.0f;
+        marioObj->oMarioJumboStarCutscenePosZ = 0.0f;
 
         if (is_anim_past_end(m)) {
             play_mario_landing_sound(m, SOUND_ACTION_TERRAIN_LANDING);
@@ -2259,7 +2257,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
             play_sound_and_spawn_particles(m, SOUND_ACTION_TERRAIN_JUMP, 1);
         }
         if (animFrame >= 3) {
-            marioObj->rawData.asF32[0x22] -= 32.0f;
+            marioObj->oMarioJumboStarCutscenePosZ -= 32.0f;
         }
 
         switch (animFrame) {
@@ -2282,7 +2280,7 @@ static s32 jumbo_star_cutscene_taking_off(struct MarioState *m) {
         }
     }
 
-    vec3f_set(m->pos, 0.0f, 307.0, marioObj->rawData.asF32[0x22]);
+    vec3f_set(m->pos, 0.0f, 307.0, marioObj->oMarioJumboStarCutscenePosZ);
     m->pos[0] += 100.0f * m->playerIndex;
 
     update_mario_pos_for_anim(m);
@@ -3006,7 +3004,7 @@ static s32 act_end_peach_cutscene(struct MarioState *m) {
         if (m->controller->buttonPressed & START_BUTTON) {
             lvl_skip_credits();
         }
-        
+
         sEndCutsceneVp.vp.vscale[0] = 640;
         sEndCutsceneVp.vp.vscale[1] = 360;
         sEndCutsceneVp.vp.vtrans[0] = 640;
@@ -3053,7 +3051,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
             stop_and_set_height_to_floor(m);
         }
     }
-    
+
     if (m->playerIndex == 0 && m->controller->buttonPressed & START_BUTTON) {
         lvl_skip_credits();
     }

@@ -11,15 +11,15 @@
  * Hitbox for a single pokey body part.
  */
 static struct ObjectHitbox sPokeyBodyPartHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 10,
-    /* damageOrCoinValue: */ 2,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
-    /* radius:            */ 40,
-    /* height:            */ 20,
-    /* hurtboxRadius:     */ 20,
-    /* hurtboxHeight:     */ 20,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 10,
+    .damageOrCoinValue = 2,
+    .health = 0,
+    .numLootCoins = 0,
+    .radius = 40,
+    .height = 20,
+    .hurtboxRadius = 20,
+    .hurtboxHeight = 20,
 };
 
 /**

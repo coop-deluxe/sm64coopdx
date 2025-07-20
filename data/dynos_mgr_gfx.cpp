@@ -69,7 +69,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
         }
 
         // Duplicate referenced vertices
-        if (op == G_VTX) {
+        if (op == G_VTX || op == G_VTX_EXT) {
             cmd->words.w1 = (uintptr_t) DynOS_Vtx_Duplicate((Vtx *) cmd->words.w1, C0(cmd, 12, 8), shouldDuplicate);
         }
     }

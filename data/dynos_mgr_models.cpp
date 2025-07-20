@@ -91,7 +91,7 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
 
     // check maps, permanent pool is always checked
     struct GraphNode *node = NULL;
-    #define CHECK_POOL(pool) if (node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) { return node; }
+    #define CHECK_POOL(pool) if ((node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) != NULL) { return node; }
     CHECK_POOL(MODEL_POOL_PERMANENT);
     if (aModelPool == MODEL_POOL_SESSION) {
         CHECK_POOL(MODEL_POOL_SESSION);
@@ -235,6 +235,17 @@ u32 DynOS_Model_GetIdFromAsset(void* asset) {
     }
     if (lowest < 9999) { return lowest; }
     return MODEL_ERROR_MODEL;
+}
+
+enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode) {
+    for (auto& it : sIdMap) {
+        if (!it.second.size() || it.second.empty()) { continue; }
+        auto& node = it.second.back();
+        if (aNode == node.graphNode) {
+            return node.modelPool;
+        }
+    }
+    return MODEL_POOL_MAX;
 }
 
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {

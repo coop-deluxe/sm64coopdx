@@ -3,6 +3,7 @@
 #include "types.h"
 
 #include "data/dynos.c.h"
+#include "engine/math_util.h"
 #include "game/bettercamera.h"
 #include "game/camera.h"
 #include "game/hardcoded.h"
@@ -26,7 +27,6 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
-#include "pc/lua/utils/smlua_math_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORD_SDK
@@ -47,6 +47,22 @@ u32 get_network_area_timer(void) {
 
 u16 get_area_update_counter(void) {
     return gAreaUpdateCounter;
+}
+
+///
+
+s32* get_temp_s32_pointer(s32 initialValue) {
+    static s32 value = 0;
+    value = initialValue;
+    return &value;
+}
+
+s32 deref_s32_pointer(s32* pointer) {
+    if (pointer == NULL) {
+        LOG_LUA_LINE("Tried to dereference null pointer!");
+        return 0;
+    }
+    return *pointer;
 }
 
 ///
@@ -207,19 +223,20 @@ extern const u8 texture_power_meter_three_segments[];
 extern const u8 texture_power_meter_two_segments[];
 extern const u8 texture_power_meter_one_segments[];
 
+static struct TextureInfo sPowerMeterTexturesInfo[] = {
+    { (u8*)texture_power_meter_left_side,      "texture_power_meter_left_side",      32, 64, 8 },
+    { (u8*)texture_power_meter_right_side,     "texture_power_meter_right_side",     32, 64, 8 },
+    { (u8*)texture_power_meter_one_segments,   "texture_power_meter_one_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_two_segments,   "texture_power_meter_two_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_three_segments, "texture_power_meter_three_segments", 32, 32, 8 },
+    { (u8*)texture_power_meter_four_segments,  "texture_power_meter_four_segments",  32, 32, 8 },
+    { (u8*)texture_power_meter_five_segments,  "texture_power_meter_five_segments",  32, 32, 8 },
+    { (u8*)texture_power_meter_six_segments,   "texture_power_meter_six_segments",   32, 32, 8 },
+    { (u8*)texture_power_meter_seven_segments, "texture_power_meter_seven_segments", 32, 32, 8 },
+    { (u8*)texture_power_meter_full,           "texture_power_meter_full",           32, 32, 8 },
+};
+
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
-    static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
-        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
-    };
     djui_hud_render_texture(&sPowerMeterTexturesInfo[0], x, y, width / 64, height / 64);
     djui_hud_render_texture(&sPowerMeterTexturesInfo[1], x + (width - 2) / 2, y, width / 64, height / 64);
     s32 numWedges = MIN(MAX(health >> 8, 0), 8);
@@ -229,19 +246,6 @@ void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
 }
 
 void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
-    static struct TextureInfo sPowerMeterTexturesInfo[] = {
-        { (u8*)texture_power_meter_left_side,      8, 32, 64, "texture_power_meter_left_side"      },
-        { (u8*)texture_power_meter_right_side,     8, 32, 64, "texture_power_meter_right_side"     },
-        { (u8*)texture_power_meter_one_segments,   8, 32, 32, "texture_power_meter_one_segments"   },
-        { (u8*)texture_power_meter_two_segments,   8, 32, 32, "texture_power_meter_two_segments"   },
-        { (u8*)texture_power_meter_three_segments, 8, 32, 32, "texture_power_meter_three_segments" },
-        { (u8*)texture_power_meter_four_segments,  8, 32, 32, "texture_power_meter_four_segments"  },
-        { (u8*)texture_power_meter_five_segments,  8, 32, 32, "texture_power_meter_five_segments"  },
-        { (u8*)texture_power_meter_six_segments,   8, 32, 32, "texture_power_meter_six_segments"   },
-        { (u8*)texture_power_meter_seven_segments, 8, 32, 32, "texture_power_meter_seven_segments" },
-        { (u8*)texture_power_meter_full,           8, 32, 32, "texture_power_meter_full"           },
-    };
-
     djui_hud_render_texture_interpolated(&sPowerMeterTexturesInfo[0],
         prevX, prevY, prevWidth / 64, prevHeight / 64,
         x,     y,     width     / 64, height     / 64);
@@ -293,22 +297,36 @@ u32 allocate_mario_action(u32 actFlags) {
 
 ///
 
+static const u32 sHandFootToAnimParts[] = {
+    [0] = MARIO_ANIM_PART_RIGHT_HAND,
+    [1] = MARIO_ANIM_PART_LEFT_HAND,
+    [2] = MARIO_ANIM_PART_RIGHT_FOOT,
+    [3] = MARIO_ANIM_PART_LEFT_FOOT,
+};
+
 f32 get_hand_foot_pos_x(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][0];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][0];
 }
 
 f32 get_hand_foot_pos_y(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][1];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][1];
 }
 
 f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     if (!m) { return 0; }
     if (index >= 4) { index = 0; }
-    return m->marioBodyState->handFootPos[index][2];
+    return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
+}
+
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
+    if (!m) { return false; }
+    if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
+    vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
+    return true;
 }
 
 ///
@@ -566,4 +584,44 @@ struct GraphNodeCamera* geo_get_current_camera(void) {
 
 struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
+}
+
+void texture_to_lua_table(const u8 *tex) {
+    lua_State *L = gLuaState;
+    if (!L || !tex) { return; }
+
+    struct TextureInfo texInfo;
+    if (!dynos_texture_get_from_data(tex, &texInfo)) { return; }
+
+    u32 bpp = texInfo.bitSize;
+    if (bpp != 16 && bpp != 32) { return; }
+
+    u32 bytesPerPixel = bpp / 8;
+    const u8 *data = texInfo.texture;
+    u32 texSize = texInfo.width * texInfo.height * bytesPerPixel;
+
+    lua_newtable(L);
+    for (u32 i = 0; i < texSize; i += bytesPerPixel) {
+        lua_newtable(L);
+
+        if (bpp == 16) {
+            u16 col = (data[i] << 8) | data[i + 1];
+            u8 r = SCALE_5_8((col >> 11) & 0x1F);
+            u8 g = SCALE_5_8((col >>  6) & 0x1F);
+            u8 b = SCALE_5_8((col >>  1) & 0x1F);
+            u8 a = 0xFF * (col & 0x1);
+
+            smlua_push_integer_field(-2, "r", r);
+            smlua_push_integer_field(-2, "g", g);
+            smlua_push_integer_field(-2, "b", b);
+            smlua_push_integer_field(-2, "a", a);
+        } else if (bpp == 32) {
+            smlua_push_integer_field(-2, "r", data[i]);
+            smlua_push_integer_field(-2, "g", data[i + 1]);
+            smlua_push_integer_field(-2, "b", data[i + 2]);
+            smlua_push_integer_field(-2, "a", data[i + 3]);
+        }
+
+        lua_rawseti(L, -2, i / bytesPerPixel + 1);
+    }
 }

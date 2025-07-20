@@ -218,6 +218,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             } else {
                 _Warp = DynOS_Level_GetWarp(gCurrLevelNum, gCurrAreaIndex, sDynosWarpNodeNum);
             }
+            if (!_Warp) { return NULL; }
             s16 sDynosWarpSpawnType = sSpawnTypeFromWarpBhv[_Warp[2]];
 
             // Init Mario
@@ -263,7 +264,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
+            smlua_call_event_hooks(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
 
             // Reset values
             sDynosWarpTargetArea = -1;
@@ -411,7 +412,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             sDynosExitTargetWarp = NULL;
 
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
+            smlua_call_event_hooks(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
         }
 
         // Phase 4 - Unlock Mario as soon as the second transition is ended

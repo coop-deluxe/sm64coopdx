@@ -1,15 +1,15 @@
 // boo.c.inc
 
 static struct ObjectHitbox sBooGivingStarHitbox = {
-    /* interactType: */      0,
-    /* downOffset: */        0,
-    /* damageOrCoinValue: */ 3,
-    /* health: */            3,
-    /* numLootCoins: */      0,
-    /* radius: */            140,
-    /* height: */            80,
-    /* hurtboxRadius: */     40,
-    /* hurtboxHeight: */     60,
+    .interactType = 0,
+    .downOffset = 0,
+    .damageOrCoinValue = 3,
+    .health = 3,
+    .numLootCoins = 0,
+    .radius = 140,
+    .height = 80,
+    .hurtboxRadius = 40,
+    .hurtboxHeight = 60,
 };
 
 // Relative positions
@@ -119,31 +119,27 @@ static s32 boo_should_be_active(void) {
 }
 
 void bhv_courtyard_boo_triplet_init(void) {
-    s32 i;
-    struct Object *boo;
-
     if (gHudDisplay.stars < gBehaviorValues.CourtyardBoosRequirement) {
         obj_mark_for_deletion(o);
-    } else {
-        for (i = 0; i < 3; i++) {
-            boo = spawn_object_relative(
-                0x01,
-                sCourtyardBooTripletPositions[i][0],
-                sCourtyardBooTripletPositions[i][1],
-                sCourtyardBooTripletPositions[i][2],
-                o,
-                MODEL_BOO,
-                bhvGhostHuntBoo
-            );
-            if (boo == NULL) { continue; }
-            boo->oMoveAngleYaw = random_u16();
-        }
+        return;
+    }
+    
+    for (s32 i = 0; i < 3; i++) {
+        struct Object *boo = spawn_object_relative(
+            0x01,
+            sCourtyardBooTripletPositions[i][0],
+            sCourtyardBooTripletPositions[i][1],
+            sCourtyardBooTripletPositions[i][2],
+            o,
+            MODEL_BOO,
+            bhvGhostHuntBoo
+        );
+        if (boo == NULL) { continue; }
+        boo->oMoveAngleYaw = random_u16();
     }
 }
 
 static void boo_approach_target_opacity_and_update_scale(void) {
-    f32 scale;
-
     if (o->oBooTargetOpacity != o->oOpacity) {
         if (o->oBooTargetOpacity > o->oOpacity) {
             o->oOpacity += 20;
@@ -160,7 +156,7 @@ static void boo_approach_target_opacity_and_update_scale(void) {
         }
     }
 
-    scale = (o->oOpacity/255.0f * 0.4 + 0.6) * o->oBooBaseScale;
+    f32 scale = (o->oOpacity/255.0f * 0.4 + 0.6) * o->oBooBaseScale;
     obj_scale(o, scale); // why no cur_obj_scale? was cur_obj_scale written later?
 }
 
@@ -346,9 +342,9 @@ static s32 boo_update_during_death(void) {
 static s32 obj_has_attack_type(u32 attackType) {
     if ((o->oInteractStatus & INT_STATUS_ATTACK_MASK) == attackType) {
         return TRUE;
-    } else {
-        return FALSE;
     }
+    
+    return FALSE;
 }
 
 static s32 boo_get_attack_status(void) {
@@ -663,10 +659,9 @@ static void big_boo_spawn_merry_go_round_star(void) {
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
     merryGoRound = cur_obj_nearest_object_with_behavior(bhvMerryGoRound);
-
-    if (merryGoRound != NULL) {
-        merryGoRound->oMerryGoRoundStopped = TRUE;
-    }
+    if (merryGoRound == NULL) { return; }
+    
+    merryGoRound->oMerryGoRoundStopped = TRUE;
 }
 
 static void big_boo_act_3(void) {
@@ -834,16 +829,15 @@ static void boo_with_cage_act_3(void) {
 }
 
 void bhv_boo_with_cage_init(void) {
-    struct Object* cage;
-
     if (gHudDisplay.stars < gBehaviorValues.CourtyardBoosRequirement) {
         obj_mark_for_deletion(o);
-    } else {
-        cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
-        if (cage != NULL) {
-            cage->oBehParams = o->oBehParams;
-        }
+        return;
     }
+    
+    struct Object *cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
+    if (cage == NULL) { return; }
+    
+    cage->oBehParams = o->oBehParams;
 }
 
 static void (*sBooWithCageActions[])(void) = {

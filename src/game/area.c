@@ -215,6 +215,8 @@ void load_obj_warp_nodes(void) {
 }
 
 void clear_areas(void) {
+    smlua_call_event_hooks(HOOK_ON_CLEAR_AREAS);
+
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         np->currAreaSyncValid = false;
@@ -373,9 +375,9 @@ void area_update_objects(void) {
  */
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue) {
     reset_screen_transition_timers();
-    bool returnValue = true;
-    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_SCREEN_TRANSITION, transType, &returnValue);
-    if (!returnValue) { return; }
+    bool allowPlayTransition = true;
+    smlua_call_event_hooks(HOOK_ON_SCREEN_TRANSITION, transType, &allowPlayTransition);
+    if (!allowPlayTransition) { return; }
 
     gWarpTransition.isActive = TRUE;
     gWarpTransition.type = transType;
@@ -456,7 +458,7 @@ void render_game(void) {
             if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
-            smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
+            smlua_call_event_hooks(HOOK_ON_HUD_RENDER_BEHIND, djui_reset_hud_params);
             djui_gfx_displaylist_end();
         }
         render_hud();

@@ -9,15 +9,15 @@
  * Hitbox for goomba.
  */
 static struct ObjectHitbox sGoombaHitbox = {
-    /* interactType:      */ INTERACT_BOUNCE_TOP,
-    /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 1,
-    /* radius:            */ 72,
-    /* height:            */ 50,
-    /* hurtboxRadius:     */ 42,
-    /* hurtboxHeight:     */ 40,
+    .interactType = INTERACT_BOUNCE_TOP,
+    .downOffset = 0,
+    .damageOrCoinValue = 1,
+    .health = 0,
+    .numLootCoins = 1,
+    .radius = 72,
+    .height = 50,
+    .hurtboxRadius = 42,
+    .hurtboxHeight = 40,
 };
 
 /**

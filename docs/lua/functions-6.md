@@ -6,6 +6,1459 @@
 
 
 ---
+# functions from object_list_processor.h
+
+<br />
+
+
+## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
+
+### Description
+Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
+
+### Lua Example
+`set_object_respawn_info_bits(obj, bits)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| bits | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_object_respawn_info_bits(struct Object *obj, u8 bits);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from platform_displacement.h
+
+<br />
+
+
+## [apply_platform_displacement](#apply_platform_displacement)
+
+### Description
+Apply one frame of platform rotation to the object using the given platform
+
+### Lua Example
+`apply_platform_displacement(o, platform)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| platform | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void apply_platform_displacement(struct Object *o, struct Object *platform);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from rumble_init.h
+
+<br />
+
+
+## [queue_rumble_data](#queue_rumble_data)
+
+### Description
+Queues rumble data
+
+### Lua Example
+`queue_rumble_data(a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data(s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_object](#queue_rumble_data_object)
+
+### Description
+Queues rumble data for object, factoring in its distance from Mario
+
+### Lua Example
+`queue_rumble_data_object(object, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| object | [Object](structs.md#Object) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_data_mario](#queue_rumble_data_mario)
+
+### Description
+Queues rumble data for Mario
+
+### Lua Example
+`queue_rumble_data_mario(m, a0, a1)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+| a1 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_rumble_timers](#reset_rumble_timers)
+
+### Description
+Resets rumble timers
+
+### Lua Example
+`reset_rumble_timers(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [reset_rumble_timers_2](#reset_rumble_timers_2)
+
+### Description
+Resets rumble timers and sets a field based on `a0`
+
+### Lua Example
+`reset_rumble_timers_2(m, a0)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| a0 | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from save_file.h
+
+<br />
+
+
+## [get_level_num_from_course_num](#get_level_num_from_course_num)
+
+### Description
+Gets the course number's corresponding level number
+
+### Lua Example
+`local integerValue = get_level_num_from_course_num(courseNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_num_from_course_num(s16 courseNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_level_course_num](#get_level_course_num)
+
+### Description
+Gets the level number's corresponding course number
+
+### Lua Example
+`local integerValue = get_level_course_num(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s8 get_level_course_num(s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [touch_coin_score_age](#touch_coin_score_age)
+
+### Description
+Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
+
+### Lua Example
+`touch_coin_score_age(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_do_save](#save_file_do_save)
+
+### Description
+Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
+
+### Lua Example
+`save_file_do_save(fileIndex, forceSave)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| forceSave | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_do_save(s32 fileIndex, s8 forceSave);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_erase](#save_file_erase)
+
+### Description
+Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
+
+### Lua Example
+`save_file_erase(fileIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase(s32 fileIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
+
+### Description
+Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
+
+### Lua Example
+`save_file_erase_current_backup_save()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_erase_current_backup_save(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_reload](#save_file_reload)
+
+### Description
+Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
+
+### Lua Example
+`save_file_reload(load_all)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| load_all | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_reload(u8 load_all);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
+
+### Description
+Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
+
+### Lua Example
+`local integerValue = save_file_get_max_coin_score(courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_max_coin_score(s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_course_star_count](#save_file_get_course_star_count)
+
+### Description
+Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
+
+### Lua Example
+`local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_course_star_count(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_total_star_count](#save_file_get_total_star_count)
+
+### Description
+Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
+
+### Lua Example
+`local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| minCourse | `integer` |
+| maxCourse | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_total_star_count(s32 fileIndex, s32 minCourse, s32 maxCourse);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_flags](#save_file_set_flags)
+
+### Description
+Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
+
+### Lua Example
+`save_file_set_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_clear_flags](#save_file_clear_flags)
+
+### Description
+Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
+
+### Lua Example
+`save_file_clear_flags(flags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_clear_flags(u32 flags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_flags](#save_file_get_flags)
+
+### Description
+Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
+
+### Lua Example
+`local integerValue = save_file_get_flags()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_flags(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_star_flags](#save_file_get_star_flags)
+
+### Description
+Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
+
+### Lua Example
+`local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 save_file_get_star_flags(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_star_flags](#save_file_set_star_flags)
+
+### Description
+Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
+
+### Lua Example
+`save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlags | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_remove_star_flags](#save_file_remove_star_flags)
+
+### Description
+Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
+
+### Lua Example
+`save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| starFlagsToRemove | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_remove_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlagsToRemove);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
+
+### Description
+Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
+
+### Lua Example
+`local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
+
+### Description
+Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
+
+### Lua Example
+`save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+| coinScore | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_course_coin_score(s32 fileIndex, s32 courseIndex, u8 coinScore);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
+
+### Description
+Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
+
+### Lua Example
+`local integerValue = save_file_is_cannon_unlocked(fileIndex, courseIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fileIndex | `integer` |
+| courseIndex | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_cap_pos](#save_file_get_cap_pos)
+
+### Description
+Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
+
+### Lua Example
+`local integerValue = save_file_get_cap_pos(capPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| capPos | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_cap_pos(OUT Vec3s capPos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_sound_mode](#save_file_get_sound_mode)
+
+### Description
+Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
+
+### Lua Example
+`local integerValue = save_file_get_sound_mode()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 save_file_get_sound_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from seqplayer.h
+
+<br />
+
+
+## [sequence_player_get_tempo](#sequence_player_get_tempo)
+
+### Description
+Gets the tempo of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_tempo(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempo(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempo](#sequence_player_set_tempo)
+
+### Description
+Sets the `tempo` of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_tempo(player, tempo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempo | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempo(u8 player, u16 tempo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
+
+### Description
+Gets the tempoAcc (tempo accumulation) of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_tempo_acc(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_tempo_acc(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
+
+### Description
+Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_tempo_acc(player, tempoAcc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| tempoAcc | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_transposition](#sequence_player_get_transposition)
+
+### Description
+Gets the transposition (pitch) of `player`
+
+### Lua Example
+`local integerValue = sequence_player_get_transposition(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sequence_player_get_transposition(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_transposition](#sequence_player_set_transposition)
+
+### Description
+Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
+
+### Lua Example
+`sequence_player_set_transposition(player, transposition)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| transposition | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_transposition(u8 player, u16 transposition);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_volume](#sequence_player_get_volume)
+
+### Description
+Gets the volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
+
+### Description
+Gets the fade volume of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_fade_volume(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_fade_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
+
+### Description
+Gets the mute volume scale of `player`
+
+### Lua Example
+`local numberValue = sequence_player_get_mute_volume_scale(player)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 sequence_player_get_mute_volume_scale(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_anim_utils.h
+
+<br />
+
+
+## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
+
+### Description
+Gets a vanilla mario Animation with `index`
+
+### Lua Example
+`local AnimationValue = get_mario_vanilla_animation(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+[Animation](structs.md#Animation)
+
+### C Prototype
+`struct Animation *get_mario_vanilla_animation(u16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_set_animation](#smlua_anim_util_set_animation)
+
+### Description
+Sets the animation of `obj` to the animation `name` corresponds to
+
+### Lua Example
+`smlua_anim_util_set_animation(obj, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
+
+### Description
+Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
+
+### Lua Example
+`local stringValue = smlua_anim_util_get_current_animation_name(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_audio_utils.h
+
+<br />
+
+
+## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+
+### Description
+Resets all custom sequences back to vanilla
+
+### Lua Example
+`smlua_audio_utils_reset_all()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_reset_all(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+
+### Description
+Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
+
+### Lua Example
+`smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| sequenceId | `integer` |
+| bankId | `integer` |
+| defaultVolume | `integer` |
+| m64Name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_load](#audio_stream_load)
+
+### Description
+Loads an `audio` stream by `filename` (with extension)
+
+### Lua Example
+`local ModAudioValue = audio_stream_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_stream_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_destroy](#audio_stream_destroy)
+
+### Description
+Destroys an `audio` stream
+
+### Lua Example
+`audio_stream_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_play](#audio_stream_play)
+
+### Description
+Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+
+### Lua Example
+`audio_stream_play(audio, restart, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| restart | `boolean` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_pause](#audio_stream_pause)
+
+### Description
+Pauses an `audio` stream
+
+### Lua Example
+`audio_stream_pause(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_pause(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_stop](#audio_stream_stop)
+
+### Description
+Stops an `audio` stream
+
+### Lua Example
+`audio_stream_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_position](#audio_stream_get_position)
+
+### Description
+Gets the position of an `audio` stream in seconds
+
+### Lua Example
+`local numberValue = audio_stream_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_position(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_position](#audio_stream_set_position)
+
+### Description
+Sets the position of an `audio` stream in seconds
+
+### Lua Example
+`audio_stream_set_position(audio, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pos | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_looping](#audio_stream_get_looping)
+
+### Description
+Gets if an `audio` stream is looping or not
+
+### Lua Example
+`local booleanValue = audio_stream_get_looping(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_stream_get_looping(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_looping](#audio_stream_set_looping)
+
+### Description
+Sets if an `audio` stream is looping or not
+
+### Lua Example
+`audio_stream_set_looping(audio, looping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| looping | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
+
+### Description
+Sets an `audio` stream's loop points in samples
+
+### Lua Example
+`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_frequency](#audio_stream_get_frequency)
+
+### Description
+Gets the frequency of an `audio` stream
+
+### Lua Example
+`local numberValue = audio_stream_get_frequency(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_frequency](#audio_stream_set_frequency)
+
+### Description
+Sets the frequency of an `audio` stream
+
+### Lua Example
+`audio_stream_set_frequency(audio, freq)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| freq | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_get_volume](#audio_stream_get_volume)
+
+### Description
+Gets the volume of an `audio` stream
+
+### Lua Example
+`local numberValue = audio_stream_get_volume(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_stream_get_volume(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume](#audio_stream_set_volume)
+
+### Description
+Sets the volume of an `audio` stream
+
+### Lua Example
+`audio_stream_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_load](#audio_sample_load)
+
+### Description
+Loads an `audio` sample
+
+### Lua Example
+`local ModAudioValue = audio_sample_load(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+[ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_load(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_destroy](#audio_sample_destroy)
+
+### Description
+Destroys an `audio` sample
+
+### Lua Example
+`audio_sample_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_stop](#audio_sample_stop)
+
+### Description
+Stops an `audio` sample
+
+### Lua Example
+`audio_sample_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_sample_play](#audio_sample_play)
+
+### Description
+Plays an `audio` sample at `position` with `volume`
+
+### Lua Example
+`audio_sample_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_camera_utils.h
 
 <br />
@@ -1343,6 +2796,75 @@ Gets a table of the surface types from `data`
 
 <br />
 
+## [surface_is_quicksand](#surface_is_quicksand)
+
+### Description
+Checks if the surface is quicksand
+
+### Lua Example
+`local booleanValue = surface_is_quicksand(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_quicksand(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_not_hard](#surface_is_not_hard)
+
+### Description
+Checks if the surface is not a hard surface
+
+### Lua Example
+`local booleanValue = surface_is_not_hard(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_not_hard(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_is_painting_warp](#surface_is_painting_warp)
+
+### Description
+Checks if the surface is a painting warp
+
+### Lua Example
+`local booleanValue = surface_is_painting_warp(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_painting_warp(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_deprecated.h
 
@@ -1905,6 +3427,29 @@ Gets the number of vertices from a display list command if it has the op `G_VTX`
 
 ### C Prototype
 `u16 gfx_get_vertex_count(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_texture](#gfx_get_texture)
+
+### Description
+Gets the texture from a display list command if it has an image related op
+
+### Lua Example
+`local PointerValue = gfx_get_texture(cmd)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cmd | `Pointer` <`Gfx`> |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`u8 *gfx_get_texture(Gfx *cmd);`
 
 [:arrow_up_small:](#)
 
@@ -2575,320 +4120,6 @@ Warps back to the castle from `aLevel`
 <br />
 
 ---
-# functions from smlua_math_utils.h
-
-<br />
-
-
-## [min](#min)
-
-### Description
-Finds the minimum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = min(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 min(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [max](#max)
-
-### Description
-Finds the maximum of two signed 32-bit integers
-
-### Lua Example
-`local integerValue = max(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 max(s32 a, s32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqr](#sqr)
-
-### Description
-Computes the square of a signed 32-bit integer
-
-### Lua Example
-`local integerValue = sqr(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 sqr(s32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [minf](#minf)
-
-### Description
-Finds the minimum of two floating-point numbers
-
-### Lua Example
-`local numberValue = minf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 minf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [maxf](#maxf)
-
-### Description
-Finds the maximum of two floating-point numbers
-
-### Lua Example
-`local numberValue = maxf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 maxf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sqrf](#sqrf)
-
-### Description
-Computes the square of a floating-point number
-
-### Lua Example
-`local numberValue = sqrf(x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sqrf(f32 x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_radians](#sm64_to_radians)
-
-### Description
-Converts an angle from SM64 format to radians
-
-### Lua Example
-`local numberValue = sm64_to_radians(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_radians(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [radians_to_sm64](#radians_to_sm64)
-
-### Description
-Converts an angle from radians to SM64 format
-
-### Lua Example
-`local integerValue = radians_to_sm64(radiansAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| radiansAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 radians_to_sm64(f32 radiansAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sm64_to_degrees](#sm64_to_degrees)
-
-### Description
-Converts an angle from SM64 format to degrees
-
-### Lua Example
-`local numberValue = sm64_to_degrees(sm64Angle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sm64Angle | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 sm64_to_degrees(s16 sm64Angle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [degrees_to_sm64](#degrees_to_sm64)
-
-### Description
-Converts an angle from degrees to SM64 format
-
-### Lua Example
-`local integerValue = degrees_to_sm64(degreesAngle)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| degreesAngle | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 degrees_to_sm64(f32 degreesAngle);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [hypotf](#hypotf)
-
-### Description
-Computes the hypotenuse of a right triangle given sides `a` and `b` using the Pythagorean theorem
-
-### Lua Example
-`local numberValue = hypotf(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 hypotf(f32 a, f32 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clamp](#clamp)
-
-### Description
-Clamps a signed 32-bit integer `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local integerValue = clamp(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| c | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 clamp(s32 a, s32 b, s32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clampf](#clampf)
-
-### Description
-Clamps a floating-point number `a` between bounds `b` (minimum) and `c` (maximum)
-
-### Lua Example
-`local numberValue = clampf(a, b, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-| c | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 clampf(f32 a, f32 b, f32 c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
 # functions from smlua_misc_utils.h
 
 <br />
@@ -2931,6 +4162,52 @@ Gets the area update counter incremented when objects are updated
 
 ### C Prototype
 `u16 get_area_update_counter(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_temp_s32_pointer](#get_temp_s32_pointer)
+
+### Description
+Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
+
+### Lua Example
+`local PointerValue = get_temp_s32_pointer(initialValue)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| initialValue | `integer` |
+
+### Returns
+- `Pointer` <`integer`>
+
+### C Prototype
+`s32* get_temp_s32_pointer(s32 initialValue);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [deref_s32_pointer](#deref_s32_pointer)
+
+### Description
+Gets the signed 32-bit integer value from `pointer`
+
+### Lua Example
+`local integerValue = deref_s32_pointer(pointer)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pointer | `Pointer` <`integer`> |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 deref_s32_pointer(s32* pointer);`
 
 [:arrow_up_small:](#)
 
@@ -3736,6 +5013,31 @@ Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 
 ### C Prototype
 `f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_mario_anim_part_pos](#get_mario_anim_part_pos)
+
+### Description
+Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+
+### Lua Example
+`local booleanValue = get_mario_anim_part_pos(m, animPart, pos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animPart | `integer` |
+| pos | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -4556,6 +5858,29 @@ Gets the current GraphNodeHeldObject
 
 <br />
 
+## [texture_to_lua_table](#texture_to_lua_table)
+
+### Description
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+
+### Lua Example
+`texture_to_lua_table(tex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void texture_to_lua_table(const u8 *tex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_model_utils.h
 
@@ -4594,7 +5919,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 ## [spawn_sync_object](#spawn_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -4622,7 +5947,7 @@ Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the lo
 ## [spawn_non_sync_object](#spawn_non_sync_object)
 
 ### Description
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -4876,7 +6201,7 @@ Gets the secondary camera focus object
 Sets the cutscene focus object
 
 ### Lua Example
-`local voidValue = set_cutscene_focus(o)`
+`set_cutscene_focus(o)`
 
 ### Parameters
 | Field | Type |
@@ -4884,10 +6209,10 @@ Sets the cutscene focus object
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- `void *`
+- None
 
 ### C Prototype
-`void *set_cutscene_focus(struct Object *o);`
+`void set_cutscene_focus(struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -4899,7 +6224,7 @@ Sets the cutscene focus object
 Sets the secondary camera focus object
 
 ### Lua Example
-`local voidValue = set_secondary_camera_focus(o)`
+`set_secondary_camera_focus(o)`
 
 ### Parameters
 | Field | Type |
@@ -4907,10 +6232,10 @@ Sets the secondary camera focus object
 | o | [Object](structs.md#Object) |
 
 ### Returns
-- `void *`
+- None
 
 ### C Prototype
-`void *set_secondary_camera_focus(struct Object *o);`
+`void set_secondary_camera_focus(struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -5788,6 +7113,29 @@ Resets every modified dialog back to vanilla
 
 <br />
 
+## [smlua_text_utils_dialog_get](#smlua_text_utils_dialog_get)
+
+### Description
+Gets the DialogEntry struct for the given `dialogId`
+
+### Lua Example
+`local DialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+[DialogEntry](structs.md#DialogEntry)
+
+### C Prototype
+`struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
 
 ### Description
@@ -5811,6 +7159,29 @@ Replaces `dialogId` with a custom one
 
 ### C Prototype
 `void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
+
+### Description
+Returns whether the dialog with the given ID has been replaced
+
+### Lua Example
+`local booleanValue = smlua_text_utils_dialog_is_replaced(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);`
 
 [:arrow_up_small:](#)
 
@@ -6083,6 +7454,69 @@ Replaces the castle secret stars text with `name`
 
 <br />
 
+## [smlua_text_utils_castle_secret_stars_get](#smlua_text_utils_castle_secret_stars_get)
+
+### Description
+Gets the castle secret stars text
+
+### Lua Example
+`local stringValue = smlua_text_utils_castle_secret_stars_get()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_castle_secret_stars_get();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_mod_index](#smlua_text_utils_castle_secret_stars_mod_index)
+
+### Description
+Gets the index of the mod that replaced the castle secret stars text
+
+### Lua Example
+`local integerValue = smlua_text_utils_castle_secret_stars_mod_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_castle_secret_stars_mod_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_castle_secret_stars_reset](#smlua_text_utils_castle_secret_stars_reset)
+
+### Description
+Resets the castle secret stars text
+
+### Lua Example
+`smlua_text_utils_castle_secret_stars_reset()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_castle_secret_stars_reset();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
 
 ### Description
@@ -6102,6 +7536,75 @@ Replace extra text (e.g. one of the castle's secret stars) with `text`
 
 ### C Prototype
 `void smlua_text_utils_extra_text_replace(s16 index, const char* text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_get](#smlua_text_utils_extra_text_get)
+
+### Description
+Gets the extra text at `index`
+
+### Lua Example
+`local stringValue = smlua_text_utils_extra_text_get(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* smlua_text_utils_extra_text_get(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_mod_index](#smlua_text_utils_extra_text_mod_index)
+
+### Description
+Gets the index of the mod that replaced the extra text at `index`
+
+### Lua Example
+`local integerValue = smlua_text_utils_extra_text_mod_index(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_extra_text_mod_index(s16 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_extra_text_reset](#smlua_text_utils_extra_text_reset)
+
+### Description
+Resets the extra text at `index`
+
+### Lua Example
+`smlua_text_utils_extra_text_reset(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_extra_text_reset(s16 index);`
 
 [:arrow_up_small:](#)
 
@@ -6782,6 +8285,31 @@ Sets whether collision finding functions should check wall directions.
 
 <br />
 
+## [closest_point_to_triangle](#closest_point_to_triangle)
+
+### Description
+Gets the closest point of the triangle to `src` and returns it in `out`.
+
+### Lua Example
+`closest_point_to_triangle(surf, src, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+| src | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from surface_load.h
 
@@ -6851,6 +8379,81 @@ Checks if a surface has force
 
 ### C Prototype
 `bool surface_has_force(s16 surfaceType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from sync_object.h
+
+<br />
+
+
+## [sync_object_get_object](#sync_object_get_object)
+
+### Description
+Retrieves an object from a sync ID
+
+### Lua Example
+`local ObjectValue = sync_object_get_object(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+[Object](structs.md#Object)
+
+### C Prototype
+`struct Object* sync_object_get_object(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sync_object_is_initialized](#sync_object_is_initialized)
+
+### Description
+Checks if a sync object is initialized using a `syncId`
+
+### Lua Example
+`local booleanValue = sync_object_is_initialized(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool sync_object_is_initialized(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sync_object_is_owned_locally](#sync_object_is_owned_locally)
+
+### Description
+Checks if a sync object is owned locally using a `syncId`
+
+### Lua Example
+`local booleanValue = sync_object_is_owned_locally(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool sync_object_is_owned_locally(u32 syncId);`
 
 [:arrow_up_small:](#)
 
