@@ -11870,6 +11870,7 @@ function smlua_text_utils_dialog_is_replaced(dialogId)
 end
 
 --- @return integer
+--- Allocates a new dialog entry
 function smlua_text_utils_allocate_dialog()
     -- ...
 end

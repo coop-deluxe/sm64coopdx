@@ -18,6 +18,8 @@
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/dialog_table.h"
+#include "dialog_ids.h"
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #define EU_FLOAT(x) x##f
@@ -2455,10 +2457,10 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
 /**
  * Called from threads: thread5_game_loop
  */
-void play_dialog_sound(u8 dialogID) {
+void play_dialog_sound(s32 dialogID) {
     s32 speaker;
 
-    if (dialogID >= DIALOG_COUNT) {
+    if (!IS_VALID_DIALOG(dialogID) || IS_CUSTOM_DIALOG(dialogID)) {
         dialogID = 0;
     }
 

@@ -373,8 +373,8 @@ void game_deinit(void) {
     audio_shutdown();
     network_shutdown(true, true, false, false);
     smlua_text_utils_shutdown();
-    dialog_table_shutdown();
     smlua_shutdown();
+    dialog_table_shutdown();
     smlua_audio_custom_deinit();
     mods_shutdown();
     djui_shutdown();

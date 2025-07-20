@@ -17,8 +17,6 @@ extern s32 gInGameLanguage;
 #include "eu_translation.h"
 #endif
 
-static bool sReplacedDialog[DIALOG_COUNT] = { 0 };
-
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
 extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
@@ -189,39 +187,36 @@ static void smlua_text_utils_replace_course_or_act_name(struct ReplacedName *nam
 }
 
 void smlua_text_utils_reset_all(void) {
-    void **dialogTable = NULL;
     void **dialogTableOrg = NULL;
 
 #ifdef VERSION_EU
     switch (gInGameLanguage) {
         case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
             dialogTableOrg = segmented_to_virtual(dialog_table_eu_en_original);
             break;
         case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
             dialogTableOrg = segmented_to_virtual(dialog_table_eu_fr_original);
             break;
         case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
             dialogTableOrg = segmented_to_virtual(dialog_table_eu_de_original);
             break;
     }
 #else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
     dialogTableOrg = segmented_to_virtual(seg2_dialog_original);
 #endif
 
     for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        if (!sReplacedDialog[i]) { continue; }
+        struct DialogEntry *dialog = dialog_table_get(i);
+        
+        if (!dialog->replaced) continue;
+
         const struct DialogEntry *dialogOrig = segmented_to_virtual(dialogTableOrg[i]);
-        struct DialogEntry *dialog = segmented_to_virtual(dialogTable[i]);
+
         free((u8*)dialog->str);
         free(dialog->text);
 
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
         dialog->text = get_dialog_text_ascii(dialog); 
-        sReplacedDialog[i] = false;
     }
 
     dialog_table_reset();
@@ -248,22 +243,17 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
+    if (!IS_VALID_DIALOG(dialogId)) return;
+    
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
     if (!dialog) { return; }
 
-    if (dialogId < DIALOG_COUNT) {
-        if (sReplacedDialog[dialogId]) {
-            free((u8*)dialog->str);
-        }
-    }
-    if (dialogId >= DIALOG_COUNT && dialog->str) {
+    if (dialog->replaced) {
         free((u8*)dialog->str);
     }
 
-    if (dialog->text) {
-        free(dialog->text);
-    }
+    free(dialog->text);
 
     dialog->unused = unused;
     dialog->linesPerBox = linesPerBox;
@@ -271,34 +261,30 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     dialog->width = width;
     dialog->str = smlua_text_utils_convert(str);
     dialog->text = strdup(str);
-
-    sReplacedDialog[dialogId] = true;
+    dialog->replaced = true;
 }
 
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
-    if (dialogId >= DIALOG_COUNT) {
-        return false;
-    }
+    if (!IS_VALID_DIALOG(dialogId)) return false;
 
-    return sReplacedDialog[dialogId];
+    struct DialogEntry *dialog = dialog_table_get(dialogId);
+    return dialog->replaced;
 }
 
-u32 smlua_text_utils_allocate_dialog(void) {
+s32 smlua_text_utils_allocate_dialog(void) {
     struct DialogEntry* dialog = malloc(sizeof(struct DialogEntry));
-    
-    // will crash if i dont do this
-    // ???
+
     dialog->unused = 0;
     dialog->linesPerBox = 0;
     dialog->leftOffset = 0;
     dialog->width = 0;
     dialog->str = NULL;
     dialog->text = NULL;
+    dialog->replaced = true;
 
+    s32 id = dialog_table_add(dialog);
 
-    size_t index = dialog_table_add(dialog);
-
-    return (u32)index;
+    return id;
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

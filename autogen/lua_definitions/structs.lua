@@ -595,6 +595,7 @@
 --- @class DialogEntry
 --- @field public leftOffset integer
 --- @field public linesPerBox integer
+--- @field public replaced boolean
 --- @field public text string
 --- @field public unused integer
 --- @field public width integer

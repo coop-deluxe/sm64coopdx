@@ -1,23 +1,27 @@
 #ifndef DIALOG_TABLE_H
 #define DIALOG_TABLE_H
 
-#include <stddef.h>
 #include "PR/ultratypes.h"
+
+#define MAX_ALLOCATED_DIALOGS 2147483647 // max s32
 
 struct DialogEntry;
 
 typedef struct {
     struct DialogEntry **data;
-    size_t size;
-    size_t capacity;
+    s32 size;
+    s32 capacity;
 } DialogTable;
 
 void dialog_table_init(void);
-size_t dialog_table_add(struct DialogEntry *dialog);
-struct DialogEntry* dialog_table_get(u32 dialogId);
+s32 dialog_table_add(struct DialogEntry *dialog);
+struct DialogEntry* dialog_table_get(s16 dialogId);
 void dialog_table_reset(void);
 void dialog_table_shutdown(void);
 
 extern DialogTable gDialogTable;
+
+#define IS_CUSTOM_DIALOG(dialogId) ((dialogId) >= DIALOG_COUNT)
+#define IS_VALID_DIALOG(dialogId) ((dialogId) >= 0 && (dialogId) < gDialogTable.size)
 
 #endif

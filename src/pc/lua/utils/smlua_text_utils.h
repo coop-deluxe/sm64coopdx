@@ -36,7 +36,8 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
 /* |description|Returns whether the dialog with the given ID has been replaced|descriptionEnd| */
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);
-u32 smlua_text_utils_allocate_dialog(void);
+/* |description|Allocates a new dialog entry|descriptionEnd|*/
+s32 smlua_text_utils_allocate_dialog(void);
 /* |description|Replaces the act names of `courseNum`|descriptionEnd| */
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);
 /* |description|Replaces the secret star course name of `courseNum` with `courseName`|descriptionEnd| */

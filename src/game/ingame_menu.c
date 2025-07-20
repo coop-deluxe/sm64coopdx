@@ -38,6 +38,7 @@
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "menu/ingame_text.h"
+#include "pc/dialog_table.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -1957,35 +1958,13 @@ void render_dialog_entries(void) {
 #ifdef VERSION_EU
     s8 lowerBound = 0;
 #endif
-    void **dialogTable;
-    struct DialogEntry *dialog;
+
 #if defined(VERSION_US) || defined(VERSION_SH)
     s8 lowerBound = 0;
 #endif
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    if (gDialogID >= DIALOG_COUNT || gDialogID < 0) {
-        gDialogID = -1;
-        return;
-    }
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    // if the dialog entry is invalid, set the ID to -1.
-    if (segmented_to_virtual(NULL) == dialog) {
+    if (dialog == NULL) {
         gDialogID = -1;
         return;
     }
@@ -2278,28 +2257,11 @@ void do_cutscene_handler(void) {
 
 // "Dear Mario" message handler
 void print_peach_letter_message(void) {
-    void **dialogTable;
-    struct DialogEntry *dialog;
     u8 *str;
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
 
-    str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
+
+    str = sOverrideDialogString ? sHookString : (u8*)dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 

@@ -13463,7 +13463,7 @@ int smlua_func_play_dialog_sound(lua_State* L) {
         return 0;
     }
 
-    u8 dialogID = smlua_to_integer(L, 1);
+    s32 dialogID = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_dialog_sound"); return 0; }
 
     play_dialog_sound(dialogID);

@@ -39,12 +39,13 @@ extern s8 gHudFlash;
 
 struct DialogEntry
 {
-    u32 unused;     /*0x00*/
-    s8 linesPerBox; /*0x04*/
-    s16 leftOffset; /*0x06*/
-    s16 width;      /*0x08*/
-    const u8 *str;  /*0x0C*/
+    u32 unused;
+    s8 linesPerBox;
+    s16 leftOffset;
+    s16 width;
+    const u8 *str;
     char* text;
+    bool replaced;
 };
 
 // EU only

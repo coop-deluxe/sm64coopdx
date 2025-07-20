@@ -4056,7 +4056,7 @@ Plays a dialog sound corresponding to `dialogID`
 - None
 
 ### C Prototype
-`void play_dialog_sound(u8 dialogID);`
+`void play_dialog_sound(s32 dialogID);`
 
 [:arrow_up_small:](#)
 

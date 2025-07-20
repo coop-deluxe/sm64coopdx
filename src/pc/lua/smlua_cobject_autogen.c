@@ -805,10 +805,11 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE, 1, sizeof(s32) },
 };
 
-#define LUA_DIALOG_ENTRY_FIELD_COUNT 5
+#define LUA_DIALOG_ENTRY_FIELD_COUNT 6
 static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
     { "leftOffset",  LVT_S16,      offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE, 1, sizeof(s16)   },
     { "linesPerBox", LVT_S8,       offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE, 1, sizeof(s8)    },
+    { "replaced",    LVT_BOOL,     offsetof(struct DialogEntry, replaced),    true, LOT_NONE, 1, sizeof(bool)  },
     { "text",        LVT_STRING_P, offsetof(struct DialogEntry, text),        true, LOT_NONE, 1, sizeof(char*) },
     { "unused",      LVT_U32,      offsetof(struct DialogEntry, unused),      true, LOT_NONE, 1, sizeof(u32)   },
     { "width",       LVT_S16,      offsetof(struct DialogEntry, width),       true, LOT_NONE, 1, sizeof(s16)   },
