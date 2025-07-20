@@ -5,7 +5,6 @@
 #include "PR/ultratypes.h"
 #include "game/segment2.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 DialogTable gDialogTable;
 
