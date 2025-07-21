@@ -178,38 +178,6 @@ static void smlua_text_utils_replace_course_or_act_name(struct ReplacedName *nam
 }
 
 void smlua_text_utils_reset_all(void) {
-    void **dialogTableOrg = NULL;
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_en_original);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_fr_original);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_de_original);
-            break;
-    }
-#else
-    dialogTableOrg = segmented_to_virtual(seg2_dialog_original);
-#endif
-
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        struct DialogEntry *dialog = dialog_table_get(i);
-        
-        if (!dialog->replaced) continue;
-
-        const struct DialogEntry *dialogOrig = segmented_to_virtual(dialogTableOrg[i]);
-
-        free((u8*)dialog->str);
-        free(dialog->text);
-
-        memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-        dialog->text = get_dialog_text_ascii(dialog); 
-    }
-
     dialog_table_reset();
 
     if (sSmluaTextUtilsInited) {
@@ -228,9 +196,33 @@ void smlua_text_utils_reset_all(void) {
     }
 }
 
-struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
+struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
     struct DialogEntry* dialog = dialog_table_get(dialogId);
     return dialog;
+}
+
+const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) return NULL;
+    
+    void **dialogTableOrg;
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH:
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_en_original);
+            break;
+        case LANGUAGE_FRENCH:
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_fr_original);
+            break;
+        case LANGUAGE_GERMAN:
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_de_original);
+            break;
+    }
+#else
+    dialogTableOrg = segmented_to_virtual(seg2_dialog_original);
+#endif
+
+    return segmented_to_virtual(dialogTableOrg[dialogId]);
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {

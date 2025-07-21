@@ -93,12 +93,23 @@ struct DialogEntry* dialog_table_get(s32 dialogId) {
 void dialog_table_reset(void) {
     DialogTable *table = &gDialogTable;
 
-    for (s32 i = DIALOG_COUNT; i < table->size; i++) {
+    for (s32 i = 0; i < table->size; i++) {
         struct DialogEntry *dialog = table->data[i];
+
+        if (!dialog->replaced) continue;
 
         free((u8*)dialog->str);
         free(dialog->text);
-        free(dialog);
+
+        if (!IS_CUSTOM_DIALOG(i)) {
+            const struct DialogEntry *dialogOrig = smlua_text_utils_dialog_get_unmodified(i);
+
+            memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
+            dialog->text = get_dialog_text_ascii(dialog); 
+        }
+        else {
+            free(dialog);
+        }
     }
 
     table->size = DIALOG_COUNT;

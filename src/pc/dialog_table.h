@@ -22,5 +22,6 @@ extern DialogTable gDialogTable;
 
 #define IS_CUSTOM_DIALOG(dialogId) ((dialogId) >= DIALOG_COUNT)
 #define IS_VALID_DIALOG(dialogId) ((dialogId) >= 0 && (dialogId) < gDialogTable.size)
+#define IS_VALID_VANILLA_DIALOG(dialogId) ((dialogId) >= 0 && (dialogId) < DIALOG_COUNT)
 
 #endif
