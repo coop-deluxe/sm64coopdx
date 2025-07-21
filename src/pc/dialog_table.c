@@ -47,7 +47,7 @@ void dialog_table_init(void) {
             LOG_ERROR("Failed to allocate DialogEntry %d", i);
             exit(EXIT_FAILURE);
         }
-        
+
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
         dialog->text = get_dialog_text_ascii(dialog);
 
@@ -109,8 +109,10 @@ void dialog_table_shutdown(void) {
 
     dialog_table_reset();
 
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        free(table->data[i]);
+    for (s32 i = 0; i < DIALOG_COUNT; i++) {\
+        struct DialogEntry *dialog = table->data[i];
+        free(dialog->text);
+        free(dialog);
     }
 
     free(table->data);
