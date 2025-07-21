@@ -2257,11 +2257,9 @@ void do_cutscene_handler(void) {
 
 // "Dear Mario" message handler
 void print_peach_letter_message(void) {
-    u8 *str;
-
     struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    str = sOverrideDialogString ? sHookString : (u8*)dialog->str;
+    const u8* str = sOverrideDialogString ? sHookString : dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
