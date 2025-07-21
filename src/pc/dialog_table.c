@@ -75,7 +75,7 @@ s32 dialog_table_add(struct DialogEntry *dialog) {
     return index;
 }
 
-struct DialogEntry* dialog_table_get(s16 dialogId) {
+struct DialogEntry* dialog_table_get(s32 dialogId) {
     if (dialogId >= gDialogTable.size) {
         return NULL;
     }

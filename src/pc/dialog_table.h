@@ -15,7 +15,7 @@ typedef struct {
 
 void dialog_table_init(void);
 s32 dialog_table_add(struct DialogEntry *dialog);
-struct DialogEntry* dialog_table_get(s16 dialogId);
+struct DialogEntry* dialog_table_get(s32 dialogId);
 void dialog_table_reset(void);
 void dialog_table_shutdown(void);
 
