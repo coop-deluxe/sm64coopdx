@@ -129,7 +129,7 @@ f32 gDialogBoxOpenTimer = DEFAULT_DIALOG_BOX_ANGLE;
 f32 gDialogBoxScale = DEFAULT_DIALOG_BOX_SCALE;
 s16 gDialogScrollOffsetY = 0;
 s8 gDialogBoxType = DIALOG_TYPE_ROTATE;
-s32 gDialogID = -1;
+s32 gDialogID = DIALOG_NONE;
 s16 gLastDialogPageStrPos = 0;
 s16 gDialogTextPos = 0;
 #ifdef VERSION_EU
@@ -1174,14 +1174,14 @@ bool handle_dialog_hook(s32 dialogId) {
 }
 
 void create_dialog_box(s32 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
 void create_dialog_box_with_var(s32 dialog, s32 dialogVar) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogVariable = dialogVar;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
@@ -1189,14 +1189,14 @@ void create_dialog_box_with_var(s32 dialog, s32 dialogVar) {
 }
 
 void create_dialog_inverted_box(s32 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ZOOM;
     }
 }
 
 void create_dialog_box_with_response(s32 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
         gLastDialogResponse = 1;
@@ -1965,7 +1965,7 @@ void render_dialog_entries(void) {
     struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
     if (dialog == NULL) {
-        gDialogID = -1;
+        gDialogID = DIALOG_NONE;
         return;
     }
 
