@@ -255,11 +255,12 @@ bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
 }
 
 s32 smlua_text_utils_allocate_dialog(void) {
-    struct DialogEntry* dialog = calloc(1, sizeof(struct DialogEntry));
+    s32 dialogId;
+    struct DialogEntry* dialog = dialog_table_alloc(&dialogId);
 
     dialog->replaced = true;
 
-    return dialog_table_add(dialog);
+    return dialogId;
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

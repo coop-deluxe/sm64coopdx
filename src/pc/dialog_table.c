@@ -5,25 +5,17 @@
 #include "PR/ultratypes.h"
 #include "game/segment2.h"
 #include "pc/lua/utils/smlua_text_utils.h"
+#include "game/memory.h"
 #include <stdlib.h>
 
-DialogTable gDialogTable;
+DialogTable *gDialogTable = NULL;
 
 void dialog_table_init(void) {
-    DialogTable *table = &gDialogTable;
+    gDialogTable = growing_array_init(gDialogTable, 256);
 
-    table->capacity = 256;
-    table->size = 0;
-    table->data = malloc(sizeof(struct DialogEntry*) * table->capacity);
-
-    if (!table->data) {
-        LOG_ERROR("Failed to allocate dialog table");
-        exit(EXIT_FAILURE);
-    }
-
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
+    for (u32 i = 0; i < DIALOG_COUNT; i++) {
         const struct DialogEntry* dialogOrig = smlua_text_utils_dialog_get_unmodified(i);
-        struct DialogEntry* dialog = malloc(sizeof(struct DialogEntry));
+        struct DialogEntry* dialog = dialog_table_alloc(NULL);
 
         if (!dialog) {
             LOG_ERROR("Failed to allocate DialogEntry %d", i);
@@ -32,36 +24,29 @@ void dialog_table_init(void) {
 
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
         dialog->text = get_dialog_text_ascii(dialog);
-
-        dialog_table_add(dialog);
     }
 }
 
-s32 dialog_table_add(struct DialogEntry *dialog) {
-    DialogTable *table = &gDialogTable;
+struct DialogEntry* dialog_table_alloc(s32 *dialogId) {
+    DialogTable *table = gDialogTable;
 
-    if (table->size >= MAX_ALLOCATED_DIALOGS) {
+    if (table->count >= MAX_ALLOCATED_DIALOGS) {
         LOG_LUA_LINE_WARNING("Dialog limit reached! (%d max)", MAX_ALLOCATED_DIALOGS);
-        return -1;
+        if (dialogId) *dialogId = DIALOG_NONE;
+        return NULL;
     }
 
-    if (table->size >= table->capacity) {
-        s32 newCapacity = table->capacity * 2;
-        struct DialogEntry **newData = realloc(table->data, sizeof(struct DialogEntry*) * newCapacity);
+    struct DialogEntry* alloc = growing_array_alloc(table, sizeof(struct DialogEntry));
 
-        if (!newData) {
-            LOG_LUA_LINE_WARNING("Failed to resize dialog table");
-            return -1;
-        }
-
-        table->data = newData;
-        table->capacity = newCapacity;
+    if (!alloc) {
+        LOG_LUA_LINE_WARNING("Failed to allocate DialogEntry");
+        if (dialogId) *dialogId = DIALOG_NONE;
+        return NULL;
     }
 
-    s32 index = table->size;
-    table->data[table->size++] = dialog;
+    if (dialogId) *dialogId = table->count - 1;
 
-    return index;
+    return alloc;
 }
 
 struct DialogEntry* dialog_table_get(s32 dialogId) {
@@ -69,14 +54,14 @@ struct DialogEntry* dialog_table_get(s32 dialogId) {
         return NULL;
     }
 
-    return gDialogTable.data[dialogId];
+    return gDialogTable->buffer[dialogId];
 }
 
 void dialog_table_reset(void) {
-    DialogTable *table = &gDialogTable;
+    DialogTable *table = gDialogTable;
 
-    for (s32 i = 0; i < table->size; i++) {
-        struct DialogEntry *dialog = table->data[i];
+    for (u32 i = 0; i < table->count; i++) {
+        struct DialogEntry *dialog = table->buffer[i];
 
         if (!dialog->replaced) continue;
 
@@ -91,26 +76,25 @@ void dialog_table_reset(void) {
         }
         else {
             free(dialog);
+            table->buffer[i] = NULL;
         }
     }
 
-    table->size = DIALOG_COUNT;
+    table->count = DIALOG_COUNT;
 }
 
 void dialog_table_shutdown(void) {
-    DialogTable *table = &gDialogTable;
+    DialogTable *table = gDialogTable;
 
     dialog_table_reset();
 
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        struct DialogEntry *dialog = table->data[i];
+    for (u32 i = 0; i < DIALOG_COUNT; i++) {
+        struct DialogEntry *dialog = table->buffer[i];
 
         free(dialog->text);
         free(dialog);
     }
 
-    free(table->data);
-    table->data = NULL;
-    table->size = 0;
-    table->capacity = 0;
+    free(table->buffer);
+    table->buffer = NULL;
 }
