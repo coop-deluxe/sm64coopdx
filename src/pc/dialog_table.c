@@ -100,11 +100,12 @@ void dialog_table_reset(void) {
 void dialog_table_shutdown(void) {
     DialogTable *table = &gDialogTable;
 
+    dialog_table_reset();
+    
     for (s32 i = 0; i < DIALOG_COUNT; i++) {
         free(table->data[i]);
     }
 
-    dialog_table_reset();
     free(table->data);
     table->data = NULL;
     table->size = 0;
