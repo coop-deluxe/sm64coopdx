@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "dialog_ids.h"
+#include "game/ingame_menu.h"
 
 #define MAX_ACTS 6
 #define MAX_ACTS_AND_100_COINS 7
@@ -25,6 +26,8 @@ struct CourseActNames {
 };
 
 extern struct CourseActNames gReplacedCourseActNameTable[]; // indexed by COURSE_* constants
+
+char* get_dialog_text_ascii(struct DialogEntry *dialog);
 
 void smlua_text_utils_init(void);
 void smlua_text_utils_shutdown(void);

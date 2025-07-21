@@ -2,10 +2,9 @@
 #define DIALOG_TABLE_H
 
 #include "PR/ultratypes.h"
+#include "game/ingame_menu.h"
 
 #define MAX_ALLOCATED_DIALOGS 2147483647 // max s32
-
-struct DialogEntry;
 
 typedef struct {
     struct DialogEntry **data;

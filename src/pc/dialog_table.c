@@ -4,6 +4,7 @@
 #include "dialog_ids.h"
 #include "PR/ultratypes.h"
 #include "game/segment2.h"
+#include "pc/lua/utils/smlua_text_utils.h"
 #include <stdlib.h>
 
 DialogTable gDialogTable;
@@ -46,9 +47,10 @@ void dialog_table_init(void) {
             LOG_ERROR("Failed to allocate DialogEntry %d", i);
             exit(EXIT_FAILURE);
         }
-
+        
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-        // hard error?
+        dialog->text = get_dialog_text_ascii(dialog);
+
         dialog_table_add(dialog);
     }
 }

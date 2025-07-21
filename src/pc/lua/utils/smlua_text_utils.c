@@ -126,15 +126,6 @@ void smlua_text_utils_init(void) {
         );
     }
 
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        struct DialogEntry *dialog = smlua_text_utils_dialog_get(i);
-        char* dialogText = get_dialog_text_ascii(dialog);
-
-        free(dialog->text);
-
-        dialog->text = dialogText;
-    }
-
     sSmluaTextUtilsInited = true;
 }
 
