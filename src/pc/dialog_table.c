@@ -122,10 +122,7 @@ void dialog_table_shutdown(void) {
 
     for (s32 i = 0; i < DIALOG_COUNT; i++) {
         struct DialogEntry *dialog = table->data[i];
-        if (dialog->replaced){
-            free(dialog->str)
-        }
-        
+
         free(dialog->text);
         free(dialog);
     }
