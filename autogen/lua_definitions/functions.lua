@@ -11852,13 +11852,6 @@ function smlua_text_utils_dialog_get(dialogId)
 end
 
 --- @param dialogId DialogId
---- @return DialogEntry
---- Gets the unmodified DialogEntry struct for the given `dialogId`
-function smlua_text_utils_dialog_get_unmodified(dialogId)
-    -- ...
-end
-
---- @param dialogId DialogId
 --- @param unused integer
 --- @param linesPerBox integer
 --- @param leftOffset integer

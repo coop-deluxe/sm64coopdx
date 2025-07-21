@@ -7136,29 +7136,6 @@ Gets the DialogEntry struct for the given `dialogId`
 
 <br />
 
-## [smlua_text_utils_dialog_get_unmodified](#smlua_text_utils_dialog_get_unmodified)
-
-### Description
-Gets the unmodified DialogEntry struct for the given `dialogId`
-
-### Lua Example
-`local DialogEntryValue = smlua_text_utils_dialog_get_unmodified(dialogId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dialogId | [enum DialogId](constants.md#enum-DialogId) |
-
-### Returns
-[DialogEntry](structs.md#DialogEntry)
-
-### C Prototype
-`const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
 
 ### Description

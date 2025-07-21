@@ -35,7 +35,6 @@ void smlua_text_utils_shutdown(void);
 void smlua_text_utils_reset_all(void);
 /* |description|Gets the DialogEntry struct for the given `dialogId`|descriptionEnd| */
 struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
-/* |description|Gets the unmodified DialogEntry struct for the given `dialogId`|descriptionEnd|*/
 const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);

@@ -21,26 +21,8 @@ void dialog_table_init(void) {
         exit(EXIT_FAILURE);
     }
 
-    void **dialogTableOrig = NULL;
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTableOrig = segmented_to_virtual(dialog_table_eu_en_original);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTableOrig = segmented_to_virtual(dialog_table_eu_fr_original);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTableOrig = segmented_to_virtual(dialog_table_eu_de_original);
-            break;
-    }
-#else
-    dialogTableOrig = segmented_to_virtual(seg2_dialog_original);
-#endif
-
-    for (s32 i = 0; i < DIALOG_COUNT; ++i) {
-        struct DialogEntry* dialogOrig = segmented_to_virtual(dialogTableOrig[i]);
+    for (s32 i = 0; i < DIALOG_COUNT; i++) {
+        const struct DialogEntry* dialogOrig = smlua_text_utils_dialog_get_unmodified(i);
         struct DialogEntry* dialog = malloc(sizeof(struct DialogEntry));
 
         if (!dialog) {
