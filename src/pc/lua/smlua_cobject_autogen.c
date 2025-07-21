@@ -2357,7 +2357,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oTiltingPyramidNormalY",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalY),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTiltingPyramidNormalZ",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalZ),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTimer",                                     LVT_S32,                 offsetof(struct Object, oTimer),                                     false, LOT_NONE,         1, sizeof(s32)                   },
-    { "oToadMessageDialogId",                       LVT_U32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(u32)                   },
+    { "oToadMessageDialogId",                       LVT_S32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageRecentlyTalked",                 LVT_S32,                 offsetof(struct Object, oToadMessageRecentlyTalked),                 false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageState",                          LVT_S32,                 offsetof(struct Object, oToadMessageState),                          false, LOT_NONE,         1, sizeof(s32)                   },
 //  { "oToxBoxMovementPattern",                     LVT_???,                 offsetof(struct Object, oToxBoxMovementPattern),                     false, LOT_???,          1, sizeof(void*)                 }, <--- UNIMPLEMENTED
