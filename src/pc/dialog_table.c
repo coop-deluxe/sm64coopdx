@@ -61,7 +61,7 @@ s32 dialog_table_add(struct DialogEntry *dialog) {
         struct DialogEntry **newData = realloc(table->data, sizeof(struct DialogEntry*) * newCapacity);
 
         if (!newData) {
-            LOG_ERROR("Failed to resize dialog table");
+            LOG_LUA_LINE_WARNING("Failed to resize dialog table");
             return -1;
         }
 
