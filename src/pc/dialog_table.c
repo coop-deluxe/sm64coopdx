@@ -73,8 +73,7 @@ void dialog_table_reset(void) {
 
             memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
             dialog->text = get_dialog_text_ascii(dialog); 
-        }
-        else {
+        } else {
             free(dialog);
             table->buffer[i] = NULL;
         }
@@ -96,5 +95,6 @@ void dialog_table_shutdown(void) {
     }
 
     free(table->buffer);
-    table->buffer = NULL;
+    free(table);
+    gDialogTable = NULL;
 }
