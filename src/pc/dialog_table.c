@@ -83,7 +83,7 @@ s32 dialog_table_add(struct DialogEntry *dialog) {
 }
 
 struct DialogEntry* dialog_table_get(s32 dialogId) {
-    if (dialogId >= gDialogTable.size) {
+    if (!IS_VALID_DIALOG(dialogId)) {
         return NULL;
     }
 
@@ -120,7 +120,7 @@ void dialog_table_shutdown(void) {
 
     dialog_table_reset();
 
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {\
+    for (s32 i = 0; i < DIALOG_COUNT; i++) {
         struct DialogEntry *dialog = table->data[i];
         free(dialog->text);
         free(dialog);
