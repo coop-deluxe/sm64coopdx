@@ -41,9 +41,14 @@ void dialog_table_init(void) {
     for (s32 i = 0; i < DIALOG_COUNT; ++i) {
         struct DialogEntry* dialogOrig = segmented_to_virtual(dialogTableOrig[i]);
         struct DialogEntry* dialog = malloc(sizeof(struct DialogEntry));
-    
-        memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
 
+        if (!dialog) {
+            LOG_ERROR("Failed to allocate DialogEntry %d", i);
+            exit(EXIT_FAILURE);
+        }
+
+        memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
+        // hard error?
         dialog_table_add(dialog);
     }
 }
@@ -101,7 +106,7 @@ void dialog_table_shutdown(void) {
     DialogTable *table = &gDialogTable;
 
     dialog_table_reset();
-    
+
     for (s32 i = 0; i < DIALOG_COUNT; i++) {
         free(table->data[i]);
     }
