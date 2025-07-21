@@ -7271,7 +7271,7 @@ s32 unused_dialog_cutscene_response(u8 cutscene) {
     }
 }
 
-s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID) {
+s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID) {
     s16 response = 0;
 
     if ((gCamera->cutscene == 0) && (sObjectCutscene == 0)) {
@@ -7280,7 +7280,7 @@ s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID) {
             if (dialogID != -1) {
                 sCutsceneDialogID = dialogID;
             } else {
-                sCutsceneDialogID = (s16) gBehaviorValues.dialogs.DefaultCutsceneDialog;
+                sCutsceneDialogID = (s32) gBehaviorValues.dialogs.DefaultCutsceneDialog;
             }
         } else {
             response = sCutsceneDialogResponse;

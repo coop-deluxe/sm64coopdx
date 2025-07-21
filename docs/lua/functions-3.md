@@ -2186,7 +2186,7 @@ Starts a cutscene involving an object and displays dialog during the sequence. T
 - `integer`
 
 ### C Prototype
-`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);`
+`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -4692,7 +4692,7 @@ Creates a dialog box with a dialog ID that rotates into view
 - None
 
 ### C Prototype
-`void create_dialog_box(s16 dialog);`
+`void create_dialog_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4716,7 +4716,7 @@ Creates a dialog box with a dialog variable
 - None
 
 ### C Prototype
-`void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
+`void create_dialog_box_with_var(s32 dialog, s32 dialogVar);`
 
 [:arrow_up_small:](#)
 
@@ -4739,7 +4739,7 @@ Creates a dialog box with a dialog ID that zooms into view
 - None
 
 ### C Prototype
-`void create_dialog_inverted_box(s16 dialog);`
+`void create_dialog_inverted_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4762,7 +4762,7 @@ Creates a dialog box with a response
 - None
 
 ### C Prototype
-`void create_dialog_box_with_response(s16 dialog);`
+`void create_dialog_box_with_response(s32 dialog);`
 
 [:arrow_up_small:](#)
 

@@ -11908,7 +11908,7 @@ int smlua_func_cutscene_object_with_dialog(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cutscene_object_with_dialog"); return 0; }
     struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cutscene_object_with_dialog"); return 0; }
-    s16 dialogID = smlua_to_integer(L, 3);
+    s32 dialogID = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "cutscene_object_with_dialog"); return 0; }
 
     lua_pushinteger(L, cutscene_object_with_dialog(cutscene, o, dialogID));
@@ -13935,7 +13935,7 @@ int smlua_func_create_dialog_box(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box"); return 0; }
 
     create_dialog_box(dialog);
@@ -13952,7 +13952,7 @@ int smlua_func_create_dialog_box_with_var(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_var"); return 0; }
     s32 dialogVar = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "create_dialog_box_with_var"); return 0; }
@@ -13971,7 +13971,7 @@ int smlua_func_create_dialog_inverted_box(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_inverted_box"); return 0; }
 
     create_dialog_inverted_box(dialog);
@@ -13988,7 +13988,7 @@ int smlua_func_create_dialog_box_with_response(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_response"); return 0; }
 
     create_dialog_box_with_response(dialog);

@@ -4443,7 +4443,7 @@ Gets the current dialog box ID
 - `integer`
 
 ### C Prototype
-`s16 get_dialog_id(void);`
+`s32 get_dialog_id(void);`
 
 [:arrow_up_small:](#)
 

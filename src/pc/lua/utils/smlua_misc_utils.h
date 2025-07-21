@@ -71,7 +71,7 @@ struct DjuiTheme* djui_menu_get_theme(void);
 /* |description|Gets the current state of the dialog box|descriptionEnd| */
 s8 get_dialog_box_state(void);
 /* |description|Gets the current dialog box ID|descriptionEnd| */
-s16 get_dialog_id(void);
+s32 get_dialog_id(void);
 
 /* |description|Gets if the last objective collected was a star (0) or a key (1)|descriptionEnd| */
 u8 get_last_star_or_key(void);

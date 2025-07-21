@@ -1508,7 +1508,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "controller",                LVT_COBJECT_P, offsetof(struct MarioState, controller),                true,  LOT_CONTROLLER,        1, sizeof(struct Controller*)        },
     { "curAnimOffset",             LVT_F32,       offsetof(struct MarioState, curAnimOffset),             false, LOT_NONE,              1, sizeof(f32)                       },
     { "currentRoom",               LVT_S16,       offsetof(struct MarioState, currentRoom),               false, LOT_NONE,              1, sizeof(s16)                       },
-    { "dialogId",                  LVT_S16,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s16)                       },
+    { "dialogId",                  LVT_S32,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s32)                       },
     { "doubleJumpTimer",           LVT_U8,        offsetof(struct MarioState, doubleJumpTimer),           false, LOT_NONE,              1, sizeof(u8)                        },
     { "faceAngle",                 LVT_COBJECT,   offsetof(struct MarioState, faceAngle),                 true,  LOT_VEC3S,             1, sizeof(Vec3s)                     },
     { "fadeWarpOpacity",           LVT_U8,        offsetof(struct MarioState, fadeWarpOpacity),           false, LOT_NONE,              1, sizeof(u8)                        },

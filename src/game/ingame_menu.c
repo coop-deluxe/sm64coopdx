@@ -129,7 +129,7 @@ f32 gDialogBoxOpenTimer = DEFAULT_DIALOG_BOX_ANGLE;
 f32 gDialogBoxScale = DEFAULT_DIALOG_BOX_SCALE;
 s16 gDialogScrollOffsetY = 0;
 s8 gDialogBoxType = DIALOG_TYPE_ROTATE;
-s16 gDialogID = -1;
+s32 gDialogID = -1;
 s16 gLastDialogPageStrPos = 0;
 s16 gDialogTextPos = 0;
 #ifdef VERSION_EU
@@ -1106,11 +1106,11 @@ void int_to_str(s32 num, u8 *dst) {
     dst[pos] = DIALOG_CHAR_TERMINATOR;
 }
 
-s16 get_dialog_id(void) {
+s32 get_dialog_id(void) {
     return gDialogID;
 }
 
-void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
+void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
     // King Bob-omb (Start), Whomp (Start), King Bob-omb (throw him out), Eyerock (Start), Wiggler (Start)
     s16 dialogBossStart[] = { 17, 114, 128, 117, 150 };
     // Koopa the Quick (BOB), Koopa the Quick (THI), Penguin Race, Fat Penguin Race (120 stars)
@@ -1160,7 +1160,7 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
 static u8 sHookString[255];
 static bool sOverrideDialogString = false;
 void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
-bool handle_dialog_hook(s16 dialogId) {
+bool handle_dialog_hook(s32 dialogId) {
     bool openDialogBox = true;
     const char *dialogTextOverride = NULL;
     smlua_call_event_hooks(HOOK_ON_DIALOG, dialogId, &openDialogBox, &dialogTextOverride);
@@ -1173,14 +1173,14 @@ bool handle_dialog_hook(s16 dialogId) {
     return true;
 }
 
-void create_dialog_box(s16 dialog) {
+void create_dialog_box(s32 dialog) {
     if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
-void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
+void create_dialog_box_with_var(s32 dialog, s32 dialogVar) {
     if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogVariable = dialogVar;
@@ -1188,14 +1188,14 @@ void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
     }
 }
 
-void create_dialog_inverted_box(s16 dialog) {
+void create_dialog_inverted_box(s32 dialog) {
     if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ZOOM;
     }
 }
 
-void create_dialog_box_with_response(s16 dialog) {
+void create_dialog_box_with_response(s32 dialog) {
     if (handle_dialog_hook(dialog) && gDialogID == -1) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;

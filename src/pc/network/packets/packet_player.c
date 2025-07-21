@@ -77,7 +77,7 @@ struct PacketPlayerData {
     u8 areaSyncValid;
     u8 knockbackTimer;
 
-    s16 dialogId;
+    s32 dialogId;
 };
 #pragma pack()
 
