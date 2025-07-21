@@ -258,7 +258,9 @@ s32 smlua_text_utils_allocate_dialog(void) {
     s32 dialogId;
     struct DialogEntry* dialog = dialog_table_alloc(&dialogId);
 
-    dialog->replaced = true;
+    if (dialog) {
+        dialog->replaced = true;
+    }
 
     return dialogId;
 }
