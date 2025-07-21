@@ -62,7 +62,7 @@ s32 dialog_table_add(struct DialogEntry *dialog) {
 
         if (!newData) {
             LOG_ERROR("Failed to resize dialog table");
-            exit(EXIT_FAILURE);
+            return -1;
         }
 
         table->data = newData;
