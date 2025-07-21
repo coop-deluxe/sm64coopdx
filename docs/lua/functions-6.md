@@ -7092,26 +7092,6 @@ Sets the parameters of one of the two whirlpools (0-indexed) in an area
 <br />
 
 
-## [get_dialog_text_ascii](#get_dialog_text_ascii)
-
-### Lua Example
-`local stringValue = get_dialog_text_ascii(dialog)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dialog | [DialogEntry](structs.md#DialogEntry) |
-
-### Returns
-- `string`
-
-### C Prototype
-`char* get_dialog_text_ascii(struct DialogEntry *dialog);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
 
 ### Description

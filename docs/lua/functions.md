@@ -2105,7 +2105,6 @@
 <br />
 
 - smlua_text_utils.h
-   - [get_dialog_text_ascii](functions-6.md#get_dialog_text_ascii)
    - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
    - [smlua_text_utils_dialog_get](functions-6.md#smlua_text_utils_dialog_get)
    - [smlua_text_utils_dialog_get_unmodified](functions-6.md#smlua_text_utils_dialog_get_unmodified)

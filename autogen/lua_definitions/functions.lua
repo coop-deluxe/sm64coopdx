@@ -11839,12 +11839,6 @@ function set_whirlpools(x, y, z, strength, area, index)
     -- ...
 end
 
---- @param dialog DialogEntry
---- @return string
-function get_dialog_text_ascii(dialog)
-    -- ...
-end
-
 --- Resets every modified dialog back to vanilla
 function smlua_text_utils_reset_all()
     -- ...

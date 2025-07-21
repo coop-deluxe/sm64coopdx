@@ -35148,23 +35148,6 @@ int smlua_func_set_whirlpools(lua_State* L) {
  // smlua_text_utils.h //
 ////////////////////////
 
-int smlua_func_get_dialog_text_ascii(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_dialog_text_ascii", 1, top);
-        return 0;
-    }
-
-    struct DialogEntry* dialog = (struct DialogEntry*)smlua_to_cobject(L, 1, LOT_DIALOGENTRY);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_dialog_text_ascii"); return 0; }
-
-    lua_pushstring(L, get_dialog_text_ascii(dialog));
-
-    return 1;
-}
-
 int smlua_func_smlua_text_utils_reset_all(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38356,7 +38339,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
 
     // smlua_text_utils.h
-    smlua_bind_function(L, "get_dialog_text_ascii", smlua_func_get_dialog_text_ascii);
     smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);
     smlua_bind_function(L, "smlua_text_utils_dialog_get", smlua_func_smlua_text_utils_dialog_get);
     smlua_bind_function(L, "smlua_text_utils_dialog_get_unmodified", smlua_func_smlua_text_utils_dialog_get_unmodified);
