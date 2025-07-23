@@ -531,7 +531,7 @@ Gfx *envfx_update_snow(s32 snowMode, Vec3s marioPos, Vec3s camFrom, Vec3s camTo)
 Gfx *envfx_update_particles(s32 mode, Vec3s marioPos, Vec3s camTo, Vec3s camFrom) {
     Gfx *gfx;
 
-    if (get_dialog_id() != -1) {
+    if (get_dialog_id() != DIALOG_NONE) {
         return NULL;
     }
 

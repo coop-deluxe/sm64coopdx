@@ -250,11 +250,11 @@ u16 level_control_timer(s32 timerOp) {
 
 u32 pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
+        if (get_dialog_id() == DIALOG_NONE && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
-        u32 dialogActive = get_dialog_id() >= 0;
+        u32 dialogActive = get_dialog_id() != DIALOG_NONE;
         u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
         u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 

@@ -1,12 +1,12 @@
 struct RacingPenguinData {
-    s16* text;
+    enum DialogId* text;
     f32* radius;
     f32* height;
 };
 
 static struct RacingPenguinData sRacingPenguinData[] = {
-    { (s16*) &gBehaviorValues.dialogs.RacingPenguinStartDialog, &gBehaviorValues.RacingPenguinRadius, &gBehaviorValues.RacingPenguinHeight },
-    { (s16*) &gBehaviorValues.dialogs.RacingPenguinBigStartDialog, &gBehaviorValues.RacingPenguinBigRadius, &gBehaviorValues.RacingPenguinBigHeight },
+    { &gBehaviorValues.dialogs.RacingPenguinStartDialog, &gBehaviorValues.RacingPenguinRadius, &gBehaviorValues.RacingPenguinHeight },
+    { &gBehaviorValues.dialogs.RacingPenguinBigStartDialog, &gBehaviorValues.RacingPenguinBigRadius, &gBehaviorValues.RacingPenguinBigHeight },
 };
 
 static u32 penguinPathedStartWaypoint = 0;

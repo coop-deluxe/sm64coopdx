@@ -2,6 +2,7 @@
 #define INGAME_MENU_H
 
 #include <PR/ultratypes.h>
+#include <stdbool.h>
 
 #define ASCII_TO_DIALOG(asc)                                       \
     (((asc) >= '0' && (asc) <= '9') ? ((asc) - '0') :              \
