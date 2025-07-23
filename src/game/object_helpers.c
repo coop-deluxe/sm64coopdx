@@ -3184,7 +3184,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
                     cur_obj_end_dialog(m, dialogFlags, gDialogResponse);
                 }
             } else if (dialogFlags & DIALOG_UNK1_FLAG_DEFAULT) {
-                if (get_dialog_id() == -1) {
+                if (get_dialog_id() == DIALOG_NONE) {
                     cur_obj_end_dialog(m, dialogFlags, 3);
                 }
             } else {
