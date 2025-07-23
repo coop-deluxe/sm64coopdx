@@ -246,7 +246,6 @@ def process_enum(filename, line, inIfBlock):
     return ret
 
 
-
 def process_define(filename, line, inIfBlock):
     _, ident, val = line.split(' ', 2)
 
