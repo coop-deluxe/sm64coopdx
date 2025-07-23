@@ -1,11 +1,11 @@
 #include "dialog_table.h"
-#include "pc/debuglog.h"
 #include "pc/lua/smlua.h"
 #include "dialog_ids.h"
 #include "PR/ultratypes.h"
 #include "game/segment2.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
+#include "pc/platform.h"
 #include <stdlib.h>
 
 DialogTable *gDialogTable = NULL;
@@ -18,8 +18,7 @@ void dialog_table_init(void) {
         struct DialogEntry* dialog = dialog_table_alloc(NULL);
 
         if (!dialog) {
-            LOG_ERROR("Failed to allocate DialogEntry %d", i);
-            exit(EXIT_FAILURE);
+            sys_fatal("Failed to allocate DialogEntry for dialog ID %d", i);
         }
 
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
@@ -36,9 +35,9 @@ struct DialogEntry* dialog_table_alloc(s32 *dialogId) {
         return NULL;
     }
 
-    struct DialogEntry* alloc = growing_array_alloc(table, sizeof(struct DialogEntry));
+    struct DialogEntry* dialog = growing_array_alloc(table, sizeof(struct DialogEntry));
 
-    if (!alloc) {
+    if (!dialog) {
         LOG_LUA_LINE_WARNING("Failed to allocate DialogEntry");
         if (dialogId) *dialogId = DIALOG_NONE;
         return NULL;
@@ -46,7 +45,7 @@ struct DialogEntry* dialog_table_alloc(s32 *dialogId) {
 
     if (dialogId) *dialogId = table->count - 1;
 
-    return alloc;
+    return dialog;
 }
 
 struct DialogEntry* dialog_table_get(s32 dialogId) {
