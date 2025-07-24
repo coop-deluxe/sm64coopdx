@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 struct ControllerInfo {
     u8 index;
     u32 type;
