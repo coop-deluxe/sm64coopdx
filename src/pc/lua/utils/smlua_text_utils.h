@@ -38,6 +38,8 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
 const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
+/* |description|Restores a replaced DialogEntry to its original state.|descriptionEnd| */
+void smlua_text_utils_dialog_restore(enum DialogId dialogId);
 /* |description|Returns whether the dialog with the given ID has been replaced|descriptionEnd| */
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);
 /* |description|Allocates a new dialog entry|descriptionEnd|*/

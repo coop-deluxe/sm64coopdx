@@ -11863,6 +11863,12 @@ function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffs
 end
 
 --- @param dialogId DialogId
+--- Restores a replaced DialogEntry to its original state.
+function smlua_text_utils_dialog_restore(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
 --- @return boolean
 --- Returns whether the dialog with the given ID has been replaced
 function smlua_text_utils_dialog_is_replaced(dialogId)

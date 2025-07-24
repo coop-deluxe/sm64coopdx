@@ -247,6 +247,22 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     dialog->replaced = true;
 }
 
+void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) return;
+
+    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
+
+    if (!dialog->replaced) return;
+
+    const struct DialogEntry *dialogOrig = smlua_text_utils_dialog_get_unmodified(dialogId);
+
+    free((u8*)dialog->str);
+    free(dialog->text);
+
+    memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
+    dialog->text = get_dialog_text_ascii(dialog);
+}
+
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
     if (!IS_VALID_DIALOG(dialogId)) return false;
 

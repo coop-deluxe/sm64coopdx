@@ -64,15 +64,11 @@ void dialog_table_reset(void) {
 
         if (!dialog->replaced) continue;
 
-        free((u8*)dialog->str);
-        free(dialog->text);
-
         if (!IS_CUSTOM_DIALOG(i)) {
-            const struct DialogEntry *dialogOrig = smlua_text_utils_dialog_get_unmodified(i);
-
-            memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-            dialog->text = get_dialog_text_ascii(dialog); 
+            smlua_text_utils_dialog_restore(i);
         } else {
+            free((u8*)dialog->str);
+            free(dialog->text);
             free(dialog);
             table->buffer[i] = NULL;
         }
