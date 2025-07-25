@@ -453,9 +453,7 @@ static void level_cmd_begin_area(void) {
             gAreas[areaIndex].camera = gAreas[areaIndex].cameras[0];
         } else {
             gAreas[areaIndex].camera = NULL;
-            for (u8 i = 0; i < POSSIBLE_NUM_PLAYERS; i++) {
-                memset(&gAreas[areaIndex].cameras[i], 0, sizeof(sizeof(struct Camera *) * POSSIBLE_NUM_PLAYERS)); // set them to null
-            }
+            memset(gAreas[areaIndex].cameras, 0, sizeof(struct Camera *) * POSSIBLE_NUM_PLAYERS); // set them to null
         }
     }
 

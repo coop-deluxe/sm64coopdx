@@ -71,6 +71,8 @@
 #include <windows.h>
 #endif
 
+#include "game/local_multiplayer.h"
+
 extern Vp D_8032CF00;
 
 OSMesg D_80339BEC;
@@ -195,8 +197,6 @@ static s32 get_num_frames_to_draw(f64 t) {
     s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) configFrameLimit);
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
-
-#include "game/local_multiplayer.h"
 
 void produce_interpolation_frames_and_delay(void) {
     bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
