@@ -71,6 +71,10 @@
 #include <windows.h>
 #endif
 
+#ifdef HAVE_SDL2
+#include <SDL2/SDL.h>
+#endif
+
 extern Vp D_8032CF00;
 
 OSMesg D_80339BEC;
@@ -187,24 +191,42 @@ static void compute_fps(f64 curTime) {
     sDrawnFrames = 0;
 }
 
-static s32 get_num_frames_to_draw(f64 t) {
-    if (configFrameLimit % FRAMERATE == 0) {
-        return configFrameLimit / FRAMERATE;
+static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
+    if (frameLimit % FRAMERATE == 0) {
+        return frameLimit / FRAMERATE;
     }
-    s64 numFramesCurr = (s64) (t * (f64) configFrameLimit);
-    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) configFrameLimit);
+    s64 numFramesCurr = (s64) (t * (f64) frameLimit);
+    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) frameLimit);
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
+static u32 get_refresh_rate() {
+    if (configFramerateMode == RRM_MANUAL) { return configFrameLimit; }
+    if (configFramerateMode == RRM_UNLIMITED) { return 3000; } // Has no effect
+#ifdef HAVE_SDL2
+    static u32 refreshRate = 60;
+    if (!refreshRate) {
+        SDL_DisplayMode mode;
+        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
+            refreshRate = (u32) mode.refresh_rate;
+        }
+    }
+    return refreshRate;
+#else
+    return 60;
+#endif
+}
+
 void produce_interpolation_frames_and_delay(void) {
-    bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
+    u32 refreshRate = get_refresh_rate();
+    bool is30Fps = (refreshRate == FRAMERATE);
 
     gRenderingInterpolated = true;
 
-    f64 curTime = clock_elapsed_f64();
     f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
+    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
 
+    f64 curTime = clock_elapsed_f64();
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
 
