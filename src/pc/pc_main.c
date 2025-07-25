@@ -219,24 +219,29 @@ void produce_interpolation_frames_and_delay(void) {
         );
         gRenderingDelta = delta;
 
+        // prepare interpolated frame
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
-        gfx_end_frame();
-
-        sDrawnFrames++;
-
-        if (!is30Fps && configUncappedFramerate) { continue; }
+        gfx_end_frame_render();
 
         // delay if our framerate is capped
-        f64 now = clock_elapsed_f64();
-        f64 elapsedTime = now - loopStartTime;
-        expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
-        f64 delay = (expectedTime - elapsedTime) * 1000.0;
-        if (delay > 0.0) {
-            WAPI.delay((u32)delay);
+        if (!configUncappedFramerate && !configWindow.vsync) {
+            f64 now = clock_elapsed_f64();
+            f64 elapsedTime = now - loopStartTime;
+            expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
+            f64 delay = (expectedTime - elapsedTime);
+
+            numFramesToDraw--;
+            if (delay > 0.0) {
+                precise_delay_f64(delay);
+            }
         }
-        numFramesToDraw--;
+
+        // send the frame to the screen (should be directly after the delay for good frame pacing)
+        gfx_display_frame();
+
+        sDrawnFrames++;
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
@@ -271,7 +276,7 @@ inline static void buffer_audio(void) {
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    
+
     if (!shouldMute) {
         for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
             sAudioBuffer[i] *= gMasterVolume;
@@ -326,6 +331,10 @@ void produce_one_frame(void) {
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+    // measure frame start time
+    f64 frameStart = clock_elapsed_f64();
+    f64 targetFrameTime = 1.0 / 60.0; // update at 60fps
+
     // start frame
     gfx_start_frame();
     config_gfx_pool();
@@ -353,6 +362,15 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     alloc_display_list(0);
     gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
+
+    // delay to go easy on the cpu
+    f64 frameEnd = clock_elapsed_f64();
+    f64 elapsed = frameEnd - frameStart;
+    f64 remaining = targetFrameTime - elapsed;
+    if (remaining > 0) {
+        WAPI.delay((u32)(remaining * 1000.0));
+    }
+
     gfx_end_frame();
 }
 
