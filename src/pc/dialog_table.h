@@ -4,7 +4,7 @@
 #include "PR/ultratypes.h"
 #include "game/ingame_menu.h"
 
-#define MAX_ALLOCATED_DIALOGS 16384
+#define MAX_ALLOCATED_DIALOGS 32767
 
 typedef struct GrowingArray DialogTable;
 
