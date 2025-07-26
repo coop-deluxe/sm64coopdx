@@ -706,19 +706,24 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
     // set knockback very high when dealing with player attacks
     if (m->interactObj != NULL && (m->interactObj->oInteractType & INTERACT_PLAYER) && terrainIndex != 2) {
         f32 scaler = 1.0f;
-        s8 hasBeenPunched = FALSE;
-#define IF_REVAMPED_PVP(is, isNot) (gServerSettings.pvpType == PLAYER_PVP_REVAMPED ? (is) : (isNot));
+        s8 revampedPunched = FALSE;
+        s8 revampedTripped = FALSE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             struct MarioState* m2 = &gMarioStates[i];
             if (!is_player_active(m2)) { continue; }
             if (m2->marioObj == NULL) { continue; }
             if (m2->marioObj != m->interactObj) { continue; }
-            // Redundent check in case the kicking flag somehow gets missed
-            if (m2->action == ACT_JUMP_KICK || m2->flags & MARIO_KICKING) { scaler = IF_REVAMPED_PVP(1.9f, 2.0f); }
-            else if (m2->action == ACT_DIVE) { scaler = 1.0f + IF_REVAMPED_PVP(m2->forwardVel * 0.005f, 0.0f); }
-            else if ((m2->flags & MARIO_PUNCHING)) { scaler = IF_REVAMPED_PVP(-0.1f, 1.0f); hasBeenPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED; }
+
+            if (m2->flags & MARIO_KICKING) { scaler = 2.0f; }
+            else if ((m2->flags & MARIO_PUNCHING)) { revampedPunched = gServerSettings.pvpType == PLAYER_PVP_REVAMPED && m2->forwardVel < 12.0f; }
+            else if (m2->flags & MARIO_TRIPPING) { revampedTripped = gServerSettings.pvpType == PLAYER_PVP_REVAMPED; }
+
             if (m2->flags & MARIO_METAL_CAP) { scaler *= 1.25f; }
             break;
+        }
+
+        if (revampedPunched) {
+            scaler = -0.1f;
         }
 
         if (m->flags & MARIO_METAL_CAP) {
@@ -730,13 +735,23 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->forwardVel = mag;
         if (sign > 0 && terrainIndex == 1) { mag *= -1.0f; }
 
-        m->vel[0] = (-mag * sins(m->interactObj->oFaceAngleYaw)) * IF_REVAMPED_PVP(1.1f, 1.0f);
-        m->vel[1] = ((mag < 0) ? -mag : mag) * IF_REVAMPED_PVP(0.9f, 1.0f);
-        m->vel[2] = (-mag * coss(m->interactObj->oFaceAngleYaw)) * IF_REVAMPED_PVP(1.1f, 1.0f);
+        m->vel[0] = -mag * sins(m->interactObj->oFaceAngleYaw);
+        m->vel[1] = (mag < 0) ? -mag : mag;
+        m->vel[2] = -mag * coss(m->interactObj->oFaceAngleYaw);
+        if (revampedTripped) {
+            if (sign > 0) {
+                bonkAction = sBackwardKnockbackActions[terrainIndex][2];
+            } else {
+                bonkAction = sForwardKnockbackActions[terrainIndex][2];
+            }
+            m->vel[0] = sign * 8.0f;
+            m->vel[2] = sign * 8.0f;
+            m->forwardVel = sign * 8.0f;
+        }
+
         m->slideVelX = m->vel[0];
         m->slideVelZ = m->vel[2];
-        m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
-#undef IF_REVAMPED_PVP
+        m->knockbackTimer = revampedPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
     }
 
@@ -1316,14 +1331,23 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
     if (marioRelY < 0) { marioRelY = -marioRelY; }
     if (marioRelY >= extentY) { return FALSE; }
 
-
     f32 marioRelX = localTorso[0] - remoteTorso[0];
     f32 marioRelZ = localTorso[2] - remoteTorso[2];
     f32 marioDist = sqrtf(sqr(marioRelX) + sqr(marioRelZ));
 
     if (marioDist >= radius) { return FALSE; }
 
+    f32 posX = m->pos[0] + (radius - marioDist) / radius * marioRelX;
+    f32 posZ = m->pos[2] + (radius - marioDist) / radius * marioRelZ;
+    // Prevent a push into out of bounds
+    if (find_floor_height(posX, m->pos[1], posZ) == gLevelValues.floorLowerLimit) { return FALSE; }
+    m->pos[0] = posX;
+    m->pos[2] = posZ;
+    m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
+    m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
+
     // bounce
+    if (passes_pvp_interaction_checks(m, m2)) { return FALSE; }
     u32 interaction = determine_interaction(m, m2->marioObj);
     if (interaction & INT_HIT_FROM_ABOVE) {
         m2->bounceSquishTimer = max(m2->bounceSquishTimer, 4);
@@ -1356,31 +1380,24 @@ static u8 resolve_player_collision(struct MarioState* m, struct MarioState* m2) 
         // don't do further interactions if we've hopped on top
         return TRUE;
     }
-
-    f32 posX = m->pos[0] + (radius - marioDist) / radius * marioRelX;
-    f32 posZ = m->pos[2] + (radius - marioDist) / radius * marioRelZ;
-    // Prevent a push into out of bounds
-    if (find_floor_height(posX, m->pos[1], posZ) == gLevelValues.floorLowerLimit) { return FALSE; }
-    m->pos[0] = posX;
-    m->pos[2] = posZ;
-    m->marioBodyState->torsoPos[0] += (radius - marioDist) / radius * marioRelX;
-    m->marioBodyState->torsoPos[2] += (radius - marioDist) / radius * marioRelZ;
     return FALSE;
 }
 
 u8 determine_player_damage_value(struct MarioState* attacker, u32 interaction) {
     if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
         if (attacker->action == ACT_GROUND_POUND_LAND) { return 2; }
-        else if (interaction & INT_GROUND_POUND) { return 3; }
-        else if (interaction & (INT_KICK | INT_SLIDE_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
-        else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return 2; }
+        else if (attacker->action == ACT_SHOT_FROM_CANNON) { return 4; }
+        else if (interaction & INT_GROUND_POUND) { return (u8)(MAX((attacker->peakHeight - attacker->pos[1]) / 500.0f, 0)) + 3; }
+        else if (interaction & INT_SLIDE_KICK) { return (u8)(MAX((attacker->forwardVel - 30.0f) / 13.0f, 0)) + 1; }
+        else if (interaction & INT_PUNCH && attacker->actionArg < 3) { return attacker->forwardVel > 12.0f ? 3 : 2; }
         else if (attacker->action == ACT_FLYING) { return (u8)(MAX((attacker->forwardVel - 40.0f) / 20.0f, 0)) + 1; }
+        else if (interaction & (INT_KICK | INT_TRIP | INT_TWIRL)) { return 2; }
         return 1;
-    } else {
-        if (interaction & INT_GROUND_POUND_OR_TWIRL) { return 3; }
-        else if (interaction & INT_KICK) { return 2; }
-        else if (interaction & INT_ATTACK_SLIDE) { return 1; }
         return 2;
+    } else {
+        if (interaction & INT_GROUND_POUND) { return 3; }
+        else if (interaction & (INT_KICK | INT_TRIP | INT_TWIRL | INT_SLIDE_KICK | INT_PUNCH)) { return 2; }
+        return 1;
     }
 }
 
@@ -1416,14 +1433,16 @@ u8 passes_pvp_interaction_checks(struct MarioState* attacker, struct MarioState*
                           || attacker->action == ACT_FREEFALL || attacker->action == ACT_LEDGE_GRAB);
     u8 isVictimIntangible = (victim->action & ACT_FLAG_INTANGIBLE);
     u8 isVictimGroundPounding = (victim->action == ACT_GROUND_POUND) && (victim->actionState != 0);
+    u8 isRevampedForceAllowAttack = (gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
+                                    (attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
+                                    (victim->action == ACT_BACKWARD_GROUND_KB || victim->action == ACT_FORWARD_GROUND_KB ||
+                                    victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB));
+
     if (victim->knockbackTimer != 0) {
         return false;
     }
 
-    if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED &&
-        (attacker->action == ACT_PUNCHING || attacker->action == ACT_MOVE_PUNCHING) &&
-        (victim->action == ACT_BACKWARD_GROUND_KB || victim->action == ACT_FORWARD_GROUND_KB ||
-        victim->action == ACT_SOFT_BACKWARD_GROUND_KB || victim->action == ACT_SOFT_FORWARD_GROUND_KB)) {
+    if (isRevampedForceAllowAttack) {
         return true;
     }
 
@@ -1504,14 +1523,14 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
         return FALSE;
     }
 
-#define PLAYER_IN_ROLLOUT_FLIP(m) ((m->action == ACT_FORWARD_ROLLOUT || m->action == ACT_BACKWARD_ROLLOUT) && m->actionState == 1)
+#define PLAYER_IN_ROLLOUT_ATTACK(m) ((m->action == ACT_FORWARD_ROLLOUT || m->action == ACT_BACKWARD_ROLLOUT) && m->vel[1] > 0.0f && m->actionState == 1)
 
     // see if it was an attack
     u32 interaction = determine_interaction(attacker, cVictim->marioObj);
     // Specfically override jump kicks to prevent low damage and low knockback kicks
-    if (attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
+    if (interaction == INT_HIT_FROM_BELOW && attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
     // Allow rollouts to attack
-    else if (PLAYER_IN_ROLLOUT_FLIP(attacker)) { interaction = INT_HIT_FROM_BELOW; }
+    else if (PLAYER_IN_ROLLOUT_ATTACK(attacker)) { interaction = INT_HIT_FROM_BELOW; }
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
         return FALSE;
     }
@@ -1526,41 +1545,33 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
 
     // determine if slide attack should be ignored
     if ((interaction & INT_ATTACK_SLIDE) || player_is_sliding(cVictim)) {
-        // determine the difference in velocities
-        //Vec3f velDiff;
-        //vec3f_dif(velDiff, attacker->vel, cVictim->vel);
-        // Allow groundpounds to always hit sliding/fast attacks
-        if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED && attacker->action == ACT_GROUND_POUND) {
-            // do nothing
+        if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
+            // if the difference vectors are not different enough, do not attack
+            if (vec3f_length(attacker->vel) < 15) { return FALSE; }
         } else {
-            if (attacker->action == ACT_SLIDE_KICK_SLIDE || attacker->action == ACT_SLIDE_KICK) {
-                // if the difference vectors are not different enough, do not attack
-                if (vec3f_length(attacker->vel) < 15) { return FALSE; }
-            } else {
-                // if the difference vectors are not different enough, do not attack
-                if (vec3f_length(attacker->vel) < 40) { return FALSE; }
-            }
+            // if the difference vectors are not different enough, do not attack
+            if (vec3f_length(attacker->vel) < 40) { return FALSE; }
+        }
 
-            u8 forceAllowAttack = FALSE;
-            if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
-                // Give slidekicks trade immunity by making them (almost) invincible
-                // Also give rollout flips immunity to dives
-                if ((cVictim->action == ACT_SLIDE_KICK && attacker->action != ACT_SLIDE_KICK) ||
-                    (PLAYER_IN_ROLLOUT_FLIP(cVictim) && attacker->action == ACT_DIVE)) {
-                    return FALSE;
-                } else if ((attacker->action == ACT_SLIDE_KICK) ||
-                           (PLAYER_IN_ROLLOUT_FLIP(cVictim) && cVictim->action == ACT_DIVE)) {
-                    forceAllowAttack = TRUE;
-                }
-            }
-            // if the victim is going faster, do not attack
-            if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel) && !forceAllowAttack) {
+        u8 forceAllowAttack = FALSE;
+        if (gServerSettings.pvpType == PLAYER_PVP_REVAMPED) {
+            // Give slidekicks trade immunity by making them (almost) invincible
+            // Also give rollout flips immunity to dives
+            if ((cVictim->action == ACT_SLIDE_KICK && attacker->action != ACT_SLIDE_KICK) ||
+                (PLAYER_IN_ROLLOUT_ATTACK(cVictim) && attacker->action == ACT_DIVE)) {
                 return FALSE;
+            } else if ((attacker->action == ACT_GROUND_POUND || attacker->action == ACT_SLIDE_KICK) ||
+                        (PLAYER_IN_ROLLOUT_ATTACK(cVictim) && cVictim->action == ACT_DIVE)) {
+                forceAllowAttack = TRUE;
             }
+        }
+        // if the victim is going faster, do not attack
+        if (vec3f_length(cVictim->vel) > vec3f_length(attacker->vel) && !forceAllowAttack) {
+            return FALSE;
         }
     }
 
-#undef PLAYER_IN_ROLLOUT_FLIP
+#undef PLAYER_IN_ROLLOUT_ATTACK
 
     // determine if ground pound should be ignored
     if (attacker->action == ACT_GROUND_POUND) {

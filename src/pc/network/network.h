@@ -70,8 +70,9 @@ enum BouncyLevelBounds {
 };
 
 enum PvpType {
-    PLAYER_PVP_CLASSIC,
-    PLAYER_PVP_REVAMPED
+    PLAYER_PVP_DEFAULT,
+    PLAYER_PVP_REVAMPED,
+    PLAYER_PVP_CLASSIC = 0,
 };
 
 struct ServerSettings {
