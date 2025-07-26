@@ -19,6 +19,8 @@ u32 clock_elapsed_ticks(void);
 /* |description|Checks whether it is the day given|descriptionEnd| */
 bool clock_is_date(u8 month, u8 day);
 
+void precise_delay_f64(f64 delaySec);
+
 void file_get_line(char* buffer, size_t maxLength, FILE* fp);
 
 /* |description|Linearly interpolates between `a` and `b` with `delta`|descriptionEnd| */
