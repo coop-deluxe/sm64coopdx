@@ -62,6 +62,7 @@
 #include "gfx_dimensions.h"
 #include "game/segment2.h"
 
+#include "engine/math_util.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -71,6 +72,10 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
+#endif
+
+#ifdef HAVE_SDL2
+#include <SDL2/SDL.h>
 #endif
 
 extern Vp D_8032CF00;
@@ -189,56 +194,83 @@ static void compute_fps(f64 curTime) {
     sDrawnFrames = 0;
 }
 
-static s32 get_num_frames_to_draw(f64 t) {
-    if (configFrameLimit % FRAMERATE == 0) {
-        return configFrameLimit / FRAMERATE;
+static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
+    if (frameLimit % FRAMERATE == 0) {
+        return frameLimit / FRAMERATE;
     }
-    s64 numFramesCurr = (s64) (t * (f64) configFrameLimit);
-    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) configFrameLimit);
+    s64 numFramesCurr = (s64) (t * (f64) frameLimit);
+    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) frameLimit);
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
+static u32 get_refresh_rate() {
+    if (configFramerateMode == RRM_MANUAL) { return configFrameLimit; }
+    if (configFramerateMode == RRM_UNLIMITED) { return 3000; } // Has no effect
+    static u32 refreshRate = 60;
+#ifdef HAVE_SDL2
+    if (!refreshRate) {
+        SDL_DisplayMode mode;
+        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
+            refreshRate = (u32) mode.refresh_rate;
+        }
+    }
+#endif
+    return refreshRate;
+}
+
 void produce_interpolation_frames_and_delay(void) {
-    bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
+    u32 refreshRate = get_refresh_rate();
+    bool is30Fps = (refreshRate == FRAMERATE);
 
     gRenderingInterpolated = true;
 
-    f64 curTime = clock_elapsed_f64();
     f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
+    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
 
+    f64 curTime = clock_elapsed_f64();
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
+    u16 frames = 0;
+    const f64 interpFrameTime = sFrameTime / (f64) numFramesToDraw;
 
     // interpolate and render
     // make sure to draw at least one frame to prevent the game from freezing completely
     // (including inputs and window events) if the game update duration is greater than 33ms
     do {
+        ++frames;
+
+        // when we know how many frames to draw, use a precise delta
+        f64 idealTime = configFramerateMode != RRM_UNLIMITED ? (sFrameTimeStart + interpFrameTime * frames) : curTime;
         f32 delta = (
             is30Fps ?
             1.0f :
-            MIN(MAX((curTime - sFrameTimeStart) / sFrameTime, 0.f), 1.f)
+            clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f)
         );
         gRenderingDelta = delta;
 
+        // prepare interpolated frame
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
-        gfx_end_frame();
-
-        sDrawnFrames++;
-
-        if (!is30Fps && configUncappedFramerate) { continue; }
+        gfx_end_frame_render();
 
         // delay if our framerate is capped
-        f64 now = clock_elapsed_f64();
-        f64 elapsedTime = now - loopStartTime;
-        expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
-        f64 delay = (expectedTime - elapsedTime) * 1000.0;
-        if (delay > 0.0) {
-            WAPI.delay((u32)delay);
+        if (configFramerateMode != RRM_UNLIMITED && !configWindow.vsync) {
+            f64 now = clock_elapsed_f64();
+            f64 elapsedTime = now - loopStartTime;
+            expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
+            f64 delay = (expectedTime - elapsedTime);
+
+            numFramesToDraw--;
+            if (delay > 0.0) {
+                precise_delay_f64(delay);
+            }
         }
-        numFramesToDraw--;
+
+        // send the frame to the screen (should be directly after the delay for good frame pacing)
+        gfx_display_frame();
+
+        sDrawnFrames++;
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
@@ -273,7 +305,7 @@ inline static void buffer_audio(void) {
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    
+
     if (!shouldMute) {
         for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
             sAudioBuffer[i] *= gMasterVolume;
@@ -328,6 +360,10 @@ void produce_one_frame(void) {
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+    // measure frame start time
+    f64 frameStart = clock_elapsed_f64();
+    f64 targetFrameTime = 1.0 / 60.0; // update at 60fps
+
     // start frame
     gfx_start_frame();
     config_gfx_pool();
@@ -355,6 +391,15 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     alloc_display_list(0);
     gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
+
+    // delay to go easy on the cpu
+    f64 frameEnd = clock_elapsed_f64();
+    f64 elapsed = frameEnd - frameStart;
+    f64 remaining = targetFrameTime - elapsed;
+    if (remaining > 0) {
+        WAPI.delay((u32)(remaining * 1000.0));
+    }
+
     gfx_end_frame();
 }
 
