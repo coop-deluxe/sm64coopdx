@@ -728,11 +728,12 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_0(CLEAR_DEMO_PTR);
 
     // object
-    if (_Symbol == "OBJECT") {
+    if (_Symbol == "OBJECT" || _Symbol == "OBJECT_WITH_ACTS") {
         u64 topTokenIndex = aTokenIndex;
 
         bool foundModel = true;
         bool foundBeh = true;
+        bool foundBehParam = true;
         LevelScript model    = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundModel);
         LevelScript posX     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript posY     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
@@ -740,47 +741,20 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
         LevelScript angleX   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript angleY   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         LevelScript angleZ   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript behParam = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
+        LevelScript behParam = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBehParam);
         LevelScript beh      = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
+        LevelScript acts     = (_Symbol == "OBJECT_WITH_ACTS") ? ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex) : 0x1F;
 
-        if (foundModel && foundBeh) {
-            aGfxData->mPointerList.Add(aHead + 5);
-            LevelScript _Ls[] = { OBJECT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) };
+        if (!foundBehParam) {
+            u8 flags = (!foundModel) | (!foundBeh << 1);
+            u32 finalModel = foundModel ? model : DynOS_Lua_RememberVariable(aGfxData, aHead + 4, aNode->mTokens[topTokenIndex + 0]);
+            u32 finalBehParam = foundBehParam ? behParam : DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 7]);
+            u32 finalBeh = foundBeh ? beh : DynOS_Lua_RememberVariable(aGfxData, aHead + 6, aNode->mTokens[topTokenIndex + 8]);
+
+            LevelScript _Ls[] = { OBJECT_EXT_LUA_BPARAM(flags, finalModel, posX, posY, posZ, angleX, angleY, angleZ, finalBehParam, finalBeh, acts) };
             memcpy(aHead, _Ls, sizeof(_Ls));
             aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
-        } else if (foundModel) {
-            u32 behIndex   = DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 8]);
-            LevelScript _Ls[] = { OBJECT_EXT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, behIndex) };
-            memcpy(aHead, _Ls, sizeof(_Ls));
-            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
-        } else {
-            u32 modelIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 5, aNode->mTokens[topTokenIndex + 0]);
-            u32 behIndex   = DynOS_Lua_RememberVariable(aGfxData, aHead + 6, aNode->mTokens[topTokenIndex + 8]);
-            LevelScript _Ls[] = { OBJECT_EXT2(modelIndex, posX, posY, posZ, angleX, angleY, angleZ, behParam, behIndex) };
-            memcpy(aHead, _Ls, sizeof(_Ls));
-            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
-        }
-        return;
-    }
-
-    // object with acts
-    if (_Symbol == "OBJECT_WITH_ACTS") {
-        u64 topTokenIndex = aTokenIndex;
-
-        bool foundModel = true;
-        bool foundBeh = true;
-        LevelScript model    = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundModel);
-        LevelScript posX     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript posY     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript posZ     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript angleX   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript angleY   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript angleZ   = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript behParam = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-        LevelScript beh      = ParseLevelScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundBeh);
-        LevelScript acts     = ParseLevelScriptSymbolArg(aGfxData, aNode, aTokenIndex);
-
-        if (foundModel && foundBeh) {
+        } else if (foundModel && foundBeh) {
             aGfxData->mPointerList.Add(aHead + 5);
             LevelScript _Ls[] = { OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) };
             memcpy(aHead, _Ls, sizeof(_Ls));

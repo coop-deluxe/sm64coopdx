@@ -324,6 +324,17 @@
     CMD_W(arg), \
     CMD_PTR(target)
 
+// This command is used when behParam is a Lua variable.
+// the flags byte describes the other two arguments.
+// bit 0 set: model is lua
+// bit 1 set: behavior is lua
+#define OBJECT_EXT_LUA_BPARAM(flags, model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(0x43, 0x1C, acts, flags), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_PTR(model), \
+    CMD_PTR(behParam), \
+    CMD_PTR(beh)
+
 // README //
 // README //
 // README //

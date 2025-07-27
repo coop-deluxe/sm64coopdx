@@ -1049,6 +1049,85 @@ static void level_cmd_place_object_ext2(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+static void level_cmd_place_object_ext_lua_bparam(void) {
+    u8 val7 = 1 << (gCurrActNum - 1);
+    struct SpawnInfo *spawnInfo;
+
+    u8 flags = CMD_GET(u8, 3);
+
+    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+        spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
+
+        spawnInfo->startPos[0] = CMD_GET(s16, 4);
+        spawnInfo->startPos[1] = CMD_GET(s16, 6);
+        spawnInfo->startPos[2] = CMD_GET(s16, 8);
+        spawnInfo->startAngle[0] = CMD_GET(s16, 10) * 0x8000 / 180;
+        spawnInfo->startAngle[1] = CMD_GET(s16, 12) * 0x8000 / 180;
+        spawnInfo->startAngle[2] = CMD_GET(s16, 14) * 0x8000 / 180;
+
+        spawnInfo->areaIndex = sCurrAreaIndex;
+        spawnInfo->activeAreaIndex = sCurrAreaIndex;
+
+        uintptr_t modelArg = CMD_GET(uintptr_t, 16);
+        uintptr_t behParamArg = CMD_GET(uintptr_t, 20);
+        uintptr_t behArg = CMD_GET(uintptr_t, 24);
+
+        const char *behParamStr = dynos_level_get_token(behParamArg);
+        gSmLuaConvertSuccess = true;
+        spawnInfo->behaviorArg = smlua_get_any_integer_mod_variable(behParamStr);
+
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("Failed to place custom object, could not find behParam '%s'", behParamStr);
+            sCurrentCmd = CMD_NEXT;
+            return;
+        }
+
+        if (flags & 1) {
+            const char *modelStr = dynos_level_get_token(modelArg);
+            gSmLuaConvertSuccess = true;
+            enum ModelExtendedId modelId = smlua_get_any_integer_mod_variable(modelStr);
+
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("Failed to place custom object, could not find model '%s'", modelStr);
+                sCurrentCmd = CMD_NEXT;
+                return;
+            }
+
+            u16 slot = smlua_model_util_load(modelId);
+            spawnInfo->unk18 = dynos_model_get_geo(slot);
+        } else {
+            spawnInfo->unk18 = dynos_model_get_geo(modelArg);
+        }
+
+        if (flags & (1 << 1)) {
+            const char *behStr = dynos_level_get_token(behArg);
+            gSmLuaConvertSuccess = true;
+            enum BehaviorId behId = smlua_get_any_integer_mod_variable(behStr);
+
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("Failed to place custom object, could not find behavior '%s'", behStr);
+                sCurrentCmd = CMD_NEXT;
+                return;
+            }
+
+            spawnInfo->behaviorScript = (BehaviorScript *)get_behavior_from_id(behId);
+        } else {
+            spawnInfo->behaviorScript = (BehaviorScript *)behArg;
+        }
+
+        spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
+
+        spawnInfo->syncID = spawnInfo->next
+                          ? spawnInfo->next->syncID + 10
+                          : 10;
+
+        gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
+        area_check_red_coin_or_secret(spawnInfo->behaviorScript, false);
+    }
+
+    sCurrentCmd = CMD_NEXT;
+}
+
 static void level_cmd_load_model_from_geo_ext(void) {
     s16 modelSlot = CMD_GET(s16, 2);
     const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
@@ -1134,6 +1213,7 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*40*/ level_cmd_place_object_ext2,
     /*41*/ level_cmd_load_model_from_geo_ext,
     /*42*/ level_cmd_jump_area_ext,
+    /*43*/ level_cmd_place_object_ext_lua_bparam
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
