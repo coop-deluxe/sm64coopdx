@@ -2915,8 +2915,8 @@ function uv_update_scroll()
     -- ...
 end
 
---- Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-function bhv_ambient_light_init()
+--- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+function bhv_ambient_light_update()
     -- ...
 end
 
@@ -4997,6 +4997,12 @@ function lvl_set_current_level(param, levelNum)
     -- ...
 end
 
+--- @return boolean
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+function le_is_enabled()
+    -- ...
+end
+
 --- @param mode LEMode
 --- Sets the lighting engine mode to `mode`
 function le_set_mode(mode)
@@ -5015,9 +5021,17 @@ function le_set_tone_mapping(toneMapping)
     -- ...
 end
 
---- @return boolean
---- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
-function le_is_enabled()
+--- @param out Color
+--- Outputs the lighting engine's ambient color to `out`
+function le_get_ambient_color(out)
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Sets the lighting engine ambient color
+function le_set_ambient_color(r, g, b)
     -- ...
 end
 
@@ -5075,20 +5089,6 @@ end
 --- @return boolean
 --- Checks if a lighting engine point light corresponding to `id` exists
 function le_light_exists(id)
-    -- ...
-end
-
---- @param out Color
---- Outputs the lighting engine's ambient color to `out`
-function le_get_ambient_color(out)
-    -- ...
-end
-
---- @param r integer
---- @param g integer
---- @param b integer
---- Sets the lighting engine ambient color
-function le_set_ambient_color(r, g, b)
     -- ...
 end
 
