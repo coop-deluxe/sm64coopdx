@@ -1970,24 +1970,16 @@ void gfx_run(Gfx *commands) {
     //double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
-}
-
-void gfx_end_frame_render(void) {
     gfx_flush();
     gfx_rapi->end_frame();
+    gfx_wapi->swap_buffers_begin();
 }
 
-void gfx_display_frame(void) {
-    gfx_wapi->swap_buffers_begin();
+void gfx_end_frame(void) {
     if (!dropped_frame) {
         gfx_rapi->finish_render();
         gfx_wapi->swap_buffers_end();
     }
-}
-
-void gfx_end_frame(void) {
-    gfx_end_frame_render();
-    gfx_display_frame();
 }
 
 void gfx_shutdown(void) {
