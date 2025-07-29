@@ -874,6 +874,25 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oMacroUnk10C);
     bhv_constant(oMacroUnk110);
 
+    /* Mario */
+    bhv_constant(oMarioParticleFlags);
+    bhv_constant(oMarioPoleUnk108);
+    bhv_constant(oMarioReadingSignDYaw);
+    bhv_constant(oMarioPoleYawVel);
+    bhv_constant(oMarioCannonObjectYaw);
+    bhv_constant(oMarioTornadoYawVel);
+    bhv_constant(oMarioReadingSignDPosX);
+    bhv_constant(oMarioPolePos);
+    bhv_constant(oMarioCannonInputYaw);
+    bhv_constant(oMarioTornadoPosY);
+    bhv_constant(oMarioReadingSignDPosZ);
+    bhv_constant(oMarioWhirlpoolPosY);
+    bhv_constant(oMarioJumboStarCutscenePosZ);
+    bhv_constant(oMarioBurnTimer);
+    bhv_constant(oMarioLongJumpIsSlow);
+    bhv_constant(oMarioSteepJumpYaw);
+    bhv_constant(oMarioWalkingPitch);
+
     /* 1-UpHidden */
     bhv_constant(o1UpHiddenUnkF4);
     bhv_constant(o1UpForceSpawn);
@@ -1912,6 +1931,11 @@ static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, Da
     u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
+    // Remove (de-)referencing
+    if (_Arg.Length() > 0 && (_Arg[0] == '&' || _Arg[0] == '*')) {
+        _Arg.Remove(0);
+    }
+
     // Built-in functions
     const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
     if (_FunctionPtr != NULL) {
@@ -2107,6 +2131,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     bhv_symbol_3(SET_INT_RAND_RSHIFT, 0, 0, 0);
     bhv_symbol_3(SET_RANDOM_INT, 0, 0, 0);
+    bhv_symbol_3(SET_RANDOM_FLOAT, 0, 0, 0);
     bhv_symbol_3(ADD_RANDOM_FLOAT, 0, 0, 0);
     bhv_symbol_3(ADD_INT_RAND_RSHIFT, 0, 0, 0);
     bhv_symbol_3(SUM_FLOAT, 0, 0, 0);

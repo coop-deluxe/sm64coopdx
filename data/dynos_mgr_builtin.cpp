@@ -1358,6 +1358,7 @@ static const void* sDynosBuiltinAnims[] = {
     define_builtin_ptr(dorrie_seg6_anims_0600F638),
     define_builtin_ptr(scuttlebug_seg6_anims_06015064),
     define_builtin_ptr(swoop_seg6_anims_060070D0),
+    define_builtin_ptr(castle_grounds_seg7_anims_flags),
 };
 
 const Animation *DynOS_Builtin_Anim_GetFromName(const char *aDataName) {
