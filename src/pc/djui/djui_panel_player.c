@@ -183,7 +183,7 @@ static void djui_panel_player_edit_palette_delete(UNUSED struct DjuiBase* caller
     // }
     player_palette_delete(fs_get_write_path(PALETTES_DIRECTORY), sPalettePresetNameTextBox->buffer, false);
     sReloadPalettePresetSelection = true;
-	djui_panel_menu_back(caller);
+    djui_panel_menu_back(caller);
 }
 
 static void djui_panel_player_edit_palette_export(UNUSED struct DjuiBase* caller) {
@@ -192,10 +192,10 @@ static void djui_panel_player_edit_palette_export(UNUSED struct DjuiBase* caller
 }
 
 static void djui_panel_player_active_palette_export(UNUSED struct DjuiBase* caller) {
-	configPlayerPalette = gNetworkPlayers[0].overridePalette;
+    configPlayerPalette = gNetworkPlayers[0].overridePalette;
     player_palette_export(sPalettePresetNameTextBox->buffer);
     sReloadPalettePresetSelection = true;
-	djui_panel_menu_back(caller);
+    djui_panel_menu_back(caller);
 }
 
 static void (*sSavedDestroy)(struct DjuiBase*);
@@ -372,7 +372,7 @@ static void djui_panel_player_name_active_palette(struct DjuiBase* caller) {
             struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_active_palette_export);
             djui_base_set_size(&button2->base, 0.485f, 32);
         }
-		
+        
         {
             struct DjuiText *text = djui_text_create(body, DLANG(PLAYER, CAP_TOGGLE));
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
