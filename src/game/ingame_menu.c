@@ -448,86 +448,6 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 }
 #endif
 
-u8 str_ascii_char_to_dialog(char c) {
-    switch (c) {
-        case '/': return 0xD0;
-        case '>': return 0x53;
-        case '<': return 0x52;
-        case '|': return 0x51;
-        case '^': return 0x50;
-        case '\n': return 0xFE;
-        case '$': return 0xF9;
-        case '~': return 0xF7;
-        case '?': return 0xF4;
-        case '%': return 0xF3;
-        case '!': return 0xF2;
-        case ':': return 0xE6;
-        case '&': return 0xE5;
-        case '+': return 0xE4;
-        case ')': return 0xE3;
-        case '(': return 0xE1;
-        case '-': return 0x9F;
-        case ' ': return 0x9E;
-        case ',': return 0x6F;
-        case '.': return 0x3F;
-        case '@': return 0xFA;
-        case '*': return 0xFB;
-        case '=': return 0xFD;
-        case '\'': return 0x3E;
-        case '\0': return DIALOG_CHAR_TERMINATOR;
-        default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
-    }
-}
-
-void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
-    const char* c = string;
-    u8* d = dialog;
-    u16 converted = 0;
-
-    while (*c != '\0' && converted < (length - 1)) {
-        if (!strncmp(c, "you", 3) && (c[3] < 'a' || c[3] > 'z')) {
-            *d = 0xD2;
-            c += 2;
-        } else if (!strncmp(c, "the", 3) && (c[3] < 'a' || c[3] > 'z')) {
-            *d = 0xD1;
-            c += 2;
-        } else if (!strncmp(c, "[R]", 3)) {
-            *d = 0x58;
-            c += 2;
-        } else if (!strncmp(c, "[Z]", 3)) {
-            *d = 0x57;
-            c += 2;
-        } else if (!strncmp(c, "[C]", 3)) {
-            *d = 0x56;
-            c += 2;
-        } else if (!strncmp(c, "[B]", 3)) {
-            *d = 0x55;
-            c += 2;
-        } else if (!strncmp(c, "[A]", 3)) {
-            *d = 0x54;
-            c += 2;
-        } else if (!strncmp(c, "[Z]", 3)) {
-            *d = 0x57;
-            c += 2;
-        } else if (!strncmp(c, ")(", 2)) {
-            *d = 0xE2;
-            c += 1;
-        } else if (!strncmp(c, "[%]", 3)) {
-            *d = 0xE0;
-            c += 2;
-        } else if (!strncmp(c, "★", 2)) {
-            *d = 0xFA;
-            c += 2;
-        } else {
-            *d = str_ascii_char_to_dialog(*c);
-        }
-        d++;
-        c++;
-        converted++;
-    }
-    *d = DIALOG_CHAR_TERMINATOR;
-}
-
 f32 get_generic_dialog_width(u8* dialog) {
 #ifdef VERSION_JP
     return 0;
@@ -551,7 +471,7 @@ f32 get_generic_dialog_width(u8* dialog) {
 
 f32 get_generic_ascii_string_width(const char* ascii) {
     u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
+    convert_string_ascii_to_sm64(dialog, ascii, false);
     return get_generic_dialog_width(dialog);
 }
 
@@ -567,13 +487,13 @@ f32 get_generic_dialog_height(u8* dialog) {
 
 f32 get_generic_ascii_string_height(const char* ascii) {
     u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
+    convert_string_ascii_to_sm64(dialog, ascii, false);
     return get_generic_dialog_height(dialog);
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {
     u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
+    convert_string_ascii_to_sm64(dialog, ascii, false);
     print_generic_string(x, y, dialog);
 }
 
@@ -2637,7 +2557,7 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 
 void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
     u8 TEXT_EXIT_TO_CASTLE[16] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog("EXIT TO CASTLE", TEXT_EXIT_TO_CASTLE, 15);
+    convert_string_ascii_to_sm64(TEXT_EXIT_TO_CASTLE, "EXIT TO CASTLE", false);
 
 #ifdef VERSION_EU
     u8 textContinue[][10] = {

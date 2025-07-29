@@ -21,7 +21,6 @@ static bool sReplacedDialog[DIALOG_COUNT] = { 0 };
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
 extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
-void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);
 
 static size_t measure_converted_sm64_string(const u8* str64) {
     size_t len = 0;
@@ -146,9 +145,8 @@ void smlua_text_utils_shutdown(void) {
 }
 
 static u8* smlua_text_utils_convert(const char* str) {
-    s32 len = strlen(str);
-    u8* dialogStr = calloc(len + 2, sizeof(u8));
-    str_ascii_to_dialog(str, dialogStr, len + 1);
+    u8* dialogStr = calloc(strlen(str) + 2, sizeof(u8));
+    convert_string_ascii_to_sm64(dialogStr, str, false);
     return dialogStr;
 }
 
