@@ -15155,46 +15155,6 @@ int smlua_func_lag_compensation_get_local_state_index(UNUSED lua_State* L) {
  // level_info.h //
 //////////////////
 
-int smlua_func_convert_string_ascii_to_sm64(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "convert_string_ascii_to_sm64", 3, top);
-        return 0;
-    }
-
-    u8 * str64 = (u8 *)smlua_to_cpointer(L, 1, LVT_U8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "convert_string_ascii_to_sm64"); return 0; }
-    const char* strAscii = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "convert_string_ascii_to_sm64"); return 0; }
-    bool menu = smlua_to_boolean(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "convert_string_ascii_to_sm64"); return 0; }
-
-    convert_string_ascii_to_sm64(str64, strAscii, menu);
-
-    return 1;
-}
-
-int smlua_func_convert_string_sm64_to_ascii(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "convert_string_sm64_to_ascii", 2, top);
-        return 0;
-    }
-
-    char * strAscii = (char *)smlua_to_cpointer(L, 1, LVT_STRING_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "convert_string_sm64_to_ascii"); return 0; }
-    u8 * str64 = (u8 *)smlua_to_cpointer(L, 2, LVT_U8_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "convert_string_sm64_to_ascii"); return 0; }
-
-    convert_string_sm64_to_ascii(strAscii, str64);
-
-    return 1;
-}
-
 int smlua_func_get_level_name_ascii(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37304,8 +37264,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "lag_compensation_get_local_state_index", smlua_func_lag_compensation_get_local_state_index);
 
     // level_info.h
-    smlua_bind_function(L, "convert_string_ascii_to_sm64", smlua_func_convert_string_ascii_to_sm64);
-    smlua_bind_function(L, "convert_string_sm64_to_ascii", smlua_func_convert_string_sm64_to_ascii);
     smlua_bind_function(L, "get_level_name_ascii", smlua_func_get_level_name_ascii);
     smlua_bind_function(L, "get_level_name_sm64", smlua_func_get_level_name_sm64);
     smlua_bind_function(L, "get_level_name", smlua_func_get_level_name);

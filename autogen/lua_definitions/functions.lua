@@ -4876,19 +4876,6 @@ function lag_compensation_get_local_state_index()
     -- ...
 end
 
---- @param str64 Pointer_integer
---- @param strAscii string
---- @param menu boolean
-function convert_string_ascii_to_sm64(str64, strAscii, menu)
-    -- ...
-end
-
---- @param strAscii Pointer_integer
---- @param str64 Pointer_integer
-function convert_string_sm64_to_ascii(strAscii, str64)
-    -- ...
-end
-
 --- @param courseNum integer
 --- @param levelNum integer
 --- @param areaIndex integer

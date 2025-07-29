@@ -6253,49 +6253,6 @@ Gets the local Mario's state index
 <br />
 
 
-## [convert_string_ascii_to_sm64](#convert_string_ascii_to_sm64)
-
-### Lua Example
-`convert_string_ascii_to_sm64(str64, strAscii, menu)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| str64 | `Pointer` <`integer`> |
-| strAscii | `string` |
-| menu | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [convert_string_sm64_to_ascii](#convert_string_sm64_to_ascii)
-
-### Lua Example
-`convert_string_sm64_to_ascii(strAscii, str64)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| strAscii | `Pointer` <`integer`> |
-| str64 | `Pointer` <`integer`> |
-
-### Returns
-- None
-
-### C Prototype
-`void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_level_name_ascii](#get_level_name_ascii)
 
 ### Description
