@@ -935,6 +935,8 @@
 <br />
 
 - level_info.h
+   - [convert_string_ascii_to_sm64](functions-3.md#convert_string_ascii_to_sm64)
+   - [convert_string_sm64_to_ascii](functions-3.md#convert_string_sm64_to_ascii)
    - [get_level_name_ascii](functions-3.md#get_level_name_ascii)
    - [get_level_name_sm64](functions-3.md#get_level_name_sm64)
    - [get_level_name](functions-3.md#get_level_name)
