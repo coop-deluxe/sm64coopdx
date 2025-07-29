@@ -47,18 +47,14 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     if (charIndex >= CT_MAX) { charIndex = 0; }
     djuiHeadIconImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
 
-    if (np->ping < 150) {
-        djuiPingImages[i]->texture = texture_ping_full;
-    } else if (np->ping < 300) {
-        djuiPingImages[i]->texture = texture_ping_four;
-    } else if (np->ping < 450) {
-        djuiPingImages[i]->texture = texture_ping_three;
-    } else if (np->ping < 600) {
-        djuiPingImages[i]->texture = texture_ping_two;
-    } else if (np->ping < 750) {
-        djuiPingImages[i]->texture = texture_ping_one;
-    } else {
-        djuiPingImages[i]->texture = texture_ping_empty;
+    s16 pingValue = np->ping / 150;
+    switch (pingValue) {
+        case 0:  djuiPingImages[i]->texture = texture_ping_full;  break;
+        case 1:  djuiPingImages[i]->texture = texture_ping_four;  break;
+        case 2:  djuiPingImages[i]->texture = texture_ping_three; break;
+        case 3:  djuiPingImages[i]->texture = texture_ping_two;   break;
+        case 4:  djuiPingImages[i]->texture = texture_ping_one;   break;
+        default: djuiPingImages[i]->texture = texture_ping_empty; break;
     }
 
     u8 visible = np->connected;
@@ -144,7 +140,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_flow_layout_set_margin(row, 8);
         djui_base_set_visible(&row->base, false);
         djuiRow[i] = row;
-    
+
         struct DjuiImage* i1 = djui_image_create(&row->base, texture_ping_empty, 16, 16, 8);
         djui_base_set_size(&i1->base, 32, 32);
         djuiPingImages[i] = i1;
