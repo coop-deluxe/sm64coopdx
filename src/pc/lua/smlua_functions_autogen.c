@@ -33082,6 +33082,21 @@ int smlua_func_djui_menu_get_theme(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_is_playerlist_ping_visible(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_is_playerlist_ping_visible", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, djui_is_playerlist_ping_visible());
+
+    return 1;
+}
+
 int smlua_func_get_dialog_box_state(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38236,6 +38251,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_get_playerlist_page_index", smlua_func_djui_get_playerlist_page_index);
     smlua_bind_function(L, "djui_menu_get_font", smlua_func_djui_menu_get_font);
     smlua_bind_function(L, "djui_menu_get_theme", smlua_func_djui_menu_get_theme);
+    smlua_bind_function(L, "djui_is_playerlist_ping_visible", smlua_func_djui_is_playerlist_ping_visible);
     smlua_bind_function(L, "get_dialog_box_state", smlua_func_get_dialog_box_state);
     smlua_bind_function(L, "get_dialog_id", smlua_func_get_dialog_id);
     smlua_bind_function(L, "get_last_star_or_key", smlua_func_get_last_star_or_key);
