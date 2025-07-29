@@ -40,7 +40,7 @@ const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "z", 0x3D, 0 },
 
     // Punctuation
-    { "...", 0xE6, 0 }, // ellipsis
+    { ":",   0xE6, 0 }, // colon
     { ")(",  0xE2, 0 }, // close-open parentheses
     { "<<",  0xF5, 0 }, // double quote open
     { ">>",  0xF6, 0 }, // double quote close
@@ -67,16 +67,17 @@ const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
     { "[C]", 0x56, 0 }, // bold C
     { "[Z]", 0x57, 0 }, // bold Z
     { "[R]", 0x58, 0 }, // bold R
-    { "<->", 0xE4, 0 }, // left-right arrow
+    { "+",   0xE4, 0 }, // left-right arrow
     { "^",   0x50, 0 }, // up arrow
     { "|",   0x51, 0 }, // down arrow
     { "<",   0x52, 0 }, // left arrow
     { ">",   0x53, 0 }, // right arrow
-    { "+",   0xF9, 1 }, // coin
-    { "@",   0xFA, 1 }, // star filled
+    { "$",   0xF9, 1 }, // coin
+    { "★",   0xFA, 1 }, // star filled
+    { "@",   0xFA, 1 }, // star filled (both ★ and @ match 0xFA)
     { "*",   0xFB, 1 }, // multiply
-    { "•",   0xFC, 0 },
-    { "$",   0xFD, 0 }, // star empty
+    { "•",   0xFC, 0 }, // interpunct (unused)
+    { "=",   0xFD, 0 }, // star empty
     { "\n",  0xFE, 1 }, // New line
     { NULL,  0xFF, 1 }, // Null terminator
 };
