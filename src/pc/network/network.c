@@ -110,6 +110,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // reset override hide hud
     extern u8 gOverrideHideHud;
     gOverrideHideHud = 0;
+    act_select_hud_show(ACT_SELECT_HUD_ALL);
     gNetworkStartupTimer = 5 * 30;
 
     // sanity check network system

@@ -86,6 +86,7 @@
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
+    - [enum ActSelectHudPart](#enum-ActSelectHudPart)
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
 - [sounds.h](#soundsh)
@@ -3548,6 +3549,18 @@
 | HUD_DISPLAY_FLAGS_CAMERA | 0x0080 |
 | HUD_DISPLAY_FLAGS_POWER | 0x0100 |
 | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER | 0x8000 |
+
+### [enum ActSelectHudPart](#ActSelectHudPart)
+| Identifier | Value |
+| :--------- | :---- |
+| ACT_SELECT_HUD_SCORE | 1 << 0 |
+| ACT_SELECT_HUD_LEVEL_NAME | 1 << 1 |
+| ACT_SELECT_HUD_COURSE_NUM | 1 << 2 |
+| ACT_SELECT_HUD_ACT_NAME | 1 << 3 |
+| ACT_SELECT_HUD_STAR_NUM | 1 << 4 |
+| ACT_SELECT_HUD_PLAYERS_IN_LEVEL | 1 << 5 |
+| ACT_SELECT_HUD_NONE | 0 |
+| ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL |
 
 [:arrow_up_small:](#)
 

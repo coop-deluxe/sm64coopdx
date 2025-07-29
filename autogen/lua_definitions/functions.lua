@@ -11160,6 +11160,25 @@ function hud_set_flash(value)
     -- ...
 end
 
+--- @param part ActSelectHudPart
+--- Hides part of the Act Select HUD
+function act_select_hud_hide(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- Shows part of the Act Select HUD
+function act_select_hud_show(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- @return boolean
+--- Checks if part of the Act Select HUD is hidden
+function act_select_hud_is_hidden(part)
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the game is paused
 function is_game_paused()
