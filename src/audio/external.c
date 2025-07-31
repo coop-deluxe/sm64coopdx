@@ -2460,7 +2460,7 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
 void play_dialog_sound(s32 dialogID) {
     s32 speaker;
 
-    if (!IS_VALID_DIALOG(dialogID) || IS_CUSTOM_DIALOG(dialogID)) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogID)) {
         dialogID = 0;
     }
 

@@ -52,8 +52,6 @@
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
-#include "pc/dialog_table.h"
-
 #include "pc/mods/mods.h"
 
 #include "debug_context.h"
@@ -419,7 +417,6 @@ void game_deinit(void) {
     network_shutdown(true, true, false, false);
     smlua_text_utils_shutdown();
     smlua_shutdown();
-    dialog_table_shutdown();
     smlua_audio_custom_deinit();
     mods_shutdown();
     djui_shutdown();
@@ -448,7 +445,6 @@ void* main_game_init(UNUSED void* dummy) {
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
-    dialog_table_init();
     smlua_text_utils_init();
 
     mods_init();

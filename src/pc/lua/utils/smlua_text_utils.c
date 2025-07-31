@@ -43,7 +43,7 @@ char* get_dialog_text_ascii(struct DialogEntry *dialog) {
     size_t len = measure_converted_sm64_string(dialog->str);
 
     char* asciiStr = malloc(len + 1);
-    if (!asciiStr) return NULL;
+    if (!asciiStr) { return NULL; }
 
     convert_string_sm64_to_ascii(asciiStr, dialog->str);
 
@@ -86,6 +86,7 @@ static bool sSmluaTextUtilsInited = false;
 
 // Save all vanilla act names and course names
 void smlua_text_utils_init(void) {
+    dialog_table_init();
     memset(gReplacedCourseActNameTable, 0, sizeof(gReplacedCourseActNameTable));
 
     // Vanilla courses
@@ -193,6 +194,8 @@ void smlua_text_utils_reset_all(void) {
                 smlua_text_utils_reset_course_or_act_name(actName);
             }
         }
+    } else {
+        dialog_table_shutdown();
     }
 }
 
@@ -202,7 +205,7 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
 }
 
 const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId) {
-    if (!IS_VALID_VANILLA_DIALOG(dialogId)) return NULL;
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) { return NULL; }
     
     void **dialogTableOrg;
 
@@ -226,7 +229,7 @@ const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId d
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
-    if (!IS_VALID_DIALOG(dialogId)) return;
+    if (!IS_VALID_DIALOG(dialogId)) { return; }
     
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
@@ -248,7 +251,7 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
 }
 
 void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
-    if (!IS_VALID_VANILLA_DIALOG(dialogId)) return;
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) { return; }
 
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
@@ -264,7 +267,7 @@ void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
 }
 
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
-    if (!IS_VALID_DIALOG(dialogId)) return false;
+    if (!IS_VALID_DIALOG(dialogId)) { return false; }
 
     struct DialogEntry *dialog = dialog_table_get(dialogId);
     return dialog->replaced;
