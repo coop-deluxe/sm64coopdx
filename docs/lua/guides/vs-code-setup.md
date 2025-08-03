@@ -4,54 +4,99 @@ Setting up Visual Studio Code will allow you to have all of the modern benefits 
 
 ---
 
-1. Install the `Lua` extension by `sumneko` in VS Code:
+<details>
+<summary>1. Install the <code>Lua</code> <a href="https://marketplace.visualstudio.com/items?itemName=sumneko.lua">extension</a> by <code>sumneko</code> in VS Code:</summary>
+<br>
+<img width="1352" height="855" alt="extension" src="https://github.com/user-attachments/assets/15926d42-fa6c-4c30-a180-0fe4b06fedcb" />
+</details>
 
-![extension](https://user-images.githubusercontent.com/12403224/158046548-a8deba76-ca5f-4f35-aa73-62984820d290.png)
+---
+<details>
+<summary>2. Go to Settings (<code>Ctrl</code> + <code>,</code>) and type <code>diagnostics disable</code> in the <code>Search settings</code> bar:</summary>
+<br>
+<img width="1352" height="855" alt="diagnostics" src="https://github.com/user-attachments/assets/c2e3af1e-78ac-4693-ba83-0ffc898a033c" />
+</details>
+
+---
+<details>
+<summary>3. Add a new item called <code>lowercase-global</code> and click <code>OK</code></summary>
+<br>
+<img width="1352" height="855" alt="lowercase-global" src="https://github.com/user-attachments/assets/ba932d1e-cc2d-4422-b37c-0e85909cd7b5" />
+</details>
+
+---
+<details>
+<summary>4. Type <code>workspace library</code> in the <code>Search settings</code> bar:</summary>
+<br>
+<img width="1352" height="855" alt="workspace-library" src="https://github.com/user-attachments/assets/8c01242e-6292-4842-88f1-3fb305075dde" />
+</details>
+
+---
+<details>
+<summary>5. Add a new item containing the location of <code>&lt;your repo&gt;/autogen/lua_definitions</code> (make sure you've cloned the repository!)</summary>
+<br>
+<img width="1352" height="855" alt="lua-definitions" src="https://github.com/user-attachments/assets/712109c1-7ac8-4787-909d-b101cefa2574" />
+</details>
+
+---
+<details>
+<summary>6. Type <code>nonstandard symbol</code> in the <code>Search settings</code> bar and add all the items listed below:</summary>
+<br>
+<img width="1352" height="855" alt="nonstandard-symbol" src="https://github.com/user-attachments/assets/721ca579-2c79-4539-9869-b20b38181b44" />
+</details>
+
+---
+<details>
+<summary>7. Open a <code>.lua</code> mod file be amazed at autocompletion and all of that good stuff</summary>
+<br>
+<img width="1352" height="855" alt="autocompletion" src="https://github.com/user-attachments/assets/e8be351f-1f45-4a12-91fa-055c0e895b2e" />
+</details>
 
 ---
 
-2. Goto settings (`ctrl+,`) and type `diagnostics disable` in the settings search bar:
+# Notes
+## Annotations
+For your custom functions, you will need to provide type annotations to get autocompletion.
 
-![diagnostics](https://user-images.githubusercontent.com/12403224/158046741-3bcf513c-5da8-42ee-b3aa-ab2dbab0e3dc.png)
-
----
-
-3. Add a new item called `lowercase-global` and click `ok`
-
-![lowercase-global](https://user-images.githubusercontent.com/12403224/158046761-65883e86-fd17-4d90-a566-78fe93b4b51d.png)
-
----
-
-4. Type `workspace library` in the settings search bar:
-
-![workspace-library](https://user-images.githubusercontent.com/12403224/158046786-12b8a150-65a7-4f23-96c7-1508f8f80713.png)
-
----
-
-5. Add a new item containing the location of `<your repo>/autogen/lua_definitions`
-
-![lua-definitions](https://user-images.githubusercontent.com/12403224/158046824-1894318a-7ce9-41ef-bacc-17f95fa05f31.png)
-
----
-
-6. Open a lua mod file be amazed at autocompletion and all of that good stuff
-![autocompletion](https://user-images.githubusercontent.com/12403224/158046991-77670bae-33a9-467c-a07d-3ce6eba28673.png)
-
----
-
-Note: For your custom functions you will need to provide type definitions to get autocomplete.
-
-For instance, this will not autocomplete for the mario struct:
-```
+For instance, this will not autocomplete for the Mario struct:
+```lua
 function mario_update(m)
     -- code here
 end
 ```
 
-But this will autocomplete for the mario struct:
-```
+But this will autocomplete for the Mario struct:
+```lua
 --- @param m MarioState
 function mario_update(m)
     -- code here
 end
 ```
+
+Learn to use the appropriate annotations for your functions, variables, and classes!
+
+## NEW: Assignment Operators (v1.4)
+SMLua adds various assignment operators (not present in stock Lua) to allow for more convenient and C-like syntax:
+
+### Arithmetic
+| Operator | Effect       | Usage     | Equivalent   |
+| -------: | :----------- | --------: | ------------ |
+|    +=    | Add          | `a += 2`  | `a = a + 2`  |
+|    -=    | Subtract     | `a -= 2`  | `a = a - 2`  |
+|    *=    | Multiply     | `a *= 2`  | `a = a * 2`  |
+|    %=    | Modulo       | `a %= 2`  | `a = a % 2`  |
+|    ^=    | Power        | `a ^= 2`  | `a = a ^ 2`  |
+|    /=    | Divide       | `a /= 2`  | `a = a / 2`  |
+|   //=    | Floor Divide | `a //= 2` | `a = a // 2` |
+
+### Bitwise
+| Operator | Effect      | Usage     | Equivalent   |
+| -------: | :---------- | --------: | ------------ |
+|    &=    | AND         | `a &= 2`  | `a = a & 2`  |
+|   \|=    | OR          | `a \|= 2` | `a = a \| 2` |
+|    !=    | XOR         | `a != 2`  | `a = a ~ 2`  |
+|   <<=    | Left Shift  | `a <<= 2` | `a = a << 2` |
+|   >>=    | Right Shift | `a >>= 2` | `a = a >> 2` |
+
+#### About XOR assignment:
+In C, the XOR assignment operator is `^=`, but since that's taken by Power assignment, and `~=` is reserved for Not Equal, the only other option available was `!=`.
