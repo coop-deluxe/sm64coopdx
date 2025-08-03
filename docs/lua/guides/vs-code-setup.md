@@ -75,7 +75,7 @@ end
 
 Learn to use the appropriate annotations for your functions, variables, and classes!
 
-## NEW: Assignment Operators (v1.4 or later)
+## Assignment Operators (v1.4 or later)
 SMLua adds various assignment operators (not present in stock Lua) to allow for more convenient and C-like syntax:
 
 ### Arithmetic
