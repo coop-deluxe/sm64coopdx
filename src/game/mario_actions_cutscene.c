@@ -238,7 +238,7 @@ s32 geo_switch_peach_eyes(s32 run, struct GraphNode *node, UNUSED s32 a2) {
 
 // unused
 static void stub_is_textbox_active(u16 *a0) {
-    if (get_dialog_id() == -1) {
+    if (get_dialog_id() == DIALOG_NONE) {
         *a0 = 0;
     }
 }
@@ -576,7 +576,7 @@ s32 act_reading_automatic_dialog(struct MarioState *m) {
                 }
             }
         } else if (m->actionState == 10) { // wait until dialog is done
-            if ((m->playerIndex == 0 && get_dialog_id() >= 0) ||
+            if ((m->playerIndex == 0 && get_dialog_id() != DIALOG_NONE) ||
                 (m->playerIndex != 0 && m->dialogId != 0)) {
                 m->actionState--;
             }

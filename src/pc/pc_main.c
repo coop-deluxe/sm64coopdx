@@ -52,7 +52,6 @@
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
-
 #include "pc/mods/mods.h"
 
 #include "debug_context.h"

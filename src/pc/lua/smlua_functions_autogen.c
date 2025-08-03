@@ -11908,7 +11908,7 @@ int smlua_func_cutscene_object_with_dialog(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cutscene_object_with_dialog"); return 0; }
     struct Object* o = (struct Object*)smlua_to_cobject(L, 2, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cutscene_object_with_dialog"); return 0; }
-    s16 dialogID = smlua_to_integer(L, 3);
+    s32 dialogID = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "cutscene_object_with_dialog"); return 0; }
 
     lua_pushinteger(L, cutscene_object_with_dialog(cutscene, o, dialogID));
@@ -13463,7 +13463,7 @@ int smlua_func_play_dialog_sound(lua_State* L) {
         return 0;
     }
 
-    u8 dialogID = smlua_to_integer(L, 1);
+    s32 dialogID = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "play_dialog_sound"); return 0; }
 
     play_dialog_sound(dialogID);
@@ -13935,7 +13935,7 @@ int smlua_func_create_dialog_box(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box"); return 0; }
 
     create_dialog_box(dialog);
@@ -13952,7 +13952,7 @@ int smlua_func_create_dialog_box_with_var(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_var"); return 0; }
     s32 dialogVar = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "create_dialog_box_with_var"); return 0; }
@@ -13971,7 +13971,7 @@ int smlua_func_create_dialog_inverted_box(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_inverted_box"); return 0; }
 
     create_dialog_inverted_box(dialog);
@@ -13988,7 +13988,7 @@ int smlua_func_create_dialog_box_with_response(lua_State* L) {
         return 0;
     }
 
-    s16 dialog = smlua_to_integer(L, 1);
+    s32 dialog = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "create_dialog_box_with_response"); return 0; }
 
     create_dialog_box_with_response(dialog);
@@ -35273,6 +35273,23 @@ int smlua_func_smlua_text_utils_dialog_replace(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_text_utils_dialog_restore(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_restore", 1, top);
+        return 0;
+    }
+
+    int dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_restore"); return 0; }
+
+    smlua_text_utils_dialog_restore(dialogId);
+
+    return 1;
+}
+
 int smlua_func_smlua_text_utils_dialog_is_replaced(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35286,6 +35303,21 @@ int smlua_func_smlua_text_utils_dialog_is_replaced(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_is_replaced"); return 0; }
 
     lua_pushboolean(L, smlua_text_utils_dialog_is_replaced(dialogId));
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_allocate_dialog(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_allocate_dialog", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, smlua_text_utils_allocate_dialog());
 
     return 1;
 }
@@ -38380,7 +38412,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);
     smlua_bind_function(L, "smlua_text_utils_dialog_get", smlua_func_smlua_text_utils_dialog_get);
     smlua_bind_function(L, "smlua_text_utils_dialog_replace", smlua_func_smlua_text_utils_dialog_replace);
+    smlua_bind_function(L, "smlua_text_utils_dialog_restore", smlua_func_smlua_text_utils_dialog_restore);
     smlua_bind_function(L, "smlua_text_utils_dialog_is_replaced", smlua_func_smlua_text_utils_dialog_is_replaced);
+    smlua_bind_function(L, "smlua_text_utils_allocate_dialog", smlua_func_smlua_text_utils_allocate_dialog);
     smlua_bind_function(L, "smlua_text_utils_course_acts_replace", smlua_func_smlua_text_utils_course_acts_replace);
     smlua_bind_function(L, "smlua_text_utils_secret_star_replace", smlua_func_smlua_text_utils_secret_star_replace);
     smlua_bind_function(L, "smlua_text_utils_course_name_replace", smlua_func_smlua_text_utils_course_name_replace);

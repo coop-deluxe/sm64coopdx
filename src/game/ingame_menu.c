@@ -38,6 +38,7 @@
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "menu/ingame_text.h"
+#include "pc/dialog_table.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -128,7 +129,7 @@ f32 gDialogBoxOpenTimer = DEFAULT_DIALOG_BOX_ANGLE;
 f32 gDialogBoxScale = DEFAULT_DIALOG_BOX_SCALE;
 s16 gDialogScrollOffsetY = 0;
 s8 gDialogBoxType = DIALOG_TYPE_ROTATE;
-s16 gDialogID = -1;
+s32 gDialogID = DIALOG_NONE;
 s16 gLastDialogPageStrPos = 0;
 s16 gDialogTextPos = 0;
 #ifdef VERSION_EU
@@ -1025,24 +1026,24 @@ void int_to_str(s32 num, u8 *dst) {
     dst[pos] = DIALOG_CHAR_TERMINATOR;
 }
 
-s16 get_dialog_id(void) {
+s32 get_dialog_id(void) {
     return gDialogID;
 }
 
-void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
+void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
     // King Bob-omb (Start), Whomp (Start), King Bob-omb (throw him out), Eyerock (Start), Wiggler (Start)
-    s16 dialogBossStart[] = { 17, 114, 128, 117, 150 };
+    enum DialogId dialogBossStart[] = { DIALOG_017, DIALOG_114, DIALOG_128, DIALOG_117, DIALOG_150 };
     // Koopa the Quick (BOB), Koopa the Quick (THI), Penguin Race, Fat Penguin Race (120 stars)
-    s16 dialogRaceSound[] = { 5, 9, 55, 164 };
+    enum DialogId dialogRaceSound[] = { DIALOG_005, DIALOG_009, DIALOG_055, DIALOG_164 };
     // Red Switch, Green Switch, Blue Switch, 100 coins star, Bowser Red Coin Star
-    s16 dialogStarSound[] = { 10, 11, 12, 13, 14 };
+    enum DialogId dialogStarSound[] = { DIALOG_010, DIALOG_011, DIALOG_012, DIALOG_013, DIALOG_014 };
     // King Bob-omb (Start), Whomp (Defeated), King Bob-omb (Defeated, missing in JP), Eyerock (Defeated), Wiggler (Defeated)
 #if BUGFIX_KING_BOB_OMB_FADE_MUSIC
-    s16 dialogBossStop[] = { 17, 115, 116, 118, 152 };
+    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_116, DIALOG_118, DIALOG_152 };
 #else
     //! @bug JP misses King Bob-omb defeated dialog "116", meaning that the boss music will still
     //! play after King Bob-omb is defeated until BOB loads it's music after the star cutscene
-    s16 dialogBossStop[] = { 17, 115, 118, 152 };
+    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_118, DIALOG_152 };
 #endif
     s16 i;
 
@@ -1079,7 +1080,7 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
 static u8 sHookString[255];
 static bool sOverrideDialogString = false;
 void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
-bool handle_dialog_hook(s16 dialogId) {
+bool handle_dialog_hook(s32 dialogId) {
     bool openDialogBox = true;
     const char *dialogTextOverride = NULL;
     smlua_call_event_hooks(HOOK_ON_DIALOG, dialogId, &openDialogBox, &dialogTextOverride);
@@ -1092,30 +1093,30 @@ bool handle_dialog_hook(s16 dialogId) {
     return true;
 }
 
-void create_dialog_box(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
-void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box_with_var(s32 dialog, s32 dialogVar) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogVariable = dialogVar;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
-void create_dialog_inverted_box(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_inverted_box(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ZOOM;
     }
 }
 
-void create_dialog_box_with_response(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box_with_response(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
         gLastDialogResponse = 1;
@@ -1132,7 +1133,7 @@ void reset_dialog_render_state(void) {
     gDialogBoxScale = 19.0f;
     gDialogBoxOpenTimer = 90.0f;
     gDialogBoxState = DIALOG_STATE_OPENING;
-    gDialogID = -1;
+    gDialogID = DIALOG_NONE;
     gDialogTextPos = 0;
     gLastDialogResponse = 0;
     gLastDialogPageStrPos = 0;
@@ -1877,36 +1878,14 @@ void render_dialog_entries(void) {
 #ifdef VERSION_EU
     s8 lowerBound = 0;
 #endif
-    void **dialogTable;
-    struct DialogEntry *dialog;
+
 #if defined(VERSION_US) || defined(VERSION_SH)
     s8 lowerBound = 0;
 #endif
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    if (gDialogID >= DIALOG_COUNT || gDialogID < 0) {
-        gDialogID = -1;
-        return;
-    }
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    // if the dialog entry is invalid, set the ID to -1.
-    if (segmented_to_virtual(NULL) == dialog) {
-        gDialogID = -1;
+    if (dialog == NULL) {
+        gDialogID = DIALOG_NONE;
         return;
     }
 
@@ -1984,7 +1963,7 @@ void render_dialog_entries(void) {
 
             if (gDialogBoxOpenTimer == DEFAULT_DIALOG_BOX_ANGLE) {
                 gDialogBoxState = DIALOG_STATE_OPENING;
-                gDialogID = -1;
+                gDialogID = DIALOG_NONE;
                 gDialogTextPos = 0;
                 gLastDialogResponse = 0;
                 gLastDialogPageStrPos = 0;
@@ -2198,28 +2177,9 @@ void do_cutscene_handler(void) {
 
 // "Dear Mario" message handler
 void print_peach_letter_message(void) {
-    void **dialogTable;
-    struct DialogEntry *dialog;
-    u8 *str;
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    const u8* str = sOverrideDialogString ? sHookString : dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
@@ -2260,7 +2220,7 @@ void print_peach_letter_message(void) {
     if (gCutsceneMsgTimer > (PEACH_MESSAGE_TIMER + 20)) {
         gCutsceneMsgIndex = -1;
         gCutsceneMsgFade = 0; //! uselessly reset since the next execution will just set it to 0 again.
-        gDialogID = -1;
+        gDialogID = DIALOG_NONE;
         gCutsceneMsgTimer = 0;
         return; // return to avoid incrementing the timer
     }
@@ -3472,9 +3432,9 @@ s16 render_menus_and_dialogs(void) {
         }
 
         gDialogColorFadeTimer = (s16) gDialogColorFadeTimer + 0x1000;
-    } else if (gDialogID != -1) {
+    } else if (gDialogID != DIALOG_NONE) {
         // The Peach "Dear Mario" message needs to be repositioned separately
-        if (gDialogID == 20) {
+        if (gDialogID == DIALOG_020) {
             print_peach_letter_message();
             return mode;
         }

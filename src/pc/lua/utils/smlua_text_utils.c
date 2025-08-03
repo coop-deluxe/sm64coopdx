@@ -10,13 +10,12 @@
 #include "../smlua.h"
 #include "smlua_level_utils.h"
 #include "smlua_text_utils.h"
+#include "pc/dialog_table.h"
 
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
 #include "eu_translation.h"
 #endif
-
-static bool sReplacedDialog[DIALOG_COUNT] = { 0 };
 
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
@@ -43,7 +42,7 @@ char* get_dialog_text_ascii(struct DialogEntry *dialog) {
     size_t len = measure_converted_sm64_string(dialog->str);
 
     char* asciiStr = malloc(len + 1);
-    if (!asciiStr) return NULL;
+    if (!asciiStr) { return NULL; }
 
     convert_string_sm64_to_ascii(asciiStr, dialog->str);
 
@@ -86,6 +85,7 @@ static bool sSmluaTextUtilsInited = false;
 
 // Save all vanilla act names and course names
 void smlua_text_utils_init(void) {
+    dialog_table_init();
     memset(gReplacedCourseActNameTable, 0, sizeof(gReplacedCourseActNameTable));
 
     // Vanilla courses
@@ -124,15 +124,6 @@ void smlua_text_utils_init(void) {
             get_act_name_table_original,
             COURSE_STAGES_MAX * MAX_ACTS + actIndex
         );
-    }
-
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        struct DialogEntry *dialog = smlua_text_utils_dialog_get(i);
-        char* dialogText = get_dialog_text_ascii(dialog);
-
-        free(dialog->text);
-
-        dialog->text = dialogText;
     }
 
     sSmluaTextUtilsInited = true;
@@ -186,40 +177,7 @@ static void smlua_text_utils_replace_course_or_act_name(struct ReplacedName *nam
 }
 
 void smlua_text_utils_reset_all(void) {
-    void **dialogTable = NULL;
-    void **dialogTableOrg = NULL;
-
-#ifdef VERSION_EU
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_en_original);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_fr_original);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            dialogTableOrg = segmented_to_virtual(dialog_table_eu_de_original);
-            break;
-    }
-#else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-    dialogTableOrg = segmented_to_virtual(seg2_dialog_original);
-#endif
-
-    for (s32 i = 0; i < DIALOG_COUNT; i++) {
-        if (!sReplacedDialog[i]) { continue; }
-        const struct DialogEntry *dialogOrig = segmented_to_virtual(dialogTableOrg[i]);
-        struct DialogEntry *dialog = segmented_to_virtual(dialogTable[i]);
-        free((u8*)dialog->str);
-        free(dialog->text);
-
-        memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-        dialog->text = get_dialog_text_ascii(dialog); 
-        sReplacedDialog[i] = false;
-    }
+    dialog_table_reset();
 
     if (sSmluaTextUtilsInited) {
         for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
@@ -234,40 +192,48 @@ void smlua_text_utils_reset_all(void) {
                 smlua_text_utils_reset_course_or_act_name(actName);
             }
         }
+    } else {
+        dialog_table_shutdown();
     }
 }
 
-struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId){
-    if (dialogId >= DIALOG_COUNT) { return NULL; }
+struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
+    struct DialogEntry* dialog = dialog_table_get(dialogId);
+    return dialog;
+}
 
-    void **dialogTable = NULL;
+const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) { return NULL; }
+    
+    void **dialogTableOrg;
 
 #ifdef VERSION_EU
     switch (gInGameLanguage) {
         case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_en_original);
             break;
         case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_fr_original);
             break;
         case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
+            dialogTableOrg = segmented_to_virtual(dialog_table_eu_de_original);
             break;
     }
 #else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
+    dialogTableOrg = segmented_to_virtual(seg2_dialog_original);
 #endif
 
-    struct DialogEntry *dialog = segmented_to_virtual(dialogTable[dialogId]);
-    return dialog;
+    return segmented_to_virtual(dialogTableOrg[dialogId]);
 }
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
+    if (!IS_VALID_DIALOG(dialogId)) { return; }
+    
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
     if (!dialog) { return; }
 
-    if (sReplacedDialog[dialogId]) {
+    if (dialog->replaced) {
         free((u8*)dialog->str);
     }
 
@@ -279,16 +245,41 @@ void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, 
     dialog->width = width;
     dialog->str = smlua_text_utils_convert(str);
     dialog->text = strdup(str);
+    dialog->replaced = true;
+}
 
-    sReplacedDialog[dialogId] = true;
+void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogId)) { return; }
+
+    struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
+
+    if (!dialog->replaced) return;
+
+    const struct DialogEntry *dialogOrig = smlua_text_utils_dialog_get_unmodified(dialogId);
+
+    free((u8*)dialog->str);
+    free(dialog->text);
+
+    memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
+    dialog->text = get_dialog_text_ascii(dialog);
 }
 
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
-    if (dialogId >= DIALOG_COUNT) {
-        return false;
+    if (!IS_VALID_DIALOG(dialogId)) { return false; }
+
+    struct DialogEntry *dialog = dialog_table_get(dialogId);
+    return dialog->replaced;
+}
+
+s32 smlua_text_utils_allocate_dialog(void) {
+    s32 dialogId;
+    struct DialogEntry* dialog = dialog_table_alloc(&dialogId);
+
+    if (dialog) {
+        dialog->replaced = true;
     }
 
-    return sReplacedDialog[dialogId];
+    return dialogId;
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

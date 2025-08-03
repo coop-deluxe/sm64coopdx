@@ -1203,7 +1203,7 @@ u8 start_object_cutscene_without_focus(u8 cutscene);
 Starts a cutscene involving an object and displays dialog during the sequence.
 The camera focuses on the object while synchronizing dialog with the scene
 |descriptionEnd| */
-s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);
+s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID);
 
 /* |description|
 Starts a cutscene involving an object without dialog.

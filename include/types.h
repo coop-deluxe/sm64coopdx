@@ -498,7 +498,7 @@ struct MarioState
     
     u8 visibleToEnemies;
     u8 wasNetworkVisible;
-    s16 dialogId;
+    s32 dialogId;
     s16 prevNumStarsForDialog;
     s16 unkB0;
     

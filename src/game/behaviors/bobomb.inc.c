@@ -337,7 +337,7 @@ void bobomb_buddy_act_idle(void) {
  * dialogSecondText is called after Bob-omb Buddy has the cannon(s) ready and
  * then tells Mario that is "Ready for blastoff".
  */
-void bobomb_buddy_cannon_dialog(s16 dialogFirstText, s16 dialogSecondText) {
+void bobomb_buddy_cannon_dialog(s32 dialogFirstText, s32 dialogSecondText) {
     struct Object *cannonClosed;
     s16 buddyText, cutscene;
 

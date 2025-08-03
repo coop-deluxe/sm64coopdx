@@ -805,10 +805,11 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE, 1, sizeof(s32) },
 };
 
-#define LUA_DIALOG_ENTRY_FIELD_COUNT 5
+#define LUA_DIALOG_ENTRY_FIELD_COUNT 6
 static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
     { "leftOffset",  LVT_S16,      offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE, 1, sizeof(s16)   },
     { "linesPerBox", LVT_S8,       offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE, 1, sizeof(s8)    },
+    { "replaced",    LVT_BOOL,     offsetof(struct DialogEntry, replaced),    true, LOT_NONE, 1, sizeof(bool)  },
     { "text",        LVT_STRING_P, offsetof(struct DialogEntry, text),        true, LOT_NONE, 1, sizeof(char*) },
     { "unused",      LVT_U32,      offsetof(struct DialogEntry, unused),      true, LOT_NONE, 1, sizeof(u32)   },
     { "width",       LVT_S16,      offsetof(struct DialogEntry, width),       true, LOT_NONE, 1, sizeof(s16)   },
@@ -1507,7 +1508,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "controller",                LVT_COBJECT_P, offsetof(struct MarioState, controller),                true,  LOT_CONTROLLER,        1, sizeof(struct Controller*)        },
     { "curAnimOffset",             LVT_F32,       offsetof(struct MarioState, curAnimOffset),             false, LOT_NONE,              1, sizeof(f32)                       },
     { "currentRoom",               LVT_S16,       offsetof(struct MarioState, currentRoom),               false, LOT_NONE,              1, sizeof(s16)                       },
-    { "dialogId",                  LVT_S16,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s16)                       },
+    { "dialogId",                  LVT_S32,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s32)                       },
     { "doubleJumpTimer",           LVT_U8,        offsetof(struct MarioState, doubleJumpTimer),           false, LOT_NONE,              1, sizeof(u8)                        },
     { "faceAngle",                 LVT_COBJECT,   offsetof(struct MarioState, faceAngle),                 true,  LOT_VEC3S,             1, sizeof(Vec3s)                     },
     { "fadeWarpOpacity",           LVT_U8,        offsetof(struct MarioState, fadeWarpOpacity),           false, LOT_NONE,              1, sizeof(u8)                        },
@@ -2356,7 +2357,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oTiltingPyramidNormalY",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalY),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTiltingPyramidNormalZ",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalZ),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTimer",                                     LVT_S32,                 offsetof(struct Object, oTimer),                                     false, LOT_NONE,         1, sizeof(s32)                   },
-    { "oToadMessageDialogId",                       LVT_U32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(u32)                   },
+    { "oToadMessageDialogId",                       LVT_S32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageRecentlyTalked",                 LVT_S32,                 offsetof(struct Object, oToadMessageRecentlyTalked),                 false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageState",                          LVT_S32,                 offsetof(struct Object, oToadMessageState),                          false, LOT_NONE,         1, sizeof(s32)                   },
 //  { "oToxBoxMovementPattern",                     LVT_???,                 offsetof(struct Object, oToxBoxMovementPattern),                     false, LOT_???,          1, sizeof(void*)                 }, <--- UNIMPLEMENTED

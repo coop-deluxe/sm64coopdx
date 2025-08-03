@@ -4464,7 +4464,7 @@ Gets the current dialog box ID
 - `integer`
 
 ### C Prototype
-`s16 get_dialog_id(void);`
+`s32 get_dialog_id(void);`
 
 [:arrow_up_small:](#)
 
@@ -7254,6 +7254,29 @@ Replaces `dialogId` with a custom one
 
 <br />
 
+## [smlua_text_utils_dialog_restore](#smlua_text_utils_dialog_restore)
+
+### Description
+Restores a replaced DialogEntry to its original state.
+
+### Lua Example
+`smlua_text_utils_dialog_restore(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_dialog_restore(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
 
 ### Description
@@ -7272,6 +7295,27 @@ Returns whether the dialog with the given ID has been replaced
 
 ### C Prototype
 `bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_allocate_dialog](#smlua_text_utils_allocate_dialog)
+
+### Description
+Allocates a new dialog entry
+
+### Lua Example
+`local integerValue = smlua_text_utils_allocate_dialog()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_allocate_dialog(void);`
 
 [:arrow_up_small:](#)
 
