@@ -759,7 +759,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     }
 
     // object
-    if (_Symbol == "OBJECT") {
+    if (_Symbol == "OBJECT" || _Symbol == "OBJECT_WITH_ACTS") {
         u64 topTokenIndex = aTokenIndex;
 
         u32 luaParams = 0;
