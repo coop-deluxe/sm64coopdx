@@ -52,6 +52,12 @@
 #define OBJECT_EXT_LUA_BEHAVIOR_OFFSET(type)        (type == 0x3F ? 20 : (type == 0x40 ? 24 : 36))
 #define OBJECT_EXT_LUA_ACTS_OFFSET(type)            (type == 0x3F ?  2 : (type == 0x40 ?  2 : 40))
 
+#define SHOW_DIALOG_EXT_LUA_INDEX   (1 << 0)
+#define SHOW_DIALOG_EXT_LUA_DIALOG  (1 << 1)
+
+#define SHOW_DIALOG_EXT_LUA_INDEX_OFFSET(type)  (4)
+#define SHOW_DIALOG_EXT_LUA_DIALOG_OFFSET(type) (8)
+
 // Head defines
 #define REGULAR_FACE 0x0002
 #define DIZZY_FACE 0x0003
@@ -361,6 +367,11 @@
     CMD_PTR(behParam), \
     CMD_PTR(beh), \
     CMD_PTR(acts)
+
+#define SHOW_DIALOG_EXT(flags, index, dialogId) \
+    CMD_BBBB(0x44, 0x0C, flags, 0x00), \
+    CMD_PTR(index), \
+    CMD_PTR(dialogId)
 
 // README //
 // README //

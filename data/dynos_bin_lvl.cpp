@@ -714,7 +714,6 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_0(CMD2D);
     lvl_symbol_1(TERRAIN, 1);
     lvl_symbol_1(ROOMS, 1);
-    lvl_symbol_2(SHOW_DIALOG, 0, 0);
     lvl_symbol_1(TERRAIN_TYPE, 0);
     lvl_symbol_0(NOP);
 
@@ -735,6 +734,29 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     lvl_symbol_2(GET_OR_SET, 0, 0);
     lvl_symbol_0(ADV_DEMO);
     lvl_symbol_0(CLEAR_DEMO_PTR);
+
+    // dialog
+    if (_Symbol == "SHOW_DIALOG") {
+        u64 topTokenIndex = aTokenIndex;
+        
+        u32 luaParams = 0;
+        LevelScript index = ParseLevelScriptObjectSymbolArgInternal(aGfxData, aNode, aTokenIndex, &luaParams, SHOW_DIALOG_EXT_LUA_INDEX);
+        LevelScript dialogId = ParseLevelScriptObjectSymbolArgInternal(aGfxData, aNode, aTokenIndex, &luaParams, SHOW_DIALOG_EXT_LUA_DIALOG);
+
+        if (luaParams != 0) {
+            LevelScript finalIndex = (luaParams & SHOW_DIALOG_EXT_LUA_INDEX) ? DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]) : index;
+            LevelScript finalDialogId = (luaParams & SHOW_DIALOG_EXT_LUA_DIALOG) ? DynOS_Lua_RememberVariable(aGfxData, aHead + 2, aNode->mTokens[topTokenIndex + 1]) : dialogId;
+
+            LevelScript _Ls[] = { SHOW_DIALOG_EXT(luaParams, finalIndex, finalDialogId) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        } else {
+            LevelScript _Ls[] = { SHOW_DIALOG(index, dialogId) };
+            memcpy(aHead, _Ls, sizeof(_Ls));
+            aHead += (sizeof(_Ls) / sizeof(_Ls[0]));
+        }
+        return;
+    }
 
     // object
     if (_Symbol == "OBJECT") {

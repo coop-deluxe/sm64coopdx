@@ -1020,6 +1020,21 @@ static void level_cmd_place_object_ext_lua_params(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+static void level_cmd_show_dialog_ext(void) {
+    if (sCurrAreaIndex != -1 && !gDjuiInMainMenu) {
+        u8 luaParams = CMD_GET(u8, 2);
+
+        get_lua_param(index, u8, SHOW_DIALOG_EXT_LUA_INDEX);
+        get_lua_param(dialogId, s32, SHOW_DIALOG_EXT_LUA_DIALOG);
+
+        if (index < 2) {
+            gAreas[sCurrAreaIndex].dialog[index] = dialogId;
+        }
+    }
+
+    sCurrentCmd = CMD_NEXT;
+}
+
 static void level_cmd_load_model_from_geo_ext(void) {
     s16 modelSlot = CMD_GET(s16, 2);
     const char* geoName = dynos_level_get_token(CMD_GET(u32, 4));
@@ -1105,7 +1120,8 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*40*/ level_cmd_place_object_ext_lua_params,
     /*41*/ level_cmd_load_model_from_geo_ext,
     /*42*/ level_cmd_jump_area_ext,
-    /*43*/ level_cmd_place_object_ext_lua_params
+    /*43*/ level_cmd_place_object_ext_lua_params,
+    /*44*/ level_cmd_show_dialog_ext
 };
 
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
