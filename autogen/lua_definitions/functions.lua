@@ -7390,25 +7390,6 @@ function mod_fs_create()
     -- ...
 end
 
---- @return boolean
---- Deletes the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_delete()
-    -- ...
-end
-
---- @return boolean
---- Saves the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_save()
-    -- ...
-end
-
---- @param pub boolean
---- @return boolean
---- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-function mod_fs_set_public(pub)
-    -- ...
-end
-
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
@@ -7466,6 +7447,28 @@ end
 --- @return boolean
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Saves the provided `modFs` to persistent storage. Returns true on success
+function mod_fs_save(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+function mod_fs_delete(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_set_public(modFs, pub)
     -- ...
 end
 

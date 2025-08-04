@@ -67,7 +67,7 @@ exclude_constants = {
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
-    "src/pc/mods/mod_fs.h": [ "MOD_FS_DIRECTORY", "MOD_FS_EXTENSION", "MOD_FS_VERSION", "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
+    "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
 }
 
 include_constants = {

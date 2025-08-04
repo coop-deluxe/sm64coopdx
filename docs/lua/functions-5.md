@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [next >](functions-6.md)]
+[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-6.md)]
 
 
 ---
@@ -342,71 +342,6 @@ Creates a modfs object for the active mod if it doesn't exist. Returns the modfs
 
 <br />
 
-## [mod_fs_delete](#mod_fs_delete)
-
-### Description
-Deletes the modfs object of the active mod if it exists. Returns true on success
-
-### Lua Example
-`local booleanValue = mod_fs_delete()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_fs_delete();`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_fs_save](#mod_fs_save)
-
-### Description
-Saves the modfs object of the active mod if it exists. Returns true on success
-
-### Lua Example
-`local booleanValue = mod_fs_save()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_fs_save();`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [mod_fs_set_public](#mod_fs_set_public)
-
-### Description
-Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-
-### Lua Example
-`local booleanValue = mod_fs_set_public(pub)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pub | `boolean` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_fs_set_public(bool pub);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mod_fs_get_filename](#mod_fs_get_filename)
 
 ### Description
@@ -574,6 +509,76 @@ Deletes all files of the provided `modFs`. Returns true on success
 
 ### C Prototype
 `bool mod_fs_clear(struct ModFs *modFs);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_save](#mod_fs_save)
+
+### Description
+Saves the provided `modFs` to persistent storage. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_save(modFs)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_save(struct ModFs *modFs);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_delete](#mod_fs_delete)
+
+### Description
+Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_delete(modFs)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_delete(struct ModFs *modFs);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_set_public](#mod_fs_set_public)
+
+### Description
+Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_set_public(modFs, pub)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| modFs | [ModFs](structs.md#ModFs) |
+| pub | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_set_public(struct ModFs *modFs, bool pub);`
 
 [:arrow_up_small:](#)
 
@@ -8206,5 +8211,5 @@ Gets a trajectory's length
 <br />
 ---
 
-[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [next >](functions-6.md)]
+[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-6.md)]
 

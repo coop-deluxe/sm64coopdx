@@ -2,7 +2,7 @@
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 
 ---
 
@@ -1348,9 +1348,6 @@
    - [mod_fs_get](functions-5.md#mod_fs_get)
    - [mod_fs_reload](functions-5.md#mod_fs_reload)
    - [mod_fs_create](functions-5.md#mod_fs_create)
-   - [mod_fs_delete](functions-5.md#mod_fs_delete)
-   - [mod_fs_save](functions-5.md#mod_fs_save)
-   - [mod_fs_set_public](functions-5.md#mod_fs_set_public)
    - [mod_fs_get_filename](functions-5.md#mod_fs_get_filename)
    - [mod_fs_get_file](functions-5.md#mod_fs_get_file)
    - [mod_fs_create_file](functions-5.md#mod_fs_create_file)
@@ -1358,6 +1355,9 @@
    - [mod_fs_copy_file](functions-5.md#mod_fs_copy_file)
    - [mod_fs_delete_file](functions-5.md#mod_fs_delete_file)
    - [mod_fs_clear](functions-5.md#mod_fs_clear)
+   - [mod_fs_save](functions-5.md#mod_fs_save)
+   - [mod_fs_delete](functions-5.md#mod_fs_delete)
+   - [mod_fs_set_public](functions-5.md#mod_fs_set_public)
    - [mod_fs_file_read_bool](functions-5.md#mod_fs_file_read_bool)
    - [mod_fs_file_read_integer](functions-5.md#mod_fs_file_read_integer)
    - [mod_fs_file_read_number](functions-5.md#mod_fs_file_read_number)
@@ -2186,9 +2186,9 @@
 <br />
 
 - sync_object.h
-   - [sync_object_get_object](functions-6.md#sync_object_get_object)
-   - [sync_object_is_initialized](functions-6.md#sync_object_is_initialized)
-   - [sync_object_is_owned_locally](functions-6.md#sync_object_is_owned_locally)
+   - [sync_object_get_object](functions-7.md#sync_object_get_object)
+   - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
+   - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
 
 <br />
 
@@ -2834,5 +2834,5 @@ Plays a screen transition after a `delay` in frames
 <br />
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 

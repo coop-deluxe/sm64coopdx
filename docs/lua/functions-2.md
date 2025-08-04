@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-3.md)]
+[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-3.md)]
 
 
 ---
@@ -12081,5 +12081,5 @@ Spawns a Star that won't make Mario exit the level with an ID corresponding to t
 <br />
 ---
 
-[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-3.md)]
+[< prev](functions.md) | [1](functions.md) | 2 | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-3.md)]
 

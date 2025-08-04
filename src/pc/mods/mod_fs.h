@@ -7,9 +7,6 @@
 #define MOD_FS_MAX_SIZE     0x1000000 // 16 MB
 #define MOD_FS_MAX_FILES    0x100
 #define MOD_FS_MAX_PATH     0x100
-#define MOD_FS_DIRECTORY    "sav"
-#define MOD_FS_EXTENSION    ".modfs"
-#define MOD_FS_VERSION      1
 
 enum ModFsFileIntType {
     INT_TYPE_U8,
@@ -85,21 +82,6 @@ Creates a modfs object for the active mod if it doesn't exist. Returns the modfs
 struct ModFs *mod_fs_create();
 
 /* |description|
-Deletes the modfs object of the active mod if it exists. Returns true on success
-|descriptionEnd| */
-bool mod_fs_delete();
-
-/* |description|
-Saves the modfs object of the active mod if it exists. Returns true on success
-|descriptionEnd| */
-bool mod_fs_save();
-
-/* |description|
-Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-|descriptionEnd| */
-bool mod_fs_set_public(bool pub);
-
-/* |description|
 Gets the filename at position `index` of the provided `modFs`
 |descriptionEnd| */
 const char *mod_fs_get_filename(struct ModFs *modFs, u16 index);
@@ -133,6 +115,21 @@ bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath);
 Deletes all files of the provided `modFs`. Returns true on success
 |descriptionEnd| */
 bool mod_fs_clear(struct ModFs *modFs);
+
+/* |description|
+Saves the provided `modFs` to persistent storage. Returns true on success
+|descriptionEnd| */
+bool mod_fs_save(struct ModFs *modFs);
+
+/* |description|
+Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+|descriptionEnd| */
+bool mod_fs_delete(struct ModFs *modFs);
+
+/* |description|
+Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+|descriptionEnd| */
+bool mod_fs_set_public(struct ModFs *modFs, bool pub);
 
 /* |description|
 Reads a boolean from a binary modfs `file`
