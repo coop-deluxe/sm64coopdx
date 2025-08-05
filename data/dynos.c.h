@@ -43,7 +43,7 @@ bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenI
 void dynos_actor_register_modified_graph_node(struct GraphNode *node);
 
 // -- collisions -- //
-void dynos_add_collision(const char *filePath, const char* collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
 // -- textures -- //

@@ -133,8 +133,8 @@ void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
 
 // -- collisions -- //
 
-void dynos_add_collision(const char *filePath, const char* collisionName) {
-    DynOS_Col_Activate(filePath, collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName) {
+    return DynOS_Col_Activate(filePath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {

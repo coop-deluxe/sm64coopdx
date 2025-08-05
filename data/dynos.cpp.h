@@ -956,7 +956,7 @@ void DynOS_Bhv_ModShutdown();
 // Col Manager
 //
 
-void DynOS_Col_Activate(const SysPath &aFilePath, const char *aCollisionName);
+bool DynOS_Col_Activate(const SysPath &aFilePath, const char *aCollisionName);
 Collision* DynOS_Col_Get(const char* collisionName);
 void DynOS_Col_ModShutdown();
 
