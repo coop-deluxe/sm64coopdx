@@ -143,9 +143,9 @@ Collision* dynos_collision_get(const char* collisionName) {
 
 // -- textures -- //
 
-void dynos_add_texture(const char *filePath, const char* textureName) {
+bool dynos_add_texture(const char *filePath, const char* textureName) {
     SysPath _FilePath = filePath;
-    DynOS_Tex_AddCustom(_FilePath, textureName);
+    return DynOS_Tex_AddCustom(_FilePath, textureName);
 }
 
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {

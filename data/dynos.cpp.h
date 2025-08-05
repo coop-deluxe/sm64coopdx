@@ -918,7 +918,7 @@ u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSi
 bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
 void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
-void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
+bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
 bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo);
 void DynOS_Tex_Override_Set(const char* textureName, struct TextureInfo* aOverrideTexInfo);

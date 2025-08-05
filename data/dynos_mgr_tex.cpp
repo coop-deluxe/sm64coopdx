@@ -4,6 +4,7 @@
 extern "C" {
 #include "pc/gfx/gfx.h"
 #include "pc/gfx/gfx_rendering_api.h"
+#include "pc/mods/mod_fs.h"
 }
 
 struct OverrideTexture {
@@ -423,13 +424,13 @@ void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
     _Schedule.Add(aNode);
 }
 
-void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
+bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     auto& _DynosCustomTexs = DynosCustomTexs();
 
     // check for duplicates
     for (s32 i = 0; i < _DynosCustomTexs.Count(); ++i) {
         if (!strcmp(_DynosCustomTexs[i].first, aTexName)) {
-            return;
+            return true;
         }
     }
 
@@ -444,7 +445,9 @@ void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     free(_TexName);
     if (_Node) {
         DynOS_Tex_Activate(_Node, true);
+        return true;
     }
+    return false;
 }
 
 #define CONVERT_TEXINFO(texName) { \
@@ -485,6 +488,13 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
 
             CONVERT_TEXINFO(aTexName);
             return true;
+        }
+    }
+
+    // check modfs file
+    if (is_mod_fs_file(aTexName)) {
+        if (DynOS_Tex_AddCustom(aTexName, aTexName)) {
+            return DynOS_Tex_Get(aTexName, aOutTexInfo);
         }
     }
 

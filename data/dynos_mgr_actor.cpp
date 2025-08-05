@@ -231,7 +231,6 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
         }
     }
 
-
     *aSharedChild = (void*)it->second.mGraphNode;
 }
 
