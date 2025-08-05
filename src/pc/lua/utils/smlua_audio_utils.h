@@ -22,7 +22,7 @@ struct ModAudioSampleCopies {
 };
 
 struct ModAudio {
-    struct ModFile* file;
+    const char *filepath;
     ma_sound sound;
     ma_decoder decoder;
     void *buffer;

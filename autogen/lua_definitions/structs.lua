@@ -1273,7 +1273,7 @@
 
 --- @class ModAudio
 --- @field public baseVolume number
---- @field public file ModFile
+--- @field public filepath string
 --- @field public isStream boolean
 --- @field public loaded boolean
 

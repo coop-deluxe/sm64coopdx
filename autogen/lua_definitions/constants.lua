@@ -4545,10 +4545,10 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_BOWSER`
 
 --- @type integer
-MOD_FS_MAX_SIZE = 0x1000000
+MOD_FS_MAX_SIZE = 0x2000000
 
 --- @type integer
-MOD_FS_MAX_FILES = 0x100
+MOD_FS_MAX_FILES = 0x200
 
 --- @type integer
 MOD_FS_MAX_PATH = 0x100

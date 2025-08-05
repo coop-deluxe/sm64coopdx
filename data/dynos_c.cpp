@@ -115,8 +115,8 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild) {
     DynOS_Actor_Override(obj, aSharedChild);
 }
 
-void dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
-    DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
+    return DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {

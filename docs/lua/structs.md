@@ -1932,7 +1932,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | baseVolume | `number` |  |
-| file | [ModFile](structs.md#ModFile) |  |
+| filepath | `string` | read-only |
 | isStream | `boolean` | read-only |
 | loaded | `boolean` | read-only |
 

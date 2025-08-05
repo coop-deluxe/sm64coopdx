@@ -190,12 +190,12 @@ static void smlua_audio_custom_init(void) {
     }
 }
 
-static struct ModAudio* find_mod_audio(struct ModFile* file) {
+static struct ModAudio* find_mod_audio(const char *filepath) {
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (audio->file == file) { return audio; }
+        if (strcmp(filepath, audio->filepath) == 0) { return audio; }
         node = prev;
     }
     return NULL;
@@ -225,7 +225,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
     const char** ft = fileTypes;
     while (*ft != NULL) {
-        if (str_ends_with((char*)filename, (char*)*ft)) {
+        if (str_ends_with(filename, *ft)) {
             validFileType = true;
             break;
         }
@@ -236,25 +236,30 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         return NULL;
     }
 
-    // find mod file in mod list
-    bool foundModFile = false;
-    struct ModFile* modFile = NULL;
-    u16 fileCount = gLuaActiveMod->fileCount;
-    for (u16 i = 0; i < fileCount; i++) {
-        struct ModFile* file = &gLuaActiveMod->files[i];
-        if(str_ends_with(file->relativePath, (char*)filename)) {
-            foundModFile = true;
-            modFile = file;
-            break;
+    const char *filepath = filename;
+    if (!is_mod_fs_file(filename)) {
+
+        // find mod file in mod list
+        bool foundModFile = false;
+        struct ModFile* modFile = NULL;
+        u16 fileCount = gLuaActiveMod->fileCount;
+        for (u16 i = 0; i < fileCount; i++) {
+            struct ModFile* file = &gLuaActiveMod->files[i];
+            if(str_ends_with(file->relativePath, filename)) {
+                foundModFile = true;
+                modFile = file;
+                break;
+            }
         }
-    }
-    if (!foundModFile) {
-        LOG_LUA_LINE("Could not find audio file: '%s'", filename);
-        return NULL;
+        if (!foundModFile) {
+            LOG_LUA_LINE("Could not find audio file: '%s'", filename);
+            return NULL;
+        }
+        filepath = modFile->cachedPath;
     }
 
     // find stream in ModAudio list
-    struct ModAudio* audio = find_mod_audio(modFile);
+    struct ModAudio* audio = find_mod_audio(filepath);
     if (audio) {
         if (isStream == audio->isStream) {
             return audio;
@@ -277,36 +282,52 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
 
     // remember file
-    audio->file = modFile;
+    audio->filepath = strdup(filepath);
 
-    // load audio
-    FILE *f = f_open_r(modFile->cachedPath);
-    if (!f) {
-        LOG_ERROR("failed to load audio file '%s': file not found", filename);
-        return NULL;
-    }
+    void *buffer = NULL;
+    u32 size = 0;
 
-    f_seek(f, 0, SEEK_END);
-    u32 size = f_tell(f);
-    f_rewind(f);
-    void *buffer = calloc(size, 1);
-    if (!buffer) {
+    if (is_mod_fs_file(filepath)) {
+        if (!mod_fs_read_file_from_uri(filepath, &buffer, &size)) {
+            LOG_ERROR("failed to load audio file '%s': an error occurred with modfs", filename);
+            return NULL;
+        }
+    } else {
+
+        // load audio
+        FILE *f = f_open_r(filepath);
+        if (!f) {
+            LOG_ERROR("failed to load audio file '%s': file not found", filename);
+            return NULL;
+        }
+
+        f_seek(f, 0, SEEK_END);
+        size = f_tell(f);
+        f_rewind(f);
+        buffer = calloc(size, 1);
+        if (!buffer) {
+            f_close(f);
+            f_delete(f);
+            LOG_ERROR("failed to load audio file '%s': cannot allocate buffer of size: %d", filename, size);
+            return NULL;
+        }
+
+        // read the audio buffer
+        if (f_read(buffer, 1, size, f) < size) {
+            free(buffer);
+            f_close(f);
+            f_delete(f);
+            LOG_ERROR("failed to load audio file '%s': cannot read audio buffer of size: %d", filename, size);
+            return NULL;
+        }
         f_close(f);
         f_delete(f);
-        LOG_ERROR("failed to load audio file '%s': cannot allocate buffer of size: %d", filename, size);
-        return NULL;
     }
 
-    // read the audio buffer
-    if (f_read(buffer, 1, size, f) < size) {
-        free(buffer);
-        f_close(f);
-        f_delete(f);
-        LOG_ERROR("failed to load audio file '%s': cannot read audio buffer of size: %d", filename, size);
+    if (!buffer || !size) {
+        LOG_ERROR("failed to load audio file '%s': failed to read audio data", filename);
         return NULL;
     }
-    f_close(f);
-    f_delete(f);
 
     // decode the audio buffer
     ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
@@ -620,6 +641,7 @@ void audio_custom_shutdown(void) {
                 audio_sample_destroy_copies(audio);
             }
             ma_sound_uninit(&audio->sound);
+            free((void *) audio->filepath);
         }
         dynamic_pool_free(sModAudioPool, audio);
         node = prev;

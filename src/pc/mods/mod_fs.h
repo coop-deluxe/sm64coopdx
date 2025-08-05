@@ -4,8 +4,8 @@
 #include "types.h"
 #include "src/pc/lua/smlua.h"
 
-#define MOD_FS_MAX_SIZE     0x1000000 // 16 MB
-#define MOD_FS_MAX_FILES    0x100
+#define MOD_FS_MAX_SIZE     0x2000000 // 32 MB
+#define MOD_FS_MAX_FILES    0x200
 #define MOD_FS_MAX_PATH     0x100
 #define MOD_FS_URI_PREFIX   "modfs:/"
 #define MOD_FS_URI_FORMAT   "modfs:/%s/%s" // modPath, filepath
