@@ -136,6 +136,7 @@ defined_values = {
     'VERSION_JP': False,
     'VERSION_SH': False,
     'F3DEX_GBI_2': True,
+    'DEVELOPMENT': False,
 }
 
 ############################################################################
@@ -252,15 +253,17 @@ def process_define(filename, line, inIfBlock):
     val = val.replace('(u8)', '')
     val = val.replace('(u64)', '')
     val = re.sub(r'\.\d+f', '', val)
+    val = val.strip()
 
-    for p in val.split(' '):
-        if p.startswith('0x'):
-            continue
-        p = re.sub(r'0x[a-fA-F0-9]+', '', p)
-        if re.search(r'[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
-            if 'gCurrentObject' not in line and verbose:
-                print('UNRECOGNIZED DEFINE: ' + line)
-            return None
+    if not (val.startswith('"') and val.endswith('"') and '"' not in val[1:-1]):
+        for p in val.split(' '):
+            if p.startswith('0x'):
+                continue
+            p = re.sub(r'0x[a-fA-F0-9]+', '', p)
+            if re.search(r'[a-z]', p) != None and "VERSION_TEXT" not in line and "SM64COOPDX_VERSION" not in line:
+                if 'gCurrentObject' not in line and verbose:
+                    print('UNRECOGNIZED DEFINE: ' + line)
+                return None
 
     if not allowed_identifier(filename, ident):
         return None

@@ -10,6 +10,7 @@
 #include "game/camera.h"
 #include "engine/math_util.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mod_fs.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/mods/mods_utils.h"
@@ -78,27 +79,37 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
         return true;
     }
 
-    static u8* buffer = NULL;
-    static long int length = 0;
+    u8* buffer = NULL;
+    u32 length = 0;
 
-    FILE* fp = f_open_r(override->filename);
-    if (!fp) { return false; }
-    f_seek(fp, 0L, SEEK_END);
-    length = f_tell(fp);
+    if (is_mod_fs_file(override->filename)) {
+        if (!mod_fs_read_file_from_uri(override->filename, (void **) &buffer, &length)) {
+            return false;
+        }
+    } else {
+        FILE* fp = f_open_r(override->filename);
+        if (!fp) { return false; }
+        f_seek(fp, 0L, SEEK_END);
+        length = f_tell(fp);
 
-    buffer = malloc(length+1);
-    if (buffer == NULL) {
-        LOG_ERROR("Failed to malloc m64 sound file");
+        buffer = malloc(length+1);
+        if (buffer == NULL) {
+            LOG_ERROR("Failed to malloc m64 sound file");
+            f_close(fp);
+            f_delete(fp);
+            return false;
+        }
+
+        f_seek(fp, 0L, SEEK_SET);
+        f_read(buffer, length, 1, fp);
+
         f_close(fp);
         f_delete(fp);
-        return false;
     }
 
-    f_seek(fp, 0L, SEEK_SET);
-    f_read(buffer, length, 1, fp);
-
-    f_close(fp);
-    f_delete(fp);
+    if (!buffer || !length) {
+        return false;
+    }
 
     // cache
     override->loaded = true;
@@ -110,6 +121,17 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
     return true;
 }
 
+static void smlua_audio_utils_create_audio_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath) {
+    struct AudioOverride* override = &sAudioOverrides[sequenceId];
+    if (override->enabled) { audio_init(); }
+    smlua_audio_utils_reset(override);
+    LOG_INFO("Loading audio: %s", filepath);
+    override->filename = strdup(filepath);
+    override->enabled = true;
+    override->bank = bankId;
+    sound_set_background_music_default_volume(sequenceId, defaultVolume);
+}
+
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name) {
     if (gLuaActiveMod == NULL) { return; }
     if (sequenceId >= MAX_AUDIO_OVERRIDE) {
@@ -119,6 +141,11 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     if (bankId >= 64) {
         LOG_LUA_LINE("Invalid bankId given to smlua_audio_utils_replace_sequence(): %d", bankId);
+        return;
+    }
+
+    if (is_mod_fs_file(m64Name)) {
+        smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, m64Name);
         return;
     }
 
@@ -135,18 +162,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         snprintf(relPath, SYS_MAX_PATH-1, "%s", file->relativePath);
         normalize_path(relPath);
         if (str_ends_with(relPath, m64path)) {
-            struct AudioOverride* override = &sAudioOverrides[sequenceId];
-            if (override->enabled) { audio_init(); }
-            smlua_audio_utils_reset(override);
-            LOG_INFO("Loading audio: %s", file->cachedPath);
-            override->filename = strdup(file->cachedPath);
-            override->enabled = true;
-            override->bank = bankId;
-#ifdef VERSION_EU
-            //sBackgroundMusicDefaultVolume[sequenceId] = defaultVolume;
-#else
-            sound_set_background_music_default_volume(sequenceId, defaultVolume);
-#endif
+            smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, file->cachedPath);
             return;
         }
     }

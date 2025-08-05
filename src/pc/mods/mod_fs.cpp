@@ -1493,10 +1493,61 @@ C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
 // Errors
 //
 
-void mod_fs_hide_errors(bool hide) {
+C_DEFINE void mod_fs_hide_errors(bool hide) {
     sModFsHideErrors = hide;
 }
 
-const char *mod_fs_get_last_error() {
+C_DEFINE const char *mod_fs_get_last_error() {
     return *sModFsLastError ? sModFsLastError : NULL;
+}
+
+//
+// Functions used by other C modules, not API
+//
+
+static bool mod_fs_extract_modpath_and_filepath(const char *uri, char *modPath, char *filepath) {
+
+    // check prefix
+    if (!is_mod_fs_file(uri)) {
+        return false;
+    }
+
+    // get modPath
+    const char *modPathBegin = uri + sizeof(MOD_FS_URI_PREFIX) - 1;
+    const char *modPathEnd = strchr(modPathBegin, '/');
+    if (!modPathEnd) {
+        return false;
+    }
+    snprintf(modPath, SYS_MAX_PATH, "%.*s", (size_t) (modPathEnd - modPathBegin), modPathBegin);
+
+    // get filepath
+    snprintf(filepath, MOD_FS_MAX_PATH, "%s", modPathEnd + 1);
+
+    return true;
+}
+
+C_DEFINE bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length) {
+    char modPath[SYS_MAX_PATH];
+    char filepath[MOD_FS_MAX_PATH];
+    if (!mod_fs_extract_modpath_and_filepath(uri, modPath, filepath)) {
+        return false;
+    }
+
+    struct ModFs *modFs = mod_fs_get(modPath);
+    if (!modFs) {
+        return false;
+    }
+
+    struct ModFsFile *file = mod_fs_get_file(modFs, filepath);
+    if (!file || !file->data.bin || !file->size) {
+        return false;
+    }
+
+    *buffer = malloc(file->size);
+    if (!*buffer) {
+        return false;
+    }
+    memcpy(*buffer, file->data.bin, file->size);
+    *length = file->size;
+    return true;
 }

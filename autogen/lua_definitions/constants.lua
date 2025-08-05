@@ -4553,6 +4553,12 @@ MOD_FS_MAX_FILES = 0x100
 --- @type integer
 MOD_FS_MAX_PATH = 0x100
 
+--- @type string
+MOD_FS_URI_PREFIX = "modfs:/"
+
+--- @type string
+MOD_FS_URI_FORMAT = "modfs:/%s/%s"
+
 INT_TYPE_U8  = 0 --- @type ModFsFileIntType
 INT_TYPE_U16 = 1 --- @type ModFsFileIntType
 INT_TYPE_U32 = 2 --- @type ModFsFileIntType
@@ -6745,6 +6751,9 @@ R_CBUTTONS = CONT_F
 
 --- @type integer
 D_CBUTTONS = CONT_D
+
+--- @type string
+PALETTES_DIRECTORY = "palettes"
 
 --- @type integer
 MAX_PRESET_PALETTES = 128
@@ -11150,6 +11159,12 @@ VERSION_NUMBER = 41
 
 --- @type integer
 MINOR_VERSION_NUMBER = 0
+
+--- @type string
+GAME_NAME = "sm64coopdx"
+
+--- @type string
+WINDOW_NAME = "Super Mario 64 Coop Deluxe"
 
 --- @type integer
 MAX_VERSION_LENGTH = 128
