@@ -2,7 +2,7 @@
 
 Setting up Visual Studio Code will allow you to have all of the modern benefits of IDEs like autocomplete.
 
-**IMPORTANT**
+## IMPORTANT
 
 Install the <code>Lua</code> <a href="https://marketplace.visualstudio.com/items?itemName=sumneko.lua">extension</a> by <code>sumneko</code> in VS Code:
 <br>
