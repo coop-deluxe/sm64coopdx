@@ -223,7 +223,6 @@ static u32 get_refresh_rate() {
 
 void produce_interpolation_frames_and_delay(void) {
     u32 refreshRate = get_refresh_rate();
-    bool is30Fps = (refreshRate == FRAMERATE);
 
     gRenderingInterpolated = true;
 
