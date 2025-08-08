@@ -348,10 +348,10 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
     return true;
 }
 
-static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
+static bool mod_load_files(struct Mod* mod, char* fullPath) {
     // read single lua file
     if (!mod->isDirectory) {
-        return (mod_allocate_file(mod, modName) != NULL);
+        return (mod_allocate_file(mod, mod->relativePath) != NULL);
     }
 
     // deal with mod directory
@@ -526,7 +526,7 @@ bool mod_refresh_files(struct Mod* mod) {
     dynos_generate_mod_pack(mod->basePath);
 
     // read files
-    if (!mod_load_files(mod, mod->name, mod->basePath)) {
+    if (!mod_load_files(mod, mod->basePath)) {
         LOG_ERROR("Failed to load mod files for '%s'", mod->name);
         return false;
     }
@@ -613,7 +613,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     mod->isDirectory = isDirectory;
 
     // read files
-    if (!mod_load_files(mod, modName, fullPath)) {
+    if (!mod_load_files(mod, fullPath)) {
         LOG_ERROR("Failed to load mod files for '%s'", modName);
         return false;
     }
