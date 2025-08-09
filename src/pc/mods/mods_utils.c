@@ -271,7 +271,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     char* token = strtok(combined, delim);
     while (token && tokenCount < 64) {
         if (strcmp(token, "..") == 0) {
-            if (tokenCount > 0) tokenCount--;
+            if (tokenCount > 0) { tokenCount--; }
         } else if (strcmp(token, ".") != 0 && token[0] != '\0') {
             tokens[tokenCount++] = token;
         }

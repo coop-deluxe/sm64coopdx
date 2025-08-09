@@ -608,7 +608,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         mods_clear(mods);
         return false;
     }
-    
+
     // set directory
     mod->isDirectory = isDirectory;
 
