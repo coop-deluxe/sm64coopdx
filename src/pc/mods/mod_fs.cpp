@@ -14,6 +14,7 @@ extern "C" {
 #define C_DEFINE extern "C"
 
 using json = nlohmann::json;
+static const json sEmptyJson = {};
 
 static std::vector<struct ModFs *> sModFsList = {};
 static char sModFsFileReadStringBuf[MOD_FS_MAX_SIZE + 1];
@@ -132,8 +133,8 @@ static FILE *mod_fs_get_file_handle(const char *modPath, const char *mode) {
 }
 
 static int mod_fs_compare_filepaths(const void *l, const void *r) {
-    const struct ModFsFile *lfile = (const struct ModFsFile *) l;
-    const struct ModFsFile *rfile = (const struct ModFsFile *) r;
+    const struct ModFsFile *lfile = *((const struct ModFsFile **) l);
+    const struct ModFsFile *rfile = *((const struct ModFsFile **) r);
     return strcmp(lfile->filepath, rfile->filepath);
 }
 
@@ -192,19 +193,71 @@ bool mod_fs_get_property_value(const json &property, const bool &defaultValue) {
     return defaultValue;
 }
 
-template <typename T>
-static T mod_fs_read_property(const json &properties, const std::vector<const char *> &propertyPath, const T &defaultValue) {
+const json &mod_fs_get_properties_at(const json &properties, const std::vector<const char *> &propertyPath) {
     const json *current = &properties;
     for (const auto &key : propertyPath) {
         if (!current->is_object() || !current->contains(key)) {
-            return defaultValue;
+            return sEmptyJson;
         }
         current = &(*current)[key];
     }
-    return mod_fs_get_property_value<T>(*current, defaultValue);
+    return *current;
 }
 
-static json mod_fs_get_properties(struct ModFs *modFs) {
+template <typename T>
+static T mod_fs_read_property(const json &properties, const std::vector<const char *> &propertyPath, const T &defaultValue) {
+    return mod_fs_get_property_value<T>(
+        mod_fs_get_properties_at(properties, propertyPath),
+        defaultValue
+    );
+}
+
+static bool mod_fs_get_wildcard_tokens(const char *path, char *prefix, char *suffix) {
+    const char *wildcard = strchr(path, '*');
+    if (!wildcard) {
+        return false;
+    }
+
+    // Multiple wildcards are not supported
+    if (strchr(wildcard + 1, '*') != NULL) {
+        return false;
+    }
+
+    snprintf(prefix, SYS_MAX_PATH, "%.*s", (size_t) (wildcard - path), path);
+    snprintf(suffix, SYS_MAX_PATH, "%s", wildcard + 1);
+    return true;
+}
+
+static const json &mod_fs_read_properties_for_filepath(const json &properties, const char *filepath) {
+
+    // Get all files properties
+    const json &filesProperties = mod_fs_get_properties_at(properties, { "files" });
+    if (filesProperties.empty()) {
+        return sEmptyJson;
+    }
+
+    // First, check for the exact path
+    const json &fileProperties = mod_fs_get_properties_at(filesProperties, { filepath });
+    if (!fileProperties.empty()) {
+        return fileProperties;
+    }
+
+    // If not found, look for wildcards
+    for (auto it = filesProperties.begin(); it != filesProperties.end(); it++) {
+        char prefix[SYS_MAX_PATH];
+        char suffix[SYS_MAX_PATH];
+        if (!mod_fs_get_wildcard_tokens(it.key().c_str(), prefix, suffix)) {
+            continue;
+        }
+        if (str_starts_with(filepath, prefix) && str_ends_with(filepath, suffix)) {
+            return it.value();
+        }
+    }
+
+    return sEmptyJson;
+}
+
+static json mod_fs_get_properties_json(struct ModFs *modFs) {
     json properties;
     properties["isPublic"] = modFs->isPublic;
     for (u16 i = 0; i != modFs->numFiles; ++i) {
@@ -215,6 +268,16 @@ static json mod_fs_get_properties(struct ModFs *modFs) {
         };
     }
     return properties;
+}
+
+static bool mod_fs_file_detect_text_mode(struct ModFsFile *file) {
+    for (u32 i = 0; i != file->size; ++i) {
+        u8 c = file->data.bin[i];
+        if (iscntrl(c) && !isspace(c)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 //
@@ -371,9 +434,9 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                     );
                 }
 
-                // read properties
-                file.isText = mod_fs_read_property<bool>(properties, { "files", file.filepath, "isText" }, false);
-                file.isPublic = mod_fs_read_property<bool>(properties, { "files", file.filepath, "isPublic" }, MOD_FS_FILE_IS_PUBLIC_DEFAULT);
+                // read isPublic property
+                const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file.filepath);
+                file.isPublic = mod_fs_read_property<bool>(fileProperties, { "isPublic" }, MOD_FS_FILE_IS_PUBLIC_DEFAULT);
 
                 // skip file if it's private
                 if (!mod_fs_is_active_mod(modFs) && !file.isPublic) {
@@ -386,7 +449,7 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 // check number of files
                 if (modFs->numFiles > MOD_FS_MAX_FILES) {
                     mod_fs_read_raise_error(
-                        "modPath: %s - exceeded number of files: %llu (max is: %u)", modFs->modPath, modFs->numFiles, MOD_FS_MAX_FILES
+                        "modPath: %s - exceeded number of files: %u (max is: %u)", modFs->modPath, numFiles, MOD_FS_MAX_FILES
                     );
                 }
             }
@@ -439,6 +502,10 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 memcpy(file->data.bin, fileBuf, file->size);
             }
             mz_free(fileBuf);
+
+            // read isText property
+            const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file->filepath);
+            file->isText = mod_fs_read_property<bool>(fileProperties, { "isText" }, mod_fs_file_detect_text_mode(file));
         }
 
         if (modFs->files) {
@@ -480,7 +547,7 @@ static bool mod_fs_write(struct ModFs *modFs) {
         }
 
         // write properties file
-        std::string properties = mod_fs_get_properties(modFs).dump(4, ' ', true);
+        std::string properties = mod_fs_get_properties_json(modFs).dump(4, ' ', true);
         if (!mz_zip_writer_add_mem(zip, MOD_FS_PROPERTIES, properties.c_str(), properties.length(), MZ_BEST_COMPRESSION)) {
             mod_fs_write_raise_error();
         }
@@ -974,7 +1041,7 @@ C_DEFINE bool mod_fs_save(struct ModFs *modFs) {
     }
 
     // cannot save other mods modfs
-    if (!mod_fs_check_write(modFs, "saving")) {
+    if (!mod_fs_check_write(modFs, "saving over")) {
         return false;
     }
 
@@ -1470,6 +1537,17 @@ C_DEFINE bool mod_fs_file_erase(struct ModFsFile *file, u32 length) {
     memmove(file->data.bin + file->offset, file->data.bin + file->offset + length, file->size - (file->offset + length));
     file->size -= length;
     file->modFs->totalSize -= length;
+    return true;
+}
+
+C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    file->isText = text;
     return true;
 }
 

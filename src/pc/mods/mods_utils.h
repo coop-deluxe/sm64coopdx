@@ -12,7 +12,10 @@ void mods_delete_tmp(void);
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile);
 bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile);
 
-bool str_ends_with(const char* string, const char* suffix);
+bool str_starts_with(const char *string, const char *prefix);
+bool str_ends_with(const char *string, const char *suffix);
+
+bool path_ends_with(const char* path, const char* suffix);
 
 char* extract_lua_field(char* fieldName, char* buffer);
 

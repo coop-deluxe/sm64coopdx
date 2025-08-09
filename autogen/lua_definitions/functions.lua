@@ -7601,6 +7601,14 @@ function mod_fs_file_erase(file, length)
 end
 
 --- @param file ModFsFile
+--- @param text boolean
+--- @return boolean
+--- Marks the provided modfs `file` as text. Returns true on success
+function mod_fs_file_set_text_mode(file, text)
+    -- ...
+end
+
+--- @param file ModFsFile
 --- @param pub boolean
 --- @return boolean
 --- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success

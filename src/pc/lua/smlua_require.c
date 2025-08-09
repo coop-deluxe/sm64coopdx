@@ -54,12 +54,12 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // only consider lua files
-        if (!str_ends_with(file->relativePath, ".lua") && !str_ends_with(file->relativePath, ".luac")) {
+        if (!path_ends_with(file->relativePath, ".lua") && !path_ends_with(file->relativePath, ".luac")) {
             continue;
         }
 
         // check for match
-        if (!str_ends_with(file->relativePath, rawName) && !str_ends_with(file->relativePath, luaName) && !str_ends_with(file->relativePath, luacName)) {
+        if (!path_ends_with(file->relativePath, rawName) && !path_ends_with(file->relativePath, luaName) && !path_ends_with(file->relativePath, luacName)) {
             continue;
         }
 

@@ -161,7 +161,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         char relPath[SYS_MAX_PATH] = { 0 };
         snprintf(relPath, SYS_MAX_PATH-1, "%s", file->relativePath);
         normalize_path(relPath);
-        if (str_ends_with(relPath, m64path)) {
+        if (path_ends_with(relPath, m64path)) {
             smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, file->cachedPath);
             return;
         }
@@ -225,7 +225,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
     const char** ft = fileTypes;
     while (*ft != NULL) {
-        if (str_ends_with(filename, *ft)) {
+        if (path_ends_with(filename, *ft)) {
             validFileType = true;
             break;
         }
@@ -245,7 +245,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         u16 fileCount = gLuaActiveMod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
             struct ModFile* file = &gLuaActiveMod->files[i];
-            if(str_ends_with(file->relativePath, filename)) {
+            if(path_ends_with(file->relativePath, filename)) {
                 foundModFile = true;
                 modFile = file;
                 break;

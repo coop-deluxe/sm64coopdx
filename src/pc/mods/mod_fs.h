@@ -220,6 +220,11 @@ Erases `length` bytes or characters from a modfs `file`. Returns true on success
 bool mod_fs_file_erase(struct ModFsFile *file, u32 length);
 
 /* |description|
+Marks the provided modfs `file` as text. Returns true on success
+|descriptionEnd| */
+bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text);
+
+/* |description|
 Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 |descriptionEnd| */
 bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);

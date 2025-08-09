@@ -160,21 +160,35 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool str_ends_with(const char* string, const char* suffix) {
+bool str_starts_with(const char *string, const char *prefix) {
+    if (string == NULL || prefix == NULL) { return false; }
+
+    return strncmp(string, prefix, strlen(prefix)) == 0;
+}
+
+bool str_ends_with(const char *string, const char *suffix) {
     if (string == NULL || suffix == NULL) { return false; }
 
     size_t stringLength = strlen(string);
     size_t suffixLength = strlen(suffix);
+    return stringLength >= suffixLength && strncmp(string + stringLength - suffixLength, suffix, suffixLength) == 0;
+}
 
-    if (suffixLength > stringLength) { return false; }
+bool path_ends_with(const char* path, const char* suffix) {
+    if (path == NULL || suffix == NULL) { return false; }
+
+    size_t pathLength = strlen(path);
+    size_t suffixLength = strlen(suffix);
+
+    if (suffixLength > pathLength) { return false; }
 
 #ifdef _WIN32
     // Paths on Windows are case-insensitive and might have
     // upper-case or mixed-case endings.
-    return (0 == _stricmp(&(string[stringLength - suffixLength]), suffix));
+    return (0 == _stricmp(&(path[pathLength - suffixLength]), suffix));
 #else
     // Always expecting lower-case file paths and extensions
-    return (0 == strcmp(&(string[stringLength - suffixLength]), suffix));
+    return (0 == strcmp(&(path[pathLength - suffixLength]), suffix));
 #endif
 }
 

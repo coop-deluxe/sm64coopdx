@@ -23,7 +23,7 @@ size_t mod_get_lua_size(struct Mod* mod) {
 
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) { continue; }
+        if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) { continue; }
         size += file->size;
     }
 
@@ -161,19 +161,19 @@ void mod_activate(struct Mod* mod) {
             mod_cache_update(mod, file);
         }
 
-        if (str_ends_with(file->relativePath, ".bin")) {
+        if (path_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".col")) {
+        if (path_ends_with(file->relativePath, ".col")) {
             mod_activate_col(file);
         }
-        if (str_ends_with(file->relativePath, ".lvl")) {
+        if (path_ends_with(file->relativePath, ".lvl")) {
             mod_activate_lvl(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".bhv")) {
+        if (path_ends_with(file->relativePath, ".bhv")) {
             mod_activate_bhv(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".tex")) {
+        if (path_ends_with(file->relativePath, ".tex")) {
             mod_activate_tex(file);
         }
     }
@@ -330,7 +330,7 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         bool fileTypeMatch = false;
         const char** ft = fileTypes;
         while (*ft != NULL) {
-            if (str_ends_with(path, (char*)*ft)) {
+            if (path_ends_with(path, (char*)*ft)) {
                 fileTypeMatch = true;
             }
             ft++;
@@ -555,7 +555,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     bool isDirectory = fs_sys_dir_exists(fullPath);
 
     // make sure mod is valid
-    if (str_ends_with(modName, ".lua")) {
+    if (path_ends_with(modName, ".lua")) {
         valid = true;
     } else if (fs_sys_dir_exists(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };

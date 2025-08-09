@@ -352,7 +352,7 @@ void smlua_init(void) {
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             // skip loading non-lua files
-            if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) {
+            if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) {
                 continue;
             }
 
