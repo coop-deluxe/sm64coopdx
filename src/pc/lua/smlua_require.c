@@ -20,30 +20,31 @@ static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
     }
 }
 
-static struct ModFile* smlua_find_mod_file(const char* moduleName) {
-    char relativeDir[SYS_MAX_PATH] = "";
+static struct ModFile* smlua_find_mod_file(char* moduleName) {
+    char basePath[SYS_MAX_PATH] = "";
+    char absolutePath[SYS_MAX_PATH];
 
     if (!gLuaActiveMod) {
         return NULL;
     }
 
+    // get the directory of the current file
     if (gLuaActiveModFile) {
-        path_get_folder(gLuaActiveModFile->relativePath, relativeDir);
+        path_get_folder(gLuaActiveModFile->relativePath, basePath);
     }
 
-    bool hasRelativeDir = strlen(relativeDir) > 0;
+    normalize_path(basePath);
+    normalize_path(moduleName);
 
-    struct ModFile* bestPick = NULL;
-    int bestRelativeDepth = INT_MAX;
-    int bestTotalDepth = INT_MAX;
-    bool foundRelativeFile = false;
+    // resolve moduleName to a path relative to mod root
+    resolve_relative_path(basePath, moduleName, absolutePath);
 
-    char rawName[SYS_MAX_PATH] = "";
     char luaName[SYS_MAX_PATH] = "";
     char luacName[SYS_MAX_PATH] = "";
-    snprintf(rawName, SYS_MAX_PATH, "%s", moduleName);
-    snprintf(luaName, SYS_MAX_PATH, "%s.lua", moduleName);
-    snprintf(luacName, SYS_MAX_PATH, "%s.luac", moduleName);
+    snprintf(luaName, SYS_MAX_PATH, "%s.lua", absolutePath);
+    snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
+
+    // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
 
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
@@ -59,40 +60,17 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // check for match
-        if (!str_ends_with(file->relativePath, rawName) && !str_ends_with(file->relativePath, luaName) && !str_ends_with(file->relativePath, luacName)) {
-            continue;
-        }
-
-        // get total path depth
-        int totalDepth = path_depth(file->relativePath);
-
-        // make sure we never load the old-style lua files with require()
-        if (totalDepth < 1) {
-            continue;
-        }
-
-        // get relative path depth
-        int relativeDepth = INT_MAX;
-        if (hasRelativeDir && path_is_relative_to(file->relativePath, relativeDir)) {
-            relativeDepth = path_depth(file->relativePath + strlen(relativeDir));
-            foundRelativeFile = true;
-        }
-
-        // pick new best
-        // relative files will always win against absolute files
-        // other than that, shallower files will win
-        if (relativeDepth < bestRelativeDepth || (!foundRelativeFile && totalDepth < bestTotalDepth)) {
-            bestPick = file;
-            bestRelativeDepth = relativeDepth;
-            bestTotalDepth = totalDepth;
+        if (!strcmp(file->relativePath, luaName) || !strcmp(file->relativePath, luacName)) {
+            return file;
         }
     }
 
-    return bestPick;
+    return NULL;
 }
 
 static int smlua_custom_require(lua_State* L) {
-    const char* moduleName = luaL_checkstring(L, 1);
+    char moduleName[SYS_MAX_PATH];
+    snprintf(moduleName, sizeof(moduleName), "%s", luaL_checkstring(L, 1));
 
     struct Mod* activeMod = gLuaActiveMod;
     if (!activeMod) {

@@ -608,7 +608,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         mods_clear(mods);
         return false;
     }
-
+    
     // set directory
     mod->isDirectory = isDirectory;
 
@@ -642,6 +642,8 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     // LOG_INFO("    %s", mod->name);
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
+        normalize_path(file->relativePath);
+
         mod_cache_add(mod, file, true);
         // LOG_INFO("      - %s", file->relativePath);
     }
