@@ -22,7 +22,7 @@ static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
 
 static struct ModFile* smlua_find_mod_file(char* moduleName) {
     char basePath[SYS_MAX_PATH] = "";
-    char absolutePath[SYS_MAX_PATH];
+    char absolutePath[SYS_MAX_PATH] = "";
 
     if (!gLuaActiveMod) {
         return NULL;
@@ -69,7 +69,7 @@ static struct ModFile* smlua_find_mod_file(char* moduleName) {
 }
 
 static int smlua_custom_require(lua_State* L) {
-    char moduleName[SYS_MAX_PATH];
+    char moduleName[SYS_MAX_PATH] = "";
     snprintf(moduleName, sizeof(moduleName), "%s", luaL_checkstring(L, 1));
 
     struct Mod* activeMod = gLuaActiveMod;

@@ -253,7 +253,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     const char* delim = "/";
 #endif
 
-    char combined[SYS_MAX_PATH];
+    char combined[SYS_MAX_PATH] = "";
 
     if (base[0] == '\0') {
         // base is mod root
