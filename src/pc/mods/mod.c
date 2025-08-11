@@ -245,15 +245,22 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     memset(file, 0, sizeof(struct ModFile));
 
     // set relative path
-    if (snprintf(file->relativePath, SYS_MAX_PATH - 1, "%s", relativePath) < 0) {
-        LOG_ERROR("Failed to remember relative path '%s'", relativePath);
+    char normPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(normPath, sizeof(normPath), "%s", relativePath) < 0) {
+        LOG_ERROR("Failed to copy relative path for normalization: %s", relativePath);
+    }
+
+    normalize_path(normPath);
+
+    if (snprintf(file->relativePath, SYS_MAX_PATH - 1, "%s", normPath) < 0) {
+        LOG_ERROR("Failed to remember relative path '%s'", normPath);
         return NULL;
     }
 
     // figure out full path
     char fullPath[SYS_MAX_PATH] = { 0 };
     if (!mod_file_full_path(fullPath, mod, file)) {
-        LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, relativePath);
+        LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, normPath);
         return NULL;
     }
 
@@ -642,8 +649,6 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     // LOG_INFO("    %s", mod->name);
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        normalize_path(file->relativePath);
-
         mod_cache_add(mod, file, true);
         // LOG_INFO("      - %s", file->relativePath);
     }
