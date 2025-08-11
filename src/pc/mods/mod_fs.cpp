@@ -26,6 +26,16 @@ static char sModFsFileReadStringBuf[MOD_FS_MAX_SIZE + 1];
 #define MOD_FS_IS_PUBLIC_DEFAULT        false
 #define MOD_FS_FILE_IS_PUBLIC_DEFAULT   false
 
+static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
+    ".txt", ".json", ".yaml", ".sav",   // text
+    ".bin", ".col",                     // actors
+    ".bhv",                             // behaviors
+    ".tex", ".png",                     // textures
+    ".lvl",                             // levels
+    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    NULL
+};
+
 //
 // Error handling
 //
@@ -136,6 +146,81 @@ static int mod_fs_compare_filepaths(const void *l, const void *r) {
     const struct ModFsFile *lfile = *((const struct ModFsFile **) l);
     const struct ModFsFile *rfile = *((const struct ModFsFile **) r);
     return strcmp(lfile->filepath, rfile->filepath);
+}
+
+static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
+
+    // check length
+    u32 filepathLength = strlen(filepath);
+    if (filepathLength == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath length cannot be 0", modFs->modPath, filepath
+        );
+        return false;
+    }
+    if (filepathLength > MOD_FS_MAX_PATH - 1) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepath, filepathLength, MOD_FS_MAX_PATH - 1
+        );
+        return false;
+    }
+
+    // cannot be called properties.json
+    if (strcmp(filepath, MOD_FS_PROPERTIES) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - forbidden filepath: \"" MOD_FS_PROPERTIES "\" is reserved", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // check character validity
+    // only ascii chars, no control chars, no star, no backslash
+    for (u32 i = 0; i != filepathLength; ++i) {
+        char c = filepath[i];
+        if (!isascii(c) || iscntrl(c) || c == '*' || c == '\\') {
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - invalid character at position %d: '%c' (%02X)", modFs->modPath, filepath, i, c, (u8) c
+            );
+            return false;
+        }
+    }
+
+    // cannot start with a slash
+    if (filepath[0] == '/') {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath cannot start with a slash '/'", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // no two consecutive slashes
+    if (strstr(filepath, "//")) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - two or more consecutive slashes '/' are not allowed", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // check extension
+    const char *lastSlash = strrchr(filepath, '/');
+    const char *lastDot = strrchr(filepath, '.');
+    if (lastDot > lastSlash) {
+        bool allowedExtension = false;
+        for (const char **ext = MOD_FS_FILE_ALLOWED_EXTENSIONS; *ext; ext++) {
+            if (stricmp(lastDot, *ext) == 0) {
+                allowedExtension = true;
+                break;
+            }
+        }
+        if (!allowedExtension) {
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - file extension not allowed: %s", modFs->modPath, filepath, lastDot
+            );
+            return false;
+        }
+    }
+
+    return true;
 }
 
 //
@@ -404,19 +489,14 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 struct ModFsFile file = {0};
                 file.offset = i;
 
-                // check filepath length
-                size_t filepathLength = strlen(fileStat.m_filename);
-                if (filepathLength == 0) {
+                // check filepath
+                const char *filepath = fileStat.m_filename;
+                if (!mod_fs_check_filepath(modFs, filepath)) {
                     mod_fs_read_raise_error(
-                        "modPath: %s - filepath length cannot be 0", modFs->modPath
+                        "modPath: %s - invalid filepath: %s", modFs->modPath, filepath
                     );
                 }
-                if (filepathLength > MOD_FS_MAX_PATH - 1) {
-                    mod_fs_read_raise_error(
-                        "modPath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepathLength, MOD_FS_MAX_PATH - 1
-                    );
-                }
-                memcpy(file.filepath, fileStat.m_filename, filepathLength);
+                memcpy(file.filepath, filepath, strlen(filepath));
 
                 // check file size
                 if (fileStat.m_uncomp_size > MOD_FS_MAX_SIZE) {
@@ -599,29 +679,6 @@ static bool mod_fs_file_check_write(struct ModFsFile *file) {
     if (!mod_fs_is_active_mod(file->modFs)) {
         mod_fs_raise_error(
             "modPath: %s, filepath: %s - writing to files in other mods modfs is not allowed", file->modFs->modPath, file->filepath
-        );
-        return false;
-    }
-    return true;
-}
-
-static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
-    u32 filepathLength = strlen(filepath);
-    if (filepathLength == 0) {
-        mod_fs_raise_error(
-            "modPath: %s - filepath length cannot be 0", modFs->modPath
-        );
-        return false;
-    }
-    if (filepathLength > MOD_FS_MAX_PATH - 1) {
-        mod_fs_raise_error(
-            "modPath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepathLength, MOD_FS_MAX_PATH - 1
-        );
-        return false;
-    }
-    if (strcmp(filepath, MOD_FS_PROPERTIES) == 0) {
-        mod_fs_raise_error(
-            "modPath: %s - forbidden filepath: \"" MOD_FS_PROPERTIES "\" is reserved", modFs->modPath
         );
         return false;
     }
