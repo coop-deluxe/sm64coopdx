@@ -1538,7 +1538,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
 }
 
 /**
- * Render an animated part with an Initial rotation value.
+ * Render an animated part with a initial rotation and scale values.
  */
 static void geo_process_bone(struct GraphNodeBone *node) {
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
@@ -1564,7 +1564,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     vec3s_copy(rotationPrev, rotation);
     vec3f_copy(translationPrev, translation);
 
-    vec3f_set(scaleVec, node->scale, node->scale, node->scale);
+    vec3f_copy(scaleVec, node->scale);
 
     anim_process(translationPrev, rotationPrev, &animType, gPrevAnimFrame, &animAttribute);
     anim_process(translation, rotation, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);

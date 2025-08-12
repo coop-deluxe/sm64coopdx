@@ -370,14 +370,16 @@ struct GraphNodeCullingRadius
     u8 pad1E[2];
 };
 
-/* Same as GraphNodeAnimatedPart but it has a Initial rotation value.*/
+/**
+ * GraphNodeAnimatedPart with initial rotation and scale values.
+ */
 struct GraphNodeBone
 {
     struct GraphNode node;
     Gfx *displayList;
     Vec3s translation;
     Vec3s rotation;
-    f32 scale;
+    Vec3f scale;
 };
 
 extern struct GraphNodeMasterList *gCurGraphNodeMasterList;
@@ -438,7 +440,7 @@ struct GraphNodeBone *init_graph_node_bone(struct DynamicPool *pool,
                                            struct GraphNodeBone *graphNode,
                                            s32 drawingLayer, void *displayList,
                                            Vec3s translation, Vec3s rotation,
-                                           f32 scale);
+                                           Vec3f scale);
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode);
 struct GraphNode* geo_remove_child_from_parent(struct GraphNode* parent, struct GraphNode* graphNode);
 struct GraphNode *geo_remove_child(struct GraphNode *graphNode);

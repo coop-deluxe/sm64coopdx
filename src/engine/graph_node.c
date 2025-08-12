@@ -539,7 +539,7 @@ struct GraphNodeBone *init_graph_node_bone(struct DynamicPool *pool,
                                            struct GraphNodeBone *graphNode,
                                            s32 drawingLayer, void *displayList,
                                            Vec3s translation, Vec3s rotation,
-                                           f32 scale) {
+                                           Vec3f scale) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeBone));
     }
@@ -548,7 +548,7 @@ struct GraphNodeBone *init_graph_node_bone(struct DynamicPool *pool,
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_BONE);
         vec3s_copy(graphNode->translation, translation);
         vec3s_copy(graphNode->rotation, rotation);
-        graphNode->scale = scale;
+        vec3f_copy(graphNode->scale, scale);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
         graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
     }
