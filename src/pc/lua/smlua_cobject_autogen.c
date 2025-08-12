@@ -1127,6 +1127,15 @@ static struct LuaObjectField sGraphNodeBillboardFields[LUA_GRAPH_NODE_BILLBOARD_
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeBillboard, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
+#define LUA_GRAPH_NODE_BONE_FIELD_COUNT 5
+static struct LuaObjectField sGraphNodeBoneFields[LUA_GRAPH_NODE_BONE_FIELD_COUNT] = {
+    { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeBone, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeBone, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeBone, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+    { "scale",       LVT_F32,       offsetof(struct GraphNodeBone, scale),       false, LOT_NONE,      1, sizeof(f32)              },
+    { "translation", LVT_COBJECT,   offsetof(struct GraphNodeBone, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+};
+
 #define LUA_GRAPH_NODE_CAMERA_FIELD_COUNT 10
 static struct LuaObjectField sGraphNodeCameraFields[LUA_GRAPH_NODE_CAMERA_FIELD_COUNT] = {
 //  { "config",        LVT_???,       offsetof(struct GraphNodeCamera, config),        false, LOT_???,         1, sizeof(union { ... })      }, <--- UNIMPLEMENTED
@@ -2912,6 +2921,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODEANIMATEDPART,        sGraphNodeAnimatedPartFields,        LUA_GRAPH_NODE_ANIMATED_PART_FIELD_COUNT        },
     { LOT_GRAPHNODEBACKGROUND,          sGraphNodeBackgroundFields,          LUA_GRAPH_NODE_BACKGROUND_FIELD_COUNT           },
     { LOT_GRAPHNODEBILLBOARD,           sGraphNodeBillboardFields,           LUA_GRAPH_NODE_BILLBOARD_FIELD_COUNT            },
+    { LOT_GRAPHNODEBONE,                sGraphNodeBoneFields,                LUA_GRAPH_NODE_BONE_FIELD_COUNT                 },
     { LOT_GRAPHNODECAMERA,              sGraphNodeCameraFields,              LUA_GRAPH_NODE_CAMERA_FIELD_COUNT               },
     { LOT_GRAPHNODECULLINGRADIUS,       sGraphNodeCullingRadiusFields,       LUA_GRAPH_NODE_CULLING_RADIUS_FIELD_COUNT       },
     { LOT_GRAPHNODEDISPLAYLIST,         sGraphNodeDisplayListFields,         LUA_GRAPH_NODE_DISPLAY_LIST_FIELD_COUNT         },
@@ -3040,6 +3050,7 @@ const char *sLuaLotNames[] = {
 	[LOT_GRAPHNODEANIMATEDPART] = "GraphNodeAnimatedPart",
 	[LOT_GRAPHNODEBACKGROUND] = "GraphNodeBackground",
 	[LOT_GRAPHNODEBILLBOARD] = "GraphNodeBillboard",
+	[LOT_GRAPHNODEBONE] = "GraphNodeBone",
 	[LOT_GRAPHNODECAMERA] = "GraphNodeCamera",
 	[LOT_GRAPHNODECULLINGRADIUS] = "GraphNodeCullingRadius",
 	[LOT_GRAPHNODEDISPLAYLIST] = "GraphNodeDisplayList",

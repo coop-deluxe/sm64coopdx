@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 
 
 ---
@@ -6738,5 +6738,5 @@ Converts a 3D short integer vector `a` into a 3D integer vector and stores the r
 <br />
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 

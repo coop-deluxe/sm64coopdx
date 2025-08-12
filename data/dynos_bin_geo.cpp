@@ -268,6 +268,24 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
         return;                                                                             \
     }
 
+#define geo_symbol_9(symb, n)                                                                      \
+    if (_Symbol == #symb) {                                                                        \
+        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg6 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg7 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        s64 _Arg8 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                               \
+        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                                     \
+        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7, _Arg8) }; \
+        memcpy(aHead, _Gl, sizeof(_Gl));                                                           \
+        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                                                   \
+        return;                                                                                    \
+    }
+
 static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLayout*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
@@ -315,6 +333,8 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_0(GEO_NOP_1E);
     geo_symbol_0(GEO_NOP_1F);
     geo_symbol_1(GEO_CULLING_RADIUS, 0);
+    geo_symbol_8(GEO_BONE, 4);
+    geo_symbol_9(GEO_BONE_WITH_SCALE, 4);
 
     // Geo function node
     if (_Symbol == "GEO_ASM") {
