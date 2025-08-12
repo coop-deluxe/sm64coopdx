@@ -469,10 +469,13 @@ enum SkyBackgroundParams {
  *   0x0A: s16 xRotation
  *   0x0C: s16 yRotation
  *   0x0E: s16 zRotation
- *   0x10: u32 xScale
- *   0x14: u32 yScale
- *   0x18: u32 zScale
- *   0x1C: displayList: display list segmented address
+ *   if 0b1000_0000 set:
+ *      0x10: u32 xScale
+ *      0x14: u32 yScale
+ *      0x18: u32 zScale
+ *      0x1C: displayList: display list segmented address
+ *   else:
+ *      0x10: displayList: display list segmented address
  */
 #define GEO_BONE(layer, tx, ty, tz, rx, ry, rz, displayList) \
     CMD_BBH(0x24, (0x00 | layer), 0x0000), \
