@@ -876,7 +876,7 @@
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
 --- @field public rotation Vec3s
---- @field public scale number
+--- @field public scale Vec3f
 --- @field public translation Vec3s
 
 --- @class GraphNodeCamera

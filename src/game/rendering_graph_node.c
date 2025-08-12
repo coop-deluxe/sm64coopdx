@@ -1538,7 +1538,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
 }
 
 /**
- * Render an animated part with a initial rotation and scale values.
+ * Render an animated part with initial rotation and scale values.
  */
 static void geo_process_bone(struct GraphNodeBone *node) {
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {

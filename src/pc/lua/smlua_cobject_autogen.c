@@ -1132,7 +1132,7 @@ static struct LuaObjectField sGraphNodeBoneFields[LUA_GRAPH_NODE_BONE_FIELD_COUN
     { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeBone, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
     { "node",        LVT_COBJECT,   offsetof(struct GraphNodeBone, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
     { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeBone, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
-    { "scale",       LVT_F32,       offsetof(struct GraphNodeBone, scale),       false, LOT_NONE,      1, sizeof(f32)              },
+    { "scale",       LVT_COBJECT,   offsetof(struct GraphNodeBone, scale),       true,  LOT_VEC3F,     1, sizeof(Vec3f)            },
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeBone, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 

@@ -1301,7 +1301,7 @@
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
-| scale | `number` |  |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
