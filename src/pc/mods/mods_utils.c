@@ -245,14 +245,6 @@ int path_depth(const char* path) {
 }
 
 void resolve_relative_path(const char* base, const char* path, char* output) {
-#if defined(_WIN32)
-    const char sep = '\\';
-    const char* delim = "\\";
-#else
-    const char sep = '/';
-    const char* delim = "/";
-#endif
-
     char combined[SYS_MAX_PATH] = "";
 
     if (base[0] == '\0') {
@@ -262,34 +254,32 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
         // path should be treated as absolute
         snprintf(combined, sizeof(combined), "%s", path + 1);
     } else {
-        snprintf(combined, sizeof(combined), "%s%c%s", base, sep, path);
+        snprintf(combined, sizeof(combined), "%s/%s", base, path);
     }
 
     char* tokens[64];
     int tokenCount = 0;
 
-    char* token = strtok(combined, delim);
+    char* token = strtok(combined, "/\\");
     while (token && tokenCount < 64) {
         if (strcmp(token, "..") == 0) {
             if (tokenCount > 0) { tokenCount--; }
         } else if (strcmp(token, ".") != 0 && token[0] != '\0') {
             tokens[tokenCount++] = token;
         }
-        token = strtok(NULL, delim);
+        token = strtok(NULL, "/\\");
     }
 
     output[0] = '\0';
 
     for (int i = 0; i < tokenCount; i++) {
         if (i > 0) {
-            size_t len = strlen(output);
-            if (len < SYS_MAX_PATH - 1) {
-                output[len] = sep;
-                output[len + 1] = '\0';
-            }
+            strncat(output, "/", SYS_MAX_PATH - strlen(output) - 1);
         }
         strncat(output, tokens[i], SYS_MAX_PATH - strlen(output) - 1);
     }
+
+    normalize_path(output);
 }
 
 bool path_is_relative_to(const char* fullPath, const char* baseDir) {

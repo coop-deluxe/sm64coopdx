@@ -20,7 +20,7 @@ static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
     }
 }
 
-static struct ModFile* smlua_find_mod_file(char* moduleName) {
+static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     char basePath[SYS_MAX_PATH] = "";
     char absolutePath[SYS_MAX_PATH] = "";
 
@@ -33,9 +33,6 @@ static struct ModFile* smlua_find_mod_file(char* moduleName) {
         path_get_folder(gLuaActiveModFile->relativePath, basePath);
     }
 
-    normalize_path(basePath);
-    normalize_path(moduleName);
-
     // resolve moduleName to a path relative to mod root
     resolve_relative_path(basePath, moduleName, absolutePath);
 
@@ -45,7 +42,6 @@ static struct ModFile* smlua_find_mod_file(char* moduleName) {
     snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
 
     // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
-
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
 
@@ -69,8 +65,7 @@ static struct ModFile* smlua_find_mod_file(char* moduleName) {
 }
 
 static int smlua_custom_require(lua_State* L) {
-    char moduleName[SYS_MAX_PATH] = "";
-    snprintf(moduleName, sizeof(moduleName), "%s", luaL_checkstring(L, 1));
+    const char* moduleName = luaL_checkstring(L, 1);
 
     struct Mod* activeMod = gLuaActiveMod;
     if (!activeMod) {
