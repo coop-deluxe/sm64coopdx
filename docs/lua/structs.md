@@ -161,7 +161,6 @@
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
-| unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
 | valuesLength | `integer` |  |
 

@@ -22,7 +22,6 @@
 --- @field public loopEnd integer
 --- @field public loopStart integer
 --- @field public startFrame integer
---- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
 --- @field public valuesLength integer
 

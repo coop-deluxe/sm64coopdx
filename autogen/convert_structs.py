@@ -98,6 +98,7 @@ override_field_invisible = {
     "GraphNodeRoot": ["unk15", "views"],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
+    "Animation": [ "unusedBoneCount" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
