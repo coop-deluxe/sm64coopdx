@@ -56,7 +56,12 @@
 #endif
 
 static SDL_Window *wnd;
+#if defined(_WIN32) || defined(_WIN64)
+#include <SDL2/SDL_syswm.h>
+static HICON icon;
+#else
 static SDL_Surface *icon;
+#endif
 static SDL_GLContext ctx = NULL;
 
 static kb_callback_t kb_key_down = NULL;
@@ -341,16 +346,14 @@ static void gfx_sdl_set_window_icon(struct TextureInfo* texture) {
     printf("1\n");
     if (!icon) {
 #if defined(_WIN32) || defined(_WIN64)
-        HWND hwnd = ((SDL_WindowData *)window->driverdata)->hwnd;
+        // HWND hwnd = (HWND)(((intptr_t)wnd + 216)* + 8);
+        SDL_SysWMinfo info;
+        SDL_GetWindowWMInfo(wnd, &info);
+        HWND hwnd = info.info.win.window;
+        
         // TODO: collect original icon, delete old icons
-        HICON hIcon = (HICON)LoadImage(
-            GetModuleHandle(NULL), 
-            MAKEINTRESOURCE("id"), 
-            IMAGE_ICON, 
-            128, 128, 
-            0);
-            
-
+        icon = (HICON)SendMessage(hwnd, WM_GETICON, ICON_BIG, 0);
+        printf("Icon collected!");
 #else
         for (u16 i=0; i<2184; i++) {
             icon = (SDL_Surface*)((intptr_t)wnd + i);
@@ -374,7 +377,7 @@ static void gfx_sdl_set_window_icon(struct TextureInfo* texture) {
 
     printf("3\n");
     SDL_Surface* custom = SDL_CreateRGBSurfaceWithFormatFrom(
-        texture->texture+(texture->bitSize != 32),
+        texture->texture + (texture->bitSize != 32),
         texture->width,
         texture->height,
         0, calculate_pitch(format, texture->width, true), format
@@ -389,11 +392,37 @@ static void gfx_sdl_set_window_icon(struct TextureInfo* texture) {
 static void gfx_sdl_reset_window_icon(void) {
     if (icon) {
 #if defined(_WIN32) || defined(_WIN64)
-        GetClassInfoEx()
-#endif
+        SDL_SysWMinfo info;
+        SDL_GetWindowWMInfo(wnd, &info);
+        HWND hwnd = info.info.win.window;
+        // HINSTANCE hinst = info.info.win.hinstance;
 
+        HICON def = LoadImage(GetModuleHandle(NULL), "id", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
+        if (!def) {
+            printf("failed to load, error %ld\n", GetLastError());
+            return;
+        }
+        ICONINFO iconInfo;
+        if (GetIconInfo(def, &iconInfo)) {
+            BITMAP bmp;
+            GetObject(iconInfo.hbmColor, sizeof(BITMAP), &bmp);
+        
+            printf("Icon Size: %dx%d\n", bmp.bmWidth, bmp.bmHeight);
+        
+            // Clean up bitmaps to avoid leaks
+            DeleteObject(iconInfo.hbmColor);
+            DeleteObject(iconInfo.hbmMask);
+        } else {
+            printf("failed to retrieve icon info, error %ld\n", GetLastError());
+        }
+        SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)def);
+        SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)def);
+        icon = NULL;
+        printf("Icon restored!\n");
+#else
         SDL_SetWindowIcon(wnd, NULL);
         icon = NULL;
+        #endif
     }
 }
 
