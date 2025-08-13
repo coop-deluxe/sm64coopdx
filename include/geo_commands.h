@@ -469,7 +469,7 @@ enum SkyBackgroundParams {
  *   0x0A: s16 xRotation
  *   0x0C: s16 yRotation
  *   0x0E: s16 zRotation
- *   if 0b1000_0000 set:
+ *   if MSbit of params is set:
  *      0x10: u32 xScale
  *      0x14: u32 yScale
  *      0x18: u32 zScale
