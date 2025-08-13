@@ -247,12 +247,9 @@ int path_depth(const char* path) {
 void resolve_relative_path(const char* base, const char* path, char* output) {
     char combined[SYS_MAX_PATH] = "";
 
-    if (base[0] == '\0') {
-        // base is mod root
+    // If path is absolute, copy as is. Otherwise, combine base and relative path
+    if (path[0] == '/' || path[0] == '\\') {
         snprintf(combined, sizeof(combined), "%s", path);
-    } else if (path[0] == '/' || path[0] == '\\') {
-        // path should be treated as absolute
-        snprintf(combined, sizeof(combined), "%s", path + 1);
     } else {
         snprintf(combined, sizeof(combined), "%s/%s", base, path);
     }
@@ -260,18 +257,24 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     char* tokens[64];
     int tokenCount = 0;
 
+    // Tokenize path by separators
     char* token = strtok(combined, "/\\");
     while (token && tokenCount < 64) {
         if (strcmp(token, "..") == 0) {
+            // Pop last token to go up a directory
             if (tokenCount > 0) { tokenCount--; }
+
+        // Ignore "." (current directory) or empty tokens
         } else if (strcmp(token, ".") != 0 && token[0] != '\0') {
             tokens[tokenCount++] = token;
         }
+
         token = strtok(NULL, "/\\");
     }
 
     output[0] = '\0';
 
+    // Build output path from tokens
     for (int i = 0; i < tokenCount; i++) {
         if (i > 0) {
             strncat(output, "/", SYS_MAX_PATH - strlen(output) - 1);
