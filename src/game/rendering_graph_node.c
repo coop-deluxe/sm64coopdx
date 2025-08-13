@@ -925,6 +925,9 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
         rotation[0] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         rotation[1] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         rotation[2] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+        if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
+            *animType = ANIM_TYPE_TRANSLATION; 
+        }
     }
 }
 

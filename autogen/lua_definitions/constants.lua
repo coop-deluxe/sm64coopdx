@@ -11051,6 +11051,9 @@ ANIM_FLAG_6 = (1 << 6)
 ANIM_FLAG_7 = (1 << 7)
 
 --- @type integer
+ANIM_FLAG_BONE_TRANS = (1 << 8)
+
+--- @type integer
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
