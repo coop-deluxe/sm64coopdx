@@ -856,7 +856,7 @@ void geo_layout_cmd_bone(void) {
             cur_geo_cmd_u32(0x14) / 65536.0f,
             cur_geo_cmd_u32(0x18) / 65536.0f
         );
-        cmdPos += sizeof(u32) * 3;
+        cmdPos += 6 << CMD_SIZE_SHIFT;
     }
     displayList = *(void **) &cmdPos[0];
     cmdPos += 2 << CMD_SIZE_SHIFT;
