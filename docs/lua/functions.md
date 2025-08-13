@@ -2,7 +2,7 @@
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 
 ---
 
@@ -1159,6 +1159,7 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
+   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -2186,9 +2187,9 @@
 <br />
 
 - sync_object.h
-   - [sync_object_get_object](functions-6.md#sync_object_get_object)
-   - [sync_object_is_initialized](functions-6.md#sync_object_is_initialized)
-   - [sync_object_is_owned_locally](functions-6.md#sync_object_is_owned_locally)
+   - [sync_object_get_object](functions-7.md#sync_object_get_object)
+   - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
+   - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
 
 <br />
 
@@ -2834,5 +2835,5 @@ Plays a screen transition after a `delay` in frames
 <br />
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 

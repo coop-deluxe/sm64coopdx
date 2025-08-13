@@ -17,6 +17,7 @@
 #include "engine/behavior_script.h"
 #include "level_update.h"
 #include "ingame_menu.h"
+#include "mario_actions_stationary.h"
 #include "mario_actions_cutscene.h"
 #include "save_file.h"
 #include "object_helpers.h"
@@ -500,8 +501,6 @@ s32 update_slide_or_0f_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_spiral_stairs_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_rom_hack_camera(struct Camera *c, Vec3f, Vec3f);
 void mode_rom_hack_camera(struct Camera *c);
-void cutscene_take_cap_off(struct MarioState *m);
-void cutscene_put_cap_on(struct MarioState *m);
 
 typedef s32 (*CameraTransition)(struct Camera *c, Vec3f, Vec3f);
 CameraTransition sModeTransitions[] = {
@@ -3396,13 +3395,8 @@ void update_camera(struct Camera *c) {
 
     // Make sure the palette editor cutscene is properly reset
     struct MarioState *m = gMarioState;
-    if (c->paletteEditorCap) {
-        if (m->flags & MARIO_CAP_ON_HEAD) {
-            c->paletteEditorCap = false;
-        } else if (c->cutscene != CUTSCENE_PALETTE_EDITOR && m->action != ACT_PUTTING_ON_CAP) {
-            cutscene_put_cap_on(m);
-            c->paletteEditorCap = false;
-        }
+    if (c->cutscene != CUTSCENE_PALETTE_EDITOR && c->paletteEditorCapState) {
+        mario_exit_palette_editor(m, c);
     }
 }
 
@@ -10930,19 +10924,14 @@ void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
+    // Init cap state
+    // Ensures that Mario regains his correct cap state when exiting the palette editor
+    if (!c->paletteEditorCapState) {
+        c->paletteEditorCapState = (m->flags & MARIO_CAP_ON_HEAD) ? 1 : 2;
+    }
+
     if (!gDjuiInPlayerMenu) {
-        if (c->paletteEditorCap) {
-            if (m->flags & MARIO_CAP_ON_HEAD) {
-                gCamera->paletteEditorCap = false;
-            } else {
-                if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-                } else {
-                    cutscene_put_cap_on(m);
-                    gCamera->paletteEditorCap = false;
-                }
-            }
-        }
+        mario_exit_palette_editor(m, c);
         gCutsceneTimer = CUTSCENE_STOP;
         c->cutscene = 0;
         skip_camera_interpolation();
@@ -10953,11 +10942,7 @@ void cutscene_palette_editor(struct Camera *c) {
     static bool pressed = false;
     if (gInteractablePad.button & PAD_BUTTON_Z) {
         if (!pressed && m->action == ACT_IDLE) {
-            if (m->flags & MARIO_CAP_ON_HEAD) {
-                set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
-            } else {
-                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-            }
+            set_mario_action(m, ACT_PALETTE_EDITOR_CAP, (m->flags & MARIO_CAP_ON_HEAD) != 0);
         }
         pressed = true;
     } else {
@@ -10969,8 +10954,7 @@ void cutscene_palette_editor(struct Camera *c) {
         djui_base_set_visible(
             &gDjuiPaletteToggle->base,
             m->action == ACT_IDLE ||
-            m->action == ACT_TAKING_OFF_CAP ||
-            m->action == ACT_PUTTING_ON_CAP
+            m->action == ACT_PALETTE_EDITOR_CAP
         );
     }
 

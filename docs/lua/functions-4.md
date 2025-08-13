@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 
 
 ---
@@ -3526,6 +3526,27 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
+## [mario_exit_palette_editor](#mario_exit_palette_editor)
+
+### Lua Example
+`local integerValue = mario_exit_palette_editor(m, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Description
@@ -6738,5 +6759,5 @@ Converts a 3D short integer vector `a` into a 3D integer vector and stores the r
 <br />
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 

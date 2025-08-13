@@ -413,7 +413,6 @@
 | mode | `integer` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
 | nextYaw | `integer` |  |
-| paletteEditorCap | `boolean` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | yaw | `integer` |  |

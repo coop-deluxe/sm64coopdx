@@ -6248,6 +6248,13 @@ function check_common_landing_cancels(m, action)
 end
 
 --- @param m MarioState
+--- @param c Camera
+--- @return integer
+function mario_exit_palette_editor(m, c)
+    -- ...
+end
+
+--- @param m MarioState
 --- @return integer
 --- Checks for and handles common conditions that would cancel Mario's current stationary action.
 function check_common_stationary_cancels(m)

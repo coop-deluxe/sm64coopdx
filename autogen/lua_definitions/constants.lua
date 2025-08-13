@@ -7368,6 +7368,9 @@ ACT_COUGHING = 0x0C40020A
 ACT_SHIVERING = 0x0C40020B
 
 --- @type integer
+ACT_PALETTE_EDITOR_CAP = 0x0000020C
+
+--- @type integer
 ACT_IN_QUICKSAND = 0x0002020D
 
 --- @type integer
@@ -7948,9 +7951,6 @@ ACT_FEET_STUCK_IN_GROUND = 0x0002033C
 
 --- @type integer
 ACT_PUTTING_ON_CAP = 0x0000133D
-
---- @type integer
-ACT_TAKING_OFF_CAP = 0x0000133E
 
 --- @type integer
 ACT_HOLDING_POLE = 0x08100340

@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [next >](functions-6.md)]
+[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-6.md)]
 
 
 ---
@@ -8206,5 +8206,5 @@ Gets a trajectory's length
 <br />
 ---
 
-[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [next >](functions-6.md)]
+[< prev](functions-4.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | 5 | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-6.md)]
 

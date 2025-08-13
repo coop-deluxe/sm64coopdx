@@ -393,24 +393,23 @@ static struct LuaObjectField sBullyCollisionDataFields[LUA_BULLY_COLLISION_DATA_
     { "velZ",            LVT_F32, offsetof(struct BullyCollisionData, velZ),            false, LOT_NONE, 1, sizeof(f32) },
 };
 
-#define LUA_CAMERA_FIELD_COUNT 16
+#define LUA_CAMERA_FIELD_COUNT 15
 static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
-    { "areaCenX",         LVT_F32,     offsetof(struct Camera, areaCenX),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "areaCenY",         LVT_F32,     offsetof(struct Camera, areaCenY),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "areaCenZ",         LVT_F32,     offsetof(struct Camera, areaCenZ),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "cutscene",         LVT_U8,      offsetof(struct Camera, cutscene),         false, LOT_NONE,  1,  sizeof(u8)    },
-    { "defMode",          LVT_U8,      offsetof(struct Camera, defMode),          false, LOT_NONE,  1,  sizeof(u8)    },
-    { "doorStatus",       LVT_U8,      offsetof(struct Camera, doorStatus),       false, LOT_NONE,  1,  sizeof(u8)    },
-    { "filler31",         LVT_U8,      offsetof(struct Camera, filler31),         false, LOT_NONE,  8,  sizeof(u8)    },
-    { "filler3C",         LVT_U8,      offsetof(struct Camera, filler3C),         false, LOT_NONE,  40, sizeof(u8)    },
-    { "focus",            LVT_COBJECT, offsetof(struct Camera, focus),            true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "mode",             LVT_U8,      offsetof(struct Camera, mode),             false, LOT_NONE,  1,  sizeof(u8)    },
-    { "mtx",              LVT_COBJECT, offsetof(struct Camera, mtx),              true,  LOT_MAT4,  1,  sizeof(Mat4)  },
-    { "nextYaw",          LVT_S16,     offsetof(struct Camera, nextYaw),          false, LOT_NONE,  1,  sizeof(s16)   },
-    { "paletteEditorCap", LVT_BOOL,    offsetof(struct Camera, paletteEditorCap), false, LOT_NONE,  1,  sizeof(bool)  },
-    { "pos",              LVT_COBJECT, offsetof(struct Camera, pos),              true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "unusedVec1",       LVT_COBJECT, offsetof(struct Camera, unusedVec1),       true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "yaw",              LVT_S16,     offsetof(struct Camera, yaw),              false, LOT_NONE,  1,  sizeof(s16)   },
+    { "areaCenX",   LVT_F32,     offsetof(struct Camera, areaCenX),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "areaCenY",   LVT_F32,     offsetof(struct Camera, areaCenY),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "areaCenZ",   LVT_F32,     offsetof(struct Camera, areaCenZ),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "cutscene",   LVT_U8,      offsetof(struct Camera, cutscene),   false, LOT_NONE,  1,  sizeof(u8)    },
+    { "defMode",    LVT_U8,      offsetof(struct Camera, defMode),    false, LOT_NONE,  1,  sizeof(u8)    },
+    { "doorStatus", LVT_U8,      offsetof(struct Camera, doorStatus), false, LOT_NONE,  1,  sizeof(u8)    },
+    { "filler31",   LVT_U8,      offsetof(struct Camera, filler31),   false, LOT_NONE,  8,  sizeof(u8)    },
+    { "filler3C",   LVT_U8,      offsetof(struct Camera, filler3C),   false, LOT_NONE,  40, sizeof(u8)    },
+    { "focus",      LVT_COBJECT, offsetof(struct Camera, focus),      true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "mode",       LVT_U8,      offsetof(struct Camera, mode),       false, LOT_NONE,  1,  sizeof(u8)    },
+    { "mtx",        LVT_COBJECT, offsetof(struct Camera, mtx),        true,  LOT_MAT4,  1,  sizeof(Mat4)  },
+    { "nextYaw",    LVT_S16,     offsetof(struct Camera, nextYaw),    false, LOT_NONE,  1,  sizeof(s16)   },
+    { "pos",        LVT_COBJECT, offsetof(struct Camera, pos),        true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "unusedVec1", LVT_COBJECT, offsetof(struct Camera, unusedVec1), true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
 #define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 8
