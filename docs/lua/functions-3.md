@@ -3268,6 +3268,100 @@ Returns the amount scrolled vertically (-down/up+)
 
 <br />
 
+## [djui_hud_set_viewport](#djui_hud_set_viewport)
+
+### Description
+Sets the viewport to the specified position and size, this will resize
+
+### Lua Example
+`djui_hud_set_viewport(x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
+
+### Description
+put the description here
+
+### Lua Example
+`djui_hud_reset_viewport()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_viewport(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_scizzor](#djui_hud_set_scizzor)
+
+### Description
+put the description here
+
+### Lua Example
+`djui_hud_set_scizzor(x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_scizzor(f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_scizzor](#djui_hud_reset_scizzor)
+
+### Description
+put the description here
+
+### Lua Example
+`djui_hud_reset_scizzor()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_scizzor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description
@@ -3521,6 +3615,33 @@ Renders an interpolated DJUI HUD rect onto the screen
 
 ### C Prototype
 `void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_line](#djui_hud_render_line)
+
+### Description
+Renders an DJUI HUD line onto the screen
+
+### Lua Example
+`djui_hud_render_line(p1X, p1Y, p2X, p2Y, size)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| p1X | `number` |
+| p1Y | `number` |
+| p2X | `number` |
+| p2Y | `number` |
+| size | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size);`
 
 [:arrow_up_small:](#)
 

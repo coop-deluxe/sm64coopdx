@@ -3950,6 +3950,34 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- Sets the viewport to the specified position and size, this will resize
+function djui_hud_set_viewport(x, y, width, height)
+    -- ...
+end
+
+--- put the description here
+function djui_hud_reset_viewport()
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- put the description here
+function djui_hud_set_scizzor(x, y, width, height)
+    -- ...
+end
+
+--- put the description here
+function djui_hud_reset_scizzor()
+    -- ...
+end
+
 --- @param message string
 --- @return number
 --- Measures the length of `message` in the current font
@@ -4053,6 +4081,16 @@ end
 --- @param height number
 --- Renders an interpolated DJUI HUD rect onto the screen
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
+    -- ...
+end
+
+--- @param p1X number
+--- @param p1Y number
+--- @param p2X number
+--- @param p2Y number
+--- @param size number
+--- Renders an DJUI HUD line onto the screen
+function djui_hud_render_line(p1X, p1Y, p2X, p2Y, size)
     -- ...
 end
 
