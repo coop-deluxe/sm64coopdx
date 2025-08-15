@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6]
+[< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6 | [7](functions-7.md) | [next >](functions-7.md)]
 
 
 ---
@@ -4407,6 +4407,27 @@ Gets the DJUI menu theme
 
 <br />
 
+## [djui_is_playerlist_ping_visible](#djui_is_playerlist_ping_visible)
+
+### Description
+Checks if the DJUI playerlist ping icon is visible
+
+### Lua Example
+`local booleanValue = djui_is_playerlist_ping_visible()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_playerlist_ping_visible(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_dialog_box_state](#get_dialog_box_state)
 
 ### Description
@@ -4443,7 +4464,7 @@ Gets the current dialog box ID
 - `integer`
 
 ### C Prototype
-`s16 get_dialog_id(void);`
+`s32 get_dialog_id(void);`
 
 [:arrow_up_small:](#)
 
@@ -4876,6 +4897,75 @@ Sets if the star counter on the HUD should flash
 
 ### C Prototype
 `void hud_set_flash(s8 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [act_select_hud_hide](#act_select_hud_hide)
+
+### Description
+Hides part of the Act Select HUD
+
+### Lua Example
+`act_select_hud_hide(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- None
+
+### C Prototype
+`void act_select_hud_hide(enum ActSelectHudPart part);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [act_select_hud_show](#act_select_hud_show)
+
+### Description
+Shows part of the Act Select HUD
+
+### Lua Example
+`act_select_hud_show(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- None
+
+### C Prototype
+`void act_select_hud_show(enum ActSelectHudPart part);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [act_select_hud_is_hidden](#act_select_hud_is_hidden)
+
+### Description
+Checks if part of the Act Select HUD is hidden
+
+### Lua Example
+`local booleanValue = act_select_hud_is_hidden(part)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| part | [enum ActSelectHudPart](constants.md#enum-ActSelectHudPart) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool act_select_hud_is_hidden(enum ActSelectHudPart part);`
 
 [:arrow_up_small:](#)
 
@@ -7164,6 +7254,29 @@ Replaces `dialogId` with a custom one
 
 <br />
 
+## [smlua_text_utils_dialog_restore](#smlua_text_utils_dialog_restore)
+
+### Description
+Restores a replaced DialogEntry to its original state.
+
+### Lua Example
+`smlua_text_utils_dialog_restore(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_dialog_restore(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
 
 ### Description
@@ -7182,6 +7295,27 @@ Returns whether the dialog with the given ID has been replaced
 
 ### C Prototype
 `bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_allocate_dialog](#smlua_text_utils_allocate_dialog)
+
+### Description
+Allocates a new dialog entry
+
+### Lua Example
+`local integerValue = smlua_text_utils_allocate_dialog()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_text_utils_allocate_dialog(void);`
 
 [:arrow_up_small:](#)
 
@@ -8383,83 +8517,7 @@ Checks if a surface has force
 [:arrow_up_small:](#)
 
 <br />
-
----
-# functions from sync_object.h
-
-<br />
-
-
-## [sync_object_get_object](#sync_object_get_object)
-
-### Description
-Retrieves an object from a sync ID
-
-### Lua Example
-`local ObjectValue = sync_object_get_object(syncId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| syncId | `integer` |
-
-### Returns
-[Object](structs.md#Object)
-
-### C Prototype
-`struct Object* sync_object_get_object(u32 syncId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sync_object_is_initialized](#sync_object_is_initialized)
-
-### Description
-Checks if a sync object is initialized using a `syncId`
-
-### Lua Example
-`local booleanValue = sync_object_is_initialized(syncId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| syncId | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool sync_object_is_initialized(u32 syncId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [sync_object_is_owned_locally](#sync_object_is_owned_locally)
-
-### Description
-Checks if a sync object is owned locally using a `syncId`
-
-### Lua Example
-`local booleanValue = sync_object_is_owned_locally(syncId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| syncId | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool sync_object_is_owned_locally(u32 syncId);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ---
 
-[< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6]
+[< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6 | [7](functions-7.md) | [next >](functions-7.md)]
 

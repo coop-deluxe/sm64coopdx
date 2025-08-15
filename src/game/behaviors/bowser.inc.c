@@ -38,10 +38,10 @@ s8 D_8032F4FC[] = { 7, 8, 9, 12, 13, 14, 15, 4, 3, 16, 17, 19, 3, 3, 3, 3 };
 s16 D_8032F50C[] = { 60, 0 };
 s16 D_8032F510[] = { 50, 0 };
 s8 D_8032F514[] = { 24, 42, 60, -1 };
-s16* sBowserDefeatedDialogText[3] = {
-    (s16*) &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser3DefeatedDialog
+enum DialogId* sBowserDefeatedDialogText[3] = {
+    &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser3DefeatedDialog
 };
 s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
                         { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },

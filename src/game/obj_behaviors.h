@@ -40,7 +40,7 @@ void bhv_bobomb_loop(void);
 void bhv_bobomb_fuse_smoke_init(void);
 void bhv_bobomb_buddy_init(void);
 void bobomb_buddy_act_idle(void);
-void bobomb_buddy_cannon_dialog(s16 dialogFirstText, s16 dialogSecondText);
+void bobomb_buddy_cannon_dialog(s32 dialogFirstText, s32 dialogSecondText);
 void bobomb_buddy_act_talk(void);
 void bobomb_buddy_act_turn_to_talk(void);
 void bobomb_buddy_actions(void);

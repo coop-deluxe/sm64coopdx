@@ -29,6 +29,18 @@ enum HudDisplayFlags {
     HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000
 };
 
+enum ActSelectHudPart {
+    ACT_SELECT_HUD_SCORE = 1 << 0,
+    ACT_SELECT_HUD_LEVEL_NAME = 1 << 1,
+    ACT_SELECT_HUD_COURSE_NUM = 1 << 2,
+    ACT_SELECT_HUD_ACT_NAME = 1 << 3,
+    ACT_SELECT_HUD_STAR_NUM = 1 << 4,
+    ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
+	
+	ACT_SELECT_HUD_NONE = 0,
+	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
+};
+
 struct DateTime {
     s32 year;
     s32 month;
@@ -67,11 +79,13 @@ u8 djui_get_playerlist_page_index(void);
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
 struct DjuiTheme* djui_menu_get_theme(void);
+/* |description|Checks if the DJUI playerlist ping icon is visible|descriptionEnd| */
+bool djui_is_playerlist_ping_visible(void);
 
 /* |description|Gets the current state of the dialog box|descriptionEnd| */
 s8 get_dialog_box_state(void);
 /* |description|Gets the current dialog box ID|descriptionEnd| */
-s16 get_dialog_id(void);
+s32 get_dialog_id(void);
 
 /* |description|Gets if the last objective collected was a star (0) or a key (1)|descriptionEnd| */
 u8 get_last_star_or_key(void);
@@ -112,6 +126,13 @@ void hud_render_power_meter_interpolated(s32 health, f32 prevX, f32 prevY, f32 p
 s8 hud_get_flash(void);
 /* |description|Sets if the star counter on the HUD should flash|descriptionEnd| */
 void hud_set_flash(s8 value);
+
+/* |description|Hides part of the Act Select HUD|descriptionEnd| */
+void act_select_hud_hide(enum ActSelectHudPart part);
+/* |description|Shows part of the Act Select HUD|descriptionEnd| */
+void act_select_hud_show(enum ActSelectHudPart part);
+/* |description|Checks if part of the Act Select HUD is hidden|descriptionEnd| */
+bool act_select_hud_is_hidden(enum ActSelectHudPart part);
 
 /* |description|Checks if the game is paused|descriptionEnd| */
 bool is_game_paused(void);

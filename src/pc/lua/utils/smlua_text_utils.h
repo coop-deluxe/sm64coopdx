@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "dialog_ids.h"
+#include "game/ingame_menu.h"
 
 #define MAX_ACTS 6
 #define MAX_ACTS_AND_100_COINS 7
@@ -26,16 +27,23 @@ struct CourseActNames {
 
 extern struct CourseActNames gReplacedCourseActNameTable[]; // indexed by COURSE_* constants
 
+char* get_dialog_text_ascii(struct DialogEntry *dialog);
+
 void smlua_text_utils_init(void);
 void smlua_text_utils_shutdown(void);
 /* |description|Resets every modified dialog back to vanilla|descriptionEnd|*/
 void smlua_text_utils_reset_all(void);
 /* |description|Gets the DialogEntry struct for the given `dialogId`|descriptionEnd| */
 struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);
+const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId);
 /* |description|Replaces `dialogId` with a custom one|descriptionEnd| */
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str);
+/* |description|Restores a replaced DialogEntry to its original state.|descriptionEnd| */
+void smlua_text_utils_dialog_restore(enum DialogId dialogId);
 /* |description|Returns whether the dialog with the given ID has been replaced|descriptionEnd| */
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);
+/* |description|Allocates a new dialog entry|descriptionEnd|*/
+s32 smlua_text_utils_allocate_dialog(void);
 /* |description|Replaces the act names of `courseNum`|descriptionEnd| */
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);
 /* |description|Replaces the secret star course name of `courseNum` with `courseName`|descriptionEnd| */

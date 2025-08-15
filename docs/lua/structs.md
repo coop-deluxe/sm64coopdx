@@ -161,7 +161,6 @@
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
-| unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
 | valuesLength | `integer` |  |
 
@@ -414,7 +413,6 @@
 | mode | `integer` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
 | nextYaw | `integer` |  |
-| paletteEditorCap | `boolean` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | yaw | `integer` |  |
@@ -887,6 +885,7 @@
 | ----- | ---- | ------ |
 | leftOffset | `integer` | read-only |
 | linesPerBox | `integer` | read-only |
+| replaced | `boolean` | read-only |
 | text | `string` | read-only |
 | unused | `integer` | read-only |
 | width | `integer` | read-only |

@@ -2,7 +2,7 @@
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 
 ---
 
@@ -605,7 +605,7 @@
    - [bhv_yoshi_loop](functions-2.md#bhv_yoshi_loop)
    - [bhv_volcano_trap_loop](functions-2.md#bhv_volcano_trap_loop)
    - [uv_update_scroll](functions-2.md#uv_update_scroll)
-   - [bhv_ambient_light_init](functions-2.md#bhv_ambient_light_init)
+   - [bhv_ambient_light_update](functions-2.md#bhv_ambient_light_update)
    - [bhv_point_light_init](functions-2.md#bhv_point_light_init)
    - [bhv_point_light_loop](functions-2.md#bhv_point_light_loop)
    - [spawn_default_star](functions-2.md#spawn_default_star)
@@ -962,10 +962,12 @@
 <br />
 
 - lighting_engine.h
+   - [le_is_enabled](functions-3.md#le_is_enabled)
    - [le_set_mode](functions-3.md#le_set_mode)
    - [le_get_mode](functions-3.md#le_get_mode)
    - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
-   - [le_is_enabled](functions-3.md#le_is_enabled)
+   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
+   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
    - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
@@ -973,8 +975,6 @@
    - [le_remove_light](functions-3.md#le_remove_light)
    - [le_get_light_count](functions-3.md#le_get_light_count)
    - [le_light_exists](functions-3.md#le_light_exists)
-   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
-   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
    - [le_get_light_pos](functions-3.md#le_get_light_pos)
    - [le_set_light_pos](functions-3.md#le_set_light_pos)
    - [le_get_light_color](functions-3.md#le_get_light_color)
@@ -1159,6 +1159,7 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
+   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -1977,6 +1978,7 @@
    - [djui_get_playerlist_page_index](functions-6.md#djui_get_playerlist_page_index)
    - [djui_menu_get_font](functions-6.md#djui_menu_get_font)
    - [djui_menu_get_theme](functions-6.md#djui_menu_get_theme)
+   - [djui_is_playerlist_ping_visible](functions-6.md#djui_is_playerlist_ping_visible)
    - [get_dialog_box_state](functions-6.md#get_dialog_box_state)
    - [get_dialog_id](functions-6.md#get_dialog_id)
    - [get_last_star_or_key](functions-6.md#get_last_star_or_key)
@@ -1998,6 +2000,9 @@
    - [hud_render_power_meter_interpolated](functions-6.md#hud_render_power_meter_interpolated)
    - [hud_get_flash](functions-6.md#hud_get_flash)
    - [hud_set_flash](functions-6.md#hud_set_flash)
+   - [act_select_hud_hide](functions-6.md#act_select_hud_hide)
+   - [act_select_hud_show](functions-6.md#act_select_hud_show)
+   - [act_select_hud_is_hidden](functions-6.md#act_select_hud_is_hidden)
    - [is_game_paused](functions-6.md#is_game_paused)
    - [is_transition_playing](functions-6.md#is_transition_playing)
    - [allocate_mario_action](functions-6.md#allocate_mario_action)
@@ -2108,7 +2113,9 @@
    - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
    - [smlua_text_utils_dialog_get](functions-6.md#smlua_text_utils_dialog_get)
    - [smlua_text_utils_dialog_replace](functions-6.md#smlua_text_utils_dialog_replace)
+   - [smlua_text_utils_dialog_restore](functions-6.md#smlua_text_utils_dialog_restore)
    - [smlua_text_utils_dialog_is_replaced](functions-6.md#smlua_text_utils_dialog_is_replaced)
+   - [smlua_text_utils_allocate_dialog](functions-6.md#smlua_text_utils_allocate_dialog)
    - [smlua_text_utils_course_acts_replace](functions-6.md#smlua_text_utils_course_acts_replace)
    - [smlua_text_utils_secret_star_replace](functions-6.md#smlua_text_utils_secret_star_replace)
    - [smlua_text_utils_course_name_replace](functions-6.md#smlua_text_utils_course_name_replace)
@@ -2180,9 +2187,9 @@
 <br />
 
 - sync_object.h
-   - [sync_object_get_object](functions-6.md#sync_object_get_object)
-   - [sync_object_is_initialized](functions-6.md#sync_object_is_initialized)
-   - [sync_object_is_owned_locally](functions-6.md#sync_object_is_owned_locally)
+   - [sync_object_get_object](functions-7.md#sync_object_get_object)
+   - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
+   - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
 
 <br />
 
@@ -2828,5 +2835,5 @@ Plays a screen transition after a `delay` in frames
 <br />
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 

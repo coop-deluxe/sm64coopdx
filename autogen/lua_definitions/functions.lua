@@ -2915,8 +2915,8 @@ function uv_update_scroll()
     -- ...
 end
 
---- Behavior init function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
-function bhv_ambient_light_init()
+--- Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
+function bhv_ambient_light_update()
     -- ...
 end
 
@@ -4997,6 +4997,12 @@ function lvl_set_current_level(param, levelNum)
     -- ...
 end
 
+--- @return boolean
+--- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+function le_is_enabled()
+    -- ...
+end
+
 --- @param mode LEMode
 --- Sets the lighting engine mode to `mode`
 function le_set_mode(mode)
@@ -5015,9 +5021,17 @@ function le_set_tone_mapping(toneMapping)
     -- ...
 end
 
---- @return boolean
---- Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
-function le_is_enabled()
+--- @param out Color
+--- Outputs the lighting engine's ambient color to `out`
+function le_get_ambient_color(out)
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Sets the lighting engine ambient color
+function le_set_ambient_color(r, g, b)
     -- ...
 end
 
@@ -5075,20 +5089,6 @@ end
 --- @return boolean
 --- Checks if a lighting engine point light corresponding to `id` exists
 function le_light_exists(id)
-    -- ...
-end
-
---- @param out Color
---- Outputs the lighting engine's ambient color to `out`
-function le_get_ambient_color(out)
-    -- ...
-end
-
---- @param r integer
---- @param g integer
---- @param b integer
---- Sets the lighting engine ambient color
-function le_set_ambient_color(r, g, b)
     -- ...
 end
 
@@ -6244,6 +6244,13 @@ end
 --- @return integer
 --- Checks for and handles common conditions that would cancel Mario's current landing action.
 function check_common_landing_cancels(m, action)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param c Camera
+--- @return integer
+function mario_exit_palette_editor(m, c)
     -- ...
 end
 
@@ -11022,6 +11029,12 @@ function djui_menu_get_theme()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the DJUI playerlist ping icon is visible
+function djui_is_playerlist_ping_visible()
+    -- ...
+end
+
 --- @return integer
 --- Gets the current state of the dialog box
 function get_dialog_box_state()
@@ -11157,6 +11170,25 @@ end
 --- @param value integer
 --- Sets if the star counter on the HUD should flash
 function hud_set_flash(value)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- Hides part of the Act Select HUD
+function act_select_hud_hide(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- Shows part of the Act Select HUD
+function act_select_hud_show(part)
+    -- ...
+end
+
+--- @param part ActSelectHudPart
+--- @return boolean
+--- Checks if part of the Act Select HUD is hidden
+function act_select_hud_is_hidden(part)
     -- ...
 end
 
@@ -11863,9 +11895,21 @@ function smlua_text_utils_dialog_replace(dialogId, unused, linesPerBox, leftOffs
 end
 
 --- @param dialogId DialogId
+--- Restores a replaced DialogEntry to its original state.
+function smlua_text_utils_dialog_restore(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
 --- @return boolean
 --- Returns whether the dialog with the given ID has been replaced
 function smlua_text_utils_dialog_is_replaced(dialogId)
+    -- ...
+end
+
+--- @return integer
+--- Allocates a new dialog entry
+function smlua_text_utils_allocate_dialog()
     -- ...
 end
 

@@ -1976,8 +1976,6 @@ void gfx_run(Gfx *commands) {
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
     gfx_flush();
-    //double t1 = gfx_wapi->get_time();
-    //printf("Process %f %f\n", t1, t1 - t0);
     gfx_rapi->end_frame();
     gfx_wapi->swap_buffers_begin();
 }

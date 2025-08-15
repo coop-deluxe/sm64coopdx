@@ -72,7 +72,13 @@ gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 --- @return number
 function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
-    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
+    return math.s32(
+        ((bank << SOUNDARGS_SHIFT_BANK) & SOUNDARGS_MASK_BANK) |
+        ((soundID << SOUNDARGS_SHIFT_SOUNDID) & SOUNDARGS_MASK_SOUNDID) |
+        ((priority << SOUNDARGS_SHIFT_PRIORITY) & SOUNDARGS_MASK_PRIORITY) |
+        (flags & SOUNDARGS_MASK_BITFLAGS) |
+        SOUND_STATUS_WAITING
+    )
 end
 
 -------------
@@ -2361,6 +2367,7 @@ M_MOUSE_BUTTON = MOUSE_BUTTON_2
 --- @type integer
 R_MOUSE_BUTTON = MOUSE_BUTTON_3
 
+DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId
 DIALOG_002   =   2 --- @type DialogId
@@ -2534,6 +2541,7 @@ DIALOG_169   = 169 --- @type DialogId
 DIALOG_COUNT = 170 --- @type DialogId
 
 --- @alias DialogId
+--- | `DIALOG_NONE`
 --- | `DIALOG_000`
 --- | `DIALOG_001`
 --- | `DIALOG_002`
@@ -3485,27 +3493,27 @@ SPECIAL_WARP_TITLE = -8
 --- @type integer
 SPECIAL_WARP_LEVEL_SELECT = -9
 
-MARIO_SPAWN_NONE                  =                                          0 --- @type MarioSpawnType
-MARIO_SPAWN_DOOR_WARP             =                                          1 --- @type MarioSpawnType
-MARIO_SPAWN_IDLE                  =                                          2 --- @type MarioSpawnType
-MARIO_SPAWN_PIPE                  =                                          3 --- @type MarioSpawnType
-MARIO_SPAWN_TELEPORT              =                                          4 --- @type MarioSpawnType
-MARIO_SPAWN_INSTANT_ACTIVE        =                                       0x10 --- @type MarioSpawnType
-MARIO_SPAWN_SWIMMING              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2) --- @type MarioSpawnType
-MARIO_SPAWN_HARD_AIR_KNOCKBACK    =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3) --- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE  =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4) --- @type MarioSpawnType
-MARIO_SPAWN_DEATH                 =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5) --- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE         =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6) --- @type MarioSpawnType
-MARIO_SPAWN_FLYING                =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7) --- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_STAR_COLLECT =                                       0x20 --- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3) --- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_STAR_COLLECT   = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4) --- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_DEATH          = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5) --- @type MarioSpawnType
-MARIO_SPAWN_UNUSED_38             = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6) --- @type MarioSpawnType
-MARIO_SPAWN_FADE_FROM_BLACK       = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7) --- @type MarioSpawnType
+MARIO_SPAWN_NONE                  =    0 --- @type MarioSpawnType
+MARIO_SPAWN_DOOR_WARP             =    1 --- @type MarioSpawnType
+MARIO_SPAWN_IDLE                  =    2 --- @type MarioSpawnType
+MARIO_SPAWN_PIPE                  =    3 --- @type MarioSpawnType
+MARIO_SPAWN_TELEPORT              =    4 --- @type MarioSpawnType
+MARIO_SPAWN_INSTANT_ACTIVE        = 0x10 --- @type MarioSpawnType
+MARIO_SPAWN_SWIMMING              =   17 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE              =   18 --- @type MarioSpawnType
+MARIO_SPAWN_HARD_AIR_KNOCKBACK    =   19 --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE  =   20 --- @type MarioSpawnType
+MARIO_SPAWN_DEATH                 =   21 --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE         =   22 --- @type MarioSpawnType
+MARIO_SPAWN_FLYING                =   23 --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_STAR_COLLECT = 0x20 --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_DEATH        =   33 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_STAR_COLLECT =   34 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_DEATH        =   35 --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_STAR_COLLECT   =   36 --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_DEATH          =   37 --- @type MarioSpawnType
+MARIO_SPAWN_UNUSED_38             =   38 --- @type MarioSpawnType
+MARIO_SPAWN_FADE_FROM_BLACK       =   39 --- @type MarioSpawnType
 
 --- @alias MarioSpawnType
 --- | `MARIO_SPAWN_NONE`
@@ -3618,7 +3626,7 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_DEFAULT`
 
 --- @type integer
-LE_MAX_LIGHTS = 128
+LE_MAX_LIGHTS = 256
 
 LE_MODE_AFFECT_ALL_SHADED_AND_COLORED = 0 --- @type LEMode
 LE_MODE_AFFECT_ALL_SHADED             = 1 --- @type LEMode
@@ -7372,6 +7380,9 @@ ACT_COUGHING = 0x0C40020A
 ACT_SHIVERING = 0x0C40020B
 
 --- @type integer
+ACT_PALETTE_EDITOR_CAP = 0x0000020C
+
+--- @type integer
 ACT_IN_QUICKSAND = 0x0002020D
 
 --- @type integer
@@ -7954,9 +7965,6 @@ ACT_FEET_STUCK_IN_GROUND = 0x0002033C
 ACT_PUTTING_ON_CAP = 0x0000133D
 
 --- @type integer
-ACT_TAKING_OFF_CAP = 0x0000133E
-
---- @type integer
 ACT_HOLDING_POLE = 0x08100340
 
 --- @type integer
@@ -8216,6 +8224,25 @@ HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
 --- | `HUD_DISPLAY_FLAGS_CAMERA`
 --- | `HUD_DISPLAY_FLAGS_POWER`
 --- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
+
+ACT_SELECT_HUD_SCORE            =                                                                                                                                                            1 << 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                            1 << 1 --- @type ActSelectHudPart
+ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                            1 << 2 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                            1 << 3 --- @type ActSelectHudPart
+ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                            1 << 4 --- @type ActSelectHudPart
+ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                            1 << 5 --- @type ActSelectHudPart
+ACT_SELECT_HUD_NONE             =                                                                                                                                                                 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
+
+--- @alias ActSelectHudPart
+--- | `ACT_SELECT_HUD_SCORE`
+--- | `ACT_SELECT_HUD_LEVEL_NAME`
+--- | `ACT_SELECT_HUD_COURSE_NUM`
+--- | `ACT_SELECT_HUD_ACT_NAME`
+--- | `ACT_SELECT_HUD_STAR_NUM`
+--- | `ACT_SELECT_HUD_PLAYERS_IN_LEVEL`
+--- | `ACT_SELECT_HUD_NONE`
+--- | `ACT_SELECT_HUD_ALL`
 
 E_MODEL_NONE                               =   0 --- @type ModelExtendedId
 E_MODEL_MARIO                              =   1 --- @type ModelExtendedId
@@ -8995,6 +9022,9 @@ SOUNDARGS_MASK_PRIORITY = 0x0000FF00
 
 --- @type integer
 SOUNDARGS_MASK_STATUS = 0x0000000F
+
+--- @type integer
+SOUNDARGS_MASK_BITFLAGS = 0x0F0000F0
 
 --- @type integer
 SOUNDARGS_SHIFT_BANK = 28
@@ -11124,16 +11154,16 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.3.2"
+SM64COOPDX_VERSION = "v1.4"
 
 --- @type string
 VERSION_TEXT = "v"
 
 --- @type integer
-VERSION_NUMBER = 40
+VERSION_NUMBER = 41
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 0
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

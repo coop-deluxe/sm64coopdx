@@ -22,7 +22,6 @@
 --- @field public loopEnd integer
 --- @field public loopStart integer
 --- @field public startFrame integer
---- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
 --- @field public valuesLength integer
 
@@ -226,7 +225,6 @@
 --- @field public mode integer
 --- @field public mtx Mat4
 --- @field public nextYaw integer
---- @field public paletteEditorCap boolean
 --- @field public pos Vec3f
 --- @field public unusedVec1 Vec3f
 --- @field public yaw integer
@@ -596,6 +594,7 @@
 --- @class DialogEntry
 --- @field public leftOffset integer
 --- @field public linesPerBox integer
+--- @field public replaced boolean
 --- @field public text string
 --- @field public unused integer
 --- @field public width integer

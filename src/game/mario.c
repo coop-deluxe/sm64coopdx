@@ -2063,9 +2063,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // don't update mario when in a cutscene
         if (gMarioState->playerIndex == 0) {
-            extern s16 gDialogID;
+            extern s32 gDialogID;
             if (gMarioState->freeze > 0) { gMarioState->freeze--; }
-            if (gMarioState->freeze < 2 && gDialogID != -1) { gMarioState->freeze = 2; }
+            if (gMarioState->freeze < 2 && gDialogID != DIALOG_NONE) { gMarioState->freeze = 2; }
             if (gMarioState->freeze < 2 && sCurrPlayMode == PLAY_MODE_PAUSED) { gMarioState->freeze = 2; }
         }
 

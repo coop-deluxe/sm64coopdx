@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-4.md)]
 
 
 ---
@@ -2186,7 +2186,7 @@ Starts a cutscene involving an object and displays dialog during the sequence. T
 - `integer`
 
 ### C Prototype
-`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);`
+`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -4056,7 +4056,7 @@ Plays a dialog sound corresponding to `dialogID`
 - None
 
 ### C Prototype
-`void play_dialog_sound(u8 dialogID);`
+`void play_dialog_sound(s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -4692,7 +4692,7 @@ Creates a dialog box with a dialog ID that rotates into view
 - None
 
 ### C Prototype
-`void create_dialog_box(s16 dialog);`
+`void create_dialog_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4716,7 +4716,7 @@ Creates a dialog box with a dialog variable
 - None
 
 ### C Prototype
-`void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
+`void create_dialog_box_with_var(s32 dialog, s32 dialogVar);`
 
 [:arrow_up_small:](#)
 
@@ -4739,7 +4739,7 @@ Creates a dialog box with a dialog ID that zooms into view
 - None
 
 ### C Prototype
-`void create_dialog_inverted_box(s16 dialog);`
+`void create_dialog_inverted_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4762,7 +4762,7 @@ Creates a dialog box with a response
 - None
 
 ### C Prototype
-`void create_dialog_box_with_response(s16 dialog);`
+`void create_dialog_box_with_response(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -6633,6 +6633,27 @@ Sets the level number and handles the act select screen. `param` is used for ove
 <br />
 
 
+## [le_is_enabled](#le_is_enabled)
+
+### Description
+Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+
+### Lua Example
+`local booleanValue = le_is_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_is_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_set_mode](#le_set_mode)
 
 ### Description
@@ -6700,22 +6721,49 @@ Sets the lighting engine's tone mapping mode to `toneMapping`
 
 <br />
 
-## [le_is_enabled](#le_is_enabled)
+## [le_get_ambient_color](#le_get_ambient_color)
 
 ### Description
-Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+Outputs the lighting engine's ambient color to `out`
 
 ### Lua Example
-`local booleanValue = le_is_enabled()`
+`le_get_ambient_color(out)`
 
 ### Parameters
-- None
+| Field | Type |
+| ----- | ---- |
+| out | [Color](structs.md#Color) |
 
 ### Returns
-- `boolean`
+- None
 
 ### C Prototype
-`bool le_is_enabled(void);`
+`void le_get_ambient_color(OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [le_set_ambient_color](#le_set_ambient_color)
+
+### Description
+Sets the lighting engine ambient color
+
+### Lua Example
+`le_set_ambient_color(r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_ambient_color(u8 r, u8 g, u8 b);`
 
 [:arrow_up_small:](#)
 
@@ -6820,7 +6868,7 @@ Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and
 - `integer`
 
 ### C Prototype
-`s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
+`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
 
 [:arrow_up_small:](#)
 
@@ -6843,7 +6891,7 @@ Removes a lighting engine point light corresponding to `id`
 - None
 
 ### C Prototype
-`void le_remove_light(s32 id);`
+`void le_remove_light(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -6864,7 +6912,7 @@ Gets the total number of lights currently loaded in the lighting engine
 - `integer`
 
 ### C Prototype
-`s32 le_get_light_count(void);`
+`s16 le_get_light_count(void);`
 
 [:arrow_up_small:](#)
 
@@ -6887,55 +6935,7 @@ Checks if a lighting engine point light corresponding to `id` exists
 - `boolean`
 
 ### C Prototype
-`bool le_light_exists(s32 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_ambient_color](#le_get_ambient_color)
-
-### Description
-Outputs the lighting engine's ambient color to `out`
-
-### Lua Example
-`le_get_ambient_color(out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_ambient_color(OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_ambient_color](#le_set_ambient_color)
-
-### Description
-Sets the lighting engine ambient color
-
-### Lua Example
-`le_set_ambient_color(r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
+`bool le_light_exists(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -6959,7 +6959,7 @@ Outputs a lighting engine point light's position to `out`
 - None
 
 ### C Prototype
-`void le_get_light_pos(s32 id, OUT Vec3f out);`
+`void le_get_light_pos(s16 id, OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -6985,7 +6985,7 @@ Sets a lighting engine point light's position to `x`, `y`, `z`
 - None
 
 ### C Prototype
-`void le_set_light_pos(s32 id, f32 x, f32 y, f32 z);`
+`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
 
 [:arrow_up_small:](#)
 
@@ -7009,7 +7009,7 @@ Outputs a lighting engine point light's color to `out`
 - None
 
 ### C Prototype
-`void le_get_light_color(s32 id, OUT Color out);`
+`void le_get_light_color(s16 id, OUT Color out);`
 
 [:arrow_up_small:](#)
 
@@ -7035,7 +7035,7 @@ Sets a lighting engine point light's color to `r`, `g`, `b`
 - None
 
 ### C Prototype
-`void le_set_light_color(s32 id, u8 r, u8 g, u8 b);`
+`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
 
 [:arrow_up_small:](#)
 
@@ -7058,7 +7058,7 @@ Gets a lighting engine point light's `radius`
 - `number`
 
 ### C Prototype
-`f32 le_get_light_radius(s32 id);`
+`f32 le_get_light_radius(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -7082,7 +7082,7 @@ Sets a lighting engine point light's `radius`
 - None
 
 ### C Prototype
-`void le_set_light_radius(s32 id, f32 radius);`
+`void le_set_light_radius(s16 id, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -7105,7 +7105,7 @@ Gets a lighting engine point light's `intensity`
 - `number`
 
 ### C Prototype
-`f32 le_get_light_intensity(s32 id);`
+`f32 le_get_light_intensity(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -7129,7 +7129,7 @@ Sets a lighting engine point light's `intensity`
 - None
 
 ### C Prototype
-`void le_set_light_intensity(s32 id, f32 intensity);`
+`void le_set_light_intensity(s16 id, f32 intensity);`
 
 [:arrow_up_small:](#)
 
@@ -7152,7 +7152,7 @@ Gets whether a lighting engine point light will use a surface's normals to deter
 - `boolean`
 
 ### C Prototype
-`bool le_get_light_use_surface_normals(s32 id);`
+`bool le_get_light_use_surface_normals(s16 id);`
 
 [:arrow_up_small:](#)
 
@@ -7176,12 +7176,12 @@ Sets whether a lighting engine point light will use a surface's normals to deter
 - None
 
 ### C Prototype
-`void le_set_light_use_surface_normals(s32 id, bool useSurfaceNormals);`
+`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 
 <br />
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-4.md)]
 

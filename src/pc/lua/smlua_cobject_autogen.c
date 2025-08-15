@@ -178,7 +178,7 @@ static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
     { "prevAnimPtr",            LVT_COBJECT_P, offsetof(struct AnimInfo, prevAnimPtr),            false, LOT_ANIMATION, 1, sizeof(struct Animation*) },
 };
 
-#define LUA_ANIMATION_FIELD_COUNT 11
+#define LUA_ANIMATION_FIELD_COUNT 10
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE,    1, sizeof(s16)  },
     { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE,    1, sizeof(s16)  },
@@ -188,7 +188,6 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE,    1, sizeof(s16)  },
     { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE,    1, sizeof(s16)  },
     { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE,    1, sizeof(s16)  },
-    { "unusedBoneCount",   LVT_S16,   offsetof(struct Animation, unusedBoneCount),   false, LOT_NONE,    1, sizeof(s16)  },
     { "values",            LVT_U16_P, offsetof(struct Animation, values),            false, LOT_POINTER, 1, sizeof(u16*) },
     { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      false, LOT_NONE,    1, sizeof(u32)  },
 };
@@ -394,24 +393,23 @@ static struct LuaObjectField sBullyCollisionDataFields[LUA_BULLY_COLLISION_DATA_
     { "velZ",            LVT_F32, offsetof(struct BullyCollisionData, velZ),            false, LOT_NONE, 1, sizeof(f32) },
 };
 
-#define LUA_CAMERA_FIELD_COUNT 16
+#define LUA_CAMERA_FIELD_COUNT 15
 static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
-    { "areaCenX",         LVT_F32,     offsetof(struct Camera, areaCenX),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "areaCenY",         LVT_F32,     offsetof(struct Camera, areaCenY),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "areaCenZ",         LVT_F32,     offsetof(struct Camera, areaCenZ),         false, LOT_NONE,  1,  sizeof(f32)   },
-    { "cutscene",         LVT_U8,      offsetof(struct Camera, cutscene),         false, LOT_NONE,  1,  sizeof(u8)    },
-    { "defMode",          LVT_U8,      offsetof(struct Camera, defMode),          false, LOT_NONE,  1,  sizeof(u8)    },
-    { "doorStatus",       LVT_U8,      offsetof(struct Camera, doorStatus),       false, LOT_NONE,  1,  sizeof(u8)    },
-    { "filler31",         LVT_U8,      offsetof(struct Camera, filler31),         false, LOT_NONE,  8,  sizeof(u8)    },
-    { "filler3C",         LVT_U8,      offsetof(struct Camera, filler3C),         false, LOT_NONE,  40, sizeof(u8)    },
-    { "focus",            LVT_COBJECT, offsetof(struct Camera, focus),            true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "mode",             LVT_U8,      offsetof(struct Camera, mode),             false, LOT_NONE,  1,  sizeof(u8)    },
-    { "mtx",              LVT_COBJECT, offsetof(struct Camera, mtx),              true,  LOT_MAT4,  1,  sizeof(Mat4)  },
-    { "nextYaw",          LVT_S16,     offsetof(struct Camera, nextYaw),          false, LOT_NONE,  1,  sizeof(s16)   },
-    { "paletteEditorCap", LVT_BOOL,    offsetof(struct Camera, paletteEditorCap), false, LOT_NONE,  1,  sizeof(bool)  },
-    { "pos",              LVT_COBJECT, offsetof(struct Camera, pos),              true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "unusedVec1",       LVT_COBJECT, offsetof(struct Camera, unusedVec1),       true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
-    { "yaw",              LVT_S16,     offsetof(struct Camera, yaw),              false, LOT_NONE,  1,  sizeof(s16)   },
+    { "areaCenX",   LVT_F32,     offsetof(struct Camera, areaCenX),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "areaCenY",   LVT_F32,     offsetof(struct Camera, areaCenY),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "areaCenZ",   LVT_F32,     offsetof(struct Camera, areaCenZ),   false, LOT_NONE,  1,  sizeof(f32)   },
+    { "cutscene",   LVT_U8,      offsetof(struct Camera, cutscene),   false, LOT_NONE,  1,  sizeof(u8)    },
+    { "defMode",    LVT_U8,      offsetof(struct Camera, defMode),    false, LOT_NONE,  1,  sizeof(u8)    },
+    { "doorStatus", LVT_U8,      offsetof(struct Camera, doorStatus), false, LOT_NONE,  1,  sizeof(u8)    },
+    { "filler31",   LVT_U8,      offsetof(struct Camera, filler31),   false, LOT_NONE,  8,  sizeof(u8)    },
+    { "filler3C",   LVT_U8,      offsetof(struct Camera, filler3C),   false, LOT_NONE,  40, sizeof(u8)    },
+    { "focus",      LVT_COBJECT, offsetof(struct Camera, focus),      true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "mode",       LVT_U8,      offsetof(struct Camera, mode),       false, LOT_NONE,  1,  sizeof(u8)    },
+    { "mtx",        LVT_COBJECT, offsetof(struct Camera, mtx),        true,  LOT_MAT4,  1,  sizeof(Mat4)  },
+    { "nextYaw",    LVT_S16,     offsetof(struct Camera, nextYaw),    false, LOT_NONE,  1,  sizeof(s16)   },
+    { "pos",        LVT_COBJECT, offsetof(struct Camera, pos),        true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "unusedVec1", LVT_COBJECT, offsetof(struct Camera, unusedVec1), true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
+    { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
 #define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 8
@@ -806,10 +804,11 @@ static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "year",   LVT_S32, offsetof(struct DateTime, year),   false, LOT_NONE, 1, sizeof(s32) },
 };
 
-#define LUA_DIALOG_ENTRY_FIELD_COUNT 5
+#define LUA_DIALOG_ENTRY_FIELD_COUNT 6
 static struct LuaObjectField sDialogEntryFields[LUA_DIALOG_ENTRY_FIELD_COUNT] = {
     { "leftOffset",  LVT_S16,      offsetof(struct DialogEntry, leftOffset),  true, LOT_NONE, 1, sizeof(s16)   },
     { "linesPerBox", LVT_S8,       offsetof(struct DialogEntry, linesPerBox), true, LOT_NONE, 1, sizeof(s8)    },
+    { "replaced",    LVT_BOOL,     offsetof(struct DialogEntry, replaced),    true, LOT_NONE, 1, sizeof(bool)  },
     { "text",        LVT_STRING_P, offsetof(struct DialogEntry, text),        true, LOT_NONE, 1, sizeof(char*) },
     { "unused",      LVT_U32,      offsetof(struct DialogEntry, unused),      true, LOT_NONE, 1, sizeof(u32)   },
     { "width",       LVT_S16,      offsetof(struct DialogEntry, width),       true, LOT_NONE, 1, sizeof(s16)   },
@@ -1507,7 +1506,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "controller",                LVT_COBJECT_P, offsetof(struct MarioState, controller),                true,  LOT_CONTROLLER,        1, sizeof(struct Controller*)        },
     { "curAnimOffset",             LVT_F32,       offsetof(struct MarioState, curAnimOffset),             false, LOT_NONE,              1, sizeof(f32)                       },
     { "currentRoom",               LVT_S16,       offsetof(struct MarioState, currentRoom),               false, LOT_NONE,              1, sizeof(s16)                       },
-    { "dialogId",                  LVT_S16,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s16)                       },
+    { "dialogId",                  LVT_S32,       offsetof(struct MarioState, dialogId),                  true,  LOT_NONE,              1, sizeof(s32)                       },
     { "doubleJumpTimer",           LVT_U8,        offsetof(struct MarioState, doubleJumpTimer),           false, LOT_NONE,              1, sizeof(u8)                        },
     { "faceAngle",                 LVT_COBJECT,   offsetof(struct MarioState, faceAngle),                 true,  LOT_VEC3S,             1, sizeof(Vec3s)                     },
     { "fadeWarpOpacity",           LVT_U8,        offsetof(struct MarioState, fadeWarpOpacity),           false, LOT_NONE,              1, sizeof(u8)                        },
@@ -2364,7 +2363,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oTiltingPyramidNormalY",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalY),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTiltingPyramidNormalZ",                     LVT_F32,                 offsetof(struct Object, oTiltingPyramidNormalZ),                     false, LOT_NONE,         1, sizeof(f32)                   },
     { "oTimer",                                     LVT_S32,                 offsetof(struct Object, oTimer),                                     false, LOT_NONE,         1, sizeof(s32)                   },
-    { "oToadMessageDialogId",                       LVT_U32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(u32)                   },
+    { "oToadMessageDialogId",                       LVT_S32,                 offsetof(struct Object, oToadMessageDialogId),                       false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageRecentlyTalked",                 LVT_S32,                 offsetof(struct Object, oToadMessageRecentlyTalked),                 false, LOT_NONE,         1, sizeof(s32)                   },
     { "oToadMessageState",                          LVT_S32,                 offsetof(struct Object, oToadMessageState),                          false, LOT_NONE,         1, sizeof(s32)                   },
 //  { "oToxBoxMovementPattern",                     LVT_???,                 offsetof(struct Object, oToxBoxMovementPattern),                     false, LOT_???,          1, sizeof(void*)                 }, <--- UNIMPLEMENTED

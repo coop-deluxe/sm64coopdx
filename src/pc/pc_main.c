@@ -52,7 +52,6 @@
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
-
 #include "pc/mods/mods.h"
 
 #include "debug_context.h"
@@ -60,6 +59,8 @@
 
 #include "gfx_dimensions.h"
 #include "game/segment2.h"
+
+#include "engine/math_util.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -69,6 +70,10 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
+#endif
+
+#ifdef HAVE_SDL2
+#include <SDL2/SDL.h>
 #endif
 
 extern Vp D_8032CF00;
@@ -187,23 +192,43 @@ static void compute_fps(f64 curTime) {
     sDrawnFrames = 0;
 }
 
-static s32 get_num_frames_to_draw(f64 t) {
-    if (configFrameLimit % FRAMERATE == 0) {
-        return configFrameLimit / FRAMERATE;
+static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
+    if (frameLimit % FRAMERATE == 0) {
+        return frameLimit / FRAMERATE;
     }
-    s64 numFramesCurr = (s64) (t * (f64) configFrameLimit);
-    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) configFrameLimit);
+    s64 numFramesCurr = (s64) (t * (f64) frameLimit);
+    s64 numFramesNext = (s64) ((t + sFrameTime) * (f64) frameLimit);
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
+static u32 get_refresh_rate() {
+    if (configFramerateMode == RRM_MANUAL) { return configFrameLimit; }
+    if (configFramerateMode == RRM_UNLIMITED) { return 3000; } // Has no effect
+    static u32 refreshRate = 0;
+#ifdef HAVE_SDL2
+    if (!refreshRate) {
+        SDL_DisplayMode mode;
+        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
+            refreshRate = (u32) mode.refresh_rate;
+        } else {
+            refreshRate = 60;
+        }
+    }
+    return refreshRate;
+#else
+    return 60;
+#endif
+}
+
 void produce_interpolation_frames_and_delay(void) {
-    bool is30Fps = (!configUncappedFramerate && configFrameLimit == FRAMERATE);
+    u32 refreshRate = get_refresh_rate();
+    bool is30Fps = (refreshRate == FRAMERATE);
 
     gRenderingInterpolated = true;
 
     f64 curTime = clock_elapsed_f64();
     f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart);
+    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
 
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
@@ -215,7 +240,7 @@ void produce_interpolation_frames_and_delay(void) {
         f32 delta = (
             is30Fps ?
             1.0f :
-            MIN(MAX((curTime - sFrameTimeStart) / sFrameTime, 0.f), 1.f)
+            clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f)
         );
         gRenderingDelta = delta;
 
@@ -226,15 +251,15 @@ void produce_interpolation_frames_and_delay(void) {
 
         sDrawnFrames++;
 
-        if (!is30Fps && configUncappedFramerate) { continue; }
+        if (!is30Fps && configFramerateMode == RRM_UNLIMITED) { continue; }
 
         // delay if our framerate is capped
         f64 now = clock_elapsed_f64();
         f64 elapsedTime = now - loopStartTime;
         expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
-        f64 delay = (expectedTime - elapsedTime) * 1000.0;
+        f64 delay = (expectedTime - elapsedTime);
         if (delay > 0.0) {
-            WAPI.delay((u32)delay);
+            precise_delay_f64(delay);
         }
         numFramesToDraw--;
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
@@ -271,7 +296,7 @@ inline static void buffer_audio(void) {
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
-    
+
     if (!shouldMute) {
         for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
             sAudioBuffer[i] *= gMasterVolume;
@@ -326,6 +351,10 @@ void produce_one_frame(void) {
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+    // measure frame start time
+    f64 frameStart = clock_elapsed_f64();
+    f64 targetFrameTime = 1.0 / 60.0; // update at 60fps
+
     // start frame
     gfx_start_frame();
     config_gfx_pool();
@@ -353,6 +382,15 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     alloc_display_list(0);
     gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
     display_and_vsync();
+
+    // delay to go easy on the cpu
+    f64 frameEnd = clock_elapsed_f64();
+    f64 elapsed = frameEnd - frameStart;
+    f64 remaining = targetFrameTime - elapsed;
+    if (remaining > 0) {
+        WAPI.delay((u32)(remaining * 1000.0));
+    }
+
     gfx_end_frame();
 }
 

@@ -970,7 +970,7 @@
 #define /*0x10C*/ oTiltingPyramidMarioOnPlatform OBJECT_FIELD_S32(0x21)
 
 /* Toad Message */
-#define /*0x108*/ oToadMessageDialogId       OBJECT_FIELD_U32(0x20)
+#define /*0x108*/ oToadMessageDialogId       OBJECT_FIELD_S32(0x20)
 #define /*0x10C*/ oToadMessageRecentlyTalked OBJECT_FIELD_S32(0x21)
 #define /*0x110*/ oToadMessageState          OBJECT_FIELD_S32(0x22)
 

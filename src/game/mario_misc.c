@@ -139,7 +139,7 @@ static void toad_message_talking(void) {
         gCurrentObject->oToadMessageRecentlyTalked = TRUE;
         gCurrentObject->oToadMessageState = TOAD_MESSAGE_FADING;
 
-        u32 dialogId = gCurrentObject->oToadMessageDialogId;
+        s32 dialogId = gCurrentObject->oToadMessageDialogId;
         if (dialogId == TOAD_STAR_1_DIALOG) {
             gCurrentObject->oToadMessageDialogId = TOAD_STAR_1_DIALOG_AFTER;
             bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 0, TRUE);
