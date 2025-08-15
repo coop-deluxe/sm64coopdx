@@ -1477,8 +1477,6 @@
 | ----- | ---- | ------ |
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevRotation | [Vec3s](structs.md#Vec3s) | read-only |
-| prevTimestamp | `integer` |  |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1491,8 +1489,7 @@
 | ----- | ---- | ------ |
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevScale | `number` |  |
-| scale | `number` |  |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 

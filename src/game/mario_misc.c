@@ -460,11 +460,6 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
         rotNode->rotation[0] = bodyState->torsoAngle[1] * character->torsoRotMult;
         rotNode->rotation[1] = bodyState->torsoAngle[2] * character->torsoRotMult;
         rotNode->rotation[2] = bodyState->torsoAngle[0] * character->torsoRotMult;
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
-            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
-            rotNode->prevTimestamp = gGlobalTimer;
-        }
         // update torso position in bodyState
         get_pos_from_transform_mtx(bodyState->torsoPos, *curTransform, *gCurGraphNodeCamera->matrixPtr);
         bodyState->updateTorsoTime = gGlobalTimer;
@@ -500,12 +495,6 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
         } else {
             vec3s_set(bodyState->headAngle, 0, 0, 0);
             vec3s_set(rotNode->rotation, 0, 0, 0);
-        }
-
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
-            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
-            rotNode->prevTimestamp = gGlobalTimer;
         }
 
         // update head position in bodyState
@@ -560,15 +549,14 @@ Gfx* geo_mario_hand_foot_scaler(s32 callContext, struct GraphNode* node, UNUSED 
     struct MarioBodyState* bodyState = geo_get_body_state();
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        scaleNode->scale = 1.0f;
+        vec3f_copy(scaleNode->scale, gVec3fOne);
         if (asGenerated->parameter == bodyState->punchState >> 6) {
             if (sMarioAttackAnimCounter[index] != gAreaUpdateCounter && (bodyState->punchState & 0x3F) > 0) {
                 bodyState->punchState -= 1;
                 sMarioAttackAnimCounter[index] = gAreaUpdateCounter;
             }
-            scaleNode->scale =
-                gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)]
-                / 10.0f;
+            f32 scale = gMarioAttackScaleAnimation[asGenerated->parameter * 6 + (bodyState->punchState & 0x3F)] / 10.0f;
+            vec3f_set(scaleNode->scale, scale, scale, scale);
         }
     }
     return NULL;

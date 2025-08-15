@@ -1248,21 +1248,18 @@ static struct LuaObjectField sGraphNodeRootFields[LUA_GRAPH_NODE_ROOT_FIELD_COUN
     { "y",         LVT_S16,     offsetof(struct GraphNodeRoot, y),         false, LOT_NONE,      1, sizeof(s16)              },
 };
 
-#define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 5
+#define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 3
 static struct LuaObjectField sGraphNodeRotationFields[LUA_GRAPH_NODE_ROTATION_FIELD_COUNT] = {
-    { "displayList",   LVT_COBJECT_P, offsetof(struct GraphNodeRotation, displayList),   false, LOT_GFX,       1, sizeof(Gfx*)             },
-    { "node",          LVT_COBJECT,   offsetof(struct GraphNodeRotation, node),          true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
-    { "prevRotation",  LVT_COBJECT,   offsetof(struct GraphNodeRotation, prevRotation),  true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
-    { "prevTimestamp", LVT_U32,       offsetof(struct GraphNodeRotation, prevTimestamp), false, LOT_NONE,      1, sizeof(u32)              },
-    { "rotation",      LVT_COBJECT,   offsetof(struct GraphNodeRotation, rotation),      true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+    { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeRotation, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeRotation, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeRotation, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
-#define LUA_GRAPH_NODE_SCALE_FIELD_COUNT 4
+#define LUA_GRAPH_NODE_SCALE_FIELD_COUNT 3
 static struct LuaObjectField sGraphNodeScaleFields[LUA_GRAPH_NODE_SCALE_FIELD_COUNT] = {
     { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeScale, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
     { "node",        LVT_COBJECT,   offsetof(struct GraphNodeScale, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
-    { "prevScale",   LVT_F32,       offsetof(struct GraphNodeScale, prevScale),   false, LOT_NONE,      1, sizeof(f32)              },
-    { "scale",       LVT_F32,       offsetof(struct GraphNodeScale, scale),       false, LOT_NONE,      1, sizeof(f32)              },
+    { "scale",       LVT_COBJECT,   offsetof(struct GraphNodeScale, scale),       true,  LOT_VEC3F,     1, sizeof(Vec3f)            },
 };
 
 #define LUA_GRAPH_NODE_SHADOW_FIELD_COUNT 4
