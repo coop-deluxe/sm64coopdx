@@ -93,6 +93,7 @@ u32 gNumVblanks = 0;
 
 u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
+f32 gFramePercentage = 0.f;
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
@@ -209,8 +210,8 @@ static u32 get_refresh_rate() {
     static u32 refreshRate = 0;
     if (!refreshRate) {
         SDL_DisplayMode mode;
-        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
-            refreshRate = (u32) mode.refresh_rate;
+        if (SDL_GetWindowDisplayMode(0, &mode) == 0) {
+            if (mode.refresh_rate > 0) { refreshRate = (u32) mode.refresh_rate; }
         } else {
             refreshRate = 60;
         }
@@ -232,18 +233,19 @@ void produce_interpolation_frames_and_delay(void) {
     f64 curTime = clock_elapsed_f64();
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
-    u16 frames = 0;
+    u16 framesDrawn = 0;
     const f64 interpFrameTime = sFrameTime / (f64) numFramesToDraw;
 
     // interpolate and render
     // make sure to draw at least one frame to prevent the game from freezing completely
     // (including inputs and window events) if the game update duration is greater than 33ms
     do {
-        ++frames;
+        ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
-        f64 idealTime = configFramerateMode != RRM_UNLIMITED ? (sFrameTimeStart + interpFrameTime * frames) : curTime;
+        f64 idealTime = configFramerateMode != RRM_UNLIMITED ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
         f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+        gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
         gRenderingDelta = delta;
 
         gfx_start_frame();

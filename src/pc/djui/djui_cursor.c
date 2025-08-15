@@ -17,6 +17,10 @@ static f32 sSavedMouseY = 0;
 f32 gCursorX = 0;
 f32 gCursorY = 0;
 
+static f32 sPrevCursorX = 0;
+static f32 sPrevCursorY = 0;
+static Gfx* sSavedDisplayListHead = NULL;
+
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
         djui_base_set_visible(&sMouseCursor->base, visible);
@@ -111,7 +115,9 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
     }
 }
 
-void djui_cursor_update(void) {
+static void djui_cursor_update_position(void) {
+    sPrevCursorX = gCursorX;
+    sPrevCursorY = gCursorY;
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
@@ -152,6 +158,20 @@ void djui_cursor_update(void) {
         djui_image_set_image(sMouseCursor, gd_texture_hand_open, 32, 32, 16);
     }
 #endif
+}
+
+void djui_cursor_interp(void) {
+    djui_cursor_update_position();
+    if (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY) {
+        if (sSavedDisplayListHead == NULL) { return; }
+        gDisplayListHead = sSavedDisplayListHead;
+        djui_base_render(&sMouseCursor->base);
+    }
+}
+
+void djui_cursor_update(void) {
+    djui_cursor_update_position();
+    sSavedDisplayListHead = gDisplayListHead;
     djui_base_render(&sMouseCursor->base);
 }
 

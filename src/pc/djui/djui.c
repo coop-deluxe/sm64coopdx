@@ -71,14 +71,21 @@ void patch_djui_before(void) {
 }
 
 void patch_djui_interpolated(UNUSED f32 delta) {
-    // reset the head and re-render DJUI
-    if (delta >= 0.5f && !sDjuiRendered60fps && (gDjuiInMainMenu || gDjuiPanelPauseCreated)) {
+    extern f32 gFramePercentage;
+    if (gFramePercentage >= 0.5f && !sDjuiRendered60fps && (gDjuiInMainMenu || gDjuiPanelPauseCreated)) {
+        // reset the head and re-render DJUI
         sDjuiRendered60fps = true;
         if (sSavedDisplayListHead == NULL) { return; }
         gDisplayListHead = sSavedDisplayListHead;
         djui_render();
         gDPFullSync(gDisplayListHead++);
         gSPEndDisplayList(gDisplayListHead++);
+    } else {
+        // patch the display list instead of a full re-render
+        // to make some elements on screen be smooth, while keeping things cheap.
+        Gfx* displayListHead = gDisplayListHead;
+        djui_cursor_interp();
+        gDisplayListHead = displayListHead;
     }
 }
 
