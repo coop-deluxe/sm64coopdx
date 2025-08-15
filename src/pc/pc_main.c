@@ -255,19 +255,19 @@ void produce_interpolation_frames_and_delay(void) {
 
         // delay if our framerate is capped
         if (configFramerateMode != RRM_UNLIMITED) {
+            expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
             f64 now = clock_elapsed_f64();
             f64 elapsedTime = now - loopStartTime;
-            expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
             f64 delay = (expectedTime - elapsedTime);
             if (delay > 0.0) {
                 precise_delay_f64(delay);
             }
-            numFramesToDraw--;
         }
 
         // send the frame to the screen (should be directly after the delay for good frame pacing)
         gfx_display_frame();
         sDrawnFrames++;
+        if (configFramerateMode != RRM_UNLIMITED) { numFramesToDraw--; }
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
