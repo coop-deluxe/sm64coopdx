@@ -12828,40 +12828,40 @@ int smlua_func_djui_hud_reset_viewport(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_djui_hud_set_scizzor(lua_State* L) {
+int smlua_func_djui_hud_set_scissor(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 4) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_scizzor", 4, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_scissor", 4, top);
         return 0;
     }
 
     f32 x = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_scizzor"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_scissor"); return 0; }
     f32 y = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_scizzor"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_scissor"); return 0; }
     f32 width = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_scizzor"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_scissor"); return 0; }
     f32 height = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_scizzor"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_scissor"); return 0; }
 
-    djui_hud_set_scizzor(x, y, width, height);
+    djui_hud_set_scissor(x, y, width, height);
 
     return 1;
 }
 
-int smlua_func_djui_hud_reset_scizzor(UNUSED lua_State* L) {
+int smlua_func_djui_hud_reset_scissor(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_reset_scizzor", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_reset_scissor", 0, top);
         return 0;
     }
 
 
-    djui_hud_reset_scizzor();
+    djui_hud_reset_scissor();
 
     return 1;
 }
@@ -37278,8 +37278,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_mouse_scroll_y", smlua_func_djui_hud_get_mouse_scroll_y);
     smlua_bind_function(L, "djui_hud_set_viewport", smlua_func_djui_hud_set_viewport);
     smlua_bind_function(L, "djui_hud_reset_viewport", smlua_func_djui_hud_reset_viewport);
-    smlua_bind_function(L, "djui_hud_set_scizzor", smlua_func_djui_hud_set_scizzor);
-    smlua_bind_function(L, "djui_hud_reset_scizzor", smlua_func_djui_hud_reset_scizzor);
+    smlua_bind_function(L, "djui_hud_set_scissor", smlua_func_djui_hud_set_scissor);
+    smlua_bind_function(L, "djui_hud_reset_scissor", smlua_func_djui_hud_reset_scissor);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
     smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);

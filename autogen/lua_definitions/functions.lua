@@ -3969,12 +3969,12 @@ end
 --- @param width number
 --- @param height number
 --- put the description here
-function djui_hud_set_scizzor(x, y, width, height)
+function djui_hud_set_scissor(x, y, width, height)
     -- ...
 end
 
 --- put the description here
-function djui_hud_reset_scizzor()
+function djui_hud_reset_scissor()
     -- ...
 end
 

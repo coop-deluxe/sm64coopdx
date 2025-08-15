@@ -345,16 +345,16 @@ void djui_hud_reset_viewport(void) {
     gSPViewport(gDisplayListHead++, &gViewportFullscreen);
 }
 
-void djui_hud_set_scizzor(f32 x, f32 y, f32 width, f32 height) {
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height) {
     // translate position and scale
     f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
     djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
 
-    // apply the scizzor
+    // apply the scissor
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, translatedX, translatedY, translatedW, translatedH);
 }
 
-void djui_hud_reset_scizzor(void) {
+void djui_hud_reset_scissor(void) {
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 }
 

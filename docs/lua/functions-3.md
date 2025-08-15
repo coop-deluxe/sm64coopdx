@@ -3315,13 +3315,13 @@ put the description here
 
 <br />
 
-## [djui_hud_set_scizzor](#djui_hud_set_scizzor)
+## [djui_hud_set_scissor](#djui_hud_set_scissor)
 
 ### Description
 put the description here
 
 ### Lua Example
-`djui_hud_set_scizzor(x, y, width, height)`
+`djui_hud_set_scissor(x, y, width, height)`
 
 ### Parameters
 | Field | Type |
@@ -3335,19 +3335,19 @@ put the description here
 - None
 
 ### C Prototype
-`void djui_hud_set_scizzor(f32 x, f32 y, f32 width, f32 height);`
+`void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_hud_reset_scizzor](#djui_hud_reset_scizzor)
+## [djui_hud_reset_scissor](#djui_hud_reset_scissor)
 
 ### Description
 put the description here
 
 ### Lua Example
-`djui_hud_reset_scizzor()`
+`djui_hud_reset_scissor()`
 
 ### Parameters
 - None
@@ -3356,7 +3356,7 @@ put the description here
 - None
 
 ### C Prototype
-`void djui_hud_reset_scizzor(void);`
+`void djui_hud_reset_scissor(void);`
 
 [:arrow_up_small:](#)
 

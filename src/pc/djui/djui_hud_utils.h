@@ -109,9 +109,9 @@ void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);
 /* |description|put the description here|descriptionEnd| */
 void djui_hud_reset_viewport(void);
 /* |description|put the description here|descriptionEnd| */
-void djui_hud_set_scizzor(f32 x, f32 y, f32 width, f32 height);
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
 /* |description|put the description here|descriptionEnd| */
-void djui_hud_reset_scizzor(void);
+void djui_hud_reset_scissor(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);
