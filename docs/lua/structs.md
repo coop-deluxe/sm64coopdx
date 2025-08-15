@@ -56,6 +56,7 @@
 - [GraphNodeRoot](#GraphNodeRoot)
 - [GraphNodeRotation](#GraphNodeRotation)
 - [GraphNodeScale](#GraphNodeScale)
+- [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
 - [GraphNodeShadow](#GraphNodeShadow)
 - [GraphNodeStart](#GraphNodeStart)
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
@@ -1484,6 +1485,18 @@
 <br />
 
 ## [GraphNodeScale](#GraphNodeScale)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| scale | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |

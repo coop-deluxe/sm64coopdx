@@ -831,6 +831,44 @@ static void geo_process_rotation(struct GraphNodeRotation *node) {
  * For the rest it acts as a normal display list node.
  */
 static void geo_process_scale(struct GraphNodeScale *node) {
+    Vec3f scaleVec;
+    Vec3f prevScaleVec;
+
+    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
+    if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
+
+    // current frame
+    vec3f_set(scaleVec, node->scale, node->scale, node->scale);
+    mtxf_scale_vec3f(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex], scaleVec);
+
+    // previous frame
+    geo_update_interpolation(NULL, NULL, scaleVec,
+        if (geo_should_interpolate(interp)) {
+            vec3f_copy(prevScaleVec, interp->scale);
+        } else {
+            vec3f_copy(prevScaleVec, scaleVec);
+        }
+        mtxf_scale_vec3f(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], prevScaleVec);
+    );
+
+    // Increment the matrix stack, If we fail to do so. Just return.
+    if (!increment_mat_stack()) { return; }
+
+    if (node->displayList != NULL) {
+        geo_append_display_list(node->displayList, node->node.flags >> 8);
+    }
+    if (node->node.children != NULL) {
+        geo_process_node_and_siblings(node->node.children);
+    }
+    gMatStackIndex--;
+}
+
+/**
+ * Process an XYZ scaling node. A transformation matrix based on the node's
+ * scale is created and pushed on both the float and fixed point matrix stacks.
+ * For the rest it acts as a normal display list node.
+ */
+static void geo_process_scale_xyz(struct GraphNodeScaleXYZ *node) {
 
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
@@ -1167,8 +1205,15 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             if (gCurAnimType == ANIM_TYPE_TRANSLATION
                 || gCurAnimType == ANIM_TYPE_LATERAL_TRANSLATION) {
                 struct GraphNode *geo = node->node.children;
-                if (geo != NULL && geo->type == GRAPH_NODE_TYPE_SCALE) {
-                    vec3f_copy(objScale, ((struct GraphNodeScale *) geo)->scale);
+                if (geo != NULL) {
+                    switch (geo->type) {
+                        case GRAPH_NODE_TYPE_SCALE:
+                            vec3f_mul(objScale, ((struct GraphNodeScale *) geo)->scale);
+                            break;
+                        case GRAPH_NODE_TYPE_SCALE_XYZ:
+                            vec3f_copy(objScale, ((struct GraphNodeScaleXYZ *) geo)->scale);
+                            break;
+                    }
                 }
                 animOffset[0] = retrieve_animation_value(gCurAnim, gCurrAnimFrame, &gCurrAnimAttribute) * gCurAnimTranslationMultiplier * objScale[0];
                 animOffset[1] = 0.0f;
@@ -1743,6 +1788,9 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                     case GRAPH_NODE_TYPE_SCALE:
                         geo_process_scale((struct GraphNodeScale *) curGraphNode);
+                        break;
+                    case GRAPH_NODE_TYPE_SCALE_XYZ:
+                        geo_process_scale_xyz((struct GraphNodeScaleXYZ *) curGraphNode);
                         break;
                     case GRAPH_NODE_TYPE_SHADOW:
                         geo_process_shadow((struct GraphNodeShadow *) curGraphNode);

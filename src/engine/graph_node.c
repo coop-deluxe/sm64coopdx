@@ -282,13 +282,33 @@ struct GraphNodeRotation *init_graph_node_rotation(struct DynamicPool *pool,
  */
 struct GraphNodeScale *init_graph_node_scale(struct DynamicPool *pool,
                                              struct GraphNodeScale *graphNode, s32 drawingLayer,
-                                             void *displayList, Vec3f scale) {
+                                             void *displayList, f32 scale) {
     if (pool != NULL) {
         graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeScale));
     }
 
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_SCALE);
+        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+        graphNode->scale = scale;
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
+    }
+
+    return graphNode;
+}
+
+/**
+ * Allocates and returns a newly created XYZ scaling node
+ */
+struct GraphNodeScaleXYZ *init_graph_node_scale_xyz(struct DynamicPool *pool,
+                                                    struct GraphNodeScaleXYZ *graphNode, s32 drawingLayer,
+                                                    void *displayList, Vec3f scale) {
+    if (pool != NULL) {
+        graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeScaleXYZ));
+    }
+
+    if (graphNode != NULL) {
+        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_SCALE_XYZ);
         graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
         vec3f_copy(graphNode->scale, scale);
         graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);

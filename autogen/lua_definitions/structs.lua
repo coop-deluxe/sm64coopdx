@@ -974,6 +974,11 @@
 --- @class GraphNodeScale
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
+--- @field public scale number
+
+--- @class GraphNodeScaleXYZ
+--- @field public displayList Pointer_Gfx
+--- @field public node GraphNode
 --- @field public scale Vec3f
 
 --- @class GraphNodeShadow

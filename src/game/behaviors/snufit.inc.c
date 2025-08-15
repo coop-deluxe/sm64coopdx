@@ -60,8 +60,7 @@ Gfx *geo_snufit_scale_body(s32 callContext, struct GraphNode *node, UNUSED Mat4 
         obj = (struct Object *) gCurGraphNodeObject;
         scaleNode = (struct GraphNodeScale *) node->next;
 
-        f32 scale = obj->oSnufitBodyScale / 1000.0f;
-        vec3f_set(scaleNode->scale, scale, scale, scale);
+        scaleNode->scale = obj->oSnufitBodyScale / 1000.0f;
     }
 
     return NULL;

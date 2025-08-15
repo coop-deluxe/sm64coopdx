@@ -495,8 +495,7 @@ static void level_cmd_23(void) {
     // GraphNodeScale has a GraphNode at the top. This
     // is being stored to the array, so cast the pointer.
     u32 id = model;
-    Vec3f scale = { arg2.f, arg2.f, arg2.f };
-    dynos_model_store_geo(&id, MODEL_POOL_LEVEL, arg1, (struct GraphNode*)init_graph_node_scale(gLevelPool, 0, arg0H, arg1, scale));
+    dynos_model_store_geo(&id, MODEL_POOL_LEVEL, arg1, (struct GraphNode*)init_graph_node_scale(gLevelPool, 0, arg0H, arg1, arg2.f));
 
     sCurrentCmd = CMD_NEXT;
 }
