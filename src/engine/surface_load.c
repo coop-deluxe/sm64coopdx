@@ -91,9 +91,9 @@ static void clear_spatial_partition(SpatialPartitionCell *cells) {
  */
 static void clear_static_surfaces(void) {
     clear_spatial_partition(&gStaticSurfacePartition[0][0]);
-    sSOCPool = growing_array_init(sSOCPool, 0x100);
-    sSOCNodePool = growing_array_init(sSOCNodePool, 0x500);
-    sSOCSurfacePool = growing_array_init(sSOCSurfacePool, 0x200);
+    sSOCPool = growing_array_init(sSOCPool, 0x100, malloc, smlua_free);
+    sSOCNodePool = growing_array_init(sSOCNodePool, 0x500, malloc, free);
+    sSOCSurfacePool = growing_array_init(sSOCSurfacePool, 0x200, malloc, smlua_free);
 }
 
 /**
