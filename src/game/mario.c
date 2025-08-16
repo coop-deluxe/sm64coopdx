@@ -1574,12 +1574,14 @@ resetGoto:;
         }
 
     } else {
-        vec3f_set(m->pos, m->spawnInfo->startPos[0], m->spawnInfo->startPos[1], m->spawnInfo->startPos[2]);
+        if (!is_other_player_active()) goto deathWarp;
+        vec3s_to_vec3f(m->pos, m->spawnInfo->startPos);
         m->faceAngle[1] = m->spawnInfo->startAngle[1];
+        if (mario_can_bubble(m)) mario_set_bubbled(m);
         struct Surface* floor = NULL;
         find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
         if (floor == NULL) {
-            level_trigger_warp(m, WARP_OP_DEATH);
+deathWarp:  level_trigger_warp(m, WARP_OP_DEATH);
         } else {
             goto resetGoto;
         }
