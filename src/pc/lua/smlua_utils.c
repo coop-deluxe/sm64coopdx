@@ -3,6 +3,7 @@
 #include "audio/external.h"
 
 u8 gSmLuaConvertSuccess = false;
+u16 gSmLuaFreeLot = LOT_SURFACE;
 
 #define VEC3F_BUFFER_COUNT 64
 static Vec3f sVec3fBuffer[VEC3F_BUFFER_COUNT] = { 0 };
@@ -870,3 +871,12 @@ void smlua_free(void *ptr, u16 lot) {
     }
     free(ptr);
 }
+
+#define smlua_free_lot(name, lot) \
+void smlua_free_ ## name(void *ptr) { \
+    gSmLuaFreeLot = lot; \
+    smlua_free(ptr); \
+}
+
+smlua_free_lot(surface, LOT_SURFACE)
+smlua_free_lot(soc, LOT_STATICOBJECTCOLLISION)

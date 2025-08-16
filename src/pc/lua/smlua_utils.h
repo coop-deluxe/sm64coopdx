@@ -69,4 +69,9 @@ static inline void smlua_free_##name(void *ptr) { smlua_free(ptr, lot); }
 
 smlua_free_lot(surface, LOT_SURFACE);
 
+#define smlua_free_lot(name, lot) void smlua_free_ ## name(void *ptr);
+smlua_free_lot(surface, LOT_SURFACE)
+smlua_free_lot(soc, LOT_STATICOBJECTCOLLISION)
+#undef smlua_free_lot
+
 #endif
