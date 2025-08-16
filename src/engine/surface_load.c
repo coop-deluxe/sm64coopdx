@@ -472,7 +472,7 @@ void alloc_surface_pools(void) {
     clear_dynamic_surfaces();
 
     sSurfaceNodePool = growing_array_init(sSurfaceNodePool, 0x1000, malloc, free);
-    sSurfacePool = growing_array_init(sSurfacePool, 0x400, malloc, smlua_free);
+    sSurfacePool = growing_array_init(sSurfacePool, 0x400, malloc, smlua_free_surface);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;
