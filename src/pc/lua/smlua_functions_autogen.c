@@ -23040,6 +23040,21 @@ int smlua_func_mod_storage_load_bool(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_storage_load_all(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_storage_load_all", 0, top);
+        return 0;
+    }
+
+
+    mod_storage_load_all();
+
+    return 1;
+}
+
 int smlua_func_mod_storage_exists(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37736,6 +37751,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_storage_load", smlua_func_mod_storage_load);
     smlua_bind_function(L, "mod_storage_load_number", smlua_func_mod_storage_load_number);
     smlua_bind_function(L, "mod_storage_load_bool", smlua_func_mod_storage_load_bool);
+    smlua_bind_function(L, "mod_storage_load_all", smlua_func_mod_storage_load_all);
     smlua_bind_function(L, "mod_storage_exists", smlua_func_mod_storage_exists);
     smlua_bind_function(L, "mod_storage_remove", smlua_func_mod_storage_remove);
     smlua_bind_function(L, "mod_storage_clear", smlua_func_mod_storage_clear);

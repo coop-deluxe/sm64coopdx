@@ -1388,6 +1388,7 @@
    - [mod_storage_load](functions-5.md#mod_storage_load)
    - [mod_storage_load_number](functions-5.md#mod_storage_load_number)
    - [mod_storage_load_bool](functions-5.md#mod_storage_load_bool)
+   - [mod_storage_load_all](functions-5.md#mod_storage_load_all)
    - [mod_storage_exists](functions-5.md#mod_storage_exists)
    - [mod_storage_remove](functions-5.md#mod_storage_remove)
    - [mod_storage_clear](functions-5.md#mod_storage_clear)
