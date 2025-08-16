@@ -184,28 +184,27 @@ static Gfx* sViewportClipPos = NULL;
 static Vp   sViewportPrev    = { 0 };
 static Vp   sViewportInterp  = { 0 };
 
-static struct GraphNodeBackground* sBackgroundNode = NULL;
 Gfx* gBackgroundSkyboxGfx = NULL;
 Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X] = { 0 };
 Mtx* gBackgroundSkyboxMtx = NULL;
-struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
 
-#define MAX_SHADOW_NODES 128
-struct ShadowInterp sShadowInterp[MAX_SHADOW_NODES] = { 0 };
+static struct GraphNodeBackground* sBackgroundNode = NULL;
+static struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
+static struct GraphNodeCamera* sCameraNode = NULL;
+
+static struct GrowingArray* sShadowInterp = NULL;
 struct ShadowInterp* gShadowInterpCurrent = NULL;
-static u8 sShadowInterpCount = 0;
 
-static struct GraphNodeCamera * sCameraNode = NULL;
-
-struct {
+struct MtxInterp {
     Gfx *pos;
     Mtx *mtx;
     Mtx *mtxPrev;
     void *displayList;
     Mtx interp;
     u8 usingCamSpace;
-} gMtxTbl[6400];
-s32 gMtxTblSize = 0;
+};
+
+static struct GrowingArray* sMtxTbl = NULL;
 
 struct Object* gCurGraphNodeProcessingObject = NULL;
 struct MarioState* gCurGraphNodeMarioState = NULL;
@@ -214,8 +213,36 @@ f32 gOverrideFOV = 0;
 f32 gOverrideNear = 0;
 f32 gOverrideFar = 0;
 
+static void init_mtx(void) {
+
+    // matrices
+    if (!sMtxTbl) {
+        sMtxTbl = growing_array_init(NULL, 1024, malloc, free);
+        if (!sMtxTbl) {
+            sys_fatal("Cannot allocate matrix buffer for interpolation");
+        }
+    }
+    sMtxTbl->count = 0;
+
+    // shadows
+    if (!sShadowInterp) {
+        sShadowInterp = growing_array_init(NULL, 32, malloc, free);
+        if (!sShadowInterp) {
+            sys_fatal("Cannot allocate shadow buffer for interpolation");
+        }
+    }
+    sShadowInterp->count = 0;
+    gShadowInterpCurrent = NULL;
+}
+
+static void reset_mtx(void) {
+    growing_array_free(&sMtxTbl);
+    growing_array_free(&sShadowInterp);
+    init_mtx();
+}
+
 void patch_mtx_before(void) {
-    gMtxTblSize = 0;
+    init_mtx();
 
     if (sPerspectiveNode != NULL) {
         sPerspectiveNode->prevFov = sPerspectiveNode->fov;
@@ -236,8 +263,6 @@ void patch_mtx_before(void) {
         sBackgroundNode = NULL;
         gBackgroundSkyboxGfx = NULL;
     }
-
-    sShadowInterpCount = 0;
 }
 
 void patch_mtx_interpolated(f32 delta) {
@@ -286,8 +311,8 @@ void patch_mtx_interpolated(f32 delta) {
     }
 
     struct GraphNodeObject* savedObj = gCurGraphNodeObject;
-    for (s32 i = 0; i < sShadowInterpCount; i++) {
-        struct ShadowInterp* interp = &sShadowInterp[i];
+    for (u32 i = 0; i < sShadowInterp->count; i++) {
+        struct ShadowInterp* interp = sShadowInterp->buffer[i];
         if (!interp->gfx) { continue; }
         gShadowInterpCurrent = interp;
         Vec3f posInterp;
@@ -305,7 +330,7 @@ void patch_mtx_interpolated(f32 delta) {
     // technically this is improper use of mtxf functions, but coop doesn't target N64
     Mtx camTranfInv, prevCamTranfInv;
     Mtx camInterp;
-    bool translateCamSpace = (gMtxTblSize > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
+    bool translateCamSpace = (sMtxTbl->count > 0) && sCameraNode && (sCameraNode->matrixPtr != NULL) && (sCameraNode->matrixPtrPrev != NULL);
     if (translateCamSpace) {
         // compute inverse camera matrix to transform out of camera space later
         mtxf_inverse(camTranfInv.m, *sCameraNode->matrixPtr);
@@ -319,12 +344,13 @@ void patch_mtx_interpolated(f32 delta) {
         mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
-    for (s32 i = 0; i < gMtxTblSize; i++) {
-        Gfx *pos = gMtxTbl[i].pos;
-        Mtx *srcMtx = gMtxTbl[i].mtx;
-        Mtx *srcMtxPrev = gMtxTbl[i].mtxPrev;
+    for (u32 i = 0; i < sMtxTbl->count; i++) {
+        struct MtxInterp *interp = sMtxTbl->buffer[i];
+        Gfx *pos = interp->pos;
+        Mtx *srcMtx = interp->mtx;
+        Mtx *srcMtxPrev = interp->mtxPrev;
 
-        if (gMtxTbl[i].usingCamSpace && translateCamSpace) {
+        if (interp->usingCamSpace && translateCamSpace) {
             // transform out of camera space so the matrix can interp in world space
             Mtx bufMtx, bufMtxPrev;
             mtxf_copy(bufMtx.m, srcMtx->m);
@@ -334,12 +360,12 @@ void patch_mtx_interpolated(f32 delta) {
             srcMtx = &bufMtx;
             srcMtxPrev = &bufMtxPrev;
         }
-        delta_interpolate_mtx(&gMtxTbl[i].interp, srcMtxPrev, srcMtx, delta);
-        if (gMtxTbl[i].usingCamSpace) {
+        delta_interpolate_mtx(&interp->interp, srcMtxPrev, srcMtx, delta);
+        if (interp->usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
-            mtxf_mul(gMtxTbl[i].interp.m, gMtxTbl[i].interp.m, camInterp.m);
+            mtxf_mul(interp->interp.m, interp->interp.m, camInterp.m);
         }
-        gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&gMtxTbl[i].interp),
+        gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(&interp->interp),
                   G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -414,6 +440,7 @@ void geo_clear_interp_data() {
     }
     hmap_destroy(sGraphNodeInterpDataMap);
     sGraphNodeInterpDataMap = NULL;
+    reset_mtx();
 }
 
 #define geo_update_interpolation(translation, rotation, scale, ...) { \
@@ -475,13 +502,13 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
             gDPSetRenderMode(gDisplayListHead++, modeList->modes[i], mode2List->modes[i]);
             while (currList != NULL) {
                 detect_and_skip_mtx_interpolation(&currList->transform, &currList->transformPrev);
-                if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) {
-                    gMtxTbl[gMtxTblSize].pos = gDisplayListHead;
-                    gMtxTbl[gMtxTblSize].mtx = currList->transform;
-                    gMtxTbl[gMtxTblSize].mtxPrev = currList->transformPrev;
-                    gMtxTbl[gMtxTblSize].displayList = currList->displayList;
-                    gMtxTbl[gMtxTblSize++].usingCamSpace = currList->usingCamSpace;
-                }
+
+                struct MtxInterp *interp = growing_array_alloc(sMtxTbl, sizeof(struct MtxInterp));
+                interp->pos = gDisplayListHead;
+                interp->mtx = currList->transform;
+                interp->mtxPrev = currList->transformPrev;
+                interp->displayList = currList->displayList;
+                interp->usingCamSpace = currList->usingCamSpace;
 
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -1252,18 +1279,14 @@ static void geo_process_shadow(struct GraphNodeShadow *node) {
             gCurGraphNodeObject->prevShadowPosTimestamp = gGlobalTimer;
         }
 
-        if (sShadowInterpCount < MAX_SHADOW_NODES) {
-            struct ShadowInterp* interp = &sShadowInterp[sShadowInterpCount++];
-            gShadowInterpCurrent = interp;
-            interp->gfx = NULL;
-            interp->node = node;
-            interp->shadowScale = shadowScale;
-            interp->obj = gCurGraphNodeObject;
-            vec3f_copy(interp->shadowPos, gCurGraphNodeObject->shadowPos);
-            vec3f_copy(interp->shadowPosPrev, shadowPosPrev);
-        } else {
-            gShadowInterpCurrent = NULL;
-        }
+        struct ShadowInterp* interp = growing_array_alloc(sShadowInterp, sizeof(struct ShadowInterp));
+        gShadowInterpCurrent = interp;
+        interp->gfx = NULL;
+        interp->node = node;
+        interp->shadowScale = shadowScale;
+        interp->obj = gCurGraphNodeObject;
+        vec3f_copy(interp->shadowPos, gCurGraphNodeObject->shadowPos);
+        vec3f_copy(interp->shadowPosPrev, shadowPosPrev);
 
         Gfx *shadowListPrev = create_shadow_below_xyz(shadowPosPrev[0], shadowPosPrev[1],
                                                       shadowPosPrev[2], shadowScale,
@@ -1837,11 +1860,11 @@ static void geo_clear_interp_variables(void) {
     gBackgroundSkyboxMtx = NULL;
     sBackgroundNodeRoot = NULL;
 
+    sShadowInterp->count = 0;
     gShadowInterpCurrent = NULL;
-    sShadowInterpCount = 0;
 
+    sMtxTbl->count = 0;
     sCameraNode = NULL;
-    gMtxTblSize = 0;
     gCurGraphNodeProcessingObject = NULL;
     gCurGraphNodeMarioState = NULL;
 }
