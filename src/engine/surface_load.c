@@ -35,11 +35,23 @@ static struct GrowingArray *sSurfaceNodePool = NULL;
 static struct GrowingArray *sSurfacePool = NULL;
 
 /**
+ * Pools of data for static object collisions and their surfaces.
+ */
+static bool sLoadingSOC = false;
+static struct GrowingArray *sSOCPool = NULL;
+static struct GrowingArray *sSOCNodePool = NULL;
+static struct GrowingArray *sSOCSurfacePool = NULL;
+
+/**
  * Allocate the part of the surface node pool to contain a surface node.
  */
 static struct SurfaceNode *alloc_surface_node(void) {
-    sSurfaceNodePool->count = gSurfaceNodesAllocated++;
-    return growing_array_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
+    if (!sLoadingSOC) sSurfaceNodePool->count = gSurfaceNodesAllocated++;
+    return growing_array_alloc(
+        sLoadingSOC
+            ? sSOCNodePool
+            : sSurfaceNodePool,
+        sizeof(struct SurfaceNode));
 }
 
 /**
@@ -47,8 +59,16 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * initialize the surface.
  */
 static struct Surface *alloc_surface(void) {
-    sSurfacePool->count = gSurfacesAllocated++;
-    return growing_array_alloc(sSurfacePool, sizeof(struct Surface));
+    if (!sLoadingSOC) sSurfacePool->count = gSurfacesAllocated++;
+    return growing_array_alloc(
+        sLoadingSOC
+            ? sSOCSurfacePool
+            : sSurfacePool,
+        sizeof(struct Surface));
+}
+
+static struct StaticObjectCollision *alloc_static_object_collision(void) {
+    return growing_array_alloc(sSOCPool, sizeof(struct StaticObjectCollision));
 }
 
 /**
@@ -71,6 +91,9 @@ static void clear_spatial_partition(SpatialPartitionCell *cells) {
  */
 static void clear_static_surfaces(void) {
     clear_spatial_partition(&gStaticSurfacePartition[0][0]);
+    sSOCPool = growing_array_init(sSOCPool, 0x100);
+    sSOCNodePool = growing_array_init(sSOCNodePool, 0x500);
+    sSOCSurfacePool = growing_array_init(sSOCSurfacePool, 0x200);
 }
 
 /**
@@ -682,14 +705,15 @@ void load_object_surfaces(s16** data, s16* vertexData) {
         struct Surface* surface = read_surface_data(vertexData, data);
 
         if (surface != NULL) {
-
-            // Set index of first surface
-            if (gCurrentObject->firstSurface == 0) {
-                gCurrentObject->firstSurface = gSurfacesAllocated - 1;
+            if (!sLoadingSOC) {
+                // Set index of first surface
+                if (gCurrentObject->firstSurface == 0) {
+                    gCurrentObject->firstSurface = gSurfacesAllocated - 1;
+                }
+    
+                // Increase surface count
+                gCurrentObject->numSurfaces++;
             }
-
-            // Increase surface count
-            gCurrentObject->numSurfaces++;
 
             surface->object = gCurrentObject;
             surface->type = surfaceType;
@@ -702,7 +726,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
 
             surface->flags |= flags;
             surface->room = (s8)room;
-            add_surface(surface, TRUE);
+            add_surface(surface, !sLoadingSOC);
         }
 
         if (hasForce) {
@@ -746,24 +770,30 @@ void load_object_collision_model(void) {
     }
 
     s16* collisionData = gCurrentObject->collisionData;
-    f32 tangibleDist = gCurrentObject->oCollisionDistance;
 
     u8 anyPlayerInTangibleRange = FALSE;
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
-        if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
+    if (!sLoadingSOC) {
+        f32 tangibleDist = gCurrentObject->oCollisionDistance;
+    
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
+            if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
+        }
+        
+        // If the object collision is supposed to be loaded more than the
+        // drawing distance of 4000, extend the drawing range.
+        if (gCurrentObject->oCollisionDistance > 4000.0f) {
+            gCurrentObject->oDrawingDistance = gCurrentObject->oCollisionDistance;
+        }
     }
 
-    // If the object collision is supposed to be loaded more than the
-    // drawing distance of 4000, extend the drawing range.
-    if (gCurrentObject->oCollisionDistance > 4000.0f) {
-        gCurrentObject->oDrawingDistance = gCurrentObject->oCollisionDistance;
-    }
-
-    // Update if no Time Stop, in range, and in the current room.
-    if (!(gTimeStopState & TIME_STOP_ACTIVE)
-        && (anyPlayerInTangibleRange)
-        && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
+    // Update if no Time Stop, in range, and in the current room. (or if static)
+    if (
+        (   !(gTimeStopState & TIME_STOP_ACTIVE)
+            && (anyPlayerInTangibleRange)
+            && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)
+        ) || sLoadingSOC
+    ) {
         collisionData++;
         transform_object_vertices(&collisionData, sVertexData);
 
@@ -773,12 +803,44 @@ void load_object_collision_model(void) {
         }
     }
 
+    if (sLoadingSOC) { return; }
     f32 marioDist = dist_between_objects(gCurrentObject, gMarioStates[0].marioObj);
     if (marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
         gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
     } else {
         gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     }
+}
+
+struct StaticObjectCollision *load_static_object_collision() {
+    struct StaticObjectCollision *col;
+    u32 startIndex = sSOCSurfacePool->count;
+
+    sLoadingSOC = true;
+    load_object_collision_model();
+    sLoadingSOC = false;
+
+    col = alloc_static_object_collision();
+    col->index = startIndex;
+    col->length = sSOCSurfacePool->count - startIndex;
+
+    return col;
+}
+
+void toggle_static_object_collision(struct StaticObjectCollision *col, bool tangible) {
+    for (s32 i = 0; i < col->length; i++) {
+        struct Surface *surf = sSOCSurfacePool->buffer[col->index + i];
+        if (tangible) {
+            surf->flags &= ~SURFACE_FLAG_INTANGIBLE;
+        } else { surf->flags |= SURFACE_FLAG_INTANGIBLE; }
+    }
+}
+
+struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index) {
+    if (!col) { return NULL; }
+    if (index >= col->length) { return NULL; }
+    struct Surface *surf = sSOCSurfacePool->buffer[col->index + index];
+    return surf;
 }
 
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index) {

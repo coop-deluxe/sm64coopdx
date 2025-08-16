@@ -2330,6 +2330,10 @@
 --- @field public dialog5 integer
 --- @field public dialog6 integer
 
+--- @class StaticObjectCollision
+--- @field public index integer
+--- @field public length integer
+
 --- @class Surface
 --- @field public flags integer
 --- @field public force integer

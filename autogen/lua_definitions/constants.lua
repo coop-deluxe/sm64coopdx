@@ -10948,6 +10948,9 @@ SURFACE_FLAG_DYNAMIC = (1 << 0)
 SURFACE_FLAG_NO_CAM_COLLISION = (1 << 1)
 
 --- @type integer
+SURFACE_FLAG_INTANGIBLE = (1 << 2)
+
+--- @type integer
 SURFACE_FLAG_X_PROJECTION = (1 << 3)
 
 --- @type integer

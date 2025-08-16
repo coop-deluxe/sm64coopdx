@@ -36333,6 +36333,59 @@ int smlua_func_load_object_collision_model(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_load_static_object_collision(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "load_static_object_collision", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_STATICOBJECTCOLLISION, load_static_object_collision(), NULL);
+
+    return 1;
+}
+
+int smlua_func_toggle_static_object_collision(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "toggle_static_object_collision", 2, top);
+        return 0;
+    }
+
+    struct StaticObjectCollision* col = (struct StaticObjectCollision*)smlua_to_cobject(L, 1, LOT_STATICOBJECTCOLLISION);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "toggle_static_object_collision"); return 0; }
+    bool tangible = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "toggle_static_object_collision"); return 0; }
+
+    toggle_static_object_collision(col, tangible);
+
+    return 1;
+}
+
+int smlua_func_get_static_object_surface(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_static_object_surface", 2, top);
+        return 0;
+    }
+
+    struct StaticObjectCollision* col = (struct StaticObjectCollision*)smlua_to_cobject(L, 1, LOT_STATICOBJECTCOLLISION);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_static_object_surface"); return 0; }
+    u32 index = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_static_object_surface"); return 0; }
+
+    smlua_push_object(L, LOT_SURFACE, get_static_object_surface(col, index), NULL);
+
+    return 1;
+}
+
 int smlua_func_obj_get_surface_from_index(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38497,6 +38550,9 @@ void smlua_bind_functions_autogen(void) {
 
     // surface_load.h
     smlua_bind_function(L, "load_object_collision_model", smlua_func_load_object_collision_model);
+    smlua_bind_function(L, "load_static_object_collision", smlua_func_load_static_object_collision);
+    smlua_bind_function(L, "toggle_static_object_collision", smlua_func_toggle_static_object_collision);
+    smlua_bind_function(L, "get_static_object_surface", smlua_func_get_static_object_surface);
     smlua_bind_function(L, "obj_get_surface_from_index", smlua_func_obj_get_surface_from_index);
     smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
