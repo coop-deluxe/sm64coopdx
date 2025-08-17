@@ -1517,7 +1517,6 @@ void update_mario_joystick_inputs(struct MarioState *m) {
  */
 void update_mario_geometry_inputs(struct MarioState *m) {
     if (!m) { return; }
-resetGoto:;
 
     f32 gasLevel;
     f32 ceilToFloorDist;
