@@ -158,7 +158,6 @@
 | startFrame | `integer` |  |
 | loopStart | `integer` |  |
 | loopEnd | `integer` |  |
-| unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
 | index | `Pointer` <`integer`> |  |
 | length | `integer` | read-only |
@@ -416,7 +415,6 @@
 | doorStatus | `integer` |  |
 | areaCenY | `number` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
-| paletteEditorCap | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -889,6 +887,7 @@
 | leftOffset | `integer` | read-only |
 | width | `integer` | read-only |
 | text | `string` | read-only |
+| replaced | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 

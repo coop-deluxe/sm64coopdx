@@ -19,7 +19,6 @@
 --- @field public startFrame integer
 --- @field public loopStart integer
 --- @field public loopEnd integer
---- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
 --- @field public index Pointer_integer
 --- @field protected length integer
@@ -228,7 +227,6 @@
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field protected mtx Mat4
---- @field public paletteEditorCap boolean
 
 --- @class CameraFOVStatus
 --- @field public fovFunc integer
@@ -598,6 +596,7 @@
 --- @field protected leftOffset integer
 --- @field protected width integer
 --- @field protected text string
+--- @field protected replaced boolean
 
 --- @class DisplayListNode
 --- @field public displayList Pointer_Gfx
