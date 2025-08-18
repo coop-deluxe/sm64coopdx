@@ -183,6 +183,12 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
         return NULL;
     }
 
+    if (cobject->freed) {
+        LOG_LUA_LINE("smlua_to_cobject received freed pointer.");
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }
+
     gSmLuaConvertSuccess = true;
     return cobject->pointer;
 }
@@ -844,9 +850,6 @@ void smlua_logline(void) {
     }
 }
 
-// If an object is freed that Lua has a CObject to,
-// Lua is able to use-after-free that pointer
-// todo figure out a better way to do this
 void smlua_free(void *ptr, u16 lot) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;

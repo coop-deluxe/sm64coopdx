@@ -385,7 +385,7 @@ struct GraphNodeInterpData {
 
 static void *sGraphNodeInterpDataMap = NULL;
 
-static struct GraphNodeInterpData *geo_get_interp_data(void *node, void *obj) {
+static struct GraphNodeInterpData *geo_get_interp_data(void *node, struct GraphNodeObject *obj) {
 
     // Map for nodes
     if (!sGraphNodeInterpDataMap) {
@@ -870,11 +870,11 @@ static void geo_process_scale(struct GraphNodeScale *node) {
 
     // previous frame
     geo_update_interpolation(NULL, NULL, scaleVec,
-        if (geo_should_interpolate(interp)) {
-            vec3f_copy(prevScaleVec, interp->scale);
-        } else {
-            vec3f_copy(prevScaleVec, scaleVec);
-        }
+        vec3f_copy(prevScaleVec,
+            geo_should_interpolate(interp) ?
+            interp->scale :
+            scaleVec
+        );
         mtxf_scale_vec3f(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], prevScaleVec);
     );
 
@@ -905,11 +905,11 @@ static void geo_process_scale_xyz(struct GraphNodeScaleXYZ *node) {
 
     // previous frame
     geo_update_interpolation(NULL, NULL, node->scale,
-        if (geo_should_interpolate(interp)) {
-            mtxf_scale_vec3f(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], interp->scale);
-        } else {
-            mtxf_scale_vec3f(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex], node->scale);
-        }
+        mtxf_scale_vec3f(gMatStackPrev[gMatStackIndex + 1], gMatStackPrev[gMatStackIndex],
+            geo_should_interpolate(interp) ?
+            interp->scale :
+            node->scale
+        );
     );
 
     // Increment the matrix stack, If we fail to do so. Just return.
@@ -1120,11 +1120,11 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
     // previous frame
     geo_update_interpolation(node->translation, NULL, NULL,
-        if (geo_should_interpolate(interp)) {
-            vec3s_to_vec3f(translation, interp->translation);
-        } else {
-            vec3s_to_vec3f(translation, node->translation);
-        }
+        vec3s_to_vec3f(translation,
+            geo_should_interpolate(interp) ?
+            interp->translation :
+            node->translation
+        );
         vec3s_copy(rotation, gVec3sZero);
         anim_process(translation, rotation, &animType, gPrevAnimFrame, &animAttribute);
         mtxf_rotate_xyz_and_translate(matrix, translation, rotation);

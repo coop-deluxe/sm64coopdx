@@ -549,16 +549,14 @@ void geo_layout_cmd_node_scale(void) {
     s16 params = cur_geo_cmd_u8(0x01);
     Vec3f scale;
     void *displayList = NULL;
-    bool isScaleXYZ = false;
+    bool isScaleXYZ = (params & 0x40) != 0;
 
-    if (params & 0x40) {
-        isScaleXYZ = true;
+    if (isScaleXYZ) {
         scale[0] = cur_geo_cmd_u32(0x04) / 65536.0f;
         scale[1] = cur_geo_cmd_u32(0x08) / 65536.0f;
         scale[2] = cur_geo_cmd_u32(0x0C) / 65536.0f;
         gGeoLayoutCommand += 0x10 << CMD_SIZE_SHIFT;
     } else {
-        isScaleXYZ = false;
         scale[0] = cur_geo_cmd_u32(0x04) / 65536.0f;
         gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
     }
