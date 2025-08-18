@@ -12,6 +12,7 @@
 #include "main.h"
 #include "engine/math_util.h"
 #include "engine/graph_node.h"
+#include "rendering_graph_node.h"
 #include "area.h"
 #include "save_file.h"
 #include "sound_init.h"
@@ -1749,6 +1750,7 @@ s32 update_level(void) {
 
 s32 init_level(void) {
     sync_objects_clear();
+    geo_clear_interp_data();
     reset_dialog_render_state();
 
     s32 val4 = 0;

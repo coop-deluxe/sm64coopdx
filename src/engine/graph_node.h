@@ -44,6 +44,7 @@
 #define GRAPH_NODE_TYPE_BILLBOARD             0x01A
 #define GRAPH_NODE_TYPE_DISPLAY_LIST          0x01B
 #define GRAPH_NODE_TYPE_SCALE                 0x01C
+#define GRAPH_NODE_TYPE_SCALE_XYZ             0x01D
 #define GRAPH_NODE_TYPE_SHADOW                0x028
 #define GRAPH_NODE_TYPE_OBJECT_PARENT         0x029
 #define GRAPH_NODE_TYPE_GENERATED_LIST       (0x02A | GRAPH_NODE_TYPE_FUNCTIONAL)
@@ -242,8 +243,6 @@ struct GraphNodeRotation
     /*0x00*/ struct GraphNode node;
     /*0x14*/ Gfx *displayList;
     /*0x18*/ Vec3s rotation;
-    Vec3s prevRotation;
-    u32 prevTimestamp;
 };
 
 /** GraphNode part that transforms itself and its children based on animation
@@ -294,7 +293,16 @@ struct GraphNodeScale
     /*0x00*/ struct GraphNode node;
     /*0x14*/ Gfx *displayList;
     /*0x18*/ f32 scale;
-    /*????*/ f32 prevScale;
+};
+
+/** GraphNodeScale but on X, Y and Z independently.
+ *  Must be another graph node type for retro-compatibility.
+ */
+struct GraphNodeScaleXYZ
+{
+    /*0x00*/ struct GraphNode node;
+    /*0x14*/ Gfx *displayList;
+    /*0x18*/ Vec3f scale;
 };
 
 /** GraphNode that draws a shadow under an object.
@@ -416,6 +424,8 @@ struct GraphNodeRotation *init_graph_node_rotation(struct DynamicPool *pool, str
                                                    s32 drawingLayer, void *displayList, Vec3s rotation);
 struct GraphNodeScale *init_graph_node_scale(struct DynamicPool *pool, struct GraphNodeScale *graphNode,
                                              s32 drawingLayer, void *displayList, f32 scale);
+struct GraphNodeScaleXYZ *init_graph_node_scale_xyz(struct DynamicPool *pool, struct GraphNodeScaleXYZ *graphNode,
+                                             s32 drawingLayer, void *displayList, Vec3f scale);
 struct GraphNodeObject *init_graph_node_object(struct DynamicPool *pool, struct GraphNodeObject *graphNode,
                                                struct GraphNode *sharedChild, Vec3f pos, Vec3s angle, Vec3f scale);
 struct GraphNodeCullingRadius *init_graph_node_culling_radius(struct DynamicPool *pool, struct GraphNodeCullingRadius *graphNode, s16 radius);

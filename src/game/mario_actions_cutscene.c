@@ -1897,40 +1897,15 @@ s32 act_squished(struct MarioState *m) {
 s32 act_putting_on_cap(struct MarioState *m) {
     s32 animFrame = set_character_animation(m, CHAR_ANIM_PUT_CAP_ON);
 
-    if (animFrame == 0 && !gCamera->paletteEditorCap) {
+    if (animFrame == 0) {
         enable_time_stop_if_alone();
     }
 
     if (animFrame == 28) {
         cutscene_put_cap_on(m);
-        gCamera->paletteEditorCap = false;
     }
 
     if (is_anim_at_end(m)) {
-        set_mario_action(m, ACT_IDLE, 0);
-        disable_time_stop();
-    }
-
-    stationary_ground_step(m);
-    return FALSE;
-}
-
-// coop custom action
-// actionArg == 1: the action was inited from CUTSCENE_PALETTE_EDITOR
-s32 act_taking_off_cap(struct MarioState *m) {
-    s16 animFrame = set_character_animation(m, CHAR_ANIM_TAKE_CAP_OFF_THEN_ON);
-    switch (animFrame) {
-        case 0:
-            if (m->actionArg != 1) {
-                enable_time_stop_if_alone();
-            }
-            break;
-        case 12:
-            cutscene_take_cap_off(m);
-            if (m->actionArg == 1) { gCamera->paletteEditorCap = true; }
-            break;
-    }
-    if (animFrame >= 30 || gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
         set_mario_action(m, ACT_IDLE, 0);
         disable_time_stop();
     }
@@ -3215,7 +3190,6 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
             case ACT_BUTT_STUCK_IN_GROUND:       cancel = act_butt_stuck_in_ground(m);       break;
             case ACT_FEET_STUCK_IN_GROUND:       cancel = act_feet_stuck_in_ground(m);       break;
             case ACT_PUTTING_ON_CAP:             cancel = act_putting_on_cap(m);             break;
-            case ACT_TAKING_OFF_CAP:             cancel = act_taking_off_cap(m);             break;
             default:
                 LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);

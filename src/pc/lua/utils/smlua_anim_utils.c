@@ -88,6 +88,28 @@ struct GlobalObjectAnimations gGlobalObjectAnimations = {
     .yoshi_seg5_anims_05024100        = (struct AnimationTable*) &yoshi_seg5_anims_05024100,
 };
 
+  //////////////////////
+ // mario animations //
+//////////////////////
+
+static u8 *sMarioAnimsOrig = NULL;
+
+static void smlua_anim_util_init_mario_animations() {
+    if (!sMarioAnimsOrig) {
+        sMarioAnimsOrig = malloc(gMarioAnimsSize);
+        if (!sMarioAnimsOrig) {
+            sys_fatal("Cannot initialize Mario animations");
+        }
+        memcpy(sMarioAnimsOrig, gMarioAnims, gMarioAnimsSize);
+    }
+}
+
+static void smlua_anim_util_reset_mario_animations() {
+    if (sMarioAnimsOrig) {
+        memcpy(gMarioAnims, sMarioAnimsOrig, gMarioAnimsSize);
+    }
+}
+
 struct Animation *get_mario_vanilla_animation(u16 index) {
     static struct MarioAnimDmaRelatedThing *marioAnims = (struct MarioAnimDmaRelatedThing *) gMarioAnims;
 
@@ -125,7 +147,13 @@ static struct CustomAnimation *get_custom_animation_node(const char *name) {
     return NULL;
 }
 
+void smlua_anim_util_init(void) {
+    smlua_anim_util_init_mario_animations();
+}
+
 void smlua_anim_util_reset(void) {
+    smlua_anim_util_reset_mario_animations();
+
     for (struct CustomAnimation *node = sCustomAnimationHead; node;) {
         struct CustomAnimation *next = node->next;
         if (node->name) {

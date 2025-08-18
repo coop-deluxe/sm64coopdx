@@ -179,6 +179,7 @@ try:
     for s in structobj:
         print(s)
     print("};")
+    print("size_t gMarioAnimsSize = sizeof(gMarioAnims);")
 
     for asset in asset_loads:
         print(asset)

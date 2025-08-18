@@ -22,7 +22,6 @@
 --- @field public loopEnd integer
 --- @field public loopStart integer
 --- @field public startFrame integer
---- @field public unusedBoneCount integer
 --- @field public values Pointer_integer
 --- @field public valuesLength integer
 
@@ -225,7 +224,6 @@
 --- @field public mode integer
 --- @field public mtx Mat4
 --- @field public nextYaw integer
---- @field public paletteEditorCap boolean
 --- @field public pos Vec3f
 --- @field public unusedVec1 Vec3f
 --- @field public yaw integer
@@ -978,15 +976,17 @@
 --- @class GraphNodeRotation
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
---- @field public prevRotation Vec3s
---- @field public prevTimestamp integer
 --- @field public rotation Vec3s
 
 --- @class GraphNodeScale
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
---- @field public prevScale number
 --- @field public scale number
+
+--- @class GraphNodeScaleXYZ
+--- @field public displayList Pointer_Gfx
+--- @field public node GraphNode
+--- @field public scale Vec3f
 
 --- @class GraphNodeShadow
 --- @field public node GraphNode
