@@ -210,7 +210,7 @@ static u32 get_refresh_rate() {
     static u32 refreshRate = 0;
     if (!refreshRate) {
         SDL_DisplayMode mode;
-        if (SDL_GetWindowDisplayMode(0, &mode) == 0) {
+        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
             if (mode.refresh_rate > 0) { refreshRate = (u32) mode.refresh_rate; }
         } else {
             refreshRate = 60;
