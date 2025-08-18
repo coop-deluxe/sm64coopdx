@@ -317,6 +317,8 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_5(GEO_HELD_OBJECT, 2);
     geo_symbol_2(GEO_SCALE, 0);
     geo_symbol_3(GEO_SCALE_WITH_DL, 2);
+    geo_symbol_4(GEO_SCALE_XYZ, 0);
+    geo_symbol_5(GEO_SCALE_XYZ_WITH_DL, 4);
     geo_symbol_0(GEO_NOP_1E);
     geo_symbol_0(GEO_NOP_1F);
     geo_symbol_1(GEO_CULLING_RADIUS, 0);

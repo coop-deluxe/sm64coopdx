@@ -3051,6 +3051,9 @@ GRAPH_NODE_TYPE_DISPLAY_LIST = 0x01B
 GRAPH_NODE_TYPE_SCALE = 0x01C
 
 --- @type integer
+GRAPH_NODE_TYPE_SCALE_XYZ = 0x01D
+
+--- @type integer
 GRAPH_NODE_TYPE_SHADOW = 0x028
 
 --- @type integer
