@@ -791,6 +791,20 @@ int smlua_func_log_to_console(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("log_to_console: Failed to convert parameter 2 for function"); return 0; }
     }
 
+    const char* origin = gLuaActiveModFile->relativePath;
+
+    switch (level) {
+        case CONSOLE_MESSAGE_INFO:
+            LOG_INFO("%s: %s", origin, message);
+            break;
+        case CONSOLE_MESSAGE_WARNING:
+            LOG_WARNING("%s: %s", origin, message);
+            break;
+        case CONSOLE_MESSAGE_ERROR:
+            LOG_ERROR("%s: %s", origin, message);
+            break;
+    }
+
     djui_console_message_create(message, level);
 
     return 1;
