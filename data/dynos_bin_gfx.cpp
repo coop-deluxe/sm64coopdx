@@ -1104,7 +1104,7 @@ void DynOS_Gfx_Write(BinFile *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode) {
         Gfx *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
             aFile->Write<u32>(_Head->words.w0);
-            DynOS_Pointer_Write(aFile, (const void *) _Head->words.w1, aGfxData);
+            DynOS_Pointer_Write(aFile, (const void *) _Head->words.w1, aGfxData, 0);
         } else {
             aFile->Write<u32>(_Head->words.w0);
             aFile->Write<u32>(_Head->words.w1);
@@ -1127,7 +1127,7 @@ void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData) {
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _WordsW0 = aFile->Read<u32>();
         u32 _WordsW1 = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _WordsW1, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _WordsW1, 0, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i].words.w0 = (uintptr_t) _WordsW0;
             _Node->mData[i].words.w1 = (uintptr_t) _Ptr;

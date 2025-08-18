@@ -209,7 +209,7 @@ void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData) {
     token.Write(aFile);
 }
 
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData) {
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType) {
 
     // NULL
     if (!aPtr) {
@@ -229,10 +229,15 @@ void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData) {
     }
 
     // Built-in functions
-    s32 _GeoFunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr);
-    if (_GeoFunctionIndex != -1) {
+    s32 _FunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr, aFuncType);
+    if (_FunctionIndex != -1) {
         aFile->Write<u32>(FUNCTION_CODE);
-        aFile->Write<s32>(_GeoFunctionIndex);
+        aFile->Write<s32>(_FunctionIndex);
+        return;
+    }
+    String error = DynOS_Builtin_Func_CheckMisuse(aPtr, aFuncType);
+    if (!error.Empty()) {
+        PrintDataError("  ERROR: %s", error.begin());
         return;
     }
 
@@ -451,7 +456,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags) {
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
@@ -469,13 +474,23 @@ void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outF
     // FUNC
     if (aValue == FUNCTION_CODE) {
         s32 _FunctionIndex = aFile->Read<s32>();
-        return (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex);
+        void *_FunctionPtr = (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex, aFuncType);
+        if (_FunctionPtr) {
+            return _FunctionPtr;
+        }
+        String error = DynOS_Builtin_Func_CheckMisuse(_FunctionIndex, aFuncType);
+        if (!error.Empty()) {
+            sys_fatal(error.begin());
+            return NULL;
+        }
+        sys_fatal("Invalid function index: %d", _FunctionIndex);
+        return NULL;
     }
 
     // PNTR
     if (aValue == POINTER_CODE) {
         String _PtrName; _PtrName.Read(aFile);
-        u32   _PtrData = aFile->Read<u32>();
+        u32 _PtrData = aFile->Read<u32>();
         return GetPointerFromData(aGfxData, _PtrName, _PtrData, outFlags);
     }
 
