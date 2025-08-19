@@ -2736,6 +2736,12 @@ static struct LuaObjectField sStarsNeededForDialogFields[LUA_STARS_NEEDED_FOR_DI
     { "dialog6", LVT_U16, offsetof(struct StarsNeededForDialog, dialog6), false, LOT_NONE, 1, sizeof(u16) },
 };
 
+#define LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT 2
+static struct LuaObjectField sStaticObjectCollisionFields[LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT] = {
+    { "index",  LVT_U32, offsetof(struct StaticObjectCollision, index),  true, LOT_NONE, 1, sizeof(u32) },
+    { "length", LVT_U16, offsetof(struct StaticObjectCollision, length), true, LOT_NONE, 1, sizeof(u16) },
+};
+
 #define LUA_SURFACE_FIELD_COUNT 16
 static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "flags",             LVT_S8,        offsetof(struct Surface, flags),             false, LOT_NONE,   1, sizeof(s8)             },
@@ -2973,6 +2979,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SPAWNPARTICLESINFO,           sSpawnParticlesInfoFields,           LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT            },
     { LOT_STARPOSITIONS,                sStarPositionsFields,                LUA_STAR_POSITIONS_FIELD_COUNT                  },
     { LOT_STARSNEEDEDFORDIALOG,         sStarsNeededForDialogFields,         LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT         },
+    { LOT_STATICOBJECTCOLLISION,        sStaticObjectCollisionFields,        LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT         },
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_TRANSITIONINFO,               sTransitionInfoFields,               LUA_TRANSITION_INFO_FIELD_COUNT                 },
@@ -3102,6 +3109,7 @@ const char *sLuaLotNames[] = {
 	[LOT_SPAWNPARTICLESINFO] = "SpawnParticlesInfo",
 	[LOT_STARPOSITIONS] = "StarPositions",
 	[LOT_STARSNEEDEDFORDIALOG] = "StarsNeededForDialog",
+	[LOT_STATICOBJECTCOLLISION] = "StaticObjectCollision",
 	[LOT_SURFACE] = "Surface",
 	[LOT_TEXTUREINFO] = "TextureInfo",
 	[LOT_TRANSITIONINFO] = "TransitionInfo",

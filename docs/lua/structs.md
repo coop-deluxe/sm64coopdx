@@ -104,6 +104,7 @@
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
 - [StarsNeededForDialog](#StarsNeededForDialog)
+- [StaticObjectCollision](#StaticObjectCollision)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
 - [TransitionInfo](#TransitionInfo)
@@ -3190,6 +3191,17 @@
 | dialog4 | `integer` |  |
 | dialog5 | `integer` |  |
 | dialog6 | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [StaticObjectCollision](#StaticObjectCollision)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| index | `integer` | read-only |
+| length | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
