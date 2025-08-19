@@ -282,13 +282,12 @@ static void controller_sdl_read(OSContPad *pad) {
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
 
-    u32 buttons_down = 0;
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
             pad->button |= joy_binds[i][1];
 
-    const u32 xstick = buttons_down & STICK_XMASK;
-    const u32 ystick = buttons_down & STICK_YMASK;
+    const u32 xstick = pad->button & STICK_XMASK;
+    const u32 ystick = pad->button & STICK_YMASK;
     if (xstick == STICK_LEFT)
         pad->stick_x = -128;
     else if (xstick == STICK_RIGHT)
