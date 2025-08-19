@@ -1723,9 +1723,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
-    Vec3s rotationPrev;
-    Vec3f translationPrev;
-    Vec3f scaleVec;
+    Vec3f scale;
 
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
@@ -1733,28 +1731,31 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     u16 *animAttribute = gCurrAnimAttribute;
     u8 animType = gCurAnimType;
 
+    // current frame
     vec3s_copy(rotation, node->rotation);
-    vec3f_set(translation, node->translation[0], node->translation[1], node->translation[2]);
-
-    vec3s_copy(rotationPrev, rotation);
-    vec3f_copy(translationPrev, translation);
-
-    vec3f_copy(scaleVec, node->scale);
-
-    anim_process(translationPrev, rotationPrev, &animType, gPrevAnimFrame, &animAttribute);
+    vec3s_to_vec3f(translation, node->translation);
+    vec3f_copy(scale, node->scale);
     anim_process(translation, rotation, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
-
     mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
-    mtxf_scale_vec3f(matrix, matrix, scaleVec);
+    mtxf_scale_vec3f(matrix, matrix, scale);
     mtxf_mul(gMatStack[gMatStackIndex + 1], matrix, gMatStack[gMatStackIndex]);
 
-    mtxf_rotate_xyz_and_translate(matrix, translationPrev, rotationPrev);
-    /* From geo_process_scale:
-        TODO: this fails because multiple player models reuse the same scalenode
-        mtxf_scale_vec3f(matrix, matrix, prevScaleVec);
-    */
-    mtxf_scale_vec3f(matrix, matrix, scaleVec);
-    mtxf_mul(gMatStackPrev[gMatStackIndex + 1], matrix, gMatStackPrev[gMatStackIndex]);
+    // previous frame
+    geo_update_interpolation(node->translation, node->rotation, node->scale,
+        if (geo_should_interpolate(interp)) {
+            vec3s_copy(rotation, interp->rotation);
+            vec3s_to_vec3f(translation, interp->translation);
+            vec3f_copy(scale, interp->scale);
+        } else {
+            vec3s_copy(rotation, node->rotation);
+            vec3s_to_vec3f(translation, node->translation);
+            vec3f_copy(scale, node->scale);
+        }
+        anim_process(translation, rotation, &animType, gPrevAnimFrame, &animAttribute);
+        mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
+        mtxf_scale_vec3f(matrix, matrix, scale);
+        mtxf_mul(gMatStackPrev[gMatStackIndex + 1], matrix, gMatStackPrev[gMatStackIndex]);
+    );
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
