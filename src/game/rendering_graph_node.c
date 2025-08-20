@@ -1086,9 +1086,14 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
     }
 
     if (*animType == ANIM_TYPE_ROTATION) {
-        rotation[0] = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
-        rotation[1] = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
-        rotation[2] = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+        // GEO_ANIMATED_PART: rotation = (0 + AnimValue)
+        // GEO_BONE: rotation = (BoneRotation + AnimValue)
+        rotation[0] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+        rotation[1] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+        rotation[2] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+        if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
+            *animType = ANIM_TYPE_TRANSLATION; 
+        }
     }
 }
 
@@ -1708,6 +1713,77 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
 }
 
 /**
+ * Render an animated part with initial rotation and scale values.
+ */
+static void geo_process_bone(struct GraphNodeBone *node) {
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject) {
+        gCurMarioBodyState->currAnimPart++;
+    }
+
+    Mat4 matrix;
+    Vec3s rotation;
+    Vec3f translation;
+    Vec3f scale;
+
+    // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
+    if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
+
+    u16 *animAttribute = gCurrAnimAttribute;
+    u8 animType = gCurAnimType;
+
+    // current frame
+    vec3s_copy(rotation, node->rotation);
+    vec3s_to_vec3f(translation, node->translation);
+    vec3f_copy(scale, node->scale);
+    anim_process(translation, rotation, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
+    mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
+    mtxf_scale_vec3f(matrix, matrix, scale);
+    mtxf_mul(gMatStack[gMatStackIndex + 1], matrix, gMatStack[gMatStackIndex]);
+
+    // previous frame
+    geo_update_interpolation(node->translation, node->rotation, node->scale,
+        if (geo_should_interpolate(interp)) {
+            vec3s_copy(rotation, interp->rotation);
+            vec3s_to_vec3f(translation, interp->translation);
+            vec3f_copy(scale, interp->scale);
+        } else {
+            vec3s_copy(rotation, node->rotation);
+            vec3s_to_vec3f(translation, node->translation);
+            vec3f_copy(scale, node->scale);
+        }
+        anim_process(translation, rotation, &animType, gPrevAnimFrame, &animAttribute);
+        mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
+        mtxf_scale_vec3f(matrix, matrix, scale);
+        mtxf_mul(gMatStackPrev[gMatStackIndex + 1], matrix, gMatStackPrev[gMatStackIndex]);
+    );
+
+    // Increment the matrix stack, If we fail to do so. Just return.
+    if (!increment_mat_stack()) { return; }
+
+    // Mario anim part pos
+    if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
+        get_pos_from_transform_mtx(
+            gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
+            gMatStack[gMatStackIndex],
+            *gCurGraphNodeCamera->matrixPtr
+        );
+    }
+
+    if (gCurGraphNodeMarioState != NULL) {
+        Vec3f translated = { 0 };
+        get_pos_from_transform_mtx(translated, gMatStack[gMatStackIndex], *gCurGraphNodeCamera->matrixPtr);
+        gCurGraphNodeMarioState->minimumBoneY = fmin(gCurGraphNodeMarioState->minimumBoneY, translated[1] - gCurGraphNodeMarioState->marioObj->header.gfx.pos[1]);
+    }
+    if (node->displayList != NULL) {
+        geo_append_display_list(node->displayList, node->node.flags >> 8);
+    }
+    if (node->node.children != NULL) {
+        geo_process_node_and_siblings(node->node.children);
+    }
+    gMatStackIndex--;
+}
+
+/**
  * Processes the children of the given GraphNode if it has any
  */
 void geo_try_process_children(struct GraphNode *node) {
@@ -1829,6 +1905,9 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
                         break;
                     case GRAPH_NODE_TYPE_HELD_OBJ:
                         geo_process_held_object((struct GraphNodeHeldObject *) curGraphNode);
+                        break;
+                    case GRAPH_NODE_TYPE_BONE:
+                        geo_process_bone((struct GraphNodeBone *) curGraphNode);
                         break;
                     default:
                         geo_try_process_children((struct GraphNode *) curGraphNode);

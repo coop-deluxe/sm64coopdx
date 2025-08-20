@@ -870,6 +870,13 @@
 --- @field public node GraphNode
 --- @field public translation Vec3s
 
+--- @class GraphNodeBone
+--- @field public displayList Pointer_Gfx
+--- @field public node GraphNode
+--- @field public rotation Vec3s
+--- @field public scale Vec3f
+--- @field public translation Vec3s
+
 --- @class GraphNodeCamera
 --- @field public fnNode FnGraphNode
 --- @field public focus Vec3f

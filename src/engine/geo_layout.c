@@ -47,6 +47,7 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_node_background_ext,
     geo_layout_cmd_node_switch_case_ext,
     geo_layout_cmd_node_generated_ext,
+    geo_layout_cmd_bone,
 };
 
 struct GraphNode gObjParentGraphNode;
@@ -844,6 +845,47 @@ void geo_layout_cmd_node_generated_ext(void) {
     register_scene_graph_node(&graphNode->fnNode.node);
 
     gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x24: Create a scene graph node that is rotated by the object's animation + an initial rotation.
+*/
+void geo_layout_cmd_bone(void) {
+    struct GraphNodeBone *graphNode;
+    Vec3s translation;
+    Vec3s rotation;
+    s32 params = cur_geo_cmd_u8(0x01);
+    s32 drawingLayer = params;
+    Vec3f scale;
+    vec3f_copy(scale, gVec3fOne);
+
+    void *displayList;
+    s16 *cmdPos = (s16 *) gGeoLayoutCommand;
+
+    cmdPos = read_vec3s(translation, &cmdPos[2]);
+    cmdPos = read_vec3s(rotation, &cmdPos[0]);
+    if (params & 0x80) {
+        drawingLayer &= 0x0F;
+
+        vec3f_set(scale,
+            cur_geo_cmd_u32(0x10) / 65536.0f,
+            cur_geo_cmd_u32(0x14) / 65536.0f,
+            cur_geo_cmd_u32(0x18) / 65536.0f
+        );
+        cmdPos += 6 << CMD_SIZE_SHIFT;
+    }
+    displayList = *(void **) &cmdPos[0];
+    cmdPos += 2 << CMD_SIZE_SHIFT;
+
+    graphNode = init_graph_node_bone(
+        gGraphNodePool, NULL, 
+        drawingLayer, displayList, 
+        translation, rotation,
+        scale);
+
+    register_scene_graph_node(&graphNode->node);
+
+    gGeoLayoutCommand = (u8 *) cmdPos;
 }
 
 struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {

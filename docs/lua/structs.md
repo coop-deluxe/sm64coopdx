@@ -42,6 +42,7 @@
 - [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
 - [GraphNodeBackground](#GraphNodeBackground)
 - [GraphNodeBillboard](#GraphNodeBillboard)
+- [GraphNodeBone](#GraphNodeBone)
 - [GraphNodeCamera](#GraphNodeCamera)
 - [GraphNodeCullingRadius](#GraphNodeCullingRadius)
 - [GraphNodeDisplayList](#GraphNodeDisplayList)
@@ -1286,6 +1287,20 @@
 | ----- | ---- | ------ |
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| translation | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeBone](#GraphNodeBone)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| rotation | [Vec3s](structs.md#Vec3s) | read-only |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
