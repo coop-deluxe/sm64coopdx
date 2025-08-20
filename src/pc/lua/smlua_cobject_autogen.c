@@ -1126,6 +1126,15 @@ static struct LuaObjectField sGraphNodeBillboardFields[LUA_GRAPH_NODE_BILLBOARD_
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeBillboard, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
+#define LUA_GRAPH_NODE_BONE_FIELD_COUNT 5
+static struct LuaObjectField sGraphNodeBoneFields[LUA_GRAPH_NODE_BONE_FIELD_COUNT] = {
+    { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeBone, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeBone, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeBone, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+    { "scale",       LVT_COBJECT,   offsetof(struct GraphNodeBone, scale),       true,  LOT_VEC3F,     1, sizeof(Vec3f)            },
+    { "translation", LVT_COBJECT,   offsetof(struct GraphNodeBone, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+};
+
 #define LUA_GRAPH_NODE_CAMERA_FIELD_COUNT 10
 static struct LuaObjectField sGraphNodeCameraFields[LUA_GRAPH_NODE_CAMERA_FIELD_COUNT] = {
 //  { "config",        LVT_???,       offsetof(struct GraphNodeCamera, config),        false, LOT_???,         1, sizeof(union { ... })      }, <--- UNIMPLEMENTED
@@ -1249,21 +1258,25 @@ static struct LuaObjectField sGraphNodeRootFields[LUA_GRAPH_NODE_ROOT_FIELD_COUN
     { "y",         LVT_S16,     offsetof(struct GraphNodeRoot, y),         false, LOT_NONE,      1, sizeof(s16)              },
 };
 
-#define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 5
+#define LUA_GRAPH_NODE_ROTATION_FIELD_COUNT 3
 static struct LuaObjectField sGraphNodeRotationFields[LUA_GRAPH_NODE_ROTATION_FIELD_COUNT] = {
-    { "displayList",   LVT_COBJECT_P, offsetof(struct GraphNodeRotation, displayList),   false, LOT_GFX,       1, sizeof(Gfx*)             },
-    { "node",          LVT_COBJECT,   offsetof(struct GraphNodeRotation, node),          true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
-    { "prevRotation",  LVT_COBJECT,   offsetof(struct GraphNodeRotation, prevRotation),  true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
-    { "prevTimestamp", LVT_U32,       offsetof(struct GraphNodeRotation, prevTimestamp), false, LOT_NONE,      1, sizeof(u32)              },
-    { "rotation",      LVT_COBJECT,   offsetof(struct GraphNodeRotation, rotation),      true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+    { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeRotation, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeRotation, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeRotation, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
-#define LUA_GRAPH_NODE_SCALE_FIELD_COUNT 4
+#define LUA_GRAPH_NODE_SCALE_FIELD_COUNT 3
 static struct LuaObjectField sGraphNodeScaleFields[LUA_GRAPH_NODE_SCALE_FIELD_COUNT] = {
     { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeScale, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
     { "node",        LVT_COBJECT,   offsetof(struct GraphNodeScale, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
-    { "prevScale",   LVT_F32,       offsetof(struct GraphNodeScale, prevScale),   false, LOT_NONE,      1, sizeof(f32)              },
     { "scale",       LVT_F32,       offsetof(struct GraphNodeScale, scale),       false, LOT_NONE,      1, sizeof(f32)              },
+};
+
+#define LUA_GRAPH_NODE_SCALE_XYZ_FIELD_COUNT 3
+static struct LuaObjectField sGraphNodeScaleXYZFields[LUA_GRAPH_NODE_SCALE_XYZ_FIELD_COUNT] = {
+    { "displayList", LVT_COBJECT_P, offsetof(struct GraphNodeScaleXYZ, displayList), false, LOT_GFX,       1, sizeof(Gfx*)             },
+    { "node",        LVT_COBJECT,   offsetof(struct GraphNodeScaleXYZ, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
+    { "scale",       LVT_COBJECT,   offsetof(struct GraphNodeScaleXYZ, scale),       true,  LOT_VEC3F,     1, sizeof(Vec3f)            },
 };
 
 #define LUA_GRAPH_NODE_SHADOW_FIELD_COUNT 4
@@ -2918,6 +2931,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODEANIMATEDPART,        sGraphNodeAnimatedPartFields,        LUA_GRAPH_NODE_ANIMATED_PART_FIELD_COUNT        },
     { LOT_GRAPHNODEBACKGROUND,          sGraphNodeBackgroundFields,          LUA_GRAPH_NODE_BACKGROUND_FIELD_COUNT           },
     { LOT_GRAPHNODEBILLBOARD,           sGraphNodeBillboardFields,           LUA_GRAPH_NODE_BILLBOARD_FIELD_COUNT            },
+    { LOT_GRAPHNODEBONE,                sGraphNodeBoneFields,                LUA_GRAPH_NODE_BONE_FIELD_COUNT                 },
     { LOT_GRAPHNODECAMERA,              sGraphNodeCameraFields,              LUA_GRAPH_NODE_CAMERA_FIELD_COUNT               },
     { LOT_GRAPHNODECULLINGRADIUS,       sGraphNodeCullingRadiusFields,       LUA_GRAPH_NODE_CULLING_RADIUS_FIELD_COUNT       },
     { LOT_GRAPHNODEDISPLAYLIST,         sGraphNodeDisplayListFields,         LUA_GRAPH_NODE_DISPLAY_LIST_FIELD_COUNT         },
@@ -2932,6 +2946,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODEROOT,                sGraphNodeRootFields,                LUA_GRAPH_NODE_ROOT_FIELD_COUNT                 },
     { LOT_GRAPHNODEROTATION,            sGraphNodeRotationFields,            LUA_GRAPH_NODE_ROTATION_FIELD_COUNT             },
     { LOT_GRAPHNODESCALE,               sGraphNodeScaleFields,               LUA_GRAPH_NODE_SCALE_FIELD_COUNT                },
+    { LOT_GRAPHNODESCALEXYZ,            sGraphNodeScaleXYZFields,            LUA_GRAPH_NODE_SCALE_XYZ_FIELD_COUNT            },
     { LOT_GRAPHNODESHADOW,              sGraphNodeShadowFields,              LUA_GRAPH_NODE_SHADOW_FIELD_COUNT               },
     { LOT_GRAPHNODESTART,               sGraphNodeStartFields,               LUA_GRAPH_NODE_START_FIELD_COUNT                },
     { LOT_GRAPHNODESWITCHCASE,          sGraphNodeSwitchCaseFields,          LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT          },
@@ -3046,6 +3061,7 @@ const char *sLuaLotNames[] = {
 	[LOT_GRAPHNODEANIMATEDPART] = "GraphNodeAnimatedPart",
 	[LOT_GRAPHNODEBACKGROUND] = "GraphNodeBackground",
 	[LOT_GRAPHNODEBILLBOARD] = "GraphNodeBillboard",
+	[LOT_GRAPHNODEBONE] = "GraphNodeBone",
 	[LOT_GRAPHNODECAMERA] = "GraphNodeCamera",
 	[LOT_GRAPHNODECULLINGRADIUS] = "GraphNodeCullingRadius",
 	[LOT_GRAPHNODEDISPLAYLIST] = "GraphNodeDisplayList",
@@ -3060,6 +3076,7 @@ const char *sLuaLotNames[] = {
 	[LOT_GRAPHNODEROOT] = "GraphNodeRoot",
 	[LOT_GRAPHNODEROTATION] = "GraphNodeRotation",
 	[LOT_GRAPHNODESCALE] = "GraphNodeScale",
+	[LOT_GRAPHNODESCALEXYZ] = "GraphNodeScaleXYZ",
 	[LOT_GRAPHNODESHADOW] = "GraphNodeShadow",
 	[LOT_GRAPHNODESTART] = "GraphNodeStart",
 	[LOT_GRAPHNODESWITCHCASE] = "GraphNodeSwitchCase",

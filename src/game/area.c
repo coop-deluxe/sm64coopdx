@@ -254,6 +254,7 @@ void clear_areas(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
     geo_unload_all_mirror_objects();
 }
 
@@ -313,6 +314,7 @@ void unload_area(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
     geo_unload_all_mirror_objects();
 }
 

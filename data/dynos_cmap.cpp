@@ -135,8 +135,8 @@ private:
 };
 
 extern "C" {
-void* hmap_create(MapType type) {
-    return new HMap(type);
+void* hmap_create(bool useUnordered) {
+    return new HMap(useUnordered ? MapType::Unordered : MapType::Ordered);
 }
 
 void* hmap_get(void* map, int64_t key) {

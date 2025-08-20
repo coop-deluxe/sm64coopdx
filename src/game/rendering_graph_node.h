@@ -45,6 +45,7 @@ void geo_append_display_list(void *displayList, s16 layer);
 void geo_process_object(struct Object *node);
 void geo_process_node_and_siblings(struct GraphNode *firstNode);
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
+void geo_clear_interp_data();
 
 struct ShadowInterp {
     Gfx*  gfx;

@@ -871,6 +871,13 @@
 --- @field public node GraphNode
 --- @field public translation Vec3s
 
+--- @class GraphNodeBone
+--- @field public displayList Pointer_Gfx
+--- @field public node GraphNode
+--- @field public rotation Vec3s
+--- @field public scale Vec3f
+--- @field public translation Vec3s
+
 --- @class GraphNodeCamera
 --- @field public fnNode FnGraphNode
 --- @field public focus Vec3f
@@ -970,15 +977,17 @@
 --- @class GraphNodeRotation
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
---- @field public prevRotation Vec3s
---- @field public prevTimestamp integer
 --- @field public rotation Vec3s
 
 --- @class GraphNodeScale
 --- @field public displayList Pointer_Gfx
 --- @field public node GraphNode
---- @field public prevScale number
 --- @field public scale number
+
+--- @class GraphNodeScaleXYZ
+--- @field public displayList Pointer_Gfx
+--- @field public node GraphNode
+--- @field public scale Vec3f
 
 --- @class GraphNodeShadow
 --- @field public node GraphNode

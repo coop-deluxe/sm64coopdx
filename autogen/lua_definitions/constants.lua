@@ -3057,6 +3057,9 @@ GRAPH_NODE_TYPE_DISPLAY_LIST = 0x01B
 GRAPH_NODE_TYPE_SCALE = 0x01C
 
 --- @type integer
+GRAPH_NODE_TYPE_SCALE_XYZ = 0x01D
+
+--- @type integer
 GRAPH_NODE_TYPE_SHADOW = 0x028
 
 --- @type integer
@@ -3073,6 +3076,9 @@ GRAPH_NODE_TYPE_HELD_OBJ = (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
 
 --- @type integer
 GRAPH_NODE_TYPE_CULLING_RADIUS = 0x02F
+
+--- @type integer
+GRAPH_NODE_TYPE_BONE = 0x030
 
 --- @type integer
 GFX_NUM_MASTER_LISTS = 8
@@ -11060,6 +11066,9 @@ ANIM_FLAG_6 = (1 << 6)
 
 --- @type integer
 ANIM_FLAG_7 = (1 << 7)
+
+--- @type integer
+ANIM_FLAG_BONE_TRANS = (1 << 8)
 
 --- @type integer
 OBJECT_MAX_BHV_STACK = 16

@@ -19,6 +19,7 @@
 #include "obj_behaviors.h"
 #include "platform_displacement.h"
 #include "profiler.h"
+#include "rendering_graph_node.h"
 #include "spawn_object.h"
 #include "first_person_cam.h"
 #include "engine/math_util.h"
@@ -625,6 +626,7 @@ void clear_objects(void) {
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();
+    geo_clear_interp_data();
     geo_unload_all_mirror_objects();
 }
 
