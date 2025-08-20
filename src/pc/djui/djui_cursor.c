@@ -20,6 +20,7 @@ f32 gCursorY = 0;
 static f32 sPrevCursorX = 0;
 static f32 sPrevCursorY = 0;
 static Gfx* sSavedDisplayListHead = NULL;
+static bool sInterpCursor = false;
 
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
@@ -160,9 +161,14 @@ static void djui_cursor_update_position(void) {
 #endif
 }
 
+void djui_cursor_interp_before(void) {
+    sSavedDisplayListHead = NULL;
+    sInterpCursor = false;
+}
+
 void djui_cursor_interp(void) {
     djui_cursor_update_position();
-    if (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY) {
+    if (sInterpCursor && (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY)) {
         if (sSavedDisplayListHead == NULL) { return; }
         gDisplayListHead = sSavedDisplayListHead;
         djui_base_render(&sMouseCursor->base);
@@ -173,6 +179,7 @@ void djui_cursor_update(void) {
     djui_cursor_update_position();
     sSavedDisplayListHead = gDisplayListHead;
     djui_base_render(&sMouseCursor->base);
+    sInterpCursor = gDisplayListHead != sSavedDisplayListHead; // Check that we actually rendered something
 }
 
 void djui_cursor_create(void) {
