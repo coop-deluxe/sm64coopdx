@@ -602,16 +602,6 @@ void render_hud(void) {
 
     hudDisplayFlags = gHudDisplay.flags;
 
-    // Placed here to update when the camera hud flag is disabled
-    if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
-        sCameraHUD.status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
-        switch (gNewCamera.distanceTargetIndex) {
-            case 0: sCameraHUD.status |= CAM_STATUS_C_UP; break;
-            case 1: break;
-            case 2: sCameraHUD.status |= CAM_STATUS_C_DOWN; break;
-        }
-    }
-
     if (hudDisplayFlags == HUD_DISPLAY_NONE) {
         sPowerMeterHUD.animation = POWER_METER_HIDDEN;
         sPowerMeterStoredHealth = 8;
