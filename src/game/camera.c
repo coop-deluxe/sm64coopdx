@@ -4171,6 +4171,15 @@ s32 update_camera_hud_status(struct Camera *c) {
     if (gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
         status |= CAM_STATUS_C_UP;
     }
+    if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
+        status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
+        switch (gNewCamera.distanceTargetIndex) {
+            case 0: status |= CAM_STATUS_C_UP; break;
+            case 1: break;
+            case 2: status |= CAM_STATUS_C_DOWN; break;
+        }
+    }
+
     set_hud_camera_status(status);
     return status;
 }
