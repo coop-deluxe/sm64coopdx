@@ -93,3 +93,25 @@
 
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
+
+//////////////////////
+// G_COPYOTHERCOLOR //
+//////////////////////
+
+#define G_COPYOTHERCOLOR_EXT G_SPECIAL_3
+
+#define CP_PRIM 0x0
+#define CP_ENV  0x1
+
+#define gSPCopyOtherColor(pkt, mode, idx)                        \
+{                                                                \
+    Gfx *_g = (Gfx *)(pkt);                                      \
+    _g->words.w0 = _SHIFTL(G_COPYOTHERCOLOR_EXT, 24, 8) | _SHIFTL(mode, 16, 8); \
+    _g->words.w1 = (idx);                                        \
+}
+
+#define gsSPCopyOtherColor(mode, idx)                                \
+{{                                                                   \
+    (_SHIFTL(G_COPYOTHERCOLOR_EXT, 24, 8)) | (_SHIFTL(mode, 16, 8)), \
+    (idx)                                                            \
+}}

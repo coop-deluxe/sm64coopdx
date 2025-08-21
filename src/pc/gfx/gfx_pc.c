@@ -2106,6 +2106,23 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
+static void OPTIMIZE_O3 gfx_sp_copyotherlight(uint8_t mode, uint32_t idx) {
+    SUPPORT_CHECK(mode == CP_ENV || mode == CP_PRIM);
+
+    if (idx <= MAX_LIGHTS) {
+        Light_t *l = (rsp.current_lights + idx);
+        struct RGBA *color = NULL;
+        switch (mode) {
+            case CP_PRIM: color = &rdp.prim_color; break;
+            case CP_ENV:  color = &rdp.env_color;  break;
+        }
+
+        color->r = l->col[0];
+        color->g = l->col[1];
+        color->b = l->col[2];
+    }
+}
+
 static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
     sDjuiClipX1 = x1;
     sDjuiClipY1 = y1;
@@ -2168,6 +2185,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
+            break;
+        case G_COPYOTHERCOLOR_EXT:
+            gfx_sp_copyotherlight(C0(16, 8), cmd->words.w1);
             break;
     }
 }
