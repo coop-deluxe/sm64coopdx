@@ -2110,7 +2110,7 @@ static void OPTIMIZE_O3 gfx_sp_copyotherlight(uint8_t mode, uint32_t idx) {
     SUPPORT_CHECK(mode == CP_ENV || mode == CP_PRIM);
 
     if (idx <= MAX_LIGHTS) {
-        Light_t *l = (rsp.current_lights + idx);
+        Light_t *l = (rsp.current_lights + (idx - 1));
         struct RGBA *color = NULL;
         switch (mode) {
             case CP_PRIM: color = &rdp.prim_color; break;
