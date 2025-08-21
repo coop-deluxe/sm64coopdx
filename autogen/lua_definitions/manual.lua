@@ -405,6 +405,13 @@ function log_to_console(message, level)
     -- ...
 end
 
+--- @param message string The message to log
+--- @param level? ConsoleMessageLevel Optional; Determines whether the message should appear as info, a warning or an error.
+--- Logs a message to standard output
+function log_to_stdout(message, level)
+    -- ...
+end
+
 --- @param index integer The index of the scroll target, should match up with the behavior param of `RM_Scroll_Texture` or `editor_Scroll_Texture`
 --- @param name string The name of the vertex buffer that should be used while scrolling the texture
 --- Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`

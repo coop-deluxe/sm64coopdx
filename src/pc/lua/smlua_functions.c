@@ -796,6 +796,37 @@ int smlua_func_log_to_console(lua_State* L) {
     return 1;
 }
 
+int smlua_func_log_to_stdout(lua_State* L) {
+    if (!smlua_functions_valid_param_range(L, 1, 2)) { return 0; }
+
+    int paramCount = lua_gettop(L);
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("log_to_stdout: Failed to convert parameter 1 for function"); return 0; }
+
+    enum ConsoleMessageLevel level = CONSOLE_MESSAGE_INFO;
+    if (paramCount >= 2) {
+        level = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("log_to_stdout: Failed to convert parameter 2 for function"); return 0; }
+    }
+
+    const char* origin = gLuaActiveModFile->relativePath;
+
+    switch (level) {
+        case CONSOLE_MESSAGE_INFO:
+            LOG_INFO("%s: %s", origin, message);
+            break;
+        case CONSOLE_MESSAGE_WARNING:
+            LOG_WARNING("%s: %s", origin, message);
+            break;
+        case CONSOLE_MESSAGE_ERROR:
+            LOG_ERROR("%s: %s", origin, message);
+            break;
+    }
+
+    return 1;
+}
+
   ////////////////////
  // scroll targets //
 ////////////////////
@@ -1042,6 +1073,7 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
+    smlua_bind_function(L, "log_to_stdout", smlua_func_log_to_stdout);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
