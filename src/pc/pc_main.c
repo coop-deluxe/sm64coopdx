@@ -266,6 +266,7 @@ void produce_interpolation_frames_and_delay(void) {
 
         // send the frame to the screen (should be directly after the delay for good frame pacing)
         gfx_display_frame();
+        gfx_display_frame(); // ! for debugging purposes
         sDrawnFrames++;
         if (configFramerateMode != RRM_UNLIMITED) { numFramesToDraw--; }
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
