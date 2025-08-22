@@ -94,24 +94,27 @@
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
 
-//////////////////////
-// G_COPYOTHERCOLOR //
-//////////////////////
+/////////////////////
+// G_PPARTTOCOLOR //
+/////////////////////
 
-#define G_COPYOTHERCOLOR_EXT G_SPECIAL_3
+#define G_PPARTTOCOLOR 0xd3
 
-#define CP_PRIM 0x0
-#define CP_ENV  0x1
+#define G_COL_PRIM   0x0
+#define G_COL_ENV    0x1
 
-#define gSPCopyOtherColor(pkt, mode, idx)                        \
+#define G_CP_LIGHT   0x0
+#define G_CP_AMBIENT 0x1
+
+#define gSPCopyPlayerPartToColor(pkt, col, part, offset)             \
 {                                                                \
     Gfx *_g = (Gfx *)(pkt);                                      \
-    _g->words.w0 = _SHIFTL(G_COPYOTHERCOLOR_EXT, 24, 8) | _SHIFTL(mode, 16, 8); \
-    _g->words.w1 = (idx);                                        \
+    _g->words.w0 = (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(col, 16, 8)); \
+    _g->words.w1 = ((2 * ((part) + 1)) + 1 + offset);            \
 }
 
-#define gsSPCopyOtherColor(mode, idx)                                \
+#define gsSPCopyPlayerPartToColor(col, part, offset)                     \
 {{                                                                   \
-    (_SHIFTL(G_COPYOTHERCOLOR_EXT, 24, 8)) | (_SHIFTL(mode, 16, 8)), \
-    (idx)                                                            \
+    (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(col, 16, 8)),        \
+    ((2 * ((part) + 1)) + 1 + offset)                                \
 }}

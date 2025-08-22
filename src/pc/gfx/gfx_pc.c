@@ -2106,15 +2106,15 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
-static void OPTIMIZE_O3 gfx_sp_copyotherlight(uint8_t mode, uint32_t idx) {
-    SUPPORT_CHECK(mode == CP_ENV || mode == CP_PRIM);
+static void gfx_sp_copy_playerpart_to_color(uint8_t col, uint32_t idx) {
+    SUPPORT_CHECK(col == G_COL_PRIM || col == G_COL_ENV);
 
     if (idx <= MAX_LIGHTS) {
         Light_t *l = (rsp.current_lights + (idx - 1));
         struct RGBA *color = NULL;
-        switch (mode) {
-            case CP_PRIM: color = &rdp.prim_color; break;
-            case CP_ENV:  color = &rdp.env_color;  break;
+        switch (col) {
+            case G_COL_PRIM: color = &rdp.prim_color; break;
+            case G_COL_ENV:  color = &rdp.env_color;  break;
         }
 
         color->r = l->col[0];
@@ -2186,8 +2186,8 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
             break;
-        case G_COPYOTHERCOLOR_EXT:
-            gfx_sp_copyotherlight(C0(16, 8), cmd->words.w1);
+        case G_PPARTTOCOLOR:
+            gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
             break;
     }
 }

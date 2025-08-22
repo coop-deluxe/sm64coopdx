@@ -406,8 +406,11 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_LIGHTING_ENGINE_EXT);
     gfx_constant(G_PACKED_NORMALS_EXT);
 
-    gfx_constant(CP_PRIM);
-    gfx_constant(CP_ENV);
+    gfx_constant(G_COL_PRIM);
+    gfx_constant(G_COL_ENV);
+
+    gfx_constant(G_CP_LIGHT);
+    gfx_constant(G_CP_AMBIENT);
 
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
