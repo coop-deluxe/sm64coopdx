@@ -368,6 +368,9 @@
     CMD_PTR(beh), \
     CMD_PTR(acts)
 
+// This command is used when parameters are Lua variables.
+// The flags parameter describes which parameter is a Lua variable.
+// See SHOW_DIALOG_EXT flags at the top of this file.
 #define SHOW_DIALOG_EXT(flags, index, dialogId) \
     CMD_BBBB(0x44, 0x0C, flags, 0x00), \
     CMD_PTR(index), \

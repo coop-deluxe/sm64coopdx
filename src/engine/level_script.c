@@ -941,7 +941,7 @@ static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaP
         }
 
         if (!gSmLuaConvertSuccess) {
-            LOG_LUA("Failed to place custom object, could not find %s '%s'", paramType, paramStr);
+            LOG_LUA("Failed to execute level command, could not find parameter '%s'", paramStr);
             return false;
         }
     }
