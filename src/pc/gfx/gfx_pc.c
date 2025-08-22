@@ -2109,7 +2109,7 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
 static void gfx_sp_copy_playerpart_to_color(uint8_t col, uint32_t idx) {
     SUPPORT_CHECK(col == G_COL_PRIM || col == G_COL_ENV);
 
-    if (idx <= MAX_LIGHTS) {
+    if (idx >= 1 && idx <= MAX_LIGHTS) {
         Light_t *l = (rsp.current_lights + (idx - 1));
         struct RGBA *color = NULL;
         switch (col) {
