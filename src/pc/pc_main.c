@@ -203,9 +203,7 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
-static u32 get_refresh_rate() {
-    if (configFramerateMode == RRM_MANUAL) { return configFrameLimit; }
-    if (configFramerateMode == RRM_UNLIMITED) { return 3000; } // Has no effect
+static u32 get_display_refresh_rate() {
 #ifdef HAVE_SDL2
     static u32 refreshRate = 0;
     if (!refreshRate) {
@@ -222,10 +220,23 @@ static u32 get_refresh_rate() {
 #endif
 }
 
+static u32 get_target_refresh_rate() {
+    if (configFramerateMode == RRM_MANUAL) { return configFrameLimit; }
+    if (configFramerateMode == RRM_UNLIMITED) { return 3000; } // Has no effect
+    return get_display_refresh_rate();
+}
+
 void produce_interpolation_frames_and_delay(void) {
-    u32 refreshRate = get_refresh_rate();
+    u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
+
+    u32 displayRefreshRate = get_display_refresh_rate();
+    bool shouldDelay = configFramerateMode != RRM_UNLIMITED;
+    if (configWindow.vsync && displayRefreshRate <= refreshRate) {
+        shouldDelay = false;
+        refreshRate = displayRefreshRate;
+    }
 
     f64 targetTime = sFrameTimeStart + sFrameTime;
     s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
@@ -243,7 +254,7 @@ void produce_interpolation_frames_and_delay(void) {
         ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
-        f64 idealTime = configFramerateMode != RRM_UNLIMITED ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
+        f64 idealTime = shouldDelay ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
         f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
         gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
         gRenderingDelta = delta;
@@ -254,7 +265,7 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_end_frame_render();
 
         // delay if our framerate is capped
-        if (configFramerateMode != RRM_UNLIMITED) {
+        if (shouldDelay) {
             expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
             f64 now = clock_elapsed_f64();
             f64 elapsedTime = now - loopStartTime;
@@ -267,7 +278,7 @@ void produce_interpolation_frames_and_delay(void) {
         // send the frame to the screen (should be directly after the delay for good frame pacing)
         gfx_display_frame();
         sDrawnFrames++;
-        if (configFramerateMode != RRM_UNLIMITED) { numFramesToDraw--; }
+        if (shouldDelay) { numFramesToDraw--; }
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
