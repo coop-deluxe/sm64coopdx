@@ -101,7 +101,7 @@ jobs:
                     zip
 
             - name: Build the game
-              run: make -j$(nproc) DEBUG=1
+              run: make -j$(nproc)
 
             - name: Generate hash
               run: |
