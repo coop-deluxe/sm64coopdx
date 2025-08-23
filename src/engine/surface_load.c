@@ -29,29 +29,53 @@ SpatialPartitionCell gStaticSurfacePartition[NUM_CELLS][NUM_CELLS];
 SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 
 /**
+ * The total number of surface nodes allocated (a node is allocated for each
+ * spatial partition cell that a surface intersects).
+ */
+s32 gSurfaceNodesAllocated;
+
+/**
+ * The total number of surfaces allocated.
+ */
+s32 gSurfacesAllocated;
+
+/**
+ * The number of nodes that have been created for static surfaces.
+ */
+s32 gNumStaticSurfaceNodes;
+
+/**
+ * The number of static surfaces in the pool.
+ */
+s32 gNumStaticSurfaces;
+
+/**
+ * The number of nodes that have been created for static object collision surfaces.
+ */
+s32 gNumSOCSurfaceNodes;
+
+/**
+ * The number of static object collision surfaces in the pool.
+ */
+s32 gNumSOCSurfaces;
+
+/**
  * Pools of data to contain either surface nodes or surfaces.
  */
 static struct GrowingArray *sSurfaceNodePool = NULL;
 static struct GrowingArray *sSurfacePool = NULL;
 
 /**
- * Pools of data for static object collisions and their surfaces.
+ * Pool of data for static object collisions.
  */
-static bool sLoadingSOC = false;
 static struct GrowingArray *sSOCPool = NULL;
-static struct GrowingArray *sSOCNodePool = NULL;
-static struct GrowingArray *sSOCSurfacePool = NULL;
 
 /**
  * Allocate the part of the surface node pool to contain a surface node.
  */
 static struct SurfaceNode *alloc_surface_node(void) {
-    if (!sLoadingSOC) sSurfaceNodePool->count = gSurfaceNodesAllocated++;
-    return growing_array_alloc(
-        sLoadingSOC
-            ? sSOCNodePool
-            : sSurfaceNodePool,
-        sizeof(struct SurfaceNode));
+    sSurfaceNodePool->count = gSurfaceNodesAllocated++;
+    return growing_array_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
 }
 
 /**
@@ -59,12 +83,8 @@ static struct SurfaceNode *alloc_surface_node(void) {
  * initialize the surface.
  */
 static struct Surface *alloc_surface(void) {
-    if (!sLoadingSOC) sSurfacePool->count = gSurfacesAllocated++;
-    return growing_array_alloc(
-        sLoadingSOC
-            ? sSOCSurfacePool
-            : sSurfacePool,
-        sizeof(struct Surface));
+    sSurfacePool->count = gSurfacesAllocated++;
+    return growing_array_alloc(sSurfacePool, sizeof(struct Surface));
 }
 
 static struct StaticObjectCollision *alloc_static_object_collision(void) {
@@ -92,8 +112,6 @@ static void clear_spatial_partition(SpatialPartitionCell *cells) {
 static void clear_static_surfaces(void) {
     clear_spatial_partition(&gStaticSurfacePartition[0][0]);
     sSOCPool = growing_array_init(sSOCPool, 0x100, malloc, smlua_free_soc);
-    sSOCNodePool = growing_array_init(sSOCNodePool, 0x500, malloc, free);
-    sSOCSurfacePool = growing_array_init(sSOCSurfacePool, 0x200, malloc, smlua_free_surface);
 }
 
 /**
@@ -502,6 +520,8 @@ void alloc_surface_pools(void) {
     gSurfacesAllocated = 0;
     gNumStaticSurfaceNodes = 0;
     gNumStaticSurfaces = 0;
+    gNumSOCSurfaceNodes = 0;
+    gNumSOCSurfaces = 0;
 
     gCCMEnteredSlide = 0;
     reset_red_coins_collected();
@@ -609,6 +629,8 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
 
     gNumStaticSurfaceNodes = gSurfaceNodesAllocated;
     gNumStaticSurfaces = gSurfacesAllocated;
+    gNumSOCSurfaceNodes = 0;
+    gNumSOCSurfaces = 0;
 }
 
 /**
@@ -616,8 +638,8 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
  */
 void clear_dynamic_surfaces(void) {
     if (!(gTimeStopState & TIME_STOP_ACTIVE)) {
-        gSurfacesAllocated = gNumStaticSurfaces;
-        gSurfaceNodesAllocated = gNumStaticSurfaceNodes;
+        gSurfacesAllocated = gNumStaticSurfaces + gNumSOCSurfaces;
+        gSurfaceNodesAllocated = gNumStaticSurfaceNodes + gNumSOCSurfaceNodes;
 
         clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
 
@@ -673,7 +695,7 @@ void transform_object_vertices(s16 **data, s16 *vertexData) {
 /**
  * Load in the surfaces for the gCurrentObject. This includes setting the flags, exertion, and room.
  */
-void load_object_surfaces(s16** data, s16* vertexData) {
+void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
     if (!gCurrentObject) { return; }
     s32 surfaceType;
     s32 i;
@@ -705,7 +727,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
         struct Surface* surface = read_surface_data(vertexData, data);
 
         if (surface != NULL) {
-            if (!sLoadingSOC) {
+            if (!isSOC) {
                 // Set index of first surface
                 if (gCurrentObject->firstSurface == 0) {
                     gCurrentObject->firstSurface = gSurfacesAllocated - 1;
@@ -726,7 +748,7 @@ void load_object_surfaces(s16** data, s16* vertexData) {
 
             surface->flags |= flags;
             surface->room = (s8)room;
-            add_surface(surface, !sLoadingSOC);
+            add_surface(surface, !isSOC);
         }
 
         if (hasForce) {
@@ -740,9 +762,12 @@ void load_object_surfaces(s16** data, s16* vertexData) {
 /**
  * Transform an object's vertices, reload them, and render the object.
  */
-void load_object_collision_model(void) {
+static void load_object_collision(bool isSOC) {
+    static bool sIsLoadingCollision = false;
+
     if (!gCurrentObject) { return; }
     if (gCurrentObject->collisionData == NULL) { return; }
+    if (sIsLoadingCollision) { return; }
 
     s32 numVertices = 64;
     if (gCurrentObject->collisionData[0] == COL_INIT()) {
@@ -760,6 +785,9 @@ void load_object_collision_model(void) {
     static s32 sVertexDataCount = 0;
     static s16* sVertexData = NULL;
 
+    // start loading collision
+    sIsLoadingCollision = true;
+
     // allocate vertex data
     if (numVertices > sVertexDataCount || sVertexData == NULL) {
         if (sVertexData) { free(sVertexData); }
@@ -772,14 +800,14 @@ void load_object_collision_model(void) {
     s16* collisionData = gCurrentObject->collisionData;
 
     u8 anyPlayerInTangibleRange = FALSE;
-    if (!sLoadingSOC) {
+    if (!isSOC) {
         f32 tangibleDist = gCurrentObject->oCollisionDistance;
-    
+
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
             if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
         }
-        
+
         // If the object collision is supposed to be loaded more than the
         // drawing distance of 4000, extend the drawing range.
         if (gCurrentObject->oCollisionDistance > 4000.0f) {
@@ -788,58 +816,80 @@ void load_object_collision_model(void) {
     }
 
     // Update if no Time Stop, in range, and in the current room. (or if static)
-    if (
-        (   !(gTimeStopState & TIME_STOP_ACTIVE)
-            && (anyPlayerInTangibleRange)
-            && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)
-        ) || sLoadingSOC
+    if (isSOC ||
+        (!(gTimeStopState & TIME_STOP_ACTIVE)
+        && (anyPlayerInTangibleRange)
+        && !(gCurrentObject->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM))
     ) {
         collisionData++;
         transform_object_vertices(&collisionData, sVertexData);
 
         // TERRAIN_LOAD_CONTINUE acts as an "end" to the terrain data.
         while (*collisionData != TERRAIN_LOAD_CONTINUE) {
-            load_object_surfaces(&collisionData, sVertexData);
+            load_object_surfaces(&collisionData, sVertexData, isSOC);
         }
     }
 
-    if (sLoadingSOC) { return; }
-    f32 marioDist = dist_between_objects(gCurrentObject, gMarioStates[0].marioObj);
-    if (marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
-        gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
-    } else {
-        gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+    if (!isSOC) {
+        f32 marioDist = dist_between_objects(gCurrentObject, gMarioStates[0].marioObj);
+        if (marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
+            gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
+        } else {
+            gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
+        }
     }
+
+    // stop loading collision
+    sIsLoadingCollision = false;
+}
+
+void load_object_collision_model(void) {
+    load_object_collision(false);
 }
 
 struct StaticObjectCollision *load_static_object_collision() {
     struct StaticObjectCollision *col;
-    u32 startIndex = sSOCSurfacePool->count;
+    u32 lastSurfaceIndex = gSurfacesAllocated;
+    u32 lastSurfaceNodeIndex = gSurfaceNodesAllocated;
+    u32 lastSOCSurfaceIndex = gNumStaticSurfaces + gNumSOCSurfaces;
+    u32 lastSOCSurfaceNodeIndex = gNumStaticSurfaceNodes + gNumSOCSurfaceNodes;
 
-    sLoadingSOC = true;
-    load_object_collision_model();
-    sLoadingSOC = false;
+    load_object_collision(true);
+
+    // Reorder surfaces and nodes and update SOC variables
+    u32 addedSurfaces = gSurfacesAllocated - lastSurfaceIndex;
+    u32 addedSurfaceNodes = gSurfaceNodesAllocated - lastSurfaceNodeIndex;
+    if (addedSurfaces > 0) {
+        growing_array_move(sSurfacePool, lastSurfaceIndex, lastSOCSurfaceIndex, addedSurfaces);
+        gNumSOCSurfaces += addedSurfaces;
+    }
+    if (addedSurfaceNodes > 0) {
+        growing_array_move(sSurfaceNodePool, lastSurfaceNodeIndex, lastSOCSurfaceNodeIndex, addedSurfaceNodes);
+        gNumSOCSurfaceNodes += addedSurfaceNodes;
+    }
 
     col = alloc_static_object_collision();
-    col->index = startIndex;
-    col->length = sSOCSurfacePool->count - startIndex;
+    col->index = lastSOCSurfaceIndex;
+    col->length = addedSurfaces;
 
     return col;
 }
 
 void toggle_static_object_collision(struct StaticObjectCollision *col, bool tangible) {
     for (s32 i = 0; i < col->length; i++) {
-        struct Surface *surf = sSOCSurfacePool->buffer[col->index + i];
+        struct Surface *surf = sSurfacePool->buffer[col->index + i];
         if (tangible) {
             surf->flags &= ~SURFACE_FLAG_INTANGIBLE;
-        } else { surf->flags |= SURFACE_FLAG_INTANGIBLE; }
+        } else {
+            surf->flags |= SURFACE_FLAG_INTANGIBLE;
+        }
     }
 }
 
 struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index) {
     if (!col) { return NULL; }
     if (index >= col->length) { return NULL; }
-    struct Surface *surf = sSOCSurfacePool->buffer[col->index + index];
+    struct Surface *surf = sSurfacePool->buffer[col->index + index];
     return surf;
 }
 

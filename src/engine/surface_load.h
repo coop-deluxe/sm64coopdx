@@ -27,6 +27,13 @@ typedef struct SurfaceNode SpatialPartitionCell[3];
 extern SpatialPartitionCell gStaticSurfacePartition[NUM_CELLS][NUM_CELLS];
 extern SpatialPartitionCell gDynamicSurfacePartition[NUM_CELLS][NUM_CELLS];
 
+extern s32 gSurfaceNodesAllocated;
+extern s32 gSurfacesAllocated;
+extern s32 gNumStaticSurfaceNodes;
+extern s32 gNumStaticSurfaces;
+extern s32 gNumSOCSurfaceNodes;
+extern s32 gNumSOCSurfaces;
+
 void alloc_surface_pools(void);
 
 u32 get_area_terrain_size(s16 *data);

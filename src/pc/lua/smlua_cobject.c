@@ -656,6 +656,12 @@ int smlua__eq(lua_State *L) {
     return 1;
 }
 
+int smlua__bnot(lua_State *L) {
+    const CObject *a = lua_touserdata(L, 1);
+    lua_pushboolean(L, !a || a->freed);
+    return 1;
+}
+
 static int smlua_cpointer_get(lua_State* L) {
     const CPointer *cptr = lua_touserdata(L, 1);
     const char *key = lua_tostring(L, 2);
@@ -696,6 +702,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };
@@ -706,6 +713,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua_cpointer_get },
         { "__newindex", smlua_cpointer_set },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };

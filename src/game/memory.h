@@ -77,6 +77,7 @@ void growing_pool_free_pool(struct GrowingPool *pool);
 
 struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity, GrowingArrayAllocFunc alloc, GrowingArrayFreeFunc free);
 void *growing_array_alloc(struct GrowingArray *array, u32 size);
+void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count);
 void growing_array_free(struct GrowingArray **array);
 void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y);
 
