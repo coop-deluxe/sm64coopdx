@@ -94,9 +94,9 @@
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
 
-/////////////////////
+////////////////////
 // G_PPARTTOCOLOR //
-/////////////////////
+////////////////////
 
 #define G_PPARTTOCOLOR 0xd3
 
