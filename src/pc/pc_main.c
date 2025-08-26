@@ -76,7 +76,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-extern Vp D_8032CF00;
+extern Vp gViewportFullscreen;
 
 OSMesg D_80339BEC;
 OSMesgQueue gSIEventMesgQueue;
@@ -363,7 +363,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     djui_gfx_displaylist_begin();
 
     // fix scaling issues
-    gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
+    gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gViewportFullscreen));
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
     // clear screen

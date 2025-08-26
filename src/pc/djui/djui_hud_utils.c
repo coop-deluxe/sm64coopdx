@@ -82,6 +82,24 @@ static void djui_hud_size_translate(f32* size) {
     }
 }
 
+// Translates position and scale to N64 resolution
+static void djui_hud_translate_positions(f32 *outX, f32 *outY, f32 *outW, f32 *outH) {
+    // translate position
+    djui_hud_position_translate(outX, outY);
+    *outX -= GFX_DIMENSIONS_FROM_LEFT_EDGE(0);
+    *outY -= SCREEN_HEIGHT;
+
+    // translate scale
+    if (sResolution == RESOLUTION_DJUI) {
+        u32 windowWidth, windowHeight;
+        gfx_get_dimensions(&windowWidth, &windowHeight);
+        f32 screenWidth = (f32) windowWidth / djui_gfx_get_scale();
+        f32 screenHeight = (f32) windowHeight / djui_gfx_get_scale();
+        *outW = (*outW / screenWidth)  * SCREEN_WIDTH;
+        *outH = (*outH / screenHeight) * SCREEN_HEIGHT;
+    }
+}
+
   ////////////
  // interp //
 ////////////
@@ -301,6 +319,43 @@ f32 djui_hud_get_mouse_scroll_x(void) {
 
 f32 djui_hud_get_mouse_scroll_y(void) {
     return mouse_scroll_y;
+}
+
+void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height) {
+    // translate position and scale
+    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
+    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+
+    // convert to viewport structure
+    static Vp vp = {{
+        { 640, 480, 511, 0 },
+        { 640, 480, 511, 0 },
+    }};
+    Vp_t *viewport = &vp.vp;
+    viewport->vscale[0] = translatedW * 2.0f;
+    viewport->vscale[1] = translatedH * 2.0f;
+    viewport->vtrans[0] = (translatedW + translatedX) * 2.0f;
+    viewport->vtrans[1] = (translatedH + translatedY) * 2.0f;
+
+    gSPViewport(gDisplayListHead++, &vp);
+}
+
+void djui_hud_reset_viewport(void) {
+    extern Vp gViewportFullscreen;
+    gSPViewport(gDisplayListHead++, &gViewportFullscreen);
+}
+
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height) {
+    // translate position and scale
+    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
+    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+
+    // apply the scissor
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, translatedX, translatedY, translatedW, translatedH);
+}
+
+void djui_hud_reset_scissor(void) {
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 }
 
 f32 djui_hud_measure_text(const char* message) {
@@ -644,6 +699,15 @@ void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 
     interp->rotation = sRotation;
 }
 
+void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size) {
+    f32 dx = p2X - p1X;
+    f32 dy = p2Y - p1Y;
+    f32 angle = atan2s(dy, dx) - 0x4000; // -90 degrees to adjust for djui rotation
+    f32 hDist = sqrt(sqr(dx) + sqr(dy));
+    djui_hud_set_rotation(angle, 0, 0.5);
+    djui_hud_render_rect(p1X, p1Y, hDist, size);
+}
+
 static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
     out[0] = (*mtx)[0][0] * vec[0] + (*mtx)[1][0] * vec[1] + (*mtx)[2][0] * vec[2];
     out[1] = (*mtx)[0][1] * vec[0] + (*mtx)[1][1] * vec[1] + (*mtx)[2][1] * vec[2];
@@ -665,6 +729,8 @@ f32 djui_hud_get_fov_coeff() {
 
     return (fovDefault / fovCurrent) * 1.13f;
 }
+
+bool gDjuiHudToWorldCalcViewport = true;
 
 bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out) {
     if (!gCamera) { return false; }
@@ -695,9 +761,9 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out) {
     out[0] += screenWidth  / 2.0f;
     out[1] += screenHeight / 2.0f;
 
-    extern Vp *D_8032CE74;
-    if (D_8032CE74) {
-        Vp_t *viewport = &D_8032CE74->vp;
+    extern Vp *gViewportOverride;
+    if (gViewportOverride && gDjuiHudToWorldCalcViewport) {
+        Vp_t *viewport = &gViewportOverride->vp;
         f32 width  = viewport->vscale[0] / 2.0f;
         f32 height = viewport->vscale[1] / 2.0f;
         f32 x = (viewport->vtrans[0] / 4.0f) - width / 2.0f;
