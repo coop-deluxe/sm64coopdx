@@ -8,7 +8,7 @@ struct DjuiFpsDisplay {
 
 struct DjuiFpsDisplay *sFpsDisplay = NULL;
 
-void djui_fps_display_update(u16 fps) {
+void djui_fps_display_update(u32 fps) {
     if (configShowFPS && sFpsDisplay != NULL) {
         char fpsText[30] = "";
         fps = fps > 99999 ? 99999 : fps; // Prevent overflowing the FPS display (cap at 99999)
