@@ -106,15 +106,15 @@
 #define G_CP_LIGHT   0x0
 #define G_CP_AMBIENT 0x1
 
-#define gSPCopyPlayerPartToColor(pkt, col, part, offset)             \
+#define gSPCopyPlayerPartToColor(pkt, color, part, offset)             \
 {                                                                \
     Gfx *_g = (Gfx *)(pkt);                                      \
-    _g->words.w0 = (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(col, 16, 8)); \
+    _g->words.w0 = (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)); \
     _g->words.w1 = ((2 * ((part) + 1)) + 1 + offset);            \
 }
 
-#define gsSPCopyPlayerPartToColor(col, part, offset)                     \
+#define gsSPCopyPlayerPartToColor(color, part, offset)                     \
 {{                                                                   \
-    (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(col, 16, 8)),        \
+    (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)),        \
     ((2 * ((part) + 1)) + 1 + offset)                                \
 }}
