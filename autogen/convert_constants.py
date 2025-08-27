@@ -110,7 +110,10 @@ include_constants = {
         "^G_TEXRECTFLIP$",
         "^G_TEXRECT$",
     ],
-    "include/PR/gbi_extension.h": [ "G_VTX_EXT" ],
+    "include/PR/gbi_extension.h": [
+        "^G_VTX_EXT$",
+        "^G_PPARTTOCOLOR$"
+    ],
 }
 
 # Constants that exist in the source code but should not appear
