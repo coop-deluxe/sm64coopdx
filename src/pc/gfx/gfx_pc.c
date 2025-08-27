@@ -2106,20 +2106,20 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
-static void gfx_sp_copy_playerpart_to_color(uint8_t col, uint32_t idx) {
-    SUPPORT_CHECK(col == G_COL_PRIM || col == G_COL_ENV);
+static void gfx_sp_copy_playerpart_to_color(uint8_t color, uint32_t idx) {
+    SUPPORT_CHECK(color == G_COL_PRIM || color == G_COL_ENV);
 
     if (idx >= 1 && idx <= MAX_LIGHTS) {
         Light_t *l = (rsp.current_lights + (idx - 1));
-        struct RGBA *color = NULL;
-        switch (col) {
-            case G_COL_PRIM: color = &rdp.prim_color; break;
-            case G_COL_ENV:  color = &rdp.env_color;  break;
+        struct RGBA *targetColor = NULL;
+        switch (color) {
+            case G_COL_PRIM: targetColor = &rdp.prim_color; break;
+            case G_COL_ENV:  targetColor = &rdp.env_color;  break;
         }
 
-        color->r = l->col[0];
-        color->g = l->col[1];
-        color->b = l->col[2];
+        targetColor->r = l->col[0];
+        targetColor->g = l->col[1];
+        targetColor->b = l->col[2];
     }
 }
 
