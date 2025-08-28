@@ -242,5 +242,6 @@ const char *mod_fs_get_last_error();
 // Functions used by other C modules, not API
 
 bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length);
+void mod_fs_shutdown();
 
 #endif // MOD_FS_H

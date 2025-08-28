@@ -6,6 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "pc/lua/smlua_utils.h"
 
 #define MAX_KEYS 4096
 #define MAX_KEY_VALUE_LENGTH 1024
@@ -26,7 +27,7 @@ f32 mod_storage_load_number(const char* key);
 /* |description|Loads a bool `value` from a `key` in mod storage|descriptionEnd| */
 bool mod_storage_load_bool(const char* key);
 /* |description|Loads all keys and values in mod storage as strings and returns them as a table|descriptionEnd| */
-void mod_storage_load_all(void);
+LuaTable mod_storage_load_all(void);
 
 /* |description|Checks if a `key` is in mod storage|descriptionEnd| */
 bool mod_storage_exists(const char* key);
@@ -34,6 +35,8 @@ bool mod_storage_exists(const char* key);
 bool mod_storage_remove(const char* key);
 /* |description|Clears the mod's data from mod storage|descriptionEnd| */
 bool mod_storage_clear(void);
+
+void mod_storage_shutdown(void);
 
 #ifdef __cplusplus
 }

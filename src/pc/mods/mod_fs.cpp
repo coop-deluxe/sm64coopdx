@@ -56,7 +56,7 @@ static char sModFsErrorFunction[256];
 }
 
 #define mod_fs_raise_error(fmt, ...) { \
-    snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, __VA_ARGS__); \
+    snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, ##__VA_ARGS__); \
     if (!sModFsHideErrors) { \
         LOG_LUA_LINE("%s", sModFsLastError); \
     } \
@@ -207,7 +207,7 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     if (lastDot > lastSlash) {
         bool allowedExtension = false;
         for (const char **ext = MOD_FS_FILE_ALLOWED_EXTENSIONS; *ext; ext++) {
-            if (stricmp(lastDot, *ext) == 0) {
+            if (strcasecmp(lastDot, *ext) == 0) {
                 allowedExtension = true;
                 break;
             }
@@ -232,7 +232,7 @@ static struct ModFs *mod_fs_new() {
         struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
         if (!modFs) {
             mod_fs_raise_error(
-                "failed to allocate modfs object", NULL
+                "failed to allocate modfs object"
             );
             return NULL;
         }
@@ -308,7 +308,7 @@ static bool mod_fs_get_wildcard_tokens(const char *path, char *prefix, char *suf
         return false;
     }
 
-    snprintf(prefix, SYS_MAX_PATH, "%.*s", (size_t) (wildcard - path), path);
+    snprintf(prefix, SYS_MAX_PATH, "%.*s", (s32) (wildcard - path), path);
     snprintf(suffix, SYS_MAX_PATH, "%s", wildcard + 1);
     return true;
 }
@@ -501,7 +501,7 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 // check file size
                 if (fileStat.m_uncomp_size > MOD_FS_MAX_SIZE) {
                     mod_fs_read_raise_error(
-                        "modPath: %s, filepath: %s - exceeded file size: %llu (max is: %u)", modFs->modPath, file.filepath, fileStat.m_uncomp_size, MOD_FS_MAX_SIZE
+                        "modPath: %s, filepath: %s - exceeded file size: %llu (max is: %u)", modFs->modPath, file.filepath, (u64) fileStat.m_uncomp_size, MOD_FS_MAX_SIZE
                     );
                 }
                 file.size = file.capacity = fileStat.m_uncomp_size;
@@ -559,7 +559,7 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             // check file size
             if (fileSize != fileRef.size) {
                 mod_fs_read_raise_error(
-                    "modPath: %s, filepath: %s - truncated data: read size is %llu (expected: %u)", modFs->modPath, fileRef.filepath, fileSize, fileRef.size
+                    "modPath: %s, filepath: %s - truncated data: read size is %llu (expected: %u)", modFs->modPath, fileRef.filepath, (u64) fileSize, fileRef.size
                 );
             }
 
@@ -735,7 +735,7 @@ static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound
             struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
             if (!modFs) {
                 mod_fs_raise_error(
-                    "failed to allocate modfs object", NULL
+                    "failed to allocate modfs object"
                 );
                 return NULL;
             }
@@ -795,7 +795,7 @@ C_DEFINE struct ModFs *mod_fs_create() {
         struct ModFs *modFs = mod_fs_new();
         if (!modFs) {
             mod_fs_raise_error(
-                "cannot create modfs for the active mod", NULL
+                "cannot create modfs for the active mod"
             );
             return NULL;
         }
@@ -805,7 +805,7 @@ C_DEFINE struct ModFs *mod_fs_create() {
     }
 
     mod_fs_raise_error(
-        "a modfs already exists for the active mod; use `mod_fs_get()` instead", NULL
+        "a modfs already exists for the active mod; use `mod_fs_get()` instead"
     );
     return NULL;
 }
@@ -1006,7 +1006,7 @@ C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const c
     modFs->totalSize = newTotalSize;
 
     // copy file
-    u8 *buffer = (u8 *) malloc(srcfile->capacity);
+    u8 *buffer = (u8 *) malloc(srcfile->size);
     if (!buffer) {
         mod_fs_raise_error(
             "modPath: %s, filepath: %s - failed to allocate buffer for modfs file data", modFs->modPath, dstfile->filepath
@@ -1025,6 +1025,7 @@ C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const c
     memcpy(dstfile, srcfile, sizeof(struct ModFsFile));
     snprintf(dstfile->filepath, MOD_FS_MAX_PATH, "%s", dstpath);
     memcpy(buffer, srcfile->data.bin, srcfile->size);
+    dstfile->size = dstfile->capacity = srcfile->size;
     dstfile->data.bin = buffer;
     dstfile->offset = 0;
     return true;
@@ -1337,7 +1338,7 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
 
     // resize data buffer
     if (file->offset + size > file->capacity) {
-        u32 newCapacity = MAX(file->capacity * 2, 32);
+        u32 newCapacity = MAX(file->capacity * 2, file->offset + size);
         u8 *buffer = (u8 *) realloc(file->data.bin, newCapacity);
         if (!buffer) {
             mod_fs_raise_error(
@@ -1653,7 +1654,7 @@ static bool mod_fs_extract_modpath_and_filepath(const char *uri, char *modPath, 
     if (!modPathEnd) {
         return false;
     }
-    snprintf(modPath, SYS_MAX_PATH, "%.*s", (size_t) (modPathEnd - modPathBegin), modPathBegin);
+    snprintf(modPath, SYS_MAX_PATH, "%.*s", (s32) (modPathEnd - modPathBegin), modPathBegin);
 
     // get filepath
     snprintf(filepath, MOD_FS_MAX_PATH, "%s", modPathEnd + 1);
@@ -1685,4 +1686,18 @@ C_DEFINE bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *len
     memcpy(*buffer, file->data.bin, file->size);
     *length = file->size;
     return true;
+}
+
+C_DEFINE void mod_fs_shutdown() {
+
+    // Close all modfs
+    for (auto &modFs : sModFsList) {
+        mod_fs_destroy(modFs);
+        mod_fs_free<struct ModFs>(modFs);
+    }
+    sModFsList.clear();
+
+    // Reset error state
+    mod_fs_reset_last_error();
+    sModFsHideErrors = false;
 }

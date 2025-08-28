@@ -138,7 +138,8 @@ override_disallowed_functions = {
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
-    "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri" ],
+    "src/pc/mods/mod_storage.h":                [ "mod_storage_shutdown" ],
+    "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64" ],
     "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
@@ -814,6 +815,8 @@ def build_param(fid, param, i):
         return '    %s %s = smlua_to_bytestring(L, %d);\n' % (ptype, pid, i)
     elif ptype == 'LuaFunction':
         return '    %s %s = smlua_to_lua_function(L, %d);\n' % (ptype, pid, i)
+    elif ptype == 'LuaTable':
+        return '    %s %s = smlua_to_lua_table(L, %d);\n' % (ptype, pid, i)
     elif translate_type_to_lot(ptype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ptype)
         return '    %s %s = (%s)smlua_to_cpointer(L, %d, %s);\n' % (ptype, pid, ptype, i, lvt)
@@ -869,6 +872,8 @@ def build_call(function):
         lfunc = 'lua_pushstring'
     elif ftype == 'ByteString':
         lfunc = 'smlua_push_bytestring'
+    elif ftype == 'LuaTable':
+        lfunc = 'smlua_push_lua_table'
     elif translate_type_to_lot(ftype) == 'LOT_POINTER':
         lvt = translate_type_to_lvt(ftype)
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)

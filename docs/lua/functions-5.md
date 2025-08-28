@@ -1210,19 +1210,19 @@ Loads a bool `value` from a `key` in mod storage
 ## [mod_storage_load_all](#mod_storage_load_all)
 
 ### Description
-Loads all keys and values as string in mod storage and returns a table
+Loads all keys and values in mod storage as strings and returns them as a table
 
 ### Lua Example
-`mod_storage_load_all()`
+`local tableValue = mod_storage_load_all()`
 
 ### Parameters
 - None
 
 ### Returns
-- None
+- `table`
 
 ### C Prototype
-`void mod_storage_load_all(void);`
+`LuaTable mod_storage_load_all(void);`
 
 [:arrow_up_small:](#)
 

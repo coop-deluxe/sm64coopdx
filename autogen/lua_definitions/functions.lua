@@ -7673,7 +7673,8 @@ function mod_storage_load_bool(key)
     -- ...
 end
 
---- Loads all keys and values as string in mod storage and returns a table
+--- @return table
+--- Loads all keys and values in mod storage as strings and returns them as a table
 function mod_storage_load_all()
     -- ...
 end

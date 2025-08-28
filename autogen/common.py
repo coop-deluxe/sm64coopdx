@@ -117,6 +117,9 @@ def translate_type_to_lvt(ptype, allowArrays=False):
     if ptype == "LuaFunction":
         return "LVT_LUAFUNCTION"
 
+    if ptype == "LuaTable":
+        return "LVT_LUATABLE"
+
     if "struct" in ptype:
         if pointerLvl > 1:
             return "LVT_???"
@@ -192,6 +195,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
         return 'LOT_NONE'
 
     if ptype == 'LuaFunction':
+        return 'LOT_NONE'
+
+    if ptype == 'LuaTable':
         return 'LOT_NONE'
 
     if ptype in override_types:
@@ -279,6 +285,9 @@ def translate_type_to_lua(ptype):
 
     if ptype == 'LuaFunction':
         return '`Lua Function` ()', None
+
+    if ptype == 'LuaTable':
+        return '`table`', None
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()

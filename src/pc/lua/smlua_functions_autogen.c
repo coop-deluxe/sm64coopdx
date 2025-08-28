@@ -23050,7 +23050,7 @@ int smlua_func_mod_storage_load_all(UNUSED lua_State* L) {
     }
 
 
-    mod_storage_load_all();
+    smlua_push_lua_table(L, mod_storage_load_all());
 
     return 1;
 }

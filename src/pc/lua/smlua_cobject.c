@@ -102,6 +102,7 @@ const char *sLuaLvtNames[] = {
     [LVT_TRAJECTORY] = "Trajectory",
     [LVT_TRAJECTORY_P] = "Trajectory Pointer",
     [LVT_LUAFUNCTION] = "LuaFunction",
+    [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "Pointer",
     [LVT_MAX] = "Max",
 };

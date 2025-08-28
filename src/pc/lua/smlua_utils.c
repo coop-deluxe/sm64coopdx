@@ -156,6 +156,22 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
+LuaTable smlua_to_lua_table(lua_State* L, int index) {
+    if (lua_type(L, index) == LUA_TNIL) {
+        return 0;
+    }
+
+    if (lua_type(L, index) != LUA_TTABLE) {
+        LOG_LUA_LINE("smlua_to_lua_table received improper type '%s'", luaL_typename(L, index));
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+
+    gSmLuaConvertSuccess = true;
+    lua_pushvalue(L, index);
+    return luaL_ref(L, LUA_REGISTRYINDEX);
+}
+
 bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
     return lua_isuserdata(L, index);
 }
@@ -486,6 +502,14 @@ void smlua_push_table_field(int index, const char* name) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+void smlua_push_lua_table(lua_State* L, LuaTable table) {
+    if (table != 0) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, table);
+    } else {
+        lua_pushnil(L);
+    }
+}
 
 void smlua_push_bytestring(lua_State* L, ByteString bytestring) {
     if (bytestring.bytes) {

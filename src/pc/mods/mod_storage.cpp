@@ -152,14 +152,14 @@ C_FIELD bool mod_storage_exists(const char* key) {
     return mod_storage_load(key) != NULL;
 }
 
-C_FIELD void mod_storage_load_all(void) {
+C_FIELD LuaTable mod_storage_load_all(void) {
     struct lua_State *L = gLuaState;
-    if (!L) { return; }
+    if (!L) { return 0; }
 
     char filename[SYS_MAX_PATH] = { 0 };
     if (!mod_storage_check_inputs(NULL, NULL, filename)) {
         lua_pushnil(L);
-        return;
+        return 0;
     }
 
     const mINI::INIStructure &ini = mod_storage_read_file(filename);
@@ -174,6 +174,7 @@ C_FIELD void mod_storage_load_all(void) {
     }
 
     LUA_STACK_CHECK_END(L);
+    return smlua_to_lua_table(L, -1);
 }
 
   ///////////
@@ -249,4 +250,11 @@ C_FIELD bool mod_storage_clear(void) {
     file.generate(ini);
 
     return true;
+}
+
+C_FIELD void mod_storage_shutdown(void) {
+    for (auto &file : sModStorageFiles) {
+        file.second.clear();
+    }
+    sModStorageFiles.clear();
 }
