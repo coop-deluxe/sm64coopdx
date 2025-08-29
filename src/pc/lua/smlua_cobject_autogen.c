@@ -1392,7 +1392,7 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 55
+#define LUA_LEVEL_VALUES_FIELD_COUNT 56
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE,          1, sizeof(u8)                   },
     { "ceilNormalMaxY",                   LVT_F32,     offsetof(struct LevelValues, ceilNormalMaxY),                   false, LOT_NONE,          1, sizeof(f32)                  },
@@ -1433,6 +1433,7 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "pssSlideStarIndex",                LVT_U8,      offsetof(struct LevelValues, pssSlideStarIndex),                false, LOT_NONE,          1, sizeof(u8)                   },
     { "pssSlideStarTime",                 LVT_U16,     offsetof(struct LevelValues, pssSlideStarTime),                 false, LOT_NONE,          1, sizeof(u16)                  },
     { "respawnBlueCoinsSwitch",           LVT_U8,      offsetof(struct LevelValues, respawnBlueCoinsSwitch),           false, LOT_NONE,          1, sizeof(u8)                   },
+    { "shellSequence",                    LVT_S32,     offsetof(struct LevelValues, shellSequence),                    false, LOT_NONE,          1, sizeof(enum SeqId)           },
     { "showStarNumber",                   LVT_U8,      offsetof(struct LevelValues, showStarNumber),                   false, LOT_NONE,          1, sizeof(u8)                   },
     { "skipCreditsAt",                    LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),                    false, LOT_NONE,          1, sizeof(enum LevelNum)        },
     { "starHeal",                         LVT_U8,      offsetof(struct LevelValues, starHeal),                         false, LOT_NONE,          1, sizeof(u8)                   },

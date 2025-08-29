@@ -1730,6 +1730,7 @@
 | wingCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | metalCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| shellSequence | [enum SeqId](constants.md#enum-SeqId) |  |
 | starPositions | [StarPositions](structs.md#StarPositions) | read-only |
 | cellHeightLimit | `integer` |  |
 | floorLowerLimit | `integer` |  |

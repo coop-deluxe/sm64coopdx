@@ -505,11 +505,15 @@ void init_mario_after_warp(void) {
         }
 
         if (gMarioState->flags & MARIO_METAL_CAP) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
         }
 
-        if (gMarioState->flags & (MARIO_VANISH_CAP | MARIO_WING_CAP)) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+        if (gMarioState->flags & MARIO_VANISH_CAP) {
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
+        }
+
+        if (gMarioState->flags & MARIO_WING_CAP) {
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
         }
 
 #ifndef VERSION_JP
@@ -713,8 +717,10 @@ s16 music_changed_through_warp(s16 arg) {
 
     if (levelNum == LEVEL_BOB && levelNum == gCurrLevelNum && destArea == gCurrAreaIndex) {
         sp2C = get_current_background_music();
-        if (sp2C == SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP | SEQ_VARIATION)
-            || sp2C == SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP)) {
+        if (sp2C == SEQUENCE_ARGS(4, gLevelValues.wingCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.metalCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.shellSequence)) {
             val4 = 0;
         }
     } else {

@@ -1122,6 +1122,7 @@
 --- @field public wingCapSequence SeqId
 --- @field public metalCapSequence SeqId
 --- @field public vanishCapSequence SeqId
+--- @field public shellSequence SeqId
 --- @field public starPositions StarPositions
 --- @field public cellHeightLimit integer
 --- @field public floorLowerLimit integer

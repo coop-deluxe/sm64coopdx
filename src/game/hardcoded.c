@@ -84,6 +84,7 @@ struct LevelValues gDefaultLevelValues = {
     .wingCapSequence                  = SEQ_EVENT_POWERUP,
     .metalCapSequence                 = SEQ_EVENT_METAL_CAP,
     .vanishCapSequence                = SEQ_EVENT_POWERUP,
+    .shellSequence                    = SEQ_EVENT_POWERUP | SEQ_VARIATION,
     .starPositions = {
         .KoopaBobStarPos              = {  3030.0f,  4500.0f, -4600.0f },
         .KoopaThiStarPos              = {  7100.0f, -1300.0f, -6000.0f },

@@ -6,6 +6,7 @@ extern "C" {
 #include "audio/external.h"
 #include "engine/surface_collision.h"
 #include "game/mario.h"
+#include "game/hardcoded.h"
 #include "game/ingame_menu.h"
 #include "game/level_update.h"
 #include "game/sound_init.h"
@@ -249,13 +250,13 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // Set music
-            if (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING) {
+            if (sDynosWarpNodeNum == -1 || (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
                 if (gCurrentArea != NULL) {
                     set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
                 }
-                if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
-                if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
-                if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+                if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
+                if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
+                if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
                 if (gCurrLevelNum == LEVEL_BOWSER_1 ||
                     gCurrLevelNum == LEVEL_BOWSER_2 ||
                     gCurrLevelNum == LEVEL_BOWSER_3) {
