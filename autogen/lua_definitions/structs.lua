@@ -21,35 +21,35 @@
 --- @field public loopEnd integer
 --- @field public values Pointer_integer
 --- @field public index Pointer_integer
---- @field protected length integer
+--- @field public length integer
 --- @field public valuesLength integer
 --- @field public indexLength integer
 
 --- @class AnimationTable
---- @field protected count integer
+--- @field public count integer
 
 --- @class Area
 --- @field public index integer
 --- @field public flags integer
 --- @field public terrainType integer
 --- @field public root GraphNodeRoot
---- @field protected terrainData Pointer_integer
---- @field protected surfaceRooms Pointer_integer
---- @field protected macroObjects Pointer_integer
---- @field protected warpNodes ObjectWarpNode
---- @field protected paintingWarpNodes WarpNode
+--- @field public terrainData Pointer_integer
+--- @field public surfaceRooms Pointer_integer
+--- @field public macroObjects Pointer_integer
+--- @field public warpNodes ObjectWarpNode
+--- @field public paintingWarpNodes WarpNode
 --- @field public instantWarps InstantWarp
---- @field protected objectSpawnInfos SpawnInfo
+--- @field public objectSpawnInfos SpawnInfo
 --- @field public camera Camera
 --- @field public whirlpools Whirlpool[]
 --- @field public dialog integer[]
 --- @field public musicParam integer
 --- @field public musicParam2 integer
---- @field protected localAreaTimer integer
---- @field protected macroObjectsAltered Pointer_integer
+--- @field public localAreaTimer integer
+--- @field public macroObjectsAltered Pointer_integer
 --- @field public numRedCoins integer
 --- @field public numSecrets integer
---- @field protected nextSyncID integer
+--- @field public nextSyncID integer
 
 --- @class BehaviorDialogs
 --- @field public BobombBuddyBob1Dialog DialogId
@@ -199,9 +199,9 @@
 --- @field public MultipleCapCollection integer
 --- @field public InfiniteRenderDistance integer
 --- @field public CourtyardBoosRequirement integer
---- @field protected starsNeededForDialog StarsNeededForDialog
---- @field protected dialogs BehaviorDialogs
---- @field protected trajectories BehaviorTrajectories
+--- @field public starsNeededForDialog StarsNeededForDialog
+--- @field public dialogs BehaviorDialogs
+--- @field public trajectories BehaviorTrajectories
 
 --- @class BullyCollisionData
 --- @field public conversionRatio number
@@ -215,9 +215,9 @@
 --- @field public mode integer
 --- @field public defMode integer
 --- @field public yaw integer
---- @field protected focus Vec3f
---- @field protected pos Vec3f
---- @field protected unusedVec1 Vec3f
+--- @field public focus Vec3f
+--- @field public pos Vec3f
+--- @field public unusedVec1 Vec3f
 --- @field public areaCenX number
 --- @field public areaCenZ number
 --- @field public cutscene integer
@@ -226,7 +226,7 @@
 --- @field public filler3C integer[]
 --- @field public doorStatus integer
 --- @field public areaCenY number
---- @field protected mtx Mat4
+--- @field public mtx Mat4
 
 --- @class CameraFOVStatus
 --- @field public fovFunc integer
@@ -243,8 +243,8 @@
 --- @field public override boolean
 
 --- @class CameraStoredInfo
---- @field protected pos Vec3f
---- @field protected focus Vec3f
+--- @field public pos Vec3f
+--- @field public focus Vec3f
 --- @field public panDist number
 --- @field public cannonYOffset number
 
@@ -267,278 +267,278 @@
 --- @field public roll integer
 
 --- @class Character
---- @field protected type CharacterType
---- @field protected name string
---- @field protected hudHead integer
---- @field protected hudHeadTexture TextureInfo
---- @field protected cameraHudHead integer
---- @field protected modelId integer
---- @field protected capModelId integer
---- @field protected capMetalModelId integer
---- @field protected capWingModelId integer
---- @field protected capMetalWingModelId integer
---- @field protected capEnemyLayer integer
---- @field protected capEnemyGfx Pointer_Gfx
---- @field protected capEnemyDecalGfx Pointer_Gfx
---- @field protected torsoRotMult number
---- @field protected animOffsetEnabled integer
---- @field protected animOffsetLowYPoint number
---- @field protected animOffsetFeet number
---- @field protected animOffsetHand number
---- @field protected animSlowLedgeGrab integer
---- @field protected animFallOverBackwards integer
---- @field protected animBackwardAirKb integer
---- @field protected animDyingOnBack integer
---- @field protected animBackflip integer
---- @field protected animClimbUpPole integer
---- @field protected animGrabPoleShort integer
---- @field protected animGrabPoleSwingPart1 integer
---- @field protected animGrabPoleSwingPart2 integer
---- @field protected animHandstandIdle integer
---- @field protected animHandstandJump integer
---- @field protected animStartHandstand integer
---- @field protected animReturnFromHandstand integer
---- @field protected animIdleOnPole integer
---- @field protected animAPose integer
---- @field protected animSkidOnGround integer
---- @field protected animStopSkid integer
---- @field protected animCrouchFromFastLongjump integer
---- @field protected animCrouchFromSlowLongjump integer
---- @field protected animFastLongjump integer
---- @field protected animSlowLongjump integer
---- @field protected animAirborneOnStomach integer
---- @field protected animWalkWithLightObj integer
---- @field protected animRunWithLightObj integer
---- @field protected animSlowWalkWithLightObj integer
---- @field protected animShiveringWarmingHand integer
---- @field protected animShiveringReturnToIdle integer
---- @field protected animShivering integer
---- @field protected animClimbDownLedge integer
---- @field protected animCreditsWaving integer
---- @field protected animCreditsLookUp integer
---- @field protected animCreditsReturnFromLookUp integer
---- @field protected animCreditsRaiseHand integer
---- @field protected animCreditsLowerHand integer
---- @field protected animCreditsTakeOffCap integer
---- @field protected animCreditsStartWalkLookUp integer
---- @field protected animCreditsLookBackThenRun integer
---- @field protected animFinalBowserRaiseHandSpin integer
---- @field protected animFinalBowserWingCapTakeOff integer
---- @field protected animCreditsPeaceSign integer
---- @field protected animStandUpFromLavaBoost integer
---- @field protected animFireLavaBurn integer
---- @field protected animWingCapFly integer
---- @field protected animHangOnOwl integer
---- @field protected animLandOnStomach integer
---- @field protected animAirForwardKb integer
---- @field protected animDyingOnStomach integer
---- @field protected animSuffocating integer
---- @field protected animCoughing integer
---- @field protected animThrowCatchKey integer
---- @field protected animDyingFallOver integer
---- @field protected animIdleOnLedge integer
---- @field protected animFastLedgeGrab integer
---- @field protected animHangOnCeiling integer
---- @field protected animPutCapOn integer
---- @field protected animTakeCapOffThenOn integer
---- @field protected animQuicklyPutCapOn integer
---- @field protected animHeadStuckInGround integer
---- @field protected animGroundPoundLanding integer
---- @field protected animTripleJumpGroundPound integer
---- @field protected animStartGroundPound integer
---- @field protected animGroundPound integer
---- @field protected animBottomStuckInGround integer
---- @field protected animIdleWithLightObj integer
---- @field protected animJumpLandWithLightObj integer
---- @field protected animJumpWithLightObj integer
---- @field protected animFallLandWithLightObj integer
---- @field protected animFallWithLightObj integer
---- @field protected animFallFromSlidingWithLightObj integer
---- @field protected animSlidingOnBottomWithLightObj integer
---- @field protected animStandUpFromSlidingWithLightObj integer
---- @field protected animRidingShell integer
---- @field protected animWalking integer
---- @field protected animForwardFlip integer
---- @field protected animJumpRidingShell integer
---- @field protected animLandFromDoubleJump integer
---- @field protected animDoubleJumpFall integer
---- @field protected animSingleJump integer
---- @field protected animLandFromSingleJump integer
---- @field protected animAirKick integer
---- @field protected animDoubleJumpRise integer
---- @field protected animStartForwardSpinning integer
---- @field protected animThrowLightObject integer
---- @field protected animFallFromSlideKick integer
---- @field protected animBendKnessRidingShell integer
---- @field protected animLegsStuckInGround integer
---- @field protected animGeneralFall integer
---- @field protected animGeneralLand integer
---- @field protected animBeingGrabbed integer
---- @field protected animGrabHeavyObject integer
---- @field protected animSlowLandFromDive integer
---- @field protected animFlyFromCannon integer
---- @field protected animMoveOnWireNetRight integer
---- @field protected animMoveOnWireNetLeft integer
---- @field protected animMissingCap integer
---- @field protected animPullDoorWalkIn integer
---- @field protected animPushDoorWalkIn integer
---- @field protected animUnlockDoor integer
---- @field protected animStartReachPocket integer
---- @field protected animReachPocket integer
---- @field protected animStopReachPocket integer
---- @field protected animGroundThrow integer
---- @field protected animGroundKick integer
---- @field protected animFirstPunch integer
---- @field protected animSecondPunch integer
---- @field protected animFirstPunchFast integer
---- @field protected animSecondPunchFast integer
---- @field protected animPickUpLightObj integer
---- @field protected animPushing integer
---- @field protected animStartRidingShell integer
---- @field protected animPlaceLightObj integer
---- @field protected animForwardSpinning integer
---- @field protected animBackwardSpinning integer
---- @field protected animBreakdance integer
---- @field protected animRunning integer
---- @field protected animRunningUnused integer
---- @field protected animSoftBackKb integer
---- @field protected animSoftFrontKb integer
---- @field protected animDyingInQuicksand integer
---- @field protected animIdleInQuicksand integer
---- @field protected animMoveInQuicksand integer
---- @field protected animElectrocution integer
---- @field protected animShocked integer
---- @field protected animBackwardKb integer
---- @field protected animForwardKb integer
---- @field protected animIdleHeavyObj integer
---- @field protected animStandAgainstWall integer
---- @field protected animSidestepLeft integer
---- @field protected animSidestepRight integer
---- @field protected animStartSleepIdle integer
---- @field protected animStartSleepScratch integer
---- @field protected animStartSleepYawn integer
---- @field protected animStartSleepSitting integer
---- @field protected animSleepIdle integer
---- @field protected animSleepStartLying integer
---- @field protected animSleepLying integer
---- @field protected animDive integer
---- @field protected animSlideDive integer
---- @field protected animGroundBonk integer
---- @field protected animStopSlideLightObj integer
---- @field protected animSlideKick integer
---- @field protected animCrouchFromSlideKick integer
---- @field protected animSlideMotionless integer
---- @field protected animStopSlide integer
---- @field protected animFallFromSlide integer
---- @field protected animSlide integer
---- @field protected animTiptoe integer
---- @field protected animTwirlLand integer
---- @field protected animTwirl integer
---- @field protected animStartTwirl integer
---- @field protected animStopCrouching integer
---- @field protected animStartCrouching integer
---- @field protected animCrouching integer
---- @field protected animCrawling integer
---- @field protected animStopCrawling integer
---- @field protected animStartCrawling integer
---- @field protected animSummonStar integer
---- @field protected animReturnStarApproachDoor integer
---- @field protected animBackwardsWaterKb integer
---- @field protected animSwimWithObjPart1 integer
---- @field protected animSwimWithObjPart2 integer
---- @field protected animFlutterkickWithObj integer
---- @field protected animWaterActionEndWithObj integer
---- @field protected animStopGrabObjWater integer
---- @field protected animWaterIdleWithObj integer
---- @field protected animDrowningPart1 integer
---- @field protected animDrowningPart2 integer
---- @field protected animWaterDying integer
---- @field protected animWaterForwardKb integer
---- @field protected animFallFromWater integer
---- @field protected animSwimPart1 integer
---- @field protected animSwimPart2 integer
---- @field protected animFlutterkick integer
---- @field protected animWaterActionEnd integer
---- @field protected animWaterPickUpObj integer
---- @field protected animWaterGrabObjPart2 integer
---- @field protected animWaterGrabObjPart1 integer
---- @field protected animWaterThrowObj integer
---- @field protected animWaterIdle integer
---- @field protected animWaterStarDance integer
---- @field protected animReturnFromWaterStarDance integer
---- @field protected animGrabBowser integer
---- @field protected animSwingingBowser integer
---- @field protected animReleaseBowser integer
---- @field protected animHoldingBowser integer
---- @field protected animHeavyThrow integer
---- @field protected animWalkPanting integer
---- @field protected animWalkWithHeavyObj integer
---- @field protected animTurningPart1 integer
---- @field protected animTurningPart2 integer
---- @field protected animSlideflipLand integer
---- @field protected animSlideflip integer
---- @field protected animTripleJumpLand integer
---- @field protected animTripleJump integer
---- @field protected animFirstPerson integer
---- @field protected animIdleHeadLeft integer
---- @field protected animIdleHeadRight integer
---- @field protected animIdleHeadCenter integer
---- @field protected animHandstandLeft integer
---- @field protected animHandstandRight integer
---- @field protected animWakeFromSleep integer
---- @field protected animWakeFromLying integer
---- @field protected animStartTiptoe integer
---- @field protected animSlidejump integer
---- @field protected animStartWallkick integer
---- @field protected animStarDance integer
---- @field protected animReturnFromStarDance integer
---- @field protected animForwardSpinningFlip integer
---- @field protected animTripleJumpFly integer
---- @field protected soundFreqScale number
---- @field protected soundYahWahHoo integer
---- @field protected soundHoohoo integer
---- @field protected soundYahoo integer
---- @field protected soundUh integer
---- @field protected soundHrmm integer
---- @field protected soundWah2 integer
---- @field protected soundWhoa integer
---- @field protected soundEeuh integer
---- @field protected soundAttacked integer
---- @field protected soundOoof integer
---- @field protected soundOoof2 integer
---- @field protected soundHereWeGo integer
---- @field protected soundYawning integer
---- @field protected soundSnoring1 integer
---- @field protected soundSnoring2 integer
---- @field protected soundWaaaooow integer
---- @field protected soundHaha integer
---- @field protected soundHaha_2 integer
---- @field protected soundUh2 integer
---- @field protected soundUh2_2 integer
---- @field protected soundOnFire integer
---- @field protected soundDying integer
---- @field protected soundPantingCold integer
---- @field protected soundPanting integer
---- @field protected soundCoughing1 integer
---- @field protected soundCoughing2 integer
---- @field protected soundCoughing3 integer
---- @field protected soundPunchYah integer
---- @field protected soundPunchHoo integer
---- @field protected soundMamaMia integer
---- @field protected soundGroundPoundWah integer
---- @field protected soundDrowning integer
---- @field protected soundPunchWah integer
---- @field protected soundYahooWahaYippee integer
---- @field protected soundDoh integer
---- @field protected soundGameOver integer
---- @field protected soundHello integer
---- @field protected soundPressStartToPlay integer
---- @field protected soundTwirlBounce integer
---- @field protected soundSnoring3 integer
---- @field protected soundSoLongaBowser integer
---- @field protected soundImaTired integer
---- @field protected soundLetsAGo integer
---- @field protected soundOkeyDokey integer
+--- @field public type CharacterType
+--- @field public name string
+--- @field public hudHead integer
+--- @field public hudHeadTexture TextureInfo
+--- @field public cameraHudHead integer
+--- @field public modelId integer
+--- @field public capModelId integer
+--- @field public capMetalModelId integer
+--- @field public capWingModelId integer
+--- @field public capMetalWingModelId integer
+--- @field public capEnemyLayer integer
+--- @field public capEnemyGfx Pointer_Gfx
+--- @field public capEnemyDecalGfx Pointer_Gfx
+--- @field public torsoRotMult number
+--- @field public animOffsetEnabled integer
+--- @field public animOffsetLowYPoint number
+--- @field public animOffsetFeet number
+--- @field public animOffsetHand number
+--- @field public animSlowLedgeGrab integer
+--- @field public animFallOverBackwards integer
+--- @field public animBackwardAirKb integer
+--- @field public animDyingOnBack integer
+--- @field public animBackflip integer
+--- @field public animClimbUpPole integer
+--- @field public animGrabPoleShort integer
+--- @field public animGrabPoleSwingPart1 integer
+--- @field public animGrabPoleSwingPart2 integer
+--- @field public animHandstandIdle integer
+--- @field public animHandstandJump integer
+--- @field public animStartHandstand integer
+--- @field public animReturnFromHandstand integer
+--- @field public animIdleOnPole integer
+--- @field public animAPose integer
+--- @field public animSkidOnGround integer
+--- @field public animStopSkid integer
+--- @field public animCrouchFromFastLongjump integer
+--- @field public animCrouchFromSlowLongjump integer
+--- @field public animFastLongjump integer
+--- @field public animSlowLongjump integer
+--- @field public animAirborneOnStomach integer
+--- @field public animWalkWithLightObj integer
+--- @field public animRunWithLightObj integer
+--- @field public animSlowWalkWithLightObj integer
+--- @field public animShiveringWarmingHand integer
+--- @field public animShiveringReturnToIdle integer
+--- @field public animShivering integer
+--- @field public animClimbDownLedge integer
+--- @field public animCreditsWaving integer
+--- @field public animCreditsLookUp integer
+--- @field public animCreditsReturnFromLookUp integer
+--- @field public animCreditsRaiseHand integer
+--- @field public animCreditsLowerHand integer
+--- @field public animCreditsTakeOffCap integer
+--- @field public animCreditsStartWalkLookUp integer
+--- @field public animCreditsLookBackThenRun integer
+--- @field public animFinalBowserRaiseHandSpin integer
+--- @field public animFinalBowserWingCapTakeOff integer
+--- @field public animCreditsPeaceSign integer
+--- @field public animStandUpFromLavaBoost integer
+--- @field public animFireLavaBurn integer
+--- @field public animWingCapFly integer
+--- @field public animHangOnOwl integer
+--- @field public animLandOnStomach integer
+--- @field public animAirForwardKb integer
+--- @field public animDyingOnStomach integer
+--- @field public animSuffocating integer
+--- @field public animCoughing integer
+--- @field public animThrowCatchKey integer
+--- @field public animDyingFallOver integer
+--- @field public animIdleOnLedge integer
+--- @field public animFastLedgeGrab integer
+--- @field public animHangOnCeiling integer
+--- @field public animPutCapOn integer
+--- @field public animTakeCapOffThenOn integer
+--- @field public animQuicklyPutCapOn integer
+--- @field public animHeadStuckInGround integer
+--- @field public animGroundPoundLanding integer
+--- @field public animTripleJumpGroundPound integer
+--- @field public animStartGroundPound integer
+--- @field public animGroundPound integer
+--- @field public animBottomStuckInGround integer
+--- @field public animIdleWithLightObj integer
+--- @field public animJumpLandWithLightObj integer
+--- @field public animJumpWithLightObj integer
+--- @field public animFallLandWithLightObj integer
+--- @field public animFallWithLightObj integer
+--- @field public animFallFromSlidingWithLightObj integer
+--- @field public animSlidingOnBottomWithLightObj integer
+--- @field public animStandUpFromSlidingWithLightObj integer
+--- @field public animRidingShell integer
+--- @field public animWalking integer
+--- @field public animForwardFlip integer
+--- @field public animJumpRidingShell integer
+--- @field public animLandFromDoubleJump integer
+--- @field public animDoubleJumpFall integer
+--- @field public animSingleJump integer
+--- @field public animLandFromSingleJump integer
+--- @field public animAirKick integer
+--- @field public animDoubleJumpRise integer
+--- @field public animStartForwardSpinning integer
+--- @field public animThrowLightObject integer
+--- @field public animFallFromSlideKick integer
+--- @field public animBendKnessRidingShell integer
+--- @field public animLegsStuckInGround integer
+--- @field public animGeneralFall integer
+--- @field public animGeneralLand integer
+--- @field public animBeingGrabbed integer
+--- @field public animGrabHeavyObject integer
+--- @field public animSlowLandFromDive integer
+--- @field public animFlyFromCannon integer
+--- @field public animMoveOnWireNetRight integer
+--- @field public animMoveOnWireNetLeft integer
+--- @field public animMissingCap integer
+--- @field public animPullDoorWalkIn integer
+--- @field public animPushDoorWalkIn integer
+--- @field public animUnlockDoor integer
+--- @field public animStartReachPocket integer
+--- @field public animReachPocket integer
+--- @field public animStopReachPocket integer
+--- @field public animGroundThrow integer
+--- @field public animGroundKick integer
+--- @field public animFirstPunch integer
+--- @field public animSecondPunch integer
+--- @field public animFirstPunchFast integer
+--- @field public animSecondPunchFast integer
+--- @field public animPickUpLightObj integer
+--- @field public animPushing integer
+--- @field public animStartRidingShell integer
+--- @field public animPlaceLightObj integer
+--- @field public animForwardSpinning integer
+--- @field public animBackwardSpinning integer
+--- @field public animBreakdance integer
+--- @field public animRunning integer
+--- @field public animRunningUnused integer
+--- @field public animSoftBackKb integer
+--- @field public animSoftFrontKb integer
+--- @field public animDyingInQuicksand integer
+--- @field public animIdleInQuicksand integer
+--- @field public animMoveInQuicksand integer
+--- @field public animElectrocution integer
+--- @field public animShocked integer
+--- @field public animBackwardKb integer
+--- @field public animForwardKb integer
+--- @field public animIdleHeavyObj integer
+--- @field public animStandAgainstWall integer
+--- @field public animSidestepLeft integer
+--- @field public animSidestepRight integer
+--- @field public animStartSleepIdle integer
+--- @field public animStartSleepScratch integer
+--- @field public animStartSleepYawn integer
+--- @field public animStartSleepSitting integer
+--- @field public animSleepIdle integer
+--- @field public animSleepStartLying integer
+--- @field public animSleepLying integer
+--- @field public animDive integer
+--- @field public animSlideDive integer
+--- @field public animGroundBonk integer
+--- @field public animStopSlideLightObj integer
+--- @field public animSlideKick integer
+--- @field public animCrouchFromSlideKick integer
+--- @field public animSlideMotionless integer
+--- @field public animStopSlide integer
+--- @field public animFallFromSlide integer
+--- @field public animSlide integer
+--- @field public animTiptoe integer
+--- @field public animTwirlLand integer
+--- @field public animTwirl integer
+--- @field public animStartTwirl integer
+--- @field public animStopCrouching integer
+--- @field public animStartCrouching integer
+--- @field public animCrouching integer
+--- @field public animCrawling integer
+--- @field public animStopCrawling integer
+--- @field public animStartCrawling integer
+--- @field public animSummonStar integer
+--- @field public animReturnStarApproachDoor integer
+--- @field public animBackwardsWaterKb integer
+--- @field public animSwimWithObjPart1 integer
+--- @field public animSwimWithObjPart2 integer
+--- @field public animFlutterkickWithObj integer
+--- @field public animWaterActionEndWithObj integer
+--- @field public animStopGrabObjWater integer
+--- @field public animWaterIdleWithObj integer
+--- @field public animDrowningPart1 integer
+--- @field public animDrowningPart2 integer
+--- @field public animWaterDying integer
+--- @field public animWaterForwardKb integer
+--- @field public animFallFromWater integer
+--- @field public animSwimPart1 integer
+--- @field public animSwimPart2 integer
+--- @field public animFlutterkick integer
+--- @field public animWaterActionEnd integer
+--- @field public animWaterPickUpObj integer
+--- @field public animWaterGrabObjPart2 integer
+--- @field public animWaterGrabObjPart1 integer
+--- @field public animWaterThrowObj integer
+--- @field public animWaterIdle integer
+--- @field public animWaterStarDance integer
+--- @field public animReturnFromWaterStarDance integer
+--- @field public animGrabBowser integer
+--- @field public animSwingingBowser integer
+--- @field public animReleaseBowser integer
+--- @field public animHoldingBowser integer
+--- @field public animHeavyThrow integer
+--- @field public animWalkPanting integer
+--- @field public animWalkWithHeavyObj integer
+--- @field public animTurningPart1 integer
+--- @field public animTurningPart2 integer
+--- @field public animSlideflipLand integer
+--- @field public animSlideflip integer
+--- @field public animTripleJumpLand integer
+--- @field public animTripleJump integer
+--- @field public animFirstPerson integer
+--- @field public animIdleHeadLeft integer
+--- @field public animIdleHeadRight integer
+--- @field public animIdleHeadCenter integer
+--- @field public animHandstandLeft integer
+--- @field public animHandstandRight integer
+--- @field public animWakeFromSleep integer
+--- @field public animWakeFromLying integer
+--- @field public animStartTiptoe integer
+--- @field public animSlidejump integer
+--- @field public animStartWallkick integer
+--- @field public animStarDance integer
+--- @field public animReturnFromStarDance integer
+--- @field public animForwardSpinningFlip integer
+--- @field public animTripleJumpFly integer
+--- @field public soundFreqScale number
+--- @field public soundYahWahHoo integer
+--- @field public soundHoohoo integer
+--- @field public soundYahoo integer
+--- @field public soundUh integer
+--- @field public soundHrmm integer
+--- @field public soundWah2 integer
+--- @field public soundWhoa integer
+--- @field public soundEeuh integer
+--- @field public soundAttacked integer
+--- @field public soundOoof integer
+--- @field public soundOoof2 integer
+--- @field public soundHereWeGo integer
+--- @field public soundYawning integer
+--- @field public soundSnoring1 integer
+--- @field public soundSnoring2 integer
+--- @field public soundWaaaooow integer
+--- @field public soundHaha integer
+--- @field public soundHaha_2 integer
+--- @field public soundUh2 integer
+--- @field public soundUh2_2 integer
+--- @field public soundOnFire integer
+--- @field public soundDying integer
+--- @field public soundPantingCold integer
+--- @field public soundPanting integer
+--- @field public soundCoughing1 integer
+--- @field public soundCoughing2 integer
+--- @field public soundCoughing3 integer
+--- @field public soundPunchYah integer
+--- @field public soundPunchHoo integer
+--- @field public soundMamaMia integer
+--- @field public soundGroundPoundWah integer
+--- @field public soundDrowning integer
+--- @field public soundPunchWah integer
+--- @field public soundYahooWahaYippee integer
+--- @field public soundDoh integer
+--- @field public soundGameOver integer
+--- @field public soundHello integer
+--- @field public soundPressStartToPlay integer
+--- @field public soundTwirlBounce integer
+--- @field public soundSnoring3 integer
+--- @field public soundSoLongaBowser integer
+--- @field public soundImaTired integer
+--- @field public soundLetsAGo integer
+--- @field public soundOkeyDokey integer
 
 --- @class Controller
 --- @field public port integer
@@ -554,18 +554,18 @@
 --- @field public buttonReleased integer
 
 --- @class CustomLevelInfo
---- @field protected script Pointer_LevelScript
---- @field protected scriptEntryName string
+--- @field public script Pointer_LevelScript
+--- @field public scriptEntryName string
 --- @field public courseNum integer
 --- @field public levelNum integer
---- @field protected fullName string
---- @field protected shortName string
+--- @field public fullName string
+--- @field public shortName string
 --- @field public acousticReach integer
 --- @field public echoLevel1 integer
 --- @field public echoLevel2 integer
 --- @field public echoLevel3 integer
 --- @field public modIndex integer
---- @field protected next CustomLevelInfo
+--- @field public next CustomLevelInfo
 
 --- @class Cutscene
 --- @field public duration integer
@@ -573,13 +573,13 @@
 --- @class CutsceneSplinePoint
 --- @field public index integer
 --- @field public speed integer
---- @field protected point Vec3s
+--- @field public point Vec3s
 
 --- @class CutsceneVariable
 --- @field public unused1 integer
---- @field protected point Vec3f
---- @field protected unusedPoint Vec3f
---- @field protected angle Vec3s
+--- @field public point Vec3f
+--- @field public unusedPoint Vec3f
+--- @field public angle Vec3s
 --- @field public unused2 integer
 
 --- @class DateTime
@@ -591,12 +591,12 @@
 --- @field public second integer
 
 --- @class DialogEntry
---- @field protected unused integer
---- @field protected linesPerBox integer
---- @field protected leftOffset integer
---- @field protected width integer
---- @field protected text string
---- @field protected replaced boolean
+--- @field public unused integer
+--- @field public linesPerBox integer
+--- @field public leftOffset integer
+--- @field public width integer
+--- @field public text string
+--- @field public replaced boolean
 
 --- @class DisplayListNode
 --- @field public displayList Pointer_Gfx
@@ -610,27 +610,27 @@
 --- @field public a integer
 
 --- @class DjuiInteractableTheme
---- @field protected textColor DjuiColor
---- @field protected defaultRectColor DjuiColor
---- @field protected cursorDownRectColor DjuiColor
---- @field protected hoveredRectColor DjuiColor
---- @field protected defaultBorderColor DjuiColor
---- @field protected cursorDownBorderColor DjuiColor
---- @field protected hoveredBorderColor DjuiColor
+--- @field public textColor DjuiColor
+--- @field public defaultRectColor DjuiColor
+--- @field public cursorDownRectColor DjuiColor
+--- @field public hoveredRectColor DjuiColor
+--- @field public defaultBorderColor DjuiColor
+--- @field public cursorDownBorderColor DjuiColor
+--- @field public hoveredBorderColor DjuiColor
 
 --- @class DjuiPanelTheme
 --- @field public hudFontHeader boolean
 
 --- @class DjuiTheme
---- @field protected id string
---- @field protected name string
---- @field protected interactables DjuiInteractableTheme
---- @field protected threePanels DjuiThreePanelTheme
---- @field protected panels DjuiPanelTheme
+--- @field public id string
+--- @field public name string
+--- @field public interactables DjuiInteractableTheme
+--- @field public threePanels DjuiThreePanelTheme
+--- @field public panels DjuiPanelTheme
 
 --- @class DjuiThreePanelTheme
---- @field protected rectColor DjuiColor
---- @field protected borderColor DjuiColor
+--- @field public rectColor DjuiColor
+--- @field public borderColor DjuiColor
 
 --- @class ExclamationBoxContent
 --- @field public id integer
@@ -640,7 +640,7 @@
 --- @field public behavior BehaviorId
 
 --- @class FirstPersonCamera
---- @field protected enabled boolean
+--- @field public enabled boolean
 --- @field public forcePitch boolean
 --- @field public forceYaw boolean
 --- @field public forceRoll boolean
@@ -649,7 +649,7 @@
 --- @field public yaw integer
 --- @field public crouch number
 --- @field public fov number
---- @field protected offset Vec3f
+--- @field public offset Vec3f
 
 --- @class FloorGeometry
 --- @field public unused number[]
@@ -659,69 +659,69 @@
 --- @field public originOffset number
 
 --- @class FnGraphNode
---- @field protected node GraphNode
+--- @field public node GraphNode
 
 --- @class Gfx
---- @field protected w0 integer
---- @field protected w1 integer
+--- @field public w0 integer
+--- @field public w1 integer
 
 --- @class GlobalObjectAnimations
---- @field protected amp_seg8_anims_08004034 Pointer_ObjectAnimPointer
---- @field protected birds_seg5_anims_050009E8 Pointer_ObjectAnimPointer
---- @field protected blargg_seg5_anims_0500616C Pointer_ObjectAnimPointer
---- @field protected blue_fish_seg3_anims_0301C2B0 Pointer_ObjectAnimPointer
---- @field protected bobomb_seg8_anims_0802396C Pointer_ObjectAnimPointer
---- @field protected bookend_seg5_anims_05002540 Pointer_ObjectAnimPointer
---- @field protected bowser_key_seg3_anims_list Pointer_ObjectAnimPointer
---- @field protected bowser_seg6_anims_06057690 Pointer_ObjectAnimPointer
---- @field protected bub_seg6_anims_06012354 Pointer_ObjectAnimPointer
---- @field protected bully_seg5_anims_0500470C Pointer_ObjectAnimPointer
---- @field protected butterfly_seg3_anims_030056B0 Pointer_ObjectAnimPointer
---- @field protected castle_grounds_seg7_anims_flags Pointer_ObjectAnimPointer
---- @field protected chain_chomp_seg6_anims_06025178 Pointer_ObjectAnimPointer
---- @field protected chair_seg5_anims_05005784 Pointer_ObjectAnimPointer
---- @field protected chilly_chief_seg6_anims_06003994 Pointer_ObjectAnimPointer
---- @field protected chuckya_seg8_anims_0800C070 Pointer_ObjectAnimPointer
---- @field protected clam_shell_seg5_anims_05001744 Pointer_ObjectAnimPointer
---- @field protected cyan_fish_seg6_anims_0600E264 Pointer_ObjectAnimPointer
---- @field protected door_seg3_anims_030156C0 Pointer_ObjectAnimPointer
---- @field protected dorrie_seg6_anims_0600F638 Pointer_ObjectAnimPointer
---- @field protected eyerok_seg5_anims_050116E4 Pointer_ObjectAnimPointer
---- @field protected flyguy_seg8_anims_08011A64 Pointer_ObjectAnimPointer
---- @field protected goomba_seg8_anims_0801DA4C Pointer_ObjectAnimPointer
---- @field protected heave_ho_seg5_anims_0501534C Pointer_ObjectAnimPointer
---- @field protected hoot_seg5_anims_05005768 Pointer_ObjectAnimPointer
---- @field protected king_bobomb_seg5_anims_0500FE30 Pointer_ObjectAnimPointer
---- @field protected klepto_seg5_anims_05008CFC Pointer_ObjectAnimPointer
---- @field protected koopa_flag_seg6_anims_06001028 Pointer_ObjectAnimPointer
---- @field protected koopa_seg6_anims_06011364 Pointer_ObjectAnimPointer
---- @field protected lakitu_enemy_seg5_anims_050144D4 Pointer_ObjectAnimPointer
---- @field protected lakitu_seg6_anims_060058F8 Pointer_ObjectAnimPointer
---- @field protected mad_piano_seg5_anims_05009B14 Pointer_ObjectAnimPointer
---- @field protected manta_seg5_anims_05008EB4 Pointer_ObjectAnimPointer
---- @field protected mips_seg6_anims_06015634 Pointer_ObjectAnimPointer
---- @field protected moneybag_seg6_anims_06005E5C Pointer_ObjectAnimPointer
---- @field protected monty_mole_seg5_anims_05007248 Pointer_ObjectAnimPointer
---- @field protected peach_seg5_anims_0501C41C Pointer_ObjectAnimPointer
---- @field protected penguin_seg5_anims_05008B74 Pointer_ObjectAnimPointer
---- @field protected piranha_plant_seg6_anims_0601C31C Pointer_ObjectAnimPointer
---- @field protected scuttlebug_seg6_anims_06015064 Pointer_ObjectAnimPointer
---- @field protected seaweed_seg6_anims_0600A4D4 Pointer_ObjectAnimPointer
---- @field protected skeeter_seg6_anims_06007DE0 Pointer_ObjectAnimPointer
---- @field protected snowman_seg5_anims_0500D118 Pointer_ObjectAnimPointer
---- @field protected spindrift_seg5_anims_05002D68 Pointer_ObjectAnimPointer
---- @field protected spiny_seg5_anims_05016EAC Pointer_ObjectAnimPointer
---- @field protected spiny_egg_seg5_anims_050157E4 Pointer_ObjectAnimPointer
---- @field protected sushi_seg5_anims_0500AE54 Pointer_ObjectAnimPointer
---- @field protected swoop_seg6_anims_060070D0 Pointer_ObjectAnimPointer
---- @field protected toad_seg6_anims_0600FB58 Pointer_ObjectAnimPointer
---- @field protected ukiki_seg5_anims_05015784 Pointer_ObjectAnimPointer
---- @field protected unagi_seg5_anims_05012824 Pointer_ObjectAnimPointer
---- @field protected water_ring_seg6_anims_06013F7C Pointer_ObjectAnimPointer
---- @field protected whomp_seg6_anims_06020A04 Pointer_ObjectAnimPointer
---- @field protected wiggler_seg5_anims_0500C874 Pointer_ObjectAnimPointer
---- @field protected wiggler_seg5_anims_0500EC8C Pointer_ObjectAnimPointer
---- @field protected yoshi_seg5_anims_05024100 Pointer_ObjectAnimPointer
+--- @field public amp_seg8_anims_08004034 Pointer_ObjectAnimPointer
+--- @field public birds_seg5_anims_050009E8 Pointer_ObjectAnimPointer
+--- @field public blargg_seg5_anims_0500616C Pointer_ObjectAnimPointer
+--- @field public blue_fish_seg3_anims_0301C2B0 Pointer_ObjectAnimPointer
+--- @field public bobomb_seg8_anims_0802396C Pointer_ObjectAnimPointer
+--- @field public bookend_seg5_anims_05002540 Pointer_ObjectAnimPointer
+--- @field public bowser_key_seg3_anims_list Pointer_ObjectAnimPointer
+--- @field public bowser_seg6_anims_06057690 Pointer_ObjectAnimPointer
+--- @field public bub_seg6_anims_06012354 Pointer_ObjectAnimPointer
+--- @field public bully_seg5_anims_0500470C Pointer_ObjectAnimPointer
+--- @field public butterfly_seg3_anims_030056B0 Pointer_ObjectAnimPointer
+--- @field public castle_grounds_seg7_anims_flags Pointer_ObjectAnimPointer
+--- @field public chain_chomp_seg6_anims_06025178 Pointer_ObjectAnimPointer
+--- @field public chair_seg5_anims_05005784 Pointer_ObjectAnimPointer
+--- @field public chilly_chief_seg6_anims_06003994 Pointer_ObjectAnimPointer
+--- @field public chuckya_seg8_anims_0800C070 Pointer_ObjectAnimPointer
+--- @field public clam_shell_seg5_anims_05001744 Pointer_ObjectAnimPointer
+--- @field public cyan_fish_seg6_anims_0600E264 Pointer_ObjectAnimPointer
+--- @field public door_seg3_anims_030156C0 Pointer_ObjectAnimPointer
+--- @field public dorrie_seg6_anims_0600F638 Pointer_ObjectAnimPointer
+--- @field public eyerok_seg5_anims_050116E4 Pointer_ObjectAnimPointer
+--- @field public flyguy_seg8_anims_08011A64 Pointer_ObjectAnimPointer
+--- @field public goomba_seg8_anims_0801DA4C Pointer_ObjectAnimPointer
+--- @field public heave_ho_seg5_anims_0501534C Pointer_ObjectAnimPointer
+--- @field public hoot_seg5_anims_05005768 Pointer_ObjectAnimPointer
+--- @field public king_bobomb_seg5_anims_0500FE30 Pointer_ObjectAnimPointer
+--- @field public klepto_seg5_anims_05008CFC Pointer_ObjectAnimPointer
+--- @field public koopa_flag_seg6_anims_06001028 Pointer_ObjectAnimPointer
+--- @field public koopa_seg6_anims_06011364 Pointer_ObjectAnimPointer
+--- @field public lakitu_enemy_seg5_anims_050144D4 Pointer_ObjectAnimPointer
+--- @field public lakitu_seg6_anims_060058F8 Pointer_ObjectAnimPointer
+--- @field public mad_piano_seg5_anims_05009B14 Pointer_ObjectAnimPointer
+--- @field public manta_seg5_anims_05008EB4 Pointer_ObjectAnimPointer
+--- @field public mips_seg6_anims_06015634 Pointer_ObjectAnimPointer
+--- @field public moneybag_seg6_anims_06005E5C Pointer_ObjectAnimPointer
+--- @field public monty_mole_seg5_anims_05007248 Pointer_ObjectAnimPointer
+--- @field public peach_seg5_anims_0501C41C Pointer_ObjectAnimPointer
+--- @field public penguin_seg5_anims_05008B74 Pointer_ObjectAnimPointer
+--- @field public piranha_plant_seg6_anims_0601C31C Pointer_ObjectAnimPointer
+--- @field public scuttlebug_seg6_anims_06015064 Pointer_ObjectAnimPointer
+--- @field public seaweed_seg6_anims_0600A4D4 Pointer_ObjectAnimPointer
+--- @field public skeeter_seg6_anims_06007DE0 Pointer_ObjectAnimPointer
+--- @field public snowman_seg5_anims_0500D118 Pointer_ObjectAnimPointer
+--- @field public spindrift_seg5_anims_05002D68 Pointer_ObjectAnimPointer
+--- @field public spiny_seg5_anims_05016EAC Pointer_ObjectAnimPointer
+--- @field public spiny_egg_seg5_anims_050157E4 Pointer_ObjectAnimPointer
+--- @field public sushi_seg5_anims_0500AE54 Pointer_ObjectAnimPointer
+--- @field public swoop_seg6_anims_060070D0 Pointer_ObjectAnimPointer
+--- @field public toad_seg6_anims_0600FB58 Pointer_ObjectAnimPointer
+--- @field public ukiki_seg5_anims_05015784 Pointer_ObjectAnimPointer
+--- @field public unagi_seg5_anims_05012824 Pointer_ObjectAnimPointer
+--- @field public water_ring_seg6_anims_06013F7C Pointer_ObjectAnimPointer
+--- @field public whomp_seg6_anims_06020A04 Pointer_ObjectAnimPointer
+--- @field public wiggler_seg5_anims_0500C874 Pointer_ObjectAnimPointer
+--- @field public wiggler_seg5_anims_0500EC8C Pointer_ObjectAnimPointer
+--- @field public yoshi_seg5_anims_05024100 Pointer_ObjectAnimPointer
 
 --- @class GlobalObjectCollisionData
 --- @field public bbh_seg7_collision_coffin Pointer_Collision
@@ -827,119 +827,119 @@
 --- @field public wooden_signpost_seg3_collision_0302DD80 Pointer_Collision
 
 --- @class GlobalTextures
---- @field protected camera TextureInfo
---- @field protected lakitu TextureInfo
---- @field protected no_camera TextureInfo
---- @field protected arrow_up TextureInfo
---- @field protected arrow_down TextureInfo
---- @field protected coin TextureInfo
---- @field protected star TextureInfo
---- @field protected apostrophe TextureInfo
---- @field protected double_quote TextureInfo
---- @field protected mario_head TextureInfo
---- @field protected luigi_head TextureInfo
---- @field protected toad_head TextureInfo
---- @field protected waluigi_head TextureInfo
---- @field protected wario_head TextureInfo
+--- @field public camera TextureInfo
+--- @field public lakitu TextureInfo
+--- @field public no_camera TextureInfo
+--- @field public arrow_up TextureInfo
+--- @field public arrow_down TextureInfo
+--- @field public coin TextureInfo
+--- @field public star TextureInfo
+--- @field public apostrophe TextureInfo
+--- @field public double_quote TextureInfo
+--- @field public mario_head TextureInfo
+--- @field public luigi_head TextureInfo
+--- @field public toad_head TextureInfo
+--- @field public waluigi_head TextureInfo
+--- @field public wario_head TextureInfo
 
 --- @class GraphNode
---- @field protected prev GraphNode
---- @field protected next GraphNode
---- @field protected parent GraphNode
---- @field protected children GraphNode
---- @field protected type integer
+--- @field public prev GraphNode
+--- @field public next GraphNode
+--- @field public parent GraphNode
+--- @field public children GraphNode
+--- @field public type integer
 --- @field public flags integer
 --- @field public extraFlags integer
 --- @field public hookProcess integer
 
 --- @class GraphNodeAnimatedPart
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected translation Vec3s
+--- @field public translation Vec3s
 
 --- @class GraphNodeBackground
---- @field protected fnNode FnGraphNode
---- @field protected unused integer
+--- @field public fnNode FnGraphNode
+--- @field public unused integer
 --- @field public background integer
---- @field protected prevCameraPos Vec3f
---- @field protected prevCameraFocus Vec3f
---- @field protected prevCameraTimestamp integer
+--- @field public prevCameraPos Vec3f
+--- @field public prevCameraFocus Vec3f
+--- @field public prevCameraTimestamp integer
 
 --- @class GraphNodeBillboard
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected translation Vec3s
+--- @field public translation Vec3s
 
 --- @class GraphNodeBone
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected translation Vec3s
---- @field protected rotation Vec3s
---- @field protected scale Vec3f
+--- @field public translation Vec3s
+--- @field public rotation Vec3s
+--- @field public scale Vec3f
 
 --- @class GraphNodeCamera
---- @field protected fnNode FnGraphNode
---- @field protected pos Vec3f
---- @field protected focus Vec3f
---- @field protected prevPos Vec3f
---- @field protected prevFocus Vec3f
---- @field protected prevTimestamp integer
+--- @field public fnNode FnGraphNode
+--- @field public pos Vec3f
+--- @field public focus Vec3f
+--- @field public prevPos Vec3f
+--- @field public prevFocus Vec3f
+--- @field public prevTimestamp integer
 --- @field public matrixPtr Pointer_Mat4
---- @field protected matrixPtrPrev Pointer_Mat4
+--- @field public matrixPtrPrev Pointer_Mat4
 --- @field public roll integer
 --- @field public rollScreen integer
 
 --- @class GraphNodeCullingRadius
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public cullingRadius integer
 --- @field public pad1E integer[]
 
 --- @class GraphNodeDisplayList
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
 
 --- @class GraphNodeGenerated
---- @field protected fnNode FnGraphNode
+--- @field public fnNode FnGraphNode
 --- @field public parameter integer
 
 --- @class GraphNodeHeldObject
---- @field protected fnNode FnGraphNode
+--- @field public fnNode FnGraphNode
 --- @field public playerIndex integer
 --- @field public objNode Object
---- @field protected translation Vec3s
---- @field protected prevShadowPos Vec3f
---- @field protected prevShadowPosTimestamp integer
+--- @field public translation Vec3s
+--- @field public prevShadowPos Vec3f
+--- @field public prevShadowPosTimestamp integer
 
 --- @class GraphNodeLevelOfDetail
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public minDistance integer
 --- @field public maxDistance integer
 
 --- @class GraphNodeMasterList
---- @field protected node GraphNode
+--- @field public node GraphNode
 
 --- @class GraphNodeObject
---- @field protected node GraphNode
---- @field protected sharedChild GraphNode
---- @field protected unk4C SpawnInfo
+--- @field public node GraphNode
+--- @field public sharedChild GraphNode
+--- @field public unk4C SpawnInfo
 --- @field public throwMatrix Pointer_Mat4
---- @field protected throwMatrixPrev Pointer_Mat4
---- @field protected prevThrowMatrix Mat4
---- @field protected angle Vec3s
---- @field protected prevAngle Vec3s
---- @field protected pos Vec3f
---- @field protected prevPos Vec3f
---- @field protected shadowPos Vec3f
---- @field protected prevShadowPos Vec3f
---- @field protected scale Vec3f
---- @field protected prevScale Vec3f
---- @field protected cameraToObject Vec3f
---- @field protected prevTimestamp integer
---- @field protected prevShadowPosTimestamp integer
---- @field protected prevScaleTimestamp integer
---- @field protected prevThrowMatrixTimestamp integer
---- @field protected skipInterpolationTimestamp integer
---- @field protected animInfo AnimInfo
+--- @field public throwMatrixPrev Pointer_Mat4
+--- @field public prevThrowMatrix Mat4
+--- @field public angle Vec3s
+--- @field public prevAngle Vec3s
+--- @field public pos Vec3f
+--- @field public prevPos Vec3f
+--- @field public shadowPos Vec3f
+--- @field public prevShadowPos Vec3f
+--- @field public scale Vec3f
+--- @field public prevScale Vec3f
+--- @field public cameraToObject Vec3f
+--- @field public prevTimestamp integer
+--- @field public prevShadowPosTimestamp integer
+--- @field public prevScaleTimestamp integer
+--- @field public prevThrowMatrixTimestamp integer
+--- @field public skipInterpolationTimestamp integer
+--- @field public animInfo AnimInfo
 --- @field public areaIndex integer
 --- @field public activeAreaIndex integer
 --- @field public shadowInvisible boolean
@@ -948,16 +948,16 @@
 --- @field public inited boolean
 
 --- @class GraphNodeObjectParent
---- @field protected node GraphNode
---- @field protected sharedChild GraphNode
+--- @field public node GraphNode
+--- @field public sharedChild GraphNode
 
 --- @class GraphNodeOrthoProjection
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public scale number
 
 --- @class GraphNodePerspective
---- @field protected fnNode FnGraphNode
---- @field protected unused integer
+--- @field public fnNode FnGraphNode
+--- @field public unused integer
 --- @field public fov number
 --- @field public near integer
 --- @field public far integer
@@ -965,55 +965,55 @@
 --- @field public prevTimestamp number
 
 --- @class GraphNodeRoot
---- @field protected node GraphNode
---- @field protected areaIndex integer
+--- @field public node GraphNode
+--- @field public areaIndex integer
 --- @field public x integer
 --- @field public y integer
 --- @field public width integer
 --- @field public height integer
---- @field protected numViews integer
+--- @field public numViews integer
 
 --- @class GraphNodeRotation
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected rotation Vec3s
+--- @field public rotation Vec3s
 
 --- @class GraphNodeScale
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
 --- @field public scale number
 
 --- @class GraphNodeScaleXYZ
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected scale Vec3f
+--- @field public scale Vec3f
 
 --- @class GraphNodeShadow
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public shadowScale integer
 --- @field public shadowSolidity integer
 --- @field public shadowType integer
 
 --- @class GraphNodeStart
---- @field protected node GraphNode
+--- @field public node GraphNode
 
 --- @class GraphNodeSwitchCase
---- @field protected fnNode FnGraphNode
---- @field protected unused integer
+--- @field public fnNode FnGraphNode
+--- @field public unused integer
 --- @field public parameter integer
 --- @field public selectedCase integer
 
 --- @class GraphNodeTranslation
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected translation Vec3s
+--- @field public translation Vec3s
 --- @field public pad1E integer[]
 
 --- @class GraphNodeTranslationRotation
---- @field protected node GraphNode
+--- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
---- @field protected translation Vec3s
---- @field protected rotation Vec3s
+--- @field public translation Vec3s
+--- @field public rotation Vec3s
 
 --- @class GraphNode_802A45E4
 --- @field public unk18 integer
@@ -1026,7 +1026,7 @@
 --- @class HandheldShakePoint
 --- @field public index integer
 --- @field public pad integer
---- @field protected point Vec3s
+--- @field public point Vec3s
 
 --- @class HudUtilsRotation
 --- @field public rotation number
@@ -1039,13 +1039,13 @@
 --- @class InstantWarp
 --- @field public id integer
 --- @field public area integer
---- @field protected displacement Vec3s
+--- @field public displacement Vec3s
 
 --- @class LakituState
---- @field protected curFocus Vec3f
---- @field protected curPos Vec3f
---- @field protected goalFocus Vec3f
---- @field protected goalPos Vec3f
+--- @field public curFocus Vec3f
+--- @field public curPos Vec3f
+--- @field public goalFocus Vec3f
+--- @field public goalPos Vec3f
 --- @field public filler30 integer[]
 --- @field public mode integer
 --- @field public defMode integer
@@ -1054,18 +1054,18 @@
 --- @field public oldPitch integer
 --- @field public oldYaw integer
 --- @field public oldRoll integer
---- @field protected shakeMagnitude Vec3s
+--- @field public shakeMagnitude Vec3s
 --- @field public shakePitchPhase integer
 --- @field public shakePitchVel integer
 --- @field public shakePitchDecay integer
---- @field protected unusedVec1 Vec3f
---- @field protected unusedVec2 Vec3s
+--- @field public unusedVec1 Vec3f
+--- @field public unusedVec2 Vec3s
 --- @field public filler72 integer[]
 --- @field public roll integer
 --- @field public yaw integer
 --- @field public nextYaw integer
---- @field protected focus Vec3f
---- @field protected pos Vec3f
+--- @field public focus Vec3f
+--- @field public pos Vec3f
 --- @field public shakeRollPhase integer
 --- @field public shakeRollVel integer
 --- @field public shakeRollDecay integer
@@ -1122,7 +1122,7 @@
 --- @field public wingCapSequence SeqId
 --- @field public metalCapSequence SeqId
 --- @field public vanishCapSequence SeqId
---- @field protected starPositions StarPositions
+--- @field public starPositions StarPositions
 --- @field public cellHeightLimit integer
 --- @field public floorLowerLimit integer
 --- @field public floorLowerLimitMisc integer
@@ -1139,14 +1139,14 @@
 --- @field public ceilNormalMaxY number
 
 --- @class LinearTransitionPoint
---- @field protected focus Vec3f
---- @field protected pos Vec3f
+--- @field public focus Vec3f
+--- @field public pos Vec3f
 --- @field public dist number
 --- @field public pitch integer
 --- @field public yaw integer
 
 --- @class MarioAnimation
---- @field protected currentAnimAddr Pointer_integer
+--- @field public currentAnimAddr Pointer_integer
 --- @field public targetAnim Animation
 
 --- @class MarioBodyState
@@ -1159,14 +1159,14 @@
 --- @field public grabPos integer
 --- @field public wingFlutter integer
 --- @field public mirrorMario boolean
---- @field protected headAngle Vec3s
---- @field protected torsoAngle Vec3s
---- @field protected headPos Vec3f
---- @field protected torsoPos Vec3f
---- @field protected heldObjLastPosition Vec3f
---- @field protected currAnimPart integer
---- @field protected updateTorsoTime integer
---- @field protected updateHeadPosTime integer
+--- @field public headAngle Vec3s
+--- @field public torsoAngle Vec3s
+--- @field public headPos Vec3f
+--- @field public torsoPos Vec3f
+--- @field public heldObjLastPosition Vec3f
+--- @field public currAnimPart integer
+--- @field public updateTorsoTime integer
+--- @field public updateHeadPosTime integer
 --- @field public action integer
 --- @field public shadeR integer
 --- @field public shadeG integer
@@ -1179,7 +1179,7 @@
 --- @field public lightingDirZ number
 
 --- @class MarioState
---- @field protected playerIndex integer
+--- @field public playerIndex integer
 --- @field public input integer
 --- @field public numCoins integer
 --- @field public numStars integer
@@ -1202,7 +1202,7 @@
 --- @field public specialTripleJump integer
 --- @field public fadeWarpOpacity integer
 --- @field public wasNetworkVisible integer
---- @field protected dialogId integer
+--- @field public dialogId integer
 --- @field public prevNumStarsForDialog integer
 --- @field public unkB0 integer
 --- @field public action integer
@@ -1212,13 +1212,13 @@
 --- @field public actionState integer
 --- @field public flags integer
 --- @field public quicksandDepth number
---- @field protected controller Controller
---- @field protected marioBodyState MarioBodyState
+--- @field public controller Controller
+--- @field public marioBodyState MarioBodyState
 --- @field public character Character
 --- @field public terrainSoundAddend integer
---- @field protected pos Vec3f
---- @field protected nonInstantWarpPos Vec3f
---- @field protected vel Vec3f
+--- @field public pos Vec3f
+--- @field public nonInstantWarpPos Vec3f
+--- @field public vel Vec3f
 --- @field public slideVelX number
 --- @field public slideVelZ number
 --- @field public forwardVel number
@@ -1227,8 +1227,8 @@
 --- @field public intendedYaw integer
 --- @field public framesSinceA integer
 --- @field public framesSinceB integer
---- @field protected faceAngle Vec3s
---- @field protected angleVel Vec3s
+--- @field public faceAngle Vec3s
+--- @field public angleVel Vec3s
 --- @field public slideYaw integer
 --- @field public twirlYaw integer
 --- @field public heldObj Object
@@ -1236,7 +1236,7 @@
 --- @field public interactObj Object
 --- @field public riddenObj Object
 --- @field public usedObj Object
---- @field protected marioObj Object
+--- @field public marioObj Object
 --- @field public bubbleObj Object
 --- @field public collidedObjInteractTypes integer
 --- @field public particleFlags integer
@@ -1250,39 +1250,39 @@
 --- @field public ceil Surface
 --- @field public floor Surface
 --- @field public spawnInfo SpawnInfo
---- @field protected area Area
---- @field protected statusForCamera PlayerCameraState
+--- @field public area Area
+--- @field public statusForCamera PlayerCameraState
 --- @field public ceilHeight number
 --- @field public floorHeight number
---- @field protected wallNormal Vec3f
+--- @field public wallNormal Vec3f
 --- @field public unkC4 number
 --- @field public floorAngle integer
 --- @field public waterLevel integer
 --- @field public currentRoom integer
 
 --- @class Mod
---- @field protected name string
---- @field protected incompatible string
---- @field protected category string
---- @field protected description string
---- @field protected relativePath string
---- @field protected basePath string
---- @field protected index integer
---- @field protected fileCount integer
---- @field protected fileCapacity integer
---- @field protected isDirectory boolean
---- @field protected enabled boolean
---- @field protected selectable boolean
---- @field protected renderBehindHud boolean
---- @field protected pausable boolean
---- @field protected ignoreScriptWarnings boolean
---- @field protected customBehaviorIndex integer
+--- @field public name string
+--- @field public incompatible string
+--- @field public category string
+--- @field public description string
+--- @field public relativePath string
+--- @field public basePath string
+--- @field public index integer
+--- @field public fileCount integer
+--- @field public fileCapacity integer
+--- @field public isDirectory boolean
+--- @field public enabled boolean
+--- @field public selectable boolean
+--- @field public renderBehindHud boolean
+--- @field public pausable boolean
+--- @field public ignoreScriptWarnings boolean
+--- @field public customBehaviorIndex integer
 
 --- @class ModAudio
 --- @field public file ModFile
---- @field protected isStream boolean
+--- @field public isStream boolean
 --- @field public baseVolume number
---- @field protected loaded boolean
+--- @field public loaded boolean
 
 --- @class ModAudioSampleCopies
 --- @field public next ModAudioSampleCopies
@@ -1290,90 +1290,90 @@
 --- @field public parent ModAudio
 
 --- @class ModFile
---- @field protected relativePath string
---- @field protected modifiedTimestamp integer
---- @field protected isLoadedLuaModule boolean
---- @field protected wroteBytes integer
---- @field protected dataHash integer[]
---- @field protected cachedPath string
+--- @field public relativePath string
+--- @field public modifiedTimestamp integer
+--- @field public isLoadedLuaModule boolean
+--- @field public wroteBytes integer
+--- @field public dataHash integer[]
+--- @field public cachedPath string
 
 --- @class ModFs
---- @field protected mod Mod
---- @field protected modPath string
---- @field protected numFiles integer
---- @field protected totalSize integer
---- @field protected isPublic boolean
+--- @field public mod Mod
+--- @field public modPath string
+--- @field public numFiles integer
+--- @field public totalSize integer
+--- @field public isPublic boolean
 
 --- @class ModFsFile
---- @field protected modFs ModFs
---- @field protected filepath string
---- @field protected size integer
---- @field protected offset integer
---- @field protected isText boolean
---- @field protected isPublic boolean
+--- @field public modFs ModFs
+--- @field public filepath string
+--- @field public size integer
+--- @field public offset integer
+--- @field public isText boolean
+--- @field public isPublic boolean
 
 --- @class ModeTransitionInfo
 --- @field public newMode integer
 --- @field public lastMode integer
 --- @field public max integer
 --- @field public frame integer
---- @field protected transitionStart LinearTransitionPoint
---- @field protected transitionEnd LinearTransitionPoint
+--- @field public transitionStart LinearTransitionPoint
+--- @field public transitionEnd LinearTransitionPoint
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
 --- @field public showSelfTag boolean
 
 --- @class NetworkPlayer
---- @field protected connected boolean
---- @field protected type integer
---- @field protected localIndex integer
---- @field protected globalIndex integer
---- @field protected lastReceived number
---- @field protected lastSent number
---- @field protected lastPingSent number
---- @field protected currLevelAreaSeqId integer
---- @field protected currCourseNum integer
---- @field protected currActNum integer
---- @field protected currLevelNum integer
---- @field protected currAreaIndex integer
---- @field protected currLevelSyncValid boolean
---- @field protected currAreaSyncValid boolean
---- @field protected currPositionValid boolean
---- @field protected fadeOpacity integer
---- @field protected onRxSeqId integer
---- @field protected modelIndex integer
---- @field protected ping integer
---- @field protected palette PlayerPalette
---- @field protected name string
---- @field protected description string
---- @field protected descriptionR integer
---- @field protected descriptionG integer
---- @field protected descriptionB integer
---- @field protected descriptionA integer
---- @field protected overrideLocation string
+--- @field public connected boolean
+--- @field public type integer
+--- @field public localIndex integer
+--- @field public globalIndex integer
+--- @field public lastReceived number
+--- @field public lastSent number
+--- @field public lastPingSent number
+--- @field public currLevelAreaSeqId integer
+--- @field public currCourseNum integer
+--- @field public currActNum integer
+--- @field public currLevelNum integer
+--- @field public currAreaIndex integer
+--- @field public currLevelSyncValid boolean
+--- @field public currAreaSyncValid boolean
+--- @field public currPositionValid boolean
+--- @field public fadeOpacity integer
+--- @field public onRxSeqId integer
+--- @field public modelIndex integer
+--- @field public ping integer
+--- @field public palette PlayerPalette
+--- @field public name string
+--- @field public description string
+--- @field public descriptionR integer
+--- @field public descriptionG integer
+--- @field public descriptionB integer
+--- @field public descriptionA integer
+--- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
---- @field protected paletteIndex integer
+--- @field public paletteIndex integer
 --- @field public overridePaletteIndex integer
---- @field protected overridePaletteIndexLp integer
+--- @field public overridePaletteIndexLp integer
 
 --- @class Object
---- @field protected header ObjectNode
+--- @field public header ObjectNode
 --- @field public prevObj Object
 --- @field public parentObj Object
 --- @field public usingObj Object
 --- @field public platform Object
 --- @field public collidedObjs Object[]
 --- @field public collisionData Pointer_Collision
---- @field protected behavior Pointer_BehaviorScript
---- @field protected curBhvCommand Pointer_BehaviorScript
---- @field protected bhvStackIndex integer
+--- @field public behavior Pointer_BehaviorScript
+--- @field public curBhvCommand Pointer_BehaviorScript
+--- @field public bhvStackIndex integer
 --- @field public bhvDelayTimer integer
 --- @field public activeFlags integer
 --- @field public collidedObjInteractTypes integer
 --- @field public numCollidedObjs integer
---- @field protected respawnInfoType integer
+--- @field public respawnInfoType integer
 --- @field public hitboxRadius number
 --- @field public hitboxHeight number
 --- @field public hurtboxRadius number
@@ -1383,20 +1383,20 @@
 --- @field public areaTimer integer
 --- @field public areaTimerDuration integer
 --- @field public areaTimerType AreaTimerType
---- @field protected transform Mat4
---- @field protected numSurfaces integer
+--- @field public transform Mat4
+--- @field public numSurfaces integer
 --- @field public heldByPlayerIndex integer
 --- @field public setHome integer
 --- @field public ctx integer
 --- @field public allowRemoteInteractions integer
 --- @field public globalPlayerIndex integer
---- @field protected coopFlags integer
+--- @field public coopFlags integer
 --- @field public hookRender integer
 --- @field public oFlags integer
 --- @field public oDialogResponse integer
 --- @field public oDialogState integer
 --- @field public oUnk94 integer
---- @field protected oSyncID integer
+--- @field public oSyncID integer
 --- @field public oIntangibleTimer integer
 --- @field public oPosX number
 --- @field public oPosY number
@@ -1608,7 +1608,7 @@
 --- @field public oCannonPlayerIndex integer
 --- @field public oCapUnkF4 integer
 --- @field public oCapUnkF8 integer
---- @field protected oChainChompSegments ChainSegment
+--- @field public oChainChompSegments ChainSegment
 --- @field public oChainChompMaxDistFromPivotPerChainPart number
 --- @field public oChainChompMaxDistBetweenChainParts number
 --- @field public oChainChompDistToPivot number
@@ -1743,7 +1743,7 @@
 --- @field public oHauntedChairUnkF4 integer
 --- @field public oHauntedChairUnkF8 number
 --- @field public oHauntedChairUnkFC number
---- @field protected oHauntedChairUnk100 Pointer_integer
+--- @field public oHauntedChairUnk100 Pointer_integer
 --- @field public oHauntedChairUnk104 integer
 --- @field public oHeaveHoUnk88 integer
 --- @field public oHeaveHoUnkF4 number
@@ -2010,8 +2010,8 @@
 --- @field public oTTCPendulumAngleAccel number
 --- @field public oTTCPendulumDelay integer
 --- @field public oTTCPendulumSoundTimer integer
---- @field protected oTTCTreadmillBigSurface Pointer_integer
---- @field protected oTTCTreadmillSmallSurface Pointer_integer
+--- @field public oTTCTreadmillBigSurface Pointer_integer
+--- @field public oTTCTreadmillSmallSurface Pointer_integer
 --- @field public oTTCTreadmillSpeed number
 --- @field public oTTCTreadmillTargetSpeed number
 --- @field public oTTCTreadmillTimeUntilSwitch integer
@@ -2102,7 +2102,7 @@
 --- @field public oStrongWindParticlePenguinObj Object
 --- @field public oWhompShakeVal integer
 --- @field public oWigglerFallThroughFloorsHeight number
---- @field protected oWigglerSegments ChainSegment
+--- @field public oWigglerSegments ChainSegment
 --- @field public oWigglerWalkAnimSpeed number
 --- @field public oWigglerSquishSpeed number
 --- @field public oWigglerTimeUntilRandomTurn integer
@@ -2134,12 +2134,12 @@
 --- @field public hurtboxHeight integer
 
 --- @class ObjectNode
---- @field protected gfx GraphNodeObject
---- @field protected next ObjectNode
---- @field protected prev ObjectNode
+--- @field public gfx GraphNodeObject
+--- @field public next ObjectNode
+--- @field public prev ObjectNode
 
 --- @class ObjectWarpNode
---- @field protected node WarpNode
+--- @field public node WarpNode
 --- @field public object Object
 --- @field public next ObjectWarpNode
 
@@ -2148,9 +2148,9 @@
 --- @field public size integer
 
 --- @class Painting
---- @field protected id integer
---- @field protected imageCount integer
---- @field protected textureType integer
+--- @field public id integer
+--- @field public imageCount integer
+--- @field public textureType integer
 --- @field public lastFloor integer
 --- @field public currFloor integer
 --- @field public floorEntered integer
@@ -2175,10 +2175,10 @@
 --- @field public rippleTimer number
 --- @field public rippleX number
 --- @field public rippleY number
---- @field protected normalDisplayList Pointer_Gfx
---- @field protected textureWidth integer
---- @field protected textureHeight integer
---- @field protected rippleDisplayList Pointer_Gfx
+--- @field public normalDisplayList Pointer_Gfx
+--- @field public textureWidth integer
+--- @field public textureHeight integer
+--- @field public rippleDisplayList Pointer_Gfx
 --- @field public rippleTrigger integer
 --- @field public alpha integer
 --- @field public marioWasUnder integer
@@ -2210,15 +2210,15 @@
 
 --- @class ParallelTrackingPoint
 --- @field public startOfPath integer
---- @field protected pos Vec3f
+--- @field public pos Vec3f
 --- @field public distThresh number
 --- @field public zoom number
 
 --- @class PlayerCameraState
 --- @field public action integer
---- @field protected pos Vec3f
---- @field protected faceAngle Vec3s
---- @field protected headRotation Vec3s
+--- @field public pos Vec3f
+--- @field public faceAngle Vec3s
+--- @field public headRotation Vec3s
 --- @field public unused integer
 --- @field public cameraEvent integer
 --- @field public usedObj Object
@@ -2242,7 +2242,7 @@
 
 --- @class RayIntersectionInfo
 --- @field public surface Surface
---- @field protected hitPos Vec3f
+--- @field public hitPos Vec3f
 
 --- @class RomhackCameraSettings
 --- @field public enable RomhackCameraOverride
@@ -2278,19 +2278,19 @@
 --- @field public soundMagic integer
 
 --- @class SpawnInfo
---- @field protected startPos Vec3s
---- @field protected startAngle Vec3s
+--- @field public startPos Vec3s
+--- @field public startAngle Vec3s
 --- @field public areaIndex integer
 --- @field public activeAreaIndex integer
 --- @field public behaviorArg integer
---- @field protected unk18 GraphNode
---- @field protected next SpawnInfo
---- @field protected syncID integer
+--- @field public unk18 GraphNode
+--- @field public next SpawnInfo
+--- @field public syncID integer
 
 --- @class SpawnParticlesInfo
 --- @field public behParam integer
 --- @field public count integer
---- @field protected model integer
+--- @field public model integer
 --- @field public offsetY integer
 --- @field public forwardVelBase integer
 --- @field public forwardVelRange integer
@@ -2302,32 +2302,32 @@
 --- @field public sizeRange number
 
 --- @class StarPositions
---- @field protected KoopaBobStarPos Vec3f
---- @field protected KoopaThiStarPos Vec3f
---- @field protected KingBobombStarPos Vec3f
---- @field protected KingWhompStarPos Vec3f
---- @field protected EyerockStarPos Vec3f
---- @field protected BigBullyStarPos Vec3f
---- @field protected ChillBullyStarPos Vec3f
---- @field protected BigPiranhasStarPos Vec3f
---- @field protected TuxieMotherStarPos Vec3f
---- @field protected WigglerStarPos Vec3f
---- @field protected PssSlideStarPos Vec3f
---- @field protected RacingPenguinStarPos Vec3f
---- @field protected TreasureJrbStarPos Vec3f
---- @field protected TreasureChestStarPos Vec3f
---- @field protected GhostHuntBooStarPos Vec3f
---- @field protected KleptoStarPos Vec3f
---- @field protected MerryGoRoundStarPos Vec3f
---- @field protected MrIStarPos Vec3f
---- @field protected BalconyBooStarPos Vec3f
---- @field protected BigBullyTrioStarPos Vec3f
---- @field protected MantaRayStarPos Vec3f
---- @field protected SnowmanHeadStarPos Vec3f
---- @field protected CcmSlideStarPos Vec3f
---- @field protected UkikiCageStarPos Vec3f
---- @field protected UnagiStarPos Vec3f
---- @field protected JetstreamRingStarPos Vec3f
+--- @field public KoopaBobStarPos Vec3f
+--- @field public KoopaThiStarPos Vec3f
+--- @field public KingBobombStarPos Vec3f
+--- @field public KingWhompStarPos Vec3f
+--- @field public EyerockStarPos Vec3f
+--- @field public BigBullyStarPos Vec3f
+--- @field public ChillBullyStarPos Vec3f
+--- @field public BigPiranhasStarPos Vec3f
+--- @field public TuxieMotherStarPos Vec3f
+--- @field public WigglerStarPos Vec3f
+--- @field public PssSlideStarPos Vec3f
+--- @field public RacingPenguinStarPos Vec3f
+--- @field public TreasureJrbStarPos Vec3f
+--- @field public TreasureChestStarPos Vec3f
+--- @field public GhostHuntBooStarPos Vec3f
+--- @field public KleptoStarPos Vec3f
+--- @field public MerryGoRoundStarPos Vec3f
+--- @field public MrIStarPos Vec3f
+--- @field public BalconyBooStarPos Vec3f
+--- @field public BigBullyTrioStarPos Vec3f
+--- @field public MantaRayStarPos Vec3f
+--- @field public SnowmanHeadStarPos Vec3f
+--- @field public CcmSlideStarPos Vec3f
+--- @field public UkikiCageStarPos Vec3f
+--- @field public UnagiStarPos Vec3f
+--- @field public JetstreamRingStarPos Vec3f
 
 --- @class StarsNeededForDialog
 --- @field public dialog1 integer
@@ -2344,23 +2344,23 @@
 --- @field public force integer
 --- @field public lowerY integer
 --- @field public upperY integer
---- @field protected vertex1 Vec3s
---- @field protected vertex2 Vec3s
---- @field protected vertex3 Vec3s
---- @field protected prevVertex1 Vec3s
---- @field protected prevVertex2 Vec3s
---- @field protected prevVertex3 Vec3s
---- @field protected normal Vec3f
+--- @field public vertex1 Vec3s
+--- @field public vertex2 Vec3s
+--- @field public vertex3 Vec3s
+--- @field public prevVertex1 Vec3s
+--- @field public prevVertex2 Vec3s
+--- @field public prevVertex3 Vec3s
+--- @field public normal Vec3f
 --- @field public originOffset number
 --- @field public modifiedTimestamp integer
 --- @field public object Object
 
 --- @class TextureInfo
---- @field protected texture Pointer_integer
---- @field protected name string
---- @field protected width integer
---- @field protected height integer
---- @field protected bitSize integer
+--- @field public texture Pointer_integer
+--- @field public name string
+--- @field public width integer
+--- @field public height integer
+--- @field public bitSize integer
 
 --- @class TransitionInfo
 --- @field public posPitch integer
@@ -2370,7 +2370,7 @@
 --- @field public focYaw integer
 --- @field public focDist number
 --- @field public framesLeft integer
---- @field protected marioPos Vec3f
+--- @field public marioPos Vec3f
 --- @field public pad integer
 
 --- @class Vtx
@@ -2401,7 +2401,7 @@
 --- @field public unused integer
 --- @field public numWalls integer
 --- @field public walls Surface[]
---- @field protected normalAddition Vec3f
+--- @field public normalAddition Vec3f
 --- @field public normalCount integer
 
 --- @class WarpNode
@@ -2415,7 +2415,7 @@
 --- @field public type integer
 --- @field public time integer
 --- @field public pauseRendering integer
---- @field protected data WarpTransitionData
+--- @field public data WarpTransitionData
 
 --- @class WarpTransitionData
 --- @field public red integer
@@ -2432,7 +2432,7 @@
 --- @class WaterDropletParams
 --- @field public flags integer
 --- @field public model integer
---- @field protected behavior Pointer_BehaviorScript
+--- @field public behavior Pointer_BehaviorScript
 --- @field public moveAngleRange integer
 --- @field public moveRange integer
 --- @field public randForwardVelOffset number
@@ -2444,10 +2444,10 @@
 
 --- @class Waypoint
 --- @field public flags integer
---- @field protected pos Vec3s
+--- @field public pos Vec3s
 
 --- @class Whirlpool
---- @field protected pos Vec3s
+--- @field public pos Vec3s
 --- @field public strength integer
 
 --- @class Vec2f

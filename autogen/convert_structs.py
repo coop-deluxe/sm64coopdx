@@ -768,10 +768,8 @@ def def_struct(struct):
         ftype = translate_to_def(ftype)
         if ftype.startswith('Pointer_') and ftype not in def_pointers:
             def_pointers.append(ftype)
-        
-        fscope = "protected" if fimmutable == "true" else "public"
 
-        s += '--- @field %s %s %s\n' % (fscope, fid, ftype)
+        s += '--- @field public %s %s\n' % (fid, ftype)
 
     return s
 
