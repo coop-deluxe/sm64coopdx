@@ -362,7 +362,15 @@ void smlua_init(void) {
             }
 
             gLuaActiveModFile = file;
-            smlua_load_script(mod, file, i, true);
+
+            // file has been required by some module before this
+            if (!smlua_get_cached_file(L, mod, file)) {
+                int rc = smlua_load_script(mod, file, i, true);
+                if (rc == LUA_OK) {
+                    smlua_cache_module_result(L, mod, file);
+                }
+            }
+            
             lua_settop(L, 0);
         }
         gLuaActiveMod = NULL;
