@@ -36,9 +36,11 @@ bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) 
     return true;
 }
 
-void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file) {
-    // push true if nothing returned
-    if (lua_gettop(L) == 0 || lua_isnil(L, -1)) {
+void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
+    // push true if nothing or nil returned
+    if (lua_gettop(L) == prevTop) {
+        lua_pushboolean(L, 1);
+    } else if (lua_isnil(L, -1)) {
         lua_pop(L, 1);
         lua_pushboolean(L, 1);
     }
@@ -130,10 +132,12 @@ static int smlua_custom_require(lua_State* L) {
 
     // load and execute
     gLuaActiveModFile = file;
+    s32 prevTop = lua_gettop(L);
+
     int rc = smlua_load_script(activeMod, file, activeMod->index, false);
 
     if (rc == LUA_OK) {
-        smlua_cache_module_result(L, activeMod, file);
+        smlua_cache_module_result(L, activeMod, file, prevTop);
     }
 
     gLuaActiveModFile = prevModFile;

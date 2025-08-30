@@ -365,9 +365,11 @@ void smlua_init(void) {
 
             // file has been required by some module before this
             if (!smlua_get_cached_file(L, mod, file)) {
+                s32 prevTop = lua_gettop(L);
                 int rc = smlua_load_script(mod, file, i, true);
+
                 if (rc == LUA_OK) {
-                    smlua_cache_module_result(L, mod, file);
+                    smlua_cache_module_result(L, mod, file, prevTop);
                 }
             }
             
