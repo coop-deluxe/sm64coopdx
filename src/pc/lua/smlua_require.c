@@ -5,22 +5,7 @@
 #include "pc/fs/fmem.h"
 
 // table to track loaded modules per mod
-static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
-    // Create a unique registry key for this mod's loaded table
-    char registryKey[SYS_MAX_PATH + 16];
-    snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", modPath);
-
-    lua_getfield(L, LUA_REGISTRYINDEX, registryKey);
-    if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
-        lua_newtable(L);
-        lua_setfield(L, LUA_REGISTRYINDEX, registryKey);
-    } else {
-        lua_pop(L, 1);
-    }
-}
-
-void smlua_get_mod_loaded_table(lua_State* L, struct Mod* mod) {   
+void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {   
     // create registry key for this mod's loaded table
     char registryKey[SYS_MAX_PATH + 16] = "";
     snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", mod->relativePath);
@@ -36,7 +21,7 @@ void smlua_get_mod_loaded_table(lua_State* L, struct Mod* mod) {
 }
 
 bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) {
-    smlua_get_mod_loaded_table(L, mod);
+    smlua_get_or_create_mod_loaded_table(L, mod);
 
     lua_getfield(L, -1, file->relativePath); // push loaded[file->relativePath]
 
@@ -59,7 +44,7 @@ void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* fi
     }
 
     // get loaded table
-    smlua_get_mod_loaded_table(L, mod);
+    smlua_get_or_create_mod_loaded_table(L, mod);
 
     lua_pushvalue(L, -2); // duplicate result
     lua_setfield(L, -2, file->relativePath); // loaded[file->relativePath] = result
@@ -126,22 +111,22 @@ static int smlua_custom_require(lua_State* L) {
         return 0;
     }
 
+    // tag it as a loaded lua module
+    file->isLoadedLuaModule = true;
+
     // check cache first
     if (smlua_get_cached_file(L, activeMod, file)) {
         return 1;
     }
 
     // mark module as "loading" to prevent recursion
-    smlua_get_mod_loaded_table(L, activeMod);
+    smlua_get_or_create_mod_loaded_table(L, activeMod);
     lua_pushboolean(L, 1);
     lua_setfield(L, -2, file->relativePath);
     lua_pop(L, 1); // pop loaded table
 
     // cache the previous mod file
     struct ModFile* prevModFile = gLuaActiveModFile;
-
-    // tag it as a loaded lua module
-    file->isLoadedLuaModule = true;
 
     // load and execute
     gLuaActiveModFile = file;
@@ -172,6 +157,7 @@ void smlua_init_require_system(void) {
     // initialize loaded tables for each mod
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        smlua_init_mod_loaded_table(L, mod->relativePath);
+        smlua_get_or_create_mod_loaded_table(L, mod);
+        lua_pop(L, 1); // pop loaded table
     }
 }
