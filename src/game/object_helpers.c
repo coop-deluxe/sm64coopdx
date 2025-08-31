@@ -810,8 +810,8 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
 }
 
 void obj_init_animation(struct Object *obj, s32 animIndex) {
-    if (!o || !obj) { return; }
-    struct AnimationTable *animations = o->oAnimations;
+    if (!obj) { return; }
+    struct AnimationTable *animations = obj->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
     }

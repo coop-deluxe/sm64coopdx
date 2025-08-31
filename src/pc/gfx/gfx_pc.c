@@ -1970,16 +1970,24 @@ void gfx_run(Gfx *commands) {
     //double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
-    gfx_flush();
-    gfx_rapi->end_frame();
-    gfx_wapi->swap_buffers_begin();
 }
 
-void gfx_end_frame(void) {
+void gfx_end_frame_render(void) {
+    gfx_flush();
+    gfx_rapi->end_frame();
+}
+
+void gfx_display_frame(void) {
+    gfx_wapi->swap_buffers_begin();
     if (!dropped_frame) {
         gfx_rapi->finish_render();
         gfx_wapi->swap_buffers_end();
     }
+}
+
+void gfx_end_frame(void) {
+    gfx_end_frame_render();
+    gfx_display_frame();
 }
 
 void gfx_shutdown(void) {
@@ -2106,6 +2114,23 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
+static void gfx_sp_copy_playerpart_to_color(uint8_t color, uint32_t idx) {
+    SUPPORT_CHECK(color == G_COL_PRIM || color == G_COL_ENV);
+
+    if (idx >= 1 && idx <= MAX_LIGHTS) {
+        Light_t *l = (rsp.current_lights + (idx - 1));
+        struct RGBA *targetColor = NULL;
+        switch (color) {
+            case G_COL_PRIM: targetColor = &rdp.prim_color; break;
+            case G_COL_ENV:  targetColor = &rdp.env_color;  break;
+        }
+
+        targetColor->r = l->col[0];
+        targetColor->g = l->col[1];
+        targetColor->b = l->col[2];
+    }
+}
+
 static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
     sDjuiClipX1 = x1;
     sDjuiClipY1 = y1;
@@ -2168,6 +2193,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
+            break;
+        case G_PPARTTOCOLOR:
+            gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
             break;
     }
 }

@@ -283,7 +283,7 @@ def table_to_string(table):
 
 ############################################################################
 
-def parse_struct(struct_str, sortFields = True):
+def parse_struct(struct_str, sortFields = False):
     struct = {}
     struct_str = strip_anonymous_blocks(struct_str) # Allow unions and sub-structs to be accessed
     match = re.match(r"struct\s*(\w+)?\s*{(.*?)}\s*(\w+)?\s*", struct_str.replace("typedef ", ""), re.DOTALL)
@@ -335,7 +335,7 @@ def parse_struct(struct_str, sortFields = True):
 
     return struct
 
-def parse_structs(extracted, sortFields = True):
+def parse_structs(extracted, sortFields = False):
     structs = []
     for e in extracted:
         for struct in e['structs']:
@@ -582,7 +582,10 @@ def build_structs(structs):
     for struct in structs:
         if struct['identifier'] in exclude_structs:
             continue
+        oldFields = struct['fields']
+        struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
         s += build_struct(struct) + '\n'
+        struct['fields'] = oldFields
     return s
 
 def build_body(parsed):

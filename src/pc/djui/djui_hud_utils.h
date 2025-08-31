@@ -104,6 +104,14 @@ u8 djui_hud_get_mouse_buttons_released(void);
 f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
+/* |description|Sets the viewport to the specified position and size, this will resize |descriptionEnd| */
+void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_reset_viewport(void);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_reset_scissor(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);
@@ -125,6 +133,8 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);
 /* |description|Renders an interpolated DJUI HUD rect onto the screen|descriptionEnd| */
 void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
+/* |description|Renders an DJUI HUD line onto the screen|descriptionEnd| */
+void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size);
 
 /* |description|Gets the current camera FOV|descriptionEnd| */
 f32 get_current_fov();

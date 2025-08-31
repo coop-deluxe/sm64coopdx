@@ -19,8 +19,8 @@ _ReadOnlyTable = {
         local _table = rawget(t, '_table')
         return _table[k]
     end,
-    __newindex = function (t,k,v)
-    end
+    __newindex = function (_,k,_) error('Attempting to modify key `' .. k .. '` of read-only table') end,
+    __metatable = false
 }
 
 -----------
@@ -2943,6 +2943,9 @@ G_TEXRECT = 0xe4
 
 --- @type integer
 G_VTX_EXT = 0x11
+
+--- @type integer
+G_PPARTTOCOLOR = 0xd3
 
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams

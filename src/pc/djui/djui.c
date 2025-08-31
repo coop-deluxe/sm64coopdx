@@ -68,17 +68,28 @@ void djui_shutdown(void) {
 
 void patch_djui_before(void) {
     sDjuiRendered60fps = false;
+    sSavedDisplayListHead = NULL;
+    djui_cursor_interp_before();
 }
 
 void patch_djui_interpolated(UNUSED f32 delta) {
-    // reset the head and re-render DJUI
-    if (delta >= 0.5f && !sDjuiRendered60fps && (gDjuiInMainMenu || gDjuiPanelPauseCreated)) {
-        sDjuiRendered60fps = true;
-        if (sSavedDisplayListHead == NULL) { return; }
-        gDisplayListHead = sSavedDisplayListHead;
-        djui_render();
-        gDPFullSync(gDisplayListHead++);
-        gSPEndDisplayList(gDisplayListHead++);
+    extern f32 gFramePercentage;
+    if (gDjuiInMainMenu || gDjuiPanelPauseCreated) {
+        if (gFramePercentage >= 0.5f && !sDjuiRendered60fps) {
+            // reset the head and re-render DJUI
+            sDjuiRendered60fps = true;
+            if (sSavedDisplayListHead == NULL) { return; }
+            gDisplayListHead = sSavedDisplayListHead;
+            djui_render();
+            gDPFullSync(gDisplayListHead++);
+            gSPEndDisplayList(gDisplayListHead++);
+        } else {
+            // patch the display list instead of a full re-render
+            // to make some elements on screen be smooth, while keeping things cheap.
+            Gfx* displayListHead = gDisplayListHead;
+            djui_cursor_interp();
+            gDisplayListHead = displayListHead;
+        }
     }
 }
 
@@ -159,6 +170,8 @@ void djui_reset_hud_params(void) {
     djui_hud_set_rotation(0, 0, 0);
     djui_hud_reset_color();
     djui_hud_set_filter(FILTER_NEAREST);
+    djui_hud_reset_viewport();
+    djui_hud_reset_scissor();
 }
 
 void djui_render(void) {
