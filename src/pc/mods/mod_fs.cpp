@@ -223,6 +223,30 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     return true;
 }
 
+static bool mod_fs_check_file_content(struct ModFs *modFs, struct ModFsFile *file) {
+    if (!file->data.bin || file->size < 4) {
+        return true;
+    }
+
+    // Reject Windows executable files
+    if (memcmp(file->data.bin, "MZ", 2) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - Binary file cannot start with \"MZ\" bytes", modFs->modPath, file->filepath
+        );
+        return false;
+    }
+
+    // Reject ELF files
+    if (memcmp(file->data.bin, "\177ELF", 4) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - Binary file cannot start with \"\\x7fELF\" bytes", modFs->modPath, file->filepath
+        );
+        return false;
+    }
+
+    return true;
+}
+
 //
 // ctor, dtor
 //
@@ -584,8 +608,16 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             mz_free(fileBuf);
 
             // read isText property
+            const bool isText = mod_fs_file_detect_text_mode(file);
             const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file->filepath);
-            file->isText = mod_fs_read_property<bool>(fileProperties, { "isText" }, mod_fs_file_detect_text_mode(file));
+            file->isText = mod_fs_read_property<bool>(fileProperties, { "isText" }, isText);
+
+            // check file content if binary
+            if (!isText && !mod_fs_check_file_content(modFs, file)) {
+                mod_fs_read_raise_error(
+                    "modPath: %s, filepath: %s - Invalid file data", modFs->modPath, file->filepath
+                );
+            }
         }
 
         if (modFs->files) {
@@ -601,11 +633,15 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
 // Write
 //
 
-#define mod_fs_write_raise_error() { \
-    mod_fs_raise_error("cannot save modfs for the active mod: %s", mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
+#define mod_fs_write_raise_error(...) { \
+    mod_fs_raise_error("cannot save modfs for the active mod: " __VA_ARGS__); \
     mz_zip_writer_end(zip); \
     fclose(f); \
     return false; \
+}
+
+#define mod_fs_write_raise_error_zip() { \
+    mod_fs_write_raise_error("%s", mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
 }
 
 static bool mod_fs_write(struct ModFs *modFs) {
@@ -615,28 +651,37 @@ static bool mod_fs_write(struct ModFs *modFs) {
 
         // initialize zip
         if (!mz_zip_writer_init_heap(zip, 0, 0)) {
-            mod_fs_write_raise_error();
+            mod_fs_write_raise_error_zip();
         }
 
         // add each modfs file to the zip archive
         for (u16 i = 0; i != modFs->numFiles; ++i) {
             struct ModFsFile *file = modFs->files[i];
+
+            // check file content before writing if binary
+            const bool isText = mod_fs_file_detect_text_mode(file);
+            if (!isText && !mod_fs_check_file_content(modFs, file)) {
+                mod_fs_write_raise_error(
+                    "filepath: %s - Invalid file data", file->filepath
+                );
+            }
+
             if (!mz_zip_writer_add_mem(zip, file->filepath, file->data.bin, file->size, MZ_BEST_COMPRESSION)) {
-                mod_fs_write_raise_error();
+                mod_fs_write_raise_error_zip();
             }
         }
 
         // write properties file
         std::string properties = mod_fs_get_properties_json(modFs).dump(4, ' ', true);
         if (!mz_zip_writer_add_mem(zip, MOD_FS_PROPERTIES, properties.c_str(), properties.length(), MZ_BEST_COMPRESSION)) {
-            mod_fs_write_raise_error();
+            mod_fs_write_raise_error_zip();
         }
 
         // finalize and gets zip archive
         void *zipBuf = NULL;
         size_t zipSize = 0;
         if (!mz_zip_writer_finalize_heap_archive(zip, &zipBuf, &zipSize)) {
-            mod_fs_write_raise_error();
+            mod_fs_write_raise_error_zip();
         }
 
         // write file and cleanup
