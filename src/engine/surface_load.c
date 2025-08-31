@@ -762,7 +762,7 @@ void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
 /**
  * Transform an object's vertices, reload them, and render the object.
  */
-static void load_object_collision(bool isSOC) {
+static void load_object_collision_model_internal(bool isSOC) {
     static bool sIsLoadingCollision = false;
 
     if (!gCurrentObject) { return; }
@@ -844,7 +844,7 @@ static void load_object_collision(bool isSOC) {
 }
 
 void load_object_collision_model(void) {
-    load_object_collision(false);
+    load_object_collision_model_internal(false);
 }
 
 struct StaticObjectCollision *load_static_object_collision() {
@@ -854,7 +854,7 @@ struct StaticObjectCollision *load_static_object_collision() {
     u32 lastSOCSurfaceIndex = gNumStaticSurfaces + gNumSOCSurfaces;
     u32 lastSOCSurfaceNodeIndex = gNumStaticSurfaceNodes + gNumSOCSurfaceNodes;
 
-    load_object_collision(true);
+    load_object_collision_model_internal(true);
 
     // Reorder surfaces and nodes and update SOC variables
     u32 addedSurfaces = gSurfacesAllocated - lastSurfaceIndex;
