@@ -1159,6 +1159,7 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
+   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 

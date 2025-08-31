@@ -596,7 +596,7 @@ struct Camera
     /// when paused. See zoom_out_if_paused_and_outside
     /*0x68*/ f32 areaCenY;
     /*????*/ Mat4 mtx;
-    /*????*/ bool paletteEditorCap;
+    /*????*/ u8 paletteEditorCapState;
 };
 
 /**

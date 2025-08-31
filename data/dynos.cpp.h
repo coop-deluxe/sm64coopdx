@@ -17,6 +17,10 @@ extern "C" {
 #define LUA_VAR_CODE    (u32) 0x5641554C
 #define TEX_REF_CODE    (u32) 0x52584554
 
+#define FUNCTION_GEO    1
+#define FUNCTION_BHV    2
+#define FUNCTION_LVL    3
+
 #define MOD_PACK_INDEX 99
 
 //
@@ -864,10 +868,13 @@ const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
-const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
-const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
-const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
-s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName, u8 aFuncType);
+const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex, u8 aFuncType);
+const char *     DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u8 aFuncType);
+s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(s32 aIndex, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(const char* aDataName, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(const void* aData, u8 aFuncType);
 const Gfx *      DynOS_Builtin_Gfx_GetFromName(const char *aDataName);
 const char *     DynOS_Builtin_Gfx_GetFromData(const Gfx *aData);
 
@@ -1100,8 +1107,8 @@ void DynOS_Vtx_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
 void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData);
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags);
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType);
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags);
 
 void DynOS_GfxDynCmd_Load(BinFile *aFile, GfxData *aGfxData);
 

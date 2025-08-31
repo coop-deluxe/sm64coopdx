@@ -253,6 +253,7 @@ void clear_areas(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
 }
 
 void clear_area_graph_nodes(void) {
@@ -311,6 +312,7 @@ void unload_area(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
 }
 
 void load_mario_area(void) {

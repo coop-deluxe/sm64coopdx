@@ -3526,6 +3526,27 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
+## [mario_exit_palette_editor](#mario_exit_palette_editor)
+
+### Lua Example
+`local integerValue = mario_exit_palette_editor(m, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Description

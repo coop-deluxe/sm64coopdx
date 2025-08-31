@@ -11,7 +11,7 @@
 DialogTable *gDialogTable = NULL;
 
 void dialog_table_init(void) {
-    gDialogTable = growing_array_init(gDialogTable, 256);
+    gDialogTable = growing_array_init(gDialogTable, 256, malloc, free);
 
     for (u32 i = 0; i < DIALOG_COUNT; i++) {
         const struct DialogEntry* dialogOrig = smlua_text_utils_dialog_get_unmodified(i);

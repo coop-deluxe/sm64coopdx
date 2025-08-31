@@ -42,6 +42,7 @@
 - [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
 - [GraphNodeBackground](#GraphNodeBackground)
 - [GraphNodeBillboard](#GraphNodeBillboard)
+- [GraphNodeBone](#GraphNodeBone)
 - [GraphNodeCamera](#GraphNodeCamera)
 - [GraphNodeCullingRadius](#GraphNodeCullingRadius)
 - [GraphNodeDisplayList](#GraphNodeDisplayList)
@@ -56,6 +57,7 @@
 - [GraphNodeRoot](#GraphNodeRoot)
 - [GraphNodeRotation](#GraphNodeRotation)
 - [GraphNodeScale](#GraphNodeScale)
+- [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
 - [GraphNodeShadow](#GraphNodeShadow)
 - [GraphNodeStart](#GraphNodeStart)
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
@@ -161,7 +163,6 @@
 | loopEnd | `integer` |  |
 | loopStart | `integer` |  |
 | startFrame | `integer` |  |
-| unusedBoneCount | `integer` |  |
 | values | `Pointer` <`integer`> |  |
 | valuesLength | `integer` |  |
 
@@ -413,7 +414,6 @@
 | mode | `integer` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
 | nextYaw | `integer` |  |
-| paletteEditorCap | `boolean` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | yaw | `integer` |  |
@@ -1293,6 +1293,20 @@
 
 <br />
 
+## [GraphNodeBone](#GraphNodeBone)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| rotation | [Vec3s](structs.md#Vec3s) | read-only |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
+| translation | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [GraphNodeCamera](#GraphNodeCamera)
 
 | Field | Type | Access |
@@ -1479,8 +1493,6 @@
 | ----- | ---- | ------ |
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevRotation | [Vec3s](structs.md#Vec3s) | read-only |
-| prevTimestamp | `integer` |  |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1493,8 +1505,19 @@
 | ----- | ---- | ------ |
 | displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevScale | `number` |  |
 | scale | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| displayList | `Pointer` <`Gfx`> |  |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 

@@ -265,6 +265,7 @@ static std::unordered_map<s16, size_t> sGraphNodeSizeMap = {
     { GRAPH_NODE_TYPE_TRANSLATION,          sizeof(GraphNodeTranslation) },
     { GRAPH_NODE_TYPE_ROTATION,             sizeof(GraphNodeRotation) },
     { GRAPH_NODE_TYPE_SCALE,                sizeof(GraphNodeScale) },
+    { GRAPH_NODE_TYPE_SCALE_XYZ,            sizeof(GraphNodeScaleXYZ) },
     { GRAPH_NODE_TYPE_OBJECT,               sizeof(GraphNodeObject) },
     { GRAPH_NODE_TYPE_CULLING_RADIUS,       sizeof(GraphNodeCullingRadius) },
     { GRAPH_NODE_TYPE_ANIMATED_PART,        sizeof(GraphNodeAnimatedPart) },

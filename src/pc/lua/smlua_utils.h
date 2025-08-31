@@ -66,6 +66,11 @@ void smlua_logline(void);
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);
 void smlua_dump_table(int index);
-void smlua_free(void *ptr);
+void smlua_free(void *ptr, u16 lot);
+
+#define smlua_free_lot(name, lot) \
+static inline void smlua_free_##name(void *ptr) { smlua_free(ptr, lot); }
+
+smlua_free_lot(surface, LOT_SURFACE);
 
 #endif
