@@ -35,11 +35,12 @@ bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) 
 }
 
 void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
-    if (lua_gettop(L) != prevTop && lua_isnil(L, -1)) {
+    if (lua_gettop(L) == prevTop) {
+        lua_pushboolean(L, 1);
+    } else if (lua_isnil(L, -1)) {
         lua_pop(L, 1);
+        lua_pushboolean(L, 1);
     }
-
-    lua_pushboolean(L, 1);
 
     smlua_get_or_create_mod_loaded_table(L, mod);
 
