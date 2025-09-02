@@ -155,16 +155,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| flags | `integer` |  |
-| animYTransDivisor | `integer` |  |
-| startFrame | `integer` |  |
-| loopStart | `integer` |  |
-| loopEnd | `integer` |  |
-| values | `Pointer` <`integer`> |  |
-| index | `Pointer` <`integer`> |  |
+| flags | `integer` | read-only |
+| animYTransDivisor | `integer` | read-only |
+| startFrame | `integer` | read-only |
+| loopStart | `integer` | read-only |
+| loopEnd | `integer` | read-only |
+| values | `Pointer` <`integer`> | read-only |
+| index | `Pointer` <`integer`> | read-only |
 | length | `integer` | read-only |
-| valuesLength | `integer` |  |
-| indexLength | `integer` |  |
+| valuesLength | `integer` | read-only |
+| indexLength | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2899,7 +2899,7 @@
 | ----- | ---- | ------ |
 | node | [WarpNode](structs.md#WarpNode) | read-only |
 | object | [Object](structs.md#Object) |  |
-| next | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
+| next | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 
 [:arrow_up_small:](#)
 

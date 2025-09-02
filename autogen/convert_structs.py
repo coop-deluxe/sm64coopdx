@@ -83,10 +83,6 @@ override_field_mutable = {
         "overridePalette",
         "overridePaletteIndex",
     ],
-    "Animation": [
-        "values",
-        "index",
-    ],
 }
 
 override_field_invisible = {
@@ -135,9 +131,9 @@ override_field_immutable = {
     "GraphNodePerspective": [ "unused" ],
     "GraphNodeSwitchCase": [ "fnNode", "unused" ],
     "GraphNodeRoot": ["node", "areaIndex", "numViews"],
-    "ObjectWarpNode": [ "next "],
-    "Animation": [ "length" ],
-    "AnimationTable": [ "count" ],
+    "ObjectWarpNode": [ "next" ],
+    "Animation": [ "*" ],
+    "AnimationTable": [ "*" ],
     "Controller": [ "controllerData", "statusData" ],
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "isStream", "loaded" ],
