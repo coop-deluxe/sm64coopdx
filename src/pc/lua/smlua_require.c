@@ -5,12 +5,10 @@
 #include "pc/fs/fmem.h"
 
 // table to track loaded modules per mod
-void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {   
-    // create registry key for this mod's loaded table
+void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {
     char registryKey[SYS_MAX_PATH + 16] = "";
     snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", mod->relativePath);
 
-    // get or create the mod's loaded table
     lua_getfield(L, LUA_REGISTRYINDEX, registryKey);
     if (lua_isnil(L, -1)) {
         lua_pop(L, 1);
@@ -37,15 +35,12 @@ bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) 
 }
 
 void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
-    // push true if nothing or nil returned
-    if (lua_gettop(L) == prevTop) {
-        lua_pushboolean(L, 1);
-    } else if (lua_isnil(L, -1)) {
+    if (lua_gettop(L) != prevTop && lua_isnil(L, -1)) {
         lua_pop(L, 1);
-        lua_pushboolean(L, 1);
     }
 
-    // get loaded table
+    lua_pushboolean(L, 1);
+
     smlua_get_or_create_mod_loaded_table(L, mod);
 
     lua_pushvalue(L, -2); // duplicate result
