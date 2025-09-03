@@ -4,6 +4,8 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/fs/fmem.h"
 
+#define LOADING_SENTINEL ((void*)-1)
+
 // table to track loaded modules per mod
 void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {
     char registryKey[SYS_MAX_PATH + 16] = "";
@@ -18,10 +20,17 @@ void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {
     }
 }
 
-bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) {
+bool smlua_get_cached_module_result(lua_State* L, struct Mod* mod, struct ModFile* file) {
     smlua_get_or_create_mod_loaded_table(L, mod);
+    lua_getfield(L, -1, file->relativePath);
 
-    lua_getfield(L, -1, file->relativePath); // push loaded[file->relativePath]
+    if (lua_touserdata(L, -1) == LOADING_SENTINEL) {
+        LOG_LUA_LINE("loop or previous error loading module '%s'", file->relativePath);
+        lua_pop(L, 1); // pop sentinel
+        lua_pushnil(L);
+
+        return true;
+    }
 
     if (lua_isnil(L, -1)) {
         // not cached
@@ -34,6 +43,13 @@ bool smlua_get_cached_file(lua_State* L, struct Mod* mod, struct ModFile* file) 
     return true;
 }
 
+void smlua_mark_module_as_loading(lua_State* L, struct Mod* mod, struct ModFile* file) {
+    smlua_get_or_create_mod_loaded_table(L, mod);
+    lua_pushlightuserdata(L, LOADING_SENTINEL);
+    lua_setfield(L, -2, file->relativePath);
+    lua_pop(L, 1); // pop loaded table
+}
+ 
 void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
     if (lua_gettop(L) == prevTop) {
         lua_pushboolean(L, 1);
@@ -113,15 +129,12 @@ static int smlua_custom_require(lua_State* L) {
     file->isLoadedLuaModule = true;
 
     // check cache first
-    if (smlua_get_cached_file(L, activeMod, file)) {
+    if (smlua_get_cached_module_result(L, activeMod, file)) {
         return 1;
     }
 
     // mark module as "loading" to prevent recursion
-    smlua_get_or_create_mod_loaded_table(L, activeMod);
-    lua_pushboolean(L, 1);
-    lua_setfield(L, -2, file->relativePath);
-    lua_pop(L, 1); // pop loaded table
+    smlua_mark_module_as_loading(L, activeMod, file);
 
     // cache the previous mod file
     struct ModFile* prevModFile = gLuaActiveModFile;
