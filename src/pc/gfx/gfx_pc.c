@@ -867,16 +867,24 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                     camPos[2] - vpos[2]
                 };
                 vec3f_normalize(viewDir);
+                vec3f_normalize(vnormal);
 
-                int16_t dot = (int16_t)fabsf(vec3f_dot(vnormal, viewDir) * 32767.0f);
+                int32_t dot = (int32_t)fminf(fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f, 32767.0f);
 
                 int32_t factor = ((rsp.fresnel_scale * dot) >> 15) + rsp.fresnel_offset;
-                int16_t fresnel = clamp(factor << 8, 0, 0x7FFF) >> 7;
+
+                if (factor < 0) factor = 0;
+
+                int32_t fresnel = factor * 256;
+                if (fresnel > 0x7FFF) fresnel = 0x7FFF;
+
+                uint8_t result = (uint8_t)(fresnel >> 7);
+
                 if (rsp.geometry_mode & G_FRESNEL_COLOR_EXT) {
-                    d->color.r = d->color.g = d->color.b = (uint8_t)result;
+                    d->color.r = d->color.g = d->color.b = result;
                 }
                 if (rsp.geometry_mode & G_FRESNEL_ALPHA_EXT) {
-                    d->color.a = (uint8_t)result;
+                    d->color.a = result;
                 }
             }
 
