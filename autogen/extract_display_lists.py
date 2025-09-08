@@ -100,7 +100,7 @@ def main():
                             ignore = True
                         if "#endif" in line:
                             ignore = False
-                        if not ignore and "Gfx" in line and "static " not in line and "extern" not in line and "#" not in line:
+                        if not ignore and "Gfx" in line and "*" not in line and "static " not in line and "extern" not in line and "#" not in line:
                             identifiers = pattern.sub(" ", line).split()
                             index_gfx = identifiers.index("Gfx")
                             name = identifiers[index_gfx + 1]

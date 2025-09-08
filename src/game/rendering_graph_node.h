@@ -43,8 +43,7 @@ extern f32 gOverrideFar;
 
 void geo_process_node_and_siblings(struct GraphNode *firstNode);
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
-void interpolate_vectors(Vec3f res, Vec3f a, Vec3f b);
-void interpolate_vectors_s16(Vec3s res, Vec3s a, Vec3s b);
+void geo_clear_interp_data();
 
 struct ShadowInterp {
     Gfx*  gfx;

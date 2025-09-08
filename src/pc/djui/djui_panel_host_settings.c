@@ -10,6 +10,7 @@
 
 static unsigned int sKnockbackIndex = 0;
 struct DjuiInputbox* sPlayerAmount = NULL;
+static bool sFalse = false;
 
 static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* caller) {
     switch (sKnockbackIndex) {
@@ -68,6 +69,9 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, PAUSE_ANYWHERE), &configPauseAnywhere, NULL);
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, BUBBLE_ON_DEATH), &configBubbleDeath, NULL);
         djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), &configNametags, NULL);
+
+        struct DjuiCheckbox* chkDevMode = djui_checkbox_create(body, DLANG(HOST_SETTINGS, MOD_DEV_MODE), (configNetworkSystem == NS_SOCKET) ? &configModDevMode : &sFalse, NULL);
+        djui_base_set_enabled(&chkDevMode->base, configNetworkSystem == NS_SOCKET);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

@@ -19,6 +19,8 @@
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
 
+#define G_MTX_INVERSE_CAMERA_EXT   0x08
+
 #define	gsSPTextureAddrDjui(c) \
 {{ \
 	(_SHIFTL(G_TEXADDR_DJUI,24,8)|_SHIFTL(~(u32)(c),0,24)),(u32)(0)	\
@@ -91,3 +93,28 @@
 
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
+
+////////////////////
+// G_PPARTTOCOLOR //
+////////////////////
+
+#define G_PPARTTOCOLOR 0xd3
+
+#define G_COL_PRIM   0x0
+#define G_COL_ENV    0x1
+
+#define G_CP_LIGHT   0x0
+#define G_CP_AMBIENT 0x1
+
+#define gSPCopyPlayerPartToColor(pkt, color, part, offset)             \
+{                                                                \
+    Gfx *_g = (Gfx *)(pkt);                                      \
+    _g->words.w0 = (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)); \
+    _g->words.w1 = ((2 * ((part) + 1)) + 1 + offset);            \
+}
+
+#define gsSPCopyPlayerPartToColor(color, part, offset)                     \
+{{                                                                   \
+    (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)),        \
+    ((2 * ((part) + 1)) + 1 + offset)                                \
+}}

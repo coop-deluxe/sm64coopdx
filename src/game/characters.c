@@ -425,9 +425,9 @@ struct Character* get_character(struct MarioState* m) {
 static s32 get_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
     if (m == NULL || m->marioObj == NULL) { return 0; }
 
-    s32 override = 0;
-    if (smlua_call_event_hooks_mario_character_sound_param_ret_int(HOOK_CHARACTER_SOUND, m, characterSound, &override)) {
-        return override;
+    s32 soundOverride = 0;
+    if (smlua_call_event_hooks(HOOK_CHARACTER_SOUND, m, characterSound, &soundOverride)) {
+        return soundOverride;
     }
 
     struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);

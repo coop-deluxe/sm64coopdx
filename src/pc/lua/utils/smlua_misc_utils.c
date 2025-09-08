@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "game/hardcoded.h"
 #include "game/hud.h"
+#include "menu/star_select.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
@@ -117,6 +118,10 @@ struct DjuiTheme* djui_menu_get_theme(void) {
     return gDjuiThemes[configDjuiTheme];
 }
 
+bool djui_is_playerlist_ping_visible(void) {
+    return configShowPing;
+}
+
 ///
 
 extern s8 gDialogBoxState;
@@ -210,6 +215,18 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
         case HUD_DISPLAY_TIMER:         gHudDisplay.timer  = value;   break;
         case HUD_DISPLAY_CAMERA_STATUS: set_hud_camera_status(value); break;
     }
+}
+
+void act_select_hud_hide(enum ActSelectHudPart part) {
+    gOverrideHideActSelectHud |= part;
+}
+
+void act_select_hud_show(enum ActSelectHudPart part) {
+    gOverrideHideActSelectHud &= ~part;
+}
+
+bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
+    return (gOverrideHideActSelectHud & part) != 0;
 }
 
 extern const u8 texture_power_meter_left_side[];
@@ -322,7 +339,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
 }
 
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos) {
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
     if (!m) { return false; }
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
@@ -584,4 +601,44 @@ struct GraphNodeCamera* geo_get_current_camera(void) {
 
 struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
+}
+
+void texture_to_lua_table(const u8 *tex) {
+    lua_State *L = gLuaState;
+    if (!L || !tex) { return; }
+
+    struct TextureInfo texInfo;
+    if (!dynos_texture_get_from_data(tex, &texInfo)) { return; }
+
+    u32 bpp = texInfo.bitSize;
+    if (bpp != 16 && bpp != 32) { return; }
+
+    u32 bytesPerPixel = bpp / 8;
+    const u8 *data = texInfo.texture;
+    u32 texSize = texInfo.width * texInfo.height * bytesPerPixel;
+
+    lua_newtable(L);
+    for (u32 i = 0; i < texSize; i += bytesPerPixel) {
+        lua_newtable(L);
+
+        if (bpp == 16) {
+            u16 col = (data[i] << 8) | data[i + 1];
+            u8 r = SCALE_5_8((col >> 11) & 0x1F);
+            u8 g = SCALE_5_8((col >>  6) & 0x1F);
+            u8 b = SCALE_5_8((col >>  1) & 0x1F);
+            u8 a = 0xFF * (col & 0x1);
+
+            smlua_push_integer_field(-2, "r", r);
+            smlua_push_integer_field(-2, "g", g);
+            smlua_push_integer_field(-2, "b", b);
+            smlua_push_integer_field(-2, "a", a);
+        } else if (bpp == 32) {
+            smlua_push_integer_field(-2, "r", data[i]);
+            smlua_push_integer_field(-2, "g", data[i + 1]);
+            smlua_push_integer_field(-2, "b", data[i + 2]);
+            smlua_push_integer_field(-2, "a", data[i + 3]);
+        }
+
+        lua_rawseti(L, -2, i / bytesPerPixel + 1);
+    }
 }

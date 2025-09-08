@@ -1,5 +1,6 @@
 #include <map>
 #include <algorithm>
+#include <unordered_map>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -21,6 +22,8 @@ static Array<Pair<const char*, void *>>& DynosCustomActors() {
     return sDynosCustomActors;
 }
 
+static std::map<struct GraphNode *, struct GraphNode *> sModifiedGraphNodes;
+
 // TODO: the cleanup/refactor didn't really go as planned.
 //       clean up the actor management code more
 
@@ -28,7 +31,7 @@ std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
     return DynosValidActors();
 }
 
-void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *aActorName) {
+void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
@@ -42,6 +45,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, const SysPath &aFilename, const char *
         return;
     }
     _GfxData->mModIndex = aModIndex;
+    _GfxData->mModFileIndex = aModFileIndex;
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
@@ -114,13 +118,16 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     return NULL;
 }
 
-bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, const char **outToken) {
+bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken) {
     ActorGfx *_ActorGfx = DynOS_Actor_GetActorGfx(aGraphNode);
     if (_ActorGfx) {
         GfxData *_GfxData = _ActorGfx->mGfxData;
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
@@ -135,6 +142,9 @@ bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenInde
         if (_GfxData) {
             if (outModIndex) {
                 *outModIndex = _GfxData->mModIndex;
+            }
+            if (outModFileIndex) {
+                *outModFileIndex = _GfxData->mModFileIndex;
             }
             if (outToken) {
                 if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
@@ -201,7 +211,7 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
-    if (obj && (obj->behavior == smlua_override_behavior(bhvMario) ||
+    if (obj && (obj->behavior == bhvMario ||
             obj->behavior == smlua_override_behavior(bhvNormalCap) ||
             obj->behavior == smlua_override_behavior(bhvWingCap) ||
             obj->behavior == smlua_override_behavior(bhvMetalCap) ||
@@ -234,6 +244,49 @@ void DynOS_Actor_Override_All(void) {
     }
 }
 
+static std::unordered_map<s16, size_t> sGraphNodeSizeMap = {
+    { GRAPH_NODE_TYPE_ROOT,                 sizeof(GraphNodeRoot) },
+    { GRAPH_NODE_TYPE_ORTHO_PROJECTION,     sizeof(GraphNodeOrthoProjection) },
+    { GRAPH_NODE_TYPE_PERSPECTIVE,          sizeof(GraphNodePerspective) },
+    { GRAPH_NODE_TYPE_START,                sizeof(GraphNodeStart) },
+    { GRAPH_NODE_TYPE_MASTER_LIST,          sizeof(GraphNodeMasterList) },
+    { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL,      sizeof(GraphNodeLevelOfDetail) },
+    { GRAPH_NODE_TYPE_SWITCH_CASE,          sizeof(GraphNodeSwitchCase) },
+    { GRAPH_NODE_TYPE_CAMERA,               sizeof(GraphNodeCamera) },
+    { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, sizeof(GraphNodeTranslationRotation) },
+    { GRAPH_NODE_TYPE_TRANSLATION,          sizeof(GraphNodeTranslation) },
+    { GRAPH_NODE_TYPE_ROTATION,             sizeof(GraphNodeRotation) },
+    { GRAPH_NODE_TYPE_SCALE,                sizeof(GraphNodeScale) },
+    { GRAPH_NODE_TYPE_SCALE_XYZ,            sizeof(GraphNodeScaleXYZ) },
+    { GRAPH_NODE_TYPE_OBJECT,               sizeof(GraphNodeObject) },
+    { GRAPH_NODE_TYPE_CULLING_RADIUS,       sizeof(GraphNodeCullingRadius) },
+    { GRAPH_NODE_TYPE_ANIMATED_PART,        sizeof(GraphNodeAnimatedPart) },
+    { GRAPH_NODE_TYPE_BILLBOARD,            sizeof(GraphNodeBillboard) },
+    { GRAPH_NODE_TYPE_DISPLAY_LIST,         sizeof(GraphNodeDisplayList) },
+    { GRAPH_NODE_TYPE_SHADOW,               sizeof(GraphNodeShadow) },
+    { GRAPH_NODE_TYPE_OBJECT_PARENT,        sizeof(GraphNodeObjectParent) },
+    { GRAPH_NODE_TYPE_GENERATED_LIST,       sizeof(GraphNodeGenerated) },
+    { GRAPH_NODE_TYPE_BACKGROUND,           sizeof(GraphNodeBackground) },
+    { GRAPH_NODE_TYPE_HELD_OBJ,             sizeof(GraphNodeHeldObject) },
+};
+
+size_t get_graph_node_size(s16 nodeType) {
+    auto it = sGraphNodeSizeMap.find(nodeType);
+    return it != sGraphNodeSizeMap.end() ? it->second : 0;
+}
+
+void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
+    if (sModifiedGraphNodes.find(aNode) == sModifiedGraphNodes.end()) {
+        struct GraphNode *sharedChild = geo_find_shared_child(aNode);
+        if (DynOS_Model_GetModelPoolFromGraphNode(sharedChild) != MODEL_POOL_PERMANENT) { return; } // Only need to reset permanent models
+        size_t size = get_graph_node_size(aNode->type);
+        if (size == 0) { return; } // Unexpected
+        GraphNode *graphNodeCopy = (GraphNode *) malloc(size);
+        memcpy(graphNodeCopy, aNode, size);
+        sModifiedGraphNodes[aNode] = graphNodeCopy;
+    }
+}
+
 void DynOS_Actor_ModShutdown() {
     auto& _DynosCustomActors = DynosCustomActors();
     while (_DynosCustomActors.Count() > 0) {
@@ -255,4 +308,13 @@ void DynOS_Actor_ModShutdown() {
     }
 
     DynOS_Actor_Override_All();
+
+    // Reset modified graph nodes
+    for (auto& node : sModifiedGraphNodes) {
+        size_t size = get_graph_node_size(node.second->type);
+        if (size == 0) { continue; } // Unexpected
+        memcpy(node.first, node.second, size);
+        free(node.second);
+    }
+    sModifiedGraphNodes.clear();
 }

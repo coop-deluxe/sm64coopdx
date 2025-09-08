@@ -1,5 +1,5 @@
 -- localize functions to improve performance
-local mod_storage_load,string_format,table_insert,type,math_floor,math_ceil,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,obj_get_first_with_behavior_id = mod_storage_load,string.format,table.insert,type,math.floor,math.ceil,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,obj_get_first_with_behavior_id
+local mod_storage_load,string_format,table_insert,type,math_ceil,math_lerp,math_round,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,obj_get_first_with_behavior_id = mod_storage_load,string.format,table.insert,type,math.ceil,math.lerp,math.round,level_is_vanilla_level,djui_hud_get_color,djui_hud_set_color,djui_hud_print_text,obj_get_first_with_behavior_id
 
 --- @param key string
 --- `mod_storage_load_bool` except it returns true by default
@@ -47,27 +47,12 @@ function on_or_off(value)
     return "\\#ff0000\\OFF"
 end
 
---- @param x number
---- @return integer
---- Rounds up or down depending on the decimal position of `x`
-function math_round(x)
-    return math_floor(x + 0.5)
-end
-
---- @param a number
---- @param b number
---- @param t number
---- Linearly interpolates between two points using a delta
-function lerp(a, b, t)
-    return a * (1 - t) + b * t
-end
-
 --- @param a number
 --- @param b number
 --- @param t number
 --- Linearly interpolates between two points using a delta but ceils the final value
 function lerp_ceil(a, b, t)
-    return math_ceil(lerp(a, b, t))
+    return math_ceil(math_lerp(a, b, t))
 end
 
 --- @param a number
@@ -75,7 +60,7 @@ end
 --- @param t number
 --- Linearly interpolates between two points using a delta but rounds the final value
 function lerp_round(a, b, t)
-    return math_round(lerp(a, b, t))
+    return math_round(math_lerp(a, b, t))
 end
 
 --- @param a Color

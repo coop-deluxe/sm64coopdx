@@ -18,9 +18,9 @@ static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
 }
 
-static void djui_panel_display_uncapped_change(UNUSED struct DjuiBase* caller) {
-    djui_base_set_enabled(&sFrameLimitInput->base, !configUncappedFramerate);
-    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
+static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* caller) {
+    djui_base_set_enabled(&sFrameLimitInput->base, configFramerateMode == RRM_MANUAL);
+    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
@@ -32,7 +32,7 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
     }
-    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
+    djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
 static void djui_panel_display_msaa_change(UNUSED struct DjuiBase* caller) {
@@ -63,8 +63,11 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
+        djui_checkbox_create(body, DLANG(DISPLAY, SHOW_PING), &configShowPing, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
-        djui_checkbox_create(body, DLANG(DISPLAY, UNCAPPED_FRAMERATE), &configUncappedFramerate, djui_panel_display_uncapped_change);
+
+        char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
+        djui_selectionbox_create(body, DLANG(DISPLAY, FRAMERATE_MODE), framerateModeChoices, 3, &configFramerateMode, djui_panel_display_framerate_mode_change);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
@@ -85,13 +88,13 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             snprintf(frameLimitString, 32, "%d", configFrameLimit);
             djui_inputbox_set_text(inputbox1, frameLimitString);
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_display_frame_limit_text_change);
-            djui_base_set_enabled(&inputbox1->base, !configUncappedFramerate);
+            djui_base_set_enabled(&inputbox1->base, configFramerateMode == RRM_MANUAL);
             sFrameLimitInput = inputbox1;
         }
 
         char* interpChoices[2] = { DLANG(DISPLAY, FAST), DLANG(DISPLAY, ACCURATE) };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(DISPLAY, INTERPOLATION), interpChoices, 2, &configInterpolationMode, NULL);
-        djui_base_set_enabled(&selectionbox1->base, (configFrameLimit > 30 || (configFrameLimit <= 30 && configUncappedFramerate)));
+        djui_base_set_enabled(&selectionbox1->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
         sInterpolationSelectionBox = selectionbox1;
 
         char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };

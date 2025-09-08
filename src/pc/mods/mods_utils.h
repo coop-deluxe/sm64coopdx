@@ -20,6 +20,8 @@ void normalize_path(char* path);
 bool concat_path(char* destination, char* path, char* fname);
 char* path_basename(char* path);
 void path_get_folder(char* path, char* outpath);
+int path_depth(const char* path);
+bool path_is_relative_to(const char* fullPath, const char* baseDir);
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 
 #endif

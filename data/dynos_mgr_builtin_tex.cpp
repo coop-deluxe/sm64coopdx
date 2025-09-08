@@ -1153,7 +1153,15 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_selectionbox_back_icon, "textures/segment2/custom_selectionbox_back_icon.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_selectionbox_forward_icon, "textures/segment2/custom_selectionbox_forward_icon.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_coopdx_logo, "textures/segment2/custom_coopdx_logo.rgba32.png", 2048, 1024, 32),
-    
+
+    // Playerlist Exclusives
+    define_builtin_tex(texture_ping_empty, "textures/segment2/custom_ping_empty.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_one, "textures/segment2/custom_ping_one.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_two, "textures/segment2/custom_ping_two.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_three, "textures/segment2/custom_ping_three.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_four, "textures/segment2/custom_ping_four.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_full, "textures/segment2/custom_ping_full.rgba16.png", 16, 16, 16),
+
     // Goddard
     define_builtin_tex(gd_texture_hand_open, "textures/intro_raw/hand_open.rgba16.png", 32, 32, 16),
     define_builtin_tex(gd_texture_hand_closed, "textures/intro_raw/hand_closed.rgba16.png", 32, 32, 16),
@@ -1179,7 +1187,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(gd_texture_sparkle_3, "textures/intro_raw/sparkle_3.rgba16.png", 32, 32, 16),
     define_builtin_tex(gd_texture_sparkle_4, "textures/intro_raw/sparkle_4.rgba16.png", 32, 32, 16),
     define_builtin_tex(gd_texture_sparkle_5, "textures/intro_raw/sparkle_5.rgba16.png", 32, 32, 16),
-    
+
     // Version Exclusives
 #if defined(VERSION_JP)
     define_builtin_tex(texture_font_char_jp_0, "textures/segment2/segment2.07100.ia1.png", 8, 8, 16),
@@ -1448,7 +1456,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_font_char_eu_unknown, "textures/segment2/font_graphics.06510.ia1.png", 16, 8, 16),
     define_builtin_tex(texture_font_char_eu_Cedilla, "textures/segment2/font_graphics.06520.ia1.png", 16, 8, 16),
     define_builtin_tex(texture_font_char_eu_eszeet, "textures/segment2/font_graphics.06530.ia1.png", 16, 8, 16),
-    
+
     define_builtin_tex(cake_end_texture_eu_35, "levels/ending/eu_023000.rgba16.png", 64, 32, 16),
     define_builtin_tex(cake_end_texture_eu_36, "levels/ending/eu_024000.rgba16.png", 64, 32, 16),
     define_builtin_tex(cake_end_texture_eu_37, "levels/ending/eu_025000.rgba16.png", 64, 32, 16),
@@ -1614,7 +1622,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(water_skybox_texture_0003D, "textures/skybox_tiles/water.61.rgba16.png", 32, 32, 16),
     define_builtin_tex(water_skybox_texture_0003E, "textures/skybox_tiles/water.62.rgba16.png", 32, 32, 16),
     define_builtin_tex(water_skybox_texture_0003F, "textures/skybox_tiles/water.63.rgba16.png", 32, 32, 16),
-    
+
     define_builtin_tex(bitfs_skybox_texture_00000, "textures/skybox_tiles/bitfs.0.rgba16.png", 32, 32, 16),
     define_builtin_tex(bitfs_skybox_texture_00001, "textures/skybox_tiles/bitfs.1.rgba16.png", 32, 32, 16),
     define_builtin_tex(bitfs_skybox_texture_00002, "textures/skybox_tiles/bitfs.2.rgba16.png", 32, 32, 16),
@@ -2455,6 +2463,18 @@ const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aData
     for (size_t i = 0; i < count; i++) {
         const struct BuiltinTexInfo* info = &sDynosBuiltinTexs[i];
         if (!strcmp(info->identifier, aDataName)) {
+            return info;
+        }
+    }
+
+    return NULL;
+}
+
+const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData) {
+    size_t count = sizeof(sDynosBuiltinTexs) / (sizeof(struct BuiltinTexInfo));
+    for (size_t i = 0; i < count; i++) {
+        const struct BuiltinTexInfo* info = &sDynosBuiltinTexs[i];
+        if (info->pointer == aData) {
             return info;
         }
     }

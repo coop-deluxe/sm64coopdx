@@ -89,10 +89,10 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
     s16 sortDir;
     s16 listIndex;
 
-    if (surface->normal.y > 0.01) {
+    if (surface->normal.y > gLevelValues.floorNormalMinY) {
         listIndex = SPATIAL_PARTITION_FLOORS;
         sortDir = 1; // highest to lowest, then insertion order
-    } else if (surface->normal.y < -0.01) {
+    } else if (surface->normal.y < gLevelValues.ceilNormalMaxY) {
         listIndex = SPATIAL_PARTITION_CEILS;
         sortDir = -1; // lowest to highest, then insertion order
     } else {
@@ -245,6 +245,8 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
             add_surface_to_cell(dynamic, cellX, cellZ, surface);
         }
     }
+
+    smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, dynamic);
 }
 
 /**
@@ -469,8 +471,8 @@ void alloc_surface_pools(void) {
     clear_static_surfaces();
     clear_dynamic_surfaces();
 
-    sSurfaceNodePool = growing_array_init(sSurfaceNodePool, 0x1000);
-    sSurfacePool = growing_array_init(sSurfacePool, 0x400);
+    sSurfaceNodePool = growing_array_init(sSurfaceNodePool, 0x1000, malloc, free);
+    sSurfacePool = growing_array_init(sSurfacePool, 0x400, malloc, smlua_free_surface);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;

@@ -300,10 +300,10 @@ static void wiggler_act_jumped_on(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
 
     // Text to show on first, second, and third attack.
-    s32* attackText[3] = {
-        (s32*) &gBehaviorValues.dialogs.WigglerAttack1Dialog,
-        (s32*) &gBehaviorValues.dialogs.WigglerAttack2Dialog,
-        (s32*) &gBehaviorValues.dialogs.WigglerAttack3Dialog
+    enum DialogId* attackText[3] = {
+        &gBehaviorValues.dialogs.WigglerAttack1Dialog,
+        &gBehaviorValues.dialogs.WigglerAttack2Dialog,
+        &gBehaviorValues.dialogs.WigglerAttack3Dialog
     };
 
     // Shrink until the squish speed becomes 0, then unisquish

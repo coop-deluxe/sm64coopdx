@@ -47,8 +47,8 @@ struct SpawnInfo *gMarioSpawnInfo = &gPlayerSpawnInfos[0];
 struct Area *gAreas = gAreaData;
 struct Area *gCurrentArea = NULL;
 struct CreditsEntry *gCurrCreditsEntry = NULL;
-Vp *D_8032CE74 = NULL;
-Vp *D_8032CE78 = NULL;
+Vp *gViewportOverride = NULL;
+Vp *gViewportClip = NULL;
 s16 gWarpTransDelay = 0;
 u32 gFBSetColor = 0;
 u32 gWarpTransFBSetColor = 0;
@@ -90,7 +90,7 @@ u8 sSpawnTypeFromWarpBhv[] = {
     MARIO_SPAWN_AIRBORNE_STAR_COLLECT, MARIO_SPAWN_AIRBORNE_DEATH,       MARIO_SPAWN_LAUNCH_STAR_COLLECT,   MARIO_SPAWN_LAUNCH_DEATH,
 };
 
-Vp D_8032CF00 = { {
+Vp gViewportFullscreen = { {
     { 640, 480, 511, 0 },
     { 640, 480, 511, 0 },
 } };
@@ -107,8 +107,8 @@ void override_viewport_and_clip(Vp *a, Vp *b, u8 c, u8 d, u8 e) {
     u16 sp6 = ((c >> 3) << 11) | ((d >> 3) << 6) | ((e >> 3) << 1) | 1;
 
     gFBSetColor = (sp6 << 16) | sp6;
-    D_8032CE74 = a;
-    D_8032CE78 = b;
+    gViewportOverride = a;
+    gViewportClip = b;
 }
 
 void set_warp_transition_rgb(u8 red, u8 green, u8 blue) {
@@ -215,6 +215,8 @@ void load_obj_warp_nodes(void) {
 }
 
 void clear_areas(void) {
+    smlua_call_event_hooks(HOOK_ON_CLEAR_AREAS);
+
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL) {
         np->currAreaSyncValid = false;
@@ -251,6 +253,7 @@ void clear_areas(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
 }
 
 void clear_area_graph_nodes(void) {
@@ -309,6 +312,7 @@ void unload_area(void) {
     }
 
     le_clear();
+    geo_clear_interp_data();
 }
 
 void load_mario_area(void) {
@@ -373,9 +377,9 @@ void area_update_objects(void) {
  */
 void play_transition(s16 transType, s16 time, u8 red, u8 green, u8 blue) {
     reset_screen_transition_timers();
-    bool returnValue = true;
-    smlua_call_event_hooks_int_params_ret_bool(HOOK_ON_SCREEN_TRANSITION, transType, &returnValue);
-    if (!returnValue) { return; }
+    bool allowPlayTransition = true;
+    smlua_call_event_hooks(HOOK_ON_SCREEN_TRANSITION, transType, &allowPlayTransition);
+    if (!allowPlayTransition) { return; }
 
     gWarpTransition.isActive = TRUE;
     gWarpTransition.type = transType;
@@ -442,9 +446,9 @@ void play_transition_after_delay(s16 transType, s16 time, u8 red, u8 green, u8 b
 void render_game(void) {
     dynos_update_gfx();
     if (gCurrentArea != NULL && !gWarpTransition.pauseRendering) {
-        geo_process_root(gCurrentArea->root, D_8032CE74, D_8032CE78, gFBSetColor);
+        geo_process_root(gCurrentArea->root, gViewportOverride, gViewportClip, gFBSetColor);
 
-        gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&D_8032CF00));
+        gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gViewportFullscreen));
 
         gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH,
                       SCREEN_HEIGHT - BORDER_HEIGHT);
@@ -456,7 +460,7 @@ void render_game(void) {
             if (gServerSettings.nametags && !gDjuiInMainMenu) {
                 nametags_render();
             }
-            smlua_call_event_on_hud_render_behind(djui_reset_hud_params);
+            smlua_call_event_hooks(HOOK_ON_HUD_RENDER_BEHIND, djui_reset_hud_params);
             djui_gfx_displaylist_end();
         }
         render_hud();
@@ -475,8 +479,8 @@ void render_game(void) {
             gSaveOptSelectIndex = gPauseScreenMode;
         }
 
-        if (D_8032CE78 != NULL) {
-            make_viewport_clip_rect(D_8032CE78);
+        if (gViewportClip != NULL) {
+            make_viewport_clip_rect(gViewportClip);
         } else
             gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH,
                           SCREEN_HEIGHT - BORDER_HEIGHT);
@@ -498,15 +502,15 @@ void render_game(void) {
         }
     } else {
         render_text_labels();
-        if (D_8032CE78 != NULL) {
-            clear_viewport(D_8032CE78, gWarpTransFBSetColor);
+        if (gViewportClip != NULL) {
+            clear_viewport(gViewportClip, gWarpTransFBSetColor);
         } else {
             clear_frame_buffer(gWarpTransFBSetColor);
         }
     }
 
-    D_8032CE74 = NULL;
-    D_8032CE78 = NULL;
+    gViewportOverride = NULL;
+    gViewportClip = NULL;
 }
 
 void get_area_minimum_y(u8* hasMinY, f32* minY) {

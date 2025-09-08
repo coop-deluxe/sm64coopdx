@@ -84,21 +84,26 @@ void nametags_render(void) {
         vec3f_copy(pos, m->marioBodyState->headPos);
         pos[1] += 100;
 
-        if (djui_hud_world_pos_to_screen_pos(pos, out) &&
-            (i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON))) {
-            f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
+        extern bool gDjuiHudToWorldCalcViewport;
+        gDjuiHudToWorldCalcViewport = false;
+        if ((i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON)) &&
+            djui_hud_world_pos_to_screen_pos(pos, out)) {
 
             char name[MAX_CONFIG_STRING];
-            char* hookedString = NULL;
-            smlua_call_event_hooks_int_params_ret_string(HOOK_ON_NAMETAGS_RENDER, i, &hookedString);
+            const char* hookedString = NULL;
+            smlua_call_event_hooks(HOOK_ON_NAMETAGS_RENDER, i, pos, &hookedString);
             if (hookedString) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {
                 snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
                 name_without_hex(name);
             }
+            if (!djui_hud_world_pos_to_screen_pos(pos, out)) {
+                continue;
+            }
             u8* color = network_get_player_text_color(m->playerIndex);
 
+            f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
             f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
             out[1] -= 16 * scale;
 
@@ -111,11 +116,15 @@ void nametags_render(void) {
                 e->inited = true;
             }
 
-            // Scissor to clip during credits
-            extern Vp *D_8032CE74;
-            extern Vp *D_8032CE78;
-            Vp *viewport = D_8032CE74 == NULL ? D_8032CE78 : D_8032CE74;
-            if (viewport) { make_viewport_clip_rect(viewport); }
+            // Apply viewport for credits
+            extern Vp *gViewportOverride;
+            extern Vp *gViewportClip;
+            extern Vp gViewportFullscreen;
+            Vp *viewport = gViewportOverride == NULL ? gViewportClip : gViewportOverride;
+            if (viewport) {
+                make_viewport_clip_rect(viewport);
+                gSPViewport(gDisplayListHead++, viewport);
+            }
 
             djui_hud_print_outlined_text_interpolated(name,
                 e->prevPos[0] - measure, e->prevPos[1], e->prevScale,
@@ -132,12 +141,16 @@ void nametags_render(void) {
                 );
             }
 
-            // Reset scissor
-            if (viewport) { gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT); }
+            // Reset viewport
+            if (viewport) {
+                gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
+                gSPViewport(gDisplayListHead++, &gViewportFullscreen);
+            }
 
             vec3f_copy(e->prevPos, out);
             e->prevScale = scale;
         }
+        gDjuiHudToWorldCalcViewport = true;
     }
 }
 

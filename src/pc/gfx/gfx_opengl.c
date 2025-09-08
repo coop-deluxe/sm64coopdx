@@ -558,7 +558,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     } else {
         prg->used_lightmap = false;
     }
-    
+
     prg->uniform_locations[6] = glGetUniformLocation(shader_program, "uFilter");
 
     return prg;
@@ -706,14 +706,14 @@ static void gfx_opengl_init(void) {
         sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor, vminor);
 
     glGenBuffers(1, &opengl_vbo);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
 
     if (vmajor >= 3 && !is_es) {
         glGenVertexArrays(1, &opengl_vao);
         glBindVertexArray(opengl_vao);
     }
-    
+
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

@@ -19,6 +19,8 @@ u32 clock_elapsed_ticks(void);
 /* |description|Checks whether it is the day given|descriptionEnd| */
 bool clock_is_date(u8 month, u8 day);
 
+void precise_delay_f64(f64 delaySec);
+
 void file_get_line(char* buffer, size_t maxLength, FILE* fp);
 
 /* |description|Linearly interpolates between `a` and `b` with `delta`|descriptionEnd| */
@@ -26,9 +28,9 @@ f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);
 /* |description|Linearly interpolates between `a` and `b` with `delta`|descriptionEnd| */
 s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);
 /* |description|Linearly interpolates `res` between `a` and `b` with `delta`|descriptionEnd| */
-void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta);
+void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);
 /* |description|Linearly interpolates `res` between `a` and `b` with `delta`|descriptionEnd| */
-void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta);
+void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);
 void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta);
 void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta);
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);

@@ -148,6 +148,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
     if ptype == 'const char*':
         return 'LOT_NONE'
 
+    if ptype == 'ByteString':
+        return 'LOT_NONE'
+
     if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return 'LOT_NONE'
 
@@ -215,6 +218,9 @@ def translate_type_to_lua(ptype):
     if ptype == 'const char*':
         return '`string`', None
 
+    if ptype == 'ByteString':
+        return '`string`', None
+
     if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return '`string`', None
 
@@ -233,7 +239,10 @@ def translate_type_to_lua(ptype):
         ptype = ptype.split(' ')[1].replace('*', '')
         return ptype, 'structs.md#%s' % ptype
 
-    if 'Vec3' in ptype:
+    if ptype in VECP_TYPES:
+        return VECP_TYPES[ptype], 'structs.md#%s' % VECP_TYPES[ptype]
+
+    if ptype in VEC_TYPES:
         return ptype, 'structs.md#%s' % ptype
 
     if ptype.startswith('enum '):
@@ -250,7 +259,13 @@ def translate_type_to_lua(ptype):
     if ptype == 'int':
         return '`integer`', None
 
+    if ptype == 'lua_Integer':
+        return '`integer`', None
+
     if ptype == 'float':
+        return '`number`', None
+
+    if ptype == 'lua_Number':
         return '`number`', None
 
     if ptype == 'double':
@@ -267,7 +282,7 @@ def translate_type_to_lua(ptype):
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
-        s = '`Pointer` <%s>' % translate_type_to_lua(ptype)[0]
+        s = '`Pointer` <`%s`>' % translate_type_to_lua(ptype)[0].replace('`', '').strip()
         return s, None
 
     if not ptype.startswith('`'):

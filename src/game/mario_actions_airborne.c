@@ -72,9 +72,9 @@ Useful for handling collisions with lava walls, giving Mario a strong upward/for
 |descriptionEnd| */
 s32 lava_boost_on_wall(struct MarioState *m) {
     if (!m) { return 0; }
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_WALL, &allow);
-    if ((!allow) || gDjuiInMainMenu) { return FALSE; }
+    bool allowHazard = true;
+    smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_WALL, &allowHazard);
+    if ((!allowHazard) || gDjuiInMainMenu) { return FALSE; }
     m->faceAngle[1] = atan2s(m->wallNormal[2], m->wallNormal[0]);
 
     if (m->forwardVel < 24.0f) {
@@ -206,16 +206,16 @@ s32 check_horizontal_wind(struct MarioState *m) {
     struct Surface *floor;
     f32 speed;
     s16 pushAngle;
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allow);
-    if (!allow) {
-    	return FALSE;
-    }
 
     floor = m->floor;
-    
 
     if (floor && floor->type == SURFACE_HORIZONTAL_WIND) {
+        bool allowHazard = true;
+        smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_HORIZONTAL_WIND, &allowHazard);
+        if (!allowHazard) {
+            return FALSE;
+        }
+
         pushAngle = floor->force << 8;
 
         m->slideVelX += 1.2f * sins(pushAngle);
@@ -1733,7 +1733,7 @@ s32 act_lava_boost(struct MarioState *m) {
             m->health = 0x100;
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) {
                 reset_rumble_timers(m);
                 return FALSE;
@@ -2297,23 +2297,23 @@ if on certain wind surfaces. Also resets `m.quicksandDepth`
 |descriptionEnd| */
 s32 check_common_airborne_cancels(struct MarioState *m) {
     if (!m) { return 0; }
-    bool allow = true;
+
     if (m->pos[1] < m->waterLevel - 100) {
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             return set_water_plunge_action(m);
         }
     }
-    allow = true;
 
     if (m->input & INPUT_SQUISHED) {
         return drop_and_set_mario_action(m, ACT_SQUISHED, 0);
     }
 
-    
     if (m->floor && m->floor->type == SURFACE_VERTICAL_WIND && (m->action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)) {
-        smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allow);
-        if (allow) {
+        bool allowHazard = true;
+        smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_VERTICAL_WIND, &allowHazard);
+        if (allowHazard) {
             return drop_and_set_mario_action(m, ACT_VERTICAL_WIND, 0);
         }
     }

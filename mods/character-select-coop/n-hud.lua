@@ -587,7 +587,7 @@ end
 -- Act Select Hud --
 local function render_act_select_hud()
     local course = gNetworkPlayers[0].currCourseNum
-    if gServerSettings.enablePlayersInLevelDisplay == 0 or course == 0 or obj_get_first_with_behavior_id(id_bhvActSelector) == nil then return end
+    if gServerSettings.enablePlayersInLevelDisplay == 0 or course == 0 or obj_get_first_with_behavior_id(id_bhvActSelector) == nil or act_select_hud_is_hidden(ACT_SELECT_HUD_PLAYERS_IN_LEVEL) then return end
 
     local starBhvCount = count_objects_with_behavior(get_behavior_from_id(id_bhvActSelectorStarType))
     local sVisibleStars = starBhvCount < 6 and starBhvCount or 6

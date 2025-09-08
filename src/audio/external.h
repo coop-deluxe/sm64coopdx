@@ -4,6 +4,7 @@
 #include <PR/ultratypes.h>
 
 #include "types.h"
+#include "dialog_ids.h"
 
 #define MAX_AUDIO_OVERRIDE 128
 
@@ -87,7 +88,7 @@ void sound_banks_enable(u8 player, u16 bankMask);
 /* |description|Sets the `speed` of moving `bank`|descriptionEnd| */
 void set_sound_moving_speed(u8 bank, u8 speed);
 /* |description|Plays a dialog sound corresponding to `dialogID`|descriptionEnd| */
-void play_dialog_sound(u8 dialogID);
+void play_dialog_sound(s32 dialogID);
 /* |description|Sets the `volume` of `player`|descriptionEnd| */
 void set_sequence_player_volume(s32 player, f32 volume);
 /* |description|Plays fading in music (`seqArgs`) on `player` over `fadeTimer`|descriptionEnd| */

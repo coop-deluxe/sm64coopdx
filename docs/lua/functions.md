@@ -2,7 +2,7 @@
 
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 
 ---
 
@@ -15,10 +15,6 @@
    - [network_send_to](#network_send_to)
    - [network_send](#network_send)
    - [get_texture_info](#get_texture_info)
-   - [djui_hud_render_texture](#djui_hud_render_texture)
-   - [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-   - [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
-   - [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
@@ -51,7 +47,6 @@
    - [spawn_wind_particles](functions-2.md#spawn_wind_particles)
    - [check_if_moving_over_floor](functions-2.md#check_if_moving_over_floor)
    - [arc_to_goal_pos](functions-2.md#arc_to_goal_pos)
-   - [vec3f_copy_2](functions-2.md#vec3f_copy_2)
    - [tox_box_move](functions-2.md#tox_box_move)
    - [play_penguin_walking_sound](functions-2.md#play_penguin_walking_sound)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
@@ -610,8 +605,6 @@
    - [bhv_yoshi_loop](functions-2.md#bhv_yoshi_loop)
    - [bhv_volcano_trap_loop](functions-2.md#bhv_volcano_trap_loop)
    - [uv_update_scroll](functions-2.md#uv_update_scroll)
-   - [spawn_ambient_light](functions-2.md#spawn_ambient_light)
-   - [spawn_point_light](functions-2.md#spawn_point_light)
    - [bhv_ambient_light_update](functions-2.md#bhv_ambient_light_update)
    - [bhv_point_light_init](functions-2.md#bhv_point_light_init)
    - [bhv_point_light_loop](functions-2.md#bhv_point_light_loop)
@@ -654,6 +647,10 @@
    - [select_mario_cam_mode](functions-3.md#select_mario_cam_mode)
    - [object_pos_to_vec3f](functions-3.md#object_pos_to_vec3f)
    - [vec3f_to_object_pos](functions-3.md#vec3f_to_object_pos)
+   - [object_face_angle_to_vec3s](functions-3.md#object_face_angle_to_vec3s)
+   - [vec3s_to_object_face_angle](functions-3.md#vec3s_to_object_face_angle)
+   - [object_move_angle_to_vec3s](functions-3.md#object_move_angle_to_vec3s)
+   - [vec3s_to_object_move_angle](functions-3.md#vec3s_to_object_move_angle)
    - [cam_select_alt_mode](functions-3.md#cam_select_alt_mode)
    - [set_cam_angle](functions-3.md#set_cam_angle)
    - [set_handheld_shake](functions-3.md#set_handheld_shake)
@@ -779,11 +776,20 @@
    - [djui_hud_get_mouse_buttons_released](functions-3.md#djui_hud_get_mouse_buttons_released)
    - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
    - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
+   - [djui_hud_set_viewport](functions-3.md#djui_hud_set_viewport)
+   - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
+   - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
+   - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
+   - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
+   - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
+   - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
+   - [djui_hud_render_texture_tile_interpolated](functions-3.md#djui_hud_render_texture_tile_interpolated)
    - [djui_hud_render_rect](functions-3.md#djui_hud_render_rect)
    - [djui_hud_render_rect_interpolated](functions-3.md#djui_hud_render_rect_interpolated)
+   - [djui_hud_render_line](functions-3.md#djui_hud_render_line)
    - [get_current_fov](functions-3.md#get_current_fov)
    - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
@@ -961,16 +967,29 @@
 <br />
 
 - lighting_engine.h
+   - [le_is_enabled](functions-3.md#le_is_enabled)
+   - [le_set_mode](functions-3.md#le_set_mode)
+   - [le_get_mode](functions-3.md#le_get_mode)
+   - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
+   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
+   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
    - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
+   - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
    - [le_add_light](functions-3.md#le_add_light)
    - [le_remove_light](functions-3.md#le_remove_light)
    - [le_get_light_count](functions-3.md#le_get_light_count)
-   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
+   - [le_light_exists](functions-3.md#le_light_exists)
+   - [le_get_light_pos](functions-3.md#le_get_light_pos)
    - [le_set_light_pos](functions-3.md#le_set_light_pos)
+   - [le_get_light_color](functions-3.md#le_get_light_color)
    - [le_set_light_color](functions-3.md#le_set_light_color)
+   - [le_get_light_radius](functions-3.md#le_get_light_radius)
    - [le_set_light_radius](functions-3.md#le_set_light_radius)
+   - [le_get_light_intensity](functions-3.md#le_get_light_intensity)
    - [le_set_light_intensity](functions-3.md#le_set_light_intensity)
+   - [le_get_light_use_surface_normals](functions-3.md#le_get_light_use_surface_normals)
+   - [le_set_light_use_surface_normals](functions-3.md#le_set_light_use_surface_normals)
 
 <br />
 
@@ -1145,6 +1164,7 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
+   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -1214,6 +1234,7 @@
    - [mtxf_mul_vec3s](functions-4.md#mtxf_mul_vec3s)
    - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
+   - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
 
 <br />
@@ -1245,6 +1266,8 @@
    - [vec3f_sub](functions-4.md#vec3f_sub)
    - [vec3f_dif](functions-4.md#vec3f_dif)
    - [vec3f_mul](functions-4.md#vec3f_mul)
+   - [vec3f_mult](functions-4.md#vec3f_mult)
+   - [vec3f_prod](functions-4.md#vec3f_prod)
    - [vec3f_div](functions-4.md#vec3f_div)
    - [vec3f_length](functions-4.md#vec3f_length)
    - [vec3f_normalize](functions-4.md#vec3f_normalize)
@@ -1269,6 +1292,8 @@
    - [vec3i_sub](functions-4.md#vec3i_sub)
    - [vec3i_dif](functions-4.md#vec3i_dif)
    - [vec3i_mul](functions-4.md#vec3i_mul)
+   - [vec3i_mult](functions-4.md#vec3i_mult)
+   - [vec3i_prod](functions-4.md#vec3i_prod)
    - [vec3i_div](functions-4.md#vec3i_div)
    - [vec3i_length](functions-4.md#vec3i_length)
    - [vec3i_normalize](functions-4.md#vec3i_normalize)
@@ -1293,6 +1318,8 @@
    - [vec3s_sub](functions-4.md#vec3s_sub)
    - [vec3s_dif](functions-4.md#vec3s_dif)
    - [vec3s_mul](functions-4.md#vec3s_mul)
+   - [vec3s_mult](functions-4.md#vec3s_mult)
+   - [vec3s_prod](functions-4.md#vec3s_prod)
    - [vec3s_div](functions-4.md#vec3s_div)
    - [vec3s_length](functions-4.md#vec3s_length)
    - [vec3s_normalize](functions-4.md#vec3s_normalize)
@@ -1309,16 +1336,53 @@
 <br />
 
 - misc.h
-   - [smooth_step](functions-4.md#smooth_step)
-   - [update_all_mario_stars](functions-4.md#update_all_mario_stars)
-   - [clock_elapsed](functions-4.md#clock_elapsed)
-   - [clock_elapsed_f64](functions-4.md#clock_elapsed_f64)
-   - [clock_elapsed_ticks](functions-4.md#clock_elapsed_ticks)
-   - [clock_is_date](functions-4.md#clock_is_date)
-   - [delta_interpolate_f32](functions-4.md#delta_interpolate_f32)
-   - [delta_interpolate_s32](functions-4.md#delta_interpolate_s32)
-   - [delta_interpolate_vec3f](functions-4.md#delta_interpolate_vec3f)
-   - [delta_interpolate_vec3s](functions-4.md#delta_interpolate_vec3s)
+   - [smooth_step](functions-5.md#smooth_step)
+   - [update_all_mario_stars](functions-5.md#update_all_mario_stars)
+   - [clock_elapsed](functions-5.md#clock_elapsed)
+   - [clock_elapsed_f64](functions-5.md#clock_elapsed_f64)
+   - [clock_elapsed_ticks](functions-5.md#clock_elapsed_ticks)
+   - [clock_is_date](functions-5.md#clock_is_date)
+   - [delta_interpolate_f32](functions-5.md#delta_interpolate_f32)
+   - [delta_interpolate_s32](functions-5.md#delta_interpolate_s32)
+   - [delta_interpolate_vec3f](functions-5.md#delta_interpolate_vec3f)
+   - [delta_interpolate_vec3s](functions-5.md#delta_interpolate_vec3s)
+
+<br />
+
+- mod_fs.h
+   - [mod_fs_exists](functions-5.md#mod_fs_exists)
+   - [mod_fs_get](functions-5.md#mod_fs_get)
+   - [mod_fs_reload](functions-5.md#mod_fs_reload)
+   - [mod_fs_create](functions-5.md#mod_fs_create)
+   - [mod_fs_delete](functions-5.md#mod_fs_delete)
+   - [mod_fs_save](functions-5.md#mod_fs_save)
+   - [mod_fs_set_public](functions-5.md#mod_fs_set_public)
+   - [mod_fs_get_filename](functions-5.md#mod_fs_get_filename)
+   - [mod_fs_get_file](functions-5.md#mod_fs_get_file)
+   - [mod_fs_create_file](functions-5.md#mod_fs_create_file)
+   - [mod_fs_move_file](functions-5.md#mod_fs_move_file)
+   - [mod_fs_copy_file](functions-5.md#mod_fs_copy_file)
+   - [mod_fs_delete_file](functions-5.md#mod_fs_delete_file)
+   - [mod_fs_clear](functions-5.md#mod_fs_clear)
+   - [mod_fs_file_read_bool](functions-5.md#mod_fs_file_read_bool)
+   - [mod_fs_file_read_integer](functions-5.md#mod_fs_file_read_integer)
+   - [mod_fs_file_read_number](functions-5.md#mod_fs_file_read_number)
+   - [mod_fs_file_read_bytes](functions-5.md#mod_fs_file_read_bytes)
+   - [mod_fs_file_read_string](functions-5.md#mod_fs_file_read_string)
+   - [mod_fs_file_read_line](functions-5.md#mod_fs_file_read_line)
+   - [mod_fs_file_write_bool](functions-5.md#mod_fs_file_write_bool)
+   - [mod_fs_file_write_integer](functions-5.md#mod_fs_file_write_integer)
+   - [mod_fs_file_write_number](functions-5.md#mod_fs_file_write_number)
+   - [mod_fs_file_write_bytes](functions-5.md#mod_fs_file_write_bytes)
+   - [mod_fs_file_write_string](functions-5.md#mod_fs_file_write_string)
+   - [mod_fs_file_write_line](functions-5.md#mod_fs_file_write_line)
+   - [mod_fs_file_seek](functions-5.md#mod_fs_file_seek)
+   - [mod_fs_file_is_eof](functions-5.md#mod_fs_file_is_eof)
+   - [mod_fs_file_fill](functions-5.md#mod_fs_file_fill)
+   - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
+   - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
 
@@ -1682,66 +1746,66 @@
 <br />
 
 - object_list_processor.h
-   - [set_object_respawn_info_bits](functions-5.md#set_object_respawn_info_bits)
+   - [set_object_respawn_info_bits](functions-6.md#set_object_respawn_info_bits)
 
 <br />
 
 - platform_displacement.h
-   - [apply_platform_displacement](functions-5.md#apply_platform_displacement)
+   - [apply_platform_displacement](functions-6.md#apply_platform_displacement)
 
 <br />
 
 - rumble_init.h
-   - [queue_rumble_data](functions-5.md#queue_rumble_data)
-   - [queue_rumble_data_object](functions-5.md#queue_rumble_data_object)
-   - [queue_rumble_data_mario](functions-5.md#queue_rumble_data_mario)
-   - [reset_rumble_timers](functions-5.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-5.md#reset_rumble_timers_2)
+   - [queue_rumble_data](functions-6.md#queue_rumble_data)
+   - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
+   - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
+   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
 
 <br />
 
 - save_file.h
-   - [get_level_num_from_course_num](functions-5.md#get_level_num_from_course_num)
-   - [get_level_course_num](functions-5.md#get_level_course_num)
-   - [touch_coin_score_age](functions-5.md#touch_coin_score_age)
-   - [save_file_do_save](functions-5.md#save_file_do_save)
-   - [save_file_erase](functions-5.md#save_file_erase)
-   - [save_file_erase_current_backup_save](functions-5.md#save_file_erase_current_backup_save)
-   - [save_file_reload](functions-5.md#save_file_reload)
-   - [save_file_get_max_coin_score](functions-5.md#save_file_get_max_coin_score)
-   - [save_file_get_course_star_count](functions-5.md#save_file_get_course_star_count)
-   - [save_file_get_total_star_count](functions-5.md#save_file_get_total_star_count)
-   - [save_file_set_flags](functions-5.md#save_file_set_flags)
-   - [save_file_clear_flags](functions-5.md#save_file_clear_flags)
-   - [save_file_get_flags](functions-5.md#save_file_get_flags)
-   - [save_file_get_star_flags](functions-5.md#save_file_get_star_flags)
-   - [save_file_set_star_flags](functions-5.md#save_file_set_star_flags)
-   - [save_file_remove_star_flags](functions-5.md#save_file_remove_star_flags)
-   - [save_file_get_course_coin_score](functions-5.md#save_file_get_course_coin_score)
-   - [save_file_set_course_coin_score](functions-5.md#save_file_set_course_coin_score)
-   - [save_file_is_cannon_unlocked](functions-5.md#save_file_is_cannon_unlocked)
-   - [save_file_get_cap_pos](functions-5.md#save_file_get_cap_pos)
-   - [save_file_get_sound_mode](functions-5.md#save_file_get_sound_mode)
+   - [get_level_num_from_course_num](functions-6.md#get_level_num_from_course_num)
+   - [get_level_course_num](functions-6.md#get_level_course_num)
+   - [touch_coin_score_age](functions-6.md#touch_coin_score_age)
+   - [save_file_do_save](functions-6.md#save_file_do_save)
+   - [save_file_erase](functions-6.md#save_file_erase)
+   - [save_file_erase_current_backup_save](functions-6.md#save_file_erase_current_backup_save)
+   - [save_file_reload](functions-6.md#save_file_reload)
+   - [save_file_get_max_coin_score](functions-6.md#save_file_get_max_coin_score)
+   - [save_file_get_course_star_count](functions-6.md#save_file_get_course_star_count)
+   - [save_file_get_total_star_count](functions-6.md#save_file_get_total_star_count)
+   - [save_file_set_flags](functions-6.md#save_file_set_flags)
+   - [save_file_clear_flags](functions-6.md#save_file_clear_flags)
+   - [save_file_get_flags](functions-6.md#save_file_get_flags)
+   - [save_file_get_star_flags](functions-6.md#save_file_get_star_flags)
+   - [save_file_set_star_flags](functions-6.md#save_file_set_star_flags)
+   - [save_file_remove_star_flags](functions-6.md#save_file_remove_star_flags)
+   - [save_file_get_course_coin_score](functions-6.md#save_file_get_course_coin_score)
+   - [save_file_set_course_coin_score](functions-6.md#save_file_set_course_coin_score)
+   - [save_file_is_cannon_unlocked](functions-6.md#save_file_is_cannon_unlocked)
+   - [save_file_get_cap_pos](functions-6.md#save_file_get_cap_pos)
+   - [save_file_get_sound_mode](functions-6.md#save_file_get_sound_mode)
 
 <br />
 
 - seqplayer.h
-   - [sequence_player_get_tempo](functions-5.md#sequence_player_get_tempo)
-   - [sequence_player_set_tempo](functions-5.md#sequence_player_set_tempo)
-   - [sequence_player_get_tempo_acc](functions-5.md#sequence_player_get_tempo_acc)
-   - [sequence_player_set_tempo_acc](functions-5.md#sequence_player_set_tempo_acc)
-   - [sequence_player_get_transposition](functions-5.md#sequence_player_get_transposition)
-   - [sequence_player_set_transposition](functions-5.md#sequence_player_set_transposition)
-   - [sequence_player_get_volume](functions-5.md#sequence_player_get_volume)
-   - [sequence_player_get_fade_volume](functions-5.md#sequence_player_get_fade_volume)
-   - [sequence_player_get_mute_volume_scale](functions-5.md#sequence_player_get_mute_volume_scale)
+   - [sequence_player_get_tempo](functions-6.md#sequence_player_get_tempo)
+   - [sequence_player_set_tempo](functions-6.md#sequence_player_set_tempo)
+   - [sequence_player_get_tempo_acc](functions-6.md#sequence_player_get_tempo_acc)
+   - [sequence_player_set_tempo_acc](functions-6.md#sequence_player_set_tempo_acc)
+   - [sequence_player_get_transposition](functions-6.md#sequence_player_get_transposition)
+   - [sequence_player_set_transposition](functions-6.md#sequence_player_set_transposition)
+   - [sequence_player_get_volume](functions-6.md#sequence_player_get_volume)
+   - [sequence_player_get_fade_volume](functions-6.md#sequence_player_get_fade_volume)
+   - [sequence_player_get_mute_volume_scale](functions-6.md#sequence_player_get_mute_volume_scale)
 
 <br />
 
 - smlua_anim_utils.h
-   - [get_mario_vanilla_animation](functions-5.md#get_mario_vanilla_animation)
-   - [smlua_anim_util_set_animation](functions-5.md#smlua_anim_util_set_animation)
-   - [smlua_anim_util_get_current_animation_name](functions-5.md#smlua_anim_util_get_current_animation_name)
+   - [get_mario_vanilla_animation](functions-6.md#get_mario_vanilla_animation)
+   - [smlua_anim_util_set_animation](functions-6.md#smlua_anim_util_set_animation)
+   - [smlua_anim_util_get_current_animation_name](functions-6.md#smlua_anim_util_get_current_animation_name)
 
 <br />
 
@@ -1834,6 +1898,9 @@
    - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
    - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
    - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
+   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
 
 <br />
 
@@ -1866,6 +1933,7 @@
    - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-6.md#gfx_get_texture)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
@@ -1915,6 +1983,7 @@
    - [djui_get_playerlist_page_index](functions-6.md#djui_get_playerlist_page_index)
    - [djui_menu_get_font](functions-6.md#djui_menu_get_font)
    - [djui_menu_get_theme](functions-6.md#djui_menu_get_theme)
+   - [djui_is_playerlist_ping_visible](functions-6.md#djui_is_playerlist_ping_visible)
    - [get_dialog_box_state](functions-6.md#get_dialog_box_state)
    - [get_dialog_id](functions-6.md#get_dialog_id)
    - [get_last_star_or_key](functions-6.md#get_last_star_or_key)
@@ -1936,6 +2005,9 @@
    - [hud_render_power_meter_interpolated](functions-6.md#hud_render_power_meter_interpolated)
    - [hud_get_flash](functions-6.md#hud_get_flash)
    - [hud_set_flash](functions-6.md#hud_set_flash)
+   - [act_select_hud_hide](functions-6.md#act_select_hud_hide)
+   - [act_select_hud_show](functions-6.md#act_select_hud_show)
+   - [act_select_hud_is_hidden](functions-6.md#act_select_hud_is_hidden)
    - [is_game_paused](functions-6.md#is_game_paused)
    - [is_transition_playing](functions-6.md#is_transition_playing)
    - [allocate_mario_action](functions-6.md#allocate_mario_action)
@@ -1980,6 +2052,7 @@
    - [geo_get_current_perspective](functions-6.md#geo_get_current_perspective)
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
+   - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
 
 <br />
 
@@ -2043,7 +2116,11 @@
 
 - smlua_text_utils.h
    - [smlua_text_utils_reset_all](functions-6.md#smlua_text_utils_reset_all)
+   - [smlua_text_utils_dialog_get](functions-6.md#smlua_text_utils_dialog_get)
    - [smlua_text_utils_dialog_replace](functions-6.md#smlua_text_utils_dialog_replace)
+   - [smlua_text_utils_dialog_restore](functions-6.md#smlua_text_utils_dialog_restore)
+   - [smlua_text_utils_dialog_is_replaced](functions-6.md#smlua_text_utils_dialog_is_replaced)
+   - [smlua_text_utils_allocate_dialog](functions-6.md#smlua_text_utils_allocate_dialog)
    - [smlua_text_utils_course_acts_replace](functions-6.md#smlua_text_utils_course_acts_replace)
    - [smlua_text_utils_secret_star_replace](functions-6.md#smlua_text_utils_secret_star_replace)
    - [smlua_text_utils_course_name_replace](functions-6.md#smlua_text_utils_course_name_replace)
@@ -2055,7 +2132,13 @@
    - [smlua_text_utils_act_name_mod_index](functions-6.md#smlua_text_utils_act_name_mod_index)
    - [smlua_text_utils_act_name_reset](functions-6.md#smlua_text_utils_act_name_reset)
    - [smlua_text_utils_castle_secret_stars_replace](functions-6.md#smlua_text_utils_castle_secret_stars_replace)
+   - [smlua_text_utils_castle_secret_stars_get](functions-6.md#smlua_text_utils_castle_secret_stars_get)
+   - [smlua_text_utils_castle_secret_stars_mod_index](functions-6.md#smlua_text_utils_castle_secret_stars_mod_index)
+   - [smlua_text_utils_castle_secret_stars_reset](functions-6.md#smlua_text_utils_castle_secret_stars_reset)
    - [smlua_text_utils_extra_text_replace](functions-6.md#smlua_text_utils_extra_text_replace)
+   - [smlua_text_utils_extra_text_get](functions-6.md#smlua_text_utils_extra_text_get)
+   - [smlua_text_utils_extra_text_mod_index](functions-6.md#smlua_text_utils_extra_text_mod_index)
+   - [smlua_text_utils_extra_text_reset](functions-6.md#smlua_text_utils_extra_text_reset)
    - [smlua_text_utils_get_language](functions-6.md#smlua_text_utils_get_language)
 
 <br />
@@ -2105,6 +2188,13 @@
    - [load_object_collision_model](functions-6.md#load_object_collision_model)
    - [obj_get_surface_from_index](functions-6.md#obj_get_surface_from_index)
    - [surface_has_force](functions-6.md#surface_has_force)
+
+<br />
+
+- sync_object.h
+   - [sync_object_get_object](functions-7.md#sync_object_get_object)
+   - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
+   - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
 
 <br />
 
@@ -2245,96 +2335,6 @@ Retrieves a texture by name.
 
 ### C Prototype
 `N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture](#djui_hud_render_texture)
-
-Renders a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture(texInfo, 0, 0, 1, 1)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
-
-Renders a tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile(texInfo, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
-
-Renders an interpolated tile of a texture to the screen.
-
-### Lua Example
-`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, 0, 0, 1, 1, 0, 0, 16, 16)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| texInfo | [TextureInfo](structs.md#TextureInfo) |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleW | `number` |
-| prevScaleH | `number` |
-| x | `number` |
-| y | `number` |
-| scaleW | `number` |
-| scaleH | `number` |
-| tileX | `number` |
-| tileY | `number` |
-| tileW | `number` |
-| tileH | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
 
 [:arrow_up_small:](#)
 
@@ -2840,5 +2840,5 @@ Plays a screen transition after a `delay` in frames
 <br />
 ---
 
-1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-2.md)]
+1 | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-2.md)]
 
