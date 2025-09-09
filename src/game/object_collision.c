@@ -52,12 +52,6 @@ int detect_player_hitbox_overlap(struct MarioState* local, struct MarioState* re
         if (sp20 < sp38) {
             return FALSE;
         }
-        if (a->numCollidedObjs >= 4) {
-            return FALSE;
-        }
-        if (b->numCollidedObjs >= 4) {
-            return FALSE;
-        }
 
         return TRUE;
     }
@@ -196,6 +190,8 @@ void check_player_object_collision(void) {
         if (detect_player_hitbox_overlap(&gMarioStates[0], &gMarioStates[i], 1.0f)) {
             struct Object* a = gMarioStates[0].marioObj;
             struct Object* b = gMarioStates[i].marioObj;
+            if (a->numCollidedObjs >= 4) { continue; }
+            if (b->numCollidedObjs >= 4) { continue; }
             a->collidedObjs[a->numCollidedObjs] = b;
             b->collidedObjs[b->numCollidedObjs] = a;
             a->collidedObjInteractTypes |= b->oInteractType;
