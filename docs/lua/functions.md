@@ -1934,6 +1934,7 @@
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
    - [gfx_get_texture](functions-6.md#gfx_get_texture)
+   - [gfx_get_name](functions-6.md#gfx_get_name)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
@@ -1942,6 +1943,7 @@
    - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
    - [gfx_delete_all](functions-6.md#gfx_delete_all)
+   - [vtx_get_name](functions-6.md#vtx_get_name)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
    - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
@@ -2053,6 +2055,7 @@
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
    - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
+   - [get_texture_name](functions-6.md#get_texture_name)
 
 <br />
 
@@ -2185,9 +2188,9 @@
 <br />
 
 - surface_load.h
-   - [load_object_collision_model](functions-6.md#load_object_collision_model)
-   - [obj_get_surface_from_index](functions-6.md#obj_get_surface_from_index)
-   - [surface_has_force](functions-6.md#surface_has_force)
+   - [load_object_collision_model](functions-7.md#load_object_collision_model)
+   - [obj_get_surface_from_index](functions-7.md#obj_get_surface_from_index)
+   - [surface_has_force](functions-7.md#surface_has_force)
 
 <br />
 

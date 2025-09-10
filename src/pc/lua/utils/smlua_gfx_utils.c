@@ -238,13 +238,19 @@ u16 gfx_get_vertex_count(Gfx *cmd) {
     return C0(cmd, 12, 8);
 }
 
-u8 *gfx_get_texture(Gfx *cmd) {
+Texture *gfx_get_texture(Gfx *cmd) {
     if (!cmd) { return 0; }
     u32 op = GFX_OP(cmd);
     if (op != G_SETCIMG && op != G_SETZIMG && op != G_SETTIMG) { return 0; }
     if (cmd->words.w1 == 0) { return 0; }
 
-    return (u8 *) cmd->words.w1;
+    return (Texture *) cmd->words.w1;
+}
+
+const char *gfx_get_name(Gfx *gfx) {
+    if (!gfx) { return NULL; }
+
+    return dynos_gfx_get_name(gfx);
 }
 
 u32 gfx_get_length(Gfx *gfx) {
@@ -347,6 +353,12 @@ void gfx_delete(Gfx *gfx) {
 
 void gfx_delete_all() {
     dynos_gfx_delete_all();
+}
+
+const char *vtx_get_name(Vtx *vtx) {
+    if (!vtx) { return NULL; }
+
+    return dynos_vtx_get_name(vtx);
 }
 
 u32 vtx_get_count(Vtx *vtx) {

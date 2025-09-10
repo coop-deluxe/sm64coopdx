@@ -433,7 +433,7 @@ int smlua_func_get_texture_info(lua_State* L) {
     lua_newtable(L);
 
     lua_pushstring(L, "texture");
-    smlua_push_pointer(L, LVT_U8_P, texInfo.texture, NULL);
+    smlua_push_pointer(L, LVT_TEXTURE_P, texInfo.texture, NULL);
     lua_settable(L, -3);
 
     lua_pushstring(L, "bitSize");

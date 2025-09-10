@@ -503,7 +503,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
     aOutTexInfo->bitSize = info->bitSize;
     aOutTexInfo->width   = info->width;
     aOutTexInfo->height  = info->height;
-    aOutTexInfo->texture = (u8*)info->pointer;
+    aOutTexInfo->texture = (Texture*)info->pointer;
     aOutTexInfo->name    = aTexName;
     return true;
 }
@@ -522,7 +522,7 @@ bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo)
         aOutTexInfo->bitSize = info->bitSize;
         aOutTexInfo->width   = info->width;
         aOutTexInfo->height  = info->height;
-        aOutTexInfo->texture = (u8*)info->pointer;
+        aOutTexInfo->texture = (Texture*)info->pointer;
         aOutTexInfo->name    = info->identifier;
         return true;
     }
