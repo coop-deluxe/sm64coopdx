@@ -10933,6 +10933,7 @@ void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
+    bool capMissing = !(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND));
     // Init cap state
     // Ensures that Mario regains his correct cap state when exiting the palette editor
     if (!c->paletteEditorCapState) {
@@ -10950,7 +10951,7 @@ void cutscene_palette_editor(struct Camera *c) {
     // Press the Z bind to toggle cap
     static bool pressed = false;
     if (gInteractablePad.button & PAD_BUTTON_Z) {
-        if (!pressed && m->action == ACT_IDLE) {
+        if (!capMissing && !pressed && m->action == ACT_IDLE) {
             set_mario_action(m, ACT_PALETTE_EDITOR_CAP, (m->flags & MARIO_CAP_ON_HEAD) != 0);
         }
         pressed = true;
@@ -10962,8 +10963,10 @@ void cutscene_palette_editor(struct Camera *c) {
     if (gDjuiPaletteToggle) {
         djui_base_set_visible(
             &gDjuiPaletteToggle->base,
-            m->action == ACT_IDLE ||
-            m->action == ACT_PALETTE_EDITOR_CAP
+            (
+                m->action == ACT_IDLE ||
+                m->action == ACT_PALETTE_EDITOR_CAP 
+            ) && !capMissing
         );
     }
 
