@@ -23,6 +23,7 @@
 #include "object_helpers.h"
 #include "save_file.h"
 #include "hardcoded.h"
+#include "character_dialog.h"
 #include "debug_course.h"
 #ifdef VERSION_EU
 #include "memory.h"
@@ -1742,6 +1743,7 @@ s32 update_level(void) {
 s32 init_level(void) {
     sync_objects_clear();
     reset_dialog_render_state();
+    init_character_dialog_system();
 
     s32 val4 = 0;
 

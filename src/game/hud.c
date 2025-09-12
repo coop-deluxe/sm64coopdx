@@ -18,6 +18,7 @@
 #include "print.h"
 #include "hardcoded.h"
 #include "bettercamera.h"
+#include "character_dialog.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -604,6 +605,9 @@ void render_hud_camera_status(void) {
  * excluding the cannon reticle which detects a camera preset for it.
  */
 void render_hud(void) {
+    // Update character dialogs every frame (like the original Lua mod)
+    update_character_dialogs();
+    
     s16 hudDisplayFlags;
 #ifdef VERSION_EU
     Mtx *mtx;

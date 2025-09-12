@@ -18,6 +18,7 @@
 #include "memory.h"
 #include "object_helpers.h"
 #include "print.h"
+#include "character_dialog.h"
 #include "save_file.h"
 #include "segment2.h"
 #include "segment7.h"
