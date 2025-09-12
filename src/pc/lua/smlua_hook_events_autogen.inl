@@ -1082,13 +1082,13 @@ bool smlua_call_event_hooks_HOOK_ON_DIALOG(s32 dialogID, bool *openDialogBox, co
         hookResult = true;
 
         // return openDialogBox
-        if (lua_type(L, -1) == LUA_TBOOLEAN) {
-            *openDialogBox = smlua_to_boolean(L, -1);
+        if (lua_type(L, -2) == LUA_TBOOLEAN) {
+            *openDialogBox = smlua_to_boolean(L, -2);
         }
 
         // return dialogTextOverride
-        if (lua_type(L, -2) == LUA_TSTRING) {
-            *dialogTextOverride = smlua_to_string(L, -2);
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *dialogTextOverride = smlua_to_string(L, -1);
         }
 
         lua_settop(L, prevTop);
