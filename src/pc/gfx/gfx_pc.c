@@ -60,7 +60,8 @@ static struct RSP {
     uint32_t modelview_matrix_stack_size;
 
     uint32_t geometry_mode;
-    int16_t fog_mul, fog_offset, fresnel_scale, fresnel_offset;
+    int16_t fog_mul, fog_offset;
+    int16_t fresnel_scale, fresnel_offset;
 
     struct {
         // U0.16
@@ -856,29 +857,18 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 // transform vpos and vnormal to world space
                 gfx_local_to_world_space(vpos, vnormal);
 
-                Vec3f camPos = {
-                    sInverseCameraMatrix[3][0],
-                    sInverseCameraMatrix[3][1],
-                    sInverseCameraMatrix[3][2]
-                };
                 Vec3f viewDir = {
-                    camPos[0] - vpos[0], 
-                    camPos[1] - vpos[1], 
-                    camPos[2] - vpos[2]
+                    sInverseCameraMatrix[3][0] - vpos[0], 
+                    sInverseCameraMatrix[3][1] - vpos[1], 
+                    sInverseCameraMatrix[3][2] - vpos[2]
                 };
                 vec3f_normalize(viewDir);
                 vec3f_normalize(vnormal);
 
-                int32_t dot = (int32_t)fminf(fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f, 32767.0f);
-
+                int32_t dot = (int32_t) (fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f);
                 int32_t factor = ((rsp.fresnel_scale * dot) >> 15) + rsp.fresnel_offset;
-
-                if (factor < 0) factor = 0;
-
-                int32_t fresnel = factor * 256;
-                if (fresnel > 0x7FFF) fresnel = 0x7FFF;
-
-                uint8_t result = (uint8_t)(fresnel >> 7);
+                int32_t fresnel = clamp(factor << 8, 0, 0x7FFF);
+                uint8_t result = (uint8_t) (fresnel >> 7);
 
                 if (rsp.geometry_mode & G_FRESNEL_COLOR_EXT) {
                     d->color.r = d->color.g = d->color.b = result;
