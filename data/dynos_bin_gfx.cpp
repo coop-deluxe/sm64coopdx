@@ -405,6 +405,8 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_LIGHT_MAP_EXT);
     gfx_constant(G_LIGHTING_ENGINE_EXT);
     gfx_constant(G_PACKED_NORMALS_EXT);
+    gfx_constant(G_FRESNEL_COLOR_EXT);
+    gfx_constant(G_FRESNEL_ALPHA_EXT);
 
     gfx_constant(G_COL_PRIM);
     gfx_constant(G_COL_ENV);
