@@ -502,7 +502,7 @@ static void level_cmd_23(void) {
 }
 
 static void level_cmd_init_mario(void) {
-    u32 behaviorArg = CMD_GET(u32, 4);
+    UNUSED u32 behaviorArg = CMD_GET(u32, 4);
     void* behaviorScript = CMD_GET(void*, 8);
     u16 slot = CMD_GET(u8, 3);
     struct GraphNode* unk18 = dynos_model_get_geo(slot);
