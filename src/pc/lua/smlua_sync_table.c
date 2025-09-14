@@ -156,7 +156,6 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         }
 
         gLuaActiveMod = prevActiveMod;
-        prevActiveModFile = prevActiveModFile;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value
@@ -186,7 +185,6 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
         LOG_LUA_LINE("Error: tried to alter sync table with an invalid key");
         return false;
     }
-    lntKey = lntKey;
 
 
       ////////////////

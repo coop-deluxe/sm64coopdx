@@ -503,7 +503,6 @@ static void level_cmd_23(void) {
 
 static void level_cmd_init_mario(void) {
     u32 behaviorArg = CMD_GET(u32, 4);
-    behaviorArg = behaviorArg;
     void* behaviorScript = CMD_GET(void*, 8);
     u16 slot = CMD_GET(u8, 3);
     struct GraphNode* unk18 = dynos_model_get_geo(slot);
@@ -923,7 +922,7 @@ static void level_cmd_cleardemoptr(void)
 // coop
 //
 
-static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaParamFlag, const char *paramType) {
+static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaParamFlag) {
     *param = CMD_GET(uintptr_t, offset);
     if (luaParams & luaParamFlag) {
         if (gLevelScriptModIndex == -1) {
@@ -950,7 +949,7 @@ static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaP
 
 #define get_lua_param(name, type, flag) \
     uintptr_t name##Param; \
-    if (!find_lua_param(&name##Param, flag##_OFFSET(cmdType), luaParams, flag, #name)) { \
+    if (!find_lua_param(&name##Param, flag##_OFFSET(cmdType), luaParams, flag)) { \
         sCurrentCmd = CMD_NEXT; \
         return; \
     } \
