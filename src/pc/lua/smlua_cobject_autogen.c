@@ -180,16 +180,16 @@ static struct LuaObjectField sAnimInfoFields[LUA_ANIM_INFO_FIELD_COUNT] = {
 
 #define LUA_ANIMATION_FIELD_COUNT 10
 static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
-    { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), false, LOT_NONE,    1, sizeof(s16)  },
-    { "flags",             LVT_S16,   offsetof(struct Animation, flags),             false, LOT_NONE,    1, sizeof(s16)  },
-    { "index",             LVT_U16_P, offsetof(struct Animation, index),             false, LOT_POINTER, 1, sizeof(u16*) },
-    { "indexLength",       LVT_U32,   offsetof(struct Animation, indexLength),       false, LOT_NONE,    1, sizeof(u32)  },
-    { "length",            LVT_U32,   offsetof(struct Animation, length),            true,  LOT_NONE,    1, sizeof(u32)  },
-    { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           false, LOT_NONE,    1, sizeof(s16)  },
-    { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         false, LOT_NONE,    1, sizeof(s16)  },
-    { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        false, LOT_NONE,    1, sizeof(s16)  },
-    { "values",            LVT_U16_P, offsetof(struct Animation, values),            false, LOT_POINTER, 1, sizeof(u16*) },
-    { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      false, LOT_NONE,    1, sizeof(u32)  },
+    { "animYTransDivisor", LVT_S16,   offsetof(struct Animation, animYTransDivisor), true, LOT_NONE,    1, sizeof(s16)  },
+    { "flags",             LVT_S16,   offsetof(struct Animation, flags),             true, LOT_NONE,    1, sizeof(s16)  },
+    { "index",             LVT_U16_P, offsetof(struct Animation, index),             true, LOT_POINTER, 1, sizeof(u16*) },
+    { "indexLength",       LVT_U32,   offsetof(struct Animation, indexLength),       true, LOT_NONE,    1, sizeof(u32)  },
+    { "length",            LVT_U32,   offsetof(struct Animation, length),            true, LOT_NONE,    1, sizeof(u32)  },
+    { "loopEnd",           LVT_S16,   offsetof(struct Animation, loopEnd),           true, LOT_NONE,    1, sizeof(s16)  },
+    { "loopStart",         LVT_S16,   offsetof(struct Animation, loopStart),         true, LOT_NONE,    1, sizeof(s16)  },
+    { "startFrame",        LVT_S16,   offsetof(struct Animation, startFrame),        true, LOT_NONE,    1, sizeof(s16)  },
+    { "values",            LVT_U16_P, offsetof(struct Animation, values),            true, LOT_POINTER, 1, sizeof(u16*) },
+    { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      true, LOT_NONE,    1, sizeof(u32)  },
 };
 
 #define LUA_ANIMATION_TABLE_FIELD_COUNT 1
@@ -2510,7 +2510,7 @@ static struct LuaObjectField sObjectNodeFields[LUA_OBJECT_NODE_FIELD_COUNT] = {
 
 #define LUA_OBJECT_WARP_NODE_FIELD_COUNT 3
 static struct LuaObjectField sObjectWarpNodeFields[LUA_OBJECT_WARP_NODE_FIELD_COUNT] = {
-    { "next",   LVT_COBJECT_P, offsetof(struct ObjectWarpNode, next),   false, LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
+    { "next",   LVT_COBJECT_P, offsetof(struct ObjectWarpNode, next),   true,  LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
     { "node",   LVT_COBJECT,   offsetof(struct ObjectWarpNode, node),   true,  LOT_WARPNODE,       1, sizeof(struct WarpNode)        },
     { "object", LVT_COBJECT_P, offsetof(struct ObjectWarpNode, object), false, LOT_OBJECT,         1, sizeof(struct Object*)         },
 };

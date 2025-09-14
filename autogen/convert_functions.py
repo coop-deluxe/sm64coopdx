@@ -132,7 +132,7 @@ override_disallowed_functions = {
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_render_texture_raw", "djui_hud_render_texture_tile_raw" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "get_dialog_text_ascii", "smlua_text_utils_dialog_get_unmodified"],
-    "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_init", "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
+    "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],

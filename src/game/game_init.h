@@ -54,8 +54,6 @@ extern struct MarioAnimation D_80339D10[MAX_PLAYERS];
 extern struct MarioAnimation gDemo;
 
 extern u8 gMarioAnims[];
-extern size_t gMarioAnimsSize;
-
 extern u8 gDemoInputs[];
 
 extern u16 frameBufferIndex;

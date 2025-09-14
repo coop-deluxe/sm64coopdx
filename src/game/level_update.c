@@ -713,7 +713,7 @@ s16 music_changed_through_warp(s16 arg) {
 
     s16 destArea = warpNode->node.destArea;
     s16 val4 = TRUE;
-    s16 sp2C;
+    u16 sp2C;
 
     if (levelNum == LEVEL_BOB && levelNum == gCurrLevelNum && destArea == gCurrAreaIndex) {
         sp2C = get_current_background_music();

@@ -30,6 +30,34 @@
 #define WHIRLPOOL_COND_BOWSER2_BEATEN 2
 #define WHIRLPOOL_COND_AT_LEAST_SECOND_STAR 3
 
+#define OBJECT_EXT_LUA_MODEL        (1 << 0)
+#define OBJECT_EXT_LUA_POS_X        (1 << 1)
+#define OBJECT_EXT_LUA_POS_Y        (1 << 2)
+#define OBJECT_EXT_LUA_POS_Z        (1 << 3)
+#define OBJECT_EXT_LUA_ANGLE_X      (1 << 4)
+#define OBJECT_EXT_LUA_ANGLE_Y      (1 << 5)
+#define OBJECT_EXT_LUA_ANGLE_Z      (1 << 6)
+#define OBJECT_EXT_LUA_BEH_PARAMS   (1 << 7)
+#define OBJECT_EXT_LUA_BEHAVIOR     (1 << 8)
+#define OBJECT_EXT_LUA_ACTS         (1 << 9)
+
+#define OBJECT_EXT_LUA_MODEL_OFFSET(type)           (type == 0x3F ?  3 : (type == 0x40 ? 20 :  4))
+#define OBJECT_EXT_LUA_POS_X_OFFSET(type)           (type == 0x3F ?  4 : (type == 0x40 ?  4 :  8))
+#define OBJECT_EXT_LUA_POS_Y_OFFSET(type)           (type == 0x3F ?  6 : (type == 0x40 ?  6 : 12))
+#define OBJECT_EXT_LUA_POS_Z_OFFSET(type)           (type == 0x3F ?  8 : (type == 0x40 ?  8 : 16))
+#define OBJECT_EXT_LUA_ANGLE_X_OFFSET(type)         (type == 0x3F ? 10 : (type == 0x40 ? 10 : 20))
+#define OBJECT_EXT_LUA_ANGLE_Y_OFFSET(type)         (type == 0x3F ? 12 : (type == 0x40 ? 12 : 24))
+#define OBJECT_EXT_LUA_ANGLE_Z_OFFSET(type)         (type == 0x3F ? 14 : (type == 0x40 ? 14 : 28))
+#define OBJECT_EXT_LUA_BEH_PARAMS_OFFSET(type)      (type == 0x3F ? 16 : (type == 0x40 ? 16 : 32))
+#define OBJECT_EXT_LUA_BEHAVIOR_OFFSET(type)        (type == 0x3F ? 20 : (type == 0x40 ? 24 : 36))
+#define OBJECT_EXT_LUA_ACTS_OFFSET(type)            (type == 0x3F ?  2 : (type == 0x40 ?  2 : 40))
+
+#define SHOW_DIALOG_EXT_LUA_INDEX   (1 << 0)
+#define SHOW_DIALOG_EXT_LUA_DIALOG  (1 << 1)
+
+#define SHOW_DIALOG_EXT_LUA_INDEX_OFFSET(type)  (4)
+#define SHOW_DIALOG_EXT_LUA_DIALOG_OFFSET(type) (8)
+
 // Head defines
 #define REGULAR_FACE 0x0002
 #define DIZZY_FACE 0x0003
@@ -323,6 +351,30 @@
     CMD_BBBB(0x42, 0x0C, op, 0x00), \
     CMD_W(arg), \
     CMD_PTR(target)
+
+// This command is used when parameters are Lua variables.
+// The flags parameter describes which parameter is a Lua variable.
+// See OBJECT_EXT_LUA flags at the top of this file.
+#define OBJECT_EXT_LUA_PARAMS(flags, model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBH(0x43, 0x2C, flags), \
+    CMD_PTR(model), \
+    CMD_PTR(posX), \
+    CMD_PTR(posY), \
+    CMD_PTR(posZ), \
+    CMD_PTR(angleX), \
+    CMD_PTR(angleY), \
+    CMD_PTR(angleZ), \
+    CMD_PTR(behParam), \
+    CMD_PTR(beh), \
+    CMD_PTR(acts)
+
+// This command is used when parameters are Lua variables.
+// The flags parameter describes which parameter is a Lua variable.
+// See SHOW_DIALOG_EXT flags at the top of this file.
+#define SHOW_DIALOG_EXT(flags, index, dialogId) \
+    CMD_BBBB(0x44, 0x0C, flags, 0x00), \
+    CMD_PTR(index), \
+    CMD_PTR(dialogId)
 
 // README //
 // README //
