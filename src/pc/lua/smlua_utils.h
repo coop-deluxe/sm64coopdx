@@ -1,7 +1,7 @@
 #ifndef SMLUA_UTILS_H
 #define SMLUA_UTILS_H
 
-#include "smlua_cobject.h"
+#include "smlua.h"
 #include "src/pc/network/packets/packet.h"
 
 extern u8 gSmLuaConvertSuccess;
