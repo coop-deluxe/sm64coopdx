@@ -54,6 +54,25 @@ struct ModFsFile {
     u32 offset;
     bool isText;
     bool isPublic;
+
+    FUNCTION(read_bool, mod_fs_file_read_bool);
+    FUNCTION(read_integer, mod_fs_file_read_integer);
+    FUNCTION(read_number, mod_fs_file_read_number);
+    FUNCTION(read_bytes, mod_fs_file_read_bytes);
+    FUNCTION(read_string, mod_fs_file_read_string);
+    FUNCTION(read_line, mod_fs_file_read_line);
+    FUNCTION(write_bool, mod_fs_file_write_bool);
+    FUNCTION(write_integer, mod_fs_file_write_integer);
+    FUNCTION(write_number, mod_fs_file_write_number);
+    FUNCTION(write_bytes, mod_fs_file_write_bytes);
+    FUNCTION(write_string, mod_fs_file_write_string);
+    FUNCTION(write_line, mod_fs_file_write_line);
+    FUNCTION(seek, mod_fs_file_seek);
+    FUNCTION(is_eof, mod_fs_file_is_eof);
+    FUNCTION(fill, mod_fs_file_fill);
+    FUNCTION(erase, mod_fs_file_erase);
+    FUNCTION(set_text_mode, mod_fs_file_set_text_mode);
+    FUNCTION(set_public, mod_fs_file_set_public);
 };
 
 struct ModFs {
@@ -63,6 +82,17 @@ struct ModFs {
     u16 numFiles;
     u32 totalSize;
     bool isPublic;
+
+    FUNCTION(get_filename, mod_fs_get_filename);
+    FUNCTION(get_file, mod_fs_get_file);
+    FUNCTION(create_file, mod_fs_create_file);
+    FUNCTION(move_file, mod_fs_move_file);
+    FUNCTION(copy_file, mod_fs_copy_file);
+    FUNCTION(delete_file, mod_fs_delete_file);
+    FUNCTION(clear, mod_fs_clear);
+    FUNCTION(save, mod_fs_save);
+    FUNCTION(delete, mod_fs_delete);
+    FUNCTION(set_public, mod_fs_set_public);
 };
 
 /* |description|

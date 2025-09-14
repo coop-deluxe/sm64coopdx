@@ -2001,6 +2001,21 @@
 | totalSize | `integer` | read-only |
 | isPublic | `boolean` | read-only |
 
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| get_filename | [`mod_fs_get_filename`](functions-5.md#mod_fs_get_filename) |
+| get_file | [`mod_fs_get_file`](functions-5.md#mod_fs_get_file) |
+| create_file | [`mod_fs_create_file`](functions-5.md#mod_fs_create_file) |
+| move_file | [`mod_fs_move_file`](functions-5.md#mod_fs_move_file) |
+| copy_file | [`mod_fs_copy_file`](functions-5.md#mod_fs_copy_file) |
+| delete_file | [`mod_fs_delete_file`](functions-5.md#mod_fs_delete_file) |
+| clear | [`mod_fs_clear`](functions-5.md#mod_fs_clear) |
+| save | [`mod_fs_save`](functions-5.md#mod_fs_save) |
+| delete | [`mod_fs_delete`](functions-5.md#mod_fs_delete) |
+| set_public | [`mod_fs_set_public`](functions-5.md#mod_fs_set_public) |
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2015,6 +2030,29 @@
 | offset | `integer` | read-only |
 | isText | `boolean` | read-only |
 | isPublic | `boolean` | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| read_bool | [`mod_fs_file_read_bool`](functions-5.md#mod_fs_file_read_bool) |
+| read_integer | [`mod_fs_file_read_integer`](functions-5.md#mod_fs_file_read_integer) |
+| read_number | [`mod_fs_file_read_number`](functions-5.md#mod_fs_file_read_number) |
+| read_bytes | [`mod_fs_file_read_bytes`](functions-5.md#mod_fs_file_read_bytes) |
+| read_string | [`mod_fs_file_read_string`](functions-5.md#mod_fs_file_read_string) |
+| read_line | [`mod_fs_file_read_line`](functions-5.md#mod_fs_file_read_line) |
+| write_bool | [`mod_fs_file_write_bool`](functions-5.md#mod_fs_file_write_bool) |
+| write_integer | [`mod_fs_file_write_integer`](functions-5.md#mod_fs_file_write_integer) |
+| write_number | [`mod_fs_file_write_number`](functions-5.md#mod_fs_file_write_number) |
+| write_bytes | [`mod_fs_file_write_bytes`](functions-5.md#mod_fs_file_write_bytes) |
+| write_string | [`mod_fs_file_write_string`](functions-5.md#mod_fs_file_write_string) |
+| write_line | [`mod_fs_file_write_line`](functions-5.md#mod_fs_file_write_line) |
+| seek | [`mod_fs_file_seek`](functions-5.md#mod_fs_file_seek) |
+| is_eof | [`mod_fs_file_is_eof`](functions-5.md#mod_fs_file_is_eof) |
+| fill | [`mod_fs_file_fill`](functions-5.md#mod_fs_file_fill) |
+| erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |
+| set_text_mode | [`mod_fs_file_set_text_mode`](functions-5.md#mod_fs_file_set_text_mode) |
+| set_public | [`mod_fs_file_set_public`](functions-5.md#mod_fs_file_set_public) |
 
 [:arrow_up_small:](#)
 

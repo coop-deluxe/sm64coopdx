@@ -1304,6 +1304,16 @@
 --- @field public numFiles integer
 --- @field public totalSize integer
 --- @field public isPublic boolean
+--- @field public get_filename function
+--- @field public get_file function
+--- @field public create_file function
+--- @field public move_file function
+--- @field public copy_file function
+--- @field public delete_file function
+--- @field public clear function
+--- @field public save function
+--- @field public delete function
+--- @field public set_public function
 
 --- @class ModFsFile
 --- @field public modFs ModFs
@@ -1312,6 +1322,24 @@
 --- @field public offset integer
 --- @field public isText boolean
 --- @field public isPublic boolean
+--- @field public read_bool function
+--- @field public read_integer function
+--- @field public read_number function
+--- @field public read_bytes function
+--- @field public read_string function
+--- @field public read_line function
+--- @field public write_bool function
+--- @field public write_integer function
+--- @field public write_number function
+--- @field public write_bytes function
+--- @field public write_string function
+--- @field public write_line function
+--- @field public seek function
+--- @field public is_eof function
+--- @field public fill function
+--- @field public erase function
+--- @field public set_text_mode function
+--- @field public set_public function
 
 --- @class ModeTransitionInfo
 --- @field public newMode integer

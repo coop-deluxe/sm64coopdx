@@ -5,6 +5,7 @@ from vec_types import *
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32', 'f64']
 vec_types = list(VEC_TYPES.keys())
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory']
+cobject_function_identifier = 'FUNCTION'
 
 type_mappings = {
     'char': 's8',
@@ -120,6 +121,9 @@ def translate_type_to_lvt(ptype, allowArrays=False):
     if ptype == "LuaTable":
         return "LVT_LUATABLE"
 
+    if ptype == cobject_function_identifier:
+        return "LVT_FUNCTION"
+
     if "struct" in ptype:
         if pointerLvl > 1:
             return "LVT_???"
@@ -198,6 +202,9 @@ def translate_type_to_lot(ptype, allowArrays=True):
         return 'LOT_NONE'
 
     if ptype == 'LuaTable':
+        return 'LOT_NONE'
+
+    if ptype == cobject_function_identifier:
         return 'LOT_NONE'
 
     if ptype in override_types:
@@ -288,6 +295,9 @@ def translate_type_to_lua(ptype):
 
     if ptype == 'LuaTable':
         return '`table`', None
+
+    if ptype == cobject_function_identifier:
+        return '`function`', None
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()

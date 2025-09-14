@@ -39,6 +39,7 @@ enum LuaValueType {
     LVT_LUAFUNCTION,
     LVT_LUATABLE,
     LVT_POINTER,
+    LVT_FUNCTION,
     LVT_MAX,
 };
 
