@@ -1304,16 +1304,16 @@
 --- @field public numFiles integer
 --- @field public totalSize integer
 --- @field public isPublic boolean
---- @field public get_filename function
---- @field public get_file function
---- @field public create_file function
---- @field public move_file function
---- @field public copy_file function
---- @field public delete_file function
---- @field public clear function
---- @field public save function
---- @field public delete function
---- @field public set_public function
+--- @field public get_filename fun(modFs: ModFs, index: integer): string
+--- @field public get_file fun(modFs: ModFs, filepath: string): ModFsFile
+--- @field public create_file fun(modFs: ModFs, filepath: string, text: boolean): ModFsFile
+--- @field public move_file fun(modFs: ModFs, oldpath: string, newpath: string, overwriteExisting: boolean): boolean
+--- @field public copy_file fun(modFs: ModFs, srcpath: string, dstpath: string, overwriteExisting: boolean): boolean
+--- @field public delete_file fun(modFs: ModFs, filepath: string): boolean
+--- @field public clear fun(modFs: ModFs): boolean
+--- @field public save fun(modFs: ModFs): boolean
+--- @field public delete fun(modFs: ModFs): boolean
+--- @field public set_public fun(modFs: ModFs, pub: boolean): boolean
 
 --- @class ModFsFile
 --- @field public modFs ModFs
@@ -1322,24 +1322,24 @@
 --- @field public offset integer
 --- @field public isText boolean
 --- @field public isPublic boolean
---- @field public read_bool function
---- @field public read_integer function
---- @field public read_number function
---- @field public read_bytes function
---- @field public read_string function
---- @field public read_line function
---- @field public write_bool function
---- @field public write_integer function
---- @field public write_number function
---- @field public write_bytes function
---- @field public write_string function
---- @field public write_line function
---- @field public seek function
---- @field public is_eof function
---- @field public fill function
---- @field public erase function
---- @field public set_text_mode function
---- @field public set_public function
+--- @field public read_bool fun(file: ModFsFile): boolean
+--- @field public read_integer fun(file: ModFsFile, intType: ModFsFileIntType): integer
+--- @field public read_number fun(file: ModFsFile, floatType: ModFsFileFloatType): number
+--- @field public read_bytes fun(file: ModFsFile, length: integer): string
+--- @field public read_string fun(file: ModFsFile): string
+--- @field public read_line fun(file: ModFsFile): string
+--- @field public write_bool fun(file: ModFsFile, value: boolean): boolean
+--- @field public write_integer fun(file: ModFsFile, value: integer, intType: ModFsFileIntType): boolean
+--- @field public write_number fun(file: ModFsFile, value: number, floatType: ModFsFileFloatType): boolean
+--- @field public write_bytes fun(file: ModFsFile, bytestring: string): boolean
+--- @field public write_string fun(file: ModFsFile, str: string): boolean
+--- @field public write_line fun(file: ModFsFile, str: string): boolean
+--- @field public seek fun(file: ModFsFile, offset: integer, origin: ModFsFileSeek): boolean
+--- @field public is_eof fun(file: ModFsFile): boolean
+--- @field public fill fun(file: ModFsFile, byte: integer, length: integer): boolean
+--- @field public erase fun(file: ModFsFile, length: integer): boolean
+--- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
+--- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
 
 --- @class ModeTransitionInfo
 --- @field public newMode integer

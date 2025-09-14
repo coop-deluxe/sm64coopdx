@@ -718,7 +718,7 @@ def doc_struct_field(struct, field):
 
     ftype, flink = translate_type_to_lua(ftype)
 
-    if ftype == '`function`':
+    if ftype == cobject_function_identifier:
         flink = doc_find_function_link(field['function'])
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
@@ -800,6 +800,32 @@ def doc_structs(structs):
 
 def_pointers = []
 
+# HACK: Parse autogen/lua_definitions/functions.lua to find the function signature
+function_signatures = {}
+
+def get_function_signature(function):
+    if not function_signatures:
+        with open('autogen/lua_definitions/functions.lua') as f:
+            lines = f.readlines()
+        function_params = []
+        function_return = None
+        for line in lines:
+            if line.startswith('--- @param'):
+                function_params.append(line.split()[2:4])
+            elif line.startswith('--- @return'):
+                function_return = line.split()[2]
+            elif line.startswith('function'):
+                sig = 'fun('
+                sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
+                sig += ')'
+                if function_return:
+                    sig += ': %s' % (function_return)
+                function_name = line.replace('(', ' ').split()[1]
+                function_signatures[function_name] = sig
+                function_params.clear()
+                function_return = None
+    return function_signatures.get(function, 'function')
+
 def def_struct(struct):
     sid = struct['identifier']
 
@@ -821,7 +847,12 @@ def def_struct(struct):
 
         ftype, flink = translate_type_to_lua(ftype)
 
-        ftype = translate_to_def(ftype)
+        # try to get the function signature
+        if ftype == cobject_function_identifier:
+            ftype = get_function_signature(field['function'])
+        else:
+            ftype = translate_to_def(ftype)
+
         if ftype.startswith('Pointer_') and ftype not in def_pointers:
             def_pointers.append(ftype)
 

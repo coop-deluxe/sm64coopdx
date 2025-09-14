@@ -297,7 +297,7 @@ def translate_type_to_lua(ptype):
         return '`table`', None
 
     if ptype == cobject_function_identifier:
-        return '`function`', None
+        return cobject_function_identifier, None
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
