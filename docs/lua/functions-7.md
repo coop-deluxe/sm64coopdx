@@ -6,6 +6,80 @@
 
 
 ---
+# functions from surface_load.h
+
+<br />
+
+
+## [load_object_collision_model](#load_object_collision_model)
+
+### Description
+Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
+
+### Lua Example
+`load_object_collision_model()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void load_object_collision_model(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_surface_from_index](#obj_get_surface_from_index)
+
+### Description
+Gets a surface corresponding to `index` from the surface pool buffer
+
+### Lua Example
+`local SurfaceValue = obj_get_surface_from_index(o, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_has_force](#surface_has_force)
+
+### Description
+Checks if a surface has force
+
+### Lua Example
+`local booleanValue = surface_has_force(surfaceType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surfaceType | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_has_force(s16 surfaceType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from sync_object.h
 
 <br />

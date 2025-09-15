@@ -2357,7 +2357,7 @@
 --- @field public object Object
 
 --- @class TextureInfo
---- @field public texture Pointer_integer
+--- @field public texture Pointer_Texture
 --- @field public name string
 --- @field public width integer
 --- @field public height integer
@@ -2528,3 +2528,4 @@
 --- @alias Pointer_Mat4 Mat4
 --- @alias Pointer_Vec4s Vec4s
 --- @alias Pointer_BehaviorScript BehaviorScript
+--- @alias Pointer_Texture Texture
