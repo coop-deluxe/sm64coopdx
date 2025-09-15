@@ -1358,9 +1358,9 @@ static void gfx_sp_moveword(uint8_t index, uint16_t offset, uint32_t data) {
             int lightNum = offset / 24;
             // data = packed color
             if (lightNum >= 0 && lightNum <= MAX_LIGHTS) {
-                rsp.current_lights[lightNum].col[0] = data >> 24;
-                rsp.current_lights[lightNum].col[1] = data >> 16;
-                rsp.current_lights[lightNum].col[2] = data >> 8;
+                rsp.current_lights[lightNum].col[0] = (uint8_t)(data >> 24);
+                rsp.current_lights[lightNum].col[1] = (uint8_t)(data >> 16);
+                rsp.current_lights[lightNum].col[2] = (uint8_t)(data >> 8);
             }
             break;
         }
