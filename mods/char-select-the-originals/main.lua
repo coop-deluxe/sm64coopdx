@@ -99,7 +99,7 @@ local PALETTE_FL_WALUIGI = {
 
 -- Sounds --
 
-local MARIO_PITCH_SOUNDS = {
+local MARIO_SOUNDS = {
     SOUND_MARIO_YAH_WAH_HOO,
     SOUND_MARIO_HOOHOO,
     SOUND_MARIO_YAHOO,
@@ -149,7 +149,7 @@ local MARIO_PITCH_SOUNDS = {
 local VOICETABLE_CJ_LUIGI = {
     [CHAR_SOUND_OKEY_DOKEY] = '0B_cj_luigi_okey_dokey.aiff',
 	[CHAR_SOUND_LETS_A_GO] = '1A_cj_luigi_lets_a_go.aiff',
-	[CHAR_SOUND_PUNCH_YAH] = '08_cj_luigi_punch_yah.aiff',
+	[CHAR_SOUND_PUNCH_YAH]= '08_cj_luigi_punch_yah.aiff',
 	[CHAR_SOUND_PUNCH_WAH] = '01_cj_luigi_jump_wah.aiff',
     [CHAR_SOUND_WAH2] = '07_cj_luigi_wah2.aiff',
 	[CHAR_SOUND_PUNCH_HOO] = '09_cj_luigi_punch_hoo.aiff',
@@ -206,22 +206,21 @@ local function on_character_select_load()
     charSelect.character_add_palette_preset(E_MODEL_KEEB_WALUIGI, PALETTE_KB_WALUIGI)
     charSelect.character_add_palette_preset(E_MODEL_FLUFFA_WALUIGI, PALETTE_FL_WALUIGI)
     charSelect.character_add_voice(E_MODEL_CJ_LUIGI, VOICETABLE_CJ_LUIGI)
+    charSelect.config_character_sounds()
 end
 
--- Djoslin Toad Sound
+
 --- @param m MarioState
 --- @param sound CharacterSound
+--- Pitched up Mario voice
 local function character_sound(m, sound)
-    if obj_get_model_id_extended(m.marioObj) == E_MODEL_DJOSLIN_TOAD then
-        play_sound_with_freq_scale(MARIO_PITCH_SOUNDS[sound + 1], m.marioObj.header.gfx.cameraToObject, 1.25)
-        return NO_SOUND
-    end
-        if obj_get_model_id_extended(m.marioObj) == E_MODEL_VL_TONE_LUIGI then
-        play_sound_with_freq_scale(MARIO_PITCH_SOUNDS[sound + 1], m.marioObj.header.gfx.cameraToObject, 1.1)
+    local extendedModelId = obj_get_model_id_extended(m.marioObj)
+    local freqScale = extendedModelId == E_MODEL_DJOSLIN_TOAD and 1.25 or extendedModelId == E_MODEL_VL_TONE_LUIGI and 1.1 or 1
+    if extendedModelId == E_MODEL_DJOSLIN_TOAD or extendedModelId == E_MODEL_VL_TONE_LUIGI then
+        play_sound_with_freq_scale(MARIO_PH_SOUNDS[sound + 1], m.marioObj.header.gfx.cameraToObject, freqScale)
         return NO_SOUND
     end
 end
 
-charSelect.config_character_sounds()
 hook_event(HOOK_ON_MODS_LOADED, on_character_select_load)
 hook_event(HOOK_CHARACTER_SOUND, character_sound)
