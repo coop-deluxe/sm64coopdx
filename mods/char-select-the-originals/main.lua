@@ -213,10 +213,15 @@ end
 --- @param m MarioState
 --- @param sound CharacterSound
 --- Pitched up Mario voice
+local MODEL_FREQ_TABLE = {
+    [E_MODEL_DJOSLIN_TOAD]    = 1.25,
+    [E_MODEL_VL_TONE_LUIGI]   = 1.1
+}
+
 local function character_sound(m, sound)
     local extendedModelId = obj_get_model_id_extended(m.marioObj)
-    local freqScale = extendedModelId == E_MODEL_DJOSLIN_TOAD and 1.25 or extendedModelId == E_MODEL_VL_TONE_LUIGI and 1.1 or 1
-    if extendedModelId == E_MODEL_DJOSLIN_TOAD or extendedModelId == E_MODEL_VL_TONE_LUIGI then
+    local freqScale = MODEL_FREQ_TABLE[extendedModelId]
+    if freqScale then
         play_sound_with_freq_scale(MARIO_SOUNDS[sound], m.marioObj.header.gfx.cameraToObject, freqScale)
         return NO_SOUND
     end
