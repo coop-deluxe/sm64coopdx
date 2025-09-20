@@ -3000,6 +3000,9 @@ GRAPH_RENDER_PLAYER = (1 << 7)
 GRAPH_EXTRA_FORCE_3D = (1 << 0)
 
 --- @type integer
+GRAPH_EXTRA_ROTATE_HELD = (1 << 1)
+
+--- @type integer
 GRAPH_NODE_TYPE_FUNCTIONAL = 0x100
 
 --- @type integer
