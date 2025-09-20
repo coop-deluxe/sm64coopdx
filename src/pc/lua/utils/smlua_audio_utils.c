@@ -29,8 +29,6 @@ struct AudioOverride {
 
 struct AudioOverride sAudioOverrides[MAX_AUDIO_OVERRIDE] = { 0 };
 
-static u8 sCustomSeqIndex = SEQ_COUNT;
-
 static void smlua_audio_utils_reset(struct AudioOverride* override) {
     if (override == NULL) { return; }
 
@@ -67,7 +65,6 @@ void smlua_audio_utils_reset_all(void) {
 #endif
         smlua_audio_utils_reset(&sAudioOverrides[i]);
     }
-    sCustomSeqIndex = SEQ_COUNT;
 }
 
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
@@ -158,8 +155,10 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 }
 
 u8 smlua_audio_utils_allocate_sequence(void) {
-    if (sCustomSeqIndex< MAX_AUDIO_OVERRIDE) {
-        return sCustomSeqIndex++;   
+    for (u8 seqId = SEQ_COUNT + 1; seqId < MAX_AUDIO_OVERRIDE; seqId++) {
+        if (!sAudioOverrides[seqId].enabled) {
+            return seqId;
+        }
     }
     LOG_ERROR("Cannot allocate more custom sequences.");
     return 0;
