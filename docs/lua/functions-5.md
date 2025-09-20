@@ -896,6 +896,29 @@ Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, fil
 
 <br />
 
+## [mod_fs_file_rewind](#mod_fs_file_rewind)
+
+### Description
+Sets the current position of a modfs `file` to its beginning. Returns true on success
+
+### Lua Example
+`local booleanValue = mod_fs_file_rewind(file)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_rewind(struct ModFsFile *file);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_fs_file_is_eof](#mod_fs_file_is_eof)
 
 ### Description

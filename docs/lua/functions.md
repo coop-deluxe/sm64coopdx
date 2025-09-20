@@ -1377,6 +1377,7 @@
    - [mod_fs_file_write_string](functions-5.md#mod_fs_file_write_string)
    - [mod_fs_file_write_line](functions-5.md#mod_fs_file_write_line)
    - [mod_fs_file_seek](functions-5.md#mod_fs_file_seek)
+   - [mod_fs_file_rewind](functions-5.md#mod_fs_file_rewind)
    - [mod_fs_file_is_eof](functions-5.md#mod_fs_file_is_eof)
    - [mod_fs_file_fill](functions-5.md#mod_fs_file_fill)
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)

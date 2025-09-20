@@ -7623,6 +7623,13 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- Sets the current position of a modfs `file` to its beginning. Returns true on success
+function mod_fs_file_rewind(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...

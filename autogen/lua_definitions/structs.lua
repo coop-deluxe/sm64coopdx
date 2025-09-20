@@ -1335,6 +1335,7 @@
 --- @field public write_string fun(file: ModFsFile, str: string): boolean
 --- @field public write_line fun(file: ModFsFile, str: string): boolean
 --- @field public seek fun(file: ModFsFile, offset: integer, origin: ModFsFileSeek): boolean
+--- @field public rewind fun(file: ModFsFile): boolean
 --- @field public is_eof fun(file: ModFsFile): boolean
 --- @field public fill fun(file: ModFsFile, byte: integer, length: integer): boolean
 --- @field public erase fun(file: ModFsFile, length: integer): boolean

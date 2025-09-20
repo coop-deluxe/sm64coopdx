@@ -2048,6 +2048,7 @@
 | write_string | [`mod_fs_file_write_string`](functions-5.md#mod_fs_file_write_string) |
 | write_line | [`mod_fs_file_write_line`](functions-5.md#mod_fs_file_write_line) |
 | seek | [`mod_fs_file_seek`](functions-5.md#mod_fs_file_seek) |
+| rewind | [`mod_fs_file_rewind`](functions-5.md#mod_fs_file_rewind) |
 | is_eof | [`mod_fs_file_is_eof`](functions-5.md#mod_fs_file_is_eof) |
 | fill | [`mod_fs_file_fill`](functions-5.md#mod_fs_file_fill) |
 | erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |

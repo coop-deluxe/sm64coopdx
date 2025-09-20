@@ -22922,6 +22922,23 @@ int smlua_func_mod_fs_file_seek(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_fs_file_rewind(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_rewind", 1, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_rewind"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_rewind(file));
+
+    return 1;
+}
+
 int smlua_func_mod_fs_file_is_eof(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37863,6 +37880,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_write_string", smlua_func_mod_fs_file_write_string);
     smlua_bind_function(L, "mod_fs_file_write_line", smlua_func_mod_fs_file_write_line);
     smlua_bind_function(L, "mod_fs_file_seek", smlua_func_mod_fs_file_seek);
+    smlua_bind_function(L, "mod_fs_file_rewind", smlua_func_mod_fs_file_rewind);
     smlua_bind_function(L, "mod_fs_file_is_eof", smlua_func_mod_fs_file_is_eof);
     smlua_bind_function(L, "mod_fs_file_fill", smlua_func_mod_fs_file_fill);
     smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);

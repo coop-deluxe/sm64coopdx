@@ -1594,6 +1594,17 @@ C_DEFINE bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFil
     return true;
 }
 
+C_DEFINE bool mod_fs_file_rewind(struct ModFsFile *file) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    file->offset = 0;
+    return true;
+}
+
 C_DEFINE bool mod_fs_file_is_eof(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 

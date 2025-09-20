@@ -1673,6 +1673,7 @@ static const char FUNCTION__mod_fs_file_read_integer[] = "mod_fs_file_read_integ
 static const char FUNCTION__mod_fs_file_read_line[] = "mod_fs_file_read_line";
 static const char FUNCTION__mod_fs_file_read_number[] = "mod_fs_file_read_number";
 static const char FUNCTION__mod_fs_file_read_string[] = "mod_fs_file_read_string";
+static const char FUNCTION__mod_fs_file_rewind[] = "mod_fs_file_rewind";
 static const char FUNCTION__mod_fs_file_seek[] = "mod_fs_file_seek";
 static const char FUNCTION__mod_fs_file_set_public[] = "mod_fs_file_set_public";
 static const char FUNCTION__mod_fs_file_set_text_mode[] = "mod_fs_file_set_text_mode";
@@ -1683,7 +1684,7 @@ static const char FUNCTION__mod_fs_file_write_line[] = "mod_fs_file_write_line";
 static const char FUNCTION__mod_fs_file_write_number[] = "mod_fs_file_write_number";
 static const char FUNCTION__mod_fs_file_write_string[] = "mod_fs_file_write_string";
 
-#define LUA_MOD_FS_FILE_FIELD_COUNT 24
+#define LUA_MOD_FS_FILE_FIELD_COUNT 25
 static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
     { "erase",         LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_erase,         true, LOT_NONE,  1, sizeof(const char *)  },
     { "filepath",      LVT_STRING,    offsetof(struct ModFsFile, filepath),         true, LOT_NONE,  1, sizeof(char)          },
@@ -1699,6 +1700,7 @@ static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
     { "read_line",     LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_line,     true, LOT_NONE,  1, sizeof(const char *)  },
     { "read_number",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_number,   true, LOT_NONE,  1, sizeof(const char *)  },
     { "read_string",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_string,   true, LOT_NONE,  1, sizeof(const char *)  },
+    { "rewind",        LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_rewind,        true, LOT_NONE,  1, sizeof(const char *)  },
     { "seek",          LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_seek,          true, LOT_NONE,  1, sizeof(const char *)  },
     { "set_public",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_set_public,    true, LOT_NONE,  1, sizeof(const char *)  },
     { "set_text_mode", LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_set_text_mode, true, LOT_NONE,  1, sizeof(const char *)  },

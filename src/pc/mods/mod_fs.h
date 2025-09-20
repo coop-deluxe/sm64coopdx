@@ -68,6 +68,7 @@ struct ModFsFile {
     FUNCTION(write_string, mod_fs_file_write_string);
     FUNCTION(write_line, mod_fs_file_write_line);
     FUNCTION(seek, mod_fs_file_seek);
+    FUNCTION(rewind, mod_fs_file_rewind);
     FUNCTION(is_eof, mod_fs_file_is_eof);
     FUNCTION(fill, mod_fs_file_fill);
     FUNCTION(erase, mod_fs_file_erase);
@@ -233,6 +234,12 @@ If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`.
 Returns true on success
 |descriptionEnd| */
 bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);
+
+/* |description|
+Sets the current position of a modfs `file` to its beginning.
+Returns true on success
+|descriptionEnd| */
+bool mod_fs_file_rewind(struct ModFsFile *file);
 
 /* |description|
 Returns true if the provided modfs `file` has reached its end of file
