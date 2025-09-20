@@ -1628,6 +1628,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
     Mat4 mat;
     Vec3f translation;
     Vec3f scalePrev;
+    Vec3s anglePrev;
 
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
@@ -1648,19 +1649,29 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
 
         if (gGlobalTimer == node->objNode->header.gfx.prevScaleTimestamp + 1) {
             vec3f_copy(scalePrev, node->objNode->header.gfx.prevScale);
+            vec3s_copy(anglePrev, node->objNode->header.gfx.prevAngle);
         } else {
             vec3f_copy(scalePrev, node->objNode->header.gfx.scale);
+            vec3s_copy(anglePrev, node->objNode->header.gfx.angle);
         }
         vec3f_copy(node->objNode->header.gfx.prevScale, node->objNode->header.gfx.scale);
         node->objNode->header.gfx.prevScaleTimestamp = gGlobalTimer;
-
-        mtxf_translate(mat, translation);
+        
+        if (node->objNode->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_ROTATE_HELD) {
+            vec3s_copy(node->objNode->header.gfx.prevAngle, node->objNode->header.gfx.angle);
+            mtxf_rotate_zxy_and_translate(mat, translation, node->objNode->header.gfx.angle);
+        } else {
+            mtxf_translate(mat, translation);
+        }
         mtxf_copy(gMatStack[gMatStackIndex + 1], *gCurGraphNodeObject->throwMatrix);
         gMatStack[gMatStackIndex + 1][3][0] = gMatStack[gMatStackIndex][3][0];
         gMatStack[gMatStackIndex + 1][3][1] = gMatStack[gMatStackIndex][3][1];
         gMatStack[gMatStackIndex + 1][3][2] = gMatStack[gMatStackIndex][3][2];
         mtxf_mul(gMatStack[gMatStackIndex + 1], mat, gMatStack[gMatStackIndex + 1]);
         mtxf_scale_vec3f(gMatStack[gMatStackIndex + 1], gMatStack[gMatStackIndex + 1], node->objNode->header.gfx.scale);
+        if (node->objNode->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_ROTATE_HELD) {
+            mtxf_rotate_zxy_and_translate(mat, translation, anglePrev);
+        }
         mtxf_copy(gMatStackPrev[gMatStackIndex + 1], (void *) gCurGraphNodeObject->throwMatrixPrev);
         gMatStackPrev[gMatStackIndex + 1][3][0] = gMatStackPrev[gMatStackIndex][3][0];
         gMatStackPrev[gMatStackIndex + 1][3][1] = gMatStackPrev[gMatStackIndex][3][1];
