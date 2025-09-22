@@ -85,7 +85,7 @@ static f32 get_buoyancy(struct MarioState *m) {
 }
 
 /* |description|Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality|descriptionEnd| */
-u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
+u32 perform_water_full_step(struct MarioState *m, OUT Vec3f nextPos) {
     if (!m) { return 0; }
     struct WallCollisionData wcd = { 0 };
     struct Surface *ceil;
@@ -136,7 +136,7 @@ u32 perform_water_full_step(struct MarioState *m, Vec3f nextPos) {
 }
 
 /* |description|Calculates a water current and outputs it in `step`|descriptionEnd| */
-void apply_water_current(struct MarioState *m, Vec3f step) {
+void apply_water_current(struct MarioState *m, OUT Vec3f step) {
     if (!m) { return; }
     s32 i;
     f32 whirlpoolRadius = 2000.0f;
@@ -195,8 +195,10 @@ u32 perform_water_step(struct MarioState *m) {
     Vec3f step;
     struct Object *marioObj = m->marioObj;
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, &returnValue)) return (u32) returnValue;
+    s32 stepResultOverride = 0;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PHYS_STEP, m, STEP_TYPE_WATER, 0, &stepResultOverride)) {
+        return (u32) stepResultOverride;
+    }
 
     vec3f_copy(step, m->vel);
 
@@ -209,11 +211,11 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[2] = m->pos[2] + step[2];
   
     if (nextPos[1] > m->waterLevel - 80) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
-        if (allow) {
-          nextPos[1] = m->waterLevel - 80;
-          m->vel[1] = 0.0f;
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
+        if (allowForceAction) {
+            nextPos[1] = m->waterLevel - 80;
+            m->vel[1] = 0.0f;
         }
     }
 
@@ -538,9 +540,10 @@ static s32 check_water_jump(struct MarioState *m) {
 
     if (m->input & INPUT_A_PRESSED) {
         if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
-            bool allow = true;
-            smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow); 
-            if (!allow) { return FALSE; }
+            bool allowForceAction = true;
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction); 
+            if (!allowForceAction) { return FALSE; }
+
             vec3s_set(m->angleVel, 0, 0, 0);
 
             m->vel[1] = 62.0f;
@@ -997,7 +1000,7 @@ static s32 act_drowning(struct MarioState *m) {
                     // do nothing
                 } else {
                     bool allowDeath = true;
-                    smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                    smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                     if (!allowDeath) { return FALSE; }
 
                     if (mario_can_bubble(m)) {
@@ -1032,7 +1035,7 @@ static s32 act_water_death(struct MarioState *m) {
             // do nothing
         } else {
             bool allowDeath = true;
-            smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+            smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
             if (mario_can_bubble(m)) {
@@ -1158,7 +1161,7 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
                 // do nothing
             } else {
                 bool allowDeath = true;
-                smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+                smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { reset_rumble_timers(m); return FALSE; }
 
                 if (mario_can_bubble(m)) {
@@ -1626,24 +1629,24 @@ static s32 act_hold_metal_water_fall_land(struct MarioState *m) {
 static s32 check_common_submerged_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->pos[1] > m->waterLevel - 80) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allow);
-        if (allow) {
-          if (m->waterLevel - 80 > m->floorHeight) {
-              m->pos[1] = m->waterLevel - 80;
-          } else {
-              //! If you press B to throw the shell, there is a ~5 frame window
-              // where your held object is the shell, but you are not in the
-              // water shell swimming action. This allows you to hold the water
-              // shell on land (used for cloning in DDD).
-              if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL && m->playerIndex == 0) {
-                  m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
-                  m->heldObj = NULL;
-                  stop_shell_music();
-              }
-  
-              return transition_submerged_to_walking(m);
-          }
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
+        if (allowForceAction) {
+            if (m->waterLevel - 80 > m->floorHeight) {
+                m->pos[1] = m->waterLevel - 80;
+            } else {
+                //! If you press B to throw the shell, there is a ~5 frame window
+                // where your held object is the shell, but you are not in the
+                // water shell swimming action. This allows you to hold the water
+                // shell on land (used for cloning in DDD).
+                if (m->action == ACT_WATER_SHELL_SWIMMING && m->heldObj != NULL && m->playerIndex == 0) {
+                    m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
+                    m->heldObj = NULL;
+                    stop_shell_music();
+                }
+
+                return transition_submerged_to_walking(m);
+            }
         }
     }
 

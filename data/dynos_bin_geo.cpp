@@ -105,9 +105,14 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     }
 
     // Built-in functions
-    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
+    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin(), FUNCTION_GEO);
     if (_FunctionPtr != NULL) {
         return (s64) _FunctionPtr;
+    }
+    String error = DynOS_Builtin_Func_CheckMisuse(_Arg.begin(), FUNCTION_GEO);
+    if (!error.Empty()) {
+        PrintDataError("  ERROR: %s", error.begin());
+        return 0;
     }
 
     // Constants
@@ -268,6 +273,26 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
         return;                                                                             \
     }
 
+#define geo_symbol_11(symb, n)                                                                                    \
+    if (_Symbol == #symb) {                                                                                       \
+        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg6 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg7 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg8 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg9 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
+        s64 _Arg10 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                             \
+        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                                                    \
+        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7, _Arg8, _Arg9, _Arg10) }; \
+        memcpy(aHead, _Gl, sizeof(_Gl));                                                                          \
+        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                                                                  \
+        return;                                                                                                   \
+    }
+
 static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLayout*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
@@ -312,22 +337,31 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
     geo_symbol_5(GEO_HELD_OBJECT, 2);
     geo_symbol_2(GEO_SCALE, 0);
     geo_symbol_3(GEO_SCALE_WITH_DL, 2);
+    geo_symbol_4(GEO_SCALE_XYZ, 0);
+    geo_symbol_5(GEO_SCALE_XYZ_WITH_DL, 4);
     geo_symbol_0(GEO_NOP_1E);
     geo_symbol_0(GEO_NOP_1F);
     geo_symbol_1(GEO_CULLING_RADIUS, 0);
+    geo_symbol_8(GEO_BONE, 4);
+    geo_symbol_11(GEO_BONE_WITH_SCALE, 7);
 
     // Geo function node
     if (_Symbol == "GEO_ASM") {
         s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
         const String& _Arg1 = aNode->mTokens[aTokenIndex++];
 
-        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin());
+        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin(), FUNCTION_GEO);
         if (_FunctionPtr != NULL) {
             aGfxData->mPointerList.Add(aHead + 1);
             GeoLayout _Gl[] = { GEO_ASM(_Arg0, _FunctionPtr) };
             memcpy(aHead, _Gl, sizeof(_Gl));
             aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
         } else {
+            String error = DynOS_Builtin_Func_CheckMisuse(_Arg1.begin(), FUNCTION_GEO);
+            if (!error.Empty()) {
+                PrintDataError("  ERROR: %s", error.begin());
+                return;
+            }
             u32 _FuncIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, _Arg1);
             GeoLayout _Gl[] = { GEO_ASM_EXT(_Arg0, _FuncIndex) };
             memcpy(aHead, _Gl, sizeof(_Gl));
@@ -345,13 +379,18 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
         s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
         const String& _Arg1 = aNode->mTokens[aTokenIndex++];
 
-        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin());
+        const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg1.begin(), FUNCTION_GEO);
         if (_FunctionPtr != NULL) {
             aGfxData->mPointerList.Add(aHead + 1);
             GeoLayout _Gl[] = { GEO_SWITCH_CASE(_Arg0, _FunctionPtr) };
             memcpy(aHead, _Gl, sizeof(_Gl));
             aHead += (sizeof(_Gl) / sizeof(_Gl[0]));
         } else {
+            String error = DynOS_Builtin_Func_CheckMisuse(_Arg1.begin(), FUNCTION_GEO);
+            if (!error.Empty()) {
+                PrintDataError("  ERROR: %s", error.begin());
+                return;
+            }
             u32 _FuncIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, _Arg1);
             GeoLayout _Gl[] = { GEO_SWITCH_CASE_EXT(_Arg0, _FuncIndex) };
             memcpy(aHead, _Gl, sizeof(_Gl));
@@ -471,7 +510,7 @@ void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNo
     for (u32 i = 0; i != aNode->mSize; ++i) {
         GeoLayout *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
-            DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
+            DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData, FUNCTION_GEO);
         } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
@@ -495,7 +534,7 @@ void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData) {
     _Node->mData = New<GeoLayout>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, FUNCTION_GEO, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {

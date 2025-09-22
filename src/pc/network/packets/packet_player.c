@@ -16,6 +16,7 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_language.h"
 #include "pc/debuglog.h"
+#include "src/game/hardcoded.h"
 
 #pragma pack(1)
 struct PacketPlayerData {
@@ -76,7 +77,7 @@ struct PacketPlayerData {
     u8 areaSyncValid;
     u8 knockbackTimer;
 
-    s16 dialogId;
+    s32 dialogId;
 };
 #pragma pack()
 
@@ -351,23 +352,28 @@ void network_receive_player(struct Packet* p) {
     // place on top of platform
     struct SyncObject* platformSo = sync_object_get(platformSyncID);
     if (platformSo && platformSo->o) {
-        struct Surface* floor = NULL;
+
         // search up to 500 units for the platform
         f32 maxDifference = 500;
-        m->pos[1] += maxDifference;
 
-        // find the platform
+        // look for a platform above and below, and a ceiling above the player
         gCheckingSurfaceCollisionsForObject = platformSo->o;
-        f32 height = find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
+        f32 currFloorHeight = find_floor_height(m->pos[0], m->pos[1], m->pos[2]);
+        f32 floorHeight = find_floor_height(m->pos[0], m->pos[1] + maxDifference, m->pos[2]);
+        f32 ceilHeight = find_ceil_height(m->pos[0], m->pos[1], m->pos[2]);
         gCheckingSurfaceCollisionsForObject = NULL;
 
-        f32 difference = ABS((m->pos[1] - maxDifference) - height);
-        if (floor != NULL && difference <= maxDifference) {
+        // always prefer the closest floor
+        // use the floor below if there's a ceiling between the player and the floor above
+        // only accept floors 500 units away
+        f32 diffAbove = ABS(m->pos[1] - floorHeight);
+        f32 diffBelow = ABS(m->pos[1] - currFloorHeight);
+        if (floorHeight != gLevelValues.floorLowerLimit &&
+            (currFloorHeight == gLevelValues.floorLowerLimit || diffBelow > diffAbove) &&
+            (ceilHeight == gLevelValues.cellHeightLimit || floorHeight < ceilHeight) &&
+            diffAbove <= maxDifference) {
             // place on top of platform
-            m->pos[1] = height;
-        } else {
-            // search failed, reset position
-            m->pos[1] -= maxDifference;
+            m->pos[1] = floorHeight;
         }
     }
 
@@ -409,10 +415,9 @@ void network_receive_player(struct Packet* p) {
     np->currPositionValid = true;
 
     if (np->currLevelNum == LEVEL_BOWSER_3 && m->action == ACT_JUMBO_STAR_CUTSCENE && gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
-        set_mario_action((struct MarioState*) &gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
+        set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
     }
-    m->marioObj->rawData.asU32[0x16] = oldData.rawData[0x16];
-
+    m->marioObj->oActiveParticleFlags = oldData.rawData[0x16];
 }
 
 void network_update_player(void) {

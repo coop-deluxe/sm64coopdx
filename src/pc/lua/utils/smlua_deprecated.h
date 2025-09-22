@@ -13,4 +13,4 @@ void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed,
 /* |description|[DEPRECATED: Use `network_player_set_override_palette_color` instead]|descriptionEnd| */
 void network_player_color_to_palette(struct NetworkPlayer *np, enum PlayerPart part, Color color);
 /* |description|[DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]|descriptionEnd| */
-void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, Color out);
+void network_player_palette_to_color(struct NetworkPlayer *np, enum PlayerPart part, OUT Color out);

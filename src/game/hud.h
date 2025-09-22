@@ -27,7 +27,7 @@ enum CameraHUDLut {
 
 extern u8 gOverrideHideHud;
 
-void render_hud_icon(Vtx *vtx, const u8 *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH);
+void render_hud_icon(Vtx *vtx, const Texture *texture, u32 fmt, u32 siz, s32 texW, s32 texH, s32 x, s32 y, s32 w, s32 h, s32 tileX, s32 tileY, s32 tileW, s32 tileH);
 
 s16 get_hud_camera_status(void);
 void set_hud_camera_status(s16 status);

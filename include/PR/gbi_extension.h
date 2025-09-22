@@ -7,6 +7,8 @@
 #define G_LIGHT_MAP_EXT       0x00000800
 #define G_LIGHTING_ENGINE_EXT 0x00004000
 #define G_PACKED_NORMALS_EXT  0x00000080
+#define G_FRESNEL_COLOR_EXT   0x00000040
+#define G_FRESNEL_ALPHA_EXT   0x00400000
 
 //////////
 // DJUI //
@@ -18,6 +20,8 @@
 #define G_TRI2_EXT         0x12
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
+
+#define G_MTX_INVERSE_CAMERA_EXT   0x08
 
 #define	gsSPTextureAddrDjui(c) \
 {{ \
@@ -91,3 +95,75 @@
 
 #define gDPSetTextureClippingDjui(pkt, x1, y1, x2, y2)         gSetClippingDjui(pkt, G_TEXCLIP_DJUI, x1, y1, x2, y2)
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
+
+////////////////////
+// G_PPARTTOCOLOR //
+////////////////////
+
+#define G_PPARTTOCOLOR 0xd3
+
+#define G_COL_PRIM   0x0
+#define G_COL_ENV    0x1
+
+#define G_CP_LIGHT   0x0
+#define G_CP_AMBIENT 0x1
+
+#define gSPCopyPlayerPartToColor(pkt, color, part, offset)             \
+{                                                                \
+    Gfx *_g = (Gfx *)(pkt);                                      \
+    _g->words.w0 = (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)); \
+    _g->words.w1 = ((2 * ((part) + 1)) + 1 + offset);            \
+}
+
+#define gsSPCopyPlayerPartToColor(color, part, offset)                     \
+{{                                                                   \
+    (_SHIFTL(G_PPARTTOCOLOR, 24, 8)) | (_SHIFTL(color, 16, 8)),        \
+    ((2 * ((part) + 1)) + 1 + offset)                                \
+}}
+
+////////////////////
+//// G_MOVEWORD ////
+////////////////////
+
+#define G_MW_FX                  0x00 /* replaces G_MW_MATRIX which is no longer supported */
+#define G_MWO_FRESNEL            0x0C
+
+/**
+ * Fresnel - Feature suggested by thecozies
+ * Enabled with the G_FRESNEL bit in geometry mode.
+ * The dot product between a vertex normal and the vector from the vertex to the
+ * camera is computed. The offset and scale here convert this to a shade alpha
+ * value. This is useful for making surfaces fade between transparent when
+ * viewed straight-on and opaque when viewed at a large angle, or for applying a
+ * fake "outline" around the border of meshes.
+ * 
+ * If using Fresnel, you need to set the camera world position whenever you set
+ * the VP matrix, viewport, etc. See SPCameraWorld.
+ * 
+ * The RSP does:
+ * s16 dotProduct = dot(vertex normal, camera pos - vertex pos);
+ * dotProduct = abs(dotProduct); // 0 = points to side, 7FFF = points at or away
+ * s32 factor = ((scale * dotProduct) >> 15) + offset;
+ * s16 result = clamp(factor << 8, 0, 7FFF);
+ * color_or_alpha = result >> 7;
+ * 
+ * At dotMax, color_or_alpha = FF, result = 7F80, factor = 7F
+ * At dotMin, color_or_alpha = 00, result = 0, factor = 0
+ * 7F = ((scale * dotMax) >> 15) + offset
+ * 00 = ((scale * dotMin) >> 15) + offset
+ * Subtract: 7F = (scale * (dotMax - dotMin)) >> 15
+ *           3F8000 = scale * (dotMax - dotMin)
+ *           scale = 3F8000 / (dotMax - dotMin)                <--
+ * offset = -(((3F8000 / (dotMax - dotMin)) * dotMin) >> 15)
+ * offset = -((7F * dotMin) / (dotMax - dotMin))               <--
+ * 
+ * To convert in the opposite direction:
+ * ((7F - offset) << 15) / scale = dotMax
+ * ((00 - offset) << 15) / scale = dotMin
+ */
+#define gSPFresnel(pkt, scale, offset) \
+    gMoveWd(pkt, G_MW_FX, G_MWO_FRESNEL, \
+        (_SHIFTL((scale), 16, 16) | _SHIFTL((offset), 0, 16)))
+#define gsSPFresnel(scale, offset) \
+    gsMoveWd(G_MW_FX, G_MWO_FRESNEL, \
+        (_SHIFTL((scale), 16, 16) | _SHIFTL((offset), 0, 16)))

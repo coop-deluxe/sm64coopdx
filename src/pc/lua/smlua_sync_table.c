@@ -37,8 +37,8 @@ static void smlua_sync_table_create(u16 modRemoteIndex, enum LuaSyncTableType ls
 }
 
 static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
     sUnwoundLntsCount = 0;
 
     // get key
@@ -110,13 +110,13 @@ static bool smlua_sync_table_unwind(int syncTableIndex, int keyIndex) {
         return false;
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return true;
 }
 
 static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int prevValueIndex, int valueIndex) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
 
     // get hook table
     lua_pushstring(L, "_hook_on_changed"); lua_rawget(L, syncTableIndex);
@@ -143,23 +143,27 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         struct Mod* mod = gActiveMods.entries[modRemoteIndex];
 
         // call hook
-        struct Mod* prev = gLuaActiveMod;
+        struct Mod* prevActiveMod = gLuaActiveMod;
+
         gLuaActiveMod = mod;
+        gLuaActiveModFile = NULL;
         gLuaLastHookMod = mod;
         gPcDebug.lastModRun = mod;
+
         if (0 != smlua_pcall(L, 3, 0, 0)) {
             LOG_LUA_LINE("Failed to call the hook_on_changed callback");
         }
-        gLuaActiveMod = prev;
+
+        gLuaActiveMod = prevActiveMod;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool alterSeq) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
 
     int syncTableIndex = stackIndex + 1;
     int keyIndex       = stackIndex + 2;
@@ -175,12 +179,11 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     }
 
     // get key
-    struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
+    smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Error: tried to alter sync table with an invalid key");
         return false;
     }
-    lntKey = lntKey;
 
 
       ////////////////
@@ -293,7 +296,7 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
 
 CLEANUP_STACK:
     lua_remove(L, prevValueIndex); // pop prevValue
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return ret;
 }
 
@@ -304,8 +307,8 @@ static int smlua__set_sync_table_field(lua_State* L) {
 }
 
 void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 lntKeyCount, struct LSTNetworkType* lntKeys, struct LSTNetworkType* lntValue) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
 
     // figure out entry
     if (modRemoteIndex >= gActiveMods.entryCount) {
@@ -435,12 +438,12 @@ void smlua_set_sync_table_field_from_network(u64 seq, u16 modRemoteIndex, u16 ln
     lua_pop(L, 1); // pop prevValue
     lua_pop(L, 1); // pop internal table
     lua_pop(L, syncTableSize); // pop sync table
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 void smlua_sync_table_init_globals(const char* path, u16 modRemoteIndex) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
 
     lua_getfield(L, LUA_REGISTRYINDEX, path);
     int fileGlobalIndex = lua_gettop(L);
@@ -485,22 +488,22 @@ void smlua_sync_table_init_globals(const char* path, u16 modRemoteIndex) {
     }
     lua_pop(L, 1); // pop file's "global" table
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 void smlua_bind_sync_table(void) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
     smlua_bind_function(L, "_set_sync_table_field", smlua__set_sync_table_field);
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 ////////////////////////////////////////////////
 
 
 static void smlua_sync_table_send_table(u8 toLocalIndex) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
     int tableIndex = lua_gettop(L);
 
     lua_getfield(L, -1, "_table");
@@ -524,12 +527,12 @@ static void smlua_sync_table_send_table(u8 toLocalIndex) {
 
     lua_pop(L, 1); // remove internal table
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
-    LUA_STACK_CHECK_BEGIN();
     lua_State* L = gLuaState;
+    LUA_STACK_CHECK_BEGIN(L);
 
     LOG_INFO("sending sync table for file %s to %u", path, toLocalIndex);
 
@@ -562,15 +565,15 @@ static void smlua_sync_table_send_all_file(u8 toLocalIndex, const char* path) {
 
     lua_pop(L, 1); // pop file's "global" table
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
 }
 
 void smlua_sync_table_send_all(u8 toLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(gLuaState);
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
         smlua_sync_table_send_all_file(toLocalIndex, mod->relativePath);
     }
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(gLuaState);
 }

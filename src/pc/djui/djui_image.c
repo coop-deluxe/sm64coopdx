@@ -6,7 +6,7 @@
  // properties //
 ////////////////
 
-void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
+void djui_image_set_image(struct DjuiImage* image, const Texture* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
     image->texture = texture;
     image->textureWidth = textureWidth;
     image->textureHeight = textureHeight;
@@ -48,7 +48,7 @@ static void djui_image_destroy(struct DjuiBase* base) {
     free(image);
 }
 
-struct DjuiImage* djui_image_create(struct DjuiBase* parent, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
+struct DjuiImage* djui_image_create(struct DjuiBase* parent, const Texture* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
     struct DjuiImage* image = calloc(1, sizeof(struct DjuiImage));
     struct DjuiBase* base   = &image->base;
 

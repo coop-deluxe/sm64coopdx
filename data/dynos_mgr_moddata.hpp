@@ -135,7 +135,6 @@ public:
         mMapNameToItem.clear();
     }
 
-private:
     ModDataResult<ModDataItem<T> *> Find(T *aPointer, std::string &outName) {
         if (!aPointer) {
             return { NULL, DYNOS_MOD_DATA_ERROR_POINTER_IS_NULL };
@@ -151,6 +150,7 @@ private:
         return { NULL, 0 };
     }
 
+private:
     ModDataResult<ModDataItem<T> *> FindAvailableItem() {
 
         // Create pool if it doesn't exist yet
@@ -210,6 +210,16 @@ public:
         }
         *outSize = getResult.first->mSize;
         return getResult.first->mBuffer;
+    }
+
+    bool GetName(s32 aModIndex, T *aPointer, std::string &outName) {
+        ModDataT *modData = GetModData(aModIndex);
+        auto findResult = modData->Find(aPointer, outName);
+        if (!findResult.first) {
+            gDynosModDataLastError = findResult.second;
+            return false;
+        }
+        return true;
     }
 
     T *Create(s32 aModIndex, const char *aName, u32 aSize) {

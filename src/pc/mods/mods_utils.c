@@ -234,6 +234,20 @@ void path_get_folder(char* path, char* outpath) {
     *o = '\0';
 }
 
+int path_depth(const char* path) {
+    int depth = 0;
+    for (; *path; path++) {
+        if (*path == '/' || *path == '\\') {
+            depth++;
+        }
+    }
+    return depth;
+}
+
+bool path_is_relative_to(const char* fullPath, const char* baseDir) {
+    return strncmp(fullPath, baseDir, strlen(baseDir)) == 0;
+}
+
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     // skip non-portable filenames
     if (!fs_sys_filename_is_portable(dir->d_name)) { return false; }

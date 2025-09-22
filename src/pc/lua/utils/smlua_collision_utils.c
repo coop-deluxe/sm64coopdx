@@ -237,3 +237,18 @@ void smlua_collision_util_find_surface_types(Collision* data) {
     // Couldn't find anything
     lua_pushnil(L);
 }
+
+bool surface_is_quicksand(struct Surface* surf) {
+    if (surf == NULL) { return FALSE; }
+    return SURFACE_IS_QUICKSAND(surf->type);
+}
+
+bool surface_is_not_hard(struct Surface* surf) {
+    if (surf == NULL) { return FALSE; }
+    return SURFACE_IS_NOT_HARD(surf->type);
+}
+
+bool surface_is_painting_warp(struct Surface* surf) {
+    if (surf == NULL) { return FALSE; }
+    return SURFACE_IS_PAINTING_WARP(surf->type);
+}

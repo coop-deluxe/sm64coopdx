@@ -8,6 +8,7 @@
 #include "gfx_dimensions.h"
 #include "djui_gfx.h"
 #include "pc/debuglog.h"
+#include "engine/math_util.h"
 
 const Gfx dl_djui_display_list_begin[] = {
     gsSPTextureAddrDjui(1),
@@ -61,17 +62,15 @@ const Gfx dl_djui_simple_rect[] = {
     gsSPEndDisplayList(),
 };
 
+f32 round_to_multiple_f(f32 value, f32 multiple) {
+    return roundf(value / multiple) * multiple;
+}
+
 f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
         gfx_get_dimensions(&windowWidth, &windowHeight);
-        if (windowHeight < 768) {
-            return 0.5f;
-        } else if (windowHeight < 1440) {
-            return 1.0f;
-        } else {
-            return 1.5f;
-        }
+        return clamp(round_to_multiple_f(((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f, 0.5f), 0.5f, 1.5f);
     } else {
         switch (configDjuiScale) {
             case 1:  return 0.5f;
@@ -124,13 +123,13 @@ static u8 djui_gfx_power_of_two(u32 value) {
     }
 }
 
-void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize, bool filter) {
+void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u32 bitSize, bool filter) {
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
 }
 
-void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
+void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
     if (!gDisplayListHead) {
         LOG_ERROR("Retrieved a null displaylist head");
         return;

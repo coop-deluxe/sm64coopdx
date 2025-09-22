@@ -19,6 +19,7 @@
 #include "obj_behaviors.h"
 #include "platform_displacement.h"
 #include "profiler.h"
+#include "rendering_graph_node.h"
 #include "spawn_object.h"
 #include "first_person_cam.h"
 #include "engine/math_util.h"
@@ -285,10 +286,10 @@ void bhv_mario_update(void) {
         gMarioState->particleFlags = 0;
     }
 
-    smlua_call_event_hooks_mario_param(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
+    smlua_call_event_hooks(HOOK_BEFORE_MARIO_UPDATE, gMarioState);
 
     u32 particleFlags = execute_mario_action(gCurrentObject);
-    smlua_call_event_hooks_mario_param(HOOK_MARIO_UPDATE, gMarioState);
+    smlua_call_event_hooks(HOOK_MARIO_UPDATE, gMarioState);
     particleFlags |= gMarioState->particleFlags;
     gCurrentObject->oMarioParticleFlags = particleFlags;
 
@@ -558,7 +559,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 object->respawnInfo = &spawnInfo->behaviorArg;
 
                 // found a player
-                if (spawnInfo->behaviorArg & ((u32)1 << 31) && object->behavior == smlua_override_behavior(bhvMario)) {
+                if (spawnInfo->behaviorArg & ((u32)1 << 31) && object->behavior == bhvMario) {
                     u16 playerIndex = (spawnInfo->behaviorArg & ~(1 << 31));
                     object->oBehParams = playerIndex + 1;
                     gMarioObjects[playerIndex] = object;
@@ -624,6 +625,7 @@ void clear_objects(void) {
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();
+    geo_clear_interp_data();
 }
 
 /**

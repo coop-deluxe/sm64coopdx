@@ -38,10 +38,10 @@ s8 D_8032F4FC[] = { 7, 8, 9, 12, 13, 14, 15, 4, 3, 16, 17, 19, 3, 3, 3, 3 };
 s16 D_8032F50C[] = { 60, 0 };
 s16 D_8032F510[] = { 50, 0 };
 s8 D_8032F514[] = { 24, 42, 60, -1 };
-s16* sBowserDefeatedDialogText[3] = {
-    (s16*) &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser3DefeatedDialog
+enum DialogId* sBowserDefeatedDialogText[3] = {
+    &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser3DefeatedDialog
 };
 s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
                         { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },
@@ -1612,7 +1612,7 @@ void falling_bowser_plat_act_2(void) {
     if ((o->oTimer & 1) == 0 && o->oTimer < 14 && BHV_ARR_CHECK(D_8032F698, o->oBehParams2ndByte, struct Struct8032F698)) {
         sp22 = D_8032F698[o->oBehParams2ndByte].unk3 + (gDebugInfo[4][1] << 8);
         sp1C = -(o->oTimer / 2) * 290 + 1740;
-        vec3f_copy_2(sp24, &o->oPosX);
+        vec3f_copy(sp24, &o->oPosX);
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 + 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 + 5296) * sp1C;
         o->oPosY = 307.0f;
@@ -1620,7 +1620,7 @@ void falling_bowser_plat_act_2(void) {
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 - 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 - 5296) * sp1C;
         spawn_mist_particles_variable(4, 0, 100);
-        vec3f_copy_2(&o->oPosX, sp24);
+        vec3f_copy(&o->oPosX, sp24);
     }
     cur_obj_move_using_fvel_and_gravity();
     if (o->oTimer > 300)

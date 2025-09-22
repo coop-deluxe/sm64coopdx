@@ -200,7 +200,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
  * Rotates the animation's translation into the global coordinate system
  * and returns the animation's flags.
  */
-s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, Vec3s translation) {
+s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, OUT Vec3s translation) {
     if (!obj) { return 0; }
     f32 dx;
     f32 dz;
@@ -524,8 +524,10 @@ s32 mario_get_floor_class(struct MarioState *m) {
         floorClass = SURFACE_CLASS_NOT_SLIPPERY;
     }
 
-    s32 returnValue = 0;
-    if (smlua_call_event_hooks_mario_param_and_int_ret_int(HOOK_MARIO_OVERRIDE_FLOOR_CLASS, m, floorClass, &returnValue)) return returnValue;
+    s32 floorClassOverride = 0;
+    if (smlua_call_event_hooks(HOOK_MARIO_OVERRIDE_FLOOR_CLASS, m, floorClass, &floorClassOverride)) {
+        return floorClassOverride;
+    }
 
     return floorClass;
 }
@@ -618,7 +620,7 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
 /**
  * Collides with walls and returns the most recent wall.
  */
-struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius) {
+struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f32 radius) {
     struct WallCollisionData collisionData;
     struct Surface *wall = NULL;
 
@@ -643,7 +645,7 @@ struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 ra
 /**
  * Collides with walls and returns the wall collision data.
  */
-void resolve_and_return_wall_collisions_data(Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
+void resolve_and_return_wall_collisions_data(OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
     if (!collisionData || !pos) { return; }
 
     collisionData->x = pos[0];
@@ -1140,9 +1142,10 @@ static u32 set_mario_action_cutscene(struct MarioState *m, u32 action, UNUSED u3
  */
 u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     if (!m) { return FALSE; }
-    u32 returnValue = 0;
-    smlua_call_event_hooks_mario_action_and_arg_ret_int(HOOK_BEFORE_SET_MARIO_ACTION, m, action, actionArg, &returnValue);
-    if (returnValue == 1) { return TRUE; } else if (returnValue) { action = returnValue; }
+    u32 actionOverride = 0;
+    smlua_call_event_hooks(HOOK_BEFORE_SET_MARIO_ACTION, m, action, actionArg, &actionOverride);
+    if (actionOverride == 1) { return TRUE; }
+    if (actionOverride != 0) { action = actionOverride; }
 
     switch (action & ACT_GROUP_MASK) {
         case ACT_GROUP_MOVING:
@@ -1176,7 +1179,7 @@ u32 set_mario_action(struct MarioState *m, u32 action, u32 actionArg) {
     m->actionState = 0;
     m->actionTimer = 0;
 
-    smlua_call_event_hooks_mario_param(HOOK_ON_SET_MARIO_ACTION, m);
+    smlua_call_event_hooks(HOOK_ON_SET_MARIO_ACTION, m);
 
     return TRUE;
 }
@@ -1514,14 +1517,13 @@ void update_mario_joystick_inputs(struct MarioState *m) {
  */
 void update_mario_geometry_inputs(struct MarioState *m) {
     if (!m) { return; }
-resetGoto:;
 
     f32 gasLevel;
     f32 ceilToFloorDist;
 
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_ret_bool(HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS, m, &allow);
-    if (!allow) { return; }
+    bool allowUpdateGeometryInputs = true;
+    smlua_call_event_hooks(HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS, m, &allowUpdateGeometryInputs);
+    if (!allowUpdateGeometryInputs) { return; }
 
     f32_find_wall_collision(&m->pos[0], &m->pos[1], &m->pos[2], 60.0f, 50.0f);
     f32_find_wall_collision(&m->pos[0], &m->pos[1], &m->pos[2], 30.0f, 24.0f);
@@ -1570,15 +1572,19 @@ resetGoto:;
             m->input |= INPUT_IN_POISON_GAS;
         }
 
+    } else if (!is_other_player_active()) {
+        level_trigger_warp(m, WARP_OP_DEATH);
     } else {
-        vec3f_set(m->pos, m->spawnInfo->startPos[0], m->spawnInfo->startPos[1], m->spawnInfo->startPos[2]);
+        vec3s_to_vec3f(m->pos, m->spawnInfo->startPos);
         m->faceAngle[1] = m->spawnInfo->startAngle[1];
+        if (mario_can_bubble(m)) { mario_set_bubbled(m); }
         struct Surface* floor = NULL;
         find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
         if (floor == NULL) {
             level_trigger_warp(m, WARP_OP_DEATH);
         } else {
-            goto resetGoto;
+            update_mario_geometry_inputs(m);
+            return;
         }
     }
 }
@@ -2060,9 +2066,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // don't update mario when in a cutscene
         if (gMarioState->playerIndex == 0) {
-            extern s16 gDialogID;
+            extern s32 gDialogID;
             if (gMarioState->freeze > 0) { gMarioState->freeze--; }
-            if (gMarioState->freeze < 2 && gDialogID != -1) { gMarioState->freeze = 2; }
+            if (gMarioState->freeze < 2 && gDialogID != DIALOG_NONE) { gMarioState->freeze = 2; }
             if (gMarioState->freeze < 2 && sCurrPlayMode == PLAY_MODE_PAUSED) { gMarioState->freeze = 2; }
         }
 
@@ -2401,11 +2407,10 @@ void mario_update_wall(struct MarioState* m, struct WallCollisionData* wcd) {
 
 struct MarioState *get_mario_state_from_object(struct Object *o) {
     if (!o) { return NULL; }
-    for (s32 i = 0; i != MAX_PLAYERS; ++i) {
-        struct MarioState *m = &gMarioStates[i];
-        if (m->marioObj == o) {
-            return m;
-        }
+    if (o->behavior != bhvMario) { return NULL; }
+    s32 stateIndex = o->oBehParams - 1;
+    if (stateIndex >= 0 && stateIndex < MAX_PLAYERS) {
+        return &gMarioStates[stateIndex];
     }
     return NULL;
 }

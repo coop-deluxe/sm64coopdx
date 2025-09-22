@@ -45,9 +45,8 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
-        if (numJoys > 10) { numJoys = 10; }
 
-        char* gamepadChoices[numJoys];
+        char** gamepadChoices = calloc(numJoys, sizeof(char *));
 
         // Get the names of all connected gamepads, if none is provided, use "Unknown"
         for (int i = 0; i < numJoys; i++) {
@@ -90,6 +89,8 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         for (int i = 0; i < numJoys; i++) {
             free(gamepadChoices[i]);
         }
+
+        free(gamepadChoices);
 #endif
 
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);

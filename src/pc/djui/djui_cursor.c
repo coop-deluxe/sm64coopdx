@@ -17,6 +17,11 @@ static f32 sSavedMouseY = 0;
 f32 gCursorX = 0;
 f32 gCursorY = 0;
 
+static f32 sPrevCursorX = 0;
+static f32 sPrevCursorY = 0;
+static Gfx* sSavedDisplayListHead = NULL;
+static bool sInterpCursor = false;
+
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
         djui_base_set_visible(&sMouseCursor->base, visible);
@@ -85,8 +90,8 @@ static void djui_cursor_move_check(s8 xDir, s8 yDir, struct DjuiBase** pick, str
             if (*pick == NULL) {
                 *pick = base;
             } else {
-                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 2.0f, yDir ? 1.0f : 2.0f);
-                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 2.0f, yDir ? 1.0f : 2.0f);
+                f32 pickDist = djui_cursor_base_distance(*pick, xDir ? 1.0f : 1.2f, yDir ? 1.0f : 2.0f);
+                f32 baseDist = djui_cursor_base_distance(base,  xDir ? 1.0f : 1.2f, yDir ? 1.0f : 2.0f);
                 if (baseDist < pickDist) { *pick = base; }
             }
         }
@@ -111,7 +116,9 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
     }
 }
 
-void djui_cursor_update(void) {
+static void djui_cursor_update_position(void) {
+    sPrevCursorX = gCursorX;
+    sPrevCursorY = gCursorY;
 #if defined(CAPI_SDL2) || defined(CAPI_SDL1)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
@@ -152,7 +159,27 @@ void djui_cursor_update(void) {
         djui_image_set_image(sMouseCursor, gd_texture_hand_open, 32, 32, 16);
     }
 #endif
+}
+
+void djui_cursor_interp_before(void) {
+    sSavedDisplayListHead = NULL;
+    sInterpCursor = false;
+}
+
+void djui_cursor_interp(void) {
+    djui_cursor_update_position();
+    if (sInterpCursor && (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY)) {
+        if (sSavedDisplayListHead == NULL) { return; }
+        gDisplayListHead = sSavedDisplayListHead;
+        djui_base_render(&sMouseCursor->base);
+    }
+}
+
+void djui_cursor_update(void) {
+    djui_cursor_update_position();
+    sSavedDisplayListHead = gDisplayListHead;
     djui_base_render(&sMouseCursor->base);
+    sInterpCursor = gDisplayListHead != sSavedDisplayListHead; // Check that we actually rendered something
 }
 
 void djui_cursor_create(void) {

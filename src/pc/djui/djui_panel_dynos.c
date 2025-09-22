@@ -75,5 +75,6 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
+    if (!p) { return; }
     p->on_panel_destroy = djui_panel_dynos_destroy;
 }
