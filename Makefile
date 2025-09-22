@@ -1575,11 +1575,11 @@ endif
 # with no prerequisites, .SECONDARY causes no intermediate target to be removed
 .SECONDARY:
 
+# Handle end of macOS compilation
 APP_DIR = ./sm64coopdx.app
 APP_CONTENTS_DIR = $(APP_DIR)/Contents
 APP_MACOS_DIR = $(APP_CONTENTS_DIR)/MacOS
 APP_RESOURCES_DIR = $(APP_CONTENTS_DIR)/Resources
-
 
 ifeq ($(OSX_BUILD),1)
   GLEW_LIB := $(shell find $(BREW_PREFIX)/Cellar/glew | grep libGLEW.2.2.0 | sort -n | uniq)
@@ -1612,7 +1612,11 @@ all:
     install_name_tool -change $(BREW_PREFIX)/opt/glew/lib/libGLEW.2.2.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
-		cp res/icon.icns $(APP_RESOURCES_DIR)/icon.icns; \
+    mkdir res/build; \
+    xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target 26.0 --platform macosx > /dev/null 2>&1; \
+    mv res/build/Assets.car $(APP_RESOURCES_DIR)/; \
+    mv res/build/icon.icns $(APP_RESOURCES_DIR)/; \
+    rm -rf res/build; \
 		echo "APPL????" > $(APP_CONTENTS_DIR)/PkgInfo; \
 		echo '<?xml version="1.0" encoding="UTF-8"?>' > $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> $(APP_CONTENTS_DIR)/Info.plist; \
@@ -1623,7 +1627,7 @@ all:
 		echo '    <key>CFBundleIconFile</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleIconName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
-		echo '    <string>AppIcon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleDisplayName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <!-- Add other keys and values here -->' >> $(APP_CONTENTS_DIR)/Info.plist; \
