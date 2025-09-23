@@ -179,7 +179,7 @@ jobs:
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 sdl2 pkg-config glfw3 coreutils
+                brew install make mingw-w64 pkg-config glfw3 coreutils
 
             - name: Compile glew
               run: |
@@ -232,7 +232,24 @@ jobs:
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 coreutils
+                brew install make mingw-w64 gcc@9 pkg-config glfw3 coreutils
+
+            - name: Compile glew
+              run: |
+                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
+                tar -xzf glew.tar.gz
+                cd glew-2.2.0
+                make SYSTEM=darwin CC="clang -arch x86_64 -mmacosx-version-min=11"
+                make install
+
+            - name: Compile SDL2
+              run: |
+                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
+                tar -xzf SDL2.tar.gz
+                cd SDL2-2.30.9
+                ./configure --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
+                make -j$(sysctl -n hw.ncpu)
+                make install
 
             - name: Build the game
               run: |
