@@ -1613,7 +1613,7 @@ all:
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
     mkdir res/build; \
-    xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target 26.0 --platform macosx; \
+    xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target $(MIN_MACOS_VERSION) --platform macosx; \
     mv res/build/Assets.car $(APP_RESOURCES_DIR)/; \
     mv res/build/icon.icns $(APP_RESOURCES_DIR)/; \
     rm -rf res/build; \
