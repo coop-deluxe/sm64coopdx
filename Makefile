@@ -64,9 +64,9 @@ ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
 # Minimum macOS Version
-# If our arch is arm, set to macOS 14
+# If our arch is arm, set to macOS 11 (Big Sur), otherwise 10.15 (Catalina)
 ifeq ($(shell arch),arm64)
-  MIN_MACOS_VERSION ?= 14
+  MIN_MACOS_VERSION ?= 11
 else
   MIN_MACOS_VERSION ?= 10.15
 endif
