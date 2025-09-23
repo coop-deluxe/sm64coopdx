@@ -187,7 +187,7 @@ jobs:
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
                 make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11"
-                make install PREFIX=/opt/homebrew
+                make install GLEW_DEST=/opt/homebrew
 
             - name: Compile SDL2
               run: |
@@ -196,7 +196,7 @@ jobs:
                 cd SDL2-2.30.9
                 ./configure --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
                 make -j$(sysctl -n hw.ncpu)
-                make install PREFIX=/opt/homebrew
+                make install
 
             - name: Build the game
               run: |
