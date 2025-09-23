@@ -183,6 +183,7 @@ jobs:
 
             - name: Compile glew
               run: |
+                export MACOSX_DEPLOYMENT_TARGET=11
                 curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
@@ -236,10 +237,11 @@ jobs:
 
             - name: Compile glew
               run: |
+                export MACOSX_DEPLOYMENT_TARGET=10.15
                 curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch x86_64 -mmacosx-version-min=11"
+                make SYSTEM=darwin CC="clang -arch x86_64 -mmacosx-version-min=10.15"
                 make install
 
             - name: Compile SDL2
@@ -247,7 +249,7 @@ jobs:
                 curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
                 tar -xzf SDL2.tar.gz
                 cd SDL2-2.30.9
-                ./configure --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=11"
+                ./configure --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=10.15"
                 make -j$(sysctl -n hw.ncpu)
                 make install
 
