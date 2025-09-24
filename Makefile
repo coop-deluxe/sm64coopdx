@@ -1605,12 +1605,12 @@ all:
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
-    install_name_tool -change $(BREW_PREFIX)/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
-		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
+		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib > /dev/null 2>&1; \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libSDL2.dylib; \
     cp $(GLEW_LIB) $(APP_MACOS_DIR)/libGLEW.dylib; \
-    install_name_tool -change $(BREW_PREFIX)/lib/libGLEW.2.2.0.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
-		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib; > /dev/null 2>&1 \
+    install_name_tool -change $(BREW_PREFIX)/lib/libGLEW.2.2.0.dylib @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
+		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib > /dev/null 2>&1; \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
     mkdir res/build; \
     xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target $(MIN_MACOS_VERSION) --platform macosx > /dev/null 2>&1; \
