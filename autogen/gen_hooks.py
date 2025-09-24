@@ -309,17 +309,20 @@ def main():
                 name=input["name"]
             )
 
+        n_outputs = len(hook_event["outputs"])
         generated += SMLUA_CALL_EVENT_HOOKS_CALLBACK.format(
             n_inputs=len(hook_event["inputs"]) - mod_index_found,
-            n_outputs=len(hook_event["outputs"]),
+            n_outputs=n_outputs,
             hook_type=hook_event["type"],
             set_hook_result=set_hook_result
         )
 
+        # Note: relative indexes for return values are reversed in the Lua stack
+        # -1 is the last value, -2 the penultimate, ... and -N the first
         for i, output in enumerate(hook_event["outputs"]):
             generated += SMLUA_TYPES[output["type"]]["output"].format(
                 name=output["name"],
-                output_index=i+1,
+                output_index=n_outputs - i,
                 return_on_output_set=return_on_output_set
             )
 

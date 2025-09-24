@@ -104,6 +104,14 @@ u8 djui_hud_get_mouse_buttons_released(void);
 f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
+/* |description|Sets the viewport to the specified position and size, this will resize |descriptionEnd| */
+void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_reset_viewport(void);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
+/* |description|put the description here|descriptionEnd| */
+void djui_hud_reset_scissor(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */
 f32 djui_hud_measure_text(const char* message);
@@ -113,10 +121,10 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
 /* |description|Renders a DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
-void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH);
+void djui_hud_render_texture_raw(const Texture* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders a DJUI HUD texture tile onto the screen|descriptionEnd| */
 void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
-void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
+void djui_hud_render_texture_tile_raw(const Texture* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
 /* |description|Renders an interpolated DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders an interpolated DJUI HUD texture tile onto the screen|descriptionEnd| */
@@ -125,6 +133,8 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height);
 /* |description|Renders an interpolated DJUI HUD rect onto the screen|descriptionEnd| */
 void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);
+/* |description|Renders an DJUI HUD line onto the screen|descriptionEnd| */
+void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size);
 
 /* |description|Gets the current camera FOV|descriptionEnd| */
 f32 get_current_fov();

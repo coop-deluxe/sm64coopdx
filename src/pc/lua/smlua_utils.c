@@ -288,7 +288,7 @@ struct TextureInfo *smlua_to_texture_info(lua_State *L, int index) {
 
         lua_pushstring(L, "texture");
         lua_gettable(L, top + 1);
-        const u8 *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        const Texture *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_TEXTURE_P);
         lua_pop(L, 1);
         if (!gSmLuaConvertSuccess) { return NULL; }
 

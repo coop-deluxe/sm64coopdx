@@ -776,6 +776,10 @@
    - [djui_hud_get_mouse_buttons_released](functions-3.md#djui_hud_get_mouse_buttons_released)
    - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
    - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
+   - [djui_hud_set_viewport](functions-3.md#djui_hud_set_viewport)
+   - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
+   - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
+   - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
    - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
@@ -785,6 +789,7 @@
    - [djui_hud_render_texture_tile_interpolated](functions-3.md#djui_hud_render_texture_tile_interpolated)
    - [djui_hud_render_rect](functions-3.md#djui_hud_render_rect)
    - [djui_hud_render_rect_interpolated](functions-3.md#djui_hud_render_rect_interpolated)
+   - [djui_hud_render_line](functions-3.md#djui_hud_render_line)
    - [get_current_fov](functions-3.md#get_current_fov)
    - [djui_hud_get_fov_coeff](functions-3.md#djui_hud_get_fov_coeff)
    - [djui_hud_world_pos_to_screen_pos](functions-3.md#djui_hud_world_pos_to_screen_pos)
@@ -1929,6 +1934,7 @@
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
    - [gfx_get_texture](functions-6.md#gfx_get_texture)
+   - [gfx_get_name](functions-6.md#gfx_get_name)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
    - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
@@ -1937,6 +1943,7 @@
    - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
    - [gfx_delete_all](functions-6.md#gfx_delete_all)
+   - [vtx_get_name](functions-6.md#vtx_get_name)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
    - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
@@ -2048,6 +2055,7 @@
    - [geo_get_current_camera](functions-6.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-6.md#geo_get_current_held_object)
    - [texture_to_lua_table](functions-6.md#texture_to_lua_table)
+   - [get_texture_name](functions-6.md#get_texture_name)
 
 <br />
 

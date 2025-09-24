@@ -481,5 +481,34 @@ enum SkyBackgroundParams {
     CMD_BBH(0x23, 0x00, param), \
     CMD_W(luaTokenIndex)
 
+/**
+ * 0x24: Create a scene graph node that is rotated by the object's animation + an initial rotation with optional default scale
+ *   0x01: u8 params/drawingLayer
+ *      0b1000_0000 if set, enable scale and drawingLayer field
+ *      0b0000_1111 drawingLayer
+ *   0x02-0x03: unused
+ *   0x04: s16 xTranslation
+ *   0x06: s16 yTranslation
+ *   0x08: s16 zTranslation
+ *   0x0A: s16 xRotation
+ *   0x0C: s16 yRotation
+ *   0x0E: s16 zRotation
+ *   if MSbit of params is set:
+ *      0x10: u32 xScale
+ *      0x14: u32 yScale
+ *      0x18: u32 zScale
+ *      0x1C: displayList: display list segmented address
+ *   else:
+ *      0x10: displayList: display list segmented address
+ */
+#define GEO_BONE(layer, tx, ty, tz, rx, ry, rz, displayList) \
+    CMD_BBH(0x24, (0x00 | layer), 0x0000), \
+    CMD_HHHHHH(tx, ty, tz, rx, ry, rz), \
+    CMD_PTR(displayList)
+#define GEO_BONE_WITH_SCALE(layer, tx, ty, tz, rx, ry, rz, sx, sy, sz, displayList) \
+    CMD_BBH(0x24, (0x80 | layer), 0x0000), \
+    CMD_HHHHHH(tx, ty, tz, rx, ry, rz), \
+    CMD_W(sx), CMD_W(sy), CMD_W(sz), \
+    CMD_PTR(displayList)
 
 #endif // GEO_COMMANDS_H

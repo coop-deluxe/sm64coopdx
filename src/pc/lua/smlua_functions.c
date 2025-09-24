@@ -10,6 +10,7 @@
 #include "game/mario_actions_stationary.h"
 #include "audio/external.h"
 #include "object_fields.h"
+#include "level_commands.h"
 #include "engine/math_util.h"
 #include "engine/level_script.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -433,7 +434,7 @@ int smlua_func_get_texture_info(lua_State* L) {
     lua_newtable(L);
 
     lua_pushstring(L, "texture");
-    smlua_push_pointer(L, LVT_U8_P, texInfo.texture, NULL);
+    smlua_push_pointer(L, LVT_TEXTURE_P, texInfo.texture, NULL);
     lua_settable(L, -3);
 
     lua_pushstring(L, "bitSize");
@@ -492,6 +493,30 @@ struct LuaLevelScriptParse {
 
 struct LuaLevelScriptParse sLevelScriptParse = { 0 };
 
+static bool smlua_func_level_find_lua_param(u64 *param, void *cmd, u32 offset, u32 luaParams, u32 luaParamFlag) {
+    *param = dynos_level_cmd_get(cmd, offset);
+    if (luaParams & luaParamFlag) {
+        const char *paramStr = dynos_level_get_token(*param);
+        gSmLuaConvertSuccess = true;
+        *param = smlua_get_integer_mod_variable(gLevelScriptModIndex, paramStr);
+        if (!gSmLuaConvertSuccess) {
+            gSmLuaConvertSuccess = true;
+            *param = smlua_get_any_integer_mod_variable(paramStr);
+        }
+        if (!gSmLuaConvertSuccess) {
+            return false;
+        }
+    }
+    return true;
+}
+
+#define smlua_func_level_get_lua_param(name, ptype, flag) \
+    u64 name##Param; \
+    if (!smlua_func_level_find_lua_param(&name##Param, cmd, flag##_OFFSET(type), luaParams, flag)) { \
+        break; \
+    } \
+    ptype name = (ptype) name##Param;
+
 s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
     u32 areaIndex, bhvId, bhvArgs, bhvModelId;
     s16 bhvPosX, bhvPosY, bhvPosZ;
@@ -513,7 +538,7 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
             const BehaviorScript *bhvPtr = (const BehaviorScript *) dynos_level_cmd_get(cmd, 20);
             if (bhvPtr) {
                 bhvId = get_id_from_behavior(bhvPtr);
-                if (bhvId == id_bhv1Up) {
+                if (bhvId == id_bhv_max_count) {
                     bhvId = get_id_from_vanilla_behavior(bhvPtr); // for behaviors with no id in the script (e.g. bhvInstantActiveWarp)
                 }
                 bhvArgs = dynos_level_cmd_get(cmd, 16);
@@ -529,54 +554,46 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
         } break;
 
         // OBJECT_EXT, OBJECT_WITH_ACTS_EXT
-        case 0x3F: {
-            if (gLevelScriptModIndex != -1) {
-                const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 20));
-                if (bhvStr) {
-                    gSmLuaConvertSuccess = true;
-                    bhvId = smlua_get_integer_mod_variable(gLevelScriptModIndex, bhvStr);
-                    if (!gSmLuaConvertSuccess) {
-                        gSmLuaConvertSuccess = true;
-                        bhvId = smlua_get_any_integer_mod_variable(bhvStr);
-                    }
-                    if (gSmLuaConvertSuccess) {
-                        bhvArgs = dynos_level_cmd_get(cmd, 16);
-                        bhvModelId = dynos_level_cmd_get(cmd, 3);
-                        bhvPosX = dynos_level_cmd_get(cmd, 4);
-                        bhvPosY = dynos_level_cmd_get(cmd, 6);
-                        bhvPosZ = dynos_level_cmd_get(cmd, 8);
-                        bhvPitch = (dynos_level_cmd_get(cmd, 10) * 0x8000) / 180;
-                        bhvYaw   = (dynos_level_cmd_get(cmd, 12) * 0x8000) / 180;
-                        bhvRoll  = (dynos_level_cmd_get(cmd, 14) * 0x8000) / 180;
-                        bhv = true;
-                    }
-                }
-            }
-        } break;
-
         // OBJECT_EXT2, OBJECT_WITH_ACTS_EXT2
-        case 0x40: {
+        // OBJECT_EXT_LUA_PARAMS
+        case 0x3F:
+        case 0x40:
+        case 0x43: {
             if (gLevelScriptModIndex != -1) {
-                const char *bhvStr = dynos_level_get_token(dynos_level_cmd_get(cmd, 24));
-                if (bhvStr) {
-                    gSmLuaConvertSuccess = true;
-                    bhvId = smlua_get_integer_mod_variable(gLevelScriptModIndex, bhvStr);
-                    if (!gSmLuaConvertSuccess) {
-                        gSmLuaConvertSuccess = true;
-                        bhvId = smlua_get_any_integer_mod_variable(bhvStr);
-                    }
-                    if (gSmLuaConvertSuccess) {
-                        bhvArgs = dynos_level_cmd_get(cmd, 16);
-                        bhvModelId = dynos_level_cmd_get(cmd, 3);
-                        bhvPosX = dynos_level_cmd_get(cmd, 4);
-                        bhvPosY = dynos_level_cmd_get(cmd, 6);
-                        bhvPosZ = dynos_level_cmd_get(cmd, 8);
-                        bhvPitch = (dynos_level_cmd_get(cmd, 10) * 0x8000) / 180;
-                        bhvYaw   = (dynos_level_cmd_get(cmd, 12) * 0x8000) / 180;
-                        bhvRoll  = (dynos_level_cmd_get(cmd, 14) * 0x8000) / 180;
-                        bhv = true;
+                u16 luaParams = (
+                    type == 0x3F ? OBJECT_EXT_LUA_BEHAVIOR : (
+                    type == 0x40 ? OBJECT_EXT_LUA_BEHAVIOR | OBJECT_EXT_LUA_MODEL : (
+                    dynos_level_cmd_get(cmd, 2)
+                )));
+
+                smlua_func_level_get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
+                smlua_func_level_get_lua_param(posX, s16, OBJECT_EXT_LUA_POS_X);
+                smlua_func_level_get_lua_param(posY, s16, OBJECT_EXT_LUA_POS_Y);
+                smlua_func_level_get_lua_param(posZ, s16, OBJECT_EXT_LUA_POS_Z);
+                smlua_func_level_get_lua_param(angleX, s16, OBJECT_EXT_LUA_ANGLE_X);
+                smlua_func_level_get_lua_param(angleY, s16, OBJECT_EXT_LUA_ANGLE_Y);
+                smlua_func_level_get_lua_param(angleZ, s16, OBJECT_EXT_LUA_ANGLE_Z);
+                smlua_func_level_get_lua_param(behParam, u32, OBJECT_EXT_LUA_BEH_PARAMS);
+                smlua_func_level_get_lua_param(behavior, uintptr_t, OBJECT_EXT_LUA_BEHAVIOR);
+
+                bhvArgs = behParam;
+                bhvModelId = modelId;
+                bhvPosX = posX;
+                bhvPosY = posY;
+                bhvPosZ = posZ;
+                bhvPitch = angleX;
+                bhvYaw = angleY;
+                bhvRoll = angleZ;
+                if (luaParams & OBJECT_EXT_LUA_BEHAVIOR) {
+                    bhvId = (u32) behavior;
+                } else {
+                    bhvId = get_id_from_behavior((const BehaviorScript *) behavior);
+                    if (bhvId == id_bhv_max_count) {
+                        bhvId = get_id_from_vanilla_behavior((const BehaviorScript *) behavior);
                     }
                 }
+
+                bhv = true;
             }
         } break;
 
@@ -883,6 +900,7 @@ static GraphNodeLot graphNodeLots[] = {
     { GRAPH_NODE_TYPE_SWITCH_CASE, LOT_GRAPHNODESWITCHCASE },
     { GRAPH_NODE_TYPE_TRANSLATION, LOT_GRAPHNODETRANSLATION },
     { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, LOT_GRAPHNODETRANSLATIONROTATION },
+    { GRAPH_NODE_TYPE_BONE, LOT_GRAPHNODEBONE },
 };
 
 int smlua_func_cast_graph_node(lua_State* L) {

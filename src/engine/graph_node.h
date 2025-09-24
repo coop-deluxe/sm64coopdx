@@ -51,6 +51,7 @@
 #define GRAPH_NODE_TYPE_BACKGROUND           (0x02C | GRAPH_NODE_TYPE_FUNCTIONAL)
 #define GRAPH_NODE_TYPE_HELD_OBJ             (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
 #define GRAPH_NODE_TYPE_CULLING_RADIUS        0x02F
+#define GRAPH_NODE_TYPE_BONE                  0x030
 
 // The number of master lists. A master list determines the order and render
 // mode with which display lists are drawn.
@@ -377,6 +378,18 @@ struct GraphNodeCullingRadius
     u8 pad1E[2];
 };
 
+/**
+ * GraphNodeAnimatedPart with initial rotation and scale values.
+ */
+struct GraphNodeBone
+{
+    struct GraphNode node;
+    Gfx *displayList;
+    Vec3s translation;
+    Vec3s rotation;
+    Vec3f scale;
+};
+
 extern struct GraphNodeMasterList *gCurGraphNodeMasterList;
 extern struct GraphNodePerspective *gCurGraphNodeCamFrustum;
 extern struct GraphNodeCamera *gCurGraphNodeCamera;
@@ -433,6 +446,11 @@ struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool,
 struct GraphNodeHeldObject *init_graph_node_held_object(struct DynamicPool *pool, struct GraphNodeHeldObject *sp1c,
                                                         struct Object *objNode, Vec3s translation,
                                                         GraphNodeFunc nodeFunc, s32 playerIndex);
+struct GraphNodeBone *init_graph_node_bone(struct DynamicPool *pool,
+                                           struct GraphNodeBone *graphNode,
+                                           s32 drawingLayer, void *displayList,
+                                           Vec3s translation, Vec3s rotation,
+                                           Vec3f scale);
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode);
 struct GraphNode* geo_remove_child_from_parent(struct GraphNode* parent, struct GraphNode* graphNode);
 struct GraphNode *geo_remove_child(struct GraphNode *graphNode);

@@ -19,8 +19,8 @@ _ReadOnlyTable = {
         local _table = rawget(t, '_table')
         return _table[k]
     end,
-    __newindex = function (t,k,v)
-    end
+    __newindex = function (_,k,_) error('Attempting to modify key `' .. k .. '` of read-only table') end,
+    __metatable = false
 }
 
 -----------
@@ -2944,6 +2944,9 @@ G_TEXRECT = 0xe4
 --- @type integer
 G_VTX_EXT = 0x11
 
+--- @type integer
+G_PPARTTOCOLOR = 0xd3
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -3070,6 +3073,9 @@ GRAPH_NODE_TYPE_HELD_OBJ = (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
 
 --- @type integer
 GRAPH_NODE_TYPE_CULLING_RADIUS = 0x02F
+
+--- @type integer
+GRAPH_NODE_TYPE_BONE = 0x030
 
 --- @type integer
 GFX_NUM_MASTER_LISTS = 8
@@ -11052,6 +11058,9 @@ ANIM_FLAG_6 = (1 << 6)
 
 --- @type integer
 ANIM_FLAG_7 = (1 << 7)
+
+--- @type integer
+ANIM_FLAG_BONE_TRANS = (1 << 8)
 
 --- @type integer
 OBJECT_MAX_BHV_STACK = 16

@@ -3446,10 +3446,33 @@ Gets the texture from a display list command if it has an image related op
 | cmd | `Pointer` <`Gfx`> |
 
 ### Returns
-- `Pointer` <`integer`>
+- `Pointer` <`Texture`>
 
 ### C Prototype
-`u8 *gfx_get_texture(Gfx *cmd);`
+`Texture *gfx_get_texture(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_name](#gfx_get_name)
+
+### Description
+Gets the name of a display list
+
+### Lua Example
+`local stringValue = gfx_get_name(gfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *gfx_get_name(Gfx *gfx);`
 
 [:arrow_up_small:](#)
 
@@ -3637,6 +3660,29 @@ Deletes all display lists created by `gfx_create`
 
 ### C Prototype
 `void gfx_delete_all();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_name](#vtx_get_name)
+
+### Description
+Gets the name of a vertex buffer
+
+### Lua Example
+`local stringValue = vtx_get_name(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *vtx_get_name(Vtx *vtx);`
 
 [:arrow_up_small:](#)
 
@@ -5951,7 +5997,7 @@ Gets the current GraphNodeHeldObject
 ## [texture_to_lua_table](#texture_to_lua_table)
 
 ### Description
-Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
 
 ### Lua Example
 `texture_to_lua_table(tex)`
@@ -5959,13 +6005,36 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| tex | `Pointer` <`integer`> |
+| tex | `Pointer` <`Texture`> |
 
 ### Returns
 - None
 
 ### C Prototype
-`void texture_to_lua_table(const u8 *tex);`
+`void texture_to_lua_table(const Texture *tex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_texture_name](#get_texture_name)
+
+### Description
+Gets the name of the provided texture pointer `tex`
+
+### Lua Example
+`local stringValue = get_texture_name(tex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`Texture`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_texture_name(const Texture *tex);`
 
 [:arrow_up_small:](#)
 

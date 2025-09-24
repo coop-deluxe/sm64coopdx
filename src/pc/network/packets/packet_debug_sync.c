@@ -15,7 +15,6 @@ void print_sync_object_table(void) {
         if (so->o->oSyncID != so->id) {
             LOG_INFO("^^^^^^^^^^^^^^^^^^^^^ %u != %u", so->o->oSyncID, so->id);
         }
-        behaviorId = behaviorId; // suppress warning
     }
     LOG_INFO(" ");
 }

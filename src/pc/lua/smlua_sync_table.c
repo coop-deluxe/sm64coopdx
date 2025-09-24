@@ -144,7 +144,6 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
 
         // call hook
         struct Mod* prevActiveMod = gLuaActiveMod;
-        struct ModFile* prevActiveModFile = gLuaActiveModFile;
 
         gLuaActiveMod = mod;
         gLuaActiveModFile = NULL;
@@ -156,7 +155,6 @@ static void smlua_sync_table_call_hook(int syncTableIndex, int keyIndex, int pre
         }
 
         gLuaActiveMod = prevActiveMod;
-        prevActiveModFile = prevActiveModFile;
     }
 
     lua_pop(L, 1); // pop _hook_on_changed's value
@@ -181,12 +179,11 @@ static bool smlua_sync_table_send_field(u8 toLocalIndex, int stackIndex, bool al
     }
 
     // get key
-    struct LSTNetworkType lntKey = smlua_to_lnt(L, keyIndex);
+    smlua_to_lnt(L, keyIndex);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA_LINE("Error: tried to alter sync table with an invalid key");
         return false;
     }
-    lntKey = lntKey;
 
 
       ////////////////

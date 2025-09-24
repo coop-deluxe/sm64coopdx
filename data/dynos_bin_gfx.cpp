@@ -405,6 +405,14 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     gfx_constant(G_LIGHT_MAP_EXT);
     gfx_constant(G_LIGHTING_ENGINE_EXT);
     gfx_constant(G_PACKED_NORMALS_EXT);
+    gfx_constant(G_FRESNEL_COLOR_EXT);
+    gfx_constant(G_FRESNEL_ALPHA_EXT);
+
+    gfx_constant(G_COL_PRIM);
+    gfx_constant(G_COL_ENV);
+
+    gfx_constant(G_CP_LIGHT);
+    gfx_constant(G_CP_AMBIENT);
 
     // Common values
     gfx_constant(CALC_DXT(4,G_IM_SIZ_4b_BYTES));
@@ -1205,7 +1213,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         case GFX_PARAM_TYPE_TEX: return ConvertParam<Texture *>(
             L, aGfxData, paramIndex,
             "Texture pointer",
-            [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_U8_P); },
+            [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_TEXTURE_P); },
             [&aGfxData] (Texture *texture) { return CreateRawPointerDataNode(aGfxData, texture); }
         );
 

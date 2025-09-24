@@ -3950,6 +3950,34 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- Sets the viewport to the specified position and size, this will resize
+function djui_hud_set_viewport(x, y, width, height)
+    -- ...
+end
+
+--- put the description here
+function djui_hud_reset_viewport()
+    -- ...
+end
+
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- put the description here
+function djui_hud_set_scissor(x, y, width, height)
+    -- ...
+end
+
+--- put the description here
+function djui_hud_reset_scissor()
+    -- ...
+end
+
 --- @param message string
 --- @return number
 --- Measures the length of `message` in the current font
@@ -4053,6 +4081,16 @@ end
 --- @param height number
 --- Renders an interpolated DJUI HUD rect onto the screen
 function djui_hud_render_rect_interpolated(prevX, prevY, prevWidth, prevHeight, x, y, width, height)
+    -- ...
+end
+
+--- @param p1X number
+--- @param p1Y number
+--- @param p2X number
+--- @param p2Y number
+--- @param size number
+--- Renders an DJUI HUD line onto the screen
+function djui_hud_render_line(p1X, p1Y, p2X, p2Y, size)
     -- ...
 end
 
@@ -10738,9 +10776,16 @@ function gfx_get_vertex_count(cmd)
 end
 
 --- @param cmd Pointer_Gfx
---- @return Pointer_integer
+--- @return Pointer_Texture
 --- Gets the texture from a display list command if it has an image related op
 function gfx_get_texture(cmd)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @return string
+--- Gets the name of a display list
+function gfx_get_name(gfx)
     -- ...
 end
 
@@ -10797,6 +10842,13 @@ end
 
 --- Deletes all display lists created by `gfx_create`
 function gfx_delete_all()
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @return string
+--- Gets the name of a vertex buffer
+function vtx_get_name(vtx)
     -- ...
 end
 
@@ -11476,9 +11528,16 @@ function geo_get_current_held_object()
     -- ...
 end
 
---- @param tex Pointer_integer
---- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+--- @param tex Pointer_Texture
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
 function texture_to_lua_table(tex)
+    -- ...
+end
+
+--- @param tex Pointer_Texture
+--- @return string
+--- Gets the name of the provided texture pointer `tex`
+function get_texture_name(tex)
     -- ...
 end
 
@@ -12301,6 +12360,7 @@ end
 --- @alias Pointer_Collision Collision
 --- @alias Pointer_Gfx Gfx
 --- @alias Pointer_Vtx Vtx
+--- @alias Pointer_Texture Texture
 --- @alias Vec2fp Vec2f
 --- @alias Vec3fp Vec3f
 --- @alias Vec4fp Vec4f

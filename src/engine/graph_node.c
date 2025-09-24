@@ -552,6 +552,30 @@ struct GraphNodeHeldObject *init_graph_node_held_object(struct DynamicPool *pool
 }
 
 /**
+ * Allocates and returns a newly created bone node with initial rotation/translation
+ */
+struct GraphNodeBone *init_graph_node_bone(struct DynamicPool *pool,
+                                           struct GraphNodeBone *graphNode,
+                                           s32 drawingLayer, void *displayList,
+                                           Vec3s translation, Vec3s rotation,
+                                           Vec3f scale) {
+    if (pool != NULL) {
+        graphNode = dynamic_pool_alloc(pool, sizeof(struct GraphNodeBone));
+    }
+
+    if (graphNode != NULL) {
+        init_scene_graph_node_links(&graphNode->node, GRAPH_NODE_TYPE_BONE);
+        vec3s_copy(graphNode->translation, translation);
+        vec3s_copy(graphNode->rotation, rotation);
+        vec3f_copy(graphNode->scale, scale);
+        graphNode->node.flags = (drawingLayer << 8) | (graphNode->node.flags & 0xFF);
+        graphNode->displayList = dynos_gfx_get_writable_display_list(displayList);
+    }
+
+    return graphNode;
+}
+
+/**
  * Adds 'childNode' to the end of the list children from 'parent'
  */
 struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *childNode) {
