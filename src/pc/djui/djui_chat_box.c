@@ -542,6 +542,19 @@ void djui_chat_box_toggle(void) {
     gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
 }
 
+void djui_chat_box_open_with_text(const char* text) {
+    if (gDjuiChatBox == NULL) { return; }
+    if (!gDjuiChatBoxFocus) {
+        sDjuiChatBoxClearText = false;
+        gDjuiChatBoxFocus = true;
+        djui_chat_box_set_focus_style();
+    }
+    if (gDjuiChatBox->chatInput != NULL && text != NULL) {
+        djui_inputbox_set_text(gDjuiChatBox->chatInput, (char*)text);
+        djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
+    }
+}
+
 struct DjuiChatBox* djui_chat_box_create(void) {
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);

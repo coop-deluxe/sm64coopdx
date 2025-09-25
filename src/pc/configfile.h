@@ -80,6 +80,7 @@ extern unsigned int configKeyStickDown[MAX_BINDS];
 extern unsigned int configKeyStickLeft[MAX_BINDS];
 extern unsigned int configKeyStickRight[MAX_BINDS];
 extern unsigned int configKeyChat[MAX_BINDS];
+extern unsigned int configKeyChatCommand[MAX_BINDS];
 extern unsigned int configKeyPlayerList[MAX_BINDS];
 extern unsigned int configKeyDUp[MAX_BINDS];
 extern unsigned int configKeyDDown[MAX_BINDS];
