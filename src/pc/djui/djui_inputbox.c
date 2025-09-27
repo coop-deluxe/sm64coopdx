@@ -447,6 +447,60 @@ static void djui_inputbox_render_char(struct DjuiInputbox* inputbox, char* c, f3
     *additionalShift += charWidth;
 }
 
+static void djui_inputbox_render_preview_text(struct DjuiInputbox* inputbox) {
+    // Always show debug preview when focused (remove all conditions for testing)
+    if (!djui_interactable_is_input_focus(&inputbox->base)) {
+        return;
+    }
+    
+    const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    struct DjuiBaseRect* comp = &inputbox->base.comp;
+    
+    // Calculate current text width
+    f32 currentTextWidth = 0;
+    char* c = inputbox->buffer;
+    while (*c != '\0') {
+        char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
+        currentTextWidth += font->char_width(dc) * font->defaultFontScale;
+        c = djui_unicode_next_char(c);
+    }
+    
+    // Calculate preview position - use absolute positioning
+    f32 previewX = comp->x + inputbox->viewX + currentTextWidth + 50; // Add 50px offset
+    f32 previewY = comp->y + DJUI_INPUTBOX_YOFF + 30; // Move down 30px
+    
+    // Apply position translation
+    djui_gfx_position_translate(&previewX, &previewY);
+    
+    // Create translation matrix for the preview text
+    create_dl_translation_matrix(DJUI_MTX_PUSH, previewX, previewY, 0);
+    f32 translatedFontSize = font->defaultFontScale;
+    djui_gfx_size_translate(&translatedFontSize);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
+    
+    // Set bright red color for debug visibility
+    gDPSetEnvColor(gDisplayListHead++, 255, 0, 0, 255);
+    
+    // Begin font rendering
+    if (font->textBeginDisplayList != NULL) {
+        gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
+    }
+    
+    // Render debug text
+    char testText[] = "DEBUG";
+    char* testChar = testText;
+    while (*testChar != '\0') {
+        font->render_char(testChar);
+        f32 charWidth = font->char_width(testChar);
+        previewX += charWidth * font->defaultFontScale;
+        testChar = djui_unicode_next_char(testChar);
+    }
+    
+    // Clean up matrices
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
+
 static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
 
@@ -576,6 +630,9 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
         gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
     }
 
+    // render preview text (for tab completion) - after font setup
+    // djui_inputbox_render_preview_text(inputbox);
+
     // set color
     gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
 
@@ -616,6 +673,31 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
         // render character
         djui_inputbox_render_char(inputbox, c, &drawX, &additionalShift);
         c = djui_unicode_next_char(c);
+    }
+    
+    // Tab completion preview - show what would happen if TAB was pressed
+    if (djui_interactable_is_input_focus(&inputbox->base) && inputbox->buffer[0] == '/') {
+        // Get preview text from tab completion function
+        extern char* get_next_tab_completion_preview(const char* input);
+        char* previewText = get_next_tab_completion_preview(inputbox->buffer);
+        
+        if (previewText != NULL && strlen(previewText) > 0) {
+            // Set gray color for preview text
+            gDPSetEnvColor(gDisplayListHead++, 128, 128, 128, 128);
+            
+            // Render preview text at the current position
+            char* previewChar = previewText;
+            while (*previewChar != '\0') {
+                djui_inputbox_render_char(inputbox, previewChar, &drawX, &additionalShift);
+                previewChar = djui_unicode_next_char(previewChar);
+            }
+            
+            // Free the preview text
+            free(previewText);
+            
+            // Reset color back to normal
+            gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+        }
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

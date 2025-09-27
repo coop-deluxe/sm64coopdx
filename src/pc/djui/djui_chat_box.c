@@ -335,6 +335,75 @@ static bool complete_player_name(const char* namePrefix, bool reverse) {
     return completionSuccess;
 }
 
+char* get_next_tab_completion_preview(const char* input) {
+    if (input[0] != '/') {
+        return NULL;
+    }
+    
+    char* spacePosition = strrchr(input, ' ');
+    if (spacePosition != NULL) {
+        // Subcommand completion
+        char* mainCommand = get_main_command_from_input(input);
+        if (mainCommand) {
+            char** subcommands = smlua_get_chat_subcommands_list(mainCommand + 1);
+            if (subcommands && subcommands[0]) {
+                s32 foundSubCommandsCount = 0;
+                
+                // Count matching subcommands
+                for (s32 i = 0; subcommands[i] != NULL; i++) {
+                    if (strncmp(subcommands[i], spacePosition + 1, strlen(spacePosition + 1)) == 0) {
+                        foundSubCommandsCount++;
+                    }
+                }
+                
+                if (foundSubCommandsCount > 0) {
+                    // Find the first matching subcommand
+                    for (s32 i = 0; subcommands[i] != NULL; i++) {
+                        if (strncmp(subcommands[i], spacePosition + 1, strlen(spacePosition + 1)) == 0) {
+                            char* preview = malloc(MAX_CHAT_MSG_LENGTH);
+                            // Only show the missing part of the subcommand
+                            char* inputSubcommand = spacePosition + 1;
+                            char* missingPart = subcommands[i] + strlen(inputSubcommand);
+                            snprintf(preview, MAX_CHAT_MSG_LENGTH, "%s", missingPart);
+                            free(mainCommand);
+                            return preview;
+                        }
+                    }
+                }
+            }
+            free(mainCommand);
+        }
+    } else {
+        // Main command completion
+        char* bufferWithoutSlash = (char*)input + 1;
+        char** commands = smlua_get_chat_maincommands_list();
+        if (commands && commands[0]) {
+            s32 foundCommandsCount = 0;
+            
+            // Count matching commands
+            for (s32 i = 0; commands[i] != NULL; i++) {
+                if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
+                    foundCommandsCount++;
+                }
+            }
+            
+            if (foundCommandsCount > 0) {
+                // Find the first matching command
+                for (s32 i = 0; commands[i] != NULL; i++) {
+                    if (strncmp(commands[i], bufferWithoutSlash, strlen(bufferWithoutSlash)) == 0) {
+                        char* preview = malloc(MAX_CHAT_MSG_LENGTH);
+                        // Only show the missing part of the command
+                        snprintf(preview, MAX_CHAT_MSG_LENGTH, "%s", commands[i] + strlen(bufferWithoutSlash));
+                        return preview;
+                    }
+                }
+            }
+        }
+    }
+    
+    return NULL;
+}
+
 static void handle_tab_completion(bool reverse) {
     bool alreadyTabCompleted = false;
     if (gDjuiChatBox->chatInput->buffer[0] == '/') {
