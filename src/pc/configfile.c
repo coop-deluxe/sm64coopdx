@@ -132,7 +132,7 @@ unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
-bool         configUseStandardKeyBindingsChat     = false;
+bool         configUseStandardKeyBindingsChat     = true;
 bool         configSmoothScrolling                = false;
 // free camera settings
 bool         configEnableFreeCamera               = false;
