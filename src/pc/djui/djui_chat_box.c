@@ -54,6 +54,11 @@ void sent_history_init(ArrayList *arrayList) {
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
     if (!configUseStandardKeyBindingsChat && (!newMessage || newMessage[0] != '/')) { return; }
 
+    // Don't add duplicate messages - check if the new message is the same as the last one
+    if (arrayList->size > 0 && strcmp(arrayList->messages[arrayList->size - 1], newMessage) == 0) {
+        return;
+    }
+
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
             snprintf(arrayList->messages[i-1], MAX_CHAT_MSG_LENGTH, "%s", arrayList->messages[i]);
