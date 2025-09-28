@@ -187,7 +187,7 @@ jobs:
                 curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11"
+                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew
                 make install GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
 
             - name: Compile SDL2
