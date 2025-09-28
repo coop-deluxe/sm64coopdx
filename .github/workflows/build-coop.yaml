@@ -187,7 +187,7 @@ jobs:
                 curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew
+                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11"
                 make install GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
 
             - name: Compile SDL2
@@ -201,6 +201,7 @@ jobs:
 
             - name: Build the game
               run: |
+                export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
             - name: Code sign the app (Ad-Hoc)
