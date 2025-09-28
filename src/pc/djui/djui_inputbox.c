@@ -694,7 +694,11 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
             if (insideSelection && !wasInsideSelection) {
                 gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
             } else if (!insideSelection && wasInsideSelection) {
-                gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+                if (isChatInput) {
+                    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+                } else {
+                    gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+                }
             }
             wasInsideSelection = insideSelection;
         }
