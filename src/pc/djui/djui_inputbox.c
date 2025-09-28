@@ -731,6 +731,73 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+
+    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base)) {
+        char charCountText[32];
+        int currentLength = djui_unicode_len(inputbox->buffer);
+        snprintf(charCountText, sizeof(charCountText), "%d", currentLength);
+        
+        f32 originalX = comp->x;
+        f32 originalY = comp->y;
+        f32 originalWidth = comp->width;
+        
+        if (isChatInput) {
+            originalX -= 6;
+            originalY += 1;
+            originalWidth += 6;
+        } else {
+            originalX -= 2;
+            originalWidth += 2;
+        }
+        
+        f32 counterX = originalX + originalWidth + 10 - 3;
+        f32 counterY = originalY + (comp->height - font->lineHeight * font->defaultFontScale) * 0.5f - 3;
+        
+        djui_gfx_position_translate(&counterX, &counterY);
+        create_dl_translation_matrix(DJUI_MTX_PUSH, counterX, counterY, 0);
+        
+        f32 translatedFontSize = font->defaultFontScale;
+        djui_gfx_size_translate(&translatedFontSize);
+        create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
+        
+        u8 colR = 255, colG = 255, colB = 255;
+        if (currentLength >= 499) {
+            colG = 0;  colB = 0;
+        } else if (currentLength >= 256) {
+            colG = 128;  colB = 64;
+        } else if (currentLength >= 192) {
+            colG = 192; colB = 64;
+        } else if (currentLength >= 128) {
+            colG = 255; colB = 64;
+        }
+        gDPSetEnvColor(gDisplayListHead++, colR, colG, colB, 255);
+        
+        if (font->textBeginDisplayList != NULL) {
+            gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
+        }
+        
+        char* c = charCountText;
+        while (*c != '\0') {
+            font->render_char(c);
+            f32 cw = font->char_width(c);
+            create_dl_translation_matrix(DJUI_MTX_NOPUSH, cw, 0, 0);
+            c = djui_unicode_next_char(c);
+        }
+        
+        gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+        
+        gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    }
+
+    if (isChatInput) {
+        comp->x -= 6;
+        comp->y += 1;
+        comp->width += 6;
+    } else {
+        comp->x -= 2;
+        comp->width += 2;
+    }
+
     return true;
 }
 
