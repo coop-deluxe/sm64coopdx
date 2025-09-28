@@ -187,8 +187,23 @@ jobs:
                 curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
                 tar -xzf glew.tar.gz
                 cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11"
+                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew
                 make install GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
+                cat > glew.pc <<'EOF'
+                prefix=/opt/homebrew
+                exec_prefix=${prefix}
+                libdir=${exec_prefix}/lib
+                includedir=${prefix}/include
+            
+                Name: glew
+                Description: The OpenGL Extension Wrangler library
+                Version: 2.2.0
+                Cflags: -I${includedir}
+                Libs: -L${libdir} -lGLEW -framework OpenGL
+                EOF
+            
+                sudo mkdir -p /opt/homebrew/lib/pkgconfig
+                sudo cp glew.pc /opt/homebrew/lib/pkgconfig/
 
             - name: Compile SDL2
               run: |
