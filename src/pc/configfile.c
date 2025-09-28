@@ -133,6 +133,7 @@ unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = true;
+unsigned int configChatWidth                      = 800;
 bool         configSmoothScrolling                = false;
 // free camera settings
 bool         configEnableFreeCamera               = false;
@@ -279,6 +280,7 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
+    {.name = "chat_width",                     .type = CONFIG_TYPE_UINT, .uintValue = &configChatWidth},
     {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},
     {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
     {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},

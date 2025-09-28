@@ -42,6 +42,28 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #endif
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
+        static unsigned int sChatWidthIndex = 3;
+        switch (configChatWidth) {
+            case 500: sChatWidthIndex = 0; break;
+            case 600: sChatWidthIndex = 1; break;
+            case 700: sChatWidthIndex = 2; break;
+            case 800: sChatWidthIndex = 3; break;
+            case 900: sChatWidthIndex = 4; break;
+            case 1000: sChatWidthIndex = 5; break;
+            default: sChatWidthIndex = 3; break;
+        }
+
+        char* chatWidthChoices[] = { "500", "600", "700", "800", "900", "1000" };
+        void on_chat_width_change(struct DjuiBase* b) {
+            unsigned int idx = sChatWidthIndex;
+            unsigned int widths[] = {500,600,700,800,900,1000};
+            configChatWidth = widths[idx];
+            if (gDjuiChatBox != NULL) {
+                djui_base_set_size(&gDjuiChatBox->base, configChatWidth, gDjuiChatBox->base.height.value);
+            }
+        }
+        djui_selectionbox_create(body, DLANG(MISC, CHAT_WIDTH), chatWidthChoices, 6, &sChatWidthIndex, on_chat_width_change);
+
 #ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
