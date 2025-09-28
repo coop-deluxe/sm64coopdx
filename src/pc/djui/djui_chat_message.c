@@ -28,6 +28,8 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
         djui_base_set_color(ctBase, 255, 255, 255, 255);
         djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
+    } else if (configDisableChatWhenClosed) {
+        return false;
     } else if (f <= 0.1f) {
         return false;
     } else {

@@ -42,6 +42,9 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #endif
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
+        djui_checkbox_create(body, DLANG(MISC, CHAT_CHAR_COUNTER), &configChatCharCounter, NULL);
+        djui_checkbox_create(body, DLANG(MISC, DISABLE_CHAT_WHEN_CLOSED), &configDisableChatWhenClosed, NULL);
+
         static unsigned int sChatWidthIndex = 3;
         switch (configChatWidth) {
             case 500: sChatWidthIndex = 0; break;
@@ -50,19 +53,20 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             case 800: sChatWidthIndex = 3; break;
             case 900: sChatWidthIndex = 4; break;
             case 1000: sChatWidthIndex = 5; break;
+            case 1100: sChatWidthIndex = 6; break;
             default: sChatWidthIndex = 3; break;
         }
 
-        char* chatWidthChoices[] = { "500", "600", "700", "800", "900", "1000" };
-        void on_chat_width_change(struct DjuiBase* b) {
+        char* chatWidthChoices[] = { DLANG(MISC, CHAT_WIDTH_TINY), DLANG(MISC, CHAT_WIDTH_VERY_SMALL), DLANG(MISC, CHAT_WIDTH_SMALL), DLANG(MISC, CHAT_WIDTH_NORMAL), DLANG(MISC, CHAT_WIDTH_BIG), DLANG(MISC, CHAT_WIDTH_VERY_BIG), DLANG(MISC, CHAT_WIDTH_HUGE) };
+        void on_chat_width_change(UNUSED struct DjuiBase* b) {
             unsigned int idx = sChatWidthIndex;
-            unsigned int widths[] = {500,600,700,800,900,1000};
+            unsigned int widths[] = {500,600,700,800,900,1000,1100};
             configChatWidth = widths[idx];
             if (gDjuiChatBox != NULL) {
                 djui_base_set_size(&gDjuiChatBox->base, configChatWidth, gDjuiChatBox->base.height.value);
             }
         }
-        djui_selectionbox_create(body, DLANG(MISC, CHAT_WIDTH), chatWidthChoices, 6, &sChatWidthIndex, on_chat_width_change);
+        djui_selectionbox_create(body, DLANG(MISC, CHAT_WIDTH), chatWidthChoices, 7, &sChatWidthIndex, on_chat_width_change);
 
 #ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();

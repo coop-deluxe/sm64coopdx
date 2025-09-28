@@ -8,6 +8,7 @@
 #include "pc/pc_main.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
+#include "pc/configfile.h"
 
 #define DJUI_INPUTBOX_YOFF (-2)
 #define DJUI_INPUTBOX_MAX_BLINK 50
@@ -736,7 +737,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
-    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base)) {
+    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base) && configChatCharCounter) {
         char charCountText[32];
         int currentLength = djui_unicode_len(inputbox->buffer);
         snprintf(charCountText, sizeof(charCountText), "%d", currentLength);

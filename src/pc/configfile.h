@@ -96,6 +96,8 @@ extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
+extern bool         configChatCharCounter;
+extern bool         configDisableChatWhenClosed;
 extern unsigned int configChatWidth;
 extern bool         configSmoothScrolling;
 // free camera settings
