@@ -3,12 +3,13 @@
 #include "djui.h"
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"
+#include "djui_chat_box.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
 
-#define DJUI_INPUTBOX_YOFF (-3)
+#define DJUI_INPUTBOX_YOFF (-2)
 #define DJUI_INPUTBOX_MAX_BLINK 50
 #define DJUI_INPUTBOX_MID_BLINK (DJUI_INPUTBOX_MAX_BLINK / 2)
 #define DJUI_INPUTBOX_CURSOR_WIDTH (2.0f / 32.0f)
@@ -20,6 +21,14 @@ static u8 sCursorBlink = 0;
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
+    if (gDjuiChatBox != NULL && &gDjuiChatBox->chatInput->base == base) {
+        djui_base_set_border_width(base, 0);
+        djui_base_set_border_color(base, 0, 0, 0, 0);
+        u8 alpha = gDjuiChatBoxFocus ? 200 : 150;
+        djui_base_set_color(&inputbox->base, 0, 0, 0, alpha);
+        return;
+    }
+
     if (!inputbox->base.enabled) {
         djui_base_set_border_color(base, 90, 90, 90, 255);
         djui_base_set_color(&inputbox->base, 140, 140, 140, 255);
@@ -503,6 +512,7 @@ static void djui_inputbox_render_preview_text(struct DjuiInputbox* inputbox) {
 
 static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
+    bool isChatInput = (gDjuiChatBox != NULL && &gDjuiChatBox->chatInput->base == &inputbox->base);
 
     // make selection well formed
     u16 selection[2] = { 0 };
@@ -540,7 +550,11 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
-            gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+            if (isChatInput) {
+                gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+            } else {
+                gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+            }
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
             gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         }
@@ -604,9 +618,15 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     const struct DjuiFont* font   = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
     djui_rect_render(base);
 
-    // Shift the text away from the left side a tad
-    comp->x += 2;
-    comp->width -= 2;
+    bool isChatInput = (gDjuiChatBox != NULL && &gDjuiChatBox->chatInput->base == base);
+    if (isChatInput) {
+        comp->x += 6;
+        comp->y  -= 1;
+        comp->width -= 6;
+    } else {
+        comp->x += 2;
+        comp->width -= 2;
+    }
 
     // shift the viewing window to keep the selection in view
     djui_inputbox_keep_selection_in_view(inputbox);
@@ -614,6 +634,12 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     // translate position
     f32 translatedX = comp->x + inputbox->viewX;
     f32 translatedY = comp->y + DJUI_INPUTBOX_YOFF;
+    if (isChatInput) {
+        f32 lineHeight = font->lineHeight * font->defaultFontScale;
+        f32 innerHeight = comp->height - base->borderWidth.value * 2;
+        f32 centerOffset = (innerHeight - lineHeight) * 0.5f;
+        translatedY += fmaxf(centerOffset, 0.0f);
+    }
     djui_gfx_position_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
@@ -633,8 +659,11 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     // render preview text (for tab completion) - after font setup
     // djui_inputbox_render_preview_text(inputbox);
 
-    // set color
-    gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+    if (isChatInput) {
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+    } else {
+        gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+    }
 
     // make selection well formed
     u16 selection[2] = { 0 };

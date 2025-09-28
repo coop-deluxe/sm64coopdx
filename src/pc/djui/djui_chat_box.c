@@ -105,7 +105,7 @@ void sent_history_reset_navigation(ArrayList *arrayList) {
 bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiChatBox* chatBox = (struct DjuiChatBox*)base;
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
-    djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
+    djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 18);
     if (chatBox->scrolling) {
         f32 yMax = chatBox->chatContainer->base.elem.height - chatBox->chatFlow->base.height.value;
         f32 target = chatBox->chatFlow->base.y.value + (chatBox->scrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
@@ -135,7 +135,12 @@ static void djui_chat_box_set_focus_style(void) {
         djui_interactable_set_input_focus(&gDjuiChatBox->chatInput->base);
     }
 
-    djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, gDjuiChatBoxFocus ? 128 : 0);
+    bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
+    u8 alpha = 0;
+    if (hasMessages) {
+        alpha = gDjuiChatBoxFocus ? 160 : 0;
+    }
+    djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
 }
 
 static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
@@ -640,7 +645,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
 
     djui_base_init(&gDjuiRoot->base, base, djui_chat_box_render, djui_chat_box_destroy);
     djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 600, 400);
+    djui_base_set_size(base, 800, 400);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_color(base, 0, 0, 0, 0);
     djui_base_set_padding(base, 0, 8, 8, 8);
@@ -654,12 +659,12 @@ struct DjuiChatBox* djui_chat_box_create(void) {
 
     struct DjuiFlowLayout* chatFlow = djui_flow_layout_create(ccBase);
     struct DjuiBase* cfBase = &chatFlow->base;
-    djui_base_set_location(cfBase, 0, 0);
+    djui_base_set_location(cfBase, 0, 8);
     djui_base_set_size_type(cfBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(cfBase, 1.0f, 2);
-    djui_base_set_color(cfBase, 0, 0, 0, 128);
-    djui_base_set_padding(cfBase, 2, 2, 2, 2);
-    djui_flow_layout_set_margin(chatFlow, 2);
+    djui_base_set_color(cfBase, 0, 0, 0, 64);
+    djui_base_set_padding(cfBase, 0, 2, 0, 2);
+    djui_flow_layout_set_margin(chatFlow, 0);
     djui_flow_layout_set_flow_direction(chatFlow, DJUI_FLOW_DIR_UP);
     cfBase->addChildrenToHead = true;
     cfBase->abandonAfterChildRenderFail = true;
@@ -670,6 +675,9 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);
     djui_base_set_alignment(ciBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_location(ciBase, 0, 0);
+    djui_base_set_border_width(ciBase, 0);
+
     djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
     djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);

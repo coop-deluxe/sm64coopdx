@@ -24,14 +24,14 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     }
 
     if (gDjuiChatBoxFocus) {
-        djui_base_set_color(base, 0, 0, 0, 120);
+        djui_base_set_color(base, 0, 0, 0, 0);
         djui_base_set_color(ctBase, 255, 255, 255, 255);
         djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
     } else if (f <= 0.1f) {
         return false;
     } else {
-        djui_base_set_color(base, 0, 0, 0, 180 * f);
+        djui_base_set_color(base, 0, 0, 0, 140 * f);
         djui_base_set_color(ctBase, 255, 255, 255, 255 * f);
         djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
@@ -76,8 +76,8 @@ void djui_chat_message_create(const char* message) {
     djui_base_init(&gDjuiChatBox->chatFlow->base, base, djui_chat_message_render, djui_chat_message_destroy);
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(base, 1.0f, 0);
-    djui_base_set_color(base, 0, 0, 0, 64);
-    djui_base_set_padding(base, 2, 4, 2, 4);
+    djui_base_set_color(base, 0, 0, 0, 0);
+    djui_base_set_padding(base, 0, 4, 0, 4);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
 
     f32 maxTextWidth = gDjuiChatBox->base.width.value - gDjuiChatBox->base.padding.left.value - gDjuiChatBox->base.padding.right.value - base->padding.left.value - base->padding.right.value;
