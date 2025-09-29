@@ -101,7 +101,7 @@ inline static s16 newcam_adjust_value(f32 var, f32 val, f32 limit) {
 inline static s32 newcam_ivrt(u8 axis) {
     return (
         axis == 0 ?
-        (gNewCamera.invertX ? 1 : -1) :
+        (gNewCamera.invertX ? -1 : 1) :
         (gNewCamera.invertY ? -1 : 1)
     );
 }
