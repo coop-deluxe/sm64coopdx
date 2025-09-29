@@ -782,7 +782,7 @@ else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   else ifeq ($(TARGET_RK3588),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -L$(BREW_PREFIX) -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
+    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
     EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
   else
     BACKEND_LDFLAGS += -lGL
@@ -821,7 +821,7 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
   ifeq ($(OSX_BUILD),1)
     # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
     OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
-    BACKEND_CFLAGS += -I$(BREW_PREFIX)/include -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
+    BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
   else
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
