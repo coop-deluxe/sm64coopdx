@@ -5,7 +5,6 @@
 #include "djui_panel_dynos.h"
 #include "djui_panel_options.h"
 #include "djui_panel_host.h"
-#include "djui_panel_host_settings.h"
 #include "djui_panel_client_server_settings.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
