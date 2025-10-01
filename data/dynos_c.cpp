@@ -292,6 +292,10 @@ Gfx *dynos_gfx_get(const char *name, u32 *outLength) {
     return DynOS_Gfx_Get(name, outLength);
 }
 
+const char *dynos_gfx_get_name(Gfx *gfx) {
+    return DynOS_Gfx_GetName(gfx);
+}
+
 Gfx *dynos_gfx_create(const char *name, u32 length) {
     return DynOS_Gfx_Create(name, length);
 }
@@ -310,6 +314,10 @@ void dynos_gfx_delete_all() {
 
 Vtx *dynos_vtx_get(const char *name, u32 *outCount) {
     return DynOS_Vtx_Get(name, outCount);
+}
+
+const char *dynos_vtx_get_name(Vtx *vtx) {
+    return DynOS_Vtx_GetName(vtx);
 }
 
 Vtx *dynos_vtx_create(const char *name, u32 count) {

@@ -2127,7 +2127,7 @@ Gets the current GraphNodeHeldObject
 ## [texture_to_lua_table](#texture_to_lua_table)
 
 ### Description
-Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
 
 ### Lua Example
 `texture_to_lua_table(tex)`
@@ -2135,13 +2135,36 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| tex | `Pointer` <`integer`> |
+| tex | `Pointer` <`Texture`> |
 
 ### Returns
 - None
 
 ### C Prototype
-`void texture_to_lua_table(const u8 *tex);`
+`void texture_to_lua_table(const Texture *tex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_texture_name](#get_texture_name)
+
+### Description
+Gets the name of the provided texture pointer `tex`
+
+### Lua Example
+`local stringValue = get_texture_name(tex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| tex | `Pointer` <`Texture`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_texture_name(const Texture *tex);`
 
 [:arrow_up_small:](#)
 

@@ -996,11 +996,13 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
 Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
+const char *DynOS_Gfx_GetName(Gfx *aGfx);
 Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength);
 bool DynOS_Gfx_Resize(Gfx *aGfx, u32 aNewLength);
 bool DynOS_Gfx_Delete(Gfx *aGfx);
 void DynOS_Gfx_DeleteAll();
 Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
+const char *DynOS_Vtx_GetName(Vtx *aVtx);
 Vtx *DynOS_Vtx_Create(const char *aName, u32 aCount);
 bool DynOS_Vtx_Resize(Vtx *aVtx, u32 aNewCount);
 bool DynOS_Vtx_Delete(Vtx *aVtx);

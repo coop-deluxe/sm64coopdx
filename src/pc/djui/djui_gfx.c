@@ -123,13 +123,13 @@ static u8 djui_gfx_power_of_two(u32 value) {
     }
 }
 
-void djui_gfx_render_texture(const u8* texture, u32 w, u32 h, u32 bitSize, bool filter) {
+void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u32 bitSize, bool filter) {
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
 }
 
-void djui_gfx_render_texture_tile(const u8* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
+void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
     if (!gDisplayListHead) {
         LOG_ERROR("Retrieved a null displaylist head");
         return;

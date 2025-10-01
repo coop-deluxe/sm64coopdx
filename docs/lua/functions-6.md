@@ -8024,10 +8024,33 @@ Gets the texture from a display list command if it has an image related op
 | cmd | `Pointer` <`Gfx`> |
 
 ### Returns
-- `Pointer` <`integer`>
+- `Pointer` <`Texture`>
 
 ### C Prototype
-`u8 *gfx_get_texture(Gfx *cmd);`
+`Texture *gfx_get_texture(Gfx *cmd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_get_name](#gfx_get_name)
+
+### Description
+Gets the name of a display list
+
+### Lua Example
+`local stringValue = gfx_get_name(gfx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gfx | `Pointer` <`Gfx`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *gfx_get_name(Gfx *gfx);`
 
 [:arrow_up_small:](#)
 
@@ -8215,6 +8238,29 @@ Deletes all display lists created by `gfx_create`
 
 ### C Prototype
 `void gfx_delete_all();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_name](#vtx_get_name)
+
+### Description
+Gets the name of a vertex buffer
+
+### Lua Example
+`local stringValue = vtx_get_name(vtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| vtx | `Pointer` <`Vtx`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *vtx_get_name(Vtx *vtx);`
 
 [:arrow_up_small:](#)
 

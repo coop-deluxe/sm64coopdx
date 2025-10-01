@@ -1213,7 +1213,7 @@ static String ResolveParam(lua_State *L, GfxData *aGfxData, u32 paramIndex, char
         case GFX_PARAM_TYPE_TEX: return ConvertParam<Texture *>(
             L, aGfxData, paramIndex,
             "Texture pointer",
-            [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_U8_P); },
+            [] (lua_State *L, u32 paramIndex) { return (Texture *) smlua_to_cpointer(L, paramIndex, LVT_TEXTURE_P); },
             [&aGfxData] (Texture *texture) { return CreateRawPointerDataNode(aGfxData, texture); }
         );
 

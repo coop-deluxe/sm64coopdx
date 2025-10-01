@@ -90,11 +90,13 @@ void dynos_model_clear_pool(enum ModelPool aModelPool);
 // -- gfx -- //
 Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx);
 Gfx *dynos_gfx_get(const char *name, u32 *outLength);
+const char *dynos_gfx_get_name(Gfx *gfx);
 Gfx *dynos_gfx_create(const char *name, u32 length);
 bool dynos_gfx_resize(Gfx *gfx, u32 newLength);
 bool dynos_gfx_delete(Gfx *gfx);
 void dynos_gfx_delete_all();
 Vtx *dynos_vtx_get(const char *name, u32 *outCount);
+const char *dynos_vtx_get_name(Vtx *vtx);
 Vtx *dynos_vtx_create(const char *name, u32 count);
 bool dynos_vtx_resize(Vtx *vtx, u32 newCount);
 bool dynos_vtx_delete(Vtx *vtx);

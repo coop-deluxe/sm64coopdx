@@ -577,7 +577,7 @@ struct MarioState
 
 struct TextureInfo
 {
-    u8 *texture;
+    Texture *texture;
     const char *name;
     u32 width;
     u32 height;

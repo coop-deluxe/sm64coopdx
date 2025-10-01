@@ -3279,7 +3279,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| texture | `Pointer` <`integer`> | read-only |
+| texture | `Pointer` <`Texture`> | read-only |
 | name | `string` | read-only |
 | width | `integer` | read-only |
 | height | `integer` | read-only |
