@@ -96,6 +96,7 @@ override_field_invisible = {
     "Object": [ "firstSurface" ],
     "Animation": [ "unusedBoneCount" ],
     "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],

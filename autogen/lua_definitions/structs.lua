@@ -2176,10 +2176,9 @@
 --- @field public rippleTimer number
 --- @field public rippleX number
 --- @field public rippleY number
---- @field public normalDisplayList Pointer_Gfx
+--- @field public textureArray Pointer_Texture[]
 --- @field public textureWidth integer
 --- @field public textureHeight integer
---- @field public rippleDisplayList Pointer_Gfx
 --- @field public rippleTrigger integer
 --- @field public alpha integer
 --- @field public marioWasUnder integer
@@ -2528,4 +2527,5 @@
 --- @alias Pointer_Mat4 Mat4
 --- @alias Pointer_Vec4s Vec4s
 --- @alias Pointer_BehaviorScript BehaviorScript
+--- @alias Pointer_Texture[] Texture[]
 --- @alias Pointer_Texture Texture
