@@ -4,6 +4,15 @@ extern "C" {
 #include "stb/stb_image_write.h"
 }
 
+// 4x4 pink-black checkerboard texture to indicate missing textures
+#define MISSING_TEX_SIZE 64
+static const uint8_t sMissingTexture[MISSING_TEX_SIZE] = {
+    0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,
+    0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,
+    0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
+    0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
+};
+
   ///////////
  // Utils //
 ///////////
@@ -39,6 +48,7 @@ static TexData* LoadTextureFromFile(GfxData *aGfxData, const char* aFile) {
     }
 
     FILE *_File = fopen(_Filename.c_str(), "rb");
+    bool _UnknownTexture = false;
 
     // Check as if we're an Actor.
     if (!_File) {
@@ -52,17 +62,22 @@ static TexData* LoadTextureFromFile(GfxData *aGfxData, const char* aFile) {
 
         // The file does not exist in either spot!
         if (!_File) {
-            PrintDataError("  ERROR: Unable to open file at \"%s\" or \"%s\"", _Filename.c_str(), _ActorFilename.c_str());
-            return NULL;
+            PrintError("  ERROR: Unable to open file at \"%s\" or \"%s\"", _Filename.c_str(), _ActorFilename.c_str());
+            _UnknownTexture = true;
         }
     }
 
-    // Texture data
-    fseek(_File, 0, SEEK_END);
     TexData* _Texture = New<TexData>();
-    _Texture->mPngData.Resize(ftell(_File)); rewind(_File);
-    fread(_Texture->mPngData.begin(), sizeof(u8), _Texture->mPngData.Count(), _File);
-    fclose(_File);
+
+    if (_UnknownTexture) {
+        _Texture->mPngData.Resize(1);
+    } else {
+        // Texture data
+        fseek(_File, 0, SEEK_END);
+        _Texture->mPngData.Resize(ftell(_File)); rewind(_File);
+        fread(_Texture->mPngData.begin(), sizeof(u8), _Texture->mPngData.Count(), _File);
+        fclose(_File);
+    }
     return _Texture;
 }
 
@@ -269,10 +284,20 @@ DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData) {
         _Node->mData->mPngData.Read(aFile);
         if (!_Node->mData->mPngData.Empty()) {
             u8 *_RawData = stbi_load_from_memory(_Node->mData->mPngData.begin(), _Node->mData->mPngData.Count(), &_Node->mData->mRawWidth, &_Node->mData->mRawHeight, NULL, 4);
-            _Node->mData->mRawFormat = G_IM_FMT_RGBA;
-            _Node->mData->mRawSize   = G_IM_SIZ_32b;
-            _Node->mData->mRawData   = Array<u8>(_RawData, _RawData + (_Node->mData->mRawWidth * _Node->mData->mRawHeight * 4));
-            free(_RawData);
+            if (_RawData) {
+                _Node->mData->mRawFormat = G_IM_FMT_RGBA;
+                _Node->mData->mRawSize   = G_IM_SIZ_32b;
+                _Node->mData->mRawData   = Array<u8>(_RawData, _RawData + (_Node->mData->mRawWidth * _Node->mData->mRawHeight * 4));
+                free(_RawData);
+            } else {
+                // Handle missing texture
+                _Node->mData->mRawWidth  = 4;
+                _Node->mData->mRawHeight = 4;
+                _Node->mData->mRawFormat = G_IM_FMT_RGBA;
+                _Node->mData->mRawSize   = G_IM_SIZ_32b;
+
+                _Node->mData->mRawData = Array<u8>(sMissingTexture, sMissingTexture + MISSING_TEX_SIZE);
+            }
         } else { // Probably a palette
             _Node->mData->mRawData   = Array<u8>();
             _Node->mData->mRawWidth  = 0;
