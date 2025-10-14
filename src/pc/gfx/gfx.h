@@ -66,6 +66,7 @@ struct UnloadedTex {
 struct TextureTile {
     uint8_t fmt;
     uint8_t siz;
+    uint8_t shifts, shiftt;
     uint8_t cms, cmt;
     uint16_t uls, ult, lrs, lrt; // U10.2
     uint32_t line_size_bytes;

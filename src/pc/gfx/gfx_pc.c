@@ -1151,6 +1151,24 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if (use_texture) {
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
+
+            uint8_t shifts = rdp.texture_tile.shifts;
+            uint8_t shiftt = rdp.texture_tile.shiftt;
+            if (shifts != 0) {
+                if (shifts <= 10) {
+                    u /= 1 << shifts;
+                } else {
+                    u *= 1 << (16 - shifts);
+                }
+            }
+            if (shiftt != 0) {
+                if (shiftt <= 10) {
+                    v /= 1 << shiftt;
+                } else {
+                    v *= 1 << (16 - shiftt);
+                }
+            }
+
             if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
                 // Linear filter adds 0.5f to the coordinates (why?)
                 u += 0.5f;
@@ -1381,13 +1399,15 @@ static void gfx_dp_set_texture_image(UNUSED uint32_t format, uint32_t size, UNUS
     rdp.texture_to_load.siz = size;
 }
 
-static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t tmem, uint8_t tile, uint32_t palette, uint32_t cmt, UNUSED uint32_t maskt, UNUSED uint32_t shiftt, uint32_t cms, UNUSED uint32_t masks, UNUSED uint32_t shifts) {
+static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t tmem, uint8_t tile, uint32_t palette, uint32_t cmt, UNUSED uint32_t maskt, uint32_t shiftt, uint32_t cms, UNUSED uint32_t masks, uint32_t shifts) {
     if (tile == G_TX_RENDERTILE) {
         SUPPORT_CHECK(palette == 0); // palette should set upper 4 bits of color index in 4b mode
         rdp.texture_tile.fmt = fmt;
         rdp.texture_tile.siz = siz;
         rdp.texture_tile.cms = cms;
         rdp.texture_tile.cmt = cmt;
+        rdp.texture_tile.shifts = shifts;
+        rdp.texture_tile.shiftt = shiftt;
         rdp.texture_tile.line_size_bytes = line * 8;
         if (!sOnlyTextureChangeOnAddrChange) {
             // I don't know if we ever need to set these...
