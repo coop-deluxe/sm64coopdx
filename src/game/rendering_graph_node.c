@@ -1656,7 +1656,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         }
         vec3f_copy(node->objNode->header.gfx.prevScale, node->objNode->header.gfx.scale);
         node->objNode->header.gfx.prevScaleTimestamp = gGlobalTimer;
-        
+
         if (node->objNode->header.gfx.sharedChild->extraFlags & GRAPH_EXTRA_ROTATE_HELD) {
             vec3s_copy(node->objNode->header.gfx.prevAngle, node->objNode->header.gfx.angle);
             mtxf_rotate_zxy_and_translate(mat, translation, node->objNode->header.gfx.angle);
