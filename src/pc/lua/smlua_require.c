@@ -114,14 +114,19 @@ static int smlua_custom_require(lua_State* L) {
 
     struct Mod* activeMod = gLuaActiveMod;
     if (!activeMod) {
-        LOG_LUA("require() called outside of mod context");
+        LOG_LUA_LINE("require() called outside of mod context");
+        return 0;
+    }
+
+    if (str_ends_with(moduleName, "/") || str_ends_with(moduleName, "\\")) {
+        LOG_LUA_LINE("cannot require a directory");
         return 0;
     }
 
     // find the file in mod files
     struct ModFile* file = smlua_find_mod_file(moduleName);
     if (!file) {
-        LOG_LUA("module '%s' not found in mod files", moduleName);
+        LOG_LUA_LINE("module '%s' not found in mod files", moduleName);
         return 0;
     }
 
