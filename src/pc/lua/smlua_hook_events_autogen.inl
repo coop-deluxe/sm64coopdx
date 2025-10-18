@@ -1864,33 +1864,6 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_BYTESTRING_RECEIVE(s32 modIndex, s32 
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_BEFORE_OBJECT_UPDATE(struct Object *obj) {
-    lua_State *L = gLuaState;
-    if (L == NULL) { return false; }
-    bool hookResult = false;
-
-    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_BEFORE_OBJECT_UPDATE];
-    for (int i = 0; i < hook->count; i++) {
-        s32 prevTop = lua_gettop(L);
-
-        // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
-
-        // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
-
-        // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_OBJECT_UPDATE]);
-            continue;
-        }
-        hookResult = true;
-
-        lua_settop(L, prevTop);
-    }
-    return hookResult;
-}
-
 bool smlua_call_event_hooks_HOOK_OBJECT_UPDATE(struct Object *obj) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }

@@ -1293,7 +1293,6 @@ static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
 void cur_obj_update(void) {
     if (!gCurrentObject) { return; }
     // Don't update if dormant
-
     if (gCurrentObject->activeFlags & ACTIVE_FLAG_DORMANT) {
         gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
         gCurrentObject->oInteractStatus = INT_STATUS_INTERACTED;
@@ -1381,9 +1380,7 @@ cur_obj_update_begin:;
 
     smlua_call_behavior_hook(&gCurBhvCommand, gCurrentObject, false);
     gCurrentObject->curBhvCommand = gCurBhvCommand;
-
-    smlua_call_event_hooks(HOOK_BEFORE_OBJECT_UPDATE, gCurrentObject);
-
+    
     // Increment the object's timer.
     if (gCurrentObject->oTimer < 0x3FFFFFFF) {
         gCurrentObject->oTimer++;
