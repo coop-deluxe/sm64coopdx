@@ -2986,10 +2986,9 @@
 | rippleTimer | `number` |  |
 | rippleX | `number` |  |
 | rippleY | `number` |  |
-| normalDisplayList | `Pointer` <`Gfx`> | read-only |
+| textureArray | `Array` <`Pointer` <`Texture`>> | read-only |
 | textureWidth | `integer` | read-only |
 | textureHeight | `integer` | read-only |
-| rippleDisplayList | `Pointer` <`Gfx`> | read-only |
 | rippleTrigger | `integer` |  |
 | alpha | `integer` |  |
 | marioWasUnder | `integer` |  |

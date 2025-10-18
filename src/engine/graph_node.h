@@ -20,6 +20,7 @@
 
 // Extra, custom, flags
 #define GRAPH_EXTRA_FORCE_3D        (1 << 0)
+#define GRAPH_EXTRA_ROTATE_HELD     (1 << 1)
 
 // Whether the node type has a function pointer of type GraphNodeFunc
 #define GRAPH_NODE_TYPE_FUNCTIONAL            0x100
