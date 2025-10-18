@@ -3914,8 +3914,14 @@ function djui_hud_get_raw_mouse_y()
     -- ...
 end
 
+--- @return boolean
+--- Returns if the cursor is hidden and constrained to the window
+function djui_hud_get_mouse_locked()
+    -- ...
+end
+
 --- @param locked boolean
---- Sets if the cursor is hidden and constrainted to the window
+--- Sets if the cursor is hidden and constrained to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
@@ -3954,12 +3960,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- Sets the viewport to the specified position and size, this will resize
+--- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
 function djui_hud_set_viewport(x, y, width, height)
     -- ...
 end
 
---- put the description here
+--- Resets the viewport to a fullscreen state
 function djui_hud_reset_viewport()
     -- ...
 end
@@ -3968,12 +3974,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- put the description here
+--- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
 function djui_hud_set_scissor(x, y, width, height)
     -- ...
 end
 
---- put the description here
+--- Resets the scissor rectangle to a fullscreen state
 function djui_hud_reset_scissor()
     -- ...
 end

@@ -770,6 +770,7 @@
    - [djui_hud_get_mouse_y](functions-3.md#djui_hud_get_mouse_y)
    - [djui_hud_get_raw_mouse_x](functions-3.md#djui_hud_get_raw_mouse_x)
    - [djui_hud_get_raw_mouse_y](functions-3.md#djui_hud_get_raw_mouse_y)
+   - [djui_hud_get_mouse_locked](functions-3.md#djui_hud_get_mouse_locked)
    - [djui_hud_set_mouse_locked](functions-3.md#djui_hud_set_mouse_locked)
    - [djui_hud_get_mouse_buttons_down](functions-3.md#djui_hud_get_mouse_buttons_down)
    - [djui_hud_get_mouse_buttons_pressed](functions-3.md#djui_hud_get_mouse_buttons_pressed)
