@@ -10933,7 +10933,6 @@ void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
-    bool capMissing = !(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND));
     // Init cap state
     // Ensures that Mario regains his correct cap state when exiting the palette editor
     if (!c->paletteEditorCapState) {
@@ -10947,6 +10946,8 @@ void cutscene_palette_editor(struct Camera *c) {
         skip_camera_interpolation();
         return;
     }
+
+    bool capMissing = !(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND));
 
     // Press the Z bind to toggle cap
     static bool pressed = false;
