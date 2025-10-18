@@ -17,7 +17,6 @@ using json = nlohmann::json;
 static const json sEmptyJson = {};
 
 static std::vector<struct ModFs *> sModFsList = {};
-static char sModFsFileReadStringBuf[MOD_FS_MAX_SIZE + 1];
 
 #define MOD_FS_DIRECTORY    "sav"
 #define MOD_FS_EXTENSION    ".modfs"
@@ -27,7 +26,7 @@ static char sModFsFileReadStringBuf[MOD_FS_MAX_SIZE + 1];
 #define MOD_FS_FILE_IS_PUBLIC_DEFAULT   false
 
 static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
-    ".txt", ".json", ".yaml", ".sav",   // text
+    ".txt", ".json", ".ini", ".sav",    // text
     ".bin", ".col",                     // actors
     ".bhv",                             // behaviors
     ".tex", ".png",                     // textures
@@ -189,6 +188,14 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     if (filepath[0] == '/') {
         mod_fs_raise_error(
             "modPath: %s, filepath: %s - filepath cannot start with a slash '/'", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // cannot end with a slash
+    if (filepath[filepathLength - 1] == '/') {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath cannot end with a slash '/'", modFs->modPath, filepath
         );
         return false;
     }
@@ -1216,6 +1223,31 @@ static T mod_fs_file_read_data(struct ModFsFile *file, T defaultValue) {
     return value;
 }
 
+static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 length, bool skipNextChar) {
+    static char *sModFsFileReadStringBuf = NULL;
+    static u32 sModFsFileReadStringBufLength = 0;
+
+    // grow buffer if needed
+    if (length > sModFsFileReadStringBufLength) {
+        free(sModFsFileReadStringBuf);
+        sModFsFileReadStringBuf = (char *) malloc(length + 1);
+        if (!sModFsFileReadStringBuf) {
+            sModFsFileReadStringBufLength = 0;
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - unable to allocate temporary buffer of length: %u",
+                file->modFs->modPath, file->filepath, length
+            );
+            return NULL;
+        }
+        sModFsFileReadStringBufLength = length;
+    }
+
+    memcpy(sModFsFileReadStringBuf, file->data.bin + file->offset, length);
+    sModFsFileReadStringBuf[length] = 0;
+    file->offset = MIN(file->offset + length + skipNextChar, file->size);
+    return sModFsFileReadStringBuf;
+}
+
 C_DEFINE bool mod_fs_file_read_bool(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 
@@ -1316,26 +1348,23 @@ C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
         return NULL;
     }
 
-    memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
     if (mod_fs_file_read_check_eof(file, 1)) {
         return NULL;
     }
 
     // for text files, returns the whole content from offset
     if (file->isText) {
-        memcpy(sModFsFileReadStringBuf, file->data.text + file->offset, file->size - file->offset);
-        file->offset = file->size;
-        return sModFsFileReadStringBuf;
+        return mod_fs_file_read_string_buffer(file, file->size - file->offset, false);
     }
 
-    // for binary, stops at the first NULL char or at the end of the file
-    char *buf = sModFsFileReadStringBuf;
-    for (char *c = (char *) (file->data.bin + file->offset); *c && file->offset < file->size; c++, file->offset++, buf++) {
-        *buf = *c;
+    // for binary, stops at the first NUL char or at the end of the file
+    u32 length = 0;
+    const char *start = (const char *) (file->data.bin + file->offset);
+    const char *end = (const char *) (file->data.bin + file->size);
+    for (const char *c = start; *c && c < end; c++) {
+        length++;
     }
-    *buf = 0;
-    file->offset = MIN(file->offset + 1, file->size);
-    return sModFsFileReadStringBuf;
+    return mod_fs_file_read_string_buffer(file, length, true);
 }
 
 C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
@@ -1350,18 +1379,18 @@ C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
         return 0;
     }
 
-    memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
     if (mod_fs_file_read_check_eof(file, 1)) {
         return NULL;
     }
 
-    char *buf = sModFsFileReadStringBuf;
-    for (char *c = file->data.text + file->offset; *c != '\n' && file->offset < file->size; c++, file->offset++, buf++) {
-        *buf = *c;
+    // stops at the first newline or at the end of the file
+    u32 length = 0;
+    const char *start = (const char *) (file->data.text + file->offset);
+    const char *end = (const char *) (file->data.text + file->size);
+    for (const char *c = start; *c != '\n' && c < end; c++) {
+        length++;
     }
-    *buf = 0;
-    file->offset = MIN(file->offset + 1, file->size);
-    return sModFsFileReadStringBuf;
+    return mod_fs_file_read_string_buffer(file, length, true);
 }
 
 //

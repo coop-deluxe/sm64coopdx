@@ -34,6 +34,8 @@ Save file locations:
 - [Hooks](guides/hooks.md)
 - [gMarioStates](guides/mario-state.md)
 - [Behavior Object Lists](guides/object-lists.md)
+- [Lighting Engine](guides/lighting-engine.md)
+- [ModFS](guides/modfs.md)
 
 ## Important notes on player indices
 
