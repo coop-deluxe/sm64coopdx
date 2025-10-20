@@ -190,10 +190,11 @@ static void controller_sdl_read(OSContPad *pad) {
     controller_mouse_read_relative();
     u32 mouse = mouse_buttons;
 
+    u32 buttons_down = 0;
     if (!gInteractableOverridePad) {
         for (u32 i = 0; i < num_mouse_binds; ++i)
             if (mouse & SDL_BUTTON(mouse_binds[i][0]))
-                pad->button |= mouse_binds[i][1];
+                buttons_down |= mouse_binds[i][1];
     }
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_prev ^ mouse) & mouse;
@@ -284,10 +285,12 @@ static void controller_sdl_read(OSContPad *pad) {
 
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
-            pad->button |= joy_binds[i][1];
+            buttons_down |= joy_binds[i][1];
 
-    const u32 xstick = pad->button & STICK_XMASK;
-    const u32 ystick = pad->button & STICK_YMASK;
+    pad->button |= buttons_down;
+
+    const u32 xstick = buttons_down & STICK_XMASK;
+    const u32 ystick = buttons_down & STICK_YMASK;
     if (xstick == STICK_LEFT)
         pad->stick_x = -128;
     else if (xstick == STICK_RIGHT)
