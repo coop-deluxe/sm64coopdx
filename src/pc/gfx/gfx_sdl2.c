@@ -56,6 +56,12 @@
 #endif
 
 static SDL_Window *wnd;
+#if defined(_WIN32) || defined(_WIN64)
+#include <SDL2/SDL_syswm.h>
+static HICON icon;
+#else
+static SDL_Surface *icon;
+#endif
 static SDL_GLContext ctx = NULL;
 
 static kb_callback_t kb_key_down = NULL;
@@ -308,6 +314,118 @@ static void gfx_sdl_reset_window_title(void) {
     SDL_SetWindowTitle(wnd, TITLE);
 }
 
+// borrowed from SDL_surface.c:SDL_CalculatePitch
+static size_t calculate_pitch(u32 format, size_t width, bool minimal)
+{
+    size_t pitch;
+
+    if (SDL_BITSPERPIXEL(format) >= 8) {
+        if (SDL_size_mul_overflow(width, SDL_BYTESPERPIXEL(format), &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+    } else {
+        if (SDL_size_mul_overflow(width, SDL_BITSPERPIXEL(format), &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        if (SDL_size_add_overflow(pitch, 7, &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        pitch /= 8;
+    }
+    if (!minimal) {
+        /* 4-byte aligning for speed */
+        if (SDL_size_add_overflow(pitch, 3, &pitch)) {
+            return SDL_SIZE_MAX;
+        }
+        pitch &= ~3;
+    }
+    return pitch;
+}
+
+static void gfx_sdl_set_window_icon(struct TextureInfo* texture) {
+    printf("1\n");
+    if (!icon) {
+#if defined(_WIN32) || defined(_WIN64)
+        // HWND hwnd = (HWND)(((intptr_t)wnd + 216)* + 8);
+        SDL_SysWMinfo info;
+        SDL_GetWindowWMInfo(wnd, &info);
+        HWND hwnd = info.info.win.window;
+        
+        // TODO: collect original icon, delete old icons
+        icon = (HICON)SendMessage(hwnd, WM_GETICON, ICON_BIG, 0);
+        printf("Icon collected!");
+#else
+        for (u16 i=0; i<2184; i++) {
+            icon = (SDL_Surface*)((intptr_t)wnd + i);
+            // icon->flags |= SDL_DONTFREE;
+            // printf("%i: %i, %i\n", i, icon->w, icon->h);
+            if (icon->w > 0 && icon->w == icon->h) printf("%i: square size! (%i)\n", i, icon->w);
+        }
+#endif
+    }
+
+    printf("2\n");
+    uint32_t format;
+    // uint32_t pitch;
+    switch (texture->bitSize) {
+        case  8:
+        case 16: format = SDL_PIXELFORMAT_RGBA5551; break;
+        case 32: format = SDL_PIXELFORMAT_RGBA32;   break;
+        default: return;
+    }
+    printf("format: %i\n", texture->bitSize);
+
+    printf("3\n");
+    SDL_Surface* custom = SDL_CreateRGBSurfaceWithFormatFrom(
+        texture->texture + (texture->bitSize != 32),
+        texture->width,
+        texture->height,
+        0, calculate_pitch(format, texture->width, true), format
+    );
+    if (!custom) { printf(SDL_GetError()); return; }
+
+    printf("4\n");
+    SDL_SetWindowIcon(wnd, custom);
+    printf("Done\n");
+}
+
+static void gfx_sdl_reset_window_icon(void) {
+    if (icon) {
+#if defined(_WIN32) || defined(_WIN64)
+        SDL_SysWMinfo info;
+        SDL_GetWindowWMInfo(wnd, &info);
+        HWND hwnd = info.info.win.window;
+        // HINSTANCE hinst = info.info.win.hinstance;
+
+        HICON def = LoadImage(GetModuleHandle(NULL), "id", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
+        if (!def) {
+            printf("failed to load, error %ld\n", GetLastError());
+            return;
+        }
+        ICONINFO iconInfo;
+        if (GetIconInfo(def, &iconInfo)) {
+            BITMAP bmp;
+            GetObject(iconInfo.hbmColor, sizeof(BITMAP), &bmp);
+        
+            printf("Icon Size: %dx%d\n", bmp.bmWidth, bmp.bmHeight);
+        
+            // Clean up bitmaps to avoid leaks
+            DeleteObject(iconInfo.hbmColor);
+            DeleteObject(iconInfo.hbmMask);
+        } else {
+            printf("failed to retrieve icon info, error %ld\n", GetLastError());
+        }
+        SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)def);
+        SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)def);
+        icon = NULL;
+        printf("Icon restored!\n");
+#else
+        SDL_SetWindowIcon(wnd, NULL);
+        icon = NULL;
+        #endif
+    }
+}
+
 static void gfx_sdl_shutdown(void) {
     if (SDL_WasInit(0)) {
         if (ctx) { SDL_GL_DeleteContext(ctx); ctx = NULL; }
@@ -358,6 +476,8 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
     gfx_sdl_reset_window_title,
+    gfx_sdl_set_window_icon,
+    gfx_sdl_reset_window_icon,
     gfx_sdl_has_focus
 };
 
