@@ -788,8 +788,11 @@ static Gfx *geo_mario_create_player_colors_dl(s32 index, Gfx *capEnemyGfx, Gfx *
     if (gfx) {
         Gfx *gfxp = gfx;
         for (s32 part = 0; part != PLAYER_PART_MAX; ++part) {
-            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].l, (2 * (part + 1)) + 1);
-            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].a, (2 * (part + 1)) + 2);
+            Lights1 *light = alloc_display_list(sizeof(Lights1));
+            if (!light) { return NULL; }
+            *light = gNetworkPlayerColors[index].parts[part];
+            gSPLight(gfxp++, &light->l, (2 * (part + 1)) + 1);
+            gSPLight(gfxp++, &light->a, (2 * (part + 1)) + 2);
         }
         if (capEnemyGfx) { gSPDisplayList(gfxp++, capEnemyGfx); }
         if (capEnemyDecalGfx) { gSPDisplayList(gfxp++, capEnemyDecalGfx); }

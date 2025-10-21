@@ -1028,6 +1028,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
             cross = -cross;
         }
 
+        // Invert culling: back becomes front and front becomes back
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
+            cross = -cross;
+        }
+
         switch (rsp.geometry_mode & G_CULL_BOTH) {
             case G_CULL_FRONT:
                 if (cross <= 0) return;
