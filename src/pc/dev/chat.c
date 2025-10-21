@@ -8,14 +8,11 @@
 #include "pc/network/moderator_list.h"
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/mods/mods_utils.h"
 #include "level_table.h"
 #include "game/save_file.h"
 
 #ifdef DEVELOPMENT
-
-static bool str_starts_with(const char* pre, char* str) {
-    return strncmp(pre, str, strlen(pre)) == 0;
-}
 
 // For case insensitivity
 static const char *upper(char *str) {
@@ -74,7 +71,7 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/warp ", command)) {
+    if (str_starts_with(command, "/warp ")) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
@@ -169,7 +166,7 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/lua ", command)) {
+    if (str_starts_with(command, "/lua ")) {
         smlua_exec_str(&command[5]);
         return true;
     }
@@ -179,7 +176,7 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/luaf ", command)) {
+    if (str_starts_with(command, "/luaf ")) {
         smlua_exec_file(&command[6]);
         return true;
     }

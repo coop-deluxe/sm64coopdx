@@ -2144,6 +2144,8 @@
 - MOD_FS_MAX_SIZE
 - MOD_FS_MAX_FILES
 - MOD_FS_MAX_PATH
+- MOD_FS_URI_PREFIX
+- MOD_FS_URI_FORMAT
 
 ### [enum ModFsFileIntType](#ModFsFileIntType)
 | Identifier | Value |
@@ -2970,6 +2972,7 @@
 <br />
 
 ## [player_palette.h](#player_palette.h)
+- PALETTES_DIRECTORY
 - MAX_PRESET_PALETTES
 
 ### [enum PlayerPart](#PlayerPart)
@@ -4722,6 +4725,12 @@
 - VERSION_TEXT
 - VERSION_NUMBER
 - MINOR_VERSION_NUMBER
+- GAME_NAME
+- WINDOW_NAME
+- GAME_NAME
+- WINDOW_NAME
+- GAME_NAME
+- WINDOW_NAME
 - MAX_VERSION_LENGTH
 
 [:arrow_up_small:](#)

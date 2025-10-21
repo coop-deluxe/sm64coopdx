@@ -7435,25 +7435,6 @@ function mod_fs_create()
     -- ...
 end
 
---- @return boolean
---- Deletes the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_delete()
-    -- ...
-end
-
---- @return boolean
---- Saves the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_save()
-    -- ...
-end
-
---- @param pub boolean
---- @return boolean
---- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-function mod_fs_set_public(pub)
-    -- ...
-end
-
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
@@ -7511,6 +7492,28 @@ end
 --- @return boolean
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Saves the provided `modFs` to persistent storage. Returns true on success
+function mod_fs_save(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+function mod_fs_delete(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_set_public(modFs, pub)
     -- ...
 end
 
@@ -7620,6 +7623,13 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- Sets the current position of a modfs `file` to its beginning. Returns true on success
+function mod_fs_file_rewind(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -7639,6 +7649,14 @@ end
 --- @return boolean
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param text boolean
+--- @return boolean
+--- Marks the provided modfs `file` as text. Returns true on success
+function mod_fs_file_set_text_mode(file, text)
     -- ...
 end
 
@@ -7704,6 +7722,12 @@ end
 --- @return boolean
 --- Loads a bool `value` from a `key` in mod storage
 function mod_storage_load_bool(key)
+    -- ...
+end
+
+--- @return table
+--- Loads all keys and values in mod storage as strings and returns them as a table
+function mod_storage_load_all()
     -- ...
 end
 

@@ -1,17 +1,21 @@
 #include "dynos.cpp.h"
 
+extern "C" {
+#include "pc/mods/mod_fs.h"
+}
+
 static Array<Pair<const char*, DataNode<Collision>*>>& DynosCollisions() {
     static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
     return sDynosCollisions;
 }
 
-void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
+bool DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
     auto& _DynosCollisions = DynosCollisions();
 
     // check for duplicates
     for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
         if (!strcmp(_DynosCollisions[i].first, aCollisionName)) {
-            return;
+            return true;
         }
     }
 
@@ -24,11 +28,12 @@ void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
     DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aFilename, collisionName);
     if (!_Node) {
         free(collisionName);
-        return;
+        return false;
     }
 
     // Add to collisions
     _DynosCollisions.Add({ collisionName, _Node });
+    return true;
 }
 
 Collision* DynOS_Col_Get(const char* collisionName) {
@@ -48,6 +53,13 @@ Collision* DynOS_Col_Get(const char* collisionName) {
     for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
         if (!strcmp(_DynosCollisions[i].first, collisionName)) {
             return _DynosCollisions[i].second->mData;
+        }
+    }
+
+    // check modfs file
+    if (is_mod_fs_file(collisionName)) {
+        if (DynOS_Col_Activate(collisionName, collisionName)) {
+            return DynOS_Col_Get(collisionName);
         }
     }
 

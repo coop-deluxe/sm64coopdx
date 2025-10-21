@@ -19,7 +19,7 @@
 #endif
 
 #ifdef DEVELOPMENT
-#define GAME_NAME   "sm64coopdx-dev"
+#define GAME_NAME "sm64coopdx-dev"
 #define WINDOW_NAME "Super Mario 64 Coop Deluxe (DEV)"
 #elif !defined(VERSION_US)
 #define GAME_NAME "sm64coopdx-intl"

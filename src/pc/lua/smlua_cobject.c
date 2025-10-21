@@ -98,7 +98,9 @@ static const char *sLuaLvtNames[] = {
     [LVT_TRAJECTORY_P] = "Trajectory Pointer",
     [LVT_TEXTURE_P] = "Texture Pointer",
     [LVT_LUAFUNCTION] = "LuaFunction",
+    [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "Pointer",
+    [LVT_FUNCTION] = "Function",
     [LVT_MAX] = "Max",
 };
 
@@ -547,6 +549,14 @@ static int smlua__get_field(lua_State* L) {
     if (data == NULL) {
         LOG_LUA_LINE("_get_field on invalid key '%s', lot '%s'", key, smlua_get_lot_name(lot));
         return 0;
+    }
+
+    // CObject function members
+    if (data->valueType == LVT_FUNCTION) {
+        const char *function = (const char *) data->valueOffset;
+        lua_getglobal(L, function);
+        LUA_STACK_CHECK_END(L);
+        return 1;
     }
 
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;

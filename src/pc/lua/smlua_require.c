@@ -96,7 +96,7 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // only consider lua files
-        if (!str_ends_with(file->relativePath, ".lua") && !str_ends_with(file->relativePath, ".luac")) {
+        if (!path_ends_with(file->relativePath, ".lua") && !path_ends_with(file->relativePath, ".luac")) {
             continue;
         }
 
@@ -118,7 +118,7 @@ static int smlua_custom_require(lua_State* L) {
         return 0;
     }
 
-    if (str_ends_with(moduleName, "/") || str_ends_with(moduleName, "\\")) {
+    if (path_ends_with(moduleName, "/") || path_ends_with(moduleName, "\\")) {
         LOG_LUA_LINE("cannot require a directory");
         return 0;
     }

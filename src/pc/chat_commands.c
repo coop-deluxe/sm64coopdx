@@ -8,6 +8,7 @@
 #include "pc/network/moderator_list.h"
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/mods/mods_utils.h"
 #include "level_table.h"
 #ifdef DEVELOPMENT
 #include "pc/dev/chat.h"
@@ -37,10 +38,6 @@ static struct NetworkPlayer* chat_get_network_player(const char* name) {
         }
     }
     return NULL;
-}
-
-static bool str_starts_with(const char* pre, const char* str) {
-    return strncmp(pre, str, strlen(pre)) == 0;
 }
 
 static void chat_construct_player_message(struct NetworkPlayer* np, char* msg) {
@@ -124,7 +121,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
   
-    if (str_starts_with("/kick ", command)) {
+    if (str_starts_with(command, "/kick ")) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
@@ -152,7 +149,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/ban ", command)) {
+    if (str_starts_with(command, "/ban ")) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
@@ -180,7 +177,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/permban ", command)) {
+    if (str_starts_with(command, "/permban ")) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
             return true;
@@ -208,7 +205,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with("/moderator ", command)) {     
+    if (str_starts_with(command, "/moderator ")) {     
         if (gNetworkType != NT_SERVER) {
             djui_chat_message_create(DLANG(CHAT, SERVER_ONLY));
             return true;
@@ -237,7 +234,7 @@ bool exec_chat_command(char* command) {
             return true;
         }
 
-        if (str_starts_with("/nametags ", command)) {
+        if (str_starts_with(command, "/nametags ")) {
             char *option = &command[10];
             if (strcmp("show-tag", option) == 0) {
                 gNametagsSettings.showSelfTag = !gNametagsSettings.showSelfTag;
