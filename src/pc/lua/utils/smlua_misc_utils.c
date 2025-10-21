@@ -539,9 +539,17 @@ void set_environment_region(u8 index, s16 value) {
 bool mod_file_exists(const char* filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
+    char normPath[SYS_MAX_PATH] = { 0 };
+
+    if (snprintf(normPath, sizeof(normPath), "%s", filename) < 0) {
+        LOG_ERROR("Failed to copy filename for normalization: %s", filename);
+    }
+
+    normalize_path(normPath);
+
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, filename)) {
+        if (!strcmp(file->relativePath, normPath)) {
             return true;
         }
     }

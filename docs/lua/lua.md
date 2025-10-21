@@ -71,7 +71,11 @@ All of this is a holdover from when there were only two players. It was a reason
 - [Custom HUD Texture](examples/custom-hud-texture)
 - [Custom Audio Test](examples/audio-test)
 - [Custom Texture Overriding](examples/texture-override)
+- [Custom Animations (DynOS)](examples/custom-animations-dynos)
+- [Custom Animations (Lua)](examples/custom-animations-lua)
 - [Bytestring Packet Example](examples/bytestring-packet-example.lua)
+- [Gfx/Vtx Demo](examples/gfx-vtx-demo)
+- [Lighting Engine Demo](examples/lighting-engine-demo)
 
 ## Example Lua mods (large)
 - [Hide and Seek Gamemode](../../mods/hide-and-seek.lua)
