@@ -32,6 +32,75 @@ Loads the object's collision data into dynamic collision. You must run this ever
 
 <br />
 
+## [load_static_object_collision](#load_static_object_collision)
+
+### Description
+Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+
+### Lua Example
+`local StaticObjectCollisionValue = load_static_object_collision()`
+
+### Parameters
+- None
+
+### Returns
+[StaticObjectCollision](structs.md#StaticObjectCollision)
+
+### C Prototype
+`struct StaticObjectCollision *load_static_object_collision();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [toggle_static_object_collision](#toggle_static_object_collision)
+
+### Description
+Toggles a collection of static object surfaces
+
+### Lua Example
+`toggle_static_object_collision(col, tangible)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| col | [StaticObjectCollision](structs.md#StaticObjectCollision) |
+| tangible | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void toggle_static_object_collision(struct StaticObjectCollision *col, bool tangible);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_static_object_surface](#get_static_object_surface)
+
+### Description
+Gets a surface corresponding to `index` from the static object collision
+
+### Lua Example
+`local SurfaceValue = get_static_object_surface(col, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| col | [StaticObjectCollision](structs.md#StaticObjectCollision) |
+| index | `integer` |
+
+### Returns
+[Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_surface_from_index](#obj_get_surface_from_index)
 
 ### Description

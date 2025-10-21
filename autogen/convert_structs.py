@@ -142,6 +142,7 @@ override_field_immutable = {
     "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text", "replaced"],
     "ModFsFile": [ "*" ],
     "ModFs": [ "*" ],
+    "StaticObjectCollision": [ "*" ],
 }
 
 override_field_version_excludes = {

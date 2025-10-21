@@ -91,11 +91,6 @@ extern struct Object *gCurrentObject;
 extern const BehaviorScript *gCurBhvCommand;
 extern s16 gPrevFrameObjectCount;
 
-extern s32 gSurfaceNodesAllocated;
-extern s32 gSurfacesAllocated;
-extern s32 gNumStaticSurfaceNodes;
-extern s32 gNumStaticSurfaces;
-
 extern struct Object* gCheckingSurfaceCollisionsForObject;
 extern s16 gCheckingSurfaceCollisionsForCamera;
 extern s16 gFindFloorIncludeSurfaceIntangible;

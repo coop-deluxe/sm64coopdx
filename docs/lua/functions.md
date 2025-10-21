@@ -2189,6 +2189,9 @@
 
 - surface_load.h
    - [load_object_collision_model](functions-7.md#load_object_collision_model)
+   - [load_static_object_collision](functions-7.md#load_static_object_collision)
+   - [toggle_static_object_collision](functions-7.md#toggle_static_object_collision)
+   - [get_static_object_surface](functions-7.md#get_static_object_surface)
    - [obj_get_surface_from_index](functions-7.md#obj_get_surface_from_index)
    - [surface_has_force](functions-7.md#surface_has_force)
 

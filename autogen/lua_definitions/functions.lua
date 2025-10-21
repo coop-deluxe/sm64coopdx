@@ -12295,6 +12295,27 @@ function load_object_collision_model()
     -- ...
 end
 
+--- @return StaticObjectCollision
+--- Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+function load_static_object_collision()
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param tangible boolean
+--- Toggles a collection of static object surfaces
+function toggle_static_object_collision(col, tangible)
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param index integer
+--- @return Surface
+--- Gets a surface corresponding to `index` from the static object collision
+function get_static_object_surface(col, index)
+    -- ...
+end
+
 --- @param o Object
 --- @param index integer
 --- @return Surface
