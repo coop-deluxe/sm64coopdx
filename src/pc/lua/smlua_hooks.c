@@ -100,6 +100,7 @@ int smlua_hook_event(lua_State* L) {
 
     hook->reference[hook->count] = ref;
     hook->mod[hook->count] = gLuaActiveMod;
+    hook->modFile[hook->count] = gLuaActiveModFile;
     hook->count++;
 
     return 1;
