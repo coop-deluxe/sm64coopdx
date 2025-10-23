@@ -3916,7 +3916,7 @@ end
 
 --- @return boolean
 --- Returns if the cursor is hidden and constrained to the window
-function djui_hud_get_mouse_locked()
+function djui_hud_is_mouse_locked()
     -- ...
 end
 

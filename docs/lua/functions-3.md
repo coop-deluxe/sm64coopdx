@@ -3140,13 +3140,13 @@ Returns the y coordinate of the mouse relative to the screen
 
 <br />
 
-## [djui_hud_get_mouse_locked](#djui_hud_get_mouse_locked)
+## [djui_hud_is_mouse_locked](#djui_hud_is_mouse_locked)
 
 ### Description
 Returns if the cursor is hidden and constrained to the window
 
 ### Lua Example
-`local booleanValue = djui_hud_get_mouse_locked()`
+`local booleanValue = djui_hud_is_mouse_locked()`
 
 ### Parameters
 - None
@@ -3155,7 +3155,7 @@ Returns if the cursor is hidden and constrained to the window
 - `boolean`
 
 ### C Prototype
-`bool djui_hud_get_mouse_locked(void);`
+`bool djui_hud_is_mouse_locked(void);`
 
 [:arrow_up_small:](#)
 

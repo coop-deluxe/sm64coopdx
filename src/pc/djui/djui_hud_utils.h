@@ -93,7 +93,7 @@ f32 djui_hud_get_raw_mouse_x(void);
 /* |description|Returns the y coordinate of the mouse relative to the screen|descriptionEnd| */
 f32 djui_hud_get_raw_mouse_y(void);
 /* |description|Returns if the cursor is hidden and constrained to the window|descriptionEnd| */
-bool djui_hud_get_mouse_locked(void);
+bool djui_hud_is_mouse_locked(void);
 /* |description|Sets if the cursor is hidden and constrained to the window|descriptionEnd| */
 void djui_hud_set_mouse_locked(bool locked);
 /* |description|Returns the flags of the mouse buttons held down|descriptionEnd| */

@@ -297,7 +297,7 @@ f32 djui_hud_get_raw_mouse_y(void) {
     return mouse_y;
 }
 
-bool djui_hud_get_mouse_locked(void) {
+bool djui_hud_is_mouse_locked(void) {
     return gDjuiHudLockMouse;
 }
 
