@@ -4,6 +4,8 @@
 #include "game/hardcoded.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/mods/mod_storage.h"
+#include "pc/mods/mod_fs.h"
 #include "pc/crash_handler.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
@@ -352,7 +354,7 @@ void smlua_init(void) {
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             // skip loading non-lua files
-            if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) {
+            if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) {
                 continue;
             }
 
@@ -362,7 +364,19 @@ void smlua_init(void) {
             }
 
             gLuaActiveModFile = file;
-            smlua_load_script(mod, file, i, true);
+
+            // file has been required by some module before this
+            if (!smlua_get_cached_module_result(L, mod, file)) {
+                smlua_mark_module_as_loading(L, mod, file);
+
+                s32 prevTop = lua_gettop(L);
+                int rc = smlua_load_script(mod, file, i, true);
+
+                if (rc == LUA_OK) {
+                    smlua_cache_module_result(L, mod, file, prevTop);
+                }
+            }
+
             lua_settop(L, 0);
         }
         gLuaActiveMod = NULL;
@@ -406,6 +420,8 @@ void smlua_shutdown(void) {
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    mod_storage_shutdown();
+    mod_fs_shutdown();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);

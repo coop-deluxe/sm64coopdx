@@ -61,6 +61,7 @@ static struct RSP {
 
     uint32_t geometry_mode;
     int16_t fog_mul, fog_offset;
+    int16_t fresnel_scale, fresnel_offset;
 
     struct {
         // U0.16
@@ -850,6 +851,33 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.b *= vtxB;
             }
 
+            if (rsp.geometry_mode & (G_FRESNEL_COLOR_EXT | G_FRESNEL_ALPHA_EXT)) {
+                Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
+                Vec3f vnormal = { nx / 255.0f, ny / 255.0f, nz / 255.0f };
+                // transform vpos and vnormal to world space
+                gfx_local_to_world_space(vpos, vnormal);
+
+                Vec3f viewDir = {
+                    sInverseCameraMatrix[3][0] - vpos[0], 
+                    sInverseCameraMatrix[3][1] - vpos[1], 
+                    sInverseCameraMatrix[3][2] - vpos[2]
+                };
+                vec3f_normalize(viewDir);
+                vec3f_normalize(vnormal);
+
+                int32_t dot = (int32_t) (fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f);
+                int32_t factor = ((rsp.fresnel_scale * dot) >> 15) + rsp.fresnel_offset;
+                int32_t fresnel = clamp(factor << 8, 0, 0x7FFF);
+                uint8_t result = (uint8_t) (fresnel >> 7);
+
+                if (rsp.geometry_mode & G_FRESNEL_COLOR_EXT) {
+                    d->color.r = d->color.g = d->color.b = result;
+                }
+                if (rsp.geometry_mode & G_FRESNEL_ALPHA_EXT) {
+                    d->color.a = result;
+                }
+            }
+
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
                 dotx += nx * rsp.current_lookat_coeffs[0][0];
@@ -970,8 +998,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (fog_z > 255) fog_z = 255;
             d->fog_z = fog_z;
         }
-
-        d->color.a = v->cn[3];
+        if (!(rsp.geometry_mode & G_FRESNEL_ALPHA_EXT)) {
+            d->color.a = v->cn[3];
+        }
     }
 }
 
@@ -996,6 +1025,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if ((v1->w < 0) ^ (v2->w < 0) ^ (v3->w < 0)) {
             // If one vertex lies behind the eye, negating cross will give the correct result.
             // If all vertices lie behind the eye, the triangle will be rejected anyway.
+            cross = -cross;
+        }
+
+        // Invert culling: back becomes front and front becomes back
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
             cross = -cross;
         }
 
@@ -1297,7 +1331,7 @@ static void gfx_sp_copymem(uint8_t idx, uint16_t dstofs, uint16_t srcofs, UNUSED
 }
 #endif
 
-static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data) {
+static void gfx_sp_moveword(uint8_t index, uint16_t offset, uint32_t data) {
     switch (index) {
         case G_MW_NUMLIGHT:
 #ifdef F3DEX_GBI_2
@@ -1319,6 +1353,22 @@ static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data
             sDepthZSub = gProjectionVanillaNearValue;
 
             break;
+        case G_MW_FX:
+            if (offset == G_MWO_FRESNEL) {
+                rsp.fresnel_scale = (int16_t)(data >> 16);
+                rsp.fresnel_offset = (int16_t)data;
+            }
+            break;
+        case G_MW_LIGHTCOL: {
+            int lightNum = offset / 24;
+            // data = packed color
+            if (lightNum >= 0 && lightNum <= MAX_LIGHTS) {
+                rsp.current_lights[lightNum].col[0] = (uint8_t)(data >> 24);
+                rsp.current_lights[lightNum].col[1] = (uint8_t)(data >> 16);
+                rsp.current_lights[lightNum].col[2] = (uint8_t)(data >> 8);
+            }
+            break;
+        }
     }
 }
 

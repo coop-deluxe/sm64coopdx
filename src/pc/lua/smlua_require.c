@@ -4,47 +4,89 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/fs/fmem.h"
 
+#define LOADING_SENTINEL ((void*)-1)
+
 // table to track loaded modules per mod
-static void smlua_init_mod_loaded_table(lua_State* L, const char* modPath) {
-    // Create a unique registry key for this mod's loaded table
-    char registryKey[SYS_MAX_PATH + 16];
-    snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", modPath);
+void smlua_get_or_create_mod_loaded_table(lua_State* L, struct Mod* mod) {
+    char registryKey[SYS_MAX_PATH + 16] = "";
+    snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", mod->relativePath);
 
     lua_getfield(L, LUA_REGISTRYINDEX, registryKey);
     if (lua_isnil(L, -1)) {
         lua_pop(L, 1);
         lua_newtable(L);
+        lua_pushvalue(L, -1);
         lua_setfield(L, LUA_REGISTRYINDEX, registryKey);
-    } else {
-        lua_pop(L, 1);
     }
 }
 
+bool smlua_get_cached_module_result(lua_State* L, struct Mod* mod, struct ModFile* file) {
+    smlua_get_or_create_mod_loaded_table(L, mod);
+    lua_getfield(L, -1, file->relativePath);
+
+    if (lua_touserdata(L, -1) == LOADING_SENTINEL) {
+        LOG_LUA_LINE("loop or previous error loading module '%s'", file->relativePath);
+        lua_pop(L, 1); // pop sentinel
+        lua_pushnil(L);
+
+        return true;
+    }
+
+    if (lua_isnil(L, -1)) {
+        // not cached
+        lua_pop(L, 2); // pop nil and loaded table
+        return false;
+    }
+
+    // cached, remove loaded table and leave value on top
+    lua_remove(L, -2);
+    return true;
+}
+
+void smlua_mark_module_as_loading(lua_State* L, struct Mod* mod, struct ModFile* file) {
+    smlua_get_or_create_mod_loaded_table(L, mod);
+    lua_pushlightuserdata(L, LOADING_SENTINEL);
+    lua_setfield(L, -2, file->relativePath);
+    lua_pop(L, 1); // pop loaded table
+}
+ 
+void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
+    if (lua_gettop(L) == prevTop) {
+        lua_pushboolean(L, 1);
+    } else if (lua_isnil(L, -1)) {
+        lua_pop(L, 1);
+        lua_pushboolean(L, 1);
+    }
+
+    smlua_get_or_create_mod_loaded_table(L, mod);
+
+    lua_pushvalue(L, -2); // duplicate result
+    lua_setfield(L, -2, file->relativePath); // loaded[file->relativePath] = result
+    lua_pop(L, 1); // pop loaded table
+}
+
 static struct ModFile* smlua_find_mod_file(const char* moduleName) {
-    char relativeDir[SYS_MAX_PATH] = "";
+    char basePath[SYS_MAX_PATH] = "";
+    char absolutePath[SYS_MAX_PATH] = "";
 
     if (!gLuaActiveMod) {
         return NULL;
     }
 
+    // get the directory of the current file
     if (gLuaActiveModFile) {
-        path_get_folder(gLuaActiveModFile->relativePath, relativeDir);
+        path_get_folder(gLuaActiveModFile->relativePath, basePath);
     }
 
-    bool hasRelativeDir = strlen(relativeDir) > 0;
+    // resolve moduleName to a path relative to mod root
+    resolve_relative_path(basePath, moduleName, absolutePath);
 
-    struct ModFile* bestPick = NULL;
-    int bestRelativeDepth = INT_MAX;
-    int bestTotalDepth = INT_MAX;
-    bool foundRelativeFile = false;
-
-    char rawName[SYS_MAX_PATH] = "";
     char luaName[SYS_MAX_PATH] = "";
     char luacName[SYS_MAX_PATH] = "";
-    snprintf(rawName, SYS_MAX_PATH, "/%s", moduleName);
-    snprintf(luaName, SYS_MAX_PATH, "/%s.lua", moduleName);
-    snprintf(luacName, SYS_MAX_PATH, "/%s.luac", moduleName);
+    snprintf(luaName, SYS_MAX_PATH, "%s.lua", absolutePath);
+    snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
 
+    // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
 
@@ -54,41 +96,17 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // only consider lua files
-        if (!str_ends_with(file->relativePath, ".lua") && !str_ends_with(file->relativePath, ".luac")) {
+        if (!path_ends_with(file->relativePath, ".lua") && !path_ends_with(file->relativePath, ".luac")) {
             continue;
         }
 
         // check for match
-        if (!str_ends_with(file->relativePath, rawName) && !str_ends_with(file->relativePath, luaName) && !str_ends_with(file->relativePath, luacName)) {
-            continue;
-        }
-
-        // get total path depth
-        int totalDepth = path_depth(file->relativePath);
-
-        // make sure we never load the old-style lua files with require()
-        if (totalDepth < 1) {
-            continue;
-        }
-
-        // get relative path depth
-        int relativeDepth = INT_MAX;
-        if (hasRelativeDir && path_is_relative_to(file->relativePath, relativeDir)) {
-            relativeDepth = path_depth(file->relativePath + strlen(relativeDir));
-            foundRelativeFile = true;
-        }
-
-        // pick new best
-        // relative files will always win against absolute files
-        // other than that, shallower files will win
-        if (relativeDepth < bestRelativeDepth || (!foundRelativeFile && totalDepth < bestTotalDepth)) {
-            bestPick = file;
-            bestRelativeDepth = relativeDepth;
-            bestTotalDepth = totalDepth;
+        if (!strcmp(file->relativePath, luaName) || !strcmp(file->relativePath, luacName)) {
+            return file;
         }
     }
 
-    return bestPick;
+    return NULL;
 }
 
 static int smlua_custom_require(lua_State* L) {
@@ -96,69 +114,47 @@ static int smlua_custom_require(lua_State* L) {
 
     struct Mod* activeMod = gLuaActiveMod;
     if (!activeMod) {
-        LOG_LUA("require() called outside of mod context");
+        LOG_LUA_LINE("require() called outside of mod context");
         return 0;
     }
 
-    // create registry key for this mod's loaded table
-    char registryKey[SYS_MAX_PATH + 16] = "";
-    snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", activeMod->relativePath);
-
-    // get or create the mod's loaded table
-    lua_getfield(L, LUA_REGISTRYINDEX, registryKey);
-    if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
-        lua_newtable(L);
-        lua_pushvalue(L, -1);
-        lua_setfield(L, LUA_REGISTRYINDEX, registryKey);
+    if (path_ends_with(moduleName, "/") || path_ends_with(moduleName, "\\")) {
+        LOG_LUA_LINE("cannot require a directory");
+        return 0;
     }
 
     // find the file in mod files
     struct ModFile* file = smlua_find_mod_file(moduleName);
     if (!file) {
-        LOG_LUA("module '%s' not found in mod files", moduleName);
-        lua_pop(L, 1); // pop table
+        LOG_LUA_LINE("module '%s' not found in mod files", moduleName);
         return 0;
     }
-
-    // check if module is already loaded
-    lua_getfield(L, -1, file->relativePath);
-    if (!lua_isnil(L, -1)) {
-        // module already loaded, return it
-        return 1;
-    }
-    lua_pop(L, 1); // pop nil value
-
-    // mark module as "loading" to prevent recursion
-    lua_pushboolean(L, 1);
-    lua_setfield(L, -2, file->relativePath);
-
-    // cache the previous mod file
-    struct ModFile* prevModFile = gLuaActiveModFile;
-    s32 prevTop = lua_gettop(L);
 
     // tag it as a loaded lua module
     file->isLoadedLuaModule = true;
 
-    // load and execute
-    gLuaActiveModFile = file;
-    smlua_load_script(activeMod, file, activeMod->index, false);
-    gLuaActiveModFile = prevModFile;
-
-    // if the module didn't return anything, use true
-    if (prevTop == lua_gettop(L)) {
-        lua_pushboolean(L, 1);
-    } else if (lua_isnil(L, -1)) {
-        lua_pop(L, 1);
-        lua_pushboolean(L, 1);
+    // check cache first
+    if (smlua_get_cached_module_result(L, activeMod, file)) {
+        return 1;
     }
 
-    // store in loaded table
-    lua_pushvalue(L, -1); // duplicate return value
-    lua_setfield(L, -3, file->relativePath); // loaded[file->relativePath] = return_value
+    // mark module as "loading" to prevent recursion
+    smlua_mark_module_as_loading(L, activeMod, file);
 
-    // clean up stack
-    lua_remove(L, -2);
+    // cache the previous mod file
+    struct ModFile* prevModFile = gLuaActiveModFile;
+
+    // load and execute
+    gLuaActiveModFile = file;
+    s32 prevTop = lua_gettop(L);
+
+    int rc = smlua_load_script(activeMod, file, activeMod->index, false);
+
+    if (rc == LUA_OK) {
+        smlua_cache_module_result(L, activeMod, file, prevTop);
+    }
+
+    gLuaActiveModFile = prevModFile;
 
     return 1; // return the module value
 }
@@ -179,6 +175,7 @@ void smlua_init_require_system(void) {
     // initialize loaded tables for each mod
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
-        smlua_init_mod_loaded_table(L, mod->relativePath);
+        smlua_get_or_create_mod_loaded_table(L, mod);
+        lua_pop(L, 1); // pop loaded table
     }
 }

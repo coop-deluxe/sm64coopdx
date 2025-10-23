@@ -201,7 +201,7 @@ static struct LuaObjectField sAnimationTableFields[LUA_ANIMATION_TABLE_FIELD_COU
 #define LUA_AREA_FIELD_COUNT 21
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "camera",              LVT_COBJECT_P, offsetof(struct Area, camera),              false, LOT_CAMERA,         1, sizeof(struct Camera*)         },
-    { "dialog",              LVT_U8,        offsetof(struct Area, dialog),              false, LOT_NONE,           2, sizeof(u8)                     },
+    { "dialog",              LVT_S32,       offsetof(struct Area, dialog),              false, LOT_NONE,           2, sizeof(s32)                    },
     { "flags",               LVT_S8,        offsetof(struct Area, flags),               false, LOT_NONE,           1, sizeof(s8)                     },
     { "index",               LVT_S8,        offsetof(struct Area, index),               false, LOT_NONE,           1, sizeof(s8)                     },
     { "instantWarps",        LVT_COBJECT_P, offsetof(struct Area, instantWarps),        false, LOT_INSTANTWARP,    1, sizeof(struct InstantWarp*)    },
@@ -1607,10 +1607,10 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
 
 #define LUA_MOD_AUDIO_FIELD_COUNT 4
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume", LVT_F32,       offsetof(struct ModAudio, baseVolume), false, LOT_NONE,    1, sizeof(f32)             },
-    { "file",       LVT_COBJECT_P, offsetof(struct ModAudio, file),       false, LOT_MODFILE, 1, sizeof(struct ModFile*) },
-    { "isStream",   LVT_BOOL,      offsetof(struct ModAudio, isStream),   true,  LOT_NONE,    1, sizeof(bool)            },
-    { "loaded",     LVT_BOOL,      offsetof(struct ModAudio, loaded),     true,  LOT_NONE,    1, sizeof(bool)            },
+    { "baseVolume", LVT_F32,      offsetof(struct ModAudio, baseVolume), false, LOT_NONE, 1, sizeof(f32)         },
+    { "filepath",   LVT_STRING_P, offsetof(struct ModAudio, filepath),   true,  LOT_NONE, 1, sizeof(const char*) },
+    { "isStream",   LVT_BOOL,     offsetof(struct ModAudio, isStream),   true,  LOT_NONE, 1, sizeof(bool)        },
+    { "loaded",     LVT_BOOL,     offsetof(struct ModAudio, loaded),     true,  LOT_NONE, 1, sizeof(bool)        },
 };
 
 #define LUA_MOD_AUDIO_SAMPLE_COPIES_FIELD_COUNT 3
@@ -1634,23 +1634,83 @@ static struct LuaObjectField sModFileFields[LUA_MOD_FILE_FIELD_COUNT] = {
     { "wroteBytes",        LVT_U64,      offsetof(struct ModFile, wroteBytes),        true, LOT_NONE, 1,  sizeof(u64)    },
 };
 
-#define LUA_MOD_FS_FIELD_COUNT 5
+static const char FUNCTION__mod_fs_clear[] = "mod_fs_clear";
+static const char FUNCTION__mod_fs_copy_file[] = "mod_fs_copy_file";
+static const char FUNCTION__mod_fs_create_file[] = "mod_fs_create_file";
+static const char FUNCTION__mod_fs_delete[] = "mod_fs_delete";
+static const char FUNCTION__mod_fs_delete_file[] = "mod_fs_delete_file";
+static const char FUNCTION__mod_fs_get_file[] = "mod_fs_get_file";
+static const char FUNCTION__mod_fs_get_filename[] = "mod_fs_get_filename";
+static const char FUNCTION__mod_fs_move_file[] = "mod_fs_move_file";
+static const char FUNCTION__mod_fs_save[] = "mod_fs_save";
+static const char FUNCTION__mod_fs_set_public[] = "mod_fs_set_public";
+
+#define LUA_MOD_FS_FIELD_COUNT 15
 static struct LuaObjectField sModFsFields[LUA_MOD_FS_FIELD_COUNT] = {
-    { "isPublic",  LVT_BOOL,      offsetof(struct ModFs, isPublic),  true, LOT_NONE, 1, sizeof(bool)        },
-    { "mod",       LVT_COBJECT_P, offsetof(struct ModFs, mod),       true, LOT_MOD,  1, sizeof(struct Mod*) },
-    { "modPath",   LVT_STRING,    offsetof(struct ModFs, modPath),   true, LOT_NONE, 1, sizeof(char)        },
-    { "numFiles",  LVT_U16,       offsetof(struct ModFs, numFiles),  true, LOT_NONE, 1, sizeof(u16)         },
-    { "totalSize", LVT_U32,       offsetof(struct ModFs, totalSize), true, LOT_NONE, 1, sizeof(u32)         },
+    { "clear",        LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_clear,        true, LOT_NONE, 1, sizeof(const char *) },
+    { "copy_file",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_copy_file,    true, LOT_NONE, 1, sizeof(const char *) },
+    { "create_file",  LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_create_file,  true, LOT_NONE, 1, sizeof(const char *) },
+    { "delete",       LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_delete,       true, LOT_NONE, 1, sizeof(const char *) },
+    { "delete_file",  LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_delete_file,  true, LOT_NONE, 1, sizeof(const char *) },
+    { "get_file",     LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_get_file,     true, LOT_NONE, 1, sizeof(const char *) },
+    { "get_filename", LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_get_filename, true, LOT_NONE, 1, sizeof(const char *) },
+    { "isPublic",     LVT_BOOL,      offsetof(struct ModFs, isPublic),       true, LOT_NONE, 1, sizeof(bool)         },
+    { "mod",          LVT_COBJECT_P, offsetof(struct ModFs, mod),            true, LOT_MOD,  1, sizeof(struct Mod*)  },
+    { "modPath",      LVT_STRING,    offsetof(struct ModFs, modPath),        true, LOT_NONE, 1, sizeof(char)         },
+    { "move_file",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_move_file,    true, LOT_NONE, 1, sizeof(const char *) },
+    { "numFiles",     LVT_U16,       offsetof(struct ModFs, numFiles),       true, LOT_NONE, 1, sizeof(u16)          },
+    { "save",         LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_save,         true, LOT_NONE, 1, sizeof(const char *) },
+    { "set_public",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_set_public,   true, LOT_NONE, 1, sizeof(const char *) },
+    { "totalSize",    LVT_U32,       offsetof(struct ModFs, totalSize),      true, LOT_NONE, 1, sizeof(u32)          },
 };
 
-#define LUA_MOD_FS_FILE_FIELD_COUNT 6
+static const char FUNCTION__mod_fs_file_erase[] = "mod_fs_file_erase";
+static const char FUNCTION__mod_fs_file_fill[] = "mod_fs_file_fill";
+static const char FUNCTION__mod_fs_file_is_eof[] = "mod_fs_file_is_eof";
+static const char FUNCTION__mod_fs_file_read_bool[] = "mod_fs_file_read_bool";
+static const char FUNCTION__mod_fs_file_read_bytes[] = "mod_fs_file_read_bytes";
+static const char FUNCTION__mod_fs_file_read_integer[] = "mod_fs_file_read_integer";
+static const char FUNCTION__mod_fs_file_read_line[] = "mod_fs_file_read_line";
+static const char FUNCTION__mod_fs_file_read_number[] = "mod_fs_file_read_number";
+static const char FUNCTION__mod_fs_file_read_string[] = "mod_fs_file_read_string";
+static const char FUNCTION__mod_fs_file_rewind[] = "mod_fs_file_rewind";
+static const char FUNCTION__mod_fs_file_seek[] = "mod_fs_file_seek";
+static const char FUNCTION__mod_fs_file_set_public[] = "mod_fs_file_set_public";
+static const char FUNCTION__mod_fs_file_set_text_mode[] = "mod_fs_file_set_text_mode";
+static const char FUNCTION__mod_fs_file_write_bool[] = "mod_fs_file_write_bool";
+static const char FUNCTION__mod_fs_file_write_bytes[] = "mod_fs_file_write_bytes";
+static const char FUNCTION__mod_fs_file_write_integer[] = "mod_fs_file_write_integer";
+static const char FUNCTION__mod_fs_file_write_line[] = "mod_fs_file_write_line";
+static const char FUNCTION__mod_fs_file_write_number[] = "mod_fs_file_write_number";
+static const char FUNCTION__mod_fs_file_write_string[] = "mod_fs_file_write_string";
+
+#define LUA_MOD_FS_FILE_FIELD_COUNT 25
 static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
-    { "filepath", LVT_STRING,    offsetof(struct ModFsFile, filepath), true, LOT_NONE,  1, sizeof(char)          },
-    { "isPublic", LVT_BOOL,      offsetof(struct ModFsFile, isPublic), true, LOT_NONE,  1, sizeof(bool)          },
-    { "isText",   LVT_BOOL,      offsetof(struct ModFsFile, isText),   true, LOT_NONE,  1, sizeof(bool)          },
-    { "modFs",    LVT_COBJECT_P, offsetof(struct ModFsFile, modFs),    true, LOT_MODFS, 1, sizeof(struct ModFs*) },
-    { "offset",   LVT_U32,       offsetof(struct ModFsFile, offset),   true, LOT_NONE,  1, sizeof(u32)           },
-    { "size",     LVT_U32,       offsetof(struct ModFsFile, size),     true, LOT_NONE,  1, sizeof(u32)           },
+    { "erase",         LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_erase,         true, LOT_NONE,  1, sizeof(const char *)  },
+    { "filepath",      LVT_STRING,    offsetof(struct ModFsFile, filepath),         true, LOT_NONE,  1, sizeof(char)          },
+    { "fill",          LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_fill,          true, LOT_NONE,  1, sizeof(const char *)  },
+    { "isPublic",      LVT_BOOL,      offsetof(struct ModFsFile, isPublic),         true, LOT_NONE,  1, sizeof(bool)          },
+    { "isText",        LVT_BOOL,      offsetof(struct ModFsFile, isText),           true, LOT_NONE,  1, sizeof(bool)          },
+    { "is_eof",        LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_is_eof,        true, LOT_NONE,  1, sizeof(const char *)  },
+    { "modFs",         LVT_COBJECT_P, offsetof(struct ModFsFile, modFs),            true, LOT_MODFS, 1, sizeof(struct ModFs*) },
+    { "offset",        LVT_U32,       offsetof(struct ModFsFile, offset),           true, LOT_NONE,  1, sizeof(u32)           },
+    { "read_bool",     LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_bool,     true, LOT_NONE,  1, sizeof(const char *)  },
+    { "read_bytes",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_bytes,    true, LOT_NONE,  1, sizeof(const char *)  },
+    { "read_integer",  LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_integer,  true, LOT_NONE,  1, sizeof(const char *)  },
+    { "read_line",     LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_line,     true, LOT_NONE,  1, sizeof(const char *)  },
+    { "read_number",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_number,   true, LOT_NONE,  1, sizeof(const char *)  },
+    { "read_string",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_read_string,   true, LOT_NONE,  1, sizeof(const char *)  },
+    { "rewind",        LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_rewind,        true, LOT_NONE,  1, sizeof(const char *)  },
+    { "seek",          LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_seek,          true, LOT_NONE,  1, sizeof(const char *)  },
+    { "set_public",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_set_public,    true, LOT_NONE,  1, sizeof(const char *)  },
+    { "set_text_mode", LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_set_text_mode, true, LOT_NONE,  1, sizeof(const char *)  },
+    { "size",          LVT_U32,       offsetof(struct ModFsFile, size),             true, LOT_NONE,  1, sizeof(u32)           },
+    { "write_bool",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_bool,    true, LOT_NONE,  1, sizeof(const char *)  },
+    { "write_bytes",   LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_bytes,   true, LOT_NONE,  1, sizeof(const char *)  },
+    { "write_integer", LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_integer, true, LOT_NONE,  1, sizeof(const char *)  },
+    { "write_line",    LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_line,    true, LOT_NONE,  1, sizeof(const char *)  },
+    { "write_number",  LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_number,  true, LOT_NONE,  1, sizeof(const char *)  },
+    { "write_string",  LVT_FUNCTION,  (size_t) FUNCTION__mod_fs_file_write_string,  true, LOT_NONE,  1, sizeof(const char *)  },
 };
 
 #define LUA_MODE_TRANSITION_INFO_FIELD_COUNT 6
@@ -2521,48 +2581,44 @@ static struct LuaObjectField sOffsetSizePairFields[LUA_OFFSET_SIZE_PAIR_FIELD_CO
     { "size",   LVT_U32, offsetof(struct OffsetSizePair, size),   false, LOT_NONE, 1, sizeof(u32) },
 };
 
-#define LUA_PAINTING_FIELD_COUNT 37
+#define LUA_PAINTING_FIELD_COUNT 36
 static struct LuaObjectField sPaintingFields[LUA_PAINTING_FIELD_COUNT] = {
-    { "alpha",                   LVT_U8,        offsetof(struct Painting, alpha),                   false, LOT_NONE, 1, sizeof(u8)                    },
-    { "currFloor",               LVT_S8,        offsetof(struct Painting, currFloor),               false, LOT_NONE, 1, sizeof(s8)                    },
-    { "currRippleMag",           LVT_F32,       offsetof(struct Painting, currRippleMag),           false, LOT_NONE, 1, sizeof(f32)                   },
-    { "currRippleRate",          LVT_F32,       offsetof(struct Painting, currRippleRate),          false, LOT_NONE, 1, sizeof(f32)                   },
-    { "dispersionFactor",        LVT_F32,       offsetof(struct Painting, dispersionFactor),        false, LOT_NONE, 1, sizeof(f32)                   },
-    { "entryDispersionFactor",   LVT_F32,       offsetof(struct Painting, entryDispersionFactor),   false, LOT_NONE, 1, sizeof(f32)                   },
-    { "entryRippleDecay",        LVT_F32,       offsetof(struct Painting, entryRippleDecay),        false, LOT_NONE, 1, sizeof(f32)                   },
-    { "entryRippleMag",          LVT_F32,       offsetof(struct Painting, entryRippleMag),          false, LOT_NONE, 1, sizeof(f32)                   },
-    { "entryRippleRate",         LVT_F32,       offsetof(struct Painting, entryRippleRate),         false, LOT_NONE, 1, sizeof(f32)                   },
-    { "floorEntered",            LVT_S8,        offsetof(struct Painting, floorEntered),            false, LOT_NONE, 1, sizeof(s8)                    },
-    { "id",                      LVT_S16,       offsetof(struct Painting, id),                      true,  LOT_NONE, 1, sizeof(s16)                   },
-    { "imageCount",              LVT_S8,        offsetof(struct Painting, imageCount),              true,  LOT_NONE, 1, sizeof(s8)                    },
-    { "lastFloor",               LVT_S8,        offsetof(struct Painting, lastFloor),               false, LOT_NONE, 1, sizeof(s8)                    },
-    { "marioIsUnder",            LVT_S8,        offsetof(struct Painting, marioIsUnder),            false, LOT_NONE, 1, sizeof(s8)                    },
-    { "marioWasUnder",           LVT_S8,        offsetof(struct Painting, marioWasUnder),           false, LOT_NONE, 1, sizeof(s8)                    },
-    { "marioWentUnder",          LVT_S8,        offsetof(struct Painting, marioWentUnder),          false, LOT_NONE, 1, sizeof(s8)                    },
-    { "normalDisplayList",       LVT_COBJECT_P, offsetof(struct Painting, normalDisplayList),       true,  LOT_GFX,  1, sizeof(const Gfx*)            },
-    { "passiveDispersionFactor", LVT_F32,       offsetof(struct Painting, passiveDispersionFactor), false, LOT_NONE, 1, sizeof(f32)                   },
-    { "passiveRippleDecay",      LVT_F32,       offsetof(struct Painting, passiveRippleDecay),      false, LOT_NONE, 1, sizeof(f32)                   },
-    { "passiveRippleMag",        LVT_F32,       offsetof(struct Painting, passiveRippleMag),        false, LOT_NONE, 1, sizeof(f32)                   },
-    { "passiveRippleRate",       LVT_F32,       offsetof(struct Painting, passiveRippleRate),       false, LOT_NONE, 1, sizeof(f32)                   },
-    { "pitch",                   LVT_F32,       offsetof(struct Painting, pitch),                   false, LOT_NONE, 1, sizeof(f32)                   },
-    { "posX",                    LVT_F32,       offsetof(struct Painting, posX),                    false, LOT_NONE, 1, sizeof(f32)                   },
-    { "posY",                    LVT_F32,       offsetof(struct Painting, posY),                    false, LOT_NONE, 1, sizeof(f32)                   },
-    { "posZ",                    LVT_F32,       offsetof(struct Painting, posZ),                    false, LOT_NONE, 1, sizeof(f32)                   },
-    { "rippleDecay",             LVT_F32,       offsetof(struct Painting, rippleDecay),             false, LOT_NONE, 1, sizeof(f32)                   },
-    { "rippleDisplayList",       LVT_COBJECT_P, offsetof(struct Painting, rippleDisplayList),       true,  LOT_GFX,  1, sizeof(const Gfx*)            },
-    { "rippleTimer",             LVT_F32,       offsetof(struct Painting, rippleTimer),             false, LOT_NONE, 1, sizeof(f32)                   },
-    { "rippleTrigger",           LVT_S8,        offsetof(struct Painting, rippleTrigger),           false, LOT_NONE, 1, sizeof(s8)                    },
-    { "rippleX",                 LVT_F32,       offsetof(struct Painting, rippleX),                 false, LOT_NONE, 1, sizeof(f32)                   },
-    { "rippleY",                 LVT_F32,       offsetof(struct Painting, rippleY),                 false, LOT_NONE, 1, sizeof(f32)                   },
-//  { "ripples",                 LVT_???,       offsetof(struct Painting, ripples),                 false, LOT_???,  1, sizeof(struct { ... })        }, <--- UNIMPLEMENTED
-    { "size",                    LVT_F32,       offsetof(struct Painting, size),                    false, LOT_NONE, 1, sizeof(f32)                   },
-    { "state",                   LVT_S8,        offsetof(struct Painting, state),                   false, LOT_NONE, 1, sizeof(s8)                    },
-//  { "textureArray",            LVT_???,       offsetof(struct Painting, textureArray),            true,  LOT_???,  1, sizeof(const Texture *const*) }, <--- UNIMPLEMENTED
-    { "textureHeight",           LVT_S16,       offsetof(struct Painting, textureHeight),           true,  LOT_NONE, 1, sizeof(s16)                   },
-//  { "textureMaps",             LVT_???,       offsetof(struct Painting, textureMaps),             true,  LOT_???,  1, sizeof(const s16 *const*)     }, <--- UNIMPLEMENTED
-    { "textureType",             LVT_S8,        offsetof(struct Painting, textureType),             true,  LOT_NONE, 1, sizeof(s8)                    },
-    { "textureWidth",            LVT_S16,       offsetof(struct Painting, textureWidth),            true,  LOT_NONE, 1, sizeof(s16)                   },
-    { "yaw",                     LVT_F32,       offsetof(struct Painting, yaw),                     false, LOT_NONE, 1, sizeof(f32)                   },
+    { "alpha",                   LVT_U8,        offsetof(struct Painting, alpha),                   false, LOT_NONE,    1, sizeof(u8)             },
+    { "currFloor",               LVT_S8,        offsetof(struct Painting, currFloor),               false, LOT_NONE,    1, sizeof(s8)             },
+    { "currRippleMag",           LVT_F32,       offsetof(struct Painting, currRippleMag),           false, LOT_NONE,    1, sizeof(f32)            },
+    { "currRippleRate",          LVT_F32,       offsetof(struct Painting, currRippleRate),          false, LOT_NONE,    1, sizeof(f32)            },
+    { "dispersionFactor",        LVT_F32,       offsetof(struct Painting, dispersionFactor),        false, LOT_NONE,    1, sizeof(f32)            },
+    { "entryDispersionFactor",   LVT_F32,       offsetof(struct Painting, entryDispersionFactor),   false, LOT_NONE,    1, sizeof(f32)            },
+    { "entryRippleDecay",        LVT_F32,       offsetof(struct Painting, entryRippleDecay),        false, LOT_NONE,    1, sizeof(f32)            },
+    { "entryRippleMag",          LVT_F32,       offsetof(struct Painting, entryRippleMag),          false, LOT_NONE,    1, sizeof(f32)            },
+    { "entryRippleRate",         LVT_F32,       offsetof(struct Painting, entryRippleRate),         false, LOT_NONE,    1, sizeof(f32)            },
+    { "floorEntered",            LVT_S8,        offsetof(struct Painting, floorEntered),            false, LOT_NONE,    1, sizeof(s8)             },
+    { "id",                      LVT_S16,       offsetof(struct Painting, id),                      true,  LOT_NONE,    1, sizeof(s16)            },
+    { "imageCount",              LVT_S8,        offsetof(struct Painting, imageCount),              true,  LOT_NONE,    1, sizeof(s8)             },
+    { "lastFloor",               LVT_S8,        offsetof(struct Painting, lastFloor),               false, LOT_NONE,    1, sizeof(s8)             },
+    { "marioIsUnder",            LVT_S8,        offsetof(struct Painting, marioIsUnder),            false, LOT_NONE,    1, sizeof(s8)             },
+    { "marioWasUnder",           LVT_S8,        offsetof(struct Painting, marioWasUnder),           false, LOT_NONE,    1, sizeof(s8)             },
+    { "marioWentUnder",          LVT_S8,        offsetof(struct Painting, marioWentUnder),          false, LOT_NONE,    1, sizeof(s8)             },
+    { "passiveDispersionFactor", LVT_F32,       offsetof(struct Painting, passiveDispersionFactor), false, LOT_NONE,    1, sizeof(f32)            },
+    { "passiveRippleDecay",      LVT_F32,       offsetof(struct Painting, passiveRippleDecay),      false, LOT_NONE,    1, sizeof(f32)            },
+    { "passiveRippleMag",        LVT_F32,       offsetof(struct Painting, passiveRippleMag),        false, LOT_NONE,    1, sizeof(f32)            },
+    { "passiveRippleRate",       LVT_F32,       offsetof(struct Painting, passiveRippleRate),       false, LOT_NONE,    1, sizeof(f32)            },
+    { "pitch",                   LVT_F32,       offsetof(struct Painting, pitch),                   false, LOT_NONE,    1, sizeof(f32)            },
+    { "posX",                    LVT_F32,       offsetof(struct Painting, posX),                    false, LOT_NONE,    1, sizeof(f32)            },
+    { "posY",                    LVT_F32,       offsetof(struct Painting, posY),                    false, LOT_NONE,    1, sizeof(f32)            },
+    { "posZ",                    LVT_F32,       offsetof(struct Painting, posZ),                    false, LOT_NONE,    1, sizeof(f32)            },
+    { "rippleDecay",             LVT_F32,       offsetof(struct Painting, rippleDecay),             false, LOT_NONE,    1, sizeof(f32)            },
+    { "rippleTimer",             LVT_F32,       offsetof(struct Painting, rippleTimer),             false, LOT_NONE,    1, sizeof(f32)            },
+    { "rippleTrigger",           LVT_S8,        offsetof(struct Painting, rippleTrigger),           false, LOT_NONE,    1, sizeof(s8)             },
+    { "rippleX",                 LVT_F32,       offsetof(struct Painting, rippleX),                 false, LOT_NONE,    1, sizeof(f32)            },
+    { "rippleY",                 LVT_F32,       offsetof(struct Painting, rippleY),                 false, LOT_NONE,    1, sizeof(f32)            },
+    { "size",                    LVT_F32,       offsetof(struct Painting, size),                    false, LOT_NONE,    1, sizeof(f32)            },
+    { "state",                   LVT_S8,        offsetof(struct Painting, state),                   false, LOT_NONE,    1, sizeof(s8)             },
+    { "textureArray",            LVT_TEXTURE_P, offsetof(struct Painting, textureArray),            true,  LOT_POINTER, 2, sizeof(const Texture*) },
+    { "textureHeight",           LVT_S16,       offsetof(struct Painting, textureHeight),           true,  LOT_NONE,    1, sizeof(s16)            },
+    { "textureType",             LVT_S8,        offsetof(struct Painting, textureType),             true,  LOT_NONE,    1, sizeof(s8)             },
+    { "textureWidth",            LVT_S16,       offsetof(struct Painting, textureWidth),            true,  LOT_NONE,    1, sizeof(s16)            },
+    { "yaw",                     LVT_F32,       offsetof(struct Painting, yaw),                     false, LOT_NONE,    1, sizeof(f32)            },
 };
 
 #define LUA_PAINTING_MESH_VERTEX_FIELD_COUNT 2
@@ -2746,6 +2802,12 @@ static struct LuaObjectField sStarsNeededForDialogFields[LUA_STARS_NEEDED_FOR_DI
     { "dialog6", LVT_U16, offsetof(struct StarsNeededForDialog, dialog6), false, LOT_NONE, 1, sizeof(u16) },
 };
 
+#define LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT 2
+static struct LuaObjectField sStaticObjectCollisionFields[LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT] = {
+    { "index",  LVT_U32, offsetof(struct StaticObjectCollision, index),  true, LOT_NONE, 1, sizeof(u32) },
+    { "length", LVT_U16, offsetof(struct StaticObjectCollision, length), true, LOT_NONE, 1, sizeof(u16) },
+};
+
 #define LUA_SURFACE_FIELD_COUNT 16
 static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "flags",             LVT_S8,        offsetof(struct Surface, flags),             false, LOT_NONE,   1, sizeof(s8)             },
@@ -2768,11 +2830,11 @@ static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
 
 #define LUA_TEXTURE_INFO_FIELD_COUNT 5
 static struct LuaObjectField sTextureInfoFields[LUA_TEXTURE_INFO_FIELD_COUNT] = {
-    { "bitSize", LVT_U8,       offsetof(struct TextureInfo, bitSize), true, LOT_NONE,    1, sizeof(u8)          },
-    { "height",  LVT_U32,      offsetof(struct TextureInfo, height),  true, LOT_NONE,    1, sizeof(u32)         },
-    { "name",    LVT_STRING_P, offsetof(struct TextureInfo, name),    true, LOT_NONE,    1, sizeof(const char*) },
-    { "texture", LVT_U8_P,     offsetof(struct TextureInfo, texture), true, LOT_POINTER, 1, sizeof(u8*)         },
-    { "width",   LVT_U32,      offsetof(struct TextureInfo, width),   true, LOT_NONE,    1, sizeof(u32)         },
+    { "bitSize", LVT_U8,        offsetof(struct TextureInfo, bitSize), true, LOT_NONE,    1, sizeof(u8)          },
+    { "height",  LVT_U32,       offsetof(struct TextureInfo, height),  true, LOT_NONE,    1, sizeof(u32)         },
+    { "name",    LVT_STRING_P,  offsetof(struct TextureInfo, name),    true, LOT_NONE,    1, sizeof(const char*) },
+    { "texture", LVT_TEXTURE_P, offsetof(struct TextureInfo, texture), true, LOT_POINTER, 1, sizeof(Texture*)    },
+    { "width",   LVT_U32,       offsetof(struct TextureInfo, width),   true, LOT_NONE,    1, sizeof(u32)         },
 };
 
 #define LUA_TRANSITION_INFO_FIELD_COUNT 9
@@ -2984,6 +3046,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SPAWNPARTICLESINFO,           sSpawnParticlesInfoFields,           LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT            },
     { LOT_STARPOSITIONS,                sStarPositionsFields,                LUA_STAR_POSITIONS_FIELD_COUNT                  },
     { LOT_STARSNEEDEDFORDIALOG,         sStarsNeededForDialogFields,         LUA_STARS_NEEDED_FOR_DIALOG_FIELD_COUNT         },
+    { LOT_STATICOBJECTCOLLISION,        sStaticObjectCollisionFields,        LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT         },
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_TRANSITIONINFO,               sTransitionInfoFields,               LUA_TRANSITION_INFO_FIELD_COUNT                 },
@@ -3114,6 +3177,7 @@ const char *sLuaLotNames[] = {
 	[LOT_SPAWNPARTICLESINFO] = "SpawnParticlesInfo",
 	[LOT_STARPOSITIONS] = "StarPositions",
 	[LOT_STARSNEEDEDFORDIALOG] = "StarsNeededForDialog",
+	[LOT_STATICOBJECTCOLLISION] = "StaticObjectCollision",
 	[LOT_SURFACE] = "Surface",
 	[LOT_TEXTUREINFO] = "TextureInfo",
 	[LOT_TRANSITIONINFO] = "TransitionInfo",

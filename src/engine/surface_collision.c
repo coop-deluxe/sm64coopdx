@@ -137,9 +137,8 @@ static s32 find_wall_collisions_from_list(struct SurfaceNode *surfaceNode,
         surfaceNode = surfaceNode->next;
 
         // Exclude a large number of walls immediately to optimize.
-        if (y < surf->lowerY || y > surf->upperY) {
-            continue;
-        }
+        if (y < surf->lowerY || y > surf->upperY) { continue; }
+        if (surf->flags & SURFACE_FLAG_INTANGIBLE) { continue; }
 
         if (gLevelValues.fixCollisionBugs && gLevelValues.fixCollisionBugsRoundedCorners && !gFindWallDirectionAirborne) {
             // Check AABB to exclude walls before doing expensive triangle check
@@ -399,6 +398,8 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
         surf = surfaceNode->surface;
         surfaceNode = surfaceNode->next;
 
+        if (surf->flags & SURFACE_FLAG_INTANGIBLE) { continue; }
+
         x1 = surf->vertex1[0];
         z1 = surf->vertex1[2];
         z2 = surf->vertex2[2];
@@ -622,7 +623,8 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
         interpolate = gInterpolatingSurfaces;
-
+        
+        if (surf->flags & SURFACE_FLAG_INTANGIBLE) { continue; }
         if (gCheckingSurfaceCollisionsForObject != NULL) {
             if (surf->object != gCheckingSurfaceCollisionsForObject) {
                 continue;

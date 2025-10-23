@@ -2,20 +2,38 @@ extern "C" {
 #include "mod_fs.h"
 #include "src/pc/fs/fs.h"
 #include "src/pc/mods/mods_utils.h"
+#include "pc/utils/miniz/miniz.h"
 }
 #include <algorithm>
 #include <vector>
 #include <string>
 #include <map>
 #include <set>
+#include "pc/utils/json.hpp"
 
 #define C_DEFINE extern "C"
 
-static std::vector<struct ModFs *> sModFsList = {};
-static char sModFsFileReadStringBuf[MOD_FS_MAX_SIZE + 1];
+using json = nlohmann::json;
+static const json sEmptyJson = {};
 
-#define MOD_FS_MAGIC "MODFSSM64COOPDX"
-#define MOD_FS_HEADER_SIZE 32
+static std::vector<struct ModFs *> sModFsList = {};
+
+#define MOD_FS_DIRECTORY    "sav"
+#define MOD_FS_EXTENSION    ".modfs"
+#define MOD_FS_PROPERTIES   "properties.json"
+
+#define MOD_FS_IS_PUBLIC_DEFAULT        false
+#define MOD_FS_FILE_IS_PUBLIC_DEFAULT   false
+
+static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
+    ".txt", ".json", ".ini", ".sav",    // text
+    ".bin", ".col",                     // actors
+    ".bhv",                             // behaviors
+    ".tex", ".png",                     // textures
+    ".lvl",                             // levels
+    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    NULL
+};
 
 //
 // Error handling
@@ -37,7 +55,7 @@ static char sModFsErrorFunction[256];
 }
 
 #define mod_fs_raise_error(fmt, ...) { \
-    snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, __VA_ARGS__); \
+    snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, ##__VA_ARGS__); \
     if (!sModFsHideErrors) { \
         LOG_LUA_LINE("%s", sModFsLastError); \
     } \
@@ -123,6 +141,119 @@ static FILE *mod_fs_get_file_handle(const char *modPath, const char *mode) {
     return NULL;
 }
 
+static int mod_fs_compare_filepaths(const void *l, const void *r) {
+    const struct ModFsFile *lfile = *((const struct ModFsFile **) l);
+    const struct ModFsFile *rfile = *((const struct ModFsFile **) r);
+    return strcmp(lfile->filepath, rfile->filepath);
+}
+
+static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
+
+    // check length
+    u32 filepathLength = strlen(filepath);
+    if (filepathLength == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath length cannot be 0", modFs->modPath, filepath
+        );
+        return false;
+    }
+    if (filepathLength > MOD_FS_MAX_PATH - 1) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepath, filepathLength, MOD_FS_MAX_PATH - 1
+        );
+        return false;
+    }
+
+    // cannot be called properties.json
+    if (strcmp(filepath, MOD_FS_PROPERTIES) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - forbidden filepath: \"" MOD_FS_PROPERTIES "\" is reserved", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // check character validity
+    // only ascii chars, no control chars, no star, no backslash
+    for (u32 i = 0; i != filepathLength; ++i) {
+        char c = filepath[i];
+        if (!isascii(c) || iscntrl(c) || c == '*' || c == '\\') {
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - invalid character at position %d: '%c' (%02X)", modFs->modPath, filepath, i, c, (u8) c
+            );
+            return false;
+        }
+    }
+
+    // cannot start with a slash
+    if (filepath[0] == '/') {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath cannot start with a slash '/'", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // cannot end with a slash
+    if (filepath[filepathLength - 1] == '/') {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - filepath cannot end with a slash '/'", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // no two consecutive slashes
+    if (strstr(filepath, "//")) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - two or more consecutive slashes '/' are not allowed", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // check extension
+    const char *lastSlash = strrchr(filepath, '/');
+    const char *lastDot = strrchr(filepath, '.');
+    if (lastDot > lastSlash) {
+        bool allowedExtension = false;
+        for (const char **ext = MOD_FS_FILE_ALLOWED_EXTENSIONS; *ext; ext++) {
+            if (strcasecmp(lastDot, *ext) == 0) {
+                allowedExtension = true;
+                break;
+            }
+        }
+        if (!allowedExtension) {
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - file extension not allowed: %s", modFs->modPath, filepath, lastDot
+            );
+            return false;
+        }
+    }
+
+    return true;
+}
+
+static bool mod_fs_check_file_content(struct ModFs *modFs, struct ModFsFile *file) {
+    if (!file->data.bin || file->size < 4) {
+        return true;
+    }
+
+    // Reject Windows executable files
+    if (memcmp(file->data.bin, "MZ", 2) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - Binary file cannot start with \"MZ\" bytes", modFs->modPath, file->filepath
+        );
+        return false;
+    }
+
+    // Reject ELF files
+    if (memcmp(file->data.bin, "\177ELF", 4) == 0) {
+        mod_fs_raise_error(
+            "modPath: %s, filepath: %s - Binary file cannot start with \"\\x7fELF\" bytes", modFs->modPath, file->filepath
+        );
+        return false;
+    }
+
+    return true;
+}
+
 //
 // ctor, dtor
 //
@@ -132,7 +263,7 @@ static struct ModFs *mod_fs_new() {
         struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
         if (!modFs) {
             mod_fs_raise_error(
-                "failed to allocate modfs object", NULL
+                "failed to allocate modfs object"
             );
             return NULL;
         }
@@ -141,7 +272,7 @@ static struct ModFs *mod_fs_new() {
         modFs->files = NULL;
         modFs->numFiles = 0;
         modFs->totalSize = 0;
-        modFs->isPublic = false;
+        modFs->isPublic = MOD_FS_IS_PUBLIC_DEFAULT;
         return modFs;
     }
     return NULL;
@@ -164,29 +295,168 @@ static void mod_fs_destroy(struct ModFs *modFs) {
 }
 
 //
+// Properties
+//
+
+template <typename T>
+T mod_fs_get_property_value(const json &property, const T &defaultValue);
+
+template <>
+bool mod_fs_get_property_value(const json &property, const bool &defaultValue) {
+    if (property.is_boolean()) {
+        return (bool) property;
+    }
+    return defaultValue;
+}
+
+const json &mod_fs_get_properties_at(const json &properties, const std::vector<const char *> &propertyPath) {
+    const json *current = &properties;
+    for (const auto &key : propertyPath) {
+        if (!current->is_object() || !current->contains(key)) {
+            return sEmptyJson;
+        }
+        current = &(*current)[key];
+    }
+    return *current;
+}
+
+template <typename T>
+static T mod_fs_read_property(const json &properties, const std::vector<const char *> &propertyPath, const T &defaultValue) {
+    return mod_fs_get_property_value<T>(
+        mod_fs_get_properties_at(properties, propertyPath),
+        defaultValue
+    );
+}
+
+static bool mod_fs_get_wildcard_tokens(const char *path, char *prefix, char *suffix) {
+    const char *wildcard = strchr(path, '*');
+    if (!wildcard) {
+        return false;
+    }
+
+    // Multiple wildcards are not supported
+    if (strchr(wildcard + 1, '*') != NULL) {
+        return false;
+    }
+
+    snprintf(prefix, SYS_MAX_PATH, "%.*s", (s32) (wildcard - path), path);
+    snprintf(suffix, SYS_MAX_PATH, "%s", wildcard + 1);
+    return true;
+}
+
+static const json &mod_fs_read_properties_for_filepath(const json &properties, const char *filepath) {
+
+    // Get all files properties
+    const json &filesProperties = mod_fs_get_properties_at(properties, { "files" });
+    if (filesProperties.empty()) {
+        return sEmptyJson;
+    }
+
+    // First, check for the exact path
+    const json &fileProperties = mod_fs_get_properties_at(filesProperties, { filepath });
+    if (!fileProperties.empty()) {
+        return fileProperties;
+    }
+
+    // If not found, look for wildcards
+    for (auto it = filesProperties.begin(); it != filesProperties.end(); it++) {
+        char prefix[SYS_MAX_PATH];
+        char suffix[SYS_MAX_PATH];
+        if (!mod_fs_get_wildcard_tokens(it.key().c_str(), prefix, suffix)) {
+            continue;
+        }
+        if (str_starts_with(filepath, prefix) && str_ends_with(filepath, suffix)) {
+            return it.value();
+        }
+    }
+
+    return sEmptyJson;
+}
+
+static json mod_fs_get_properties_json(struct ModFs *modFs) {
+    json properties;
+    properties["isPublic"] = modFs->isPublic;
+    for (u16 i = 0; i != modFs->numFiles; ++i) {
+        struct ModFsFile *file = modFs->files[i];
+        properties["files"][file->filepath] = {
+            { "isText", file->isText },
+            { "isPublic", file->isPublic }
+        };
+    }
+    return properties;
+}
+
+static bool mod_fs_file_detect_text_mode(struct ModFsFile *file) {
+    for (u32 i = 0; i != file->size; ++i) {
+        u8 c = file->data.bin[i];
+        if (iscntrl(c) && !isspace(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+//
 // Read
 //
 
-#define mod_fs_read_raise_error(modFs, f, ...) { \
-    mod_fs_destroy(modFs); \
-    fclose(f); \
+#define mod_fs_read_return(ret) { \
+    if (zipBuf) { free(zipBuf); } \
+    if (f) { fclose(f); } \
+    mz_zip_reader_end(zip); \
+    if (!ret) { mod_fs_destroy(modFs); } \
+    return ret; \
+}
+
+#define mod_fs_read_raise_error(...) { \
     mod_fs_raise_error(__VA_ARGS__); \
-    return false; \
+    mod_fs_read_return(false); \
 }
 
-#define mod_fs_read_fread_or_fail(modFs, f, buf, size, count, ...) { \
-    if (fread(buf, size, count, f) < count) { \
-        mod_fs_read_raise_error(modFs, f, __VA_ARGS__); \
-    } \
+#define mod_fs_read_raise_error_zip() { \
+    mod_fs_read_raise_error("modPath: %s - cannot read zip file: %s", modFs->modPath, mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
 }
 
-static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool readHeaderOnly) {
+static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::string &error) {
+    properties.clear();
+
+    // locate file in zip
+    s32 fileIndex = mz_zip_reader_locate_file(zip, MOD_FS_PROPERTIES, NULL, 0);
+    if (fileIndex < 0) {
+        return true;
+    }
+
+    // read file
+    size_t fileSize;
+    void *fileBuf = mz_zip_reader_extract_to_heap(zip, fileIndex, &fileSize, 0);
+    if (!fileBuf) {
+        error = "cannot read file \"" MOD_FS_PROPERTIES "\": " + std::string(mz_zip_get_error_string(mz_zip_get_last_error(zip)));
+        return false;
+    }
+    std::string textBuf((const char *) fileBuf, fileSize);
+    mz_free(fileBuf);
+
+    // parse json
+    try {
+        properties = json::parse(textBuf);
+    } catch (const json::parse_error& e) {
+        error = e.what();
+        return false;
+    }
+
+    // properties found
+    return true;
+}
+
+static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExistenceOnly) {
     FILE *f = mod_fs_get_file_handle(modPath, "rb");
     if (f) {
+        mz_zip_archive zip[1] = {0};
+        void *zipBuf = NULL;
 
         // get true modPath and mod
         if (!mod_fs_get_modpath(modPath, modFs->modPath)) {
-            mod_fs_read_raise_error(modFs, f,
+            mod_fs_read_raise_error(
                 "unable to retrieve modPath from %s", modPath
             );
         }
@@ -197,147 +467,171 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool readHeade
             modFs->mod = NULL;
         }
 
-        // read magic (last byte is version)
-        char magic[sizeof(MOD_FS_MAGIC)] = {0};
-        mod_fs_read_fread_or_fail(modFs, f, magic, 1, sizeof(magic),
-            "modPath: %s - cannot read file magic", modFs->modPath
-        );
-        if (memcmp(magic, MOD_FS_MAGIC, sizeof(MOD_FS_MAGIC) - 1) != 0) {
-            mod_fs_read_raise_error(modFs, f,
-                "modPath: %s - not a modfs file", modFs->modPath
+        // read zip file
+        fseek(f, 0, SEEK_END);
+        size_t zipSize = ftell(f);
+        rewind(f);
+        zipBuf = malloc(zipSize);
+        if (!zipBuf || fread(zipBuf, 1, zipSize, f) < zipSize) {
+            mod_fs_read_raise_error(
+                "modPath: %s - cannot read zip file", modFs->modPath
             );
         }
-        u8 version = (u8) magic[sizeof(MOD_FS_MAGIC) - 1];
-        if (version == 0 || version > MOD_FS_VERSION) {
-            mod_fs_read_raise_error(modFs, f,
-                "modPath: %s - invalid version: %u (must be between 1 and %u)", modFs->modPath, version, MOD_FS_VERSION
-            );
+        fclose(f);
+        f = NULL;
+
+        // initialize zip
+        if (!mz_zip_reader_init_mem(zip, zipBuf, zipSize, 0)) {
+            mod_fs_read_raise_error_zip();
         }
 
-        // read header
-        mod_fs_read_fread_or_fail(modFs, f, &modFs->numFiles, sizeof(modFs->numFiles), 1,
-            "modPath: %s - cannot read number of files", modFs->modPath
-        );
-        mod_fs_read_fread_or_fail(modFs, f, &modFs->isPublic, sizeof(modFs->isPublic), 1,
-            "modPath: %s - cannot read public flag", modFs->modPath
-        );
-
-        // check validity
-        if (modFs->numFiles > MOD_FS_MAX_FILES) {
-            mod_fs_read_raise_error(modFs, f,
-                "modPath: %s - exceeded number of files: %u (max is: %u)", modFs->modPath, modFs->numFiles, MOD_FS_MAX_FILES
+        // find and read properties file
+        json properties;
+        std::string error;
+        if (!mod_fs_read_properties(zip, properties, error)) {
+            mod_fs_read_raise_error(
+                "modPath: %s - %s", modFs->modPath, error.c_str()
             );
         }
 
-        // check access
+        // check if modfs is public
+        modFs->isPublic = mod_fs_read_property<bool>(properties, { "isPublic" }, MOD_FS_IS_PUBLIC_DEFAULT);
         if (!mod_fs_is_active_mod(modFs) && !modFs->isPublic) {
             // don't raise an error, user should not know if a private modfs file exists
-            mod_fs_destroy(modFs);
-            fclose(f);
-            return false;
+            mod_fs_read_return (false);
         }
-        if (readHeaderOnly) {
-            fclose(f);
-            return true;
+        if (checkExistenceOnly) {
+            mod_fs_read_return (true);
         }
 
-        // padding (empty space for future versions)
-        if (fseek(f, MOD_FS_HEADER_SIZE, SEEK_SET) != 0) {
-            mod_fs_read_raise_error(modFs, f,
-                "modPath: %s - cannot read header", modFs->modPath
-            );
+        modFs->numFiles = 0;
+        modFs->totalSize = 0;
+        u32 numFiles = mz_zip_reader_get_num_files(zip);
+        std::vector<struct ModFsFile> files;
+
+        // retrieve files and start building them
+        // check filename, file size, total size and number of files here
+        for (u32 i = 0; i != numFiles; ++i) {
+            mz_zip_archive_file_stat fileStat;
+            if (!mz_zip_reader_is_file_a_directory(zip, i) &&        // not a directory
+                mz_zip_reader_file_stat(zip, i, &fileStat) &&        // valid file
+                strcmp(fileStat.m_filename, MOD_FS_PROPERTIES) != 0  // not properties.json
+            ) {
+                struct ModFsFile file = {0};
+                file.offset = i;
+
+                // check filepath
+                const char *filepath = fileStat.m_filename;
+                if (!mod_fs_check_filepath(modFs, filepath)) {
+                    mod_fs_read_raise_error(
+                        "modPath: %s - invalid filepath: %s", modFs->modPath, filepath
+                    );
+                }
+                memcpy(file.filepath, filepath, strlen(filepath));
+
+                // check file size
+                if (fileStat.m_uncomp_size > MOD_FS_MAX_SIZE) {
+                    mod_fs_read_raise_error(
+                        "modPath: %s, filepath: %s - exceeded file size: %llu (max is: %u)", modFs->modPath, file.filepath, (u64) fileStat.m_uncomp_size, MOD_FS_MAX_SIZE
+                    );
+                }
+                file.size = file.capacity = fileStat.m_uncomp_size;
+
+                // check total size
+                modFs->totalSize += file.size;
+                if (modFs->totalSize > MOD_FS_MAX_SIZE) {
+                    mod_fs_read_raise_error(
+                        "modPath: %s - exceeded total size: %u (max is: %u)", modFs->modPath, modFs->totalSize, MOD_FS_MAX_SIZE
+                    );
+                }
+
+                // read isPublic property
+                const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file.filepath);
+                file.isPublic = mod_fs_read_property<bool>(fileProperties, { "isPublic" }, MOD_FS_FILE_IS_PUBLIC_DEFAULT);
+
+                // skip file if it's private
+                if (!mod_fs_is_active_mod(modFs) && !file.isPublic) {
+                    continue;
+                }
+
+                files.push_back(file);
+                modFs->numFiles++;
+
+                // check number of files
+                if (modFs->numFiles > MOD_FS_MAX_FILES) {
+                    mod_fs_read_raise_error(
+                        "modPath: %s - exceeded number of files: %u (max is: %u)", modFs->modPath, numFiles, MOD_FS_MAX_FILES
+                    );
+                }
+            }
         }
 
-        // read files and compute total size
+        // read files data
         if (modFs->numFiles) {
             modFs->files = (struct ModFsFile **) calloc(modFs->numFiles, sizeof(struct ModFsFile *));
             if (!modFs->files) {
-                mod_fs_read_raise_error(modFs, f,
+                mod_fs_read_raise_error(
                     "modPath: %s - failed to allocate buffer for modfs files", modFs->modPath
                 );
             }
         } else {
             modFs->files = NULL;
         }
-        modFs->totalSize = 0;
-        for (u16 i = 0; i != modFs->numFiles; ++i) {
+        for (u16 i = 0, j = 0; i != modFs->numFiles; ++i) {
+            const struct ModFsFile &fileRef = files[i];
 
-            // check filepath length
-            u16 filepathLength;
-            mod_fs_read_fread_or_fail(modFs, f, &filepathLength, sizeof(filepathLength), 1,
-                "modPath: %s - cannot read filepath length", modFs->modPath
-            );
-            if (filepathLength == 0) {
-                mod_fs_read_raise_error(modFs, f,
-                    "modPath: %s - filepath length cannot be 0", modFs->modPath
+            // read file
+            size_t fileSize;
+            void *fileBuf = mz_zip_reader_extract_to_heap(zip, fileRef.offset, &fileSize, 0);
+            if (!fileBuf) {
+                mod_fs_read_raise_error_zip();
+            }
+
+            // check file size
+            if (fileSize != fileRef.size) {
+                mod_fs_read_raise_error(
+                    "modPath: %s, filepath: %s - truncated data: read size is %llu (expected: %u)", modFs->modPath, fileRef.filepath, (u64) fileSize, fileRef.size
                 );
             }
-            if (filepathLength > MOD_FS_MAX_PATH - 1) {
-                mod_fs_read_raise_error(modFs, f,
-                    "modPath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepathLength, MOD_FS_MAX_PATH - 1
-                );
-            }
 
-            // get filename
-            char filepath[MOD_FS_MAX_PATH] = {0};
-            mod_fs_read_fread_or_fail(modFs, f, filepath, sizeof(char), filepathLength,
-                "modPath: %s - cannot read filepath", modFs->modPath
-            );
-
-            // read file header
-            struct ModFsFile fileHeader = {0};
-            mod_fs_read_fread_or_fail(modFs, f, &fileHeader.size, sizeof(fileHeader.size), 1,
-                "modPath: %s, filepath: %s - cannot read file size", modFs->modPath, filepath
-            );
-            mod_fs_read_fread_or_fail(modFs, f, &fileHeader.isPublic, sizeof(fileHeader.isPublic), 1,
-                "modPath: %s, filepath: %s - cannot read file public flag", modFs->modPath, filepath
-            );
-            mod_fs_read_fread_or_fail(modFs, f, &fileHeader.isText, sizeof(fileHeader.isText), 1,
-                "modPath: %s, filepath: %s - cannot read file text flag", modFs->modPath, filepath
-            );
-
-            // don't create file if it's private
-            if (!mod_fs_is_active_mod(modFs) && !fileHeader.isPublic) {
-                modFs->numFiles--;
-                i--;
-                fseek(f, fileHeader.size, SEEK_CUR);
-                continue;
-            }
-
-            // create file
+            // create modfs file
             struct ModFsFile *file = modFs->files[i] = mod_fs_alloc<struct ModFsFile>();
             if (!file) {
-                mod_fs_read_raise_error(modFs, f,
+                mod_fs_read_raise_error(
                     "modPath: %s, filepath: %s - failed to allocate modfs file object", modFs->modPath, file->filepath
                 );
             }
-            memcpy(file, &fileHeader, sizeof(struct ModFsFile));
-            snprintf(file->filepath, MOD_FS_MAX_PATH, "%s", filepath);
-            modFs->totalSize += file->size;
-            if (modFs->totalSize > MOD_FS_MAX_SIZE) {
-                mod_fs_read_raise_error(modFs, f,
-                    "modPath: %s - exceeded total size: %u (max is: %u)", modFs->modPath, modFs->totalSize, MOD_FS_MAX_SIZE
-                );
-            }
+            memcpy(file, &fileRef, sizeof(struct ModFsFile));
             file->offset = 0;
-
-            // read file data
-            file->capacity = file->size;
             if (file->size > 0) {
                 file->data.bin = (u8 *) malloc(file->capacity);
                 if (!file->data.bin) {
-                    mod_fs_read_raise_error(modFs, f,
+                    mod_fs_read_raise_error(
                         "modPath: %s, filepath: %s - failed to allocate buffer for modfs file data", modFs->modPath, file->filepath
                     );
                 }
-                mod_fs_read_fread_or_fail(modFs, f, file->data.bin, 1, file->size,
-                    "modPath: %s, filepath: %s - cannot read file data", modFs->modPath, file->filepath
+                memcpy(file->data.bin, fileBuf, file->size);
+            }
+            mz_free(fileBuf);
+
+            // read isText property
+            const bool isText = mod_fs_file_detect_text_mode(file);
+            const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file->filepath);
+            file->isText = mod_fs_read_property<bool>(fileProperties, { "isText" }, isText);
+
+            // check file content if binary
+            if (!isText && !mod_fs_check_file_content(modFs, file)) {
+                mod_fs_read_raise_error(
+                    "modPath: %s, filepath: %s - Invalid file data", modFs->modPath, file->filepath
                 );
             }
         }
 
-        fclose(f);
-        return true;
+        if (modFs->files) {
+            qsort(modFs->files, modFs->numFiles, sizeof(struct ModFsFile *), mod_fs_compare_filepaths);
+        }
+
+        mod_fs_read_return (true);
     }
     return false;
 }
@@ -346,50 +640,63 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool readHeade
 // Write
 //
 
-#define mod_fs_write_fwrite_or_fail(f, buf, size, count) { \
-    if (fwrite(buf, size, count, f) < count) { \
-        fclose(f); \
-        return false; \
-    } \
+#define mod_fs_write_raise_error(...) { \
+    mod_fs_raise_error("cannot save modfs for the active mod: " __VA_ARGS__); \
+    mz_zip_writer_end(zip); \
+    fclose(f); \
+    return false; \
+}
+
+#define mod_fs_write_raise_error_zip() { \
+    mod_fs_write_raise_error("%s", mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
 }
 
 static bool mod_fs_write(struct ModFs *modFs) {
     FILE *f = mod_fs_get_file_handle(modFs->modPath, "wb");
     if (f) {
+        mz_zip_archive zip[1] = {0};
 
-        // magic + version
-        const u8 version = MOD_FS_VERSION;
-        mod_fs_write_fwrite_or_fail(f, MOD_FS_MAGIC, 1, sizeof(MOD_FS_MAGIC) - 1);
-        mod_fs_write_fwrite_or_fail(f, &version, sizeof(u8), 1);
+        // initialize zip
+        if (!mz_zip_writer_init_heap(zip, 0, 0)) {
+            mod_fs_write_raise_error_zip();
+        }
 
-        // header
-        mod_fs_write_fwrite_or_fail(f, &modFs->numFiles, sizeof(modFs->numFiles), 1);
-        mod_fs_write_fwrite_or_fail(f, &modFs->isPublic, sizeof(modFs->isPublic), 1);
-
-        // padding (empty space for future versions)
-        const u8 padding[MOD_FS_HEADER_SIZE] = {0};
-        u32 paddingLength = MOD_FS_HEADER_SIZE - ftell(f);
-        mod_fs_write_fwrite_or_fail(f, padding, 1, paddingLength);
-
-        // files
+        // add each modfs file to the zip archive
         for (u16 i = 0; i != modFs->numFiles; ++i) {
             struct ModFsFile *file = modFs->files[i];
 
-            // filepath
-            u16 filepathLength = strlen(file->filepath);
-            mod_fs_write_fwrite_or_fail(f, &filepathLength, sizeof(filepathLength), 1);
-            mod_fs_write_fwrite_or_fail(f, file->filepath, sizeof(char), filepathLength);
+            // check file content before writing if binary
+            const bool isText = mod_fs_file_detect_text_mode(file);
+            if (!isText && !mod_fs_check_file_content(modFs, file)) {
+                mod_fs_write_raise_error(
+                    "filepath: %s - Invalid file data", file->filepath
+                );
+            }
 
-            // data
-            mod_fs_write_fwrite_or_fail(f, &file->size, sizeof(file->size), 1);
-            mod_fs_write_fwrite_or_fail(f, &file->isPublic, sizeof(file->isPublic), 1);
-            mod_fs_write_fwrite_or_fail(f, &file->isText, sizeof(file->isText), 1);
-            if (file->data.bin) {
-                mod_fs_write_fwrite_or_fail(f, file->data.bin, 1, file->size);
+            if (!mz_zip_writer_add_mem(zip, file->filepath, file->data.bin, file->size, MZ_BEST_COMPRESSION)) {
+                mod_fs_write_raise_error_zip();
             }
         }
 
+        // write properties file
+        std::string properties = mod_fs_get_properties_json(modFs).dump(4, ' ', true);
+        if (!mz_zip_writer_add_mem(zip, MOD_FS_PROPERTIES, properties.c_str(), properties.length(), MZ_BEST_COMPRESSION)) {
+            mod_fs_write_raise_error_zip();
+        }
+
+        // finalize and gets zip archive
+        void *zipBuf = NULL;
+        size_t zipSize = 0;
+        if (!mz_zip_writer_finalize_heap_archive(zip, &zipBuf, &zipSize)) {
+            mod_fs_write_raise_error_zip();
+        }
+
+        // write file and cleanup
+        fwrite(zipBuf, 1, zipSize, f);
+        mz_zip_writer_end(zip);
+        mz_free(zipBuf);
         fclose(f);
+
         return true;
     }
     return false;
@@ -413,7 +720,7 @@ static bool mod_fs_check_pointer(T *ptr, const char *typeName) {
 static bool mod_fs_check_write(struct ModFs *modFs, const char *action) {
     if (!mod_fs_is_active_mod(modFs)) {
         mod_fs_raise_error(
-            "modPath: %s - %s files in other mods modfs is not allowed", modFs->modPath, action
+            "modPath: %s - %s other mods modfs is not allowed", modFs->modPath, action
         );
         return false;
     }
@@ -424,22 +731,6 @@ static bool mod_fs_file_check_write(struct ModFsFile *file) {
     if (!mod_fs_is_active_mod(file->modFs)) {
         mod_fs_raise_error(
             "modPath: %s, filepath: %s - writing to files in other mods modfs is not allowed", file->modFs->modPath, file->filepath
-        );
-        return false;
-    }
-    return true;
-}
-
-static bool mod_fs_check_filepath_length(struct ModFs *modFs, u32 filepathLength) {
-    if (filepathLength == 0) {
-        mod_fs_raise_error(
-            "modPath: %s - filepath length cannot be 0", modFs->modPath
-        );
-        return false;
-    }
-    if (filepathLength > MOD_FS_MAX_PATH - 1) {
-        mod_fs_raise_error(
-            "modPath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepathLength, MOD_FS_MAX_PATH - 1
         );
         return false;
     }
@@ -472,11 +763,6 @@ static bool mod_fs_file_check_parameter(struct ModFsFile *file, u8 parameter, u8
     return true;
 }
 
-
-
-
-
-
 //
 // FS management
 //
@@ -501,7 +787,7 @@ static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound
             struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
             if (!modFs) {
                 mod_fs_raise_error(
-                    "failed to allocate modfs object", NULL
+                    "failed to allocate modfs object"
                 );
                 return NULL;
             }
@@ -551,18 +837,17 @@ C_DEFINE struct ModFs *mod_fs_reload(OPTIONAL const char *modPath) {
     }
 
     // reload
-    return mod_fs_get_or_load(modPath, true);
+    return mod_fs_get(modPath);
 }
 
 C_DEFINE struct ModFs *mod_fs_create() {
     mod_fs_reset_last_error();
 
-    struct ModFs *modFs = mod_fs_get_or_load(NULL, false);
-    if (!modFs) {
-        modFs = mod_fs_new();
+    if (!mod_fs_exists(NULL)) {
+        struct ModFs *modFs = mod_fs_new();
         if (!modFs) {
             mod_fs_raise_error(
-                "cannot create modfs for the active mod", NULL
+                "cannot create modfs for the active mod"
             );
             return NULL;
         }
@@ -572,77 +857,14 @@ C_DEFINE struct ModFs *mod_fs_create() {
     }
 
     mod_fs_raise_error(
-        "a modfs already exists for the active mod; use `mod_fs_get()` instead", NULL
+        "a modfs already exists for the active mod; use `mod_fs_get()` instead"
     );
     return NULL;
-}
-
-C_DEFINE bool mod_fs_delete() {
-    mod_fs_reset_last_error();
-
-    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
-    if (modFs) {
-        char filename[SYS_MAX_PATH];
-        if (mod_fs_get_physical_filename(modFs->modPath, filename) && fs_sys_file_exists(filename)) {
-            remove(filename);
-        }
-
-        sModFsList.erase(std::find(sModFsList.begin(), sModFsList.end(), modFs));
-        mod_fs_destroy(modFs);
-        mod_fs_free<struct ModFs>(modFs);
-        return true;
-    }
-
-    mod_fs_raise_error(
-        "there is no modfs for the active mod", NULL
-    );
-    return false;
-}
-
-C_DEFINE bool mod_fs_save() {
-    mod_fs_reset_last_error();
-
-    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
-    if (modFs) {
-        if (!mod_fs_write(modFs)) {
-            mod_fs_raise_error(
-                "cannot save modfs for the active mod", NULL
-            );
-            return false;
-        }
-        return true;
-    }
-
-    mod_fs_raise_error(
-        "there is no modfs for the active mod; use `mod_fs_create()` to create one", NULL
-    );
-    return false;
-}
-
-C_DEFINE bool mod_fs_set_public(bool pub) {
-    mod_fs_reset_last_error();
-
-    struct ModFs *modFs = mod_fs_get_or_load(NULL, true);
-    if (modFs) {
-        modFs->isPublic = pub;
-        return true;
-    }
-
-    mod_fs_raise_error(
-        "there is no modfs for the active mod; use `mod_fs_create()` to create one", NULL
-    );
-    return false;
 }
 
 //
 // File management
 //
-
-static int mod_fs_compare_filepaths(const void *l, const void *r) {
-    const struct ModFsFile *lfile = (const struct ModFsFile *) l;
-    const struct ModFsFile *rfile = (const struct ModFsFile *) r;
-    return strcmp(lfile->filepath, rfile->filepath);
-}
 
 C_DEFINE const char *mod_fs_get_filename(struct ModFs *modFs, u16 index) {
     mod_fs_reset_last_error();
@@ -685,7 +907,7 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     }
 
     // cannot create new files in other mods modfs
-    if (!mod_fs_check_write(modFs, "creating")) {
+    if (!mod_fs_check_write(modFs, "creating files in")) {
         return NULL;
     }
 
@@ -698,8 +920,15 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     }
 
     // check filepath
-    u32 filepathLength = strlen(filepath);
-    if (!mod_fs_check_filepath_length(modFs, filepathLength)) {
+    if (!mod_fs_check_filepath(modFs, filepath)) {
+        return NULL;
+    }
+
+    // check existing file
+    if (mod_fs_get_file(modFs, filepath)) {
+        mod_fs_raise_error(
+            "modPath: %s - file %s already exists; use `mod_fs_get_file` instead", modFs->modPath, filepath
+        );
         return NULL;
     }
 
@@ -717,7 +946,7 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     file->capacity = 0;
     file->offset = 0;
     file->isText = text;
-    file->isPublic = false;
+    file->isPublic = MOD_FS_FILE_IS_PUBLIC_DEFAULT;
     file->modFs = modFs;
 
     // add file and sort by filename
@@ -745,13 +974,12 @@ C_DEFINE bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const c
     }
 
     // cannot move files in other mods modfs
-    if (!mod_fs_check_write(modFs, "moving")) {
+    if (!mod_fs_check_write(modFs, "moving files in")) {
         return false;
     }
 
     // check new filepath
-    u32 newpathLength = strlen(newpath);
-    if (!mod_fs_check_filepath_length(modFs, newpathLength)) {
+    if (!mod_fs_check_filepath(modFs, newpath)) {
         return false;
     }
 
@@ -789,13 +1017,12 @@ C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const c
     }
 
     // cannot copy files in other mods modfs
-    if (!mod_fs_check_write(modFs, "copying")) {
+    if (!mod_fs_check_write(modFs, "copying files in")) {
         return false;
     }
 
     // check dest filepath
-    u32 dstpathLength = strlen(dstpath);
-    if (!mod_fs_check_filepath_length(modFs, dstpathLength)) {
+    if (!mod_fs_check_filepath(modFs, dstpath)) {
         return false;
     }
 
@@ -831,7 +1058,7 @@ C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const c
     modFs->totalSize = newTotalSize;
 
     // copy file
-    u8 *buffer = (u8 *) malloc(srcfile->capacity);
+    u8 *buffer = (u8 *) malloc(srcfile->size);
     if (!buffer) {
         mod_fs_raise_error(
             "modPath: %s, filepath: %s - failed to allocate buffer for modfs file data", modFs->modPath, dstfile->filepath
@@ -850,6 +1077,7 @@ C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const c
     memcpy(dstfile, srcfile, sizeof(struct ModFsFile));
     snprintf(dstfile->filepath, MOD_FS_MAX_PATH, "%s", dstpath);
     memcpy(buffer, srcfile->data.bin, srcfile->size);
+    dstfile->size = dstfile->capacity = srcfile->size;
     dstfile->data.bin = buffer;
     dstfile->offset = 0;
     return true;
@@ -863,7 +1091,7 @@ C_DEFINE bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath) {
     }
 
     // cannot delete files in other mods modfs
-    if (!mod_fs_check_write(modFs, "deleting")) {
+    if (!mod_fs_check_write(modFs, "deleting files in")) {
         return false;
     }
 
@@ -898,7 +1126,7 @@ C_DEFINE bool mod_fs_clear(struct ModFs *modFs) {
     }
 
     // cannot delete files in other mods modfs
-    if (!mod_fs_check_write(modFs, "deleting")) {
+    if (!mod_fs_check_write(modFs, "deleting files in")) {
         return false;
     }
 
@@ -912,6 +1140,60 @@ C_DEFINE bool mod_fs_clear(struct ModFs *modFs) {
     modFs->files = NULL;
     modFs->numFiles = 0;
     modFs->totalSize = 0;
+    return true;
+}
+
+C_DEFINE bool mod_fs_save(struct ModFs *modFs) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(modFs, "modfs")) {
+        return false;
+    }
+
+    // cannot save other mods modfs
+    if (!mod_fs_check_write(modFs, "saving over")) {
+        return false;
+    }
+
+    return mod_fs_write(modFs);
+}
+
+C_DEFINE bool mod_fs_delete(struct ModFs *modFs) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(modFs, "modfs")) {
+        return false;
+    }
+
+    // cannot delete other mods modfs
+    if (!mod_fs_check_write(modFs, "deleting")) {
+        return false;
+    }
+
+    char filename[SYS_MAX_PATH];
+    if (mod_fs_get_physical_filename(modFs->modPath, filename) && fs_sys_file_exists(filename)) {
+        remove(filename);
+    }
+
+    sModFsList.erase(std::find(sModFsList.begin(), sModFsList.end(), modFs));
+    mod_fs_destroy(modFs);
+    mod_fs_free<struct ModFs>(modFs);
+    return true;
+}
+
+C_DEFINE bool mod_fs_set_public(struct ModFs *modFs, bool pub) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(modFs, "modfs")) {
+        return false;
+    }
+
+    // cannot change public flag of other mods modfs
+    if (!mod_fs_check_write(modFs, "changing public flag of")) {
+        return false;
+    }
+
+    modFs->isPublic = pub;
     return true;
 }
 
@@ -939,6 +1221,31 @@ static T mod_fs_file_read_data(struct ModFsFile *file, T defaultValue) {
     memcpy(&value, file->data.bin + file->offset, sizeof(T));
     file->offset += sizeof(T);
     return value;
+}
+
+static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 length, bool skipNextChar) {
+    static char *sModFsFileReadStringBuf = NULL;
+    static u32 sModFsFileReadStringBufLength = 0;
+
+    // grow buffer if needed
+    if (length > sModFsFileReadStringBufLength) {
+        free(sModFsFileReadStringBuf);
+        sModFsFileReadStringBuf = (char *) malloc(length + 1);
+        if (!sModFsFileReadStringBuf) {
+            sModFsFileReadStringBufLength = 0;
+            mod_fs_raise_error(
+                "modPath: %s, filepath: %s - unable to allocate temporary buffer of length: %u",
+                file->modFs->modPath, file->filepath, length
+            );
+            return NULL;
+        }
+        sModFsFileReadStringBufLength = length;
+    }
+
+    memcpy(sModFsFileReadStringBuf, file->data.bin + file->offset, length);
+    sModFsFileReadStringBuf[length] = 0;
+    file->offset = MIN(file->offset + length + skipNextChar, file->size);
+    return sModFsFileReadStringBuf;
 }
 
 C_DEFINE bool mod_fs_file_read_bool(struct ModFsFile *file) {
@@ -1041,26 +1348,23 @@ C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
         return NULL;
     }
 
-    memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
     if (mod_fs_file_read_check_eof(file, 1)) {
         return NULL;
     }
 
     // for text files, returns the whole content from offset
     if (file->isText) {
-        memcpy(sModFsFileReadStringBuf, file->data.text + file->offset, file->size - file->offset);
-        file->offset = file->size;
-        return sModFsFileReadStringBuf;
+        return mod_fs_file_read_string_buffer(file, file->size - file->offset, false);
     }
 
-    // for binary, stops at the first NULL char or at the end of the file
-    char *buf = sModFsFileReadStringBuf;
-    for (char *c = (char *) (file->data.bin + file->offset); *c && file->offset < file->size; c++, file->offset++, buf++) {
-        *buf = *c;
+    // for binary, stops at the first NUL char or at the end of the file
+    u32 length = 0;
+    const char *start = (const char *) (file->data.bin + file->offset);
+    const char *end = (const char *) (file->data.bin + file->size);
+    for (const char *c = start; *c && c < end; c++) {
+        length++;
     }
-    *buf = 0;
-    file->offset = MIN(file->offset + 1, file->size);
-    return sModFsFileReadStringBuf;
+    return mod_fs_file_read_string_buffer(file, length, true);
 }
 
 C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
@@ -1075,18 +1379,18 @@ C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
         return 0;
     }
 
-    memset(sModFsFileReadStringBuf, 0, sizeof(sModFsFileReadStringBuf));
     if (mod_fs_file_read_check_eof(file, 1)) {
         return NULL;
     }
 
-    char *buf = sModFsFileReadStringBuf;
-    for (char *c = file->data.text + file->offset; *c != '\n' && file->offset < file->size; c++, file->offset++, buf++) {
-        *buf = *c;
+    // stops at the first newline or at the end of the file
+    u32 length = 0;
+    const char *start = (const char *) (file->data.text + file->offset);
+    const char *end = (const char *) (file->data.text + file->size);
+    for (const char *c = start; *c != '\n' && c < end; c++) {
+        length++;
     }
-    *buf = 0;
-    file->offset = MIN(file->offset + 1, file->size);
-    return sModFsFileReadStringBuf;
+    return mod_fs_file_read_string_buffer(file, length, true);
 }
 
 //
@@ -1108,7 +1412,7 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
 
     // resize data buffer
     if (file->offset + size > file->capacity) {
-        u32 newCapacity = MAX(file->capacity * 2, 32);
+        u32 newCapacity = MAX(file->capacity * 2, file->offset + size);
         u8 *buffer = (u8 *) realloc(file->data.bin, newCapacity);
         if (!buffer) {
             mod_fs_raise_error(
@@ -1319,6 +1623,17 @@ C_DEFINE bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFil
     return true;
 }
 
+C_DEFINE bool mod_fs_file_rewind(struct ModFsFile *file) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    file->offset = 0;
+    return true;
+}
+
 C_DEFINE bool mod_fs_file_is_eof(struct ModFsFile *file) {
     mod_fs_reset_last_error();
 
@@ -1368,6 +1683,17 @@ C_DEFINE bool mod_fs_file_erase(struct ModFsFile *file, u32 length) {
     return true;
 }
 
+C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    file->isText = text;
+    return true;
+}
+
 C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
     mod_fs_reset_last_error();
 
@@ -1388,10 +1714,75 @@ C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
 // Errors
 //
 
-void mod_fs_hide_errors(bool hide) {
+C_DEFINE void mod_fs_hide_errors(bool hide) {
     sModFsHideErrors = hide;
 }
 
-const char *mod_fs_get_last_error() {
+C_DEFINE const char *mod_fs_get_last_error() {
     return *sModFsLastError ? sModFsLastError : NULL;
+}
+
+//
+// Functions used by other C modules, not API
+//
+
+static bool mod_fs_extract_modpath_and_filepath(const char *uri, char *modPath, char *filepath) {
+
+    // check prefix
+    if (!is_mod_fs_file(uri)) {
+        return false;
+    }
+
+    // get modPath
+    const char *modPathBegin = uri + sizeof(MOD_FS_URI_PREFIX) - 1;
+    const char *modPathEnd = strchr(modPathBegin, '/');
+    if (!modPathEnd) {
+        return false;
+    }
+    snprintf(modPath, SYS_MAX_PATH, "%.*s", (s32) (modPathEnd - modPathBegin), modPathBegin);
+
+    // get filepath
+    snprintf(filepath, MOD_FS_MAX_PATH, "%s", modPathEnd + 1);
+
+    return true;
+}
+
+C_DEFINE bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length) {
+    char modPath[SYS_MAX_PATH];
+    char filepath[MOD_FS_MAX_PATH];
+    if (!mod_fs_extract_modpath_and_filepath(uri, modPath, filepath)) {
+        return false;
+    }
+
+    struct ModFs *modFs = mod_fs_get(modPath);
+    if (!modFs) {
+        return false;
+    }
+
+    struct ModFsFile *file = mod_fs_get_file(modFs, filepath);
+    if (!file || !file->data.bin || !file->size) {
+        return false;
+    }
+
+    *buffer = malloc(file->size);
+    if (!*buffer) {
+        return false;
+    }
+    memcpy(*buffer, file->data.bin, file->size);
+    *length = file->size;
+    return true;
+}
+
+C_DEFINE void mod_fs_shutdown() {
+
+    // Close all modfs
+    for (auto &modFs : sModFsList) {
+        mod_fs_destroy(modFs);
+        mod_fs_free<struct ModFs>(modFs);
+    }
+    sModFsList.clear();
+
+    // Reset error state
+    mod_fs_reset_last_error();
+    sModFsHideErrors = false;
 }

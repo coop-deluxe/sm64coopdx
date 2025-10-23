@@ -220,6 +220,32 @@ void *growing_array_alloc(struct GrowingArray *array, u32 size) {
     return NULL;
 }
 
+void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count) {
+    if (array && array->buffer && count > 0 &&
+        (to < from || to > from + count) &&
+        (from + count) <= array->count && to <= array->count) {
+
+        void **temp = malloc(sizeof(void *) * count);
+        if (!temp) { return; }
+
+        // Copy elements to move to temporary buffer
+        memcpy(temp, array->buffer + from, sizeof(void *) * count);
+
+        // Remove copied elements from the array
+        memmove(array->buffer + from, array->buffer + (from + count), sizeof(void *) * (array->count - (from + count)));
+
+        // Make place for the copied elements
+        // If moving left to right, account for the removed elements
+        if (to > from) { to -= count; }
+        memmove(array->buffer + (to + count), array->buffer + to, sizeof(void *) * (array->count - (to + count)));
+
+        // Insert copied elements
+        memcpy(array->buffer + to, temp, sizeof(void *) * count);
+
+        free(temp);
+    }
+}
+
 void growing_array_free(struct GrowingArray **array) {
     if (*array) {
         for (u32 i = 0; i != (*array)->capacity; ++i) {

@@ -7435,25 +7435,6 @@ function mod_fs_create()
     -- ...
 end
 
---- @return boolean
---- Deletes the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_delete()
-    -- ...
-end
-
---- @return boolean
---- Saves the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_save()
-    -- ...
-end
-
---- @param pub boolean
---- @return boolean
---- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-function mod_fs_set_public(pub)
-    -- ...
-end
-
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
@@ -7511,6 +7492,28 @@ end
 --- @return boolean
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Saves the provided `modFs` to persistent storage. Returns true on success
+function mod_fs_save(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+function mod_fs_delete(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_set_public(modFs, pub)
     -- ...
 end
 
@@ -7620,6 +7623,13 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- Sets the current position of a modfs `file` to its beginning. Returns true on success
+function mod_fs_file_rewind(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -7639,6 +7649,14 @@ end
 --- @return boolean
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param text boolean
+--- @return boolean
+--- Marks the provided modfs `file` as text. Returns true on success
+function mod_fs_file_set_text_mode(file, text)
     -- ...
 end
 
@@ -7704,6 +7722,12 @@ end
 --- @return boolean
 --- Loads a bool `value` from a `key` in mod storage
 function mod_storage_load_bool(key)
+    -- ...
+end
+
+--- @return table
+--- Loads all keys and values in mod storage as strings and returns them as a table
+function mod_storage_load_all()
     -- ...
 end
 
@@ -10776,9 +10800,16 @@ function gfx_get_vertex_count(cmd)
 end
 
 --- @param cmd Pointer_Gfx
---- @return Pointer_integer
+--- @return Pointer_Texture
 --- Gets the texture from a display list command if it has an image related op
 function gfx_get_texture(cmd)
+    -- ...
+end
+
+--- @param gfx Pointer_Gfx
+--- @return string
+--- Gets the name of a display list
+function gfx_get_name(gfx)
     -- ...
 end
 
@@ -10835,6 +10866,13 @@ end
 
 --- Deletes all display lists created by `gfx_create`
 function gfx_delete_all()
+    -- ...
+end
+
+--- @param vtx Pointer_Vtx
+--- @return string
+--- Gets the name of a vertex buffer
+function vtx_get_name(vtx)
     -- ...
 end
 
@@ -11514,9 +11552,16 @@ function geo_get_current_held_object()
     -- ...
 end
 
---- @param tex Pointer_integer
---- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures.
+--- @param tex Pointer_Texture
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
 function texture_to_lua_table(tex)
+    -- ...
+end
+
+--- @param tex Pointer_Texture
+--- @return string
+--- Gets the name of the provided texture pointer `tex`
+function get_texture_name(tex)
     -- ...
 end
 
@@ -12274,6 +12319,27 @@ function load_object_collision_model()
     -- ...
 end
 
+--- @return StaticObjectCollision
+--- Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+function load_static_object_collision()
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param tangible boolean
+--- Toggles a collection of static object surfaces
+function toggle_static_object_collision(col, tangible)
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param index integer
+--- @return Surface
+--- Gets a surface corresponding to `index` from the static object collision
+function get_static_object_surface(col, index)
+    -- ...
+end
+
 --- @param o Object
 --- @param index integer
 --- @return Surface
@@ -12318,6 +12384,7 @@ end
 --- @alias Pointer_Collision Collision
 --- @alias Pointer_Gfx Gfx
 --- @alias Pointer_Vtx Vtx
+--- @alias Pointer_Texture Texture
 --- @alias Vec2fp Vec2f
 --- @alias Vec3fp Vec3f
 --- @alias Vec4fp Vec4f
