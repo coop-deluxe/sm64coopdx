@@ -698,7 +698,7 @@ Returns the current sound mode (e.g., stereo, mono) stored in the save file. Use
 ## [sequence_player_get_tempo](#sequence_player_get_tempo)
 
 ### Description
-Gets the tempo of `player`
+Gets the `tempo` of `player`
 
 ### Lua Example
 `local integerValue = sequence_player_get_tempo(player)`
@@ -745,7 +745,7 @@ Sets the `tempo` of `player`. Resets when another sequence is played
 ## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
 
 ### Description
-Gets the tempoAcc (tempo accumulation) of `player`
+Gets the `tempoAcc` (tempo accumulation) of `player`
 
 ### Lua Example
 `local integerValue = sequence_player_get_tempo_acc(player)`
@@ -792,7 +792,7 @@ Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequen
 ## [sequence_player_get_transposition](#sequence_player_get_transposition)
 
 ### Description
-Gets the transposition (pitch) of `player`
+Gets the `transposition` (pitch) of `player`
 
 ### Lua Example
 `local integerValue = sequence_player_get_transposition(player)`

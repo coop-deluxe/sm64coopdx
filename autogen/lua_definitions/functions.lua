@@ -3915,13 +3915,13 @@ function djui_hud_get_raw_mouse_y()
 end
 
 --- @return boolean
---- Returns if the cursor is hidden and constrained to the window
+--- Checks if the cursor is locked to the window
 function djui_hud_is_mouse_locked()
     -- ...
 end
 
 --- @param locked boolean
---- Sets if the cursor is hidden and constrained to the window
+--- Locks (or unlocks) the cursor to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
@@ -6449,14 +6449,14 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+--- Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
 function stationary_ground_step(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+--- Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
 function perform_ground_step(m)
     -- ...
 end
@@ -10011,7 +10011,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the tempo of `player`
+--- Gets the `tempo` of `player`
 function sequence_player_get_tempo(player)
     -- ...
 end
@@ -10025,7 +10025,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the tempoAcc (tempo accumulation) of `player`
+--- Gets the `tempoAcc` (tempo accumulation) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
@@ -10039,7 +10039,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the transposition (pitch) of `player`
+--- Gets the `transposition` (pitch) of `player`
 function sequence_player_get_transposition(player)
     -- ...
 end
