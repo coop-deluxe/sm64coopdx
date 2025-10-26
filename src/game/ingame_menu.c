@@ -471,9 +471,10 @@ f32 get_generic_dialog_width(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_width(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    return get_generic_dialog_width(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 width = get_generic_dialog_width(str);
+    free(str);
+    return width;
 }
 
 f32 get_generic_dialog_height(u8* dialog) {
@@ -487,15 +488,16 @@ f32 get_generic_dialog_height(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_height(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    return get_generic_dialog_height(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 height = get_generic_dialog_height(str);
+    free(str);
+    return height;
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    print_generic_string(x, y, dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    print_generic_string(x, y, str);
+    free(str);
 }
 
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -1088,14 +1090,9 @@ bool handle_dialog_hook(s32 dialogId) {
         return false;
     }
 
+    free(sOverrideDialogHookString);
     if (dialogTextOverride != NULL) {
-        free(sOverrideDialogHookString);
-        u32 dialogTextLength = strlen(dialogTextOverride);
-        // note: sm64 string length is always lower or equal than its ascii string equivalent, no risk of buffer overflow
-        sOverrideDialogHookString = (u8 *) malloc(dialogTextLength + 1);
-        if (sOverrideDialogHookString != NULL) {
-            convert_string_ascii_to_sm64(sOverrideDialogHookString, dialogTextOverride, false);
-        }
+        sOverrideDialogHookString = convert_string_ascii_to_sm64(NULL, dialogTextOverride, false);
     } else {
         sOverrideDialogHookString = NULL;
     }

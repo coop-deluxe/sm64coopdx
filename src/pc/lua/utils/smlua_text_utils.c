@@ -19,36 +19,6 @@ extern s32 gInGameLanguage;
 
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
-extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
-
-static size_t measure_converted_sm64_string(const u8* str64) {
-    size_t len = 0;
-    
-    for (size_t i = 0; str64[i] != 0xFF; i++) {
-        for (s32 j = 0; sSm64CharMap[j].str != NULL; j++) {
-            if (sSm64CharMap[j].c == str64[i]) {
-                len += strlen(sSm64CharMap[j].str);
-                break;
-            }
-        }
-    }
-
-    return len;
-}
-
-char* get_dialog_text_ascii(struct DialogEntry *dialog) {
-    if (!dialog) { return NULL; }
-
-    size_t len = measure_converted_sm64_string(dialog->str);
-
-    char* asciiStr = malloc(len + 1);
-    if (!asciiStr) { return NULL; }
-
-    convert_string_sm64_to_ascii(asciiStr, dialog->str);
-
-    return asciiStr;
-}
-
 /*
 ---------------------------------------------------
 Mapping gReplacedCourseActNameTable <-> seg2 tables
@@ -136,9 +106,7 @@ void smlua_text_utils_shutdown(void) {
 }
 
 static u8* smlua_text_utils_convert(const char* str) {
-    u8* dialogStr = calloc(strlen(str) + 2, sizeof(u8));
-    convert_string_ascii_to_sm64(dialogStr, str, false);
-    return dialogStr;
+    return convert_string_ascii_to_sm64(NULL, str, false);
 }
 
 // Checks the first 3 characters
@@ -261,7 +229,7 @@ void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
     free(dialog->text);
 
     memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-    dialog->text = get_dialog_text_ascii(dialog);
+    dialog->text = convert_string_sm64_to_ascii(NULL, dialog->str);
 }
 
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
