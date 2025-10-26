@@ -1077,9 +1077,8 @@ void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
     }
 }
 
-static u8 sHookString[255];
-static bool sOverrideDialogString = false;
-void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
+static u8 *sOverrideDialogHookString = NULL;
+
 bool handle_dialog_hook(s32 dialogId) {
     bool openDialogBox = true;
     const char *dialogTextOverride = NULL;
@@ -1088,8 +1087,18 @@ bool handle_dialog_hook(s32 dialogId) {
         if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
         return false;
     }
-    sOverrideDialogString = dialogTextOverride != NULL;
-    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, dialogTextOverride, false); }
+
+    if (dialogTextOverride != NULL) {
+        free(sOverrideDialogHookString);
+        u32 dialogTextLength = strlen(dialogTextOverride);
+        // note: sm64 string length is always lower or equal than its ascii string equivalent, no risk of buffer overflow
+        sOverrideDialogHookString = (u8 *) malloc(dialogTextLength + 1);
+        if (sOverrideDialogHookString != NULL) {
+            convert_string_ascii_to_sm64(sOverrideDialogHookString, dialogTextOverride, false);
+        }
+    } else {
+        sOverrideDialogHookString = NULL;
+    }
     return true;
 }
 
@@ -1443,7 +1452,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     u8 strChar;
 
-    u8 *str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    u8 *str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : segmented_to_virtual(dialog->str);
     s8 lineNum = 1;
 
     s8 totalLines;
@@ -2179,7 +2188,7 @@ void do_cutscene_handler(void) {
 void print_peach_letter_message(void) {
     struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    const u8* str = sOverrideDialogString ? sHookString : dialog->str;
+    const u8* str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
