@@ -52,7 +52,7 @@ struct GlobalTextures {
 
 extern struct GlobalTextures gGlobalTextures;
 extern f32 gDjuiHudUtilsZ;
-extern u8 gDjuiHudLockMouse;
+extern bool gDjuiHudLockMouse;
 
 /* |description|Gets the current DJUI HUD resolution|descriptionEnd| */
 u8 djui_hud_get_resolution(void);
@@ -92,7 +92,9 @@ f32 djui_hud_get_mouse_y(void);
 f32 djui_hud_get_raw_mouse_x(void);
 /* |description|Returns the y coordinate of the mouse relative to the screen|descriptionEnd| */
 f32 djui_hud_get_raw_mouse_y(void);
-/* |description|Sets if the cursor is hidden and constrainted to the window|descriptionEnd| */
+/* |description|Checks if the cursor is locked to the window|descriptionEnd| */
+bool djui_hud_is_mouse_locked(void);
+/* |description|Locks (or unlocks) the cursor to the window|descriptionEnd| */
 void djui_hud_set_mouse_locked(bool locked);
 /* |description|Returns the flags of the mouse buttons held down|descriptionEnd| */
 u8 djui_hud_get_mouse_buttons_down(void);
@@ -104,13 +106,13 @@ u8 djui_hud_get_mouse_buttons_released(void);
 f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
-/* |description|Sets the viewport to the specified position and size, this will resize |descriptionEnd| */
+/* |description|Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics|descriptionEnd| */
 void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);
-/* |description|put the description here|descriptionEnd| */
+/* |description|Resets the viewport to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_viewport(void);
-/* |description|put the description here|descriptionEnd| */
+/* |description|Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
 void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
-/* |description|put the description here|descriptionEnd| */
+/* |description|Resets the scissor rectangle to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_scissor(void);
 
 /* |description|Measures the length of `message` in the current font|descriptionEnd| */

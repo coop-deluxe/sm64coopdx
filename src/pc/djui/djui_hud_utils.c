@@ -33,7 +33,7 @@ static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 static bool sLegacy = false;
 
 f32 gDjuiHudUtilsZ = 0;
-u8 gDjuiHudLockMouse = false;
+bool gDjuiHudLockMouse = false;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
 extern ALIGNED8 const u8 texture_hud_char_lakitu[];
@@ -295,6 +295,10 @@ f32 djui_hud_get_raw_mouse_x(void) {
 
 f32 djui_hud_get_raw_mouse_y(void) {
     return mouse_y;
+}
+
+bool djui_hud_is_mouse_locked(void) {
+    return gDjuiHudLockMouse;
 }
 
 void djui_hud_set_mouse_locked(bool locked) {

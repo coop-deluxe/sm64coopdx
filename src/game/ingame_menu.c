@@ -471,9 +471,10 @@ f32 get_generic_dialog_width(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_width(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    return get_generic_dialog_width(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 width = get_generic_dialog_width(str);
+    free(str);
+    return width;
 }
 
 f32 get_generic_dialog_height(u8* dialog) {
@@ -487,15 +488,16 @@ f32 get_generic_dialog_height(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_height(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    return get_generic_dialog_height(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 height = get_generic_dialog_height(str);
+    free(str);
+    return height;
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(dialog, ascii, false);
-    print_generic_string(x, y, dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    print_generic_string(x, y, str);
+    free(str);
 }
 
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -1077,9 +1079,8 @@ void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
     }
 }
 
-static u8 sHookString[255];
-static bool sOverrideDialogString = false;
-void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
+static u8 *sOverrideDialogHookString = NULL;
+
 bool handle_dialog_hook(s32 dialogId) {
     bool openDialogBox = true;
     const char *dialogTextOverride = NULL;
@@ -1088,8 +1089,13 @@ bool handle_dialog_hook(s32 dialogId) {
         if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
         return false;
     }
-    sOverrideDialogString = dialogTextOverride != NULL;
-    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, dialogTextOverride, false); }
+
+    free(sOverrideDialogHookString);
+    if (dialogTextOverride != NULL) {
+        sOverrideDialogHookString = convert_string_ascii_to_sm64(NULL, dialogTextOverride, false);
+    } else {
+        sOverrideDialogHookString = NULL;
+    }
     return true;
 }
 
@@ -1443,7 +1449,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     u8 strChar;
 
-    u8 *str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    u8 *str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : segmented_to_virtual(dialog->str);
     s8 lineNum = 1;
 
     s8 totalLines;
@@ -2179,7 +2185,7 @@ void do_cutscene_handler(void) {
 void print_peach_letter_message(void) {
     struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    const u8* str = sOverrideDialogString ? sHookString : dialog->str;
+    const u8* str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 

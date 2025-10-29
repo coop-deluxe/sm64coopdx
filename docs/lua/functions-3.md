@@ -3140,10 +3140,31 @@ Returns the y coordinate of the mouse relative to the screen
 
 <br />
 
+## [djui_hud_is_mouse_locked](#djui_hud_is_mouse_locked)
+
+### Description
+Checks if the cursor is locked to the window
+
+### Lua Example
+`local booleanValue = djui_hud_is_mouse_locked()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_hud_is_mouse_locked(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
 
 ### Description
-Sets if the cursor is hidden and constrainted to the window
+Locks (or unlocks) the cursor to the window
 
 ### Lua Example
 `djui_hud_set_mouse_locked(locked)`
@@ -3271,7 +3292,7 @@ Returns the amount scrolled vertically (-down/up+)
 ## [djui_hud_set_viewport](#djui_hud_set_viewport)
 
 ### Description
-Sets the viewport to the specified position and size, this will resize
+Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
 
 ### Lua Example
 `djui_hud_set_viewport(x, y, width, height)`
@@ -3297,7 +3318,7 @@ Sets the viewport to the specified position and size, this will resize
 ## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
 
 ### Description
-put the description here
+Resets the viewport to a fullscreen state
 
 ### Lua Example
 `djui_hud_reset_viewport()`
@@ -3318,7 +3339,7 @@ put the description here
 ## [djui_hud_set_scissor](#djui_hud_set_scissor)
 
 ### Description
-put the description here
+Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
 
 ### Lua Example
 `djui_hud_set_scissor(x, y, width, height)`
@@ -3344,7 +3365,7 @@ put the description here
 ## [djui_hud_reset_scissor](#djui_hud_reset_scissor)
 
 ### Description
-put the description here
+Resets the scissor rectangle to a fullscreen state
 
 ### Lua Example
 `djui_hud_reset_scissor()`
