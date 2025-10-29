@@ -4070,7 +4070,7 @@ Sets all of Mario's velocity variables to 0 and sets his Y position to the floor
 ## [stationary_ground_step](#stationary_ground_step)
 
 ### Description
-Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
 
 ### Lua Example
 `local integerValue = stationary_ground_step(m)`
@@ -4093,7 +4093,7 @@ Performs a full Mario stationary physics step (4 substeps) and returns an `GROUN
 ## [perform_ground_step](#perform_ground_step)
 
 ### Description
-Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
 
 ### Lua Example
 `local integerValue = perform_ground_step(m)`
