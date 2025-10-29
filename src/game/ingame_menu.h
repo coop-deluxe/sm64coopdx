@@ -138,8 +138,6 @@ void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
 void create_dl_rotation_matrix(s8 pushOp, f32 a, f32 x, f32 y, f32 z);
 void create_dl_ortho_matrix(void);
 void render_generic_char(u8 c);
-u8 str_ascii_char_to_dialog(char c);
-void str_ascii_to_dialog(const char* string, u8* dialog, u16 length);
 f32 get_generic_dialog_width(u8* dialog);
 f32 get_generic_ascii_string_width(const char* ascii);
 f32 get_generic_dialog_height(u8* dialog);
