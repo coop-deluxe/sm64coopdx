@@ -5,7 +5,6 @@
 #include "game/segment2.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "game/memory.h"
-#include "game/level_info.h"
 #include "pc/platform.h"
 #include <stdlib.h>
 
@@ -23,7 +22,7 @@ void dialog_table_init(void) {
         }
 
         memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-        dialog->text = convert_string_sm64_to_ascii(NULL, dialog->str);
+        dialog->text = get_dialog_text_ascii(dialog);
     }
 }
 

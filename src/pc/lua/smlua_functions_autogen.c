@@ -12698,21 +12698,6 @@ int smlua_func_djui_hud_get_raw_mouse_y(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_djui_hud_is_mouse_locked(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_is_mouse_locked", 0, top);
-        return 0;
-    }
-
-
-    lua_pushboolean(L, djui_hud_is_mouse_locked());
-
-    return 1;
-}
-
 int smlua_func_djui_hud_set_mouse_locked(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37446,7 +37431,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_mouse_y", smlua_func_djui_hud_get_mouse_y);
     smlua_bind_function(L, "djui_hud_get_raw_mouse_x", smlua_func_djui_hud_get_raw_mouse_x);
     smlua_bind_function(L, "djui_hud_get_raw_mouse_y", smlua_func_djui_hud_get_raw_mouse_y);
-    smlua_bind_function(L, "djui_hud_is_mouse_locked", smlua_func_djui_hud_is_mouse_locked);
     smlua_bind_function(L, "djui_hud_set_mouse_locked", smlua_func_djui_hud_set_mouse_locked);
     smlua_bind_function(L, "djui_hud_get_mouse_buttons_down", smlua_func_djui_hud_get_mouse_buttons_down);
     smlua_bind_function(L, "djui_hud_get_mouse_buttons_pressed", smlua_func_djui_hud_get_mouse_buttons_pressed);

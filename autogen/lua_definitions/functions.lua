@@ -3914,14 +3914,8 @@ function djui_hud_get_raw_mouse_y()
     -- ...
 end
 
---- @return boolean
---- Checks if the cursor is locked to the window
-function djui_hud_is_mouse_locked()
-    -- ...
-end
-
 --- @param locked boolean
---- Locks (or unlocks) the cursor to the window
+--- Sets if the cursor is hidden and constrainted to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
@@ -3960,12 +3954,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
+--- Sets the viewport to the specified position and size, this will resize
 function djui_hud_set_viewport(x, y, width, height)
     -- ...
 end
 
---- Resets the viewport to a fullscreen state
+--- put the description here
 function djui_hud_reset_viewport()
     -- ...
 end
@@ -3974,12 +3968,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
+--- put the description here
 function djui_hud_set_scissor(x, y, width, height)
     -- ...
 end
 
---- Resets the scissor rectangle to a fullscreen state
+--- put the description here
 function djui_hud_reset_scissor()
     -- ...
 end
@@ -6449,14 +6443,14 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
+--- Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
 function stationary_ground_step(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
+--- Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
 function perform_ground_step(m)
     -- ...
 end
@@ -10035,7 +10029,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the `tempo` of `player`
+--- Gets the tempo of `player`
 function sequence_player_get_tempo(player)
     -- ...
 end
@@ -10049,7 +10043,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the `tempoAcc` (tempo accumulation) of `player`
+--- Gets the tempoAcc (tempo accumulation) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
@@ -10063,7 +10057,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the `transposition` (pitch) of `player`
+--- Gets the transposition (pitch) of `player`
 function sequence_player_get_transposition(player)
     -- ...
 end
