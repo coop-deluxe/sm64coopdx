@@ -3,6 +3,7 @@
 
 #include "dialog_ids.h"
 #include "game/camera.h"
+#include "pc/lua/smlua_utils.h"
 
 enum HudDisplayValue {
     HUD_DISPLAY_LIVES,
@@ -252,8 +253,8 @@ struct GraphNodeCamera* geo_get_current_camera(void);
 /* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
 
-/* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures|descriptionEnd|*/
-void texture_to_lua_table(const Texture *tex);
+/* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels|descriptionEnd|*/
+LuaTable texture_to_lua_table(const Texture *tex);
 
 /* |description|Gets the name of the provided texture pointer `tex`|descriptionEnd|*/
 const char *get_texture_name(const Texture *tex);

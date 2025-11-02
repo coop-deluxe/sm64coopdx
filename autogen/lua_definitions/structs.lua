@@ -2393,7 +2393,8 @@
 --- @field public name string
 --- @field public width integer
 --- @field public height integer
---- @field public bitSize integer
+--- @field public format integer
+--- @field public size integer
 
 --- @class TransitionInfo
 --- @field public posPitch integer

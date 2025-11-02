@@ -91,7 +91,7 @@ static const Vtx vertex_djui_image[] = {
     {{{ 0,  0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
-const Gfx dl_djui_image[] = {
+const Gfx dl_djui_image_begin[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
@@ -99,7 +99,10 @@ const Gfx dl_djui_image[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0),
     gsSPExecuteDjui(G_TEXOVERRIDE_DJUI),
-    gsSPVertexNonGlobal(vertex_djui_image, 4, 0),
+    gsSPEndDisplayList(),
+};
+
+const Gfx dl_djui_image_end[] = {
     // gsSPExecuteDjui(G_TEXCLIP_DJUI),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
@@ -107,29 +110,64 @@ const Gfx dl_djui_image[] = {
     gsSPEndDisplayList(),
 };
 
-static u8 djui_gfx_power_of_two(u32 value) {
-    switch (value) {
-        case 2:    return 1;
-        case 4:    return 2;
-        case 8:    return 3;
-        case 16:   return 4;
-        case 32:   return 5;
-        case 64:   return 6;
-        case 128:  return 7;
-        case 256:  return 8;
-        case 512:  return 9;
-        case 1024: return 10;
-        default:   return 11;
+inline static u8 djui_gfx_power_of_two(u32 value) {
+    return (u8) log2f(value);
+}
+
+void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter) {
+    if (!gDisplayListHead) {
+        LOG_ERROR("Retrieved a null displaylist head");
+        return;
     }
-}
 
-void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u32 bitSize, bool filter) {
+    if (!texture) {
+        LOG_ERROR("Attempted to render null texture");
+        return;
+    }
+
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
-    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
-    gSPDisplayList(gDisplayListHead++, dl_djui_image);
+    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_begin);
+    gSPVertexNonGlobal(gDisplayListHead++, vertex_djui_image, 4, 0);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_end);
 }
 
-void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u32 bitSize, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter, bool font) {
+void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH, bool filter) {
+    if (!gDisplayListHead) {
+        LOG_ERROR("Retrieved a null displaylist head");
+        return;
+    }
+
+    if (!texture) {
+        LOG_ERROR("Attempted to render null texture");
+        return;
+    }
+
+    Vtx *vtx = alloc_display_list(sizeof(Vtx) * 4);
+    if (!vtx) {
+        LOG_ERROR("Failed to allocate vertices");
+        return;
+    }
+
+    s16 tu0 = ((f32) tileX / (f32) w) * (64 << 5);
+    s16 tu1 = ((f32) (tileX + tileW) / (f32) w) * (64 << 5);
+    s16 tv0 = ((f32) tileY / (f32) w) * (64 << 5);
+    s16 tv1 = ((f32) (tileY + tileH) / (f32) w) * (64 << 5);
+    f32 sx = (f32) tileW / (f32) w;
+    f32 sy = (f32) tileH / (f32) h;
+    vtx[0] = (Vtx) {{{ 0,  -sy, 0 }, 0, { tu0, tv1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ sx,   0, 0 }, 0, { tu1, tv0 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ sx, -sy, 0 }, 0, { tu1, tv1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,    0, 0 }, 0, { tu0, tv0 }, { 0xff, 0xff, 0xff, 0xff }}};
+
+    gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
+    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_begin);
+    gSPVertexNonGlobal(gDisplayListHead++, vtx, 4, 0);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_end);
+}
+
+void djui_gfx_render_font_char(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     if (!gDisplayListHead) {
         LOG_ERROR("Retrieved a null displaylist head");
         return;
@@ -150,31 +188,18 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u32 bitS
 
     // I don't know why adding 1 to all of the UVs seems to fix rendering, but it does...
     // this should be tested carefully. it definitely fixes some stuff, but what does it break?
-    f32 offsetX = (font ? -1024.0f / (f32)w : 0) + 1;
-    f32 offsetY = (font ? -1024.0f / (f32)h : 0) + 1;
+    f32 offsetX = -1024.0f / (f32) w + 1;
+    f32 offsetY = -1024.0f / (f32) h + 1;
     vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
     vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
 
-    gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
-    gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-    gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
-
-    gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
-
-    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), bitSize);
-	gDPLoadTextureBlockWithoutTexture(gDisplayListHead++, NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
-
-    *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
-
+    gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
+    gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_begin);
     gSPVertexNonGlobal(gDisplayListHead++, vtx, 4, 0);
-    *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXCLIP_DJUI);
-    gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
-
-    gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+    gSPDisplayList(gDisplayListHead++, dl_djui_image_end);
 }
 
 /////////////////////////////////////////////

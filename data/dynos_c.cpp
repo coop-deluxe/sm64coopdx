@@ -164,6 +164,16 @@ void dynos_texture_override_reset(const char* textureName) {
     DynOS_Tex_Override_Reset(textureName);
 }
 
+u8 *dynos_texture_convert_to_rgba32(const Texture *tex, u32 width, u32 height, u8 fmt, u8 siz) {
+    switch (siz) {
+        case G_IM_SIZ_4b: return DynOS_Tex_ConvertToRGBA32(tex, (width * height) / 2, fmt, siz, NULL);
+        case G_IM_SIZ_8b: return DynOS_Tex_ConvertToRGBA32(tex, width * height, fmt, siz, NULL);
+        case G_IM_SIZ_16b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 2, fmt, siz, NULL);
+        case G_IM_SIZ_32b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 4, fmt, siz, NULL);
+    }
+    return NULL;
+}
+
 // -- movtexqcs -- //
 
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type) {
