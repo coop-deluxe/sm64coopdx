@@ -93,7 +93,7 @@ static const Vtx vertex_djui_image[] = {
 
 const Gfx dl_djui_image_begin[] = {
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
     gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -107,6 +107,7 @@ const Gfx dl_djui_image_end[] = {
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
