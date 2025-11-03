@@ -14,6 +14,14 @@
 #define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
 #define VERSION_IDENTIFIER "#define SM64COOPDX_VERSION \""
 
+/*
+
+NOTE: This entire update checker process should be replaced with one that uses GitHub's API
+to check for the latest release version. This would be more reliable and efficient than
+downloading and parsing a source file.
+
+*/
+
 static char sVersionUpdateTextBuffer[256] = { 0 };
 static char sRemoteVersion[8] = { 0 };
 
@@ -57,8 +65,10 @@ void parse_version(const char *data) {
 
 // function to download a text file from the internet
 void get_version_remote(void) {
+    sRemoteVersion[0] = '\0';
+
 #if defined(_WIN32) || defined(_WIN64)
-    char buffer[0xFF];
+    char buffer[0xFF] = { 0 };
 
     // initialize WinINet
     HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
@@ -92,7 +102,6 @@ void get_version_remote(void) {
     }
 
     buffer[bytesRead] = '\0';
-    snprintf(sRemoteVersion, 8, "%s", buffer);
 
     // close handles
     InternetCloseHandle(hUrl);
@@ -136,7 +145,7 @@ void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
-    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
+    if (sRemoteVersion[0] == 'v' && strcmp(sRemoteVersion, get_version())) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
