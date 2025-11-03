@@ -13,17 +13,10 @@ struct BuiltinTexInfo {
     struct TextureInfo info;
 };
 
-#define BITSIZE(_size) ( \
-    _size == G_IM_SIZ_4b ? 4 : ( \
-    _size == G_IM_SIZ_8b ? 8 : ( \
-    _size == G_IM_SIZ_16b ? 16 : ( \
-    _size == G_IM_SIZ_32b ? 32 : 0))) \
-)
-
 #define define_builtin_tex(_ptr, _path, _width, _height, _format, _size) { \
     .path = _path, \
     .info = { \
-        .texture = (Texture *) _ptr, \
+        .texture = _ptr, \
         .name = #_ptr, \
         .width = _width, \
         .height = _height, \
@@ -35,7 +28,7 @@ struct BuiltinTexInfo {
 #define define_builtin_tex_(_ptr, _path, _width, _height, _format, _size) { \
     .path = _path, \
     .info = { \
-        .texture = (Texture *) _ptr, \
+        .texture = _ptr, \
         .name = #_ptr "_", \
         .width = _width, \
         .height = _height, \
