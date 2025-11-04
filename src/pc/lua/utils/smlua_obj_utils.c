@@ -367,6 +367,20 @@ struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedI
     return &sTmpSpi;
 }
 
+struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId) {
+    static struct WaterDropletParams sTmpWdp = { 0 };
+    memset(&sTmpWdp, 0, sizeof(struct WaterDropletParams));
+
+    s16 loadedModelId = smlua_model_util_load(modelId);
+    sTmpWdp.model = loadedModelId;
+
+    const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
+    sTmpWdp.behavior = behavior;
+
+    return &sTmpWdp;
+}
+
 struct ObjectHitbox* get_temp_object_hitbox(void) {
     static struct ObjectHitbox sTmpHitbox = { 0 };
     memset(&sTmpHitbox, 0, sizeof(struct ObjectHitbox));

@@ -1007,28 +1007,6 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 
 <br />
 
-## [obj_init_animation_with_sound](#obj_init_animation_with_sound)
-
-### Lua Example
-`obj_init_animation_with_sound(obj, animations, animIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| obj | [Object](structs.md#Object) |
-| animations | [AnimationTable](structs.md#AnimationTable) |
-| animIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_enable_rendering_and_become_tangible](#cur_obj_enable_rendering_and_become_tangible)
 
 ### Lua Example
@@ -3209,26 +3187,6 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ### C Prototype
 `s32 cur_obj_follow_path(UNUSED s32 unusedArg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [chain_segment_init](#chain_segment_init)
-
-### Lua Example
-`chain_segment_init(segment)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| segment | [ChainSegment](structs.md#ChainSegment) |
-
-### Returns
-- None
-
-### C Prototype
-`void chain_segment_init(struct ChainSegment *segment);`
 
 [:arrow_up_small:](#)
 

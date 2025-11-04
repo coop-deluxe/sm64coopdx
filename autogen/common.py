@@ -17,13 +17,40 @@ type_mappings = {
     'double': 'f64',
 
     'uintptr_t': 'u64', # this is assumed
+    'size_t': 'u64', # this is assumed
 }
 
 exclude_structs = [
-    'SPTask',
-    'VblankHandler',
+    'AnimationTable',
+    'BullyCollisionData',
+    'CameraFOVStatus',
+    'CameraStoredInfo',
+    'CameraTrigger',
+    'ChainSegment',
+    'Cutscene',
+    'CutsceneSplinePoint',
+    'CutsceneVariable',
+    'FloorGeometry',
+    'GraphNode_802A45E4',
+    'HandheldShakePoint',
+    'LinearTransitionPoint',
     'MarioAnimDmaRelatedThing',
+    'ModAudioSampleCopies',
+    'ModFile',
+    'ModeTransitionInfo',
+    'OffsetSizePair',
+    'PaintingMeshVertex',
+    'ParallelTrackingPoint',
+    'PlayerGeometry',
+    'PlayerPalette',
+    'SPTask',
+    'SoundState',
+    'TransitionInfo',
     'UnusedArea28',
+    'VblankHandler',
+    'Vtx_Interp',
+    'WarpTransition',
+    'WarpTransitionData',
 ]
 
 override_types = { "Gfx", "Vtx" }

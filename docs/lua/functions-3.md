@@ -2121,29 +2121,6 @@ Rotates the camera to avoid walls or other obstructions. Ensures clear visibilit
 
 <br />
 
-## [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
-
-### Description
-Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
-
-### Lua Example
-`find_mario_floor_and_ceil(pg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pg | [PlayerGeometry](structs.md#PlayerGeometry) |
-
-### Returns
-- None
-
-### C Prototype
-`void find_mario_floor_and_ceil(struct PlayerGeometry *pg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
 
 ### Description

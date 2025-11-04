@@ -11861,6 +11861,7 @@ int smlua_func_rotate_camera_around_walls(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_find_mario_floor_and_ceil(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -11870,13 +11871,14 @@ int smlua_func_find_mario_floor_and_ceil(lua_State* L) {
         return 0;
     }
 
-    struct PlayerGeometry* pg = (struct PlayerGeometry*)smlua_to_cobject(L, 1, LOT_PLAYERGEOMETRY);
+//  struct PlayerGeometry* pg = (struct PlayerGeometry*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "find_mario_floor_and_ceil"); return 0; }
 
     find_mario_floor_and_ceil(pg);
 
     return 1;
 }
+*/
 
 int smlua_func_start_object_cutscene_without_focus(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -19305,6 +19307,7 @@ int smlua_func_mario_bonk_reflection(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_init_bully_collision_data(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -19314,7 +19317,7 @@ int smlua_func_init_bully_collision_data(lua_State* L) {
         return 0;
     }
 
-    struct BullyCollisionData* data = (struct BullyCollisionData*)smlua_to_cobject(L, 1, LOT_BULLYCOLLISIONDATA);
+//  struct BullyCollisionData* data = (struct BullyCollisionData*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "init_bully_collision_data"); return 0; }
     f32 posX = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "init_bully_collision_data"); return 0; }
@@ -19333,6 +19336,7 @@ int smlua_func_init_bully_collision_data(lua_State* L) {
 
     return 1;
 }
+*/
 
 int smlua_func_mario_update_quicksand(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -26452,6 +26456,7 @@ int smlua_func_cur_obj_init_animation_with_accel_and_sound(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_obj_init_animation_with_sound(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26463,7 +26468,7 @@ int smlua_func_obj_init_animation_with_sound(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_init_animation_with_sound"); return 0; }
-    struct AnimationTable* animations = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_ANIMATIONTABLE);
+//  struct AnimationTable* animations = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_init_animation_with_sound"); return 0; }
     s32 animIndex = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_init_animation_with_sound"); return 0; }
@@ -26473,6 +26478,7 @@ int smlua_func_obj_init_animation_with_sound(lua_State* L) {
 
     return 1;
 }
+*/
 
 int smlua_func_cur_obj_enable_rendering_and_become_tangible(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -28494,6 +28500,7 @@ int smlua_func_cur_obj_follow_path(lua_State* L) {
     return 1;
 }
 
+/*
 int smlua_func_chain_segment_init(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28503,7 +28510,7 @@ int smlua_func_chain_segment_init(lua_State* L) {
         return 0;
     }
 
-    struct ChainSegment* segment = (struct ChainSegment*)smlua_to_cobject(L, 1, LOT_CHAINSEGMENT);
+//  struct ChainSegment* segment = (struct ChainSegment*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "chain_segment_init"); return 0; }
 
     extern void chain_segment_init(struct ChainSegment *segment);
@@ -28511,6 +28518,7 @@ int smlua_func_chain_segment_init(lua_State* L) {
 
     return 1;
 }
+*/
 
 int smlua_func_random_f32_around_zero(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -35165,6 +35173,25 @@ int smlua_func_obj_get_temp_spawn_particles_info(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_temp_water_droplet_params(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_temp_water_droplet_params", 2, top);
+        return 0;
+    }
+
+    int modelId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_temp_water_droplet_params"); return 0; }
+    int behaviorId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_temp_water_droplet_params"); return 0; }
+
+    smlua_push_object(L, LOT_WATERDROPLETPARAMS, obj_get_temp_water_droplet_params(modelId, behaviorId), NULL);
+
+    return 1;
+}
+
 int smlua_func_get_temp_object_hitbox(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37393,7 +37420,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_course_processing", smlua_func_camera_course_processing);
     smlua_bind_function(L, "resolve_geometry_collisions", smlua_func_resolve_geometry_collisions);
     smlua_bind_function(L, "rotate_camera_around_walls", smlua_func_rotate_camera_around_walls);
-    smlua_bind_function(L, "find_mario_floor_and_ceil", smlua_func_find_mario_floor_and_ceil);
+    //smlua_bind_function(L, "find_mario_floor_and_ceil", smlua_func_find_mario_floor_and_ceil); <--- UNIMPLEMENTED
     smlua_bind_function(L, "start_object_cutscene_without_focus", smlua_func_start_object_cutscene_without_focus);
     smlua_bind_function(L, "cutscene_object_with_dialog", smlua_func_cutscene_object_with_dialog);
     smlua_bind_function(L, "cutscene_object_without_dialog", smlua_func_cutscene_object_without_dialog);
@@ -37831,7 +37858,7 @@ void smlua_bind_functions_autogen(void) {
     // mario_step.h
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);
     smlua_bind_function(L, "mario_bonk_reflection", smlua_func_mario_bonk_reflection);
-    smlua_bind_function(L, "init_bully_collision_data", smlua_func_init_bully_collision_data);
+    //smlua_bind_function(L, "init_bully_collision_data", smlua_func_init_bully_collision_data); <--- UNIMPLEMENTED
     smlua_bind_function(L, "mario_update_quicksand", smlua_func_mario_update_quicksand);
     smlua_bind_function(L, "mario_push_off_steep_floor", smlua_func_mario_push_off_steep_floor);
     smlua_bind_function(L, "mario_update_moving_sand", smlua_func_mario_update_moving_sand);
@@ -38184,7 +38211,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_init_animation_with_sound", smlua_func_cur_obj_init_animation_with_sound);
     smlua_bind_function(L, "obj_init_animation_with_accel_and_sound", smlua_func_obj_init_animation_with_accel_and_sound);
     smlua_bind_function(L, "cur_obj_init_animation_with_accel_and_sound", smlua_func_cur_obj_init_animation_with_accel_and_sound);
-    smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound);
+    //smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound); <--- UNIMPLEMENTED
     smlua_bind_function(L, "cur_obj_enable_rendering_and_become_tangible", smlua_func_cur_obj_enable_rendering_and_become_tangible);
     smlua_bind_function(L, "cur_obj_enable_rendering", smlua_func_cur_obj_enable_rendering);
     smlua_bind_function(L, "cur_obj_disable_rendering_and_become_intangible", smlua_func_cur_obj_disable_rendering_and_become_intangible);
@@ -38295,7 +38322,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_rotate_face_angle_using_vel", smlua_func_cur_obj_rotate_face_angle_using_vel);
     smlua_bind_function(L, "cur_obj_set_face_angle_to_move_angle", smlua_func_cur_obj_set_face_angle_to_move_angle);
     smlua_bind_function(L, "cur_obj_follow_path", smlua_func_cur_obj_follow_path);
-    smlua_bind_function(L, "chain_segment_init", smlua_func_chain_segment_init);
+    //smlua_bind_function(L, "chain_segment_init", smlua_func_chain_segment_init); <--- UNIMPLEMENTED
     smlua_bind_function(L, "random_f32_around_zero", smlua_func_random_f32_around_zero);
     smlua_bind_function(L, "obj_scale_random", smlua_func_obj_scale_random);
     smlua_bind_function(L, "obj_translate_xyz_random", smlua_func_obj_translate_xyz_random);
@@ -38702,6 +38729,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_set_field_f32", smlua_func_obj_set_field_f32);
     smlua_bind_function(L, "obj_set_field_s16", smlua_func_obj_set_field_s16);
     smlua_bind_function(L, "obj_get_temp_spawn_particles_info", smlua_func_obj_get_temp_spawn_particles_info);
+    smlua_bind_function(L, "obj_get_temp_water_droplet_params", smlua_func_obj_get_temp_water_droplet_params);
     smlua_bind_function(L, "get_temp_object_hitbox", smlua_func_get_temp_object_hitbox);
     smlua_bind_function(L, "obj_is_attackable", smlua_func_obj_is_attackable);
     smlua_bind_function(L, "obj_is_breakable_object", smlua_func_obj_is_breakable_object);

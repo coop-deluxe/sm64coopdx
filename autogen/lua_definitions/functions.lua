@@ -3615,12 +3615,6 @@ function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
 end
 
---- @param pg PlayerGeometry
---- Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
-function find_mario_floor_and_ceil(pg)
-    -- ...
-end
-
 --- @param cutscene integer
 --- @return integer
 --- Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
@@ -6399,17 +6393,6 @@ function mario_bonk_reflection(m, negateSpeed)
     -- ...
 end
 
---- @param data BullyCollisionData
---- @param posX number
---- @param posZ number
---- @param forwardVel number
---- @param yaw integer
---- @param conversionRatio number
---- @param radius number
-function init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)
-    -- ...
-end
-
 --- @param m MarioState
 --- @param sinkingSpeed number
 --- @return integer
@@ -8833,13 +8816,6 @@ function cur_obj_init_animation_with_accel_and_sound(animIndex, accel)
 end
 
 --- @param obj Object
---- @param animations AnimationTable
---- @param animIndex integer
-function obj_init_animation_with_sound(obj, animations, animIndex)
-    -- ...
-end
-
---- @param obj Object
 function cur_obj_enable_rendering_and_become_tangible(obj)
     -- ...
 end
@@ -9447,11 +9423,6 @@ end
 --- @param unusedArg integer
 --- @return integer
 function cur_obj_follow_path(unusedArg)
-    -- ...
-end
-
---- @param segment ChainSegment
-function chain_segment_init(segment)
     -- ...
 end
 
@@ -11838,6 +11809,14 @@ end
 --- @return SpawnParticlesInfo
 --- Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 function obj_get_temp_spawn_particles_info(modelId)
+    -- ...
+end
+
+--- @param modelId ModelExtendedId
+--- @param behaviorId BehaviorId
+--- @return WaterDropletParams
+--- Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`
+function obj_get_temp_water_droplet_params(modelId, behaviorId)
     -- ...
 end
 
