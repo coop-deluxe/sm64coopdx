@@ -239,13 +239,18 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     const char *filepath = filename;
     if (!is_mod_fs_file(filename)) {
 
+        // normalize filename
+        char normPath[SYS_MAX_PATH] = { 0 };
+        snprintf(normPath, SYS_MAX_PATH, "%s", filename);
+        normalize_path(normPath);
+
         // find mod file in mod list
         bool foundModFile = false;
         struct ModFile* modFile = NULL;
         u16 fileCount = gLuaActiveMod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
             struct ModFile* file = &gLuaActiveMod->files[i];
-            if(path_ends_with(file->relativePath, filename)) {
+            if(path_ends_with(file->relativePath, normPath)) {
                 foundModFile = true;
                 modFile = file;
                 break;
