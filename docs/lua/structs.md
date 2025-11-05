@@ -3,24 +3,16 @@
 # Supported Structs
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
-- [AnimationTable](#AnimationTable)
 - [Area](#Area)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
-- [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
-- [CameraFOVStatus](#CameraFOVStatus)
-- [CameraStoredInfo](#CameraStoredInfo)
-- [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
-- [Cutscene](#Cutscene)
-- [CutsceneSplinePoint](#CutsceneSplinePoint)
-- [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
 - [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
@@ -31,7 +23,6 @@
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
-- [FloorGeometry](#FloorGeometry)
 - [FnGraphNode](#FnGraphNode)
 - [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -62,44 +53,31 @@
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
 - [GraphNodeTranslation](#GraphNodeTranslation)
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
-- [GraphNode_802A45E4](#GraphNode_802A45E4)
-- [HandheldShakePoint](#HandheldShakePoint)
 - [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
-- [LinearTransitionPoint](#LinearTransitionPoint)
-- [MarioAnimDmaRelatedThing](#MarioAnimDmaRelatedThing)
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mat4](#Mat4)
 - [Mod](#Mod)
 - [ModAudio](#ModAudio)
-- [ModAudioSampleCopies](#ModAudioSampleCopies)
-- [ModFile](#ModFile)
 - [ModFs](#ModFs)
 - [ModFsFile](#ModFsFile)
-- [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
 - [ObjectNode](#ObjectNode)
 - [ObjectWarpNode](#ObjectWarpNode)
-- [OffsetSizePair](#OffsetSizePair)
 - [Painting](#Painting)
-- [PaintingMeshVertex](#PaintingMeshVertex)
 - [PaintingValues](#PaintingValues)
-- [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
-- [PlayerGeometry](#PlayerGeometry)
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
-- [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
-- [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
@@ -107,9 +85,6 @@
 - [StaticObjectCollision](#StaticObjectCollision)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
-- [TransitionInfo](#TransitionInfo)
-- [UnusedArea28](#UnusedArea28)
-- [VblankHandler](#VblankHandler)
 - [Vec2f](#Vec2f)
 - [Vec2i](#Vec2i)
 - [Vec2s](#Vec2s)
@@ -120,11 +95,8 @@
 - [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
-- [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
-- [WarpTransition](#WarpTransition)
-- [WarpTransitionData](#WarpTransitionData)
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
@@ -397,6 +369,21 @@
 
 <br />
 
+## [ChainSegment](#ChainSegment)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| posX | `number` |  |
+| posY | `number` |  |
+| posZ | `number` |  |
+| pitch | `integer` |  |
+| yaw | `integer` |  |
+| roll | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Character](#Character)
 
 | Field | Type | Access |
@@ -628,6 +615,7 @@
 | animReturnFromStarDance | `integer` | read-only |
 | animForwardSpinningFlip | `integer` | read-only |
 | animTripleJumpFly | `integer` | read-only |
+| anims | `Array` <`integer`> | read-only |
 | soundFreqScale | `number` | read-only |
 | soundYahWahHoo | `integer` | read-only |
 | soundHoohoo | `integer` | read-only |
@@ -673,6 +661,7 @@
 | soundImaTired | `integer` | read-only |
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
+| sounds | `Array` <`integer`> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1605,6 +1594,7 @@
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
+| animPartsPos | `Array` <`Vec3f`> | read-only |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -1878,6 +1868,7 @@
 | onRxSeqId | `integer` | read-only |
 | modelIndex | `integer` | read-only |
 | ping | `integer` | read-only |
+| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
 | name | `string` | read-only |
 | description | `string` | read-only |
 | descriptionR | `integer` | read-only |
@@ -1886,6 +1877,7 @@
 | descriptionA | `integer` | read-only |
 | overrideLocation | `string` | read-only |
 | overrideModelIndex | `integer` |  |
+| overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
 
 [:arrow_up_small:](#)
 
@@ -1904,6 +1896,7 @@
 | collisionData | `Pointer` <`Collision`> |  |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
+| bhvStack | `Array` <`integer`> | read-only |
 | bhvStackIndex | `integer` | read-only |
 | bhvDelayTimer | `integer` |  |
 | activeFlags | `integer` |  |
@@ -2152,6 +2145,7 @@
 | oCannonPlayerIndex | `integer` |  |
 | oCapUnkF4 | `integer` |  |
 | oCapUnkF8 | `integer` |  |
+| oChainChompSegments | [ChainSegment](structs.md#ChainSegment) | read-only |
 | oChainChompMaxDistFromPivotPerChainPart | `number` |  |
 | oChainChompMaxDistBetweenChainParts | `number` |  |
 | oChainChompDistToPivot | `number` |  |
@@ -2645,6 +2639,7 @@
 | oStrongWindParticlePenguinObj | [Object](structs.md#Object) |  |
 | oWhompShakeVal | `integer` |  |
 | oWigglerFallThroughFloorsHeight | `number` |  |
+| oWigglerSegments | [ChainSegment](structs.md#ChainSegment) | read-only |
 | oWigglerWalkAnimSpeed | `number` |  |
 | oWigglerSquishSpeed | `number` |  |
 | oWigglerTimeUntilRandomTurn | `integer` |  |
@@ -2791,6 +2786,16 @@
 | unused | `integer` |  |
 | cameraEvent | `integer` |  |
 | usedObj | [Object](structs.md#Object) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PlayerPalette](#PlayerPalette)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| parts | `Array` <`Color`> | read-only |
 
 [:arrow_up_small:](#)
 

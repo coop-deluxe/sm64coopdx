@@ -1674,6 +1674,7 @@
    - [cur_obj_rotate_face_angle_using_vel](functions-6.md#cur_obj_rotate_face_angle_using_vel)
    - [cur_obj_set_face_angle_to_move_angle](functions-6.md#cur_obj_set_face_angle_to_move_angle)
    - [cur_obj_follow_path](functions-6.md#cur_obj_follow_path)
+   - [chain_segment_init](functions-6.md#chain_segment_init)
    - [random_f32_around_zero](functions-6.md#random_f32_around_zero)
    - [obj_scale_random](functions-6.md#obj_scale_random)
    - [obj_translate_xyz_random](functions-6.md#obj_translate_xyz_random)

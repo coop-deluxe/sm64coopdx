@@ -217,6 +217,14 @@
 --- @field public areaCenY number
 --- @field public mtx Mat4
 
+--- @class ChainSegment
+--- @field public posX number
+--- @field public posY number
+--- @field public posZ number
+--- @field public pitch integer
+--- @field public yaw integer
+--- @field public roll integer
+
 --- @class Character
 --- @field public type CharacterType
 --- @field public name string
@@ -445,6 +453,7 @@
 --- @field public animReturnFromStarDance integer
 --- @field public animForwardSpinningFlip integer
 --- @field public animTripleJumpFly integer
+--- @field public anims integer[]
 --- @field public soundFreqScale number
 --- @field public soundYahWahHoo integer
 --- @field public soundHoohoo integer
@@ -490,6 +499,7 @@
 --- @field public soundImaTired integer
 --- @field public soundLetsAGo integer
 --- @field public soundOkeyDokey integer
+--- @field public sounds integer[]
 
 --- @class Controller
 --- @field public port integer
@@ -1074,6 +1084,7 @@
 --- @field public headPos Vec3f
 --- @field public torsoPos Vec3f
 --- @field public heldObjLastPosition Vec3f
+--- @field public animPartsPos Vec3f[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer
@@ -1263,6 +1274,7 @@
 --- @field public onRxSeqId integer
 --- @field public modelIndex integer
 --- @field public ping integer
+--- @field public palette PlayerPalette
 --- @field public name string
 --- @field public description string
 --- @field public descriptionR integer
@@ -1271,6 +1283,7 @@
 --- @field public descriptionA integer
 --- @field public overrideLocation string
 --- @field public overrideModelIndex integer
+--- @field public overridePalette PlayerPalette
 --- @field public paletteIndex integer
 --- @field public overridePaletteIndex integer
 --- @field public overridePaletteIndexLp integer
@@ -1285,6 +1298,7 @@
 --- @field public collisionData Pointer_Collision
 --- @field public behavior Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
+--- @field public bhvStack integer[]
 --- @field public bhvStackIndex integer
 --- @field public bhvDelayTimer integer
 --- @field public activeFlags integer
@@ -1525,6 +1539,7 @@
 --- @field public oCannonPlayerIndex integer
 --- @field public oCapUnkF4 integer
 --- @field public oCapUnkF8 integer
+--- @field public oChainChompSegments ChainSegment
 --- @field public oChainChompMaxDistFromPivotPerChainPart number
 --- @field public oChainChompMaxDistBetweenChainParts number
 --- @field public oChainChompDistToPivot number
@@ -2018,6 +2033,7 @@
 --- @field public oStrongWindParticlePenguinObj Object
 --- @field public oWhompShakeVal integer
 --- @field public oWigglerFallThroughFloorsHeight number
+--- @field public oWigglerSegments ChainSegment
 --- @field public oWigglerWalkAnimSpeed number
 --- @field public oWigglerSquishSpeed number
 --- @field public oWigglerTimeUntilRandomTurn integer
@@ -2122,6 +2138,9 @@
 --- @field public unused integer
 --- @field public cameraEvent integer
 --- @field public usedObj Object
+
+--- @class PlayerPalette
+--- @field public parts Color[]
 
 --- @class RayIntersectionInfo
 --- @field public surface Surface

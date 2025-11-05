@@ -89,9 +89,10 @@ override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "Camera": [ "paletteEditorCapState" ],
     "MarioState": [ "visibleToEnemies" ],
-    "NetworkPlayer": [ "gag", "moderator", "discordId" ],
+    "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
+    "GraphNodeMasterList": [ "listHeads", "listTails" ],
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "Animation": [ "unusedBoneCount" ],
@@ -113,7 +114,7 @@ override_field_immutable = {
     "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces" ],
+    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "WaterDropletParams": [ "model" ],
@@ -506,6 +507,8 @@ def get_struct_field_info(struct, field):
                 size = int(array_size)
             elif array_size.startswith("0x") and all(c in "0123456789abcdef" for c in array_size[2:]):
                 size = int(array_size, 16)
+            elif array_size != "":
+                size = array_size
             else:
                 lvt, lot = 'LVT_???', "LOT_???" # array size not provided, so not supported
 
@@ -698,6 +701,8 @@ def doc_struct_index(structs):
     s = '# Supported Structs\n'
     for struct in structs:
         sid = struct['identifier']
+        if sid in exclude_structs:
+            continue
         s += '- [%s](#%s)\n' % (sid, sid)
         global total_structs
         total_structs += 1

@@ -9426,6 +9426,11 @@ function cur_obj_follow_path(unusedArg)
     -- ...
 end
 
+--- @param segment ChainSegment
+function chain_segment_init(segment)
+    -- ...
+end
+
 --- @param diameter number
 --- @return number
 function random_f32_around_zero(diameter)

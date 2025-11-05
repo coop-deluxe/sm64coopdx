@@ -28500,7 +28500,6 @@ int smlua_func_cur_obj_follow_path(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_chain_segment_init(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -28510,7 +28509,7 @@ int smlua_func_chain_segment_init(lua_State* L) {
         return 0;
     }
 
-//  struct ChainSegment* segment = (struct ChainSegment*)smlua_to_cobject(L, 1, LOT_???); <--- UNIMPLEMENTED
+    struct ChainSegment* segment = (struct ChainSegment*)smlua_to_cobject(L, 1, LOT_CHAINSEGMENT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "chain_segment_init"); return 0; }
 
     extern void chain_segment_init(struct ChainSegment *segment);
@@ -28518,7 +28517,6 @@ int smlua_func_chain_segment_init(lua_State* L) {
 
     return 1;
 }
-*/
 
 int smlua_func_random_f32_around_zero(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -38322,7 +38320,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_rotate_face_angle_using_vel", smlua_func_cur_obj_rotate_face_angle_using_vel);
     smlua_bind_function(L, "cur_obj_set_face_angle_to_move_angle", smlua_func_cur_obj_set_face_angle_to_move_angle);
     smlua_bind_function(L, "cur_obj_follow_path", smlua_func_cur_obj_follow_path);
-    //smlua_bind_function(L, "chain_segment_init", smlua_func_chain_segment_init); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "chain_segment_init", smlua_func_chain_segment_init);
     smlua_bind_function(L, "random_f32_around_zero", smlua_func_random_f32_around_zero);
     smlua_bind_function(L, "obj_scale_random", smlua_func_obj_scale_random);
     smlua_bind_function(L, "obj_translate_xyz_random", smlua_func_obj_translate_xyz_random);
