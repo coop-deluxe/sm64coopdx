@@ -1,40 +1,27 @@
 {
-  "profiles": [
-    {
+  "regions": {
+    "US": {
       "name": "Mickey's Speedway USA (U)",
-      "region": "US",
       "size": 0,
       "hashes": {
         "crc32": "",
         "md5": "",
         "sha1": ""
       },
-      "patch_filename": "msusacoop_US.bps",
-      "notes": "Fill with canonical US ROM size and hashes."
+      "addresses": {
+        "PlayerState": "0x80123456",
+        "HandleInput": "0x80124500",
+        "SpawnObject": "0x8012A000",
+        "ObjectListStart": "0x80300000"
+      }
     },
-    {
+    "JP": {
       "name": "Mickey's Speedway USA (J)",
-      "region": "JP",
-      "size": 0,
-      "hashes": {
-        "crc32": "",
-        "md5": "",
-        "sha1": ""
-      },
-      "patch_filename": "msusacoop_JP.bps",
-      "notes": "Fill with canonical JP ROM size and hashes."
+      "addresses": {}
     },
-    {
+    "EU": {
       "name": "Mickey's Speedway USA (E)",
-      "region": "EU",
-      "size": 0,
-      "hashes": {
-        "crc32": "",
-        "md5": "",
-        "sha1": ""
-      },
-      "patch_filename": "msusacoop_EU.bps",
-      "notes": "Fill with canonical EU ROM size and hashes."
+      "addresses": {}
     }
-  ]
+  }
 }
