@@ -9,3 +9,11 @@ $(GEN_DIR)/rom_offsets.c $(GEN_DIR)/rom_offsets.h: $(MAP)
 
 all: $(GEN_DIR)/rom_offsets.c
 	@echo "Build would continue here. Ensure you add $(GEN_DIR)/rom_offsets.c to your build sources."
+
+# add this near the top of your Makefile
+GEN_DIR := generated
+CFLAGS += -I$(GEN_DIR)
+
+# add this near the top of your Makefile
+GEN_DIR := generated
+CFLAGS += -I$(GEN_DIR)
