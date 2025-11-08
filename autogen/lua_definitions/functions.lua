@@ -9996,6 +9996,11 @@ function save_file_is_cannon_unlocked(fileIndex, courseIndex)
     -- ...
 end
 
+--- Unlocks the cannon in the current course
+function save_file_set_cannon_unlocked()
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 --- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost

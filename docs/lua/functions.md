@@ -1785,6 +1785,7 @@
    - [save_file_get_course_coin_score](functions-6.md#save_file_get_course_coin_score)
    - [save_file_set_course_coin_score](functions-6.md#save_file_set_course_coin_score)
    - [save_file_is_cannon_unlocked](functions-6.md#save_file_is_cannon_unlocked)
+   - [save_file_set_cannon_unlocked](functions-6.md#save_file_set_cannon_unlocked)
    - [save_file_get_cap_pos](functions-6.md#save_file_get_cap_pos)
    - [save_file_get_sound_mode](functions-6.md#save_file_get_sound_mode)
 

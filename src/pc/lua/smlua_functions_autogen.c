@@ -30332,6 +30332,21 @@ int smlua_func_save_file_is_cannon_unlocked(lua_State* L) {
     return 1;
 }
 
+int smlua_func_save_file_set_cannon_unlocked(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "save_file_set_cannon_unlocked", 0, top);
+        return 0;
+    }
+
+
+    save_file_set_cannon_unlocked();
+
+    return 1;
+}
+
 int smlua_func_save_file_get_cap_pos(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38428,6 +38443,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "save_file_get_course_coin_score", smlua_func_save_file_get_course_coin_score);
     smlua_bind_function(L, "save_file_set_course_coin_score", smlua_func_save_file_set_course_coin_score);
     smlua_bind_function(L, "save_file_is_cannon_unlocked", smlua_func_save_file_is_cannon_unlocked);
+    smlua_bind_function(L, "save_file_set_cannon_unlocked", smlua_func_save_file_set_cannon_unlocked);
     smlua_bind_function(L, "save_file_get_cap_pos", smlua_func_save_file_get_cap_pos);
     smlua_bind_function(L, "save_file_get_sound_mode", smlua_func_save_file_get_sound_mode);
 

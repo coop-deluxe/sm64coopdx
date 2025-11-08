@@ -5201,6 +5201,27 @@ Checks whether the cannon in the specified course is unlocked. Returns true if t
 
 <br />
 
+## [save_file_set_cannon_unlocked](#save_file_set_cannon_unlocked)
+
+### Description
+Unlocks the cannon in the current course
+
+### Lua Example
+`save_file_set_cannon_unlocked()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void save_file_set_cannon_unlocked(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Description
