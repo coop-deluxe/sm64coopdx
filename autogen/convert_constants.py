@@ -109,6 +109,7 @@ include_constants = {
         "^G_SETSCISSOR$",
         "^G_TEXRECTFLIP$",
         "^G_TEXRECT$",
+        "^G_SETENVRGB$",
     ],
     "include/PR/gbi_extension.h": [
         "^G_VTX_EXT$",

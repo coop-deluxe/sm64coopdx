@@ -1247,6 +1247,7 @@
 
 ## [gbi.h](#gbi.h)
 - G_COPYMEM
+- G_SETENVRGB
 - G_NOOP
 - G_SETOTHERMODE_H
 - G_SETOTHERMODE_L
