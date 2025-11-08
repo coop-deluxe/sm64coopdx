@@ -1235,12 +1235,36 @@ struct GfxParamInfo {
     const GfxParamType *types;
 };
 
+// Allow whitespaces before and after the command symbol name
+static const char *ExtractGfxSymbol(const char *command, size_t *symbolLength) {
+    const char *symbol = NULL;
+    *symbolLength = 0;
+    for (; *command != 0; command++) {
+        if ((u8) *command <= (u8) ' ' || *command == '(') {
+            if (symbol != NULL) {
+                return symbol;
+            }
+        } else {
+            if (symbol == NULL) {
+                symbol = command;
+            }
+            (*symbolLength)++;
+        }
+    }
+    return symbol;
+}
+
 static const struct GfxParamInfo *GetGfxParamInfo(const char *command) {
-#define define_gfx_symbol(symb, params, addPtr, ...)                                                    \
-    static const GfxParamType types_##symb[] = { __VA_ARGS__ };                                         \
-    static struct GfxParamInfo info_##symb = { .count = params, .types = types_##symb };                \
-    static_assert(sizeof(types_##symb) == params, "Parameter count does not match for gfx command.");   \
-    if (!strncmp(#symb, command, strlen(#symb))) { return &info_##symb; }
+    size_t symbolLength = 0;
+    const char *symbol = ExtractGfxSymbol(command, &symbolLength);
+    if (symbol == NULL) { return NULL; }
+#define define_gfx_symbol(symb, params, addPtr, ...) \
+{ \
+    static const GfxParamType types_##symb[] = { __VA_ARGS__ };                                             \
+    static struct GfxParamInfo info_##symb = { .count = params, .types = types_##symb };                    \
+    static_assert(sizeof(types_##symb) == params, "Parameter count does not match for gfx symbol: " #symb); \
+    if (symbolLength == sizeof(#symb) - 1 && !memcmp(symbol, #symb, symbolLength)) { return &info_##symb; } \
+}
 #define define_gfx_symbol_manual(...) define_gfx_symbol(__VA_ARGS__)
 #include "gfx_symbols.h"
 #undef define_gfx_symbol
