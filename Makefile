@@ -978,11 +978,11 @@ ifeq ($(COOPNET),1)
     ifeq ($(shell uname -m),arm64)
       LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_arm/ -l coopnet
       COOPNET_LIBS += ./lib/coopnet/mac_arm/libcoopnet.dylib
-      COOPNET_LIBS += ./lib/coopnet/mac_arm/libjuice.1.2.2.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_arm/libjuice.1.6.2.dylib
     else
       LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_intel/ -l coopnet
       COOPNET_LIBS += ./lib/coopnet/mac_intel/libcoopnet.dylib
-      COOPNET_LIBS += ./lib/coopnet/mac_intel/libjuice.1.2.2.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_intel/libjuice.1.6.2.dylib
     endif
   else ifeq ($(TARGET_RPI),1)
     ifneq (,$(findstring aarch64,$(machine)))
