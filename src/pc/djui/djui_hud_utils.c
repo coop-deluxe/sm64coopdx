@@ -495,7 +495,7 @@ static inline bool is_power_of_two(u32 n) {
     return (n > 0) && ((n & (n - 1)) == 0);
 }
 
-static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     if (!is_power_of_two(width) || !is_power_of_two(height)) {
         LOG_LUA_LINE("Tried to render DJUI HUD texture with NPOT width or height");
         return;
@@ -517,8 +517,8 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     djui_hud_size_translate(&translatedW);
     djui_hud_size_translate(&translatedH);
     if (sRotation.rotation != 0) {
-        f32 pivotTranslationX = tileW * translatedW * sRotation.pivotX;
-        f32 pivotTranslationY = tileH * translatedH * sRotation.pivotY;
+        f32 pivotTranslationX = width * translatedW * sRotation.pivotX;
+        f32 pivotTranslationY = height * translatedH * sRotation.pivotY;
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sRotation.rotation, 0, 0, 1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
@@ -528,18 +528,47 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    if (tileX == 0 && tileY == 0 && tileW == width && tileH == height) {
-        djui_gfx_render_texture(texture, width, height, fmt, siz, sFilter);
-    } else {
-        djui_gfx_render_texture_tile(texture, width, height, fmt, siz, tileX, tileY, tileW, tileH, sFilter);
-    }
+    djui_gfx_render_texture(texture, width, height, fmt, siz, sFilter);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH) {
-    djui_hud_render_texture_tile_raw(texture, width, height, fmt, siz, x, y, scaleW, scaleH, 0, 0, width, height);
+static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+    if (!texture) { return; }
+
+    gDjuiHudUtilsZ += 0.01f;
+    if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
+    if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
+
+    // translate position
+    f32 translatedX = x;
+    f32 translatedY = y;
+    djui_hud_position_translate(&translatedX, &translatedY);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+
+    // rotate
+    f32 translatedW = scaleW;
+    f32 translatedH = scaleH;
+    djui_hud_size_translate(&translatedW);
+    djui_hud_size_translate(&translatedH);
+    if (sRotation.rotation != 0) {
+        f32 aspect = tileH ? ((f32) tileW / (f32) tileH) : 1.f;
+        f32 pivotTranslationX = width * translatedW * aspect * sRotation.pivotX;
+        f32 pivotTranslationY = height * translatedH * sRotation.pivotY;
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sRotation.rotation, 0, 0, 1);
+        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
+    }
+
+    // translate scale
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
+
+    // render
+    djui_gfx_render_texture_tile(texture, width, height, fmt, siz, tileX, tileY, tileW, tileH, sFilter, false);
+
+    // pop
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
