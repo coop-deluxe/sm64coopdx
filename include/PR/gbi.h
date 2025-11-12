@@ -126,7 +126,6 @@
 #ifdef F3DEX_GBI_2E
 /* extended commands */
 #define G_COPYMEM		0xd2
-#define G_SETENVRGB		0xd1
 #endif
 
 #define G_VTX			0x01
@@ -2606,8 +2605,6 @@ typedef union {
 #define gsSPCopyLightsPlayerPart(part) \
     gsSPCopyLightEXT(1, ((2 * ((part) + 1)) + 1)), \
     gsSPCopyLightEXT(2, ((2 * ((part) + 1)) + 2))
-#define	gsDPSetEnvRGB(r, g, b)					\
-            sDPRGBColor(G_SETENVRGB, r,g,b,255)
 #endif
 
 /*

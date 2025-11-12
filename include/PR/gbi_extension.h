@@ -98,6 +98,13 @@
 #define gDPSetTextureOverrideDjui(pkt, texture, w, h, bitSize) gSetOverrideDjui(pkt, G_TEXOVERRIDE_DJUI, texture, w, h, bitSize)
 
 ////////////////////
+//  RDP commands  //
+////////////////////
+#define G_SETENVRGB		0xd1
+#define	gsDPSetEnvRGB(r, g, b)					\
+            sDPRGBColor(G_SETENVRGB, r,g,b,255)
+
+////////////////////
 // G_PPARTTOCOLOR //
 ////////////////////
 

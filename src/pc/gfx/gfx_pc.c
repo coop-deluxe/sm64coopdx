@@ -1509,13 +1509,11 @@ static void gfx_dp_set_env_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.env_color.a = a;
 }
 
-#ifdef F3DEX_GBI_2E
 static void gfx_dp_set_env_rgb(uint8_t r, uint8_t g, uint8_t b) {
     rdp.env_color.r = r;
     rdp.env_color.g = g;
     rdp.env_color.b = b;
 }
-#endif
 
 static void gfx_dp_set_prim_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.prim_color.r = r;
@@ -1856,11 +1854,9 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
             case G_SETENVCOLOR:
                 gfx_dp_set_env_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
-#ifdef F3DEX_GBI_2E
             case G_SETENVRGB:
                 gfx_dp_set_env_rgb(C1(24, 8), C1(16, 8), C1(8, 8));
                 break;
-#endif
             case G_SETPRIMCOLOR:
                 gfx_dp_set_prim_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;

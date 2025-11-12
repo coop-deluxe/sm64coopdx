@@ -2846,9 +2846,6 @@ FIRST_PERSON_MARIO_HEAD_POS_SHORT = 60
 G_COPYMEM = 0xd2
 
 --- @type integer
-G_SETENVRGB = 0xd1
-
---- @type integer
 G_NOOP = 0x00
 
 --- @type integer
@@ -2946,6 +2943,9 @@ G_TEXRECT = 0xe4
 
 --- @type integer
 G_VTX_EXT = 0x11
+
+--- @type integer
+G_SETENVRGB = 0xd1
 
 --- @type integer
 G_PPARTTOCOLOR = 0xd3

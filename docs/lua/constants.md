@@ -1247,7 +1247,6 @@
 
 ## [gbi.h](#gbi.h)
 - G_COPYMEM
-- G_SETENVRGB
 - G_NOOP
 - G_SETOTHERMODE_H
 - G_SETOTHERMODE_L
@@ -1299,6 +1298,7 @@
 
 ## [gbi_extension.h](#gbi_extension.h)
 - G_VTX_EXT
+- G_SETENVRGB
 - G_PPARTTOCOLOR
 
 [:arrow_up_small:](#)
