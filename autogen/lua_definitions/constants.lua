@@ -2945,6 +2945,9 @@ G_TEXRECT = 0xe4
 G_VTX_EXT = 0x11
 
 --- @type integer
+G_SETENVRGB = 0xd1
+
+--- @type integer
 G_PPARTTOCOLOR = 0xd3
 
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams

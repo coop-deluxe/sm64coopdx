@@ -1298,6 +1298,7 @@
 
 ## [gbi_extension.h](#gbi_extension.h)
 - G_VTX_EXT
+- G_SETENVRGB
 - G_PPARTTOCOLOR
 
 [:arrow_up_small:](#)
