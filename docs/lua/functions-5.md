@@ -6,6 +6,545 @@
 
 
 ---
+# functions from math_util_vec3s.inl
+
+<br />
+
+
+## [vec3s_zero](#vec3s_zero)
+
+### Description
+Sets the components of the 3D short integer vector `v` to 0
+
+### Lua Example
+`local Vec3sValue = vec3s_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_zero(OUT Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_copy](#vec3s_copy)
+
+### Description
+Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
+
+### Lua Example
+`local Vec3sValue = vec3s_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_copy(OUT Vec3s dest, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_set](#vec3s_set)
+
+### Description
+Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local Vec3sValue = vec3s_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_set(OUT Vec3s dest, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_add](#vec3s_add)
+
+### Description
+Adds the components of the 3D short integer vector `a` to `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_add(OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_sum](#vec3s_sum)
+
+### Description
+Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_sum(OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_sub](#vec3s_sub)
+
+### Description
+Subtracts the components of the 3D short integer vector `a` from `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_sub(OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dif](#vec3s_dif)
+
+### Description
+Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_dif(OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_mul](#vec3s_mul)
+
+### Description
+Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local Vec3sValue = vec3s_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_mul(OUT Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_mult](#vec3s_mult)
+
+### Description
+Multiplies the components of the 3D short integer vector `dest` with the components of `a`
+
+### Lua Example
+`local Vec3sValue = vec3s_mult(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_mult(OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_prod](#vec3s_prod)
+
+### Description
+Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_prod(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_prod(OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_div](#vec3s_div)
+
+### Description
+Divides each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local Vec3sValue = vec3s_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_div(OUT Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_length](#vec3s_length)
+
+### Description
+Calculates the length (magnitude) of the 3D short integer vector `a`
+
+### Lua Example
+`local numberValue = vec3s_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_length(Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_normalize](#vec3s_normalize)
+
+### Description
+Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local Vec3sValue = vec3s_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_normalize(OUT Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_set_magnitude](#vec3s_set_magnitude)
+
+### Description
+Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
+
+### Lua Example
+`local Vec3sValue = vec3s_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+| mag | `number` |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_set_magnitude(OUT Vec3s v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dot](#vec3s_dot)
+
+### Description
+Computes the dot product of the two 3D short integer vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3s_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dot(Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_cross](#vec3s_cross)
+
+### Description
+Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_cross(OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_combine](#vec3s_combine)
+
+### Description
+Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local Vec3sValue = vec3s_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| vecA | [Vec3s](structs.md#Vec3s) |
+| vecB | [Vec3s](structs.md#Vec3s) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+[Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_combine(OUT Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_dist](#vec3s_dist)
+
+### Description
+Calculates the distance between two 3D short integer vectors `v1` and `v2`
+
+### Lua Example
+`local numberValue = vec3s_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_hdist](#vec3s_hdist)
+
+### Description
+Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3s_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_hdist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_is_zero](#vec3s_is_zero)
+
+### Description
+Returns `true` if all components of the 3D short integer vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3s_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3s_is_zero(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_vec3f](#vec3s_to_vec3f)
+
+### Description
+Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+
+### Lua Example
+`local Vec3fValue = vec3s_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3f](structs.md#Vec3f)
+
+### C Prototype
+`Vec3fp vec3s_to_vec3f(OUT Vec3f dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_vec3i](#vec3s_to_vec3i)
+
+### Description
+Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
+
+### Lua Example
+`local Vec3iValue = vec3s_to_vec3i(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+[Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3s_to_vec3i(OUT Vec3i dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from misc.h
 
 <br />
