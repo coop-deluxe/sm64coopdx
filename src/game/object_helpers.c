@@ -810,8 +810,8 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
 }
 
 void obj_init_animation(struct Object *obj, s32 animIndex) {
-    if (!o || !obj) { return; }
-    struct AnimationTable *animations = o->oAnimations;
+    if (!obj) { return; }
+    struct AnimationTable *animations = obj->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
     }
@@ -3184,7 +3184,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
                     cur_obj_end_dialog(m, dialogFlags, gDialogResponse);
                 }
             } else if (dialogFlags & DIALOG_UNK1_FLAG_DEFAULT) {
-                if (get_dialog_id() == -1) {
+                if (get_dialog_id() == DIALOG_NONE) {
                     cur_obj_end_dialog(m, dialogFlags, 3);
                 }
             } else {

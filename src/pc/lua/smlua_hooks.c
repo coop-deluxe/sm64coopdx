@@ -41,10 +41,10 @@ struct LuaHookedEvent {
 static struct LuaHookedEvent sHookedEvents[HOOK_MAX] = { 0 };
 
 static const char* sLuaHookedEventTypeName[] = {
-#define SMLUA_EVENT_HOOK(hookEventType, ...) #hookEventType,
+#define SMLUA_EVENT_HOOK(hookEventType, ...) [hookEventType] = #hookEventType,
 #include "smlua_hook_events.inl"
 #undef SMLUA_EVENT_HOOK
-    "HOOK_MAX"
+    [HOOK_MAX] = "HOOK_MAX"
 };
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod, struct ModFile* activeModFile) {
@@ -100,6 +100,7 @@ int smlua_hook_event(lua_State* L) {
 
     hook->reference[hook->count] = ref;
     hook->mod[hook->count] = gLuaActiveMod;
+    hook->modFile[hook->count] = gLuaActiveModFile;
     hook->count++;
 
     return 1;

@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "smlua.h"
+#include "smlua_require.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 
@@ -343,16 +344,8 @@ static void smlua_reload_module(lua_State *L, struct Mod* mod, struct ModFile *f
     // only handle loaded Lua modules
     if (!file->isLoadedLuaModule) { return; }
 
-    // build registry key for this mod's loaded table
-    char registryKey[SYS_MAX_PATH + 16];
-    snprintf(registryKey, sizeof(registryKey), "mod_loaded_%s", mod->relativePath);
-
     // get per-mod "loaded" table
-    lua_getfield(L, LUA_REGISTRYINDEX, registryKey);      // ..., loadedTable
-    if (!lua_istable(L, -1)) {
-        lua_pop(L, 1);
-        return;
-    }
+    smlua_get_or_create_mod_loaded_table(L, mod);
 
     // get the old module table: loadedTable[file->relativePath]
     lua_getfield(L, -1, file->relativePath);              // ..., loadedTable, oldMod

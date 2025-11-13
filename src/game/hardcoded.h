@@ -82,6 +82,7 @@ struct LevelValues {
     enum SeqId wingCapSequence;
     enum SeqId metalCapSequence;
     enum SeqId vanishCapSequence;
+    enum SeqId shellSequence;
     struct StarPositions starPositions;
     s16 cellHeightLimit;
     s16 floorLowerLimit;

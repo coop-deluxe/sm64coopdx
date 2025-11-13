@@ -2,7 +2,10 @@
 extern "C" {
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
+#include "pc/mods/mod_fs.h"
 }
+
+#define PNG_SIGNATURE 0x0A1A0A0D474E5089llu
 
   ///////////
  // Utils //
@@ -304,46 +307,67 @@ DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const Sy
 
     // Load data from binary file
     DataNode<TexData>* _TexNode = NULL;
-    BinFile *_File = BinFile::OpenR(aFilename.c_str());
+    BinFile *_File = NULL;
+    if (is_mod_fs_file(aFilename.c_str())) {
+        void *_Buffer = NULL;
+        u32 _Size = 0;
+        if (mod_fs_read_file_from_uri(aFilename.c_str(), &_Buffer, &_Size)) {
+            _File = BinFile::OpenB((const u8 *) _Buffer, _Size);
+            free(_Buffer);
+        }
+    } else {
+        _File = BinFile::OpenR(aFilename.c_str());
+    }
     if (!_File) { return NULL; }
 
     u8 type = _File->Read<u8>();
     if (type == DATA_TYPE_TEXTURE) {
+
         // load png-texture
         _TexNode = New<DataNode<TexData>>();
-        _TexNode->mData = New<TexData>();
-
         _TexNode->mName.Read(_File);
+        _TexNode->mData = New<TexData>();
         _TexNode->mData->mPngData.Read(_File);
-        BinFile::Close(_File);
+
+    } else if (type == DATA_TYPE_TEXTURE_RAW) {
+
+        // load raw-texture
+        _TexNode = New<DataNode<TexData>>();
+        _TexNode->mName.Read(_File);
+        _TexNode->mData = New<TexData>();
+        _TexNode->mData->mRawFormat = _File->Read<s32>();
+        _TexNode->mData->mRawSize = _File->Read<s32>();
+        _TexNode->mData->mRawWidth = _File->Read<s32>();
+        _TexNode->mData->mRawHeight = _File->Read<s32>();
+        _TexNode->mData->mRawData.Read(_File);
+
+    } else if ((_File->SetOffset(0), _File->Read<u64>() == PNG_SIGNATURE)) {
+        _File->SetOffset(0);
+
+        // load PNG file
+        _TexNode = New<DataNode<TexData>>();
+        _TexNode->mName = aFilename.c_str();
+        _TexNode->mData = New<TexData>();
+        _TexNode->mData->mPngData.Resize(_File->Size());
+        _File->Read<u8>(_TexNode->mData->mPngData.begin(), _File->Size());
+    }
+
+    BinFile::Close(_File);
+
+    if (_TexNode) {
+
+        // For some reason texture nodes are indexed to DynosCustomTexs by their node name,
+        // and not by `aTexName`, but DynOS_Tex_Get searches for `aTexName`...
+        // Normally, this doesn't cause any issue, but things go wrong when `aTexName`
+        // is not the same as the texture node name (which is the case for modfs files).
+        if (is_mod_fs_file(aFilename.c_str())) {
+            _TexNode->mName = aTexName;
+        }
 
         if (aAddToPack) {
             if (!_Pack) { _Pack = DynOS_Pack_Add(aPackFolder); }
             DynOS_Pack_AddTex(_Pack, _TexNode);
         }
-
-        return _TexNode;
-    } else if (type != DATA_TYPE_TEXTURE_RAW) {
-        BinFile::Close(_File);
-        return NULL;
-    }
-
-    // load raw-texture
-    _TexNode = New<DataNode<TexData>>();
-    _TexNode->mData = New<TexData>();
-
-    _TexNode->mName.Read(_File);
-    _TexNode->mData->mRawFormat = _File->Read<s32>();
-    _TexNode->mData->mRawSize = _File->Read<s32>();
-    _TexNode->mData->mRawWidth = _File->Read<s32>();
-    _TexNode->mData->mRawHeight = _File->Read<s32>();
-    _TexNode->mData->mRawData.Read(_File);
-
-    BinFile::Close(_File);
-
-    if (aAddToPack) {
-        if (!_Pack) { _Pack = DynOS_Pack_Add(aPackFolder); }
-        DynOS_Pack_AddTex(_Pack, _TexNode);
     }
 
     return _TexNode;

@@ -17,6 +17,10 @@ extern "C" {
 #define LUA_VAR_CODE    (u32) 0x5641554C
 #define TEX_REF_CODE    (u32) 0x52584554
 
+#define FUNCTION_GEO    1
+#define FUNCTION_BHV    2
+#define FUNCTION_LVL    3
+
 #define MOD_PACK_INDEX 99
 
 //
@@ -864,10 +868,13 @@ const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
 const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
-const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName);
-const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex);
-const char *     DynOS_Builtin_Func_GetNameFromIndex(s64 aIndex);
-s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData);
+const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName, u8 aFuncType);
+const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex, u8 aFuncType);
+const char *     DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u8 aFuncType);
+s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(s32 aIndex, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(const char* aDataName, u8 aFuncType);
+String           DynOS_Builtin_Func_CheckMisuse(const void* aData, u8 aFuncType);
 const Gfx *      DynOS_Builtin_Gfx_GetFromName(const char *aDataName);
 const char *     DynOS_Builtin_Gfx_GetFromData(const Gfx *aData);
 
@@ -890,7 +897,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 //
 
 std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
-void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName);
+bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
@@ -918,7 +925,7 @@ u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSi
 bool DynOS_Tex_Import(void **aOutput, void *aPtr, s32 aTile, void *aGfxRApi, void **aHashMap, void *aPool, u32 *aPoolPos, u32 aPoolSize);
 void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture);
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode);
-void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
+bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName);
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo);
 bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo);
 void DynOS_Tex_Override_Set(const char* textureName, struct TextureInfo* aOverrideTexInfo);
@@ -956,7 +963,7 @@ void DynOS_Bhv_ModShutdown();
 // Col Manager
 //
 
-void DynOS_Col_Activate(const SysPath &aFilePath, const char *aCollisionName);
+bool DynOS_Col_Activate(const SysPath &aFilePath, const char *aCollisionName);
 Collision* DynOS_Col_Get(const char* collisionName);
 void DynOS_Col_ModShutdown();
 
@@ -989,11 +996,13 @@ void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
 Gfx *DynOS_Gfx_GetWritableDisplayList(Gfx *aGfx);
 Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength);
+const char *DynOS_Gfx_GetName(Gfx *aGfx);
 Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength);
 bool DynOS_Gfx_Resize(Gfx *aGfx, u32 aNewLength);
 bool DynOS_Gfx_Delete(Gfx *aGfx);
 void DynOS_Gfx_DeleteAll();
 Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount);
+const char *DynOS_Vtx_GetName(Vtx *aVtx);
 Vtx *DynOS_Vtx_Create(const char *aName, u32 aCount);
 bool DynOS_Vtx_Resize(Vtx *aVtx, u32 aNewCount);
 bool DynOS_Vtx_Delete(Vtx *aVtx);
@@ -1100,8 +1109,8 @@ void DynOS_Vtx_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
 void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData);
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData);
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags);
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType);
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags);
 
 void DynOS_GfxDynCmd_Load(BinFile *aFile, GfxData *aGfxData);
 

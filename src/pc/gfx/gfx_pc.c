@@ -61,6 +61,7 @@ static struct RSP {
 
     uint32_t geometry_mode;
     int16_t fog_mul, fog_offset;
+    int16_t fresnel_scale, fresnel_offset;
 
     struct {
         // U0.16
@@ -850,6 +851,33 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.b *= vtxB;
             }
 
+            if (rsp.geometry_mode & (G_FRESNEL_COLOR_EXT | G_FRESNEL_ALPHA_EXT)) {
+                Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
+                Vec3f vnormal = { nx / 255.0f, ny / 255.0f, nz / 255.0f };
+                // transform vpos and vnormal to world space
+                gfx_local_to_world_space(vpos, vnormal);
+
+                Vec3f viewDir = {
+                    sInverseCameraMatrix[3][0] - vpos[0], 
+                    sInverseCameraMatrix[3][1] - vpos[1], 
+                    sInverseCameraMatrix[3][2] - vpos[2]
+                };
+                vec3f_normalize(viewDir);
+                vec3f_normalize(vnormal);
+
+                int32_t dot = (int32_t) (fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f);
+                int32_t factor = ((rsp.fresnel_scale * dot) >> 15) + rsp.fresnel_offset;
+                int32_t fresnel = clamp(factor << 8, 0, 0x7FFF);
+                uint8_t result = (uint8_t) (fresnel >> 7);
+
+                if (rsp.geometry_mode & G_FRESNEL_COLOR_EXT) {
+                    d->color.r = d->color.g = d->color.b = result;
+                }
+                if (rsp.geometry_mode & G_FRESNEL_ALPHA_EXT) {
+                    d->color.a = result;
+                }
+            }
+
             if (rsp.geometry_mode & G_TEXTURE_GEN) {
                 float dotx = 0, doty = 0;
                 dotx += nx * rsp.current_lookat_coeffs[0][0];
@@ -970,8 +998,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (fog_z > 255) fog_z = 255;
             d->fog_z = fog_z;
         }
-
-        d->color.a = v->cn[3];
+        if (!(rsp.geometry_mode & G_FRESNEL_ALPHA_EXT)) {
+            d->color.a = v->cn[3];
+        }
     }
 }
 
@@ -996,6 +1025,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if ((v1->w < 0) ^ (v2->w < 0) ^ (v3->w < 0)) {
             // If one vertex lies behind the eye, negating cross will give the correct result.
             // If all vertices lie behind the eye, the triangle will be rejected anyway.
+            cross = -cross;
+        }
+
+        // Invert culling: back becomes front and front becomes back
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
             cross = -cross;
         }
 
@@ -1297,7 +1331,7 @@ static void gfx_sp_copymem(uint8_t idx, uint16_t dstofs, uint16_t srcofs, UNUSED
 }
 #endif
 
-static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data) {
+static void gfx_sp_moveword(uint8_t index, uint16_t offset, uint32_t data) {
     switch (index) {
         case G_MW_NUMLIGHT:
 #ifdef F3DEX_GBI_2
@@ -1319,6 +1353,22 @@ static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data
             sDepthZSub = gProjectionVanillaNearValue;
 
             break;
+        case G_MW_FX:
+            if (offset == G_MWO_FRESNEL) {
+                rsp.fresnel_scale = (int16_t)(data >> 16);
+                rsp.fresnel_offset = (int16_t)data;
+            }
+            break;
+        case G_MW_LIGHTCOL: {
+            int lightNum = offset / 24;
+            // data = packed color
+            if (lightNum >= 0 && lightNum <= MAX_LIGHTS) {
+                rsp.current_lights[lightNum].col[0] = (uint8_t)(data >> 24);
+                rsp.current_lights[lightNum].col[1] = (uint8_t)(data >> 16);
+                rsp.current_lights[lightNum].col[2] = (uint8_t)(data >> 8);
+            }
+            break;
+        }
     }
 }
 
@@ -1457,6 +1507,12 @@ static void gfx_dp_set_env_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.env_color.g = g;
     rdp.env_color.b = b;
     rdp.env_color.a = a;
+}
+
+static void gfx_dp_set_env_rgb(uint8_t r, uint8_t g, uint8_t b) {
+    rdp.env_color.r = r;
+    rdp.env_color.g = g;
+    rdp.env_color.b = b;
 }
 
 static void gfx_dp_set_prim_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -1798,6 +1854,9 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
             case G_SETENVCOLOR:
                 gfx_dp_set_env_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
+            case G_SETENVRGB:
+                gfx_dp_set_env_rgb(C1(24, 8), C1(16, 8), C1(8, 8));
+                break;
             case G_SETPRIMCOLOR:
                 gfx_dp_set_prim_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
@@ -1970,18 +2029,24 @@ void gfx_run(Gfx *commands) {
     //double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
-    gfx_flush();
-    //double t1 = gfx_wapi->get_time();
-    //printf("Process %f %f\n", t1, t1 - t0);
-    gfx_rapi->end_frame();
-    gfx_wapi->swap_buffers_begin();
 }
 
-void gfx_end_frame(void) {
+void gfx_end_frame_render(void) {
+    gfx_flush();
+    gfx_rapi->end_frame();
+}
+
+void gfx_display_frame(void) {
+    gfx_wapi->swap_buffers_begin();
     if (!dropped_frame) {
         gfx_rapi->finish_render();
         gfx_wapi->swap_buffers_end();
     }
+}
+
+void gfx_end_frame(void) {
+    gfx_end_frame_render();
+    gfx_display_frame();
 }
 
 void gfx_shutdown(void) {
@@ -2108,6 +2173,23 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     }
 }
 
+static void gfx_sp_copy_playerpart_to_color(uint8_t color, uint32_t idx) {
+    SUPPORT_CHECK(color == G_COL_PRIM || color == G_COL_ENV);
+
+    if (idx >= 1 && idx <= MAX_LIGHTS) {
+        Light_t *l = (rsp.current_lights + (idx - 1));
+        struct RGBA *targetColor = NULL;
+        switch (color) {
+            case G_COL_PRIM: targetColor = &rdp.prim_color; break;
+            case G_COL_ENV:  targetColor = &rdp.env_color;  break;
+        }
+
+        targetColor->r = l->col[0];
+        targetColor->g = l->col[1];
+        targetColor->b = l->col[2];
+    }
+}
+
 static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
     sDjuiClipX1 = x1;
     sDjuiClipY1 = y1;
@@ -2170,6 +2252,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
+            break;
+        case G_PPARTTOCOLOR:
+            gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
             break;
     }
 }

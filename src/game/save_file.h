@@ -241,6 +241,7 @@ Useful for tracking course-specific progress and enabling shortcuts
 |descriptionEnd| */
 s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);
 
+/* |description|Unlocks the cannon in the current course|descriptionEnd| */
 void save_file_set_cannon_unlocked(void);
 void save_file_set_cap_pos(s16 x, s16 y, s16 z);
 

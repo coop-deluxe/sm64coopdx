@@ -4,7 +4,6 @@
 #include "memory.h"
 #include "print.h"
 #include "pc/debuglog.h"
-#include "pc/lua/smlua.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
 
@@ -186,12 +185,14 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
  // growing array //
 ///////////////////
 
-struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity) {
+struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity, GrowingArrayAllocFunc alloc, GrowingArrayFreeFunc free) {
     growing_array_free(&array);
     array = calloc(1, sizeof(struct GrowingArray));
     array->buffer = calloc(capacity, sizeof(void *));
     array->capacity = capacity;
     array->count = 0;
+    array->alloc = alloc;
+    array->free = free;
     return array;
 }
 
@@ -211,7 +212,7 @@ void *growing_array_alloc(struct GrowingArray *array, u32 size) {
         // Alloc element if needed
         void **elem = &array->buffer[array->count++];
         if (!*elem) {
-            *elem = malloc(size);
+            *elem = array->alloc(size);
         }
         memset(*elem, 0, size);
         return *elem;
@@ -219,11 +220,37 @@ void *growing_array_alloc(struct GrowingArray *array, u32 size) {
     return NULL;
 }
 
+void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count) {
+    if (array && array->buffer && count > 0 &&
+        (to < from || to > from + count) &&
+        (from + count) <= array->count && to <= array->count) {
+
+        void **temp = malloc(sizeof(void *) * count);
+        if (!temp) { return; }
+
+        // Copy elements to move to temporary buffer
+        memcpy(temp, array->buffer + from, sizeof(void *) * count);
+
+        // Remove copied elements from the array
+        memmove(array->buffer + from, array->buffer + (from + count), sizeof(void *) * (array->count - (from + count)));
+
+        // Make place for the copied elements
+        // If moving left to right, account for the removed elements
+        if (to > from) { to -= count; }
+        memmove(array->buffer + (to + count), array->buffer + to, sizeof(void *) * (array->count - (to + count)));
+
+        // Insert copied elements
+        memcpy(array->buffer + to, temp, sizeof(void *) * count);
+
+        free(temp);
+    }
+}
+
 void growing_array_free(struct GrowingArray **array) {
     if (*array) {
         for (u32 i = 0; i != (*array)->capacity; ++i) {
             if ((*array)->buffer[i]) {
-                smlua_free((*array)->buffer[i]);
+                (*array)->free((*array)->buffer[i]);
             }
         }
         free((*array)->buffer);

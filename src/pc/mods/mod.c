@@ -23,7 +23,7 @@ size_t mod_get_lua_size(struct Mod* mod) {
 
     for (int i = 0; i < mod->fileCount; i++) {
         struct ModFile* file = &mod->files[i];
-        if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) { continue; }
+        if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) { continue; }
         size += file->size;
     }
 
@@ -161,19 +161,19 @@ void mod_activate(struct Mod* mod) {
             mod_cache_update(mod, file);
         }
 
-        if (str_ends_with(file->relativePath, ".bin")) {
+        if (path_ends_with(file->relativePath, ".bin")) {
             mod_activate_bin(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".col")) {
+        if (path_ends_with(file->relativePath, ".col")) {
             mod_activate_col(file);
         }
-        if (str_ends_with(file->relativePath, ".lvl")) {
+        if (path_ends_with(file->relativePath, ".lvl")) {
             mod_activate_lvl(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".bhv")) {
+        if (path_ends_with(file->relativePath, ".bhv")) {
             mod_activate_bhv(mod, file);
         }
-        if (str_ends_with(file->relativePath, ".tex")) {
+        if (path_ends_with(file->relativePath, ".tex")) {
             mod_activate_tex(file);
         }
     }
@@ -245,15 +245,22 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     memset(file, 0, sizeof(struct ModFile));
 
     // set relative path
-    if (snprintf(file->relativePath, SYS_MAX_PATH - 1, "%s", relativePath) < 0) {
-        LOG_ERROR("Failed to remember relative path '%s'", relativePath);
+    char normPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(normPath, sizeof(normPath), "%s", relativePath) < 0) {
+        LOG_ERROR("Failed to copy relative path for normalization: %s", relativePath);
+    }
+
+    normalize_path(normPath);
+
+    if (snprintf(file->relativePath, SYS_MAX_PATH - 1, "%s", normPath) < 0) {
+        LOG_ERROR("Failed to remember relative path '%s'", normPath);
         return NULL;
     }
 
     // figure out full path
     char fullPath[SYS_MAX_PATH] = { 0 };
     if (!mod_file_full_path(fullPath, mod, file)) {
-        LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, relativePath);
+        LOG_ERROR("Failed to concat path: '%s' + '%s'", mod->basePath, normPath);
         return NULL;
     }
 
@@ -330,7 +337,7 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         bool fileTypeMatch = false;
         const char** ft = fileTypes;
         while (*ft != NULL) {
-            if (str_ends_with(path, (char*)*ft)) {
+            if (path_ends_with(path, (char*)*ft)) {
                 fileTypeMatch = true;
             }
             ft++;
@@ -348,10 +355,10 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
     return true;
 }
 
-static bool mod_load_files(struct Mod* mod, char* modName, char* fullPath) {
+static bool mod_load_files(struct Mod* mod, char* fullPath) {
     // read single lua file
     if (!mod->isDirectory) {
-        return (mod_allocate_file(mod, modName) != NULL);
+        return (mod_allocate_file(mod, mod->relativePath) != NULL);
     }
 
     // deal with mod directory
@@ -526,7 +533,7 @@ bool mod_refresh_files(struct Mod* mod) {
     dynos_generate_mod_pack(mod->basePath);
 
     // read files
-    if (!mod_load_files(mod, mod->name, mod->basePath)) {
+    if (!mod_load_files(mod, mod->basePath)) {
         LOG_ERROR("Failed to load mod files for '%s'", mod->name);
         return false;
     }
@@ -555,7 +562,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     bool isDirectory = fs_sys_dir_exists(fullPath);
 
     // make sure mod is valid
-    if (str_ends_with(modName, ".lua")) {
+    if (path_ends_with(modName, ".lua")) {
         valid = true;
     } else if (fs_sys_dir_exists(fullPath)) {
         char tmpPath[SYS_MAX_PATH] = { 0 };
@@ -613,7 +620,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     mod->isDirectory = isDirectory;
 
     // read files
-    if (!mod_load_files(mod, modName, fullPath)) {
+    if (!mod_load_files(mod, fullPath)) {
         LOG_ERROR("Failed to load mod files for '%s'", modName);
         return false;
     }

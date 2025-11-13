@@ -1517,7 +1517,6 @@ void update_mario_joystick_inputs(struct MarioState *m) {
  */
 void update_mario_geometry_inputs(struct MarioState *m) {
     if (!m) { return; }
-resetGoto:;
 
     f32 gasLevel;
     f32 ceilToFloorDist;
@@ -1573,15 +1572,19 @@ resetGoto:;
             m->input |= INPUT_IN_POISON_GAS;
         }
 
+    } else if (!is_other_player_active()) {
+        level_trigger_warp(m, WARP_OP_DEATH);
     } else {
-        vec3f_set(m->pos, m->spawnInfo->startPos[0], m->spawnInfo->startPos[1], m->spawnInfo->startPos[2]);
+        vec3s_to_vec3f(m->pos, m->spawnInfo->startPos);
         m->faceAngle[1] = m->spawnInfo->startAngle[1];
+        if (mario_can_bubble(m)) { mario_set_bubbled(m); }
         struct Surface* floor = NULL;
         find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
         if (floor == NULL) {
             level_trigger_warp(m, WARP_OP_DEATH);
         } else {
-            goto resetGoto;
+            update_mario_geometry_inputs(m);
+            return;
         }
     }
 }
@@ -2063,9 +2066,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
 
         // don't update mario when in a cutscene
         if (gMarioState->playerIndex == 0) {
-            extern s16 gDialogID;
+            extern s32 gDialogID;
             if (gMarioState->freeze > 0) { gMarioState->freeze--; }
-            if (gMarioState->freeze < 2 && gDialogID != -1) { gMarioState->freeze = 2; }
+            if (gMarioState->freeze < 2 && gDialogID != DIALOG_NONE) { gMarioState->freeze = 2; }
             if (gMarioState->freeze < 2 && sCurrPlayMode == PLAY_MODE_PAUSED) { gMarioState->freeze = 2; }
         }
 

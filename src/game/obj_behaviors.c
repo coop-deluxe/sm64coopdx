@@ -850,7 +850,7 @@ s8 current_mario_room_check(s16 room) {
 /**
  * Triggers dialog when Mario is facing an object and controls it while in the dialog.
  */
-s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s16 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
+s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s32 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     if (!o) { return 0; }
     if (!m || !inDialog) { return 0; }
     s16 dialogueResponse;

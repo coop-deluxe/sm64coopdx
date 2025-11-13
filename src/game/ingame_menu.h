@@ -2,6 +2,7 @@
 #define INGAME_MENU_H
 
 #include <PR/ultratypes.h>
+#include <stdbool.h>
 
 #define ASCII_TO_DIALOG(asc)                                       \
     (((asc) >= '0' && (asc) <= '9') ? ((asc) - '0') :              \
@@ -39,12 +40,13 @@ extern s8 gHudFlash;
 
 struct DialogEntry
 {
-    u32 unused;     /*0x00*/
-    s8 linesPerBox; /*0x04*/
-    s16 leftOffset; /*0x06*/
-    s16 width;      /*0x08*/
-    const u8 *str;  /*0x0C*/
+    u32 unused;
+    s8 linesPerBox;
+    s16 leftOffset;
+    s16 width;
+    const u8 *str;
     char* text;
+    bool replaced;
 };
 
 // EU only
@@ -136,8 +138,6 @@ void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
 void create_dl_rotation_matrix(s8 pushOp, f32 a, f32 x, f32 y, f32 z);
 void create_dl_ortho_matrix(void);
 void render_generic_char(u8 c);
-u8 str_ascii_char_to_dialog(char c);
-void str_ascii_to_dialog(const char* string, u8* dialog, u16 length);
 f32 get_generic_dialog_width(u8* dialog);
 f32 get_generic_ascii_string_width(const char* ascii);
 f32 get_generic_dialog_height(u8* dialog);
@@ -158,15 +158,15 @@ s16 get_str_x_pos_from_center_scale(s16 centerPos, u8 *str, f32 scale);
 #endif
 void print_hud_my_score_coins(s32 useCourseCoinScore, s8 fileNum, s8 courseNum, s16 x, s16 y);
 void int_to_str(s32 num, u8 *dst);
-s16 get_dialog_id(void);
+s32 get_dialog_id(void);
 /* |description|Creates a dialog box with a dialog ID that rotates into view|descriptionEnd| */
-void create_dialog_box(s16 dialog);
+void create_dialog_box(s32 dialog);
 /* |description|Creates a dialog box with a dialog variable|descriptionEnd| */
-void create_dialog_box_with_var(s16 dialog, s32 dialogVar);
+void create_dialog_box_with_var(s32 dialog, s32 dialogVar);
 /* |description|Creates a dialog box with a dialog ID that zooms into view|descriptionEnd| */
-void create_dialog_inverted_box(s16 dialog);
+void create_dialog_inverted_box(s32 dialog);
 /* |description|Creates a dialog box with a response|descriptionEnd| */
-void create_dialog_box_with_response(s16 dialog);
+void create_dialog_box_with_response(s32 dialog);
 /* |description|Resets the dialog box's state including dialog ID and open state|descriptionEnd| */
 void reset_dialog_render_state(void);
 /* |description|

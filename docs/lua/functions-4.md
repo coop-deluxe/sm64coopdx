@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 
 
 ---
@@ -3526,6 +3526,27 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
+## [mario_exit_palette_editor](#mario_exit_palette_editor)
+
+### Lua Example
+`local integerValue = mario_exit_palette_editor(m, c)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| c | [Camera](structs.md#Camera) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Description
@@ -3902,32 +3923,6 @@ Reflects Mario off a wall if he is colliding with one and flips forward velocity
 
 <br />
 
-## [init_bully_collision_data](#init_bully_collision_data)
-
-### Lua Example
-`init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | [BullyCollisionData](structs.md#BullyCollisionData) |
-| posX | `number` |
-| posZ | `number` |
-| forwardVel | `number` |
-| yaw | `integer` |
-| conversionRatio | `number` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mario_update_quicksand](#mario_update_quicksand)
 
 ### Description
@@ -4049,7 +4044,7 @@ Sets all of Mario's velocity variables to 0 and sets his Y position to the floor
 ## [stationary_ground_step](#stationary_ground_step)
 
 ### Description
-Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
 
 ### Lua Example
 `local integerValue = stationary_ground_step(m)`
@@ -4072,7 +4067,7 @@ Performs a full Mario stationary physics step (4 substeps) and returns an `GROUN
 ## [perform_ground_step](#perform_ground_step)
 
 ### Description
-Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
 
 ### Lua Example
 `local integerValue = perform_ground_step(m)`
@@ -6738,5 +6733,5 @@ Converts a 3D short integer vector `a` into a 3D integer vector and stores the r
 <br />
 ---
 
-[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-5.md)]
+[< prev](functions-3.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | 4 | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-5.md)]
 

@@ -37,17 +37,17 @@ void dynos_generate_packs(const char* directory);
 
 // -- geos -- //
 void dynos_actor_override(struct Object* obj, void** aSharedChild);
-void dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
 bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, s32 *modFileIndex, const char **token);
 void dynos_actor_register_modified_graph_node(struct GraphNode *node);
 
 // -- collisions -- //
-void dynos_add_collision(const char *filePath, const char* collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
 // -- textures -- //
-void dynos_add_texture(const char *filePath, const char* textureName);
+bool dynos_add_texture(const char *filePath, const char* textureName);
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo);
 bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo);
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo);
@@ -90,11 +90,13 @@ void dynos_model_clear_pool(enum ModelPool aModelPool);
 // -- gfx -- //
 Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx);
 Gfx *dynos_gfx_get(const char *name, u32 *outLength);
+const char *dynos_gfx_get_name(Gfx *gfx);
 Gfx *dynos_gfx_create(const char *name, u32 length);
 bool dynos_gfx_resize(Gfx *gfx, u32 newLength);
 bool dynos_gfx_delete(Gfx *gfx);
 void dynos_gfx_delete_all();
 Vtx *dynos_vtx_get(const char *name, u32 *outCount);
+const char *dynos_vtx_get_name(Vtx *vtx);
 Vtx *dynos_vtx_create(const char *name, u32 count);
 bool dynos_vtx_resize(Vtx *vtx, u32 newCount);
 bool dynos_vtx_delete(Vtx *vtx);

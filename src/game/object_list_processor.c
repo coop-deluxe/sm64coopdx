@@ -19,6 +19,7 @@
 #include "obj_behaviors.h"
 #include "platform_displacement.h"
 #include "profiler.h"
+#include "rendering_graph_node.h"
 #include "spawn_object.h"
 #include "first_person_cam.h"
 #include "engine/math_util.h"
@@ -120,27 +121,6 @@ const BehaviorScript *gCurBhvCommand;
  * Besides this, a bug in update_terrain_objects makes this count inaccurate.
  */
 s16 gPrevFrameObjectCount;
-
-/**
- * The total number of surface nodes allocated (a node is allocated for each
- * spatial partition cell that a surface intersects).
- */
-s32 gSurfaceNodesAllocated;
-
-/**
- * The total number of surfaces allocated.
- */
-s32 gSurfacesAllocated;
-
-/**
- * The number of nodes that have been created for surfaces.
- */
-s32 gNumStaticSurfaceNodes;
-
-/**
- * The number of surfaces in the pool.
- */
-s32 gNumStaticSurfaces;
 
 struct Object* gCheckingSurfaceCollisionsForObject = NULL;
 s16 gCheckingSurfaceCollisionsForCamera;
@@ -624,6 +604,7 @@ void clear_objects(void) {
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();
+    geo_clear_interp_data();
 }
 
 /**

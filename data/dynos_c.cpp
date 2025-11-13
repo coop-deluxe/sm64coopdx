@@ -115,8 +115,8 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild) {
     DynOS_Actor_Override(obj, aSharedChild);
 }
 
-void dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
-    DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
+    return DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
@@ -133,8 +133,8 @@ void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
 
 // -- collisions -- //
 
-void dynos_add_collision(const char *filePath, const char* collisionName) {
-    DynOS_Col_Activate(filePath, collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName) {
+    return DynOS_Col_Activate(filePath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
@@ -143,9 +143,9 @@ Collision* dynos_collision_get(const char* collisionName) {
 
 // -- textures -- //
 
-void dynos_add_texture(const char *filePath, const char* textureName) {
+bool dynos_add_texture(const char *filePath, const char* textureName) {
     SysPath _FilePath = filePath;
-    DynOS_Tex_AddCustom(_FilePath, textureName);
+    return DynOS_Tex_AddCustom(_FilePath, textureName);
 }
 
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {
@@ -292,6 +292,10 @@ Gfx *dynos_gfx_get(const char *name, u32 *outLength) {
     return DynOS_Gfx_Get(name, outLength);
 }
 
+const char *dynos_gfx_get_name(Gfx *gfx) {
+    return DynOS_Gfx_GetName(gfx);
+}
+
 Gfx *dynos_gfx_create(const char *name, u32 length) {
     return DynOS_Gfx_Create(name, length);
 }
@@ -310,6 +314,10 @@ void dynos_gfx_delete_all() {
 
 Vtx *dynos_vtx_get(const char *name, u32 *outCount) {
     return DynOS_Vtx_Get(name, outCount);
+}
+
+const char *dynos_vtx_get_name(Vtx *vtx) {
+    return DynOS_Vtx_GetName(vtx);
 }
 
 Vtx *dynos_vtx_create(const char *name, u32 count) {

@@ -1,10 +1,12 @@
 #ifndef SMLUA_UTILS_H
 #define SMLUA_UTILS_H
 
+#include "smlua.h"
 #include "src/pc/network/packets/packet.h"
 
 extern u8 gSmLuaConvertSuccess;
 typedef int LuaFunction;
+typedef int LuaTable;
 
 typedef struct ByteString {
     const char *bytes;
@@ -26,6 +28,7 @@ lua_Number smlua_to_number(lua_State* L, int index);
 const char* smlua_to_string(lua_State* L, int index);
 ByteString smlua_to_bytestring(lua_State* L, int index);
 LuaFunction smlua_to_lua_function(lua_State* L, int index);
+LuaTable smlua_to_lua_table(lua_State* L, int index);
 bool smlua_is_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt);
@@ -43,6 +46,7 @@ void smlua_push_string_field(int index, const char* name, const char* val);
 void smlua_push_nil_field(int index, const char* name);
 void smlua_push_table_field(int index, const char* name);
 
+void smlua_push_lua_table(lua_State* L, LuaTable table);
 void smlua_push_bytestring(lua_State* L, ByteString bytestring);
 void smlua_push_lnt(struct LSTNetworkType* lnt);
 
@@ -62,6 +66,12 @@ void smlua_logline(void);
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);
 void smlua_dump_table(int index);
-void smlua_free(void *ptr);
+void smlua_free(void *ptr, u16 lot);
+
+#define smlua_free_lot(name, lot) \
+static inline void smlua_free_##name(void *ptr) { smlua_free(ptr, lot); }
+
+smlua_free_lot(surface, LOT_SURFACE);
+smlua_free_lot(soc, LOT_STATICOBJECTCOLLISION);
 
 #endif

@@ -156,6 +156,22 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index) {
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
+LuaTable smlua_to_lua_table(lua_State* L, int index) {
+    if (lua_type(L, index) == LUA_TNIL) {
+        return 0;
+    }
+
+    if (lua_type(L, index) != LUA_TTABLE) {
+        LOG_LUA_LINE("smlua_to_lua_table received improper type '%s'", luaL_typename(L, index));
+        gSmLuaConvertSuccess = false;
+        return 0;
+    }
+
+    gSmLuaConvertSuccess = true;
+    lua_pushvalue(L, index);
+    return luaL_ref(L, LUA_REGISTRYINDEX);
+}
+
 bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
     return lua_isuserdata(L, index);
 }
@@ -179,6 +195,12 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
     if (cobject->pointer == NULL) {
         LOG_LUA_LINE("smlua_to_cobject received null pointer.");
+        gSmLuaConvertSuccess = false;
+        return NULL;
+    }
+
+    if (cobject->freed) {
+        LOG_LUA_LINE("smlua_to_cobject received freed pointer.");
         gSmLuaConvertSuccess = false;
         return NULL;
     }
@@ -282,7 +304,7 @@ struct TextureInfo *smlua_to_texture_info(lua_State *L, int index) {
 
         lua_pushstring(L, "texture");
         lua_gettable(L, top + 1);
-        const u8 *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_U8_P);
+        const Texture *texPtr = smlua_to_cpointer(L, lua_gettop(L), LVT_TEXTURE_P);
         lua_pop(L, 1);
         if (!gSmLuaConvertSuccess) { return NULL; }
 
@@ -387,6 +409,10 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+inline static uintptr_t smlua_get_pointer_key(void *ptr, u16 lt) {
+    return (lt * 0x9E3779B97F4A7C15) ^ ((uintptr_t) ptr >> 3);
+}
+
 CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     if (p == NULL) {
         lua_pushnil(L);
@@ -394,7 +420,7 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     }
     LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
-    uintptr_t key = (lot * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
+    uintptr_t key = smlua_get_pointer_key(p, lot);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
@@ -431,7 +457,7 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     }
     LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
-    uintptr_t key = (lvt * 0x9E3779B97F4A7C15) ^ ((uintptr_t)p >> 3);
+    uintptr_t key = smlua_get_pointer_key(p, lvt);
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCPointers);
     lua_pushinteger(L, key);
     lua_gettable(L, -2);
@@ -486,6 +512,14 @@ void smlua_push_table_field(int index, const char* name) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+void smlua_push_lua_table(lua_State* L, LuaTable table) {
+    if (table != 0) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, table);
+    } else {
+        lua_pushnil(L);
+    }
+}
 
 void smlua_push_bytestring(lua_State* L, ByteString bytestring) {
     if (bytestring.bytes) {
@@ -840,15 +874,11 @@ void smlua_logline(void) {
     }
 }
 
-// If an object is freed that Lua has a CObject to,
-// Lua is able to use-after-free that pointer
-// todo figure out a better way to do this
-void smlua_free(void *ptr) {
+void smlua_free(void *ptr, u16 lot) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;
         LUA_STACK_CHECK_BEGIN(L);
-        u16 lot = LOT_SURFACE; // Assuming this is a surface
-        uintptr_t key = lot ^ (uintptr_t) ptr;
+        uintptr_t key = smlua_get_pointer_key(ptr, lot);
         lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjects);
         lua_pushinteger(L, key);
         lua_gettable(L, -2);

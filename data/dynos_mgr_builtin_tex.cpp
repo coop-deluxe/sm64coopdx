@@ -1154,6 +1154,14 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_selectionbox_forward_icon, "textures/segment2/custom_selectionbox_forward_icon.rgba16.png", 16, 16, 16),
     define_builtin_tex(texture_coopdx_logo, "textures/segment2/custom_coopdx_logo.rgba32.png", 2048, 1024, 32),
 
+    // Playerlist Exclusives
+    define_builtin_tex(texture_ping_empty, "textures/segment2/custom_ping_empty.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_one, "textures/segment2/custom_ping_one.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_two, "textures/segment2/custom_ping_two.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_three, "textures/segment2/custom_ping_three.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_four, "textures/segment2/custom_ping_four.rgba16.png", 16, 16, 16),
+    define_builtin_tex(texture_ping_full, "textures/segment2/custom_ping_full.rgba16.png", 16, 16, 16),
+
     // Goddard
     define_builtin_tex(gd_texture_hand_open, "textures/intro_raw/hand_open.rgba16.png", 32, 32, 16),
     define_builtin_tex(gd_texture_hand_closed, "textures/intro_raw/hand_closed.rgba16.png", 32, 32, 16),

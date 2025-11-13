@@ -9,15 +9,7 @@
 #undef DEFINE_DIALOG
 #define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, _) \
     static const struct DialogEntry dialog_entry_orig_ ## id = { \
-        unused, linesPerBox, leftOffset, width, dialog_text_ ## id, NULL \
-    };
-
-#include "dialogs.h"
-
-#undef DEFINE_DIALOG
-#define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, _) \
-    static struct DialogEntry dialog_entry_ ## id = { \
-        unused, linesPerBox, leftOffset, width, dialog_text_ ## id, NULL \
+        unused, linesPerBox, leftOffset, width, dialog_text_ ## id, NULL, false \
     };
 
 #include "dialogs.h"
@@ -31,12 +23,6 @@ const struct DialogEntry *const seg2_dialog_original[] = {
 };
 
 #undef DEFINE_DIALOG
-#define DEFINE_DIALOG(id, _1, _2, _3, _4, _5) &dialog_entry_ ## id,
-
-const struct DialogEntry *const seg2_dialog_table[] = {
-#include "dialogs.h"
-    NULL
-};
 
 // == courses ==
 // (defines en_course_name_table etc.)

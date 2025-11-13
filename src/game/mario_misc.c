@@ -139,7 +139,7 @@ static void toad_message_talking(void) {
         gCurrentObject->oToadMessageRecentlyTalked = TRUE;
         gCurrentObject->oToadMessageState = TOAD_MESSAGE_FADING;
 
-        u32 dialogId = gCurrentObject->oToadMessageDialogId;
+        s32 dialogId = gCurrentObject->oToadMessageDialogId;
         if (dialogId == TOAD_STAR_1_DIALOG) {
             gCurrentObject->oToadMessageDialogId = TOAD_STAR_1_DIALOG_AFTER;
             bhv_spawn_star_no_level_exit(gMarioStates[0].marioObj, 0, TRUE);
@@ -460,11 +460,6 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
         rotNode->rotation[0] = bodyState->torsoAngle[1] * character->torsoRotMult;
         rotNode->rotation[1] = bodyState->torsoAngle[2] * character->torsoRotMult;
         rotNode->rotation[2] = bodyState->torsoAngle[0] * character->torsoRotMult;
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
-            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
-            rotNode->prevTimestamp = gGlobalTimer;
-        }
         // update torso position in bodyState
         get_pos_from_transform_mtx(bodyState->torsoPos, *curTransform, *gCurGraphNodeCamera->matrixPtr);
         bodyState->updateTorsoTime = gGlobalTimer;
@@ -500,12 +495,6 @@ Gfx* geo_mario_head_rotation(s32 callContext, struct GraphNode* node, Mat4* c) {
         } else {
             vec3s_set(bodyState->headAngle, 0, 0, 0);
             vec3s_set(rotNode->rotation, 0, 0, 0);
-        }
-
-        if (plrIdx != 0) {
-            // only interpolate angles for the local player
-            vec3s_copy(rotNode->prevRotation, rotNode->rotation);
-            rotNode->prevTimestamp = gGlobalTimer;
         }
 
         // update head position in bodyState
@@ -799,8 +788,11 @@ static Gfx *geo_mario_create_player_colors_dl(s32 index, Gfx *capEnemyGfx, Gfx *
     if (gfx) {
         Gfx *gfxp = gfx;
         for (s32 part = 0; part != PLAYER_PART_MAX; ++part) {
-            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].l, (2 * (part + 1)) + 1);
-            gSPLight(gfxp++, &gNetworkPlayerColors[index].parts[part].a, (2 * (part + 1)) + 2);
+            Lights1 *light = alloc_display_list(sizeof(Lights1));
+            if (!light) { return NULL; }
+            *light = gNetworkPlayerColors[index].parts[part];
+            gSPLight(gfxp++, &light->l, (2 * (part + 1)) + 1);
+            gSPLight(gfxp++, &light->a, (2 * (part + 1)) + 2);
         }
         if (capEnemyGfx) { gSPDisplayList(gfxp++, capEnemyGfx); }
         if (capEnemyDecalGfx) { gSPDisplayList(gfxp++, capEnemyDecalGfx); }

@@ -234,6 +234,30 @@ OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, OUT Vec3f result) {
 }
 
   ///////////
+ // Vec2f //
+///////////
+
+Vec2f gVec2fZero = { 0.0f, 0.0f };
+
+Vec2f gVec2fOne = { 1.0f, 1.0f };
+
+  ///////////
+ // Vec2i //
+///////////
+
+Vec2i gVec2iZero = { 0, 0 };
+
+Vec2i gVec2iOne = { 1, 1 };
+
+  ///////////
+ // Vec2s //
+///////////
+
+Vec2s gVec2sZero = { 0, 0 };
+
+Vec2s gVec2sOne = { 1, 1 };
+
+  ///////////
  // Vec3f //
 ///////////
 

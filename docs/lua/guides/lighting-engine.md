@@ -1,3 +1,5 @@
+## [:rewind: Lua Reference](../lua.md)
+
 # How to use the Lighting Engine
 
 ## Section 1: Preparation

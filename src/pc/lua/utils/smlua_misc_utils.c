@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "game/hardcoded.h"
 #include "game/hud.h"
+#include "menu/star_select.h"
 #include "pc/lua/smlua.h"
 #include "smlua_misc_utils.h"
 #include "pc/debuglog.h"
@@ -117,6 +118,10 @@ struct DjuiTheme* djui_menu_get_theme(void) {
     return gDjuiThemes[configDjuiTheme];
 }
 
+bool djui_is_playerlist_ping_visible(void) {
+    return configShowPing;
+}
+
 ///
 
 extern s8 gDialogBoxState;
@@ -212,6 +217,18 @@ void hud_set_value(enum HudDisplayValue type, s32 value) {
     }
 }
 
+void act_select_hud_hide(enum ActSelectHudPart part) {
+    gOverrideHideActSelectHud |= part;
+}
+
+void act_select_hud_show(enum ActSelectHudPart part) {
+    gOverrideHideActSelectHud &= ~part;
+}
+
+bool act_select_hud_is_hidden(enum ActSelectHudPart part) {
+    return (gOverrideHideActSelectHud & part) != 0;
+}
+
 extern const u8 texture_power_meter_left_side[];
 extern const u8 texture_power_meter_right_side[];
 extern const u8 texture_power_meter_full[];
@@ -224,16 +241,16 @@ extern const u8 texture_power_meter_two_segments[];
 extern const u8 texture_power_meter_one_segments[];
 
 static struct TextureInfo sPowerMeterTexturesInfo[] = {
-    { (u8*)texture_power_meter_left_side,      "texture_power_meter_left_side",      32, 64, 8 },
-    { (u8*)texture_power_meter_right_side,     "texture_power_meter_right_side",     32, 64, 8 },
-    { (u8*)texture_power_meter_one_segments,   "texture_power_meter_one_segments",   32, 32, 8 },
-    { (u8*)texture_power_meter_two_segments,   "texture_power_meter_two_segments",   32, 32, 8 },
-    { (u8*)texture_power_meter_three_segments, "texture_power_meter_three_segments", 32, 32, 8 },
-    { (u8*)texture_power_meter_four_segments,  "texture_power_meter_four_segments",  32, 32, 8 },
-    { (u8*)texture_power_meter_five_segments,  "texture_power_meter_five_segments",  32, 32, 8 },
-    { (u8*)texture_power_meter_six_segments,   "texture_power_meter_six_segments",   32, 32, 8 },
-    { (u8*)texture_power_meter_seven_segments, "texture_power_meter_seven_segments", 32, 32, 8 },
-    { (u8*)texture_power_meter_full,           "texture_power_meter_full",           32, 32, 8 },
+    { (Texture*)texture_power_meter_left_side,      "texture_power_meter_left_side",      32, 64, 8 },
+    { (Texture*)texture_power_meter_right_side,     "texture_power_meter_right_side",     32, 64, 8 },
+    { (Texture*)texture_power_meter_one_segments,   "texture_power_meter_one_segments",   32, 32, 8 },
+    { (Texture*)texture_power_meter_two_segments,   "texture_power_meter_two_segments",   32, 32, 8 },
+    { (Texture*)texture_power_meter_three_segments, "texture_power_meter_three_segments", 32, 32, 8 },
+    { (Texture*)texture_power_meter_four_segments,  "texture_power_meter_four_segments",  32, 32, 8 },
+    { (Texture*)texture_power_meter_five_segments,  "texture_power_meter_five_segments",  32, 32, 8 },
+    { (Texture*)texture_power_meter_six_segments,   "texture_power_meter_six_segments",   32, 32, 8 },
+    { (Texture*)texture_power_meter_seven_segments, "texture_power_meter_seven_segments", 32, 32, 8 },
+    { (Texture*)texture_power_meter_full,           "texture_power_meter_full",           32, 32, 8 },
 };
 
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
@@ -522,9 +539,17 @@ void set_environment_region(u8 index, s16 value) {
 bool mod_file_exists(const char* filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
+    char normPath[SYS_MAX_PATH] = { 0 };
+
+    if (snprintf(normPath, sizeof(normPath), "%s", filename) < 0) {
+        LOG_ERROR("Failed to copy filename for normalization: %s", filename);
+    }
+
+    normalize_path(normPath);
+
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, filename)) {
+        if (!strcmp(file->relativePath, normPath)) {
             return true;
         }
     }
@@ -586,7 +611,7 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
 }
 
-void texture_to_lua_table(const u8 *tex) {
+void texture_to_lua_table(const Texture *tex) {
     lua_State *L = gLuaState;
     if (!L || !tex) { return; }
 
@@ -597,7 +622,7 @@ void texture_to_lua_table(const u8 *tex) {
     if (bpp != 16 && bpp != 32) { return; }
 
     u32 bytesPerPixel = bpp / 8;
-    const u8 *data = texInfo.texture;
+    const Texture *data = texInfo.texture;
     u32 texSize = texInfo.width * texInfo.height * bytesPerPixel;
 
     lua_newtable(L);
@@ -624,4 +649,12 @@ void texture_to_lua_table(const u8 *tex) {
 
         lua_rawseti(L, -2, i / bytesPerPixel + 1);
     }
+}
+
+const char *get_texture_name(const Texture *tex) {
+    struct TextureInfo texInfo;
+    if (dynos_texture_get_from_data(tex, &texInfo)) {
+        return texInfo.name;
+    }
+    return NULL;
 }

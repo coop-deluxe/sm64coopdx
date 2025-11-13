@@ -17,6 +17,7 @@
 #include "engine/behavior_script.h"
 #include "level_update.h"
 #include "ingame_menu.h"
+#include "mario_actions_stationary.h"
 #include "mario_actions_cutscene.h"
 #include "save_file.h"
 #include "object_helpers.h"
@@ -172,7 +173,7 @@ extern s16 s2ndRotateFlags;
 extern s16 unused8033B31A;
 extern s16 sCameraSoundFlags;
 extern u16 sCButtonsPressed;
-extern s16 sCutsceneDialogID;
+extern s32 sCutsceneDialogID;
 extern struct LakituState gLakituState;
 extern s16 unused8033B3E8;
 extern s16 sAreaYaw;
@@ -304,7 +305,7 @@ u16 sCButtonsPressed;
 /**
  * A copy of gDialogID, the dialog displayed during the cutscene.
  */
-s16 sCutsceneDialogID;
+s32 sCutsceneDialogID;
 /**
  * The currently playing shot in the cutscene.
  */
@@ -500,8 +501,6 @@ s32 update_slide_or_0f_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_spiral_stairs_camera(struct Camera *c, Vec3f, Vec3f);
 s32 update_rom_hack_camera(struct Camera *c, Vec3f, Vec3f);
 void mode_rom_hack_camera(struct Camera *c);
-void cutscene_take_cap_off(struct MarioState *m);
-void cutscene_put_cap_on(struct MarioState *m);
 
 typedef s32 (*CameraTransition)(struct Camera *c, Vec3f, Vec3f);
 CameraTransition sModeTransitions[] = {
@@ -3396,13 +3395,8 @@ void update_camera(struct Camera *c) {
 
     // Make sure the palette editor cutscene is properly reset
     struct MarioState *m = gMarioState;
-    if (c->paletteEditorCap) {
-        if (m->flags & MARIO_CAP_ON_HEAD) {
-            c->paletteEditorCap = false;
-        } else if (c->cutscene != CUTSCENE_PALETTE_EDITOR && m->action != ACT_PUTTING_ON_CAP) {
-            cutscene_put_cap_on(m);
-            c->paletteEditorCap = false;
-        }
+    if (c->cutscene != CUTSCENE_PALETTE_EDITOR && c->paletteEditorCapState) {
+        mario_exit_palette_editor(m, c);
     }
 }
 
@@ -4177,6 +4171,15 @@ s32 update_camera_hud_status(struct Camera *c) {
     if (gCameraMovementFlags & CAM_MOVE_C_UP_MODE) {
         status |= CAM_STATUS_C_UP;
     }
+    if (gLakituState.mode == CAMERA_MODE_NEWCAM) {
+        status = gNewCamera.directionLocked ? CAM_STATUS_FIXED : CAM_STATUS_LAKITU;
+        switch (gNewCamera.distanceTargetIndex) {
+            case 0: status |= CAM_STATUS_C_UP; break;
+            case 1: break;
+            case 2: status |= CAM_STATUS_C_DOWN; break;
+        }
+    }
+
     set_hud_camera_status(status);
     return status;
 }
@@ -7271,16 +7274,16 @@ s32 unused_dialog_cutscene_response(u8 cutscene) {
     }
 }
 
-s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID) {
+s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID) {
     s16 response = 0;
 
     if ((gCamera->cutscene == 0) && (sObjectCutscene == 0)) {
         if (gRecentCutscene != cutscene) {
             start_object_cutscene(cutscene, o);
-            if (dialogID != -1) {
+            if (dialogID != DIALOG_NONE) {
                 sCutsceneDialogID = dialogID;
             } else {
-                sCutsceneDialogID = (s16) gBehaviorValues.dialogs.DefaultCutsceneDialog;
+                sCutsceneDialogID = (s32) gBehaviorValues.dialogs.DefaultCutsceneDialog;
             }
         } else {
             response = sCutsceneDialogResponse;
@@ -8586,7 +8589,7 @@ BAD_RETURN(s32) cutscene_bowser_arena_start(struct Camera *c) {
  * Create the dialog box depending on which bowser fight Mario is in.
  */
 BAD_RETURN(s32) bowser_fight_intro_dialog(UNUSED struct Camera *c) {
-    s16 dialog;
+    s32 dialog;
 
     switch (gCurrLevelNum) {
         case LEVEL_BOWSER_1:
@@ -8608,7 +8611,7 @@ BAD_RETURN(s32) bowser_fight_intro_dialog(UNUSED struct Camera *c) {
 BAD_RETURN(s32) cutscene_bowser_arena_dialog(struct Camera *c) {
     cutscene_event(bowser_fight_intro_dialog, c, 0, 0);
 
-    if (get_dialog_id() == -1) {
+    if (get_dialog_id() == DIALOG_NONE) {
         gCutsceneTimer = CUTSCENE_LOOP;
     }
 }
@@ -9486,7 +9489,7 @@ BAD_RETURN(s32) cutscene_dialog(struct Camera *c) {
         sCutsceneDialogResponse = gDialogResponse;
     }
 
-    if ((get_dialog_id() == -1) && (sCutsceneVars[8].angle[0] != 0)) {
+    if ((get_dialog_id() == DIALOG_NONE) && (sCutsceneVars[8].angle[0] != 0)) {
         if (c->cutscene != CUTSCENE_RACE_DIALOG) {
             sCutsceneDialogResponse = 3;
         }
@@ -9556,7 +9559,7 @@ BAD_RETURN(s32) cutscene_read_message(struct Camera *c) {
     switch (sCutsceneVars[0].angle[0]) {
         // Do nothing until message is gone.
         case 0:
-            if (get_dialog_id() != -1) {
+            if (get_dialog_id() != DIALOG_NONE) {
                 sCutsceneVars[0].angle[0] += 1;
                 //set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_DIALOG);
             }
@@ -9568,7 +9571,7 @@ BAD_RETURN(s32) cutscene_read_message(struct Camera *c) {
 
             // This could cause softlocks. If a message starts one frame after another one closes, the
             // cutscene will never end.
-            if (get_dialog_id() == -1) {
+            if (get_dialog_id() == DIALOG_NONE) {
                 gCutsceneTimer = CUTSCENE_LOOP;
                 retrieve_info_star(c);
                 transition_next_state(c, 15);
@@ -9926,7 +9929,7 @@ BAD_RETURN(s32) cutscene_cap_switch_press(struct Camera *c) {
         sCutsceneVars[4].angle[0] = gDialogResponse;
     }
 
-    if ((get_dialog_id() == -1) && (sCutsceneVars[4].angle[0] != 0)) {
+    if ((get_dialog_id() == DIALOG_NONE) && (sCutsceneVars[4].angle[0] != 0)) {
         sCutsceneDialogResponse = sCutsceneVars[4].angle[0];
         if (sCutsceneVars[4].angle[0] == 1 && gCutsceneFocus) {
             cap_switch_save(gCutsceneFocus->oBehParams2ndByte);
@@ -10066,7 +10069,7 @@ BAD_RETURN(s32) cutscene_intro_peach_start_to_pipe_spline(struct Camera *c) {
  */
 BAD_RETURN(s32) cutscene_intro_peach_dialog(struct Camera *c) {
     if (!c) { return; }
-    if (get_dialog_id() == -1) {
+    if (get_dialog_id() == DIALOG_NONE) {
         vec3f_copy(gLakituState.goalPos, c->pos);
         vec3f_copy(gLakituState.goalFocus, c->focus);
         sStatusFlags |= (CAM_FLAG_SMOOTH_MOVEMENT | CAM_FLAG_UNUSED_CUTSCENE_ACTIVE);
@@ -10195,7 +10198,7 @@ BAD_RETURN(s32) cutscene_intro_peach_letter(struct Camera *c) {
     cutscene_event(play_sound_peach_reading_letter, c, 83, 83);
 #endif
 
-    if ((gCutsceneTimer > 120) && (get_dialog_id() == -1)) {
+    if ((gCutsceneTimer > 120) && (get_dialog_id() == DIALOG_NONE)) {
         // Start the next scene
         gCutsceneTimer = CUTSCENE_LOOP;
     }
@@ -10930,34 +10933,27 @@ void cutscene_palette_editor(struct Camera *c) {
     if (!c) { return; }
     struct MarioState* m = gMarioState;
 
+    // Init cap state
+    // Ensures that Mario regains his correct cap state when exiting the palette editor
+    if (!c->paletteEditorCapState) {
+        c->paletteEditorCapState = (m->flags & MARIO_CAP_ON_HEAD) ? 1 : 2;
+    }
+
     if (!gDjuiInPlayerMenu) {
-        if (c->paletteEditorCap) {
-            if (m->flags & MARIO_CAP_ON_HEAD) {
-                gCamera->paletteEditorCap = false;
-            } else {
-                if (m->action == ACT_IDLE) {
-                    set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-                } else {
-                    cutscene_put_cap_on(m);
-                    gCamera->paletteEditorCap = false;
-                }
-            }
-        }
+        mario_exit_palette_editor(m, c);
         gCutsceneTimer = CUTSCENE_STOP;
         c->cutscene = 0;
         skip_camera_interpolation();
         return;
     }
 
+    bool capMissing = !(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND));
+
     // Press the Z bind to toggle cap
     static bool pressed = false;
     if (gInteractablePad.button & PAD_BUTTON_Z) {
-        if (!pressed && m->action == ACT_IDLE) {
-            if (m->flags & MARIO_CAP_ON_HEAD) {
-                set_mario_action(m, ACT_TAKING_OFF_CAP, 1); // Add palette editor action arg
-            } else {
-                set_mario_action(m, ACT_PUTTING_ON_CAP, 0);
-            }
+        if (!capMissing && !pressed && m->action == ACT_IDLE) {
+            set_mario_action(m, ACT_PALETTE_EDITOR_CAP, (m->flags & MARIO_CAP_ON_HEAD) != 0);
         }
         pressed = true;
     } else {
@@ -10968,9 +10964,10 @@ void cutscene_palette_editor(struct Camera *c) {
     if (gDjuiPaletteToggle) {
         djui_base_set_visible(
             &gDjuiPaletteToggle->base,
-            m->action == ACT_IDLE ||
-            m->action == ACT_TAKING_OFF_CAP ||
-            m->action == ACT_PUTTING_ON_CAP
+            (
+                m->action == ACT_IDLE ||
+                m->action == ACT_PALETTE_EDITOR_CAP 
+            ) && !capMissing
         );
     }
 
@@ -12256,7 +12253,7 @@ static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
     f32 mDist;
     s16 mPitch;
     s16 mYaw;
-    vec3f_get_dist_and_angle(desiredPos, gMarioStates[0].pos, &mDist, &mPitch, &mYaw);
+    vec3f_get_dist_and_angle(desiredPos, sMarioCamState->pos, &mDist, &mPitch, &mYaw);
 
     s16 degreeMult = sRomHackZoom ? 7 : 5;
 
@@ -12386,7 +12383,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     // Thank you hackersm64
     if (gRomhackCameraSettings.dpad) {
         if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
-            sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
+            sRomHackYaw = DEGREES(180 + 90) - sMarioCamState->faceAngle[1];
         } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
             sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? 1 : -1);
         } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
@@ -12415,7 +12412,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     // figure out desired position
     f32 desiredDist = sRomHackZoom ? gRomhackCameraSettings.zoomedInDist : gRomhackCameraSettings.zoomedOutDist;
     f32 desiredHeight = sRomHackZoom ? gRomhackCameraSettings.zoomedInHeight : gRomhackCameraSettings.zoomedOutHeight;
-    f32* mPos = &gMarioStates[0].pos[0];
+    f32* mPos = &sMarioCamState->pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
@@ -12450,9 +12447,9 @@ void mode_rom_hack_camera(struct Camera *c) {
         vec3f_normalize(dir);
 
         // start at mario
-        c->pos[0] = gMarioStates[0].pos[0];
-        c->pos[1] = gMarioStates[0].pos[1] + 150;
-        c->pos[2] = gMarioStates[0].pos[2];
+        c->pos[0] = sMarioCamState->pos[0];
+        c->pos[1] = sMarioCamState->pos[1] + 150;
+        c->pos[2] = sMarioCamState->pos[2];
 
         rom_hack_cam_walk(c->pos, dir, desiredDist);
     }
@@ -12496,8 +12493,8 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     // if rom hack camera was just set, figure out the yaw to use
     if (!sRomHackIsUpdate) {
         sRomHackYaw = DEGREES(90) - atan2s(
-            c->pos[2] - gMarioStates[0].pos[2],
-            c->pos[0] - gMarioStates[0].pos[0]);
+            c->pos[2] - sMarioCamState->pos[2],
+            c->pos[0] - sMarioCamState->pos[0]);
         sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
     }
 
