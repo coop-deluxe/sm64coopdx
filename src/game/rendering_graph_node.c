@@ -185,7 +185,6 @@ static Vp   sViewportPrev    = { 0 };
 static Vp   sViewportInterp  = { 0 };
 
 Gfx* gBackgroundSkyboxGfx = NULL;
-Vtx* gBackgroundSkyboxVerts[SKYBOX_TILES_Y][SKYBOX_TILES_X] = { 0 };
 Mtx* gBackgroundSkyboxMtx = NULL;
 
 static struct GraphNodeBackground* sBackgroundNode = NULL;
@@ -1090,7 +1089,7 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
         rotation[1] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         rotation[2] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
-            *animType = ANIM_TYPE_TRANSLATION; 
+            *animType = ANIM_TYPE_TRANSLATION;
         }
     }
 }
@@ -1944,7 +1943,6 @@ static void geo_clear_interp_variables(void) {
 
     sBackgroundNode = NULL;
     gBackgroundSkyboxGfx = NULL;
-    memset(gBackgroundSkyboxVerts, 0, sizeof(Vtx*) * SKYBOX_TILES_Y * SKYBOX_TILES_X);
     gBackgroundSkyboxMtx = NULL;
     sBackgroundNodeRoot = NULL;
 
