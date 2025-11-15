@@ -2033,3 +2033,21 @@ void lvl_skip_credits(void) {
     gMarioStates[0].health = 0x880;
     play_transition(0x09, 0x14, 0x00, 0x00, 0x00);
 }
+
+void game_pause(void) {
+    if (gMenuMode != -1) { return; }
+
+    lower_background_noise(1);
+    cancel_rumble();
+    gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+    set_play_mode(PLAY_MODE_PAUSED);
+}
+
+void game_unpause(void) {
+    if (gMenuMode == -1) { return; }
+
+    level_set_transition(0, NULL);
+    gMenuMode = -1;
+    gDialogBoxState = 0;
+    gPauseScreenMode = 1;
+}

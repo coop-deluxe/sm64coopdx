@@ -15468,6 +15468,21 @@ int smlua_func_level_control_timer_running(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_pressed_pause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "pressed_pause", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, pressed_pause());
+
+    return 1;
+}
+
 int smlua_func_fade_into_special_warp(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -15587,6 +15602,36 @@ int smlua_func_lvl_set_current_level(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "lvl_set_current_level"); return 0; }
 
     lua_pushinteger(L, lvl_set_current_level(param, levelNum));
+
+    return 1;
+}
+
+int smlua_func_game_pause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_pause", 0, top);
+        return 0;
+    }
+
+
+    game_pause();
+
+    return 1;
+}
+
+int smlua_func_game_unpause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_unpause", 0, top);
+        return 0;
+    }
+
+
+    game_unpause();
 
     return 1;
 }
@@ -37684,6 +37729,7 @@ void smlua_bind_functions_autogen(void) {
 
     // level_update.h
     smlua_bind_function(L, "level_control_timer_running", smlua_func_level_control_timer_running);
+    smlua_bind_function(L, "pressed_pause", smlua_func_pressed_pause);
     smlua_bind_function(L, "fade_into_special_warp", smlua_func_fade_into_special_warp);
     smlua_bind_function(L, "get_instant_warp", smlua_func_get_instant_warp);
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
@@ -37691,6 +37737,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
+    smlua_bind_function(L, "game_pause", smlua_func_game_pause);
+    smlua_bind_function(L, "game_unpause", smlua_func_game_unpause);
 
     // lighting_engine.h
     smlua_bind_function(L, "le_is_enabled", smlua_func_le_is_enabled);

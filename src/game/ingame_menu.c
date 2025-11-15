@@ -141,6 +141,8 @@ u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = 0;
 
+static bool sPauseMenuHidden = false;
+
 #if defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU)
 #ifdef VERSION_EU
 #define CHCACHE_BUFLEN (8 * 8)  // EU only converts 8x8
@@ -2029,6 +2031,14 @@ void set_menu_mode(s16 mode) {
     }
 }
 
+bool get_pause_menu_hidden(void) {
+    return sPauseMenuHidden;
+}
+
+void set_pause_menu_hidden(bool hidden) {
+    sPauseMenuHidden = hidden;
+}
+
 void reset_cutscene_msg_fade(void) {
     gCutsceneMsgFade = 0;
 }
@@ -2975,7 +2985,7 @@ s16 render_pause_courses_and_castle(void) {
             }
             break;
         case DIALOG_STATE_VERTICAL:
-            if (!gDjuiPanelPauseCreated) {
+            if (!gDjuiPanelPauseCreated && !sPauseMenuHidden) {
                 shade_screen();
                 render_pause_my_score_coins();
                 render_pause_red_coins();
@@ -3016,7 +3026,7 @@ s16 render_pause_courses_and_castle(void) {
             }
             break;
         case DIALOG_STATE_HORIZONTAL:
-            if (!gDjuiPanelPauseCreated) {
+            if (!gDjuiPanelPauseCreated && !sPauseMenuHidden) {
                 shade_screen();
                 print_hud_pause_colorful_str();
 

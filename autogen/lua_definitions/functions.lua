@@ -4993,6 +4993,12 @@ function level_control_timer_running()
     -- ...
 end
 
+--- @return integer
+--- Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
+function pressed_pause()
+    -- ...
+end
+
 --- @param arg integer
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
@@ -5038,6 +5044,16 @@ end
 --- @return integer
 --- Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
 function lvl_set_current_level(param, levelNum)
+    -- ...
+end
+
+--- Pauses the game
+function game_pause()
+    -- ...
+end
+
+--- Unpauses the game
+function game_unpause()
     -- ...
 end
 

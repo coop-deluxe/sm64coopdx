@@ -111,6 +111,7 @@ enum DialogSpecialChars {
     DIALOG_CHAR_TERMINATOR = 0xFF
 };
 
+extern s8 gDialogBoxState;
 extern s32 gDialogResponse;
 extern u16 gDialogColorFadeTimer;
 extern s8 gLastDialogLineNum;
@@ -132,6 +133,8 @@ extern u8 gDialogTextColorR;
 extern u8 gDialogTextColorG;
 extern u8 gDialogTextColorB;
 extern u8 gDialogTextColorA;
+
+extern s16 gMenuMode;
 
 void create_dl_identity_matrix(void);
 void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
@@ -173,6 +176,10 @@ void reset_dialog_render_state(void);
 Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
 |descriptionEnd| */
 void set_menu_mode(s16 mode);
+/* |description|Gets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+bool get_pause_menu_hidden(void);
+/* |description|Sets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+void set_pause_menu_hidden(bool hidden);
 void reset_cutscene_msg_fade(void);
 void dl_rgba16_begin_cutscene_msg_fade(void);
 void dl_rgba16_stop_cutscene_msg_fade(void);
