@@ -965,8 +965,6 @@
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
    - [warp_special](functions-3.md#warp_special)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)
-   - [game_pause](functions-3.md#game_pause)
-   - [game_unpause](functions-3.md#game_unpause)
 
 <br />
 
@@ -2018,6 +2016,10 @@
    - [act_select_hud_show](functions-7.md#act_select_hud_show)
    - [act_select_hud_is_hidden](functions-7.md#act_select_hud_is_hidden)
    - [is_game_paused](functions-7.md#is_game_paused)
+   - [is_pause_menu_hidden](functions-7.md#is_pause_menu_hidden)
+   - [set_pause_menu_hidden](functions-7.md#set_pause_menu_hidden)
+   - [game_pause](functions-7.md#game_pause)
+   - [game_unpause](functions-7.md#game_unpause)
    - [is_transition_playing](functions-7.md#is_transition_playing)
    - [allocate_mario_action](functions-7.md#allocate_mario_action)
    - [get_hand_foot_pos_x](functions-7.md#get_hand_foot_pos_x)

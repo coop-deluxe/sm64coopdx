@@ -138,6 +138,14 @@ bool act_select_hud_is_hidden(enum ActSelectHudPart part);
 
 /* |description|Checks if the game is paused|descriptionEnd| */
 bool is_game_paused(void);
+/* |description|Gets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+bool is_pause_menu_hidden(void);
+/* |description|Sets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+void set_pause_menu_hidden(bool hidden);
+/* |description|Pauses the game|descriptionEnd| */
+void game_pause(void);
+/* |description|Unpauses the game|descriptionEnd| */
+void game_unpause(void);
 /* |description|Checks if a screen transition is playing|descriptionEnd| */
 bool is_transition_playing(void);
 

@@ -15478,7 +15478,7 @@ int smlua_func_pressed_pause(UNUSED lua_State* L) {
     }
 
 
-    lua_pushinteger(L, pressed_pause());
+    lua_pushboolean(L, pressed_pause());
 
     return 1;
 }
@@ -15602,36 +15602,6 @@ int smlua_func_lvl_set_current_level(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "lvl_set_current_level"); return 0; }
 
     lua_pushinteger(L, lvl_set_current_level(param, levelNum));
-
-    return 1;
-}
-
-int smlua_func_game_pause(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_pause", 0, top);
-        return 0;
-    }
-
-
-    game_pause();
-
-    return 1;
-}
-
-int smlua_func_game_unpause(UNUSED lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_unpause", 0, top);
-        return 0;
-    }
-
-
-    game_unpause();
 
     return 1;
 }
@@ -33849,6 +33819,68 @@ int smlua_func_is_game_paused(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_is_pause_menu_hidden(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "is_pause_menu_hidden", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, is_pause_menu_hidden());
+
+    return 1;
+}
+
+int smlua_func_set_pause_menu_hidden(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_pause_menu_hidden", 1, top);
+        return 0;
+    }
+
+    bool hidden = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_pause_menu_hidden"); return 0; }
+
+    set_pause_menu_hidden(hidden);
+
+    return 1;
+}
+
+int smlua_func_game_pause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_pause", 0, top);
+        return 0;
+    }
+
+
+    game_pause();
+
+    return 1;
+}
+
+int smlua_func_game_unpause(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "game_unpause", 0, top);
+        return 0;
+    }
+
+
+    game_unpause();
+
+    return 1;
+}
+
 int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37737,8 +37769,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
-    smlua_bind_function(L, "game_pause", smlua_func_game_pause);
-    smlua_bind_function(L, "game_unpause", smlua_func_game_unpause);
 
     // lighting_engine.h
     smlua_bind_function(L, "le_is_enabled", smlua_func_le_is_enabled);
@@ -38741,6 +38771,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "act_select_hud_show", smlua_func_act_select_hud_show);
     smlua_bind_function(L, "act_select_hud_is_hidden", smlua_func_act_select_hud_is_hidden);
     smlua_bind_function(L, "is_game_paused", smlua_func_is_game_paused);
+    smlua_bind_function(L, "is_pause_menu_hidden", smlua_func_is_pause_menu_hidden);
+    smlua_bind_function(L, "set_pause_menu_hidden", smlua_func_set_pause_menu_hidden);
+    smlua_bind_function(L, "game_pause", smlua_func_game_pause);
+    smlua_bind_function(L, "game_unpause", smlua_func_game_unpause);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);

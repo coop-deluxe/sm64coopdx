@@ -6613,16 +6613,16 @@ Returns if the level timer is running
 Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
 
 ### Lua Example
-`local integerValue = pressed_pause()`
+`local booleanValue = pressed_pause()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- `boolean`
 
 ### C Prototype
-`u32 pressed_pause(void);`
+`bool pressed_pause(void);`
 
 [:arrow_up_small:](#)
 
@@ -6785,48 +6785,6 @@ Sets the level number and handles the act select screen. `param` is used for ove
 
 ### C Prototype
 `s32 lvl_set_current_level(s16 param, s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [game_pause](#game_pause)
-
-### Description
-Pauses the game
-
-### Lua Example
-`game_pause()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void game_pause(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [game_unpause](#game_unpause)
-
-### Description
-Unpauses the game
-
-### Lua Example
-`game_unpause()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void game_unpause(void);`
 
 [:arrow_up_small:](#)
 

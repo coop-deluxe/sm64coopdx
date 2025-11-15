@@ -1189,6 +1189,92 @@ Checks if the game is paused
 
 <br />
 
+## [is_pause_menu_hidden](#is_pause_menu_hidden)
+
+### Description
+Gets if the pause menu elements are hidden, useful for creating custom pause menus
+
+### Lua Example
+`local booleanValue = is_pause_menu_hidden()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_pause_menu_hidden(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_pause_menu_hidden](#set_pause_menu_hidden)
+
+### Description
+Sets if the pause menu elements are hidden, useful for creating custom pause menus
+
+### Lua Example
+`set_pause_menu_hidden(hidden)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| hidden | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_pause_menu_hidden(bool hidden);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [game_pause](#game_pause)
+
+### Description
+Pauses the game
+
+### Lua Example
+`game_pause()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void game_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [game_unpause](#game_unpause)
+
+### Description
+Unpauses the game
+
+### Lua Example
+`game_unpause()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void game_unpause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [is_transition_playing](#is_transition_playing)
 
 ### Description

@@ -4993,7 +4993,7 @@ function level_control_timer_running()
     -- ...
 end
 
---- @return integer
+--- @return boolean
 --- Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
 function pressed_pause()
     -- ...
@@ -5044,16 +5044,6 @@ end
 --- @return integer
 --- Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
 function lvl_set_current_level(param, levelNum)
-    -- ...
-end
-
---- Pauses the game
-function game_pause()
-    -- ...
-end
-
---- Unpauses the game
-function game_unpause()
     -- ...
 end
 
@@ -11286,6 +11276,28 @@ end
 --- @return boolean
 --- Checks if the game is paused
 function is_game_paused()
+    -- ...
+end
+
+--- @return boolean
+--- Gets if the pause menu elements are hidden, useful for creating custom pause menus
+function is_pause_menu_hidden()
+    -- ...
+end
+
+--- @param hidden boolean
+--- Sets if the pause menu elements are hidden, useful for creating custom pause menus
+function set_pause_menu_hidden(hidden)
+    -- ...
+end
+
+--- Pauses the game
+function game_pause()
+    -- ...
+end
+
+--- Unpauses the game
+function game_unpause()
     -- ...
 end
 

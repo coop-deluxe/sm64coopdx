@@ -28,6 +28,8 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
+#include "game/rumble_init.h"
+#include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORD_SDK
@@ -296,6 +298,36 @@ void hud_set_flash(s8 value) {
 extern s16 gMenuMode;
 bool is_game_paused(void) {
     return gMenuMode != -1;
+}
+
+extern bool gPauseMenuHidden;
+bool is_pause_menu_hidden(void) {
+    return gPauseMenuHidden;
+}
+
+void set_pause_menu_hidden(bool hidden) {
+    gPauseMenuHidden = hidden;
+}
+
+extern void set_play_mode(s16);
+void game_pause(void) {
+    if (gMenuMode != -1) { return; }
+
+    lower_background_noise(1);
+    cancel_rumble();
+    gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+    set_play_mode(PLAY_MODE_PAUSED);
+}
+
+extern s8 gDialogBoxState;
+extern s16 gPauseScreenMode;
+void game_unpause(void) {
+    if (gMenuMode == -1) { return; }
+
+    level_set_transition(0, NULL);
+    gMenuMode = -1;
+    gDialogBoxState = 0;
+    gPauseScreenMode = 1;
 }
 
 ///

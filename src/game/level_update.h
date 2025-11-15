@@ -179,7 +179,7 @@ enum HUDDisplayFlag {
 u8 level_control_timer_running(void);
 u16 level_control_timer(s32 timerOp);
 /* |description|Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled|descriptionEnd|*/
-u32 pressed_pause(void);
+bool pressed_pause(void);
 /* |description|Fades into a special warp with `arg` and using `color`|descriptionEnd| */
 void fade_into_special_warp(u32 arg, u32 color);
 void load_level_init_text(u32 arg);
@@ -216,10 +216,5 @@ void lvl_skip_credits(void);
 
 void update_menu_level(void);
 void stop_demo(UNUSED struct DjuiBase* caller);
-
-/* |description|Pauses the game|descriptionEnd| */
-void game_pause(void);
-/* |description|Unpauses the game|descriptionEnd| */
-void game_unpause(void);
 
 #endif // LEVEL_UPDATE_H
