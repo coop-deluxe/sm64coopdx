@@ -102,6 +102,12 @@ static void controller_sdl_bind(void) {
 }
 
 static void controller_sdl_init(void) {
+    // Allows extended reports on PS4 and PS5 controllers
+    if(configExtendedReports) {
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+    }
+
     // Allows game to be controlled by gamepad when not in focus
     if (configBackgroundGamepad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
