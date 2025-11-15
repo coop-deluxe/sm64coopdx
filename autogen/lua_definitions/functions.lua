@@ -11086,6 +11086,12 @@ function djui_get_playerlist_page_index()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the DJUI chatbox is open
+function djui_is_chatbox_open()
+    -- ...
+end
+
 --- @return DjuiFontType
 --- Gets the DJUI menu font
 function djui_menu_get_font()

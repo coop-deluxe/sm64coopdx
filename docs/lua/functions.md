@@ -1986,6 +1986,7 @@
    - [djui_is_playerlist_open](functions-7.md#djui_is_playerlist_open)
    - [djui_attempting_to_open_playerlist](functions-7.md#djui_attempting_to_open_playerlist)
    - [djui_get_playerlist_page_index](functions-7.md#djui_get_playerlist_page_index)
+   - [djui_is_chatbox_open](functions-7.md#djui_is_chatbox_open)
    - [djui_menu_get_font](functions-7.md#djui_menu_get_font)
    - [djui_menu_get_theme](functions-7.md#djui_menu_get_theme)
    - [djui_is_playerlist_ping_visible](functions-7.md#djui_is_playerlist_ping_visible)

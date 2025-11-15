@@ -110,6 +110,10 @@ u8 djui_get_playerlist_page_index(void) {
     return sPageIndex;
 }
 
+bool djui_is_chatbox_open(void) {
+    return gDjuiChatBox->base.visible;
+}
+
 enum DjuiFontType djui_menu_get_font(void) {
     return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
 }

@@ -541,6 +541,27 @@ Gets the DJUI playerlist's page index
 
 <br />
 
+## [djui_is_chatbox_open](#djui_is_chatbox_open)
+
+### Description
+Checks if the DJUI chatbox is open
+
+### Lua Example
+`local booleanValue = djui_is_chatbox_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_is_chatbox_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_menu_get_font](#djui_menu_get_font)
 
 ### Description

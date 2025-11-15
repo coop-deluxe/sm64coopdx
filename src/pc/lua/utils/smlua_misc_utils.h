@@ -75,6 +75,8 @@ bool djui_is_playerlist_open(void);
 bool djui_attempting_to_open_playerlist(void);
 /* |description|Gets the DJUI playerlist's page index|descriptionEnd| */
 u8 djui_get_playerlist_page_index(void);
+/* |description|Checks if the DJUI chatbox is open|descriptionEnd| */
+bool djui_is_chatbox_open(void);
 /* |description|Gets the DJUI menu font|descriptionEnd| */
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
