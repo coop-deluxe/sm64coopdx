@@ -869,6 +869,7 @@
    - [create_dialog_box_with_response](functions-3.md#create_dialog_box_with_response)
    - [reset_dialog_render_state](functions-3.md#reset_dialog_render_state)
    - [set_menu_mode](functions-3.md#set_menu_mode)
+   - [handle_special_dialog_text](functions-3.md#handle_special_dialog_text)
    - [set_min_dialog_width](functions-3.md#set_min_dialog_width)
    - [set_dialog_override_pos](functions-3.md#set_dialog_override_pos)
    - [reset_dialog_override_pos](functions-3.md#reset_dialog_override_pos)

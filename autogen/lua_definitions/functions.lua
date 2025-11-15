@@ -4444,6 +4444,12 @@ function set_menu_mode(mode)
     -- ...
 end
 
+--- @param dialogID integer
+--- The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.
+function handle_special_dialog_text(dialogID)
+    -- ...
+end
+
 --- @param width integer
 --- Dialog box customization: Sets the minimum width for a dialog box
 function set_min_dialog_width(width)

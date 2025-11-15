@@ -14146,6 +14146,23 @@ int smlua_func_set_menu_mode(lua_State* L) {
     return 1;
 }
 
+int smlua_func_handle_special_dialog_text(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "handle_special_dialog_text", 1, top);
+        return 0;
+    }
+
+    s32 dialogID = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "handle_special_dialog_text"); return 0; }
+
+    handle_special_dialog_text(dialogID);
+
+    return 1;
+}
+
 int smlua_func_set_min_dialog_width(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37574,6 +37591,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "create_dialog_box_with_response", smlua_func_create_dialog_box_with_response);
     smlua_bind_function(L, "reset_dialog_render_state", smlua_func_reset_dialog_render_state);
     smlua_bind_function(L, "set_menu_mode", smlua_func_set_menu_mode);
+    smlua_bind_function(L, "handle_special_dialog_text", smlua_func_handle_special_dialog_text);
     smlua_bind_function(L, "set_min_dialog_width", smlua_func_set_min_dialog_width);
     smlua_bind_function(L, "set_dialog_override_pos", smlua_func_set_dialog_override_pos);
     smlua_bind_function(L, "reset_dialog_override_pos", smlua_func_reset_dialog_override_pos);
