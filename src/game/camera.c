@@ -1633,6 +1633,12 @@ s32 update_boss_fight_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     if ((o = gSecondCameraFocus) != NULL) {
         object_pos_to_vec3f(secondFocus, o);
         heldState = o->oHeldState;
+
+        // for coop: if bowser is being held by someone else, don't alter the camera to prevent camera oscillations
+        if (gMarioStates[0].heldObj == NULL) {
+            heldState = 0;
+        }
+
     } else {
     // If no boss is there, just rotate around the area's center point.
         secondFocus[0] = c->areaCenX;
