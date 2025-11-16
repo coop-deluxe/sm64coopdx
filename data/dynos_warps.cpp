@@ -250,7 +250,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // Set music
-            if (sDynosWarpNodeNum == -1 || (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
+            if ((sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
                 if (gCurrentArea != NULL) {
                     set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
                 }
