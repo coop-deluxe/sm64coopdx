@@ -176,10 +176,10 @@ void djui_reset_hud_params(void) {
 
 void djui_render(void) {
     if (!sDjuiInited || gDjuiDisabled) { return; }
-    djui_reset_hud_params();
 
     sSavedDisplayListHead = gDisplayListHead;
     gDjuiHudUtilsZ = 0;
+    djui_reset_hud_params();
 
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
