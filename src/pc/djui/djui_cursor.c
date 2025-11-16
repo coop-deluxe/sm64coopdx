@@ -167,7 +167,6 @@ void djui_cursor_interp_before(void) {
 }
 
 void djui_cursor_interp(void) {
-    djui_cursor_update_position();
     if (sInterpCursor && (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY)) {
         if (sSavedDisplayListHead == NULL) { return; }
         gDisplayListHead = sSavedDisplayListHead;
