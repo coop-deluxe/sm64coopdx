@@ -69,7 +69,6 @@ void djui_shutdown(void) {
 void patch_djui_before(void) {
     sDjuiRendered60fps = false;
     sSavedDisplayListHead = NULL;
-    djui_cursor_interp_before();
 }
 
 void patch_djui_interpolated(UNUSED f32 delta) {
@@ -211,6 +210,11 @@ void djui_render(void) {
 
     djui_cursor_update();
     djui_base_render(&gDjuiConsole->base);
-    djui_interactable_update();
+
+    // Be careful! Djui interactables update at 30hz to avoid display list corruption.
+    if (!sDjuiRendered60fps) {
+        djui_interactable_update();
+    }
+
     djui_gfx_displaylist_end();
 }

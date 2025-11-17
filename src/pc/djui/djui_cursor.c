@@ -4,6 +4,8 @@
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
 
+#define CURSOR_GFX_MAX_SIZE 20
+
 extern ALIGNED8 u8 gd_texture_hand_open[];
 extern ALIGNED8 u8 gd_texture_hand_closed[];
 
@@ -17,10 +19,10 @@ static f32 sSavedMouseY = 0;
 f32 gCursorX = 0;
 f32 gCursorY = 0;
 
+static Gfx sDjuiCursorGfx[CURSOR_GFX_MAX_SIZE] = { 0 };
+
 static f32 sPrevCursorX = 0;
 static f32 sPrevCursorY = 0;
-static Gfx* sSavedDisplayListHead = NULL;
-static bool sInterpCursor = false;
 
 void djui_cursor_set_visible(bool visible) {
     if (sMouseCursor) {
@@ -161,25 +163,31 @@ static void djui_cursor_update_position(void) {
 #endif
 }
 
-void djui_cursor_interp_before(void) {
-    sSavedDisplayListHead = NULL;
-    sInterpCursor = false;
+static void djui_cursor_render_cursor(void) {
+    gDisplayListHead = sDjuiCursorGfx;
+    djui_base_render(&sMouseCursor->base);
+    gSPEndDisplayList(gDisplayListHead++);
+    if (gDisplayListHead - sDjuiCursorGfx >= CURSOR_GFX_MAX_SIZE) {
+        sys_fatal("CURSOR_GFX_MAX_SIZE is too small! %lu", gDisplayListHead - sDjuiCursorGfx);
+    }
 }
 
+// This isn't actually interpolation, it just updates the cursor at a faster rate
 void djui_cursor_interp(void) {
     djui_cursor_update_position();
-    if (sInterpCursor && (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY)) {
-        if (sSavedDisplayListHead == NULL) { return; }
-        gDisplayListHead = sSavedDisplayListHead;
-        djui_base_render(&sMouseCursor->base);
+
+    if (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY) {
+        djui_cursor_render_cursor();
     }
 }
 
 void djui_cursor_update(void) {
     djui_cursor_update_position();
-    sSavedDisplayListHead = gDisplayListHead;
-    djui_base_render(&sMouseCursor->base);
-    sInterpCursor = gDisplayListHead != sSavedDisplayListHead; // Check that we actually rendered something
+
+    Gfx *savedDisplayListHead = gDisplayListHead;
+    djui_cursor_render_cursor();
+    gDisplayListHead = savedDisplayListHead;
+    gSPDisplayList(gDisplayListHead++, sDjuiCursorGfx);
 }
 
 void djui_cursor_create(void) {
