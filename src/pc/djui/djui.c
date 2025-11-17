@@ -211,7 +211,7 @@ void djui_render(void) {
     djui_cursor_update();
     djui_base_render(&gDjuiConsole->base);
 
-    // Be careful! Djui updates at 30hz to avoid display list corruption.
+    // Be careful! Djui interactables update at 30hz to avoid display list corruption.
     if (!sDjuiRendered60fps) {
         djui_interactable_update();
     }
