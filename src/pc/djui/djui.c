@@ -18,6 +18,8 @@
 #include "pc/utils/misc.h"
 
 static Gfx* sSavedDisplayListHead = NULL;
+static Gfx* sHookHudRenderGfx = NULL;
+static size_t sHookHudRenderGfxSize = 0;
 
 struct DjuiRoot* gDjuiRoot = NULL;
 struct DjuiText* gDjuiPauseOptions = NULL;
@@ -188,7 +190,20 @@ void djui_render(void) {
         djui_base_render(&sDjuiRootBehind->base);
     }
 
-    smlua_call_event_hooks(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+    // To maintain consistency with other hooks, HOOK_ON_HUD_RENDER must run at 30 fps
+    // During interpolated frames, copy the generated display list without running the hook again
+    if (!sDjuiRendered60fps) {
+        Gfx *hookHudRenderStart = gDisplayListHead;
+        smlua_call_event_hooks(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
+        sHookHudRenderGfxSize = sizeof(Gfx) * (gDisplayListHead - hookHudRenderStart);
+        if (sHookHudRenderGfxSize > 0) {
+            sHookHudRenderGfx = realloc(sHookHudRenderGfx, sHookHudRenderGfxSize);
+            memcpy(sHookHudRenderGfx, hookHudRenderStart, sHookHudRenderGfxSize);
+        }
+    } else if (sHookHudRenderGfx != NULL && sHookHudRenderGfxSize > 0) {
+        memcpy(gDisplayListHead, sHookHudRenderGfx, sHookHudRenderGfxSize);
+        gDisplayListHead += sHookHudRenderGfxSize;
+    }
 
     djui_panel_update();
     djui_popup_update();
