@@ -163,17 +163,21 @@ static void djui_cursor_update_position(void) {
 #endif
 }
 
+static void djui_cursor_render_cursor(void) {
+    gDisplayListHead = sDjuiCursorGfx;
+    djui_base_render(&sMouseCursor->base);
+    gSPEndDisplayList(gDisplayListHead++);
+    if (gDisplayListHead - sDjuiCursorGfx >= CURSOR_GFX_MAX_SIZE) {
+        sys_fatal("CURSOR_GFX_MAX_SIZE is too small! %lu", gDisplayListHead - sDjuiCursorGfx);
+    }
+}
+
 // This isn't actually interpolation, it just updates the cursor at a faster rate
 void djui_cursor_interp(void) {
     djui_cursor_update_position();
 
     if (sPrevCursorX != gCursorX || sPrevCursorY != gCursorY) {
-        gDisplayListHead = sDjuiCursorGfx;
-        djui_base_render(&sMouseCursor->base);
-        gSPEndDisplayList(gDisplayListHead++);
-        if (gDisplayListHead - sDjuiCursorGfx >= CURSOR_GFX_MAX_SIZE) {
-            sys_fatal("CURSOR_GFX_MAX_SIZE is too small! %lu", gDisplayListHead - sDjuiCursorGfx);
-        }
+        djui_cursor_render_cursor();
     }
 }
 
@@ -181,12 +185,7 @@ void djui_cursor_update(void) {
     djui_cursor_update_position();
 
     Gfx *savedDisplayListHead = gDisplayListHead;
-    gDisplayListHead = sDjuiCursorGfx;
-    djui_base_render(&sMouseCursor->base);
-    gSPEndDisplayList(gDisplayListHead++);
-    if (gDisplayListHead - sDjuiCursorGfx >= CURSOR_GFX_MAX_SIZE) {
-        sys_fatal("CURSOR_GFX_MAX_SIZE is too small! %lu", gDisplayListHead - sDjuiCursorGfx);
-    }
+    djui_cursor_render_cursor();
     gDisplayListHead = savedDisplayListHead;
     gSPDisplayList(gDisplayListHead++, sDjuiCursorGfx);
 }
