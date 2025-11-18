@@ -8,7 +8,7 @@ on:
 jobs:
     build-linux:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         container:
           image: archlinux:latest
         steps:
@@ -17,8 +17,8 @@ jobs:
 
             - name: Install dependencies
               run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                sudo pacman -Syuu
+                sudo pacman -S base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat
 
             - name: Build the game
               run: make -j$(nproc)
@@ -42,7 +42,7 @@ jobs:
     
     build-steamos:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         container:
           image: archlinux:latest
         steps:
@@ -51,8 +51,8 @@ jobs:
 
             - name: Install dependencies
               run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                sudo pacman -Syuu
+                sudo pacman -S base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat
 
             - name: Build the game
               run: make -j$(nproc) HANDHELD=1
