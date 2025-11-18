@@ -18,7 +18,7 @@ jobs:
             - name: Install dependencies
               run: |
                 pacman -Syuu --noconfirm
-                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat
+                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat zip
 
             - name: Build the game
               run: make -j$(nproc)
@@ -52,7 +52,7 @@ jobs:
             - name: Install dependencies
               run: |
                 pacman -Syuu --noconfirm
-                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat
+                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat zip
 
             - name: Build the game
               run: make -j$(nproc) HANDHELD=1
