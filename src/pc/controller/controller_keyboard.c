@@ -14,8 +14,13 @@
 #include "menu/file_select.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 
 static int keyboard_buttons_down;
+
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+bool keyboard_keys_prev_down[SDL_NUM_SCANCODES];
+#endif
 
 #define MAX_KEYBINDS 64
 static int keyboard_mapping[MAX_KEYBINDS][2];
@@ -60,6 +65,13 @@ bool keyboard_on_key_up(int scancode) {
 
 void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+        gKeyboard[scancode].keyDown = false;
+        gKeyboard[scancode].keyPressed = false;
+        gKeyboard[scancode].keyReleased = false;
+    }
+#endif
 }
 
 void keyboard_on_text_input(char* text) {
@@ -110,7 +122,20 @@ static void keyboard_init(void) {
     keyboard_bindkeys();
 }
 
+
 static void keyboard_read(OSContPad *pad) {
+#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+        bool prev = keyboard_keys_prev_down[scancode];
+        bool curr = gKeyboard[scancode].keyDown;
+
+        gKeyboard[scancode].keyPressed = (!prev && curr);
+        gKeyboard[scancode].keyReleased = (prev && !curr);
+
+        keyboard_keys_prev_down[scancode] = curr;
+    }
+#endif
+
     pad->button |= keyboard_buttons_down;
     const u32 xstick = keyboard_buttons_down & STICK_XMASK;
     const u32 ystick = keyboard_buttons_down & STICK_YMASK;

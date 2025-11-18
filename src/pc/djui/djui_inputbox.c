@@ -333,7 +333,7 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
 }
 
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
-    wm_api->stop_text_input();
+    // wm_api->stop_text_input(); Keep commented to allow text input in lua
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {

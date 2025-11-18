@@ -1959,6 +1959,11 @@
 
 <br />
 
+- smlua_input_utils.h
+   - [get_current_gamepad_index](functions-6.md#get_current_gamepad_index)
+
+<br />
+
 - smlua_level_utils.h
    - [smlua_level_util_change_area](functions-7.md#smlua_level_util_change_area)
    - [smlua_level_util_get_info](functions-7.md#smlua_level_util_get_info)

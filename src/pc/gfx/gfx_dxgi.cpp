@@ -29,6 +29,7 @@ extern "C" {
     #include "pc/rom_checker.h"
     #include "pc/network/version.h"
     #include "pc/configfile.h"
+    #include "pc/lua/smlua.h"
 }
 
 #include "pc/pc_main.h"
@@ -314,6 +315,7 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
         }
         case WM_CHAR: {
             // some keyboard input translated to a single UTF-16LE code unit
+            smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, (wchar_t)w_param);
             gfx_dxgi_on_text_input((wchar_t)w_param);
             return 0;
         }

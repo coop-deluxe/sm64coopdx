@@ -600,6 +600,26 @@
 --- @class FnGraphNode
 --- @field public node GraphNode
 
+--- @class Gamepad
+--- @field public name string
+--- @field public index integer
+--- @field public playerIndex integer
+--- @field public buttons boolean[]
+--- @field public leftTrigger integer
+--- @field public rightTrigger integer
+--- @field public leftStick Vec2s
+--- @field public rightStick Vec2s
+--- @field public gyro Vec3f
+--- @field public accelerometer Vec3f
+--- @field public leftGyro Vec3f
+--- @field public rightGyro Vec3f
+--- @field public leftAccelerometer Vec3f
+--- @field public rightAccelerometer Vec3f
+--- @field public touchpad Touchpad[]
+--- @field public loRumble integer
+--- @field public hiRumble integer
+--- @field public ledColor Color
+
 --- @class Gfx
 --- @field public w0 integer
 --- @field public w1 integer
@@ -966,6 +986,11 @@
 --- @field public id integer
 --- @field public area integer
 --- @field public displacement Vec3s
+
+--- @class Keyboard
+--- @field public keyDown boolean
+--- @field public keyPressed boolean
+--- @field public keyReleased boolean
 
 --- @class LakituState
 --- @field public curFocus Vec3f
@@ -2261,6 +2286,11 @@
 --- @field public width integer
 --- @field public height integer
 --- @field public bitSize integer
+
+--- @class Touchpad
+--- @field public pos Vec2f
+--- @field public pressure number
+--- @field public touched boolean
 
 --- @class Vtx
 --- @field public x number

@@ -43,6 +43,8 @@
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
+#include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 
 #ifndef GL_MAX_SAMPLES
 #define GL_MAX_SAMPLES 0x8D57
@@ -176,13 +178,17 @@ static void gfx_sdl_onkeydown(int scancode) {
         return;
     }
 
-    if (kb_key_down)
+    if (kb_key_down) {
         kb_key_down(translate_sdl_scancode(scancode));
+        gKeyboard[scancode].keyDown = true;
+    }
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
-    if (kb_key_up)
+    if (kb_key_up) {
         kb_key_up(translate_sdl_scancode(scancode));
+        gKeyboard[scancode].keyDown = false;
+    }
 }
 
 static void gfx_sdl_onscroll(float x, float y) {
@@ -214,9 +220,11 @@ static void gfx_sdl_handle_events(void) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_TEXTINPUT:
+                smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, event.text.text);
                 kb_text_input(event.text.text);
                 break;
             case SDL_TEXTEDITING: //IME composition
+                smlua_call_event_hooks(HOOK_ON_TEXT_EDITING, event.edit.text, event.edit.start);
                 kb_text_editing(event.edit.text,event.edit.start);
                 break;
             case SDL_KEYDOWN:

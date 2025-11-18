@@ -25,6 +25,8 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/controller/controller_bind_mapping.h"
 
+#include "pc/lua/utils/smlua_input_utils.h"
+
 // TODO: figure out if this shit even works
 #ifdef VERSION_EU
 # define FRAMERATE 25
@@ -130,13 +132,17 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
 }
 
 static void gfx_sdl_onkeydown(int scancode) {
-    if (kb_key_down)
+    if (kb_key_down) {
         kb_key_down(translate_bind_to_name(scancode));
+        gKeyboard[scancode].keyDown = true;
+    }
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
-    if (kb_key_up)
+    if (kb_key_up) {
         kb_key_up(translate_bind_to_name(scancode));
+        gKeyboard[scancode].keyDown = false;
+    }
 }
 
 static void gfx_sdl_handle_events(void) {

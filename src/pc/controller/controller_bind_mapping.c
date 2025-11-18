@@ -14,8 +14,8 @@
 
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
 
-static int inverted_scancode_table[512];
-static SDL_Scancode bind_to_sdl_scancode[512] = { 0 };
+static int inverted_scancode_table[SDL_NUM_SCANCODES];
+static SDL_Scancode bind_to_sdl_scancode[SDL_NUM_SCANCODES] = { 0 };
 
 const SDL_Scancode windows_scancode_table[] = {
     /*  0                        1                            2                         3                            4                     5                            6                            7  */
@@ -81,15 +81,15 @@ void controller_bind_init(void) {
         inverted_scancode_table[scancode_rmapping_nonextended[i][1]] += 0x100;
     }
 
-    for (size_t i = 0; i < 512; i++) {
-        if (inverted_scancode_table[i] >= 512) { continue; }
+    for (size_t i = 0; i < SDL_NUM_SCANCODES; i++) {
+        if (inverted_scancode_table[i] >= SDL_NUM_SCANCODES) { continue; }
         bind_to_sdl_scancode[inverted_scancode_table[i]] = i;
     }
 
 }
 
 int translate_sdl_scancode(int scancode) {
-    if (scancode < 512) {
+    if (scancode < SDL_NUM_SCANCODES) {
         return inverted_scancode_table[scancode];
     }
     else {
@@ -139,7 +139,7 @@ const char* translate_bind_to_name(int bind) {
     }
 
     // keyboard
-    if (bind >= 512) { return name; }
+    if (bind >= SDL_NUM_SCANCODES) { return name; }
 
     SDL_Scancode sc = bind_to_sdl_scancode[bind];
     if (sc == 0) { return name; }

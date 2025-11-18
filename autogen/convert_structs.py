@@ -23,6 +23,7 @@ in_files = [
     "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
+    "src/pc/lua/utils/smlua_input_utils.h",
     "src/game/spawn_sound.h",
     "src/pc/network/network.h",
     "src/game/hardcoded.h",
@@ -145,6 +146,7 @@ override_field_immutable = {
     "ModFsFile": [ "*" ],
     "ModFs": [ "*" ],
     "StaticObjectCollision": [ "*" ],
+    "Gamepad": [ "accelerometer", "buttons", "gyro", "index", "leftAccelerometer", "leftGyro", "leftStick", "leftTrigger", "name", "rightAccelerometer", "rightGyro", "rightStick", "rightTrigger", "touchpad" ],
 }
 
 override_field_version_excludes = {

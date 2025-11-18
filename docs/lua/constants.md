@@ -83,6 +83,7 @@
     - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
+- [smlua_input_utils.h](#smlua_input_utilsh)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
@@ -3524,7 +3525,17 @@
 | HOOK_ON_ADD_SURFACE | 57 |
 | HOOK_ON_CLEAR_AREAS | 58 |
 | HOOK_ON_PACKET_BYTESTRING_RECEIVE | 59 |
-| HOOK_MAX | 60 |
+| HOOK_ON_TEXT_INPUT | 60 |
+| HOOK_ON_TEXT_EDITING | 61 |
+| HOOK_MAX | 62 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_input_utils.h](#smlua_input_utils.h)
+- MAX_GAMEPADS
+- MAX_TOUCHPAD_FINGERS
 
 [:arrow_up_small:](#)
 
