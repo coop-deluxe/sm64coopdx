@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "smlua.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
@@ -250,7 +252,7 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
             lnt.value.number = lua_tonumber(L, index);
             lnt.size = sizeof(u8) + sizeof(double);
 
-            if (lnt.value.number == 0) {
+            if (lnt.value.number == 0.0 && !signbit(lnt.value.number)) {
                 lnt.type = LST_NETWORK_TYPE_INTEGER;
                 lnt.size = sizeof(u8) + sizeof(long long);
             }
