@@ -272,6 +272,7 @@ static void gfx_dxgi_on_text_input(wchar_t code_unit) {
             utf8_buffer[1] = '\0';
         }
 
+        smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, utf8_buffer);
         dxgi.on_text_input(utf8_buffer);
     }
 }
@@ -315,7 +316,6 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
         }
         case WM_CHAR: {
             // some keyboard input translated to a single UTF-16LE code unit
-            smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, (wchar_t)w_param);
             gfx_dxgi_on_text_input((wchar_t)w_param);
             return 0;
         }

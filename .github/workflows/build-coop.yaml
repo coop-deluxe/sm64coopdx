@@ -9,6 +9,8 @@ jobs:
     build-linux:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
+        container:
+          image: archlinux:latest
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -41,6 +43,8 @@ jobs:
     build-steamos:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
+        container:
+          image: archlinux:latest
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
