@@ -1,5 +1,3 @@
-#include <math.h>
-
 #include "smlua.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
