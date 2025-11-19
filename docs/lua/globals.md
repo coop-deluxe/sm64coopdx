@@ -44,6 +44,20 @@ The `gControllers[]` table is an array from `0` to `(MAX_PLAYERS - 1)` that cont
 
 <br />
 
+## [gGamepads](#gGamepads)
+The `gGamepads[]` table is an array from `0` to `(MAX_GAMEPADS - 1)` that contains a [Gamepad](structs.md#Gamepad) struct for each possible gamepad.
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gKeyboard](#gKeyboard)
+The `gKeyboard[]` table is an array from `0` to `(SDL_NUM_SCANCODES - 1)` that contains a [Keyboard](structs.md#Keyboard) struct for each possible scancode.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gMatStack](#gMatStack)
 The `gMatStack[]` table is an array from `0` to `(MATRIX_STACK_SIZE - 1)` that contains `Mat4`s used by geo process.
 
