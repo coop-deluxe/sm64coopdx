@@ -205,7 +205,7 @@ void djui_render(void) {
         sHookHudRenderGfxSize = gfxSize;
     } else if (sHookHudRenderGfx != NULL && sHookHudRenderGfxSize > 0) {
         memcpy(gDisplayListHead, sHookHudRenderGfx, sHookHudRenderGfxSize);
-        gDisplayListHead += sHookHudRenderGfxSize;
+        gDisplayListHead += sHookHudRenderGfxSize / sizeof(Gfx);
     }
 
     djui_panel_update();
