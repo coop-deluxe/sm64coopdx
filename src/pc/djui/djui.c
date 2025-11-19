@@ -195,11 +195,14 @@ void djui_render(void) {
     if (!sDjuiRendered60fps) {
         Gfx *hookHudRenderStart = gDisplayListHead;
         smlua_call_event_hooks(HOOK_ON_HUD_RENDER, djui_reset_hud_params);
-        sHookHudRenderGfxSize = sizeof(Gfx) * (gDisplayListHead - hookHudRenderStart);
-        if (sHookHudRenderGfxSize > 0) {
-            sHookHudRenderGfx = realloc(sHookHudRenderGfx, sHookHudRenderGfxSize);
-            memcpy(sHookHudRenderGfx, hookHudRenderStart, sHookHudRenderGfxSize);
+        size_t gfxSize = sizeof(Gfx) * (gDisplayListHead - hookHudRenderStart);
+        if (gfxSize > 0) {
+            if (gfxSize > sHookHudRenderGfxSize) {
+                sHookHudRenderGfx = realloc(sHookHudRenderGfx, gfxSize);
+            }
+            memcpy(sHookHudRenderGfx, hookHudRenderStart, gfxSize);
         }
+        sHookHudRenderGfxSize = gfxSize;
     } else if (sHookHudRenderGfx != NULL && sHookHudRenderGfxSize > 0) {
         memcpy(gDisplayListHead, sHookHudRenderGfx, sHookHudRenderGfxSize);
         gDisplayListHead += sHookHudRenderGfxSize;
