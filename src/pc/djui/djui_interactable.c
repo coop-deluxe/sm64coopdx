@@ -211,7 +211,13 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if (gDjuiChatBox != NULL) {
+    if (scancode == SCANCODE_ESCAPE && djui_panel_is_active()) {
+        // pressed escape button on keyboard
+        djui_panel_back();
+        return true;
+    }
+
+    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
         bool pressChat = false;
         bool pressChatCommand = false;
         for (int i = 0; i < MAX_BINDS; i++) {
