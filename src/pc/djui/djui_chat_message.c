@@ -17,8 +17,8 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiBase* ctBase = &chatMessage->message->base;
 
     f32 lifeTime = (f32)configChatMessageLifetime;
-    if (lifeTime < 3.0f)  lifeTime = 3.0f;
-    if (lifeTime > 60.0f) lifeTime = 60.0f;
+    if (lifeTime < 1.0f)  lifeTime = 1.0f;
+    if (lifeTime > 120.0f) lifeTime = 120.0f;
 
     f32 seconds = clock_elapsed() - chatMessage->createTime;
     f32 f = 1.0f;
