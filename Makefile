@@ -64,12 +64,7 @@ ICON ?= 1
 # Use .app (for macOS)
 USE_APP ?= 1
 # Minimum macOS Version
-# If our arch is arm, set to macOS 11 (Big Sur), otherwise 10.15 (Catalina)
-ifeq ($(shell arch),arm64)
-  MIN_MACOS_VERSION ?= 11
-else
-  MIN_MACOS_VERSION ?= 10.15
-endif
+MIN_MACOS_VERSION ?= 11
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
 
@@ -1603,7 +1598,7 @@ all:
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
-    cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libjuice.1.6.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
     install_name_tool -change $(BREW_PREFIX)/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
     install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
