@@ -621,7 +621,8 @@ void djui_chat_box_toggle(void) {
     gDjuiChatBoxFocus = !gDjuiChatBoxFocus;
     djui_chat_box_set_focus_style();
     gDjuiChatBox->scrolling = false;
-    gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+    f32 containerHeight = gDjuiChatBox->base.height.value - 32.0f - 18.0f;
+    gDjuiChatBox->chatFlow->base.y.value = containerHeight - gDjuiChatBox->chatFlow->base.height.value;
 }
 
 void djui_chat_box_open_with_text(const char* text) {

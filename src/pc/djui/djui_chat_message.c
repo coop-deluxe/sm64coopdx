@@ -136,7 +136,8 @@ void djui_chat_messages_apply_style(void) {
     }
 
     if (!gDjuiChatBox->scrolling) {
-        gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+        f32 containerHeight = gDjuiChatBox->base.height.value - 32.0f - 18.0f;
+        gDjuiChatBox->chatFlow->base.y.value = containerHeight - gDjuiChatBox->chatFlow->base.height.value;
     }
 }
 

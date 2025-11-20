@@ -8,6 +8,21 @@ static struct DjuiText* sChatTextScaleLabel = NULL;
 static struct DjuiText* sChatOpacityLabel   = NULL;
 static struct DjuiText* sChatLifetimeLabel  = NULL;
 
+static void djui_panel_chat_apply_chatbox_style(void) {
+    djui_chat_messages_apply_style();
+    if (gDjuiChatBox != NULL) {
+        bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
+        u8 alpha = 0;
+        if (hasMessages) {
+            int baseAlpha = (int)(configChatOpacity * 2.55f);
+            if (baseAlpha > 255) { baseAlpha = 255; }
+            if (baseAlpha < 0)   { baseAlpha = 0; }
+            alpha = gDjuiChatBoxFocus ? (u8)baseAlpha : 0;
+        }
+        djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
+    }
+}
+
 static void djui_panel_chat_update_value_labels(void) {
     if (sChatTextScaleLabel != NULL) {
         char buf[16];
@@ -17,7 +32,7 @@ static void djui_panel_chat_update_value_labels(void) {
         if (configChatTextScale < 100) {
             djui_base_set_color(base, 64, 64, 255, 255);
         } else if (configChatTextScale == 100) {
-            djui_base_set_color(base, 48, 224, 48, 255);
+            djui_base_set_color(base, 16, 255, 16, 255);
         } else {
             djui_base_set_color(base, 255, 64, 64, 255);
         }
@@ -31,7 +46,7 @@ static void djui_panel_chat_update_value_labels(void) {
         if (configChatOpacity < 70) {
             djui_base_set_color(base, 64, 64, 255, 255);
         } else if (configChatOpacity == 70) {
-            djui_base_set_color(base, 48, 224, 48, 255);
+            djui_base_set_color(base, 16, 255, 16, 255);
         } else {
             djui_base_set_color(base, 255, 64, 64, 255);
         }
@@ -45,7 +60,7 @@ static void djui_panel_chat_update_value_labels(void) {
         if (configChatMessageLifetime < 10) {
             djui_base_set_color(base, 64, 64, 255, 255);
         } else if (configChatMessageLifetime == 10) {
-            djui_base_set_color(base, 64, 255, 64, 255);
+            djui_base_set_color(base, 16, 255, 16, 255);
         } else {
             djui_base_set_color(base, 255, 64, 64, 255);
         }
@@ -112,6 +127,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             configChatWidth = widths[idx];
             if (gDjuiChatBox != NULL) {
                 djui_base_set_size(&gDjuiChatBox->base, configChatWidth, gDjuiChatBox->base.height.value);
+                djui_panel_chat_apply_chatbox_style();
             }
         }
         void on_chat_height_change(UNUSED struct DjuiBase* b) {
@@ -120,6 +136,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             configChatHeight = heights[idx];
             if (gDjuiChatBox != NULL) {
                 djui_base_set_size(&gDjuiChatBox->base, gDjuiChatBox->base.width.value, configChatHeight);
+                djui_panel_chat_apply_chatbox_style();
             }
         }
 
@@ -127,18 +144,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_HEIGHT), chatSizeChoices, 11, &sChatHeightIndex, on_chat_height_change);
 
         void on_chat_style_change(UNUSED struct DjuiBase* b) {
-            djui_chat_messages_apply_style();
-            if (gDjuiChatBox != NULL) {
-                bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
-                u8 alpha = 0;
-                if (hasMessages) {
-                    int baseAlpha = (int)(configChatOpacity * 2.55f);
-                    if (baseAlpha > 255) { baseAlpha = 255; }
-                    if (baseAlpha < 0)   { baseAlpha = 0; }
-                    alpha = gDjuiChatBoxFocus ? (u8)baseAlpha : 0;
-                }
-                djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
-            }
+            djui_panel_chat_apply_chatbox_style();
             djui_panel_chat_update_value_labels();
         }
         void on_chat_lifetime_change(UNUSED struct DjuiBase* b) {
