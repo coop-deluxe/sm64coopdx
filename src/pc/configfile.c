@@ -136,6 +136,7 @@ bool         configUseStandardKeyBindingsChat     = true;
 bool         configChatCharCounter                = true;
 bool         configDisableChatWhenClosed          = false;
 unsigned int configChatWidth                      = 800;
+unsigned int configChatHeight                     = 400;
 bool         configSmoothScrolling                = false;
 // free camera settings
 bool         configEnableFreeCamera               = false;
@@ -283,6 +284,7 @@ static const struct ConfigOption options[] = {
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
     {.name = "chat_width",                     .type = CONFIG_TYPE_UINT, .uintValue = &configChatWidth},
+    {.name = "chat_height",                    .type = CONFIG_TYPE_UINT, .uintValue = &configChatHeight},
     {.name = "chat_char_counter",              .type = CONFIG_TYPE_BOOL, .boolValue = &configChatCharCounter},
     {.name = "disable_chat_when_closed",       .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableChatWhenClosed},
     {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},

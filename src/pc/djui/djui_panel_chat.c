@@ -25,7 +25,19 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             default: sChatWidthIndex = 3; break;
         }
 
-        char* chatWidthChoices[] = {
+        static unsigned int sChatHeightIndex = 3;
+        switch (configChatHeight) {
+            case 250: sChatHeightIndex = 0; break;
+            case 300: sChatHeightIndex = 1; break;
+            case 350: sChatHeightIndex = 2; break;
+            case 400: sChatHeightIndex = 3; break;
+            case 450: sChatHeightIndex = 4; break;
+            case 500: sChatHeightIndex = 5; break;
+            case 550: sChatHeightIndex = 6; break;
+            default: sChatHeightIndex = 3; break;
+        }
+
+        char* chatSizeChoices[] = {
             DLANG(CHAT_OPTIONS, CHAT_SIZE_TINY),
             DLANG(CHAT_OPTIONS, CHAT_SIZE_VERY_SMALL),
             DLANG(CHAT_OPTIONS, CHAT_SIZE_SMALL),
@@ -34,7 +46,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             DLANG(CHAT_OPTIONS, CHAT_SIZE_VERY_BIG),
             DLANG(CHAT_OPTIONS, CHAT_SIZE_HUGE)
         };
-        void on_CHAT_SIZE_change(UNUSED struct DjuiBase* b) {
+        void on_chat_width_change(UNUSED struct DjuiBase* b) {
             unsigned int idx = sChatWidthIndex;
             unsigned int widths[] = { 500, 600, 700, 800, 900, 1000, 1100 };
             configChatWidth = widths[idx];
@@ -42,7 +54,16 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
                 djui_base_set_size(&gDjuiChatBox->base, configChatWidth, gDjuiChatBox->base.height.value);
             }
         }
-        djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_WIDTH), chatWidthChoices, 7, &sChatWidthIndex, on_CHAT_SIZE_change);
+        void on_chat_height_change(UNUSED struct DjuiBase* b) {
+            unsigned int idx = sChatHeightIndex;
+            unsigned int heights[] = { 250, 300, 350, 400, 450, 500, 550 };
+            configChatHeight = heights[idx];
+            if (gDjuiChatBox != NULL) {
+                djui_base_set_size(&gDjuiChatBox->base, gDjuiChatBox->base.width.value, configChatHeight);
+            }
+        }
+        djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_WIDTH),  chatSizeChoices, 7, &sChatWidthIndex,  on_chat_width_change);
+        djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_HEIGHT), chatSizeChoices, 7, &sChatHeightIndex, on_chat_height_change);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

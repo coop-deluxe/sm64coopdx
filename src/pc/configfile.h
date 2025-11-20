@@ -99,6 +99,7 @@ extern bool         configUseStandardKeyBindingsChat;
 extern bool         configChatCharCounter;
 extern bool         configDisableChatWhenClosed;
 extern unsigned int configChatWidth;
+extern unsigned int configChatHeight;
 extern bool         configSmoothScrolling;
 // free camera settings
 extern bool         configEnableFreeCamera;
