@@ -43,8 +43,6 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
         if (bgAlphaI < 0)   { bgAlphaI = 0; }
         u8 bgAlpha = (u8)bgAlphaI;
 
-        // Text-Deckkraft: beim Standardwert (70) bereits voll sichtbar,
-        // darunter linear bis 0 herunter, darüber weiterhin voll sichtbar.
         const f32 defaultOpacity = 70.0f;
         f32 textScale = 1.0f;
         if ((f32)configChatOpacity < defaultOpacity) {
