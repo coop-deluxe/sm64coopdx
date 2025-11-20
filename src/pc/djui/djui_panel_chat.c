@@ -5,7 +5,7 @@
 #include "pc/configfile.h"
 
 void djui_panel_chat_create(struct DjuiBase* caller) {
-    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(OPTIONS, CHAT), false);
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CHAT_OPTIONS, CHAT), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         djui_checkbox_create(body, DLANG(CHAT_OPTIONS, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
@@ -74,8 +74,28 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
                 djui_base_set_size(&gDjuiChatBox->base, gDjuiChatBox->base.width.value, configChatHeight);
             }
         }
+
         djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_WIDTH),  chatSizeChoices, 11, &sChatWidthIndex,  on_chat_width_change);
         djui_selectionbox_create(body, DLANG(CHAT_OPTIONS, CHAT_HEIGHT), chatSizeChoices, 11, &sChatHeightIndex, on_chat_height_change);
+
+        void on_chat_style_change(UNUSED struct DjuiBase* b) {
+            djui_chat_messages_apply_style();
+            if (gDjuiChatBox != NULL) {
+                bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
+                u8 alpha = 0;
+                if (hasMessages) {
+                    int baseAlpha = (int)(configChatOpacity * 2.55f);
+                    if (baseAlpha > 255) { baseAlpha = 255; }
+                    if (baseAlpha < 0)   { baseAlpha = 0; }
+                    alpha = gDjuiChatBoxFocus ? (u8)baseAlpha : 0;
+                }
+                djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
+            }
+        }
+
+        djui_slider_create(body, DLANG(CHAT_OPTIONS, CHAT_TEXT_SCALE),     &configChatTextScale,      50, 150, on_chat_style_change);
+        djui_slider_create(body, DLANG(CHAT_OPTIONS, CHAT_OPACITY),        &configChatOpacity,         0, 100, on_chat_style_change);
+        djui_slider_create(body, DLANG(CHAT_OPTIONS, CHAT_LIFETIME),      &configChatMessageLifetime, 3, 60,  NULL);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

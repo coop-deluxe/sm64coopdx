@@ -100,6 +100,9 @@ extern bool         configChatCharCounter;
 extern bool         configDisableChatWhenClosed;
 extern unsigned int configChatWidth;
 extern unsigned int configChatHeight;
+extern unsigned int configChatTextScale;
+extern unsigned int configChatOpacity;
+extern unsigned int configChatMessageLifetime;
 extern bool         configSmoothScrolling;
 // free camera settings
 extern bool         configEnableFreeCamera;
