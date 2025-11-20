@@ -45,16 +45,16 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
         snprintf(sActNum, 7, "Done");
     }
     if (charIndex >= CT_MAX) { charIndex = 0; }
-    djuiHeadIconImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
+    djuiHeadIconImages[i]->textureInfo.texture = gCharacters[charIndex].hudHeadTexture.texture;
 
     s16 pingValue = np->ping / 150;
     switch (pingValue) {
-        case 0:  djuiPingImages[i]->texture = texture_ping_full;  break;
-        case 1:  djuiPingImages[i]->texture = texture_ping_four;  break;
-        case 2:  djuiPingImages[i]->texture = texture_ping_three; break;
-        case 3:  djuiPingImages[i]->texture = texture_ping_two;   break;
-        case 4:  djuiPingImages[i]->texture = texture_ping_one;   break;
-        default: djuiPingImages[i]->texture = texture_ping_empty; break;
+        case 0:  djuiPingImages[i]->textureInfo.texture = texture_ping_full;  break;
+        case 1:  djuiPingImages[i]->textureInfo.texture = texture_ping_four;  break;
+        case 2:  djuiPingImages[i]->textureInfo.texture = texture_ping_three; break;
+        case 3:  djuiPingImages[i]->textureInfo.texture = texture_ping_two;   break;
+        case 4:  djuiPingImages[i]->textureInfo.texture = texture_ping_one;   break;
+        default: djuiPingImages[i]->textureInfo.texture = texture_ping_empty; break;
     }
 
     u8 visible = np->connected;
@@ -141,11 +141,11 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_visible(&row->base, false);
         djuiRow[i] = row;
 
-        struct DjuiImage* i1 = djui_image_create(&row->base, texture_ping_empty, 16, 16, 8);
+        struct DjuiImage* i1 = djui_image_create(&row->base, texture_ping_empty, 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b);
         djui_base_set_size(&i1->base, 32, 32);
         djuiPingImages[i] = i1;
 
-        struct DjuiImage* i2 = djui_image_create(&row->base, texture_hud_char_mario_head, 16, 16, 8);
+        struct DjuiImage* i2 = djui_image_create(&row->base, texture_hud_char_mario_head, 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b);
         djui_base_set_size(&i2->base, 32, 32);
         djuiHeadIconImages[i] = i2;
 

@@ -239,11 +239,11 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
             // UGLY HACK: if the camera moves weird after a level transition this can go too high
             if (tileIndex < 0)  { tileIndex = 0;  }
             if (tileIndex > 79) { tileIndex = 79; }
-            Texture* texture = NULL;
+            const Texture* texture = NULL;
             if (background < 0 || background >= 10) {
                 texture = gCustomSkyboxPtrList[tileIndex];
             } else {
-                texture = (Texture*)(*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
+                texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
             }
 
             Vtx *vertices = make_skybox_rect(tileRow, tileColTmp, colorIndex, row, col);

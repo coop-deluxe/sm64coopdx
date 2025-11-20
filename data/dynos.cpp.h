@@ -653,15 +653,6 @@ struct DynosOption : NoCopy {
 };
 typedef bool (*DynosLoopFunc)(DynosOption *, void *);
 
-struct BuiltinTexInfo {
-    const char* identifier;
-    const void* pointer;
-    const char* path;
-    s32 width;
-    s32 height;
-    s32 bitSize;
-};
-
 struct LvlCmd {
     u8 mType;
     u8 mSize;
@@ -866,8 +857,8 @@ const char *     DynOS_Builtin_Anim_GetFromData(const Animation *aData);
 const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
-const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
-const struct BuiltinTexInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
+const struct TextureInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
+const struct TextureInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
 const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName, u8 aFuncType);
 const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex, u8 aFuncType);
 const char *     DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u8 aFuncType);

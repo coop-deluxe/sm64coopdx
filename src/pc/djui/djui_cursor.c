@@ -156,9 +156,9 @@ static void djui_cursor_update_position(void) {
 
     // set cursor sprite
     if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
-        djui_image_set_image(sMouseCursor, gd_texture_hand_closed, 32, 32, 16);
+        sMouseCursor->textureInfo.texture = gd_texture_hand_closed;
     } else {
-        djui_image_set_image(sMouseCursor, gd_texture_hand_open, 32, 32, 16);
+        sMouseCursor->textureInfo.texture = gd_texture_hand_open;
     }
 #endif
 }
@@ -191,7 +191,7 @@ void djui_cursor_update(void) {
 }
 
 void djui_cursor_create(void) {
-    sMouseCursor = djui_image_create(NULL, gd_texture_hand_open, 32, 32, 16);
+    sMouseCursor = djui_image_create(NULL, gd_texture_hand_open, 32, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b);
     djui_base_set_location(&sMouseCursor->base, 0, 0);
     djui_base_set_size(&sMouseCursor->base, 64, 64);
 }
