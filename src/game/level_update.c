@@ -249,7 +249,7 @@ u16 level_control_timer(s32 timerOp) {
     return gHudDisplay.timer;
 }
 
-u32 pressed_pause(void) {
+bool pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
         if (get_dialog_id() == DIALOG_NONE && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
@@ -264,7 +264,7 @@ u32 pressed_pause(void) {
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 void set_play_mode(s16 playMode) {

@@ -33,6 +33,7 @@ define_gfx_symbol(gsSPGeometryMode, 2, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE
 define_gfx_symbol(gsSPGeometryModeSetFirst, 2, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsDPSetPrimColor, 6, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsDPSetEnvColor, 4, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
+define_gfx_symbol(gsDPSetEnvRGB, 3, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsDPSetFogColor, 4, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsSPFogPosition, 2, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsDPSetAlphaCompare, 1, false, GFX_PARAM_TYPE_INT);

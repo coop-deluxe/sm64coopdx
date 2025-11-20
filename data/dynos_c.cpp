@@ -115,8 +115,8 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild) {
     DynOS_Actor_Override(obj, aSharedChild);
 }
 
-void dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
-    DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
+    return DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
@@ -133,8 +133,8 @@ void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
 
 // -- collisions -- //
 
-void dynos_add_collision(const char *filePath, const char* collisionName) {
-    DynOS_Col_Activate(filePath, collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName) {
+    return DynOS_Col_Activate(filePath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
@@ -143,9 +143,9 @@ Collision* dynos_collision_get(const char* collisionName) {
 
 // -- textures -- //
 
-void dynos_add_texture(const char *filePath, const char* textureName) {
+bool dynos_add_texture(const char *filePath, const char* textureName) {
     SysPath _FilePath = filePath;
-    DynOS_Tex_AddCustom(_FilePath, textureName);
+    return DynOS_Tex_AddCustom(_FilePath, textureName);
 }
 
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {
@@ -162,6 +162,16 @@ void dynos_texture_override_set(const char* textureName, struct TextureInfo* ove
 
 void dynos_texture_override_reset(const char* textureName) {
     DynOS_Tex_Override_Reset(textureName);
+}
+
+u8 *dynos_texture_convert_to_rgba32(const Texture *tex, u32 width, u32 height, u8 fmt, u8 siz) {
+    switch (siz) {
+        case G_IM_SIZ_4b: return DynOS_Tex_ConvertToRGBA32(tex, (width * height) / 2, fmt, siz, NULL);
+        case G_IM_SIZ_8b: return DynOS_Tex_ConvertToRGBA32(tex, width * height, fmt, siz, NULL);
+        case G_IM_SIZ_16b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 2, fmt, siz, NULL);
+        case G_IM_SIZ_32b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 4, fmt, siz, NULL);
+    }
+    return NULL;
 }
 
 // -- movtexqcs -- //

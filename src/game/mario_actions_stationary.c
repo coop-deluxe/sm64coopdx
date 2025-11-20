@@ -1162,13 +1162,20 @@ s32 act_first_person(struct MarioState *m) {
 }
 
 s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c) {
+    if (!(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND))) {
+        return FALSE;
+    }
+
     switch (c->paletteEditorCapState) {
         case 0: return FALSE;
         case 1: cutscene_put_cap_on(m); break;
         case 2: cutscene_take_cap_off(m); break;
     }
     c->paletteEditorCapState = 0;
-    return set_mario_action(m, ACT_IDLE, 0);
+    if (m->action == ACT_PALETTE_EDITOR_CAP) {
+        set_mario_action(m, ACT_IDLE, 0);
+    }
+    return TRUE;
 }
 
 s32 act_palette_editor_cap(struct MarioState *m) {

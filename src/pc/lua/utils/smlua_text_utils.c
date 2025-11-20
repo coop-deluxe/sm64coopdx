@@ -19,36 +19,6 @@ extern s32 gInGameLanguage;
 
 #define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
 
-extern const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[];
-
-static size_t measure_converted_sm64_string(const u8* str64) {
-    size_t len = 0;
-    
-    for (size_t i = 0; str64[i] != 0xFF; i++) {
-        for (s32 j = 0; sSm64CharMap[j].str != NULL; j++) {
-            if (sSm64CharMap[j].c == str64[i]) {
-                len += strlen(sSm64CharMap[j].str);
-                break;
-            }
-        }
-    }
-
-    return len;
-}
-
-char* get_dialog_text_ascii(struct DialogEntry *dialog) {
-    if (!dialog) { return NULL; }
-
-    size_t len = measure_converted_sm64_string(dialog->str);
-
-    char* asciiStr = malloc(len + 1);
-    if (!asciiStr) { return NULL; }
-
-    convert_string_sm64_to_ascii(asciiStr, dialog->str);
-
-    return asciiStr;
-}
-
 /*
 ---------------------------------------------------
 Mapping gReplacedCourseActNameTable <-> seg2 tables
@@ -136,9 +106,7 @@ void smlua_text_utils_shutdown(void) {
 }
 
 static u8* smlua_text_utils_convert(const char* str) {
-    u8* dialogStr = calloc(strlen(str) + 2, sizeof(u8));
-    convert_string_ascii_to_sm64(dialogStr, str, false);
-    return dialogStr;
+    return convert_string_ascii_to_sm64(NULL, str, false);
 }
 
 // Checks the first 3 characters
@@ -162,8 +130,8 @@ static void smlua_text_utils_reset_course_or_act_name(struct ReplacedName *name)
     name->modNum = 0;
 }
 
-static void smlua_text_utils_replace_course_or_act_name(struct ReplacedName *name, const char *replacement, s32 modIndex) {
-    replacement += 3 * str_starts_with_spaces(replacement);
+static void smlua_text_utils_replace_course_or_act_name(struct ReplacedName *name, const char *replacement, s32 modIndex, bool removeLeadingSpaces) {
+    if (removeLeadingSpaces) { replacement += 3 * str_starts_with_spaces(replacement); }
     if (name->name.get_table && name->orig.get_table) {
         void **tblName = name->name.get_table() + name->name.offset;
         void **tblOrig = name->orig.get_table() + name->orig.offset;
@@ -180,7 +148,7 @@ void smlua_text_utils_reset_all(void) {
     dialog_table_reset();
 
     if (sSmluaTextUtilsInited) {
-        for (s16 courseNum = 0; courseNum < COURSE_END; courseNum++) {
+        for (s16 courseNum = 0; courseNum <= COURSE_END; courseNum++) {
 
             // Restore vanilla course names
             struct ReplacedName *courseName = &gReplacedCourseActNameTable[courseNum].courseName;
@@ -204,7 +172,7 @@ struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
 
 const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId dialogId) {
     if (!IS_VALID_VANILLA_DIALOG(dialogId)) { return NULL; }
-    
+
     void **dialogTableOrg;
 
 #ifdef VERSION_EU
@@ -228,7 +196,7 @@ const struct DialogEntry* smlua_text_utils_dialog_get_unmodified(enum DialogId d
 
 void smlua_text_utils_dialog_replace(enum DialogId dialogId, UNUSED u32 unused, s8 linesPerBox, s16 leftOffset, s16 width, const char* str) {
     if (!IS_VALID_DIALOG(dialogId)) { return; }
-    
+
     struct DialogEntry *dialog = smlua_text_utils_dialog_get(dialogId);
 
     if (!dialog) { return; }
@@ -261,7 +229,7 @@ void smlua_text_utils_dialog_restore(enum DialogId dialogId) {
     free(dialog->text);
 
     memcpy(dialog, dialogOrig, sizeof(struct DialogEntry));
-    dialog->text = get_dialog_text_ascii(dialog);
+    dialog->text = convert_string_sm64_to_ascii(NULL, dialog->str);
 }
 
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId) {
@@ -286,10 +254,10 @@ void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName,
     if (!COURSE_IS_VALID_COURSE(courseNum)) { return; }
 
     struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[courseNum];
-    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, courseName, gLuaActiveMod->index);
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, courseName + (3 * (strlen(courseName) > 3)), gLuaActiveMod->index, false);
 
 #define REPLACE_ACT_NAME(i) { \
-        smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[i - 1], act##i, gLuaActiveMod->index); \
+        smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[i - 1], act##i, gLuaActiveMod->index, false); \
     }
 
     REPLACE_ACT_NAME(1);
@@ -304,7 +272,7 @@ void smlua_text_utils_course_name_replace(s16 courseNum, const char* name) {
     if (!COURSE_IS_VALID_COURSE(courseNum)) { return; }
 
     struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[courseNum];
-    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, name, gLuaActiveMod->index);
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, name, gLuaActiveMod->index, false);
 }
 
 const char* smlua_text_utils_course_name_get(s16 courseNum) {
@@ -331,7 +299,7 @@ void smlua_text_utils_act_name_replace(s16 courseNum, u8 actNum, const char* nam
     if (actNum < 1 || actNum > MAX_ACTS_AND_100_COINS) { return; }
 
     struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[courseNum];
-    smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[actNum - 1], name, gLuaActiveMod->index);
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[actNum - 1], name, gLuaActiveMod->index, false);
 }
 
 const char* smlua_text_utils_act_name_get(s16 courseNum, u8 actNum) {
@@ -359,12 +327,13 @@ void smlua_text_utils_act_name_reset(s16 courseNum, u8 actNum) {
 void smlua_text_utils_secret_star_replace(s16 courseNum, const char* courseName) {
     if (courseNum <= COURSE_STAGES_MAX || courseNum > COURSE_MAX) { return; }
 
-    smlua_text_utils_course_name_replace(courseNum, courseName);
+    struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[courseNum];
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, courseName, gLuaActiveMod->index, true);
 }
 
 void smlua_text_utils_castle_secret_stars_replace(const char* name) {
     struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[COURSE_END];
-    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, name, gLuaActiveMod->index);
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->courseName, name, gLuaActiveMod->index, false);
 }
 
 const char* smlua_text_utils_castle_secret_stars_get() {
@@ -384,7 +353,7 @@ void smlua_text_utils_extra_text_replace(s16 index, const char* text) {
     if (index < 0 || index > MAX_ACTS_AND_100_COINS) { return; }
 
     struct CourseActNames *courseActNames = &gReplacedCourseActNameTable[COURSE_END];
-    smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[index], text, gLuaActiveMod->index);
+    smlua_text_utils_replace_course_or_act_name(&courseActNames->actName[index], text, gLuaActiveMod->index, false);
 }
 
 const char* smlua_text_utils_extra_text_get(s16 index) {

@@ -27,8 +27,6 @@ struct CourseActNames {
 
 extern struct CourseActNames gReplacedCourseActNameTable[]; // indexed by COURSE_* constants
 
-char* get_dialog_text_ascii(struct DialogEntry *dialog);
-
 void smlua_text_utils_init(void);
 void smlua_text_utils_shutdown(void);
 /* |description|Resets every modified dialog back to vanilla|descriptionEnd|*/

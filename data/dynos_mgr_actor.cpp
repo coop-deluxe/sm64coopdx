@@ -9,6 +9,7 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "pc/configfile.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/mods/mod_fs.h"
 }
 
 // Static maps/arrays
@@ -31,7 +32,7 @@ std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
     return DynosValidActors();
 }
 
-void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
+bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
     u16 actorLen = strlen(aActorName);
@@ -42,7 +43,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     if (!_GfxData) {
         PrintError("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aFilename.c_str());
         free(actorName);
-        return;
+        return false;
     }
     _GfxData->mModIndex = aModIndex;
     _GfxData->mModFileIndex = aModFileIndex;
@@ -51,7 +52,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     if (!geoLayout) {
         PrintError("  ERROR: Couldn't load geo layout for \"%s\"", actorName);
         free(actorName);
-        return;
+        return false;
     }
 
     // Alloc and init the actors gfx list
@@ -63,7 +64,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     if (!actorGfx.mGraphNode) {
         PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName);
         free(actorName);
-        return;
+        return false;
     }
     actorGfx.mGraphNode->georef = georef;
 
@@ -76,6 +77,7 @@ void DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
     free(actorName);
+    return true;
 }
 
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
@@ -112,6 +114,13 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
         auto name = DynOS_Builtin_Actor_GetNameFromIndex(i);
         if (!strcmp(aActorName, name)) {
             return DynOS_Builtin_Actor_GetFromIndex(i);
+        }
+    }
+
+    // check modfs file
+    if (is_mod_fs_file(aActorName)) {
+        if (DynOS_Actor_AddCustom(gLuaActiveMod->index, -1, aActorName, aActorName)) {
+            return DynOS_Actor_GetLayoutFromName(aActorName);
         }
     }
 
@@ -221,7 +230,6 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
             return;
         }
     }
-
 
     *aSharedChild = (void*)it->second.mGraphNode;
 }

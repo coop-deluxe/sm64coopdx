@@ -730,7 +730,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
     Vec3f globalLightCached[2];
     Vec3f vertexColorCached;
-    if (rsp.geometry_mode & G_LIGHTING) {
+    if ((rsp.geometry_mode & G_LIGHTING) && !(rsp.geometry_mode & G_LIGHT_MAP_EXT)) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
@@ -911,7 +911,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 d->color.b *= color[2] / 255.0f;
             }
         // if lighting engine is enabled and we should affect all vertex colored surfaces or the lighting engine geometry mode is on
-        } else if (le_is_enabled() && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+        } else if (le_is_enabled() && !(rsp.geometry_mode & G_LIGHT_MAP_EXT) && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
             Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
             CTX_BEGIN(CTX_LIGHTING);
 
@@ -1025,6 +1025,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if ((v1->w < 0) ^ (v2->w < 0) ^ (v3->w < 0)) {
             // If one vertex lies behind the eye, negating cross will give the correct result.
             // If all vertices lie behind the eye, the triangle will be rejected anyway.
+            cross = -cross;
+        }
+
+        // Invert culling: back becomes front and front becomes back
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
             cross = -cross;
         }
 
@@ -1504,6 +1509,12 @@ static void gfx_dp_set_env_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.env_color.a = a;
 }
 
+static void gfx_dp_set_env_rgb(uint8_t r, uint8_t g, uint8_t b) {
+    rdp.env_color.r = r;
+    rdp.env_color.g = g;
+    rdp.env_color.b = b;
+}
+
 static void gfx_dp_set_prim_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.prim_color.r = r;
     rdp.prim_color.g = g;
@@ -1843,6 +1854,9 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
             case G_SETENVCOLOR:
                 gfx_dp_set_env_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
+            case G_SETENVRGB:
+                gfx_dp_set_env_rgb(C1(24, 8), C1(16, 8), C1(8, 8));
+                break;
             case G_SETPRIMCOLOR:
                 gfx_dp_set_prim_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
@@ -2051,17 +2065,26 @@ void gfx_shutdown(void) {
  // v custom for djui v //
 /////////////////////////
 
-static bool    sDjuiClip          = 0;
-static uint8_t sDjuiClipX1        = 0;
-static uint8_t sDjuiClipY1        = 0;
-static uint8_t sDjuiClipX2        = 0;
-static uint8_t sDjuiClipY2        = 0;
+static const struct {
+    uint8_t LOAD_BLOCK;
+    uint8_t SHIFT;
+    uint8_t INCR;
+    uint8_t LINE_BYTES;
+} G_IM_SIZ_[] = {
+    [G_IM_SIZ_4b]  = { G_IM_SIZ_4b_LOAD_BLOCK,  G_IM_SIZ_4b_SHIFT,  G_IM_SIZ_4b_INCR,  G_IM_SIZ_4b_LINE_BYTES  },
+    [G_IM_SIZ_8b]  = { G_IM_SIZ_8b_LOAD_BLOCK,  G_IM_SIZ_8b_SHIFT,  G_IM_SIZ_8b_INCR,  G_IM_SIZ_8b_LINE_BYTES  },
+    [G_IM_SIZ_16b] = { G_IM_SIZ_16b_LOAD_BLOCK, G_IM_SIZ_16b_SHIFT, G_IM_SIZ_16b_INCR, G_IM_SIZ_16b_LINE_BYTES },
+    [G_IM_SIZ_32b] = { G_IM_SIZ_32b_LOAD_BLOCK, G_IM_SIZ_32b_SHIFT, G_IM_SIZ_32b_INCR, G_IM_SIZ_32b_LINE_BYTES },
+};
 
-static bool    sDjuiOverride        = false;
-static void*   sDjuiOverrideTexture = NULL;
-static uint32_t sDjuiOverrideW       = 0;
-static uint32_t sDjuiOverrideH       = 0;
-static uint32_t sDjuiOverrideB       = 0;
+static bool    sDjuiClip   = 0;
+static uint8_t sDjuiClipX1 = 0;
+static uint8_t sDjuiClipY1 = 0;
+static uint8_t sDjuiClipX2 = 0;
+static uint8_t sDjuiClipY2 = 0;
+
+static bool sDjuiOverride = false;
+static struct TextureInfo sDjuiOverrideTexture;
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_clipping(void) {
     if (!sDjuiClip) { return; }
@@ -2127,29 +2150,19 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     if (!sDjuiOverride) { return; }
     sDjuiOverride = false;
 
-    // gsDPSetTextureImage
-    uint8_t sizeLoadBlock = (sDjuiOverrideB == 32) ? 3 : 2;
-    rdp.texture_to_load.addr = sDjuiOverrideTexture;
-    rdp.texture_to_load.siz = sizeLoadBlock;
+    const Texture *texture = sDjuiOverrideTexture.texture;
+    uint32_t width = sDjuiOverrideTexture.width;
+    uint32_t height = sDjuiOverrideTexture.height;
+    uint8_t fmt = sDjuiOverrideTexture.format;
+    uint8_t siz = sDjuiOverrideTexture.size;
 
-    // gsDPSetTile
-    rdp.texture_tile.siz = sizeLoadBlock;
+    if (siz > G_IM_SIZ_32b) { return; }
 
-    // gsDPLoadBlock
-    uint32_t wordSizeShift = (sDjuiOverrideB == 32) ? 2 : 1;
-    uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
-    uint32_t sizeBytes = (lrs + 1) << wordSizeShift;
-    gfx_update_loaded_texture(rdp.texture_to_load.tile_number, sizeBytes, rdp.texture_to_load.addr);
-
-    // gsDPSetTile
-    uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
-    rdp.texture_tile.line_size_bytes = line * 8;
-
-    // gsDPSetTileSize
-    /*rdp.texture_tile.uls = 0;
-    rdp.texture_tile.ult = 0;
-    rdp.texture_tile.lrs = (sDjuiOverrideW - 1) << G_TEXTURE_IMAGE_FRAC;
-    rdp.texture_tile.lrt = (sDjuiOverrideH - 1) << G_TEXTURE_IMAGE_FRAC;*/
+    // This is gDPLoadTextureBlock, but with some shortcuts and without texture size limitations
+    gfx_dp_set_texture_image(fmt, G_IM_SIZ_[siz].LOAD_BLOCK, width, texture);
+    gfx_dp_set_tile(fmt, siz, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+    gfx_dp_load_block(0, 0, 0, ((width * height + G_IM_SIZ_[siz].INCR) >> G_IM_SIZ_[siz].SHIFT) - 1, 0);
+    gfx_dp_set_tile(fmt, siz, (((width * G_IM_SIZ_[siz].LINE_BYTES) + 7) >> 3), 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
 }
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
@@ -2184,12 +2197,13 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(uint32_t x1, uint32_t y1, uint3
     sDjuiClip   = true;
 }
 
-static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint32_t b) {
-    sDjuiOverrideTexture = texture;
-    sDjuiOverrideW = w;
-    sDjuiOverrideH = h;
-    sDjuiOverrideB = b;
-    sDjuiOverride  = (texture != NULL);
+static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint8_t fmt, uint8_t siz) {
+    sDjuiOverrideTexture.texture = texture;
+    sDjuiOverrideTexture.width = w;
+    sDjuiOverrideTexture.height = h;
+    sDjuiOverrideTexture.format = fmt;
+    sDjuiOverrideTexture.size = siz;
+    sDjuiOverride = (texture != NULL);
 }
 
 /*static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
@@ -2218,7 +2232,7 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             djui_gfx_dp_set_clipping(C0(16, 8), C0(8, 8), C1(16, 8), C1(8, 8));
             break;
         case G_TEXOVERRIDE_DJUI:
-            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(0, 8));
+            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(4, 4), C0(0, 4));
             break;
         case G_VTX_EXT:
 #ifdef F3DEX_GBI_2

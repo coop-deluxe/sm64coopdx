@@ -2,6 +2,11 @@
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
 
+struct CameraOverride {
+    u32 value;
+    bool override;
+};
+
 static struct CameraOverride sOverrideCameraXSens            = { 0 };
 static struct CameraOverride sOverrideCameraYSens            = { 0 };
 static struct CameraOverride sOverrideCameraAggr             = { 0 };

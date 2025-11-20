@@ -3,25 +3,16 @@
 # Supported Structs
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
-- [AnimationTable](#AnimationTable)
 - [Area](#Area)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
-- [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
-- [CameraFOVStatus](#CameraFOVStatus)
-- [CameraOverride](#CameraOverride)
-- [CameraStoredInfo](#CameraStoredInfo)
-- [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
-- [Cutscene](#Cutscene)
-- [CutsceneSplinePoint](#CutsceneSplinePoint)
-- [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
 - [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
@@ -32,7 +23,6 @@
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
-- [FloorGeometry](#FloorGeometry)
 - [FnGraphNode](#FnGraphNode)
 - [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -63,53 +53,38 @@
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
 - [GraphNodeTranslation](#GraphNodeTranslation)
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
-- [GraphNode_802A45E4](#GraphNode_802A45E4)
-- [HandheldShakePoint](#HandheldShakePoint)
 - [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
-- [LinearTransitionPoint](#LinearTransitionPoint)
-- [MarioAnimDmaRelatedThing](#MarioAnimDmaRelatedThing)
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mat4](#Mat4)
 - [Mod](#Mod)
 - [ModAudio](#ModAudio)
-- [ModAudioSampleCopies](#ModAudioSampleCopies)
-- [ModFile](#ModFile)
 - [ModFs](#ModFs)
 - [ModFsFile](#ModFsFile)
-- [ModeTransitionInfo](#ModeTransitionInfo)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
 - [ObjectNode](#ObjectNode)
 - [ObjectWarpNode](#ObjectWarpNode)
-- [OffsetSizePair](#OffsetSizePair)
 - [Painting](#Painting)
-- [PaintingMeshVertex](#PaintingMeshVertex)
 - [PaintingValues](#PaintingValues)
-- [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
-- [PlayerGeometry](#PlayerGeometry)
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
-- [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
-- [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
 - [StarsNeededForDialog](#StarsNeededForDialog)
+- [StaticObjectCollision](#StaticObjectCollision)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
-- [TransitionInfo](#TransitionInfo)
-- [UnusedArea28](#UnusedArea28)
-- [VblankHandler](#VblankHandler)
 - [Vec2f](#Vec2f)
 - [Vec2i](#Vec2i)
 - [Vec2s](#Vec2s)
@@ -120,11 +95,8 @@
 - [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
-- [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
-- [WarpTransition](#WarpTransition)
-- [WarpTransitionData](#WarpTransitionData)
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
@@ -165,16 +137,6 @@
 | length | `integer` | read-only |
 | valuesLength | `integer` | read-only |
 | indexLength | `integer` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [AnimationTable](#AnimationTable)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| count | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -383,21 +345,6 @@
 
 <br />
 
-## [BullyCollisionData](#BullyCollisionData)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| conversionRatio | `number` |  |
-| radius | `number` |  |
-| posX | `number` |  |
-| posZ | `number` |  |
-| velX | `number` |  |
-| velZ | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [Camera](#Camera)
 
 | Field | Type | Access |
@@ -417,64 +364,6 @@
 | doorStatus | `integer` |  |
 | areaCenY | `number` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraFOVStatus](#CameraFOVStatus)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| fovFunc | `integer` |  |
-| fov | `number` |  |
-| fovOffset | `number` |  |
-| unusedIsSleeping | `integer` |  |
-| shakeAmplitude | `number` |  |
-| shakePhase | `integer` |  |
-| shakeSpeed | `integer` |  |
-| decay | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraOverride](#CameraOverride)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| value | `integer` |  |
-| override | `boolean` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraStoredInfo](#CameraStoredInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
-| panDist | `number` |  |
-| cannonYOffset | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraTrigger](#CameraTrigger)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| area | `integer` |  |
-| centerX | `integer` |  |
-| centerY | `integer` |  |
-| centerZ | `integer` |  |
-| boundsX | `integer` |  |
-| boundsY | `integer` |  |
-| boundsZ | `integer` |  |
-| boundsYaw | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -726,6 +615,7 @@
 | animReturnFromStarDance | `integer` | read-only |
 | animForwardSpinningFlip | `integer` | read-only |
 | animTripleJumpFly | `integer` | read-only |
+| anims | `Array` <`integer`> | read-only |
 | soundFreqScale | `number` | read-only |
 | soundYahWahHoo | `integer` | read-only |
 | soundHoohoo | `integer` | read-only |
@@ -771,6 +661,7 @@
 | soundImaTired | `integer` | read-only |
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
+| sounds | `Array` <`integer`> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -824,42 +715,6 @@
 | echoLevel3 | `integer` |  |
 | modIndex | `integer` |  |
 | next | [CustomLevelInfo](structs.md#CustomLevelInfo) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [Cutscene](#Cutscene)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| duration | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CutsceneSplinePoint](#CutsceneSplinePoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| index | `integer` |  |
-| speed | `integer` |  |
-| point | [Vec3s](structs.md#Vec3s) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CutsceneVariable](#CutsceneVariable)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unused1 | `integer` |  |
-| point | [Vec3f](structs.md#Vec3f) | read-only |
-| unusedPoint | [Vec3f](structs.md#Vec3f) | read-only |
-| angle | [Vec3s](structs.md#Vec3s) | read-only |
-| unused2 | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -999,20 +854,6 @@
 | crouch | `number` |  |
 | fov | `number` |  |
 | offset | [Vec3f](structs.md#Vec3f) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [FloorGeometry](#FloorGeometry)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unused | `Array` <`number`> |  |
-| normalX | `number` |  |
-| normalY | `number` |  |
-| normalZ | `number` |  |
-| originOffset | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -1585,33 +1426,6 @@
 
 <br />
 
-## [GraphNode_802A45E4](#GraphNode_802A45E4)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unk18 | `integer` |  |
-| unk1A | `integer` |  |
-| unk1C | `integer` |  |
-| unk1E | `integer` |  |
-| unk20 | `integer` |  |
-| unk22 | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [HandheldShakePoint](#HandheldShakePoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| index | `integer` |  |
-| pad | `integer` |  |
-| point | [Vec3s](structs.md#Vec3s) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [HudUtilsRotation](#HudUtilsRotation)
 
 | Field | Type | Access |
@@ -1751,20 +1565,6 @@
 
 <br />
 
-## [LinearTransitionPoint](#LinearTransitionPoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| dist | `number` |  |
-| pitch | `integer` |  |
-| yaw | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [MarioAnimation](#MarioAnimation)
 
 | Field | Type | Access |
@@ -1794,6 +1594,7 @@
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
+| animPartsPos | `Array` <`Vec3f`> | read-only |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -1945,6 +1746,7 @@
 | renderBehindHud | `boolean` | read-only |
 | pausable | `boolean` | read-only |
 | ignoreScriptWarnings | `boolean` | read-only |
+| size | `integer` | read-only |
 | customBehaviorIndex | `integer` | read-only |
 
 [:arrow_up_small:](#)
@@ -1955,37 +1757,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| file | [ModFile](structs.md#ModFile) |  |
+| filepath | `string` | read-only |
 | isStream | `boolean` | read-only |
 | baseVolume | `number` |  |
 | loaded | `boolean` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [ModAudioSampleCopies](#ModAudioSampleCopies)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| next | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
-| prev | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
-| parent | [ModAudio](structs.md#ModAudio) |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [ModFile](#ModFile)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| relativePath | `string` | read-only |
-| modifiedTimestamp | `integer` | read-only |
-| isLoadedLuaModule | `boolean` | read-only |
-| wroteBytes | `integer` | read-only |
-| dataHash | `Array` <`integer`> | read-only |
-| cachedPath | `string` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2000,6 +1775,21 @@
 | numFiles | `integer` | read-only |
 | totalSize | `integer` | read-only |
 | isPublic | `boolean` | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| get_filename | [`mod_fs_get_filename`](functions-5.md#mod_fs_get_filename) |
+| get_file | [`mod_fs_get_file`](functions-5.md#mod_fs_get_file) |
+| create_file | [`mod_fs_create_file`](functions-5.md#mod_fs_create_file) |
+| move_file | [`mod_fs_move_file`](functions-5.md#mod_fs_move_file) |
+| copy_file | [`mod_fs_copy_file`](functions-5.md#mod_fs_copy_file) |
+| delete_file | [`mod_fs_delete_file`](functions-5.md#mod_fs_delete_file) |
+| clear | [`mod_fs_clear`](functions-5.md#mod_fs_clear) |
+| save | [`mod_fs_save`](functions-5.md#mod_fs_save) |
+| delete | [`mod_fs_delete`](functions-5.md#mod_fs_delete) |
+| set_public | [`mod_fs_set_public`](functions-5.md#mod_fs_set_public) |
 
 [:arrow_up_small:](#)
 
@@ -2016,20 +1806,29 @@
 | isText | `boolean` | read-only |
 | isPublic | `boolean` | read-only |
 
-[:arrow_up_small:](#)
+**Functions:**
 
-<br />
-
-## [ModeTransitionInfo](#ModeTransitionInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| newMode | `integer` |  |
-| lastMode | `integer` |  |
-| max | `integer` |  |
-| frame | `integer` |  |
-| transitionStart | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
-| transitionEnd | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
+| Name | Reference |
+| ---- | --------- |
+| read_bool | [`mod_fs_file_read_bool`](functions-5.md#mod_fs_file_read_bool) |
+| read_integer | [`mod_fs_file_read_integer`](functions-5.md#mod_fs_file_read_integer) |
+| read_number | [`mod_fs_file_read_number`](functions-5.md#mod_fs_file_read_number) |
+| read_bytes | [`mod_fs_file_read_bytes`](functions-5.md#mod_fs_file_read_bytes) |
+| read_string | [`mod_fs_file_read_string`](functions-5.md#mod_fs_file_read_string) |
+| read_line | [`mod_fs_file_read_line`](functions-5.md#mod_fs_file_read_line) |
+| write_bool | [`mod_fs_file_write_bool`](functions-5.md#mod_fs_file_write_bool) |
+| write_integer | [`mod_fs_file_write_integer`](functions-5.md#mod_fs_file_write_integer) |
+| write_number | [`mod_fs_file_write_number`](functions-5.md#mod_fs_file_write_number) |
+| write_bytes | [`mod_fs_file_write_bytes`](functions-5.md#mod_fs_file_write_bytes) |
+| write_string | [`mod_fs_file_write_string`](functions-5.md#mod_fs_file_write_string) |
+| write_line | [`mod_fs_file_write_line`](functions-5.md#mod_fs_file_write_line) |
+| seek | [`mod_fs_file_seek`](functions-5.md#mod_fs_file_seek) |
+| rewind | [`mod_fs_file_rewind`](functions-5.md#mod_fs_file_rewind) |
+| is_eof | [`mod_fs_file_is_eof`](functions-5.md#mod_fs_file_is_eof) |
+| fill | [`mod_fs_file_fill`](functions-5.md#mod_fs_file_fill) |
+| erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |
+| set_text_mode | [`mod_fs_file_set_text_mode`](functions-5.md#mod_fs_file_set_text_mode) |
+| set_public | [`mod_fs_file_set_public`](functions-5.md#mod_fs_file_set_public) |
 
 [:arrow_up_small:](#)
 
@@ -2097,6 +1896,7 @@
 | collisionData | `Pointer` <`Collision`> |  |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
+| bhvStack | `Array` <`integer`> | read-only |
 | bhvStackIndex | `integer` | read-only |
 | bhvDelayTimer | `integer` |  |
 | activeFlags | `integer` |  |
@@ -2905,17 +2705,6 @@
 
 <br />
 
-## [OffsetSizePair](#OffsetSizePair)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| offset | `integer` |  |
-| size | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [Painting](#Painting)
 
 | Field | Type | Access |
@@ -2947,27 +2736,15 @@
 | rippleTimer | `number` |  |
 | rippleX | `number` |  |
 | rippleY | `number` |  |
-| normalDisplayList | `Pointer` <`Gfx`> | read-only |
+| textureArray | `Array` <`Pointer` <`Texture`>> | read-only |
 | textureWidth | `integer` | read-only |
 | textureHeight | `integer` | read-only |
-| rippleDisplayList | `Pointer` <`Gfx`> | read-only |
 | rippleTrigger | `integer` |  |
 | alpha | `integer` |  |
 | marioWasUnder | `integer` |  |
 | marioIsUnder | `integer` |  |
 | marioWentUnder | `integer` |  |
 | size | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [PaintingMeshVertex](#PaintingMeshVertex)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| pos | `Array` <`integer`> |  |
-| norm | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -2998,19 +2775,6 @@
 
 <br />
 
-## [ParallelTrackingPoint](#ParallelTrackingPoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| startOfPath | `integer` |  |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| distThresh | `number` |  |
-| zoom | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [PlayerCameraState](#PlayerCameraState)
 
 | Field | Type | Access |
@@ -3027,32 +2791,11 @@
 
 <br />
 
-## [PlayerGeometry](#PlayerGeometry)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| currFloor | [Surface](structs.md#Surface) |  |
-| currFloorHeight | `number` |  |
-| currFloorType | `integer` |  |
-| currCeil | [Surface](structs.md#Surface) |  |
-| currCeilType | `integer` |  |
-| currCeilHeight | `number` |  |
-| prevFloor | [Surface](structs.md#Surface) |  |
-| prevFloorHeight | `number` |  |
-| prevFloorType | `integer` |  |
-| prevCeil | [Surface](structs.md#Surface) |  |
-| prevCeilHeight | `number` |  |
-| prevCeilType | `integer` |  |
-| waterHeight | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [PlayerPalette](#PlayerPalette)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| parts | `Array` <`Color`> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -3105,19 +2848,6 @@
 | nametags | `integer` |  |
 | maxPlayers | `integer` |  |
 | pauseAnywhere | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [SoundState](#SoundState)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| playSound | `integer` |  |
-| animFrame1 | `integer` |  |
-| animFrame2 | `integer` |  |
-| soundMagic | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3211,6 +2941,17 @@
 
 <br />
 
+## [StaticObjectCollision](#StaticObjectCollision)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| index | `integer` | read-only |
+| length | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Surface](#Surface)
 
 | Field | Type | Access |
@@ -3244,25 +2985,8 @@
 | name | `string` | read-only |
 | width | `integer` | read-only |
 | height | `integer` | read-only |
-| bitSize | `integer` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [TransitionInfo](#TransitionInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| posPitch | `integer` |  |
-| posYaw | `integer` |  |
-| posDist | `number` |  |
-| focPitch | `integer` |  |
-| focYaw | `integer` |  |
-| focDist | `number` |  |
-| framesLeft | `integer` |  |
-| marioPos | [Vec3f](structs.md#Vec3f) | read-only |
-| pad | `integer` |  |
+| format | `integer` | read-only |
+| size | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -3398,17 +3122,6 @@
 
 <br />
 
-## [Vtx_Interp](#Vtx_Interp)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| ob | `Array` <`number`> |  |
-| n | `string` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [WallCollisionData](#WallCollisionData)
 
 | Field | Type | Access |
@@ -3441,45 +3154,12 @@
 
 <br />
 
-## [WarpTransition](#WarpTransition)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| isActive | `integer` |  |
-| type | `integer` |  |
-| time | `integer` |  |
-| pauseRendering | `integer` |  |
-| data | [WarpTransitionData](structs.md#WarpTransitionData) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [WarpTransitionData](#WarpTransitionData)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| red | `integer` |  |
-| green | `integer` |  |
-| blue | `integer` |  |
-| startTexRadius | `integer` |  |
-| endTexRadius | `integer` |  |
-| startTexX | `integer` |  |
-| startTexY | `integer` |  |
-| endTexX | `integer` |  |
-| endTexY | `integer` |  |
-| texTimer | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [WaterDropletParams](#WaterDropletParams)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | flags | `integer` |  |
-| model | `integer` |  |
+| model | `integer` | read-only |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
 | moveAngleRange | `integer` |  |
 | moveRange | `integer` |  |

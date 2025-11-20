@@ -1,6 +1,8 @@
 #ifndef SMLUA_COBJECT_H
 #define SMLUA_COBJECT_H
 
+#include "lua.h"
+
 enum LuaValueType {
     LVT_BOOL,
     LVT_BOOL_P,
@@ -31,7 +33,9 @@ enum LuaValueType {
     LVT_TRAJECTORY_P,
     LVT_TEXTURE_P,
     LVT_LUAFUNCTION,
+    LVT_LUATABLE,
     LVT_POINTER,
+    LVT_FUNCTION,
     LVT_MAX,
 };
 

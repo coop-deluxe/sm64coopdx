@@ -2945,6 +2945,9 @@ G_TEXRECT = 0xe4
 G_VTX_EXT = 0x11
 
 --- @type integer
+G_SETENVRGB = 0xd1
+
+--- @type integer
 G_PPARTTOCOLOR = 0xd3
 
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
@@ -2998,6 +3001,9 @@ GRAPH_RENDER_PLAYER = (1 << 7)
 
 --- @type integer
 GRAPH_EXTRA_FORCE_3D = (1 << 0)
+
+--- @type integer
+GRAPH_EXTRA_ROTATE_HELD = (1 << 1)
 
 --- @type integer
 GRAPH_NODE_TYPE_FUNCTIONAL = 0x100
@@ -4554,13 +4560,19 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_BOWSER`
 
 --- @type integer
-MOD_FS_MAX_SIZE = 0x1000000
+MOD_FS_MAX_SIZE = 0x2000000
 
 --- @type integer
-MOD_FS_MAX_FILES = 0x100
+MOD_FS_MAX_FILES = 0x200
 
 --- @type integer
 MOD_FS_MAX_PATH = 0x100
+
+--- @type string
+MOD_FS_URI_PREFIX = "modfs:/"
+
+--- @type string
+MOD_FS_URI_FORMAT = "modfs:/%s/%s"
 
 INT_TYPE_U8  = 0 --- @type ModFsFileIntType
 INT_TYPE_U16 = 1 --- @type ModFsFileIntType
@@ -6754,6 +6766,9 @@ R_CBUTTONS = CONT_F
 
 --- @type integer
 D_CBUTTONS = CONT_D
+
+--- @type string
+PALETTES_DIRECTORY = "palettes"
 
 --- @type integer
 MAX_PRESET_PALETTES = 128
@@ -10954,6 +10969,9 @@ SURFACE_FLAG_DYNAMIC = (1 << 0)
 SURFACE_FLAG_NO_CAM_COLLISION = (1 << 1)
 
 --- @type integer
+SURFACE_FLAG_INTANGIBLE = (1 << 2)
+
+--- @type integer
 SURFACE_FLAG_X_PROJECTION = (1 << 3)
 
 --- @type integer
@@ -11162,6 +11180,12 @@ VERSION_NUMBER = 41
 
 --- @type integer
 MINOR_VERSION_NUMBER = 0
+
+--- @type string
+GAME_NAME = "sm64coopdx"
+
+--- @type string
+WINDOW_NAME = "Super Mario 64 Coop Deluxe"
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

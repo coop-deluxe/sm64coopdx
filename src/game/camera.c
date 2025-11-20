@@ -1633,6 +1633,12 @@ s32 update_boss_fight_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     if ((o = gSecondCameraFocus) != NULL) {
         object_pos_to_vec3f(secondFocus, o);
         heldState = o->oHeldState;
+
+        // for coop: if bowser is being held by someone else, don't alter the camera to prevent camera oscillations
+        if (gMarioStates[0].heldObj == NULL) {
+            heldState = 0;
+        }
+
     } else {
     // If no boss is there, just rotate around the area's center point.
         secondFocus[0] = c->areaCenX;
@@ -10947,10 +10953,12 @@ void cutscene_palette_editor(struct Camera *c) {
         return;
     }
 
+    bool capMissing = !(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND));
+
     // Press the Z bind to toggle cap
     static bool pressed = false;
     if (gInteractablePad.button & PAD_BUTTON_Z) {
-        if (!pressed && m->action == ACT_IDLE) {
+        if (!capMissing && !pressed && m->action == ACT_IDLE) {
             set_mario_action(m, ACT_PALETTE_EDITOR_CAP, (m->flags & MARIO_CAP_ON_HEAD) != 0);
         }
         pressed = true;
@@ -10962,8 +10970,10 @@ void cutscene_palette_editor(struct Camera *c) {
     if (gDjuiPaletteToggle) {
         djui_base_set_visible(
             &gDjuiPaletteToggle->base,
-            m->action == ACT_IDLE ||
-            m->action == ACT_PALETTE_EDITOR_CAP
+            (
+                m->action == ACT_IDLE ||
+                m->action == ACT_PALETTE_EDITOR_CAP 
+            ) && !capMissing
         );
     }
 
@@ -12249,7 +12259,7 @@ static u8 rom_hack_cam_can_see_mario(Vec3f desiredPos) {
     f32 mDist;
     s16 mPitch;
     s16 mYaw;
-    vec3f_get_dist_and_angle(desiredPos, gMarioStates[0].pos, &mDist, &mPitch, &mYaw);
+    vec3f_get_dist_and_angle(desiredPos, sMarioCamState->pos, &mDist, &mPitch, &mYaw);
 
     s16 degreeMult = sRomHackZoom ? 7 : 5;
 
@@ -12379,7 +12389,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     // Thank you hackersm64
     if (gRomhackCameraSettings.dpad) {
         if (gMarioStates[0].controller->buttonPressed & U_JPAD) {
-            sRomHackYaw = DEGREES(180 + 90) - gMarioStates[0].faceAngle[1];
+            sRomHackYaw = DEGREES(180 + 90) - sMarioCamState->faceAngle[1];
         } else if (gMarioStates[0].controller->buttonDown & L_JPAD) {
             sRomHackYaw -= DEGREES(0.5) * (camera_config_is_x_inverted() ? 1 : -1);
         } else if (gMarioStates[0].controller->buttonDown & R_JPAD) {
@@ -12408,7 +12418,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     // figure out desired position
     f32 desiredDist = sRomHackZoom ? gRomhackCameraSettings.zoomedInDist : gRomhackCameraSettings.zoomedOutDist;
     f32 desiredHeight = sRomHackZoom ? gRomhackCameraSettings.zoomedInHeight : gRomhackCameraSettings.zoomedOutHeight;
-    f32* mPos = &gMarioStates[0].pos[0];
+    f32* mPos = &sMarioCamState->pos[0];
     pos[0] = mPos[0] + coss(sRomHackYaw) * desiredDist;
     pos[1] = mPos[1] + desiredHeight;
     pos[2] = mPos[2] + sins(sRomHackYaw) * desiredDist;
@@ -12443,9 +12453,9 @@ void mode_rom_hack_camera(struct Camera *c) {
         vec3f_normalize(dir);
 
         // start at mario
-        c->pos[0] = gMarioStates[0].pos[0];
-        c->pos[1] = gMarioStates[0].pos[1] + 150;
-        c->pos[2] = gMarioStates[0].pos[2];
+        c->pos[0] = sMarioCamState->pos[0];
+        c->pos[1] = sMarioCamState->pos[1] + 150;
+        c->pos[2] = sMarioCamState->pos[2];
 
         rom_hack_cam_walk(c->pos, dir, desiredDist);
     }
@@ -12489,8 +12499,8 @@ s32 update_rom_hack_camera(struct Camera *c, Vec3f focus, Vec3f pos) {
     // if rom hack camera was just set, figure out the yaw to use
     if (!sRomHackIsUpdate) {
         sRomHackYaw = DEGREES(90) - atan2s(
-            c->pos[2] - gMarioStates[0].pos[2],
-            c->pos[0] - gMarioStates[0].pos[0]);
+            c->pos[2] - sMarioCamState->pos[2],
+            c->pos[0] - sMarioCamState->pos[0]);
         sRomHackYaw = (sRomHackYaw / DEGREES(45)) * DEGREES(45);
     }
 

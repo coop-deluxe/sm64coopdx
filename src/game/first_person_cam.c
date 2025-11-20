@@ -63,8 +63,6 @@ static void first_person_camera_update(void) {
     struct MarioState *m = &gMarioStates[0];
     f32 sensX = 0.3f * camera_config_get_x_sensitivity();
     f32 sensY = 0.4f * camera_config_get_y_sensitivity();
-    s16 invX = camera_config_is_x_inverted() ? 1 : -1;
-    s16 invY = camera_config_is_y_inverted() ? 1 : -1;
 
     if (mouse_relative_enabled) {
         // hack: make c buttons work for moving the camera
@@ -79,7 +77,7 @@ static void first_person_camera_update(void) {
 
         // update pitch
         if (!gFirstPersonCamera.forcePitch) {
-            gFirstPersonCamera.pitch -= sensY * (invY * extStickY - 1.5f * mouse_y);
+            gFirstPersonCamera.pitch -= sensY * (extStickY - 1.5f * mouse_y);
             gFirstPersonCamera.pitch = clamp(gFirstPersonCamera.pitch, -0x3F00, 0x3F00);
         }
 
@@ -88,7 +86,7 @@ static void first_person_camera_update(void) {
             if (m->controller->buttonDown & L_TRIG && gFirstPersonCamera.centerL) {
                 gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             } else {
-                gFirstPersonCamera.yaw += sensX * (invX * extStickX - 1.5f * mouse_x);
+                gFirstPersonCamera.yaw += sensX * (extStickX - 1.5f * mouse_x);
             }
         }
     }

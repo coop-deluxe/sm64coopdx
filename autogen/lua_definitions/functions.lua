@@ -3615,12 +3615,6 @@ function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
 end
 
---- @param pg PlayerGeometry
---- Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
-function find_mario_floor_and_ceil(pg)
-    -- ...
-end
-
 --- @param cutscene integer
 --- @return integer
 --- Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
@@ -3914,8 +3908,14 @@ function djui_hud_get_raw_mouse_y()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the cursor is locked to the window
+function djui_hud_is_mouse_locked()
+    -- ...
+end
+
 --- @param locked boolean
---- Sets if the cursor is hidden and constrainted to the window
+--- Locks (or unlocks) the cursor to the window
 function djui_hud_set_mouse_locked(locked)
     -- ...
 end
@@ -3954,12 +3954,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- Sets the viewport to the specified position and size, this will resize
+--- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
 function djui_hud_set_viewport(x, y, width, height)
     -- ...
 end
 
---- put the description here
+--- Resets the viewport to a fullscreen state
 function djui_hud_reset_viewport()
     -- ...
 end
@@ -3968,12 +3968,12 @@ end
 --- @param y number
 --- @param width number
 --- @param height number
---- put the description here
+--- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
 function djui_hud_set_scissor(x, y, width, height)
     -- ...
 end
 
---- put the description here
+--- Resets the scissor rectangle to a fullscreen state
 function djui_hud_reset_scissor()
     -- ...
 end
@@ -4441,6 +4441,12 @@ end
 --- @param mode integer
 --- Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
 function set_menu_mode(mode)
+    -- ...
+end
+
+--- @param dialogID integer
+--- The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.
+function handle_special_dialog_text(dialogID)
     -- ...
 end
 
@@ -4984,6 +4990,12 @@ end
 --- @return integer
 --- Returns if the level timer is running
 function level_control_timer_running()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
+function pressed_pause()
     -- ...
 end
 
@@ -6393,17 +6405,6 @@ function mario_bonk_reflection(m, negateSpeed)
     -- ...
 end
 
---- @param data BullyCollisionData
---- @param posX number
---- @param posZ number
---- @param forwardVel number
---- @param yaw integer
---- @param conversionRatio number
---- @param radius number
-function init_bully_collision_data(data, posX, posZ, forwardVel, yaw, conversionRatio, radius)
-    -- ...
-end
-
 --- @param m MarioState
 --- @param sinkingSpeed number
 --- @return integer
@@ -6443,14 +6444,14 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result
+--- Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
 function stationary_ground_step(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result
+--- Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
 function perform_ground_step(m)
     -- ...
 end
@@ -7435,25 +7436,6 @@ function mod_fs_create()
     -- ...
 end
 
---- @return boolean
---- Deletes the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_delete()
-    -- ...
-end
-
---- @return boolean
---- Saves the modfs object of the active mod if it exists. Returns true on success
-function mod_fs_save()
-    -- ...
-end
-
---- @param pub boolean
---- @return boolean
---- Marks the modfs object of the active mod as public (i.e. readable by other mods) if it exists. Returns true on success
-function mod_fs_set_public(pub)
-    -- ...
-end
-
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
@@ -7511,6 +7493,28 @@ end
 --- @return boolean
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Saves the provided `modFs` to persistent storage. Returns true on success
+function mod_fs_save(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @return boolean
+--- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
+function mod_fs_delete(modFs)
+    -- ...
+end
+
+--- @param modFs ModFs
+--- @param pub boolean
+--- @return boolean
+--- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
+function mod_fs_set_public(modFs, pub)
     -- ...
 end
 
@@ -7620,6 +7624,13 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- Sets the current position of a modfs `file` to its beginning. Returns true on success
+function mod_fs_file_rewind(file)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @return boolean
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -7639,6 +7650,14 @@ end
 --- @return boolean
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
+    -- ...
+end
+
+--- @param file ModFsFile
+--- @param text boolean
+--- @return boolean
+--- Marks the provided modfs `file` as text. Returns true on success
+function mod_fs_file_set_text_mode(file, text)
     -- ...
 end
 
@@ -7704,6 +7723,12 @@ end
 --- @return boolean
 --- Loads a bool `value` from a `key` in mod storage
 function mod_storage_load_bool(key)
+    -- ...
+end
+
+--- @return table
+--- Loads all keys and values in mod storage as strings and returns them as a table
+function mod_storage_load_all()
     -- ...
 end
 
@@ -8799,13 +8824,6 @@ end
 --- @param animIndex integer
 --- @param accel number
 function cur_obj_init_animation_with_accel_and_sound(animIndex, accel)
-    -- ...
-end
-
---- @param obj Object
---- @param animations AnimationTable
---- @param animIndex integer
-function obj_init_animation_with_sound(obj, animations, animIndex)
     -- ...
 end
 
@@ -9990,6 +10008,11 @@ function save_file_is_cannon_unlocked(fileIndex, courseIndex)
     -- ...
 end
 
+--- Unlocks the cannon in the current course
+function save_file_set_cannon_unlocked()
+    -- ...
+end
+
 --- @param capPos Vec3s
 --- @return integer
 --- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
@@ -10005,7 +10028,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the tempo of `player`
+--- Gets the `tempo` of `player`
 function sequence_player_get_tempo(player)
     -- ...
 end
@@ -10019,7 +10042,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the tempoAcc (tempo accumulation) of `player`
+--- Gets the `tempoAcc` (tempo accumulation) of `player`
 function sequence_player_get_tempo_acc(player)
     -- ...
 end
@@ -10033,7 +10056,7 @@ end
 
 --- @param player integer
 --- @return integer
---- Gets the transposition (pitch) of `player`
+--- Gets the `transposition` (pitch) of `player`
 function sequence_player_get_transposition(player)
     -- ...
 end
@@ -11069,6 +11092,12 @@ function djui_get_playerlist_page_index()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the DJUI chatbox is open
+function djui_is_chatbox_open()
+    -- ...
+end
+
 --- @return DjuiFontType
 --- Gets the DJUI menu font
 function djui_menu_get_font()
@@ -11247,6 +11276,28 @@ end
 --- @return boolean
 --- Checks if the game is paused
 function is_game_paused()
+    -- ...
+end
+
+--- @return boolean
+--- Gets if the pause menu elements are hidden, useful for creating custom pause menus
+function is_pause_menu_hidden()
+    -- ...
+end
+
+--- @param hidden boolean
+--- Sets if the pause menu elements are hidden, useful for creating custom pause menus
+function set_pause_menu_hidden(hidden)
+    -- ...
+end
+
+--- Pauses the game
+function game_pause()
+    -- ...
+end
+
+--- Unpauses the game
+function game_unpause()
     -- ...
 end
 
@@ -11529,7 +11580,8 @@ function geo_get_current_held_object()
 end
 
 --- @param tex Pointer_Texture
---- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
+--- @return table
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
 function texture_to_lua_table(tex)
     -- ...
 end
@@ -11808,6 +11860,14 @@ end
 --- @return SpawnParticlesInfo
 --- Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 function obj_get_temp_spawn_particles_info(modelId)
+    -- ...
+end
+
+--- @param modelId ModelExtendedId
+--- @param behaviorId BehaviorId
+--- @return WaterDropletParams
+--- Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`
+function obj_get_temp_water_droplet_params(modelId, behaviorId)
     -- ...
 end
 
@@ -12292,6 +12352,27 @@ end
 
 --- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
+    -- ...
+end
+
+--- @return StaticObjectCollision
+--- Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+function load_static_object_collision()
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param tangible boolean
+--- Toggles a collection of static object surfaces
+function toggle_static_object_collision(col, tangible)
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- @param index integer
+--- @return Surface
+--- Gets a surface corresponding to `index` from the static object collision
+function get_static_object_surface(col, index)
     -- ...
 end
 

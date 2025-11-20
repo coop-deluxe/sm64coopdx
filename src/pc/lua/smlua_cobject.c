@@ -98,7 +98,9 @@ static const char *sLuaLvtNames[] = {
     [LVT_TRAJECTORY_P] = "Trajectory Pointer",
     [LVT_TEXTURE_P] = "Texture Pointer",
     [LVT_LUAFUNCTION] = "LuaFunction",
+    [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "Pointer",
+    [LVT_FUNCTION] = "Function",
     [LVT_MAX] = "Max",
 };
 
@@ -549,6 +551,14 @@ static int smlua__get_field(lua_State* L) {
         return 0;
     }
 
+    // CObject function members
+    if (data->valueType == LVT_FUNCTION) {
+        const char *function = (const char *) data->valueOffset;
+        lua_getglobal(L, function);
+        LUA_STACK_CHECK_END(L);
+        return 1;
+    }
+
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     if (data->count == 1) {
         if (smlua_push_field(L, p, data)) {
@@ -650,6 +660,12 @@ int smlua__eq(lua_State *L) {
     return 1;
 }
 
+int smlua__bnot(lua_State *L) {
+    const CObject *a = lua_touserdata(L, 1);
+    lua_pushboolean(L, !a || a->freed);
+    return 1;
+}
+
 static int smlua_cpointer_get(lua_State* L) {
     const CPointer *cptr = lua_touserdata(L, 1);
     const char *key = lua_tostring(L, 2);
@@ -690,6 +706,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };
@@ -700,6 +717,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua_cpointer_get },
         { "__newindex", smlua_cpointer_set },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };
