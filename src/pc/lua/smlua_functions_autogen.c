@@ -34626,7 +34626,7 @@ int smlua_func_texture_to_lua_table(lua_State* L) {
     Texture * tex = (Texture *)smlua_to_cpointer(L, 1, LVT_TEXTURE_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "texture_to_lua_table"); return 0; }
 
-    texture_to_lua_table(tex);
+    smlua_push_lua_table(L, texture_to_lua_table(tex));
 
     return 1;
 }

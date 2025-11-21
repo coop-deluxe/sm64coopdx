@@ -3027,7 +3027,8 @@
 | name | `string` | read-only |
 | width | `integer` | read-only |
 | height | `integer` | read-only |
-| bitSize | `integer` | read-only |
+| format | `integer` | read-only |
+| size | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

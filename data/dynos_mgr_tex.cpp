@@ -451,15 +451,10 @@ bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
 }
 
 #define CONVERT_TEXINFO(texName) { \
-    /* translate bit size */ \
-    switch (_Data->mRawSize) { \
-        case G_IM_SIZ_8b:  aOutTexInfo->bitSize = 8; break; \
-        case G_IM_SIZ_16b: aOutTexInfo->bitSize = 16; break; \
-        case G_IM_SIZ_32b: aOutTexInfo->bitSize = 32; break; \
-        default: return false; \
-    } \
     aOutTexInfo->width   = _Data->mRawWidth; \
     aOutTexInfo->height  = _Data->mRawHeight; \
+    aOutTexInfo->format  = _Data->mRawFormat; \
+    aOutTexInfo->size    = _Data->mRawSize; \
     aOutTexInfo->texture = _Data->mRawData.begin(); \
     aOutTexInfo->name    = texName; \
 }
@@ -499,7 +494,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
     }
 
     // check builtin textures
-    const struct BuiltinTexInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
+    const struct TextureInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
     if (!info) {
         for (DataNode<TexData>* _Node : DynosValidTextures()) { // check valid textures
             if (_Node->mName == aTexName) {
@@ -510,11 +505,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
         }
         return false;
     }
-    aOutTexInfo->bitSize = info->bitSize;
-    aOutTexInfo->width   = info->width;
-    aOutTexInfo->height  = info->height;
-    aOutTexInfo->texture = (Texture*)info->pointer;
-    aOutTexInfo->name    = aTexName;
+    *aOutTexInfo = *info;
     return true;
 }
 
@@ -527,13 +518,9 @@ bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo)
     }
 
     // check builtin textures
-    const struct BuiltinTexInfo* info = DynOS_Builtin_Tex_GetInfoFromData(aTex);
+    const struct TextureInfo* info = DynOS_Builtin_Tex_GetInfoFromData(aTex);
     if (info) {
-        aOutTexInfo->bitSize = info->bitSize;
-        aOutTexInfo->width   = info->width;
-        aOutTexInfo->height  = info->height;
-        aOutTexInfo->texture = (Texture*)info->pointer;
-        aOutTexInfo->name    = info->identifier;
+        *aOutTexInfo = *info;
         return true;
     }
 

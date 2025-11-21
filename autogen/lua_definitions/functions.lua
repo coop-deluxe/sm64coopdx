@@ -11586,7 +11586,8 @@ function geo_get_current_held_object()
 end
 
 --- @param tex Pointer_Texture
---- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a table as a pure memory buffer. Supports rgba16 and rgba32 textures
+--- @return table
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
 function texture_to_lua_table(tex)
     -- ...
 end

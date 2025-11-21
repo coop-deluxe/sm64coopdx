@@ -241,19 +241,14 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     int valueType = lua_type(L, index);
 
     if (valueType == LUA_TNUMBER) {
-        lnt.type = LST_NETWORK_TYPE_INTEGER;
-        lnt.value.integer = lua_tointeger(L, index);
-        lnt.size = sizeof(u8) + sizeof(long long);
-
-        if (lnt.value.integer == 0) {
+        if (lua_isinteger(L, index)) {
+            lnt.type = LST_NETWORK_TYPE_INTEGER;
+            lnt.value.integer = lua_tointeger(L, index);
+            lnt.size = sizeof(u8) + sizeof(long long);
+        } else {
             lnt.type = LST_NETWORK_TYPE_NUMBER;
             lnt.value.number = lua_tonumber(L, index);
             lnt.size = sizeof(u8) + sizeof(double);
-
-            if (lnt.value.number == 0) {
-                lnt.type = LST_NETWORK_TYPE_INTEGER;
-                lnt.size = sizeof(u8) + sizeof(long long);
-            }
         }
         gSmLuaConvertSuccess = true;
         return lnt;
