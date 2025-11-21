@@ -356,7 +356,7 @@ static void import_texture_rgba32(int tile) {
 static void import_texture_rgba16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 0x2000) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -380,7 +380,7 @@ static void import_texture_rgba16(int tile) {
 static void import_texture_ia4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -406,7 +406,7 @@ static void import_texture_ia4(int tile) {
 static void import_texture_ia8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -430,7 +430,7 @@ static void import_texture_ia8(int tile) {
 static void import_texture_ia16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 0x2000) { return; }
     uint8_t rgba32_buf[8192];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
@@ -454,7 +454,7 @@ static void import_texture_ia16(int tile) {
 static void import_texture_i4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -475,7 +475,7 @@ static void import_texture_i4(int tile) {
 static void import_texture_i8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -495,7 +495,7 @@ static void import_texture_i8(int tile) {
 static void import_texture_ci4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
     uint8_t rgba32_buf[32768];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
@@ -521,7 +521,7 @@ static void import_texture_ci4(int tile) {
 static void import_texture_ci8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
     uint8_t rgba32_buf[16384];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
@@ -858,8 +858,8 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 gfx_local_to_world_space(vpos, vnormal);
 
                 Vec3f viewDir = {
-                    sInverseCameraMatrix[3][0] - vpos[0], 
-                    sInverseCameraMatrix[3][1] - vpos[1], 
+                    sInverseCameraMatrix[3][0] - vpos[0],
+                    sInverseCameraMatrix[3][1] - vpos[1],
                     sInverseCameraMatrix[3][2] - vpos[2]
                 };
                 vec3f_normalize(viewDir);
