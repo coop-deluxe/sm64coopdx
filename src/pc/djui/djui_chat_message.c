@@ -38,17 +38,12 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     } else if (f <= 0.1f) {
         return false;
     } else {
-        int bgAlphaI = (int)(configChatOpacity * f * 2.55f);
+        int bgAlphaI = (int)(configChatBackgroundOpacity * f * 2.55f);
         if (bgAlphaI > 255) { bgAlphaI = 255; }
         if (bgAlphaI < 0)   { bgAlphaI = 0; }
         u8 bgAlpha = (u8)bgAlphaI;
 
-        const f32 defaultOpacity = 70.0f;
-        f32 textScale = 1.0f;
-        if ((f32)configChatOpacity < defaultOpacity) {
-            textScale = (f32)configChatOpacity / defaultOpacity;
-        }
-        u8 textAlpha = (u8)(255.0f * f * textScale);
+        u8 textAlpha = (u8)(255.0f * f * ((f32)configChatTextOpacity / 100.0f));
 
         djui_base_set_color(base, 0, 0, 0, bgAlpha);
         djui_base_set_color(ctBase, 255, 255, 255, textAlpha);
@@ -106,7 +101,7 @@ static void djui_chat_message_apply_style_one(struct DjuiChatMessage* chatMessag
     // apply text scale based on config
     f32 scale = ((f32)configChatTextScale) / 100.0f;
     if (scale < 0.5f) { scale = 0.5f; }
-    if (scale > 1.5f) { scale = 1.5f; }
+    if (scale > 2.0f) { scale = 2.0f; }
     djui_text_set_font_scale(chatText, chatText->font->defaultFontScale * scale);
 
     // figure out chat message height

@@ -138,7 +138,8 @@ bool         configDisableChatWhenClosed          = false;
 unsigned int configChatWidth                      = 800;
 unsigned int configChatHeight                     = 400;
 unsigned int configChatTextScale                  = 100;
-unsigned int configChatOpacity                    = 70;
+unsigned int configChatBackgroundOpacity          = 70;
+unsigned int configChatTextOpacity                = 100;
 unsigned int configChatMessageLifetime            = 10;
 bool         configSmoothScrolling                = false;
 // free camera settings
@@ -289,7 +290,8 @@ static const struct ConfigOption options[] = {
     {.name = "chat_width",                     .type = CONFIG_TYPE_UINT, .uintValue = &configChatWidth},
     {.name = "chat_height",                    .type = CONFIG_TYPE_UINT, .uintValue = &configChatHeight},
     {.name = "chat_text_scale",                .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextScale},
-    {.name = "chat_opacity",                   .type = CONFIG_TYPE_UINT, .uintValue = &configChatOpacity},
+    {.name = "chat_background_opacity",        .type = CONFIG_TYPE_UINT, .uintValue = &configChatBackgroundOpacity},
+    {.name = "chat_text_opacity",              .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextOpacity},
     {.name = "chat_message_lifetime",          .type = CONFIG_TYPE_UINT, .uintValue = &configChatMessageLifetime},
     {.name = "chat_char_counter",              .type = CONFIG_TYPE_BOOL, .boolValue = &configChatCharCounter},
     {.name = "disable_chat_when_closed",       .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableChatWhenClosed},

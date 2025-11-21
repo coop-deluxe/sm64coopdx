@@ -138,7 +138,7 @@ static void djui_chat_box_set_focus_style(void) {
     bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
     u8 alpha = 0;
     if (hasMessages) {
-        int baseAlpha = (int)(configChatOpacity * 2.55f);
+        int baseAlpha = (int)(configChatBackgroundOpacity * 2.55f);
         if (baseAlpha > 255) { baseAlpha = 255; }
         if (baseAlpha < 0)   { baseAlpha = 0; }
         alpha = gDjuiChatBoxFocus ? (u8)baseAlpha : 0;
