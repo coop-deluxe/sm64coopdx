@@ -167,3 +167,20 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
 
     return selectionbox;
 }
+
+void djui_selectionbox_set_choice_text(struct DjuiSelectionbox* selectionbox, u8 index, const char* text) {
+    if (selectionbox == NULL) { return; }
+    if (index >= selectionbox->choiceCount) { return; }
+
+    if (selectionbox->choices[index] != NULL) {
+        free(selectionbox->choices[index]);
+    }
+
+    u32 length = strlen(text);
+    selectionbox->choices[index] = calloc(length + 1, sizeof(char));
+    sprintf(selectionbox->choices[index], "%s", text);
+
+    if (*selectionbox->value == index && selectionbox->rectText != NULL) {
+        djui_text_set_text(selectionbox->rectText, selectionbox->choices[index]);
+    }
+}

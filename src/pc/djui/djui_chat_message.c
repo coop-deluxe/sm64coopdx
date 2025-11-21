@@ -16,28 +16,39 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
     struct DjuiBase* ctBase = &chatMessage->message->base;
 
-    f32 lifeTime = (f32)configChatMessageLifetime;
-    if (lifeTime < 1.0f)  lifeTime = 1.0f;
-    if (lifeTime > 120.0f) lifeTime = 120.0f;
-
-    f32 seconds = clock_elapsed() - chatMessage->createTime;
     f32 f = 1.0f;
-    if (seconds >= (lifeTime - 1.0f)) {
-        f = fmax(1.0f - (seconds - (lifeTime - 1.0f)), 0.0f);
-        f *= f;
-        f *= f;
-    }
 
     if (gDjuiChatBoxFocus) {
         djui_base_set_color(base, 0, 0, 0, 0);
         djui_base_set_color(ctBase, 255, 255, 255, 255);
         djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
-    } else if (configDisableChatWhenClosed) {
-        return false;
-    } else if (f <= 0.1f) {
-        return false;
     } else {
+        u32 mode = configChatClosedMode;
+        if (mode > 2) { mode = 1; }
+
+        if (mode == 0) {
+            return false;
+        }
+
+        if (mode == 1) {
+            f32 lifeTime = (f32)configChatMessageLifetime;
+            if (lifeTime < 1.0f)  lifeTime = 1.0f;
+            if (lifeTime > 120.0f) lifeTime = 120.0f;
+
+            f32 seconds = clock_elapsed() - chatMessage->createTime;
+            if (seconds >= (lifeTime - 1.0f)) {
+                f = fmax(1.0f - (seconds - (lifeTime - 1.0f)), 0.0f);
+                f *= f;
+                f *= f;
+            }
+            if (f <= 0.1f) {
+                return false;
+            }
+        } else {
+            f = 1.0f;
+        }
+
         int bgAlphaI = (int)(configChatBackgroundOpacity * f * 2.55f);
         if (bgAlphaI > 255) { bgAlphaI = 255; }
         if (bgAlphaI < 0)   { bgAlphaI = 0; }

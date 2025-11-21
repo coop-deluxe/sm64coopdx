@@ -97,7 +97,7 @@ extern bool         configBackgroundGamepad;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 extern bool         configChatCharCounter;
-extern bool         configDisableChatWhenClosed;
+extern unsigned int configChatClosedMode;
 extern unsigned int configChatWidth;
 extern unsigned int configChatHeight;
 extern unsigned int configChatTextScale;

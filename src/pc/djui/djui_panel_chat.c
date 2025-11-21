@@ -1,15 +1,19 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
+#include "djui_selectionbox.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
-#define CHAT_WIDTH_DEFAULT           800
-#define CHAT_HEIGHT_DEFAULT          400
-#define CHAT_TEXT_SCALE_DEFAULT      100
-#define CHAT_BG_OPACITY_DEFAULT      70
-#define CHAT_TEXT_OPACITY_DEFAULT    100
-#define CHAT_LIFETIME_DEFAULT        10
+#define CHAT_WIDTH_DEFAULT                800
+#define CHAT_HEIGHT_DEFAULT               400
+#define CHAT_TEXT_SCALE_DEFAULT           100
+#define CHAT_BG_OPACITY_DEFAULT           70
+#define CHAT_TEXT_OPACITY_DEFAULT         100
+#define CHAT_LIFETIME_DEFAULT             10
+#define CHAT_USE_STD_KEY_BINDINGS_DEFAULT true
+#define CHAT_CHAR_COUNTER_DEFAULT         true
+#define CHAT_CLOSED_MODE_DEFAULT          1
 
 static const u8 CHAT_LABEL_LOW_RGB[3]     = {  32,  64, 255 };
 static const u8 CHAT_LABEL_DEFAULT_RGB[3] = {  32, 224,  32 }; 
@@ -29,12 +33,23 @@ static struct DjuiSlider* sSliderBgOpacity         = NULL;
 static struct DjuiSlider* sSliderTextOpacity       = NULL;
 static struct DjuiSlider* sSliderLifetime          = NULL;
 
+static struct DjuiCheckbox* sCheckboxUseStdChat    = NULL;
+static struct DjuiCheckbox* sCheckboxCharCounter   = NULL;
+
 static struct DjuiButton* sResetWidthButton        = NULL;
 static struct DjuiButton* sResetHeightButton       = NULL;
 static struct DjuiButton* sResetTextScaleButton    = NULL;
 static struct DjuiButton* sResetBgOpacityButton    = NULL;
 static struct DjuiButton* sResetTextOpacityButton  = NULL;
 static struct DjuiButton* sResetLifetimeButton     = NULL;
+static struct DjuiButton* sResetUseStdChatButton   = NULL;
+static struct DjuiButton* sResetCharCounterButton  = NULL;
+static struct DjuiButton* sResetClosedModeButton   = NULL;
+
+static void djui_panel_chat_update_lifetime_slider_enabled(void);
+static void djui_panel_chat_update_closed_mode_lifetime_label(void);
+
+static struct DjuiSelectionbox* sChatClosedModeSelection = NULL;
 
 static void djui_panel_chat_apply_chatbox_style(void) {
     djui_chat_messages_apply_style();
@@ -127,27 +142,36 @@ static void djui_panel_chat_update_value_labels(void) {
         snprintf(buf, sizeof(buf), "%us", configChatMessageLifetime);
         djui_text_set_text(sChatLifetimeLabel, buf);
         struct DjuiBase* base = &sChatLifetimeLabel->base;
-        if (configChatMessageLifetime < 10) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatMessageLifetime == 10) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+
+        if (configChatClosedMode != 1) {
+            // Deaktivierter Modus: Wert grau darstellen
+            djui_base_set_color(base, 160, 160, 160, 255);
         } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            if (configChatMessageLifetime < CHAT_LIFETIME_DEFAULT) {
+                djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+            } else if (configChatMessageLifetime == CHAT_LIFETIME_DEFAULT) {
+                djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+            } else {
+                djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
         }
     }
 }
 
 static void djui_panel_chat_update_reset_buttons(void) {
     const struct { struct DjuiButton** btn; bool active; } entries[] = {
+        { &sResetUseStdChatButton,   configUseStandardKeyBindingsChat != CHAT_USE_STD_KEY_BINDINGS_DEFAULT },
+        { &sResetCharCounterButton,  configChatCharCounter            != CHAT_CHAR_COUNTER_DEFAULT          },
+        { &sResetClosedModeButton,   configChatClosedMode             != CHAT_CLOSED_MODE_DEFAULT           },
         { &sResetWidthButton,        configChatWidth           != CHAT_WIDTH_DEFAULT        },
         { &sResetHeightButton,       configChatHeight          != CHAT_HEIGHT_DEFAULT       },
         { &sResetTextScaleButton,    configChatTextScale       != CHAT_TEXT_SCALE_DEFAULT   },
         { &sResetBgOpacityButton,    configChatBackgroundOpacity != CHAT_BG_OPACITY_DEFAULT },
         { &sResetTextOpacityButton,  configChatTextOpacity     != CHAT_TEXT_OPACITY_DEFAULT },
-        { &sResetLifetimeButton,     configChatMessageLifetime != CHAT_LIFETIME_DEFAULT     },
+        { &sResetLifetimeButton,     (configChatClosedMode == 1) && (configChatMessageLifetime != CHAT_LIFETIME_DEFAULT) },
     };
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 9; i++) {
         struct DjuiButton* btn = *entries[i].btn;
         if (btn == NULL) { continue; }
 
@@ -162,6 +186,12 @@ static void djui_panel_chat_update_reset_buttons(void) {
             }
         }
     }
+}
+
+static void djui_panel_chat_update_lifetime_slider_enabled(void) {
+    if (sSliderLifetime == NULL) { return; }
+    bool lifetimeActive = (configChatClosedMode == 1);
+    djui_base_set_enabled(&sSliderLifetime->base, lifetimeActive);
 }
 
 static void djui_panel_chat_slider_on_cursor_down(struct DjuiBase* base) {
@@ -243,6 +273,24 @@ static void djui_panel_chat_on_style_change(UNUSED struct DjuiBase* b) {
 static void djui_panel_chat_on_lifetime_change(UNUSED struct DjuiBase* b) {
     djui_panel_chat_update_value_labels();
     djui_panel_chat_update_reset_buttons();
+    djui_panel_chat_update_closed_mode_lifetime_label();
+}
+
+static void djui_panel_chat_on_closed_mode_change(UNUSED struct DjuiBase* b) {
+    if (configChatClosedMode > 2) {
+        configChatClosedMode = 1;
+    }
+    djui_panel_chat_update_lifetime_slider_enabled();
+    djui_panel_chat_update_reset_buttons();
+    djui_panel_chat_update_value_labels();
+    djui_panel_chat_update_closed_mode_lifetime_label();
+}
+
+static void djui_panel_chat_update_closed_mode_lifetime_label(void) {
+    if (sChatClosedModeSelection == NULL) { return; }
+    char buf[64];
+    snprintf(buf, sizeof(buf), DLANG(CHAT_OPTIONS, CHAT_CLOSED_LIFETIME), configChatMessageLifetime);
+    djui_selectionbox_set_choice_text(sChatClosedModeSelection, 1, buf);
 }
 
 static void djui_panel_chat_on_reset_width(UNUSED struct DjuiBase* b) {
@@ -308,16 +356,58 @@ static void djui_panel_chat_on_reset_lifetime(UNUSED struct DjuiBase* b) {
     }
     djui_panel_chat_update_value_labels();
     djui_panel_chat_update_reset_buttons();
+    djui_panel_chat_update_closed_mode_lifetime_label();
+}
+
+static void djui_panel_chat_on_reset_use_std_chat(UNUSED struct DjuiBase* b) {
+    configUseStandardKeyBindingsChat = CHAT_USE_STD_KEY_BINDINGS_DEFAULT;
+    if (sCheckboxUseStdChat != NULL && sCheckboxUseStdChat->rectValue != NULL) {
+        djui_base_set_visible(&sCheckboxUseStdChat->rectValue->base, configUseStandardKeyBindingsChat);
+    }
+    djui_panel_chat_update_reset_buttons();
+}
+
+static void djui_panel_chat_on_reset_char_counter(UNUSED struct DjuiBase* b) {
+    configChatCharCounter = CHAT_CHAR_COUNTER_DEFAULT;
+    if (sCheckboxCharCounter != NULL && sCheckboxCharCounter->rectValue != NULL) {
+        djui_base_set_visible(&sCheckboxCharCounter->rectValue->base, configChatCharCounter);
+    }
+    djui_panel_chat_update_reset_buttons();
+}
+
+static void djui_panel_chat_on_reset_closed_mode(UNUSED struct DjuiBase* b) {
+    configChatClosedMode = CHAT_CLOSED_MODE_DEFAULT;
+    if (sChatClosedModeSelection != NULL) {
+        djui_selectionbox_update_value(&sChatClosedModeSelection->base);
+        djui_panel_chat_on_closed_mode_change(&sChatClosedModeSelection->base);
+    } else {
+        djui_panel_chat_on_closed_mode_change(NULL);
+    }
+}
+
+static void djui_panel_chat_on_checkbox_change(UNUSED struct DjuiBase* b) {
+    djui_panel_chat_update_reset_buttons();
 }
 
 void djui_panel_chat_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CHAT_OPTIONS, CHAT), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_checkbox_create(body, DLANG(CHAT_OPTIONS, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
+        struct DjuiRect* rowUseStdChat  = djui_rect_container_create(body, 32);
+        struct DjuiRect* rowCharCounter = djui_rect_container_create(body, 32);
+        struct DjuiRect* rowClosedMode  = djui_rect_container_create(body, 32);
 
-        djui_checkbox_create(body, DLANG(CHAT_OPTIONS, CHAT_CHAR_COUNTER), &configChatCharCounter, NULL);
-        djui_checkbox_create(body, DLANG(CHAT_OPTIONS, DISABLE_CHAT_WHEN_CLOSED), &configDisableChatWhenClosed, NULL);
+        sCheckboxUseStdChat  = djui_checkbox_create(&rowUseStdChat->base,  DLANG(CHAT_OPTIONS, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, djui_panel_chat_on_checkbox_change);
+        sCheckboxCharCounter = djui_checkbox_create(&rowCharCounter->base, DLANG(CHAT_OPTIONS, CHAT_CHAR_COUNTER),             &configChatCharCounter,           djui_panel_chat_on_checkbox_change);
+
+        char lifetimeChoice[64];
+        snprintf(lifetimeChoice, sizeof(lifetimeChoice), DLANG(CHAT_OPTIONS, CHAT_CLOSED_LIFETIME), configChatMessageLifetime);
+        char* chatClosedModeChoices[] = {
+            DLANG(CHAT_OPTIONS, CHAT_CLOSED_DISABLED),
+            lifetimeChoice,
+            DLANG(CHAT_OPTIONS, CHAT_CLOSED_ALWAYS),
+        };
+        sChatClosedModeSelection = djui_selectionbox_create(&rowClosedMode->base, DLANG(CHAT_OPTIONS, CHAT_CLOSED_MODE), chatClosedModeChoices, 3, &configChatClosedMode, djui_panel_chat_on_closed_mode_change);
 
         char* chatSizeChoices[] = {
             DLANG(CHAT_OPTIONS, CHAT_SIZE_MINIMUM),
@@ -334,19 +424,33 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         };
         (void)chatSizeChoices;
 
+        // Checkbox- / Selection-Basis und -Track an Sliderbreite anpassen
+        if (sCheckboxUseStdChat != NULL) {
+            djui_base_set_size(&sCheckboxUseStdChat->base, 0.94f, 32.0f);
+        }
+        if (sCheckboxCharCounter != NULL) {
+            djui_base_set_size(&sCheckboxCharCounter->base, 0.94f, 32.0f);
+        }
+        if (sChatClosedModeSelection != NULL) {
+            djui_base_set_size(&sChatClosedModeSelection->base, 0.94f, 32.0f);
+            if (sChatClosedModeSelection->rect != NULL) {
+                djui_base_set_size(&sChatClosedModeSelection->rect->base, 0.46f, 1.0f);
+            }
+        }
+
+        struct DjuiRect* rowLifetime   = djui_rect_container_create(body, 32);
         struct DjuiRect* rowWidth      = djui_rect_container_create(body, 32);
         struct DjuiRect* rowHeight     = djui_rect_container_create(body, 32);
         struct DjuiRect* rowTextScale  = djui_rect_container_create(body, 32);
         struct DjuiRect* rowBgOpacity  = djui_rect_container_create(body, 32);
         struct DjuiRect* rowTextOpacity= djui_rect_container_create(body, 32);
-        struct DjuiRect* rowLifetime   = djui_rect_container_create(body, 32);
 
+        sSliderLifetime     = djui_slider_create(&rowLifetime->base,    DLANG(CHAT_OPTIONS, CHAT_LIFETIME),           &configChatMessageLifetime,    1,  120, djui_panel_chat_on_lifetime_change);
         sSliderWidth        = djui_slider_create(&rowWidth->base,       DLANG(CHAT_OPTIONS, CHAT_WIDTH),              &configChatWidth,           200, 2000, djui_panel_chat_on_width_slider_change);
         sSliderHeight       = djui_slider_create(&rowHeight->base,      DLANG(CHAT_OPTIONS, CHAT_HEIGHT),             &configChatHeight,          100, 1000, djui_panel_chat_on_height_slider_change);
         sSliderTextScale    = djui_slider_create(&rowTextScale->base,   DLANG(CHAT_OPTIONS, CHAT_TEXT_SCALE),         &configChatTextScale,         50,  200, djui_panel_chat_on_style_change);
         sSliderBgOpacity    = djui_slider_create(&rowBgOpacity->base,   DLANG(CHAT_OPTIONS, CHAT_BACKGROUND_OPACITY), &configChatBackgroundOpacity,  0,  100, djui_panel_chat_on_style_change);
         sSliderTextOpacity  = djui_slider_create(&rowTextOpacity->base, DLANG(CHAT_OPTIONS, CHAT_TEXT_OPACITY),       &configChatTextOpacity,        0,  100, djui_panel_chat_on_style_change);
-        sSliderLifetime     = djui_slider_create(&rowLifetime->base,    DLANG(CHAT_OPTIONS, CHAT_LIFETIME),           &configChatMessageLifetime,    1,  120, djui_panel_chat_on_lifetime_change);
 
         {
             struct DjuiSlider* slidersForCursor[] = {
@@ -429,6 +533,9 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         djui_text_set_alignment(sChatLifetimeLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_text_set_drop_shadow(sChatLifetimeLabel, 64, 64, 64, 100);
 
+        sResetUseStdChatButton  = djui_button_create(&rowUseStdChat->base,   "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_use_std_chat);
+        sResetCharCounterButton = djui_button_create(&rowCharCounter->base,  "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_char_counter);
+        sResetClosedModeButton  = djui_button_create(&rowClosedMode->base,   "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_closed_mode);
         sResetWidthButton       = djui_button_create(&rowWidth->base,        "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_width);
         sResetHeightButton      = djui_button_create(&rowHeight->base,       "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_height);
         sResetTextScaleButton   = djui_button_create(&rowTextScale->base,    "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_text_scale);
@@ -437,6 +544,9 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         sResetLifetimeButton    = djui_button_create(&rowLifetime->base,     "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_lifetime);
 
         struct DjuiButton* buttons[] = {
+            sResetUseStdChatButton,
+            sResetCharCounterButton,
+            sResetClosedModeButton,
             sResetWidthButton,
             sResetHeightButton,
             sResetTextScaleButton,
@@ -444,7 +554,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             sResetTextOpacityButton,
             sResetLifetimeButton,
         };
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 9; i++) {
             struct DjuiButton* btn = buttons[i];
             if (btn == NULL) { continue; }
             djui_base_set_alignment(&btn->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
@@ -453,6 +563,7 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         }
 
         djui_panel_chat_update_value_labels();
+        djui_panel_chat_update_lifetime_slider_enabled();
         djui_panel_chat_update_reset_buttons();
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
