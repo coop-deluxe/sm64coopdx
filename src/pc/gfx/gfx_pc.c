@@ -381,7 +381,7 @@ static void import_texture_ia4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
     if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
-    uint8_t rgba32_buf[32768];
+    uint8_t rgba32_buf[0x8000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
         uint8_t byte = rdp.loaded_texture[tile].addr[i / 2];
