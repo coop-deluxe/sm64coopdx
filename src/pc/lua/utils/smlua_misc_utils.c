@@ -28,6 +28,8 @@
 #include "include/course_table.h"
 #include "game/level_geo.h"
 #include "game/first_person_cam.h"
+#include "game/rumble_init.h"
+#include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #ifdef DISCORD_SDK
@@ -108,6 +110,10 @@ bool djui_attempting_to_open_playerlist(void) {
 u8 djui_get_playerlist_page_index(void) {
     extern u8 sPageIndex;
     return sPageIndex;
+}
+
+bool djui_is_chatbox_open(void) {
+    return gDjuiChatBox->chatInput->base.visible;
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
@@ -241,16 +247,16 @@ extern const u8 texture_power_meter_two_segments[];
 extern const u8 texture_power_meter_one_segments[];
 
 static struct TextureInfo sPowerMeterTexturesInfo[] = {
-    { (Texture*)texture_power_meter_left_side,      "texture_power_meter_left_side",      32, 64, 8 },
-    { (Texture*)texture_power_meter_right_side,     "texture_power_meter_right_side",     32, 64, 8 },
-    { (Texture*)texture_power_meter_one_segments,   "texture_power_meter_one_segments",   32, 32, 8 },
-    { (Texture*)texture_power_meter_two_segments,   "texture_power_meter_two_segments",   32, 32, 8 },
-    { (Texture*)texture_power_meter_three_segments, "texture_power_meter_three_segments", 32, 32, 8 },
-    { (Texture*)texture_power_meter_four_segments,  "texture_power_meter_four_segments",  32, 32, 8 },
-    { (Texture*)texture_power_meter_five_segments,  "texture_power_meter_five_segments",  32, 32, 8 },
-    { (Texture*)texture_power_meter_six_segments,   "texture_power_meter_six_segments",   32, 32, 8 },
-    { (Texture*)texture_power_meter_seven_segments, "texture_power_meter_seven_segments", 32, 32, 8 },
-    { (Texture*)texture_power_meter_full,           "texture_power_meter_full",           32, 32, 8 },
+    { .texture = texture_power_meter_left_side,      .name = "texture_power_meter_left_side",      .width = 32, .height = 64, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_right_side,     .name = "texture_power_meter_right_side",     .width = 32, .height = 64, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_one_segments,   .name = "texture_power_meter_one_segments",   .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_two_segments,   .name = "texture_power_meter_two_segments",   .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_three_segments, .name = "texture_power_meter_three_segments", .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_four_segments,  .name = "texture_power_meter_four_segments",  .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_five_segments,  .name = "texture_power_meter_five_segments",  .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_six_segments,   .name = "texture_power_meter_six_segments",   .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_seven_segments, .name = "texture_power_meter_seven_segments", .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    { .texture = texture_power_meter_full,           .name = "texture_power_meter_full",           .width = 32, .height = 32, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
 };
 
 void hud_render_power_meter(s32 health, f32 x, f32 y, f32 width, f32 height) {
@@ -292,6 +298,36 @@ void hud_set_flash(s8 value) {
 extern s16 gMenuMode;
 bool is_game_paused(void) {
     return gMenuMode != -1;
+}
+
+extern bool gPauseMenuHidden;
+bool is_pause_menu_hidden(void) {
+    return gPauseMenuHidden;
+}
+
+void set_pause_menu_hidden(bool hidden) {
+    gPauseMenuHidden = hidden;
+}
+
+extern void set_play_mode(s16);
+void game_pause(void) {
+    if (gMenuMode != -1) { return; }
+
+    lower_background_noise(1);
+    cancel_rumble();
+    gCameraMovementFlags |= CAM_MOVE_PAUSE_SCREEN;
+    set_play_mode(PLAY_MODE_PAUSED);
+}
+
+extern s8 gDialogBoxState;
+extern s16 gPauseScreenMode;
+void game_unpause(void) {
+    if (gMenuMode == -1) { return; }
+
+    level_set_transition(0, NULL);
+    gMenuMode = -1;
+    gDialogBoxState = 0;
+    gPauseScreenMode = 1;
 }
 
 ///
@@ -539,9 +575,17 @@ void set_environment_region(u8 index, s16 value) {
 bool mod_file_exists(const char* filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
+    char normPath[SYS_MAX_PATH] = { 0 };
+
+    if (snprintf(normPath, sizeof(normPath), "%s", filename) < 0) {
+        LOG_ERROR("Failed to copy filename for normalization: %s", filename);
+    }
+
+    normalize_path(normPath);
+
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, filename)) {
+        if (!strcmp(file->relativePath, normPath)) {
             return true;
         }
     }
@@ -603,44 +647,43 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
 }
 
-void texture_to_lua_table(const Texture *tex) {
+LuaTable texture_to_lua_table(const Texture *tex) {
     lua_State *L = gLuaState;
-    if (!L || !tex) { return; }
+    if (!L) { return 0; }
+
+    if (!tex) {
+        lua_pushnil(L);
+        return 0;
+    }
 
     struct TextureInfo texInfo;
-    if (!dynos_texture_get_from_data(tex, &texInfo)) { return; }
+    if (!dynos_texture_get_from_data(tex, &texInfo)) {
+        lua_pushnil(L);
+        return 0;
+    }
 
-    u32 bpp = texInfo.bitSize;
-    if (bpp != 16 && bpp != 32) { return; }
+    u8 *rgba = dynos_texture_convert_to_rgba32(texInfo.texture, texInfo.width, texInfo.height, texInfo.format, texInfo.size);
+    if (!rgba) {
+        lua_pushnil(L);
+        return 0;
+    }
 
-    u32 bytesPerPixel = bpp / 8;
-    const Texture *data = texInfo.texture;
-    u32 texSize = texInfo.width * texInfo.height * bytesPerPixel;
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     lua_newtable(L);
-    for (u32 i = 0; i < texSize; i += bytesPerPixel) {
+    const u8 *pixel = rgba;
+    for (u32 i = 0; i < texInfo.width * texInfo.height; ++i, pixel += 4) {
         lua_newtable(L);
-
-        if (bpp == 16) {
-            u16 col = (data[i] << 8) | data[i + 1];
-            u8 r = SCALE_5_8((col >> 11) & 0x1F);
-            u8 g = SCALE_5_8((col >>  6) & 0x1F);
-            u8 b = SCALE_5_8((col >>  1) & 0x1F);
-            u8 a = 0xFF * (col & 0x1);
-
-            smlua_push_integer_field(-2, "r", r);
-            smlua_push_integer_field(-2, "g", g);
-            smlua_push_integer_field(-2, "b", b);
-            smlua_push_integer_field(-2, "a", a);
-        } else if (bpp == 32) {
-            smlua_push_integer_field(-2, "r", data[i]);
-            smlua_push_integer_field(-2, "g", data[i + 1]);
-            smlua_push_integer_field(-2, "b", data[i + 2]);
-            smlua_push_integer_field(-2, "a", data[i + 3]);
-        }
-
-        lua_rawseti(L, -2, i / bytesPerPixel + 1);
+        smlua_push_integer_field(-2, "r", pixel[0]);
+        smlua_push_integer_field(-2, "g", pixel[1]);
+        smlua_push_integer_field(-2, "b", pixel[2]);
+        smlua_push_integer_field(-2, "a", pixel[3]);
+        lua_rawseti(L, -2, i + 1);
     }
+    free(rgba);
+
+    LUA_STACK_CHECK_END(L);
+    return smlua_to_lua_table(L, -1);
 }
 
 const char *get_texture_name(const Texture *tex) {

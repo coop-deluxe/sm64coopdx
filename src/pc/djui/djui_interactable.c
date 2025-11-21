@@ -296,12 +296,6 @@ void djui_interactable_on_key_up(int scancode) {
         }
     }
 
-    if (scancode == SCANCODE_ESCAPE && djui_panel_is_active()) {
-        // pressed escape button on keyboard
-        djui_panel_back();
-        return;
-    }
-
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i]) {

@@ -38,6 +38,12 @@ struct FloorGeometry
     f32 originOffset;
 };
 
+struct StaticObjectCollision
+{
+    u32 index;
+    u16 length;
+};
+
 extern Vec3f gFindWallDirection;
 extern u8 gFindWallDirectionActive;
 extern u8 gFindWallDirectionAirborne;

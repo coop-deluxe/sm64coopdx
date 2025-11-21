@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+from common import cobject_function_identifier
 
 def extract_structs(filename):
     with open(filename) as file:
@@ -35,6 +36,9 @@ def extract_structs(filename):
     txt = txt.replace('{', '{\n')
     while ('  ' in txt):
         txt = txt.replace('  ', ' ')
+
+    # handle function members (NOT function pointers)
+    txt = re.sub(f'{cobject_function_identifier}\\((.*),(.*)\\)', f'{cobject_function_identifier} \\1 \\2', txt)
 
     # strip macros
     txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)

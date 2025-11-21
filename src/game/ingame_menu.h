@@ -111,6 +111,7 @@ enum DialogSpecialChars {
     DIALOG_CHAR_TERMINATOR = 0xFF
 };
 
+extern s8 gDialogBoxState;
 extern s32 gDialogResponse;
 extern u16 gDialogColorFadeTimer;
 extern s8 gLastDialogLineNum;
@@ -133,13 +134,13 @@ extern u8 gDialogTextColorG;
 extern u8 gDialogTextColorB;
 extern u8 gDialogTextColorA;
 
+extern s16 gMenuMode;
+
 void create_dl_identity_matrix(void);
 void create_dl_translation_matrix(s8 pushOp, f32 x, f32 y, f32 z);
 void create_dl_rotation_matrix(s8 pushOp, f32 a, f32 x, f32 y, f32 z);
 void create_dl_ortho_matrix(void);
 void render_generic_char(u8 c);
-u8 str_ascii_char_to_dialog(char c);
-void str_ascii_to_dialog(const char* string, u8* dialog, u16 length);
 f32 get_generic_dialog_width(u8* dialog);
 f32 get_generic_ascii_string_width(const char* ascii);
 f32 get_generic_dialog_height(u8* dialog);
@@ -184,6 +185,8 @@ void do_cutscene_handler(void);
 void render_hud_cannon_reticle(void);
 void reset_red_coins_collected(void);
 s16 render_menus_and_dialogs(void);
+/* |description|The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.|descriptionEnd| */
+void handle_special_dialog_text(s32 dialogID);
 void create_dl_scale_matrix(s8 pushOp, f32 x, f32 y, f32 z);
 /* |description|Dialog box customization: Sets the minimum width for a dialog box|descriptionEnd| */
 void set_min_dialog_width(s16 width);

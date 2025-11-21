@@ -101,7 +101,7 @@ inline static s16 newcam_adjust_value(f32 var, f32 val, f32 limit) {
 inline static s32 newcam_ivrt(u8 axis) {
     return (
         axis == 0 ?
-        (gNewCamera.invertX ? 1 : -1) :
+        (gNewCamera.invertX ? -1 : 1) :
         (gNewCamera.invertY ? -1 : 1)
     );
 }
@@ -313,7 +313,7 @@ static void newcam_zoom_button(void) {
 
     // When you press L, set the flag for centering the camera. Afterwards, start setting the yaw to the Player's yaw at the time.
     if (gNewCamera.LCentering && (gPlayer1Controller->buttonDown & L_TRIG)) {
-        gNewCamera.yawTarget = -gMarioState->faceAngle[1] - 0x4000;
+        gNewCamera.yawTarget = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
         gNewCamera.centering = true;
     }
 
@@ -346,24 +346,24 @@ static void newcam_update_values(void) {
     if (gNewCamera.turnWait > 0 && gMarioState->vel[1] == 0) {
         gNewCamera.turnWait--;
     } else if (gMarioState->intendedMag > 0 && gMarioState->vel[1] == 0) {
-        gNewCamera.yaw = approach_s16_symmetric(gNewCamera.yaw, -gMarioState->faceAngle[1] - 0x4000, ((gNewCamera.aggression * (ABS(gPlayer1Controller->rawStickX / 10.f))) * (gMarioState->forwardVel / 32.f)));
+        gNewCamera.yaw = approach_s16_symmetric(gNewCamera.yaw, -gMarioState->statusForCamera->faceAngle[1] - 0x4000, ((gNewCamera.aggression * (ABS(gPlayer1Controller->rawStickX / 10.f))) * (gMarioState->forwardVel / 32.f)));
     } else {
         gNewCamera.turnWait = 10;
     }
 
     // During slide actions in slide levels, force centering
     if (gNewCamera.isSlide && (
-        gMarioState->action == ACT_BUTT_SLIDE ||
-        gMarioState->action == ACT_STOMACH_SLIDE ||
-        gMarioState->action == ACT_HOLD_BUTT_SLIDE ||
-        gMarioState->action == ACT_HOLD_STOMACH_SLIDE)
+        gMarioState->statusForCamera->action == ACT_BUTT_SLIDE ||
+        gMarioState->statusForCamera->action == ACT_STOMACH_SLIDE ||
+        gMarioState->statusForCamera->action == ACT_HOLD_BUTT_SLIDE ||
+        gMarioState->statusForCamera->action == ACT_HOLD_STOMACH_SLIDE)
     ) {
         centering = (gMarioState->forwardVel > 8);
         ycentering = false;
     }
 
     // Force centering when flying
-    if ((gMarioState->action & ACT_FLAG_FLYING) == ACT_FLAG_FLYING) {
+    if ((gMarioState->statusForCamera->action & ACT_FLAG_FLYING) == ACT_FLAG_FLYING) {
         centering = true;
     }
 
@@ -371,12 +371,12 @@ static void newcam_update_values(void) {
     // Place the camera behind Mario during the ACT_SHOT_FROM_CANNON action
     static u32 sLastAction = 0;
     static bool sForceCentering = false;
-    if (sLastAction != gMarioState->action) {
-        sLastAction = gMarioState->action;
+    if (sLastAction != gMarioState->statusForCamera->action) {
+        sLastAction = gMarioState->statusForCamera->action;
         sForceCentering = true;
-        switch (gMarioState->action) {
+        switch (gMarioState->statusForCamera->action) {
             case ACT_SHOT_FROM_CANNON:
-                gNewCamera.yaw = -gMarioState->faceAngle[1] - 0x4000;
+                gNewCamera.yaw = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
                 break;
         }
     }
@@ -392,14 +392,14 @@ static void newcam_update_values(void) {
     }
 
     // Force centering during non-still swimming actions
-    if (gMarioState->action & ACT_FLAG_SWIMMING && gMarioState->forwardVel > 2) {
+    if (gMarioState->statusForCamera->action & ACT_FLAG_SWIMMING && gMarioState->forwardVel > 2) {
         centering = true;
     }
 
     if (centering) {
-        gNewCamera.yaw = approach_s16_symmetric(gNewCamera.yaw, -gMarioState->faceAngle[1] - 0x4000, gMarioState->forwardVel * 128);
+        gNewCamera.yaw = approach_s16_symmetric(gNewCamera.yaw, -gMarioState->statusForCamera->faceAngle[1] - 0x4000, gMarioState->forwardVel * 128);
         if (gMarioState->forwardVel > 1 && ycentering) {
-            gNewCamera.tilt = approach_s16_symmetric(gNewCamera.tilt, (-gMarioState->faceAngle[0] * 0.8f) + NEWCAM_TILT_CENTERING, gMarioState->forwardVel * 32);
+            gNewCamera.tilt = approach_s16_symmetric(gNewCamera.tilt, (-gMarioState->statusForCamera->faceAngle[0] * 0.8f) + NEWCAM_TILT_CENTERING, gMarioState->forwardVel * 32);
         } else {
             gNewCamera.tilt = approach_s16_symmetric(gNewCamera.tilt, NEWCAM_TILT_CENTERING, 32);
         }
@@ -508,12 +508,12 @@ static void newcam_set_pan(void) {
     }
 
     // Apply panning values based on Mario's direction.
-    if (gMarioState->action != ACT_HOLDING_BOWSER &&
-        gMarioState->action != ACT_SLEEPING &&
-        gMarioState->action != ACT_START_SLEEPING
+    if (gMarioState->statusForCamera->action != ACT_HOLDING_BOWSER &&
+        gMarioState->statusForCamera->action != ACT_SLEEPING &&
+        gMarioState->statusForCamera->action != ACT_START_SLEEPING
     ) {
-        approach_f32_asymptotic_bool(&gNewCamera.panX, newcam_lengthdir_x((160.f * gNewCamera.panLevel) / 100.f, -gMarioState->faceAngle[1] - 0x4000), 0.05f);
-        approach_f32_asymptotic_bool(&gNewCamera.panZ, newcam_lengthdir_y((160.f * gNewCamera.panLevel) / 100.f, -gMarioState->faceAngle[1] - 0x4000), 0.05f);
+        approach_f32_asymptotic_bool(&gNewCamera.panX, newcam_lengthdir_x((160.f * gNewCamera.panLevel) / 100.f, -gMarioState->statusForCamera->faceAngle[1] - 0x4000), 0.05f);
+        approach_f32_asymptotic_bool(&gNewCamera.panZ, newcam_lengthdir_y((160.f * gNewCamera.panLevel) / 100.f, -gMarioState->statusForCamera->faceAngle[1] - 0x4000), 0.05f);
     } else {
         approach_f32_asymptotic_bool(&gNewCamera.panX, 0, 0.05f);
         approach_f32_asymptotic_bool(&gNewCamera.panZ, 0, 0.05f);
@@ -538,7 +538,7 @@ static void newcam_level_bounds(void) {
 static void newcam_position_cam(void) {
     f32 floorY = 0;
     f32 floorY2 = 0;
-    if (!(gMarioState->action & ACT_FLAG_SWIMMING)) {
+    if (!(gMarioState->statusForCamera->action & ACT_FLAG_SWIMMING)) {
         calc_y_to_curr_floor(&floorY, 1.f, 200.f, &floorY2, 0.9f, 200.f);
     }
 
@@ -549,9 +549,9 @@ static void newcam_position_cam(void) {
     // Fetch Mario's current position.
     // Not hardcoded just for the sake of flexibility, though this specific bit is temp,
     // because it won't always want to be focusing on Mario.
-    gNewCamera.posTarget[0] = gMarioState->pos[0];
-    gNewCamera.posTarget[1] = gMarioState->pos[1] + NEWCAM_MARIO_HEIGHT;
-    gNewCamera.posTarget[2] = gMarioState->pos[2];
+    gNewCamera.posTarget[0] = gMarioState->statusForCamera->pos[0];
+    gNewCamera.posTarget[1] = gMarioState->statusForCamera->pos[1] + NEWCAM_MARIO_HEIGHT;
+    gNewCamera.posTarget[2] = gMarioState->statusForCamera->pos[2];
 
     // These will set the position of the camera to where Mario is supposed to be,
     // minus adjustments for where the camera should be, on top of.
@@ -607,7 +607,7 @@ static void newcam_apply_values(struct Camera *c) {
 // The ingame cutscene system is such a spaghetti mess I actually have to resort to something as stupid as this to cover every base.
 static void newcam_update_camera_yaw(struct Camera *c, bool useMarioYaw) {
     if (useMarioYaw) {
-        gNewCamera.yaw = -gMarioState->faceAngle[1] - 0x4000;
+        gNewCamera.yaw = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
     } else {
         gNewCamera.yaw = -c->yaw + 0x4000;
     }

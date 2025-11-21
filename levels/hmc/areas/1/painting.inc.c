@@ -505,9 +505,9 @@ static const Gfx hmc_seg7_painting_dl_070254E0[] = {
 };
 
 // 0x07025518 - 0x07025594
-const Texture *const hmc_seg7_painting_textures_07025518[] = {
-    hmc_seg7_texture_07024CE0,
-};
+#define hmc_seg7_painting_textures_07025518 { \
+    hmc_seg7_texture_07024CE0, \
+}
 
 // 0x0702551C (PaintingData)
 struct Painting cotmc_painting = {

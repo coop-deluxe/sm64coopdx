@@ -456,6 +456,7 @@ void mario_retrieve_cap(struct MarioState* m) {
     if (!m) { return; }
     mario_drop_held_object(m);
     save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
+    m->cap &= ~(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
     m->flags &= ~MARIO_CAP_ON_HEAD;
     m->flags |= MARIO_NORMAL_CAP | MARIO_CAP_IN_HAND;
 }
@@ -2155,6 +2156,10 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
             case MARIO_WING_CAP:
                 capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
+                break;
+            
+            case MARIO_NORMAL_CAP:
+                m->cap = 0;
                 break;
         }
 

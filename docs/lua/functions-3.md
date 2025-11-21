@@ -2121,29 +2121,6 @@ Rotates the camera to avoid walls or other obstructions. Ensures clear visibilit
 
 <br />
 
-## [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
-
-### Description
-Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
-
-### Lua Example
-`find_mario_floor_and_ceil(pg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pg | [PlayerGeometry](structs.md#PlayerGeometry) |
-
-### Returns
-- None
-
-### C Prototype
-`void find_mario_floor_and_ceil(struct PlayerGeometry *pg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
 
 ### Description
@@ -3140,10 +3117,31 @@ Returns the y coordinate of the mouse relative to the screen
 
 <br />
 
+## [djui_hud_is_mouse_locked](#djui_hud_is_mouse_locked)
+
+### Description
+Checks if the cursor is locked to the window
+
+### Lua Example
+`local booleanValue = djui_hud_is_mouse_locked()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_hud_is_mouse_locked(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
 
 ### Description
-Sets if the cursor is hidden and constrainted to the window
+Locks (or unlocks) the cursor to the window
 
 ### Lua Example
 `djui_hud_set_mouse_locked(locked)`
@@ -3271,7 +3269,7 @@ Returns the amount scrolled vertically (-down/up+)
 ## [djui_hud_set_viewport](#djui_hud_set_viewport)
 
 ### Description
-Sets the viewport to the specified position and size, this will resize
+Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
 
 ### Lua Example
 `djui_hud_set_viewport(x, y, width, height)`
@@ -3297,7 +3295,7 @@ Sets the viewport to the specified position and size, this will resize
 ## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
 
 ### Description
-put the description here
+Resets the viewport to a fullscreen state
 
 ### Lua Example
 `djui_hud_reset_viewport()`
@@ -3318,7 +3316,7 @@ put the description here
 ## [djui_hud_set_scissor](#djui_hud_set_scissor)
 
 ### Description
-put the description here
+Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
 
 ### Lua Example
 `djui_hud_set_scissor(x, y, width, height)`
@@ -3344,7 +3342,7 @@ put the description here
 ## [djui_hud_reset_scissor](#djui_hud_reset_scissor)
 
 ### Description
-put the description here
+Resets the scissor rectangle to a fullscreen state
 
 ### Lua Example
 `djui_hud_reset_scissor()`
@@ -4928,6 +4926,29 @@ Sets the in-game menu state. 0-1 is the courses box with the castle secret stars
 
 ### C Prototype
 `void set_menu_mode(s16 mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [handle_special_dialog_text](#handle_special_dialog_text)
+
+### Description
+The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.
+
+### Lua Example
+`handle_special_dialog_text(dialogID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogID | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void handle_special_dialog_text(s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -6586,6 +6607,27 @@ Returns if the level timer is running
 
 <br />
 
+## [pressed_pause](#pressed_pause)
+
+### Description
+Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
+
+### Lua Example
+`local booleanValue = pressed_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool pressed_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [fade_into_special_warp](#fade_into_special_warp)
 
 ### Description
@@ -6743,561 +6785,6 @@ Sets the level number and handles the act select screen. `param` is used for ove
 
 ### C Prototype
 `s32 lvl_set_current_level(s16 param, s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from lighting_engine.h
-
-<br />
-
-
-## [le_is_enabled](#le_is_enabled)
-
-### Description
-Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
-
-### Lua Example
-`local booleanValue = le_is_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_is_enabled(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_mode](#le_set_mode)
-
-### Description
-Sets the lighting engine mode to `mode`
-
-### Lua Example
-`le_set_mode(mode)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mode | [enum LEMode](constants.md#enum-LEMode) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_mode(enum LEMode mode);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_mode](#le_get_mode)
-
-### Description
-Gets the lighting engine mode
-
-### Lua Example
-`local enumValue = le_get_mode()`
-
-### Parameters
-- None
-
-### Returns
-[enum LEMode](constants.md#enum-LEMode)
-
-### C Prototype
-`enum LEMode le_get_mode(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_tone_mapping](#le_set_tone_mapping)
-
-### Description
-Sets the lighting engine's tone mapping mode to `toneMapping`
-
-### Lua Example
-`le_set_tone_mapping(toneMapping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_ambient_color](#le_get_ambient_color)
-
-### Description
-Outputs the lighting engine's ambient color to `out`
-
-### Lua Example
-`le_get_ambient_color(out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_ambient_color(OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_ambient_color](#le_set_ambient_color)
-
-### Description
-Sets the lighting engine ambient color
-
-### Lua Example
-`le_set_ambient_color(r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_color](#le_calculate_lighting_color)
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color(Vec3f pos, OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_color_with_normal](#le_calculate_lighting_color_with_normal)
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| normal | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_dir](#le_calculate_lighting_dir)
-
-### Description
-Calculates the lighting direction from a position and outputs the result in `out`
-
-### Lua Example
-`le_calculate_lighting_dir(pos, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_dir(Vec3f pos, OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_add_light](#le_add_light)
-
-### Description
-Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
-
-### Lua Example
-`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-| intensity | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_remove_light](#le_remove_light)
-
-### Description
-Removes a lighting engine point light corresponding to `id`
-
-### Lua Example
-`le_remove_light(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_remove_light(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_count](#le_get_light_count)
-
-### Description
-Gets the total number of lights currently loaded in the lighting engine
-
-### Lua Example
-`local integerValue = le_get_light_count()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_get_light_count(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_light_exists](#le_light_exists)
-
-### Description
-Checks if a lighting engine point light corresponding to `id` exists
-
-### Lua Example
-`local booleanValue = le_light_exists(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_light_exists(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_pos](#le_get_light_pos)
-
-### Description
-Outputs a lighting engine point light's position to `out`
-
-### Lua Example
-`le_get_light_pos(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_pos(s16 id, OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_pos](#le_set_light_pos)
-
-### Description
-Sets a lighting engine point light's position to `x`, `y`, `z`
-
-### Lua Example
-`le_set_light_pos(id, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_color](#le_get_light_color)
-
-### Description
-Outputs a lighting engine point light's color to `out`
-
-### Lua Example
-`le_get_light_color(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_color(s16 id, OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_color](#le_set_light_color)
-
-### Description
-Sets a lighting engine point light's color to `r`, `g`, `b`
-
-### Lua Example
-`le_set_light_color(id, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_radius](#le_get_light_radius)
-
-### Description
-Gets a lighting engine point light's `radius`
-
-### Lua Example
-`local numberValue = le_get_light_radius(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_radius(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_radius](#le_set_light_radius)
-
-### Description
-Sets a lighting engine point light's `radius`
-
-### Lua Example
-`le_set_light_radius(id, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_radius(s16 id, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_intensity](#le_get_light_intensity)
-
-### Description
-Gets a lighting engine point light's `intensity`
-
-### Lua Example
-`local numberValue = le_get_light_intensity(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_intensity(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_intensity](#le_set_light_intensity)
-
-### Description
-Sets a lighting engine point light's `intensity`
-
-### Lua Example
-`le_set_light_intensity(id, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| intensity | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_intensity(s16 id, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_use_surface_normals](#le_get_light_use_surface_normals)
-
-### Description
-Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`local booleanValue = le_get_light_use_surface_normals(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_get_light_use_surface_normals(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_use_surface_normals](#le_set_light_use_surface_normals)
-
-### Description
-Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`le_set_light_use_surface_normals(id, useSurfaceNormals)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| useSurfaceNormals | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 

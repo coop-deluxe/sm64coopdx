@@ -537,9 +537,9 @@ static const Gfx ttm_seg7_painting_dl_07012E98[] = {
 };
 
 // 0x07012EF8 - 0x07012F78
-ALIGNED8 const Texture *const ttm_seg7_painting_textures_07012EF8[] = {
-    ttm_seg7_texture_07004000, ttm_seg7_texture_07003000,
-};
+#define ttm_seg7_painting_textures_07012EF8 { \
+    ttm_seg7_texture_07004000, ttm_seg7_texture_07003000, \
+}
 
 // 0x07012F00 (PaintingData)
 struct Painting ttm_slide_painting = {

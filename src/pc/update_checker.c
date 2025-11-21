@@ -14,6 +14,14 @@
 #define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
 #define VERSION_IDENTIFIER "#define SM64COOPDX_VERSION \""
 
+/*
+
+NOTE: This entire update checker process should be replaced with one that uses GitHub's API
+to check for the latest release version. This would be more reliable and efficient than
+downloading and parsing a source file.
+
+*/
+
 static char sVersionUpdateTextBuffer[256] = { 0 };
 static char sRemoteVersion[8] = { 0 };
 
@@ -46,17 +54,21 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 void parse_version(const char *data) {
     const char *version = strstr(data, VERSION_IDENTIFIER);
     if (version == NULL) { return; }
-    u8 len = strlen(VERSION_IDENTIFIER);
+    size_t len = strlen(VERSION_IDENTIFIER);
     version += len;
     const char *end = strchr(version, '"');
-    memcpy(sRemoteVersion, version, end - version);
-    sRemoteVersion[end - version] = '\0';
+    size_t versionLength = (size_t)(end - version);
+    if (versionLength > sizeof(sRemoteVersion) - 1) { return; }
+    memcpy(sRemoteVersion, version, versionLength);
+    sRemoteVersion[versionLength] = '\0';
 }
 
 // function to download a text file from the internet
 void get_version_remote(void) {
+    sRemoteVersion[0] = '\0';
+
 #if defined(_WIN32) || defined(_WIN64)
-    char buffer[0xFF];
+    char buffer[0xFF] = { 0 };
 
     // initialize WinINet
     HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
@@ -80,9 +92,9 @@ void get_version_remote(void) {
     DWORD dwSize = sizeof(contentLength);
     HttpQueryInfo(hUrl, HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER, &contentLength, &dwSize, NULL);
 
-    // read data from the URL
+    // read data from the URL, making room in the buffer for the null-terminator
     DWORD bytesRead;
-    if (!InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead)) {
+    if (!InternetReadFile(hUrl, buffer, sizeof(buffer) - 1, &bytesRead)) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
@@ -90,7 +102,6 @@ void get_version_remote(void) {
     }
 
     buffer[bytesRead] = '\0';
-    snprintf(sRemoteVersion, 8, "%s", buffer);
 
     // close handles
     InternetCloseHandle(hUrl);
@@ -134,7 +145,7 @@ void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
-    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
+    if (sRemoteVersion[0] == 'v' && strcmp(sRemoteVersion, get_version())) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",

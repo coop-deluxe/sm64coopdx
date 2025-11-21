@@ -250,19 +250,21 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // Set music
-            if (sDynosWarpNodeNum == -1 || (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
+            if ((sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
                 if (gCurrentArea != NULL) {
                     set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
                 }
-                if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
-                if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
-                if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
                 if (gCurrLevelNum == LEVEL_BOWSER_1 ||
                     gCurrLevelNum == LEVEL_BOWSER_2 ||
                     gCurrLevelNum == LEVEL_BOWSER_3) {
                     sound_banks_enable(0, 0xFFFF); // Bowser levels sound fix
                 }
             }
+
+            // Enable power-up cap music
+            if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
+            if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
+            if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
 
             // lua hooks
             smlua_call_event_hooks(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);

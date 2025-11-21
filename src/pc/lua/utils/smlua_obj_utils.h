@@ -118,6 +118,8 @@ void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 
 
 /* |description|Returns a temporary particle spawn info pointer with its model loaded in from `modelId`|descriptionEnd| */
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
+/* |description|Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`|descriptionEnd| */
+struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);
 /* |description|Returns a temporary object hitbox pointer|descriptionEnd| */
 struct ObjectHitbox* get_temp_object_hitbox(void);
 

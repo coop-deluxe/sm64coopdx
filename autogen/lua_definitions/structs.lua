@@ -25,9 +25,6 @@
 --- @field public valuesLength integer
 --- @field public indexLength integer
 
---- @class AnimationTable
---- @field public count integer
-
 --- @class Area
 --- @field public index integer
 --- @field public flags integer
@@ -203,14 +200,6 @@
 --- @field public dialogs BehaviorDialogs
 --- @field public trajectories BehaviorTrajectories
 
---- @class BullyCollisionData
---- @field public conversionRatio number
---- @field public radius number
---- @field public posX number
---- @field public posZ number
---- @field public velX number
---- @field public velZ number
-
 --- @class Camera
 --- @field public mode integer
 --- @field public defMode integer
@@ -227,36 +216,6 @@
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field public mtx Mat4
-
---- @class CameraFOVStatus
---- @field public fovFunc integer
---- @field public fov number
---- @field public fovOffset number
---- @field public unusedIsSleeping integer
---- @field public shakeAmplitude number
---- @field public shakePhase integer
---- @field public shakeSpeed integer
---- @field public decay integer
-
---- @class CameraOverride
---- @field public value integer
---- @field public override boolean
-
---- @class CameraStoredInfo
---- @field public pos Vec3f
---- @field public focus Vec3f
---- @field public panDist number
---- @field public cannonYOffset number
-
---- @class CameraTrigger
---- @field public area integer
---- @field public centerX integer
---- @field public centerY integer
---- @field public centerZ integer
---- @field public boundsX integer
---- @field public boundsY integer
---- @field public boundsZ integer
---- @field public boundsYaw integer
 
 --- @class ChainSegment
 --- @field public posX number
@@ -494,6 +453,7 @@
 --- @field public animReturnFromStarDance integer
 --- @field public animForwardSpinningFlip integer
 --- @field public animTripleJumpFly integer
+--- @field public anims integer[]
 --- @field public soundFreqScale number
 --- @field public soundYahWahHoo integer
 --- @field public soundHoohoo integer
@@ -539,6 +499,7 @@
 --- @field public soundImaTired integer
 --- @field public soundLetsAGo integer
 --- @field public soundOkeyDokey integer
+--- @field public sounds integer[]
 
 --- @class Controller
 --- @field public port integer
@@ -566,21 +527,6 @@
 --- @field public echoLevel3 integer
 --- @field public modIndex integer
 --- @field public next CustomLevelInfo
-
---- @class Cutscene
---- @field public duration integer
-
---- @class CutsceneSplinePoint
---- @field public index integer
---- @field public speed integer
---- @field public point Vec3s
-
---- @class CutsceneVariable
---- @field public unused1 integer
---- @field public point Vec3f
---- @field public unusedPoint Vec3f
---- @field public angle Vec3s
---- @field public unused2 integer
 
 --- @class DateTime
 --- @field public year integer
@@ -650,13 +596,6 @@
 --- @field public crouch number
 --- @field public fov number
 --- @field public offset Vec3f
-
---- @class FloorGeometry
---- @field public unused number[]
---- @field public normalX number
---- @field public normalY number
---- @field public normalZ number
---- @field public originOffset number
 
 --- @class FnGraphNode
 --- @field public node GraphNode
@@ -1015,19 +954,6 @@
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
 
---- @class GraphNode_802A45E4
---- @field public unk18 integer
---- @field public unk1A integer
---- @field public unk1C integer
---- @field public unk1E integer
---- @field public unk20 integer
---- @field public unk22 integer
-
---- @class HandheldShakePoint
---- @field public index integer
---- @field public pad integer
---- @field public point Vec3s
-
 --- @class HudUtilsRotation
 --- @field public rotation number
 --- @field public rotationDiff number
@@ -1139,13 +1065,6 @@
 --- @field public floorNormalMinY number
 --- @field public ceilNormalMaxY number
 
---- @class LinearTransitionPoint
---- @field public focus Vec3f
---- @field public pos Vec3f
---- @field public dist number
---- @field public pitch integer
---- @field public yaw integer
-
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer
 --- @field public targetAnim Animation
@@ -1165,6 +1084,7 @@
 --- @field public headPos Vec3f
 --- @field public torsoPos Vec3f
 --- @field public heldObjLastPosition Vec3f
+--- @field public animPartsPos Vec3f[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer
@@ -1277,26 +1197,14 @@
 --- @field public renderBehindHud boolean
 --- @field public pausable boolean
 --- @field public ignoreScriptWarnings boolean
+--- @field public size integer
 --- @field public customBehaviorIndex integer
 
 --- @class ModAudio
---- @field public file ModFile
+--- @field public filepath string
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
-
---- @class ModAudioSampleCopies
---- @field public next ModAudioSampleCopies
---- @field public prev ModAudioSampleCopies
---- @field public parent ModAudio
-
---- @class ModFile
---- @field public relativePath string
---- @field public modifiedTimestamp integer
---- @field public isLoadedLuaModule boolean
---- @field public wroteBytes integer
---- @field public dataHash integer[]
---- @field public cachedPath string
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1304,6 +1212,16 @@
 --- @field public numFiles integer
 --- @field public totalSize integer
 --- @field public isPublic boolean
+--- @field public get_filename fun(modFs: ModFs, index: integer): string
+--- @field public get_file fun(modFs: ModFs, filepath: string): ModFsFile
+--- @field public create_file fun(modFs: ModFs, filepath: string, text: boolean): ModFsFile
+--- @field public move_file fun(modFs: ModFs, oldpath: string, newpath: string, overwriteExisting: boolean): boolean
+--- @field public copy_file fun(modFs: ModFs, srcpath: string, dstpath: string, overwriteExisting: boolean): boolean
+--- @field public delete_file fun(modFs: ModFs, filepath: string): boolean
+--- @field public clear fun(modFs: ModFs): boolean
+--- @field public save fun(modFs: ModFs): boolean
+--- @field public delete fun(modFs: ModFs): boolean
+--- @field public set_public fun(modFs: ModFs, pub: boolean): boolean
 
 --- @class ModFsFile
 --- @field public modFs ModFs
@@ -1312,14 +1230,25 @@
 --- @field public offset integer
 --- @field public isText boolean
 --- @field public isPublic boolean
-
---- @class ModeTransitionInfo
---- @field public newMode integer
---- @field public lastMode integer
---- @field public max integer
---- @field public frame integer
---- @field public transitionStart LinearTransitionPoint
---- @field public transitionEnd LinearTransitionPoint
+--- @field public read_bool fun(file: ModFsFile): boolean
+--- @field public read_integer fun(file: ModFsFile, intType: ModFsFileIntType): integer
+--- @field public read_number fun(file: ModFsFile, floatType: ModFsFileFloatType): number
+--- @field public read_bytes fun(file: ModFsFile, length: integer): string
+--- @field public read_string fun(file: ModFsFile): string
+--- @field public read_line fun(file: ModFsFile): string
+--- @field public write_bool fun(file: ModFsFile, value: boolean): boolean
+--- @field public write_integer fun(file: ModFsFile, value: integer, intType: ModFsFileIntType): boolean
+--- @field public write_number fun(file: ModFsFile, value: number, floatType: ModFsFileFloatType): boolean
+--- @field public write_bytes fun(file: ModFsFile, bytestring: string): boolean
+--- @field public write_string fun(file: ModFsFile, str: string): boolean
+--- @field public write_line fun(file: ModFsFile, str: string): boolean
+--- @field public seek fun(file: ModFsFile, offset: integer, origin: ModFsFileSeek): boolean
+--- @field public rewind fun(file: ModFsFile): boolean
+--- @field public is_eof fun(file: ModFsFile): boolean
+--- @field public fill fun(file: ModFsFile, byte: integer, length: integer): boolean
+--- @field public erase fun(file: ModFsFile, length: integer): boolean
+--- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
+--- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
@@ -1369,6 +1298,7 @@
 --- @field public collisionData Pointer_Collision
 --- @field public behavior Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
+--- @field public bhvStack integer[]
 --- @field public bhvStackIndex integer
 --- @field public bhvDelayTimer integer
 --- @field public activeFlags integer
@@ -2144,10 +2074,6 @@
 --- @field public object Object
 --- @field public next ObjectWarpNode
 
---- @class OffsetSizePair
---- @field public offset integer
---- @field public size integer
-
 --- @class Painting
 --- @field public id integer
 --- @field public imageCount integer
@@ -2176,20 +2102,15 @@
 --- @field public rippleTimer number
 --- @field public rippleX number
 --- @field public rippleY number
---- @field public normalDisplayList Pointer_Gfx
+--- @field public textureArray Pointer_Texture[]
 --- @field public textureWidth integer
 --- @field public textureHeight integer
---- @field public rippleDisplayList Pointer_Gfx
 --- @field public rippleTrigger integer
 --- @field public alpha integer
 --- @field public marioWasUnder integer
 --- @field public marioIsUnder integer
 --- @field public marioWentUnder integer
 --- @field public size number
-
---- @class PaintingMeshVertex
---- @field public pos integer[]
---- @field public norm integer[]
 
 --- @class PaintingValues
 --- @field public cotmc_painting Painting
@@ -2209,12 +2130,6 @@
 --- @field public thi_huge_painting Painting
 --- @field public ttm_slide_painting Painting
 
---- @class ParallelTrackingPoint
---- @field public startOfPath integer
---- @field public pos Vec3f
---- @field public distThresh number
---- @field public zoom number
-
 --- @class PlayerCameraState
 --- @field public action integer
 --- @field public pos Vec3f
@@ -2224,22 +2139,8 @@
 --- @field public cameraEvent integer
 --- @field public usedObj Object
 
---- @class PlayerGeometry
---- @field public currFloor Surface
---- @field public currFloorHeight number
---- @field public currFloorType integer
---- @field public currCeil Surface
---- @field public currCeilType integer
---- @field public currCeilHeight number
---- @field public prevFloor Surface
---- @field public prevFloorHeight number
---- @field public prevFloorType integer
---- @field public prevCeil Surface
---- @field public prevCeilHeight number
---- @field public prevCeilType integer
---- @field public waterHeight number
-
 --- @class PlayerPalette
+--- @field public parts Color[]
 
 --- @class RayIntersectionInfo
 --- @field public surface Surface
@@ -2271,12 +2172,6 @@
 --- @field public nametags integer
 --- @field public maxPlayers integer
 --- @field public pauseAnywhere integer
-
---- @class SoundState
---- @field public playSound integer
---- @field public animFrame1 integer
---- @field public animFrame2 integer
---- @field public soundMagic integer
 
 --- @class SpawnInfo
 --- @field public startPos Vec3s
@@ -2338,6 +2233,10 @@
 --- @field public dialog5 integer
 --- @field public dialog6 integer
 
+--- @class StaticObjectCollision
+--- @field public index integer
+--- @field public length integer
+
 --- @class Surface
 --- @field public type integer
 --- @field public flags integer
@@ -2361,18 +2260,8 @@
 --- @field public name string
 --- @field public width integer
 --- @field public height integer
---- @field public bitSize integer
-
---- @class TransitionInfo
---- @field public posPitch integer
---- @field public posYaw integer
---- @field public posDist number
---- @field public focPitch integer
---- @field public focYaw integer
---- @field public focDist number
---- @field public framesLeft integer
---- @field public marioPos Vec3f
---- @field public pad integer
+--- @field public format integer
+--- @field public size integer
 
 --- @class Vtx
 --- @field public x number
@@ -2388,10 +2277,6 @@
 --- @field public b integer
 --- @field public nz integer
 --- @field public a integer
-
---- @class Vtx_Interp
---- @field public ob number[]
---- @field public n string
 
 --- @class WallCollisionData
 --- @field public x number
@@ -2410,25 +2295,6 @@
 --- @field public destLevel integer
 --- @field public destArea integer
 --- @field public destNode integer
-
---- @class WarpTransition
---- @field public isActive integer
---- @field public type integer
---- @field public time integer
---- @field public pauseRendering integer
---- @field public data WarpTransitionData
-
---- @class WarpTransitionData
---- @field public red integer
---- @field public green integer
---- @field public blue integer
---- @field public startTexRadius integer
---- @field public endTexRadius integer
---- @field public startTexX integer
---- @field public startTexY integer
---- @field public endTexX integer
---- @field public endTexY integer
---- @field public texTimer integer
 
 --- @class WaterDropletParams
 --- @field public flags integer
@@ -2528,4 +2394,5 @@
 --- @alias Pointer_Mat4 Mat4
 --- @alias Pointer_Vec4s Vec4s
 --- @alias Pointer_BehaviorScript BehaviorScript
+--- @alias Pointer_Texture[] Texture[]
 --- @alias Pointer_Texture Texture

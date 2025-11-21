@@ -163,6 +163,7 @@
 
 #define SURFACE_FLAG_DYNAMIC          (1 << 0)
 #define SURFACE_FLAG_NO_CAM_COLLISION (1 << 1)
+#define SURFACE_FLAG_INTANGIBLE       (1 << 2)
 #define SURFACE_FLAG_X_PROJECTION     (1 << 3)
 
 #define HAZARD_TYPE_LAVA_FLOOR      1
