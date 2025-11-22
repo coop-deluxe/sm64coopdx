@@ -32,7 +32,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -66,7 +66,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -116,7 +116,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes databases coop.map discord_game_sdk.dll sm64coopdx.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -166,7 +166,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes databases coop.map discord_game_sdk.dll sm64coopdx.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
