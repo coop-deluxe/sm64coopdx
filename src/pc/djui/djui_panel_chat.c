@@ -46,6 +46,21 @@ static struct DjuiButton* sResetUseStdChatButton   = NULL;
 static struct DjuiButton* sResetCharCounterButton  = NULL;
 static struct DjuiButton* sResetClosedModeButton   = NULL;
 
+static f32 sChatSliderLastCursorX = 0.0f;
+static bool sChatSliderFineAdjust = false;
+static struct DjuiText* sChatShiftHintText        = NULL;
+
+void djui_panel_chat_update_shift_hint(void) {
+    if (sChatShiftHintText == NULL) { return; }
+    if (gDjuiInputHeldShift) {
+        djui_text_set_text(sChatShiftHintText, DLANG(CHAT_OPTIONS, CHAT_SHIFT_HINT_ACTIVE));
+        djui_base_set_color(&sChatShiftHintText->base, 255, 165, 0, 255);
+    } else {
+        djui_text_set_text(sChatShiftHintText, DLANG(CHAT_OPTIONS, CHAT_SHIFT_HINT));
+        djui_base_set_color(&sChatShiftHintText->base, 128, 128, 128, 255);
+    }
+}
+
 static void djui_panel_chat_update_lifetime_slider_enabled(void);
 static void djui_panel_chat_update_closed_mode_lifetime_label(void);
 
@@ -199,20 +214,41 @@ static void djui_panel_chat_slider_on_cursor_down(struct DjuiBase* base) {
     u32  min   = slider->min;
     u32  max   = slider->max;
     u32* value = slider->value;
-    f32 x = slider->rect->base.elem.x;
-    f32 w = slider->rect->base.elem.width;
-    f32 cursorX = gCursorX;
-    cursorX = fmax(cursorX, x);
-    cursorX = fmin(cursorX, x + w);
 
-    f32 t = 0.0f;
-    if (w > 0.0f) {
-        t = (cursorX - x) / w;
+    sChatSliderFineAdjust = (gDjuiInputHeldShift != 0);
+    djui_panel_chat_update_shift_hint();
+
+    int newValue = (int)*value;
+
+    if (sChatSliderFineAdjust) {
+        f32 w = slider->rect->base.elem.width;
+        if (w <= 0.0f) { w = 1.0f; }
+
+        f32 baseStepPerPixel = (f32)(max - min) / w;
+        f32 fineStepPerPixel = baseStepPerPixel * 0.1f;
+
+        f32 cursorX = gCursorX;
+        f32 deltaX  = cursorX - sChatSliderLastCursorX;
+        sChatSliderLastCursorX = cursorX;
+
+        newValue = (int)((f32)newValue + deltaX * fineStepPerPixel + 0.5f);
+    } else {
+        f32 x = slider->rect->base.elem.x;
+        f32 w = slider->rect->base.elem.width;
+        f32 cursorX = gCursorX;
+        cursorX = fmax(cursorX, x);
+        cursorX = fmin(cursorX, x + w);
+
+        f32 t = 0.0f;
+        if (w > 0.0f) {
+            t = (cursorX - x) / w;
+        }
+        if (t < 0.0f) t = 0.0f;
+        if (t > 1.0f) t = 1.0f;
+
+        newValue = (int)(t * (f32)(max - min) + 0.5f) + (int)min;
     }
-    if (t < 0.0f) t = 0.0f;
-    if (t > 1.0f) t = 1.0f;
 
-    int newValue = (int)(t * (f32)(max - min) + 0.5f) + (int)min;
     if (newValue < (int)min) newValue = (int)min;
     if (newValue > (int)max) newValue = (int)max;
     *value = (u32)newValue;
@@ -230,6 +266,9 @@ static void djui_panel_chat_slider_on_cursor_down_begin(struct DjuiBase* base, b
         if (inputCursor) {
             djui_interactable_set_input_focus(base);
         } else {
+            sChatSliderLastCursorX = gCursorX;
+            sChatSliderFineAdjust = (gDjuiInputHeldShift != 0);
+            djui_panel_chat_update_shift_hint();
             slider->base.interactable->on_cursor_down = djui_panel_chat_slider_on_cursor_down;
         }
     } else {
@@ -240,6 +279,8 @@ static void djui_panel_chat_slider_on_cursor_down_begin(struct DjuiBase* base, b
 static void djui_panel_chat_slider_on_cursor_down_end(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     slider->base.interactable->on_cursor_down = NULL;
+    sChatSliderFineAdjust = false;
+    djui_panel_chat_update_shift_hint();
 }
 
 static void djui_panel_chat_on_width_slider_change(UNUSED struct DjuiBase* b) {
@@ -565,6 +606,18 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         djui_panel_chat_update_value_labels();
         djui_panel_chat_update_lifetime_slider_enabled();
         djui_panel_chat_update_reset_buttons();
+
+        struct DjuiRect* rowShiftHint = djui_rect_container_create(body, 32);
+        djui_base_set_color(&rowShiftHint->base, 0, 0, 0, 0);
+        
+        sChatShiftHintText = djui_text_create(&rowShiftHint->base, "");
+        djui_base_set_alignment(&sChatShiftHintText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_base_set_size_type(&sChatShiftHintText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+        djui_base_set_size(&sChatShiftHintText->base, 1.0f, 1.0f);
+        djui_text_set_alignment(sChatShiftHintText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_text_set_drop_shadow(sChatShiftHintText, 64, 64, 64, 100);
+        djui_base_set_visible(&sChatShiftHintText->base, true);
+        djui_panel_chat_update_shift_hint();
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
