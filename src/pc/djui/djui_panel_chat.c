@@ -84,15 +84,18 @@ static void djui_panel_chat_update_closed_mode_lifetime_label(void);
 static struct DjuiSelectionbox* sChatClosedModeSelection = NULL;
 
 static void djui_panel_chat_apply_chatbox_style(void) {
+    if (gDjuiChatBox == NULL) { return; }
+
     djui_chat_messages_apply_style();
-    if (gDjuiChatBox != NULL) {
+
+    if (gDjuiChatBox != NULL && gDjuiChatBoxFocus) {
         bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
         u8 alpha = 0;
         if (hasMessages) {
             int baseAlpha = (int)(configChatBackgroundOpacity * 2.55f);
             if (baseAlpha > 255) { baseAlpha = 255; }
             if (baseAlpha < 0)   { baseAlpha = 0; }
-            alpha = gDjuiChatBoxFocus ? (u8)baseAlpha : 0;
+            alpha = (u8)baseAlpha;
         }
         djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
     }
@@ -193,7 +196,6 @@ static void djui_panel_chat_update_value_labels(void) {
             struct DjuiBase* base = &sChatLifetimeLabel->base;
 
             if (configChatClosedMode != 1) {
-                // Deaktivierter Modus: Wert grau darstellen
                 djui_base_set_color(base, 160, 160, 160, 255);
             } else {
                 if (configChatMessageLifetime < CHAT_LIFETIME_DEFAULT) {

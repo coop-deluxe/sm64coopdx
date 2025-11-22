@@ -18,12 +18,7 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
 
     f32 f = 1.0f;
 
-    if (gDjuiChatBoxFocus) {
-        djui_base_set_color(base, 0, 0, 0, 0);
-        djui_base_set_color(ctBase, 255, 255, 255, 255);
-        djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
-    } else {
+    if (!gDjuiChatBoxFocus) {
         u32 mode = configChatClosedMode;
         if (mode > 2) { mode = 1; }
 
@@ -58,9 +53,13 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
 
         djui_base_set_color(base, 0, 0, 0, bgAlpha);
         djui_base_set_color(ctBase, 255, 255, 255, textAlpha);
-        djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(base, chatMessage->messageWidth, chatMessage->base.height.value);
+    } else {
+        djui_base_set_color(base, 0, 0, 0, 0);
+        djui_base_set_color(ctBase, 255, 255, 255, 255);
     }
+
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 1.0f, chatMessage->base.height.value);
 
     djui_text_set_font(chatMessage->message, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
 
