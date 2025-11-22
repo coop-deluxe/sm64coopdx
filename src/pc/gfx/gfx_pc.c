@@ -1983,6 +1983,8 @@ void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, co
     gfx_wapi->init(window_title);
     gfx_rapi->init();
 
+    gfx_wapi->start_text_input();
+
     gfx_cc_precomp();
 
     gGfxInited = true;
