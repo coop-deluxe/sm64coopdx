@@ -8,7 +8,6 @@ static void djui_slider_default_format_value(struct DjuiSlider* slider, char* bu
     if (slider == NULL || slider->value == NULL || bufSize <= 0) {
         return;
     }
-    // Standard: roher Wert ohne Einheit
     snprintf(buf, bufSize, "%u", *slider->value);
 }
 
@@ -193,7 +192,6 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size_type(&rectValue->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     slider->rectValue = rectValue;
 
-    // zentrales Value-Label im Slider
     struct DjuiText* valueText = djui_text_create(&rect->base, "");
     djui_base_set_alignment(&valueText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&valueText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);

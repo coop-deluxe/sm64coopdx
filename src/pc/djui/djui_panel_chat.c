@@ -427,7 +427,6 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         };
         (void)chatSizeChoices;
 
-        // Checkbox- / Selection-Basis und -Track an Sliderbreite anpassen
         if (sCheckboxUseStdChat != NULL) {
             djui_base_set_size(&sCheckboxUseStdChat->base, 0.94f, 32.0f);
         }
