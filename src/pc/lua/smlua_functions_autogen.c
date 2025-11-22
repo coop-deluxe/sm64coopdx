@@ -32945,6 +32945,38 @@ int smlua_func_get_current_gamepad_index(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_clipboard_text(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_clipboard_text", 0, top);
+        return 0;
+    }
+
+
+    lua_pushstring(L, get_clipboard_text());
+
+    return 1;
+}
+
+int smlua_func_set_clipboard_text(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_clipboard_text", 1, top);
+        return 0;
+    }
+
+    const char* text = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_clipboard_text"); return 0; }
+
+    set_clipboard_text(text);
+
+    return 1;
+}
+
   /////////////////////////
  // smlua_level_utils.h //
 /////////////////////////
@@ -38738,6 +38770,8 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_input_utils.h
     smlua_bind_function(L, "get_current_gamepad_index", smlua_func_get_current_gamepad_index);
+    smlua_bind_function(L, "get_clipboard_text", smlua_func_get_clipboard_text);
+    smlua_bind_function(L, "set_clipboard_text", smlua_func_set_clipboard_text);
 
     // smlua_level_utils.h
     smlua_bind_function(L, "smlua_level_util_change_area", smlua_func_smlua_level_util_change_area);

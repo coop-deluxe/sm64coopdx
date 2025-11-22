@@ -3534,6 +3534,7 @@
 <br />
 
 ## [smlua_input_utils.h](#smlua_input_utils.h)
+- DATABASES_DIRECTORY
 - MAX_GAMEPADS
 - MAX_TOUCHPAD_FINGERS
 

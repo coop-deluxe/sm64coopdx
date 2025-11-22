@@ -134,14 +134,14 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
 static void gfx_sdl_onkeydown(int scancode) {
     if (kb_key_down) {
         kb_key_down(translate_bind_to_name(scancode));
-        gKeyboard[scancode].keyDown = true;
+        kb_keys_curr_down[scancode] = true;
     }
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
     if (kb_key_up) {
         kb_key_up(translate_bind_to_name(scancode));
-        gKeyboard[scancode].keyDown = false;
+        kb_keys_curr_down[scancode] = false;
     }
 }
 

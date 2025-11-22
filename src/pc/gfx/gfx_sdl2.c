@@ -180,14 +180,14 @@ static void gfx_sdl_onkeydown(int scancode) {
 
     if (kb_key_down) {
         kb_key_down(translate_sdl_scancode(scancode));
-        gKeyboard[scancode].keyDown = true;
+        kb_keys_curr_down[scancode] = true;
     }
 }
 
 static void gfx_sdl_onkeyup(int scancode) {
     if (kb_key_up) {
         kb_key_up(translate_sdl_scancode(scancode));
-        gKeyboard[scancode].keyDown = false;
+        kb_keys_curr_down[scancode] = false;
     }
 }
 

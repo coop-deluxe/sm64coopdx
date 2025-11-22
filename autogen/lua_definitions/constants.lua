@@ -8483,6 +8483,9 @@ HOOK_MAX                                    = 62 --- @type LuaHookedEventType
 --- | `HOOK_ON_TEXT_EDITING`
 --- | `HOOK_MAX`
 
+--- @type string
+DATABASES_DIRECTORY = "databases"
+
 --- @type integer
 MAX_GAMEPADS = 256
 

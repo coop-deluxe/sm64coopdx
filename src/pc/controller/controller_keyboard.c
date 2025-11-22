@@ -19,7 +19,7 @@
 static int keyboard_buttons_down;
 
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-bool keyboard_keys_prev_down[SDL_NUM_SCANCODES];
+bool kb_keys_curr_down[SDL_NUM_SCANCODES];
 #endif
 
 #define MAX_KEYBINDS 64
@@ -67,9 +67,9 @@ void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
     for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
-        gKeyboard[scancode].keyDown = false;
-        gKeyboard[scancode].keyPressed = false;
-        gKeyboard[scancode].keyReleased = false;
+        gKeyboard[scancode].down = false;
+        gKeyboard[scancode].pressed = false;
+        gKeyboard[scancode].released = false;
     }
 #endif
 }
@@ -126,13 +126,12 @@ static void keyboard_init(void) {
 static void keyboard_read(OSContPad *pad) {
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
     for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
-        bool prev = keyboard_keys_prev_down[scancode];
-        bool curr = gKeyboard[scancode].keyDown;
+        bool prev = gKeyboard[scancode].down;
+        bool curr = kb_keys_curr_down[scancode];
 
-        gKeyboard[scancode].keyPressed = (!prev && curr);
-        gKeyboard[scancode].keyReleased = (prev && !curr);
-
-        keyboard_keys_prev_down[scancode] = curr;
+        gKeyboard[scancode].down = curr;
+        gKeyboard[scancode].pressed = (!prev && curr);
+        gKeyboard[scancode].released = (prev && !curr);
     }
 #endif
 

@@ -766,7 +766,7 @@ void smlua_cobject_init_globals(void) {
 #if defined(CAPI_SDL1) || defined(CAPI_SDL2)
     EXPOSE_GLOBAL_ARRAY(LOT_GAMEPAD, gGamepads, MAX_GAMEPADS);
 
-    EXPOSE_GLOBAL_ARRAY(LOT_KEYBOARD, gKeyboard, SDL_NUM_SCANCODES);
+    EXPOSE_GLOBAL_ARRAY(LOT_KEY, gKeyboard, SDL_NUM_SCANCODES);
 #endif
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
 

@@ -102,6 +102,7 @@ override_field_invisible = {
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],
+    "Gamepad": [ "controller" ],
 }
 
 override_field_deprecated = {

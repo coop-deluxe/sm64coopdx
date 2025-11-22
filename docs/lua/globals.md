@@ -52,7 +52,7 @@ The `gGamepads[]` table is an array from `0` to `(MAX_GAMEPADS - 1)` that contai
 <br />
 
 ## [gKeyboard](#gKeyboard)
-The `gKeyboard[]` table is an array from `0` to `(SDL_NUM_SCANCODES - 1)` that contains a [Keyboard](structs.md#Keyboard) struct for each possible scancode.
+The `gKeyboard[]` table is an array from `0` to `(SDL_NUM_SCANCODES - 1)` that contains a [Key](structs.md#Key) struct for each possible scancode.
 
 [:arrow_up_small:](#)
 

@@ -667,34 +667,6 @@ void network_mod_dev_mode_reload(void) {
     LOG_CONSOLE("===================================================");
 }
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-static void clear_gamepad_input_data(void) {
-    for (int i = 0; i < MAX_GAMEPADS; ++i) {
-        for (int j = 0; j < SDL_CONTROLLER_BUTTON_MAX; ++j) {
-            gGamepads[i].buttons[j] = false;
-        }
-        vec2s_set(gGamepads[i].leftStick, 0, 0);
-        vec2s_set(gGamepads[i].rightStick, 0, 0);
-        gGamepads[i].leftTrigger = 0;
-        gGamepads[i].rightTrigger = 0;
-        vec3f_set(gGamepads[i].accelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].gyro, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].leftAccelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].leftGyro, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].rightAccelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].rightGyro, 0.0f, 0.0f, 0.0f);
-        gGamepads[i].loRumble = 0;
-        gGamepads[i].hiRumble = 0;
-        for (int j = 0; j < MAX_TOUCHPAD_FINGERS; ++j) {
-            vec2f_set(gGamepads[i].touchpad[j].pos, 0.0f, 0.0f);
-            gGamepads[i].touchpad[j].pressure = 0.0f;
-            gGamepads[i].touchpad[j].touched = false;
-        }
-        color_set(gGamepads[i].ledColor, 0x0, 0x0, 0x0);
-    }
-}
-#endif
-
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     smlua_call_event_hooks(HOOK_ON_EXIT);
 

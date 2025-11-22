@@ -35,15 +35,11 @@
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers
 #define AXIS_THRESHOLD (30 * 256)
 
-static s32 num_gamepads;
-
 static bool init_ok = false;
 static bool haptics_enabled = false;
 static SDL_GameController *sdl_cntrl = NULL;
 static SDL_Joystick *sdl_joystick = NULL;
 static SDL_Haptic *sdl_haptic = NULL;
-
-static SDL_GameController *sOpenControllers[MAX_GAMEPADS];
 
 static bool sBackgroundGamepad = false;
 
@@ -62,8 +58,8 @@ static s16 invert_s16(s16 val) {
     return (s16)(-(s32)val);
 }
 
-// This uses the code from the comment in SDL2 SDL_gamecontroller.h
-static int SDL_NumGameControllers(void) {
+// This uses the code from the comment in SDL2 SDL_gamecontroller.h https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h#L110
+static int get_gamepad_num(void) {
     int nJoysticks = SDL_NumJoysticks();
     int nGameControllers = 0;
     for (int i = 0; i < nJoysticks; i++) {
@@ -172,18 +168,11 @@ static void controller_sdl_init(void) {
 
     haptics_enabled = (SDL_InitSubSystem(SDL_INIT_HAPTIC) == 0);
 
-    // Loading a controller mapping file
-    uint64_t gcsize = 0;
-    void *gcdata = fs_load_file("controller_gamepad.db", &gcsize);
-    if (gcdata && gcsize) {
-        SDL_RWops *rw = SDL_RWFromConstMem(gcdata, gcsize);
-        if (rw) {
-            int nummaps = SDL_GameControllerAddMappingsFromRW(rw, SDL_TRUE);
-            if (nummaps >= 0)
-                printf("Successfully loaded %d controller mappings from 'controller_gamepad.db'\n", nummaps);
-        }
-        free(gcdata);
+    if (!fs_sys_dir_exists(fs_get_write_path(DATABASES_DIRECTORY))) {
+        fs_sys_mkdir(fs_get_write_path(DATABASES_DIRECTORY));
     }
+    controller_maps_load(sys_resource_path(), true);
+    controller_maps_load(fs_get_write_path(DATABASES_DIRECTORY), false);
 
     if (gNewCamera.isMouse) { controller_mouse_enter_relative(); }
     controller_mouse_read_relative();
@@ -255,44 +244,50 @@ static void controller_sdl_read(OSContPad *pad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, sBackgroundGamepad ? "1" : "0");
     }
 
-    num_gamepads = SDL_NumGameControllers();
-
-    for (int i = 0; i < num_gamepads; ++i) {
+    for (int i = 0; i < get_gamepad_num() && i < MAX_GAMEPADS; ++i) {
         gGamepads[i].index = i;
-        SDL_GameController *sSDLGameController = NULL;
-        if (sOpenControllers[i] == NULL) sSDLGameController = SDL_GameControllerOpen(i);
-        else sSDLGameController = sOpenControllers[i];
-        if (sSDLGameController == NULL) continue;
-        sOpenControllers[i] = sSDLGameController;
-        gGamepads[i].name = SDL_GameControllerName(sSDLGameController);
-        SDL_GameControllerSetPlayerIndex(sSDLGameController, (int32_t)gGamepads[i].playerIndex);
-        for (int j = 0; j < SDL_CONTROLLER_BUTTON_MAX; ++j) {
-            gGamepads[i].buttons[j] = SDL_GameControllerGetButton(sSDLGameController, j);
+        SDL_GameController *sdl_gamepad = NULL;
+        if (gGamepads[i].controller == NULL) {
+            sdl_gamepad = SDL_GameControllerOpen(i);
+        } else {
+            sdl_gamepad = gGamepads[i].controller;
         }
-        gGamepads[i].leftStick[0] = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_LEFTX);
-        gGamepads[i].leftStick[1] = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_LEFTY);
-        gGamepads[i].rightStick[0] = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_RIGHTX);
-        gGamepads[i].rightStick[1] = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_RIGHTY);
-        gGamepads[i].leftTrigger = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-        gGamepads[i].rightTrigger = SDL_GameControllerGetAxis(sSDLGameController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_ACCEL, 3);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_GYRO, 3);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_ACCEL_L, 3);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_GYRO_L, 3);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_ACCEL_R, 3);
-        SDL_GameControllerSetSensorEnabled(sSDLGameController, SDL_SENSOR_GYRO_R, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_ACCEL, gGamepads[i].accelerometer, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_GYRO, gGamepads[i].gyro, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_ACCEL_L, gGamepads[i].leftAccelerometer, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_GYRO_L, gGamepads[i].leftGyro, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_ACCEL_R, gGamepads[i].rightAccelerometer, 3);
-        SDL_GameControllerGetSensorData(sSDLGameController, SDL_SENSOR_GYRO_R, gGamepads[i].rightGyro, 3);
-        SDL_GameControllerRumble(sSDLGameController, gGamepads[i].loRumble, gGamepads[i].hiRumble, 1000);
-        SDL_GameControllerSetLED(sSDLGameController, gGamepads[i].ledColor[0], gGamepads[i].ledColor[1], gGamepads[i].ledColor[2]);
+        if (sdl_gamepad == NULL) continue;
+        gGamepads[i].controller = sdl_gamepad;
+        gGamepads[i].name = SDL_GameControllerName(sdl_gamepad);
+        SDL_GameControllerSetPlayerIndex(sdl_gamepad, (int32_t)gGamepads[i].playerIndex);
+        for (int j = 0; j < SDL_CONTROLLER_BUTTON_MAX; ++j) {
+            gGamepads[i].buttons[j] = SDL_GameControllerGetButton(sdl_gamepad, j);
+        }
+        gGamepads[i].leftStick[0] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_LEFTX);
+        gGamepads[i].leftStick[1] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_LEFTY);
+        gGamepads[i].rightStick[0] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_RIGHTX);
+        gGamepads[i].rightStick[1] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_RIGHTY);
+        gGamepads[i].leftTrigger = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+        gGamepads[i].rightTrigger = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL_L, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO_L, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL_R, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO_R, SDL_TRUE);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL, gGamepads[i].accelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO, gGamepads[i].gyro, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL_L, gGamepads[i].leftAccelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO_L, gGamepads[i].leftGyro, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL_R, gGamepads[i].rightAccelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO_R, gGamepads[i].rightGyro, 3);
+        if (gGamepads[i].rumbleDurationMs > 0) {  
+            SDL_GameControllerRumble(sdl_gamepad, gGamepads[i].rumbleLowFreq, gGamepads[i].rumbleHighFreq, gGamepads[i].rumbleDurationMs);  
+            gGamepads[i].rumbleLowFreq = 0;
+            gGamepads[i].rumbleHighFreq = 0;
+            gGamepads[i].rumbleDurationMs = 0;  
+        }
+        SDL_GameControllerSetLED(sdl_gamepad, gGamepads[i].ledColor[0], gGamepads[i].ledColor[1], gGamepads[i].ledColor[2]);
         for (int j = 0; j < MAX_TOUCHPAD_FINGERS; ++j) {
-            uint8_t state;
-            float_t x, y, pressure;
-            SDL_GameControllerGetTouchpadFinger(sSDLGameController, 0, j, &state, &x, &y, &pressure);
+            Uint8 state;
+            float x, y, pressure;
+            SDL_GameControllerGetTouchpadFinger(sdl_gamepad, 0, j, &state, &x, &y, &pressure);
             gGamepads[i].touchpad[j].touched = state;
             gGamepads[i].touchpad[j].pos[0] = x;
             gGamepads[i].touchpad[j].pos[1] = y;
@@ -472,10 +467,11 @@ static void controller_sdl_shutdown(void) {
             sdl_joystick = NULL;
         }
         for (int i = 0; i < MAX_GAMEPADS; ++i) {
-            if (sOpenControllers[i] != NULL) {
-                SDL_GameControllerSetLED(sOpenControllers[i], 0x0, 0x0, 0x0);
-                SDL_GameControllerClose(sOpenControllers[i]);
-                sOpenControllers[i] = NULL;
+            if (gGamepads[i].controller != NULL) {
+                SDL_GameControllerSetLED(gGamepads[i].controller, 0x0, 0x0, 0x0);
+                SDL_GameControllerSetPlayerIndex(gGamepads[i].controller, 0);
+                SDL_GameControllerClose(gGamepads[i].controller);
+                gGamepads[i].controller = NULL;
             }
         }
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);

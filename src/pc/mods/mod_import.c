@@ -6,6 +6,7 @@
 #include "data/dynos.c.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 #include "mods.h"
 #include "mods_utils.h"
 
@@ -98,6 +99,54 @@ static bool mod_import_palette(char* src) {
     }
 
     LOG_INFO("Imported palette ini: '%s' -> '%s'", src, dst);
+
+    return true;
+}
+
+static bool mod_import_database(char* src) {
+    const char* databasesDirectory = fs_get_write_path(DATABASES_DIRECTORY);
+    fs_sys_mkdir(databasesDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)databasesDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat path for database db import");
+        return false;
+    }
+
+    FILE* fin = fopen(src, "rb");
+    if (fin == NULL) {
+        LOG_ERROR("Failed to open src path for database db import");
+        return false;
+    }
+
+    FILE* fout = fopen(dst, "wb");
+    if (fout == NULL) {
+        LOG_ERROR("Failed to open dst path for database db import");
+        fclose(fin);
+        return false;
+    }
+
+    size_t rbytes;
+    size_t wbytes;
+    unsigned char buff[8192];
+    do {
+        rbytes = fread(buff, 1, sizeof(buff), fin);
+        if (rbytes > 0) {
+            wbytes = fwrite(buff, 1, rbytes, fout);
+        } else {
+            wbytes = 0;
+        }
+    } while ((rbytes > 0) && (rbytes == wbytes));
+
+    fclose(fout);
+    fclose(fin);
+
+    if (wbytes) {
+        LOG_ERROR("Write error on database db import");
+        return false;
+    }
+
+    LOG_INFO("Imported database db: '%s' -> '%s'", src, dst);
 
     return true;
 }
@@ -256,6 +305,7 @@ bool mod_import_file(char* path) {
     bool isLua = false;
     bool isDynos = false;
     bool isPalette = false;
+    bool isDatabase = false;
     bool ret = false;
 
     if (gNetworkType != NT_NONE && !path_ends_with(path, ".ini")) {
@@ -269,6 +319,9 @@ bool mod_import_file(char* path) {
     } else if (path_ends_with(path, ".ini")) {
         isPalette = true;
         ret = mod_import_palette(path);
+    } else if (path_ends_with(path, ".db")) {
+        isDatabase = true;
+        ret = mod_import_database(path);
     } else if (path_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
     }
@@ -287,6 +340,9 @@ bool mod_import_file(char* path) {
             djui_popup_create(msg, 2);
         } else if (isPalette) {
             djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        } else if (isDatabase) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_DATABASE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }
     } else {

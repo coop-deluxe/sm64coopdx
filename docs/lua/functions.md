@@ -1961,6 +1961,8 @@
 
 - smlua_input_utils.h
    - [get_current_gamepad_index](functions-6.md#get_current_gamepad_index)
+   - [get_clipboard_text](functions-6.md#get_clipboard_text)
+   - [set_clipboard_text](functions-6.md#set_clipboard_text)
 
 <br />
 

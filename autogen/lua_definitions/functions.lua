@@ -10937,6 +10937,18 @@ function get_current_gamepad_index()
     -- ...
 end
 
+--- @return string
+--- Returns the clipboard text
+function get_clipboard_text()
+    -- ...
+end
+
+--- @param text string
+--- Sets the clipboard text
+function set_clipboard_text(text)
+    -- ...
+end
+
 --- @param areaIndex integer
 --- Instantly changes the current area to `areaIndex`
 function smlua_level_util_change_area(areaIndex)

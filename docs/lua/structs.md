@@ -22,6 +22,7 @@
 - [DjuiTheme](#DjuiTheme)
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
+- [Finger](#Finger)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FnGraphNode](#FnGraphNode)
 - [Gamepad](#Gamepad)
@@ -56,7 +57,7 @@
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
 - [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
-- [Keyboard](#Keyboard)
+- [Key](#Key)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
 - [MarioAnimation](#MarioAnimation)
@@ -87,7 +88,6 @@
 - [StaticObjectCollision](#StaticObjectCollision)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
-- [Touchpad](#Touchpad)
 - [Vec2f](#Vec2f)
 - [Vec2i](#Vec2i)
 - [Vec2s](#Vec2s)
@@ -843,6 +843,18 @@
 
 <br />
 
+## [Finger](#Finger)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| pos | [Vec2f](structs.md#Vec2f) | read-only |
+| pressure | `number` |  |
+| touched | `boolean` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [FirstPersonCamera](#FirstPersonCamera)
 
 | Field | Type | Access |
@@ -890,9 +902,10 @@
 | rightGyro | [Vec3f](structs.md#Vec3f) | read-only |
 | leftAccelerometer | [Vec3f](structs.md#Vec3f) | read-only |
 | rightAccelerometer | [Vec3f](structs.md#Vec3f) | read-only |
-| touchpad | `Array` <`Touchpad`> | read-only |
-| loRumble | `integer` |  |
-| hiRumble | `integer` |  |
+| touchpad | `Array` <`Finger`> | read-only |
+| rumbleLowFreq | `integer` |  |
+| rumbleHighFreq | `integer` |  |
+| rumbleDurationMs | `integer` |  |
 | ledColor | [Color](structs.md#Color) | read-only |
 
 [:arrow_up_small:](#)
@@ -1483,13 +1496,13 @@
 
 <br />
 
-## [Keyboard](#Keyboard)
+## [Key](#Key)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| keyDown | `boolean` |  |
-| keyPressed | `boolean` |  |
-| keyReleased | `boolean` |  |
+| down | `boolean` |  |
+| pressed | `boolean` |  |
+| released | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -3029,18 +3042,6 @@
 | height | `integer` | read-only |
 | format | `integer` | read-only |
 | size | `integer` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [Touchpad](#Touchpad)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| pos | [Vec2f](structs.md#Vec2f) | read-only |
-| pressure | `number` |  |
-| touched | `boolean` |  |
 
 [:arrow_up_small:](#)
 

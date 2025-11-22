@@ -585,6 +585,11 @@
 --- @field public model ModelExtendedId
 --- @field public behavior BehaviorId
 
+--- @class Finger
+--- @field public pos Vec2f
+--- @field public pressure number
+--- @field public touched boolean
+
 --- @class FirstPersonCamera
 --- @field public enabled boolean
 --- @field public forcePitch boolean
@@ -615,9 +620,10 @@
 --- @field public rightGyro Vec3f
 --- @field public leftAccelerometer Vec3f
 --- @field public rightAccelerometer Vec3f
---- @field public touchpad Touchpad[]
---- @field public loRumble integer
---- @field public hiRumble integer
+--- @field public touchpad Finger[]
+--- @field public rumbleLowFreq integer
+--- @field public rumbleHighFreq integer
+--- @field public rumbleDurationMs integer
 --- @field public ledColor Color
 
 --- @class Gfx
@@ -987,10 +993,10 @@
 --- @field public area integer
 --- @field public displacement Vec3s
 
---- @class Keyboard
---- @field public keyDown boolean
---- @field public keyPressed boolean
---- @field public keyReleased boolean
+--- @class Key
+--- @field public down boolean
+--- @field public pressed boolean
+--- @field public released boolean
 
 --- @class LakituState
 --- @field public curFocus Vec3f
@@ -2287,11 +2293,6 @@
 --- @field public height integer
 --- @field public format integer
 --- @field public size integer
-
---- @class Touchpad
---- @field public pos Vec2f
---- @field public pressure number
---- @field public touched boolean
 
 --- @class Vtx
 --- @field public x number

@@ -35,7 +35,7 @@ gControllers = {}
 --- Array of every gamepad, from 0 to `MAX_GAMEPADS` - 1
 gGamepads = {}
 
---- @type Keyboard[]
+--- @type Key[]
 --- Array of every SDL scancode, from 0 to `SDL_NUM_SCANCODES` - 1
 gKeyboard = {}
 
