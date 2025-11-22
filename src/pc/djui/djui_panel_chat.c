@@ -19,13 +19,6 @@ static const u8 CHAT_LABEL_LOW_RGB[3]     = {  32,  64, 255 };
 static const u8 CHAT_LABEL_DEFAULT_RGB[3] = {  32, 224,  32 }; 
 static const u8 CHAT_LABEL_HIGH_RGB[3]    = { 255,  64,  32 };
 
-static struct DjuiText*   sChatTextScaleLabel      = NULL;
-static struct DjuiText*   sChatBgOpacityLabel      = NULL;
-static struct DjuiText*   sChatTextOpacityLabel    = NULL;
-static struct DjuiText*   sChatLifetimeLabel       = NULL;
-static struct DjuiText*   sChatWidthLabel          = NULL;
-static struct DjuiText*   sChatHeightLabel         = NULL;
-
 static struct DjuiSlider* sSliderWidth             = NULL;
 static struct DjuiSlider* sSliderHeight            = NULL;
 static struct DjuiSlider* sSliderTextScale         = NULL;
@@ -46,12 +39,36 @@ static struct DjuiButton* sResetUseStdChatButton   = NULL;
 static struct DjuiButton* sResetCharCounterButton  = NULL;
 static struct DjuiButton* sResetClosedModeButton   = NULL;
 
-static f32 sChatSliderLastCursorX = 0.0f;
-static bool sChatSliderFineAdjust = false;
 static struct DjuiText* sChatShiftHintText        = NULL;
+
+static void djui_panel_chat_destroy(UNUSED struct DjuiBase* base) {
+    sChatShiftHintText = NULL;
+    sSliderWidth       = NULL;
+    sSliderHeight      = NULL;
+    sSliderTextScale   = NULL;
+    sSliderBgOpacity   = NULL;
+    sSliderTextOpacity = NULL;
+    sSliderLifetime    = NULL;
+    sCheckboxUseStdChat  = NULL;
+    sCheckboxCharCounter = NULL;
+    sResetWidthButton       = NULL;
+    sResetHeightButton      = NULL;
+    sResetTextScaleButton   = NULL;
+    sResetBgOpacityButton   = NULL;
+    sResetTextOpacityButton = NULL;
+    sResetLifetimeButton    = NULL;
+    sResetUseStdChatButton  = NULL;
+    sResetCharCounterButton = NULL;
+    sResetClosedModeButton  = NULL;
+}
+
+bool djui_panel_chat_is_shift_hint_visible(void) {
+    return (sChatShiftHintText != NULL && sChatShiftHintText->base.visible);
+}
 
 void djui_panel_chat_update_shift_hint(void) {
     if (sChatShiftHintText == NULL) { return; }
+    if (!sChatShiftHintText->base.visible) { return; }
     if (gDjuiInputHeldShift) {
         djui_text_set_text(sChatShiftHintText, DLANG(CHAT_OPTIONS, CHAT_SHIFT_HINT_ACTIVE));
         djui_base_set_color(&sChatShiftHintText->base, 255, 165, 0, 255);
@@ -82,92 +99,110 @@ static void djui_panel_chat_apply_chatbox_style(void) {
 }
 
 static void djui_panel_chat_update_value_labels(void) {
-    if (sChatWidthLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%u", configChatWidth);
-        djui_text_set_text(sChatWidthLabel, buf);
-        struct DjuiBase* base = &sChatWidthLabel->base;
-        if (configChatWidth < CHAT_WIDTH_DEFAULT) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatWidth == CHAT_WIDTH_DEFAULT) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
-        } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
-        }
-    }
-
-    if (sChatHeightLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%u", configChatHeight);
-        djui_text_set_text(sChatHeightLabel, buf);
-        struct DjuiBase* base = &sChatHeightLabel->base;
-        if (configChatHeight < CHAT_HEIGHT_DEFAULT) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatHeight == CHAT_HEIGHT_DEFAULT) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
-        } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
-        }
-    }
-
-    if (sChatTextScaleLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%u%%", configChatTextScale);
-        djui_text_set_text(sChatTextScaleLabel, buf);
-        struct DjuiBase* base = &sChatTextScaleLabel->base;
-        if (configChatTextScale < 100) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatTextScale == 100) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
-        } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
-        }
-    }
-
-    if (sChatBgOpacityLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%u%%", configChatBackgroundOpacity);
-        djui_text_set_text(sChatBgOpacityLabel, buf);
-        struct DjuiBase* base = &sChatBgOpacityLabel->base;
-        if (configChatBackgroundOpacity < 70) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatBackgroundOpacity == 70) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
-        } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
-        }
-    }
-
-    if (sChatTextOpacityLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%u%%", configChatTextOpacity);
-        djui_text_set_text(sChatTextOpacityLabel, buf);
-        struct DjuiBase* base = &sChatTextOpacityLabel->base;
-        if (configChatTextOpacity < 100) {
-            djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-        } else if (configChatTextOpacity == 100) {
-            djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
-        } else {
-            djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
-        }
-    }
-
-    if (sChatLifetimeLabel != NULL) {
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%us", configChatMessageLifetime);
-        djui_text_set_text(sChatLifetimeLabel, buf);
-        struct DjuiBase* base = &sChatLifetimeLabel->base;
-
-        if (configChatClosedMode != 1) {
-            // Deaktivierter Modus: Wert grau darstellen
-            djui_base_set_color(base, 160, 160, 160, 255);
-        } else {
-            if (configChatMessageLifetime < CHAT_LIFETIME_DEFAULT) {
+    if (sSliderWidth != NULL) {
+        struct DjuiText* sChatWidthLabel = djui_slider_get_value_text(sSliderWidth);
+        if (sChatWidthLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u", configChatWidth);
+            djui_text_set_text(sChatWidthLabel, buf);
+            struct DjuiBase* base = &sChatWidthLabel->base;
+            if (configChatWidth < CHAT_WIDTH_DEFAULT) {
                 djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
-            } else if (configChatMessageLifetime == CHAT_LIFETIME_DEFAULT) {
+            } else if (configChatWidth == CHAT_WIDTH_DEFAULT) {
                 djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
             } else {
                 djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
+        }
+    }
+
+    if (sSliderHeight != NULL) {
+        struct DjuiText* sChatHeightLabel = djui_slider_get_value_text(sSliderHeight);
+        if (sChatHeightLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u", configChatHeight);
+            djui_text_set_text(sChatHeightLabel, buf);
+            struct DjuiBase* base = &sChatHeightLabel->base;
+            if (configChatHeight < CHAT_HEIGHT_DEFAULT) {
+                djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+            } else if (configChatHeight == CHAT_HEIGHT_DEFAULT) {
+                djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+            } else {
+                djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
+        }
+    }
+
+    if (sSliderTextScale != NULL) {
+        struct DjuiText* sChatTextScaleLabel = djui_slider_get_value_text(sSliderTextScale);
+        if (sChatTextScaleLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u%%", configChatTextScale);
+            djui_text_set_text(sChatTextScaleLabel, buf);
+            struct DjuiBase* base = &sChatTextScaleLabel->base;
+            if (configChatTextScale < 100) {
+                djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+            } else if (configChatTextScale == 100) {
+                djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+            } else {
+                djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
+        }
+    }
+
+    if (sSliderBgOpacity != NULL) {
+        struct DjuiText* sChatBgOpacityLabel = djui_slider_get_value_text(sSliderBgOpacity);
+        if (sChatBgOpacityLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u%%", configChatBackgroundOpacity);
+            djui_text_set_text(sChatBgOpacityLabel, buf);
+            struct DjuiBase* base = &sChatBgOpacityLabel->base;
+            if (configChatBackgroundOpacity < 70) {
+                djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+            } else if (configChatBackgroundOpacity == 70) {
+                djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+            } else {
+                djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
+        }
+    }
+
+    if (sSliderTextOpacity != NULL) {
+        struct DjuiText* sChatTextOpacityLabel = djui_slider_get_value_text(sSliderTextOpacity);
+        if (sChatTextOpacityLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%u%%", configChatTextOpacity);
+            djui_text_set_text(sChatTextOpacityLabel, buf);
+            struct DjuiBase* base = &sChatTextOpacityLabel->base;
+            if (configChatTextOpacity < 100) {
+                djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+            } else if (configChatTextOpacity == 100) {
+                djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+            } else {
+                djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+            }
+        }
+    }
+
+    if (sSliderLifetime != NULL) {
+        struct DjuiText* sChatLifetimeLabel = djui_slider_get_value_text(sSliderLifetime);
+        if (sChatLifetimeLabel != NULL) {
+            char buf[16];
+            snprintf(buf, sizeof(buf), "%us", configChatMessageLifetime);
+            djui_text_set_text(sChatLifetimeLabel, buf);
+            struct DjuiBase* base = &sChatLifetimeLabel->base;
+
+            if (configChatClosedMode != 1) {
+                // Deaktivierter Modus: Wert grau darstellen
+                djui_base_set_color(base, 160, 160, 160, 255);
+            } else {
+                if (configChatMessageLifetime < CHAT_LIFETIME_DEFAULT) {
+                    djui_base_set_color(base, CHAT_LABEL_LOW_RGB[0], CHAT_LABEL_LOW_RGB[1], CHAT_LABEL_LOW_RGB[2], 255);
+                } else if (configChatMessageLifetime == CHAT_LIFETIME_DEFAULT) {
+                    djui_base_set_color(base, CHAT_LABEL_DEFAULT_RGB[0], CHAT_LABEL_DEFAULT_RGB[1], CHAT_LABEL_DEFAULT_RGB[2], 255);
+                } else {
+                    djui_base_set_color(base, CHAT_LABEL_HIGH_RGB[0], CHAT_LABEL_HIGH_RGB[1], CHAT_LABEL_HIGH_RGB[2], 255);
+                }
             }
         }
     }
@@ -209,79 +244,6 @@ static void djui_panel_chat_update_lifetime_slider_enabled(void) {
     djui_base_set_enabled(&sSliderLifetime->base, lifetimeActive);
 }
 
-static void djui_panel_chat_slider_on_cursor_down(struct DjuiBase* base) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    u32  min   = slider->min;
-    u32  max   = slider->max;
-    u32* value = slider->value;
-
-    sChatSliderFineAdjust = (gDjuiInputHeldShift != 0);
-    djui_panel_chat_update_shift_hint();
-
-    int newValue = (int)*value;
-
-    if (sChatSliderFineAdjust) {
-        f32 w = slider->rect->base.elem.width;
-        if (w <= 0.0f) { w = 1.0f; }
-
-        f32 baseStepPerPixel = (f32)(max - min) / w;
-        f32 fineStepPerPixel = baseStepPerPixel * 0.1f;
-
-        f32 cursorX = gCursorX;
-        f32 deltaX  = cursorX - sChatSliderLastCursorX;
-        sChatSliderLastCursorX = cursorX;
-
-        newValue = (int)((f32)newValue + deltaX * fineStepPerPixel + 0.5f);
-    } else {
-        f32 x = slider->rect->base.elem.x;
-        f32 w = slider->rect->base.elem.width;
-        f32 cursorX = gCursorX;
-        cursorX = fmax(cursorX, x);
-        cursorX = fmin(cursorX, x + w);
-
-        f32 t = 0.0f;
-        if (w > 0.0f) {
-            t = (cursorX - x) / w;
-        }
-        if (t < 0.0f) t = 0.0f;
-        if (t > 1.0f) t = 1.0f;
-
-        newValue = (int)(t * (f32)(max - min) + 0.5f) + (int)min;
-    }
-
-    if (newValue < (int)min) newValue = (int)min;
-    if (newValue > (int)max) newValue = (int)max;
-    *value = (u32)newValue;
-
-    if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
-        base->interactable->on_value_change(base);
-    }
-    djui_slider_update_value(base);
-}
-
-static void djui_panel_chat_slider_on_cursor_down_begin(struct DjuiBase* base, bool inputCursor) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    f32 x = slider->rect->base.elem.x;
-    if (gCursorX >= x) {
-        if (inputCursor) {
-            djui_interactable_set_input_focus(base);
-        } else {
-            sChatSliderLastCursorX = gCursorX;
-            sChatSliderFineAdjust = (gDjuiInputHeldShift != 0);
-            djui_panel_chat_update_shift_hint();
-            slider->base.interactable->on_cursor_down = djui_panel_chat_slider_on_cursor_down;
-        }
-    } else {
-        slider->base.interactable->on_cursor_down = NULL;
-    }
-}
-
-static void djui_panel_chat_slider_on_cursor_down_end(struct DjuiBase* base) {
-    struct DjuiSlider* slider = (struct DjuiSlider*)base;
-    slider->base.interactable->on_cursor_down = NULL;
-    sChatSliderFineAdjust = false;
-    djui_panel_chat_update_shift_hint();
-}
 
 static void djui_panel_chat_on_width_slider_change(UNUSED struct DjuiBase* b) {
     if (configChatWidth < 200)  { configChatWidth = 200; }
@@ -493,26 +455,6 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         sSliderBgOpacity    = djui_slider_create(&rowBgOpacity->base,   DLANG(CHAT_OPTIONS, CHAT_BACKGROUND_OPACITY), &configChatBackgroundOpacity,  0,  100, djui_panel_chat_on_style_change);
         sSliderTextOpacity  = djui_slider_create(&rowTextOpacity->base, DLANG(CHAT_OPTIONS, CHAT_TEXT_OPACITY),       &configChatTextOpacity,        0,  100, djui_panel_chat_on_style_change);
 
-        {
-            struct DjuiSlider* slidersForCursor[] = {
-                sSliderWidth,
-                sSliderHeight,
-                sSliderTextScale,
-                sSliderBgOpacity,
-                sSliderTextOpacity,
-                sSliderLifetime,
-            };
-            for (int i = 0; i < 6; i++) {
-                struct DjuiSlider* s = slidersForCursor[i];
-                if (s == NULL) { continue; }
-                djui_interactable_hook_cursor_down(
-                    &s->base,
-                    djui_panel_chat_slider_on_cursor_down_begin,
-                    djui_panel_chat_slider_on_cursor_down,
-                    djui_panel_chat_slider_on_cursor_down_end
-                );
-            }
-        }
 
         struct DjuiSlider* sliders[] = {
             sSliderWidth,
@@ -531,48 +473,6 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
             djui_base_set_size(&s->base, 0.94f, 32.0f);
             djui_base_set_size(&s->rect->base, 0.46f, 1.0f);
         }
-
-        sChatWidthLabel = djui_text_create(&sSliderWidth->rect->base, "");
-        djui_base_set_alignment(&sChatWidthLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatWidthLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatWidthLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatWidthLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatWidthLabel, 64, 64, 64, 100);
-
-        sChatHeightLabel = djui_text_create(&sSliderHeight->rect->base, "");
-        djui_base_set_alignment(&sChatHeightLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatHeightLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatHeightLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatHeightLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatHeightLabel, 64, 64, 64, 100);
-
-        sChatTextScaleLabel = djui_text_create(&sSliderTextScale->rect->base, "");
-        djui_base_set_alignment(&sChatTextScaleLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatTextScaleLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatTextScaleLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatTextScaleLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatTextScaleLabel, 64, 64, 64, 100);
-
-        sChatBgOpacityLabel = djui_text_create(&sSliderBgOpacity->rect->base, "");
-        djui_base_set_alignment(&sChatBgOpacityLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatBgOpacityLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatBgOpacityLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatBgOpacityLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatBgOpacityLabel, 64, 64, 64, 100);
-
-        sChatTextOpacityLabel = djui_text_create(&sSliderTextOpacity->rect->base, "");
-        djui_base_set_alignment(&sChatTextOpacityLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatTextOpacityLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatTextOpacityLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatTextOpacityLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatTextOpacityLabel, 64, 64, 64, 100);
-
-        sChatLifetimeLabel = djui_text_create(&sSliderLifetime->rect->base, "");
-        djui_base_set_alignment(&sChatLifetimeLabel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_base_set_size_type(&sChatLifetimeLabel->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&sChatLifetimeLabel->base, 1.0f, 1.0f);
-        djui_text_set_alignment(sChatLifetimeLabel, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-        djui_text_set_drop_shadow(sChatLifetimeLabel, 64, 64, 64, 100);
 
         sResetUseStdChatButton  = djui_button_create(&rowUseStdChat->base,   "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_use_std_chat);
         sResetCharCounterButton = djui_button_create(&rowCharCounter->base,  "X", DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_on_reset_char_counter);
@@ -622,7 +522,9 @@ void djui_panel_chat_create(struct DjuiBase* caller) {
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
-    djui_panel_add(caller, panel, NULL);
+    struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
+    if (!p) { return; }
+    p->on_panel_destroy = djui_panel_chat_destroy;
 }
 
 

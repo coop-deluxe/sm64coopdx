@@ -208,7 +208,7 @@ bool djui_interactable_on_key_down(int scancode) {
         case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     |= (1 << 1); break;
     }
     
-    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_is_active()) {
+    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_chat_is_shift_hint_visible()) {
         djui_panel_chat_update_shift_hint();
     }
 
@@ -308,7 +308,7 @@ void djui_interactable_on_key_up(int scancode) {
         case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     &= ~(1 << 1); break;
     }
     
-    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_is_active()) {
+    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_chat_is_shift_hint_visible()) {
         djui_panel_chat_update_shift_hint();
     }
 
