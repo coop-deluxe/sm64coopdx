@@ -2162,7 +2162,7 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     gfx_dp_set_texture_image(fmt, G_IM_SIZ_[siz].LOAD_BLOCK, width, texture);
     gfx_dp_set_tile(fmt, siz, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
     gfx_dp_load_block(0, 0, 0, ((width * height + G_IM_SIZ_[siz].INCR) >> G_IM_SIZ_[siz].SHIFT) - 1, 0);
-    gfx_dp_set_tile(fmt, siz, (((width * G_IM_SIZ_[siz].LINE_BYTES) + 7) >> 3), 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+    gfx_dp_set_tile(fmt, siz, (((width * G_IM_SIZ_[siz].LINE_BYTES) + 7) >> 3), 0, G_TX_RENDERTILE, 0, rdp.texture_tile.cmt, 0, 0, rdp.texture_tile.cms, 0, 0);
 }
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
