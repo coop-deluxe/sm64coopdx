@@ -768,9 +768,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
     clear_gamepad_input_data();
-#endif
 
     le_shutdown();
 

@@ -14,9 +14,7 @@
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
 #include "pc/lua/utils/smlua_input_utils.h"
-#endif
 #include "pc/mods/mods.h"
 
 extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
@@ -763,11 +761,11 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, CT_MAX);
 
     EXPOSE_GLOBAL_ARRAY(LOT_CONTROLLER, gControllers, MAX_PLAYERS);
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
+
     EXPOSE_GLOBAL_ARRAY(LOT_GAMEPAD, gGamepads, MAX_GAMEPADS);
 
     EXPOSE_GLOBAL_ARRAY(LOT_KEY, gKeyboard, SDL_NUM_SCANCODES);
-#endif
+
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
 
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStackPrev, MATRIX_STACK_SIZE);

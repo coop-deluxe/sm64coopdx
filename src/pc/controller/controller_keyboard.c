@@ -18,9 +18,7 @@
 
 static int keyboard_buttons_down;
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-bool kb_keys_curr_down[SDL_NUM_SCANCODES];
-#endif
+bool kb_keys_curr_down[512];
 
 #define MAX_KEYBINDS 64
 static int keyboard_mapping[MAX_KEYBINDS][2];
@@ -65,13 +63,11 @@ bool keyboard_on_key_up(int scancode) {
 
 void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+    for (int scancode = 0; scancode < 512; ++scancode) {
         gKeyboard[scancode].down = false;
         gKeyboard[scancode].pressed = false;
         gKeyboard[scancode].released = false;
     }
-#endif
 }
 
 void keyboard_on_text_input(char* text) {
@@ -124,8 +120,7 @@ static void keyboard_init(void) {
 
 
 static void keyboard_read(OSContPad *pad) {
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+    for (int scancode = 0; scancode < 512; ++scancode) {
         bool prev = gKeyboard[scancode].down;
         bool curr = kb_keys_curr_down[scancode];
 
@@ -133,7 +128,6 @@ static void keyboard_read(OSContPad *pad) {
         gKeyboard[scancode].pressed = (!prev && curr);
         gKeyboard[scancode].released = (prev && !curr);
     }
-#endif
 
     pad->button |= keyboard_buttons_down;
     const u32 xstick = keyboard_buttons_down & STICK_XMASK;

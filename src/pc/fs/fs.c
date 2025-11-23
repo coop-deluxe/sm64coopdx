@@ -292,6 +292,65 @@ bool fs_sys_filename_is_portable(char const *filename) {
 
 /* these operate on the real file system */
 
+static bool concat_path(char* destination, char* path, char* fname) {
+    return (snprintf(destination, SYS_MAX_PATH - 1, "%s/%s", path, fname) >= 0);
+}
+
+static char* path_basename(char* path) {
+    char* base = path;
+    while (*path != '\0') {
+        if (*(path + 1) != '\0') {
+            if (*path == '\\' || *path == '/') {
+                base = path + 1;
+            }
+        }
+        path++;
+    }
+    return base;
+}
+
+bool fs_sys_copy_file(char* src, const char* dir) {
+    const char* directory = fs_get_write_path(dir);
+    fs_sys_mkdir(directory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)directory, path_basename(src))) {
+        return false;
+    }
+
+    FILE* fin = fopen(src, "rb");
+    if (fin == NULL) {
+        return false;
+    }
+
+    FILE* fout = fopen(dst, "wb");
+    if (fout == NULL) {
+        fclose(fin);
+        return false;
+    }
+
+    size_t rbytes;
+    size_t wbytes;
+    unsigned char buff[8192];
+    do {
+        rbytes = fread(buff, 1, sizeof(buff), fin);
+        if (rbytes > 0) {
+            wbytes = fwrite(buff, 1, rbytes, fout);
+        } else {
+            wbytes = 0;
+        }
+    } while ((rbytes > 0) && (rbytes == wbytes));
+
+    fclose(fout);
+    fclose(fin);
+
+    if (wbytes) {
+        return false;
+    }
+
+    return true;
+}
+
 bool fs_sys_path_exists(const char *name) {
 #ifdef _WIN32
     return GetFileAttributesA(name) != INVALID_FILE_ATTRIBUTES;

@@ -1,5 +1,3 @@
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-
 #include "smlua_input_utils.h"
 
 #include "engine/math_util.h"
@@ -89,76 +87,17 @@ void controller_maps_load(const char* mapsPath, bool appendMaps) {
         char fullpath[SYS_MAX_PATH] = "";
         snprintf(fullpath, SYS_MAX_PATH, "%s/%s.db", dbpath, path);
 
-        // open file
-        FILE* f = fopen(fullpath, "rb");
-        if (!f) {
+        // load map
+        UNUSED int loadedMaps = SDL_GameControllerAddMappingsFromFile(fullpath);
+
 #ifdef DEVELOPMENT
-            printf("Failed to load controller map '%s.db'\n", path);
-#endif
-            continue;
-        }
-
-        // get file size
-        fseek(f, 0, SEEK_END);
-        int64_t size = ftell(f);
-        fseek(f, 0, SEEK_SET);
-
-        if (size <= 0) {
-#ifdef DEVELOPMENT
-            printf("Controller map empty or invalid: '%s.db'\n", path);
-#endif
-            fclose(f);
-            continue;
-        }
-
-        void* data = malloc(size);
-        if (!data) {
-            fclose(f);
-            continue;
-        }
-
-        if (fread(data, 1, size, f) != (size_t)size) {
-            free(data);
-            fclose(f);
-            continue;
-        }
-
-        fclose(f);
-
-        // SDL_RWFromConstMem uses int size
-        if (size > INT_MAX) {
-#ifdef DEVELOPMENT
-            printf("Controller map too large: '%s.db'\n", path);
-#endif
-            free(data);
-            continue;
-        }
-
-        SDL_RWops* rw = SDL_RWFromConstMem(data, (int)size);
-        if (!rw) {
-#ifdef DEVELOPMENT
-            printf("SDL_RWFromConstMem failed for '%s.db'\n", path);
-#endif
-            free(data);
-            continue;
-        }
-
-        // Load into SDL
-        int loadedMaps = SDL_GameControllerAddMappingsFromRW(rw, SDL_FALSE);
-
-        SDL_RWclose(rw);
-        free(data);
-
         if (loadedMaps >= 0) {
-#ifdef DEVELOPMENT
             printf("Controller Database: Loaded %d controller mapping(s) from '%s.db'\n", loadedMaps, path);
         } else {
             printf("Controller Database: Failed to load controller map from '%s.db'\n", path);
-#endif
         }
+#endif
     }
 
     closedir(d);
 }
-
-#endif

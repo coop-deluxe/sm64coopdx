@@ -7,8 +7,6 @@
 #define MAX_GAMEPADS 256
 #define MAX_TOUCHPAD_FINGERS 10
 
-#if defined(CAPI_SDL1) || defined(CAPI_SDL2)
-
 #include "types.h"
 
 #include <stdbool.h>
@@ -93,6 +91,4 @@ const char* get_clipboard_text(void);
 void set_clipboard_text(const char* text);
 void clear_gamepad_input_data(void);
 void controller_maps_load(const char* mapsPath, bool appendMaps);
-
-#endif
 #endif

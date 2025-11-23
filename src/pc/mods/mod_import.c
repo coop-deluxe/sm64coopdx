@@ -11,144 +11,39 @@
 #include "mods_utils.h"
 
 static bool mod_import_lua(char* src) {
-    char dst[SYS_MAX_PATH] = { 0 };
-    if (!concat_path(dst, (char*)fs_get_write_path(MOD_DIRECTORY), path_basename(src))) {
-        LOG_ERROR("Failed to concat path for lua mod import");
-        return false;
+    bool success = fs_sys_copy_file(src, MOD_DIRECTORY);
+
+    if (!success) {
+        LOG_ERROR("Failed to import lua mod file");
+    } else {
+        LOG_INFO("Imported lua mod: '%s'", src);
     }
 
-    FILE* fin = fopen(src, "rb");
-    if (fin == NULL) {
-        LOG_ERROR("Failed to open src path for lua mod import");
-        return false;
-    }
-
-    FILE* fout = fopen(dst, "wb");
-    if (fout == NULL) {
-        LOG_ERROR("Failed to open dst path for lua mod import");
-        fclose(fin);
-        return false;
-    }
-
-    size_t rbytes;
-    size_t wbytes;
-    unsigned char buff[8192];
-    do {
-        rbytes = fread(buff, 1, sizeof(buff), fin);
-        if (rbytes > 0) {
-            wbytes = fwrite(buff, 1, rbytes, fout);
-        } else {
-            wbytes = 0;
-        }
-    } while ((rbytes > 0) && (rbytes == wbytes));
-
-    fclose(fout);
-    fclose(fin);
-
-    if (wbytes) {
-        LOG_ERROR("Write error on lua mod import");
-        return false;
-    }
-
-    LOG_INFO("Imported lua mod: '%s' -> '%s'", src, dst);
-
-    return true;
+    return success;
 }
 
 static bool mod_import_palette(char* src) {
-    const char* palettesDirectory = fs_get_write_path(PALETTES_DIRECTORY);
-    fs_sys_mkdir(palettesDirectory);
+    bool success = fs_sys_copy_file(src, PALETTES_DIRECTORY);
 
-    char dst[SYS_MAX_PATH] = { 0 };
-    if (!concat_path(dst, (char*)palettesDirectory, path_basename(src))) {
-        LOG_ERROR("Failed to concat path for palette ini import");
-        return false;
+    if (!success) {
+        LOG_ERROR("Failed to import palette preset file");
+    } else {
+        LOG_INFO("Imported palette preset: '%s'", src);
     }
 
-    FILE* fin = fopen(src, "rb");
-    if (fin == NULL) {
-        LOG_ERROR("Failed to open src path for palette ini import");
-        return false;
-    }
-
-    FILE* fout = fopen(dst, "wb");
-    if (fout == NULL) {
-        LOG_ERROR("Failed to open dst path for palette ini import");
-        fclose(fin);
-        return false;
-    }
-
-    size_t rbytes;
-    size_t wbytes;
-    unsigned char buff[8192];
-    do {
-        rbytes = fread(buff, 1, sizeof(buff), fin);
-        if (rbytes > 0) {
-            wbytes = fwrite(buff, 1, rbytes, fout);
-        } else {
-            wbytes = 0;
-        }
-    } while ((rbytes > 0) && (rbytes == wbytes));
-
-    fclose(fout);
-    fclose(fin);
-
-    if (wbytes) {
-        LOG_ERROR("Write error on palette ini import");
-        return false;
-    }
-
-    LOG_INFO("Imported palette ini: '%s' -> '%s'", src, dst);
-
-    return true;
+    return success;
 }
 
 static bool mod_import_database(char* src) {
-    const char* databasesDirectory = fs_get_write_path(DATABASES_DIRECTORY);
-    fs_sys_mkdir(databasesDirectory);
+    bool success = fs_sys_copy_file(src, DATABASES_DIRECTORY);
 
-    char dst[SYS_MAX_PATH] = { 0 };
-    if (!concat_path(dst, (char*)databasesDirectory, path_basename(src))) {
-        LOG_ERROR("Failed to concat path for database db import");
-        return false;
+    if (!success) {
+        LOG_ERROR("Failed to import controller database file");
+    } else {
+        LOG_INFO("Imported controller database: '%s'", src);
     }
 
-    FILE* fin = fopen(src, "rb");
-    if (fin == NULL) {
-        LOG_ERROR("Failed to open src path for database db import");
-        return false;
-    }
-
-    FILE* fout = fopen(dst, "wb");
-    if (fout == NULL) {
-        LOG_ERROR("Failed to open dst path for database db import");
-        fclose(fin);
-        return false;
-    }
-
-    size_t rbytes;
-    size_t wbytes;
-    unsigned char buff[8192];
-    do {
-        rbytes = fread(buff, 1, sizeof(buff), fin);
-        if (rbytes > 0) {
-            wbytes = fwrite(buff, 1, rbytes, fout);
-        } else {
-            wbytes = 0;
-        }
-    } while ((rbytes > 0) && (rbytes == wbytes));
-
-    fclose(fout);
-    fclose(fin);
-
-    if (wbytes) {
-        LOG_ERROR("Write error on database db import");
-        return false;
-    }
-
-    LOG_INFO("Imported database db: '%s' -> '%s'", src, dst);
-
-    return true;
+    return success;
 }
 
 static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
