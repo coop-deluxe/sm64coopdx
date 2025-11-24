@@ -827,7 +827,7 @@ OPTIMIZE_O3 bool mtxf_inverse_non_affine(OUT Mat4 dest, Mat4 src) {
             if (fabsf(aug[i][k]) > fabsf(aug[piv][k])) { piv = i; }
         }
 
-        if (fabsf(aug[piv][k]) < FLT_EPSILON) { return false; }
+        if (fabsf(aug[piv][k]) < __FLT_EPSILON__) { return false; }
 
         // swap pivot row into place
         if (piv != k) {
