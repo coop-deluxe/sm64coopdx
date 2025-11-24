@@ -1,6 +1,7 @@
 #ifndef SMLUA_COLLISION_UTILS_H
 #define SMLUA_COLLISION_UTILS_H
 
+#include "pc/lua/smlua_utils.h"
 #include "engine/surface_collision.h"
 
 struct RayIntersectionInfo {
@@ -140,7 +141,7 @@ Collision* smlua_collision_util_get_current_terrain_collision(void);
 Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);
 
 /* |description|Gets a table of the surface types from `data`|descriptionEnd| */
-void smlua_collision_util_find_surface_types(Collision* data);
+LuaTable smlua_collision_util_find_surface_types(Collision* data);
 
 /* |description|Checks if the surface is quicksand|descriptionEnd| */
 bool surface_is_quicksand(struct Surface* surf);

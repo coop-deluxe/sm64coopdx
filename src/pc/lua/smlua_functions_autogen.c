@@ -30928,6 +30928,23 @@ int smlua_func_audio_stream_set_looping(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_stream_get_loop_points(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_get_loop_points", 1, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_get_loop_points"); return 0; }
+
+    smlua_push_lua_table(L, audio_stream_get_loop_points(audio));
+
+    return 1;
+}
+
 int smlua_func_audio_stream_set_loop_points(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32070,7 +32087,7 @@ int smlua_func_smlua_collision_util_find_surface_types(lua_State* L) {
     Collision* data = (Collision*)smlua_to_cpointer(L, 1, LVT_COLLISION_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_collision_util_find_surface_types"); return 0; }
 
-    smlua_collision_util_find_surface_types(data);
+    smlua_push_lua_table(L, smlua_collision_util_find_surface_types(data));
 
     return 1;
 }
@@ -34418,7 +34435,7 @@ int smlua_func_get_volume_master(UNUSED lua_State* L) {
     }
 
 
-    lua_pushnumber(L, get_volume_master());
+    lua_pushinteger(L, get_volume_master());
 
     return 1;
 }
@@ -34433,7 +34450,7 @@ int smlua_func_get_volume_level(UNUSED lua_State* L) {
     }
 
 
-    lua_pushnumber(L, get_volume_level());
+    lua_pushinteger(L, get_volume_level());
 
     return 1;
 }
@@ -34448,7 +34465,7 @@ int smlua_func_get_volume_sfx(UNUSED lua_State* L) {
     }
 
 
-    lua_pushnumber(L, get_volume_sfx());
+    lua_pushinteger(L, get_volume_sfx());
 
     return 1;
 }
@@ -34463,7 +34480,7 @@ int smlua_func_get_volume_env(UNUSED lua_State* L) {
     }
 
 
-    lua_pushnumber(L, get_volume_env());
+    lua_pushinteger(L, get_volume_env());
 
     return 1;
 }
@@ -34477,7 +34494,7 @@ int smlua_func_set_volume_master(lua_State* L) {
         return 0;
     }
 
-    f32 volume = smlua_to_number(L, 1);
+    u8 volume = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_master"); return 0; }
 
     set_volume_master(volume);
@@ -34494,7 +34511,7 @@ int smlua_func_set_volume_level(lua_State* L) {
         return 0;
     }
 
-    f32 volume = smlua_to_number(L, 1);
+    u8 volume = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_level"); return 0; }
 
     set_volume_level(volume);
@@ -34511,7 +34528,7 @@ int smlua_func_set_volume_sfx(lua_State* L) {
         return 0;
     }
 
-    f32 volume = smlua_to_number(L, 1);
+    u8 volume = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_sfx"); return 0; }
 
     set_volume_sfx(volume);
@@ -34528,7 +34545,7 @@ int smlua_func_set_volume_env(lua_State* L) {
         return 0;
     }
 
-    f32 volume = smlua_to_number(L, 1);
+    u8 volume = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_volume_env"); return 0; }
 
     set_volume_env(volume);
@@ -38719,6 +38736,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_set_position", smlua_func_audio_stream_set_position);
     smlua_bind_function(L, "audio_stream_get_looping", smlua_func_audio_stream_get_looping);
     smlua_bind_function(L, "audio_stream_set_looping", smlua_func_audio_stream_set_looping);
+    smlua_bind_function(L, "audio_stream_get_loop_points", smlua_func_audio_stream_get_loop_points);
     smlua_bind_function(L, "audio_stream_set_loop_points", smlua_func_audio_stream_set_loop_points);
     smlua_bind_function(L, "audio_stream_get_frequency", smlua_func_audio_stream_get_frequency);
     smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);

@@ -10233,6 +10233,13 @@ function audio_stream_set_looping(audio, looping)
 end
 
 --- @param audio ModAudio
+--- @return table
+--- Gets an `audio` stream's loop points in samples
+function audio_stream_get_loop_points(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
 --- @param loopStart integer
 --- @param loopEnd integer
 --- Sets an `audio` stream's loop points in samples
@@ -10658,6 +10665,7 @@ function smlua_collision_util_get_level_collision(level, area)
 end
 
 --- @param data Pointer_Collision
+--- @return table
 --- Gets a table of the surface types from `data`
 function smlua_collision_util_find_surface_types(data)
     -- ...
@@ -11520,49 +11528,49 @@ function get_coopnet_id(localIndex)
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...

@@ -1800,16 +1800,16 @@ Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and t
 Gets the master volume level
 
 ### Lua Example
-`local numberValue = get_volume_master()`
+`local integerValue = get_volume_master()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_master(void);`
+`u8 get_volume_master(void);`
 
 [:arrow_up_small:](#)
 
@@ -1821,16 +1821,16 @@ Gets the master volume level
 Gets the volume level of music
 
 ### Lua Example
-`local numberValue = get_volume_level()`
+`local integerValue = get_volume_level()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_level(void);`
+`u8 get_volume_level(void);`
 
 [:arrow_up_small:](#)
 
@@ -1842,16 +1842,16 @@ Gets the volume level of music
 Gets the volume level of sound effects
 
 ### Lua Example
-`local numberValue = get_volume_sfx()`
+`local integerValue = get_volume_sfx()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_sfx(void);`
+`u8 get_volume_sfx(void);`
 
 [:arrow_up_small:](#)
 
@@ -1863,16 +1863,16 @@ Gets the volume level of sound effects
 Gets the volume level of environment sounds effects
 
 ### Lua Example
-`local numberValue = get_volume_env()`
+`local integerValue = get_volume_env()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_env(void);`
+`u8 get_volume_env(void);`
 
 [:arrow_up_small:](#)
 
@@ -1889,13 +1889,13 @@ Sets the master volume level
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_master(f32 volume);`
+`void set_volume_master(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -1912,13 +1912,13 @@ Sets the volume level of music
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_level(f32 volume);`
+`void set_volume_level(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -1935,13 +1935,13 @@ Sets the volume level of sound effects
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_sfx(f32 volume);`
+`void set_volume_sfx(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -1958,13 +1958,13 @@ Sets the volume level of environment sounds effects
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_env(f32 volume);`
+`void set_volume_env(u8 volume);`
 
 [:arrow_up_small:](#)
 
