@@ -19,6 +19,7 @@
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
 
+#pragma region m64
 struct AudioOverride {
     bool enabled;
     bool loaded;
@@ -169,6 +170,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
 }
+#pragma endregion
 
   ///////////////
  // mod audio //
@@ -179,6 +181,8 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 #define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
 
 static ma_engine sModAudioEngine;
+static ma_sound_group sModAudioStreamGroup;
+static ma_sound_group sModAudioSampleGroup;
 static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
@@ -188,6 +192,13 @@ static void smlua_audio_custom_init(void) {
     if (result != MA_SUCCESS) {
         LOG_ERROR("failed to init Miniaudio: %d", result);
     }
+
+    ma_sound_group_init(&sModAudioEngine, 0, NULL, &sModAudioStreamGroup);
+    ma_sound_group_init(&sModAudioEngine, 0, NULL, &sModAudioSampleGroup);
+    f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;    
+    ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
+    ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
 }
 
 static struct ModAudio* find_mod_audio(const char *filepath) {
@@ -250,7 +261,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         u16 fileCount = gLuaActiveMod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
             struct ModFile* file = &gLuaActiveMod->files[i];
-            if(path_ends_with(file->relativePath, normPath)) {
+            if (path_ends_with(file->relativePath, normPath)) {
                 foundModFile = true;
                 modFile = file;
                 break;
@@ -345,7 +356,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     result = ma_sound_init_from_data_source(
         &sModAudioEngine, &audio->decoder,
         isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        NULL, &audio->sound
+        isStream ? &sModAudioStreamGroup : &sModAudioSampleGroup, &audio->sound
     );
     if (result != MA_SUCCESS) {
         free(buffer);
@@ -374,12 +385,7 @@ void audio_stream_destroy(struct ModAudio* audio) {
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
     
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
-        ma_sound_set_volume(&audio->sound, 0);
-    } else {
-        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-        ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
-    }
+    ma_sound_set_volume(&audio->sound, volume);
     audio->baseVolume = volume;
     if (restart || !ma_sound_is_playing(&audio->sound)) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
     ma_sound_start(&audio->sound);
@@ -423,13 +429,30 @@ void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
     ma_sound_set_looping(&audio->sound, looping);
 }
 
-void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd) {
+LuaTable audio_stream_get_loop_points(struct ModAudio* audio) {
+    struct lua_State *L = gLuaState;
+    if (!L || !audio_sanity_check(audio, true, "get stream loop points for")) { return 0; }
+    
+    u64 loopStart, loopEnd;
+    ma_data_source_get_loop_point_in_pcm_frames(&audio->decoder, &loopStart, &loopEnd);
+
+    lua_newtable(L);
+    lua_pushinteger(L, loopStart);
+    lua_rawseti(L, -2, 1);
+    lua_pushinteger(L, loopEnd);
+    lua_rawseti(L, -2, 2);
+
+    return smlua_to_lua_table(L, -1);
+}
+
+void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
     
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart += length;
     if (loopEnd <= 0) loopEnd += length;
 
+    ma_sound_set_looping(&audio->sound, true);
     ma_data_source_set_loop_point_in_pcm_frames(&audio->decoder, loopStart, loopEnd);
 }
 
@@ -467,12 +490,7 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
     
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
-        ma_sound_set_volume(&audio->sound, 0);
-    } else {
-        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-        ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
-    }
+    ma_sound_set_volume(&audio->sound, volume);
     audio->baseVolume = volume;
 }
 
@@ -575,7 +593,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
         ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
         if (result != MA_SUCCESS) { return; }
-        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, &sModAudioSampleGroup, &copy->sound);
         if (result != MA_SUCCESS) { return; }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
@@ -605,33 +623,32 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
-        ma_sound_set_volume(sound, 0);
-    } else {
-        f32 intensity = sound_get_level_intensity(dist);
-        f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-        ma_sound_set_volume(sound, gMasterVolume * sfxVolume * volume * intensity);
-    }
+    f32 intensity = sound_get_level_intensity(dist);
+    ma_sound_set_volume(sound, volume * intensity);
     ma_sound_set_pan(sound, pan);
     audio->baseVolume = volume;
 
     ma_sound_start(sound);
 }
 
+static bool sModAudioMute = false;
 void audio_custom_update_volume(void) {
     gMasterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
     if (!sModAudioPool) { return; }
+    ma_engine_set_volume(&sModAudioEngine, sModAudioMute ? 0 : gMasterVolume);
+
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-    struct DynamicPoolNode* node = sModAudioPool->tail;
-    while (node) {
-        struct DynamicPoolNode* prev = node->prev;
-        struct ModAudio* audio = node->ptr;
-        if (configMuteFocusLoss && !WAPI.has_focus()) {
-            ma_sound_set_volume(&audio->sound, 0);
-        } else if (audio->isStream) {
-            ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);
-        }
-        node = prev;
+    f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+    ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
+    ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
+}
+
+void audio_custom_update_mute(bool mute) {
+    if (!sModAudioPool) { return; }
+
+    if (sModAudioMute != mute) {
+        sModAudioMute = mute;
+        ma_engine_set_volume(&sModAudioEngine, mute ? 0 : gMasterVolume);
     }
 }
 
@@ -658,6 +675,8 @@ void smlua_audio_custom_deinit(void) {
     if (sModAudioPool) {
         audio_custom_shutdown();
         free(sModAudioPool);
+        ma_sound_group_uninit(&sModAudioStreamGroup);
+        ma_sound_group_uninit(&sModAudioSampleGroup);
         ma_engine_uninit(&sModAudioEngine);
         sModAudioPool = NULL;
     }
