@@ -19,7 +19,6 @@
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
 
-#pragma region m64
 struct AudioOverride {
     bool enabled;
     bool loaded;
@@ -170,7 +169,6 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
 }
-#pragma endregion
 
   ///////////////
  // mod audio //
