@@ -13,12 +13,9 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "pc/network/packets/packet.h"
 #include "pc/lua/smlua_hooks.h"
-extern s8 gDialogBoxState;
-extern s16 gMenuMode;
 extern s32 gWdwWaterLevelSet;
 extern u8 sSpawnTypeFromWarpBhv[];
 extern void set_mario_initial_action(struct MarioState *, u32, u32);
-extern void set_play_mode(s16);
 }
 
 //

@@ -193,6 +193,7 @@ void initiate_painting_warp(s16 paintingIndex);
 /* |description|Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`|descriptionEnd| */
 s16 level_trigger_warp(struct MarioState *m, s32 warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
+void set_play_mode(s16 playMode);
 /* |description|Special warps to arg (`SPECIAL_WARP_*`)|descriptionEnd| */
 void warp_special(s32 arg);
 /* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */

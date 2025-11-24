@@ -130,7 +130,6 @@ bool djui_is_playerlist_ping_visible(void) {
 
 ///
 
-extern s8 gDialogBoxState;
 s8 get_dialog_box_state(void) {
     return gDialogBoxState;
 }
@@ -295,12 +294,10 @@ void hud_set_flash(s8 value) {
 
 ///
 
-extern s16 gMenuMode;
 bool is_game_paused(void) {
     return gMenuMode != -1;
 }
 
-extern bool gPauseMenuHidden;
 bool is_pause_menu_hidden(void) {
     return gPauseMenuHidden;
 }
@@ -309,7 +306,6 @@ void set_pause_menu_hidden(bool hidden) {
     gPauseMenuHidden = hidden;
 }
 
-extern void set_play_mode(s16);
 void game_pause(void) {
     if (gMenuMode != -1) { return; }
 
@@ -319,8 +315,6 @@ void game_pause(void) {
     set_play_mode(PLAY_MODE_PAUSED);
 }
 
-extern s8 gDialogBoxState;
-extern s16 gPauseScreenMode;
 void game_unpause(void) {
     if (gMenuMode == -1) { return; }
 

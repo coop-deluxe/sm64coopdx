@@ -134,6 +134,8 @@ extern u8 gDialogTextColorG;
 extern u8 gDialogTextColorB;
 extern u8 gDialogTextColorA;
 
+extern bool gPauseMenuHidden;
+
 extern s16 gMenuMode;
 
 void create_dl_identity_matrix(void);
