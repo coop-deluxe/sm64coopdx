@@ -1577,7 +1577,6 @@ void update_mario_geometry_inputs(struct MarioState *m) {
     } else {
         vec3s_to_vec3f(m->pos, m->spawnInfo->startPos);
         m->faceAngle[1] = m->spawnInfo->startAngle[1];
-        if (mario_can_bubble(m)) { mario_set_bubbled(m); }
         struct Surface* floor = NULL;
         find_floor(m->pos[0], m->pos[1], m->pos[2], &floor);
         if (floor == NULL) {
