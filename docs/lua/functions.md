@@ -1828,6 +1828,7 @@
    - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
    - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
    - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
+   - [audio_stream_get_loop_points](functions-6.md#audio_stream_get_loop_points)
    - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
    - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
    - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)

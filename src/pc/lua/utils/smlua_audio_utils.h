@@ -1,6 +1,11 @@
 #ifndef SMLUA_AUDIO_UTILS_H
 #define SMLUA_AUDIO_UTILS_H
 
+#include "pc/lua/smlua_utils.h"
+
+#define MA_NO_RESOURCE_MANAGER
+#define MA_NO_GENERATION
+#define MA_NO_ENCODING
 #include "pc/utils/miniaudio.h"
 
 /* |description|Resets all custom sequences back to vanilla|descriptionEnd| */
@@ -51,6 +56,8 @@ void audio_stream_set_position(struct ModAudio* audio, f32 pos);
 bool audio_stream_get_looping(struct ModAudio* audio);
 /* |description|Sets if an `audio` stream is looping or not|descriptionEnd| */
 void audio_stream_set_looping(struct ModAudio* audio, bool looping);
+/* |description|Gets an `audio` stream's loop points in samples|descriptionEnd| */
+LuaTable audio_stream_get_loop_points(struct ModAudio* audio);
 /* |description|Sets an `audio` stream's loop points in samples|descriptionEnd| */
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);
 /* |description|Gets the frequency of an `audio` stream|descriptionEnd| */
@@ -73,6 +80,7 @@ void audio_sample_stop(struct ModAudio* audio);
 void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);
 
 void audio_custom_update_volume(void);
+void audio_custom_update_mute(bool mute);
 void audio_custom_shutdown(void);
 void smlua_audio_custom_deinit(void);
 
