@@ -211,6 +211,7 @@ Collision *smlua_collision_util_get_level_collision(u32 level, u16 area) {
 
 LuaTable smlua_collision_util_find_surface_types(Collision* data) {
     lua_State* L = gLuaState;
+    if (!L) { return 0; }
 
     if (data && *data++ == COL_INIT()) {
         lua_newtable(L);
