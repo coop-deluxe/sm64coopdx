@@ -5,6 +5,13 @@ FONT_TINY = -1
 ANIM_FLAG_FORWARD = (1 << 1)
 
 
+-----------------------
+-- Renamed functions --
+-----------------------
+
+rom_hack_cam_set_collisions = camera_romhack_set_collisions
+
+
 --------------------
 -- Math functions --
 --------------------

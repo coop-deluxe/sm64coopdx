@@ -6240,13 +6240,13 @@ Sets if the romhack camera should allow D-Pad movement
 
 <br />
 
-## [rom_hack_cam_set_collisions](#rom_hack_cam_set_collisions)
+## [camera_romhack_set_collisions](#camera_romhack_set_collisions)
 
 ### Description
 Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
 
 ### Lua Example
-`rom_hack_cam_set_collisions(enable)`
+`camera_romhack_set_collisions(enable)`
 
 ### Parameters
 | Field | Type |
@@ -6257,7 +6257,7 @@ Toggles collision settings for the ROM hack camera. This enables or disables spe
 - None
 
 ### C Prototype
-`void rom_hack_cam_set_collisions(u8 enable);`
+`void camera_romhack_set_collisions(u8 enable);`
 
 [:arrow_up_small:](#)
 

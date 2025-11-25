@@ -1847,7 +1847,7 @@
    - [camera_romhack_allow_centering](functions-6.md#camera_romhack_allow_centering)
    - [camera_allow_toxic_gas_camera](functions-6.md#camera_allow_toxic_gas_camera)
    - [camera_romhack_allow_dpad_usage](functions-6.md#camera_romhack_allow_dpad_usage)
-   - [rom_hack_cam_set_collisions](functions-6.md#rom_hack_cam_set_collisions)
+   - [camera_romhack_set_collisions](functions-6.md#camera_romhack_set_collisions)
    - [camera_romhack_set_zoomed_in_dist](functions-6.md#camera_romhack_set_zoomed_in_dist)
    - [camera_romhack_set_zoomed_out_dist](functions-6.md#camera_romhack_set_zoomed_out_dist)
    - [camera_romhack_set_zoomed_in_height](functions-6.md#camera_romhack_set_zoomed_in_height)

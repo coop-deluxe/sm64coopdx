@@ -10301,7 +10301,7 @@ end
 
 --- @param enable integer
 --- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
-function rom_hack_cam_set_collisions(enable)
+function camera_romhack_set_collisions(enable)
     -- ...
 end
 

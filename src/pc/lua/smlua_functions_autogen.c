@@ -31154,19 +31154,19 @@ int smlua_func_camera_romhack_allow_dpad_usage(lua_State* L) {
     return 1;
 }
 
-int smlua_func_rom_hack_cam_set_collisions(lua_State* L) {
+int smlua_func_camera_romhack_set_collisions(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "rom_hack_cam_set_collisions", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_set_collisions", 1, top);
         return 0;
     }
 
     u8 enable = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "rom_hack_cam_set_collisions"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_set_collisions"); return 0; }
 
-    rom_hack_cam_set_collisions(enable);
+    camera_romhack_set_collisions(enable);
 
     return 1;
 }
@@ -38606,7 +38606,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
     smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
-    smlua_bind_function(L, "rom_hack_cam_set_collisions", smlua_func_rom_hack_cam_set_collisions);
+    smlua_bind_function(L, "camera_romhack_set_collisions", smlua_func_camera_romhack_set_collisions);
     smlua_bind_function(L, "camera_romhack_set_zoomed_in_dist", smlua_func_camera_romhack_set_zoomed_in_dist);
     smlua_bind_function(L, "camera_romhack_set_zoomed_out_dist", smlua_func_camera_romhack_set_zoomed_out_dist);
     smlua_bind_function(L, "camera_romhack_set_zoomed_in_height", smlua_func_camera_romhack_set_zoomed_in_height);

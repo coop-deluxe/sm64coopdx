@@ -69,7 +69,7 @@ void camera_romhack_allow_dpad_usage(u8 allow) {
     gRomhackCameraSettings.dpad = allow;
 }
 
-void rom_hack_cam_set_collisions(u8 enable) {
+void camera_romhack_set_collisions(u8 enable) {
     gRomhackCameraSettings.collisions = enable;
 }
 
