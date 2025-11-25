@@ -310,20 +310,12 @@ static char* path_basename(char* path) {
 }
 
 bool fs_sys_copy_file(char* src, const char* dir) {
-    const char* directory = fs_get_write_path(dir);
-    fs_sys_mkdir(directory);
-
-    char dst[SYS_MAX_PATH] = { 0 };
-    if (!concat_path(dst, (char*)directory, path_basename(src))) {
-        return false;
-    }
-
     FILE* fin = fopen(src, "rb");
     if (fin == NULL) {
         return false;
     }
 
-    FILE* fout = fopen(dst, "wb");
+    FILE* fout = fopen(dir, "wb");
     if (fout == NULL) {
         fclose(fin);
         return false;

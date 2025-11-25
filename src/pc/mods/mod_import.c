@@ -11,7 +11,16 @@
 #include "mods_utils.h"
 
 static bool mod_import_lua(char* src) {
-    bool success = fs_sys_copy_file(src, MOD_DIRECTORY);
+    const char* modDirectory = fs_get_write_path(MOD_DIRECTORY);
+    fs_sys_mkdir(modDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)modDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat lua mod directory");
+        return false;
+    }
+
+    bool success = fs_sys_copy_file(src, dst);
 
     if (!success) {
         LOG_ERROR("Failed to import lua mod file");
@@ -23,7 +32,16 @@ static bool mod_import_lua(char* src) {
 }
 
 static bool mod_import_palette(char* src) {
-    bool success = fs_sys_copy_file(src, PALETTES_DIRECTORY);
+    const char* paletteDirectory = fs_get_write_path(PALETTES_DIRECTORY);
+    fs_sys_mkdir(paletteDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)paletteDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat palette preset directory");
+        return false;
+    }
+
+    bool success = fs_sys_copy_file(src, dst);
 
     if (!success) {
         LOG_ERROR("Failed to import palette preset file");
@@ -35,7 +53,16 @@ static bool mod_import_palette(char* src) {
 }
 
 static bool mod_import_database(char* src) {
-    bool success = fs_sys_copy_file(src, DATABASES_DIRECTORY);
+    const char* databasesDirectory = fs_get_write_path(DATABASES_DIRECTORY);
+    fs_sys_mkdir(databasesDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)databasesDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat controller database directory");
+        return false;
+    }
+
+    bool success = fs_sys_copy_file(src, dst);
 
     if (!success) {
         LOG_ERROR("Failed to import controller database file");
