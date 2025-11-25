@@ -138,7 +138,7 @@ bool camera_config_is_dpad_enabled(void) {
 }
 
 bool camera_config_is_collision_enabled(void) {
-    return sOverrideCameraCollision.override ? sOverrideCameraCollision.value : true;
+    return sOverrideCameraCollision.override ? sOverrideCameraCollision.value : configFreeCameraHasCollision;
 }
 
 bool camera_config_is_mouse_look_enabled(void) {

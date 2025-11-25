@@ -12233,7 +12233,7 @@ void romhack_camera_init_settings(void) {
     if (!sCCSSChangedByMod) {
         gCameraUseCourseSpecificSettings = dynos_level_is_vanilla_level(gCurrLevelNum);
     }
-    gRomhackCameraSettings.collisions = TRUE;
+    gRomhackCameraSettings.collisions = configRomhackCameraHasCollision;
     gRomhackCameraSettings.centering = configRomhackCameraHasCentering;
     gRomhackCameraSettings.dpad = configRomhackCameraDPadBehavior;
     gOverrideAllowToxicGasCamera = configCameraToxicGas;

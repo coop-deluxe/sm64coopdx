@@ -101,6 +101,7 @@ extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
 extern bool         configFreeCameraLCentering;
 extern bool         configFreeCameraDPadBehavior;
+extern bool         configFreeCameraHasCollision;
 extern bool         configFreeCameraMouse;
 extern unsigned int configFreeCameraXSens;
 extern unsigned int configFreeCameraYSens;
@@ -110,6 +111,7 @@ extern unsigned int configFreeCameraDegrade;
 // romhack camera settings
 extern unsigned int configEnableRomhackCamera;
 extern bool         configRomhackCameraBowserFights;
+extern bool         configRomhackCameraHasCollision;
 extern bool         configRomhackCameraHasCentering;
 extern bool         configRomhackCameraDPadBehavior;
 extern bool         configRomhackCameraSlowFall;

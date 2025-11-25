@@ -135,6 +135,7 @@ bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
 bool         configFreeCameraLCentering           = false;
 bool         configFreeCameraDPadBehavior         = false;
+bool         configFreeCameraHasCollision         = true;
 bool         configFreeCameraMouse                = false;
 unsigned int configFreeCameraXSens                = 50;
 unsigned int configFreeCameraYSens                = 50;
@@ -144,6 +145,7 @@ unsigned int configFreeCameraDegrade              = 50; // 0 - 100%
 // romhack camera settings
 unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
+bool         configRomhackCameraHasCollision      = true;
 bool         configRomhackCameraHasCentering      = false;
 bool         configRomhackCameraDPadBehavior      = false;
 bool         configRomhackCameraSlowFall          = true;
@@ -284,6 +286,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_analog",               .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraAnalog},
     {.name = "bettercam_centering",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraLCentering},
     {.name = "bettercam_dpad",                 .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraDPadBehavior},
+    {.name = "bettercam_collision",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraHasCollision},
     {.name = "bettercam_mouse_look",           .type = CONFIG_TYPE_BOOL, .boolValue = &configFreeCameraMouse},
     {.name = "bettercam_xsens",                .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraXSens},
     {.name = "bettercam_ysens",                .type = CONFIG_TYPE_UINT, .uintValue = &configFreeCameraYSens},
@@ -293,6 +296,7 @@ static const struct ConfigOption options[] = {
     // romhack camera settings
     {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
+    {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
     {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
     {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDPadBehavior},
     {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
