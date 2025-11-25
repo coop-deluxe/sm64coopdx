@@ -33,7 +33,7 @@ static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 static bool sLegacy = false;
 
 f32 gDjuiHudUtilsZ = 0;
-u8 gDjuiHudLockMouse = false;
+bool gDjuiHudLockMouse = false;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
 extern ALIGNED8 const u8 texture_hud_char_lakitu[];
@@ -51,20 +51,20 @@ extern ALIGNED8 const u8 texture_hud_char_apostrophe[];
 extern ALIGNED8 const u8 texture_hud_char_double_quote[];
 
 struct GlobalTextures gGlobalTextures = {
-    .camera       = { .texture = (u8*)texture_hud_char_camera,       "texture_hud_char_camera",       .width = 16, .height = 16, .bitSize = 8 },
-    .lakitu       = { .texture = (u8*)texture_hud_char_lakitu,       "texture_hud_char_lakitu",       .width = 16, .height = 16, .bitSize = 8 },
-    .no_camera    = { .texture = (u8*)texture_hud_char_no_camera,    "texture_hud_char_no_camera",    .width = 16, .height = 16, .bitSize = 8 },
-    .arrow_up     = { .texture = (u8*)texture_hud_char_arrow_up,     "texture_hud_char_arrow_up",     .width =  8, .height =  8, .bitSize = 8 },
-    .arrow_down   = { .texture = (u8*)texture_hud_char_arrow_down,   "texture_hud_char_arrow_down",   .width =  8, .height =  8, .bitSize = 8 },
-    .coin         = { .texture = (u8*)texture_hud_char_coin,         "texture_hud_char_coin",         .width = 16, .height = 16, .bitSize = 8 },
-    .star         = { .texture = (u8*)texture_hud_char_star,         "texture_hud_char_star",         .width = 16, .height = 16, .bitSize = 8 },
-    .apostrophe   = { .texture = (u8*)texture_hud_char_apostrophe,   "texture_hud_char_apostrophe",   .width = 16, .height = 16, .bitSize = 8 },
-    .double_quote = { .texture = (u8*)texture_hud_char_double_quote, "texture_hud_char_double_quote", .width = 16, .height = 16, .bitSize = 8 },
-    .mario_head   = { .texture = (u8*)texture_hud_char_mario_head,   "texture_hud_char_mario_head",   .width = 16, .height = 16, .bitSize = 8 },
-    .luigi_head   = { .texture = (u8*)texture_hud_char_luigi_head,   "texture_hud_char_luigi_head",   .width = 16, .height = 16, .bitSize = 8 },
-    .toad_head    = { .texture = (u8*)texture_hud_char_toad_head,    "texture_hud_char_toad_head",    .width = 16, .height = 16, .bitSize = 8 },
-    .waluigi_head = { .texture = (u8*)texture_hud_char_waluigi_head, "texture_hud_char_waluigi_head", .width = 16, .height = 16, .bitSize = 8 },
-    .wario_head   = { .texture = (u8*)texture_hud_char_wario_head,   "texture_hud_char_wario_head",   .width = 16, .height = 16, .bitSize = 8 }
+    .camera       = { .texture = texture_hud_char_camera,       "texture_hud_char_camera",       .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .lakitu       = { .texture = texture_hud_char_lakitu,       "texture_hud_char_lakitu",       .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .no_camera    = { .texture = texture_hud_char_no_camera,    "texture_hud_char_no_camera",    .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .arrow_up     = { .texture = texture_hud_char_arrow_up,     "texture_hud_char_arrow_up",     .width =  8, .height =  8, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .arrow_down   = { .texture = texture_hud_char_arrow_down,   "texture_hud_char_arrow_down",   .width =  8, .height =  8, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .coin         = { .texture = texture_hud_char_coin,         "texture_hud_char_coin",         .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .star         = { .texture = texture_hud_char_star,         "texture_hud_char_star",         .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .apostrophe   = { .texture = texture_hud_char_apostrophe,   "texture_hud_char_apostrophe",   .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .double_quote = { .texture = texture_hud_char_double_quote, "texture_hud_char_double_quote", .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .mario_head   = { .texture = texture_hud_char_mario_head,   "texture_hud_char_mario_head",   .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .luigi_head   = { .texture = texture_hud_char_luigi_head,   "texture_hud_char_luigi_head",   .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .toad_head    = { .texture = texture_hud_char_toad_head,    "texture_hud_char_toad_head",    .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .waluigi_head = { .texture = texture_hud_char_waluigi_head, "texture_hud_char_waluigi_head", .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b },
+    .wario_head   = { .texture = texture_hud_char_wario_head,   "texture_hud_char_wario_head",   .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b }
 };
 
 static void djui_hud_position_translate(f32* x, f32* y) {
@@ -79,6 +79,24 @@ static void djui_hud_position_translate(f32* x, f32* y) {
 static void djui_hud_size_translate(f32* size) {
     if (sResolution == RESOLUTION_DJUI) {
         djui_gfx_size_translate(size);
+    }
+}
+
+// Translates position and scale to N64 resolution
+static void djui_hud_translate_positions(f32 *outX, f32 *outY, f32 *outW, f32 *outH) {
+    // translate position
+    djui_hud_position_translate(outX, outY);
+    *outX -= GFX_DIMENSIONS_FROM_LEFT_EDGE(0);
+    *outY -= SCREEN_HEIGHT;
+
+    // translate scale
+    if (sResolution == RESOLUTION_DJUI) {
+        u32 windowWidth, windowHeight;
+        gfx_get_dimensions(&windowWidth, &windowHeight);
+        f32 screenWidth = (f32) windowWidth / djui_gfx_get_scale();
+        f32 screenHeight = (f32) windowHeight / djui_gfx_get_scale();
+        *outW = (*outW / screenWidth)  * SCREEN_WIDTH;
+        *outH = (*outH / screenHeight) * SCREEN_HEIGHT;
     }
 }
 
@@ -279,6 +297,10 @@ f32 djui_hud_get_raw_mouse_y(void) {
     return mouse_y;
 }
 
+bool djui_hud_is_mouse_locked(void) {
+    return gDjuiHudLockMouse;
+}
+
 void djui_hud_set_mouse_locked(bool locked) {
     gDjuiHudLockMouse = locked;
 }
@@ -301,6 +323,43 @@ f32 djui_hud_get_mouse_scroll_x(void) {
 
 f32 djui_hud_get_mouse_scroll_y(void) {
     return mouse_scroll_y;
+}
+
+void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height) {
+    // translate position and scale
+    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
+    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+
+    // convert to viewport structure
+    static Vp vp = {{
+        { 640, 480, 511, 0 },
+        { 640, 480, 511, 0 },
+    }};
+    Vp_t *viewport = &vp.vp;
+    viewport->vscale[0] = translatedW * 2.0f;
+    viewport->vscale[1] = translatedH * 2.0f;
+    viewport->vtrans[0] = (translatedW + translatedX) * 2.0f;
+    viewport->vtrans[1] = (translatedH + translatedY) * 2.0f;
+
+    gSPViewport(gDisplayListHead++, &vp);
+}
+
+void djui_hud_reset_viewport(void) {
+    extern Vp gViewportFullscreen;
+    gSPViewport(gDisplayListHead++, &gViewportFullscreen);
+}
+
+void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height) {
+    // translate position and scale
+    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
+    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+
+    // apply the scissor
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, translatedX, translatedY, translatedW, translatedH);
+}
+
+void djui_hud_reset_scissor(void) {
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 }
 
 f32 djui_hud_measure_text(const char* message) {
@@ -440,11 +499,13 @@ static inline bool is_power_of_two(u32 n) {
     return (n > 0) && ((n & (n - 1)) == 0);
 }
 
-void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH) {
+static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     if (!is_power_of_two(width) || !is_power_of_two(height)) {
         LOG_LUA_LINE("Tried to render DJUI HUD texture with NPOT width or height");
         return;
     }
+
+    if (!texture) { return; }
 
     gDjuiHudUtilsZ += 0.01f;
 
@@ -471,16 +532,18 @@ void djui_hud_render_texture_raw(const u8* texture, u32 bitSize, u32 width, u32 
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    djui_gfx_render_texture(texture, width, height, bitSize, sFilter);
+    djui_gfx_render_texture(texture, width, height, fmt, siz, sFilter);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
-void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width, u32 height, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
+    if (!texture) { return; }
+
     gDjuiHudUtilsZ += 0.01f;
-    scaleW *= (f32) tileW / (f32) width;
-    scaleH *= (f32) tileH / (f32) height;
+    if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
+    if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
 
     // translate position
     f32 translatedX = x;
@@ -506,25 +569,29 @@ void djui_hud_render_texture_tile_raw(const u8* texture, u32 bitSize, u32 width,
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
 
     // render
-    djui_gfx_render_texture_tile(texture, width, height, bitSize, tileX, tileY, tileW, tileH, sFilter, false);
+    djui_gfx_render_texture_tile(texture, width, height, fmt, siz, tileX, tileY, tileW, tileH, sFilter, false);
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH) {
-    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH);
+    if (!texInfo) { return; }
+    djui_hud_render_texture_raw(texInfo->texture, texInfo->width, texInfo->height, texInfo->format, texInfo->size, x, y, scaleW, scaleH);
 }
 
 void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
-    djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
+    if (!texInfo) { return; }
+    djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->width, texInfo->height, texInfo->format, texInfo->size, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH);
 }
 
 void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH) {
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
 
-    djui_hud_render_texture_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH);
+    if (!texInfo) { return; }
+
+    djui_hud_render_texture_raw(texInfo->texture, texInfo->width, texInfo->height, texInfo->format, texInfo->size, prevX, prevY, prevScaleW, prevScaleH);
 
     if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
     struct InterpHud* interp = &sInterpHuds[sInterpHudCount++];
@@ -548,7 +615,19 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
     Gfx* savedHeadPos = gDisplayListHead;
     f32 savedZ = gDjuiHudUtilsZ;
 
-    djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->bitSize, texInfo->width, texInfo->height, prevX, prevY, prevScaleW, prevScaleH, tileX, tileY, tileW, tileH);
+    if (!texInfo) { return; }
+
+    // apply scale correction for tiles
+    if (texInfo->width != 0) {
+        scaleW *= ((f32)tileW / (f32)texInfo->width);
+        prevScaleW *= ((f32)tileW / (f32)texInfo->width);
+    }
+    if (texInfo->height != 0) {
+        scaleH *= ((f32)tileH / (f32)texInfo->height);
+        prevScaleH *= ((f32)tileH / (f32)texInfo->height);
+    }
+
+    djui_hud_render_texture_tile_raw(texInfo->texture, texInfo->width, texInfo->height, texInfo->format, texInfo->size, prevX, prevY, prevScaleW, prevScaleH, tileX, tileY, tileW, tileH);
 
     if (sInterpHudCount >= MAX_INTERP_HUD) { return; }
     struct InterpHud* interp = &sInterpHuds[sInterpHudCount++];
@@ -624,6 +703,15 @@ void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 
     interp->rotation = sRotation;
 }
 
+void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size) {
+    f32 dx = p2X - p1X;
+    f32 dy = p2Y - p1Y;
+    f32 angle = atan2s(dy, dx) - 0x4000; // -90 degrees to adjust for djui rotation
+    f32 hDist = sqrt(sqr(dx) + sqr(dy));
+    djui_hud_set_rotation(angle, 0, 0.5);
+    djui_hud_render_rect(p1X, p1Y, hDist, size);
+}
+
 static void hud_rotate_and_translate_vec3f(Vec3f vec, Mat4* mtx, Vec3f out) {
     out[0] = (*mtx)[0][0] * vec[0] + (*mtx)[1][0] * vec[1] + (*mtx)[2][0] * vec[2];
     out[1] = (*mtx)[0][1] * vec[0] + (*mtx)[1][1] * vec[1] + (*mtx)[2][1] * vec[2];
@@ -646,7 +734,9 @@ f32 djui_hud_get_fov_coeff() {
     return (fovDefault / fovCurrent) * 1.13f;
 }
 
-bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
+bool gDjuiHudToWorldCalcViewport = true;
+
+bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out) {
     if (!gCamera) { return false; }
     hud_rotate_and_translate_vec3f(pos, &gCamera->mtx, out);
     if (out[2] >= 0.0f) {
@@ -675,9 +765,9 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out) {
     out[0] += screenWidth  / 2.0f;
     out[1] += screenHeight / 2.0f;
 
-    extern Vp *D_8032CE74;
-    if (D_8032CE74) {
-        Vp_t *viewport = &D_8032CE74->vp;
+    extern Vp *gViewportOverride;
+    if (gViewportOverride && gDjuiHudToWorldCalcViewport) {
+        Vp_t *viewport = &gViewportOverride->vp;
         f32 width  = viewport->vscale[0] / 2.0f;
         f32 height = viewport->vscale[1] / 2.0f;
         f32 x = (viewport->vtrans[0] / 4.0f) - width / 2.0f;

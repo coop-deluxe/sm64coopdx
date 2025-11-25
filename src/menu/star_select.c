@@ -22,6 +22,7 @@
 #include "star_select.h"
 #include "prevent_bss_reordering.h"
 #include "pc/network/network.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 #include "engine/math_util.h"
 #include "game/print.h"
 #include "game/level_info.h"
@@ -34,6 +35,9 @@
  * That includes handles what stars can be selected, star selector types,
  * strings, act values, and star selector model rendering if a star is collected or not.
  */
+
+// Which parts of the HUD have been hidden.
+u8 gOverrideHideActSelectHud;
 
 // Star Selector count models printed in the act selector menu.
 static struct Object *sStarSelectorModels[8] = { 0 };
@@ -225,7 +229,6 @@ void print_course_number(s16 language) {
 void print_course_number(void) {
 #endif
     u8 courseNum[4];
-
     create_dl_translation_matrix(MENU_MTX_PUSH, 158.0f, 81.0f, 0.0f);
 
     // Full wood texture in JP & US, lower part of it on EU
@@ -292,17 +295,17 @@ void print_act_selector_strings(void) {
 #endif
 
     create_dl_ortho_matrix();
-
-    // Print the coin highscore.
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
-    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-    print_hud_my_score_coins(1, gCurrSaveFileNum - 1, gCurrCourseNum - 1, 155, 106);
-    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
-
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_SCORE) == 0) {
+        // Print the coin highscore.
+        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+        print_hud_my_score_coins(1, gCurrSaveFileNum - 1, gCurrCourseNum - 1, 155, 106);
+        gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+    }
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
     // Print the "MY SCORE" text if the coin score is more than 0
-    if (save_file_get_course_coin_score(gCurrSaveFileNum - 1, gCurrCourseNum - 1) != 0) {
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_SCORE) == 0 && save_file_get_course_coin_score(gCurrSaveFileNum - 1, gCurrCourseNum - 1) != 0) {
 #ifdef VERSION_EU
         print_generic_string(95, 118, myScore[language]);
 #else
@@ -310,7 +313,7 @@ void print_act_selector_strings(void) {
 #endif
     }
 
-    if (currLevelName != NULL) {
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_LEVEL_NAME) == 0 && currLevelName != NULL) {
 #ifdef VERSION_EU
         print_generic_string(get_str_x_pos_from_center(160, (u8*) currLevelName + 3, 10.0f), 33, currLevelName + 3);
 #else
@@ -320,17 +323,18 @@ void print_act_selector_strings(void) {
     }
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
-
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_COURSE_NUM) == 0) {
 #ifdef VERSION_EU
-    print_course_number(language);
+        print_course_number(language);
 #else
-    print_course_number();
+        print_course_number();
 #endif
+    }
 
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
     // Print the name of the selected act.
-    if (sVisibleStars != 0) {
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_ACT_NAME) == 0 && sVisibleStars != 0) {
 #ifdef VERSION_EU
         print_menu_generic_string(get_str_x_pos_from_center(ACT_NAME_X, (u8*) selectedActName, 8.0f), 81, selectedActName);
 #else
@@ -345,13 +349,17 @@ void print_act_selector_strings(void) {
         s16 x = 0;
 #ifdef VERSION_EU
         x = 143 - sVisibleStars * 15 + i * 30;
-        print_menu_generic_string(x, 38, starNumbers);
+        if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_STAR_NUM) == 0) {
+            print_menu_generic_string(x, 38, starNumbers);
+        }
 #else
         x = 139 - sVisibleStars * 17 + i * 34;
-        print_menu_generic_string(x, 38, starNumbers);
+        if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_STAR_NUM) == 0) {
+            print_menu_generic_string(x, 38, starNumbers);
+        }
 #endif
         // display player HUD head if they're in that act
-        if (gServerSettings.enablePlayersInLevelDisplay) {
+        if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_PLAYERS_IN_LEVEL) == 0 && gServerSettings.enablePlayersInLevelDisplay) {
             for (int j = 0; j < MAX_PLAYERS; j++) {
                 struct NetworkPlayer* np = &gNetworkPlayers[j];
                 if (np == NULL || !np->connected) { continue; }
@@ -366,7 +374,7 @@ void print_act_selector_strings(void) {
     }
 
     // print the number of players in the selected act
-    if (sVisibleStars > 0) {
+    if ((gOverrideHideActSelectHud & ACT_SELECT_HUD_PLAYERS_IN_LEVEL) == 0 && sVisibleStars > 0) {
         u8 playersInAct = 0;
         for (int j = 0; j < MAX_PLAYERS; j++) {
             struct NetworkPlayer* np = &gNetworkPlayers[j];
@@ -402,7 +410,7 @@ void print_act_selector_strings(void) {
     }
 
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
- }
+}
 
 /**
  * Geo function that Print act selector strings.

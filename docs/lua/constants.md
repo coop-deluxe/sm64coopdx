@@ -26,6 +26,7 @@
     - [enum DialogSound](#enum-DialogSound)
 - [first_person_cam.h](#first_person_camh)
 - [gbi.h](#gbih)
+- [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
 - [graph_node.h](#graph_nodeh)
@@ -40,6 +41,9 @@
 - [level_update.h](#level_updateh)
     - [enum MarioSpawnType](#enum-MarioSpawnType)
     - [enum HUDDisplayFlag](#enum-HUDDisplayFlag)
+- [lighting_engine.h](#lighting_engineh)
+    - [enum LEMode](#enum-LEMode)
+    - [enum LEToneMapping](#enum-LEToneMapping)
 - [mario_animation_ids.h](#mario_animation_idsh)
     - [enum MarioAnimID](#enum-MarioAnimID)
     - [enum CharacterAnimID](#enum-CharacterAnimID)
@@ -48,6 +52,10 @@
     - [enum MarioHandGSCId](#enum-MarioHandGSCId)
     - [enum MarioCapGSCId](#enum-MarioCapGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
+- [mod_fs.h](#mod_fsh)
+    - [enum ModFsFileIntType](#enum-ModFsFileIntType)
+    - [enum ModFsFileFloatType](#enum-ModFsFileFloatType)
+    - [enum ModFsFileSeek](#enum-ModFsFileSeek)
 - [mod_storage.h](#mod_storageh)
 - [network.h](#networkh)
     - [enum NetworkSystemType](#enum-NetworkSystemType)
@@ -72,11 +80,13 @@
 - [sm64.h](#sm64h)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+    - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
+    - [enum ActSelectHudPart](#enum-ActSelectHudPart)
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
 - [sounds.h](#soundsh)
@@ -948,6 +958,7 @@
 ### [enum DialogId](#DialogId)
 | Identifier | Value |
 | :--------- | :---- |
+| DIALOG_NONE | -1 |
 | DIALOG_000 | 0 |
 | DIALOG_001 | 1 |
 | DIALOG_002 | 2 |
@@ -1285,6 +1296,15 @@
 
 <br />
 
+## [gbi_extension.h](#gbi_extension.h)
+- G_VTX_EXT
+- G_SETENVRGB
+- G_PPARTTOCOLOR
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [geo_commands.h](#geo_commands.h)
 
 ### [enum SkyBackgroundParams](#SkyBackgroundParams)
@@ -1316,6 +1336,7 @@
 - GRAPH_RENDER_CYLBOARD
 - GRAPH_RENDER_PLAYER
 - GRAPH_EXTRA_FORCE_3D
+- GRAPH_EXTRA_ROTATE_HELD
 - GRAPH_NODE_TYPE_FUNCTIONAL
 - GRAPH_NODE_TYPE_400
 - GRAPH_NODE_TYPE_ROOT
@@ -1334,12 +1355,14 @@
 - GRAPH_NODE_TYPE_BILLBOARD
 - GRAPH_NODE_TYPE_DISPLAY_LIST
 - GRAPH_NODE_TYPE_SCALE
+- GRAPH_NODE_TYPE_SCALE_XYZ
 - GRAPH_NODE_TYPE_SHADOW
 - GRAPH_NODE_TYPE_OBJECT_PARENT
 - GRAPH_NODE_TYPE_GENERATED_LIST
 - GRAPH_NODE_TYPE_BACKGROUND
 - GRAPH_NODE_TYPE_HELD_OBJ
 - GRAPH_NODE_TYPE_CULLING_RADIUS
+- GRAPH_NODE_TYPE_BONE
 - GFX_NUM_MASTER_LISTS
 - GEO_CONTEXT_CREATE
 - GEO_CONTEXT_RENDER
@@ -1562,21 +1585,21 @@
 | MARIO_SPAWN_PIPE | 3 |
 | MARIO_SPAWN_TELEPORT | 4 |
 | MARIO_SPAWN_INSTANT_ACTIVE | 0x10 |
-| MARIO_SPAWN_SWIMMING | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1) |
-| MARIO_SPAWN_AIRBORNE | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2) |
-| MARIO_SPAWN_HARD_AIR_KNOCKBACK | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3) |
-| MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4) |
-| MARIO_SPAWN_DEATH | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5) |
-| MARIO_SPAWN_SPIN_AIRBORNE | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6) |
-| MARIO_SPAWN_FLYING | ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7) |
+| MARIO_SPAWN_SWIMMING | 17 |
+| MARIO_SPAWN_AIRBORNE | 18 |
+| MARIO_SPAWN_HARD_AIR_KNOCKBACK | 19 |
+| MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE | 20 |
+| MARIO_SPAWN_DEATH | 21 |
+| MARIO_SPAWN_SPIN_AIRBORNE | 22 |
+| MARIO_SPAWN_FLYING | 23 |
 | MARIO_SPAWN_PAINTING_STAR_COLLECT | 0x20 |
-| MARIO_SPAWN_PAINTING_DEATH | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1) |
-| MARIO_SPAWN_AIRBORNE_STAR_COLLECT | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2) |
-| MARIO_SPAWN_AIRBORNE_DEATH | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3) |
-| MARIO_SPAWN_LAUNCH_STAR_COLLECT | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4) |
-| MARIO_SPAWN_LAUNCH_DEATH | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5) |
-| MARIO_SPAWN_UNUSED_38 | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6) |
-| MARIO_SPAWN_FADE_FROM_BLACK | ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7) |
+| MARIO_SPAWN_PAINTING_DEATH | 33 |
+| MARIO_SPAWN_AIRBORNE_STAR_COLLECT | 34 |
+| MARIO_SPAWN_AIRBORNE_DEATH | 35 |
+| MARIO_SPAWN_LAUNCH_STAR_COLLECT | 36 |
+| MARIO_SPAWN_LAUNCH_DEATH | 37 |
+| MARIO_SPAWN_UNUSED_38 | 38 |
+| MARIO_SPAWN_FADE_FROM_BLACK | 39 |
 - MARIO_SPAWN_UNKNOWN_02
 - MARIO_SPAWN_UNKNOWN_03
 - MARIO_SPAWN_UNKNOWN_27
@@ -1613,6 +1636,28 @@
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
 | HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lighting_engine.h](#lighting_engine.h)
+- LE_MAX_LIGHTS
+
+### [enum LEMode](#LEMode)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_MODE_AFFECT_ALL_SHADED_AND_COLORED | 0 |
+| LE_MODE_AFFECT_ALL_SHADED | 1 |
+| LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 2 |
+
+### [enum LEToneMapping](#LEToneMapping)
+| Identifier | Value |
+| :--------- | :---- |
+| LE_TONE_MAPPING_TOTAL_WEIGHTED | 0 |
+| LE_TONE_MAPPING_WEIGHTED | 1 |
+| LE_TONE_MAPPING_CLAMP | 2 |
+| LE_TONE_MAPPING_REINHARD | 3 |
 
 [:arrow_up_small:](#)
 
@@ -2091,6 +2136,42 @@
 | GRAB_POS_LIGHT_OBJ | 1 |
 | GRAB_POS_HEAVY_OBJ | 2 |
 | GRAB_POS_BOWSER | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs.h](#mod_fs.h)
+- MOD_FS_MAX_SIZE
+- MOD_FS_MAX_FILES
+- MOD_FS_MAX_PATH
+- MOD_FS_URI_PREFIX
+- MOD_FS_URI_FORMAT
+
+### [enum ModFsFileIntType](#ModFsFileIntType)
+| Identifier | Value |
+| :--------- | :---- |
+| INT_TYPE_U8 | 0 |
+| INT_TYPE_U16 | 1 |
+| INT_TYPE_U32 | 2 |
+| INT_TYPE_U64 | 3 |
+| INT_TYPE_S8 | 4 |
+| INT_TYPE_S16 | 5 |
+| INT_TYPE_S32 | 6 |
+| INT_TYPE_S64 | 7 |
+
+### [enum ModFsFileFloatType](#ModFsFileFloatType)
+| Identifier | Value |
+| :--------- | :---- |
+| FLOAT_TYPE_F32 | 0 |
+| FLOAT_TYPE_F64 | 1 |
+
+### [enum ModFsFileSeek](#ModFsFileSeek)
+| Identifier | Value |
+| :--------- | :---- |
+| FILE_SEEK_SET | 0 |
+| FILE_SEEK_CUR | 1 |
+| FILE_SEEK_END | 2 |
 
 [:arrow_up_small:](#)
 
@@ -2892,6 +2973,7 @@
 <br />
 
 ## [player_palette.h](#player_palette.h)
+- PALETTES_DIRECTORY
 - MAX_PRESET_PALETTES
 
 ### [enum PlayerPart](#PlayerPart)
@@ -3147,6 +3229,7 @@
 - ACT_STANDING_AGAINST_WALL
 - ACT_COUGHING
 - ACT_SHIVERING
+- ACT_PALETTE_EDITOR_CAP
 - ACT_IN_QUICKSAND
 - ACT_UNKNOWN_0002020E
 - ACT_CROUCHING
@@ -3341,7 +3424,6 @@
 - ACT_BUTT_STUCK_IN_GROUND
 - ACT_FEET_STUCK_IN_GROUND
 - ACT_PUTTING_ON_CAP
-- ACT_TAKING_OFF_CAP
 - ACT_HOLDING_POLE
 - ACT_GRAB_POLE_SLOW
 - ACT_GRAB_POLE_FAST
@@ -3439,24 +3521,10 @@
 | HOOK_BEFORE_WARP | 54 |
 | HOOK_ON_INSTANT_WARP | 55 |
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | 56 |
-| HOOK_MAX | 57 |
-
-### [enum LuaActionHookType](#LuaActionHookType)
-| Identifier | Value |
-| :--------- | :---- |
-| ACTION_HOOK_EVERY_FRAME | 0 |
-| ACTION_HOOK_GRAVITY | 1 |
-| ACTION_HOOK_MAX | 2 |
-
-### [enum LuaModMenuElementType](#LuaModMenuElementType)
-| Identifier | Value |
-| :--------- | :---- |
-| MOD_MENU_ELEMENT_TEXT | 0 |
-| MOD_MENU_ELEMENT_BUTTON | 1 |
-| MOD_MENU_ELEMENT_CHECKBOX | 2 |
-| MOD_MENU_ELEMENT_SLIDER | 3 |
-| MOD_MENU_ELEMENT_INPUTBOX | 4 |
-| MOD_MENU_ELEMENT_MAX | 5 |
+| HOOK_ON_ADD_SURFACE | 57 |
+| HOOK_ON_CLEAR_AREAS | 58 |
+| HOOK_ON_PACKET_BYTESTRING_RECEIVE | 59 |
+| HOOK_MAX | 60 |
 
 [:arrow_up_small:](#)
 
@@ -3490,6 +3558,18 @@
 | HUD_DISPLAY_FLAGS_CAMERA | 0x0080 |
 | HUD_DISPLAY_FLAGS_POWER | 0x0100 |
 | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER | 0x8000 |
+
+### [enum ActSelectHudPart](#ActSelectHudPart)
+| Identifier | Value |
+| :--------- | :---- |
+| ACT_SELECT_HUD_SCORE | 1 << 0 |
+| ACT_SELECT_HUD_LEVEL_NAME | 1 << 1 |
+| ACT_SELECT_HUD_COURSE_NUM | 1 << 2 |
+| ACT_SELECT_HUD_ACT_NAME | 1 << 3 |
+| ACT_SELECT_HUD_STAR_NUM | 1 << 4 |
+| ACT_SELECT_HUD_PLAYERS_IN_LEVEL | 1 << 5 |
+| ACT_SELECT_HUD_NONE | 0 |
+| ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL |
 
 [:arrow_up_small:](#)
 
@@ -3892,6 +3972,7 @@
 - SOUNDARGS_MASK_SOUNDID
 - SOUNDARGS_MASK_PRIORITY
 - SOUNDARGS_MASK_STATUS
+- SOUNDARGS_MASK_BITFLAGS
 - SOUNDARGS_SHIFT_BANK
 - SOUNDARGS_SHIFT_SOUNDID
 - SOUNDARGS_SHIFT_PRIORITY
@@ -4543,6 +4624,7 @@
 - SURFACE_CLASS_NOT_SLIPPERY
 - SURFACE_FLAG_DYNAMIC
 - SURFACE_FLAG_NO_CAM_COLLISION
+- SURFACE_FLAG_INTANGIBLE
 - SURFACE_FLAG_X_PROJECTION
 - HAZARD_TYPE_LAVA_FLOOR
 - HAZARD_TYPE_LAVA_WALL
@@ -4592,6 +4674,7 @@
 - ANIM_FLAG_5
 - ANIM_FLAG_6
 - ANIM_FLAG_7
+- ANIM_FLAG_BONE_TRANS
 - OBJECT_MAX_BHV_STACK
 - OBJECT_NUM_REGULAR_FIELDS
 - OBJECT_NUM_CUSTOM_FIELDS
@@ -4643,6 +4726,12 @@
 - VERSION_TEXT
 - VERSION_NUMBER
 - MINOR_VERSION_NUMBER
+- GAME_NAME
+- WINDOW_NAME
+- GAME_NAME
+- WINDOW_NAME
+- GAME_NAME
+- WINDOW_NAME
 - MAX_VERSION_LENGTH
 
 [:arrow_up_small:](#)

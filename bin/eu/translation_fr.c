@@ -12,7 +12,6 @@
 #define seg2_course_name_table_original course_name_table_eu_fr_original
 #define seg2_act_name_table act_name_table_eu_fr
 #define seg2_act_name_table_original act_name_table_eu_fr_original
-#define seg2_dialog_table dialog_table_eu_fr
 #define seg2_dialog_original dialog_table_eu_fr_original
 
 #include "text/fr/define_text.inc.c"

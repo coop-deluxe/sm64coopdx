@@ -10,6 +10,7 @@
 #include "level_update.h"
 #include "mario.h"
 #include "mario_actions_stationary.h"
+#include "mario_actions_cutscene.h"
 #include "mario_step.h"
 #include "memory.h"
 #include "save_file.h"
@@ -1160,6 +1161,54 @@ s32 act_first_person(struct MarioState *m) {
     return FALSE;
 }
 
+s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c) {
+    if (!(m->flags & (MARIO_CAP_ON_HEAD | MARIO_CAP_IN_HAND))) {
+        return FALSE;
+    }
+
+    switch (c->paletteEditorCapState) {
+        case 0: return FALSE;
+        case 1: cutscene_put_cap_on(m); break;
+        case 2: cutscene_take_cap_off(m); break;
+    }
+    c->paletteEditorCapState = 0;
+    if (m->action == ACT_PALETTE_EDITOR_CAP) {
+        set_mario_action(m, ACT_IDLE, 0);
+    }
+    return TRUE;
+}
+
+s32 act_palette_editor_cap(struct MarioState *m) {
+    if (gCamera->cutscene != CUTSCENE_PALETTE_EDITOR) {
+        return mario_exit_palette_editor(m, gCamera);
+    }
+
+    // Put cap on
+    if (m->actionArg == 0) {
+        s16 animFrame = set_character_animation(m, CHAR_ANIM_PUT_CAP_ON);
+        if (animFrame == 28) {
+            cutscene_put_cap_on(m);
+        }
+        if (is_anim_at_end(m)) {
+            set_mario_action(m, ACT_IDLE, 0);
+        }
+    }
+
+    // Take cap off
+    else {
+        s16 animFrame = set_character_animation(m, CHAR_ANIM_TAKE_CAP_OFF_THEN_ON);
+        if (animFrame == 12) {
+            cutscene_take_cap_off(m);
+        }
+        if (animFrame >= 30) {
+            set_mario_action(m, ACT_IDLE, 0);
+        }
+    }
+
+    stationary_ground_step(m);
+    return FALSE;
+}
+
 /* |description|
 Checks for and handles common conditions that would cancel Mario's current stationary action.
 |descriptionEnd| */
@@ -1167,9 +1216,9 @@ s32 check_common_stationary_cancels(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->playerIndex != 0) { return FALSE; }
     if (m->pos[1] < m->waterLevel - 100) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             if (m->action == ACT_SPAWN_SPIN_LANDING) {
                 if (m == &gMarioStates[0]) {
                     load_level_init_text(0);
@@ -1249,6 +1298,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
             case ACT_BRAKING_STOP:            cancel = act_braking_stop(m);                     break;
             case ACT_BUTT_SLIDE_STOP:         cancel = act_butt_slide_stop(m);                  break;
             case ACT_HOLD_BUTT_SLIDE_STOP:    cancel = act_hold_butt_slide_stop(m);             break;
+            case ACT_PALETTE_EDITOR_CAP:      cancel = act_palette_editor_cap(m);               break;
             default:
                 LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);

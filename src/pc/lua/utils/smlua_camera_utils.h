@@ -4,11 +4,6 @@
 #include "types.h"
 #include "game/camera.h"
 
-struct CameraOverride {
-    unsigned int value;
-    bool override;
-};
-
 /* |description|Resets camera config overrides|descriptionEnd| */
 void camera_reset_overrides(void);
 /* |description|Freezes the camera by not updating it|descriptionEnd| */

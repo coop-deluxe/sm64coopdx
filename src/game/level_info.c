@@ -4,6 +4,7 @@
 #include "course_table.h"
 #include "game/hardcoded.h"
 #include "game/memory.h"
+#include "game/segment2.h"
 #include "level_info.h"
 #include "level_table.h"
 #include "save_file.h"
@@ -14,106 +15,231 @@
 #ifdef VERSION_EU
 extern s32 gInGameLanguage;
 #include "eu_translation.h"
-#else
-extern u8 *seg2_course_name_table[];
-extern u8 *seg2_act_name_table[];
 #endif
 
-static const struct { const char *str; u8 c; u8 menu; } sSm64CharMap[] = {
-
-    // Digits
-    { "0", 0x00, 1 }, { "1", 0x01, 1 }, { "2", 0x02, 1 }, { "3", 0x03, 1 }, { "4", 0x04, 1 },
-    { "5", 0x05, 1 }, { "6", 0x06, 1 }, { "7", 0x07, 1 }, { "8", 0x08, 1 }, { "9", 0x09, 1 },
-
-    // Capital letters
-    { "A", 0x0A, 1 }, { "B", 0x0B, 1 }, { "C", 0x0C, 1 }, { "D", 0x0D, 1 }, { "E", 0x0E, 1 },
-    { "F", 0x0F, 1 }, { "G", 0x10, 1 }, { "H", 0x11, 1 }, { "I", 0x12, 1 }, { "J", 0x13, 1 },
-    { "K", 0x14, 1 }, { "L", 0x15, 1 }, { "M", 0x16, 1 }, { "N", 0x17, 1 }, { "O", 0x18, 1 },
-    { "P", 0x19, 1 }, { "Q", 0x1A, 1 }, { "R", 0x1B, 1 }, { "S", 0x1C, 1 }, { "T", 0x1D, 1 },
-    { "U", 0x1E, 1 }, { "V", 0x1F, 1 }, { "W", 0x20, 1 }, { "X", 0x21, 1 }, { "Y", 0x22, 1 },
-    { "Z", 0x23, 1 },
-
-    // Letters
-    { "a", 0x24, 0 }, { "b", 0x25, 0 }, { "c", 0x26, 0 }, { "d", 0x27, 0 }, { "e", 0x28, 0 },
-    { "f", 0x29, 0 }, { "g", 0x2A, 0 }, { "h", 0x2B, 0 }, { "i", 0x2C, 0 }, { "j", 0x2D, 0 },
-    { "k", 0x2E, 0 }, { "l", 0x2F, 0 }, { "m", 0x30, 0 }, { "n", 0x31, 0 }, { "o", 0x32, 0 },
-    { "p", 0x33, 0 }, { "q", 0x34, 0 }, { "r", 0x35, 0 }, { "s", 0x36, 0 }, { "t", 0x37, 0 },
-    { "u", 0x38, 0 }, { "v", 0x39, 0 }, { "w", 0x3A, 0 }, { "x", 0x3B, 0 }, { "y", 0x3C, 0 },
-    { "z", 0x3D, 0 },
-
-    // Punctuation
-    { "...", 0xE6, 0 }, // ellipsis
-    { ")(",  0xE2, 0 }, // close-open parentheses
-    { "<<",  0xF5, 0 }, // double quote open
-    { ">>",  0xF6, 0 }, // double quote close
-    { "\'",  0x3E, 1 }, // apostrophe
-    { ".",   0x3F, 1 }, // period
-    { ",",   0x6F, 1 }, // comma
-    { " ",   0x9E, 1 }, // space
-    { "-",   0x9F, 1 }, // dash
-    { "(",   0xE1, 0 }, // open parentheses
-    { ")",   0xE3, 0 }, // close parentheses
-    { "&",   0xE5, 1 }, // ampersand
-    { "!",   0xF2, 1 }, // exclamation mark
-    { "%",   0xF3, 0 }, // percent
-    { "?",   0xF4, 1 }, // question mark
-    { "~",   0xF7, 0 }, // tilde
-
-    // Symbols
-    { "[A]", 0x54, 0 }, // bold A
-    { "[B]", 0x55, 0 }, // bold B
-    { "[C]", 0x56, 0 }, // bold C
-    { "[Z]", 0x57, 0 }, // bold Z
-    { "[R]", 0x58, 0 }, // bold R
-    { "<->", 0xE4, 0 }, // left-right arrow
-    { "^",   0x50, 0 }, // up arrow
-    { "|",   0x51, 0 }, // down arrow
-    { "<",   0x52, 0 }, // left arrow
-    { ">",   0x53, 0 }, // right arrow
-    { "+",   0xF9, 1 }, // coin
-    { "@",   0xFA, 1 }, // star filled
-    { "*",   0xFB, 1 }, // multiply
-    { "$",   0xFD, 0 }, // star empty
-    { "\n",  0xFE, 1 }, // New line
-    { NULL,  0xFF, 1 }, // Null terminator
+struct Sm64Char {
+    const char *str;
+    u32 len;
+    u8 c;
+    bool menu;
 };
 
+#define SM64_CHAR(_str, _c, _menu) { \
+    .str = _str, \
+    .len = sizeof(_str) - 1, \
+    .c = _c, \
+    .menu = _menu, \
+}
+
+static const struct Sm64Char sSm64CharMap[] = {
+
+    // Digits
+    SM64_CHAR("0", 0x00, true),
+    SM64_CHAR("1", 0x01, true),
+    SM64_CHAR("2", 0x02, true),
+    SM64_CHAR("3", 0x03, true),
+    SM64_CHAR("4", 0x04, true),
+    SM64_CHAR("5", 0x05, true),
+    SM64_CHAR("6", 0x06, true),
+    SM64_CHAR("7", 0x07, true),
+    SM64_CHAR("8", 0x08, true),
+    SM64_CHAR("9", 0x09, true),
+
+    // Capital letters
+    SM64_CHAR("A", 0x0A, true),
+    SM64_CHAR("B", 0x0B, true),
+    SM64_CHAR("C", 0x0C, true),
+    SM64_CHAR("D", 0x0D, true),
+    SM64_CHAR("E", 0x0E, true),
+    SM64_CHAR("F", 0x0F, true),
+    SM64_CHAR("G", 0x10, true),
+    SM64_CHAR("H", 0x11, true),
+    SM64_CHAR("I", 0x12, true),
+    SM64_CHAR("J", 0x13, true),
+    SM64_CHAR("K", 0x14, true),
+    SM64_CHAR("L", 0x15, true),
+    SM64_CHAR("M", 0x16, true),
+    SM64_CHAR("N", 0x17, true),
+    SM64_CHAR("O", 0x18, true),
+    SM64_CHAR("P", 0x19, true),
+    SM64_CHAR("Q", 0x1A, true),
+    SM64_CHAR("R", 0x1B, true),
+    SM64_CHAR("S", 0x1C, true),
+    SM64_CHAR("T", 0x1D, true),
+    SM64_CHAR("U", 0x1E, true),
+    SM64_CHAR("V", 0x1F, true),
+    SM64_CHAR("W", 0x20, true),
+    SM64_CHAR("X", 0x21, true),
+    SM64_CHAR("Y", 0x22, true),
+    SM64_CHAR("Z", 0x23, true),
+
+    // Letters
+    SM64_CHAR("a", 0x24, false),
+    SM64_CHAR("b", 0x25, false),
+    SM64_CHAR("c", 0x26, false),
+    SM64_CHAR("d", 0x27, false),
+    SM64_CHAR("e", 0x28, false),
+    SM64_CHAR("f", 0x29, false),
+    SM64_CHAR("g", 0x2A, false),
+    SM64_CHAR("h", 0x2B, false),
+    SM64_CHAR("i", 0x2C, false),
+    SM64_CHAR("j", 0x2D, false),
+    SM64_CHAR("k", 0x2E, false),
+    SM64_CHAR("l", 0x2F, false),
+    SM64_CHAR("m", 0x30, false),
+    SM64_CHAR("n", 0x31, false),
+    SM64_CHAR("o", 0x32, false),
+    SM64_CHAR("p", 0x33, false),
+    SM64_CHAR("q", 0x34, false),
+    SM64_CHAR("r", 0x35, false),
+    SM64_CHAR("s", 0x36, false),
+    SM64_CHAR("t", 0x37, false),
+    SM64_CHAR("u", 0x38, false),
+    SM64_CHAR("v", 0x39, false),
+    SM64_CHAR("w", 0x3A, false),
+    SM64_CHAR("x", 0x3B, false),
+    SM64_CHAR("y", 0x3C, false),
+    SM64_CHAR("z", 0x3D, false),
+
+    // Punctuation
+    SM64_CHAR(":",   0xE6, false), // colon
+    SM64_CHAR(")(",  0xE2, false), // close-open parentheses
+    SM64_CHAR("<<",  0xF5, false), // double quote open
+    SM64_CHAR(">>",  0xF6, false), // double quote close
+    SM64_CHAR("\'",  0x3E, true ), // apostrophe
+    SM64_CHAR(".",   0x3F, true ), // period
+    SM64_CHAR(",",   0x6F, true ), // comma
+    SM64_CHAR(" ",   0x9E, true ), // space
+    SM64_CHAR("-",   0x9F, true ), // dash
+    SM64_CHAR("(",   0xE1, false), // open parentheses
+    SM64_CHAR(")",   0xE3, false), // close parentheses
+    SM64_CHAR("&",   0xE5, true ), // ampersand
+    SM64_CHAR("!",   0xF2, true ), // exclamation mark
+    SM64_CHAR("%",   0xF3, false), // percent
+    SM64_CHAR("?",   0xF4, true ), // question mark
+    SM64_CHAR("~",   0xF7, false), // tilde
+
+    // Symbols
+    SM64_CHAR("/",   0xD0, false),
+    SM64_CHAR("the", 0xD1, false),
+    SM64_CHAR("you", 0xD2, false),
+    SM64_CHAR("[%]", 0xE0, false), // The number of extra stars required to unlock a star door
+    SM64_CHAR("[A]", 0x54, false), // bold A
+    SM64_CHAR("[B]", 0x55, false), // bold B
+    SM64_CHAR("[C]", 0x56, false), // bold C
+    SM64_CHAR("[Z]", 0x57, false), // bold Z
+    SM64_CHAR("[R]", 0x58, false), // bold R
+    SM64_CHAR("+",   0xE4, false), // left-right arrow
+    SM64_CHAR("^",   0x50, false), // up arrow
+    SM64_CHAR("|",   0x51, false), // down arrow
+    SM64_CHAR("<",   0x52, false), // left arrow
+    SM64_CHAR(">",   0x53, false), // right arrow
+    SM64_CHAR("$",   0xF9, true ), // coin
+    SM64_CHAR("★",   0xFA, true ), // star filled
+    SM64_CHAR("@",   0xFA, true ), // star filled (both ★ and @ match 0xFA)
+    SM64_CHAR("*",   0xFB, true ), // multiply
+    SM64_CHAR("•",   0xFC, false), // interpunct (unused)
+    SM64_CHAR("=",   0xFD, false), // star empty
+    SM64_CHAR("\n",  0xFE, true ), // New line
+//  SM64_CHAR(NULL,  0xFF, true ), // Null terminator
+};
+
+#define ASCII_TO_SM64_MAX_CHAR_SIZE     1
+#define SM64_TO_ASCII_MAX_CHAR_SIZE     4
+
 static const char *ascii_to_sm64_char(u8 *str64, const char *strAscii, bool menu) {
-    for (s32 i = 0; sSm64CharMap[i].str != NULL; ++i) {
-        if (menu && !sSm64CharMap[i].menu) { continue; }
-        if (strstr(strAscii, sSm64CharMap[i].str) == strAscii) {
-            *str64 = sSm64CharMap[i].c;
-            return strAscii + strlen(sSm64CharMap[i].str);
+    for (u32 i = 0; i < ARRAY_COUNT(sSm64CharMap); ++i) {
+        const struct Sm64Char *ch = &sSm64CharMap[i];
+        if (menu && !ch->menu) {
+            continue;
+        }
+        if (memcmp(strAscii, ch->str, ch->len) == 0) {
+            *str64 = ch->c;
+            return strAscii + ch->len;
         }
     }
     *str64 = 0x9E;
     return strAscii + 1;
 }
 
-static char *sm64_to_ascii_char(char *strAscii, const u8 *str64) {
-    for (s32 i = 0; sSm64CharMap[i].str != NULL; ++i) {
-        if (sSm64CharMap[i].c == *str64) {
-            s32 l = strlen(sSm64CharMap[i].str);
-            memcpy(strAscii, sSm64CharMap[i].str, l);
-            return strAscii + l;
+static char *sm64_to_ascii_char(char *strAscii, u8 c) {
+    for (u32 i = 0; i < ARRAY_COUNT(sSm64CharMap); ++i) {
+        const struct Sm64Char *ch = &sSm64CharMap[i];
+        if (ch->c == c) {
+            memcpy(strAscii, ch->str, ch->len);
+            return strAscii + ch->len;
         }
     }
     *strAscii = ' ';
     return strAscii + 1;
 }
 
-void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
-    for (; *strAscii != 0; str64++) {
-        strAscii = ascii_to_sm64_char(str64, strAscii, menu);
+u8 *convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
+    if (!strAscii) { return str64; }
+
+    // allocate string with maximum size
+    bool shouldResizeString = false;
+    if (!str64) {
+        str64 = malloc(ASCII_TO_SM64_MAX_CHAR_SIZE * strlen(strAscii) + 1);
+        if (!str64) {
+            return NULL;
+        }
+        shouldResizeString = true;
     }
-    *str64 = 0xFF;
+
+    // convert string
+    u8 *str64End = str64;
+    for (; *strAscii != 0; str64End++) {
+        strAscii = ascii_to_sm64_char(str64End, strAscii, menu);
+    }
+    *(str64End++) = 0xFF;
+
+    // resize string if it was allocated by this function
+    if (shouldResizeString) {
+        u8 *resizedStr64 = realloc(str64, (size_t) (str64End - str64));
+        if (resizedStr64) {
+            str64 = resizedStr64;
+        }
+    }
+
+    return str64;
 }
 
-void convert_string_sm64_to_ascii(char *strAscii, const u8 *str64) {
-    for (; *str64 != 0xFF; str64++) {
-        strAscii = sm64_to_ascii_char(strAscii, str64);
+static inline size_t strlen64(const u8 *str64) {
+    const u8 *str64Begin = str64;
+    for (; *str64 != 0xFF; str64++);
+    return (size_t) (str64 - str64Begin);
+}
+
+char *convert_string_sm64_to_ascii(char *strAscii, const u8 *str64) {
+    if (!str64) { return strAscii; }
+
+    // allocate string with maximum size
+    bool shouldResizeString = false;
+    if (!strAscii) {
+        strAscii = malloc(SM64_TO_ASCII_MAX_CHAR_SIZE * strlen64(str64) + 1);
+        if (!strAscii) {
+            return NULL;
+        }
+        shouldResizeString = true;
     }
-    *strAscii = 0;
+
+    // convert string
+    char *strAsciiEnd = strAscii;
+    for (; *str64 != 0xFF; str64++) {
+        strAsciiEnd = sm64_to_ascii_char(strAsciiEnd, *str64);
+    }
+    *(strAsciiEnd++) = 0;
+
+    // resize string if it was allocated by this function
+    if (shouldResizeString) {
+        char *resizedStrAscii = realloc(strAscii, (size_t) (strAsciiEnd - strAscii));
+        if (resizedStrAscii) {
+            strAscii = resizedStrAscii;
+        }
+    }
+
+    return strAscii;
 }
 
 static void capitalize_string_ascii(char *strAscii) {
@@ -160,7 +286,7 @@ static void decapitalize_string_sm64(u8 *str64) {
     }
 }
 
-void *get_course_name_table(void) {
+void **get_course_name_table(void) {
     void **courseNameTbl = segmented_to_virtual(seg2_course_name_table);
 
 #ifdef VERSION_EU
@@ -174,7 +300,21 @@ void *get_course_name_table(void) {
     return courseNameTbl;
 }
 
-void *get_act_name_table(void) {
+void **get_course_name_table_original(void) {
+    void **courseNameTblOrig = segmented_to_virtual(seg2_course_name_table_original);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: courseNameTblOrig = segmented_to_virtual(course_name_table_eu_en_original); break;
+        case LANGUAGE_FRENCH:  courseNameTblOrig = segmented_to_virtual(course_name_table_eu_fr_original); break;
+        case LANGUAGE_GERMAN:  courseNameTblOrig = segmented_to_virtual(course_name_table_eu_de_original); break;
+    }
+#endif
+
+    return courseNameTblOrig;
+}
+
+void **get_act_name_table(void) {
     void **actNameTbl = segmented_to_virtual(seg2_act_name_table);
 
 #ifdef VERSION_EU
@@ -186,6 +326,20 @@ void *get_act_name_table(void) {
 #endif
 
     return actNameTbl;
+}
+
+void **get_act_name_table_original(void) {
+    void **actNameTblOrig = segmented_to_virtual(seg2_act_name_table_original);
+
+#ifdef VERSION_EU
+    switch (gInGameLanguage) {
+        case LANGUAGE_ENGLISH: actNameTblOrig = segmented_to_virtual(act_name_table_eu_en_original); break;
+        case LANGUAGE_FRENCH:  actNameTblOrig = segmented_to_virtual(act_name_table_eu_fr_original); break;
+        case LANGUAGE_GERMAN:  actNameTblOrig = segmented_to_virtual(act_name_table_eu_de_original); break;
+    }
+#endif
+
+    return actNameTblOrig;
 }
 
 const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16 charCase) {
@@ -201,8 +355,8 @@ const char *get_level_name_ascii(s16 courseNum, s16 levelNum, s16 areaIndex, s16
         }
     }
 
-    if (courseNum >= 0 && courseNum <= COURSE_MAX && gReplacedActNameTable[courseNum]->modIndex != -1) {
-        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->name);
+    if (courseNum >= 0 && courseNum <= COURSE_MAX && gReplacedCourseActNameTable[courseNum].courseName.modNum != 0) {
+        snprintf(output, 256, "%s", gReplacedCourseActNameTable[courseNum].courseName.name.value);
     }
 
     else if (!hasCustomName) {
@@ -266,9 +420,9 @@ const char *get_star_name_ascii(s16 courseNum, s16 starNum, s16 charCase) {
 
     s16 starIndex = starNum - 1;
     if (starIndex >= 0 && starIndex < MAX_ACTS_AND_100_COINS &&
-        courseNum >= 0 && courseNum < COURSE_END &&
-        gReplacedActNameTable[courseNum]->actName && gReplacedActNameTable[courseNum]->actName[starIndex].modIndex != -1) {
-        snprintf(output, 256, "%s", gReplacedActNameTable[courseNum]->actName[starIndex].name);
+        courseNum >= 0 && courseNum <= COURSE_MAX &&
+        gReplacedCourseActNameTable[courseNum].actName[starIndex].modNum != 0) {
+        snprintf(output, 256, "%s", gReplacedCourseActNameTable[courseNum].actName[starIndex].name.value);
     }
 
     // Main courses: BOB to RR

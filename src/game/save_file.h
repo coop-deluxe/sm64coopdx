@@ -241,6 +241,7 @@ Useful for tracking course-specific progress and enabling shortcuts
 |descriptionEnd| */
 s32 save_file_is_cannon_unlocked(s32 fileIndex, s32 courseIndex);
 
+/* |description|Unlocks the cannon in the current course|descriptionEnd| */
 void save_file_set_cannon_unlocked(void);
 void save_file_set_cap_pos(s16 x, s16 y, s16 z);
 
@@ -248,7 +249,7 @@ void save_file_set_cap_pos(s16 x, s16 y, s16 z);
 Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter.
 Useful for tracking the cap's location after it has been dropped or lost
 |descriptionEnd| */
-s32 save_file_get_cap_pos(Vec3s capPos);
+s32 save_file_get_cap_pos(OUT Vec3s capPos);
 
 void save_file_set_sound_mode(u16 mode);
 

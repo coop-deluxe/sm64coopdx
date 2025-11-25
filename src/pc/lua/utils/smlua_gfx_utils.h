@@ -66,7 +66,11 @@ Gfx *gfx_get_display_list(Gfx *cmd);
 Vtx *gfx_get_vertex_buffer(Gfx *cmd);
 /* |description|Gets the number of vertices from a display list command if it has the op `G_VTX`|descriptionEnd| */
 u16 gfx_get_vertex_count(Gfx *cmd);
+/* |description|Gets the texture from a display list command if it has an image related op|descriptionEnd| */
+Texture *gfx_get_texture(Gfx *cmd);
 
+/* |description|Gets the name of a display list|descriptionEnd| */
+const char *gfx_get_name(Gfx *gfx);
 /* |description|Gets the max length of a display list|descriptionEnd| */
 u32 gfx_get_length(Gfx *gfx);
 /* |description|Gets a command of a display list at position `offset`|descriptionEnd| */
@@ -84,6 +88,8 @@ void gfx_delete(Gfx *gfx);
 /* |description|Deletes all display lists created by `gfx_create`|descriptionEnd| */
 void gfx_delete_all();
 
+/* |description|Gets the name of a vertex buffer|descriptionEnd| */
+const char *vtx_get_name(Vtx *vtx);
 /* |description|Gets the max count of vertices of a vertex buffer|descriptionEnd| */
 u32 vtx_get_count(Vtx *vtx);
 /* |description|Gets a vertex of a vertex buffer at position `offset`|descriptionEnd| */

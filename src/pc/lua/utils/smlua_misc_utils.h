@@ -3,6 +3,7 @@
 
 #include "dialog_ids.h"
 #include "game/camera.h"
+#include "pc/lua/smlua_utils.h"
 
 enum HudDisplayValue {
     HUD_DISPLAY_LIVES,
@@ -27,6 +28,18 @@ enum HudDisplayFlags {
     HUD_DISPLAY_FLAGS_CAMERA = 0x0080,
     HUD_DISPLAY_FLAGS_POWER = 0x0100,
     HUD_DISPLAY_FLAGS_EMPHASIZE_POWER = 0x8000
+};
+
+enum ActSelectHudPart {
+    ACT_SELECT_HUD_SCORE = 1 << 0,
+    ACT_SELECT_HUD_LEVEL_NAME = 1 << 1,
+    ACT_SELECT_HUD_COURSE_NUM = 1 << 2,
+    ACT_SELECT_HUD_ACT_NAME = 1 << 3,
+    ACT_SELECT_HUD_STAR_NUM = 1 << 4,
+    ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
+	
+	ACT_SELECT_HUD_NONE = 0,
+	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
 
 struct DateTime {
@@ -63,15 +76,19 @@ bool djui_is_playerlist_open(void);
 bool djui_attempting_to_open_playerlist(void);
 /* |description|Gets the DJUI playerlist's page index|descriptionEnd| */
 u8 djui_get_playerlist_page_index(void);
+/* |description|Checks if the DJUI chatbox is open|descriptionEnd| */
+bool djui_is_chatbox_open(void);
 /* |description|Gets the DJUI menu font|descriptionEnd| */
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
 struct DjuiTheme* djui_menu_get_theme(void);
+/* |description|Checks if the DJUI playerlist ping icon is visible|descriptionEnd| */
+bool djui_is_playerlist_ping_visible(void);
 
 /* |description|Gets the current state of the dialog box|descriptionEnd| */
 s8 get_dialog_box_state(void);
 /* |description|Gets the current dialog box ID|descriptionEnd| */
-s16 get_dialog_id(void);
+s32 get_dialog_id(void);
 
 /* |description|Gets if the last objective collected was a star (0) or a key (1)|descriptionEnd| */
 u8 get_last_star_or_key(void);
@@ -113,8 +130,23 @@ s8 hud_get_flash(void);
 /* |description|Sets if the star counter on the HUD should flash|descriptionEnd| */
 void hud_set_flash(s8 value);
 
+/* |description|Hides part of the Act Select HUD|descriptionEnd| */
+void act_select_hud_hide(enum ActSelectHudPart part);
+/* |description|Shows part of the Act Select HUD|descriptionEnd| */
+void act_select_hud_show(enum ActSelectHudPart part);
+/* |description|Checks if part of the Act Select HUD is hidden|descriptionEnd| */
+bool act_select_hud_is_hidden(enum ActSelectHudPart part);
+
 /* |description|Checks if the game is paused|descriptionEnd| */
 bool is_game_paused(void);
+/* |description|Gets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+bool is_pause_menu_hidden(void);
+/* |description|Sets if the pause menu elements are hidden, useful for creating custom pause menus|descriptionEnd| */
+void set_pause_menu_hidden(bool hidden);
+/* |description|Pauses the game|descriptionEnd| */
+void game_pause(void);
+/* |description|Unpauses the game|descriptionEnd| */
+void game_unpause(void);
 /* |description|Checks if a screen transition is playing|descriptionEnd| */
 bool is_transition_playing(void);
 
@@ -136,7 +168,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index);
 /* |description|
 Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, Vec3f pos);
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);
@@ -230,5 +262,11 @@ struct GraphNodeCamera* geo_get_current_camera(void);
 
 /* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
+
+/* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels|descriptionEnd|*/
+LuaTable texture_to_lua_table(const Texture *tex);
+
+/* |description|Gets the name of the provided texture pointer `tex`|descriptionEnd|*/
+const char *get_texture_name(const Texture *tex);
 
 #endif

@@ -64,9 +64,6 @@ static void ValidateColSectionChange(GfxData* aGfxData, struct CollisionValidati
 }
 
 static void ValidateColInit(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
-    if (aColValData.tokenIndex != 0) {
-        PrintDataError("COL_INIT found after the first token");
-    }
     ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_VTX);
 }
 
@@ -687,16 +684,12 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const ch
 void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData) {
     for (auto &_ColNode : _GfxData->mCollisions) {
         String _ColRootName = _ColNode->mName;
-
-        // If there is an existing binary file for this collision, skip and go to the next actor
         SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
-        if (fs_sys_file_exists(_ColFilename.c_str())) {
 
-            // Compress file to gain some space
-            if (configCompressOnStartup && !DynOS_Bin_IsCompressed(_ColFilename)) {
-                DynOS_Bin_Compress(_ColFilename);
-            }
-
+        // If there is an existing binary file for this collision, skip and go to the next collision
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _ColNode->mModelIdentifier);
+        SysPath _SrcFilename = fstring("%s/%s/collision.inc.c", aPackFolder.c_str(), _ActorFolder.begin());
+        if (DynOS_GenFileExistsAndIsNewerThanFile(_ColFilename, _SrcFilename)) {
             continue;
         }
 

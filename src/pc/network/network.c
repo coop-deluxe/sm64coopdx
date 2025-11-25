@@ -110,6 +110,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // reset override hide hud
     extern u8 gOverrideHideHud;
     gOverrideHideHud = 0;
+    act_select_hud_show(ACT_SELECT_HUD_ALL);
     gNetworkStartupTimer = 5 * 30;
 
     // sanity check network system
@@ -183,6 +184,8 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         discord_activity_update();
     }
 #endif
+
+    djui_base_set_visible(&gDjuiModReload->base, network_allow_mod_dev_mode());
 
     LOG_INFO("initialized");
 
@@ -636,6 +639,33 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
     color[1] = g;
     color[2] = b;
 }
+
+bool network_allow_mod_dev_mode(void) {
+    return (configModDevMode && gNetworkSystem == &gNetworkSystemSocket && gNetworkType == NT_SERVER);
+}
+
+void network_mod_dev_mode_reload(void) {
+    network_rehost_begin();
+
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod->enabled) {
+            mod_refresh_files(mod);
+        }
+    }
+
+    djui_lua_error_clear();
+
+    LOG_CONSOLE(" ");
+    LOG_CONSOLE("===================================================");
+    LOG_CONSOLE("===================================================");
+    LOG_CONSOLE("===================================================");
+    LOG_CONSOLE("===================== REFRESH =====================");
+    LOG_CONSOLE("===================================================");
+    LOG_CONSOLE("===================================================");
+    LOG_CONSOLE("===================================================");
+}
+
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     smlua_call_event_hooks(HOOK_ON_EXIT);

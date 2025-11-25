@@ -10,11 +10,21 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 
+extern ALIGNED8 const u8 texture_hud_char_mario_head[];
+
+extern ALIGNED8 const Texture texture_ping_empty[];
+extern ALIGNED8 const Texture texture_ping_one[];
+extern ALIGNED8 const Texture texture_ping_two[];
+extern ALIGNED8 const Texture texture_ping_three[];
+extern ALIGNED8 const Texture texture_ping_four[];
+extern ALIGNED8 const Texture texture_ping_full[];
+
 struct DjuiThreePanel* gDjuiPlayerList = NULL;
 bool gAttemptingToOpenPlayerlist = false;
 
 static struct DjuiFlowLayout* djuiRow[MAX_PLAYERS] = { 0 };
-static struct DjuiImage* djuiImages[MAX_PLAYERS] = { 0 };
+static struct DjuiImage* djuiHeadIconImages[MAX_PLAYERS] = { 0 };
+static struct DjuiImage* djuiPingImages[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
@@ -35,7 +45,17 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
         snprintf(sActNum, 7, "Done");
     }
     if (charIndex >= CT_MAX) { charIndex = 0; }
-    djuiImages[i]->texture = gCharacters[charIndex].hudHeadTexture.texture;
+    djuiHeadIconImages[i]->textureInfo.texture = gCharacters[charIndex].hudHeadTexture.texture;
+
+    s16 pingValue = np->ping / 150;
+    switch (pingValue) {
+        case 0:  djuiPingImages[i]->textureInfo.texture = texture_ping_full;  break;
+        case 1:  djuiPingImages[i]->textureInfo.texture = texture_ping_four;  break;
+        case 2:  djuiPingImages[i]->textureInfo.texture = texture_ping_three; break;
+        case 3:  djuiPingImages[i]->textureInfo.texture = texture_ping_two;   break;
+        case 4:  djuiPingImages[i]->textureInfo.texture = texture_ping_one;   break;
+        default: djuiPingImages[i]->textureInfo.texture = texture_ping_empty; break;
+    }
 
     u8 visible = np->connected;
     if (np == gNetworkPlayerServer && gServerSettings.headlessServer) {
@@ -46,6 +66,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     }
 
     djui_base_set_visible(&djuiRow[i]->base, visible);
+    djui_base_set_visible(&djuiPingImages[i]->base, configShowPing);
 
     u8* rgb = network_get_player_text_color(np->localIndex);
     djui_base_set_color(&djuiTextNames[i]->base, rgb[0], rgb[1], rgb[2], 255);
@@ -60,6 +81,7 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
           : np->overrideLocation
     );
     djui_text_set_text(djuiTextAct[i], sActNum);
+    djui_base_set_size(&djuiTextAct[i]->base, configShowPing ? 65 : 100, 32.0f);
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
@@ -94,7 +116,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     // delete old player list
     if (gDjuiPlayerList != NULL) {
         djui_base_destroy(&gDjuiPlayerList->base);
-        gDjuiPlayerList= NULL;
+        gDjuiPlayerList = NULL;
     }
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PLAYER_LIST, PLAYERS), false);
@@ -119,10 +141,13 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_visible(&row->base, false);
         djuiRow[i] = row;
 
-        extern ALIGNED8 const u8 texture_hud_char_mario_head[];
-        struct DjuiImage* i1 = djui_image_create(&row->base, texture_hud_char_mario_head, 16, 16, 8);
+        struct DjuiImage* i1 = djui_image_create(&row->base, texture_ping_empty, 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b);
         djui_base_set_size(&i1->base, 32, 32);
-        djuiImages[i] = i1;
+        djuiPingImages[i] = i1;
+
+        struct DjuiImage* i2 = djui_image_create(&row->base, texture_hud_char_mario_head, 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+        djui_base_set_size(&i2->base, 32, 32);
+        djuiHeadIconImages[i] = i2;
 
         int t = 220;
         struct DjuiText* t2 = djui_text_create(&row->base, DLANG(PLAYER_LIST, NAME));

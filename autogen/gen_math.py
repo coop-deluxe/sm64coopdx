@@ -1,39 +1,70 @@
 import sys
 
-
-VEC3X_TO_VEC3Y = """
+VECX_TO_VECY = """
 /* |description|
-Converts a 3D {{desc}} vector `a` into a 3D {{desc_2}} vector and stores the result in `dest`
+Converts a {{size}}D {{desc}} vector `a` into a {{size}}D {{desc_2}} vector and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec3{{suffix_2}}p vec3{{suffix}}_to_vec3{{suffix_2}}(Vec3{{suffix_2}} dest, Vec3{{suffix}} a) {
-    dest[0] = a[0]{{rounding_0}};
-    dest[1] = a[1]{{rounding_1}};
-    dest[2] = a[2]{{rounding_2}};
+INLINE OPTIMIZE_O3 Vec{{size}}{{suffix_2}}p vec{{size}}{{suffix}}_to_vec{{size}}{{suffix_2}}(OUT Vec{{size}}{{suffix_2}} dest, Vec{{size}}{{suffix}} a) {
+    {{body}}
     return dest;
 }
 """
 
-ROUNDING_FORMULA = " + ((a[%d] > 0) ? 0.5f : -0.5f)"
+ROUNDING_FORMULA = " + ((a[{i}] > 0) ? 0.5f : -0.5f)"
 
-def vec3_write_conversion_functions(generated: str, curr_template: dict, templates: list, size: int) -> str:
+def vec_write_conversion_functions(generated: str, curr_template: dict, templates: list, size: int) -> str:
     for template in templates:
         if template["suffix"] == curr_template["suffix"]:
             continue
 
-        generated += VEC3X_TO_VEC3Y \
+        body = "\n    ".join([
+            "dest[{i}] = a[{i}]{rounding};".format(
+                i=i,
+                rounding=ROUNDING_FORMULA.format(i=i) if curr_template["rounding"] else ""
+            ) for i in range(size)
+        ])
+
+        generated += VECX_TO_VECY \
+            .replace("{{size}}", str(size)) \
             .replace("{{desc}}", curr_template["desc"]) \
             .replace("{{suffix}}", curr_template["suffix"]) \
             .replace("{{desc_2}}", template["desc"]) \
-            .replace("{{suffix_2}}", template["suffix"])
-
-        for i in range(size):
-            rounding_i = "{{rounding_%d}}" % (i)
-            generated = generated.replace(rounding_i, ROUNDING_FORMULA % (i) if curr_template["rounding"] else "")
+            .replace("{{suffix_2}}", template["suffix"]) \
+            .replace("{{body}}", body)
 
     return generated
 
 
 TEMPLATES = {
+    "src/engine/math_util_vec2.tmpl": {
+        "size": 2,
+        "templates": [
+            {
+                "desc": "floating-point",
+                "type": "f32",
+                "suffix": "f",
+                "rounding": True
+            },
+            {
+                "desc": "integer",
+                "type": "s32",
+                "suffix": "i",
+                "rounding": False
+            },
+            {
+                "desc": "short integer",
+                "type": "s16",
+                "suffix": "s",
+                "rounding": False
+            }
+        ],
+        "post-template": {
+            "function": vec_write_conversion_functions,
+            "args": {
+                "size": 2
+            }
+        }
+    },
     "src/engine/math_util_vec3.tmpl": {
         "size": 3,
         "templates": [
@@ -57,7 +88,7 @@ TEMPLATES = {
             }
         ],
         "post-template": {
-            "function": vec3_write_conversion_functions,
+            "function": vec_write_conversion_functions,
             "args": {
                 "size": 3
             }

@@ -58,15 +58,16 @@ static struct RSP {
     ALIGNED16 Mat4 P_matrix;
     ALIGNED16 Mat4 modelview_matrix_stack[MAX_MATRIX_STACK_SIZE];
     uint32_t modelview_matrix_stack_size;
-    
+
     uint32_t geometry_mode;
     int16_t fog_mul, fog_offset;
-    
+    int16_t fresnel_scale, fresnel_offset;
+
     struct {
         // U0.16
         uint16_t s, t;
     } texture_scaling_factor;
-    
+
     bool lights_changed;
     uint8_t current_num_lights; // includes ambient light
     Vec3f current_lights_coeffs[MAX_LIGHTS];
@@ -123,6 +124,10 @@ Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
 Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
+
+// need inverse camera matrix to compute world space for lighting engine
+static Mat4 sInverseCameraMatrix;
+static bool sHasInverseCameraMatrix = false;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -351,8 +356,8 @@ static void import_texture_rgba32(int tile) {
 static void import_texture_rgba16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
-    uint8_t rgba32_buf[8192];
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 0x2000) { return; }
+    uint8_t rgba32_buf[0x2000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
         uint16_t col16 = (rdp.loaded_texture[tile].addr[2 * i] << 8) | rdp.loaded_texture[tile].addr[2 * i + 1];
@@ -375,8 +380,8 @@ static void import_texture_rgba16(int tile) {
 static void import_texture_ia4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
-    uint8_t rgba32_buf[32768];
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
+    uint8_t rgba32_buf[0x8000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
         uint8_t byte = rdp.loaded_texture[tile].addr[i / 2];
@@ -401,8 +406,8 @@ static void import_texture_ia4(int tile) {
 static void import_texture_ia8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
-    uint8_t rgba32_buf[16384];
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
+    uint8_t rgba32_buf[0x4000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
         uint8_t intensity = rdp.loaded_texture[tile].addr[i] >> 4;
@@ -425,8 +430,8 @@ static void import_texture_ia8(int tile) {
 static void import_texture_ia16(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 2 > 8192) { return; }
-    uint8_t rgba32_buf[8192];
+    if (rdp.loaded_texture[tile].size_bytes * 2 > 0x2000) { return; }
+    uint8_t rgba32_buf[0x2000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes / 2; i++) {
         uint8_t intensity = rdp.loaded_texture[tile].addr[2 * i];
@@ -449,8 +454,8 @@ static void import_texture_ia16(int tile) {
 static void import_texture_i4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
-    uint8_t rgba32_buf[32768];
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
+    uint8_t rgba32_buf[0x8000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
         uint8_t byte = rdp.loaded_texture[tile].addr[i / 2];
@@ -470,8 +475,8 @@ static void import_texture_i4(int tile) {
 static void import_texture_i8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
-    uint8_t rgba32_buf[16384];
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
+    uint8_t rgba32_buf[0x4000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
         uint8_t intensity = rdp.loaded_texture[tile].addr[i];
@@ -490,8 +495,8 @@ static void import_texture_i8(int tile) {
 static void import_texture_ci4(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 8 > 32768) { return; }
-    uint8_t rgba32_buf[32768];
+    if (rdp.loaded_texture[tile].size_bytes * 8 > 0x8000) { return; }
+    uint8_t rgba32_buf[0x8000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes * 2; i++) {
         uint8_t byte = rdp.loaded_texture[tile].addr[i / 2];
@@ -516,8 +521,8 @@ static void import_texture_ci4(int tile) {
 static void import_texture_ci8(int tile) {
     tile = tile % RDP_TILES;
     if (!rdp.loaded_texture[tile].addr) { return; }
-    if (rdp.loaded_texture[tile].size_bytes * 4 > 16384) { return; }
-    uint8_t rgba32_buf[16384];
+    if (rdp.loaded_texture[tile].size_bytes * 4 > 0x4000) { return; }
+    uint8_t rgba32_buf[0x4000];
 
     for (uint32_t i = 0; i < rdp.loaded_texture[tile].size_bytes; i++) {
         uint8_t idx = rdp.loaded_texture[tile].addr[i];
@@ -603,7 +608,7 @@ static void import_texture(int tile) {
     //printf("Time diff: %d\n", t1 - t0);
 }
 
-static void OPTIMIZE_O3 gfx_transposed_matrix_mul(Vec3f res, const Vec3f a, const Mat4 b) {
+static void OPTIMIZE_O3 gfx_transposed_matrix_mul(OUT Vec3f res, const Vec3f a, const Mat4 b) {
     res[0] = a[0] * b[0][0] + a[1] * b[0][1] + a[2] * b[0][2];
     res[1] = a[0] * b[1][0] + a[1] * b[1][1] + a[2] * b[1][2];
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
@@ -627,7 +632,18 @@ static void calculate_normal_dir(const Light_t *light, Vec3f coeffs, bool applyL
 }
 
 static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
+
     Mat4 matrix;
+
+    // remember inverse camera matrix to use for the lighting engine
+    if (parameters == G_MTX_INVERSE_CAMERA_EXT) {
+        if (addr) {
+            memcpy(sInverseCameraMatrix, addr, sizeof(sInverseCameraMatrix));
+            sHasInverseCameraMatrix = true;
+        }
+        return;
+    }
+
 #if 0
     // Original code when fixed point matrices were used
     for (int32_t i = 0; i < 4; i++) {
@@ -641,6 +657,7 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
 #else
     memcpy(matrix, addr, sizeof(matrix));
 #endif
+
 
     if (parameters & G_MTX_PROJECTION) {
         if (parameters & G_MTX_LOAD) {
@@ -678,12 +695,42 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * gfx_current_dimensions.x_adjust_ratio;
 }
 
+static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal) {
+    if (!sHasInverseCameraMatrix) { return; }
+
+    // strip view matrix off of the model-view matrix
+    Mat4 model;
+    mtxf_mul(model, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size-1], sInverseCameraMatrix);
+
+    // transform position to world
+    Vec3f worldPos;
+    worldPos[0] = pos[0] * model[0][0] + pos[1] * model[1][0] + pos[2] * model[2][0] + model[3][0];
+    worldPos[1] = pos[0] * model[0][1] + pos[1] * model[1][1] + pos[2] * model[2][1] + model[3][1];
+    worldPos[2] = pos[0] * model[0][2] + pos[1] * model[1][2] + pos[2] * model[2][2] + model[3][2];
+
+    pos[0] = worldPos[0];
+    pos[1] = worldPos[1];
+    pos[2] = worldPos[2];
+
+    // transform normal to world
+    if (normal) {
+        Vec3f worldNormal;
+        worldNormal[0] = normal[0] * model[0][0] + normal[1] * model[1][0] + normal[2] * model[2][0];
+        worldNormal[1] = normal[0] * model[0][1] + normal[1] * model[1][1] + normal[2] * model[2][1];
+        worldNormal[2] = normal[0] * model[0][2] + normal[1] * model[1][2] + normal[2] * model[2][2];
+
+        normal[0] = worldNormal[0];
+        normal[1] = worldNormal[1];
+        normal[2] = worldNormal[2];
+    }
+}
+
 static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices, bool luaVertexColor) {
     if (!vertices) { return; }
 
     Vec3f globalLightCached[2];
     Vec3f vertexColorCached;
-    if (rsp.geometry_mode & G_LIGHTING) {
+    if ((rsp.geometry_mode & G_LIGHTING) && !(rsp.geometry_mode & G_LIGHT_MAP_EXT)) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++)
                 globalLightCached[i][j] = gLightingColor[i][j] / 255.0f;
@@ -691,7 +738,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
     }
 
     if (luaVertexColor) {
-        if ((rsp.geometry_mode & G_PACKED_NORMALS_EXT) || (!(rsp.geometry_mode & G_LIGHTING))) {
+        if (!(rsp.geometry_mode & G_LIGHTING)) {
             for (int i = 0; i < 3; i ++) {
                 vertexColorCached[i] = gVertexColor[i] / 255.0f;
             }
@@ -731,6 +778,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
 
         short U = v->tc[0] * rsp.texture_scaling_factor.s >> 16;
         short V = v->tc[1] * rsp.texture_scaling_factor.t >> 16;
+
+        // are we on affect all shaded surfaces mode and on a vertex colorable surface
+        bool affectAllVertexColored = (le_get_mode() == LE_MODE_AFFECT_ALL_SHADED_AND_COLORED && luaVertexColor);
 
         if (rsp.geometry_mode & G_LIGHTING) {
             if (rsp.lights_changed) {
@@ -796,14 +846,35 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 float vtxR = (v->cn[0] / 255.0f);
                 float vtxG = (v->cn[1] / 255.0f);
                 float vtxB = (v->cn[2] / 255.0f);
-                if (luaVertexColor) {
-                    d->color.r *= vtxR * vertexColorCached[0];
-                    d->color.g *= vtxG * vertexColorCached[1];
-                    d->color.b *= vtxB * vertexColorCached[2];
-                } else {
-                    d->color.r *= vtxR;
-                    d->color.g *= vtxG;
-                    d->color.b *= vtxB;
+                d->color.r *= vtxR;
+                d->color.g *= vtxG;
+                d->color.b *= vtxB;
+            }
+
+            if (rsp.geometry_mode & (G_FRESNEL_COLOR_EXT | G_FRESNEL_ALPHA_EXT)) {
+                Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
+                Vec3f vnormal = { nx / 255.0f, ny / 255.0f, nz / 255.0f };
+                // transform vpos and vnormal to world space
+                gfx_local_to_world_space(vpos, vnormal);
+
+                Vec3f viewDir = {
+                    sInverseCameraMatrix[3][0] - vpos[0],
+                    sInverseCameraMatrix[3][1] - vpos[1],
+                    sInverseCameraMatrix[3][2] - vpos[2]
+                };
+                vec3f_normalize(viewDir);
+                vec3f_normalize(vnormal);
+
+                int32_t dot = (int32_t) (fabsf(vec3f_dot(vnormal, viewDir)) * 32767.0f);
+                int32_t factor = ((rsp.fresnel_scale * dot) >> 15) + rsp.fresnel_offset;
+                int32_t fresnel = clamp(factor << 8, 0, 0x7FFF);
+                uint8_t result = (uint8_t) (fresnel >> 7);
+
+                if (rsp.geometry_mode & G_FRESNEL_COLOR_EXT) {
+                    d->color.r = d->color.g = d->color.b = result;
+                }
+                if (rsp.geometry_mode & G_FRESNEL_ALPHA_EXT) {
+                    d->color.a = result;
                 }
             }
 
@@ -820,29 +891,62 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
 
-            if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
-                Color color;
+            // if lighting engine is enabled and either we want to affect all shaded surfaces or the lighting engine geometry mode is on
+            if (le_is_enabled() && ((le_get_mode() != LE_MODE_AFFECT_ONLY_GEOMETRY_MODE) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+                Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
                 CTX_BEGIN(CTX_LIGHTING);
-                le_calculate_lighting_color(((Vtx_t*)v)->ob, color, 1.0f);
+
+                Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
+                Vec3f vnormal = { nx, ny, nz };
+
+                // transform vpos and vnormal to world space
+                gfx_local_to_world_space(vpos, vnormal);
+
+                le_calculate_lighting_color_with_normal(vpos, vnormal, color, 1.0f);
+
                 CTX_END(CTX_LIGHTING);
 
                 d->color.r *= color[0] / 255.0f;
                 d->color.g *= color[1] / 255.0f;
                 d->color.b *= color[2] / 255.0f;
             }
-        } else if (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT) {
-            Color color;
+        // if lighting engine is enabled and we should affect all vertex colored surfaces or the lighting engine geometry mode is on
+        } else if (le_is_enabled() && !(rsp.geometry_mode & G_LIGHT_MAP_EXT) && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+            Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
             CTX_BEGIN(CTX_LIGHTING);
-            le_calculate_vertex_lighting((Vtx_t*)v, color);
-            CTX_END(CTX_LIGHTING);
-            if (luaVertexColor) {
-                d->color.r = color[0] * vertexColorCached[0];
-                d->color.g = color[1] * vertexColorCached[1];
-                d->color.b = color[2] * vertexColorCached[2];
+
+            Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
+
+            // transform vpos to world space
+            gfx_local_to_world_space(vpos, NULL);
+
+            // do multiplication based lighting instead of additive based lighting if we're not using the lighting engine geometry mode,
+            // this is my compromise for retaining vertex colors vs lighting up darker surfaces.
+            // if retaining color is the most important like on a red coin, don't use the lighting engine geometry mode.
+            // if lighting up darker surfaces like in a map with prebaked lighting is the most important, use the lighting engine geometry mode.
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                le_calculate_lighting_color(vpos, color, 1.0f);
             } else {
-                d->color.r = color[0];
-                d->color.g = color[1];
-                d->color.b = color[2];
+                le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+            }
+
+            CTX_END(CTX_LIGHTING);
+
+            // combine the colors
+            if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
+                d->color.r = (v->cn[0] * color[0] / 255.0f) * vertexColorCached[0];
+                d->color.g = (v->cn[1] * color[1] / 255.0f) * vertexColorCached[1];
+                d->color.b = (v->cn[2] * color[2] / 255.0f) * vertexColorCached[2];
+            } else {
+                if (luaVertexColor) {
+                    d->color.r = color[0] * vertexColorCached[0];
+                    d->color.g = color[1] * vertexColorCached[1];
+                    d->color.b = color[2] * vertexColorCached[2];
+                } else {
+                    d->color.r = color[0];
+                    d->color.g = color[1];
+                    d->color.b = color[2];
+                }
             }
         } else {
             if (!(rsp.geometry_mode & G_LIGHT_MAP_EXT) && luaVertexColor) {
@@ -894,8 +998,9 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (fog_z > 255) fog_z = 255;
             d->fog_z = fog_z;
         }
-
-        d->color.a = v->cn[3];
+        if (!(rsp.geometry_mode & G_FRESNEL_ALPHA_EXT)) {
+            d->color.a = v->cn[3];
+        }
     }
 }
 
@@ -920,6 +1025,11 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if ((v1->w < 0) ^ (v2->w < 0) ^ (v3->w < 0)) {
             // If one vertex lies behind the eye, negating cross will give the correct result.
             // If all vertices lie behind the eye, the triangle will be rejected anyway.
+            cross = -cross;
+        }
+
+        // Invert culling: back becomes front and front becomes back
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
             cross = -cross;
         }
 
@@ -1221,7 +1331,7 @@ static void gfx_sp_copymem(uint8_t idx, uint16_t dstofs, uint16_t srcofs, UNUSED
 }
 #endif
 
-static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data) {
+static void gfx_sp_moveword(uint8_t index, uint16_t offset, uint32_t data) {
     switch (index) {
         case G_MW_NUMLIGHT:
 #ifdef F3DEX_GBI_2
@@ -1243,6 +1353,22 @@ static void gfx_sp_moveword(uint8_t index, UNUSED uint16_t offset, uint32_t data
             sDepthZSub = gProjectionVanillaNearValue;
 
             break;
+        case G_MW_FX:
+            if (offset == G_MWO_FRESNEL) {
+                rsp.fresnel_scale = (int16_t)(data >> 16);
+                rsp.fresnel_offset = (int16_t)data;
+            }
+            break;
+        case G_MW_LIGHTCOL: {
+            int lightNum = offset / 24;
+            // data = packed color
+            if (lightNum >= 0 && lightNum <= MAX_LIGHTS) {
+                rsp.current_lights[lightNum].col[0] = (uint8_t)(data >> 24);
+                rsp.current_lights[lightNum].col[1] = (uint8_t)(data >> 16);
+                rsp.current_lights[lightNum].col[2] = (uint8_t)(data >> 8);
+            }
+            break;
+        }
     }
 }
 
@@ -1381,6 +1507,12 @@ static void gfx_dp_set_env_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     rdp.env_color.g = g;
     rdp.env_color.b = b;
     rdp.env_color.a = a;
+}
+
+static void gfx_dp_set_env_rgb(uint8_t r, uint8_t g, uint8_t b) {
+    rdp.env_color.r = r;
+    rdp.env_color.g = g;
+    rdp.env_color.b = b;
 }
 
 static void gfx_dp_set_prim_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -1722,6 +1854,9 @@ static void OPTIMIZE_O3 gfx_run_dl(Gfx* cmd) {
             case G_SETENVCOLOR:
                 gfx_dp_set_env_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
+            case G_SETENVRGB:
+                gfx_dp_set_env_rgb(C1(24, 8), C1(16, 8), C1(8, 8));
+                break;
             case G_SETPRIMCOLOR:
                 gfx_dp_set_prim_color(C1(24, 8), C1(16, 8), C1(8, 8), C1(0, 8));
                 break;
@@ -1881,6 +2016,8 @@ void gfx_start_frame(void) {
 void gfx_run(Gfx *commands) {
     gfx_sp_reset();
 
+    sHasInverseCameraMatrix = false;
+
     //puts("New frame");
 
     if (!gfx_wapi->start_frame()) {
@@ -1892,18 +2029,24 @@ void gfx_run(Gfx *commands) {
     //double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
-    gfx_flush();
-    //double t1 = gfx_wapi->get_time();
-    //printf("Process %f %f\n", t1, t1 - t0);
-    gfx_rapi->end_frame();
-    gfx_wapi->swap_buffers_begin();
 }
 
-void gfx_end_frame(void) {
+void gfx_end_frame_render(void) {
+    gfx_flush();
+    gfx_rapi->end_frame();
+}
+
+void gfx_display_frame(void) {
+    gfx_wapi->swap_buffers_begin();
     if (!dropped_frame) {
         gfx_rapi->finish_render();
         gfx_wapi->swap_buffers_end();
     }
+}
+
+void gfx_end_frame(void) {
+    gfx_end_frame_render();
+    gfx_display_frame();
 }
 
 void gfx_shutdown(void) {
@@ -1922,17 +2065,26 @@ void gfx_shutdown(void) {
  // v custom for djui v //
 /////////////////////////
 
-static bool    sDjuiClip          = 0;
-static uint8_t sDjuiClipX1        = 0;
-static uint8_t sDjuiClipY1        = 0;
-static uint8_t sDjuiClipX2        = 0;
-static uint8_t sDjuiClipY2        = 0;
+static const struct {
+    uint8_t LOAD_BLOCK;
+    uint8_t SHIFT;
+    uint8_t INCR;
+    uint8_t LINE_BYTES;
+} G_IM_SIZ_[] = {
+    [G_IM_SIZ_4b]  = { G_IM_SIZ_4b_LOAD_BLOCK,  G_IM_SIZ_4b_SHIFT,  G_IM_SIZ_4b_INCR,  G_IM_SIZ_4b_LINE_BYTES  },
+    [G_IM_SIZ_8b]  = { G_IM_SIZ_8b_LOAD_BLOCK,  G_IM_SIZ_8b_SHIFT,  G_IM_SIZ_8b_INCR,  G_IM_SIZ_8b_LINE_BYTES  },
+    [G_IM_SIZ_16b] = { G_IM_SIZ_16b_LOAD_BLOCK, G_IM_SIZ_16b_SHIFT, G_IM_SIZ_16b_INCR, G_IM_SIZ_16b_LINE_BYTES },
+    [G_IM_SIZ_32b] = { G_IM_SIZ_32b_LOAD_BLOCK, G_IM_SIZ_32b_SHIFT, G_IM_SIZ_32b_INCR, G_IM_SIZ_32b_LINE_BYTES },
+};
 
-static bool    sDjuiOverride        = false;
-static void*   sDjuiOverrideTexture = NULL;
-static uint32_t sDjuiOverrideW       = 0;
-static uint32_t sDjuiOverrideH       = 0;
-static uint32_t sDjuiOverrideB       = 0;
+static bool    sDjuiClip   = 0;
+static uint8_t sDjuiClipX1 = 0;
+static uint8_t sDjuiClipY1 = 0;
+static uint8_t sDjuiClipX2 = 0;
+static uint8_t sDjuiClipY2 = 0;
+
+static bool sDjuiOverride = false;
+static struct TextureInfo sDjuiOverrideTexture;
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_clipping(void) {
     if (!sDjuiClip) { return; }
@@ -1998,35 +2150,42 @@ static void OPTIMIZE_O3 djui_gfx_dp_execute_override(void) {
     if (!sDjuiOverride) { return; }
     sDjuiOverride = false;
 
-    // gsDPSetTextureImage
-    uint8_t sizeLoadBlock = (sDjuiOverrideB == 32) ? 3 : 2;
-    rdp.texture_to_load.addr = sDjuiOverrideTexture;
-    rdp.texture_to_load.siz = sizeLoadBlock;
+    const Texture *texture = sDjuiOverrideTexture.texture;
+    uint32_t width = sDjuiOverrideTexture.width;
+    uint32_t height = sDjuiOverrideTexture.height;
+    uint8_t fmt = sDjuiOverrideTexture.format;
+    uint8_t siz = sDjuiOverrideTexture.size;
 
-    // gsDPSetTile
-    rdp.texture_tile.siz = sizeLoadBlock;
+    if (siz > G_IM_SIZ_32b) { return; }
 
-    // gsDPLoadBlock
-    uint32_t wordSizeShift = (sDjuiOverrideB == 32) ? 2 : 1;
-    uint32_t lrs = (sDjuiOverrideW * sDjuiOverrideH) - 1;
-    uint32_t sizeBytes = (lrs + 1) << wordSizeShift;
-    gfx_update_loaded_texture(rdp.texture_to_load.tile_number, sizeBytes, rdp.texture_to_load.addr);
-
-    // gsDPSetTile
-    uint32_t line = (((sDjuiOverrideW * 2) + 7) >> 3);
-    rdp.texture_tile.line_size_bytes = line * 8;
-
-    // gsDPSetTileSize
-    /*rdp.texture_tile.uls = 0;
-    rdp.texture_tile.ult = 0;
-    rdp.texture_tile.lrs = (sDjuiOverrideW - 1) << G_TEXTURE_IMAGE_FRAC;
-    rdp.texture_tile.lrt = (sDjuiOverrideH - 1) << G_TEXTURE_IMAGE_FRAC;*/
+    // This is gDPLoadTextureBlock, but with some shortcuts and without texture size limitations
+    gfx_dp_set_texture_image(fmt, G_IM_SIZ_[siz].LOAD_BLOCK, width, texture);
+    gfx_dp_set_tile(fmt, siz, 0, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+    gfx_dp_load_block(0, 0, 0, ((width * height + G_IM_SIZ_[siz].INCR) >> G_IM_SIZ_[siz].SHIFT) - 1, 0);
+    gfx_dp_set_tile(fmt, siz, (((width * G_IM_SIZ_[siz].LINE_BYTES) + 7) >> 3), 0, G_TX_RENDERTILE, 0, rdp.texture_tile.cmt, 0, 0, rdp.texture_tile.cms, 0, 0);
 }
 
 static void OPTIMIZE_O3 djui_gfx_dp_execute_djui(uint32_t opcode) {
     switch (opcode) {
         case G_TEXOVERRIDE_DJUI: djui_gfx_dp_execute_override(); break;
         case G_TEXCLIP_DJUI:     djui_gfx_dp_execute_clipping(); break;
+    }
+}
+
+static void gfx_sp_copy_playerpart_to_color(uint8_t color, uint32_t idx) {
+    SUPPORT_CHECK(color == G_COL_PRIM || color == G_COL_ENV);
+
+    if (idx >= 1 && idx <= MAX_LIGHTS) {
+        Light_t *l = (rsp.current_lights + (idx - 1));
+        struct RGBA *targetColor = NULL;
+        switch (color) {
+            case G_COL_PRIM: targetColor = &rdp.prim_color; break;
+            case G_COL_ENV:  targetColor = &rdp.env_color;  break;
+        }
+
+        targetColor->r = l->col[0];
+        targetColor->g = l->col[1];
+        targetColor->b = l->col[2];
     }
 }
 
@@ -2038,12 +2197,13 @@ static void OPTIMIZE_O3 djui_gfx_dp_set_clipping(uint32_t x1, uint32_t y1, uint3
     sDjuiClip   = true;
 }
 
-static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint32_t b) {
-    sDjuiOverrideTexture = texture;
-    sDjuiOverrideW = w;
-    sDjuiOverrideH = h;
-    sDjuiOverrideB = b;
-    sDjuiOverride  = (texture != NULL);
+static void OPTIMIZE_O3 djui_gfx_dp_set_override(void* texture, uint32_t w, uint32_t h, uint8_t fmt, uint8_t siz) {
+    sDjuiOverrideTexture.texture = texture;
+    sDjuiOverrideTexture.width = w;
+    sDjuiOverrideTexture.height = h;
+    sDjuiOverrideTexture.format = fmt;
+    sDjuiOverrideTexture.size = siz;
+    sDjuiOverride = (texture != NULL);
 }
 
 /*static void OPTIMIZE_O3 djui_gfx_sp_simple_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
@@ -2072,7 +2232,7 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             djui_gfx_dp_set_clipping(C0(16, 8), C0(8, 8), C1(16, 8), C1(8, 8));
             break;
         case G_TEXOVERRIDE_DJUI:
-            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(0, 8));
+            djui_gfx_dp_set_override(seg_addr(cmd->words.w1), 1 << C0(16, 8), 1 << C0(8, 8), C0(4, 4), C0(0, 4));
             break;
         case G_VTX_EXT:
 #ifdef F3DEX_GBI_2
@@ -2092,6 +2252,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
+            break;
+        case G_PPARTTOCOLOR:
+            gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
             break;
     }
 }

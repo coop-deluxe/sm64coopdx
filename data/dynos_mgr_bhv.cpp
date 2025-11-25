@@ -62,7 +62,7 @@ GfxData *DynOS_Bhv_GetActiveGfx(BehaviorScript *bhvScript) {
     return NULL;
 }
 
-s32 DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript) {
+bool DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript, s32 *modIndex, s32 *modFileIndex) {
     auto &_CustomBehaviorScripts = DynOS_Bhv_GetArray();
 
     for (s32 i = 0; i < _CustomBehaviorScripts.Count(); ++i) {
@@ -70,10 +70,12 @@ s32 DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript) {
         auto &scripts = gfxData->mBehaviorScripts;
         if (scripts.Count() == 0) { continue; }
         if (bhvScript == scripts[scripts.Count() - 1]->mData) {
-            return gfxData->mModIndex;
+            *modIndex = gfxData->mModIndex;
+            *modFileIndex = gfxData->mModFileIndex;
+            return true;
         }
     }
-    return -1;
+    return false;
 }
 
 const char *DynOS_Bhv_GetToken(BehaviorScript *bhvScript, u32 index) {

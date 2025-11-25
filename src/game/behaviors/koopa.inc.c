@@ -50,16 +50,16 @@ static u8 sKoopaShelledAttackHandlers[] = {
  * Data to control the behavior of each instance of Koopa the Quick.
  */
 struct KoopaTheQuickProperties {
-    s16* initText;
-    s16* winText;
+    enum DialogId* initText;
+    enum DialogId* winText;
 };
 
 /**
  * Properties for the BoB race and the THI race.
  */
 static struct KoopaTheQuickProperties sKoopaTheQuickProperties[] = {
-    { (s16*) &gBehaviorValues.dialogs.KoopaQuickBobStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickBobWinDialog },
-    { (s16*) &gBehaviorValues.dialogs.KoopaQuickThiStartDialog, (s16*) &gBehaviorValues.dialogs.KoopaQuickThiWinDialog }
+    { &gBehaviorValues.dialogs.KoopaQuickBobStartDialog, &gBehaviorValues.dialogs.KoopaQuickBobWinDialog },
+    { &gBehaviorValues.dialogs.KoopaQuickThiStartDialog, &gBehaviorValues.dialogs.KoopaQuickThiWinDialog }
 };
 
 static u32 koopaPathedStartWaypoint = 0;
@@ -872,7 +872,7 @@ static void koopa_the_quick_act_after_race(void) {
         if (marioState && should_start_or_continue_dialog(marioState, o)) {
             s32 dialogResponse = cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, o->parentObj->oKoopaRaceEndpointUnk100, koopa_the_quick_act_after_race_continue_dialog);
             if (dialogResponse != 0) {
-                o->parentObj->oKoopaRaceEndpointUnk100 = -1;
+                o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_NONE;
                 o->oTimer = 0;
             }
         }

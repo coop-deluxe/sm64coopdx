@@ -19,8 +19,8 @@ _ReadOnlyTable = {
         local _table = rawget(t, '_table')
         return _table[k]
     end,
-    __newindex = function (t,k,v)
-    end
+    __newindex = function (_,k,_) error('Attempting to modify key `' .. k .. '` of read-only table') end,
+    __metatable = false
 }
 
 -----------
@@ -63,7 +63,7 @@ end
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number
@@ -72,7 +72,13 @@ gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 --- @return number
 function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
-    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
+    return math.s32(
+        ((bank << SOUNDARGS_SHIFT_BANK) & SOUNDARGS_MASK_BANK) |
+        ((soundID << SOUNDARGS_SHIFT_SOUNDID) & SOUNDARGS_MASK_SOUNDID) |
+        ((priority << SOUNDARGS_SHIFT_PRIORITY) & SOUNDARGS_MASK_PRIORITY) |
+        (flags & SOUNDARGS_MASK_BITFLAGS) |
+        SOUND_STATUS_WAITING
+    )
 end
 
 -------------
@@ -171,14 +177,142 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
+--------------------------
+-- local math functions --
+--------------------------
+local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
+
+------------
+-- tweens --
+------------
+-- Unrelated to SM64, but these are for `math.tween`
+
+---@param x number
+---@return number
+IN_SINE        = function (x) return 1 - __math_cos((x * __math_pi) / 2) end
+---@param x number
+---@return number
+OUT_SINE       = function (x) return __math_sin((x * __math_pi) / 2) end
+---@param x number
+---@return number
+IN_OUT_SINE    = function (x) return -(__math_cos(__math_pi * x) - 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_SINE    = function (x) return x < 0.5 and 0.5 * __math_sin(x * __math_pi) or 1 - 0.5 * __math_cos(((x * 2 - 1) * (__math_pi / 2))) end
+---@param x number
+---@return number
+IN_QUAD        = function (x) return x ^ 2 end
+---@param x number
+---@return number
+OUT_QUAD       = function (x) return 1 - ((1 - x) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_QUAD    = function (x) return x < 0.5 and 2 * (x ^ 2) or 1 - ((-2 * x + 2) ^ 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUAD    = function (x) return x < 0.5 and 0.5 * (-(2 * x) * ((2 * x) - 2)) or 0.5 + 0.5 * (2 * x - 1) ^ 2 end
+---@param x number
+---@return number
+IN_CUBIC       = function (x) return x ^ 3 end
+---@param x number
+---@return number
+OUT_CUBIC      = function (x) return 1 - ((1 - x) ^ 3) end
+---@param x number
+---@return number
+IN_OUT_CUBIC   = function (x) return x < 0.5 and 4 * (x ^ 3) or 1 - ((-2 * x + 2) ^ 3) / 2 end
+---@param x number
+---@return number
+OUT_IN_CUBIC   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 3) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 3 end
+---@param x number
+---@return number
+IN_QUART       = function (x) return x ^ 4 end
+---@param x number
+---@return number
+OUT_QUART      = function (x) return 1 - ((1 - x) ^ 4) end
+---@param x number
+---@return number
+IN_OUT_QUART   = function (x) return x < 0.5 and 8 * (x ^ 4) or 1 - ((-2 * x + 2) ^ 4) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUART   = function (x) return x < 0.5 and 0.5 * (1 - ((2 * x - 1) ^ 4)) or 0.5 + 0.5 * (2 * x - 1) ^ 4 end
+---@param x number
+---@return number
+IN_QUINT       = function (x) return x ^ 5 end
+---@param x number
+---@return number
+OUT_QUINT      = function (x) return 1 - ((1 - x) ^ 5) end
+---@param x number
+---@return number
+IN_OUT_QUINT   = function (x) return x < 0.5 and 16 * (x ^ 5) or 1 - ((-2 * x + 2) ^ 5) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUINT   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 5) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 5 end
+---@param x number
+---@return number
+IN_EXPO        = function (x) return x == 0 and x or 2 ^ (10 * x - 10) end
+---@param x number
+---@return number
+OUT_EXPO       = function (x) return x == 1 and x or 1 - (2 ^ (-10 * x)) end
+---@param x number
+---@return number
+IN_OUT_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and (2 ^ (20 * x - 10)) / 2 or (2 - (2 ^ (-20 * x + 10))) / 2 end
+---@param x number
+---@return number
+OUT_IN_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and 0.5 * (1 - 2 ^ (-20 * x)) or 0.5 + 0.5 * (2 ^ (20 * x - 20)) end
+---@param x number
+---@return number
+IN_CIRC        = function (x) return 1 - __math_sqrt(1 - (x ^ 2)) end
+---@param x number
+---@return number
+OUT_CIRC       = function (x) return __math_sqrt(1 - ((x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_OUT_CIRC    = function (x) return x < 0.5 and (1 - __math_sqrt(1 - ((2 * x) ^ 2))) / 2 or (__math_sqrt(1 - ((-2 * x + 2) ^ 2)) + 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_CIRC    = function (x) return x < 0.5 and 0.5 * __math_sqrt(1 - (2 * x - 1) ^ 2) or 0.5 + 0.5 * (1 - __math_sqrt(1 - (2 * x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_BACK        = function (x) return (1.70158 + 1) * (x ^ 3) - 1.70158 * (x ^ 2) end
+---@param x number
+---@return number
+OUT_BACK       = function (x) return 1 + (1.70158 + 1) * ((x - 1) ^ 3) + 1.70158 * ((x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_BACK    = function (x) return x < 0.5 and (((2 * x) ^ 2) * (((1.70158 * 1.525) + 1) * 2 * x - (1.70158 * 1.525))) / 2 or (((2 * x - 2) ^ 2) * (((1.70158 * 1.525) + 1) * (x * 2 - 2) + (1.70158 * 1.525)) + 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_BACK    = function (x) return x < 0.5 and 0.5 * (1 + (1.70158 + 1) * ((2 * x) - 1) ^ 3 + 1.70158 * ((2 * x) - 1) ^ 2) or 0.5 + 0.5 * ((1.70158 + 1) * (2 * x - 1) ^ 3 - 1.70158 * (2 * x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_ELASTIC     = function (x) return (x == 0 or x == 1) and x or -(2 ^ (10 * x - 10)) * __math_sin((x * 10 - 10.75) * ((2 * __math_pi) / 3)) end
+---@param x number
+---@return number
+OUT_ELASTIC    = function (x) return (x == 0 or x == 1) and x or (2 ^ (-10 * x)) * __math_sin((x * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1 end
+---@param x number
+---@return number
+IN_OUT_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and (-0.5 * (2 ^ (20 * x - 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)))) or (0.5 * (2 ^ (-20 * x + 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)) + 1) end
+---@param x number
+---@return number
+OUT_IN_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and 0.5 * ((2 ^ (-10 * (x * 2))) * __math_sin(((x * 2) * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1)) or 0.5 + 0.5 * (-(2 ^ (10 * ((x - 0.5) * 2) - 10)) * __math_sin((((x - 0.5) * 2) * 10 - 10.75) * ((2 * __math_pi) / 3))) end
+---@param x number
+---@return number
+IN_BOUNCE      = function (x) return 1 - OUT_BOUNCE(1 - x) end
+---@param x number
+---@return number
+OUT_BOUNCE     = function (x) if x < 1 / 2.75 then return 7.5625 * (x ^ 2) elseif x < 2 / 2.75 then x = x - 1.5 / 2.75 return 7.5625 * (x ^ 2) + 0.75 elseif x < 2.5 / 2.75 then x = x - 2.25 / 2.75 return 7.5625 * (x ^ 2) + 0.9375 else x = x - 2.625 / 2.75 return 7.5625 * (x ^ 2) + 0.984375 end end
+---@param x number
+---@return number
+IN_OUT_BOUNCE  = function (x) return x < 0.5 and (1 - OUT_BOUNCE(1 - 2 * x)) / 2 or (1 + OUT_BOUNCE(2 * x - 1)) / 2 end
+---@param x number
+---@return number
+OUT_IN_BOUNCE  = function (x) return x < 0.5 and 0.5 * OUT_BOUNCE(x * 2) or 0.5 + 0.5 * IN_BOUNCE(2 * x - 1) end
 
 --------------------
 -- math functions --
 --------------------
 --- Note: These functions don't exist in the Lua math library,
 --- and are useful enough to not have to redefine them in every mod
-
-local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil = math.min, math.max, math.sqrt, math.floor, math.ceil
 
 --- @param x number
 --- @return number
@@ -252,6 +386,77 @@ end
 function math.round(x)
     return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
 end
+
+--- @param t function | number
+--- @param a number
+--- @param b number
+--- @param x number
+--- @return number
+--- Interpolates between `a` and `b` using delta `x` and a tweening or easing math function `t`
+function math.tween(t, a, b, x)
+    local y
+
+    if type(t) == 'function' then
+        y = a + t(x) * (b - a)
+    else
+        y = a + t * (b - a)
+    end
+
+    return y
+end
+
+local __common_signed_conversion = function (x, size)
+    x = __math_floor(x) & (1 << size) - 1
+    return x - ((x & (1 << (size - 1))) << 1)
+end
+
+local __common_unsigned_conversion = function (x, size)
+    return __math_floor(x) & (1 << size) - 1
+end
+
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s8` range
+--- - `[-128, 127]`
+function math.s8(x)
+    return __common_signed_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s16` range
+--- - `[-32768, 32767]`
+function math.s16(x)
+    return __common_signed_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s32` range
+--- - `[-2147483648, 2147483647]`
+function math.s32(x)
+    return __common_signed_conversion(x, 32)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u8` range
+--- - `[0, 255]`
+function math.u8(x)
+    return __common_unsigned_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u16` range
+--- - `[0, 65535]`
+function math.u16(x)
+    return __common_unsigned_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u32` range
+--- - `[0, 4294967295]`
+function math.u32(x)
+    return __common_unsigned_conversion(x, 32)
+end
+
 
 
 -------------------------
@@ -2156,6 +2361,7 @@ M_MOUSE_BUTTON = MOUSE_BUTTON_2
 --- @type integer
 R_MOUSE_BUTTON = MOUSE_BUTTON_3
 
+DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId
 DIALOG_002   =   2 --- @type DialogId
@@ -2329,6 +2535,7 @@ DIALOG_169   = 169 --- @type DialogId
 DIALOG_COUNT = 170 --- @type DialogId
 
 --- @alias DialogId
+--- | `DIALOG_NONE`
 --- | `DIALOG_000`
 --- | `DIALOG_001`
 --- | `DIALOG_002`
@@ -2734,6 +2941,15 @@ G_TEXRECTFLIP = 0xe5
 --- @type integer
 G_TEXRECT = 0xe4
 
+--- @type integer
+G_VTX_EXT = 0x11
+
+--- @type integer
+G_SETENVRGB = 0xd1
+
+--- @type integer
+G_PPARTTOCOLOR = 0xd3
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -2785,6 +3001,9 @@ GRAPH_RENDER_PLAYER = (1 << 7)
 
 --- @type integer
 GRAPH_EXTRA_FORCE_3D = (1 << 0)
+
+--- @type integer
+GRAPH_EXTRA_ROTATE_HELD = (1 << 1)
 
 --- @type integer
 GRAPH_NODE_TYPE_FUNCTIONAL = 0x100
@@ -2841,6 +3060,9 @@ GRAPH_NODE_TYPE_DISPLAY_LIST = 0x01B
 GRAPH_NODE_TYPE_SCALE = 0x01C
 
 --- @type integer
+GRAPH_NODE_TYPE_SCALE_XYZ = 0x01D
+
+--- @type integer
 GRAPH_NODE_TYPE_SHADOW = 0x028
 
 --- @type integer
@@ -2857,6 +3079,9 @@ GRAPH_NODE_TYPE_HELD_OBJ = (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
 
 --- @type integer
 GRAPH_NODE_TYPE_CULLING_RADIUS = 0x02F
+
+--- @type integer
+GRAPH_NODE_TYPE_BONE = 0x030
 
 --- @type integer
 GFX_NUM_MASTER_LISTS = 8
@@ -3277,27 +3502,27 @@ SPECIAL_WARP_TITLE = -8
 --- @type integer
 SPECIAL_WARP_LEVEL_SELECT = -9
 
-MARIO_SPAWN_NONE                  =                                          0 --- @type MarioSpawnType
-MARIO_SPAWN_DOOR_WARP             =                                          1 --- @type MarioSpawnType
-MARIO_SPAWN_IDLE                  =                                          2 --- @type MarioSpawnType
-MARIO_SPAWN_PIPE                  =                                          3 --- @type MarioSpawnType
-MARIO_SPAWN_TELEPORT              =                                          4 --- @type MarioSpawnType
-MARIO_SPAWN_INSTANT_ACTIVE        =                                       0x10 --- @type MarioSpawnType
-MARIO_SPAWN_SWIMMING              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 1) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE              =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 2) --- @type MarioSpawnType
-MARIO_SPAWN_HARD_AIR_KNOCKBACK    =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 3) --- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE  =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 4) --- @type MarioSpawnType
-MARIO_SPAWN_DEATH                 =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 5) --- @type MarioSpawnType
-MARIO_SPAWN_SPIN_AIRBORNE         =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 6) --- @type MarioSpawnType
-MARIO_SPAWN_FLYING                =        ((MARIO_SPAWN_INSTANT_ACTIVE ) + 7) --- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_STAR_COLLECT =                                       0x20 --- @type MarioSpawnType
-MARIO_SPAWN_PAINTING_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 1) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_STAR_COLLECT = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 2) --- @type MarioSpawnType
-MARIO_SPAWN_AIRBORNE_DEATH        = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 3) --- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_STAR_COLLECT   = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 4) --- @type MarioSpawnType
-MARIO_SPAWN_LAUNCH_DEATH          = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 5) --- @type MarioSpawnType
-MARIO_SPAWN_UNUSED_38             = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 6) --- @type MarioSpawnType
-MARIO_SPAWN_FADE_FROM_BLACK       = ((MARIO_SPAWN_PAINTING_STAR_COLLECT ) + 7) --- @type MarioSpawnType
+MARIO_SPAWN_NONE                  =    0 --- @type MarioSpawnType
+MARIO_SPAWN_DOOR_WARP             =    1 --- @type MarioSpawnType
+MARIO_SPAWN_IDLE                  =    2 --- @type MarioSpawnType
+MARIO_SPAWN_PIPE                  =    3 --- @type MarioSpawnType
+MARIO_SPAWN_TELEPORT              =    4 --- @type MarioSpawnType
+MARIO_SPAWN_INSTANT_ACTIVE        = 0x10 --- @type MarioSpawnType
+MARIO_SPAWN_SWIMMING              =   17 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE              =   18 --- @type MarioSpawnType
+MARIO_SPAWN_HARD_AIR_KNOCKBACK    =   19 --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE_CIRCLE  =   20 --- @type MarioSpawnType
+MARIO_SPAWN_DEATH                 =   21 --- @type MarioSpawnType
+MARIO_SPAWN_SPIN_AIRBORNE         =   22 --- @type MarioSpawnType
+MARIO_SPAWN_FLYING                =   23 --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_STAR_COLLECT = 0x20 --- @type MarioSpawnType
+MARIO_SPAWN_PAINTING_DEATH        =   33 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_STAR_COLLECT =   34 --- @type MarioSpawnType
+MARIO_SPAWN_AIRBORNE_DEATH        =   35 --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_STAR_COLLECT   =   36 --- @type MarioSpawnType
+MARIO_SPAWN_LAUNCH_DEATH          =   37 --- @type MarioSpawnType
+MARIO_SPAWN_UNUSED_38             =   38 --- @type MarioSpawnType
+MARIO_SPAWN_FADE_FROM_BLACK       =   39 --- @type MarioSpawnType
 
 --- @alias MarioSpawnType
 --- | `MARIO_SPAWN_NONE`
@@ -3408,6 +3633,29 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_FLAG_EMPHASIZE_POWER`
 --- | `HUD_DISPLAY_NONE`
 --- | `HUD_DISPLAY_DEFAULT`
+
+--- @type integer
+LE_MAX_LIGHTS = 256
+
+LE_MODE_AFFECT_ALL_SHADED_AND_COLORED = 0 --- @type LEMode
+LE_MODE_AFFECT_ALL_SHADED             = 1 --- @type LEMode
+LE_MODE_AFFECT_ONLY_GEOMETRY_MODE     = 2 --- @type LEMode
+
+--- @alias LEMode
+--- | `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED`
+--- | `LE_MODE_AFFECT_ALL_SHADED`
+--- | `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE`
+
+LE_TONE_MAPPING_TOTAL_WEIGHTED = 0 --- @type LEToneMapping
+LE_TONE_MAPPING_WEIGHTED       = 1 --- @type LEToneMapping
+LE_TONE_MAPPING_CLAMP          = 2 --- @type LEToneMapping
+LE_TONE_MAPPING_REINHARD       = 3 --- @type LEToneMapping
+
+--- @alias LEToneMapping
+--- | `LE_TONE_MAPPING_TOTAL_WEIGHTED`
+--- | `LE_TONE_MAPPING_WEIGHTED`
+--- | `LE_TONE_MAPPING_CLAMP`
+--- | `LE_TONE_MAPPING_REINHARD`
 
 MARIO_ANIM_SLOW_LEDGE_GRAB                      =   0 --- @type MarioAnimID
 MARIO_ANIM_FALL_OVER_BACKWARDS                  =   1 --- @type MarioAnimID
@@ -4310,6 +4558,56 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_LIGHT_OBJ`
 --- | `GRAB_POS_HEAVY_OBJ`
 --- | `GRAB_POS_BOWSER`
+
+--- @type integer
+MOD_FS_MAX_SIZE = 0x2000000
+
+--- @type integer
+MOD_FS_MAX_FILES = 0x200
+
+--- @type integer
+MOD_FS_MAX_PATH = 0x100
+
+--- @type string
+MOD_FS_URI_PREFIX = "modfs:/"
+
+--- @type string
+MOD_FS_URI_FORMAT = "modfs:/%s/%s"
+
+INT_TYPE_U8  = 0 --- @type ModFsFileIntType
+INT_TYPE_U16 = 1 --- @type ModFsFileIntType
+INT_TYPE_U32 = 2 --- @type ModFsFileIntType
+INT_TYPE_U64 = 3 --- @type ModFsFileIntType
+INT_TYPE_S8  = 4 --- @type ModFsFileIntType
+INT_TYPE_S16 = 5 --- @type ModFsFileIntType
+INT_TYPE_S32 = 6 --- @type ModFsFileIntType
+INT_TYPE_S64 = 7 --- @type ModFsFileIntType
+
+--- @alias ModFsFileIntType
+--- | `INT_TYPE_U8`
+--- | `INT_TYPE_U16`
+--- | `INT_TYPE_U32`
+--- | `INT_TYPE_U64`
+--- | `INT_TYPE_S8`
+--- | `INT_TYPE_S16`
+--- | `INT_TYPE_S32`
+--- | `INT_TYPE_S64`
+
+FLOAT_TYPE_F32 = 0 --- @type ModFsFileFloatType
+FLOAT_TYPE_F64 = 1 --- @type ModFsFileFloatType
+
+--- @alias ModFsFileFloatType
+--- | `FLOAT_TYPE_F32`
+--- | `FLOAT_TYPE_F64`
+
+FILE_SEEK_SET = 0 --- @type ModFsFileSeek
+FILE_SEEK_CUR = 1 --- @type ModFsFileSeek
+FILE_SEEK_END = 2 --- @type ModFsFileSeek
+
+--- @alias ModFsFileSeek
+--- | `FILE_SEEK_SET`
+--- | `FILE_SEEK_CUR`
+--- | `FILE_SEEK_END`
 
 --- @type integer
 MAX_KEYS = 4096
@@ -6469,6 +6767,9 @@ R_CBUTTONS = CONT_F
 --- @type integer
 D_CBUTTONS = CONT_D
 
+--- @type string
+PALETTES_DIRECTORY = "palettes"
+
 --- @type integer
 MAX_PRESET_PALETTES = 128
 
@@ -7091,6 +7392,9 @@ ACT_COUGHING = 0x0C40020A
 ACT_SHIVERING = 0x0C40020B
 
 --- @type integer
+ACT_PALETTE_EDITOR_CAP = 0x0000020C
+
+--- @type integer
 ACT_IN_QUICKSAND = 0x0002020D
 
 --- @type integer
@@ -7673,9 +7977,6 @@ ACT_FEET_STUCK_IN_GROUND = 0x0002033C
 ACT_PUTTING_ON_CAP = 0x0000133D
 
 --- @type integer
-ACT_TAKING_OFF_CAP = 0x0000133E
-
---- @type integer
 ACT_HOLDING_POLE = 0x08100340
 
 --- @type integer
@@ -7822,7 +8123,10 @@ HOOK_ALLOW_FORCE_WATER_ACTION               = 53 --- @type LuaHookedEventType
 HOOK_BEFORE_WARP                            = 54 --- @type LuaHookedEventType
 HOOK_ON_INSTANT_WARP                        = 55 --- @type LuaHookedEventType
 HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
-HOOK_MAX                                    = 57 --- @type LuaHookedEventType
+HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
+HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
+HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
+HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -7882,31 +8186,10 @@ HOOK_MAX                                    = 57 --- @type LuaHookedEventType
 --- | `HOOK_BEFORE_WARP`
 --- | `HOOK_ON_INSTANT_WARP`
 --- | `HOOK_MARIO_OVERRIDE_FLOOR_CLASS`
+--- | `HOOK_ON_ADD_SURFACE`
+--- | `HOOK_ON_CLEAR_AREAS`
+--- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
-
-ACTION_HOOK_EVERY_FRAME = 0 --- @type LuaActionHookType
-ACTION_HOOK_GRAVITY     = 1 --- @type LuaActionHookType
-ACTION_HOOK_MAX         = 2 --- @type LuaActionHookType
-
---- @alias LuaActionHookType
---- | `ACTION_HOOK_EVERY_FRAME`
---- | `ACTION_HOOK_GRAVITY`
---- | `ACTION_HOOK_MAX`
-
-MOD_MENU_ELEMENT_TEXT     = 0 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_BUTTON   = 1 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_CHECKBOX = 2 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_SLIDER   = 3 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_INPUTBOX = 4 --- @type LuaModMenuElementType
-MOD_MENU_ELEMENT_MAX      = 5 --- @type LuaModMenuElementType
-
---- @alias LuaModMenuElementType
---- | `MOD_MENU_ELEMENT_TEXT`
---- | `MOD_MENU_ELEMENT_BUTTON`
---- | `MOD_MENU_ELEMENT_CHECKBOX`
---- | `MOD_MENU_ELEMENT_SLIDER`
---- | `MOD_MENU_ELEMENT_INPUTBOX`
---- | `MOD_MENU_ELEMENT_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
@@ -7951,6 +8234,25 @@ HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
 --- | `HUD_DISPLAY_FLAGS_CAMERA`
 --- | `HUD_DISPLAY_FLAGS_POWER`
 --- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
+
+ACT_SELECT_HUD_SCORE            =                                                                                                                                                            1 << 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                            1 << 1 --- @type ActSelectHudPart
+ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                            1 << 2 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                            1 << 3 --- @type ActSelectHudPart
+ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                            1 << 4 --- @type ActSelectHudPart
+ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                            1 << 5 --- @type ActSelectHudPart
+ACT_SELECT_HUD_NONE             =                                                                                                                                                                 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
+
+--- @alias ActSelectHudPart
+--- | `ACT_SELECT_HUD_SCORE`
+--- | `ACT_SELECT_HUD_LEVEL_NAME`
+--- | `ACT_SELECT_HUD_COURSE_NUM`
+--- | `ACT_SELECT_HUD_ACT_NAME`
+--- | `ACT_SELECT_HUD_STAR_NUM`
+--- | `ACT_SELECT_HUD_PLAYERS_IN_LEVEL`
+--- | `ACT_SELECT_HUD_NONE`
+--- | `ACT_SELECT_HUD_ALL`
 
 E_MODEL_NONE                               =   0 --- @type ModelExtendedId
 E_MODEL_MARIO                              =   1 --- @type ModelExtendedId
@@ -8730,6 +9032,9 @@ SOUNDARGS_MASK_PRIORITY = 0x0000FF00
 
 --- @type integer
 SOUNDARGS_MASK_STATUS = 0x0000000F
+
+--- @type integer
+SOUNDARGS_MASK_BITFLAGS = 0x0F0000F0
 
 --- @type integer
 SOUNDARGS_SHIFT_BANK = 28
@@ -10664,6 +10969,9 @@ SURFACE_FLAG_DYNAMIC = (1 << 0)
 SURFACE_FLAG_NO_CAM_COLLISION = (1 << 1)
 
 --- @type integer
+SURFACE_FLAG_INTANGIBLE = (1 << 2)
+
+--- @type integer
 SURFACE_FLAG_X_PROJECTION = (1 << 3)
 
 --- @type integer
@@ -10767,6 +11075,9 @@ ANIM_FLAG_6 = (1 << 6)
 ANIM_FLAG_7 = (1 << 7)
 
 --- @type integer
+ANIM_FLAG_BONE_TRANS = (1 << 8)
+
+--- @type integer
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
@@ -10859,16 +11170,22 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.3.2"
+SM64COOPDX_VERSION = "v1.4"
 
 --- @type string
 VERSION_TEXT = "v"
 
 --- @type integer
-VERSION_NUMBER = 40
+VERSION_NUMBER = 41
 
 --- @type integer
-MINOR_VERSION_NUMBER = 2
+MINOR_VERSION_NUMBER = 0
+
+--- @type string
+GAME_NAME = "sm64coopdx"
+
+--- @type string
+WINDOW_NAME = "Super Mario 64 Coop Deluxe"
 
 --- @type integer
 MAX_VERSION_LENGTH = 128

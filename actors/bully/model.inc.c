@@ -28,7 +28,7 @@ const Gfx bully_seg5_dl_050002E0[] = {
 // 0x05000398 - 0x05000408
 const Gfx bully_seg5_dl_05000398[] = {
     gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineMode(G_CC_MODULATERGBA, G_CC_MODULATERGBA),
     gsSPClearGeometryMode(G_LIGHTING),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),

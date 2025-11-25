@@ -6,6 +6,7 @@ extern "C" {
 #include "audio/external.h"
 #include "engine/surface_collision.h"
 #include "game/mario.h"
+#include "game/hardcoded.h"
 #include "game/ingame_menu.h"
 #include "game/level_update.h"
 #include "game/sound_init.h"
@@ -218,6 +219,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             } else {
                 _Warp = DynOS_Level_GetWarp(gCurrLevelNum, gCurrAreaIndex, sDynosWarpNodeNum);
             }
+            if (!_Warp) { return NULL; }
             s16 sDynosWarpSpawnType = sSpawnTypeFromWarpBhv[_Warp[2]];
 
             // Init Mario
@@ -248,13 +250,10 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             }
 
             // Set music
-            if (sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING) {
+            if ((sWarpDest.type != WARP_TYPE_SAME_AREA && sWarpDest.type != WARP_TYPE_NOT_WARPING)) {
                 if (gCurrentArea != NULL) {
                     set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
                 }
-                if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
-                if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
-                if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
                 if (gCurrLevelNum == LEVEL_BOWSER_1 ||
                     gCurrLevelNum == LEVEL_BOWSER_2 ||
                     gCurrLevelNum == LEVEL_BOWSER_3) {
@@ -262,8 +261,13 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
                 }
             }
 
+            // Enable power-up cap music
+            if (gMarioState->flags & MARIO_METAL_CAP)  play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
+            if (gMarioState->flags & MARIO_VANISH_CAP) play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
+            if (gMarioState->flags & MARIO_WING_CAP)   play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
+
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
+            smlua_call_event_hooks(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
 
             // Reset values
             sDynosWarpTargetArea = -1;
@@ -411,7 +415,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
             sDynosExitTargetWarp = NULL;
 
             // lua hooks
-            smlua_call_event_hooks_warp_params(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
+            smlua_call_event_hooks(HOOK_ON_WARP, sBackupWarpDest.type, sDynosWarpLevelNum, sDynosWarpAreaNum, sDynosWarpNodeNum, sBackupWarpDest.arg);
         }
 
         // Phase 4 - Unlock Mario as soon as the second transition is ended

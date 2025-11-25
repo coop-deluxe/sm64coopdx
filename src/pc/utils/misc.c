@@ -13,6 +13,7 @@
 #include "game/save_file.h"
 #include "engine/math_util.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 
 float smooth_step(float edge0, float edge1, float x) {
     float t = (x - edge0) / (edge1 - edge0);
@@ -90,6 +91,25 @@ bool clock_is_date(u8 month, u8 day) {
     return tm_info->tm_mon == month - 1 && tm_info->tm_mday == day;
 }
 
+// delay functions lack accuracy sometimes due to os scheduling
+// busy-waiting is bad practice but it's very accurate so we use a hybrid
+void precise_delay_f64(f64 delaySec) {
+    const f64 sleepMargin = 0.002; // 2 ms margin before we switch to busy-waiting
+
+    f64 start = clock_elapsed_f64();
+    f64 end = start + delaySec;
+
+    // sleep until we're ~2ms away from the target
+    for (f64 remaining = end - clock_elapsed_f64(); remaining > sleepMargin; remaining = end - clock_elapsed_f64()) {
+        u32 sleepMs = (u32) ((remaining - sleepMargin) * 1000.0);
+        if (sleepMs < 1) { break; } // not enough time to sleep
+        WAPI.delay(sleepMs);
+    }
+
+    // busy-wait until the target time is hit
+    while (clock_elapsed_f64() < end);
+}
+
 void file_get_line(char* buffer, size_t maxLength, FILE* fp) {
     char* initial = buffer;
 
@@ -135,14 +155,14 @@ s32 delta_interpolate_s32(s32 a, s32 b, f32 delta) {
     return a * (1.0f - delta) + b * delta;
 }
 
-void delta_interpolate_vec3f(Vec3f res, Vec3f a, Vec3f b, f32 delta) {
+void delta_interpolate_vec3f(OUT Vec3f res, Vec3f a, Vec3f b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));
     res[2] = ((a[2] * antiDelta) + (b[2] * delta));
 }
 
-void delta_interpolate_vec3s(Vec3s res, Vec3s a, Vec3s b, f32 delta) {
+void delta_interpolate_vec3s(OUT Vec3s res, Vec3s a, Vec3s b, f32 delta) {
     f32 antiDelta = 1.0f - delta;
     res[0] = ((a[0] * antiDelta) + (b[0] * delta));
     res[1] = ((a[1] * antiDelta) + (b[1] * delta));

@@ -151,7 +151,7 @@
 #define SURFACE_WOBBLING_WARP                0x00FD // Pool warp (HMC & DDD)
 #define SURFACE_TRAPDOOR                     0x00FF // Bowser Left trapdoor, has no action defined
 
-#define SURFACE_IS_QUICKSAND(cmd)     (cmd >= 0x21 && cmd < 0x28)   // Doesn't include SURFACE_INSTANT_MOVING_QUICKSAND
+#define SURFACE_IS_QUICKSAND(cmd)     ((cmd >= 0x21 && cmd < 0x28) || cmd == SURFACE_INSTANT_MOVING_QUICKSAND)
 #define SURFACE_IS_NOT_HARD(cmd)      (cmd != SURFACE_HARD && \
                                      !(cmd >= 0x35 && cmd <= 0x37))
 #define SURFACE_IS_PAINTING_WARP(cmd) (cmd >= 0xD3 && cmd < 0xFD)
@@ -163,6 +163,7 @@
 
 #define SURFACE_FLAG_DYNAMIC          (1 << 0)
 #define SURFACE_FLAG_NO_CAM_COLLISION (1 << 1)
+#define SURFACE_FLAG_INTANGIBLE       (1 << 2)
 #define SURFACE_FLAG_X_PROJECTION     (1 << 3)
 
 #define HAZARD_TYPE_LAVA_FLOOR      1

@@ -4,6 +4,7 @@
 extern "C" {
 #include "pc/gfx/gfx.h"
 #include "pc/gfx/gfx_rendering_api.h"
+#include "pc/mods/mod_fs.h"
 }
 
 struct OverrideTexture {
@@ -423,13 +424,13 @@ void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
     _Schedule.Add(aNode);
 }
 
-void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
+bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     auto& _DynosCustomTexs = DynosCustomTexs();
 
     // check for duplicates
     for (s32 i = 0; i < _DynosCustomTexs.Count(); ++i) {
         if (!strcmp(_DynosCustomTexs[i].first, aTexName)) {
-            return;
+            return true;
         }
     }
 
@@ -444,27 +445,24 @@ void DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
     free(_TexName);
     if (_Node) {
         DynOS_Tex_Activate(_Node, true);
+        return true;
     }
+    return false;
+}
+
+#define CONVERT_TEXINFO(texName) { \
+    aOutTexInfo->width   = _Data->mRawWidth; \
+    aOutTexInfo->height  = _Data->mRawHeight; \
+    aOutTexInfo->format  = _Data->mRawFormat; \
+    aOutTexInfo->size    = _Data->mRawSize; \
+    aOutTexInfo->texture = _Data->mRawData.begin(); \
+    aOutTexInfo->name    = texName; \
 }
 
 bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
-    #define CONVERT_TEXINFO() { \
-        /* translate bit size */ \
-        switch (_Data->mRawSize) { \
-            case G_IM_SIZ_8b:  aOutTexInfo->bitSize = 8; break; \
-            case G_IM_SIZ_16b: aOutTexInfo->bitSize = 16; break; \
-            case G_IM_SIZ_32b: aOutTexInfo->bitSize = 32; break; \
-            default: return false; \
-        } \
-        aOutTexInfo->width   = _Data->mRawWidth; \
-        aOutTexInfo->height  = _Data->mRawHeight; \
-        aOutTexInfo->texture = _Data->mRawData.begin(); \
-        aOutTexInfo->name    = aTexName; \
-    }
-
-    auto& _DynosCustomTexs = DynosCustomTexs();
 
     // check custom textures
+    auto& _DynosCustomTexs = DynosCustomTexs();
     for (s32 i = 0; i < _DynosCustomTexs.Count(); ++i) {
         if (!strcmp(_DynosCustomTexs[i].first, aTexName)) {
             auto& _Data = _DynosCustomTexs[i].second->mData;
@@ -483,29 +481,50 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 free(_RawData);
             }
 
-            CONVERT_TEXINFO();
+            CONVERT_TEXINFO(aTexName);
             return true;
         }
     }
 
+    // check modfs file
+    if (is_mod_fs_file(aTexName)) {
+        if (DynOS_Tex_AddCustom(aTexName, aTexName)) {
+            return DynOS_Tex_Get(aTexName, aOutTexInfo);
+        }
+    }
+
     // check builtin textures
-    const struct BuiltinTexInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
+    const struct TextureInfo* info = DynOS_Builtin_Tex_GetInfoFromName(aTexName);
     if (!info) {
         for (DataNode<TexData>* _Node : DynosValidTextures()) { // check valid textures
             if (_Node->mName == aTexName) {
                 auto& _Data = _Node->mData;
-                CONVERT_TEXINFO();
+                CONVERT_TEXINFO(aTexName);
                 return true;
             }
         }
         return false;
     }
-    aOutTexInfo->bitSize = info->bitSize;
-    aOutTexInfo->width   = info->width;
-    aOutTexInfo->height  = info->height;
-    aOutTexInfo->texture = (u8*)info->pointer;
-    aOutTexInfo->name    = aTexName;
+    *aOutTexInfo = *info;
     return true;
+}
+
+bool DynOS_Tex_GetFromData(const Texture *aTex, struct TextureInfo* aOutTexInfo) {
+    DataNode<TexData> *node = DynOS_Tex_RetrieveNode((void *) aTex);
+    if (node) {
+        auto& _Data = node->mData;
+        CONVERT_TEXINFO(node->mName.begin());
+        return true;
+    }
+
+    // check builtin textures
+    const struct TextureInfo* info = DynOS_Builtin_Tex_GetInfoFromData(aTex);
+    if (info) {
+        *aOutTexInfo = *info;
+        return true;
+    }
+
+    return false;
 }
 
 static DataNode<TexData> *DynOS_Lua_Tex_RetrieveNode(const char* aName) {

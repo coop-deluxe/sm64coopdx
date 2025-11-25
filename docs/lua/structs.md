@@ -3,26 +3,18 @@
 # Supported Structs
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
-- [AnimationTable](#AnimationTable)
 - [Area](#Area)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
-- [BullyCollisionData](#BullyCollisionData)
 - [Camera](#Camera)
-- [CameraFOVStatus](#CameraFOVStatus)
-- [CameraOverride](#CameraOverride)
-- [CameraStoredInfo](#CameraStoredInfo)
-- [CameraTrigger](#CameraTrigger)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
-- [Cutscene](#Cutscene)
-- [CutsceneSplinePoint](#CutsceneSplinePoint)
-- [CutsceneVariable](#CutsceneVariable)
 - [DateTime](#DateTime)
+- [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
 - [DjuiColor](#DjuiColor)
 - [DjuiInteractableTheme](#DjuiInteractableTheme)
@@ -31,7 +23,6 @@
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
-- [FloorGeometry](#FloorGeometry)
 - [FnGraphNode](#FnGraphNode)
 - [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
@@ -41,6 +32,7 @@
 - [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
 - [GraphNodeBackground](#GraphNodeBackground)
 - [GraphNodeBillboard](#GraphNodeBillboard)
+- [GraphNodeBone](#GraphNodeBone)
 - [GraphNodeCamera](#GraphNodeCamera)
 - [GraphNodeCullingRadius](#GraphNodeCullingRadius)
 - [GraphNodeDisplayList](#GraphNodeDisplayList)
@@ -55,56 +47,44 @@
 - [GraphNodeRoot](#GraphNodeRoot)
 - [GraphNodeRotation](#GraphNodeRotation)
 - [GraphNodeScale](#GraphNodeScale)
+- [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
 - [GraphNodeShadow](#GraphNodeShadow)
 - [GraphNodeStart](#GraphNodeStart)
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
 - [GraphNodeTranslation](#GraphNodeTranslation)
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
-- [GraphNode_802A45E4](#GraphNode_802A45E4)
-- [HandheldShakePoint](#HandheldShakePoint)
 - [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
-- [LinearTransitionPoint](#LinearTransitionPoint)
-- [MarioAnimDmaRelatedThing](#MarioAnimDmaRelatedThing)
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
 - [MarioState](#MarioState)
 - [Mat4](#Mat4)
 - [Mod](#Mod)
 - [ModAudio](#ModAudio)
-- [ModAudioSampleCopies](#ModAudioSampleCopies)
-- [ModFile](#ModFile)
-- [ModeTransitionInfo](#ModeTransitionInfo)
+- [ModFs](#ModFs)
+- [ModFsFile](#ModFsFile)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
 - [ObjectNode](#ObjectNode)
 - [ObjectWarpNode](#ObjectWarpNode)
-- [OffsetSizePair](#OffsetSizePair)
 - [Painting](#Painting)
-- [PaintingMeshVertex](#PaintingMeshVertex)
 - [PaintingValues](#PaintingValues)
-- [ParallelTrackingPoint](#ParallelTrackingPoint)
 - [PlayerCameraState](#PlayerCameraState)
-- [PlayerGeometry](#PlayerGeometry)
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
-- [SPTask](#SPTask)
 - [ServerSettings](#ServerSettings)
-- [SoundState](#SoundState)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
 - [StarsNeededForDialog](#StarsNeededForDialog)
+- [StaticObjectCollision](#StaticObjectCollision)
 - [Surface](#Surface)
 - [TextureInfo](#TextureInfo)
-- [TransitionInfo](#TransitionInfo)
-- [UnusedArea28](#UnusedArea28)
-- [VblankHandler](#VblankHandler)
 - [Vec2f](#Vec2f)
 - [Vec2i](#Vec2i)
 - [Vec2s](#Vec2s)
@@ -115,11 +95,8 @@
 - [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
-- [Vtx_Interp](#Vtx_Interp)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
-- [WarpTransition](#WarpTransition)
-- [WarpTransitionData](#WarpTransitionData)
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
 - [Whirlpool](#Whirlpool)
@@ -130,17 +107,17 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| animAccel | `integer` |  |
-| animFrame | `integer` |  |
-| animFrameAccelAssist | `integer` |  |
-| animID | `integer` |  |
-| animTimer | `integer` |  |
-| animYTrans | `integer` |  |
 | curAnim | [Animation](structs.md#Animation) |  |
+| prevAnimPtr | [Animation](structs.md#Animation) |  |
+| animID | `integer` |  |
+| prevAnimID | `integer` |  |
+| animFrame | `integer` |  |
 | prevAnimFrame | `integer` |  |
 | prevAnimFrameTimestamp | `integer` |  |
-| prevAnimID | `integer` |  |
-| prevAnimPtr | [Animation](structs.md#Animation) |  |
+| animFrameAccelAssist | `integer` |  |
+| animAccel | `integer` |  |
+| animTimer | `integer` |  |
+| animYTrans | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -150,27 +127,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| animYTransDivisor | `integer` |  |
-| flags | `integer` |  |
-| index | `Pointer` <`integer`> |  |
-| indexLength | `integer` |  |
+| flags | `integer` | read-only |
+| animYTransDivisor | `integer` | read-only |
+| startFrame | `integer` | read-only |
+| loopStart | `integer` | read-only |
+| loopEnd | `integer` | read-only |
+| values | `Pointer` <`integer`> | read-only |
+| index | `Pointer` <`integer`> | read-only |
 | length | `integer` | read-only |
-| loopEnd | `integer` |  |
-| loopStart | `integer` |  |
-| startFrame | `integer` |  |
-| unusedBoneCount | `integer` |  |
-| values | `Pointer` <`integer`> |  |
-| valuesLength | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [AnimationTable](#AnimationTable)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| count | `integer` | read-only |
+| valuesLength | `integer` | read-only |
+| indexLength | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -180,27 +146,27 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| camera | [Camera](structs.md#Camera) |  |
-| dialog | `Array` <`integer`> |  |
-| flags | `integer` |  |
 | index | `integer` |  |
-| instantWarps | [InstantWarp](structs.md#InstantWarp) |  |
-| localAreaTimer | `integer` | read-only |
+| flags | `integer` |  |
+| terrainType | `integer` |  |
+| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
+| terrainData | `Pointer` <`integer`> | read-only |
+| surfaceRooms | `Pointer` <`integer`> | read-only |
 | macroObjects | `Pointer` <`integer`> | read-only |
-| macroObjectsAltered | `Pointer` <`integer`> | read-only |
+| warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
+| paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
+| instantWarps | [InstantWarp](structs.md#InstantWarp) |  |
+| objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
+| camera | [Camera](structs.md#Camera) |  |
+| whirlpools | `Array` <`Whirlpool`> |  |
+| dialog | `Array` <`integer`> |  |
 | musicParam | `integer` |  |
 | musicParam2 | `integer` |  |
-| nextSyncID | `integer` | read-only |
+| localAreaTimer | `integer` | read-only |
+| macroObjectsAltered | `Pointer` <`integer`> | read-only |
 | numRedCoins | `integer` |  |
 | numSecrets | `integer` |  |
-| objectSpawnInfos | [SpawnInfo](structs.md#SpawnInfo) | read-only |
-| paintingWarpNodes | [WarpNode](structs.md#WarpNode) | read-only |
-| root | [GraphNodeRoot](structs.md#GraphNodeRoot) |  |
-| surfaceRooms | `Pointer` <`integer`> | read-only |
-| terrainData | `Pointer` <`integer`> | read-only |
-| terrainType | `integer` |  |
-| warpNodes | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
-| whirlpools | `Array` <`Whirlpool`> |  |
+| nextSyncID | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -280,9 +246,9 @@
 | ToadStar2Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | ToadStar3AfterDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | ToadStar3Dialog | [enum DialogId](constants.md#enum-DialogId) |  |
+| TuxieMotherDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | TuxieMotherBabyFoundDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | TuxieMotherBabyWrongDialog | [enum DialogId](constants.md#enum-DialogId) |  |
-| TuxieMotherDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | UkikiCageDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | UkikiCapGiveDialog | [enum DialogId](constants.md#enum-DialogId) |  |
 | UkikiCapStealDialog | [enum DialogId](constants.md#enum-DialogId) |  |
@@ -303,14 +269,18 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> |  |
-| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> |  |
-| BowlingBallThiLargeTrajectory | `Pointer` <`Trajectory`> |  |
-| BowlingBallThiSmallTrajectory | `Pointer` <`Trajectory`> |  |
-| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> |  |
 | KoopaBobTrajectory | `Pointer` <`Trajectory`> |  |
 | KoopaThiTrajectory | `Pointer` <`Trajectory`> |  |
-| Mips10Trajectory | `Pointer` <`Trajectory`> |  |
+| UnagiTrajectory | `Pointer` <`Trajectory`> |  |
+| Unagi2Trajectory | `Pointer` <`Trajectory`> |  |
+| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> |  |
+| RacingPenguinTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallBobTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallBob2Trajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallTtmTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallThiLargeTrajectory | `Pointer` <`Trajectory`> |  |
+| BowlingBallThiSmallTrajectory | `Pointer` <`Trajectory`> |  |
+| MipsTrajectory | `Pointer` <`Trajectory`> |  |
 | Mips2Trajectory | `Pointer` <`Trajectory`> |  |
 | Mips3Trajectory | `Pointer` <`Trajectory`> |  |
 | Mips4Trajectory | `Pointer` <`Trajectory`> |  |
@@ -319,20 +289,16 @@
 | Mips7Trajectory | `Pointer` <`Trajectory`> |  |
 | Mips8Trajectory | `Pointer` <`Trajectory`> |  |
 | Mips9Trajectory | `Pointer` <`Trajectory`> |  |
-| MipsTrajectory | `Pointer` <`Trajectory`> |  |
-| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> |  |
-| PlatformCcmTrajectory | `Pointer` <`Trajectory`> |  |
-| PlatformHmcTrajectory | `Pointer` <`Trajectory`> |  |
-| PlatformLll2Trajectory | `Pointer` <`Trajectory`> |  |
-| PlatformLllTrajectory | `Pointer` <`Trajectory`> |  |
+| Mips10Trajectory | `Pointer` <`Trajectory`> |  |
+| PlatformRrTrajectory | `Pointer` <`Trajectory`> |  |
 | PlatformRr2Trajectory | `Pointer` <`Trajectory`> |  |
 | PlatformRr3Trajectory | `Pointer` <`Trajectory`> |  |
 | PlatformRr4Trajectory | `Pointer` <`Trajectory`> |  |
-| PlatformRrTrajectory | `Pointer` <`Trajectory`> |  |
-| RacingPenguinTrajectory | `Pointer` <`Trajectory`> |  |
-| SnowmanHeadTrajectory | `Pointer` <`Trajectory`> |  |
-| Unagi2Trajectory | `Pointer` <`Trajectory`> |  |
-| UnagiTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformCcmTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformBitfsTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformHmcTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLllTrajectory | `Pointer` <`Trajectory`> |  |
+| PlatformLll2Trajectory | `Pointer` <`Trajectory`> |  |
 
 [:arrow_up_small:](#)
 
@@ -342,53 +308,38 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| BowlingBallBob2Speed | `number` |  |
-| BowlingBallBobSpeed | `number` |  |
-| BowlingBallThiLargeSpeed | `number` |  |
-| BowlingBallThiSmallSpeed | `number` |  |
-| BowlingBallTtmSpeed | `number` |  |
-| ChillBullyDeathPosY | `number` |  |
-| CourtyardBoosRequirement | `integer` |  |
-| GrateStarRequirement | `integer` |  |
-| InfiniteRenderDistance | `integer` |  |
-| KingBobombFVel | `number` |  |
-| KingBobombHealth | `integer` |  |
-| KingBobombYawVel | `integer` |  |
-| KingWhompHealth | `integer` |  |
 | KoopaBobAgility | `number` |  |
 | KoopaCatchupAgility | `number` |  |
 | KoopaThiAgility | `number` |  |
-| MipsStar1Requirement | `integer` |  |
-| MipsStar2Requirement | `integer` |  |
-| MultipleCapCollection | `integer` |  |
 | RacingPenguinBigHeight | `number` |  |
 | RacingPenguinBigRadius | `number` |  |
 | RacingPenguinHeight | `number` |  |
 | RacingPenguinRadius | `number` |  |
-| RespawnShellBoxes | `integer` |  |
-| ShowStarDialog | `integer` |  |
-| ShowStarMilestones | `integer` |  |
 | ToadStar1Requirement | `integer` |  |
 | ToadStar2Requirement | `integer` |  |
 | ToadStar3Requirement | `integer` |  |
-| dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
+| KingBobombFVel | `number` |  |
+| KingBobombYawVel | `integer` |  |
+| KingBobombHealth | `integer` |  |
+| KingWhompHealth | `integer` |  |
+| MipsStar1Requirement | `integer` |  |
+| MipsStar2Requirement | `integer` |  |
+| BowlingBallBobSpeed | `number` |  |
+| BowlingBallBob2Speed | `number` |  |
+| BowlingBallTtmSpeed | `number` |  |
+| BowlingBallThiLargeSpeed | `number` |  |
+| BowlingBallThiSmallSpeed | `number` |  |
+| GrateStarRequirement | `integer` |  |
+| ChillBullyDeathPosY | `number` |  |
+| ShowStarMilestones | `integer` |  |
+| ShowStarDialog | `integer` |  |
+| RespawnShellBoxes | `integer` |  |
+| MultipleCapCollection | `integer` |  |
+| InfiniteRenderDistance | `integer` |  |
+| CourtyardBoosRequirement | `integer` |  |
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
+| dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [BullyCollisionData](#BullyCollisionData)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| conversionRatio | `number` |  |
-| posX | `number` |  |
-| posZ | `number` |  |
-| radius | `number` |  |
-| velX | `number` |  |
-| velZ | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -398,80 +349,21 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| areaCenX | `number` |  |
-| areaCenY | `number` |  |
-| areaCenZ | `number` |  |
-| cutscene | `integer` |  |
-| defMode | `integer` |  |
-| doorStatus | `integer` |  |
-| filler31 | `Array` <`integer`> |  |
-| filler3C | `Array` <`integer`> |  |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
 | mode | `integer` |  |
-| mtx | [Mat4](structs.md#Mat4) | read-only |
-| nextYaw | `integer` |  |
-| paletteEditorCap | `boolean` |  |
+| defMode | `integer` |  |
+| yaw | `integer` |  |
+| focus | [Vec3f](structs.md#Vec3f) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
-| yaw | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraFOVStatus](#CameraFOVStatus)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| decay | `integer` |  |
-| fov | `number` |  |
-| fovFunc | `integer` |  |
-| fovOffset | `number` |  |
-| shakeAmplitude | `number` |  |
-| shakePhase | `integer` |  |
-| shakeSpeed | `integer` |  |
-| unusedIsSleeping | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraOverride](#CameraOverride)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| override | `boolean` |  |
-| value | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraStoredInfo](#CameraStoredInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| cannonYOffset | `number` |  |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
-| panDist | `number` |  |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CameraTrigger](#CameraTrigger)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| area | `integer` |  |
-| boundsX | `integer` |  |
-| boundsY | `integer` |  |
-| boundsYaw | `integer` |  |
-| boundsZ | `integer` |  |
-| centerX | `integer` |  |
-| centerY | `integer` |  |
-| centerZ | `integer` |  |
+| areaCenX | `number` |  |
+| areaCenZ | `number` |  |
+| cutscene | `integer` |  |
+| filler31 | `Array` <`integer`> |  |
+| nextYaw | `integer` |  |
+| filler3C | `Array` <`integer`> |  |
+| doorStatus | `integer` |  |
+| areaCenY | `number` |  |
+| mtx | [Mat4](structs.md#Mat4) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -481,12 +373,12 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| pitch | `integer` |  |
 | posX | `number` |  |
 | posY | `number` |  |
 | posZ | `number` |  |
-| roll | `integer` |  |
+| pitch | `integer` |  |
 | yaw | `integer` |  |
+| roll | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -496,278 +388,280 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| animAPose | `integer` | read-only |
-| animAirForwardKb | `integer` | read-only |
-| animAirKick | `integer` | read-only |
-| animAirborneOnStomach | `integer` | read-only |
-| animBackflip | `integer` | read-only |
-| animBackwardAirKb | `integer` | read-only |
-| animBackwardKb | `integer` | read-only |
-| animBackwardSpinning | `integer` | read-only |
-| animBackwardsWaterKb | `integer` | read-only |
-| animBeingGrabbed | `integer` | read-only |
-| animBendKnessRidingShell | `integer` | read-only |
-| animBottomStuckInGround | `integer` | read-only |
-| animBreakdance | `integer` | read-only |
-| animClimbDownLedge | `integer` | read-only |
-| animClimbUpPole | `integer` | read-only |
-| animCoughing | `integer` | read-only |
-| animCrawling | `integer` | read-only |
-| animCreditsLookBackThenRun | `integer` | read-only |
-| animCreditsLookUp | `integer` | read-only |
-| animCreditsLowerHand | `integer` | read-only |
-| animCreditsPeaceSign | `integer` | read-only |
-| animCreditsRaiseHand | `integer` | read-only |
-| animCreditsReturnFromLookUp | `integer` | read-only |
-| animCreditsStartWalkLookUp | `integer` | read-only |
-| animCreditsTakeOffCap | `integer` | read-only |
-| animCreditsWaving | `integer` | read-only |
-| animCrouchFromFastLongjump | `integer` | read-only |
-| animCrouchFromSlideKick | `integer` | read-only |
-| animCrouchFromSlowLongjump | `integer` | read-only |
-| animCrouching | `integer` | read-only |
-| animDive | `integer` | read-only |
-| animDoubleJumpFall | `integer` | read-only |
-| animDoubleJumpRise | `integer` | read-only |
-| animDrowningPart1 | `integer` | read-only |
-| animDrowningPart2 | `integer` | read-only |
-| animDyingFallOver | `integer` | read-only |
-| animDyingInQuicksand | `integer` | read-only |
-| animDyingOnBack | `integer` | read-only |
-| animDyingOnStomach | `integer` | read-only |
-| animElectrocution | `integer` | read-only |
-| animFallFromSlide | `integer` | read-only |
-| animFallFromSlideKick | `integer` | read-only |
-| animFallFromSlidingWithLightObj | `integer` | read-only |
-| animFallFromWater | `integer` | read-only |
-| animFallLandWithLightObj | `integer` | read-only |
+| type | [enum CharacterType](constants.md#enum-CharacterType) | read-only |
+| name | `string` | read-only |
+| hudHead | `integer` | read-only |
+| hudHeadTexture | [TextureInfo](structs.md#TextureInfo) | read-only |
+| cameraHudHead | `integer` | read-only |
+| modelId | `integer` | read-only |
+| capModelId | `integer` | read-only |
+| capMetalModelId | `integer` | read-only |
+| capWingModelId | `integer` | read-only |
+| capMetalWingModelId | `integer` | read-only |
+| capEnemyLayer | `integer` | read-only |
+| capEnemyGfx | `Pointer` <`Gfx`> | read-only |
+| capEnemyDecalGfx | `Pointer` <`Gfx`> | read-only |
+| torsoRotMult | `number` | read-only |
+| animOffsetEnabled | `integer` | read-only |
+| animOffsetLowYPoint | `number` | read-only |
+| animOffsetFeet | `number` | read-only |
+| animOffsetHand | `number` | read-only |
+| animSlowLedgeGrab | `integer` | read-only |
 | animFallOverBackwards | `integer` | read-only |
-| animFallWithLightObj | `integer` | read-only |
-| animFastLedgeGrab | `integer` | read-only |
-| animFastLongjump | `integer` | read-only |
-| animFinalBowserRaiseHandSpin | `integer` | read-only |
-| animFinalBowserWingCapTakeOff | `integer` | read-only |
-| animFireLavaBurn | `integer` | read-only |
-| animFirstPerson | `integer` | read-only |
-| animFirstPunch | `integer` | read-only |
-| animFirstPunchFast | `integer` | read-only |
-| animFlutterkick | `integer` | read-only |
-| animFlutterkickWithObj | `integer` | read-only |
-| animFlyFromCannon | `integer` | read-only |
-| animForwardFlip | `integer` | read-only |
-| animForwardKb | `integer` | read-only |
-| animForwardSpinning | `integer` | read-only |
-| animForwardSpinningFlip | `integer` | read-only |
-| animGeneralFall | `integer` | read-only |
-| animGeneralLand | `integer` | read-only |
-| animGrabBowser | `integer` | read-only |
-| animGrabHeavyObject | `integer` | read-only |
+| animBackwardAirKb | `integer` | read-only |
+| animDyingOnBack | `integer` | read-only |
+| animBackflip | `integer` | read-only |
+| animClimbUpPole | `integer` | read-only |
 | animGrabPoleShort | `integer` | read-only |
 | animGrabPoleSwingPart1 | `integer` | read-only |
 | animGrabPoleSwingPart2 | `integer` | read-only |
-| animGroundBonk | `integer` | read-only |
-| animGroundKick | `integer` | read-only |
-| animGroundPound | `integer` | read-only |
-| animGroundPoundLanding | `integer` | read-only |
-| animGroundThrow | `integer` | read-only |
 | animHandstandIdle | `integer` | read-only |
 | animHandstandJump | `integer` | read-only |
-| animHandstandLeft | `integer` | read-only |
-| animHandstandRight | `integer` | read-only |
-| animHangOnCeiling | `integer` | read-only |
-| animHangOnOwl | `integer` | read-only |
-| animHeadStuckInGround | `integer` | read-only |
-| animHeavyThrow | `integer` | read-only |
-| animHoldingBowser | `integer` | read-only |
-| animIdleHeadCenter | `integer` | read-only |
-| animIdleHeadLeft | `integer` | read-only |
-| animIdleHeadRight | `integer` | read-only |
-| animIdleHeavyObj | `integer` | read-only |
-| animIdleInQuicksand | `integer` | read-only |
-| animIdleOnLedge | `integer` | read-only |
+| animStartHandstand | `integer` | read-only |
+| animReturnFromHandstand | `integer` | read-only |
 | animIdleOnPole | `integer` | read-only |
+| animAPose | `integer` | read-only |
+| animSkidOnGround | `integer` | read-only |
+| animStopSkid | `integer` | read-only |
+| animCrouchFromFastLongjump | `integer` | read-only |
+| animCrouchFromSlowLongjump | `integer` | read-only |
+| animFastLongjump | `integer` | read-only |
+| animSlowLongjump | `integer` | read-only |
+| animAirborneOnStomach | `integer` | read-only |
+| animWalkWithLightObj | `integer` | read-only |
+| animRunWithLightObj | `integer` | read-only |
+| animSlowWalkWithLightObj | `integer` | read-only |
+| animShiveringWarmingHand | `integer` | read-only |
+| animShiveringReturnToIdle | `integer` | read-only |
+| animShivering | `integer` | read-only |
+| animClimbDownLedge | `integer` | read-only |
+| animCreditsWaving | `integer` | read-only |
+| animCreditsLookUp | `integer` | read-only |
+| animCreditsReturnFromLookUp | `integer` | read-only |
+| animCreditsRaiseHand | `integer` | read-only |
+| animCreditsLowerHand | `integer` | read-only |
+| animCreditsTakeOffCap | `integer` | read-only |
+| animCreditsStartWalkLookUp | `integer` | read-only |
+| animCreditsLookBackThenRun | `integer` | read-only |
+| animFinalBowserRaiseHandSpin | `integer` | read-only |
+| animFinalBowserWingCapTakeOff | `integer` | read-only |
+| animCreditsPeaceSign | `integer` | read-only |
+| animStandUpFromLavaBoost | `integer` | read-only |
+| animFireLavaBurn | `integer` | read-only |
+| animWingCapFly | `integer` | read-only |
+| animHangOnOwl | `integer` | read-only |
+| animLandOnStomach | `integer` | read-only |
+| animAirForwardKb | `integer` | read-only |
+| animDyingOnStomach | `integer` | read-only |
+| animSuffocating | `integer` | read-only |
+| animCoughing | `integer` | read-only |
+| animThrowCatchKey | `integer` | read-only |
+| animDyingFallOver | `integer` | read-only |
+| animIdleOnLedge | `integer` | read-only |
+| animFastLedgeGrab | `integer` | read-only |
+| animHangOnCeiling | `integer` | read-only |
+| animPutCapOn | `integer` | read-only |
+| animTakeCapOffThenOn | `integer` | read-only |
+| animQuicklyPutCapOn | `integer` | read-only |
+| animHeadStuckInGround | `integer` | read-only |
+| animGroundPoundLanding | `integer` | read-only |
+| animTripleJumpGroundPound | `integer` | read-only |
+| animStartGroundPound | `integer` | read-only |
+| animGroundPound | `integer` | read-only |
+| animBottomStuckInGround | `integer` | read-only |
 | animIdleWithLightObj | `integer` | read-only |
 | animJumpLandWithLightObj | `integer` | read-only |
-| animJumpRidingShell | `integer` | read-only |
 | animJumpWithLightObj | `integer` | read-only |
+| animFallLandWithLightObj | `integer` | read-only |
+| animFallWithLightObj | `integer` | read-only |
+| animFallFromSlidingWithLightObj | `integer` | read-only |
+| animSlidingOnBottomWithLightObj | `integer` | read-only |
+| animStandUpFromSlidingWithLightObj | `integer` | read-only |
+| animRidingShell | `integer` | read-only |
+| animWalking | `integer` | read-only |
+| animForwardFlip | `integer` | read-only |
+| animJumpRidingShell | `integer` | read-only |
 | animLandFromDoubleJump | `integer` | read-only |
+| animDoubleJumpFall | `integer` | read-only |
+| animSingleJump | `integer` | read-only |
 | animLandFromSingleJump | `integer` | read-only |
-| animLandOnStomach | `integer` | read-only |
+| animAirKick | `integer` | read-only |
+| animDoubleJumpRise | `integer` | read-only |
+| animStartForwardSpinning | `integer` | read-only |
+| animThrowLightObject | `integer` | read-only |
+| animFallFromSlideKick | `integer` | read-only |
+| animBendKnessRidingShell | `integer` | read-only |
 | animLegsStuckInGround | `integer` | read-only |
-| animMissingCap | `integer` | read-only |
-| animMoveInQuicksand | `integer` | read-only |
-| animMoveOnWireNetLeft | `integer` | read-only |
+| animGeneralFall | `integer` | read-only |
+| animGeneralLand | `integer` | read-only |
+| animBeingGrabbed | `integer` | read-only |
+| animGrabHeavyObject | `integer` | read-only |
+| animSlowLandFromDive | `integer` | read-only |
+| animFlyFromCannon | `integer` | read-only |
 | animMoveOnWireNetRight | `integer` | read-only |
-| animOffsetEnabled | `integer` | read-only |
-| animOffsetFeet | `number` | read-only |
-| animOffsetHand | `number` | read-only |
-| animOffsetLowYPoint | `number` | read-only |
-| animPickUpLightObj | `integer` | read-only |
-| animPlaceLightObj | `integer` | read-only |
+| animMoveOnWireNetLeft | `integer` | read-only |
+| animMissingCap | `integer` | read-only |
 | animPullDoorWalkIn | `integer` | read-only |
 | animPushDoorWalkIn | `integer` | read-only |
-| animPushing | `integer` | read-only |
-| animPutCapOn | `integer` | read-only |
-| animQuicklyPutCapOn | `integer` | read-only |
+| animUnlockDoor | `integer` | read-only |
+| animStartReachPocket | `integer` | read-only |
 | animReachPocket | `integer` | read-only |
-| animReleaseBowser | `integer` | read-only |
-| animReturnFromHandstand | `integer` | read-only |
-| animReturnFromStarDance | `integer` | read-only |
-| animReturnFromWaterStarDance | `integer` | read-only |
-| animReturnStarApproachDoor | `integer` | read-only |
-| animRidingShell | `integer` | read-only |
-| animRunWithLightObj | `integer` | read-only |
+| animStopReachPocket | `integer` | read-only |
+| animGroundThrow | `integer` | read-only |
+| animGroundKick | `integer` | read-only |
+| animFirstPunch | `integer` | read-only |
+| animSecondPunch | `integer` | read-only |
+| animFirstPunchFast | `integer` | read-only |
+| animSecondPunchFast | `integer` | read-only |
+| animPickUpLightObj | `integer` | read-only |
+| animPushing | `integer` | read-only |
+| animStartRidingShell | `integer` | read-only |
+| animPlaceLightObj | `integer` | read-only |
+| animForwardSpinning | `integer` | read-only |
+| animBackwardSpinning | `integer` | read-only |
+| animBreakdance | `integer` | read-only |
 | animRunning | `integer` | read-only |
 | animRunningUnused | `integer` | read-only |
-| animSecondPunch | `integer` | read-only |
-| animSecondPunchFast | `integer` | read-only |
-| animShivering | `integer` | read-only |
-| animShiveringReturnToIdle | `integer` | read-only |
-| animShiveringWarmingHand | `integer` | read-only |
-| animShocked | `integer` | read-only |
-| animSidestepLeft | `integer` | read-only |
-| animSidestepRight | `integer` | read-only |
-| animSingleJump | `integer` | read-only |
-| animSkidOnGround | `integer` | read-only |
-| animSleepIdle | `integer` | read-only |
-| animSleepLying | `integer` | read-only |
-| animSleepStartLying | `integer` | read-only |
-| animSlide | `integer` | read-only |
-| animSlideDive | `integer` | read-only |
-| animSlideKick | `integer` | read-only |
-| animSlideMotionless | `integer` | read-only |
-| animSlideflip | `integer` | read-only |
-| animSlideflipLand | `integer` | read-only |
-| animSlidejump | `integer` | read-only |
-| animSlidingOnBottomWithLightObj | `integer` | read-only |
-| animSlowLandFromDive | `integer` | read-only |
-| animSlowLedgeGrab | `integer` | read-only |
-| animSlowLongjump | `integer` | read-only |
-| animSlowWalkWithLightObj | `integer` | read-only |
 | animSoftBackKb | `integer` | read-only |
 | animSoftFrontKb | `integer` | read-only |
+| animDyingInQuicksand | `integer` | read-only |
+| animIdleInQuicksand | `integer` | read-only |
+| animMoveInQuicksand | `integer` | read-only |
+| animElectrocution | `integer` | read-only |
+| animShocked | `integer` | read-only |
+| animBackwardKb | `integer` | read-only |
+| animForwardKb | `integer` | read-only |
+| animIdleHeavyObj | `integer` | read-only |
 | animStandAgainstWall | `integer` | read-only |
-| animStandUpFromLavaBoost | `integer` | read-only |
-| animStandUpFromSlidingWithLightObj | `integer` | read-only |
-| animStarDance | `integer` | read-only |
-| animStartCrawling | `integer` | read-only |
-| animStartCrouching | `integer` | read-only |
-| animStartForwardSpinning | `integer` | read-only |
-| animStartGroundPound | `integer` | read-only |
-| animStartHandstand | `integer` | read-only |
-| animStartReachPocket | `integer` | read-only |
-| animStartRidingShell | `integer` | read-only |
+| animSidestepLeft | `integer` | read-only |
+| animSidestepRight | `integer` | read-only |
 | animStartSleepIdle | `integer` | read-only |
 | animStartSleepScratch | `integer` | read-only |
-| animStartSleepSitting | `integer` | read-only |
 | animStartSleepYawn | `integer` | read-only |
-| animStartTiptoe | `integer` | read-only |
-| animStartTwirl | `integer` | read-only |
-| animStartWallkick | `integer` | read-only |
-| animStopCrawling | `integer` | read-only |
-| animStopCrouching | `integer` | read-only |
-| animStopGrabObjWater | `integer` | read-only |
-| animStopReachPocket | `integer` | read-only |
-| animStopSkid | `integer` | read-only |
-| animStopSlide | `integer` | read-only |
+| animStartSleepSitting | `integer` | read-only |
+| animSleepIdle | `integer` | read-only |
+| animSleepStartLying | `integer` | read-only |
+| animSleepLying | `integer` | read-only |
+| animDive | `integer` | read-only |
+| animSlideDive | `integer` | read-only |
+| animGroundBonk | `integer` | read-only |
 | animStopSlideLightObj | `integer` | read-only |
-| animSuffocating | `integer` | read-only |
+| animSlideKick | `integer` | read-only |
+| animCrouchFromSlideKick | `integer` | read-only |
+| animSlideMotionless | `integer` | read-only |
+| animStopSlide | `integer` | read-only |
+| animFallFromSlide | `integer` | read-only |
+| animSlide | `integer` | read-only |
+| animTiptoe | `integer` | read-only |
+| animTwirlLand | `integer` | read-only |
+| animTwirl | `integer` | read-only |
+| animStartTwirl | `integer` | read-only |
+| animStopCrouching | `integer` | read-only |
+| animStartCrouching | `integer` | read-only |
+| animCrouching | `integer` | read-only |
+| animCrawling | `integer` | read-only |
+| animStopCrawling | `integer` | read-only |
+| animStartCrawling | `integer` | read-only |
 | animSummonStar | `integer` | read-only |
-| animSwimPart1 | `integer` | read-only |
-| animSwimPart2 | `integer` | read-only |
+| animReturnStarApproachDoor | `integer` | read-only |
+| animBackwardsWaterKb | `integer` | read-only |
 | animSwimWithObjPart1 | `integer` | read-only |
 | animSwimWithObjPart2 | `integer` | read-only |
-| animSwingingBowser | `integer` | read-only |
-| animTakeCapOffThenOn | `integer` | read-only |
-| animThrowCatchKey | `integer` | read-only |
-| animThrowLightObject | `integer` | read-only |
-| animTiptoe | `integer` | read-only |
-| animTripleJump | `integer` | read-only |
-| animTripleJumpFly | `integer` | read-only |
-| animTripleJumpGroundPound | `integer` | read-only |
-| animTripleJumpLand | `integer` | read-only |
-| animTurningPart1 | `integer` | read-only |
-| animTurningPart2 | `integer` | read-only |
-| animTwirl | `integer` | read-only |
-| animTwirlLand | `integer` | read-only |
-| animUnlockDoor | `integer` | read-only |
-| animWakeFromLying | `integer` | read-only |
-| animWakeFromSleep | `integer` | read-only |
-| animWalkPanting | `integer` | read-only |
-| animWalkWithHeavyObj | `integer` | read-only |
-| animWalkWithLightObj | `integer` | read-only |
-| animWalking | `integer` | read-only |
-| animWaterActionEnd | `integer` | read-only |
+| animFlutterkickWithObj | `integer` | read-only |
 | animWaterActionEndWithObj | `integer` | read-only |
+| animStopGrabObjWater | `integer` | read-only |
+| animWaterIdleWithObj | `integer` | read-only |
+| animDrowningPart1 | `integer` | read-only |
+| animDrowningPart2 | `integer` | read-only |
 | animWaterDying | `integer` | read-only |
 | animWaterForwardKb | `integer` | read-only |
-| animWaterGrabObjPart1 | `integer` | read-only |
-| animWaterGrabObjPart2 | `integer` | read-only |
-| animWaterIdle | `integer` | read-only |
-| animWaterIdleWithObj | `integer` | read-only |
+| animFallFromWater | `integer` | read-only |
+| animSwimPart1 | `integer` | read-only |
+| animSwimPart2 | `integer` | read-only |
+| animFlutterkick | `integer` | read-only |
+| animWaterActionEnd | `integer` | read-only |
 | animWaterPickUpObj | `integer` | read-only |
-| animWaterStarDance | `integer` | read-only |
+| animWaterGrabObjPart2 | `integer` | read-only |
+| animWaterGrabObjPart1 | `integer` | read-only |
 | animWaterThrowObj | `integer` | read-only |
-| animWingCapFly | `integer` | read-only |
-| cameraHudHead | `integer` | read-only |
-| capEnemyDecalGfx | `Pointer` <`Gfx`> | read-only |
-| capEnemyGfx | `Pointer` <`Gfx`> | read-only |
-| capEnemyLayer | `integer` | read-only |
-| capMetalModelId | `integer` | read-only |
-| capMetalWingModelId | `integer` | read-only |
-| capModelId | `integer` | read-only |
-| capWingModelId | `integer` | read-only |
-| hudHead | `integer` | read-only |
-| hudHeadTexture | [TextureInfo](structs.md#TextureInfo) | read-only |
-| modelId | `integer` | read-only |
-| name | `string` | read-only |
+| animWaterIdle | `integer` | read-only |
+| animWaterStarDance | `integer` | read-only |
+| animReturnFromWaterStarDance | `integer` | read-only |
+| animGrabBowser | `integer` | read-only |
+| animSwingingBowser | `integer` | read-only |
+| animReleaseBowser | `integer` | read-only |
+| animHoldingBowser | `integer` | read-only |
+| animHeavyThrow | `integer` | read-only |
+| animWalkPanting | `integer` | read-only |
+| animWalkWithHeavyObj | `integer` | read-only |
+| animTurningPart1 | `integer` | read-only |
+| animTurningPart2 | `integer` | read-only |
+| animSlideflipLand | `integer` | read-only |
+| animSlideflip | `integer` | read-only |
+| animTripleJumpLand | `integer` | read-only |
+| animTripleJump | `integer` | read-only |
+| animFirstPerson | `integer` | read-only |
+| animIdleHeadLeft | `integer` | read-only |
+| animIdleHeadRight | `integer` | read-only |
+| animIdleHeadCenter | `integer` | read-only |
+| animHandstandLeft | `integer` | read-only |
+| animHandstandRight | `integer` | read-only |
+| animWakeFromSleep | `integer` | read-only |
+| animWakeFromLying | `integer` | read-only |
+| animStartTiptoe | `integer` | read-only |
+| animSlidejump | `integer` | read-only |
+| animStartWallkick | `integer` | read-only |
+| animStarDance | `integer` | read-only |
+| animReturnFromStarDance | `integer` | read-only |
+| animForwardSpinningFlip | `integer` | read-only |
+| animTripleJumpFly | `integer` | read-only |
+| anims | `Array` <`integer`> | read-only |
+| soundFreqScale | `number` | read-only |
+| soundYahWahHoo | `integer` | read-only |
+| soundHoohoo | `integer` | read-only |
+| soundYahoo | `integer` | read-only |
+| soundUh | `integer` | read-only |
+| soundHrmm | `integer` | read-only |
+| soundWah2 | `integer` | read-only |
+| soundWhoa | `integer` | read-only |
+| soundEeuh | `integer` | read-only |
 | soundAttacked | `integer` | read-only |
+| soundOoof | `integer` | read-only |
+| soundOoof2 | `integer` | read-only |
+| soundHereWeGo | `integer` | read-only |
+| soundYawning | `integer` | read-only |
+| soundSnoring1 | `integer` | read-only |
+| soundSnoring2 | `integer` | read-only |
+| soundWaaaooow | `integer` | read-only |
+| soundHaha | `integer` | read-only |
+| soundHaha_2 | `integer` | read-only |
+| soundUh2 | `integer` | read-only |
+| soundUh2_2 | `integer` | read-only |
+| soundOnFire | `integer` | read-only |
+| soundDying | `integer` | read-only |
+| soundPantingCold | `integer` | read-only |
+| soundPanting | `integer` | read-only |
 | soundCoughing1 | `integer` | read-only |
 | soundCoughing2 | `integer` | read-only |
 | soundCoughing3 | `integer` | read-only |
-| soundDoh | `integer` | read-only |
-| soundDrowning | `integer` | read-only |
-| soundDying | `integer` | read-only |
-| soundEeuh | `integer` | read-only |
-| soundFreqScale | `number` | read-only |
-| soundGameOver | `integer` | read-only |
-| soundGroundPoundWah | `integer` | read-only |
-| soundHaha | `integer` | read-only |
-| soundHaha_2 | `integer` | read-only |
-| soundHello | `integer` | read-only |
-| soundHereWeGo | `integer` | read-only |
-| soundHoohoo | `integer` | read-only |
-| soundHrmm | `integer` | read-only |
-| soundImaTired | `integer` | read-only |
-| soundLetsAGo | `integer` | read-only |
-| soundMamaMia | `integer` | read-only |
-| soundOkeyDokey | `integer` | read-only |
-| soundOnFire | `integer` | read-only |
-| soundOoof | `integer` | read-only |
-| soundOoof2 | `integer` | read-only |
-| soundPanting | `integer` | read-only |
-| soundPantingCold | `integer` | read-only |
-| soundPressStartToPlay | `integer` | read-only |
-| soundPunchHoo | `integer` | read-only |
-| soundPunchWah | `integer` | read-only |
 | soundPunchYah | `integer` | read-only |
-| soundSnoring1 | `integer` | read-only |
-| soundSnoring2 | `integer` | read-only |
+| soundPunchHoo | `integer` | read-only |
+| soundMamaMia | `integer` | read-only |
+| soundGroundPoundWah | `integer` | read-only |
+| soundDrowning | `integer` | read-only |
+| soundPunchWah | `integer` | read-only |
+| soundYahooWahaYippee | `integer` | read-only |
+| soundDoh | `integer` | read-only |
+| soundGameOver | `integer` | read-only |
+| soundHello | `integer` | read-only |
+| soundPressStartToPlay | `integer` | read-only |
+| soundTwirlBounce | `integer` | read-only |
 | soundSnoring3 | `integer` | read-only |
 | soundSoLongaBowser | `integer` | read-only |
-| soundTwirlBounce | `integer` | read-only |
-| soundUh | `integer` | read-only |
-| soundUh2 | `integer` | read-only |
-| soundUh2_2 | `integer` | read-only |
-| soundWaaaooow | `integer` | read-only |
-| soundWah2 | `integer` | read-only |
-| soundWhoa | `integer` | read-only |
-| soundYahWahHoo | `integer` | read-only |
-| soundYahoo | `integer` | read-only |
-| soundYahooWahaYippee | `integer` | read-only |
-| soundYawning | `integer` | read-only |
-| torsoRotMult | `number` | read-only |
-| type | [enum CharacterType](constants.md#enum-CharacterType) | read-only |
+| soundImaTired | `integer` | read-only |
+| soundLetsAGo | `integer` | read-only |
+| soundOkeyDokey | `integer` | read-only |
+| sounds | `Array` <`integer`> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -789,17 +683,17 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| port | `integer` |  |
+| stickX | `number` |  |
+| stickY | `number` |  |
+| stickMag | `number` |  |
+| rawStickX | `integer` |  |
+| rawStickY | `integer` |  |
+| extStickX | `integer` |  |
+| extStickY | `integer` |  |
 | buttonDown | `integer` |  |
 | buttonPressed | `integer` |  |
 | buttonReleased | `integer` |  |
-| extStickX | `integer` |  |
-| extStickY | `integer` |  |
-| port | `integer` |  |
-| rawStickX | `integer` |  |
-| rawStickY | `integer` |  |
-| stickMag | `number` |  |
-| stickX | `number` |  |
-| stickY | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -809,54 +703,18 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| acousticReach | `integer` |  |
+| script | `Pointer` <`LevelScript`> | read-only |
+| scriptEntryName | `string` | read-only |
 | courseNum | `integer` |  |
+| levelNum | `integer` |  |
+| fullName | `string` | read-only |
+| shortName | `string` | read-only |
+| acousticReach | `integer` |  |
 | echoLevel1 | `integer` |  |
 | echoLevel2 | `integer` |  |
 | echoLevel3 | `integer` |  |
-| fullName | `string` | read-only |
-| levelNum | `integer` |  |
 | modIndex | `integer` |  |
 | next | [CustomLevelInfo](structs.md#CustomLevelInfo) | read-only |
-| script | `Pointer` <`LevelScript`> | read-only |
-| scriptEntryName | `string` | read-only |
-| shortName | `string` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [Cutscene](#Cutscene)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| duration | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CutsceneSplinePoint](#CutsceneSplinePoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| index | `integer` |  |
-| point | [Vec3s](structs.md#Vec3s) | read-only |
-| speed | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CutsceneVariable](#CutsceneVariable)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| angle | [Vec3s](structs.md#Vec3s) | read-only |
-| point | [Vec3f](structs.md#Vec3f) | read-only |
-| unused1 | `integer` |  |
-| unused2 | `integer` |  |
-| unusedPoint | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -866,12 +724,27 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| year | `integer` |  |
+| month | `integer` |  |
 | day | `integer` |  |
 | hour | `integer` |  |
 | minute | `integer` |  |
-| month | `integer` |  |
 | second | `integer` |  |
-| year | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [DialogEntry](#DialogEntry)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| unused | `integer` | read-only |
+| linesPerBox | `integer` | read-only |
+| leftOffset | `integer` | read-only |
+| width | `integer` | read-only |
+| text | `string` | read-only |
+| replaced | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -893,10 +766,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| a | `integer` |  |
-| b | `integer` |  |
-| g | `integer` |  |
 | r | `integer` |  |
+| g | `integer` |  |
+| b | `integer` |  |
+| a | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -906,13 +779,13 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| cursorDownBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | textColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| defaultBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| cursorDownBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| hoveredBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -933,10 +806,10 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | id | `string` | read-only |
-| interactables | [DjuiInteractableTheme](structs.md#DjuiInteractableTheme) | read-only |
 | name | `string` | read-only |
-| panels | [DjuiPanelTheme](structs.md#DjuiPanelTheme) | read-only |
+| interactables | [DjuiInteractableTheme](structs.md#DjuiInteractableTheme) | read-only |
 | threePanels | [DjuiThreePanelTheme](structs.md#DjuiThreePanelTheme) | read-only |
+| panels | [DjuiPanelTheme](structs.md#DjuiPanelTheme) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -946,8 +819,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -957,11 +830,11 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
-| firstByte | `integer` |  |
 | id | `integer` |  |
-| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
 | unused | `integer` |  |
+| firstByte | `integer` |  |
+| model | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |  |
+| behavior | [enum BehaviorId](constants.md#enum-BehaviorId) |  |
 
 [:arrow_up_small:](#)
 
@@ -971,30 +844,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| centerL | `boolean` |  |
-| crouch | `number` |  |
 | enabled | `boolean` | read-only |
 | forcePitch | `boolean` |  |
-| forceRoll | `boolean` |  |
 | forceYaw | `boolean` |  |
-| fov | `number` |  |
-| offset | [Vec3f](structs.md#Vec3f) | read-only |
+| forceRoll | `boolean` |  |
+| centerL | `boolean` |  |
 | pitch | `integer` |  |
 | yaw | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [FloorGeometry](#FloorGeometry)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| normalX | `number` |  |
-| normalY | `number` |  |
-| normalZ | `number` |  |
-| originOffset | `number` |  |
-| unused | `Array` <`number`> |  |
+| crouch | `number` |  |
+| fov | `number` |  |
+| offset | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1069,8 +928,8 @@
 | skeeter_seg6_anims_06007DE0 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | snowman_seg5_anims_0500D118 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | spindrift_seg5_anims_05002D68 | `Pointer` <`ObjectAnimPointer`> | read-only |
-| spiny_egg_seg5_anims_050157E4 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | spiny_seg5_anims_05016EAC | `Pointer` <`ObjectAnimPointer`> | read-only |
+| spiny_egg_seg5_anims_050157E4 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | sushi_seg5_anims_0500AE54 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | swoop_seg6_anims_060070D0 | `Pointer` <`ObjectAnimPointer`> | read-only |
 | toad_seg6_anims_0600FB58 | `Pointer` <`ObjectAnimPointer`> | read-only |
@@ -1200,17 +1059,17 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| apostrophe | [TextureInfo](structs.md#TextureInfo) | read-only |
-| arrow_down | [TextureInfo](structs.md#TextureInfo) | read-only |
-| arrow_up | [TextureInfo](structs.md#TextureInfo) | read-only |
 | camera | [TextureInfo](structs.md#TextureInfo) | read-only |
-| coin | [TextureInfo](structs.md#TextureInfo) | read-only |
-| double_quote | [TextureInfo](structs.md#TextureInfo) | read-only |
 | lakitu | [TextureInfo](structs.md#TextureInfo) | read-only |
-| luigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
-| mario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | no_camera | [TextureInfo](structs.md#TextureInfo) | read-only |
+| arrow_up | [TextureInfo](structs.md#TextureInfo) | read-only |
+| arrow_down | [TextureInfo](structs.md#TextureInfo) | read-only |
+| coin | [TextureInfo](structs.md#TextureInfo) | read-only |
 | star | [TextureInfo](structs.md#TextureInfo) | read-only |
+| apostrophe | [TextureInfo](structs.md#TextureInfo) | read-only |
+| double_quote | [TextureInfo](structs.md#TextureInfo) | read-only |
+| mario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
+| luigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | toad_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | waluigi_head | [TextureInfo](structs.md#TextureInfo) | read-only |
 | wario_head | [TextureInfo](structs.md#TextureInfo) | read-only |
@@ -1223,14 +1082,14 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| children | [GraphNode](structs.md#GraphNode) | read-only |
-| extraFlags | `integer` |  |
-| flags | `integer` |  |
-| hookProcess | `integer` |  |
+| prev | [GraphNode](structs.md#GraphNode) | read-only |
 | next | [GraphNode](structs.md#GraphNode) | read-only |
 | parent | [GraphNode](structs.md#GraphNode) | read-only |
-| prev | [GraphNode](structs.md#GraphNode) | read-only |
+| children | [GraphNode](structs.md#GraphNode) | read-only |
 | type | `integer` | read-only |
+| flags | `integer` |  |
+| extraFlags | `integer` |  |
+| hookProcess | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1240,8 +1099,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1252,12 +1111,12 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| background | `integer` |  |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| prevCameraFocus | [Vec3f](structs.md#Vec3f) | read-only |
-| prevCameraPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevCameraTimestamp | `integer` | read-only |
 | unused | `integer` | read-only |
+| background | `integer` |  |
+| prevCameraPos | [Vec3f](structs.md#Vec3f) | read-only |
+| prevCameraFocus | [Vec3f](structs.md#Vec3f) | read-only |
+| prevCameraTimestamp | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1267,9 +1126,23 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeBone](#GraphNodeBone)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
+| translation | [Vec3s](structs.md#Vec3s) | read-only |
+| rotation | [Vec3s](structs.md#Vec3s) | read-only |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1280,13 +1153,13 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
+| pos | [Vec3f](structs.md#Vec3f) | read-only |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
+| prevPos | [Vec3f](structs.md#Vec3f) | read-only |
+| prevFocus | [Vec3f](structs.md#Vec3f) | read-only |
+| prevTimestamp | `integer` | read-only |
 | matrixPtr | `Pointer` <`Mat4`> |  |
 | matrixPtrPrev | `Pointer` <`Mat4`> | read-only |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevFocus | [Vec3f](structs.md#Vec3f) | read-only |
-| prevPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevTimestamp | `integer` | read-only |
 | roll | `integer` |  |
 | rollScreen | `integer` |  |
 
@@ -1298,8 +1171,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| cullingRadius | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| cullingRadius | `integer` |  |
 | pad1E | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
@@ -1310,8 +1183,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1333,11 +1206,11 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| objNode | [Object](structs.md#Object) |  |
 | playerIndex | `integer` |  |
+| objNode | [Object](structs.md#Object) |  |
+| translation | [Vec3s](structs.md#Vec3s) | read-only |
 | prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevShadowPosTimestamp | `integer` | read-only |
-| translation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1347,9 +1220,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| maxDistance | `integer` |  |
-| minDistance | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+| minDistance | `integer` |  |
+| maxDistance | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1369,33 +1242,33 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| activeAreaIndex | `integer` |  |
-| angle | [Vec3s](structs.md#Vec3s) | read-only |
-| animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
-| areaIndex | `integer` |  |
-| cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
-| disableAutomaticShadowPos | `boolean` |  |
-| inited | `boolean` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
-| prevPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevScale | [Vec3f](structs.md#Vec3f) | read-only |
-| prevScaleTimestamp | `integer` | read-only |
-| prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevShadowPosTimestamp | `integer` | read-only |
-| prevThrowMatrix | [Mat4](structs.md#Mat4) | read-only |
-| prevThrowMatrixTimestamp | `integer` | read-only |
-| prevTimestamp | `integer` | read-only |
-| scale | [Vec3f](structs.md#Vec3f) | read-only |
-| shadowInvisible | `boolean` |  |
-| shadowPos | [Vec3f](structs.md#Vec3f) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
-| skipInViewCheck | `boolean` |  |
-| skipInterpolationTimestamp | `integer` | read-only |
+| unk4C | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | throwMatrix | `Pointer` <`Mat4`> |  |
 | throwMatrixPrev | `Pointer` <`Mat4`> | read-only |
-| unk4C | [SpawnInfo](structs.md#SpawnInfo) | read-only |
+| prevThrowMatrix | [Mat4](structs.md#Mat4) | read-only |
+| angle | [Vec3s](structs.md#Vec3s) | read-only |
+| prevAngle | [Vec3s](structs.md#Vec3s) | read-only |
+| pos | [Vec3f](structs.md#Vec3f) | read-only |
+| prevPos | [Vec3f](structs.md#Vec3f) | read-only |
+| shadowPos | [Vec3f](structs.md#Vec3f) | read-only |
+| prevShadowPos | [Vec3f](structs.md#Vec3f) | read-only |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
+| prevScale | [Vec3f](structs.md#Vec3f) | read-only |
+| cameraToObject | [Vec3f](structs.md#Vec3f) | read-only |
+| prevTimestamp | `integer` | read-only |
+| prevShadowPosTimestamp | `integer` | read-only |
+| prevScaleTimestamp | `integer` | read-only |
+| prevThrowMatrixTimestamp | `integer` | read-only |
+| skipInterpolationTimestamp | `integer` | read-only |
+| animInfo | [AnimInfo](structs.md#AnimInfo) | read-only |
+| areaIndex | `integer` |  |
+| activeAreaIndex | `integer` |  |
+| shadowInvisible | `boolean` |  |
+| disableAutomaticShadowPos | `boolean` |  |
+| skipInViewCheck | `boolean` |  |
+| inited | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -1427,13 +1300,13 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| far | `integer` |  |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
+| unused | `integer` | read-only |
 | fov | `number` |  |
 | near | `integer` |  |
+| far | `integer` |  |
 | prevFov | `number` |  |
 | prevTimestamp | `number` |  |
-| unused | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1443,13 +1316,13 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| areaIndex | `integer` | read-only |
-| height | `integer` |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| numViews | `integer` | read-only |
-| width | `integer` |  |
+| areaIndex | `integer` | read-only |
 | x | `integer` |  |
 | y | `integer` |  |
+| width | `integer` |  |
+| height | `integer` |  |
+| numViews | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1459,10 +1332,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevRotation | [Vec3s](structs.md#Vec3s) | read-only |
-| prevTimestamp | `integer` |  |
+| displayList | `Pointer` <`Gfx`> |  |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
@@ -1473,10 +1344,21 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| prevScale | `number` |  |
+| displayList | `Pointer` <`Gfx`> |  |
 | scale | `number` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| node | [GraphNode](structs.md#GraphNode) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
+| scale | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1510,9 +1392,9 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
+| unused | `integer` | read-only |
 | parameter | `integer` |  |
 | selectedCase | `integer` |  |
-| unused | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1522,10 +1404,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| pad1E | `Array` <`integer`> |  |
+| displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
+| pad1E | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1535,37 +1417,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| displayList | `Pointer` <`Gfx`> |  |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
-| rotation | [Vec3s](structs.md#Vec3s) | read-only |
+| displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [GraphNode_802A45E4](#GraphNode_802A45E4)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| unk18 | `integer` |  |
-| unk1A | `integer` |  |
-| unk1C | `integer` |  |
-| unk1E | `integer` |  |
-| unk20 | `integer` |  |
-| unk22 | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [HandheldShakePoint](#HandheldShakePoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| index | `integer` |  |
-| pad | `integer` |  |
-| point | [Vec3s](structs.md#Vec3s) | read-only |
+| rotation | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1575,12 +1430,12 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| pivotX | `number` |  |
-| pivotY | `number` |  |
-| prevPivotX | `number` |  |
-| prevPivotY | `number` |  |
 | rotation | `number` |  |
 | rotationDiff | `number` |  |
+| prevPivotX | `number` |  |
+| prevPivotY | `number` |  |
+| pivotX | `number` |  |
+| pivotY | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -1590,9 +1445,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| id | `integer` |  |
 | area | `integer` |  |
 | displacement | [Vec3s](structs.md#Vec3s) | read-only |
-| id | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1604,42 +1459,42 @@
 | ----- | ---- | ------ |
 | curFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | curPos | [Vec3f](structs.md#Vec3f) | read-only |
-| defMode | `integer` |  |
-| filler30 | `Array` <`integer`> |  |
-| filler3E | `Array` <`integer`> |  |
-| filler72 | `Array` <`integer`> |  |
-| focHSpeed | `number` |  |
-| focVSpeed | `number` |  |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
-| focusDistance | `number` |  |
 | goalFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | goalPos | [Vec3f](structs.md#Vec3f) | read-only |
-| keyDanceRoll | `integer` |  |
-| lastFrameAction | `integer` |  |
+| filler30 | `Array` <`integer`> |  |
 | mode | `integer` |  |
-| nextYaw | `integer` |  |
+| defMode | `integer` |  |
+| filler3E | `Array` <`integer`> |  |
+| focusDistance | `number` |  |
 | oldPitch | `integer` |  |
-| oldRoll | `integer` |  |
 | oldYaw | `integer` |  |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| posHSpeed | `number` |  |
-| posVSpeed | `number` |  |
-| roll | `integer` |  |
+| oldRoll | `integer` |  |
 | shakeMagnitude | [Vec3s](structs.md#Vec3s) | read-only |
-| shakePitchDecay | `integer` |  |
 | shakePitchPhase | `integer` |  |
 | shakePitchVel | `integer` |  |
-| shakeRollDecay | `integer` |  |
-| shakeRollPhase | `integer` |  |
-| shakeRollVel | `integer` |  |
-| shakeYawDecay | `integer` |  |
-| shakeYawPhase | `integer` |  |
-| shakeYawVel | `integer` |  |
-| skipCameraInterpolationTimestamp | `integer` |  |
-| unused | `integer` |  |
+| shakePitchDecay | `integer` |  |
 | unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | unusedVec2 | [Vec3s](structs.md#Vec3s) | read-only |
+| filler72 | `Array` <`integer`> |  |
+| roll | `integer` |  |
 | yaw | `integer` |  |
+| nextYaw | `integer` |  |
+| focus | [Vec3f](structs.md#Vec3f) | read-only |
+| pos | [Vec3f](structs.md#Vec3f) | read-only |
+| shakeRollPhase | `integer` |  |
+| shakeRollVel | `integer` |  |
+| shakeRollDecay | `integer` |  |
+| shakeYawPhase | `integer` |  |
+| shakeYawVel | `integer` |  |
+| shakeYawDecay | `integer` |  |
+| focHSpeed | `number` |  |
+| focVSpeed | `number` |  |
+| posHSpeed | `number` |  |
+| posVSpeed | `number` |  |
+| keyDanceRoll | `integer` |  |
+| lastFrameAction | `integer` |  |
+| unused | `integer` |  |
+| skipCameraInterpolationTimestamp | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1649,73 +1504,62 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| bubbleOnDeathBarrierInCapStages | `integer` |  |
-| cellHeightLimit | `integer` |  |
-| coinsRequiredForCoinStar | `integer` |  |
-| disableActs | `integer` |  |
-| entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
-| exitCastleArea | `integer` |  |
-| exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
-| exitCastleWarpNode | `integer` |  |
-| extendedPauseDisplay | `integer` |  |
 | fixCollisionBugs | `integer` |  |
+| fixCollisionBugsRoundedCorners | `integer` |  |
 | fixCollisionBugsFalseLedgeGrab | `integer` |  |
 | fixCollisionBugsGroundPoundBonks | `integer` |  |
 | fixCollisionBugsPickBestWall | `integer` |  |
-| fixCollisionBugsRoundedCorners | `integer` |  |
-| fixInvalidShellRides | `integer` |  |
 | fixVanishFloors | `integer` |  |
-| floatingStarDance | `integer` |  |
-| floorLowerLimit | `integer` |  |
-| floorLowerLimitMisc | `integer` |  |
-| floorLowerLimitShadow | `integer` |  |
+| fixInvalidShellRides | `integer` |  |
 | hudCapTimer | `integer` |  |
 | hudRedCoinsRadar | `integer` |  |
 | hudSecretsRadar | `integer` |  |
-| infiniteStairsRequirement | `integer` |  |
-| jrbDarkenSkybox | `integer` |  |
-| maxCoins | `integer` |  |
-| maxLives | `integer` |  |
-| metalCapDuration | `integer` |  |
-| metalCapDurationCotmc | `integer` |  |
-| metalCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
-| mushroom1UpHeal | `integer` |  |
-| numCoinsToLife | `integer` |  |
-| pauseExitAnywhere | `integer` |  |
-| previewBlueCoins | `integer` |  |
-| pssSlideStarIndex | `integer` |  |
-| pssSlideStarTime | `integer` |  |
-| respawnBlueCoinsSwitch | `integer` |  |
-| showStarNumber | `integer` |  |
-| skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
 | starHeal | `integer` |  |
-| starPositions | [StarPositions](structs.md#StarPositions) | read-only |
-| useGlobalStarIds | `integer` |  |
-| vanishCapDuration | `integer` |  |
-| vanishCapDurationVcutm | `integer` |  |
-| vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| mushroom1UpHeal | `integer` |  |
+| floatingStarDance | `integer` |  |
+| previewBlueCoins | `integer` |  |
+| respawnBlueCoinsSwitch | `integer` |  |
 | visibleSecrets | `integer` |  |
-| wallMaxRadius | `number` |  |
-| wdwWaterLevelSpeed | `number` |  |
-| wingCapDuration | `integer` |  |
-| wingCapDurationTotwc | `integer` |  |
+| showStarNumber | `integer` |  |
+| extendedPauseDisplay | `integer` |  |
+| pauseExitAnywhere | `integer` |  |
+| disableActs | `integer` |  |
+| bubbleOnDeathBarrierInCapStages | `integer` |  |
+| entryLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleLevel | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| exitCastleArea | `integer` |  |
+| exitCastleWarpNode | `integer` |  |
 | wingCapLookUpReq | `integer` |  |
+| skipCreditsAt | [enum LevelNum](constants.md#enum-LevelNum) |  |
+| pssSlideStarTime | `integer` |  |
+| pssSlideStarIndex | `integer` |  |
+| coinsRequiredForCoinStar | `integer` |  |
+| infiniteStairsRequirement | `integer` |  |
+| wingCapDuration | `integer` |  |
+| metalCapDuration | `integer` |  |
+| vanishCapDuration | `integer` |  |
+| wingCapDurationTotwc | `integer` |  |
+| metalCapDurationCotmc | `integer` |  |
+| vanishCapDurationVcutm | `integer` |  |
 | wingCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| metalCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| vanishCapSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| shellSequence | [enum SeqId](constants.md#enum-SeqId) |  |
+| starPositions | [StarPositions](structs.md#StarPositions) | read-only |
+| cellHeightLimit | `integer` |  |
+| floorLowerLimit | `integer` |  |
+| floorLowerLimitMisc | `integer` |  |
+| floorLowerLimitShadow | `integer` |  |
+| maxLives | `integer` |  |
+| maxCoins | `integer` |  |
+| numCoinsToLife | `integer` |  |
+| wdwWaterLevelSpeed | `number` |  |
+| useGlobalStarIds | `integer` |  |
 | zoomOutCameraOnPause | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [LinearTransitionPoint](#LinearTransitionPoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| dist | `number` |  |
-| focus | [Vec3f](structs.md#Vec3f) | read-only |
-| pitch | `integer` |  |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| yaw | `integer` |  |
+| jrbDarkenSkybox | `integer` |  |
+| wallMaxRadius | `number` |  |
+| floorNormalMinY | `number` |  |
+| ceilNormalMaxY | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -1736,33 +1580,34 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| action | `integer` |  |
-| allowPartRotation | `integer` |  |
 | capState | `integer` |  |
-| currAnimPart | `integer` | read-only |
 | eyeState | `integer` |  |
-| grabPos | `integer` |  |
 | handState | `integer` |  |
+| punchState | `integer` |  |
+| modelState | `integer` |  |
+| allowPartRotation | `integer` |  |
+| grabPos | `integer` |  |
+| wingFlutter | `integer` |  |
+| mirrorMario | `boolean` |  |
 | headAngle | [Vec3s](structs.md#Vec3s) | read-only |
+| torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
+| torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
-| lightB | `integer` |  |
-| lightG | `integer` |  |
+| animPartsPos | `Array` <`Vec3f`> | read-only |
+| currAnimPart | `integer` | read-only |
+| updateTorsoTime | `integer` | read-only |
+| updateHeadPosTime | `integer` | read-only |
+| action | `integer` |  |
+| shadeR | `integer` |  |
+| shadeG | `integer` |  |
+| shadeB | `integer` |  |
 | lightR | `integer` |  |
+| lightG | `integer` |  |
+| lightB | `integer` |  |
 | lightingDirX | `number` |  |
 | lightingDirY | `number` |  |
 | lightingDirZ | `number` |  |
-| mirrorMario | `boolean` |  |
-| modelState | `integer` |  |
-| punchState | `integer` |  |
-| shadeB | `integer` |  |
-| shadeG | `integer` |  |
-| shadeR | `integer` |  |
-| torsoAngle | [Vec3s](structs.md#Vec3s) | read-only |
-| torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
-| updateHeadPosTime | `integer` | read-only |
-| updateTorsoTime | `integer` | read-only |
-| wingFlutter | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1772,86 +1617,86 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| action | `integer` |  |
-| actionArg | `integer` |  |
-| actionState | `integer` |  |
-| actionTimer | `integer` |  |
-| angleVel | [Vec3s](structs.md#Vec3s) | read-only |
-| animation | [MarioAnimation](structs.md#MarioAnimation) |  |
-| area | [Area](structs.md#Area) | read-only |
-| bounceSquishTimer | `integer` |  |
-| bubbleObj | [Object](structs.md#Object) |  |
+| playerIndex | `integer` | read-only |
+| input | `integer` |  |
+| numCoins | `integer` |  |
+| numStars | `integer` |  |
+| numLives | `integer` |  |
+| numKeys | `integer` |  |
+| health | `integer` |  |
+| hurtCounter | `integer` |  |
+| healCounter | `integer` |  |
+| isSnoring | `integer` |  |
+| freeze | `integer` |  |
 | cap | `integer` |  |
 | capTimer | `integer` |  |
-| ceil | [Surface](structs.md#Surface) |  |
-| ceilHeight | `number` |  |
-| character | [Character](structs.md#Character) |  |
-| collidedObjInteractTypes | `integer` |  |
-| controller | [Controller](structs.md#Controller) | read-only |
-| curAnimOffset | `number` |  |
-| currentRoom | `integer` |  |
-| dialogId | `integer` | read-only |
-| doubleJumpTimer | `integer` |  |
-| faceAngle | [Vec3s](structs.md#Vec3s) | read-only |
-| fadeWarpOpacity | `integer` |  |
-| flags | `integer` |  |
-| floor | [Surface](structs.md#Surface) |  |
-| floorAngle | `integer` |  |
-| floorHeight | `number` |  |
-| forwardVel | `number` |  |
-| framesSinceA | `integer` |  |
-| framesSinceB | `integer` |  |
-| freeze | `integer` |  |
-| healCounter | `integer` |  |
-| health | `integer` |  |
-| heldByObj | [Object](structs.md#Object) |  |
-| heldObj | [Object](structs.md#Object) |  |
-| hurtCounter | `integer` |  |
-| input | `integer` |  |
-| intendedMag | `number` |  |
-| intendedYaw | `integer` |  |
-| interactObj | [Object](structs.md#Object) |  |
 | invincTimer | `integer` |  |
-| isSnoring | `integer` |  |
-| knockbackTimer | `integer` |  |
-| marioBodyState | [MarioBodyState](structs.md#MarioBodyState) | read-only |
-| marioObj | [Object](structs.md#Object) | read-only |
-| minimumBoneY | `number` |  |
-| nonInstantWarpPos | [Vec3f](structs.md#Vec3f) | read-only |
-| numCoins | `integer` |  |
-| numKeys | `integer` |  |
-| numLives | `integer` |  |
-| numStars | `integer` |  |
-| particleFlags | `integer` |  |
-| peakHeight | `number` |  |
-| playerIndex | `integer` | read-only |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| prevAction | `integer` |  |
-| prevNumStarsForDialog | `integer` |  |
-| quicksandDepth | `number` |  |
-| riddenObj | [Object](structs.md#Object) |  |
 | skipWarpInteractionsTimer | `integer` |  |
+| squishTimer | `integer` |  |
+| bounceSquishTimer | `integer` |  |
+| knockbackTimer | `integer` |  |
+| wallKickTimer | `integer` |  |
+| doubleJumpTimer | `integer` |  |
+| specialTripleJump | `integer` |  |
+| fadeWarpOpacity | `integer` |  |
+| wasNetworkVisible | `integer` |  |
+| dialogId | `integer` | read-only |
+| prevNumStarsForDialog | `integer` |  |
+| unkB0 | `integer` |  |
+| action | `integer` |  |
+| prevAction | `integer` |  |
+| actionArg | `integer` |  |
+| actionTimer | `integer` |  |
+| actionState | `integer` |  |
+| flags | `integer` |  |
+| quicksandDepth | `number` |  |
+| controller | [Controller](structs.md#Controller) | read-only |
+| marioBodyState | [MarioBodyState](structs.md#MarioBodyState) | read-only |
+| character | [Character](structs.md#Character) |  |
+| terrainSoundAddend | `integer` |  |
+| pos | [Vec3f](structs.md#Vec3f) | read-only |
+| nonInstantWarpPos | [Vec3f](structs.md#Vec3f) | read-only |
+| vel | [Vec3f](structs.md#Vec3f) | read-only |
 | slideVelX | `number` |  |
 | slideVelZ | `number` |  |
+| forwardVel | `number` |  |
+| peakHeight | `number` |  |
+| intendedMag | `number` |  |
+| intendedYaw | `integer` |  |
+| framesSinceA | `integer` |  |
+| framesSinceB | `integer` |  |
+| faceAngle | [Vec3s](structs.md#Vec3s) | read-only |
+| angleVel | [Vec3s](structs.md#Vec3s) | read-only |
 | slideYaw | `integer` |  |
-| spawnInfo | [SpawnInfo](structs.md#SpawnInfo) |  |
-| specialTripleJump | `integer` |  |
+| twirlYaw | `integer` |  |
+| heldObj | [Object](structs.md#Object) |  |
+| heldByObj | [Object](structs.md#Object) |  |
+| interactObj | [Object](structs.md#Object) |  |
+| riddenObj | [Object](structs.md#Object) |  |
+| usedObj | [Object](structs.md#Object) |  |
+| marioObj | [Object](structs.md#Object) | read-only |
+| bubbleObj | [Object](structs.md#Object) |  |
+| collidedObjInteractTypes | `integer` |  |
+| particleFlags | `integer` |  |
+| animation | [MarioAnimation](structs.md#MarioAnimation) |  |
 | splineKeyframe | `Pointer` <`Vec4s`> |  |
 | splineKeyframeFraction | `number` |  |
 | splineState | `integer` |  |
-| squishTimer | `integer` |  |
-| statusForCamera | [PlayerCameraState](structs.md#PlayerCameraState) | read-only |
-| terrainSoundAddend | `integer` |  |
-| twirlYaw | `integer` |  |
-| unkB0 | `integer` |  |
-| unkC4 | `number` |  |
-| usedObj | [Object](structs.md#Object) |  |
-| vel | [Vec3f](structs.md#Vec3f) | read-only |
+| curAnimOffset | `number` |  |
+| minimumBoneY | `number` |  |
 | wall | [Surface](structs.md#Surface) |  |
-| wallKickTimer | `integer` |  |
+| ceil | [Surface](structs.md#Surface) |  |
+| floor | [Surface](structs.md#Surface) |  |
+| spawnInfo | [SpawnInfo](structs.md#SpawnInfo) |  |
+| area | [Area](structs.md#Area) | read-only |
+| statusForCamera | [PlayerCameraState](structs.md#PlayerCameraState) | read-only |
+| ceilHeight | `number` |  |
+| floorHeight | `number` |  |
 | wallNormal | [Vec3f](structs.md#Vec3f) | read-only |
-| wasNetworkVisible | `integer` |  |
+| unkC4 | `number` |  |
+| floorAngle | `integer` |  |
 | waterLevel | `integer` |  |
+| currentRoom | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -1886,22 +1731,23 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| basePath | `string` | read-only |
-| category | `string` | read-only |
-| customBehaviorIndex | `integer` | read-only |
-| description | `string` | read-only |
-| enabled | `boolean` | read-only |
-| fileCapacity | `integer` | read-only |
-| fileCount | `integer` | read-only |
-| ignoreScriptWarnings | `boolean` | read-only |
-| incompatible | `string` | read-only |
-| index | `integer` | read-only |
-| isDirectory | `boolean` | read-only |
 | name | `string` | read-only |
-| pausable | `boolean` | read-only |
+| incompatible | `string` | read-only |
+| category | `string` | read-only |
+| description | `string` | read-only |
 | relativePath | `string` | read-only |
-| renderBehindHud | `boolean` | read-only |
+| basePath | `string` | read-only |
+| index | `integer` | read-only |
+| fileCount | `integer` | read-only |
+| fileCapacity | `integer` | read-only |
+| isDirectory | `boolean` | read-only |
+| enabled | `boolean` | read-only |
 | selectable | `boolean` | read-only |
+| renderBehindHud | `boolean` | read-only |
+| pausable | `boolean` | read-only |
+| ignoreScriptWarnings | `boolean` | read-only |
+| size | `integer` | read-only |
+| customBehaviorIndex | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1911,50 +1757,78 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| baseVolume | `number` |  |
-| file | [ModFile](structs.md#ModFile) |  |
+| filepath | `string` | read-only |
 | isStream | `boolean` | read-only |
+| baseVolume | `number` |  |
 | loaded | `boolean` | read-only |
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [ModAudioSampleCopies](#ModAudioSampleCopies)
+## [ModFs](#ModFs)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| next | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
-| parent | [ModAudio](structs.md#ModAudio) |  |
-| prev | [ModAudioSampleCopies](structs.md#ModAudioSampleCopies) |  |
+| mod | [Mod](structs.md#Mod) | read-only |
+| modPath | `string` | read-only |
+| numFiles | `integer` | read-only |
+| totalSize | `integer` | read-only |
+| isPublic | `boolean` | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| get_filename | [`mod_fs_get_filename`](functions-5.md#mod_fs_get_filename) |
+| get_file | [`mod_fs_get_file`](functions-5.md#mod_fs_get_file) |
+| create_file | [`mod_fs_create_file`](functions-5.md#mod_fs_create_file) |
+| move_file | [`mod_fs_move_file`](functions-5.md#mod_fs_move_file) |
+| copy_file | [`mod_fs_copy_file`](functions-5.md#mod_fs_copy_file) |
+| delete_file | [`mod_fs_delete_file`](functions-5.md#mod_fs_delete_file) |
+| clear | [`mod_fs_clear`](functions-5.md#mod_fs_clear) |
+| save | [`mod_fs_save`](functions-5.md#mod_fs_save) |
+| delete | [`mod_fs_delete`](functions-5.md#mod_fs_delete) |
+| set_public | [`mod_fs_set_public`](functions-5.md#mod_fs_set_public) |
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [ModFile](#ModFile)
+## [ModFsFile](#ModFsFile)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| cachedPath | `string` | read-only |
-| dataHash | `Array` <`integer`> | read-only |
-| relativePath | `string` | read-only |
-| wroteBytes | `integer` | read-only |
+| modFs | [ModFs](structs.md#ModFs) | read-only |
+| filepath | `string` | read-only |
+| size | `integer` | read-only |
+| offset | `integer` | read-only |
+| isText | `boolean` | read-only |
+| isPublic | `boolean` | read-only |
 
-[:arrow_up_small:](#)
+**Functions:**
 
-<br />
-
-## [ModeTransitionInfo](#ModeTransitionInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| frame | `integer` |  |
-| lastMode | `integer` |  |
-| max | `integer` |  |
-| newMode | `integer` |  |
-| transitionEnd | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
-| transitionStart | [LinearTransitionPoint](structs.md#LinearTransitionPoint) | read-only |
+| Name | Reference |
+| ---- | --------- |
+| read_bool | [`mod_fs_file_read_bool`](functions-5.md#mod_fs_file_read_bool) |
+| read_integer | [`mod_fs_file_read_integer`](functions-5.md#mod_fs_file_read_integer) |
+| read_number | [`mod_fs_file_read_number`](functions-5.md#mod_fs_file_read_number) |
+| read_bytes | [`mod_fs_file_read_bytes`](functions-5.md#mod_fs_file_read_bytes) |
+| read_string | [`mod_fs_file_read_string`](functions-5.md#mod_fs_file_read_string) |
+| read_line | [`mod_fs_file_read_line`](functions-5.md#mod_fs_file_read_line) |
+| write_bool | [`mod_fs_file_write_bool`](functions-5.md#mod_fs_file_write_bool) |
+| write_integer | [`mod_fs_file_write_integer`](functions-5.md#mod_fs_file_write_integer) |
+| write_number | [`mod_fs_file_write_number`](functions-5.md#mod_fs_file_write_number) |
+| write_bytes | [`mod_fs_file_write_bytes`](functions-5.md#mod_fs_file_write_bytes) |
+| write_string | [`mod_fs_file_write_string`](functions-5.md#mod_fs_file_write_string) |
+| write_line | [`mod_fs_file_write_line`](functions-5.md#mod_fs_file_write_line) |
+| seek | [`mod_fs_file_seek`](functions-5.md#mod_fs_file_seek) |
+| rewind | [`mod_fs_file_rewind`](functions-5.md#mod_fs_file_rewind) |
+| is_eof | [`mod_fs_file_is_eof`](functions-5.md#mod_fs_file_is_eof) |
+| fill | [`mod_fs_file_fill`](functions-5.md#mod_fs_file_fill) |
+| erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |
+| set_text_mode | [`mod_fs_file_set_text_mode`](functions-5.md#mod_fs_file_set_text_mode) |
+| set_public | [`mod_fs_file_set_public`](functions-5.md#mod_fs_file_set_public) |
 
 [:arrow_up_small:](#)
 
@@ -1976,34 +1850,34 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | connected | `boolean` | read-only |
-| currActNum | `integer` | read-only |
-| currAreaIndex | `integer` | read-only |
-| currAreaSyncValid | `boolean` | read-only |
-| currCourseNum | `integer` | read-only |
-| currLevelAreaSeqId | `integer` | read-only |
-| currLevelNum | `integer` | read-only |
-| currLevelSyncValid | `boolean` | read-only |
-| currPositionValid | `boolean` | read-only |
-| description | `string` | read-only |
-| descriptionA | `integer` | read-only |
-| descriptionB | `integer` | read-only |
-| descriptionG | `integer` | read-only |
-| descriptionR | `integer` | read-only |
-| fadeOpacity | `integer` | read-only |
+| type | `integer` | read-only |
+| localIndex | `integer` | read-only |
 | globalIndex | `integer` | read-only |
-| lastPingSent | `number` | read-only |
 | lastReceived | `number` | read-only |
 | lastSent | `number` | read-only |
-| localIndex | `integer` | read-only |
-| modelIndex | `integer` | read-only |
-| name | `string` | read-only |
+| lastPingSent | `number` | read-only |
+| currLevelAreaSeqId | `integer` | read-only |
+| currCourseNum | `integer` | read-only |
+| currActNum | `integer` | read-only |
+| currLevelNum | `integer` | read-only |
+| currAreaIndex | `integer` | read-only |
+| currLevelSyncValid | `boolean` | read-only |
+| currAreaSyncValid | `boolean` | read-only |
+| currPositionValid | `boolean` | read-only |
+| fadeOpacity | `integer` | read-only |
 | onRxSeqId | `integer` | read-only |
+| modelIndex | `integer` | read-only |
+| ping | `integer` | read-only |
+| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
+| name | `string` | read-only |
+| description | `string` | read-only |
+| descriptionR | `integer` | read-only |
+| descriptionG | `integer` | read-only |
+| descriptionB | `integer` | read-only |
+| descriptionA | `integer` | read-only |
 | overrideLocation | `string` | read-only |
 | overrideModelIndex | `integer` |  |
 | overridePalette | [PlayerPalette](structs.md#PlayerPalette) |  |
-| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
-| ping | `integer` | read-only |
-| type | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2013,39 +1887,40 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| header | [ObjectNode](structs.md#ObjectNode) | read-only |
+| prevObj | [Object](structs.md#Object) |  |
+| parentObj | [Object](structs.md#Object) |  |
+| usingObj | [Object](structs.md#Object) |  |
+| platform | [Object](structs.md#Object) |  |
+| collidedObjs | `Array` <`Object`> |  |
+| collisionData | `Pointer` <`Collision`> |  |
+| behavior | `Pointer` <`BehaviorScript`> | read-only |
+| curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
+| bhvStack | `Array` <`integer`> | read-only |
+| bhvStackIndex | `integer` | read-only |
+| bhvDelayTimer | `integer` |  |
 | activeFlags | `integer` |  |
-| allowRemoteInteractions | `integer` |  |
+| collidedObjInteractTypes | `integer` |  |
+| numCollidedObjs | `integer` |  |
+| respawnInfoType | `integer` | read-only |
+| hitboxRadius | `number` |  |
+| hitboxHeight | `number` |  |
+| hurtboxRadius | `number` |  |
+| hurtboxHeight | `number` |  |
+| hitboxDownOffset | `number` |  |
+| unused1 | `integer` |  |
 | areaTimer | `integer` |  |
 | areaTimerDuration | `integer` |  |
 | areaTimerType | [enum AreaTimerType](constants.md#enum-AreaTimerType) |  |
-| behavior | `Pointer` <`BehaviorScript`> | read-only |
-| bhvDelayTimer | `integer` |  |
-| bhvStackIndex | `integer` | read-only |
-| collidedObjInteractTypes | `integer` |  |
-| collidedObjs | `Array` <`Object`> |  |
-| collisionData | `Pointer` <`Collision`> |  |
-| coopFlags | `integer` | read-only |
-| ctx | `integer` |  |
-| curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
-| globalPlayerIndex | `integer` |  |
-| header | [ObjectNode](structs.md#ObjectNode) | read-only |
-| heldByPlayerIndex | `integer` |  |
-| hitboxDownOffset | `number` |  |
-| hitboxHeight | `number` |  |
-| hitboxRadius | `number` |  |
-| hookRender | `integer` |  |
-| hurtboxHeight | `number` |  |
-| hurtboxRadius | `number` |  |
-| numCollidedObjs | `integer` |  |
-| numSurfaces | `integer` | read-only |
-| parentObj | [Object](structs.md#Object) |  |
-| platform | [Object](structs.md#Object) |  |
-| prevObj | [Object](structs.md#Object) |  |
-| respawnInfoType | `integer` | read-only |
-| setHome | `integer` |  |
 | transform | [Mat4](structs.md#Mat4) | read-only |
-| unused1 | `integer` |  |
-| usingObj | [Object](structs.md#Object) |  |
+| numSurfaces | `integer` | read-only |
+| heldByPlayerIndex | `integer` |  |
+| setHome | `integer` |  |
+| ctx | `integer` |  |
+| allowRemoteInteractions | `integer` |  |
+| globalPlayerIndex | `integer` |  |
+| coopFlags | `integer` | read-only |
+| hookRender | `integer` |  |
 
 ### Object-Independent Data Fields
 | Field | Type | Access |
@@ -2783,7 +2658,6 @@
 | oYoshiTargetYaw | `integer` |  |
 | oBreakableWallForce | `integer` |  |
 | oLightID | `integer` |  |
-| oLightRadius | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -2793,15 +2667,15 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| damageOrCoinValue | `integer` |  |
-| downOffset | `integer` |  |
-| health | `integer` |  |
-| height | `integer` |  |
-| hurtboxHeight | `integer` |  |
-| hurtboxRadius | `integer` |  |
 | interactType | `integer` |  |
+| health | `integer` |  |
+| damageOrCoinValue | `integer` |  |
 | numLootCoins | `integer` |  |
+| downOffset | `integer` |  |
 | radius | `integer` |  |
+| height | `integer` |  |
+| hurtboxRadius | `integer` |  |
+| hurtboxHeight | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -2823,20 +2697,9 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| next | [ObjectWarpNode](structs.md#ObjectWarpNode) |  |
 | node | [WarpNode](structs.md#WarpNode) | read-only |
 | object | [Object](structs.md#Object) |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [OffsetSizePair](#OffsetSizePair)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| offset | `integer` |  |
-| size | `integer` |  |
+| next | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2846,54 +2709,42 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| alpha | `integer` |  |
-| currFloor | `integer` |  |
-| currRippleMag | `number` |  |
-| currRippleRate | `number` |  |
-| dispersionFactor | `number` |  |
-| entryDispersionFactor | `number` |  |
-| entryRippleDecay | `number` |  |
-| entryRippleMag | `number` |  |
-| entryRippleRate | `number` |  |
-| floorEntered | `integer` |  |
 | id | `integer` | read-only |
 | imageCount | `integer` | read-only |
+| textureType | `integer` | read-only |
 | lastFloor | `integer` |  |
-| marioIsUnder | `integer` |  |
-| marioWasUnder | `integer` |  |
-| marioWentUnder | `integer` |  |
-| normalDisplayList | `Pointer` <`Gfx`> | read-only |
-| passiveDispersionFactor | `number` |  |
-| passiveRippleDecay | `number` |  |
-| passiveRippleMag | `number` |  |
-| passiveRippleRate | `number` |  |
+| currFloor | `integer` |  |
+| floorEntered | `integer` |  |
+| state | `integer` |  |
 | pitch | `number` |  |
+| yaw | `number` |  |
 | posX | `number` |  |
 | posY | `number` |  |
 | posZ | `number` |  |
+| currRippleMag | `number` |  |
+| passiveRippleMag | `number` |  |
+| entryRippleMag | `number` |  |
 | rippleDecay | `number` |  |
-| rippleDisplayList | `Pointer` <`Gfx`> | read-only |
+| passiveRippleDecay | `number` |  |
+| entryRippleDecay | `number` |  |
+| currRippleRate | `number` |  |
+| passiveRippleRate | `number` |  |
+| entryRippleRate | `number` |  |
+| dispersionFactor | `number` |  |
+| passiveDispersionFactor | `number` |  |
+| entryDispersionFactor | `number` |  |
 | rippleTimer | `number` |  |
-| rippleTrigger | `integer` |  |
 | rippleX | `number` |  |
 | rippleY | `number` |  |
-| size | `number` |  |
-| state | `integer` |  |
-| textureHeight | `integer` | read-only |
-| textureType | `integer` | read-only |
+| textureArray | `Array` <`Pointer` <`Texture`>> | read-only |
 | textureWidth | `integer` | read-only |
-| yaw | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [PaintingMeshVertex](#PaintingMeshVertex)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| norm | `Array` <`integer`> |  |
-| pos | `Array` <`integer`> |  |
+| textureHeight | `integer` | read-only |
+| rippleTrigger | `integer` |  |
+| alpha | `integer` |  |
+| marioWasUnder | `integer` |  |
+| marioIsUnder | `integer` |  |
+| marioWentUnder | `integer` |  |
+| size | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -2903,35 +2754,22 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| cotmc_painting | [Painting](structs.md#Painting) |  |
 | bob_painting | [Painting](structs.md#Painting) |  |
 | ccm_painting | [Painting](structs.md#Painting) |  |
-| cotmc_painting | [Painting](structs.md#Painting) |  |
-| ddd_painting | [Painting](structs.md#Painting) |  |
-| hmc_painting | [Painting](structs.md#Painting) |  |
+| wf_painting | [Painting](structs.md#Painting) |  |
 | jrb_painting | [Painting](structs.md#Painting) |  |
 | lll_painting | [Painting](structs.md#Painting) |  |
-| sl_painting | [Painting](structs.md#Painting) |  |
 | ssl_painting | [Painting](structs.md#Painting) |  |
-| thi_huge_painting | [Painting](structs.md#Painting) |  |
-| thi_tiny_painting | [Painting](structs.md#Painting) |  |
-| ttc_painting | [Painting](structs.md#Painting) |  |
-| ttm_painting | [Painting](structs.md#Painting) |  |
-| ttm_slide_painting | [Painting](structs.md#Painting) |  |
+| hmc_painting | [Painting](structs.md#Painting) |  |
+| ddd_painting | [Painting](structs.md#Painting) |  |
 | wdw_painting | [Painting](structs.md#Painting) |  |
-| wf_painting | [Painting](structs.md#Painting) |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [ParallelTrackingPoint](#ParallelTrackingPoint)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| distThresh | `number` |  |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
-| startOfPath | `integer` |  |
-| zoom | `number` |  |
+| thi_tiny_painting | [Painting](structs.md#Painting) |  |
+| ttm_painting | [Painting](structs.md#Painting) |  |
+| ttc_painting | [Painting](structs.md#Painting) |  |
+| sl_painting | [Painting](structs.md#Painting) |  |
+| thi_huge_painting | [Painting](structs.md#Painting) |  |
+| ttm_slide_painting | [Painting](structs.md#Painting) |  |
 
 [:arrow_up_small:](#)
 
@@ -2942,34 +2780,12 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | action | `integer` |  |
-| cameraEvent | `integer` |  |
+| pos | [Vec3f](structs.md#Vec3f) | read-only |
 | faceAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | headRotation | [Vec3s](structs.md#Vec3s) | read-only |
-| pos | [Vec3f](structs.md#Vec3f) | read-only |
 | unused | `integer` |  |
+| cameraEvent | `integer` |  |
 | usedObj | [Object](structs.md#Object) |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [PlayerGeometry](#PlayerGeometry)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| currCeil | [Surface](structs.md#Surface) |  |
-| currCeilHeight | `number` |  |
-| currCeilType | `integer` |  |
-| currFloor | [Surface](structs.md#Surface) |  |
-| currFloorHeight | `number` |  |
-| currFloorType | `integer` |  |
-| prevCeil | [Surface](structs.md#Surface) |  |
-| prevCeilHeight | `number` |  |
-| prevCeilType | `integer` |  |
-| prevFloor | [Surface](structs.md#Surface) |  |
-| prevFloorHeight | `number` |  |
-| prevFloorType | `integer` |  |
-| waterHeight | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -2979,6 +2795,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| parts | `Array` <`Color`> | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2988,8 +2805,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| hitPos | [Vec3f](structs.md#Vec3f) | read-only |
 | surface | [Surface](structs.md#Surface) |  |
+| hitPos | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2999,16 +2816,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| centering | `integer` |  |
-| collisions | `integer` |  |
-| dpad | `integer` |  |
 | enable | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |  |
-| modsOnly | `integer` |  |
+| centering | `integer` |  |
+| dpad | `integer` |  |
+| collisions | `integer` |  |
 | slowFall | `integer` |  |
 | zoomedInDist | `integer` |  |
-| zoomedInHeight | `integer` |  |
 | zoomedOutDist | `integer` |  |
+| zoomedInHeight | `integer` |  |
 | zoomedOutHeight | `integer` |  |
+| modsOnly | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3018,32 +2835,19 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| bouncyLevelBounds | [enum BouncyLevelBounds](constants.md#enum-BouncyLevelBounds) |  |
-| bubbleDeath | `integer` |  |
-| enablePlayerList | `integer` |  |
-| enablePlayersInLevelDisplay | `integer` |  |
-| headlessServer | `integer` |  |
-| maxPlayers | `integer` |  |
-| nametags | `integer` |  |
-| pauseAnywhere | `integer` |  |
 | playerInteractions | [enum PlayerInteractions](constants.md#enum-PlayerInteractions) |  |
-| playerKnockbackStrength | `integer` |  |
+| bouncyLevelBounds | [enum BouncyLevelBounds](constants.md#enum-BouncyLevelBounds) |  |
 | pvpType | [enum PvpType](constants.md#enum-PvpType) |  |
-| skipIntro | `integer` |  |
+| playerKnockbackStrength | `integer` |  |
 | stayInLevelAfterStar | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [SoundState](#SoundState)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| animFrame1 | `integer` |  |
-| animFrame2 | `integer` |  |
-| playSound | `integer` |  |
-| soundMagic | `integer` |  |
+| skipIntro | `integer` |  |
+| bubbleDeath | `integer` |  |
+| enablePlayersInLevelDisplay | `integer` |  |
+| enablePlayerList | `integer` |  |
+| headlessServer | `integer` |  |
+| nametags | `integer` |  |
+| maxPlayers | `integer` |  |
+| pauseAnywhere | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3053,14 +2857,14 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| activeAreaIndex | `integer` |  |
-| areaIndex | `integer` |  |
-| behaviorArg | `integer` |  |
-| next | [SpawnInfo](structs.md#SpawnInfo) | read-only |
-| startAngle | [Vec3s](structs.md#Vec3s) | read-only |
 | startPos | [Vec3s](structs.md#Vec3s) | read-only |
-| syncID | `integer` | read-only |
+| startAngle | [Vec3s](structs.md#Vec3s) | read-only |
+| areaIndex | `integer` |  |
+| activeAreaIndex | `integer` |  |
+| behaviorArg | `integer` |  |
 | unk18 | [GraphNode](structs.md#GraphNode) | read-only |
+| next | [SpawnInfo](structs.md#SpawnInfo) | read-only |
+| syncID | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -3072,16 +2876,16 @@
 | ----- | ---- | ------ |
 | behParam | `integer` |  |
 | count | `integer` |  |
-| dragStrength | `integer` |  |
-| forwardVelBase | `integer` |  |
-| forwardVelRange | `integer` |  |
-| gravity | `integer` |  |
 | model | `integer` | read-only |
 | offsetY | `integer` |  |
-| sizeBase | `number` |  |
-| sizeRange | `number` |  |
+| forwardVelBase | `integer` |  |
+| forwardVelRange | `integer` |  |
 | velYBase | `integer` |  |
 | velYRange | `integer` |  |
+| gravity | `integer` |  |
+| dragStrength | `integer` |  |
+| sizeBase | `number` |  |
+| sizeRange | `number` |  |
 
 [:arrow_up_small:](#)
 
@@ -3091,32 +2895,32 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| BalconyBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| BigBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| BigBullyTrioStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| BigPiranhasStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| CcmSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| ChillBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| EyerockStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| GhostHuntBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| JetstreamRingStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| KingBobombStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| KingWhompStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| KleptoStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | KoopaBobStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | KoopaThiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| MantaRayStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| MerryGoRoundStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| MrIStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingBobombStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KingWhompStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| EyerockStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| ChillBullyStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigPiranhasStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TuxieMotherStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| WigglerStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | PssSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | RacingPenguinStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| SnowmanHeadStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| TreasureChestStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | TreasureJrbStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| TuxieMotherStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| TreasureChestStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| GhostHuntBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| KleptoStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MerryGoRoundStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MrIStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BalconyBooStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| BigBullyTrioStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| MantaRayStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| SnowmanHeadStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| CcmSlideStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | UkikiCageStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 | UnagiStarPos | [Vec3f](structs.md#Vec3f) | read-only |
-| WigglerStarPos | [Vec3f](structs.md#Vec3f) | read-only |
+| JetstreamRingStarPos | [Vec3f](structs.md#Vec3f) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -3137,26 +2941,37 @@
 
 <br />
 
+## [StaticObjectCollision](#StaticObjectCollision)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| index | `integer` | read-only |
+| length | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Surface](#Surface)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| type | `integer` |  |
 | flags | `integer` |  |
+| room | `integer` |  |
 | force | `integer` |  |
 | lowerY | `integer` |  |
-| modifiedTimestamp | `integer` |  |
-| normal | [Vec3f](structs.md#Vec3f) | read-only |
-| object | [Object](structs.md#Object) |  |
-| originOffset | `number` |  |
-| prevVertex1 | [Vec3s](structs.md#Vec3s) | read-only |
-| prevVertex2 | [Vec3s](structs.md#Vec3s) | read-only |
-| prevVertex3 | [Vec3s](structs.md#Vec3s) | read-only |
-| room | `integer` |  |
-| type | `integer` |  |
 | upperY | `integer` |  |
 | vertex1 | [Vec3s](structs.md#Vec3s) | read-only |
 | vertex2 | [Vec3s](structs.md#Vec3s) | read-only |
 | vertex3 | [Vec3s](structs.md#Vec3s) | read-only |
+| prevVertex1 | [Vec3s](structs.md#Vec3s) | read-only |
+| prevVertex2 | [Vec3s](structs.md#Vec3s) | read-only |
+| prevVertex3 | [Vec3s](structs.md#Vec3s) | read-only |
+| normal | [Vec3f](structs.md#Vec3f) | read-only |
+| originOffset | `number` |  |
+| modifiedTimestamp | `integer` |  |
+| object | [Object](structs.md#Object) |  |
 
 [:arrow_up_small:](#)
 
@@ -3166,29 +2981,12 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| bitSize | `integer` | read-only |
-| height | `integer` | read-only |
+| texture | `Pointer` <`Texture`> | read-only |
 | name | `string` | read-only |
-| texture | `Pointer` <`integer`> | read-only |
 | width | `integer` | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [TransitionInfo](#TransitionInfo)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| focDist | `number` |  |
-| focPitch | `integer` |  |
-| focYaw | `integer` |  |
-| framesLeft | `integer` |  |
-| marioPos | [Vec3f](structs.md#Vec3f) | read-only |
-| pad | `integer` |  |
-| posDist | `number` |  |
-| posPitch | `integer` |  |
-| posYaw | `integer` |  |
+| height | `integer` | read-only |
+| format | `integer` | read-only |
+| size | `integer` | read-only |
 
 [:arrow_up_small:](#)
 
@@ -3306,30 +3104,19 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| a | `integer` |  |
-| b | `integer` |  |
-| flag | `integer` |  |
-| g | `integer` |  |
-| nx | `integer` |  |
-| ny | `integer` |  |
-| nz | `integer` |  |
-| r | `integer` |  |
-| tu | `integer` |  |
-| tv | `integer` |  |
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [Vtx_Interp](#Vtx_Interp)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| n | `string` |  |
-| ob | `Array` <`number`> |  |
+| flag | `integer` |  |
+| tu | `integer` |  |
+| tv | `integer` |  |
+| r | `integer` |  |
+| nx | `integer` |  |
+| g | `integer` |  |
+| ny | `integer` |  |
+| b | `integer` |  |
+| nz | `integer` |  |
+| a | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3339,16 +3126,16 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| normalAddition | [Vec3f](structs.md#Vec3f) | read-only |
-| normalCount | `integer` |  |
-| numWalls | `integer` |  |
-| offsetY | `number` |  |
-| radius | `number` |  |
-| unused | `integer` |  |
-| walls | `Array` <`Surface`> |  |
 | x | `number` |  |
 | y | `number` |  |
 | z | `number` |  |
+| offsetY | `number` |  |
+| radius | `number` |  |
+| unused | `integer` |  |
+| numWalls | `integer` |  |
+| walls | `Array` <`Surface`> |  |
+| normalAddition | [Vec3f](structs.md#Vec3f) | read-only |
+| normalCount | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3358,43 +3145,10 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| destArea | `integer` |  |
-| destLevel | `integer` |  |
-| destNode | `integer` |  |
 | id | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [WarpTransition](#WarpTransition)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| data | [WarpTransitionData](structs.md#WarpTransitionData) | read-only |
-| isActive | `integer` |  |
-| pauseRendering | `integer` |  |
-| time | `integer` |  |
-| type | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [WarpTransitionData](#WarpTransitionData)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| blue | `integer` |  |
-| endTexRadius | `integer` |  |
-| endTexX | `integer` |  |
-| endTexY | `integer` |  |
-| green | `integer` |  |
-| red | `integer` |  |
-| startTexRadius | `integer` |  |
-| startTexX | `integer` |  |
-| startTexY | `integer` |  |
-| texTimer | `integer` |  |
+| destLevel | `integer` |  |
+| destArea | `integer` |  |
+| destNode | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3404,17 +3158,17 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| behavior | `Pointer` <`BehaviorScript`> | read-only |
 | flags | `integer` |  |
-| model | `integer` |  |
+| model | `integer` | read-only |
+| behavior | `Pointer` <`BehaviorScript`> | read-only |
 | moveAngleRange | `integer` |  |
 | moveRange | `integer` |  |
 | randForwardVelOffset | `number` |  |
 | randForwardVelScale | `number` |  |
-| randSizeOffset | `number` |  |
-| randSizeScale | `number` |  |
 | randYVelOffset | `number` |  |
 | randYVelScale | `number` |  |
+| randSizeOffset | `number` |  |
+| randSizeScale | `number` |  |
 
 [:arrow_up_small:](#)
 

@@ -6,12 +6,12 @@
 #include "game/object_list_processor.h"
 
 /* |description|
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
 struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
 /* |description|
-Spawns a synchronized object in at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
 struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
@@ -43,9 +43,9 @@ struct Object *get_cutscene_focus(void);
 /* |description|Gets the secondary camera focus object|descriptionEnd| */
 struct Object *get_secondary_camera_focus(void);
 /* |description|Sets the cutscene focus object|descriptionEnd| */
-void *set_cutscene_focus(struct Object *o);
+void set_cutscene_focus(struct Object *o);
 /* |description|Sets the secondary camera focus object|descriptionEnd| */
-void *set_secondary_camera_focus(struct Object *o);
+void set_secondary_camera_focus(struct Object *o);
 
 //
 // Helpers to iterate through the object table
@@ -118,6 +118,8 @@ void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 
 
 /* |description|Returns a temporary particle spawn info pointer with its model loaded in from `modelId`|descriptionEnd| */
 struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);
+/* |description|Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`|descriptionEnd| */
+struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);
 /* |description|Returns a temporary object hitbox pointer|descriptionEnd| */
 struct ObjectHitbox* get_temp_object_hitbox(void);
 

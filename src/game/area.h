@@ -79,9 +79,9 @@ struct Area
     /*0x24*/ struct Camera *camera;
     /*0x28*/ struct UnusedArea28 *unused28; // Filled by level script 0x3A, but is unused.
     /*0x2C*/ struct Whirlpool *whirlpools[2];
-    /*0x34*/ u8 dialog[2]; // Level start dialog number (set by level script cmd 0x30)
-    /*0x36*/ u16 musicParam;
-    /*0x38*/ u16 musicParam2;
+    /*0x34*/ s32 dialog[2]; // Level start dialog number (set by level script cmd 0x30 and 0x44)
+    /*0x3C*/ u16 musicParam;
+    /*0x40*/ u16 musicParam2;
     /*????*/ u32 localAreaTimer;
     /*????*/ u8 *macroObjectsAltered;
     /*????*/ u8 numRedCoins;

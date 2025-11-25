@@ -148,7 +148,7 @@ struct DjuiPaginated* djui_paginated_create(struct DjuiBase* parent, u32 showCou
 
     djui_base_init(parent, base, djui_paginated_render, djui_paginated_destroy);
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 1.0, bodyHeight);
+    djui_base_set_size(base, 1.0f, bodyHeight);
     djui_base_set_color(base, 0, 64, 0, 0);
     djui_base_set_alignment(base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
 

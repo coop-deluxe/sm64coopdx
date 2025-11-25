@@ -12,6 +12,7 @@
 #include "main.h"
 #include "engine/math_util.h"
 #include "engine/graph_node.h"
+#include "rendering_graph_node.h"
 #include "area.h"
 #include "save_file.h"
 #include "sound_init.h"
@@ -248,13 +249,13 @@ u16 level_control_timer(s32 timerOp) {
     return gHudDisplay.timer;
 }
 
-u32 pressed_pause(void) {
+bool pressed_pause(void) {
     if (gServerSettings.pauseAnywhere) {
-        if (get_dialog_id() < 0 && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
+        if (get_dialog_id() == DIALOG_NONE && sCurrPlayMode == PLAY_MODE_NORMAL && sDelayedWarpOp == WARP_OP_NONE) {
             return gPlayer1Controller->buttonPressed & START_BUTTON;
         }
     } else {
-        u32 dialogActive = get_dialog_id() >= 0;
+        u32 dialogActive = get_dialog_id() != DIALOG_NONE;
         u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
         u32 firstPerson = gMarioState->action == ACT_FIRST_PERSON;
 
@@ -263,7 +264,7 @@ u32 pressed_pause(void) {
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 void set_play_mode(s16 playMode) {
@@ -299,7 +300,7 @@ void stub_level_update_1(void) {
 
 void load_level_init_text(u32 arg) {
     s32 gotAchievement;
-    u32 dialogID = gCurrentArea->dialog[arg];
+    s32 dialogID = gCurrentArea->dialog[arg];
 
     if (dialogID == gBehaviorValues.dialogs.VanishCourseDialog) {
         gotAchievement = save_file_get_flags() & SAVE_FLAG_HAVE_VANISH_CAP;
@@ -504,11 +505,15 @@ void init_mario_after_warp(void) {
         }
 
         if (gMarioState->flags & MARIO_METAL_CAP) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.metalCapSequence));
         }
 
-        if (gMarioState->flags & (MARIO_VANISH_CAP | MARIO_WING_CAP)) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+        if (gMarioState->flags & MARIO_VANISH_CAP) {
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence));
+        }
+
+        if (gMarioState->flags & MARIO_WING_CAP) {
+            play_cap_music(SEQUENCE_ARGS(4, gLevelValues.wingCapSequence));
         }
 
 #ifndef VERSION_JP
@@ -548,7 +553,7 @@ void init_mario_after_warp(void) {
         gMarioState->skipWarpInteractionsTimer = 30;
     }
 
-    smlua_call_event_hooks_warp_params(HOOK_ON_WARP, warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks(HOOK_ON_WARP, warpType, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 }
 
 // used for warps inside one level
@@ -686,7 +691,7 @@ void check_instant_warp(void) {
                 skip_camera_interpolation();
                 gMarioStates[0].area->camera->yaw = cameraAngle;
 
-                smlua_call_event_hooks_instant_warp_params(HOOK_ON_INSTANT_WARP, warp->area, warp->id, warp->displacement);
+                smlua_call_event_hooks(HOOK_ON_INSTANT_WARP, warp->area, warp->id, warp->displacement);
 
                 return;
             }
@@ -708,12 +713,14 @@ s16 music_changed_through_warp(s16 arg) {
 
     s16 destArea = warpNode->node.destArea;
     s16 val4 = TRUE;
-    s16 sp2C;
+    u16 sp2C;
 
     if (levelNum == LEVEL_BOB && levelNum == gCurrLevelNum && destArea == gCurrAreaIndex) {
         sp2C = get_current_background_music();
-        if (sp2C == SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP | SEQ_VARIATION)
-            || sp2C == SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP)) {
+        if (sp2C == SEQUENCE_ARGS(4, gLevelValues.wingCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.vanishCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.metalCapSequence) ||
+            sp2C == SEQUENCE_ARGS(4, gLevelValues.shellSequence)) {
             val4 = 0;
         }
     } else {
@@ -749,8 +756,16 @@ s16 music_changed_through_warp(s16 arg) {
  * Set the current warp type and destination level/area/node.
  */
 void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg) {
-
-    smlua_call_event_hooks_before_warp(HOOK_BEFORE_WARP, &destLevel, &destArea, &destWarpNode, &arg);
+    struct WarpDest warpDestOverride = {
+        .levelNum = destLevel,
+        .areaIdx = destArea,
+        .nodeId = destWarpNode,
+    };
+    if (smlua_call_event_hooks(HOOK_BEFORE_WARP, destLevel, destArea, destWarpNode, arg, &warpDestOverride)) {
+        destLevel = warpDestOverride.levelNum;
+        destArea = warpDestOverride.areaIdx;
+        destWarpNode = warpDestOverride.nodeId;
+    }
 
     if (destWarpNode >= WARP_NODE_CREDITS_MIN) {
         sWarpDest.type = WARP_TYPE_CHANGE_LEVEL;
@@ -1741,6 +1756,7 @@ s32 update_level(void) {
 
 s32 init_level(void) {
     sync_objects_clear();
+    geo_clear_interp_data();
     reset_dialog_render_state();
 
     s32 val4 = 0;
@@ -1844,7 +1860,7 @@ s32 init_level(void) {
     if (gNetworkPlayerLocal != NULL) {
         network_player_update_course_level(gNetworkPlayerLocal, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex);
     }
-    smlua_call_event_hooks_warp_params(HOOK_ON_LEVEL_INIT, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
+    smlua_call_event_hooks(HOOK_ON_LEVEL_INIT, sWarpDest.type, sWarpDest.levelNum, sWarpDest.areaIdx, sWarpDest.nodeId, sWarpDest.arg);
 
     // clear texture 1 on level init -- can linger and corrupt textures otherwise
     extern u8 gGfxPcResetTex1;
@@ -1926,9 +1942,8 @@ s32 lvl_set_current_level(s16 param, s16 levelNum) {
     gCurrLevelNum = level;
     gCurrCourseNum = get_level_course_num(level);
 
-    bool foundHook = false;
     bool hookUseActSelect = false;
-    smlua_call_event_hooks_use_act_select(HOOK_USE_ACT_SELECT, level, &foundHook, &hookUseActSelect);
+    bool foundHook = smlua_call_event_hooks(HOOK_USE_ACT_SELECT, level, &hookUseActSelect);
 
     if (!foundHook || !hookUseActSelect) {
         if (gCurrDemoInput != NULL || gCurrCreditsEntry != NULL || gCurrCourseNum == COURSE_NONE) {

@@ -23,7 +23,7 @@ void bhv_heave_ho_throw_mario_loop(void) {
                 if (player) {
                     player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
                 }
-                if (marioState) {
+                if (marioState && marioState->action == ACT_GRABBED) {
                     marioState->forwardVel = -45.0f;
                     marioState->vel[1] = 95.0f;
                 }

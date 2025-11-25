@@ -38,6 +38,7 @@
 #include "level_info.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "menu/ingame_text.h"
+#include "pc/dialog_table.h"
 
 u16 gDialogColorFadeTimer;
 s8 gLastDialogLineNum;
@@ -128,7 +129,7 @@ f32 gDialogBoxOpenTimer = DEFAULT_DIALOG_BOX_ANGLE;
 f32 gDialogBoxScale = DEFAULT_DIALOG_BOX_SCALE;
 s16 gDialogScrollOffsetY = 0;
 s8 gDialogBoxType = DIALOG_TYPE_ROTATE;
-s16 gDialogID = -1;
+s32 gDialogID = DIALOG_NONE;
 s16 gLastDialogPageStrPos = 0;
 s16 gDialogTextPos = 0;
 #ifdef VERSION_EU
@@ -139,6 +140,8 @@ s8 gLastDialogResponse = 0;
 u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = 0;
+
+bool gPauseMenuHidden = false;
 
 #if defined(VERSION_JP) || defined(VERSION_SH) || defined(VERSION_EU)
 #ifdef VERSION_EU
@@ -448,86 +451,6 @@ void render_multi_text_string(s16 *xPos, s16 *yPos, s8 multiTextID)
 }
 #endif
 
-u8 str_ascii_char_to_dialog(char c) {
-    switch (c) {
-        case '/': return 0xD0;
-        case '>': return 0x53;
-        case '<': return 0x52;
-        case '|': return 0x51;
-        case '^': return 0x50;
-        case '\n': return 0xFE;
-        case '$': return 0xF9;
-        case '~': return 0xF7;
-        case '?': return 0xF4;
-        case '%': return 0xF3;
-        case '!': return 0xF2;
-        case ':': return 0xE6;
-        case '&': return 0xE5;
-        case '+': return 0xE4;
-        case ')': return 0xE3;
-        case '(': return 0xE1;
-        case '-': return 0x9F;
-        case ' ': return 0x9E;
-        case ',': return 0x6F;
-        case '.': return 0x3F;
-        case '@': return 0xFA;
-        case '*': return 0xFB;
-        case '=': return 0xFD;
-        case '\'': return 0x3E;
-        case '\0': return DIALOG_CHAR_TERMINATOR;
-        default:   return ((u8)c < 0xF0) ? ASCII_TO_DIALOG(c) : c;
-    }
-}
-
-void str_ascii_to_dialog(const char* string, u8* dialog, u16 length) {
-    const char* c = string;
-    u8* d = dialog;
-    u16 converted = 0;
-
-    while (*c != '\0' && converted < (length - 1)) {
-        if (!strncmp(c, "you", 3) && (c[3] < 'a' || c[3] > 'z')) {
-            *d = 0xD2;
-            c += 2;
-        } else if (!strncmp(c, "the", 3) && (c[3] < 'a' || c[3] > 'z')) {
-            *d = 0xD1;
-            c += 2;
-        } else if (!strncmp(c, "[R]", 3)) {
-            *d = 0x58;
-            c += 2;
-        } else if (!strncmp(c, "[Z]", 3)) {
-            *d = 0x57;
-            c += 2;
-        } else if (!strncmp(c, "[C]", 3)) {
-            *d = 0x56;
-            c += 2;
-        } else if (!strncmp(c, "[B]", 3)) {
-            *d = 0x55;
-            c += 2;
-        } else if (!strncmp(c, "[A]", 3)) {
-            *d = 0x54;
-            c += 2;
-        } else if (!strncmp(c, "[Z]", 3)) {
-            *d = 0x57;
-            c += 2;
-        } else if (!strncmp(c, ")(", 2)) {
-            *d = 0xE2;
-            c += 1;
-        } else if (!strncmp(c, "[%]", 3)) {
-            *d = 0xE0;
-            c += 2;
-        } else if (!strncmp(c, "★", 2)) {
-            *d = 0xFA;
-            c += 2;
-        } else {
-            *d = str_ascii_char_to_dialog(*c);
-        }
-        d++;
-        c++;
-        converted++;
-    }
-    *d = DIALOG_CHAR_TERMINATOR;
-}
-
 f32 get_generic_dialog_width(u8* dialog) {
 #ifdef VERSION_JP
     return 0;
@@ -550,9 +473,10 @@ f32 get_generic_dialog_width(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_width(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
-    return get_generic_dialog_width(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 width = get_generic_dialog_width(str);
+    free(str);
+    return width;
 }
 
 f32 get_generic_dialog_height(u8* dialog) {
@@ -566,15 +490,16 @@ f32 get_generic_dialog_height(u8* dialog) {
 }
 
 f32 get_generic_ascii_string_height(const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
-    return get_generic_dialog_height(dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    f32 height = get_generic_dialog_height(str);
+    free(str);
+    return height;
 }
 
 void print_generic_ascii_string(s16 x, s16 y, const char* ascii) {
-    u8 dialog[256] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog(ascii, dialog, strlen(ascii));
-    print_generic_string(x, y, dialog);
+    u8 *str = convert_string_ascii_to_sm64(NULL, ascii, false);
+    print_generic_string(x, y, str);
+    free(str);
 }
 
 #if defined(VERSION_JP) || defined(VERSION_SH)
@@ -1105,24 +1030,24 @@ void int_to_str(s32 num, u8 *dst) {
     dst[pos] = DIALOG_CHAR_TERMINATOR;
 }
 
-s16 get_dialog_id(void) {
+s32 get_dialog_id(void) {
     return gDialogID;
 }
 
-void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
+void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
     // King Bob-omb (Start), Whomp (Start), King Bob-omb (throw him out), Eyerock (Start), Wiggler (Start)
-    s16 dialogBossStart[] = { 17, 114, 128, 117, 150 };
+    enum DialogId dialogBossStart[] = { DIALOG_017, DIALOG_114, DIALOG_128, DIALOG_117, DIALOG_150 };
     // Koopa the Quick (BOB), Koopa the Quick (THI), Penguin Race, Fat Penguin Race (120 stars)
-    s16 dialogRaceSound[] = { 5, 9, 55, 164 };
+    enum DialogId dialogRaceSound[] = { DIALOG_005, DIALOG_009, DIALOG_055, DIALOG_164 };
     // Red Switch, Green Switch, Blue Switch, 100 coins star, Bowser Red Coin Star
-    s16 dialogStarSound[] = { 10, 11, 12, 13, 14 };
+    enum DialogId dialogStarSound[] = { DIALOG_010, DIALOG_011, DIALOG_012, DIALOG_013, DIALOG_014 };
     // King Bob-omb (Start), Whomp (Defeated), King Bob-omb (Defeated, missing in JP), Eyerock (Defeated), Wiggler (Defeated)
 #if BUGFIX_KING_BOB_OMB_FADE_MUSIC
-    s16 dialogBossStop[] = { 17, 115, 116, 118, 152 };
+    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_116, DIALOG_118, DIALOG_152 };
 #else
     //! @bug JP misses King Bob-omb defeated dialog "116", meaning that the boss music will still
     //! play after King Bob-omb is defeated until BOB loads it's music after the star cutscene
-    s16 dialogBossStop[] = { 17, 115, 118, 152 };
+    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_118, DIALOG_152 };
 #endif
     s16 i;
 
@@ -1156,45 +1081,50 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
     }
 }
 
-static u8 sHookString[255];
-static bool sOverrideDialogString = false;
-void convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu);
-bool handle_dialog_hook(s16 dialogId) {
-    bool open = false;
-    const char *str = smlua_call_event_hooks_int_ret_bool_and_string(HOOK_ON_DIALOG, dialogId, &open);
-    if (!open) {
+static u8 *sOverrideDialogHookString = NULL;
+
+bool handle_dialog_hook(s32 dialogId) {
+    bool openDialogBox = true;
+    const char *dialogTextOverride = NULL;
+    smlua_call_event_hooks(HOOK_ON_DIALOG, dialogId, &openDialogBox, &dialogTextOverride);
+    if (!openDialogBox) {
         if (gCamera->cutscene == CUTSCENE_READ_MESSAGE) { gCamera->cutscene = 0; }
         return false;
     }
-    sOverrideDialogString = str != NULL;
-    if (sOverrideDialogString) { convert_string_ascii_to_sm64(sHookString, str, false); }
+
+    free(sOverrideDialogHookString);
+    if (dialogTextOverride != NULL) {
+        sOverrideDialogHookString = convert_string_ascii_to_sm64(NULL, dialogTextOverride, false);
+    } else {
+        sOverrideDialogHookString = NULL;
+    }
     return true;
 }
 
-void create_dialog_box(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
-void create_dialog_box_with_var(s16 dialog, s32 dialogVar) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box_with_var(s32 dialog, s32 dialogVar) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogVariable = dialogVar;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
     }
 }
 
-void create_dialog_inverted_box(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_inverted_box(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ZOOM;
     }
 }
 
-void create_dialog_box_with_response(s16 dialog) {
-    if (handle_dialog_hook(dialog) && gDialogID == -1) {
+void create_dialog_box_with_response(s32 dialog) {
+    if (handle_dialog_hook(dialog) && gDialogID == DIALOG_NONE) {
         gDialogID = dialog;
         gDialogBoxType = DIALOG_TYPE_ROTATE;
         gLastDialogResponse = 1;
@@ -1211,7 +1141,7 @@ void reset_dialog_render_state(void) {
     gDialogBoxScale = 19.0f;
     gDialogBoxOpenTimer = 90.0f;
     gDialogBoxState = DIALOG_STATE_OPENING;
-    gDialogID = -1;
+    gDialogID = DIALOG_NONE;
     gDialogTextPos = 0;
     gLastDialogResponse = 0;
     gLastDialogPageStrPos = 0;
@@ -1521,7 +1451,7 @@ void handle_dialog_text_and_pages(s8 colorMode, struct DialogEntry *dialog, s8 l
 
     u8 strChar;
 
-    u8 *str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    u8 *str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : segmented_to_virtual(dialog->str);
     s8 lineNum = 1;
 
     s8 totalLines;
@@ -1956,36 +1886,14 @@ void render_dialog_entries(void) {
 #ifdef VERSION_EU
     s8 lowerBound = 0;
 #endif
-    void **dialogTable;
-    struct DialogEntry *dialog;
+
 #if defined(VERSION_US) || defined(VERSION_SH)
     s8 lowerBound = 0;
 #endif
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    if (gDialogID >= DIALOG_COUNT || gDialogID < 0) {
-        gDialogID = -1;
-        return;
-    }
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    // if the dialog entry is invalid, set the ID to -1.
-    if (segmented_to_virtual(NULL) == dialog) {
-        gDialogID = -1;
+    if (dialog == NULL) {
+        gDialogID = DIALOG_NONE;
         return;
     }
 
@@ -2063,7 +1971,7 @@ void render_dialog_entries(void) {
 
             if (gDialogBoxOpenTimer == DEFAULT_DIALOG_BOX_ANGLE) {
                 gDialogBoxState = DIALOG_STATE_OPENING;
-                gDialogID = -1;
+                gDialogID = DIALOG_NONE;
                 gDialogTextPos = 0;
                 gLastDialogResponse = 0;
                 gLastDialogPageStrPos = 0;
@@ -2277,28 +2185,9 @@ void do_cutscene_handler(void) {
 
 // "Dear Mario" message handler
 void print_peach_letter_message(void) {
-    void **dialogTable;
-    struct DialogEntry *dialog;
-    u8 *str;
-#ifdef VERSION_EU
-    gInGameLanguage = eu_get_language();
-    switch (gInGameLanguage) {
-        case LANGUAGE_ENGLISH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_en);
-            break;
-        case LANGUAGE_FRENCH:
-            dialogTable = segmented_to_virtual(dialog_table_eu_fr);
-            break;
-        case LANGUAGE_GERMAN:
-            dialogTable = segmented_to_virtual(dialog_table_eu_de);
-            break;
-    }
-#else
-    dialogTable = segmented_to_virtual(seg2_dialog_table);
-#endif
-    dialog = segmented_to_virtual(dialogTable[gDialogID]);
+    struct DialogEntry *dialog = dialog_table_get(gDialogID);
 
-    str = sOverrideDialogString ? sHookString : segmented_to_virtual(dialog->str);
+    const u8* str = sOverrideDialogHookString != NULL ? sOverrideDialogHookString : dialog->str;
 
     create_dl_translation_matrix(MENU_MTX_PUSH, 97.0f, 118.0f, 0);
 
@@ -2339,7 +2228,7 @@ void print_peach_letter_message(void) {
     if (gCutsceneMsgTimer > (PEACH_MESSAGE_TIMER + 20)) {
         gCutsceneMsgIndex = -1;
         gCutsceneMsgFade = 0; //! uselessly reset since the next execution will just set it to 0 again.
-        gDialogID = -1;
+        gDialogID = DIALOG_NONE;
         gCutsceneMsgTimer = 0;
         return; // return to avoid incrementing the timer
     }
@@ -2636,7 +2525,7 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 
 void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
     u8 TEXT_EXIT_TO_CASTLE[16] = { DIALOG_CHAR_TERMINATOR };
-    str_ascii_to_dialog("EXIT TO CASTLE", TEXT_EXIT_TO_CASTLE, 15);
+    convert_string_ascii_to_sm64(TEXT_EXIT_TO_CASTLE, "EXIT TO CASTLE", false);
 
 #ifdef VERSION_EU
     u8 textContinue[][10] = {
@@ -3088,7 +2977,7 @@ s16 render_pause_courses_and_castle(void) {
             }
             break;
         case DIALOG_STATE_VERTICAL:
-            if (!gDjuiPanelPauseCreated) {
+            if (!gDjuiPanelPauseCreated && !gPauseMenuHidden) {
                 shade_screen();
                 render_pause_my_score_coins();
                 render_pause_red_coins();
@@ -3107,7 +2996,7 @@ s16 render_pause_courses_and_castle(void) {
                 {
                     bool allowExit = true;
                     if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        smlua_call_event_hooks_bool_param_ret_bool(HOOK_ON_PAUSE_EXIT, (gDialogLineNum == 3), &allowExit);
+                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, gDialogLineNum == 3, &allowExit);
                     }
                     if (allowExit) {
                         level_set_transition(0, NULL);
@@ -3129,7 +3018,7 @@ s16 render_pause_courses_and_castle(void) {
             }
             break;
         case DIALOG_STATE_HORIZONTAL:
-            if (!gDjuiPanelPauseCreated) {
+            if (!gDjuiPanelPauseCreated && !gPauseMenuHidden) {
                 shade_screen();
                 print_hud_pause_colorful_str();
 
@@ -3166,6 +3055,9 @@ s16 render_pause_courses_and_castle(void) {
     if (gDjuiPanelPauseCreated && !gDjuiInPlayerMenu) { shade_screen(); }
     if (gPlayer1Controller->buttonPressed & R_TRIG) {
         djui_panel_pause_create(NULL);
+    }
+    if ((gPlayer1Controller->buttonPressed & L_TRIG) && network_allow_mod_dev_mode()) {
+        network_mod_dev_mode_reload();
     }
 
     return 0;
@@ -3548,9 +3440,9 @@ s16 render_menus_and_dialogs(void) {
         }
 
         gDialogColorFadeTimer = (s16) gDialogColorFadeTimer + 0x1000;
-    } else if (gDialogID != -1) {
+    } else if (gDialogID != DIALOG_NONE) {
         // The Peach "Dear Mario" message needs to be repositioned separately
-        if (gDialogID == 20) {
+        if (gDialogID == DIALOG_020) {
             print_peach_letter_message();
             return mode;
         }

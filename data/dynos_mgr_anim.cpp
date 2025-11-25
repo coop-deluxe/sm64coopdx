@@ -5,6 +5,10 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
+#include "behavior_data.h"
+#include "pc/lua/smlua_hooks.h"
+
+s8 geo_get_processing_mario_index(void);
 }
 
 //
@@ -24,7 +28,6 @@ static s32 RetrieveCurrentMarioAnimationIndex(u32 aPlayerIndex) {
 }
 
 // Retrieve the current animation index
-// As we don't know the length of the table, let's hope that we'll always find the animation...
 static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
     if (!aObject->oAnimations || !aObject->header.gfx.animInfo.curAnim || smlua_anim_util_get_current_animation_name(aObject)) {
         return -1;
@@ -74,11 +77,14 @@ void DynOS_Anim_Swap(void *aPtr) {
 
         // Animation index
         s32 _AnimIndex = -1;
-        for (u32 i = 0; i < MAX_PLAYERS; i++) {
-            if (gMarioStates[i].marioObj == NULL) { continue; }
-            if (_Object == gMarioStates[i].marioObj) {
-                _AnimIndex = RetrieveCurrentMarioAnimationIndex(i);
-                break;
+        s8 index = geo_get_processing_mario_index();
+        if (index != -1) {
+            _AnimIndex = RetrieveCurrentMarioAnimationIndex(index);
+
+            // Don't allow Mario animations to be treated as regular objects
+            // because DynOS doesn't properly build an AnimationTable
+            if (_AnimIndex == -1) {
+                return;
             }
         }
         if (_AnimIndex == -1) {

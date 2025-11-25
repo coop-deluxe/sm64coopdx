@@ -32,23 +32,27 @@ const char* dynos_pack_get_name(s32 index);
 bool dynos_pack_get_enabled(s32 index);
 void dynos_pack_set_enabled(s32 index, bool value);
 bool dynos_pack_get_exists(s32 index);
+void dynos_generate_mod_pack(char* modPath);
 void dynos_generate_packs(const char* directory);
 
 // -- geos -- //
 void dynos_actor_override(struct Object* obj, void** aSharedChild);
-void dynos_add_actor_custom(s32 modIndex, const char *filePath, const char* geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName);
 const void* dynos_geolayout_get(const char *name);
-bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, const char **token);
+bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, s32 *modFileIndex, const char **token);
+void dynos_actor_register_modified_graph_node(struct GraphNode *node);
 
 // -- collisions -- //
-void dynos_add_collision(const char *filePath, const char* collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName);
 Collision* dynos_collision_get(const char* collisionName);
 
 // -- textures -- //
-void dynos_add_texture(const char *filePath, const char* textureName);
+bool dynos_add_texture(const char *filePath, const char* textureName);
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo);
+bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo);
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo);
 void dynos_texture_override_reset(const char* textureName);
+u8 *dynos_texture_convert_to_rgba32(const Texture *tex, u32 width, u32 height, u8 fmt, u8 siz);
 
 // -- movtexqcs -- //
 void dynos_movtexqc_register(const char* name, s16 level, s16 area, s16 type);
@@ -70,7 +74,7 @@ Collision *dynos_level_get_collision(u32 level, u16 area);
 
 // -- behaviors -- //
 void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behaviorName);
-s32 dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript);
+bool dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript, s32 *modIndex, s32 *modFileIndex);
 const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index);
 void dynos_behavior_hook_all_custom_behaviors(void);
 
@@ -87,11 +91,13 @@ void dynos_model_clear_pool(enum ModelPool aModelPool);
 // -- gfx -- //
 Gfx *dynos_gfx_get_writable_display_list(Gfx* gfx);
 Gfx *dynos_gfx_get(const char *name, u32 *outLength);
+const char *dynos_gfx_get_name(Gfx *gfx);
 Gfx *dynos_gfx_create(const char *name, u32 length);
 bool dynos_gfx_resize(Gfx *gfx, u32 newLength);
 bool dynos_gfx_delete(Gfx *gfx);
 void dynos_gfx_delete_all();
 Vtx *dynos_vtx_get(const char *name, u32 *outCount);
+const char *dynos_vtx_get_name(Vtx *vtx);
 Vtx *dynos_vtx_create(const char *name, u32 count);
 bool dynos_vtx_resize(Vtx *vtx, u32 newCount);
 bool dynos_vtx_delete(Vtx *vtx);

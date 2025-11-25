@@ -68,7 +68,7 @@ bool smlua_valid_lvt(u16 lvt) {
     return (lvt < LVT_MAX);
 }
 
-const char *sLuaLvtNames[] = {
+static const char *sLuaLvtNames[] = {
     [LVT_BOOL] = "bool",
     [LVT_BOOL_P] = "bool Pointer",
     [LVT_U8] = "u8",
@@ -91,18 +91,16 @@ const char *sLuaLvtNames[] = {
     [LVT_COBJECT_P] = "CObject Pointer",
     [LVT_STRING] = "string",
     [LVT_STRING_P] = "string Pointer",
-    [LVT_BEHAVIORSCRIPT] = "BehaviorScript",
     [LVT_BEHAVIORSCRIPT_P] = "BehaviorScript Pointer",
-    [LVT_OBJECTANIMPOINTER] = "ObjectAnimPointer",
     [LVT_OBJECTANIMPOINTER_P] = "ObjectAnimPointer Pointer",
-    [LVT_COLLISION] = "Collision",
     [LVT_COLLISION_P] = "Collision Pointer",
-    [LVT_LEVELSCRIPT] = "LevelScript",
     [LVT_LEVELSCRIPT_P] = "LevelScript Pointer",
-    [LVT_TRAJECTORY] = "Trajectory",
     [LVT_TRAJECTORY_P] = "Trajectory Pointer",
+    [LVT_TEXTURE_P] = "Texture Pointer",
     [LVT_LUAFUNCTION] = "LuaFunction",
+    [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "Pointer",
+    [LVT_FUNCTION] = "Function",
     [LVT_MAX] = "Max",
 };
 
@@ -183,7 +181,7 @@ static const char *smlua_get_custom_field_type_name(enum LuaValueType lvt) {
 }
 
 static int smlua_func_define_custom_obj_fields(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -295,12 +293,12 @@ static int smlua_func_define_custom_obj_fields(lua_State* L) {
     lua_pop(L, 1); // pop key
     lua_pop(L, 1); // pop _custom_object_fields
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
 struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyIndex) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
     static struct LuaObjectField lof = { 0 };
     if (lot != LOT_OBJECT) { return NULL; }
 
@@ -323,7 +321,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (lua_type(L, -1) != LUA_TTABLE) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -336,7 +334,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (!gSmLuaConvertSuccess || !validFieldIndex) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -349,7 +347,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     if (!gSmLuaConvertSuccess || !validLvt) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return NULL;
     }
 
@@ -363,7 +361,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lua_pop(L, 1); // pop value table
     lua_pop(L, 1); // pop _custom_fields
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return &lof;
 }
 
@@ -373,24 +371,19 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
 
 static bool smlua_push_field(lua_State* L, u8* p, struct LuaObjectField *data) {
     switch (data->valueType) {
-        case LVT_BOOL:              lua_pushboolean(L, *(u8* )p);                    break;
-        case LVT_U8:                lua_pushinteger(L, *(u8* )p);                    break;
-        case LVT_U16:               lua_pushinteger(L, *(u16*)p);                    break;
-        case LVT_U32:               lua_pushinteger(L, *(u32*)p);                    break;
-        case LVT_S8:                lua_pushinteger(L, *(s8* )p);                    break;
-        case LVT_S16:               lua_pushinteger(L, *(s16*)p);                    break;
-        case LVT_S32:               lua_pushinteger(L, *(s32*)p);                    break;
-        case LVT_F32:               lua_pushnumber( L, *(f32*)p);                    break;
-        case LVT_U64:               lua_pushinteger(L, *(u64*)p);                    break;
-        case LVT_COBJECT:           smlua_push_object(L, data->lot, p, NULL);        break;
-        case LVT_COBJECT_P:         smlua_push_object(L, data->lot, *(u8**)p, NULL); break;
-        case LVT_STRING:            lua_pushstring(L, (char*)p);                     break;
-        case LVT_STRING_P:          lua_pushstring(L, *(char**)p);                   break;
-        case LVT_BEHAVIORSCRIPT:    lua_pushinteger(L, *(s32*)p);                    break;
-        case LVT_OBJECTANIMPOINTER: lua_pushinteger(L, *(s32*)p);                    break;
-        case LVT_COLLISION:         lua_pushinteger(L, *(s32*)p);                    break;
-        case LVT_LEVELSCRIPT:       lua_pushinteger(L, *(s32*)p);                    break;
-        case LVT_TRAJECTORY:        lua_pushinteger(L, *(s16*)p);                    break;
+        case LVT_BOOL:      lua_pushboolean(L, *(u8* )p);                    break;
+        case LVT_U8:        lua_pushinteger(L, *(u8* )p);                    break;
+        case LVT_U16:       lua_pushinteger(L, *(u16*)p);                    break;
+        case LVT_U32:       lua_pushinteger(L, *(u32*)p);                    break;
+        case LVT_S8:        lua_pushinteger(L, *(s8* )p);                    break;
+        case LVT_S16:       lua_pushinteger(L, *(s16*)p);                    break;
+        case LVT_S32:       lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_F32:       lua_pushnumber( L, *(f32*)p);                    break;
+        case LVT_U64:       lua_pushinteger(L, *(u64*)p);                    break;
+        case LVT_COBJECT:   smlua_push_object(L, data->lot, p, NULL);        break;
+        case LVT_COBJECT_P: smlua_push_object(L, data->lot, *(u8**)p, NULL); break;
+        case LVT_STRING:    lua_pushstring(L, (char*)p);                     break;
+        case LVT_STRING_P:  lua_pushstring(L, *(char**)p);                   break;
 
         // pointers
         case LVT_BOOL_P:
@@ -407,6 +400,7 @@ static bool smlua_push_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_COLLISION_P:
         case LVT_LEVELSCRIPT_P:
         case LVT_TRAJECTORY_P:
+        case LVT_TEXTURE_P:
             smlua_push_pointer(L, data->valueType, *(u8**)p, NULL);
             break;
 
@@ -453,7 +447,9 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_BEHAVIORSCRIPT_P:
         case LVT_OBJECTANIMPOINTER_P:
         case LVT_COLLISION_P:
+        case LVT_LEVELSCRIPT_P:
         case LVT_TRAJECTORY_P:
+        case LVT_TEXTURE_P:
             if (lua_isnil(L, 3)) {
                 *(u8**)p = NULL;
                 break;
@@ -471,7 +467,7 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
 }
 
 static int smlua__get_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN_NUM(1);
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
@@ -524,7 +520,7 @@ static int smlua__get_field(lua_State* L) {
             return 0;
         }
 
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return 1;
     }
 
@@ -555,6 +551,14 @@ static int smlua__get_field(lua_State* L) {
         return 0;
     }
 
+    // CObject function members
+    if (data->valueType == LVT_FUNCTION) {
+        const char *function = (const char *) data->valueOffset;
+        lua_getglobal(L, function);
+        LUA_STACK_CHECK_END(L);
+        return 1;
+    }
+
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
     if (data->count == 1) {
         if (smlua_push_field(L, p, data)) {
@@ -569,12 +573,12 @@ static int smlua__get_field(lua_State* L) {
         }
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
 static int smlua__set_field(lua_State* L) {
-    LUA_STACK_CHECK_BEGIN();
+    LUA_STACK_CHECK_BEGIN(L);
 
     const CObject *cobj = lua_touserdata(L, 1);
     enum LuaObjectType lot = cobj->lot;
@@ -610,7 +614,7 @@ static int smlua__set_field(lua_State* L) {
             return 0;
         }
 
-        LUA_STACK_CHECK_END();
+        LUA_STACK_CHECK_END(L);
         return 1;
     }
 
@@ -645,7 +649,7 @@ static int smlua__set_field(lua_State* L) {
         return 0;
     }
 
-    LUA_STACK_CHECK_END();
+    LUA_STACK_CHECK_END(L);
     return 1;
 }
 
@@ -653,6 +657,12 @@ int smlua__eq(lua_State *L) {
     const CObject *a = lua_touserdata(L, 1);
     const CObject *b = lua_touserdata(L, 2);
     lua_pushboolean(L, a && b && a->lot == b->lot && a->pointer == b->pointer);
+    return 1;
+}
+
+int smlua__bnot(lua_State *L) {
+    const CObject *a = lua_touserdata(L, 1);
+    lua_pushboolean(L, !a || a->freed);
     return 1;
 }
 
@@ -696,6 +706,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };
@@ -706,6 +717,7 @@ void smlua_cobject_init_globals(void) {
         { "__index",    smlua_cpointer_get },
         { "__newindex", smlua_cpointer_set },
         { "__eq",       smlua__eq },
+        { "__bnot",     smlua__bnot },
         { "__metatable", NULL },
         { NULL, NULL }
     };

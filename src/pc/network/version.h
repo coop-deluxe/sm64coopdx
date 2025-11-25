@@ -1,12 +1,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v1.3.2"
+#define SM64COOPDX_VERSION "v1.4"
 
 // internal version
 #define VERSION_TEXT "v"
-#define VERSION_NUMBER 40
-#define MINOR_VERSION_NUMBER 2
+#define VERSION_NUMBER 41
+#define MINOR_VERSION_NUMBER 0
 
 #if defined(VERSION_JP)
 #define VERSION_REGION "JP"
@@ -19,7 +19,7 @@
 #endif
 
 #ifdef DEVELOPMENT
-#define GAME_NAME   "sm64coopdx-dev"
+#define GAME_NAME "sm64coopdx-dev"
 #define WINDOW_NAME "Super Mario 64 Coop Deluxe (DEV)"
 #elif !defined(VERSION_US)
 #define GAME_NAME "sm64coopdx-intl"

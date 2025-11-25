@@ -133,7 +133,7 @@ OPTIMIZE_O3 f32 approach_f32(f32 current, f32 target, f32 inc, f32 dec) {
  * [0, 0, 0, 0, 1, 2, ... n-1, n, n, n, n]
  * TODO: verify the classification of the spline / figure out how polynomials were computed
  */
-OPTIMIZE_O3 void spline_get_weights(struct MarioState* m, Vec4f result, f32 t, UNUSED s32 c) {
+OPTIMIZE_O3 void spline_get_weights(struct MarioState* m, OUT Vec4f result, f32 t, UNUSED s32 c) {
     if (!m) { return; }
     f32 tinv = 1 - t;
     f32 tinv2 = tinv * tinv;
@@ -195,7 +195,7 @@ OPTIMIZE_O3 void anim_spline_init(struct MarioState* m, Vec4s *keyFrames) {
  * anim_spline_init should be called before polling for vectors.
  * Returns TRUE when the last point is reached, FALSE otherwise.
  */
-OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
+OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, OUT Vec3f result) {
     if (!m) { return 0; }
     Vec4f weights = { 0 };
     s32 i;
@@ -234,6 +234,30 @@ OPTIMIZE_O3 s32 anim_spline_poll(struct MarioState* m, Vec3f result) {
 }
 
   ///////////
+ // Vec2f //
+///////////
+
+Vec2f gVec2fZero = { 0.0f, 0.0f };
+
+Vec2f gVec2fOne = { 1.0f, 1.0f };
+
+  ///////////
+ // Vec2i //
+///////////
+
+Vec2i gVec2iZero = { 0, 0 };
+
+Vec2i gVec2iOne = { 1, 1 };
+
+  ///////////
+ // Vec2s //
+///////////
+
+Vec2s gVec2sZero = { 0, 0 };
+
+Vec2s gVec2sOne = { 1, 1 };
+
+  ///////////
  // Vec3f //
 ///////////
 
@@ -245,7 +269,7 @@ Vec3f gVec3fOne = { 1.0f, 1.0f, 1.0f };
  * Returns a vector rotated around the z axis, then the x axis, then the y
  * axis.
  */
-OPTIMIZE_O3 Vec3fp vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
+OPTIMIZE_O3 Vec3fp vec3f_rotate_zxy(OUT Vec3f dest, Vec3s rotate) {
     Vec3f v = { dest[0], dest[1], dest[2] };
 
     f32 sx = sins(rotate[0]);
@@ -270,7 +294,7 @@ OPTIMIZE_O3 Vec3fp vec3f_rotate_zxy(Vec3f dest, Vec3s rotate) {
 
 // Rodrigues' formula
 // dest = v * cos(r) + (n x v) * sin(r) + n * (n . v) * (1 - cos(r))
-OPTIMIZE_O3 Vec3fp vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
+OPTIMIZE_O3 Vec3fp vec3f_rotate_around_n(OUT Vec3f dest, Vec3f v, Vec3f n, s16 r) {
     Vec3f nvCross;
     vec3f_cross(nvCross, n, v);
     f32 nvDot = vec3f_dot(n, v);
@@ -282,7 +306,7 @@ OPTIMIZE_O3 Vec3fp vec3f_rotate_around_n(Vec3f dest, Vec3f v, Vec3f n, s16 r) {
     return dest;
 }
 
-OPTIMIZE_O3 Vec3fp vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
+OPTIMIZE_O3 Vec3fp vec3f_project(OUT Vec3f dest, Vec3f v, Vec3f onto) {
     f32 numerator = vec3f_dot(v, onto);
     f32 denominator = vec3f_dot(onto, onto);
     if (denominator == 0) {
@@ -294,7 +318,7 @@ OPTIMIZE_O3 Vec3fp vec3f_project(Vec3f dest, Vec3f v, Vec3f onto) {
     return dest;
 }
 
-OPTIMIZE_O3 Vec3fp vec3f_transform(Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale) {
+OPTIMIZE_O3 Vec3fp vec3f_transform(OUT Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale) {
     vec3f_copy(dest, v);
 
     // scale
@@ -330,7 +354,7 @@ OPTIMIZE_O3 void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, f32 *dist, s16 *
  * Construct the 'to' point which is distance 'dist' away from the 'from' position,
  * and has the angles pitch and yaw.
  */
-OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pitch, s16 yaw) {
+OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, OUT Vec3f to, f32 dist, s16 pitch, s16 yaw) {
     to[0] = from[0] + dist * coss(pitch) * sins(yaw);
     to[1] = from[1] + dist * sins(pitch);
     to[2] = from[2] + dist * coss(pitch) * coss(yaw);
@@ -341,7 +365,7 @@ OPTIMIZE_O3 void vec3f_set_dist_and_angle(Vec3f from, Vec3f to, f32 dist, s16 pi
  * It is similar to vec3f_cross, but it calculates the vectors (c-b) and (b-a)
  * at the same time.
  */
-OPTIMIZE_O3 Vec3fp find_vector_perpendicular_to_plane(Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
+OPTIMIZE_O3 Vec3fp find_vector_perpendicular_to_plane(OUT Vec3f dest, Vec3f a, Vec3f b, Vec3f c) {
     dest[0] = (b[1] - a[1]) * (c[2] - b[2]) - (c[1] - b[1]) * (b[2] - a[2]);
     dest[1] = (b[2] - a[2]) * (c[0] - b[0]) - (c[2] - b[2]) * (b[0] - a[0]);
     dest[2] = (b[0] - a[0]) * (c[1] - b[1]) - (c[0] - b[0]) * (b[1] - a[1]);
@@ -388,7 +412,7 @@ Mat4 gMat4Zero = {
  * at the position 'to'. The up-vector is assumed to be (0, 1, 0), but the 'roll'
  * angle allows a bank rotation of the camera.
  */
-OPTIMIZE_O3 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
+OPTIMIZE_O3 void mtxf_lookat(OUT Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
     Vec3f forward, right, up;
     f32 sinRoll, cosRoll;
     f32 dx, dz, xzDist;
@@ -456,7 +480,7 @@ OPTIMIZE_O3 void mtxf_lookat(Mat4 mtx, Vec3f from, Vec3f to, s16 roll) {
  * Build a matrix that rotates around the z axis, then the x axis, then the y
  * axis, and then translates.
  */
-OPTIMIZE_O3 void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s rotate) {
+OPTIMIZE_O3 void mtxf_rotate_zxy_and_translate(OUT Mat4 dest, Vec3f translate, Vec3s rotate) {
     f32 sx = sins(rotate[0]);
     f32 cx = coss(rotate[0]);
 
@@ -489,7 +513,7 @@ OPTIMIZE_O3 void mtxf_rotate_zxy_and_translate(Mat4 dest, Vec3f translate, Vec3s
  * Build a matrix that rotates around the x axis, then the y axis, then the z
  * axis, and then translates.
  */
-OPTIMIZE_O3 void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c) {
+OPTIMIZE_O3 void mtxf_rotate_xyz_and_translate(OUT Mat4 dest, Vec3f b, Vec3s c) {
     f32 sx = sins(c[0]);
     f32 cx = coss(c[0]);
 
@@ -526,7 +550,7 @@ OPTIMIZE_O3 void mtxf_rotate_xyz_and_translate(Mat4 dest, Vec3f b, Vec3s c) {
  * 'position' is the position of the object in the world
  * 'angle' rotates the object while still facing the camera.
  */
-OPTIMIZE_O3 void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
+OPTIMIZE_O3 void mtxf_billboard(OUT Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[0][0] = coss(angle);
     dest[0][1] = sins(angle);
     dest[0][2] = 0;
@@ -549,7 +573,7 @@ OPTIMIZE_O3 void mtxf_billboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) 
 }
 
 // straight up mtxf_billboard but minus the dest[1][n] lines. transform for cylindrical billboards
-OPTIMIZE_O3 void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
+OPTIMIZE_O3 void mtxf_cylboard(OUT Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
     dest[0][0] = coss(angle);
     dest[0][1] = sins(angle);
     dest[0][2] = 0;
@@ -578,7 +602,7 @@ OPTIMIZE_O3 void mtxf_cylboard(Mat4 dest, Mat4 mtx, Vec3f position, s16 angle) {
  * 'yaw' is the angle which it should face
  * 'pos' is the object's position in the world
  */
-OPTIMIZE_O3 void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw) {
+OPTIMIZE_O3 void mtxf_align_terrain_normal(OUT Mat4 dest, Vec3f upDir, Vec3f pos, s16 yaw) {
     Vec3f lateralDir;
     Vec3f leftDir;
     Vec3f forwardDir;
@@ -621,7 +645,7 @@ OPTIMIZE_O3 void mtxf_align_terrain_normal(Mat4 dest, Vec3f upDir, Vec3f pos, s1
  * 'pos' is the object's position in the world
  * 'radius' is the distance from each triangle vertex to the center
  */
-OPTIMIZE_O3 void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 radius) {
+OPTIMIZE_O3 void mtxf_align_terrain_triangle(OUT Mat4 mtx, Vec3f pos, s16 yaw, f32 radius) {
     struct Surface *sp74;
     Vec3f point0;
     Vec3f point1;
@@ -692,7 +716,7 @@ OPTIMIZE_O3 void mtxf_align_terrain_triangle(Mat4 mtx, Vec3f pos, s16 yaw, f32 r
  * The resulting matrix represents first applying transformation b and
  * then a.
  */
-OPTIMIZE_O3 void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b) {
+OPTIMIZE_O3 void mtxf_mul(OUT Mat4 dest, Mat4 a, Mat4 b) {
     Mat4 tmp;
     for (s32 i = 0; i < 4; i++) {
         for (s32 j = 0; j < 4; j++) {
@@ -710,7 +734,7 @@ OPTIMIZE_O3 void mtxf_mul(Mat4 dest, Mat4 a, Mat4 b) {
  * to the point. Note that the bottom row is assumed to be [0, 0, 0, 1], which is
  * true for transformation matrices if the translation has a w component of 1.
  */
-OPTIMIZE_O3 s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
+OPTIMIZE_O3 Vec3sp mtxf_mul_vec3s(Mat4 mtx, OUT Vec3s b) {
     f32 x = b[0];
     f32 y = b[1];
     f32 z = b[2];
@@ -725,7 +749,7 @@ OPTIMIZE_O3 s16 *mtxf_mul_vec3s(Mat4 mtx, Vec3s b) {
 /**
  * Set 'mtx' to a transformation matrix that rotates around the z axis.
  */
-OPTIMIZE_O3 void mtxf_rotate_xy(Mat4 mtx, s16 angle) {
+OPTIMIZE_O3 void mtxf_rotate_xy(OUT Mat4 mtx, s16 angle) {
     mtxf_identity(mtx);
     mtx[0][0] = coss(angle);
     mtx[0][1] = sins(angle);
@@ -746,7 +770,7 @@ OPTIMIZE_O3 void mtxf_rotate_xy(Mat4 mtx, s16 angle) {
  * furthermore, this is currently only used to get the inverse of the camera transform
  * because that is always orthonormal, the determinant will never be 0, so that check is removed
  */
-OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src) {
+OPTIMIZE_O3 void mtxf_inverse(OUT Mat4 dest, Mat4 src) {
     Mat4 buf;
 
     // calculating the determinant has been reduced since the check is removed
@@ -782,6 +806,64 @@ OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src) {
 }
 
 /**
+ * Compute the inverse of 'src' and put it into 'dest' but it can be a non-affine matrix.
+ * Obtains the inverse via Gauss-Jordan elimination.
+ */
+OPTIMIZE_O3 bool mtxf_inverse_non_affine(OUT Mat4 dest, Mat4 src) {
+    // augmented matrix [ src | I ]
+    f32 aug[4][8];
+    for (s32 i = 0; i < 4; i++) {
+        for (s32 j = 0; j < 4; j++) {
+            aug[i][j]     = src[i][j];
+            aug[i][j + 4] = (i == j) ? 1.0f : 0.0f;
+        }
+    }
+
+    // forward elimination
+    for (s32 k = 0; k < 4; k++) {
+        // find pivot row
+        s32 piv = k;
+        for (s32 i = k + 1; i < 4; i++) {
+            if (fabsf(aug[i][k]) > fabsf(aug[piv][k])) { piv = i; }
+        }
+
+        if (fabsf(aug[piv][k]) < FLT_EPSILON) { return false; }
+
+        // swap pivot row into place
+        if (piv != k) {
+            for (s32 j = 0; j < 8; j++) {
+                f32 tmp     = aug[k][j];
+                aug[k][j]   = aug[piv][j];
+                aug[piv][j] = tmp;
+            }
+        }
+
+        // scale pivot row to make pivot = 1
+        f32 inv_p = 1.0f / aug[k][k];
+        for (s32 j = k; j < 8; j++) { aug[k][j] *= inv_p; }
+
+        // eliminate below
+        for (s32 i = k+1; i < 4; i++) {
+            f32 f = aug[i][k];
+            for (s32 j = k; j < 8; j++) { aug[i][j] -= f * aug[k][j]; }
+        }
+    }
+
+    // backward substitution
+    for (s32 k = 3; k >= 0; k--) {
+        for (s32 i = 0; i < k; i++) {
+            f32 f = aug[i][k];
+            for (s32 j = k; j < 8; j++) { aug[i][j] -= f * aug[k][j]; }
+        }
+    }
+
+    // copy right half (the inverse) into dest
+    for (s32 i = 0; i < 4; i++) { memcpy(dest[i], &aug[i][4], 4 * sizeof(f32)); }
+
+    return true;
+}
+
+/**
  * Extract a position given an object's transformation matrix and a camera matrix.
  * This is used for determining the world position of the held object: since objMtx
  * inherits the transformation from both the camera and Mario, it calculates this
@@ -789,7 +871,7 @@ OPTIMIZE_O3 void mtxf_inverse(Mat4 dest, Mat4 src) {
  * objMtx back from screen orientation to world orientation, and then subtracting
  * the camera position.
  */
-OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
+OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(OUT Vec3f dest, Mat4 objMtx, Mat4 camMtx) {
     f32 camX = camMtx[3][0] * camMtx[0][0] + camMtx[3][1] * camMtx[0][1] + camMtx[3][2] * camMtx[0][2];
     f32 camY = camMtx[3][0] * camMtx[1][0] + camMtx[3][1] * camMtx[1][1] + camMtx[3][2] * camMtx[1][2];
     f32 camZ = camMtx[3][0] * camMtx[2][0] + camMtx[3][1] * camMtx[2][1] + camMtx[3][2] * camMtx[2][2];
@@ -800,3 +882,4 @@ OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(Vec3f dest, Mat4 objMtx, Mat4 camM
         
     return dest;
 }
+

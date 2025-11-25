@@ -10,7 +10,7 @@
 
 extern "C" {
 #include "platform.h"
-#include "mods/mods_utils.h" // for str_ends_with
+#include "mods/mods_utils.h" // for path_ends_with
 #include "mods/mod_cache.h"  // for md5 hashing
 #include "mods/mods.h"
 #include "loading.h"
@@ -81,7 +81,7 @@ static bool is_rom_valid(const std::string romPath) {
 inline static bool scan_path_for_rom(const char *dir) {
     for (const auto &entry: std::filesystem::directory_iterator(dir)) {
         std::string path = entry.path().generic_string();
-        if (str_ends_with(path.c_str(), ".z64")) {
+        if (path_ends_with(path.c_str(), ".z64")) {
             if (is_rom_valid(path)) { return true; }
         }
     }

@@ -103,14 +103,15 @@ struct VblankHandler
     OSMesg msg;
 };
 
-#define ANIM_FLAG_NOLOOP     (1 << 0) // 0x01
-#define ANIM_FLAG_BACKWARD   (1 << 1) // 0x02
-#define ANIM_FLAG_2          (1 << 2) // 0x04
-#define ANIM_FLAG_HOR_TRANS  (1 << 3) // 0x08
-#define ANIM_FLAG_VERT_TRANS (1 << 4) // 0x10
-#define ANIM_FLAG_5          (1 << 5) // 0x20
-#define ANIM_FLAG_6          (1 << 6) // 0x40
-#define ANIM_FLAG_7          (1 << 7) // 0x80
+#define ANIM_FLAG_NOLOOP      (1 << 0) // 0x01
+#define ANIM_FLAG_BACKWARD    (1 << 1) // 0x02
+#define ANIM_FLAG_2           (1 << 2) // 0x04
+#define ANIM_FLAG_HOR_TRANS   (1 << 3) // 0x08
+#define ANIM_FLAG_VERT_TRANS  (1 << 4) // 0x10
+#define ANIM_FLAG_5           (1 << 5) // 0x20
+#define ANIM_FLAG_6           (1 << 6) // 0x40
+#define ANIM_FLAG_7           (1 << 7) // 0x80
+#define ANIM_FLAG_BONE_TRANS  (1 << 8)
 
 struct Animation {
     // TODO: Optimize this later if possible.
@@ -498,7 +499,7 @@ struct MarioState
     
     u8 visibleToEnemies;
     u8 wasNetworkVisible;
-    s16 dialogId;
+    s32 dialogId;
     s16 prevNumStarsForDialog;
     s16 unkB0;
     
@@ -576,11 +577,12 @@ struct MarioState
 
 struct TextureInfo
 {
-    u8 *texture;
+    const Texture *texture;
     const char *name;
     u32 width;
     u32 height;
-    u8 bitSize;
+    u8 format;
+    u8 size;
 };
 
 #define PLAY_MODE_NORMAL 0
@@ -598,5 +600,6 @@ struct TextureInfo
 
 #include "game/characters.h"
 #include "data/dynos.c.h"
+#include "src/pc/lua/smlua_autogen.h"
 
 #endif // _SM64_TYPES_H_
