@@ -529,22 +529,18 @@ u8 get_volume_env(void) {
 
 void set_volume_master(u8 volume) {
     gLuaVolumeMaster = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
 void set_volume_level(u8 volume) {
     gLuaVolumeLevel = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
 void set_volume_sfx(u8 volume) {
     gLuaVolumeSfx = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
 void set_volume_env(u8 volume) {
     gLuaVolumeEnv = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
 ///

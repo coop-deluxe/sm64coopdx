@@ -48,7 +48,7 @@ Gets information on a custom level from `levelNum`
 | levelNum | `integer` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
@@ -71,7 +71,7 @@ Gets information on a custom level from `shortName`
 | shortName | `string` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
@@ -94,7 +94,7 @@ Gets information on a custom level from `courseNum`
 | courseNum | `integer` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);`
@@ -574,7 +574,7 @@ Gets the DJUI menu font
 - None
 
 ### Returns
-[enum DjuiFontType](constants.md#enum-DjuiFontType)
+- [enum DjuiFontType](constants.md#enum-DjuiFontType)
 
 ### C Prototype
 `enum DjuiFontType djui_menu_get_font(void);`
@@ -595,7 +595,7 @@ Gets the DJUI menu theme
 - None
 
 ### Returns
-[DjuiTheme](structs.md#DjuiTheme)
+- [DjuiTheme](structs.md#DjuiTheme)
 
 ### C Prototype
 `struct DjuiTheme* djui_menu_get_theme(void);`
@@ -1655,7 +1655,7 @@ Gets the system clock's date and time
 - None
 
 ### Returns
-[DateTime](structs.md#DateTime)
+- [DateTime](structs.md#DateTime)
 
 ### C Prototype
 `struct DateTime* get_date_and_time(void);`
@@ -2052,7 +2052,7 @@ Gets the mod currently being processed
 - None
 
 ### Returns
-[Mod](structs.md#Mod)
+- [Mod](structs.md#Mod)
 
 ### C Prototype
 `struct Mod* get_active_mod(void);`
@@ -2138,7 +2138,7 @@ Gets the current GraphNodeRoot
 - None
 
 ### Returns
-[GraphNodeRoot](structs.md#GraphNodeRoot)
+- [GraphNodeRoot](structs.md#GraphNodeRoot)
 
 ### C Prototype
 `struct GraphNodeRoot* geo_get_current_root(void);`
@@ -2159,7 +2159,7 @@ Gets the current GraphNodeMasterList
 - None
 
 ### Returns
-[GraphNodeMasterList](structs.md#GraphNodeMasterList)
+- [GraphNodeMasterList](structs.md#GraphNodeMasterList)
 
 ### C Prototype
 `struct GraphNodeMasterList* geo_get_current_master_list(void);`
@@ -2180,7 +2180,7 @@ Gets the current GraphNodePerspective
 - None
 
 ### Returns
-[GraphNodePerspective](structs.md#GraphNodePerspective)
+- [GraphNodePerspective](structs.md#GraphNodePerspective)
 
 ### C Prototype
 `struct GraphNodePerspective* geo_get_current_perspective(void);`
@@ -2201,7 +2201,7 @@ Gets the current GraphNodeCamera
 - None
 
 ### Returns
-[GraphNodeCamera](structs.md#GraphNodeCamera)
+- [GraphNodeCamera](structs.md#GraphNodeCamera)
 
 ### C Prototype
 `struct GraphNodeCamera* geo_get_current_camera(void);`
@@ -2222,7 +2222,7 @@ Gets the current GraphNodeHeldObject
 - None
 
 ### Returns
-[GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
+- [GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
 
 ### C Prototype
 `struct GraphNodeHeldObject* geo_get_current_held_object(void);`
@@ -2297,7 +2297,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 | name | `string` |
 
 ### Returns
-[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+- [enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
 `enum ModelExtendedId smlua_model_util_get_id(const char* name);`
@@ -2331,7 +2331,7 @@ Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local
 | objSetupFunction | `Lua Function` () |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
@@ -2359,7 +2359,7 @@ Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the l
 | objSetupFunction | `Lua Function` () |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
@@ -2430,7 +2430,7 @@ Returns an object's extended model id
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+- [enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
 `enum ModelExtendedId obj_get_model_id_extended(struct Object *o);`
@@ -2498,7 +2498,7 @@ When used in a geo function, retrieve the current processed object
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *geo_get_current_object(void);`
@@ -2519,7 +2519,7 @@ Gets the object currently being processed
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_current_object(void);`
@@ -2540,7 +2540,7 @@ Gets the NPC object Mario is talking to
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_dialog_object(void);`
@@ -2561,7 +2561,7 @@ Gets the cutscene focus object
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_cutscene_focus(void);`
@@ -2582,7 +2582,7 @@ Gets the secondary camera focus object
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_secondary_camera_focus(void);`
@@ -2651,7 +2651,7 @@ Gets the first object in an object list
 | objList | [enum ObjectList](constants.md#enum-ObjectList) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first(enum ObjectList objList);`
@@ -2674,7 +2674,7 @@ Gets the first object loaded with `behaviorId`
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId);`
@@ -2699,7 +2699,7 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 | value | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value);`
@@ -2724,7 +2724,7 @@ Gets the first object loaded with `behaviorId` and object float field (look in `
 | value | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value);`
@@ -2747,7 +2747,7 @@ Gets the next object in an object list
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next(struct Object *o);`
@@ -2770,7 +2770,7 @@ Gets the next object loaded with the same behavior ID
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id(struct Object *o);`
@@ -2795,7 +2795,7 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 | value | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
@@ -2820,7 +2820,7 @@ Gets the next object loaded with the same behavior ID and object float field (lo
 | value | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value);`
@@ -2844,7 +2844,7 @@ Gets the nearest object with `behaviorId` to `o`
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum BehaviorId behaviorId);`
@@ -2891,7 +2891,7 @@ Gets the corresponding collided object to an index from `o`
 | index | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_collided_object(struct Object *o, s16 index);`
@@ -3112,7 +3112,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 | modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
 
 ### Returns
-[SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
+- [SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
 
 ### C Prototype
 `struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);`
@@ -3136,7 +3136,7 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[WaterDropletParams](structs.md#WaterDropletParams)
+- [WaterDropletParams](structs.md#WaterDropletParams)
 
 ### C Prototype
 `struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);`
@@ -3157,7 +3157,7 @@ Returns a temporary object hitbox pointer
 - None
 
 ### Returns
-[ObjectHitbox](structs.md#ObjectHitbox)
+- [ObjectHitbox](structs.md#ObjectHitbox)
 
 ### C Prototype
 `struct ObjectHitbox* get_temp_object_hitbox(void);`
@@ -3547,7 +3547,7 @@ Gets the DialogEntry struct for the given `dialogId`
 | dialogId | [enum DialogId](constants.md#enum-DialogId) |
 
 ### Returns
-[DialogEntry](structs.md#DialogEntry)
+- [DialogEntry](structs.md#DialogEntry)
 
 ### C Prototype
 `struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);`
@@ -4813,7 +4813,7 @@ Loads the object's collision data into static collision. You may run this only o
 - None
 
 ### Returns
-[StaticObjectCollision](structs.md#StaticObjectCollision)
+- [StaticObjectCollision](structs.md#StaticObjectCollision)
 
 ### C Prototype
 `struct StaticObjectCollision *load_static_object_collision();`
@@ -4861,7 +4861,7 @@ Gets a surface corresponding to `index` from the static object collision
 | index | `integer` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index);`
@@ -4885,7 +4885,7 @@ Gets a surface corresponding to `index` from the surface pool buffer
 | index | `integer` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
@@ -4937,7 +4937,7 @@ Retrieves an object from a sync ID
 | syncId | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* sync_object_get_object(u32 syncId);`
