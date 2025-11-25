@@ -427,28 +427,16 @@ void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
     ma_sound_set_looping(&audio->sound, looping);
 }
 
-LuaTable audio_stream_get_loop_points(struct ModAudio* audio) {
-    struct lua_State *L = gLuaState;
-    if (!L || !audio_sanity_check(audio, true, "get stream loop points for")) { return 0; }
-    
-    u64 loopStart, loopEnd;
-    ma_data_source_get_loop_point_in_pcm_frames(&audio->decoder, &loopStart, &loopEnd);
-
-    lua_newtable(L);
-    lua_pushinteger(L, loopStart);
-    lua_rawseti(L, -2, 1);
-    lua_pushinteger(L, loopEnd);
-    lua_rawseti(L, -2, 2);
-
-    return smlua_to_lua_table(L, -1);
+void audio_stream_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd) {
+    ma_data_source_get_loop_point_in_pcm_frames(&audio->decoder, loopStart, loopEnd);
 }
 
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
     
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
-    if (loopStart < 0) loopStart += length;
-    if (loopEnd <= 0) loopEnd += length;
+    if (loopStart < 0) loopStart = length + loopStart % length;
+    if (loopEnd <= 0) loopEnd = length + loopEnd % length;
 
     ma_sound_set_looping(&audio->sound, true);
     ma_data_source_set_loop_point_in_pcm_frames(&audio->decoder, loopStart, loopEnd);
@@ -629,24 +617,27 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     ma_sound_start(sound);
 }
 
-static bool sModAudioMute = false;
 void audio_custom_update_volume(void) {
-    gMasterVolume = (f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f;
-    if (!sModAudioPool) { return; }
-    ma_engine_set_volume(&sModAudioEngine, sModAudioMute ? 0 : gMasterVolume);
+    bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus());
 
+    // Update master volume
+    f32 masterVolume = shouldMute ? 0 : ((f32)configMasterVolume / 127.0f * (f32)gLuaVolumeMaster / 127.0f);
+    gMasterVolume = masterVolume;
+    if (!sModAudioPool) { return; }
+    if (ma_engine_get_volume(&sModAudioEngine) != masterVolume) {
+        ma_engine_set_volume(&sModAudioEngine, masterVolume);
+    }
+
+    // Update music volume
     f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+    if (ma_sound_group_get_volume(&sModAudioStreamGroup) != musicVolume) {
+        ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
+    }
+
+    // Update sound volume
     f32 sfxVolume = (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
-    ma_sound_group_set_volume(&sModAudioStreamGroup, musicVolume);
-    ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
-}
-
-void audio_custom_update_mute(bool mute) {
-    if (!sModAudioPool) { return; }
-
-    if (sModAudioMute != mute) {
-        sModAudioMute = mute;
-        ma_engine_set_volume(&sModAudioEngine, mute ? 0 : gMasterVolume);
+    if (ma_sound_group_get_volume(&sModAudioSampleGroup) != sfxVolume) {
+        ma_sound_group_set_volume(&sModAudioSampleGroup, sfxVolume);
     }
 }
 

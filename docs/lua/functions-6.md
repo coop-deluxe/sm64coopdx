@@ -5833,7 +5833,7 @@ Sets if an `audio` stream is looping or not
 Gets an `audio` stream's loop points in samples
 
 ### Lua Example
-`local tableValue = audio_stream_get_loop_points(audio)`
+`local loopStart, loopEnd = audio_stream_get_loop_points(audio)`
 
 ### Parameters
 | Field | Type |
@@ -5841,10 +5841,10 @@ Gets an `audio` stream's loop points in samples
 | audio | [ModAudio](structs.md#ModAudio) |
 
 ### Returns
-- `table`
+- None
 
 ### C Prototype
-`LuaTable audio_stream_get_loop_points(struct ModAudio* audio);`
+`void audio_stream_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`
 
 [:arrow_up_small:](#)
 
@@ -5869,7 +5869,7 @@ Sets an `audio` stream's loop points in samples
 - None
 
 ### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd);`
 
 [:arrow_up_small:](#)
 

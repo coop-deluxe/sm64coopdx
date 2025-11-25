@@ -10233,7 +10233,8 @@ function audio_stream_set_looping(audio, looping)
 end
 
 --- @param audio ModAudio
---- @return table
+--- @return integer loopStart
+--- @return integer loopEnd
 --- Gets an `audio` stream's loop points in samples
 function audio_stream_get_loop_points(audio)
     -- ...
@@ -10241,7 +10242,7 @@ end
 
 --- @param audio ModAudio
 --- @param loopStart integer
---- @param loopEnd integer
+--- @param loopEnd? integer
 --- Sets an `audio` stream's loop points in samples
 function audio_stream_set_loop_points(audio, loopStart, loopEnd)
     -- ...
