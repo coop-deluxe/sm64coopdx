@@ -23,7 +23,6 @@ void djui_panel_free_camera_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(CAMERA, ANALOG_CAMERA), &configFreeCameraAnalog, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_L_CENTERING), &configFreeCameraLCentering, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA_USE_DPAD), &configFreeCameraDPadBehavior, djui_panel_free_camera_value_changed);
-        djui_checkbox_create(body, DLANG(CAMERA, FREE_CAMERA_COLLISION), &configFreeCameraHasCollision, djui_panel_free_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, MOUSE_LOOK), &configFreeCameraMouse, djui_panel_free_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, X_SENSITIVITY), &configFreeCameraXSens, 1, 100, djui_panel_free_camera_value_changed);
         djui_slider_create(body, DLANG(CAMERA, Y_SENSITIVITY), &configFreeCameraYSens, 1, 100, djui_panel_free_camera_value_changed);
@@ -44,7 +43,6 @@ void djui_panel_romhack_camera_create(struct DjuiBase* caller) {
         char* choices[3] = { DLANG(CAMERA, ROMHACK_CAMERA_AUTOMATIC), DLANG(CAMERA, ROMHACK_CAMERA_ON), DLANG(CAMERA, ROMHACK_CAMERA_OFF) };
         djui_selectionbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA), choices, 3, &configEnableRomhackCamera, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_IN_BOWSER), &configRomhackCameraBowserFights, djui_panel_romhack_camera_value_changed);
-        djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_COLLISION), &configRomhackCameraHasCollision, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_L_CENTERING), &configRomhackCameraHasCentering, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_USE_DPAD), &configRomhackCameraDPadBehavior, djui_panel_romhack_camera_value_changed);
         djui_checkbox_create(body, DLANG(CAMERA, ROMHACK_CAMERA_SLOW_FALL), &configRomhackCameraSlowFall, djui_panel_romhack_camera_value_changed);
