@@ -13,44 +13,52 @@ typedef Pair<String, u32> PointerData;
 static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     // Lights
     for (auto& _Node : aGfxData->mLights) {
-        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { _Node->mName, 1 };
+        auto node = DynOS_Lights_Parse(aGfxData, _Node);
+        if (!node->mData) { continue; }
+        if (&node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+            return { node->mName, 1 };
         }
-        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { _Node->mName, 2 };
+        if (&node->mData->a == aPtr) { // Ambient *, not Lights1 *
+            return { node->mName, 2 };
         }
     }
 
     // Light0s
     for (auto& _Node : aGfxData->mLight0s) {
-        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { _Node->mName, 1 };
+        auto node = DynOS_Light0_Parse(aGfxData, _Node);
+        if (!node->mData) { continue; }
+        if (&node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+            return { node->mName, 1 };
         }
-        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { _Node->mName, 2 };
+        if (&node->mData->a == aPtr) { // Ambient *, not Lights1 *
+            return { node->mName, 2 };
         }
     }
 
     // Light_ts
     for (auto& _Node : aGfxData->mLightTs) {
-        if (&_Node->mData->col[0] == aPtr) {
-            return { _Node->mName, 1 };
+        auto node = DynOS_LightT_Parse(aGfxData, _Node);
+        if (!node->mData) { continue; }
+        if (&node->mData->col[0] == aPtr) {
+            return { node->mName, 1 };
         }
-        if (&_Node->mData->colc[0] == aPtr) {
-            return { _Node->mName, 2 };
+        if (&node->mData->colc[0] == aPtr) {
+            return { node->mName, 2 };
         }
-        if (&_Node->mData->dir[0] == aPtr) {
-            return { _Node->mName, 3 };
+        if (&node->mData->dir[0] == aPtr) {
+            return { node->mName, 3 };
         }
     }
 
     // Ambient_ts
     for (auto& _Node : aGfxData->mAmbientTs) {
-        if (&_Node->mData->col[0] == aPtr) {
-            return { _Node->mName, 1 };
+        auto node = DynOS_AmbientT_Parse(aGfxData, _Node);
+        if (!node->mData) { continue; }
+        if (&node->mData->col[0] == aPtr) {
+            return { node->mName, 1 };
         }
-        if (&_Node->mData->colc[0] == aPtr) {
-            return { _Node->mName, 2 };
+        if (&node->mData->colc[0] == aPtr) {
+            return { node->mName, 2 };
         }
     }
 
