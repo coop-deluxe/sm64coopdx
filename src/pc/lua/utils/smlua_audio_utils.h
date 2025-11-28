@@ -3,9 +3,6 @@
 
 #include "pc/lua/smlua_utils.h"
 
-#define MA_NO_RESOURCE_MANAGER
-#define MA_NO_GENERATION
-#define MA_NO_ENCODING
 #include "pc/utils/miniaudio.h"
 
 /* |description|Resets all custom sequences back to vanilla|descriptionEnd| */
