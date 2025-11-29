@@ -116,6 +116,11 @@ void controller_mouse_read_relative(void) {
 #elif defined(CAPI_SDL1) || defined(CAPI_SDL2)
     mouse_buttons = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
 #endif
+    if (mouse_scroll_y > 0) {
+        mouse_buttons |= MWHEELUP;
+    } else if (mouse_scroll_y < 0) {
+        mouse_buttons |= MWHEELDOWN;
+    }
 }
 
 void controller_mouse_enter_relative(void) {
