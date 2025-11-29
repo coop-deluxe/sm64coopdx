@@ -1816,6 +1816,7 @@
 - smlua_audio_utils.h
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
    - [audio_stream_load](functions-6.md#audio_stream_load)
    - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
    - [audio_stream_play](functions-6.md#audio_stream_play)
