@@ -75,8 +75,8 @@ def extract_functions(filename):
     while ('  ' in txt):
         txt = txt.replace('  ', ' ')
 
-    # strip macros
-    txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)
+    # strip macros (except RETURNS(...))
+    txt = re.sub(r'((?!RETURNS)[^a-zA-Z0-9_][A-Z0-9_])+\(.*\)', '', txt)
 
     # strip blocks
     tmp = txt

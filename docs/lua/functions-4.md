@@ -67,7 +67,7 @@ Gets the lighting engine mode
 - None
 
 ### Returns
-[enum LEMode](constants.md#enum-LEMode)
+- [enum LEMode](constants.md#enum-LEMode)
 
 ### C Prototype
 `enum LEMode le_get_mode(void);`
@@ -1249,7 +1249,7 @@ Checks for and resolves wall collisions at a given position `pos`, returning the
 | radius | `number` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f32 radius);`
@@ -1845,7 +1845,7 @@ Gets the MarioState corresponding to the provided object if the object is a Mari
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState *get_mario_state_from_object(struct Object *o);`
@@ -4397,7 +4397,7 @@ When used in a geo function, retrieve the MarioState associated to the current p
 - None
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState *geo_get_mario_state(void);`
@@ -4418,7 +4418,7 @@ When used in a geo function, retrieve the MarioBodyState associated to the curre
 - None
 
 ### Returns
-[MarioBodyState](structs.md#MarioBodyState)
+- [MarioBodyState](structs.md#MarioBodyState)
 
 ### C Prototype
 `struct MarioBodyState *geo_get_body_state(void);`
@@ -4930,7 +4930,7 @@ Rotates the 3D floating-point vector `v` by the angles specified in the 3D signe
 | rotate | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_rotate_zxy(OUT Vec3f v, Vec3s rotate);`
@@ -4956,7 +4956,7 @@ Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation
 | r | `integer` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_rotate_around_n(OUT Vec3f dest, Vec3f v, Vec3f n, s16 r);`
@@ -4981,7 +4981,7 @@ Projects the 3D floating-point vector `v` onto another 3D floating-point vector 
 | onto | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_project(OUT Vec3f dest, Vec3f v, Vec3f onto);`
@@ -5008,7 +5008,7 @@ Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it b
 | scale | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_transform(OUT Vec3f dest, Vec3f v, Vec3f translation, Vec3s rotation, Vec3f scale);`
@@ -5088,7 +5088,7 @@ Determines a vector that is perpendicular (normal) to the plane defined by three
 | c | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp find_vector_perpendicular_to_plane(OUT Vec3f dest, Vec3f a, Vec3f b, Vec3f c);`
@@ -5317,7 +5317,7 @@ Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp mtxf_mul_vec3s(Mat4 mtx, OUT Vec3s b);`
@@ -5414,7 +5414,7 @@ Extracts the position (translation component) from the transformation matrix `ob
 | camMtx | [Mat4](structs.md#Mat4) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp get_pos_from_transform_mtx(OUT Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
@@ -5690,7 +5690,7 @@ Sets the components of the 3D floating-point vector `v` to 0
 | v | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_zero(OUT Vec3f v);`
@@ -5714,7 +5714,7 @@ Copies the contents of a 3D floating-point vector (`src`) into another 3D floati
 | src | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_copy(OUT Vec3f dest, Vec3f src);`
@@ -5740,7 +5740,7 @@ Sets the values of the 3D floating-point vector `dest` to the given x, y, and z 
 | z | `number` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_set(OUT Vec3f dest, f32 x, f32 y, f32 z);`
@@ -5764,7 +5764,7 @@ Adds the components of the 3D floating-point vector `a` to `dest`
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_add(OUT Vec3f dest, Vec3f a);`
@@ -5789,7 +5789,7 @@ Adds the components of two 3D floating-point vectors `a` and `b` and stores the 
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_sum(OUT Vec3f dest, Vec3f a, Vec3f b);`
@@ -5813,7 +5813,7 @@ Subtracts the components of the 3D floating-point vector `a` from `dest`
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_sub(OUT Vec3f dest, Vec3f a);`
@@ -5838,7 +5838,7 @@ Subtracts the components of the 3D floating-point vector `b` from the components
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_dif(OUT Vec3f dest, Vec3f a, Vec3f b);`
@@ -5862,7 +5862,7 @@ Multiplies each component of the 3D floating-point vector `dest` by the scalar v
 | a | `number` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_mul(OUT Vec3f dest, f32 a);`
@@ -5886,7 +5886,7 @@ Multiplies the components of the 3D floating-point vector `dest` with the compon
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_mult(OUT Vec3f dest, Vec3f a);`
@@ -5911,7 +5911,7 @@ Multiplies the components of two 3D floating-point vectors `a` and `b` and store
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_prod(OUT Vec3f dest, Vec3f a, Vec3f b);`
@@ -5935,7 +5935,7 @@ Divides each component of the 3D floating-point vector `dest` by the scalar valu
 | a | `number` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_div(OUT Vec3f dest, f32 a);`
@@ -5981,7 +5981,7 @@ Normalizes the 3D floating-point vector `v` so that its length (magnitude) becom
 | v | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_normalize(OUT Vec3f v);`
@@ -6005,7 +6005,7 @@ Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its
 | mag | `number` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_set_magnitude(OUT Vec3f v, f32 mag);`
@@ -6054,7 +6054,7 @@ Computes the cross product of two 3D floating-point vectors `a` and `b` and stor
 | b | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_cross(OUT Vec3f dest, Vec3f a, Vec3f b);`
@@ -6081,7 +6081,7 @@ Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA`
 | sclB | `number` |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3f_combine(OUT Vec3f dest, Vec3f vecA, Vec3f vecB, f32 sclA, f32 sclB);`
@@ -6176,7 +6176,7 @@ Converts a 3D floating-point vector `a` into a 3D integer vector and stores the 
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3f_to_vec3i(OUT Vec3i dest, Vec3f a);`
@@ -6200,7 +6200,7 @@ Converts a 3D floating-point vector `a` into a 3D short integer vector and store
 | a | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3f_to_vec3s(OUT Vec3s dest, Vec3f a);`
@@ -6229,7 +6229,7 @@ Sets the components of the 3D integer vector `v` to 0
 | v | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_zero(OUT Vec3i v);`
@@ -6253,7 +6253,7 @@ Copies the contents of a 3D integer vector (`src`) into another 3D integer vecto
 | src | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_copy(OUT Vec3i dest, Vec3i src);`
@@ -6279,7 +6279,7 @@ Sets the values of the 3D integer vector `dest` to the given x, y, and z values
 | z | `integer` |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_set(OUT Vec3i dest, s32 x, s32 y, s32 z);`
@@ -6303,7 +6303,7 @@ Adds the components of the 3D integer vector `a` to `dest`
 | a | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_add(OUT Vec3i dest, Vec3i a);`
@@ -6328,7 +6328,7 @@ Adds the components of two 3D integer vectors `a` and `b` and stores the result 
 | b | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_sum(OUT Vec3i dest, Vec3i a, Vec3i b);`
@@ -6352,7 +6352,7 @@ Subtracts the components of the 3D integer vector `a` from `dest`
 | a | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_sub(OUT Vec3i dest, Vec3i a);`
@@ -6377,7 +6377,7 @@ Subtracts the components of the 3D integer vector `b` from the components of `a`
 | b | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_dif(OUT Vec3i dest, Vec3i a, Vec3i b);`
@@ -6401,7 +6401,7 @@ Multiplies each component of the 3D integer vector `dest` by the scalar value `a
 | a | `number` |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_mul(OUT Vec3i dest, f32 a);`
@@ -6425,7 +6425,7 @@ Multiplies the components of the 3D integer vector `dest` with the components of
 | a | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_mult(OUT Vec3i dest, Vec3i a);`
@@ -6450,7 +6450,7 @@ Multiplies the components of two 3D integer vectors `a` and `b` and stores the r
 | b | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_prod(OUT Vec3i dest, Vec3i a, Vec3i b);`
@@ -6474,7 +6474,7 @@ Divides each component of the 3D integer vector `dest` by the scalar value `a`
 | a | `number` |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_div(OUT Vec3i dest, f32 a);`
@@ -6520,7 +6520,7 @@ Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, w
 | v | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_normalize(OUT Vec3i v);`
@@ -6544,7 +6544,7 @@ Sets the length (magnitude) of 3D integer vector `v`, while retaining its direct
 | mag | `number` |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_set_magnitude(OUT Vec3i v, f32 mag);`
@@ -6593,7 +6593,7 @@ Computes the cross product of two 3D integer vectors `a` and `b` and stores the 
 | b | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_cross(OUT Vec3i dest, Vec3i a, Vec3i b);`
@@ -6620,7 +6620,7 @@ Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `s
 | sclB | `number` |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3i_combine(OUT Vec3i dest, Vec3i vecA, Vec3i vecB, f32 sclA, f32 sclB);`
@@ -6715,7 +6715,7 @@ Converts a 3D integer vector `a` into a 3D floating-point vector and stores the 
 | a | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3i_to_vec3f(OUT Vec3f dest, Vec3i a);`
@@ -6739,7 +6739,7 @@ Converts a 3D integer vector `a` into a 3D short integer vector and stores the r
 | a | [Vec3i](structs.md#Vec3i) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3i_to_vec3s(OUT Vec3s dest, Vec3i a);`

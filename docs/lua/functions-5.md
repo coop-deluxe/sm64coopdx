@@ -25,7 +25,7 @@ Sets the components of the 3D short integer vector `v` to 0
 | v | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_zero(OUT Vec3s v);`
@@ -49,7 +49,7 @@ Copies the contents of a 3D short integer vector (`src`) into another 3D short i
 | src | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_copy(OUT Vec3s dest, Vec3s src);`
@@ -75,7 +75,7 @@ Sets the values of the 3D short integer vector `dest` to the given x, y, and z v
 | z | `integer` |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_set(OUT Vec3s dest, s16 x, s16 y, s16 z);`
@@ -99,7 +99,7 @@ Adds the components of the 3D short integer vector `a` to `dest`
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_add(OUT Vec3s dest, Vec3s a);`
@@ -124,7 +124,7 @@ Adds the components of two 3D short integer vectors `a` and `b` and stores the r
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_sum(OUT Vec3s dest, Vec3s a, Vec3s b);`
@@ -148,7 +148,7 @@ Subtracts the components of the 3D short integer vector `a` from `dest`
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_sub(OUT Vec3s dest, Vec3s a);`
@@ -173,7 +173,7 @@ Subtracts the components of the 3D short integer vector `b` from the components 
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_dif(OUT Vec3s dest, Vec3s a, Vec3s b);`
@@ -197,7 +197,7 @@ Multiplies each component of the 3D short integer vector `dest` by the scalar va
 | a | `number` |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_mul(OUT Vec3s dest, f32 a);`
@@ -221,7 +221,7 @@ Multiplies the components of the 3D short integer vector `dest` with the compone
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_mult(OUT Vec3s dest, Vec3s a);`
@@ -246,7 +246,7 @@ Multiplies the components of two 3D short integer vectors `a` and `b` and stores
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_prod(OUT Vec3s dest, Vec3s a, Vec3s b);`
@@ -270,7 +270,7 @@ Divides each component of the 3D short integer vector `dest` by the scalar value
 | a | `number` |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_div(OUT Vec3s dest, f32 a);`
@@ -316,7 +316,7 @@ Normalizes the 3D short integer vector `v` so that its length (magnitude) become
 | v | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_normalize(OUT Vec3s v);`
@@ -340,7 +340,7 @@ Sets the length (magnitude) of 3D short integer vector `v`, while retaining its 
 | mag | `number` |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_set_magnitude(OUT Vec3s v, f32 mag);`
@@ -389,7 +389,7 @@ Computes the cross product of two 3D short integer vectors `a` and `b` and store
 | b | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_cross(OUT Vec3s dest, Vec3s a, Vec3s b);`
@@ -416,7 +416,7 @@ Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` 
 | sclB | `number` |
 
 ### Returns
-[Vec3s](structs.md#Vec3s)
+- [Vec3s](structs.md#Vec3s)
 
 ### C Prototype
 `Vec3sp vec3s_combine(OUT Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
@@ -511,7 +511,7 @@ Converts a 3D short integer vector `a` into a 3D floating-point vector and store
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3f](structs.md#Vec3f)
+- [Vec3f](structs.md#Vec3f)
 
 ### C Prototype
 `Vec3fp vec3s_to_vec3f(OUT Vec3f dest, Vec3s a);`
@@ -535,7 +535,7 @@ Converts a 3D short integer vector `a` into a 3D integer vector and stores the r
 | a | [Vec3s](structs.md#Vec3s) |
 
 ### Returns
-[Vec3i](structs.md#Vec3i)
+- [Vec3i](structs.md#Vec3i)
 
 ### C Prototype
 `Vec3ip vec3s_to_vec3i(OUT Vec3i dest, Vec3s a);`
@@ -828,7 +828,7 @@ Gets the modfs object at path `modPath` or the active mod one if not provided. T
 | modPath | `string` |
 
 ### Returns
-[ModFs](structs.md#ModFs)
+- [ModFs](structs.md#ModFs)
 
 ### C Prototype
 `struct ModFs *mod_fs_get(OPTIONAL const char *modPath);`
@@ -851,7 +851,7 @@ Reloads the modfs object at path `modPath`. This function will return nil for a 
 | modPath | `string` |
 
 ### Returns
-[ModFs](structs.md#ModFs)
+- [ModFs](structs.md#ModFs)
 
 ### C Prototype
 `struct ModFs *mod_fs_reload(OPTIONAL const char *modPath);`
@@ -872,7 +872,7 @@ Creates a modfs object for the active mod if it doesn't exist. Returns the modfs
 - None
 
 ### Returns
-[ModFs](structs.md#ModFs)
+- [ModFs](structs.md#ModFs)
 
 ### C Prototype
 `struct ModFs *mod_fs_create();`
@@ -920,7 +920,7 @@ Gets the file object at path `filepath` of the provided `modFs`. This function w
 | filepath | `string` |
 
 ### Returns
-[ModFsFile](structs.md#ModFsFile)
+- [ModFsFile](structs.md#ModFsFile)
 
 ### C Prototype
 `struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath);`
@@ -945,7 +945,7 @@ Creates a new file at path `filepath` for the provided `modFs`. Set `text` to tr
 | text | `boolean` |
 
 ### Returns
-[ModFsFile](structs.md#ModFsFile)
+- [ModFsFile](structs.md#ModFsFile)
 
 ### C Prototype
 `struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text);`
@@ -1950,7 +1950,7 @@ Gets a network player from `globalIndex`
 | globalIndex | `integer` |
 
 ### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
+- [NetworkPlayer](structs.md#NetworkPlayer)
 
 ### C Prototype
 `struct NetworkPlayer* network_player_from_global_index(u8 globalIndex);`
@@ -1975,7 +1975,7 @@ Gets the first network player whose information matches `courseNum`, `actNum`, a
 | levelNum | `integer` |
 
 ### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
+- [NetworkPlayer](structs.md#NetworkPlayer)
 
 ### C Prototype
 `struct NetworkPlayer* get_network_player_from_level(s16 courseNum, s16 actNum, s16 levelNum);`
@@ -2001,7 +2001,7 @@ Gets the first network player whose information matches `courseNum`, `actNum`, `
 | areaIndex | `integer` |
 
 ### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
+- [NetworkPlayer](structs.md#NetworkPlayer)
 
 ### C Prototype
 `struct NetworkPlayer* get_network_player_from_area(s16 courseNum, s16 actNum, s16 levelNum, s16 areaIndex);`
@@ -2022,7 +2022,7 @@ Gets the active network player with the smallest global index. Useful for assign
 - None
 
 ### Returns
-[NetworkPlayer](structs.md#NetworkPlayer)
+- [NetworkPlayer](structs.md#NetworkPlayer)
 
 ### C Prototype
 `struct NetworkPlayer* get_network_player_smallest_global(void);`
@@ -2712,7 +2712,7 @@ Gets the nearest active Mario who isn't bubbled to `obj`
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState* nearest_mario_state_to_object(struct Object *obj);`
@@ -2735,7 +2735,7 @@ Gets the nearest possible Mario to `obj` despite anything like bubbled state or 
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj);`
@@ -2758,7 +2758,7 @@ Gets the nearest player (Mario Object) to `obj`
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* nearest_player_to_object(struct Object *obj);`
@@ -2781,7 +2781,7 @@ Gets the nearest interacting Mario to `obj`
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);`
@@ -2804,7 +2804,7 @@ Gets the nearest interacting player (Mario Object) to `obj`
 | obj | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *nearest_interacting_player_to_object(struct Object *obj);`
@@ -4230,7 +4230,7 @@ Moves the current object for specifically one second (`oTimer` < 30)
 | movePitch | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model, f32 startSpeed, f32 endSpeed, s16 movePitch);`

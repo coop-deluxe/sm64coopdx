@@ -12021,7 +12021,7 @@ Spawns a Star with an ID corresponding to the current object's first behavior pa
 | z | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_default_star(f32 x, f32 y, f32 z);`
@@ -12046,7 +12046,7 @@ Spawns a Red Coin cutscene star with an ID corresponding to the current object's
 | z | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z);`
@@ -12071,7 +12071,7 @@ Spawns a Star that won't make Mario exit the level with an ID corresponding to t
 | z | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z);`

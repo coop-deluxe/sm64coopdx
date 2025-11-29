@@ -180,7 +180,7 @@ Gets a behavior ID from a behavior script
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
@@ -203,7 +203,7 @@ Gets a behavior ID from only vanilla behavior scripts
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
@@ -272,7 +272,7 @@ gets a behavior ID from a behavior name
 | name | `string` |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior_name(const char* name);`
@@ -2502,7 +2502,7 @@ Gets a Character struct from `m`
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-[Character](structs.md#Character)
+- [Character](structs.md#Character)
 
 ### C Prototype
 `struct Character* get_character(struct MarioState* m);`
@@ -2861,7 +2861,7 @@ Gets the current DJUI HUD color
 - None
 
 ### Returns
-[DjuiColor](structs.md#DjuiColor)
+- [DjuiColor](structs.md#DjuiColor)
 
 ### C Prototype
 `struct DjuiColor* djui_hud_get_color(void);`
@@ -2929,7 +2929,7 @@ Gets the current DJUI HUD rotation
 - None
 
 ### Returns
-[HudUtilsRotation](structs.md#HudUtilsRotation)
+- [HudUtilsRotation](structs.md#HudUtilsRotation)
 
 ### C Prototype
 `struct HudUtilsRotation* djui_hud_get_rotation(void);`
@@ -6123,7 +6123,7 @@ Returns a collided object that matches a given interaction type from Mario's cur
 | interactType | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);`
@@ -6338,7 +6338,7 @@ Gets the local Mario's state stored in lag compensation history
 | otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
@@ -6571,7 +6571,7 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
@@ -6666,7 +6666,7 @@ Gets an instant warp from the current area's instant warp array (0-3)
 | index | `integer` |
 
 ### Returns
-[InstantWarp](structs.md#InstantWarp)
+- [InstantWarp](structs.md#InstantWarp)
 
 ### C Prototype
 `struct InstantWarp *get_instant_warp(u8 index);`
@@ -6687,7 +6687,7 @@ Gets a painting warp node from the local mario's floor type
 - None
 
 ### Returns
-[WarpNode](structs.md#WarpNode)
+- [WarpNode](structs.md#WarpNode)
 
 ### C Prototype
 `struct WarpNode *get_painting_warp_node(void);`
