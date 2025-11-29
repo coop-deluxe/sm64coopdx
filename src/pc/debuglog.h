@@ -46,11 +46,13 @@ static void _debuglog_print_log(const char* logType, char* filename) {
 #if defined(DISABLE_MODULE_LOG)
 #define LOG_DEBUG(...)
 #define LOG_INFO(...)
+#define LOG_WARNING(...)
 #define LOG_ERROR(...)
 #else
-#define LOG_DEBUG(...) (configDebugPrint ? ( _debuglog_print_log("DEBUG", __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
-#define LOG_INFO(...)  ((configDebugInfo || gCLIOpts.headless) ? ( _debuglog_print_log("INFO",  __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
-#define LOG_ERROR(...) (configDebugError ? ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
+#define LOG_DEBUG(...)     (configDebugPrint ? ( _debuglog_print_log("DEBUG", __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
+#define LOG_INFO(...)      ((configDebugInfo || gCLIOpts.headless) ? ( _debuglog_print_log("INFO",  __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
+#define LOG_WARNING(...)   (configDebugWarning ? ( _debuglog_print_log("WARNING",  __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
+#define LOG_ERROR(...)     (configDebugError ? ( _debuglog_print_log("ERROR", __FILE__), printf(__VA_ARGS__), printf("\n") ) : 0)
 #endif
 #define LOG_CONSOLE(...)  { snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO); }
 

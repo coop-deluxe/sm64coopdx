@@ -224,6 +224,7 @@ manual_index_documentation = """
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
+   - [log_to_stdout](#log_to_stdout)
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
@@ -490,6 +491,29 @@ Logs a message to the in-game console.
 
 ### C Prototype
 `void log_to_console(const char* message, enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [log_to_stdout](#log_to_stdout)
+
+Logs a message to standard output.
+
+### Lua Example
+`log_to_stdout("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| level (optional) | `ConsoleMessageLevel` |
+
+### Returns
+- None
+
+### C Prototype
+`void log_to_stdout(const char* message, enum ConsoleMessageLevel level);`
 
 [:arrow_up_small:](#)
 
