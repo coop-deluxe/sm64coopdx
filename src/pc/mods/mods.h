@@ -32,6 +32,7 @@ void mods_clear(struct Mods* mods);
 void mods_delete_folder(char* path);
 void mods_refresh_local(void);
 void mods_enable(char* relativePath);
+void mods_disable(char* relativePath);
 void mods_init(void);
 void mods_shutdown(void);
 

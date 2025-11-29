@@ -316,6 +316,18 @@ void mods_enable(char* relativePath) {
     }
 }
 
+void mods_disable(char* relativePath) {
+    if (!relativePath) { return; }
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!strcmp(relativePath, mod->relativePath)) {
+            mod->enabled = false;
+            break;
+        }
+    }
+}
+
 void mods_init(void) {
 
     // load mod cache

@@ -99,6 +99,7 @@ struct NametagsSettings {
 extern struct NetworkSystem* gNetworkSystem;
 extern enum NetworkType gNetworkType;
 extern bool gNetworkAreaLoaded;
+extern bool gReconnectRequested;
 extern bool gNetworkAreaSyncing;
 extern u32 gNetworkAreaTimer;
 extern u32 gNetworkAreaTimerClock;
