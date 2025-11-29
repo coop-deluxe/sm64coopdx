@@ -68,6 +68,7 @@ void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* fi
 static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     char basePath[SYS_MAX_PATH] = "";
     char absolutePath[SYS_MAX_PATH] = "";
+    char normalized_relative[SYS_MAX_PATH] = "";
 
     if (!gLuaActiveMod) {
         return NULL;
@@ -100,8 +101,10 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
             continue;
         }
 
-        // check for match
-        if (!strcmp(file->relativePath, luaName) || !strcmp(file->relativePath, luacName)) {
+        // check for match, normalizing to system separators
+        strcpy(normalized_relative, file->relativePath);
+        normalize_path(normalized_relative);
+        if (!strcmp(normalized_relative, luaName) || !strcmp(normalized_relative, luacName)) {
             return file;
         }
     }
