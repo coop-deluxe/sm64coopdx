@@ -1481,6 +1481,13 @@ u8 get_missing_bank(u32 seqId, s32 *nonNullCount, s32 *nullCount) {
 #endif
 
 #ifndef VERSION_SH
+
+s32 gOverrideBank = -1;
+
+void set_sound_bank_override(s32 bank) {
+    gOverrideBank = bank;
+}
+
 struct AudioBank *load_banks_immediate(s32 seqId, u8 *arg1) {
     void *ret = NULL;
     u32 bankId = 0;
@@ -1497,6 +1504,10 @@ struct AudioBank *load_banks_immediate(s32 seqId, u8 *arg1) {
         offset++;
         bankId = gAlBankSets[offset - 1];
 #endif
+
+        if (gOverrideBank > 0) {
+            bankId = gOverrideBank;
+        }
 
         if (IS_BANK_LOAD_COMPLETE(bankId) == TRUE) {
 #ifdef VERSION_EU

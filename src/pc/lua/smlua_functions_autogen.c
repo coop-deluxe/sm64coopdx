@@ -54,6 +54,7 @@
 #include "src/audio/seqplayer.h"
 #include "src/engine/lighting_engine.h"
 #include "src/pc/network/sync_object.h"
+#include "src/audio/load.h"
 
 
   ///////////////
@@ -16075,6 +16076,27 @@ int smlua_func_le_set_light_use_surface_normals(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "le_set_light_use_surface_normals"); return 0; }
 
     le_set_light_use_surface_normals(id, useSurfaceNormals);
+
+    return 1;
+}
+
+  ////////////
+ // load.h //
+////////////
+
+int smlua_func_set_sound_bank_override(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_sound_bank_override", 1, top);
+        return 0;
+    }
+
+    s32 bank = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_sound_bank_override"); return 0; }
+
+    set_sound_bank_override(bank);
 
     return 1;
 }
@@ -37794,6 +37816,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "le_set_light_intensity", smlua_func_le_set_light_intensity);
     smlua_bind_function(L, "le_get_light_use_surface_normals", smlua_func_le_get_light_use_surface_normals);
     smlua_bind_function(L, "le_set_light_use_surface_normals", smlua_func_le_set_light_use_surface_normals);
+
+    // load.h
+    smlua_bind_function(L, "set_sound_bank_override", smlua_func_set_sound_bank_override);
 
     // mario.h
     smlua_bind_function(L, "is_anim_at_end", smlua_func_is_anim_at_end);

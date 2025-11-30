@@ -36,6 +36,7 @@
 #include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
+#include "src/audio/load.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -748,6 +749,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLuaVolumeLevel = 127;
     gLuaVolumeSfx = 127;
     gLuaVolumeEnv = 127;
+
+    gOverrideBank = -1;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
