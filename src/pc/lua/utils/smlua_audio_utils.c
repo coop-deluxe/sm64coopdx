@@ -74,7 +74,7 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
     struct AudioOverride* override = &sAudioOverrides[sequenceId];
     if (!override->enabled) { return false; }
 
-    override->bank = gOverrideBank > 0 ? gOverrideBank: override->bank;
+    if (gOverrideBank > -1) { override->bank = gOverrideBank; }
 
     if (override->loaded) {
         *seqData = override->buffer;
