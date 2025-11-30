@@ -8032,6 +8032,30 @@ Gets the texture from a display list command if it has an image related op
 
 <br />
 
+## [gfx_get_from_name](#gfx_get_from_name)
+
+### Description
+Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+
+### Lua Example
+`local PointerValue, integerValue = gfx_get_from_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Gfx`>
+- `integer`
+
+### C Prototype
+`RETURNS(Gfx*, u32) gfx_get_from_name(const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_get_name](#gfx_get_name)
 
 ### Description
@@ -8237,6 +8261,30 @@ Deletes all display lists created by `gfx_create`
 
 ### C Prototype
 `void gfx_delete_all();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_from_name](#vtx_get_from_name)
+
+### Description
+Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+
+### Lua Example
+`local PointerValue, integerValue = vtx_get_from_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Vtx`>
+- `integer`
+
+### C Prototype
+`RETURNS(Vtx*, u32) vtx_get_from_name(const char *name);`
 
 [:arrow_up_small:](#)
 

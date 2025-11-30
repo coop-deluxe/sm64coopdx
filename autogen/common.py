@@ -254,11 +254,7 @@ def translate_type_to_lot(ptype, allowArrays=True):
 
 def translate_type_to_lua(ptype):
     if type(ptype) is list:
-        rt, rl = [], []
-        for _t in ptype:
-            t, l = translate_type_to_lua(_t)
-            rt.append(t); rl.append(l)
-        return rt, rl
+        return [list(tup) for tup in zip(*[translate_type_to_lua(t) for t in ptype])]
 
     if ptype == 'const char*':
         return '`string`', None

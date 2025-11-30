@@ -101,7 +101,6 @@ static const char *sLuaLvtNames[] = {
     [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "pointer",
     [LVT_FUNCTION] = "function",
-    [LVT_FIELD] = "field",
     [LVT_MAX] = "unknown",
 };
 
