@@ -3,6 +3,7 @@
 #ifdef __cplusplus
 
 #include "dynos.h"
+#include <vector>
 
 extern "C" {
 #include "engine/behavior_script.h"
@@ -209,22 +210,30 @@ public:
 
     inline Array(const std::initializer_list<T> &aList) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aList.size());
-        memcpy(mBuffer, aList.begin(), mCount * sizeof(T));
+        for (s32 i = 0; i < mCount; ++i) {
+            mBuffer[i] = *(aList.begin() + i);
+        }
     }
 
     inline Array(const T *aBegin, const T *aEnd) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aEnd - aBegin);
-        memcpy(mBuffer, aBegin, mCount * sizeof(T));
+        for (s32 i = 0; i < mCount; ++i) {
+            mBuffer[i] = aBegin[i];
+        }
     }
 
     inline Array(const Array &aOther) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aOther.mCount);
-        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
+        for (s32 i = 0; i < mCount; ++i) {
+            mBuffer[i] = aOther.mBuffer[i];
+        }
     }
 
     inline void operator=(const Array &aOther) {
         Resize(aOther.mCount);
-        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
+        for (s32 i = 0; i < mCount; ++i) {
+            mBuffer[i] = aOther.mBuffer[i];
+        }
     }
 
     inline ~Array() {
@@ -597,8 +606,8 @@ struct PackData {
     bool mEnabled;
     SysPath mPath;
     String mDisplayName;
-    Array<Pair<const char *, GfxData *>> mGfxData;
-    Array<DataNode<TexData>*> mTextures;
+    std::vector<std::pair<std::string, GfxData *>> mGfxData;
+    std::vector<DataNode<TexData>*> mTextures;
     bool mLoaded;
 };
 
@@ -878,7 +887,7 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled);
 PackData* DynOS_Pack_GetFromIndex(s32 aIndex);
 PackData* DynOS_Pack_GetFromPath(const SysPath& aPath);
 PackData* DynOS_Pack_Add(const SysPath& aPath);
-Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
+std::pair<std::string, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName);
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
 void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
@@ -927,7 +936,7 @@ void DynOS_Tex_ModShutdown();
 // Lvl Manager
 //
 
-Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray();
+std::vector<std::pair<std::string, GfxData *>> &DynOS_Lvl_GetArray();
 LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName);
 void  DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilePath, const char *aLevelName);
 GfxData* DynOS_Lvl_GetActiveGfx(void);
@@ -942,7 +951,7 @@ void DynOS_Lvl_ModShutdown();
 // Bhv Manager
 //
 
-Array<Pair<const char *, GfxData *>> &DynOS_Bhv_GetArray();
+std::vector<std::pair<std::string, GfxData *>> &DynOS_Bhv_GetArray();
 void DynOS_Bhv_Activate(s32 modIndex, const SysPath &aFilename, const char *aBehaviorName);
 GfxData *DynOS_Bhv_GetActiveGfx(BehaviorScript *bhvScript);
 bool DynOS_Bhv_GetActiveModIndex(BehaviorScript *bhvScript, s32 *modIndex, s32 *modFileIndex);
