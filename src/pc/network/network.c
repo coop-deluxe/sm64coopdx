@@ -712,6 +712,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideFar = 0;
     gOverrideFOV = 0;
     gRoomOverride = -1;
+    gOverrideBank = -1;
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;
@@ -749,8 +750,6 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLuaVolumeLevel = 127;
     gLuaVolumeSfx = 127;
     gLuaVolumeEnv = 127;
-
-    gOverrideBank = -1;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
