@@ -13,3 +13,4 @@ struct DjuiChatMessage {
 void djui_chat_message_create_from(u8 globalIndex, const char* message);
 /* |description|Creates a `message` in the game's chat box|descriptionEnd| */
 void djui_chat_message_create(const char* message);
+void djui_chat_messages_apply_style(void);
