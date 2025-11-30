@@ -29,6 +29,8 @@ extern "C" {
     #include "pc/rom_checker.h"
     #include "pc/network/version.h"
     #include "pc/configfile.h"
+    #include "pc/lua/smlua.h"
+    #include "pc/controller/controller_keyboard.h"
 }
 
 #include "pc/pc_main.h"
@@ -229,6 +231,260 @@ static void update_screen_settings(void) {
     }
 }
 
+// Maps dxgi scancodes to sdl2 scancodes, left scancodes are non-extended keys and right ones are extended keys
+static const DXGI_Scancode dxgi_scancodes[256][2] = {
+    /* Non-Extended              | Extended            */
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x00
+    { DXGI_SCANCODE_ESCAPE,       DXGI_SCANCODE_UNKNOWN },            // 0x01
+    { DXGI_SCANCODE_1,            DXGI_SCANCODE_UNKNOWN },            // 0x02
+    { DXGI_SCANCODE_2,            DXGI_SCANCODE_UNKNOWN },            // 0x03
+    { DXGI_SCANCODE_3,            DXGI_SCANCODE_UNKNOWN },            // 0x04
+    { DXGI_SCANCODE_4,            DXGI_SCANCODE_UNKNOWN },            // 0x05
+    { DXGI_SCANCODE_5,            DXGI_SCANCODE_UNKNOWN },            // 0x06
+    { DXGI_SCANCODE_6,            DXGI_SCANCODE_UNKNOWN },            // 0x07
+    { DXGI_SCANCODE_7,            DXGI_SCANCODE_UNKNOWN },            // 0x08
+    { DXGI_SCANCODE_8,            DXGI_SCANCODE_UNKNOWN },            // 0x09
+    { DXGI_SCANCODE_9,            DXGI_SCANCODE_UNKNOWN },            // 0x0A
+    { DXGI_SCANCODE_0,            DXGI_SCANCODE_UNKNOWN },            // 0x0B
+    { DXGI_SCANCODE_MINUS,        DXGI_SCANCODE_UNKNOWN },            // 0x0C
+    { DXGI_SCANCODE_EQUALS,       DXGI_SCANCODE_UNKNOWN },            // 0x0D
+    { DXGI_SCANCODE_BACKSPACE,    DXGI_SCANCODE_UNKNOWN },            // 0x0E
+    { DXGI_SCANCODE_TAB,          DXGI_SCANCODE_UNKNOWN },            // 0x0F
+    { DXGI_SCANCODE_Q,            DXGI_SCANCODE_UNKNOWN },            // 0x10
+    { DXGI_SCANCODE_W,            DXGI_SCANCODE_UNKNOWN },            // 0x11
+    { DXGI_SCANCODE_E,            DXGI_SCANCODE_UNKNOWN },            // 0x12
+    { DXGI_SCANCODE_R,            DXGI_SCANCODE_UNKNOWN },            // 0x13
+    { DXGI_SCANCODE_T,            DXGI_SCANCODE_UNKNOWN },            // 0x14
+    { DXGI_SCANCODE_Y,            DXGI_SCANCODE_UNKNOWN },            // 0x15
+    { DXGI_SCANCODE_U,            DXGI_SCANCODE_UNKNOWN },            // 0x16
+    { DXGI_SCANCODE_I,            DXGI_SCANCODE_UNKNOWN },            // 0x17
+    { DXGI_SCANCODE_O,            DXGI_SCANCODE_UNKNOWN },            // 0x18
+    { DXGI_SCANCODE_P,            DXGI_SCANCODE_UNKNOWN },            // 0x19
+    { DXGI_SCANCODE_LEFTBRACKET,  DXGI_SCANCODE_UNKNOWN },            // 0x1A
+    { DXGI_SCANCODE_RIGHTBRACKET, DXGI_SCANCODE_UNKNOWN },            // 0x1B
+    { DXGI_SCANCODE_RETURN,       DXGI_SCANCODE_KP_ENTER },           // 0x1C
+    { DXGI_SCANCODE_LCTRL,        DXGI_SCANCODE_RCTRL },              // 0x1D
+    { DXGI_SCANCODE_A,            DXGI_SCANCODE_UNKNOWN },            // 0x1E
+    { DXGI_SCANCODE_S,            DXGI_SCANCODE_UNKNOWN },            // 0x1F
+    { DXGI_SCANCODE_D,            DXGI_SCANCODE_UNKNOWN },            // 0x20
+    { DXGI_SCANCODE_F,            DXGI_SCANCODE_UNKNOWN },            // 0x21
+    { DXGI_SCANCODE_G,            DXGI_SCANCODE_UNKNOWN },            // 0x22
+    { DXGI_SCANCODE_H,            DXGI_SCANCODE_UNKNOWN },            // 0x23
+    { DXGI_SCANCODE_J,            DXGI_SCANCODE_UNKNOWN },            // 0x24
+    { DXGI_SCANCODE_K,            DXGI_SCANCODE_UNKNOWN },            // 0x25
+    { DXGI_SCANCODE_L,            DXGI_SCANCODE_UNKNOWN },            // 0x26
+    { DXGI_SCANCODE_SEMICOLON,    DXGI_SCANCODE_UNKNOWN },            // 0x27
+    { DXGI_SCANCODE_APOSTROPHE,   DXGI_SCANCODE_UNKNOWN },            // 0x28
+    { DXGI_SCANCODE_GRAVE,        DXGI_SCANCODE_UNKNOWN },            // 0x29
+    { DXGI_SCANCODE_LSHIFT,       DXGI_SCANCODE_UNKNOWN },            // 0x2A
+    { DXGI_SCANCODE_BACKSLASH,    DXGI_SCANCODE_UNKNOWN },            // 0x2B
+    { DXGI_SCANCODE_Z,            DXGI_SCANCODE_UNKNOWN },            // 0x2C
+    { DXGI_SCANCODE_X,            DXGI_SCANCODE_UNKNOWN },            // 0x2D
+    { DXGI_SCANCODE_C,            DXGI_SCANCODE_UNKNOWN },            // 0x2E
+    { DXGI_SCANCODE_V,            DXGI_SCANCODE_UNKNOWN },            // 0x2F
+    { DXGI_SCANCODE_B,            DXGI_SCANCODE_UNKNOWN },            // 0x30
+    { DXGI_SCANCODE_N,            DXGI_SCANCODE_UNKNOWN },            // 0x31
+    { DXGI_SCANCODE_M,            DXGI_SCANCODE_UNKNOWN },            // 0x32
+    { DXGI_SCANCODE_COMMA,        DXGI_SCANCODE_UNKNOWN },            // 0x33
+    { DXGI_SCANCODE_PERIOD,       DXGI_SCANCODE_UNKNOWN },            // 0x34
+    { DXGI_SCANCODE_SLASH,        DXGI_SCANCODE_KP_DIVIDE },          // 0x35
+    { DXGI_SCANCODE_RSHIFT,       DXGI_SCANCODE_UNKNOWN },            // 0x36
+    { DXGI_SCANCODE_KP_MULTIPLY,  DXGI_SCANCODE_PRINTSCREEN },        // 0x37
+    { DXGI_SCANCODE_LALT,         DXGI_SCANCODE_RALT },               // 0x38
+    { DXGI_SCANCODE_SPACE,        DXGI_SCANCODE_UNKNOWN },            // 0x39
+    { DXGI_SCANCODE_CAPSLOCK,     DXGI_SCANCODE_UNKNOWN },            // 0x3A
+    { DXGI_SCANCODE_F1,           DXGI_SCANCODE_UNKNOWN },            // 0x3B
+    { DXGI_SCANCODE_F2,           DXGI_SCANCODE_UNKNOWN },            // 0x3C
+    { DXGI_SCANCODE_F3,           DXGI_SCANCODE_UNKNOWN },            // 0x3D
+    { DXGI_SCANCODE_F4,           DXGI_SCANCODE_UNKNOWN },            // 0x3E
+    { DXGI_SCANCODE_F5,           DXGI_SCANCODE_UNKNOWN },            // 0x3F
+    { DXGI_SCANCODE_F6,           DXGI_SCANCODE_UNKNOWN },            // 0x40
+    { DXGI_SCANCODE_F7,           DXGI_SCANCODE_UNKNOWN },            // 0x41
+    { DXGI_SCANCODE_F8,           DXGI_SCANCODE_UNKNOWN },            // 0x42
+    { DXGI_SCANCODE_F9,           DXGI_SCANCODE_UNKNOWN },            // 0x43
+    { DXGI_SCANCODE_F10,          DXGI_SCANCODE_UNKNOWN },            // 0x44
+    { DXGI_SCANCODE_PAUSE,        DXGI_SCANCODE_NUMLOCKCLEAR },       // 0x45
+    { DXGI_SCANCODE_SCROLLLOCK,   DXGI_SCANCODE_UNKNOWN },            // 0x46
+    { DXGI_SCANCODE_KP_7,         DXGI_SCANCODE_HOME },               // 0x47
+    { DXGI_SCANCODE_KP_8,         DXGI_SCANCODE_UP },                 // 0x48
+    { DXGI_SCANCODE_KP_9,         DXGI_SCANCODE_PAGEUP },             // 0x49
+    { DXGI_SCANCODE_KP_MINUS,     DXGI_SCANCODE_UNKNOWN },            // 0x4A
+    { DXGI_SCANCODE_KP_4,         DXGI_SCANCODE_LEFT },               // 0x4B
+    { DXGI_SCANCODE_KP_5,         DXGI_SCANCODE_UNKNOWN },            // 0x4C
+    { DXGI_SCANCODE_KP_6,         DXGI_SCANCODE_RIGHT },              // 0x4D
+    { DXGI_SCANCODE_KP_PLUS,      DXGI_SCANCODE_UNKNOWN },            // 0x4E
+    { DXGI_SCANCODE_KP_1,         DXGI_SCANCODE_END },                // 0x4F
+    { DXGI_SCANCODE_KP_2,         DXGI_SCANCODE_DOWN },               // 0x50
+    { DXGI_SCANCODE_KP_3,         DXGI_SCANCODE_PAGEDOWN },           // 0x51
+    { DXGI_SCANCODE_KP_0,         DXGI_SCANCODE_INSERT },             // 0x52
+    { DXGI_SCANCODE_KP_PERIOD,    DXGI_SCANCODE_DELETE },             // 0x53
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x54
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x55
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x56
+    { DXGI_SCANCODE_F11,          DXGI_SCANCODE_UNKNOWN },            // 0x57
+    { DXGI_SCANCODE_F12,          DXGI_SCANCODE_UNKNOWN },            // 0x58
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x59
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNKNOWN },            // 0x5A
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LGUI },               // 0x5B
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RGUI },               // 0x5C
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_APPLICATION },        // 0x5D
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F13 },                // 0x5E
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F14 },                // 0x5F
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F15 },                // 0x60
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F16 },                // 0x61
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F17 },                // 0x62
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F18 },                // 0x63
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F19 },                // 0x64
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F20 },                // 0x65
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F21 },                // 0x66
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F22 },                // 0x67
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F23 },                // 0x68
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_F24 },                // 0x69
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_EXECUTE },            // 0x6A
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_HELP },               // 0x6B
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_MENU },               // 0x6C
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SELECT },             // 0x6D
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_STOP },               // 0x6E
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AGAIN },              // 0x6F
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_UNDO },               // 0x70
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CUT },                // 0x71
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_COPY },               // 0x72
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_PASTE },              // 0x73
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_FIND },               // 0x74
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_MUTE },               // 0x75
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_VOLUMEUP },           // 0x76
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_VOLUMEDOWN },         // 0x77
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_COMMA },           // 0x78
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_EQUALSAS400 },     // 0x79
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL1 },     // 0x7A
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL2 },     // 0x7B
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL3 },     // 0x7C
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL4 },     // 0x7D
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL5 },     // 0x7E
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL6 },     // 0x7F
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL7 },     // 0x80
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL8 },     // 0x81
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_INTERNATIONAL9 },     // 0x82
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG1 },              // 0x83
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG2 },              // 0x84
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG3 },              // 0x85
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG4 },              // 0x86
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG5 },              // 0x87
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG6 },              // 0x88
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG7 },              // 0x89
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG8 },              // 0x8A
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LANG9 },              // 0x8B
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_ALTERASE },           // 0x8C
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SYSREQ },             // 0x8D
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CANCEL },             // 0x8E
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CLEAR },              // 0x8F
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_PRIOR },              // 0x90
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RETURN2 },            // 0x91
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SEPARATOR },          // 0x92
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_OUT },                // 0x93
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_OPER },               // 0x94
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CLEARAGAIN },         // 0x95
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CRSEL },              // 0x96
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_EXSEL },              // 0x97
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_00 },              // 0x98
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_000 },             // 0x99
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_THOUSANDSSEPARATOR }, // 0x9A
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_DECIMALSEPARATOR },   // 0x9B
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CURRENCYUNIT },       // 0x9C
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CURRENCYSUBUNIT },    // 0x9D
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_LEFTPAREN },       // 0x9E
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_RIGHTPAREN },      // 0x9F
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_LEFTBRACE },       // 0xA0
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_RIGHTBRACE },      // 0xA1
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_TAB },             // 0xA2
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_BACKSPACE },       // 0xA3
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_A },               // 0xA4
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_B },               // 0xA5
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_C },               // 0xA6
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_D },               // 0xA7
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_E },               // 0xA8
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_F },               // 0xA9
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_XOR },             // 0xAA
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_POWER },           // 0xAB
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_PERCENT },         // 0xAC
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_LESS },            // 0xAD
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_GREATER },         // 0xAE
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_AMPERSAND },       // 0xAF
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_DBLAMPERSAND },    // 0xB0
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_VERTICALBAR },     // 0xB1
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_DBLVERTICALBAR },  // 0xB2
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_COLON },           // 0xB3
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_HASH },            // 0xB4
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_SPACE },           // 0xB5
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_AT },              // 0xB6
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_EXCLAM },          // 0xB7
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMSTORE },        // 0xB8
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMRECALL },       // 0xB9
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMCLEAR },        // 0xBA
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMADD },          // 0xBB
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMSUBTRACT },     // 0xBC
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMMULTIPLY },     // 0xBD
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_MEMDIVIDE },       // 0xBE
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_PLUSMINUS },       // 0xBF
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_CLEAR },           // 0xC0
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_CLEARENTRY },      // 0xC1
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_BINARY },          // 0xC2
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_OCTAL },           // 0xC3
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_DECIMAL },         // 0xC4
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KP_HEXADECIMAL },     // 0xC5
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LCTRL },              // 0xC6
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LSHIFT },             // 0xC7
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LALT },               // 0xC8
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_LGUI },               // 0xC9
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RCTRL },              // 0xCA
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RSHIFT },             // 0xCB
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RALT },               // 0xCC
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_RGUI },               // 0xCD
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_MODE },               // 0xCE
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIONEXT },          // 0xCF
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOPREV },          // 0xD0
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOSTOP },          // 0xD1
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOPLAY },          // 0xD2
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOMUTE },          // 0xD3
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_MEDIASELECT },        // 0xD4
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_WWW },                // 0xD5
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_MAIL },               // 0xD6
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CALCULATOR },         // 0xD7
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_COMPUTER },           // 0xD8
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_SEARCH },          // 0xD9
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_HOME },            // 0xDA
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_BACK },            // 0xDB
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_FORWARD },         // 0xDC
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_STOP },            // 0xDD
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_REFRESH },         // 0xDE
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AC_BOOKMARKS },       // 0xDF
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_BRIGHTNESSDOWN },     // 0xE0
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_BRIGHTNESSUP },       // 0xE1
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_DISPLAYSWITCH },      // 0xE2
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KBDILLUMTOGGLE },     // 0xE3
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KBDILLUMDOWN },       // 0xE4
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_KBDILLUMUP },         // 0xE5
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_EJECT },              // 0xE6
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SLEEP },              // 0xE7
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_APP1 },               // 0xE8
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_APP2 },               // 0xE9
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOREWIND },        // 0xEA
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_AUDIOFASTFORWARD },   // 0xEB
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SOFTLEFT },           // 0xEC
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_SOFTRIGHT },          // 0xED
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_CALL },               // 0xEE
+    { DXGI_SCANCODE_UNKNOWN,      DXGI_SCANCODE_ENDCALL },            // 0xEF
+};
+
+static inline DXGI_Scancode dxgi_key_to_scancode(LPARAM l_param) {
+    uint32_t sc = (l_param >> 16) & 0xFF;
+    bool ext = (l_param >> 24) & 1;
+
+    if (sc <= 0xEE) return dxgi_scancodes[sc][ext];
+
+    return DXGI_SCANCODE_UNKNOWN;
+}
+
 static void gfx_dxgi_on_resize(void) {
     if (dxgi.swap_chain.Get() != nullptr) {
         gfx_get_current_rendering_api()->on_resize();
@@ -246,11 +502,21 @@ static void gfx_dxgi_on_resize(void) {
 
 static void gfx_dxgi_on_key_down(WPARAM w_param, LPARAM l_param) {
     int key = ((l_param >> 16) & 0x1ff);
-    if (dxgi.on_key_down != nullptr) { dxgi.on_key_down(key); }
+    int scancode = dxgi_key_to_scancode(l_param);
+    if (dxgi.on_key_down != nullptr) {
+        dxgi.on_key_down(key);
+        kb_keys_curr_down[scancode] = true;
+    }
 }
+
 static void gfx_dxgi_on_key_up(WPARAM w_param, LPARAM l_param) {
     int key = ((l_param >> 16) & 0x1ff);
-    if (dxgi.on_key_up != nullptr) { dxgi.on_key_up(key); }
+    int scancode = dxgi_key_to_scancode(l_param);
+    if (w_param == VK_PAUSE) scancode = DXGI_SCANCODE_PAUSE;
+    if (dxgi.on_key_up != nullptr) {
+        dxgi.on_key_up(key);
+        kb_keys_curr_down[scancode] = false;
+    }
 }
 
 static void gfx_dxgi_on_text_input(wchar_t code_unit) {
@@ -271,6 +537,7 @@ static void gfx_dxgi_on_text_input(wchar_t code_unit) {
             utf8_buffer[1] = '\0';
         }
 
+        smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, utf8_buffer);
         dxgi.on_text_input(utf8_buffer);
     }
 }
@@ -304,9 +571,22 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
             }
             break;
         }
+        case WM_SYSKEYDOWN: {
+            if (w_param == VK_RETURN && !(l_param & (1 << 30))) {
+                toggle_borderless_window_full_screen(!dxgi.is_full_screen);
+                return 0;
+            }
+
+            gfx_dxgi_on_key_down(w_param, l_param);
+            break;
+        }
         case WM_KEYDOWN: {
             gfx_dxgi_on_key_down(w_param, l_param);
             return 0;
+        }
+        case WM_SYSKEYUP: {
+            gfx_dxgi_on_key_up(w_param, l_param);
+            break;
         }
         case WM_KEYUP: {
             gfx_dxgi_on_key_up(w_param, l_param);
@@ -320,13 +600,6 @@ static LRESULT CALLBACK gfx_dxgi_wnd_proc(HWND h_wnd, UINT message, WPARAM w_par
         case WM_MOUSEWHEEL: {
             gfx_dxgi_on_scroll(w_param);
             return 0;
-        }
-        case WM_SYSKEYDOWN: {
-            if ((w_param == VK_RETURN) && ((l_param & 1 << 30) == 0)) {
-                toggle_borderless_window_full_screen(!dxgi.is_full_screen);
-                return 0;
-            }
-            break;
         }
         case WM_LBUTTONDOWN: {
             if (!gRomIsValid) {

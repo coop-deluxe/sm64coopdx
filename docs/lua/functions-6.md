@@ -8451,6 +8451,77 @@ Deletes all vertex buffers created by `vtx_create`
 [:arrow_up_small:](#)
 
 <br />
+
+---
+# functions from smlua_input_utils.h
+
+<br />
+
+
+## [get_current_gamepad_index](#get_current_gamepad_index)
+
+### Description
+Returns the current gamepad index in the config file
+
+### Lua Example
+`local integerValue = get_current_gamepad_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_current_gamepad_index(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_clipboard_text](#get_clipboard_text)
+
+### Description
+Returns the clipboard text
+
+### Lua Example
+`local stringValue = get_clipboard_text()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_clipboard_text(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_clipboard_text](#set_clipboard_text)
+
+### Description
+Sets the clipboard text
+
+### Lua Example
+`set_clipboard_text(text)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| text | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_clipboard_text(const char* text);`
+
+[:arrow_up_small:](#)
+
+<br />
 ---
 
 [< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6 | [7](functions-7.md) | [next >](functions-7.md)]

@@ -31,6 +31,14 @@ gCharacters = {}
 --- - Index 0 always refers to the local player
 gControllers = {}
 
+--- @type Gamepad[]
+--- Array of every gamepad, from 0 to `MAX_GAMEPADS` - 1
+gGamepads = {}
+
+--- @type Key[]
+--- Array of every SDL scancode, from 0 to `SDL_NUM_SCANCODES` - 1
+gKeyboard = {}
+
 --- @type Pointer_Mat4[]
 --- Matrix stack used during geo process
 --- - Only has an effect when used in a geo process hook

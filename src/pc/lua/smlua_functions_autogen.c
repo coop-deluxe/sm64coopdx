@@ -36,6 +36,7 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_input_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
 #include "src/game/platform_displacement.h"
 #include "src/game/spawn_sound.h"
@@ -32926,6 +32927,57 @@ int smlua_func_vtx_delete_all(UNUSED lua_State* L) {
 }
 
   /////////////////////////
+ // smlua_input_utils.h //
+/////////////////////////
+
+int smlua_func_get_current_gamepad_index(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_gamepad_index", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_current_gamepad_index());
+
+    return 1;
+}
+
+int smlua_func_get_clipboard_text(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_clipboard_text", 0, top);
+        return 0;
+    }
+
+
+    lua_pushstring(L, get_clipboard_text());
+
+    return 1;
+}
+
+int smlua_func_set_clipboard_text(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_clipboard_text", 1, top);
+        return 0;
+    }
+
+    const char* text = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_clipboard_text"); return 0; }
+
+    set_clipboard_text(text);
+
+    return 1;
+}
+
+  /////////////////////////
  // smlua_level_utils.h //
 /////////////////////////
 
@@ -38715,6 +38767,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vtx_resize", smlua_func_vtx_resize);
     smlua_bind_function(L, "vtx_delete", smlua_func_vtx_delete);
     smlua_bind_function(L, "vtx_delete_all", smlua_func_vtx_delete_all);
+
+    // smlua_input_utils.h
+    smlua_bind_function(L, "get_current_gamepad_index", smlua_func_get_current_gamepad_index);
+    smlua_bind_function(L, "get_clipboard_text", smlua_func_get_clipboard_text);
+    smlua_bind_function(L, "set_clipboard_text", smlua_func_set_clipboard_text);
 
     // smlua_level_utils.h
     smlua_bind_function(L, "smlua_level_util_change_area", smlua_func_smlua_level_util_change_area);
