@@ -570,6 +570,7 @@ bool mod_file_exists(const char* filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
     char normPath[SYS_MAX_PATH] = { 0 };
+    char normRelative[SYS_MAX_PATH] = { 0 };
 
     if (snprintf(normPath, sizeof(normPath), "%s", filename) < 0) {
         LOG_ERROR("Failed to copy filename for normalization: %s", filename);
@@ -579,7 +580,9 @@ bool mod_file_exists(const char* filename) {
 
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, normPath)) {
+        strcpy(normRelative, file->relativePath);
+        normalize_path(normRelative);
+        if (!strcmp(normRelative, normPath)) {
             return true;
         }
     }
