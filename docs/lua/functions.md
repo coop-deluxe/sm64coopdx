@@ -995,6 +995,11 @@
 
 <br />
 
+- load.h
+   - [set_sound_bank_override](functions-4.md#set_sound_bank_override)
+
+<br />
+
 - mario.h
    - [is_anim_at_end](functions-4.md#is_anim_at_end)
    - [is_anim_past_end](functions-4.md#is_anim_past_end)

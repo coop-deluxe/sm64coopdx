@@ -5216,6 +5216,12 @@ function le_set_light_use_surface_normals(id, useSurfaceNormals)
     -- ...
 end
 
+--- @param bank integer
+--- Overrides the soundbank, set to -1 to reset
+function set_sound_bank_override(bank)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return integer
 --- Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation). Useful for deciding when to transition out of an animation-driven action
