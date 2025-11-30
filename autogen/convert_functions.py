@@ -751,6 +751,10 @@ def normalize_type(t):
     return t
 
 def alter_type(t):
+    if type(t) is list:
+        if len(t) > 1:
+            return 'void'
+        t = t[0]
     if t.startswith('enum '):
         return 'int'
     return t
@@ -954,13 +958,14 @@ def build_function(function, do_extern):
     s += '\n'
 
     # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
-    if function['type'] in VECP_TYPES:
+    ftype = function['type']
+    if len(ftype) == 1 and ftype[0] in VECP_TYPES:
         for i, param in enumerate(function['params']):
             if 'OUT' in param:
                 s += '    lua_settop(L, %d);\n' % (i + 1)
                 break
 
-    s += '    return 1;\n}\n'
+    s += '    return %i;\n}\n' % len(ftype)
 
     if fid in override_function_version_excludes:
         s += '#endif\n'
@@ -1046,7 +1051,11 @@ def process_function(fname, line, description):
     line = line.replace('UNUSED', '')
 
     match = re.search(r'[a-zA-Z0-9_]+\(', line)
-    function['type'] = normalize_type(line[0:match.span()[0]])
+    if match.group() == "RETURNS(":
+        function['type'] = [t.strip() for t in line.split('(', 1)[1].split(')', 1)[0].split(',')]
+        line = re.sub(r'RETURNS\(.*?\)', 'void', line)
+        match = re.search(r'[a-zA-Z0-9_]+\(', line)
+    else: function['type'] = [normalize_type(line[0:match.span()[0]])]
     function['identifier'] = match.group()[0:-1]
 
     function['params'] = []
@@ -1259,8 +1268,8 @@ def doc_function(fname, function):
         s +=  f'{description}\n'
 
     s += "\n### Lua Example\n"
-    if rtype != None:
-        s += "`local %sValue = %s(%s)`\n" % (rtype.replace('`', '').split(' ')[0], fid, param_str)
+    if None not in rtype:
+        s += "`local %s = %s(%s)`\n" % (", ".join([t.replace('`', '').split(' ')[0] + "Value" for t in rtype]), fid, param_str)
     else:
         s += "`%s(%s)`\n" % (fid, param_str)
 
@@ -1288,10 +1297,11 @@ def doc_function(fname, function):
 
     s += '\n### Returns\n'
     if rtype != None:
-        if rlink:
-            s += '[%s](%s)\n' % (rtype, rlink)
-        else:
-            s += '- %s\n' % rtype
+        for t, l in zip(rtype, rlink):
+            if l:
+                s += '- [%s](%s)\n' % (t, l)
+            else:
+                s += '- %s\n' % t
     else:
         s += '- None\n'
 
@@ -1383,8 +1393,8 @@ def def_function(fname, function):
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params']])
 
-    if rtype == None:
-        rtype = 'nil'
+    if None in rtype:
+        rtype[0] = 'nil'
 
     if function['description'].startswith("[DEPRECATED"):
         s += "--- @deprecated\n"
@@ -1401,11 +1411,12 @@ def def_function(fname, function):
         s += '--- @param %s%s %s\n' % (pid, ('?' if 'OPTIONAL' in param else ''), ptype)
 
     rtype = translate_to_def(rtype)
-    if rtype.startswith('Pointer_') and rtype not in def_pointers:
-        def_pointers.append(rtype)
+    for t in rtype:
+        if t.startswith('Pointer_') and t not in def_pointers:
+            def_pointers.append(t)
 
-    if rtype != "nil":
-        s += '--- @return %s\n' % rtype
+        if t != "nil":
+            s += '--- @return %s\n' % t
     if function['description'] != "":
         s += "--- %s\n" % (function['description'])
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)

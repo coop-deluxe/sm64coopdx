@@ -597,7 +597,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 | params | [WaterDropletParams](structs.md#WaterDropletParams) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params);`
@@ -1251,7 +1251,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);`
@@ -1289,7 +1289,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* cur_obj_find_nearest_pole(void);`
@@ -1310,7 +1310,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 | dist | `Pointer` <`number`> |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist);`
@@ -1349,7 +1349,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *find_unimportant_object(void);`
@@ -1407,7 +1407,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *find_object_with_behavior(const BehaviorScript *behavior);`
@@ -1428,7 +1428,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 | maxDist | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist);`
@@ -1937,7 +1937,7 @@ Marks an object to be unloaded at the end of the frame
 - None
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *cur_obj_update_floor_height_and_get_floor(void);`
@@ -3739,7 +3739,7 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 | sp24 | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24);`
@@ -5502,7 +5502,7 @@ Gets a vanilla mario Animation with `index`
 | index | `integer` |
 
 ### Returns
-[Animation](structs.md#Animation)
+- [Animation](structs.md#Animation)
 
 ### C Prototype
 `struct Animation *get_mario_vanilla_animation(u16 index);`
@@ -5625,7 +5625,7 @@ Loads an `audio` stream by `filename` (with extension)
 | filename | `string` |
 
 ### Returns
-[ModAudio](structs.md#ModAudio)
+- [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
 `struct ModAudio* audio_stream_load(const char* filename);`
@@ -5955,7 +5955,7 @@ Loads an `audio` sample
 | filename | `string` |
 
 ### Returns
-[ModAudio](structs.md#ModAudio)
+- [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
 `struct ModAudio* audio_sample_load(const char* filename);`
@@ -6451,7 +6451,7 @@ Gets the current romhack camera override status
 - None
 
 ### Returns
-[enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride)
+- [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride)
 
 ### C Prototype
 `enum RomhackCameraOverride camera_get_romhack_override(void);`
@@ -7182,7 +7182,7 @@ Finds a potential floor at the given `x`, `y`, and `z` values
 | z | `number` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
@@ -7207,7 +7207,7 @@ Finds a potential ceiling at the given `x`, `y`, and `z` values
 | z | `number` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
@@ -7228,7 +7228,7 @@ Gets the generated water floor surface used when riding a shell
 - None
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface* get_water_surface_pseudo_floor(void);`
@@ -7272,7 +7272,7 @@ Returns a temporary wall collision data pointer
 - None
 
 ### Returns
-[WallCollisionData](structs.md#WallCollisionData)
+- [WallCollisionData](structs.md#WallCollisionData)
 
 ### C Prototype
 `struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
@@ -7296,7 +7296,7 @@ Gets the surface corresponding to `index` from `wcd`
 | index | `integer` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
@@ -8032,6 +8032,30 @@ Gets the texture from a display list command if it has an image related op
 
 <br />
 
+## [gfx_get_from_name](#gfx_get_from_name)
+
+### Description
+Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+
+### Lua Example
+`local PointerValue, integerValue = gfx_get_from_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Gfx`>
+- `integer`
+
+### C Prototype
+`RETURNS(Gfx*, u32) gfx_get_from_name(const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_get_name](#gfx_get_name)
 
 ### Description
@@ -8237,6 +8261,30 @@ Deletes all display lists created by `gfx_create`
 
 ### C Prototype
 `void gfx_delete_all();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vtx_get_from_name](#vtx_get_from_name)
+
+### Description
+Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+
+### Lua Example
+`local PointerValue, integerValue = vtx_get_from_name(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Vtx`>
+- `integer`
+
+### C Prototype
+`RETURNS(Vtx*, u32) vtx_get_from_name(const char *name);`
 
 [:arrow_up_small:](#)
 

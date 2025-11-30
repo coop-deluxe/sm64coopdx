@@ -10805,6 +10805,14 @@ function gfx_get_texture(cmd)
     -- ...
 end
 
+--- @param name string
+--- @return Pointer_Gfx
+--- @return integer
+--- Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+function gfx_get_from_name(name)
+    -- ...
+end
+
 --- @param gfx Pointer_Gfx
 --- @return string
 --- Gets the name of a display list
@@ -10865,6 +10873,14 @@ end
 
 --- Deletes all display lists created by `gfx_create`
 function gfx_delete_all()
+    -- ...
+end
+
+--- @param name string
+--- @return Pointer_Vtx
+--- @return integer
+--- Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+function vtx_get_from_name(name)
     -- ...
 end
 

@@ -1938,6 +1938,7 @@
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
    - [gfx_get_texture](functions-6.md#gfx_get_texture)
+   - [gfx_get_from_name](functions-6.md#gfx_get_from_name)
    - [gfx_get_name](functions-6.md#gfx_get_name)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
@@ -1947,6 +1948,7 @@
    - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
    - [gfx_delete_all](functions-6.md#gfx_delete_all)
+   - [vtx_get_from_name](functions-6.md#vtx_get_from_name)
    - [vtx_get_name](functions-6.md#vtx_get_name)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
@@ -2747,7 +2749,7 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 | id | `integer` |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node(u8 id);`
@@ -2768,7 +2770,7 @@ Gets the first warp node found in the area, otherwise returns nil
 - None
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_any_warp_node(void);`
@@ -2791,7 +2793,7 @@ Finds a warp node in the current area using parameters from the provided object.
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`

@@ -32603,6 +32603,23 @@ int smlua_func_gfx_get_texture(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_get_from_name(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_from_name", 1, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_from_name"); return 0; }
+
+    gfx_get_from_name(name);
+
+    return 2;
+}
+
 int smlua_func_gfx_get_name(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -32762,6 +32779,23 @@ int smlua_func_gfx_delete_all(UNUSED lua_State* L) {
     gfx_delete_all();
 
     return 1;
+}
+
+int smlua_func_vtx_get_from_name(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "vtx_get_from_name", 1, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vtx_get_from_name"); return 0; }
+
+    vtx_get_from_name(name);
+
+    return 2;
 }
 
 int smlua_func_vtx_get_name(lua_State* L) {
@@ -38697,6 +38731,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_get_vertex_buffer", smlua_func_gfx_get_vertex_buffer);
     smlua_bind_function(L, "gfx_get_vertex_count", smlua_func_gfx_get_vertex_count);
     smlua_bind_function(L, "gfx_get_texture", smlua_func_gfx_get_texture);
+    smlua_bind_function(L, "gfx_get_from_name", smlua_func_gfx_get_from_name);
     smlua_bind_function(L, "gfx_get_name", smlua_func_gfx_get_name);
     smlua_bind_function(L, "gfx_get_length", smlua_func_gfx_get_length);
     smlua_bind_function(L, "gfx_get_command", smlua_func_gfx_get_command);
@@ -38706,6 +38741,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_resize", smlua_func_gfx_resize);
     smlua_bind_function(L, "gfx_delete", smlua_func_gfx_delete);
     smlua_bind_function(L, "gfx_delete_all", smlua_func_gfx_delete_all);
+    smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
     smlua_bind_function(L, "vtx_get_name", smlua_func_vtx_get_name);
     smlua_bind_function(L, "vtx_get_count", smlua_func_vtx_get_count);
     smlua_bind_function(L, "vtx_get_vertex", smlua_func_vtx_get_vertex);
