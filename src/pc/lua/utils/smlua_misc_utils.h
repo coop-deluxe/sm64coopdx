@@ -214,21 +214,21 @@ const char* get_local_discord_id(void);
 const char* get_coopnet_id(s8 localIndex);
 
 /* |description|Gets the master volume level|descriptionEnd| */
-f32 get_volume_master(void);
+u8 get_volume_master(void);
 /* |description|Gets the volume level of music|descriptionEnd| */
-f32 get_volume_level(void);
+u8 get_volume_level(void);
 /* |description|Gets the volume level of sound effects|descriptionEnd| */
-f32 get_volume_sfx(void);
+u8 get_volume_sfx(void);
 /* |description|Gets the volume level of environment sounds effects|descriptionEnd| */
-f32 get_volume_env(void);
+u8 get_volume_env(void);
 /* |description|Sets the master volume level|descriptionEnd| */
-void set_volume_master(f32 volume);
+void set_volume_master(u8 volume);
 /* |description|Sets the volume level of music|descriptionEnd| */
-void set_volume_level(f32 volume);
+void set_volume_level(u8 volume);
 /* |description|Sets the volume level of sound effects|descriptionEnd| */
-void set_volume_sfx(f32 volume);
+void set_volume_sfx(u8 volume);
 /* |description|Sets the volume level of environment sounds effects|descriptionEnd| */
-void set_volume_env(f32 volume);
+void set_volume_env(u8 volume);
 
 /* |description|Gets an environment region (gas/water boxes) height value|descriptionEnd| */
 s16 get_environment_region(u8 index);

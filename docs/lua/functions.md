@@ -1825,6 +1825,7 @@
    - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
    - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
    - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
+   - [audio_stream_get_loop_points](functions-6.md#audio_stream_get_loop_points)
    - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
    - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
    - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
@@ -2747,7 +2748,7 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 | id | `integer` |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node(u8 id);`
@@ -2768,7 +2769,7 @@ Gets the first warp node found in the area, otherwise returns nil
 - None
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_any_warp_node(void);`
@@ -2791,7 +2792,7 @@ Finds a warp node in the current area using parameters from the provided object.
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`
