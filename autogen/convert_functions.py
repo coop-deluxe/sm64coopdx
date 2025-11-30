@@ -996,7 +996,7 @@ def build_functions(processed_files):
 
 def build_bind(function):
     fid = function['identifier']
-    s = 'BIND_FUNCTION(%s);' % fid
+    s = 'smlua_bind_function(L, "%s", smlua_func_%s);' % (fid, fid)
     if function['implemented']:
         s = '    ' + s
         # There is no point in adding the ifndef statement if the function is commented out here anyways.
