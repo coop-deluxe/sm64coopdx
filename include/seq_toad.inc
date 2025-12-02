@@ -293,7 +293,7 @@ chan_setlayer 0, .layer_toad_D33
 chan_end
 
 .layer_toad_D33:
-layer_note1 39, 0xaa, 127
+layer_note1 39, 0xaa, 100
 layer_end
 
 .sound_toad_haha:
