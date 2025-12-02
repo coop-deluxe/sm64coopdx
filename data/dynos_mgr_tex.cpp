@@ -567,13 +567,25 @@ void DynOS_Tex_Override_Set(const char* aTexName, struct TextureInfo* aOverrideT
 
 void DynOS_Tex_Override_Reset(const char* aTexName) {
     // Override texture
-    const Texture* _BuiltinTex = DynOS_Builtin_Tex_GetFromName(aTexName);
-    if (!_BuiltinTex) { return; }
+    const Texture* _BuiltinTexture = DynOS_Builtin_Tex_GetFromName(aTexName);
+    DataNode<TexData>* _BuiltinTexData;
+    if (!_BuiltinTexture) {
+        _BuiltinTexData = DynOS_Lua_Tex_RetrieveNode(aTexName);
+        if (!_BuiltinTexData) { return; }
+    }
 
-    auto& _DynosOverrideLuaTextures = DynosOverrideLuaTextures();
-    auto _Override = _DynosOverrideLuaTextures[_BuiltinTex];
-    if (_Override) {
-        _DynosOverrideLuaTextures.erase(_BuiltinTex);
+    if (_BuiltinTexture) {
+        auto& _DynosOverrideLuaTextures = DynosOverrideLuaTextures();
+        auto _Override = _DynosOverrideLuaTextures[_BuiltinTexture];
+        if (_Override) {
+            _DynosOverrideLuaTextures.erase(_BuiltinTexture);
+        }
+    } else {
+        auto& _DynosOverrideLuaTexData = DynosOverrideLuaTexData();
+        auto _Override = _DynosOverrideLuaTexData[_BuiltinTexData];
+        if (_Override) {
+            _DynosOverrideLuaTexData.erase(_BuiltinTexData);
+        }
     }
 }
 
