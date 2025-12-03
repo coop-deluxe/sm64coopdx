@@ -53,6 +53,7 @@ extern s32 gMinAiBufferLength;
 extern s16 gTempoInternalToExternal;
 extern s8 gAudioUpdatesPerFrame; // = 4
 extern s8 gSoundMode;
+extern s32 gOverrideBank;
 
 #ifdef VERSION_SH
 extern OSMesgQueue gUnkQueue1;
@@ -94,6 +95,9 @@ void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32
 void preload_sequence(u32 seqId, u8 preloadMask);
 #endif
 void load_sequence(u32 player, u32 seqId, s32 loadAsync);
+
+/* |description|Overrides the soundbank, set to -1 to reset|descriptionEnd| */
+void set_sound_bank_override(s32 bank);
 
 #ifdef VERSION_SH
 void func_sh_802f3158(s32 index, s32 arg1, s32 arg2, OSMesgQueue *retQueue);
