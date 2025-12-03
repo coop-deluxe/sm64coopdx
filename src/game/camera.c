@@ -3788,7 +3788,7 @@ void stub_camera_2(UNUSED struct Camera *c) {
 void stub_camera_3(UNUSED struct Camera *c) {
 }
 
-void object_pos_to_vec3f(OUT Vec3f dst, struct Object *o) {
+void object_pos_to_vec3f(VEC_OUT Vec3f dst, struct Object *o) {
     if (!dst || !o) { return; }
     dst[0] = o->oPosX;
     dst[1] = o->oPosY;
@@ -3802,7 +3802,7 @@ void vec3f_to_object_pos(struct Object *o, Vec3f src) {
     o->oPosZ = src[2];
 }
 
-void object_face_angle_to_vec3s(OUT Vec3s dst, struct Object *o) {
+void object_face_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o) {
     if (!dst || !o) { return; }
     dst[0] = o->oFaceAnglePitch;
     dst[1] = o->oFaceAngleYaw;
@@ -3816,7 +3816,7 @@ void vec3s_to_object_face_angle(struct Object *o, Vec3s src) {
     o->oFaceAngleRoll = src[2];
 }
 
-void object_move_angle_to_vec3s(OUT Vec3s dst, struct Object *o) {
+void object_move_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o) {
     if (!dst || !o) { return; }
     dst[0] = o->oMoveAnglePitch;
     dst[1] = o->oMoveAngleYaw;
@@ -4061,7 +4061,7 @@ void set_handheld_shake(u8 mode) {
  * This function must be called every frame in order to actually apply the effect, since the effect's
  * mag and inc are set to 0 every frame at the end of this function.
  */
-void shake_camera_handheld(Vec3f pos, OUT Vec3f focus) {
+void shake_camera_handheld(Vec3f pos, VEC_OUT Vec3f focus) {
     s32 i;
     Vec3f shakeOffset;
     Vec3f shakeSpline[4];
@@ -4195,7 +4195,7 @@ s32 update_camera_hud_status(struct Camera *c) {
  *
  * @return the number of collisions found
  */
-s32 collide_with_walls(OUT Vec3f pos, f32 offsetY, f32 radius) {
+s32 collide_with_walls(VEC_OUT Vec3f pos, f32 offsetY, f32 radius) {
     struct WallCollisionData collisionData;
     struct Surface *wall = NULL;
     f32 normX;
@@ -4246,7 +4246,7 @@ s32 vec3f_compare(Vec3f pos, f32 posX, f32 posY, f32 posZ) {
     return equal;
 }
 
-s32 clamp_pitch(Vec3f from, OUT Vec3f to, s16 maxPitch, s16 minPitch) {
+s32 clamp_pitch(Vec3f from, VEC_OUT Vec3f to, s16 maxPitch, s16 minPitch) {
     s32 outOfRange = 0;
     s16 pitch;
     s16 yaw;
@@ -4276,7 +4276,7 @@ s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ) {
     return isCloseToMario;
 }
 
-s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale) {
+s32 set_or_approach_f32_asymptotic(INOUT f32 *dst, f32 goal, f32 scale) {
     if (!dst) { return FALSE; }
     if (sStatusFlags & CAM_FLAG_SMOOTH_MOVEMENT) {
         approach_f32_asymptotic_bool(dst, goal, scale);
@@ -4293,9 +4293,9 @@ s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale) {
 /**
  * Approaches an f32 value by taking the difference between the target and current value
  * and adding a fraction of that to the current value.
- * Edits the current value directly, returns TRUE if the target has been reached, FALSE otherwise.
+ * Edits the current value directly, returns FALSE if the target has been reached, TRUE otherwise.
  */
-s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier) {
+s32 approach_f32_asymptotic_bool(INOUT f32 *current, f32 target, f32 multiplier) {
     if (!current) { return FALSE; }
     if (multiplier > 1.f) {
         multiplier = 1.f;
@@ -4321,7 +4321,7 @@ f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier) {
  * is reached. Note: Since this function takes integers as parameters, the last argument is the
  * reciprocal of what it would be in the previous two functions.
  */
-s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor) {
+s32 approach_s16_asymptotic_bool(INOUT s16 *current, s16 target, s16 divisor) {
     if (!current) { return FALSE; }
     s16 temp = *current;
 
@@ -4362,7 +4362,7 @@ s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor) {
  * Applies the approach_f32_asymptotic_bool function to each of the X, Y, & Z components of the given
  * vector.
  */
-void approach_vec3f_asymptotic(OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul) {
+void approach_vec3f_asymptotic(VEC_OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul) {
     approach_f32_asymptotic_bool(&current[0], target[0], xMul);
     approach_f32_asymptotic_bool(&current[1], target[1], yMul);
     approach_f32_asymptotic_bool(&current[2], target[2], zMul);
@@ -4372,7 +4372,7 @@ void approach_vec3f_asymptotic(OUT Vec3f current, Vec3f target, f32 xMul, f32 yM
  * Applies the set_or_approach_f32_asymptotic_bool function to each of the X, Y, & Z components of the
  * given vector.
  */
-void set_or_approach_vec3f_asymptotic(OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul) {
+void set_or_approach_vec3f_asymptotic(VEC_OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul) {
     set_or_approach_f32_asymptotic(&dst[0], goal[0], xMul);
     set_or_approach_f32_asymptotic(&dst[1], goal[1], yMul);
     set_or_approach_f32_asymptotic(&dst[2], goal[2], zMul);
@@ -4382,13 +4382,13 @@ void set_or_approach_vec3f_asymptotic(OUT Vec3f dst, Vec3f goal, f32 xMul, f32 y
  * Applies the approach_s32_asymptotic function to each of the X, Y, & Z components of the given
  * vector.
  */
-void approach_vec3s_asymptotic(OUT Vec3s current, Vec3s target, s16 xMul, s16 yMul, s16 zMul) {
+void approach_vec3s_asymptotic(VEC_OUT Vec3s current, Vec3s target, s16 xMul, s16 yMul, s16 zMul) {
     approach_s16_asymptotic_bool(&current[0], target[0], xMul);
     approach_s16_asymptotic_bool(&current[1], target[1], yMul);
     approach_s16_asymptotic_bool(&current[2], target[2], zMul);
 }
 
-s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment) {
+s32 camera_approach_s16_symmetric_bool(INOUT s16 *current, s16 target, s16 increment) {
     if (!current) { return FALSE; }
     s16 dist = target - *current;
 
@@ -4441,7 +4441,7 @@ s32 camera_approach_s16_symmetric(s16 current, s16 target, s16 increment) {
     return current;
 }
 
-s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment) {
+s32 set_or_approach_s16_symmetric(INOUT s16 *current, s16 target, s16 increment) {
     if (!current) { return FALSE; }
     if (sStatusFlags & CAM_FLAG_SMOOTH_MOVEMENT) {
         camera_approach_s16_symmetric_bool(current, target, increment);
@@ -4460,7 +4460,7 @@ s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment) {
  * Appears to be a strange way of implementing approach_f32_symmetric from object_helpers.c.
  * It could possibly be an older version of the function
  */
-s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment) {
+s32 camera_approach_f32_symmetric_bool(INOUT f32 *current, f32 target, f32 increment) {
     if (!current) { return FALSE; }
     f32 dist = target - *current;
 
@@ -4520,7 +4520,7 @@ f32 camera_approach_f32_symmetric(f32 current, f32 target, f32 increment) {
  * Generate a vector with all three values about zero. The
  * three ranges determine how wide the range about zero.
  */
-void random_vec3s(OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange) {
+void random_vec3s(VEC_OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange) {
     f32 randomFloat;
     UNUSED u8 unused[4];
     f32 tempXRange;
@@ -4587,7 +4587,7 @@ s16 reduce_by_dist_from_camera(s16 value, f32 maxDist, f32 posX, f32 posY, f32 p
     return result;
 }
 
-s32 clamp_positions_and_find_yaw(OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin) {
+s32 clamp_positions_and_find_yaw(VEC_OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin) {
     s16 yaw = gCamera->nextYaw;
 
     if (pos[0] >= xMax) {
@@ -4767,7 +4767,7 @@ s32 is_mario_behind_surface(UNUSED struct Camera *c, struct Surface *surf) {
  * Calculates the distance between two points and sets a vector to a point
  * scaled along a line between them. Typically, somewhere in the middle.
  */
-void scale_along_line(OUT Vec3f dst, Vec3f from, Vec3f to, f32 scale) {
+void scale_along_line(VEC_OUT Vec3f dst, Vec3f from, Vec3f to, f32 scale) {
     Vec3f tempVec;
 
     tempVec[0] = (to[0] - from[0]) * scale + from[0];
@@ -4818,7 +4818,7 @@ s16 calculate_yaw(Vec3f from, Vec3f to) {
 /**
  * Calculates the pitch and yaw between two vectors.
  */
-void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw) {
+void calculate_angles(Vec3f from, Vec3f to, RET s16 *pitch, RET s16 *yaw) {
     f32 dx = to[0] - from[0];
     f32 dy = to[1] - from[1];
     f32 dz = to[2] - from[2];
@@ -4853,7 +4853,7 @@ f32 calc_hor_dist(Vec3f a, Vec3f b) {
 /**
  * Rotates a vector in the horizontal plane and copies it to a new vector.
  */
-void rotate_in_xz(OUT Vec3f dst, Vec3f src, s16 yaw) {
+void rotate_in_xz(VEC_OUT Vec3f dst, Vec3f src, s16 yaw) {
     Vec3f tempVec;
 
     vec3f_copy(tempVec, src);
@@ -4868,7 +4868,7 @@ void rotate_in_xz(OUT Vec3f dst, Vec3f src, s16 yaw) {
  * Note: This function also flips the Z axis, so +Z moves forward, not backward like it would in world
  * space. If possible, use vec3f_set_dist_and_angle()
  */
-void rotate_in_yz(OUT Vec3f dst, Vec3f src, s16 pitch) {
+void rotate_in_yz(VEC_OUT Vec3f dst, Vec3f src, s16 pitch) {
     Vec3f tempVec;
 
     vec3f_copy(tempVec, src);
@@ -4962,7 +4962,7 @@ void increment_shake_offset(s16 *offset, s16 increment) {
 /**
  * Apply a vertical shake to the camera by adjusting its pitch
  */
-void shake_camera_pitch(Vec3f pos, OUT Vec3f focus) {
+void shake_camera_pitch(Vec3f pos, VEC_OUT Vec3f focus) {
     f32 dist;
     s16 pitch;
     s16 yaw;
@@ -4982,7 +4982,7 @@ void shake_camera_pitch(Vec3f pos, OUT Vec3f focus) {
 /**
  * Apply a horizontal shake to the camera by adjusting its yaw
  */
-void shake_camera_yaw(Vec3f pos, OUT Vec3f focus) {
+void shake_camera_yaw(Vec3f pos, VEC_OUT Vec3f focus) {
     f32 dist;
     s16 pitch;
     s16 yaw;
@@ -5629,7 +5629,7 @@ static void unused_set_pos_rel_mario(struct Camera *c, f32 leftRight, f32 yOff, 
  *
  * @warning Flips the Z axis, so that relative to `rotation`, -Z moves forwards and +Z moves backwards.
  */
-void offset_rotated(OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation) {
+void offset_rotated(VEC_OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation) {
     Vec3f unusedCopy;
     Vec3f pitchRotated;
 
@@ -5683,7 +5683,7 @@ void determine_pushing_or_pulling_door(s16 *rotation) {
  *
  * @return Lakitu's next yaw, which is the same as the yaw passed in if no transition happened
  */
-s16 next_lakitu_state(OUT Vec3f newPos, OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc,
+s16 next_lakitu_state(VEC_OUT Vec3f newPos, VEC_OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc,
                       Vec3f oldPos, Vec3f oldFoc, s16 yaw) {
     s16 yawVelocity;
     s16 pitchVelocity;
@@ -7073,7 +7073,7 @@ s16 camera_course_processing(struct Camera *c) {
  * Move `pos` between the nearest floor and ceiling
  * @param lastGood unused, passed as the last position the camera was in
  */
-void resolve_geometry_collisions(OUT Vec3f pos, UNUSED Vec3f lastGood) {
+void resolve_geometry_collisions(VEC_OUT Vec3f pos, UNUSED Vec3f lastGood) {
     f32 ceilY, floorY;
     struct Surface *surf;
 
@@ -7120,7 +7120,7 @@ void resolve_geometry_collisions(OUT Vec3f pos, UNUSED Vec3f lastGood) {
  *
  * @return 3 if a wall is covering Mario, 1 if a wall is only near the camera.
  */
-s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange) {
+s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, INOUT s16 *avoidYaw, s16 yawRange) {
     UNUSED f32 unused1;
     struct WallCollisionData colData;
     struct Surface *wall;

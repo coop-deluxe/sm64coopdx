@@ -419,8 +419,8 @@ s16 obj_turn_pitch_toward_mario(struct MarioState* m, f32 targetOffsetY, s16 tur
     return targetPitch;
 }
 
-/* |description|Approaches a `target` for `px` using `delta`|descriptionEnd| */
-s32 approach_f32_ptr(f32 *px, f32 target, f32 delta) {
+/* |description|Approaches a `target` for `px` using `delta`. Returns TRUE if `px` reaches `target`|descriptionEnd| */
+s32 approach_f32_ptr(INOUT f32 *px, f32 target, f32 delta) {
     if (!px) { return FALSE; }
     if (*px > target) {
         delta = -delta;
@@ -495,8 +495,8 @@ s32 obj_face_roll_approach(s16 targetRoll, s16 deltaRoll) {
     return FALSE;
 }
 
-/* |description|Smoothly turns the `angle` integer pointer using parameters, although usage in Lua is difficult due to the amount of pointers needed|descriptionEnd| */
-s32 obj_smooth_turn(s16 *angleVel, s32 *angle, s16 targetAngle, f32 targetSpeedProportion,
+/* |description|Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `angle` reaches `targetAngle`|descriptionEnd| */
+s32 obj_smooth_turn(INOUT s16 *angleVel, INOUT s32 *angle, s16 targetAngle, f32 targetSpeedProportion,
                            s16 accel, s16 minSpeed, s16 maxSpeed) {
     s16 currentSpeed;
     s16 currentAngle = (s16)(*angle);
@@ -537,13 +537,12 @@ s16 obj_random_fixed_turn(s16 delta) {
 }
 
 /* |description|
-Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing
-`scaleVel`. Once the object starts to shrink, wait a bit, and then begin to
-scale the object toward `endScale`. The first time it reaches below
-`shootFireScale` during this time, return 1.
+Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`.
+Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`.
+The first time it reaches below `shootFireScale` during this time, return 1.
 Return -1 once it's reached endScale
 |descriptionEnd| */
-s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
+s32 obj_grow_then_shrink(INOUT f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     if (!o) { return 0; }
     if (o->oTimer < 2) {
         o->header.gfx.scale[0] += *scaleVel;
@@ -563,8 +562,8 @@ s32 obj_grow_then_shrink(f32 *scaleVel, f32 shootFireScale, f32 endScale) {
     return 0;
 }
 
-/* |description||descriptionEnd| */
-s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 accel,
+/* |description|Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`|descriptionEnd| */
+s32 oscillate_toward(INOUT s32 *value, INOUT f32 *vel, s32 target, f32 velCloseToZero, f32 accel,
                             f32 slowdown) {
     if (value == NULL || vel == NULL) { return FALSE; }
     s32 startValue = *value;
@@ -591,7 +590,7 @@ s32 oscillate_toward(s32 *value, f32 *vel, s32 target, f32 velCloseToZero, f32 a
 }
 
 /* |description|Update the current object's blinking through `oAnimState`|descriptionEnd| */
-void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange,
+void obj_update_blinking(INOUT s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange,
                                 s16 blinkLength) {
     if (!o) { return; }
     if (*blinkTimer != 0) {
@@ -607,8 +606,8 @@ void obj_update_blinking(s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRa
     }
 }
 
-/* |description|Resolves "collisions" with the current object and other objects by offsetting the current object's position|descriptionEnd| */
-s32 obj_resolve_object_collisions(s32 *targetYaw) {
+/* |description|Resolves "collisions" with the current object and other objects by offsetting the current object's position. Returns TRUE and the target yaw if there is collision|descriptionEnd| */
+s32 obj_resolve_object_collisions(RET s32 *targetYaw) {
     if (!o) { return 0; }
     struct Object *otherObject;
     f32 dx;
@@ -655,8 +654,8 @@ s32 obj_resolve_object_collisions(s32 *targetYaw) {
     return FALSE;
 }
 
-/* |description|Bounces the current object off of walls, edges, and objects using `*targetYaw`|descriptionEnd| */
-s32 obj_bounce_off_walls_edges_objects(s32 *targetYaw) {
+/* |description|Bounces the current object off of walls, edges, and objects. Returns TRUE and the target yaw if there is collision|descriptionEnd| */
+s32 obj_bounce_off_walls_edges_objects(RET s32 *targetYaw) {
     if (!o) { return 0; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         *targetYaw = cur_obj_reflect_move_angle_off_wall();
@@ -961,7 +960,8 @@ s32 obj_move_for_one_second(s32 endAction) {
  * attack Mario (e.g. fly guy shooting fire or lunging), especially when combined
  * with partial updates.
  */
-void treat_far_home_as_mario(f32 threshold, s32* distanceToPlayer, s32* angleToPlayer) {
+/* |description|Treats far home as Mario. Returns the distance and angle to the nearest player|descriptionEnd| */
+void treat_far_home_as_mario(f32 threshold, RET s32* distanceToPlayer, RET s32* angleToPlayer) {
     if (!o) { return; }
     f32 dx = o->oHomeX - o->oPosX;
     f32 dy = o->oHomeY - o->oPosY;

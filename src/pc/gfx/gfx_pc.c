@@ -608,7 +608,7 @@ static void import_texture(int tile) {
     //printf("Time diff: %d\n", t1 - t0);
 }
 
-static void OPTIMIZE_O3 gfx_transposed_matrix_mul(OUT Vec3f res, const Vec3f a, const Mat4 b) {
+static void OPTIMIZE_O3 gfx_transposed_matrix_mul(VEC_OUT Vec3f res, const Vec3f a, const Mat4 b) {
     res[0] = a[0] * b[0][0] + a[1] * b[0][1] + a[2] * b[0][2];
     res[1] = a[0] * b[1][0] + a[1] * b[1][1] + a[2] * b[1][2];
     res[2] = a[0] * b[2][0] + a[1] * b[2][1] + a[2] * b[2][2];
@@ -695,7 +695,7 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
     return x * gfx_current_dimensions.x_adjust_ratio;
 }
 
-static OPTIMIZE_O3 void gfx_local_to_world_space(OUT Vec3f pos, OUT Vec3f normal) {
+static OPTIMIZE_O3 void gfx_local_to_world_space(VEC_OUT Vec3f pos, VEC_OUT Vec3f normal) {
     if (!sHasInverseCameraMatrix) { return; }
 
     // strip view matrix off of the model-view matrix

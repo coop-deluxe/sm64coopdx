@@ -550,26 +550,26 @@ def build_struct(struct):
             endStr += '\n#endif'
         startStr += '    { '
         if ftype == cobject_function_identifier:
-            row.append(startStr                                       )
-            row.append('"%s", '                  % fid                )
-            row.append('%s, '                    % lvt                )
-            row.append('(size_t) FUNCTION__%s, ' % (field['function']))
-            row.append('%s, '                    % fimmutable         )
-            row.append('%s, '                    % lot                )
-            row.append('%s, '                    % size               )
-            row.append('sizeof(const char *)'                         )
-            row.append(endStr                                         )
+            row.append(startStr                             )
+            row.append('"%s", '          % fid              )
+            row.append('%s, '            % lvt              )
+            row.append('(size_t) "%s", ' % field['function'])
+            row.append('%s, '            % fimmutable       )
+            row.append('%s, '            % lot              )
+            row.append('%s, '            % size             )
+            row.append('sizeof(const char *)'               )
+            row.append(endStr                               )
             field_functions.append(field['function'])
         else:
-            row.append(startStr                                                       )
-            row.append('"%s", '               % fid                                   )
-            row.append('%s, '                 % lvt                                   )
+            row.append(startStr                                                        )
+            row.append('"%s", '               % fid                                    )
+            row.append('%s, '                 % lvt                                    )
             row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
-            row.append('%s, '                 % fimmutable                            )
-            row.append('%s, '                 % lot                                   )
-            row.append('%s, '                 % size                                  )
-            row.append('sizeof(%s)'           % ftype                                 )
-            row.append(endStr                                                         )
+            row.append('%s, '                 % fimmutable                             )
+            row.append('%s, '                 % lot                                    )
+            row.append('%s, '                 % size                                   )
+            row.append('sizeof(%s)'           % ftype                                  )
+            row.append(endStr                                                          )
         field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)
@@ -577,10 +577,6 @@ def build_struct(struct):
     struct_lot = 'LOT_%s' % sid.upper()
 
     s = ''
-    if field_functions:
-        for field_function in field_functions:
-            s += 'static const char FUNCTION__%s[] = "%s";\n' % (field_function, field_function)
-        s += '\n'
 
     s += "#define %s $[STRUCTFIELDCOUNT]\n" % field_count_define
     s += "static struct LuaObjectField s%sFields[%s] = {\n" % (sid, field_count_define)

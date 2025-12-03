@@ -124,9 +124,10 @@ function play_penguin_walking_sound(walk)
     -- ...
 end
 
---- @param angle Pointer_integer
+--- @param angle integer
 --- @return integer
---- Updates the current object's angle from its move flags
+--- @return integer angle
+--- Computes and returns an angle depending on the current object's angle and move flags
 function update_angle_from_move_flags(angle)
     -- ...
 end
@@ -3204,20 +3205,22 @@ function is_within_100_units_of_mario(posX, posY, posZ)
     -- ...
 end
 
---- @param dst Pointer_number
+--- @param dst number
 --- @param goal number
 --- @param scale number
 --- @return integer
---- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
+--- @return number dst
+--- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment. Returns FALSE if `dst` reaches `goal`
 function set_or_approach_f32_asymptotic(dst, goal, scale)
     -- ...
 end
 
---- @param current Pointer_number
+--- @param current number
 --- @param target number
 --- @param multiplier number
 --- @return integer
---- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
+--- @return number current
+--- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches the `target`
 function approach_f32_asymptotic_bool(current, target, multiplier)
     -- ...
 end
@@ -3231,11 +3234,12 @@ function approach_f32_asymptotic(current, target, multiplier)
     -- ...
 end
 
---- @param current Pointer_integer
+--- @param current integer
 --- @param target integer
 --- @param divisor integer
 --- @return integer
---- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
+--- @return integer current
+--- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches `target`
 function approach_s16_asymptotic_bool(current, target, divisor)
     -- ...
 end
@@ -3269,29 +3273,32 @@ function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
     -- ...
 end
 
---- @param current Pointer_integer
+--- @param current integer
 --- @param target integer
 --- @param increment integer
 --- @return integer
---- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+--- @return integer current
+--- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 function camera_approach_s16_symmetric_bool(current, target, increment)
     -- ...
 end
 
---- @param current Pointer_integer
+--- @param current integer
 --- @param target integer
 --- @param increment integer
 --- @return integer
---- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
+--- @return integer current
+--- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments. Returns FALSE if `current` reaches the `target`
 function set_or_approach_s16_symmetric(current, target, increment)
     -- ...
 end
 
---- @param current Pointer_number
+--- @param current number
 --- @param target number
 --- @param increment number
 --- @return integer
---- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+--- @return number current
+--- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 function camera_approach_f32_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3364,10 +3371,10 @@ end
 
 --- @param from Vec3f
 --- @param to Vec3f
---- @param pitch Pointer_integer
---- @param yaw Pointer_integer
---- Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
-function calculate_angles(from, to, pitch, yaw)
+--- @return integer pitch
+--- @return integer yaw
+--- Calculates and returns the pitch and yaw angles from one 3D position (`from`) to another (`to`)
+function calculate_angles(from, to)
     -- ...
 end
 
@@ -3453,7 +3460,8 @@ function shake_camera_yaw(pos, focus)
     -- ...
 end
 
---- @param roll Pointer_integer
+--- @param roll integer
+--- @return integer roll
 --- Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
 function shake_camera_roll(roll)
     -- ...
@@ -3607,9 +3615,10 @@ end
 
 --- @param c Camera
 --- @param cPos Vec3f
---- @param avoidYaw Pointer_integer
+--- @param avoidYaw integer
 --- @param yawRange integer
 --- @return integer
+--- @return integer avoidYaw
 --- Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
@@ -5039,6 +5048,15 @@ function warp_special(arg)
     -- ...
 end
 
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destWarpNode integer
+--- @param arg integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, arg)
+    -- ...
+end
+
 --- @param param integer
 --- @param levelNum integer
 --- @return integer
@@ -5436,6 +5454,24 @@ end
 --- @param collisionData WallCollisionData
 --- Similar to `resolve_and_return_wall_collisions` but also returns detailed collision data (`WallCollisionData`). This can handle multiple walls and store them for further checks
 function resolve_and_return_wall_collisions_data(pos, offset, radius, collisionData)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param height number
+--- @return number
+--- @return Surface ceil
+--- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Returns the ceiling height and surface
+function vec3f_find_ceil(pos, height)
+    -- ...
+end
+
+--- @param pos Vec3f
+--- @param height number
+--- @return number
+--- @return Surface ceil
+--- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Prevents exposed ceiling bug. Returns the ceiling height and surface
+function vec3f_mario_ceil(pos, height)
     -- ...
 end
 
@@ -6584,11 +6620,11 @@ end
 
 --- @param from Vec3f
 --- @param to Vec3f
---- @param dist Pointer_number
---- @param pitch Pointer_integer
---- @param yaw Pointer_integer
---- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. The results are stored in `dist`, `pitch`, and `yaw`
-function vec3f_get_dist_and_angle(from, to, dist, pitch, yaw)
+--- @return number dist
+--- @return integer pitch
+--- @return integer yaw
+--- Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. Returns the calculated distance, pitch and yaw
+function vec3f_get_dist_and_angle(from, to)
     -- ...
 end
 
@@ -7917,10 +7953,10 @@ function obj_orient_graph(obj, normalX, normalY, normalZ)
     -- ...
 end
 
---- @param objFriction Pointer_number
 --- @param floor_nY number
---- Orients an object with the given normals, typically the surface under the object.
-function calc_obj_friction(objFriction, floor_nY)
+--- @return number objFriction
+--- Determines an object's forward speed multiplier.
+function calc_obj_friction(floor_nY)
     -- ...
 end
 
@@ -8276,11 +8312,12 @@ function obj_turn_pitch_toward_mario(m, targetOffsetY, turnAmount)
     -- ...
 end
 
---- @param px Pointer_number
+--- @param px number
 --- @param target number
 --- @param delta number
 --- @return integer
---- Approaches a `target` for `px` using `delta`
+--- @return number px
+--- Approaches a `target` for `px` using `delta`. Returns TRUE if `px` reaches `target`
 function approach_f32_ptr(px, target, delta)
     -- ...
 end
@@ -8333,14 +8370,16 @@ function obj_face_roll_approach(targetRoll, deltaRoll)
     -- ...
 end
 
---- @param angleVel Pointer_integer
---- @param angle Pointer_integer
+--- @param angleVel integer
+--- @param angle integer
 --- @param targetAngle integer
 --- @param targetSpeedProportion number
 --- @param accel integer
 --- @param minSpeed integer
 --- @param maxSpeed integer
 --- @return integer
+--- @return integer angleVel
+--- @return integer angle
 function obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)
     -- ...
 end
@@ -8377,45 +8416,49 @@ function obj_random_fixed_turn(delta)
     -- ...
 end
 
---- @param scaleVel Pointer_number
+--- @param scaleVel number
 --- @param shootFireScale number
 --- @param endScale number
 --- @return integer
---- Begin by increasing the current object's scale by `*scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
+--- @return number scaleVel
+--- Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
 function obj_grow_then_shrink(scaleVel, shootFireScale, endScale)
     -- ...
 end
 
---- @param value Pointer_integer
---- @param vel Pointer_number
+--- @param value integer
+--- @param vel number
 --- @param target integer
 --- @param velCloseToZero number
 --- @param accel number
 --- @param slowdown number
 --- @return integer
+--- @return integer value
+--- @return number vel
 function oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)
     -- ...
 end
 
---- @param blinkTimer Pointer_integer
+--- @param blinkTimer integer
 --- @param baseCycleLength integer
 --- @param cycleLengthRange integer
 --- @param blinkLength integer
+--- @return integer blinkTimer
 function obj_update_blinking(blinkTimer, baseCycleLength, cycleLengthRange, blinkLength)
     -- ...
 end
 
---- @param targetYaw Pointer_integer
 --- @return integer
---- Resolves "collisions" with the current object and other objects by offsetting the current object's position
-function obj_resolve_object_collisions(targetYaw)
+--- @return integer targetYaw
+--- Resolves "collisions" with the current object and other objects by offsetting the current object's position. Returns TRUE and the target yaw if there is collision
+function obj_resolve_object_collisions()
     -- ...
 end
 
---- @param targetYaw Pointer_integer
 --- @return integer
---- Bounces the current object off of walls, edges, and objects using `*targetYaw`
-function obj_bounce_off_walls_edges_objects(targetYaw)
+--- @return integer targetYaw
+--- Bounces the current object off of walls, edges, and objects. Returns TRUE and the target yaw if there is collision
+function obj_bounce_off_walls_edges_objects()
     -- ...
 end
 
@@ -8493,10 +8536,10 @@ function obj_move_for_one_second(endAction)
 end
 
 --- @param threshold number
---- @param distanceToPlayer Pointer_integer
---- @param angleToPlayer Pointer_integer
---- Moves the current object for specifically one second (`oTimer` < 30)
-function treat_far_home_as_mario(threshold, distanceToPlayer, angleToPlayer)
+--- @return integer distanceToPlayer
+--- @return integer angleToPlayer
+--- Treats far home as Mario. Returns the distance and angle to the nearest player
+function treat_far_home_as_mario(threshold)
     -- ...
 end
 
@@ -8513,9 +8556,11 @@ function obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, s
     -- ...
 end
 
---- @param bitSet Pointer_integer
+--- @param bitSet integer
 --- @param flag integer
 --- @return integer
+--- @return integer bitSet
+--- Clears the `flag` from the `bitSet`
 function clear_move_flag(bitSet, flag)
     -- ...
 end
@@ -8581,10 +8626,11 @@ function cur_obj_forward_vel_approach_upward(target, increment)
     -- ...
 end
 
---- @param value Pointer_number
+--- @param value number
 --- @param target number
 --- @param increment number
 --- @return integer
+--- @return number value
 function approach_f32_signed(value, target, increment)
     -- ...
 end
@@ -8905,9 +8951,9 @@ function cur_obj_find_nearest_pole()
 end
 
 --- @param behavior Pointer_BehaviorScript
---- @param dist Pointer_number
 --- @return Object
-function cur_obj_find_nearest_object_with_behavior(behavior, dist)
+--- @return number dist
+function cur_obj_find_nearest_object_with_behavior(behavior)
     -- ...
 end
 
@@ -9084,8 +9130,9 @@ function cur_obj_update_floor_height_and_get_floor()
     -- ...
 end
 
---- @param value Pointer_number
+--- @param value number
 --- @param dragStrength number
+--- @return number value
 function apply_drag_to_value(value, dragStrength)
     -- ...
 end
@@ -10805,6 +10852,14 @@ function gfx_get_texture(cmd)
     -- ...
 end
 
+--- @param name string
+--- @return Pointer_Gfx
+--- @return integer length
+--- Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+function gfx_get_from_name(name)
+    -- ...
+end
+
 --- @param gfx Pointer_Gfx
 --- @return string
 --- Gets the name of a display list
@@ -10865,6 +10920,14 @@ end
 
 --- Deletes all display lists created by `gfx_create`
 function gfx_delete_all()
+    -- ...
+end
+
+--- @param name string
+--- @return Pointer_Vtx
+--- @return integer count
+--- Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+function vtx_get_from_name(name)
     -- ...
 end
 
@@ -12300,6 +12363,16 @@ function find_wall_collisions(colData)
     -- ...
 end
 
+--- @param posX number
+--- @param posY number
+--- @param posZ number
+--- @return number
+--- @return Surface pceil
+--- Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface. If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+function find_ceil(posX, posY, posZ)
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param z number
@@ -12315,6 +12388,16 @@ end
 --- @return number
 --- Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_floor_height(x, y, z)
+    -- ...
+end
+
+--- @param xPos number
+--- @param yPos number
+--- @param zPos number
+--- @return number
+--- @return Surface pfloor
+--- Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface. If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+function find_floor(xPos, yPos, zPos)
     -- ...
 end
 
@@ -12412,9 +12495,8 @@ function sync_object_is_owned_locally(syncId)
     -- ...
 end
 
---- @alias Pointer_integer integer
 --- @alias Pointer_BehaviorScript BehaviorScript
---- @alias Pointer_number number
+--- @alias Pointer_integer integer
 --- @alias Pointer_Vec4s Vec4s
 --- @alias Pointer_Trajectory Trajectory
 --- @alias Pointer_Collision Collision

@@ -964,6 +964,7 @@
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
    - [warp_special](functions-3.md#warp_special)
+   - [initiate_warp](functions-3.md#initiate_warp)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)
 
 <br />
@@ -1026,6 +1027,8 @@
    - [mario_get_terrain_sound_addend](functions-4.md#mario_get_terrain_sound_addend)
    - [resolve_and_return_wall_collisions](functions-4.md#resolve_and_return_wall_collisions)
    - [resolve_and_return_wall_collisions_data](functions-4.md#resolve_and_return_wall_collisions_data)
+   - [vec3f_find_ceil](functions-4.md#vec3f_find_ceil)
+   - [vec3f_mario_ceil](functions-4.md#vec3f_mario_ceil)
    - [mario_facing_downhill](functions-4.md#mario_facing_downhill)
    - [mario_floor_is_slippery](functions-4.md#mario_floor_is_slippery)
    - [mario_floor_is_slope](functions-4.md#mario_floor_is_slope)
@@ -1285,28 +1288,28 @@
 <br />
 
 - math_util_vec3i.inl
-   - [vec3i_zero](functions-4.md#vec3i_zero)
-   - [vec3i_copy](functions-4.md#vec3i_copy)
-   - [vec3i_set](functions-4.md#vec3i_set)
-   - [vec3i_add](functions-4.md#vec3i_add)
-   - [vec3i_sum](functions-4.md#vec3i_sum)
-   - [vec3i_sub](functions-4.md#vec3i_sub)
-   - [vec3i_dif](functions-4.md#vec3i_dif)
-   - [vec3i_mul](functions-4.md#vec3i_mul)
-   - [vec3i_mult](functions-4.md#vec3i_mult)
-   - [vec3i_prod](functions-4.md#vec3i_prod)
-   - [vec3i_div](functions-4.md#vec3i_div)
-   - [vec3i_length](functions-4.md#vec3i_length)
-   - [vec3i_normalize](functions-4.md#vec3i_normalize)
-   - [vec3i_set_magnitude](functions-4.md#vec3i_set_magnitude)
-   - [vec3i_dot](functions-4.md#vec3i_dot)
-   - [vec3i_cross](functions-4.md#vec3i_cross)
-   - [vec3i_combine](functions-4.md#vec3i_combine)
-   - [vec3i_dist](functions-4.md#vec3i_dist)
-   - [vec3i_hdist](functions-4.md#vec3i_hdist)
-   - [vec3i_is_zero](functions-4.md#vec3i_is_zero)
-   - [vec3i_to_vec3f](functions-4.md#vec3i_to_vec3f)
-   - [vec3i_to_vec3s](functions-4.md#vec3i_to_vec3s)
+   - [vec3i_zero](functions-5.md#vec3i_zero)
+   - [vec3i_copy](functions-5.md#vec3i_copy)
+   - [vec3i_set](functions-5.md#vec3i_set)
+   - [vec3i_add](functions-5.md#vec3i_add)
+   - [vec3i_sum](functions-5.md#vec3i_sum)
+   - [vec3i_sub](functions-5.md#vec3i_sub)
+   - [vec3i_dif](functions-5.md#vec3i_dif)
+   - [vec3i_mul](functions-5.md#vec3i_mul)
+   - [vec3i_mult](functions-5.md#vec3i_mult)
+   - [vec3i_prod](functions-5.md#vec3i_prod)
+   - [vec3i_div](functions-5.md#vec3i_div)
+   - [vec3i_length](functions-5.md#vec3i_length)
+   - [vec3i_normalize](functions-5.md#vec3i_normalize)
+   - [vec3i_set_magnitude](functions-5.md#vec3i_set_magnitude)
+   - [vec3i_dot](functions-5.md#vec3i_dot)
+   - [vec3i_cross](functions-5.md#vec3i_cross)
+   - [vec3i_combine](functions-5.md#vec3i_combine)
+   - [vec3i_dist](functions-5.md#vec3i_dist)
+   - [vec3i_hdist](functions-5.md#vec3i_hdist)
+   - [vec3i_is_zero](functions-5.md#vec3i_is_zero)
+   - [vec3i_to_vec3f](functions-5.md#vec3i_to_vec3f)
+   - [vec3i_to_vec3s](functions-5.md#vec3i_to_vec3s)
 
 <br />
 
@@ -1938,6 +1941,7 @@
    - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
    - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
    - [gfx_get_texture](functions-6.md#gfx_get_texture)
+   - [gfx_get_from_name](functions-6.md#gfx_get_from_name)
    - [gfx_get_name](functions-6.md#gfx_get_name)
    - [gfx_get_length](functions-6.md#gfx_get_length)
    - [gfx_get_command](functions-6.md#gfx_get_command)
@@ -1947,6 +1951,7 @@
    - [gfx_resize](functions-6.md#gfx_resize)
    - [gfx_delete](functions-6.md#gfx_delete)
    - [gfx_delete_all](functions-6.md#gfx_delete_all)
+   - [vtx_get_from_name](functions-6.md#vtx_get_from_name)
    - [vtx_get_name](functions-6.md#vtx_get_name)
    - [vtx_get_count](functions-6.md#vtx_get_count)
    - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
@@ -2188,8 +2193,10 @@
 
 - surface_collision.h
    - [find_wall_collisions](functions-7.md#find_wall_collisions)
+   - [find_ceil](functions-7.md#find_ceil)
    - [find_ceil_height](functions-7.md#find_ceil_height)
    - [find_floor_height](functions-7.md#find_floor_height)
+   - [find_floor](functions-7.md#find_floor)
    - [find_water_level](functions-7.md#find_water_level)
    - [find_poison_gas_level](functions-7.md#find_poison_gas_level)
    - [set_find_wall_direction](functions-7.md#set_find_wall_direction)
@@ -2739,7 +2746,7 @@ Derives a `MARIO_SPAWN_*` constant from `o`
 Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 
 ### Lua Example
-`local ObjectWarpNodeValue = area_get_warp_node(id)`
+`local objectWarpNodeValue = area_get_warp_node(id)`
 
 ### Parameters
 | Field | Type |
@@ -2747,7 +2754,7 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 | id | `integer` |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node(u8 id);`
@@ -2762,13 +2769,13 @@ Finds a warp node in the current area by its ID. The warp node must exist in the
 Gets the first warp node found in the area, otherwise returns nil
 
 ### Lua Example
-`local ObjectWarpNodeValue = area_get_any_warp_node()`
+`local objectWarpNodeValue = area_get_any_warp_node()`
 
 ### Parameters
 - None
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_any_warp_node(void);`
@@ -2783,7 +2790,7 @@ Gets the first warp node found in the area, otherwise returns nil
 Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 
 ### Lua Example
-`local ObjectWarpNodeValue = area_get_warp_node_from_params(o)`
+`local objectWarpNodeValue = area_get_warp_node_from_params(o)`
 
 ### Parameters
 | Field | Type |
@@ -2791,7 +2798,7 @@ Finds a warp node in the current area using parameters from the provided object.
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_get_warp_node_from_params(struct Object *o);`

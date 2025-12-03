@@ -42,7 +42,8 @@ static s8 sLevelsWithRooms[] = { LEVEL_BBH, LEVEL_CASTLE, LEVEL_HMC, -1 };
 
 #define o gCurrentObject
 
-s32 clear_move_flag(u32 *bitSet, s32 flag) {
+/* |description|Clears the `flag` from the `bitSet`|descriptionEnd| */
+s32 clear_move_flag(INOUT u32 *bitSet, s32 flag) {
     if (*bitSet & flag) {
         *bitSet &= flag ^ 0xFFFFFFFF;
         return TRUE;
@@ -273,7 +274,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
 }
 
-void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src) {
+void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src) {
     if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
     dst[1][0] = src[1][0] * obj->header.gfx.scale[1];
@@ -296,7 +297,7 @@ void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src) {
     dst[3][3] = src[3][3];
 }
 
-void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2) {
+void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     f32 spC, sp8, sp4;
 
     spC = a2[3][0] * a2[0][0] + a2[3][1] * a2[0][1] + a2[3][2] * a2[0][2];
@@ -384,7 +385,7 @@ void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
     }
 }
 
-s32 approach_f32_signed(f32 *value, f32 target, f32 increment) {
+s32 approach_f32_signed(INOUT f32 *value, f32 target, f32 increment) {
     if (value == NULL) { return 0; }
     s32 reachedTarget = FALSE;
 
@@ -825,7 +826,7 @@ Multiplies a vector by a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
+void linear_mtxf_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[0][i] * v[0] + m[1][i] * v[1] + m[2][i] * v[2];
@@ -840,7 +841,7 @@ Multiplies a vector by the transpose of a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v) {
+void linear_mtxf_transpose_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2];
@@ -1079,7 +1080,7 @@ struct Object* cur_obj_find_nearest_pole(void) {
     return closestObj;
 }
 
-struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist) {
+struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist) {
     if (!behavior || !dist) { return NULL; }
 
     behavior = smlua_override_behavior(behavior);
@@ -1519,7 +1520,7 @@ struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
     return floor;
 }
 
-void apply_drag_to_value(f32 *value, f32 dragStrength) {
+void apply_drag_to_value(INOUT f32 *value, f32 dragStrength) {
     f32 decel;
 
     if (*value != 0) {

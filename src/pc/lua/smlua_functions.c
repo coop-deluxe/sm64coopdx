@@ -168,24 +168,6 @@ int smlua_func_init_mario_after_warp(lua_State* L) {
     return 1;
 }
 
-int smlua_func_initiate_warp(lua_State* L) {
-    if(!smlua_functions_valid_param_count(L, 4)) { return 0; }
-
-    s16 destLevel = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("initiate_warp: Failed to convert parameter 1"); return 0; }
-    s16 destArea = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("initiate_warp: Failed to convert parameter 2"); return 0; }
-    s16 destWarpNode = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("initiate_warp: Failed to convert parameter 3"); return 0; }
-    s32 arg3 = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("initiate_warp: Failed to convert parameter 4"); return 0; }
-
-    extern void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg3);
-    initiate_warp(destLevel, destArea, destWarpNode, arg3);
-
-    return 1;
-}
-
 int smlua_func_reset_level(lua_State* L) {
     if (network_player_connected_count() >= 2) {
         LOG_LUA_LINE("reset_level() can only be used in singleplayer");
@@ -1007,36 +989,6 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
-int smlua_func_gfx_get_from_name(lua_State *L) {
-    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    const char *name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("gfx_get_from_name: Failed to convert parameter 1"); return 0; }
-
-    u32 length = 0;
-    Gfx *gfx = dynos_gfx_get(name, &length);
-
-    smlua_push_object(L, LOT_GFX, gfx, NULL);
-    lua_pushinteger(L, length);
-
-    return 2;
-}
-
-int smlua_func_vtx_get_from_name(lua_State *L) {
-    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    const char *name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("vtx_get_from_name: Failed to convert parameter 1"); return 0; }
-
-    u32 count = 0;
-    Vtx *vtx = dynos_vtx_get(name, &count);
-
-    smlua_push_object(L, LOT_VTX, vtx, NULL);
-    lua_pushinteger(L, count);
-
-    return 2;
-}
-
   //////////
  // bind //
 //////////
@@ -1048,7 +1000,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "table_copy", smlua_func_table_copy);
     smlua_bind_function(L, "table_deepcopy", smlua_func_table_deepcopy);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
-    smlua_bind_function(L, "initiate_warp", smlua_func_initiate_warp);
     smlua_bind_function(L, "network_init_object", smlua_func_network_init_object);
     smlua_bind_function(L, "network_send_object", smlua_func_network_send_object);
     smlua_bind_function(L, "reset_level", smlua_func_reset_level);
@@ -1069,6 +1020,4 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
-    smlua_bind_function(L, "gfx_get_from_name", smlua_func_gfx_get_from_name);
-    smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
 }

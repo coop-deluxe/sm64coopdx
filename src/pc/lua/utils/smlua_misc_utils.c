@@ -369,7 +369,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
 }
 
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f pos) {
     if (!m) { return false; }
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);

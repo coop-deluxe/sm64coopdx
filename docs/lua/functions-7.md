@@ -40,7 +40,7 @@ Instantly changes the current area to `areaIndex`
 Gets information on a custom level from `levelNum`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info(levelNum)`
+`local customLevelInfoValue = smlua_level_util_get_info(levelNum)`
 
 ### Parameters
 | Field | Type |
@@ -48,7 +48,7 @@ Gets information on a custom level from `levelNum`
 | levelNum | `integer` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info(s16 levelNum);`
@@ -63,7 +63,7 @@ Gets information on a custom level from `levelNum`
 Gets information on a custom level from `shortName`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
+`local customLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
 
 ### Parameters
 | Field | Type |
@@ -71,7 +71,7 @@ Gets information on a custom level from `shortName`
 | shortName | `string` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info_from_short_name(const char* shortName);`
@@ -86,7 +86,7 @@ Gets information on a custom level from `shortName`
 Gets information on a custom level from `courseNum`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
+`local customLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
 
 ### Parameters
 | Field | Type |
@@ -94,7 +94,7 @@ Gets information on a custom level from `courseNum`
 | courseNum | `integer` |
 
 ### Returns
-[CustomLevelInfo](structs.md#CustomLevelInfo)
+- [CustomLevelInfo](structs.md#CustomLevelInfo)
 
 ### C Prototype
 `struct CustomLevelInfo* smlua_level_util_get_info_from_course_num(u8 courseNum);`
@@ -349,7 +349,7 @@ Gets the area update counter incremented when objects are updated
 Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
 
 ### Lua Example
-`local PointerValue = get_temp_s32_pointer(initialValue)`
+`local pointerValue = get_temp_s32_pointer(initialValue)`
 
 ### Parameters
 | Field | Type |
@@ -574,7 +574,7 @@ Gets the DJUI menu font
 - None
 
 ### Returns
-[enum DjuiFontType](constants.md#enum-DjuiFontType)
+- [enum DjuiFontType](constants.md#enum-DjuiFontType)
 
 ### C Prototype
 `enum DjuiFontType djui_menu_get_font(void);`
@@ -589,13 +589,13 @@ Gets the DJUI menu font
 Gets the DJUI menu theme
 
 ### Lua Example
-`local DjuiThemeValue = djui_menu_get_theme()`
+`local djuiThemeValue = djui_menu_get_theme()`
 
 ### Parameters
 - None
 
 ### Returns
-[DjuiTheme](structs.md#DjuiTheme)
+- [DjuiTheme](structs.md#DjuiTheme)
 
 ### C Prototype
 `struct DjuiTheme* djui_menu_get_theme(void);`
@@ -1410,7 +1410,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 - `boolean`
 
 ### C Prototype
-`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -1649,13 +1649,13 @@ Gets the Unix Timestamp
 Gets the system clock's date and time
 
 ### Lua Example
-`local DateTimeValue = get_date_and_time()`
+`local dateTimeValue = get_date_and_time()`
 
 ### Parameters
 - None
 
 ### Returns
-[DateTime](structs.md#DateTime)
+- [DateTime](structs.md#DateTime)
 
 ### C Prototype
 `struct DateTime* get_date_and_time(void);`
@@ -2046,13 +2046,13 @@ Checks if a file exists inside of a mod
 Gets the mod currently being processed
 
 ### Lua Example
-`local ModValue = get_active_mod()`
+`local modValue = get_active_mod()`
 
 ### Parameters
 - None
 
 ### Returns
-[Mod](structs.md#Mod)
+- [Mod](structs.md#Mod)
 
 ### C Prototype
 `struct Mod* get_active_mod(void);`
@@ -2132,13 +2132,13 @@ Gets the name of the operating system the game is running on
 Gets the current GraphNodeRoot
 
 ### Lua Example
-`local GraphNodeRootValue = geo_get_current_root()`
+`local graphNodeRootValue = geo_get_current_root()`
 
 ### Parameters
 - None
 
 ### Returns
-[GraphNodeRoot](structs.md#GraphNodeRoot)
+- [GraphNodeRoot](structs.md#GraphNodeRoot)
 
 ### C Prototype
 `struct GraphNodeRoot* geo_get_current_root(void);`
@@ -2153,13 +2153,13 @@ Gets the current GraphNodeRoot
 Gets the current GraphNodeMasterList
 
 ### Lua Example
-`local GraphNodeMasterListValue = geo_get_current_master_list()`
+`local graphNodeMasterListValue = geo_get_current_master_list()`
 
 ### Parameters
 - None
 
 ### Returns
-[GraphNodeMasterList](structs.md#GraphNodeMasterList)
+- [GraphNodeMasterList](structs.md#GraphNodeMasterList)
 
 ### C Prototype
 `struct GraphNodeMasterList* geo_get_current_master_list(void);`
@@ -2174,13 +2174,13 @@ Gets the current GraphNodeMasterList
 Gets the current GraphNodePerspective
 
 ### Lua Example
-`local GraphNodePerspectiveValue = geo_get_current_perspective()`
+`local graphNodePerspectiveValue = geo_get_current_perspective()`
 
 ### Parameters
 - None
 
 ### Returns
-[GraphNodePerspective](structs.md#GraphNodePerspective)
+- [GraphNodePerspective](structs.md#GraphNodePerspective)
 
 ### C Prototype
 `struct GraphNodePerspective* geo_get_current_perspective(void);`
@@ -2195,13 +2195,13 @@ Gets the current GraphNodePerspective
 Gets the current GraphNodeCamera
 
 ### Lua Example
-`local GraphNodeCameraValue = geo_get_current_camera()`
+`local graphNodeCameraValue = geo_get_current_camera()`
 
 ### Parameters
 - None
 
 ### Returns
-[GraphNodeCamera](structs.md#GraphNodeCamera)
+- [GraphNodeCamera](structs.md#GraphNodeCamera)
 
 ### C Prototype
 `struct GraphNodeCamera* geo_get_current_camera(void);`
@@ -2216,13 +2216,13 @@ Gets the current GraphNodeCamera
 Gets the current GraphNodeHeldObject
 
 ### Lua Example
-`local GraphNodeHeldObjectValue = geo_get_current_held_object()`
+`local graphNodeHeldObjectValue = geo_get_current_held_object()`
 
 ### Parameters
 - None
 
 ### Returns
-[GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
+- [GraphNodeHeldObject](structs.md#GraphNodeHeldObject)
 
 ### C Prototype
 `struct GraphNodeHeldObject* geo_get_current_held_object(void);`
@@ -2297,7 +2297,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 | name | `string` |
 
 ### Returns
-[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+- [enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
 `enum ModelExtendedId smlua_model_util_get_id(const char* name);`
@@ -2318,7 +2318,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
-`local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
+`local objectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
 ### Parameters
 | Field | Type |
@@ -2331,7 +2331,7 @@ Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local
 | objSetupFunction | `Lua Function` () |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
@@ -2346,7 +2346,7 @@ Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local
 Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
-`local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
+`local objectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
 ### Parameters
 | Field | Type |
@@ -2359,7 +2359,7 @@ Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the l
 | objSetupFunction | `Lua Function` () |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
@@ -2430,7 +2430,7 @@ Returns an object's extended model id
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[enum ModelExtendedId](constants.md#enum-ModelExtendedId)
+- [enum ModelExtendedId](constants.md#enum-ModelExtendedId)
 
 ### C Prototype
 `enum ModelExtendedId obj_get_model_id_extended(struct Object *o);`
@@ -2469,7 +2469,7 @@ Sets an object's model to `modelId`
 Gets a trajectory by `name`
 
 ### Lua Example
-`local PointerValue = get_trajectory(name)`
+`local pointerValue = get_trajectory(name)`
 
 ### Parameters
 | Field | Type |
@@ -2492,13 +2492,13 @@ Gets a trajectory by `name`
 When used in a geo function, retrieve the current processed object
 
 ### Lua Example
-`local ObjectValue = geo_get_current_object()`
+`local objectValue = geo_get_current_object()`
 
 ### Parameters
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *geo_get_current_object(void);`
@@ -2513,13 +2513,13 @@ When used in a geo function, retrieve the current processed object
 Gets the object currently being processed
 
 ### Lua Example
-`local ObjectValue = get_current_object()`
+`local objectValue = get_current_object()`
 
 ### Parameters
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_current_object(void);`
@@ -2534,13 +2534,13 @@ Gets the object currently being processed
 Gets the NPC object Mario is talking to
 
 ### Lua Example
-`local ObjectValue = get_dialog_object()`
+`local objectValue = get_dialog_object()`
 
 ### Parameters
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_dialog_object(void);`
@@ -2555,13 +2555,13 @@ Gets the NPC object Mario is talking to
 Gets the cutscene focus object
 
 ### Lua Example
-`local ObjectValue = get_cutscene_focus()`
+`local objectValue = get_cutscene_focus()`
 
 ### Parameters
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_cutscene_focus(void);`
@@ -2576,13 +2576,13 @@ Gets the cutscene focus object
 Gets the secondary camera focus object
 
 ### Lua Example
-`local ObjectValue = get_secondary_camera_focus()`
+`local objectValue = get_secondary_camera_focus()`
 
 ### Parameters
 - None
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *get_secondary_camera_focus(void);`
@@ -2643,7 +2643,7 @@ Sets the secondary camera focus object
 Gets the first object in an object list
 
 ### Lua Example
-`local ObjectValue = obj_get_first(objList)`
+`local objectValue = obj_get_first(objList)`
 
 ### Parameters
 | Field | Type |
@@ -2651,7 +2651,7 @@ Gets the first object in an object list
 | objList | [enum ObjectList](constants.md#enum-ObjectList) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first(enum ObjectList objList);`
@@ -2666,7 +2666,7 @@ Gets the first object in an object list
 Gets the first object loaded with `behaviorId`
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id(behaviorId)`
+`local objectValue = obj_get_first_with_behavior_id(behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -2674,7 +2674,7 @@ Gets the first object loaded with `behaviorId`
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId);`
@@ -2689,7 +2689,7 @@ Gets the first object loaded with `behaviorId`
 Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
+`local objectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2699,7 +2699,7 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 | value | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value);`
@@ -2714,7 +2714,7 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
+`local objectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2724,7 +2724,7 @@ Gets the first object loaded with `behaviorId` and object float field (look in `
 | value | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value);`
@@ -2739,7 +2739,7 @@ Gets the first object loaded with `behaviorId` and object float field (look in `
 Gets the next object in an object list
 
 ### Lua Example
-`local ObjectValue = obj_get_next(o)`
+`local objectValue = obj_get_next(o)`
 
 ### Parameters
 | Field | Type |
@@ -2747,7 +2747,7 @@ Gets the next object in an object list
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next(struct Object *o);`
@@ -2762,7 +2762,7 @@ Gets the next object in an object list
 Gets the next object loaded with the same behavior ID
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id(o)`
+`local objectValue = obj_get_next_with_same_behavior_id(o)`
 
 ### Parameters
 | Field | Type |
@@ -2770,7 +2770,7 @@ Gets the next object loaded with the same behavior ID
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id(struct Object *o);`
@@ -2785,7 +2785,7 @@ Gets the next object loaded with the same behavior ID
 Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
+`local objectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2795,7 +2795,7 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 | value | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value);`
@@ -2810,7 +2810,7 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
+`local objectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2820,7 +2820,7 @@ Gets the next object loaded with the same behavior ID and object float field (lo
 | value | `number` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value);`
@@ -2835,7 +2835,7 @@ Gets the next object loaded with the same behavior ID and object float field (lo
 Gets the nearest object with `behaviorId` to `o`
 
 ### Lua Example
-`local ObjectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
+`local objectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -2844,7 +2844,7 @@ Gets the nearest object with `behaviorId` to `o`
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_nearest_object_with_behavior_id(struct Object *o, enum BehaviorId behaviorId);`
@@ -2882,7 +2882,7 @@ Counts every object with `behaviorId`
 Gets the corresponding collided object to an index from `o`
 
 ### Lua Example
-`local ObjectValue = obj_get_collided_object(o, index)`
+`local objectValue = obj_get_collided_object(o, index)`
 
 ### Parameters
 | Field | Type |
@@ -2891,7 +2891,7 @@ Gets the corresponding collided object to an index from `o`
 | index | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *obj_get_collided_object(struct Object *o, s16 index);`
@@ -3104,7 +3104,7 @@ Sets the signed 32-bit integer value from the sub field corresponding to `fieldS
 Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 
 ### Lua Example
-`local SpawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
+`local spawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
 
 ### Parameters
 | Field | Type |
@@ -3112,7 +3112,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 | modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
 
 ### Returns
-[SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
+- [SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
 
 ### C Prototype
 `struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);`
@@ -3127,7 +3127,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`
 
 ### Lua Example
-`local WaterDropletParamsValue = obj_get_temp_water_droplet_params(modelId, behaviorId)`
+`local waterDropletParamsValue = obj_get_temp_water_droplet_params(modelId, behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -3136,7 +3136,7 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 | behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
 
 ### Returns
-[WaterDropletParams](structs.md#WaterDropletParams)
+- [WaterDropletParams](structs.md#WaterDropletParams)
 
 ### C Prototype
 `struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);`
@@ -3151,13 +3151,13 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 Returns a temporary object hitbox pointer
 
 ### Lua Example
-`local ObjectHitboxValue = get_temp_object_hitbox()`
+`local objectHitboxValue = get_temp_object_hitbox()`
 
 ### Parameters
 - None
 
 ### Returns
-[ObjectHitbox](structs.md#ObjectHitbox)
+- [ObjectHitbox](structs.md#ObjectHitbox)
 
 ### C Prototype
 `struct ObjectHitbox* get_temp_object_hitbox(void);`
@@ -3539,7 +3539,7 @@ Resets every modified dialog back to vanilla
 Gets the DialogEntry struct for the given `dialogId`
 
 ### Lua Example
-`local DialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
+`local dialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
 
 ### Parameters
 | Field | Type |
@@ -3547,7 +3547,7 @@ Gets the DialogEntry struct for the given `dialogId`
 | dialogId | [enum DialogId](constants.md#enum-DialogId) |
 
 ### Returns
-[DialogEntry](structs.md#DialogEntry)
+- [DialogEntry](structs.md#DialogEntry)
 
 ### C Prototype
 `struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId);`
@@ -4626,6 +4626,32 @@ Detects wall collisions at a given position and adjusts the position based on th
 
 <br />
 
+## [find_ceil](#find_ceil)
+
+### Description
+Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface. If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+
+### Lua Example
+`local numberValue, pceil = find_ceil(posX, posY, posZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
+
+### Returns
+- `number`
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`f32 find_ceil(f32 posX, f32 posY, f32 posZ, RET struct Surface **pceil);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [find_ceil_height](#find_ceil_height)
 
 ### Description
@@ -4671,6 +4697,32 @@ Finds the height of the highest floor below a given position (x, y, z). If no fl
 
 ### C Prototype
 `f32 find_floor_height(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_floor](#find_floor)
+
+### Description
+Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface. If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+
+### Lua Example
+`local numberValue, pfloor = find_floor(xPos, yPos, zPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| xPos | `number` |
+| yPos | `number` |
+| zPos | `number` |
+
+### Returns
+- `number`
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`f32 find_floor(f32 xPos, f32 yPos, f32 zPos, RET struct Surface **pfloor);`
 
 [:arrow_up_small:](#)
 
@@ -4768,7 +4820,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 - None
 
 ### C Prototype
-`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, VEC_OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -4807,13 +4859,13 @@ Loads the object's collision data into dynamic collision. You must run this ever
 Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
 
 ### Lua Example
-`local StaticObjectCollisionValue = load_static_object_collision()`
+`local staticObjectCollisionValue = load_static_object_collision()`
 
 ### Parameters
 - None
 
 ### Returns
-[StaticObjectCollision](structs.md#StaticObjectCollision)
+- [StaticObjectCollision](structs.md#StaticObjectCollision)
 
 ### C Prototype
 `struct StaticObjectCollision *load_static_object_collision();`
@@ -4852,7 +4904,7 @@ Toggles a collection of static object surfaces
 Gets a surface corresponding to `index` from the static object collision
 
 ### Lua Example
-`local SurfaceValue = get_static_object_surface(col, index)`
+`local surfaceValue = get_static_object_surface(col, index)`
 
 ### Parameters
 | Field | Type |
@@ -4861,7 +4913,7 @@ Gets a surface corresponding to `index` from the static object collision
 | index | `integer` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index);`
@@ -4876,7 +4928,7 @@ Gets a surface corresponding to `index` from the static object collision
 Gets a surface corresponding to `index` from the surface pool buffer
 
 ### Lua Example
-`local SurfaceValue = obj_get_surface_from_index(o, index)`
+`local surfaceValue = obj_get_surface_from_index(o, index)`
 
 ### Parameters
 | Field | Type |
@@ -4885,7 +4937,7 @@ Gets a surface corresponding to `index` from the surface pool buffer
 | index | `integer` |
 
 ### Returns
-[Surface](structs.md#Surface)
+- [Surface](structs.md#Surface)
 
 ### C Prototype
 `struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);`
@@ -4929,7 +4981,7 @@ Checks if a surface has force
 Retrieves an object from a sync ID
 
 ### Lua Example
-`local ObjectValue = sync_object_get_object(syncId)`
+`local objectValue = sync_object_get_object(syncId)`
 
 ### Parameters
 | Field | Type |
@@ -4937,7 +4989,7 @@ Retrieves an object from a sync ID
 | syncId | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* sync_object_get_object(u32 syncId);`
