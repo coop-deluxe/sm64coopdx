@@ -52,7 +52,7 @@ void le_set_tone_mapping(enum LEToneMapping toneMapping) {
     sToneMapping = toneMapping;
 }
 
-void le_get_ambient_color(OUT Color out) {
+void le_get_ambient_color(VEC_OUT Color out) {
     color_copy(out, gLEAmbientColor);
 }
 
@@ -282,7 +282,7 @@ bool le_light_exists(s16 id) {
     return sLights[id].added;
 }
 
-void le_get_light_pos(s16 id, OUT Vec3f out) {
+void le_get_light_pos(s16 id, VEC_OUT Vec3f out) {
     if (id < 0 || id >= LE_MAX_LIGHTS) { return; }
 
     struct LELight* light = &sLights[id];
@@ -300,7 +300,7 @@ void le_set_light_pos(s16 id, f32 x, f32 y, f32 z) {
     light->posZ = z;
 }
 
-void le_get_light_color(s16 id, OUT Color out) {
+void le_get_light_color(s16 id, VEC_OUT Color out) {
     if (id < 0 || id >= LE_MAX_LIGHTS) { return; }
 
     struct LELight* light = &sLights[id];

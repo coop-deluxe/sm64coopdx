@@ -247,15 +247,9 @@ Texture *gfx_get_texture(Gfx *cmd) {
     return (Texture *) cmd->words.w1;
 }
 
-RETURNS(Gfx*, u32) gfx_get_from_name(const char *name) {
-    lua_State *L = gLuaState;
-    if (!L) { return; }
-
-    u32 length = 0;
-    Gfx *gfx = dynos_gfx_get(name, &length);
-
-    smlua_push_object(L, LOT_GFX, gfx, NULL);
-    lua_pushinteger(L, length);
+Gfx *gfx_get_from_name(const char *name, RET u32 *length) {
+    *length = 0;
+    return dynos_gfx_get(name, length);
 }
 
 const char *gfx_get_name(Gfx *gfx) {
@@ -366,15 +360,9 @@ void gfx_delete_all() {
     dynos_gfx_delete_all();
 }
 
-RETURNS(Vtx*, u32) vtx_get_from_name(const char *name) {
-    lua_State *L = gLuaState;
-    if (!L) { return; }
-
-    u32 count = 0;
-    Vtx *vtx = dynos_vtx_get(name, &count);
-
-    smlua_push_object(L, LOT_VTX, vtx, NULL);
-    lua_pushinteger(L, count);
+Vtx *vtx_get_from_name(const char *name, RET u32 *count) {
+    *count = 0;
+    return dynos_vtx_get(name, count);
 }
 
 const char *vtx_get_name(Vtx *vtx) {

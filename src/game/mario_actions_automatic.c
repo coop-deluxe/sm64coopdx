@@ -344,7 +344,7 @@ s32 act_top_of_pole(struct MarioState *m) {
 /* |description|
 Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
 |descriptionEnd| */
-s32 perform_hanging_step(struct MarioState *m, OUT Vec3f nextPos) {
+s32 perform_hanging_step(struct MarioState *m, VEC_OUT Vec3f nextPos) {
     if (!m) { return 0; }
     UNUSED s32 unused;
     struct Surface *ceil;

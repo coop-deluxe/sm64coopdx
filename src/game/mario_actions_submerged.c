@@ -85,7 +85,7 @@ static f32 get_buoyancy(struct MarioState *m) {
 }
 
 /* |description|Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality|descriptionEnd| */
-u32 perform_water_full_step(struct MarioState *m, OUT Vec3f nextPos) {
+u32 perform_water_full_step(struct MarioState *m, VEC_OUT Vec3f nextPos) {
     if (!m) { return 0; }
     struct WallCollisionData wcd = { 0 };
     struct Surface *ceil;
@@ -136,7 +136,7 @@ u32 perform_water_full_step(struct MarioState *m, OUT Vec3f nextPos) {
 }
 
 /* |description|Calculates a water current and outputs it in `step`|descriptionEnd| */
-void apply_water_current(struct MarioState *m, OUT Vec3f step) {
+void apply_water_current(struct MarioState *m, VEC_OUT Vec3f step) {
     if (!m) { return; }
     s32 i;
     f32 whirlpoolRadius = 2000.0f;

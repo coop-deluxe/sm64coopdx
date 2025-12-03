@@ -73,7 +73,7 @@ Texture *gfx_get_texture(Gfx *cmd);
 Gets a display list of the current mod from its name.
 Returns a pointer to the display list and its length
 |descriptionEnd| */
-RETURNS(Gfx*, u32) gfx_get_from_name(const char *name);
+Gfx *gfx_get_from_name(const char *name, RET u32 *length);
 /* |description|Gets the name of a display list|descriptionEnd| */
 const char *gfx_get_name(Gfx *gfx);
 /* |description|Gets the max length of a display list|descriptionEnd| */
@@ -98,7 +98,7 @@ void gfx_delete_all();
 Gets a vertex buffer of the current mod from its name.
 Returns a pointer to the vertex buffering and its vertex count
 |descriptionEnd| */
-RETURNS(Vtx*, u32) vtx_get_from_name(const char *name);
+Vtx *vtx_get_from_name(const char *name, RET u32 *count);
 /* |description|Gets the name of a vertex buffer|descriptionEnd| */
 const char *vtx_get_name(Vtx *vtx);
 /* |description|Gets the max count of vertices of a vertex buffer|descriptionEnd| */

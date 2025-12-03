@@ -13,20 +13,24 @@
 
 ## [clear_move_flag](#clear_move_flag)
 
+### Description
+Clears the `flag` from the `bitSet`
+
 ### Lua Example
-`local integerValue = clear_move_flag(bitSet, flag)`
+`local integerValue, bitSet = clear_move_flag(bitSet, flag)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| bitSet | `Pointer` <`integer`> |
+| bitSet | `integer` |
 | flag | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 clear_move_flag(u32 *bitSet, s32 flag);`
+`s32 clear_move_flag(INOUT u32 *bitSet, s32 flag);`
 
 [:arrow_up_small:](#)
 
@@ -92,7 +96,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 - None
 
 ### C Prototype
-`void obj_apply_scale_to_matrix(struct Object *obj, OUT Mat4 dst, Mat4 src);`
+`void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src);`
 
 [:arrow_up_small:](#)
 
@@ -114,7 +118,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 - None
 
 ### C Prototype
-`void create_transformation_from_matrices(OUT Mat4 a0, Mat4 a1, Mat4 a2);`
+`void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2);`
 
 [:arrow_up_small:](#)
 
@@ -230,20 +234,21 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [approach_f32_signed](#approach_f32_signed)
 
 ### Lua Example
-`local integerValue = approach_f32_signed(value, target, increment)`
+`local integerValue, value = approach_f32_signed(value, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | `Pointer` <`number`> |
+| value | `number` |
 | target | `number` |
 | increment | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 approach_f32_signed(f32 *value, f32 target, f32 increment);`
+`s32 approach_f32_signed(INOUT f32 *value, f32 target, f32 increment);`
 
 [:arrow_up_small:](#)
 
@@ -588,7 +593,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [spawn_water_droplet](#spawn_water_droplet)
 
 ### Lua Example
-`local ObjectValue = spawn_water_droplet(parent, params)`
+`local objectValue = spawn_water_droplet(parent, params)`
 
 ### Parameters
 | Field | Type |
@@ -788,7 +793,7 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 - None
 
 ### C Prototype
-`void linear_mtxf_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
+`void linear_mtxf_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -813,7 +818,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 - None
 
 ### C Prototype
-`void linear_mtxf_transpose_mul_vec3f(Mat4 m, OUT Vec3f dst, Vec3f v);`
+`void linear_mtxf_transpose_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v);`
 
 [:arrow_up_small:](#)
 
@@ -1243,7 +1248,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [cur_obj_nearest_object_with_behavior](#cur_obj_nearest_object_with_behavior)
 
 ### Lua Example
-`local ObjectValue = cur_obj_nearest_object_with_behavior(behavior)`
+`local objectValue = cur_obj_nearest_object_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -1283,7 +1288,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [cur_obj_find_nearest_pole](#cur_obj_find_nearest_pole)
 
 ### Lua Example
-`local ObjectValue = cur_obj_find_nearest_pole()`
+`local objectValue = cur_obj_find_nearest_pole()`
 
 ### Parameters
 - None
@@ -1301,19 +1306,19 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [cur_obj_find_nearest_object_with_behavior](#cur_obj_find_nearest_object_with_behavior)
 
 ### Lua Example
-`local ObjectValue = cur_obj_find_nearest_object_with_behavior(behavior, dist)`
+`local objectValue, dist = cur_obj_find_nearest_object_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | behavior | `Pointer` <`BehaviorScript`> |
-| dist | `Pointer` <`number`> |
 
 ### Returns
 - [Object](structs.md#Object)
+- `number`
 
 ### C Prototype
-`struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist);`
+`struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist);`
 
 [:arrow_up_small:](#)
 
@@ -1343,7 +1348,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [find_unimportant_object](#find_unimportant_object)
 
 ### Lua Example
-`local ObjectValue = find_unimportant_object()`
+`local objectValue = find_unimportant_object()`
 
 ### Parameters
 - None
@@ -1399,7 +1404,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [find_object_with_behavior](#find_object_with_behavior)
 
 ### Lua Example
-`local ObjectValue = find_object_with_behavior(behavior)`
+`local objectValue = find_object_with_behavior(behavior)`
 
 ### Parameters
 | Field | Type |
@@ -1419,7 +1424,7 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 ## [cur_obj_find_nearby_held_actor](#cur_obj_find_nearby_held_actor)
 
 ### Lua Example
-`local ObjectValue = cur_obj_find_nearby_held_actor(behavior, maxDist)`
+`local objectValue = cur_obj_find_nearby_held_actor(behavior, maxDist)`
 
 ### Parameters
 | Field | Type |
@@ -1931,7 +1936,7 @@ Marks an object to be unloaded at the end of the frame
 ## [cur_obj_update_floor_height_and_get_floor](#cur_obj_update_floor_height_and_get_floor)
 
 ### Lua Example
-`local SurfaceValue = cur_obj_update_floor_height_and_get_floor()`
+`local surfaceValue = cur_obj_update_floor_height_and_get_floor()`
 
 ### Parameters
 - None
@@ -1949,19 +1954,19 @@ Marks an object to be unloaded at the end of the frame
 ## [apply_drag_to_value](#apply_drag_to_value)
 
 ### Lua Example
-`apply_drag_to_value(value, dragStrength)`
+`local value = apply_drag_to_value(value, dragStrength)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| value | `Pointer` <`number`> |
+| value | `number` |
 | dragStrength | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void apply_drag_to_value(f32 *value, f32 dragStrength);`
+`void apply_drag_to_value(INOUT f32 *value, f32 dragStrength);`
 
 [:arrow_up_small:](#)
 
@@ -3730,7 +3735,7 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 ## [spawn_star_with_no_lvl_exit](#spawn_star_with_no_lvl_exit)
 
 ### Lua Example
-`local ObjectValue = spawn_star_with_no_lvl_exit(sp20, sp24)`
+`local objectValue = spawn_star_with_no_lvl_exit(sp20, sp24)`
 
 ### Parameters
 | Field | Type |
@@ -5239,7 +5244,7 @@ Retrieves the current position of Mario's cap, if it is on the ground in the cur
 - `integer`
 
 ### C Prototype
-`s32 save_file_get_cap_pos(OUT Vec3s capPos);`
+`s32 save_file_get_cap_pos(VEC_OUT Vec3s capPos);`
 
 [:arrow_up_small:](#)
 
@@ -5494,7 +5499,7 @@ Gets the mute volume scale of `player`
 Gets a vanilla mario Animation with `index`
 
 ### Lua Example
-`local AnimationValue = get_mario_vanilla_animation(index)`
+`local animationValue = get_mario_vanilla_animation(index)`
 
 ### Parameters
 | Field | Type |
@@ -5617,7 +5622,7 @@ Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m6
 Loads an `audio` stream by `filename` (with extension)
 
 ### Lua Example
-`local ModAudioValue = audio_stream_load(filename)`
+`local modAudioValue = audio_stream_load(filename)`
 
 ### Parameters
 | Field | Type |
@@ -5947,7 +5952,7 @@ Sets the volume of an `audio` stream
 Loads an `audio` sample
 
 ### Lua Example
-`local ModAudioValue = audio_sample_load(filename)`
+`local modAudioValue = audio_sample_load(filename)`
 
 ### Parameters
 | Field | Type |
@@ -7172,7 +7177,7 @@ Sets if the camera should account for surfaces
 Finds a potential floor at the given `x`, `y`, and `z` values
 
 ### Lua Example
-`local SurfaceValue = collision_find_floor(x, y, z)`
+`local surfaceValue = collision_find_floor(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -7197,7 +7202,7 @@ Finds a potential floor at the given `x`, `y`, and `z` values
 Finds a potential ceiling at the given `x`, `y`, and `z` values
 
 ### Lua Example
-`local SurfaceValue = collision_find_ceil(x, y, z)`
+`local surfaceValue = collision_find_ceil(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -7222,7 +7227,7 @@ Finds a potential ceiling at the given `x`, `y`, and `z` values
 Gets the generated water floor surface used when riding a shell
 
 ### Lua Example
-`local SurfaceValue = get_water_surface_pseudo_floor()`
+`local surfaceValue = get_water_surface_pseudo_floor()`
 
 ### Parameters
 - None
@@ -7243,7 +7248,7 @@ Gets the generated water floor surface used when riding a shell
 Gets the `Collision` with `name`
 
 ### Lua Example
-`local PointerValue = smlua_collision_util_get(name)`
+`local pointerValue = smlua_collision_util_get(name)`
 
 ### Parameters
 | Field | Type |
@@ -7266,7 +7271,7 @@ Gets the `Collision` with `name`
 Returns a temporary wall collision data pointer
 
 ### Lua Example
-`local WallCollisionDataValue = collision_get_temp_wall_collision_data()`
+`local wallCollisionDataValue = collision_get_temp_wall_collision_data()`
 
 ### Parameters
 - None
@@ -7287,7 +7292,7 @@ Returns a temporary wall collision data pointer
 Gets the surface corresponding to `index` from `wcd`
 
 ### Lua Example
-`local SurfaceValue = get_surface_from_wcd_index(wcd, index)`
+`local surfaceValue = get_surface_from_wcd_index(wcd, index)`
 
 ### Parameters
 | Field | Type |
@@ -7311,7 +7316,7 @@ Gets the surface corresponding to `index` from `wcd`
 Gets the current level terrain collision
 
 ### Lua Example
-`local PointerValue = smlua_collision_util_get_current_terrain_collision()`
+`local pointerValue = smlua_collision_util_get_current_terrain_collision()`
 
 ### Parameters
 - None
@@ -7332,7 +7337,7 @@ Gets the current level terrain collision
 Gets the `level` terrain collision from `area`
 
 ### Lua Example
-`local PointerValue = smlua_collision_util_get_level_collision(level, area)`
+`local pointerValue = smlua_collision_util_get_level_collision(level, area)`
 
 ### Parameters
 | Field | Type |
@@ -7946,7 +7951,7 @@ Gets the op of the display list command
 Gets the display list from a display list command if it has the op `G_DL`
 
 ### Lua Example
-`local PointerValue = gfx_get_display_list(cmd)`
+`local pointerValue = gfx_get_display_list(cmd)`
 
 ### Parameters
 | Field | Type |
@@ -7969,7 +7974,7 @@ Gets the display list from a display list command if it has the op `G_DL`
 Gets the vertex buffer from a display list command if it has the op `G_VTX`
 
 ### Lua Example
-`local PointerValue = gfx_get_vertex_buffer(cmd)`
+`local pointerValue = gfx_get_vertex_buffer(cmd)`
 
 ### Parameters
 | Field | Type |
@@ -8015,7 +8020,7 @@ Gets the number of vertices from a display list command if it has the op `G_VTX`
 Gets the texture from a display list command if it has an image related op
 
 ### Lua Example
-`local PointerValue = gfx_get_texture(cmd)`
+`local pointerValue = gfx_get_texture(cmd)`
 
 ### Parameters
 | Field | Type |
@@ -8038,7 +8043,7 @@ Gets the texture from a display list command if it has an image related op
 Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
 
 ### Lua Example
-`local PointerValue, integerValue = gfx_get_from_name(name)`
+`local pointerValue, length = gfx_get_from_name(name)`
 
 ### Parameters
 | Field | Type |
@@ -8050,7 +8055,7 @@ Gets a display list of the current mod from its name. Returns a pointer to the d
 - `integer`
 
 ### C Prototype
-`RETURNS(Gfx*, u32) gfx_get_from_name(const char *name);`
+`Gfx *gfx_get_from_name(const char *name, RET u32 *length);`
 
 [:arrow_up_small:](#)
 
@@ -8108,7 +8113,7 @@ Gets the max length of a display list
 Gets a command of a display list at position `offset`
 
 ### Lua Example
-`local PointerValue = gfx_get_command(gfx, offset)`
+`local pointerValue = gfx_get_command(gfx, offset)`
 
 ### Parameters
 | Field | Type |
@@ -8132,7 +8137,7 @@ Gets a command of a display list at position `offset`
 Gets the next command of a given display list pointer. Intended to use in a for loop
 
 ### Lua Example
-`local PointerValue = gfx_get_next_command(gfx)`
+`local pointerValue = gfx_get_next_command(gfx)`
 
 ### Parameters
 | Field | Type |
@@ -8180,7 +8185,7 @@ Copies `length` commands from display list `src` to display list `dest`
 Creates a new named display list of `length` commands
 
 ### Lua Example
-`local PointerValue = gfx_create(name, length)`
+`local pointerValue = gfx_create(name, length)`
 
 ### Parameters
 | Field | Type |
@@ -8272,7 +8277,7 @@ Deletes all display lists created by `gfx_create`
 Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
 
 ### Lua Example
-`local PointerValue, integerValue = vtx_get_from_name(name)`
+`local pointerValue, count = vtx_get_from_name(name)`
 
 ### Parameters
 | Field | Type |
@@ -8284,7 +8289,7 @@ Gets a vertex buffer of the current mod from its name. Returns a pointer to the 
 - `integer`
 
 ### C Prototype
-`RETURNS(Vtx*, u32) vtx_get_from_name(const char *name);`
+`Vtx *vtx_get_from_name(const char *name, RET u32 *count);`
 
 [:arrow_up_small:](#)
 
@@ -8342,7 +8347,7 @@ Gets the max count of vertices of a vertex buffer
 Gets a vertex of a vertex buffer at position `offset`
 
 ### Lua Example
-`local PointerValue = vtx_get_vertex(vtx, offset)`
+`local pointerValue = vtx_get_vertex(vtx, offset)`
 
 ### Parameters
 | Field | Type |
@@ -8366,7 +8371,7 @@ Gets a vertex of a vertex buffer at position `offset`
 Gets the next vertex of a given vertex pointer. Intended to use in a for loop
 
 ### Lua Example
-`local PointerValue = vtx_get_next_vertex(vtx)`
+`local pointerValue = vtx_get_next_vertex(vtx)`
 
 ### Parameters
 | Field | Type |
@@ -8414,7 +8419,7 @@ Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
 Creates a new named vertex buffer of `count` vertices
 
 ### Lua Example
-`local PointerValue = vtx_create(name, count)`
+`local pointerValue = vtx_create(name, count)`
 
 ### Parameters
 | Field | Type |

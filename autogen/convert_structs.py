@@ -550,15 +550,15 @@ def build_struct(struct):
             endStr += '\n#endif'
         startStr += '    { '
         if ftype == cobject_function_identifier:
-            row.append(startStr                              )
-            row.append('"%s", '          % fid               )
-            row.append('%s, '            % lvt               )
-            row.append('(size_t) "%s", ' % field['function'] )
-            row.append('%s, '            % fimmutable        )
-            row.append('%s, '            % lot               )
-            row.append('%s, '            % size              )
-            row.append('sizeof(const char *)'                )
-            row.append(endStr                                )
+            row.append(startStr                             )
+            row.append('"%s", '          % fid              )
+            row.append('%s, '            % lvt              )
+            row.append('(size_t) "%s", ' % field['function'])
+            row.append('%s, '            % fimmutable       )
+            row.append('%s, '            % lot              )
+            row.append('%s, '            % size             )
+            row.append('sizeof(const char *)'               )
+            row.append(endStr                               )
             field_functions.append(field['function'])
         else:
             row.append(startStr                                                        )

@@ -253,9 +253,6 @@ def translate_type_to_lot(ptype, allowArrays=True):
     return 'LOT_???'
 
 def translate_type_to_lua(ptype):
-    if type(ptype) is list:
-        return [list(tup) for tup in zip(*[translate_type_to_lua(t) for t in ptype])]
-
     if ptype == 'const char*':
         return '`string`', None
 
@@ -362,9 +359,6 @@ def gen_comment_header(f):
     return s
 
 def translate_to_def(ptype):
-    if type(ptype) is list:
-        return [translate_to_def(t) for t in ptype]
-
     if ptype == None:
         return 'nil'
     if 'Lua Function' in ptype:

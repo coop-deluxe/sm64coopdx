@@ -40,7 +40,7 @@ Instantly changes the current area to `areaIndex`
 Gets information on a custom level from `levelNum`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info(levelNum)`
+`local customLevelInfoValue = smlua_level_util_get_info(levelNum)`
 
 ### Parameters
 | Field | Type |
@@ -63,7 +63,7 @@ Gets information on a custom level from `levelNum`
 Gets information on a custom level from `shortName`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
+`local customLevelInfoValue = smlua_level_util_get_info_from_short_name(shortName)`
 
 ### Parameters
 | Field | Type |
@@ -86,7 +86,7 @@ Gets information on a custom level from `shortName`
 Gets information on a custom level from `courseNum`
 
 ### Lua Example
-`local CustomLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
+`local customLevelInfoValue = smlua_level_util_get_info_from_course_num(courseNum)`
 
 ### Parameters
 | Field | Type |
@@ -349,7 +349,7 @@ Gets the area update counter incremented when objects are updated
 Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
 
 ### Lua Example
-`local PointerValue = get_temp_s32_pointer(initialValue)`
+`local pointerValue = get_temp_s32_pointer(initialValue)`
 
 ### Parameters
 | Field | Type |
@@ -589,7 +589,7 @@ Gets the DJUI menu font
 Gets the DJUI menu theme
 
 ### Lua Example
-`local DjuiThemeValue = djui_menu_get_theme()`
+`local djuiThemeValue = djui_menu_get_theme()`
 
 ### Parameters
 - None
@@ -1410,7 +1410,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 - `boolean`
 
 ### C Prototype
-`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos);`
+`bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f pos);`
 
 [:arrow_up_small:](#)
 
@@ -1649,7 +1649,7 @@ Gets the Unix Timestamp
 Gets the system clock's date and time
 
 ### Lua Example
-`local DateTimeValue = get_date_and_time()`
+`local dateTimeValue = get_date_and_time()`
 
 ### Parameters
 - None
@@ -2046,7 +2046,7 @@ Checks if a file exists inside of a mod
 Gets the mod currently being processed
 
 ### Lua Example
-`local ModValue = get_active_mod()`
+`local modValue = get_active_mod()`
 
 ### Parameters
 - None
@@ -2132,7 +2132,7 @@ Gets the name of the operating system the game is running on
 Gets the current GraphNodeRoot
 
 ### Lua Example
-`local GraphNodeRootValue = geo_get_current_root()`
+`local graphNodeRootValue = geo_get_current_root()`
 
 ### Parameters
 - None
@@ -2153,7 +2153,7 @@ Gets the current GraphNodeRoot
 Gets the current GraphNodeMasterList
 
 ### Lua Example
-`local GraphNodeMasterListValue = geo_get_current_master_list()`
+`local graphNodeMasterListValue = geo_get_current_master_list()`
 
 ### Parameters
 - None
@@ -2174,7 +2174,7 @@ Gets the current GraphNodeMasterList
 Gets the current GraphNodePerspective
 
 ### Lua Example
-`local GraphNodePerspectiveValue = geo_get_current_perspective()`
+`local graphNodePerspectiveValue = geo_get_current_perspective()`
 
 ### Parameters
 - None
@@ -2195,7 +2195,7 @@ Gets the current GraphNodePerspective
 Gets the current GraphNodeCamera
 
 ### Lua Example
-`local GraphNodeCameraValue = geo_get_current_camera()`
+`local graphNodeCameraValue = geo_get_current_camera()`
 
 ### Parameters
 - None
@@ -2216,7 +2216,7 @@ Gets the current GraphNodeCamera
 Gets the current GraphNodeHeldObject
 
 ### Lua Example
-`local GraphNodeHeldObjectValue = geo_get_current_held_object()`
+`local graphNodeHeldObjectValue = geo_get_current_held_object()`
 
 ### Parameters
 - None
@@ -2318,7 +2318,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
-`local ObjectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
+`local objectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
 ### Parameters
 | Field | Type |
@@ -2346,7 +2346,7 @@ Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local
 Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
-`local ObjectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
+`local objectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
 
 ### Parameters
 | Field | Type |
@@ -2469,7 +2469,7 @@ Sets an object's model to `modelId`
 Gets a trajectory by `name`
 
 ### Lua Example
-`local PointerValue = get_trajectory(name)`
+`local pointerValue = get_trajectory(name)`
 
 ### Parameters
 | Field | Type |
@@ -2492,7 +2492,7 @@ Gets a trajectory by `name`
 When used in a geo function, retrieve the current processed object
 
 ### Lua Example
-`local ObjectValue = geo_get_current_object()`
+`local objectValue = geo_get_current_object()`
 
 ### Parameters
 - None
@@ -2513,7 +2513,7 @@ When used in a geo function, retrieve the current processed object
 Gets the object currently being processed
 
 ### Lua Example
-`local ObjectValue = get_current_object()`
+`local objectValue = get_current_object()`
 
 ### Parameters
 - None
@@ -2534,7 +2534,7 @@ Gets the object currently being processed
 Gets the NPC object Mario is talking to
 
 ### Lua Example
-`local ObjectValue = get_dialog_object()`
+`local objectValue = get_dialog_object()`
 
 ### Parameters
 - None
@@ -2555,7 +2555,7 @@ Gets the NPC object Mario is talking to
 Gets the cutscene focus object
 
 ### Lua Example
-`local ObjectValue = get_cutscene_focus()`
+`local objectValue = get_cutscene_focus()`
 
 ### Parameters
 - None
@@ -2576,7 +2576,7 @@ Gets the cutscene focus object
 Gets the secondary camera focus object
 
 ### Lua Example
-`local ObjectValue = get_secondary_camera_focus()`
+`local objectValue = get_secondary_camera_focus()`
 
 ### Parameters
 - None
@@ -2643,7 +2643,7 @@ Sets the secondary camera focus object
 Gets the first object in an object list
 
 ### Lua Example
-`local ObjectValue = obj_get_first(objList)`
+`local objectValue = obj_get_first(objList)`
 
 ### Parameters
 | Field | Type |
@@ -2666,7 +2666,7 @@ Gets the first object in an object list
 Gets the first object loaded with `behaviorId`
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id(behaviorId)`
+`local objectValue = obj_get_first_with_behavior_id(behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -2689,7 +2689,7 @@ Gets the first object loaded with `behaviorId`
 Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
+`local objectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2714,7 +2714,7 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
+`local objectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2739,7 +2739,7 @@ Gets the first object loaded with `behaviorId` and object float field (look in `
 Gets the next object in an object list
 
 ### Lua Example
-`local ObjectValue = obj_get_next(o)`
+`local objectValue = obj_get_next(o)`
 
 ### Parameters
 | Field | Type |
@@ -2762,7 +2762,7 @@ Gets the next object in an object list
 Gets the next object loaded with the same behavior ID
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id(o)`
+`local objectValue = obj_get_next_with_same_behavior_id(o)`
 
 ### Parameters
 | Field | Type |
@@ -2785,7 +2785,7 @@ Gets the next object loaded with the same behavior ID
 Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
+`local objectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2810,7 +2810,7 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
-`local ObjectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
+`local objectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
 
 ### Parameters
 | Field | Type |
@@ -2835,7 +2835,7 @@ Gets the next object loaded with the same behavior ID and object float field (lo
 Gets the nearest object with `behaviorId` to `o`
 
 ### Lua Example
-`local ObjectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
+`local objectValue = obj_get_nearest_object_with_behavior_id(o, behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -2882,7 +2882,7 @@ Counts every object with `behaviorId`
 Gets the corresponding collided object to an index from `o`
 
 ### Lua Example
-`local ObjectValue = obj_get_collided_object(o, index)`
+`local objectValue = obj_get_collided_object(o, index)`
 
 ### Parameters
 | Field | Type |
@@ -3104,7 +3104,7 @@ Sets the signed 32-bit integer value from the sub field corresponding to `fieldS
 Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
 
 ### Lua Example
-`local SpawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
+`local spawnParticlesInfoValue = obj_get_temp_spawn_particles_info(modelId)`
 
 ### Parameters
 | Field | Type |
@@ -3127,7 +3127,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`
 
 ### Lua Example
-`local WaterDropletParamsValue = obj_get_temp_water_droplet_params(modelId, behaviorId)`
+`local waterDropletParamsValue = obj_get_temp_water_droplet_params(modelId, behaviorId)`
 
 ### Parameters
 | Field | Type |
@@ -3151,7 +3151,7 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 Returns a temporary object hitbox pointer
 
 ### Lua Example
-`local ObjectHitboxValue = get_temp_object_hitbox()`
+`local objectHitboxValue = get_temp_object_hitbox()`
 
 ### Parameters
 - None
@@ -3539,7 +3539,7 @@ Resets every modified dialog back to vanilla
 Gets the DialogEntry struct for the given `dialogId`
 
 ### Lua Example
-`local DialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
+`local dialogEntryValue = smlua_text_utils_dialog_get(dialogId)`
 
 ### Parameters
 | Field | Type |
@@ -4626,6 +4626,32 @@ Detects wall collisions at a given position and adjusts the position based on th
 
 <br />
 
+## [find_ceil](#find_ceil)
+
+### Description
+Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface. If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+
+### Lua Example
+`local numberValue, pceil = find_ceil(posX, posY, posZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| posX | `number` |
+| posY | `number` |
+| posZ | `number` |
+
+### Returns
+- `number`
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`f32 find_ceil(f32 posX, f32 posY, f32 posZ, RET struct Surface **pceil);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [find_ceil_height](#find_ceil_height)
 
 ### Description
@@ -4671,6 +4697,32 @@ Finds the height of the highest floor below a given position (x, y, z). If no fl
 
 ### C Prototype
 `f32 find_floor_height(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [find_floor](#find_floor)
+
+### Description
+Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface. If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+
+### Lua Example
+`local numberValue, pfloor = find_floor(xPos, yPos, zPos)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| xPos | `number` |
+| yPos | `number` |
+| zPos | `number` |
+
+### Returns
+- `number`
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`f32 find_floor(f32 xPos, f32 yPos, f32 zPos, RET struct Surface **pfloor);`
 
 [:arrow_up_small:](#)
 
@@ -4768,7 +4820,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 - None
 
 ### C Prototype
-`void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out);`
+`void closest_point_to_triangle(struct Surface* surf, Vec3f src, VEC_OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -4807,7 +4859,7 @@ Loads the object's collision data into dynamic collision. You must run this ever
 Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
 
 ### Lua Example
-`local StaticObjectCollisionValue = load_static_object_collision()`
+`local staticObjectCollisionValue = load_static_object_collision()`
 
 ### Parameters
 - None
@@ -4852,7 +4904,7 @@ Toggles a collection of static object surfaces
 Gets a surface corresponding to `index` from the static object collision
 
 ### Lua Example
-`local SurfaceValue = get_static_object_surface(col, index)`
+`local surfaceValue = get_static_object_surface(col, index)`
 
 ### Parameters
 | Field | Type |
@@ -4876,7 +4928,7 @@ Gets a surface corresponding to `index` from the static object collision
 Gets a surface corresponding to `index` from the surface pool buffer
 
 ### Lua Example
-`local SurfaceValue = obj_get_surface_from_index(o, index)`
+`local surfaceValue = obj_get_surface_from_index(o, index)`
 
 ### Parameters
 | Field | Type |
@@ -4929,7 +4981,7 @@ Checks if a surface has force
 Retrieves an object from a sync ID
 
 ### Lua Example
-`local ObjectValue = sync_object_get_object(syncId)`
+`local objectValue = sync_object_get_object(syncId)`
 
 ### Parameters
 | Field | Type |
