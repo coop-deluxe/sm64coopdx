@@ -1,4 +1,15 @@
 #include "djui.h"
+#include "djui_cursor.h"
+#include "djui_inputbox.h"
+
+static f32 sSliderLastCursorX = 0.0f;
+
+static void djui_slider_default_format_value(struct DjuiSlider* slider, char* buf, int bufSize) {
+    if (slider == NULL || slider->value == NULL || bufSize <= 0) {
+        return;
+    }
+    snprintf(buf, bufSize, "%u", *slider->value);
+}
 
 static void djui_slider_update_style(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
@@ -38,6 +49,16 @@ void djui_slider_update_value(struct DjuiBase* base) {
     u32  max   = slider->max;
     u32* value = slider->value;
     djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
+
+    if (slider->valueText != NULL) {
+        char buf[32];
+        if (slider->formatCallback != NULL) {
+            slider->formatCallback(slider, buf, sizeof(buf));
+        } else {
+            djui_slider_default_format_value(slider, buf, sizeof(buf));
+        }
+        djui_text_set_text(slider->valueText, buf);
+    }
 }
 
 static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {
@@ -52,12 +73,43 @@ static void djui_slider_on_cursor_down(struct DjuiBase* base) {
     u32  min   = slider->min;
     u32  max   = slider->max;
     u32* value = slider->value;
-    f32 x = slider->rect->base.elem.x;
-    f32 w = slider->rect->base.elem.width;
-    f32 cursorX = gCursorX;
-    cursorX = fmax(cursorX, x);
-    cursorX = fmin(cursorX, x + w);
-    *value = ((cursorX - x) / w) * (max - min) + min;
+
+    bool fineAdjust = (gDjuiInputHeldShift != 0);
+    int newValue = (int)*value;
+
+    if (fineAdjust) {
+        f32 w = slider->rect->base.elem.width;
+        if (w <= 0.0f) { w = 1.0f; }
+
+        f32 baseStepPerPixel = (f32)(max - min) / w;
+        f32 fineStepPerPixel = baseStepPerPixel * 0.1f;
+
+        f32 cursorX = gCursorX;
+        f32 deltaX  = cursorX - sSliderLastCursorX;
+        sSliderLastCursorX = cursorX;
+
+        newValue = (int)((f32)newValue + deltaX * fineStepPerPixel + 0.5f);
+    } else {
+        f32 x = slider->rect->base.elem.x;
+        f32 w = slider->rect->base.elem.width;
+        f32 cursorX = gCursorX;
+        cursorX = fmax(cursorX, x);
+        cursorX = fmin(cursorX, x + w);
+
+        f32 t = 0.0f;
+        if (w > 0.0f) {
+            t = (cursorX - x) / w;
+        }
+        if (t < 0.0f) t = 0.0f;
+        if (t > 1.0f) t = 1.0f;
+
+        newValue = (int)(t * (f32)(max - min) + 0.5f) + (int)min;
+    }
+
+    if (newValue < (int)min) newValue = (int)min;
+    if (newValue > (int)max) newValue = (int)max;
+    *value = (u32)newValue;
+
     if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
         base->interactable->on_value_change(base);
     }
@@ -71,6 +123,7 @@ static void djui_slider_on_cursor_down_begin(struct DjuiBase* base, bool inputCu
         if (inputCursor) {
             djui_interactable_set_input_focus(base);
         } else {
+            sSliderLastCursorX = gCursorX;
             slider->base.interactable->on_cursor_down = djui_slider_on_cursor_down;
         }
     } else {
@@ -81,6 +134,7 @@ static void djui_slider_on_cursor_down_begin(struct DjuiBase* base, bool inputCu
 static void djui_slider_on_cursor_down_end(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     slider->base.interactable->on_cursor_down = NULL;
+    sSliderLastCursorX = 0.0f;
 }
 
 static void djui_slider_on_focus(struct DjuiBase* base, OSContPad* pad) {
@@ -111,6 +165,7 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     slider->max = max;
 
     slider->updateRectValueColor = true;
+    slider->formatCallback = djui_slider_default_format_value;
 
     djui_base_init(parent, base, NULL, djui_slider_destroy);
     djui_interactable_create(base, djui_slider_update_style);
@@ -137,6 +192,14 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size_type(&rectValue->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
     slider->rectValue = rectValue;
 
+    struct DjuiText* valueText = djui_text_create(&rect->base, "");
+    djui_base_set_alignment(&valueText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_size_type(&valueText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+    djui_base_set_size(&valueText->base, 1.0f, 1.0f);
+    djui_text_set_alignment(valueText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_text_set_drop_shadow(valueText, 64, 64, 64, 100);
+    slider->valueText = valueText;
+
     djui_slider_update_value(base);
     djui_slider_update_style(base);
 
@@ -147,4 +210,15 @@ struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size(base, 1.0f, 32);
 
     return slider;
+}
+
+void djui_slider_set_format_callback(struct DjuiSlider* slider, DjuiSliderFormatCallback cb) {
+    if (slider == NULL) { return; }
+    slider->formatCallback = cb;
+    djui_slider_update_value(&slider->base);
+}
+
+struct DjuiText* djui_slider_get_value_text(struct DjuiSlider* slider) {
+    if (slider == NULL) { return NULL; }
+    return slider->valueText;
 }

@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include <ctype.h>
 
 #include "platform.h"
@@ -114,6 +117,7 @@ unsigned int configKeyStickDown[MAX_BINDS]        = { 0x001F,     VK_INVALID, VK
 unsigned int configKeyStickLeft[MAX_BINDS]        = { 0x001E,     VK_INVALID, VK_INVALID };
 unsigned int configKeyStickRight[MAX_BINDS]       = { 0x0020,     VK_INVALID, VK_INVALID };
 unsigned int configKeyChat[MAX_BINDS]             = { 0x001C,     VK_INVALID, VK_INVALID };
+unsigned int configKeyChatCommand[MAX_BINDS]      = { VK_INVALID, VK_INVALID, VK_INVALID };
 unsigned int configKeyPlayerList[MAX_BINDS]       = { 0x000F,     0x1004,     VK_INVALID };
 unsigned int configKeyDUp[MAX_BINDS]              = { 0x0147,     0x100b,     VK_INVALID };
 unsigned int configKeyDDown[MAX_BINDS]            = { 0x014f,     0x100c,     VK_INVALID };
@@ -128,7 +132,15 @@ unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
 bool         configDisableGamepads                = false;
-bool         configUseStandardKeyBindingsChat     = false;
+bool         configUseStandardKeyBindingsChat     = true;
+bool         configChatCharCounter                = true;
+unsigned int configChatClosedMode                 = 1;
+unsigned int configChatWidth                      = 800;
+unsigned int configChatHeight                     = 400;
+unsigned int configChatTextScale                  = 100;
+unsigned int configChatBackgroundOpacity          = 70;
+unsigned int configChatTextOpacity                = 100;
+unsigned int configChatMessageLifetime            = 10;
 bool         configSmoothScrolling                = false;
 // free camera settings
 bool         configEnableFreeCamera               = false;
@@ -257,6 +269,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_stickleft",                  .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickLeft},
     {.name = "key_stickright",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickRight},
     {.name = "key_chat",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyChat},
+    {.name = "key_chat_command",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyChatCommand},
     {.name = "key_playerlist",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyPlayerList},
     {.name = "key_dup",                        .type = CONFIG_TYPE_BIND, .uintValue = configKeyDUp},
     {.name = "key_ddown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
@@ -274,6 +287,14 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
+    {.name = "chat_width",                     .type = CONFIG_TYPE_UINT, .uintValue = &configChatWidth},
+    {.name = "chat_height",                    .type = CONFIG_TYPE_UINT, .uintValue = &configChatHeight},
+    {.name = "chat_text_scale",                .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextScale},
+    {.name = "chat_background_opacity",        .type = CONFIG_TYPE_UINT, .uintValue = &configChatBackgroundOpacity},
+    {.name = "chat_text_opacity",              .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextOpacity},
+    {.name = "chat_message_lifetime",          .type = CONFIG_TYPE_UINT, .uintValue = &configChatMessageLifetime},
+    {.name = "chat_closed_mode",               .type = CONFIG_TYPE_UINT, .uintValue = &configChatClosedMode},
+    {.name = "chat_char_counter",              .type = CONFIG_TYPE_BOOL, .boolValue = &configChatCharCounter},
     {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},
     {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
     {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
@@ -666,6 +687,23 @@ static void configfile_load_internal(const char *filename, bool* error) {
     if (file == NULL) {
         // Create a new config file and save defaults
         printf("Config file '%s' not found. Creating it.\n", filename);
+        // set sensible default for chat command key depending on keyboard layout
+        if (configKeyChatCommand[0] == VK_INVALID && configKeyChatCommand[1] == VK_INVALID && configKeyChatCommand[2] == VK_INVALID) {
+#ifdef _WIN32
+            HKL hkl = GetKeyboardLayout(0);
+            LANGID lang = LOWORD(hkl);
+            switch (PRIMARYLANGID(lang)) {
+                case LANG_GERMAN:
+                    configKeyChatCommand[0] = 0x002B; // '#' on QWERTZ (OEM_5 position)
+                    break;
+                default:
+                    configKeyChatCommand[0] = 0x0035; // '/' on US QWERTY
+                    break;
+            }
+#else
+            configKeyChatCommand[0] = 0x0035; // '/' default on non-Windows
+#endif
+        }
         configfile_save(filename);
         return;
     }
@@ -777,6 +815,23 @@ NEXT_OPTION:
     }
 
     fs_close(file);
+    // If user has no chat command bind yet, set a default based on layout
+    if (configKeyChatCommand[0] == VK_INVALID && configKeyChatCommand[1] == VK_INVALID && configKeyChatCommand[2] == VK_INVALID) {
+#ifdef _WIN32
+        HKL hkl = GetKeyboardLayout(0);
+        LANGID lang = LOWORD(hkl);
+        switch (PRIMARYLANGID(lang)) {
+            case LANG_GERMAN:
+                configKeyChatCommand[0] = 0x002B; // '#'
+                break;
+            default:
+                configKeyChatCommand[0] = 0x0035; // '/'
+                break;
+        }
+#else
+        configKeyChatCommand[0] = 0x0035;
+#endif
+    }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }

@@ -4,6 +4,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_modlist.h"
 #include "djui_panel_playerlist.h"
+#include "djui_panel_chat.h"
 
 #include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_mouse.h"
@@ -198,6 +199,19 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
+    switch (scancode) {
+        case SCANCODE_SHIFT_LEFT:    gDjuiInputHeldShift   |= (1 << 0); break;
+        case SCANCODE_SHIFT_RIGHT:   gDjuiInputHeldShift   |= (1 << 1); break;
+        case SCANCODE_CONTROL_LEFT:  gDjuiInputHeldControl |= (1 << 0); break;
+        case SCANCODE_CONTROL_RIGHT: gDjuiInputHeldControl |= (1 << 1); break;
+        case SCANCODE_ALT_LEFT:      gDjuiInputHeldAlt     |= (1 << 0); break;
+        case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     |= (1 << 1); break;
+    }
+    
+    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_chat_is_shift_hint_visible()) {
+        djui_panel_chat_update_shift_hint();
+    }
+
     bool keyFocused = (gInteractableFocus != NULL)
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_down != NULL);
@@ -219,12 +233,19 @@ bool djui_interactable_on_key_down(int scancode) {
 
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
         bool pressChat = false;
+        bool pressChatCommand = false;
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyChat[i]) { pressChat = true; }
+            if (scancode == (int)configKeyChatCommand[i]) { pressChatCommand = true; }
         }
 
-        if (pressChat && !gDjuiConsoleFocus) {
+        if (pressChat && !gDjuiConsoleFocus && !gDjuiChatBoxFocus) {
             djui_chat_box_toggle();
+            return true;
+        }
+
+        if (pressChatCommand && !gDjuiConsoleFocus) {
+            djui_chat_box_open_with_text("/");
             return true;
         }
     }
@@ -278,6 +299,18 @@ bool djui_interactable_on_key_down(int scancode) {
 }
 
 void djui_interactable_on_key_up(int scancode) {
+    switch (scancode) {
+        case SCANCODE_SHIFT_LEFT:    gDjuiInputHeldShift   &= ~(1 << 0); break;
+        case SCANCODE_SHIFT_RIGHT:   gDjuiInputHeldShift   &= ~(1 << 1); break;
+        case SCANCODE_CONTROL_LEFT:  gDjuiInputHeldControl &= ~(1 << 0); break;
+        case SCANCODE_CONTROL_RIGHT: gDjuiInputHeldControl &= ~(1 << 1); break;
+        case SCANCODE_ALT_LEFT:      gDjuiInputHeldAlt     &= ~(1 << 0); break;
+        case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     &= ~(1 << 1); break;
+    }
+    
+    if ((scancode == SCANCODE_SHIFT_LEFT || scancode == SCANCODE_SHIFT_RIGHT) && djui_panel_chat_is_shift_hint_visible()) {
+        djui_panel_chat_update_shift_hint();
+    }
 
     if (!gDjuiChatBoxFocus) {
         for (int i = 0; i < MAX_BINDS; i++) {
