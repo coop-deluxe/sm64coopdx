@@ -15,6 +15,7 @@
 #include "smlua_functions_autogen.h"
 #include "smlua_hooks.h"
 #include "smlua_sync_table.h"
+#include "smlua_mod_funcs.h"
 
 #include "pc/debuglog.h"
 #include "pc/djui/djui_console.h"

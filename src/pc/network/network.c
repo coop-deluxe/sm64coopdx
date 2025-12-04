@@ -11,6 +11,7 @@
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_main.h"
+#include "pc/djui/djui_panel_modlist.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
@@ -560,6 +561,17 @@ void network_update_coopnet(void) {
 void network_update(void) {
     if (gNetworkStartupTimer > 0) {
         gNetworkStartupTimer--;
+    }
+
+    // Handle Lua reconnection requests
+    if (gReconnectRequested) {
+        gReconnectRequested = false;
+        if (gNetworkType == NT_SERVER) {
+            mods_activate(&gLocalMods);
+
+            network_rehost_begin();
+            LOG_INFO("Sent reconnect signals to all clients");
+        }
     }
 
     network_rehost_update();
