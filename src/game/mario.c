@@ -200,7 +200,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame) {
  * Rotates the animation's translation into the global coordinate system
  * and returns the animation's flags.
  */
-s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, OUT Vec3s translation) {
+s16 find_mario_anim_flags_and_translation(struct Object *obj, s32 yaw, VEC_OUT Vec3s translation) {
     if (!obj) { return 0; }
     f32 dx;
     f32 dz;
@@ -620,7 +620,7 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
 /**
  * Collides with walls and returns the most recent wall.
  */
-struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f32 radius) {
+struct Surface *resolve_and_return_wall_collisions(VEC_OUT Vec3f pos, f32 offset, f32 radius) {
     struct WallCollisionData collisionData;
     struct Surface *wall = NULL;
 
@@ -645,7 +645,7 @@ struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f3
 /**
  * Collides with walls and returns the wall collision data.
  */
-void resolve_and_return_wall_collisions_data(OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
+void resolve_and_return_wall_collisions_data(VEC_OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData) {
     if (!collisionData || !pos) { return; }
 
     collisionData->x = pos[0];
@@ -664,7 +664,7 @@ void resolve_and_return_wall_collisions_data(OUT Vec3f pos, f32 offset, f32 radi
 /**
  * Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
  */
-f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
+f32 vec3f_find_ceil(Vec3f pos, f32 height, RET struct Surface **ceil) {
     if (!ceil) { return 0; }
     UNUSED f32 unused;
 
@@ -676,7 +676,7 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
  * Prevents exposed ceiling bug
  */
 // Prevent exposed ceilings
-f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
+f32 vec3f_mario_ceil(Vec3f pos, f32 height, RET struct Surface **ceil) {
     if (!ceil) { return 0; }
     if (gLevelValues.fixCollisionBugs) {
         height = MAX(height + 80.0f, pos[1] - 2);

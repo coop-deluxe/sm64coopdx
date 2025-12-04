@@ -788,7 +788,7 @@ void stub_camera_3(UNUSED struct Camera *c);
 Converts an object's position to a `Vec3f` format.
 Useful for aligning object behaviors or interactions with the camera system
 |descriptionEnd| */
-void object_pos_to_vec3f(OUT Vec3f dst, struct Object *o);
+void object_pos_to_vec3f(VEC_OUT Vec3f dst, struct Object *o);
 
 /* |description|
 Converts a `Vec3f` position to an object's internal format.
@@ -799,7 +799,7 @@ void vec3f_to_object_pos(struct Object *o, Vec3f src);
 /* |description|
 Converts an object's face angle to a `Vec3s` format
 |descriptionEnd| */
-void object_face_angle_to_vec3s(OUT Vec3s dst, struct Object *o);
+void object_face_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);
 
 /* |description|
 Converts a `Vec3s` angle to an object's face angle internal format
@@ -809,7 +809,7 @@ void vec3s_to_object_face_angle(struct Object *o, Vec3s src);
 /* |description|
 Converts an object's move angle to a `Vec3s` format
 |descriptionEnd| */
-void object_move_angle_to_vec3s(OUT Vec3s dst, struct Object *o);
+void object_move_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);
 
 /* |description|
 Converts a `Vec3s` angle to an object's move angle internal format
@@ -840,7 +840,7 @@ void set_handheld_shake(u8 mode);
 Activates a handheld camera shake effect.
 Calculates positional and focus adjustments to simulate manual movement
 |descriptionEnd| */
-void shake_camera_handheld(Vec3f pos, OUT Vec3f focus);
+void shake_camera_handheld(Vec3f pos, VEC_OUT Vec3f focus);
 
 /* |description|
 Determines which C-buttons are currently pressed by the player.
@@ -854,13 +854,13 @@ s32 update_camera_hud_status(struct Camera *c);
 Checks for collisions between the camera and level geometry.
 Adjusts the camera's position to avoid clipping into walls or obstacles
 |descriptionEnd| */
-s32 collide_with_walls(OUT Vec3f pos, f32 offsetY, f32 radius);
+s32 collide_with_walls(VEC_OUT Vec3f pos, f32 offsetY, f32 radius);
 
 /* |description|
 Clamps the camera's pitch angle between a maximum and minimum value.
 Prevents over-rotation and maintains a consistent viewing angle
 |descriptionEnd| */
-s32 clamp_pitch(Vec3f from, OUT Vec3f to, s16 maxPitch, s16 minPitch);
+s32 clamp_pitch(Vec3f from, VEC_OUT Vec3f to, s16 maxPitch, s16 minPitch);
 
 /* |description|
 Checks if a position is within 100 units of Mario's current position.
@@ -871,16 +871,17 @@ s32 is_within_100_units_of_mario(f32 posX, f32 posY, f32 posZ);
 
 /* |description|
 Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`).
-Uses asymptotic scaling for gradual adjustments or direct assignment
+Uses asymptotic scaling for gradual adjustments or direct assignment.
+Returns FALSE if `dst` reaches `goal`
 |descriptionEnd| */
-s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);
+s32 set_or_approach_f32_asymptotic(INOUT f32 *dst, f32 goal, f32 scale);
 
 
 /* |description|
 Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing.
-Returns true if `current` reaches the `target` and false otherwise
+Returns FALSE if `current` reaches the `target`
 |descriptionEnd| */
-s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);
+s32 approach_f32_asymptotic_bool(INOUT f32 *current, f32 target, f32 multiplier);
 
 /* |description|
 Gradually approaches a floating-point value (`target`) using asymptotic smoothing.
@@ -891,9 +892,9 @@ f32 approach_f32_asymptotic(f32 current, f32 target, f32 multiplier);
 
 /* |description|
 Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing.
-Returns true if `current` reaches `target` and false otherwise
+Returns FALSE if `current` reaches `target`
 |descriptionEnd| */
-s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);
+s32 approach_s16_asymptotic_bool(INOUT s16 *current, s16 target, s16 divisor);
 
 /* |description|
 Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing.
@@ -906,31 +907,32 @@ s32 approach_s16_asymptotic(s16 current, s16 target, s16 divisor);
 Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling.
 Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 |descriptionEnd| */
-void approach_vec3f_asymptotic(OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);
+void approach_vec3f_asymptotic(VEC_OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);
 
 /* |description|
 Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling.
 Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 |descriptionEnd| */
-void set_or_approach_vec3f_asymptotic(OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);
+void set_or_approach_vec3f_asymptotic(VEC_OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);
 
 /* |description|
 Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
-Returns true if the value reaches the target and false otherwise
+Returns FALSE if `current` reaches the `target`
 |descriptionEnd| */
-s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);
+s32 camera_approach_s16_symmetric_bool(INOUT s16 *current, s16 target, s16 increment);
 
 /* |description|
 Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`).
-Uses symmetric scaling for gradual or immediate adjustments
+Uses symmetric scaling for gradual or immediate adjustments.
+Returns FALSE if `current` reaches the `target`
 |descriptionEnd| */
-s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);
+s32 set_or_approach_s16_symmetric(INOUT s16 *current, s16 target, s16 increment);
 
 /* |description|
 Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
-Returns true if the value reaches the target and false otherwise
+Returns FALSE if `current` reaches the `target`
 |descriptionEnd| */
-s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);
+s32 camera_approach_f32_symmetric_bool(INOUT f32 *current, f32 target, f32 increment);
 
 /* |description|
 Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame.
@@ -942,13 +944,13 @@ f32 camera_approach_f32_symmetric(f32 value, f32 target, f32 increment);
 Generates a random 3D vector with short integer components.
 Useful for randomized offsets or environmental effects
 |descriptionEnd| */
-void random_vec3s(OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);
+void random_vec3s(VEC_OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);
 
 /* |description|
 Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin.
 Prevents the camera from moving outside of the designated area
 |descriptionEnd| */
-s32 clamp_positions_and_find_yaw(OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);
+s32 clamp_positions_and_find_yaw(VEC_OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);
 
 /* |description|
 Determines if a range is obstructed by a surface relative to the camera.
@@ -961,7 +963,7 @@ Scales a point along a line between two 3D points (`from` and `to`).
 The scaling factor determines how far along the line the resulting point will be.
 The result is stored in the destination vector (`dest`)
 |descriptionEnd| */
-void scale_along_line(OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);
+void scale_along_line(VEC_OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);
 
 /* |description|
 Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`).
@@ -976,10 +978,9 @@ Returns the yaw as a signed 16-bit integer
 s16 calculate_yaw(Vec3f from, Vec3f to);
 
 /* |description|
-Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`).
-Updates the provided pointers with the computed pitch and yaw values
+Calculates and returns the pitch and yaw angles from one 3D position (`from`) to another (`to`)
 |descriptionEnd| */
-void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);
+void calculate_angles(Vec3f from, Vec3f to, RET s16 *pitch, RET s16 *yaw);
 
 /* |description|
 Calculates the absolute distance between two 3D points (`a` and `b`).
@@ -1000,14 +1001,14 @@ Rotates a vector around the XZ-plane by a specified yaw angle.
 The result is stored in the destination vector (`dst`).
 Useful for rotating camera positions or object coordinates horizontally
 |descriptionEnd| */
-void rotate_in_xz(OUT Vec3f dst, Vec3f src, s16 yaw);
+void rotate_in_xz(VEC_OUT Vec3f dst, Vec3f src, s16 yaw);
 
 /* |description|
 Rotates a vector around the YZ-plane by a specified pitch angle.
 The result is stored in the destination vector (`dst`).
 Useful for vertical camera rotations or object transformations
 |descriptionEnd| */
-void rotate_in_yz(OUT Vec3f dst, Vec3f src, s16 pitch);
+void rotate_in_yz(VEC_OUT Vec3f dst, Vec3f src, s16 pitch);
 
 /* |description|
 Applies a pitch-based shake effect to the camera.
@@ -1038,19 +1039,19 @@ void set_pitch_shake_from_point(s16 mag, s16 decay, s16 inc, f32 maxDist, f32 po
 Activates a pitch-based shake effect.
 Adds vertical vibrational movement to the camera's behavior
 |descriptionEnd| */
-void shake_camera_pitch(Vec3f pos, OUT Vec3f focus);
+void shake_camera_pitch(Vec3f pos, VEC_OUT Vec3f focus);
 
 /* |description|
 Activates a yaw-based shake effect.
 Adds horizontal vibrational movement to the camera's behavior
 |descriptionEnd| */
-void shake_camera_yaw(Vec3f pos, OUT Vec3f focus);
+void shake_camera_yaw(Vec3f pos, VEC_OUT Vec3f focus);
 
 /* |description|
 Applies a roll-based shake effect to the camera.
 Simulates rotational disturbances caused by impacts or other events
 |descriptionEnd| */
-void shake_camera_roll(s16 *roll);
+void shake_camera_roll(INOUT s16 *roll);
 
 /* |description|
 Calculates an outward radial offset based on the camera's yaw angle.
@@ -1158,13 +1159,13 @@ void approach_camera_height(struct Camera *c, f32 goal, f32 inc);
 Offsets a vector by rotating it in 3D space relative to a reference position.
 This is useful for creating radial effects or dynamic transformations
 |descriptionEnd| */
-void offset_rotated(OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);
+void offset_rotated(VEC_OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);
 
 /* |description|
 Transitions the camera to the next Lakitu state, updating position and focus.
 This function handles smooth transitions between different gameplay scenarios
 |descriptionEnd| */
-s16 next_lakitu_state(OUT Vec3f newPos, OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
+s16 next_lakitu_state(VEC_OUT Vec3f newPos, VEC_OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);
 
 /* |description|Set the fixed camera base pos depending on the current level area|descriptionEnd| */
 void set_fixed_cam_axis_sa_lobby(UNUSED s16 preset);
@@ -1178,13 +1179,13 @@ s16 camera_course_processing(struct Camera *c);
 Resolves collisions between the camera and level geometry.
 Adjusts the camera's position to prevent clipping or intersecting with objects
 |descriptionEnd| */
-void resolve_geometry_collisions(OUT Vec3f pos, UNUSED Vec3f lastGood);
+void resolve_geometry_collisions(VEC_OUT Vec3f pos, UNUSED Vec3f lastGood);
 
 /* |description|
 Rotates the camera to avoid walls or other obstructions.
 Ensures clear visibility of the player or target objects
 |descriptionEnd| */
-s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);
+s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, INOUT s16 *avoidYaw, s16 yawRange);
 
 
 /* |description|

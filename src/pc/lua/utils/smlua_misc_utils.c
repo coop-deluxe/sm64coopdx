@@ -369,7 +369,7 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
 }
 
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f pos) {
     if (!m) { return false; }
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
@@ -511,40 +511,36 @@ const char* get_coopnet_id(UNUSED s8 localIndex) {
 
 ///
 
-f32 get_volume_master(void) {
+u8 get_volume_master(void) {
     return gLuaVolumeMaster;
 }
 
-f32 get_volume_level(void) {
+u8 get_volume_level(void) {
     return gLuaVolumeLevel;
 }
 
-f32 get_volume_sfx(void) {
+u8 get_volume_sfx(void) {
     return gLuaVolumeSfx;
 }
 
-f32 get_volume_env(void) {
+u8 get_volume_env(void) {
     return gLuaVolumeEnv;
 }
 
-void set_volume_master(f32 volume) {
+void set_volume_master(u8 volume) {
     gLuaVolumeMaster = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
-void set_volume_level(f32 volume) {
+void set_volume_level(u8 volume) {
     gLuaVolumeLevel = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
-void set_volume_sfx(f32 volume) {
+void set_volume_sfx(u8 volume) {
     gLuaVolumeSfx = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
-void set_volume_env(f32 volume) {
+void set_volume_env(u8 volume) {
     gLuaVolumeEnv = MIN(volume, 127);
-    audio_custom_update_volume();
 }
 
 ///

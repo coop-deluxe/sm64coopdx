@@ -247,6 +247,11 @@ Texture *gfx_get_texture(Gfx *cmd) {
     return (Texture *) cmd->words.w1;
 }
 
+Gfx *gfx_get_from_name(const char *name, RET u32 *length) {
+    *length = 0;
+    return dynos_gfx_get(name, length);
+}
+
 const char *gfx_get_name(Gfx *gfx) {
     if (!gfx) { return NULL; }
 
@@ -353,6 +358,11 @@ void gfx_delete(Gfx *gfx) {
 
 void gfx_delete_all() {
     dynos_gfx_delete_all();
+}
+
+Vtx *vtx_get_from_name(const char *name, RET u32 *count) {
+    *count = 0;
+    return dynos_vtx_get(name, count);
 }
 
 const char *vtx_get_name(Vtx *vtx) {
