@@ -102,6 +102,7 @@ bool fs_sys_filename_is_portable(char const *filename);
 /* these operate on the real filesystem and are used by fs_packtype_dir */
 
 bool fs_sys_walk(const char *base, walk_fn_t walk, void *user, const bool recur);
+bool fs_sys_copy_file(char* src, const char* dir);
 bool fs_sys_path_exists(const char *name);
 bool fs_sys_file_exists(const char *name);
 bool fs_sys_dir_exists(const char *name);

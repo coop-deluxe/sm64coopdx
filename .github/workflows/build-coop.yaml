@@ -8,15 +8,17 @@ on:
 jobs:
     build-linux:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
+        container:
+          image: archlinux:latest
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
             - name: Install dependencies
               run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                pacman -Syuu --noconfirm
+                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat zip
 
             - name: Build the game
               run: make -j$(nproc)
@@ -30,7 +32,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -40,15 +42,17 @@ jobs:
     
     build-steamos:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
+        container:
+          image: archlinux:latest
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
             - name: Install dependencies
               run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                pacman -Syuu --noconfirm
+                pacman -S --noconfirm base-devel glibc linux-api-headers python sdl2 glew zlib libglvnd libcurl-compat zip
 
             - name: Build the game
               run: make -j$(nproc) HANDHELD=1
@@ -62,7 +66,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -112,7 +116,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes databases coop.map discord_game_sdk.dll sm64coopdx.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -162,7 +166,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes databases coop.map discord_game_sdk.dll sm64coopdx.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
