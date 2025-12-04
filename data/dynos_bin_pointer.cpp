@@ -13,52 +13,48 @@ typedef Pair<String, u32> PointerData;
 static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     // Lights
     for (auto& _Node : aGfxData->mLights) {
-        auto node = DynOS_Lights_Parse(aGfxData, _Node);
-        if (!node->mData) { continue; }
-        if (&node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { node->mName, 1 };
+        if (!_Node->mData) { continue; }
+        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+            return { _Node->mName, 1 };
         }
-        if (&node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { node->mName, 2 };
+        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
+            return { _Node->mName, 2 };
         }
     }
 
     // Light0s
     for (auto& _Node : aGfxData->mLight0s) {
-        auto node = DynOS_Light0_Parse(aGfxData, _Node);
-        if (!node->mData) { continue; }
-        if (&node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { node->mName, 1 };
+        if (!_Node->mData) { continue; }
+        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+            return { _Node->mName, 1 };
         }
-        if (&node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { node->mName, 2 };
+        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
+            return { _Node->mName, 2 };
         }
     }
 
     // Light_ts
     for (auto& _Node : aGfxData->mLightTs) {
-        auto node = DynOS_LightT_Parse(aGfxData, _Node);
-        if (!node->mData) { continue; }
-        if (&node->mData->col[0] == aPtr) {
-            return { node->mName, 1 };
+        if (!_Node->mData) { continue; }
+        if (&_Node->mData->col[0] == aPtr) {
+            return { _Node->mName, 1 };
         }
-        if (&node->mData->colc[0] == aPtr) {
-            return { node->mName, 2 };
+        if (&_Node->mData->colc[0] == aPtr) {
+            return { _Node->mName, 2 };
         }
-        if (&node->mData->dir[0] == aPtr) {
-            return { node->mName, 3 };
+        if (&_Node->mData->dir[0] == aPtr) {
+            return { _Node->mName, 3 };
         }
     }
 
     // Ambient_ts
     for (auto& _Node : aGfxData->mAmbientTs) {
-        auto node = DynOS_AmbientT_Parse(aGfxData, _Node);
-        if (!node->mData) { continue; }
-        if (&node->mData->col[0] == aPtr) {
-            return { node->mName, 1 };
+        if (!_Node->mData) { continue; }
+        if (&_Node->mData->col[0] == aPtr) {
+            return { _Node->mName, 1 };
         }
-        if (&node->mData->colc[0] == aPtr) {
-            return { node->mName, 2 };
+        if (&_Node->mData->colc[0] == aPtr) {
+            return { _Node->mName, 2 };
         }
     }
 
@@ -89,7 +85,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
             return { _Node->mName, 0 };
         }
     }
-    
+
     // Collisions
     for (auto& _Node : aGfxData->mCollisions) {
         if (_Node->mData == aPtr) {
@@ -161,7 +157,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     if (builtinCol != NULL) {
         return { builtinCol, 0 };
     }
-    
+
     // Built-in Animations
     auto builtinAnim = DynOS_Builtin_Anim_GetFromData((const Animation *)aPtr);
     if (builtinAnim != NULL) {
@@ -368,7 +364,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
             return (void *) (_Node->mData + aPtrData);
         }
     }
-    
+
     // Behavior scripts
     for (auto &_Node : aGfxData->mBehaviorScripts) {
         if (_Node->mName == aPtrName) {
@@ -440,7 +436,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     if (builtinCol != NULL) {
         return (void*)builtinCol;
     }
-    
+
     // Built-in Animations
     auto builtinAnim = DynOS_Builtin_Anim_GetFromName(aPtrName.begin());
     if (builtinAnim != NULL) {
