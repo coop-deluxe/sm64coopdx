@@ -147,8 +147,8 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     append_line(buf, &len, "struct PSInput {");
     append_line(buf, &len, "    float4 position : SV_POSITION;");
     if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        // if (!cc.cm.tex_persp) append_str(buf, &len, "linear");
-        append_line(buf, &len, cc.cm.tex_persp ? "    float2 uv : TEXCOORD;" : "    linear float2 uv : TEXCOORD;");
+        if (!cc.cm.tex_persp) append_str(buf, &len, "noperspective");
+        append_line(buf, &len, "    float2 uv : TEXCOORD;");
         num_floats += 2;
     }
     if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
