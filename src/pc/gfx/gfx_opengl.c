@@ -320,7 +320,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 #endif
 
     if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        append_line(fs_buf, &fs_len, opt_tex_persp ? "in vec2 vTexCoord;" : "noperspective in vec2 vTexCoord;");
+        append_line(fs_buf, &fs_len, "noperspective in vec2 vTexCoord;");
     }
     if (opt_fog) {
         append_line(fs_buf, &fs_len, "in vec4 vFog;");
