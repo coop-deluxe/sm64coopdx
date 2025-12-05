@@ -782,6 +782,13 @@ static struct PlayerColor geo_mario_get_player_color(const struct PlayerPalette 
     return color;
 }
 
+void get_player_color(u8 index, u8 part, f32 *out) {
+    const struct PlayerPalette *palette = &gNetworkPlayers[index].overridePalette;
+    out[0] = palette->parts[part][0] / 255.0f;
+    out[1] = palette->parts[part][1] / 255.0f;
+    out[2] = palette->parts[part][2] / 255.0f;
+}
+
 static Gfx *geo_mario_create_player_colors_dl(s32 index, Gfx *capEnemyGfx, Gfx *capEnemyDecalGfx) {
     s32 size = ((PLAYER_PART_MAX * 2) + 1) + (capEnemyGfx != NULL) + (capEnemyDecalGfx != NULL);
     Gfx *gfx = alloc_display_list(size * sizeof(Gfx));

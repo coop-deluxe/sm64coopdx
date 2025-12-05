@@ -1284,6 +1284,7 @@ static void gfx_calc_and_set_viewport(const Vp_t *viewport) {
 }
 
 static void gfx_sp_movemem(uint8_t index, uint16_t offset, const void* data) {
+    if (!data) { return; }
     switch (index) {
         case G_MV_VIEWPORT:
             gfx_calc_and_set_viewport((const Vp_t *) data);

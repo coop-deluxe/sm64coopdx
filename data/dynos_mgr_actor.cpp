@@ -18,8 +18,8 @@ static std::map<const void*, ActorGfx>& DynosValidActors() {
     return sDynosValidActors;
 }
 
-static Array<Pair<const char*, void *>>& DynosCustomActors() {
-    static Array<Pair<const char*, void *>> sDynosCustomActors;
+static std::vector<std::pair<std::string, void *>> &DynosCustomActors() {
+    static std::vector<std::pair<std::string, void *>> sDynosCustomActors;
     return sDynosCustomActors;
 }
 
@@ -35,14 +35,11 @@ std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
 bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
-    u16 actorLen = strlen(aActorName);
-    char* actorName = (char*)calloc(1, sizeof(char) * (actorLen + 1));
-    strcpy(actorName, aActorName);
+    std::string actorName = aActorName;
 
-    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName, aFilename, false);
+    GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName.c_str(), aFilename, false);
     if (!_GfxData) {
-        PrintError("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName, aFilename.c_str());
-        free(actorName);
+        PrintError("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName.c_str(), aFilename.c_str());
         return false;
     }
     _GfxData->mModIndex = aModIndex;
@@ -50,8 +47,7 @@ bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
 
     void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
     if (!geoLayout) {
-        PrintError("  ERROR: Couldn't load geo layout for \"%s\"", actorName);
-        free(actorName);
+        PrintError("  ERROR: Couldn't load geo layout for \"%s\"", actorName.c_str());
         return false;
     }
 
@@ -62,21 +58,19 @@ bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     actorGfx.mPackIndex = MOD_PACK_INDEX;
     actorGfx.mGraphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
     if (!actorGfx.mGraphNode) {
-        PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName);
-        free(actorName);
+        PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName.c_str());
         return false;
     }
     actorGfx.mGraphNode->georef = georef;
 
     // Add to custom actors
     if (georef == NULL) {
-        DynosCustomActors().Add({ strdup(actorName), geoLayout });
+        DynosCustomActors().emplace_back(actorName, geoLayout);
         georef = geoLayout;
     }
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
-    free(actorName);
     return true;
 }
 
@@ -95,7 +89,7 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
 
     // check custom actors
     for (auto& pair : DynosCustomActors()) {
-        if (!strcmp(aActorName, pair.first)) {
+        if (pair.first == aActorName) {
             return pair.second;
         }
     }
@@ -297,12 +291,10 @@ void DynOS_Actor_RegisterModifiedGraphNode(GraphNode *aNode) {
 
 void DynOS_Actor_ModShutdown() {
     auto& _DynosCustomActors = DynosCustomActors();
-    while (_DynosCustomActors.Count() > 0) {
-        auto& pair = _DynosCustomActors[0];
+    for (auto &pair : _DynosCustomActors) {
         DynOS_Actor_Invalid(pair.second, MOD_PACK_INDEX);
-        free((void*)pair.first);
-        _DynosCustomActors.Remove(0);
     }
+    _DynosCustomActors.clear();
 
     auto& _ValidActors = DynosValidActors();
     for (auto it = _ValidActors.cbegin(); it != _ValidActors.cend();) {
