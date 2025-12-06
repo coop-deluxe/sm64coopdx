@@ -327,6 +327,7 @@ static void gfx_d3d11_load_shader(struct ShaderProgram *new_prg) {
 static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCombiner* cc) {
     CCFeatures cc_features = { 0 };
     gfx_cc_get_features(cc, &cc_features);
+    if (d3d.feature_level < D3D_FEATURE_LEVEL_10_0) cc->cm.tex_persp = 1;
 
     char buf[4096];
     size_t len, num_floats;
@@ -342,14 +343,14 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
     UINT compile_flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 #endif
 
-    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0_level_9_1", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
+    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 ? "vs_4_0" : "vs_4_0_level_9_1", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
         MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
         throw hr;
     }
 
-    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0_level_9_1", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
+    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 ? "ps_4_0" : "ps_4_0_level_9_1", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
         MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
