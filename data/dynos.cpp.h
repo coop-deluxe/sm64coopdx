@@ -159,6 +159,9 @@ public:
 
     template <typename T>
     T *Read(T *aBuffer, s32 aCount) const {
+        if (aCount <= 0 || aBuffer == NULL) {
+            return aBuffer;
+        }
         if (mOffset + aCount * sizeof(T) <= mSize) {
             memcpy(aBuffer, mData + mOffset, aCount * sizeof(T));
             mOffset += aCount * sizeof(T);
@@ -177,6 +180,9 @@ public:
 
     template <typename T>
     void Write(const T *aBuffer, s32 aCount) {
+        if (aCount <= 0 || aBuffer == NULL) {
+            return;
+        }
         if (!mReadOnly) {
             Grow(mOffset + aCount * sizeof(T));
             memcpy(mData + mOffset, aBuffer, aCount * sizeof(T));
@@ -313,6 +319,10 @@ public:
 public:
     void Read(BinFile *aFile) {
         s32 _Length = aFile->Read<s32>();
+        if (_Length <= 0) {
+            Resize(0);
+            return;
+        }
         Resize(_Length);
         aFile->Read<T>(mBuffer, _Length);
     }
