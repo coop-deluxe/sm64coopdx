@@ -209,4 +209,14 @@ void reset_window_title(void);
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
+// BungeeCord64 - Network Switching Functions for local server hopping
+/* |description|[BungeeCord64] Switches to a different server on localhost with the specified port. Returns true if switch was initiated successfully. Only works when connected as client, not as server host|descriptionEnd| */
+bool network_switch_to_server(u32 port);
+/* |description|[BungeeCord64] Gets the current server port the client is connected to or hosting on. Returns 0 if not connected|descriptionEnd| */
+u32 network_get_current_port(void);
+/* |description|[BungeeCord64] Gets the current connection IP address as a string. Returns empty string if not connected|descriptionEnd| */
+const char* network_get_current_ip(void);
+/* |description|[BungeeCord64] Checks if the player is currently connected to a server as a client|descriptionEnd| */
+bool network_is_client(void);
+
 #endif

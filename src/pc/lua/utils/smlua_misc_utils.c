@@ -14,6 +14,8 @@
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/pc_main.h"
+#include "pc/network/network.h"
+#include "pc/configfile.h"
 #include "game/object_list_processor.h"
 #include "game/rendering_graph_node.h"
 #include "game/level_update.h"
@@ -547,4 +549,60 @@ const char* get_os_name(void) {
 #else
     return "Unknown";
 #endif
+}
+
+///
+// BungeeCord64 Network Switching Functions
+// Enables switching between multiple SM64CoopDX servers in local network
+///
+
+bool network_switch_to_server(u32 port) {
+    // Only allow switching when acting as a client.
+    if (gNetworkType != NT_CLIENT) {
+        LOG_INFO("BungeeCord64: Cannot switch server - not connected as client");
+        return false;
+    }
+
+    if (port == 0) {
+        LOG_INFO("BungeeCord64: Cannot switch server - invalid port 0");
+        return false;
+    }
+
+    // Check if already reconnecting
+    if (network_is_reconnecting()) {
+        LOG_INFO("BungeeCord64: Reconnect already in progress");
+        return false;
+    }
+
+    LOG_INFO("BungeeCord64: Switching to server on port %u", port);
+
+    // Use the standard reconnect flow with the normal connect screen
+    network_bungee_switch_begin(port);
+
+    return true;
+}
+
+u32 network_get_current_port(void) {
+    if (gNetworkType == NT_CLIENT) {
+        return configJoinPort;
+    } else if (gNetworkType == NT_SERVER) {
+        return configHostPort;
+    }
+    return 0;
+}
+
+const char* network_get_current_ip(void) {
+    static char currentIp[MAX_CONFIG_STRING] = "";
+    if (gNetworkType == NT_CLIENT) {
+        snprintf(currentIp, MAX_CONFIG_STRING, "%s", configJoinIp);
+        return currentIp;
+    } else if (gNetworkType == NT_SERVER) {
+        snprintf(currentIp, MAX_CONFIG_STRING, "localhost");
+        return currentIp;
+    }
+    return "";
+}
+
+bool network_is_client(void) {
+    return gNetworkType == NT_CLIENT;
 }

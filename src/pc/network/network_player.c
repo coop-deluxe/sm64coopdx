@@ -5,6 +5,7 @@
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "pc/configfile.h"
 #include "game/area.h"
 #include "game/level_info.h"
 #include "game/hardcoded.h"
@@ -224,8 +225,22 @@ void network_player_update(void) {
 #else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
 #endif
-            LOG_INFO("dropping due to no server connectivity");
-            network_shutdown(false, false, true, false);
+            // Don't trigger disconnect handling if we're in the middle of a BungeeCord switch
+            if (network_is_bungee_switching()) {
+                return;
+            }
+
+            u32 fbPort = network_get_bungee_fallback_port();
+            LOG_INFO("BungeeCord64: Server timeout - fallback port: %u, current port: %u", fbPort, configJoinPort);
+            
+            if (fbPort != 0 && fbPort != configJoinPort) {
+                LOG_INFO("BungeeCord64: Auto-reconnecting to fallback port %u", fbPort);
+                // Use BungeeCord switch mechanism for proper fallback handling
+                network_bungee_switch_begin(fbPort);
+            } else {
+                LOG_INFO("dropping due to no server connectivity (no fallback configured)");
+                network_shutdown(false, false, true, false);
+            }
         }
 
         elapsed = (clock_elapsed() - np->lastSent);
@@ -354,7 +369,17 @@ u8 network_player_disconnected(u8 globalIndex) {
             LOG_ERROR("player disconnected, but it's local.. this shouldn't happen!");
             return UNKNOWN_GLOBAL_INDEX;
         } else {
-            network_shutdown(true, false, true, false);
+            // BungeeCord64: Try to fallback to another server instead of just disconnecting
+            u32 fbPort = network_get_bungee_fallback_port();
+            LOG_INFO("BungeeCord64: Server disconnected - fallback port: %u, current port: %u", fbPort, configJoinPort);
+            
+            if (fbPort != 0 && fbPort != configJoinPort) {
+                LOG_INFO("BungeeCord64: Auto-reconnecting to fallback port %u", fbPort);
+                network_bungee_switch_begin(fbPort);
+            } else {
+                network_shutdown(true, false, true, false);
+            }
+            return UNKNOWN_GLOBAL_INDEX;
         }
     }
 

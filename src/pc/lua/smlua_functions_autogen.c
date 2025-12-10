@@ -14,6 +14,8 @@
 #include "src/game/rumble_init.h"
 #include "src/pc/djui/djui_popup.h"
 #include "src/pc/network/network_utils.h"
+#include "src/pc/network/network.h"
+#include "src/pc/network/packets/packet.h"
 #include "src/pc/djui/djui_console.h"
 #include "src/pc/djui/djui_chat_message.h"
 #include "src/pc/djui/djui_language.h"
@@ -31033,6 +31035,149 @@ int smlua_func_get_os_name(UNUSED lua_State* L) {
     return 1;
 }
 
+// BungeeCord64 Network Functions
+
+int smlua_func_network_switch_to_server(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_switch_to_server", 1, top);
+        return 0;
+    }
+
+    u32 port = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter 1 for function '%s'", "network_switch_to_server"); return 0; }
+
+    lua_pushboolean(L, network_switch_to_server(port));
+
+    return 1;
+}
+
+int smlua_func_network_get_current_port(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_get_current_port", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, network_get_current_port());
+
+    return 1;
+}
+
+int smlua_func_network_get_current_ip(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_get_current_ip", 0, top);
+        return 0;
+    }
+
+    lua_pushstring(L, network_get_current_ip());
+
+    return 1;
+}
+
+int smlua_func_network_is_client(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_is_client", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, network_is_client());
+
+    return 1;
+}
+
+int smlua_func_network_set_bungee_fallback_port(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_set_bungee_fallback_port", 1, top);
+        return 0;
+    }
+
+    u32 port = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 1 for function '%s'", "network_set_bungee_fallback_port");
+        return 0;
+    }
+
+    network_set_bungee_fallback_port(port);
+
+    return 0;
+}
+
+int smlua_func_network_get_bungee_fallback_port(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_get_bungee_fallback_port", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, network_get_bungee_fallback_port());
+
+    return 1;
+}
+
+int smlua_func_network_is_bungee_switching(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_is_bungee_switching", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, network_is_bungee_switching());
+
+    return 1;
+}
+
+int smlua_func_network_set_server_fallback_port(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_set_server_fallback_port", 1, top);
+        return 0;
+    }
+
+    u32 port = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 1 for function '%s'", "network_set_server_fallback_port");
+        return 0;
+    }
+
+    network_set_server_fallback_port(port);
+
+    return 0;
+}
+
+int smlua_func_network_get_server_fallback_port(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_get_server_fallback_port", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, network_get_server_fallback_port());
+
+    return 1;
+}
+
 int smlua_func_get_save_file_modified(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -35242,6 +35387,15 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_local_discord_id", smlua_func_get_local_discord_id);
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);
+    smlua_bind_function(L, "network_switch_to_server", smlua_func_network_switch_to_server);
+    smlua_bind_function(L, "network_get_current_port", smlua_func_network_get_current_port);
+    smlua_bind_function(L, "network_get_current_ip", smlua_func_network_get_current_ip);
+    smlua_bind_function(L, "network_is_client", smlua_func_network_is_client);
+    smlua_bind_function(L, "network_set_bungee_fallback_port", smlua_func_network_set_bungee_fallback_port);
+    smlua_bind_function(L, "network_get_bungee_fallback_port", smlua_func_network_get_bungee_fallback_port);
+    smlua_bind_function(L, "network_is_bungee_switching", smlua_func_network_is_bungee_switching);
+    smlua_bind_function(L, "network_set_server_fallback_port", smlua_func_network_set_server_fallback_port);
+    smlua_bind_function(L, "network_get_server_fallback_port", smlua_func_network_get_server_fallback_port);
     smlua_bind_function(L, "get_save_file_modified", smlua_func_get_save_file_modified);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "get_time", smlua_func_get_time);

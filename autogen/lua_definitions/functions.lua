@@ -9509,6 +9509,61 @@ function get_os_name()
     -- ...
 end
 
+--- @param port integer
+--- @return boolean
+--- [BungeeCord64] Switches to a different server on localhost with the specified port. Returns true if switch was initiated successfully. Only works when connected as client, not as server host.
+function network_switch_to_server(port)
+    -- ...
+end
+
+--- @return integer
+--- [BungeeCord64] Gets the current server port the client is connected to or hosting on. Returns 0 if not connected.
+function network_get_current_port()
+    -- ...
+end
+
+--- @return string
+--- [BungeeCord64] Gets the current connection IP address as a string. Returns empty string if not connected.
+function network_get_current_ip()
+    -- ...
+end
+
+--- @return boolean
+--- [BungeeCord64] Checks if the player is currently connected to a server as a client.
+function network_is_client()
+    -- ...
+end
+
+--- @param port integer
+--- [BungeeCord64] Sets the global fallback port used when the current server dies unexpectedly.
+function network_set_bungee_fallback_port(port)
+    -- ...
+end
+
+--- @return integer
+--- [BungeeCord64] Gets the current global fallback port.
+function network_get_bungee_fallback_port()
+    -- ...
+end
+
+--- @return boolean
+--- [BungeeCord64] Checks if a seamless server switch is currently in progress.
+function network_is_bungee_switching()
+    -- ...
+end
+
+--- @param port integer
+--- [BungeeCord64] SERVER ONLY: Sets the fallback port that clients should reconnect to if this server crashes.
+function network_set_server_fallback_port(port)
+    -- ...
+end
+
+--- @return integer
+--- [BungeeCord64] SERVER ONLY: Gets the configured fallback port for this server.
+function network_get_server_fallback_port()
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the save file has been modified without saving
 function get_save_file_modified()

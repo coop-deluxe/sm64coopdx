@@ -128,5 +128,14 @@ bool network_is_reconnecting(void);
 void network_rehost_begin(void);
 void network_update(void);
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting);
+u32  network_get_bungee_fallback_port(void);
+void network_set_bungee_fallback_port(u32 port);
+void network_set_bungee_first_server_port(u32 port);
+
+// BungeeCord64 simple server switching (uses standard reconnect)
+void network_bungee_switch_begin(u32 targetPort);
+void network_bungee_switch_complete(void);
+bool network_is_bungee_switching(void);
+u8   network_get_bungee_switch_phase(void);
 
 #endif
