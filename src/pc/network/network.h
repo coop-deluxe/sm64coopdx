@@ -137,6 +137,7 @@ void network_set_bungee_first_server_port(u32 port);
 // BungeeCord64 simple server switching (uses standard reconnect)
 void network_bungee_switch_begin(u32 targetPort);
 void network_bungee_switch_complete(void);
+void network_bungee_switch_cancel(void);
 bool network_is_bungee_switching(void);
 u8   network_get_bungee_switch_phase(void);
 

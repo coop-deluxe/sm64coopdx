@@ -24,6 +24,21 @@ void djui_panel_join_message_error(char* message) {
 }
 
 void djui_panel_join_message_cancel(struct DjuiBase* caller) {
+    // BungeeCord64: If we're in a BungeeCord switch, cancel immediately and fallback
+    if (network_is_bungee_switching()) {
+        network_bungee_switch_cancel();
+        // If cancel triggered a reconnect to fallback, don't go back to menu
+        if (network_is_reconnecting()) {
+            return;
+        }
+        // No fallback available, disconnect completely
+        network_reset_reconnect_and_rehost();
+        network_shutdown(true, false, false, false);
+        djui_panel_menu_back(caller);
+        return;
+    }
+    
+    // Normal cancel (not a BungeeCord switch)
     if (network_is_reconnecting()) { return; }
     network_reset_reconnect_and_rehost();
     network_shutdown(true, false, false, false);

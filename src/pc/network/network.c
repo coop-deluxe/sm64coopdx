@@ -597,9 +597,10 @@ static void network_bungee_execute_pending_switch(void) {
 static void network_bungee_connection_timeout_update(void) {
     if (sBungeeConnectionTimer == 0) { return; }
 
-    // If we're connected, cancel the timer
-    if (gNetworkType == NT_CLIENT && gNetworkSentJoin) {
-        LOG_INFO("BungeeCord64: Connection established, canceling timeout");
+    // If we received a response from the server (gNetworkServerAddr is set when we get PACKET_MOD_LIST),
+    // cancel the timeout - the server is reachable, just might take time to transfer mods
+    if (gNetworkType == NT_CLIENT && gNetworkServerAddr != NULL) {
+        LOG_INFO("BungeeCord64: Server responded, canceling connection timeout (mod transfer in progress)");
         sBungeeConnectionTimer = 0;
         sBungeeTargetPort = 0;
         return;
@@ -608,13 +609,13 @@ static void network_bungee_connection_timeout_update(void) {
     // Countdown
     sBungeeConnectionTimer--;
 
-    // If timer expired and we're still not connected, try fallback
+    // If timer expired and we still haven't received any response, try fallback
     if (sBungeeConnectionTimer == 0) {
         u32 fbPort = network_get_bungee_fallback_port();
 
         // Only try fallback if it's different from what we tried
         if (fbPort != 0 && fbPort != sBungeeTargetPort) {
-            LOG_INFO("BungeeCord64: Connection to port %u timed out, trying fallback port %u", 
+            LOG_INFO("BungeeCord64: No response from port %u, trying fallback port %u", 
                      sBungeeTargetPort, fbPort);
 
             sBungeeTargetPort = 0;
@@ -626,7 +627,7 @@ static void network_bungee_connection_timeout_update(void) {
             // Restart reconnect to fallback
             network_reconnect_begin();
         } else {
-            LOG_INFO("BungeeCord64: Connection timed out, no fallback available");
+            LOG_INFO("BungeeCord64: No response from server, no fallback available");
             sBungeeTargetPort = 0;
         }
     }
@@ -654,6 +655,39 @@ u32 network_get_bungee_switch_target(void) {
         return sBungeeTargetPort;
     }
     return configJoinPort;
+}
+
+void network_bungee_switch_cancel(void) {
+    // Cancel a BungeeCord switch and return to the fallback server
+    // This is called when the user manually cancels during connection
+    
+    if (!network_is_bungee_switching()) {
+        return;
+    }
+    
+    u32 fbPort = network_get_bungee_fallback_port();
+    u32 targetPort = sBungeeTargetPort != 0 ? sBungeeTargetPort : configJoinPort;
+    
+    LOG_INFO("BungeeCord64: Switch cancelled - target was %u, fallback is %u", targetPort, fbPort);
+    
+    // Reset switch state
+    sBungeeConnectionTimer = 0;
+    sBungeeTargetPort = 0;
+    sBungeePendingSwitchPort = 0;
+    sNetworkReconnectTimer = 0;  // Cancel any pending reconnect
+    
+    // If we have a valid fallback port that's different from what we were trying to connect to
+    if (fbPort != 0 && fbPort != targetPort) {
+        LOG_INFO("BungeeCord64: Returning to fallback port %u immediately", fbPort);
+        
+        // Update config for fallback connection
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "127.0.0.1");
+        configJoinPort = fbPort;
+        
+        // Start reconnect immediately (timer = 1 for next frame execution)
+        sNetworkReconnectTimer = 1;
+        sNetworkReconnectType = NS_SOCKET;
+    }
 }
 
 void network_rehost_begin(void) {
