@@ -139,6 +139,9 @@ void packet_process(struct Packet* p) {
         case PACKET_LUA_CUSTOM:              network_receive_lua_custom(p);              break;
         case PACKET_LUA_CUSTOM_BYTESTRING:   network_receive_lua_custom_bytestring(p);   break;
 
+        // BungeeCord64
+        case PACKET_BUNGEE_FALLBACK:         network_receive_bungee_fallback(p);         break;
+        
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
         default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);

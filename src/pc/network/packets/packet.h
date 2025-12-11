@@ -77,6 +77,9 @@ enum PacketType {
     
     PACKET_COMMAND,
     PACKET_MODERATOR,
+    
+    // BungeeCord64 - Server sends fallback port to client
+    PACKET_BUNGEE_FALLBACK,
 
     ///
     PACKET_CUSTOM = 255,
@@ -383,5 +386,13 @@ void network_send_lua_custom(bool broadcast);
 void network_receive_lua_custom(struct Packet* p);
 void network_send_lua_custom_bytestring(bool broadcast);
 void network_receive_lua_custom_bytestring(struct Packet* p);
+
+// packet_bungee_fallback.c
+void network_set_server_fallback_port(u32 port);
+u32  network_get_server_fallback_port(void);
+void network_send_bungee_fallback(u8 toLocalIndex, u32 fallbackPort);
+void network_send_bungee_fallback_request(void);
+void network_receive_bungee_fallback(struct Packet* p);
+void network_receive_bungee_fallback_request(struct Packet* p);
 
 #endif

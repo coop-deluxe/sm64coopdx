@@ -200,7 +200,18 @@ void network_receive_join(struct Packet* p) {
     network_send_network_players_request();
     network_send_lua_sync_table_request();
 
+    // BungeeCord64: Save the first server port as ultimate fallback
+    // This ensures we always have a fallback even if no server configures one
+    network_set_bungee_first_server_port(configJoinPort);
+
+    // BungeeCord64: Request fallback port from server
+    network_send_bungee_fallback_request();
+
     gCurrentlyJoining = false;
+
+    // Complete BungeeCord switch if one was in progress
+    network_bungee_switch_complete();
+    
     smlua_call_event_hooks(HOOK_JOINED_GAME);
     extern s16 gChangeLevel;
     gChangeLevel = gLevelValues.entryLevel;
