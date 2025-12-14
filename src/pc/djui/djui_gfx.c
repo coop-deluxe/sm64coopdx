@@ -54,11 +54,12 @@ const Gfx dl_djui_menu_rect[] = {
 
 const Gfx dl_djui_simple_rect[] = {
     gsDPPipeSync(),
-    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
     gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_simple_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
+    gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
 
