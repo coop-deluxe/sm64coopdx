@@ -1712,7 +1712,7 @@ s32 mario_execute_submerged_action(struct MarioState *m) {
             default:
                 LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
                 set_mario_action(m, ACT_WATER_IDLE, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

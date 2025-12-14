@@ -2328,7 +2328,7 @@ Dispatches to the appropriate action function, such as jump, double jump, freefa
 |descriptionEnd| */
 s32 mario_execute_airborne_action(struct MarioState *m) {
     if (!m) { return FALSE; }
-    u32 cancel;
+    s32 cancel;
 
     if (check_common_airborne_cancels(m)) {
         return TRUE;
@@ -2336,7 +2336,7 @@ s32 mario_execute_airborne_action(struct MarioState *m) {
 
     play_far_fall_sound(m);
 
-    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, (s32*)&cancel)) {
+    if (!smlua_call_action_hook(ACTION_HOOK_EVERY_FRAME, m, &cancel)) {
         /* clang-format off */
         switch (m->action) {
             case ACT_JUMP:                 cancel = act_jump(m);                 break;
@@ -2387,7 +2387,7 @@ s32 mario_execute_airborne_action(struct MarioState *m) {
             default:
                 LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
                 set_mario_action(m, ACT_FREEFALL, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

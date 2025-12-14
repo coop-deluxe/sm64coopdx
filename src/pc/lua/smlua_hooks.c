@@ -324,7 +324,7 @@ int smlua_hook_mario_action(lua_State* L) {
     return 1;
 }
 
-bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue) {
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -348,13 +348,31 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
             }
 
             // output the return value
-            *returnValue = false;
-            if (lua_type(L, -1) == LUA_TBOOLEAN || lua_type(L, -1) == LUA_TNUMBER) {
-                *returnValue = smlua_to_integer(L, -1);
+            // returning a negative value allows to continue the execution, useful when overriding vanilla actions
+            bool stopActionHook = true;
+            *cancel = FALSE;
+
+            switch (lua_type(L, -1)) {
+                case LUA_TBOOLEAN: {
+                    *cancel = smlua_to_boolean(L, -1) ? TRUE : FALSE;
+                } break;
+
+                case LUA_TNUMBER: {
+                    s32 returnValue = (s32) smlua_to_integer(L, -1);
+                    if (returnValue > 0) {
+                        *cancel = TRUE;
+                    } else if (returnValue == 0) {
+                        *cancel = FALSE;
+                    } else {
+                        stopActionHook = false;
+                    }
+                } break;
             }
             lua_pop(L, 1);
 
-            return true;
+            if (stopActionHook) {
+                return true;
+            }
         }
     }
 
