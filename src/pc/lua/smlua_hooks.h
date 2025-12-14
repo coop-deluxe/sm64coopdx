@@ -95,6 +95,8 @@ static const char* LuaActionHookTypeArgName[] = {
     "max (dummy)",
 };
 
+#define ACTION_HOOK_CONTINUE_EXECUTION -1
+
 #define MAX_HOOKED_MOD_MENU_ELEMENTS 256
 
 enum LuaModMenuElementType {

@@ -343,12 +343,13 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
 
             // call the callback
             if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
-                LOG_LUA("Failed to call the action callback: %u", m->action);
+                LOG_LUA("Failed to call the action callback: '%08X'", m->action);
                 continue;
             }
 
             // output the return value
-            // returning a negative value allows to continue the execution, useful when overriding vanilla actions
+            // special return values:
+            // - returning -1 allows to continue the execution, useful when overriding vanilla actions
             bool stopActionHook = true;
             *cancel = FALSE;
 
@@ -363,8 +364,10 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
                         *cancel = TRUE;
                     } else if (returnValue == 0) {
                         *cancel = FALSE;
-                    } else {
+                    } else if (returnValue == ACTION_HOOK_CONTINUE_EXECUTION) {
                         stopActionHook = false;
+                    } else {
+                        LOG_LUA("Invalid return value when calling the action callback: '%08X' returned %d", m->action, returnValue);
                     }
                 } break;
             }
