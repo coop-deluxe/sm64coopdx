@@ -78,12 +78,12 @@ void network_send_chat(char* message, u8 globalIndex) {
 
 void network_receive_chat(struct Packet* p) {
     u16 remoteMessageLength = 0;
-    char remoteMessage[256] = { 0 };
+    char remoteMessage[500] = { 0 };
     u8 globalIndex;
 
     packet_read(p, &globalIndex, sizeof(u8));
     packet_read(p, &remoteMessageLength, sizeof(u16));
-    if (remoteMessageLength >= 255) { remoteMessageLength = 255; }
+    if (remoteMessageLength >= 499) { remoteMessageLength = 499; }
     packet_read(p, &remoteMessage, remoteMessageLength * sizeof(u8));
 
     // anti spoof
