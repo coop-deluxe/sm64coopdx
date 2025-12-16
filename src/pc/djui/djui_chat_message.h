@@ -2,6 +2,7 @@
 #include "djui.h"
 
 #define MAX_CHAT_MSG_LENGTH 500
+#definte MAX_CHAT_PACKET_LENGTH 600
 
 struct DjuiChatMessage {
     struct DjuiBase base;
