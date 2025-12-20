@@ -216,30 +216,22 @@ public:
 
     inline Array(const std::initializer_list<T> &aList) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aList.size());
-        for (s32 i = 0; i < mCount; ++i) {
-            mBuffer[i] = *(aList.begin() + i);
-        }
+        memcpy(mBuffer, aList.begin(), mCount * sizeof(T));
     }
 
     inline Array(const T *aBegin, const T *aEnd) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aEnd - aBegin);
-        for (s32 i = 0; i < mCount; ++i) {
-            mBuffer[i] = aBegin[i];
-        }
+        memcpy(mBuffer, aBegin, mCount * sizeof(T));
     }
 
     inline Array(const Array &aOther) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aOther.mCount);
-        for (s32 i = 0; i < mCount; ++i) {
-            mBuffer[i] = aOther.mBuffer[i];
-        }
+        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
     }
 
     inline void operator=(const Array &aOther) {
         Resize(aOther.mCount);
-        for (s32 i = 0; i < mCount; ++i) {
-            mBuffer[i] = aOther.mBuffer[i];
-        }
+        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
     }
 
     inline ~Array() {
