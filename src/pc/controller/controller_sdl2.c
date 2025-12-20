@@ -40,6 +40,7 @@ static SDL_GameController *sdl_cntrl = NULL;
 static SDL_Joystick *sdl_joystick = NULL;
 static SDL_Haptic *sdl_haptic = NULL;
 
+static bool sExtendedReports = false;
 static bool sBackgroundGamepad = false;
 
 static u32 num_joy_binds = 0;
@@ -102,6 +103,13 @@ static void controller_sdl_bind(void) {
 }
 
 static void controller_sdl_init(void) {
+    // Allows extended reports on PS4 and PS5 controllers
+    if (configExtendedReports) {
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+    }
+    sExtendedReports = configExtendedReports;
+
     // Allows game to be controlled by gamepad when not in focus
     if (configBackgroundGamepad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
@@ -197,6 +205,13 @@ static void controller_sdl_read(OSContPad *pad) {
     }
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_prev ^ mouse) & mouse;
+
+    if (configExtendedReports != sExtendedReports) {
+        sExtendedReports = configExtendedReports;
+        char* hint = sExtendedReports ? "1" : "0";
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, hint);
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, hint);
+    }
 
     if (configBackgroundGamepad != sBackgroundGamepad) {
         sBackgroundGamepad = configBackgroundGamepad;
