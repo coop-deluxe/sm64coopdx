@@ -2154,7 +2154,7 @@ Gets the name of the operating system the game is running on
 ## [geo_get_current_root](#geo_get_current_root)
 
 ### Description
-Gets the current GraphNodeRoot
+Gets the current root node being processed
 
 ### Lua Example
 `local graphNodeRootValue = geo_get_current_root()`
@@ -2175,7 +2175,7 @@ Gets the current GraphNodeRoot
 ## [geo_get_current_master_list](#geo_get_current_master_list)
 
 ### Description
-Gets the current GraphNodeMasterList
+Gets the current master list node being processed
 
 ### Lua Example
 `local graphNodeMasterListValue = geo_get_current_master_list()`
@@ -2196,7 +2196,7 @@ Gets the current GraphNodeMasterList
 ## [geo_get_current_perspective](#geo_get_current_perspective)
 
 ### Description
-Gets the current GraphNodePerspective
+Gets the current perspective node being processed
 
 ### Lua Example
 `local graphNodePerspectiveValue = geo_get_current_perspective()`
@@ -2217,7 +2217,7 @@ Gets the current GraphNodePerspective
 ## [geo_get_current_camera](#geo_get_current_camera)
 
 ### Description
-Gets the current GraphNodeCamera
+Gets the current camera node being processed
 
 ### Lua Example
 `local graphNodeCameraValue = geo_get_current_camera()`
@@ -2238,7 +2238,7 @@ Gets the current GraphNodeCamera
 ## [geo_get_current_held_object](#geo_get_current_held_object)
 
 ### Description
-Gets the current GraphNodeHeldObject
+Gets the current held object node being processed
 
 ### Lua Example
 `local graphNodeHeldObjectValue = geo_get_current_held_object()`
@@ -2251,6 +2251,30 @@ Gets the current GraphNodeHeldObject
 
 ### C Prototype
 `struct GraphNodeHeldObject* geo_get_current_held_object(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_skip_interpolation](#geo_skip_interpolation)
+
+### Description
+Skips graph node interpolation for a frame
+
+### Lua Example
+`geo_skip_interpolation(node, obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| node | [GraphNode](structs.md#GraphNode) |
+| obj | [GraphNodeObject](structs.md#GraphNodeObject) |
+
+### Returns
+- None
+
+### C Prototype
+`void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj);`
 
 [:arrow_up_small:](#)
 
@@ -3526,6 +3550,29 @@ Sets the parameters of one of the two whirlpools (0-indexed) in an area
 
 ### C Prototype
 `void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_skip_interpolation](#obj_skip_interpolation)
+
+### Description
+Skips object interpolation for a frame
+
+### Lua Example
+`obj_skip_interpolation(o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_skip_interpolation(struct Object *o);`
 
 [:arrow_up_small:](#)
 

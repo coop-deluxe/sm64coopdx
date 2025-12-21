@@ -651,6 +651,13 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
 }
 
+void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj) {
+    struct GraphNodeInterpData *interp = geo_get_interp_data(node, obj);
+    interp->timestamp = gGlobalTimer + 1;
+}
+
+///
+
 LuaTable texture_to_lua_table(const Texture *tex) {
     lua_State *L = gLuaState;
     if (!L) { return 0; }

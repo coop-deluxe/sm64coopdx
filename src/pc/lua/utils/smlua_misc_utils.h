@@ -252,24 +252,21 @@ void reset_window_title(void);
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
-/* |description|Gets the current GraphNodeRoot|descriptionEnd|*/
+/* |description|Gets the current root node being processed|descriptionEnd|*/
 struct GraphNodeRoot* geo_get_current_root(void);
-
-/* |description|Gets the current GraphNodeMasterList|descriptionEnd|*/
+/* |description|Gets the current master list node being processed|descriptionEnd|*/
 struct GraphNodeMasterList* geo_get_current_master_list(void);
-
-/* |description|Gets the current GraphNodePerspective|descriptionEnd|*/
+/* |description|Gets the current perspective node being processed|descriptionEnd|*/
 struct GraphNodePerspective* geo_get_current_perspective(void);
-
-/* |description|Gets the current GraphNodeCamera|descriptionEnd|*/
+/* |description|Gets the current camera node being processed|descriptionEnd|*/
 struct GraphNodeCamera* geo_get_current_camera(void);
-
-/* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
+/* |description|Gets the current held object node being processed|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
+/* |description|Skips graph node interpolation for a frame|descriptionEnd|*/
+void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj);
 
 /* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels|descriptionEnd|*/
 LuaTable texture_to_lua_table(const Texture *tex);
-
 /* |description|Gets the name of the provided texture pointer `tex`|descriptionEnd|*/
 const char *get_texture_name(const Texture *tex);
 
