@@ -69,6 +69,8 @@
 #include "pc/mumble/mumble.h"
 #endif
 
+#include "game/local_multiplayer.h"
+
 extern Vp D_8032CF00;
 
 OSMesg D_80339BEC;
@@ -218,7 +220,10 @@ void produce_interpolation_frames_and_delay(void) {
         gRenderingDelta = delta;
 
         gfx_start_frame();
-        if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
+        for (u8 i = 0; i < gNumPlayersLocal; i++) {
+            set_local_player(i);
+            if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
+        }
         send_display_list(gGfxSPTask);
         gfx_end_frame();
 
@@ -232,7 +237,7 @@ void produce_interpolation_frames_and_delay(void) {
         expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
         f64 delay = (expectedTime - elapsedTime) * 1000.0;
         if (delay > 0.0) {
-            wm_api->delay((u32)delay);
+            WAPI.delay((u32)delay);
         }
         numFramesToDraw--;
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
