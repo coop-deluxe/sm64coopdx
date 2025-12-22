@@ -28,6 +28,7 @@
 
 #include "pc/configfile.h"
 #include "pc/debug_context.h"
+#include "pc/game_main.h"
 #include "pc/pc_main.h"
 #include "pc/platform.h"
 

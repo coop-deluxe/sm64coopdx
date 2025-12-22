@@ -1,6 +1,6 @@
 #include "cliopts.h"
 #include "configfile.h"
-#include "pc_main.h"
+#include "game_main.h"
 #include "platform.h"
 #include "macros.h"
 
@@ -9,6 +9,8 @@
 #define __NO_MINGW_LFS //Mysterious error in MinGW.org stdio.h
 #include <stdio.h>
 #include <string.h>
+
+#include "string_utils.h"
 
 struct CLIOptions gCLIOpts;
 

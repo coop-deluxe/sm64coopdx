@@ -9,6 +9,7 @@
 #include "mods_utils.h"
 #include "pc/utils/md5.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/string_utils.h"
 #include "pc/loading.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"

@@ -8,7 +8,7 @@
 #include <math.h>
 #include "engine/math_util.h"
 #include "game/scroll_targets.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 
 static inline void shift_UV_JUMP(struct ScrollTarget *scroll, u16 vertcount, s16 speed, u16 bhv, u16 cycle) {

@@ -6,7 +6,8 @@
 #include "pc/debuglog.h"
 #include "pc/loading.h"
 #include "pc/fs/fmem.h"
-#include "pc/pc_main.h"
+#include "pc/string_utils.h"
+#include "pc/game_main.h"
 #include "pc/utils/misc.h"
 
 #if defined(_WIN32) || defined(_WIN64)

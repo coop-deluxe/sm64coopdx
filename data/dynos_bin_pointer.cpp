@@ -199,7 +199,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
         }
     }
 
-    PrintDataError("Unable to find pointer %x!", aPtr);
+    DynOS_PrintDataError("Unable to find pointer %x!", aPtr);
     return { "", 0 };
 }
 

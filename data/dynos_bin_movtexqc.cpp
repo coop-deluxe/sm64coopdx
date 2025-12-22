@@ -27,7 +27,7 @@ static Movtex* ParseMovtexQCSymbolArg(GfxData* aGfxData, DataNode<MovtexQC>* aNo
     }
 
     // Unknown
-    PrintDataError("  ERROR: Unknown movtexqc arg: %s", _Arg.begin());
+    DynOS_PrintDataError("  ERROR: Unknown movtexqc arg: %s", _Arg.begin());
     return NULL;
 }
 

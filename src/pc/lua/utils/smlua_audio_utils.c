@@ -1,5 +1,3 @@
-#define MINIAUDIO_IMPLEMENTATION // required by miniaudio
-
 // enable Vorbis decoding (provides ogg audio decoding support) for miniaudio
 #define STB_VORBIS_HEADER_ONLY
 #include "pc/utils/stb_vorbis.c"
@@ -15,7 +13,7 @@
 #include "pc/mods/mods_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/fs/fmem.h"
 
 struct AudioOverride {
@@ -158,19 +156,15 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
  // mod audio //
 ///////////////
 
-// Optimization: disable spatialization for everything as it's not used
-#define MA_SOUND_STREAM_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_STREAM)
-#define MA_SOUND_SAMPLE_FLAGS (MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_PITCH | MA_SOUND_FLAG_DECODE) // No pitch, pre-decode audio samples
-
 static ma_engine sModAudioEngine;
 static struct DynamicPool *sModAudioPool;
 
 static void smlua_audio_custom_init(void) {
     sModAudioPool = dynamic_pool_init();
 
-    ma_result result = ma_engine_init(NULL, &sModAudioEngine);
+    ma_result result = ma_initalize(NULL, &sModAudioEngine);
     if (result != MA_SUCCESS) {
-        LOG_ERROR("failed to init Miniaudio: %d", result);
+        LOG_ERROR("Failed to init Miniaudio: %d", result);
     }
 }
 
@@ -291,23 +285,11 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
     f_close(f);
     f_delete(f);
-
-    // decode the audio buffer
-    ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
+    
+    ma_result result = ma_sound_from_buffer(&sModAudioEngine, &audio->sound, &audio->decoder, buffer, size, isStream);
     if (result != MA_SUCCESS) {
         free(buffer);
-        LOG_ERROR("failed to load audio file '%s': failed to decode raw audio: %d", filename, result);
-        return NULL;
-    }
-
-    result = ma_sound_init_from_data_source(
-        &sModAudioEngine, &audio->decoder,
-        isStream ? MA_SOUND_STREAM_FLAGS : MA_SOUND_SAMPLE_FLAGS,
-        NULL, &audio->sound
-    );
-    if (result != MA_SUCCESS) {
-        free(buffer);
-        LOG_ERROR("failed to load audio file '%s': %d", filename, result);
+        LOG_ERROR("Failed to load audio file '%s': Failed to decode raw audio: %d", filename, result);
         return NULL;
     }
 
@@ -331,8 +313,8 @@ void audio_stream_destroy(struct ModAudio* audio) {
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
-    
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+  
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -359,7 +341,7 @@ void audio_stream_stop(struct ModAudio* audio) {
 f32 audio_stream_get_position(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "get stream position from")) { return 0; }
 
-    u64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
+    ma_uint64 cursor; ma_data_source_get_cursor_in_pcm_frames(&audio->decoder, &cursor);
     return (f32)cursor / ma_engine_get_sample_rate(&sModAudioEngine);
 }
 
@@ -384,7 +366,7 @@ void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
     
-    u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
+    ma_uint64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart += length;
     if (loopEnd <= 0) loopEnd += length;
 
@@ -423,9 +405,9 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 }
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
-    if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
-    
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (!audio_sanity_check(audio, true, "set stream volume")) { return; }
+  
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
         f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
@@ -531,9 +513,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     ma_sound *sound = &audio->sound;
     if (ma_sound_is_playing(sound)) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
-        ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
-        if (result != MA_SUCCESS) { return; }
-        result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
+        ma_result result = ma_sound_from_buffer(&sModAudioEngine, &copy->sound, &copy->decoder, audio->buffer, audio->bufferSize, false);
         if (result != MA_SUCCESS) { return; }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
@@ -563,7 +543,7 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         pan = (get_sound_pan(mtx[3][0] * factor, mtx[3][2] * factor) - 0.5f) * 2.0f;
     }
 
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
+    if (configMuteFocusLoss && !wm_api->has_focus()) {
         ma_sound_set_volume(sound, 0);
     } else {
         f32 intensity = sound_get_level_intensity(dist);
@@ -584,7 +564,7 @@ void audio_custom_update_volume(void) {
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (configMuteFocusLoss && !WAPI.has_focus()) {
+        if (configMuteFocusLoss && !wm_api->has_focus()) {
             ma_sound_set_volume(&audio->sound, 0);
         } else if (audio->isStream) {
             ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * audio->baseVolume);
@@ -615,7 +595,7 @@ void smlua_audio_custom_deinit(void) {
     if (sModAudioPool) {
         audio_custom_shutdown();
         free(sModAudioPool);
-        ma_engine_uninit(&sModAudioEngine);
+        ma_uninitalize(&sModAudioEngine);
         sModAudioPool = NULL;
     }
 }

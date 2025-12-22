@@ -8,6 +8,7 @@
 #include "pc/controller/controller_api.h"
 #include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_system.h"
+#include "pc/string_utils.h"
 
 void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
     controller_reconfigure();
@@ -34,14 +35,19 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_button_create(body, DLANG(CONTROLS, N64_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
-        djui_button_create(body, DLANG(CONTROLS, EXTRA_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
-        djui_button_create(body, DLANG(CONTROLS, ANALOG_STICK_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_analog_stick_options_create);
-        djui_checkbox_create(body, DLANG(CONTROLS, BACKGROUND_GAMEPAD), &configBackgroundGamepad, NULL);
-#ifndef HANDHELD
-        djui_checkbox_create(body, DLANG(CONTROLS, DISABLE_GAMEPADS), &configDisableGamepads, NULL);
+        struct DjuiButton *binds                 = djui_button_create(body, DLANG(CONTROLS, N64_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_n64_create);
+        struct DjuiButton *extra_binds           = djui_button_create(body, DLANG(CONTROLS, EXTRA_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_extra_create);
+        struct DjuiButton *analog_stick_controls = djui_button_create(body, DLANG(CONTROLS, ANALOG_STICK_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_analog_stick_options_create);
+        struct DjuiCheckbox *background_gamepad  = djui_checkbox_create(body, DLANG(CONTROLS, BACKGROUND_GAMEPAD), &configBackgroundGamepad, NULL);
+        struct DjuiCheckbox *disable_gamepads    = djui_checkbox_create(body, DLANG(CONTROLS, DISABLE_GAMEPADS), &configDisableGamepads, NULL);
+        struct DjuiCheckbox *chat_keybinds       = djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
+        
+#ifdef __SWITCH__
+        djui_base_set_enabled(&binds->base, false);
+        djui_base_set_enabled(&extra_binds->base, false);
+        djui_base_set_enabled(&background_gamepad->base, false);
+        djui_base_set_enabled(&chat_keybinds->base, false);
 #endif
-        djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
 #ifdef HAVE_SDL2
         controller_update_gamepad_choices();

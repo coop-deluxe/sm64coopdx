@@ -1,5 +1,5 @@
 #include "djui.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 
 static bool djui_root_render(struct DjuiBase* base) {

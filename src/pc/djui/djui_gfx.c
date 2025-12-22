@@ -3,7 +3,7 @@
 #include "djui.h"
 #include "game/ingame_menu.h"
 #include "game/segment2.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "gfx_dimensions.h"
 #include "djui_gfx.h"

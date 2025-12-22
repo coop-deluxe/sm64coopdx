@@ -1,7 +1,7 @@
 #ifndef SMLUA_AUDIO_UTILS_H
 #define SMLUA_AUDIO_UTILS_H
 
-#include "pc/utils/miniaudio.h"
+#include "pc/utils/miniaudio_api.h"
 
 /* |description|Resets all custom sequences back to vanilla|descriptionEnd| */
 void smlua_audio_utils_reset_all(void);

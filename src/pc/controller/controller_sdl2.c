@@ -17,7 +17,7 @@
 #include "controller_sdl.h"
 #include "controller_mouse.h"
 #include "controller_system.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/configfile.h"
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
@@ -122,6 +122,7 @@ static void controller_sdl_init(void) {
 
     haptics_enabled = (SDL_InitSubSystem(SDL_INIT_HAPTIC) == 0);
 
+#ifndef __SWITCH__
     // try loading an external gamecontroller mapping file
     uint64_t gcsize = 0;
     void *gcdata = fs_load_file("gamecontrollerdb.txt", &gcsize);
@@ -134,6 +135,7 @@ static void controller_sdl_init(void) {
         }
         free(gcdata);
     }
+#endif
 
     if (gNewCamera.isMouse) { controller_mouse_enter_relative(); }
     controller_mouse_read_relative();
@@ -182,7 +184,7 @@ extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
 
-    if ((gNewCamera.isMouse || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && WAPI.has_focus()) {
+    if ((gNewCamera.isMouse || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && wm_api->has_focus()) {
         controller_mouse_enter_relative();
     } else {
         controller_mouse_leave_relative();

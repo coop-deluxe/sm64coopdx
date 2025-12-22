@@ -1,5 +1,5 @@
 #include "discord.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
