@@ -8,7 +8,7 @@
 #include "pc/djui/djui_panel_splitscreen.h"
 #include "engine/math_util.h"
 #include "pc/network/network.h"
-#include "pc/pc_main.h"
+#include "pc/game_main.h"
 
 // Constants for clarity
 #define MAX_GAMEPADS 10
