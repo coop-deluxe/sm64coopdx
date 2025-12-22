@@ -23,7 +23,7 @@ struct ControllerInfo *gReadingController = NULL;
 
 struct ControllerInfo gPlayerControllerInfos[POSSIBLE_NUM_PLAYERS] = {{
     .index = 0,
-    .type = 1, // Make player 1 the keyboard by default
+    .type = 0,
     .connected = true
 }};
 
