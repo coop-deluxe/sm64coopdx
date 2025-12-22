@@ -44,6 +44,7 @@ void controller_update_gamepad_choices() {
     gNumJoys = SDL_NumJoysticks();
     if (gNumJoys <= 0) { gNumJoys = 1; }
     if (gNumJoys > MAX_GAMEPADS) { gNumJoys = MAX_GAMEPADS; }
+    gNumJoys = 2;
 
     for (int i = 0; i < gNumJoys; i++) {
         gGamepadChoices[i] = gGamepadChoicesBuffer[i];
