@@ -523,7 +523,7 @@ void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index) {
 }
 
 void obj_skip_interpolation(struct Object *o) {
-    o->header.gfx.skipInterpolationTimestamp = gGlobalTimer;
+    o->header.gfx.skipInterpolationTimestamp = gGlobalTimer + 1;
 }
 
 #ifdef DEVELOPMENT
