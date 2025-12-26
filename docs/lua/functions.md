@@ -2047,6 +2047,7 @@
    - [set_override_envfx](functions-7.md#set_override_envfx)
    - [get_global_timer](functions-7.md#get_global_timer)
    - [get_dialog_response](functions-7.md#get_dialog_response)
+   - [get_time_stop_flags](functions-7.md#get_time_stop_flags)
    - [get_local_discord_id](functions-7.md#get_local_discord_id)
    - [get_coopnet_id](functions-7.md#get_coopnet_id)
    - [get_volume_master](functions-7.md#get_volume_master)

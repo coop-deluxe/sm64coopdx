@@ -1775,6 +1775,27 @@ Gets the choice selected inside of a dialog box (0-1)
 
 <br />
 
+## [get_time_stop_flags](#get_time_stop_flags)
+
+### Description
+Gets the active time stop flags, used to freeze specific objects during cutscenes
+
+### Lua Example
+`local integerValue = get_time_stop_flags()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_time_stop_flags(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_local_discord_id](#get_local_discord_id)
 
 ### Description

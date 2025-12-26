@@ -11516,6 +11516,12 @@ function get_dialog_response()
     -- ...
 end
 
+--- @return integer
+--- Gets the active time stop flags, used to freeze specific objects during cutscenes
+function get_time_stop_flags()
+    -- ...
+end
+
 --- @return string
 --- Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 function get_local_discord_id()

@@ -490,6 +490,12 @@ s32 get_dialog_response(void) {
 
 ///
 
+u32 get_time_stop_flags(void) {
+    return gTimeStopState;
+}
+
+///
+
 const char* get_local_discord_id(void) {
 #ifdef DISCORD_SDK
     if (gDiscordInitialized) {
