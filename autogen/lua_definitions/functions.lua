@@ -12075,6 +12075,12 @@ function obj_skip_interpolation(o)
     -- ...
 end
 
+--- @param o Object
+--- Skips animation interpolation for a frame
+function obj_anim_skip_interpolation(o)
+    -- ...
+end
+
 --- Resets every modified dialog back to vanilla
 function smlua_text_utils_reset_all()
     -- ...

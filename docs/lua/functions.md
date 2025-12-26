@@ -2132,6 +2132,7 @@
    - [obj_move_xyz](functions-7.md#obj_move_xyz)
    - [set_whirlpools](functions-7.md#set_whirlpools)
    - [obj_skip_interpolation](functions-7.md#obj_skip_interpolation)
+   - [obj_anim_skip_interpolation](functions-7.md#obj_anim_skip_interpolation)
 
 <br />
 

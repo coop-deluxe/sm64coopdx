@@ -157,5 +157,7 @@ void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index);
 
 /* |description|Skips object interpolation for a frame|descriptionEnd|*/
 void obj_skip_interpolation(struct Object *o);
+/* |description|Skips animation interpolation for a frame|descriptionEnd| */
+void obj_anim_skip_interpolation(struct Object *o);
 
 #endif

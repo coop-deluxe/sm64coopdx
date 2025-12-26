@@ -526,6 +526,10 @@ void obj_skip_interpolation(struct Object *o) {
     o->header.gfx.skipInterpolationTimestamp = gGlobalTimer + 1;
 }
 
+void obj_anim_skip_interpolation(struct Object *o) {
+    o->header.gfx.animInfo.prevAnimFrameTimestamp = 0;
+}
+
 #ifdef DEVELOPMENT
 void obj_randomize(struct Object* o) {
     if (!o) { return; }

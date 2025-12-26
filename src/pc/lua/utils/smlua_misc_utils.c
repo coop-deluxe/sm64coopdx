@@ -653,7 +653,7 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void) {
 
 void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj) {
     struct GraphNodeInterpData *interp = geo_get_interp_data(node, obj);
-    interp->timestamp = gGlobalTimer + 1;
+    interp->timestamp = 0;
 }
 
 ///
