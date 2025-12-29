@@ -397,7 +397,6 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
     
     ma_sound_set_volume(&audio->sound, volume);
-    audio->baseVolume = volume;
     if (restart || !ma_sound_is_playing(&audio->sound)) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
     ma_sound_start(&audio->sound);
 }
@@ -483,14 +482,13 @@ void audio_stream_set_frequency(struct ModAudio* audio, f32 freq) {
 f32 audio_stream_get_volume(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "get stream volume from")) { return 0; }
 
-    return audio->baseVolume;
+    return ma_sound_get_volume(&audio->sound);
 }
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
     
     ma_sound_set_volume(&audio->sound, volume);
-    audio->baseVolume = volume;
 }
 
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
@@ -625,7 +623,6 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     f32 intensity = sound_get_level_intensity(dist);
     ma_sound_set_volume(sound, volume * intensity);
     ma_sound_set_pan(sound, pan);
-    audio->baseVolume = volume;
 
     ma_sound_start(sound);
 }

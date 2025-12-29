@@ -1482,12 +1482,11 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "size",                 LVT_U64,      offsetof(struct Mod, size),                 true, LOT_NONE, 1, sizeof(size_t) },
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 4
+#define LUA_MOD_AUDIO_FIELD_COUNT 3
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume", LVT_F32,      offsetof(struct ModAudio, baseVolume), false, LOT_NONE, 1, sizeof(f32)         },
-    { "filepath",   LVT_STRING_P, offsetof(struct ModAudio, filepath),   true,  LOT_NONE, 1, sizeof(const char*) },
-    { "isStream",   LVT_BOOL,     offsetof(struct ModAudio, isStream),   true,  LOT_NONE, 1, sizeof(bool)        },
-    { "loaded",     LVT_BOOL,     offsetof(struct ModAudio, loaded),     true,  LOT_NONE, 1, sizeof(bool)        },
+    { "filepath", LVT_STRING_P, offsetof(struct ModAudio, filepath), true, LOT_NONE, 1, sizeof(const char*) },
+    { "isStream", LVT_BOOL,     offsetof(struct ModAudio, isStream), true, LOT_NONE, 1, sizeof(bool)        },
+    { "loaded",   LVT_BOOL,     offsetof(struct ModAudio, loaded),   true, LOT_NONE, 1, sizeof(bool)        },
 };
 
 #define LUA_MOD_FS_FIELD_COUNT 15
