@@ -1761,7 +1761,6 @@
 | ----- | ---- | ------ |
 | filepath | `string` | read-only |
 | isStream | `boolean` | read-only |
-| baseVolume | `number` |  |
 | loaded | `boolean` | read-only |
 
 [:arrow_up_small:](#)

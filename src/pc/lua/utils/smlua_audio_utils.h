@@ -34,7 +34,6 @@ struct ModAudio {
     u32 bufferSize;
     struct ModAudioSampleCopies* sampleCopiesTail;
     bool isStream;
-    f32 baseVolume;
     bool loaded;
 };
 
