@@ -31,6 +31,11 @@ struct ModAudio {
     bool isStream;
     f32 baseVolume;
     bool loaded;
+
+    PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
+    PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
+    PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
+    PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
 };
 
 /* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */

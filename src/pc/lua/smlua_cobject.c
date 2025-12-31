@@ -101,6 +101,7 @@ static const char *sLuaLvtNames[] = {
     [LVT_LUATABLE] = "LuaTable",
     [LVT_POINTER] = "pointer",
     [LVT_FUNCTION] = "function",
+    [LVT_PROPERTY] = "property",
     [LVT_MAX] = "unknown",
 };
 
@@ -553,8 +554,16 @@ static int smlua__get_field(lua_State* L) {
 
     // CObject function members
     if (data->valueType == LVT_FUNCTION) {
-        const char *function = (const char *) data->valueOffset;
-        lua_getglobal(L, function);
+        lua_getglobal(L, data->function);
+        LUA_STACK_CHECK_END(L);
+        return 1;
+    }
+
+    // CObject property
+    if (data->valueType == LVT_PROPERTY) {;
+        lua_getglobal(L, data->get);
+        lua_pushvalue(L, 1);
+        smlua_pcall(L, 1, 1, 0);
         LUA_STACK_CHECK_END(L);
         return 1;
     }
@@ -634,7 +643,17 @@ static int smlua__set_field(lua_State* L) {
         return 0;
     }
 
-    if (data->immutable) {
+    // CObject property
+    if (data->valueType == LVT_PROPERTY) {
+        lua_getglobal(L, data->set);
+        lua_pushvalue(L, 1);
+        lua_pushvalue(L, 3);
+        smlua_pcall(L, 2, 1, 0);
+        LUA_STACK_CHECK_END(L);
+        return 1;
+    }
+
+    if (data->immutable || data->valueType == LVT_FUNCTION) {
         LOG_LUA_LINE("_set_field on immutable key '%s'", key);
         return 0;
     }

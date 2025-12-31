@@ -1207,6 +1207,10 @@
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
+--- @field public position number
+--- @field public looping boolean
+--- @field public frequency number
+--- @field public volume number
 
 --- @class ModFs
 --- @field public mod Mod

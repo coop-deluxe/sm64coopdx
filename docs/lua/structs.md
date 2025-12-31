@@ -1763,6 +1763,10 @@
 | isStream | `boolean` | read-only |
 | baseVolume | `number` |  |
 | loaded | `boolean` | read-only |
+| position | `number` |  |
+| looping | `boolean` |  |
+| frequency | `number` |  |
+| volume | `number` |  |
 
 [:arrow_up_small:](#)
 
