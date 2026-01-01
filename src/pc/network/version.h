@@ -8,6 +8,10 @@
 #define VERSION_NUMBER 41
 #define MINOR_VERSION_NUMBER 1
 
+#define STR(x) #x
+#define _EX_VERSION(major, minor) STR(major) "." STR(minor)
+#define EX_VERSION "v" _EX_VERSION(VERSION_NUMBER, MINOR_VERSION_NUMBER)
+
 #if defined(VERSION_JP)
 #define VERSION_REGION "JP"
 #elif defined(VERSION_EU)
@@ -29,8 +33,11 @@
 #define WINDOW_NAME "Super Mario 64 Coop Deluxe"
 #endif
 
+#define EX_WINDOW_NAME "sm64ex-coop:"
+
 #define MAX_VERSION_LENGTH 128
 
+const char* get_real_version(void);
 const char* get_version(void);
 #ifdef COMPILE_TIME
 const char* get_version_with_build_date(void);

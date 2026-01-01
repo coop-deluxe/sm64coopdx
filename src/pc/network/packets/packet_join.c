@@ -45,7 +45,7 @@ void network_send_join_request(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
     packet_write(&p, &configPlayerModel,   sizeof(u8));
@@ -107,7 +107,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     }
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
     LOG_INFO("sending version: %s", version);
 
     struct Packet p = { 0 };
@@ -143,7 +143,7 @@ void network_receive_join(struct Packet* p) {
     gOverrideEeprom = eeprom;
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
     LOG_INFO("client has version: %s", version);
 
     char remoteVersion[MAX_VERSION_LENGTH] = { 0 };
