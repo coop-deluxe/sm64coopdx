@@ -61,15 +61,18 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             djui_base_set_color(&message->base, 255, 255, 160, 255);
             djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         } else {
-          #ifdef COMPILE_TIME
-            struct DjuiText* version = djui_text_create(&panel->base, get_version_with_build_date());
-          #else
-            struct DjuiText* version = djui_text_create(&panel->base, get_version());
-          #endif
+            struct DjuiText* version = djui_text_create(
+                &panel->base,
+                #ifdef COMPILE_TIME
+                    get_version_with_build_date()
+                #else
+                    get_version()
+                #endif
+            );
             djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&version->base, 1.0f, 1.0f);
             djui_base_set_color(&version->base, 50, 50, 50, 255);
-            djui_text_set_alignment(version, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+            djui_text_set_alignment(version, configExCoopTheme ? DJUI_HALIGN_CENTER : DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
         }
     }
 

@@ -1,1 +1,27 @@
 id ICON res/icon.ico
+
+#include <winver.h>
+#include "../src/pc/network/version.h"
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1,(VERSION_NUMBER-37),MINOR_VERSION_NUMBER,0
+PRODUCTVERSION VERSION_NUMBER,MINOR_VERSION_NUMBER,0,0
+FILEOS VOS_NT
+FILETYPE VFT_APP
+{
+    BLOCK StringFileInfo
+    {
+        BLOCK "040904B0"
+        {
+            VALUE "FileDescription", "Super Mario 64 Coop Deluxe"
+            VALUE "FileVersion", SM64COOPDX_VERSION
+            VALUE "ProductName", "Super Mario 64 Coop Deluxe"
+            VALUE "ProductVersion", SM64COOPDX_VERSION
+            VALUE "InternalName", "sm64coopdx.exe"
+            VALUE "OriginalFilename", "sm64coopdx.exe"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 0x04B0
+    }
+}
