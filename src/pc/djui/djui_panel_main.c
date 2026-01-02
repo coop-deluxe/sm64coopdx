@@ -8,6 +8,8 @@
 #include "pc/controller/controller_sdl.h"
 #include "pc/pc_main.h"
 #include "pc/update_checker.h"
+#include "sounds.h"
+#include "audio/external.h"
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
@@ -24,8 +26,34 @@ static void djui_panel_main_quit(struct DjuiBase* caller) {
                               djui_panel_main_quit_yes);
 }
 
+static int sEggCounter;
+static void djui_panel_main_increment_egg_counter(UNUSED struct DjuiBase *base) {
+    play_sound(SOUND_MENU_COLLECT_RED_COIN + ((8 - sEggCounter) << 16), gGlobalSoundSource);
+
+    if (!--sEggCounter) {
+        configExCoopTheme = !configExCoopTheme;
+        game_exit();
+    }
+}
+
+static u32 sEggHintLastFired;
+static void djui_panel_main_egg_hint(UNUSED struct DjuiBase *base) {
+    if (sEggHintLastFired < gGlobalTimer) {
+        play_sound(SOUND_GENERAL_COIN, gGlobalSoundSource);
+    }
+    sEggHintLastFired = gGlobalTimer + 1;
+}
+
+static void djui_panel_main_setup_egg_interactable(struct DjuiBase *base) {
+    djui_interactable_create(base, NULL);
+    djui_interactable_hook_click(base, djui_panel_main_increment_egg_counter);
+    djui_interactable_hook_hover(base, djui_panel_main_egg_hint, NULL);
+}
+
 void djui_panel_main_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(configExCoopTheme ? "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP" : "", false);
+    if (configExCoopTheme) { djui_panel_main_setup_egg_interactable(djui_three_panel_get_header(panel)); }
+    
     {
         struct DjuiBase* body = djui_three_panel_get_body(panel);
         {
@@ -39,6 +67,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
                 djui_base_set_alignment(&logo->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
                 djui_base_set_location_type(&logo->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_location(&logo->base, 0, -30);
+                djui_panel_main_setup_egg_interactable(&logo->base);
             }
 
             struct DjuiButton* button1 = djui_button_create(body, DLANG(MAIN, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
@@ -79,4 +108,5 @@ void djui_panel_main_create(struct DjuiBase* caller) {
     djui_panel_add(caller, panel, NULL);
     gInteractableOverridePad = true;
     gDjuiPanelMainCreated = true;
+    sEggCounter = 8;
 }

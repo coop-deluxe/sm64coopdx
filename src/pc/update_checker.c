@@ -23,7 +23,7 @@ downloading and parsing a source file.
 */
 
 static char sVersionUpdateTextBuffer[256] = { 0 };
-static char sRemoteVersionStr[10] = { 0 };
+static char sRemoteVersionStr[8] = { 0 };
 
 struct Version {
     int maj, min, fix;
@@ -65,13 +65,10 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 #endif
 
 void parse_to_version(const char *str, struct Version *ver) {
-    printf("%s\n", str);
     char* end;
     ver->maj = strtol(str+1, &end, 10);
     if (end) ver->min = strtol(end+1, &end, 10);
     if (end) ver->fix = strtol(end+1, &end, 10);
-
-    printf("v%i.%i.%i\n", ver->maj, ver->min, ver->fix);
 }
 
 void parse_version(const char *data) {
@@ -176,7 +173,7 @@ void check_for_updates(void) {
             snprintf(
                 sRemoteVersionStr, 10,
                 "v%i.%i",
-                sRemoteVersion.min + 37,
+                sRemoteVersion.min + VERSION_OFFSET,
                 sRemoteVersion.fix
             );
         }

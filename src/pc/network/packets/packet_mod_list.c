@@ -20,7 +20,7 @@ void network_send_mod_list_request(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_MOD_LIST_REQUEST, true, PLMT_NONE);
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
     network_send_to(PACKET_DESTINATION_SERVER, &p);
@@ -47,7 +47,7 @@ void network_send_mod_list(void) {
     packet_init(&p, PACKET_MOD_LIST, true, PLMT_NONE);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
     LOG_INFO("sending version: %s", version);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
@@ -135,7 +135,7 @@ void network_receive_mod_list(struct Packet* p) {
     }
 
     char version[MAX_VERSION_LENGTH] = { 0 };
-    snprintf(version, MAX_VERSION_LENGTH, "%s", get_real_version());
+    snprintf(version, MAX_VERSION_LENGTH, "%s", get_version_online());
     LOG_INFO("client has version: %s", version);
 
     // verify version
