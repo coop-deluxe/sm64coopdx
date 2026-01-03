@@ -16,7 +16,11 @@ const char* get_version_online(void) {
     return sVersionString;
 }
 
-const char* get_version(void) { return configExCoopTheme ? EX_VERSION : get_version_online(); }
+const char* get_version(void) {
+    get_version_online();
+    extern void exify_version_str(char* str);
+    if (configExCoopTheme) { exify_version_str(sVersionString); }
+    return sVersionString; }
 
 #ifdef COMPILE_TIME
 const char* get_version_with_build_date(void) {

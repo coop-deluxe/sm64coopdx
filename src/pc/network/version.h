@@ -9,9 +9,6 @@
 #define MINOR_VERSION_NUMBER 1
 
 #define VERSION_OFFSET 37
-#define STR(x) #x
-#define _EX_VERSION(major, minor) STR(major) "." STR(minor)
-#define EX_VERSION VERSION_TEXT _EX_VERSION(VERSION_NUMBER, MINOR_VERSION_NUMBER)
 
 #if defined(VERSION_JP)
 #define VERSION_REGION "JP"

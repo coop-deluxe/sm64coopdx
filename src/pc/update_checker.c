@@ -29,10 +29,10 @@ struct Version {
     int maj, min, fix;
 };
 
-bool is_version_newer(struct Version old, struct Version new) {
-    if (new.maj != old.maj) return new.maj > old.maj;
-    if (new.min != old.min) return new.min > old.min;
-    return new.fix > old.fix;
+bool is_version_newer(struct Version client, struct Version remote) {
+    if (remote.maj != client.maj) return remote.maj > client.maj;
+    if (remote.min != client.min) return remote.min > client.min;
+    return remote.fix > client.fix;
 }
 
 static struct Version sClientVersion = { 0 };
@@ -64,11 +64,37 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 }
 #endif
 
-void parse_to_version(const char *str, struct Version *ver) {
+void strtov(const char *str, struct Version *ver) {
     char* end;
     ver->maj = strtol(str+1, &end, 10);
     if (end) ver->min = strtol(end+1, &end, 10);
     if (end) ver->fix = strtol(end+1, &end, 10);
+}
+
+void vtostr(struct Version ver, char* str) {
+    int len;
+    snprintf(str, 8, "v%i", ver.maj);
+    if (ver.min || ver.fix) {
+        len = strlen(str);
+        snprintf(str + len, 8 - len, ".%i", ver.min);
+        if (ver.fix) {
+            len = strlen(str);
+            snprintf(str + len, 8 - len, ".%i", ver.fix);
+        }
+    }
+}
+
+void exify_version(struct Version *ver) {
+    ver->maj = ver->min + VERSION_OFFSET;
+    ver->min = ver->fix;
+    ver->fix = 0;
+}
+
+void exify_version_str(char* str) {
+    struct Version ver;
+    strtov(str, &ver);
+    exify_version(&ver);
+    vtostr(ver, str);
 }
 
 void parse_version(const char *data) {
@@ -82,8 +108,8 @@ void parse_version(const char *data) {
     memcpy(sRemoteVersionStr, version, versionLength);
     sRemoteVersionStr[versionLength] = '\0';
 
-    parse_to_version(sRemoteVersionStr, &sRemoteVersion);
-    parse_to_version(SM64COOPDX_VERSION, &sClientVersion);
+    strtov(sRemoteVersionStr, &sRemoteVersion);
+    strtov(get_version_online(), &sClientVersion);
 }
 
 // function to download a text file from the internet
@@ -169,14 +195,7 @@ void check_for_updates(void) {
 
     get_version_remote();
     if (sRemoteVersionStr[0] == 'v' && is_version_newer(sClientVersion, sRemoteVersion)) {
-        if (configExCoopTheme) {
-            snprintf(
-                sRemoteVersionStr, 10,
-                "v%i.%i",
-                sRemoteVersion.min + VERSION_OFFSET,
-                sRemoteVersion.fix
-            );
-        }
+        if (configExCoopTheme) { exify_version_str(sRemoteVersionStr); }
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
