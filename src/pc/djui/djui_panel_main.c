@@ -48,6 +48,7 @@ static void djui_panel_main_setup_egg_interactable(struct DjuiBase *base) {
     djui_interactable_create(base, NULL);
     djui_interactable_hook_click(base, djui_panel_main_increment_egg_counter);
     djui_interactable_hook_hover(base, djui_panel_main_egg_hint, NULL);
+    base->interactable->enabled = false;
 }
 
 void djui_panel_main_create(struct DjuiBase* caller) {
