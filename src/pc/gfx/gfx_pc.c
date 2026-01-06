@@ -1166,6 +1166,24 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         if (use_texture) {
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
+
+            int shifts = rdp.texture_tile.shifts;
+            int shiftt = rdp.texture_tile.shiftt;
+            if (shifts != 0) {
+                if (shifts <= 10) {
+                    u /= 1 << shifts;
+                } else {
+                    u *= 1 << (16 - shifts);
+                }
+            }
+            if (shiftt != 0) {
+                if (shiftt <= 10) {
+                    v /= 1 << shiftt;
+                } else {
+                    v *= 1 << (16 - shiftt);
+                }
+            }
+
             if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
                 // Linear filter adds 0.5f to the coordinates (why?)
                 u += 0.5f;
@@ -1404,6 +1422,8 @@ static void gfx_dp_set_tile(uint8_t fmt, uint32_t siz, uint32_t line, uint32_t t
         rdp.texture_tile.siz = siz;
         rdp.texture_tile.cms = cms;
         rdp.texture_tile.cmt = cmt;
+        rdp.texture_tile.shifts = shifts;
+        rdp.texture_tile.shiftt = shiftt;
         rdp.texture_tile.line_size_bytes = line * 8;
         if (!sOnlyTextureChangeOnAddrChange) {
             // I don't know if we ever need to set these...
