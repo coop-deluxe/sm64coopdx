@@ -176,6 +176,32 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
+static inline void update_analog_stick(s8 *stick_x, s8 *stick_y, 
+                                        int16_t input_x, int16_t input_y) {
+    static const float FSHRT_MAX = 32768.f;
+    
+    uint32_t magnitude_sq = (uint32_t)(input_x * input_x) + (uint32_t)(input_y * input_y);
+    uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
+
+    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
+        uint32_t magnitude = sqrt(magnitude_sq);
+        float stickDeadzoneScale = FSHRT_MAX / (FSHRT_MAX - stickDeadzoneActual);
+        float dir_x = (float)input_x / magnitude;
+        float dir_y = (float)input_y / magnitude;
+        float dir_sum = fabsf(dir_x) + fabsf(dir_y);
+
+        magnitude -= stickDeadzoneActual;
+        magnitude *= stickDeadzoneScale;
+        if (dir_sum >= 1)
+            magnitude /= (dir_sum);
+        magnitude /= 0x100;
+        magnitude = magnitude >= 127 ? 127 : magnitude;
+
+        *stick_x = dir_x * magnitude;
+        *stick_y = -dir_y * magnitude;
+    }
+}
+
 extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
@@ -305,21 +331,8 @@ static void controller_sdl_read(OSContPad *pad) {
     if (righty < -0x4000) pad->button |= U_CBUTTONS;
     if (righty > 0x4000) pad->button |= D_CBUTTONS;
 
-    uint32_t magnitude_sq = (uint32_t)(leftx * leftx) + (uint32_t)(lefty * lefty);
-    uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
-    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
-        pad->stick_x = leftx / 0x100;
-        int stick_y = -lefty / 0x100;
-        pad->stick_y = stick_y == 128 ? 127 : stick_y;
-    }
-
-    magnitude_sq = (uint32_t)(rightx * rightx) + (uint32_t)(righty * righty);
-    stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
-    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
-        pad->ext_stick_x = rightx / 0x100;
-        int stick_y = -righty / 0x100;
-        pad->ext_stick_y = stick_y == 128 ? 127 : stick_y;
-    }
+    update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty);
+    update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty);
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) {
