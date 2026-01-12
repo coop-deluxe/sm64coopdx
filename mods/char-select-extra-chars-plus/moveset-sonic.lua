@@ -845,13 +845,13 @@ local function act_homing_attack(m)
 
     elseif stepResult == AIR_STEP_HIT_WALL then
         -- A failsafe in case the homing attack doesn't break boxes for some godforsaken reason.
-        if m.wall.object == o and o.oInteractType == INTERACT_BREAKABLE then
+        if m.wall ~= nil and m.wall.object ~= nil and m.wall.object.oInteractType == INTERACT_BREAKABLE then
             m.vel.x = sins(m.faceAngle.y) * -16
             m.vel.z = coss(m.faceAngle.y) * -16
-            o.oInteractStatus = ATTACK_GROUND_POUND_OR_TWIRL + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED)
-            set_mario_action(m, ACT_AIR_SPIN, 0)
             if m.playerIndex == 0 then set_camera_shake_from_hit(SHAKE_ATTACK) end
             set_mario_particle_flags(m, PARTICLE_TRIANGLE, 0)
+            m.wall.object.oInteractStatus = ATTACK_GROUND_POUND_OR_TWIRL + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED)
+            set_mario_action(m, ACT_AIR_SPIN, 0)
         end
     end
 
@@ -1250,9 +1250,10 @@ function sonic_update(m)
         end
     end
 
-    if m.health > 0xFF or m.action ~= ACT_BUBBLED then
+    if m.health > 0xFF and m.action ~= ACT_BUBBLED and (m.action & ACT_GROUP_CUTSCENE) == 0 then
         sonic_drowning(m, e)
     end
+
     sonic_ring_health(m, e)
 
     e.sonic.instashieldTimer = e.sonic.instashieldTimer - 1
@@ -1482,7 +1483,8 @@ local badnikBounceActions = {
 }
 
 function sonic_on_interact(m, o, intType)
-    if (m.action == ACT_SONIC_RUNNING) and not m.heldObj and m.pos.y - 30 >= m.waterLevel then
+    local e = gCharacterStates[m.playerIndex]
+    if (m.action == ACT_SONIC_RUNNING) and not m.heldObj and m.pos.y + 80 >= m.waterLevel then
         if obj_has_behavior_id(o, id_bhvDoorWarp) ~= 0 then
             set_mario_action(m, ACT_DECELERATING, 0)
             interact_warp_door(m, 0, o)
@@ -1493,16 +1495,17 @@ function sonic_on_interact(m, o, intType)
     end
 
     if bounceTypes[intType] and (o.oInteractionSubtype & INT_SUBTYPE_TWIRL_BOUNCE) == 0 then
-        local e = gCharacterStates[m.playerIndex]
         if e.sonic.prevVelY < 0 and m.pos.y > o.oPosY then
             if badnikBounceActions[m.action] then
                 if m.action == ACT_GROUND_POUND then
+                    o.oInteractStatus = ATTACK_GROUND_POUND_OR_TWIRL + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED)
                     set_mario_particle_flags(m, PARTICLE_HORIZONTAL_STAR, 0)
                     play_sound(SOUND_ACTION_HIT_2, m.marioObj.header.gfx.cameraToObject)
                     set_mario_action(m, ACT_AIR_SPIN, 0)
+                else
+                    o.oInteractStatus = ATTACK_FROM_ABOVE + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED)
                 end
 
-                o.oInteractStatus = ATTACK_FROM_ABOVE + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED)
                 badnik_bounce(m, e.sonic.prevHeight, 4)
             end
         end
@@ -1512,6 +1515,10 @@ function sonic_on_interact(m, o, intType)
         if m.action == ACT_HOMING_ATTACK then
             set_mario_action(m, ACT_AIR_SPIN, 0)
         end
+    end
+
+    if intType == INTERACT_STAR_OR_KEY then
+        e.sonic.oxygen = 900
     end
 end
 
@@ -1755,11 +1762,23 @@ function sonic_homing_hud()
             end
         else
             homingCursorScaleTimer = 0
+            homingCursorPrevScale = 1
             homingCursorPrevTarget = nil
         end
     else
         homingCursorScaleTimer = 0
+        homingCursorPrevScale = 1
         homingCursorPrevTarget = nil
+    end
+
+    -- If not in a homing state, set the homing cursor previous pos on Sonic
+    -- It will make the cursor smoothly move from Sonic instead of out of nowhere
+    if homingCursorPrevTarget == nil then
+        local hudPos = gVec3fZero()
+        local onScreen = djui_hud_world_pos_to_screen_pos(m.pos, hudPos)
+        if onScreen then
+            vec3f_copy(homingCursorPrevHudPos, hudPos)
+        end
     end
 end
 
@@ -1952,8 +1971,10 @@ local function bhv_ring_loop(o)
 end
 
 function ringteract(m, o, intType) -- This is the ring interaction for ALL characters.
+    local e = gCharacterStates[m.playerIndex]
+
     if obj_has_behavior_id(o, id_bhvSonicRing) ~= 0 then
-        m.healCounter = 4
+        m.healCounter = m.healCounter + 4
         if m.playerIndex == 0 then
             gPlayerSyncTable[0].rings = gPlayerSyncTable[0].rings + 1
             if m.action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER) ~= 0 then
@@ -1964,9 +1985,19 @@ function ringteract(m, o, intType) -- This is the ring interaction for ALL chara
         end
     end
 
+    -- Regular coins increase the rings counter and partially restore oxygen (1 coin = 5 seconds)
     if intType == INTERACT_COIN then
         if m.playerIndex == 0 then
             gPlayerSyncTable[0].rings = gPlayerSyncTable[0].rings + o.oDamageOrCoinValue
+        end
+        e.sonic.oxygen = math.min(e.sonic.oxygen + o.oDamageOrCoinValue * 150, 900)
+    end
+
+    -- Fully restores oxygen if Sonic grabs a bubble/water ring
+    if intType == INTERACT_WATER_RING then
+        e.sonic.oxygen = 900
+        if m.playerIndex == 0 then
+            play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource)
         end
     end
 end
