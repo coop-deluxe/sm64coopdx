@@ -4661,6 +4661,15 @@ PLAYER_PVP_REVAMPED = 1 --- @type PvpType
 --- | `PLAYER_PVP_CLASSIC`
 --- | `PLAYER_PVP_REVAMPED`
 
+NAMETAGS_DISABLED = 0 --- @type NametagsType
+NAMETAGS_DEFAULT  = 1 --- @type NametagsType
+NAMETAGS_COLORED  = 2 --- @type NametagsType
+
+--- @alias NametagsType
+--- | `NAMETAGS_DISABLED`
+--- | `NAMETAGS_DEFAULT`
+--- | `NAMETAGS_COLORED`
+
 --- @type integer
 UNKNOWN_LOCAL_INDEX = (-1)
 

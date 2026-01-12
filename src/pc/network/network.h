@@ -74,6 +74,12 @@ enum PvpType {
     PLAYER_PVP_REVAMPED
 };
 
+enum NametagsType {
+    NAMETAGS_DISABLED,
+    NAMETAGS_DEFAULT,
+    NAMETAGS_COLORED
+};
+
 struct ServerSettings {
     enum PlayerInteractions playerInteractions;
     enum BouncyLevelBounds bouncyLevelBounds;
@@ -85,7 +91,7 @@ struct ServerSettings {
     u8 enablePlayersInLevelDisplay;
     u8 enablePlayerList;
     u8 headlessServer;
-    u8 nametags;
+    enum NametagsType nametags;
     u8 maxPlayers;
     u8 pauseAnywhere;
 };
