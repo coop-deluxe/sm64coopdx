@@ -176,25 +176,24 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
-static inline void update_analog_stick(s8 *stick_x, s8 *stick_y, 
+static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
     static const float FSHRT_MAX = 32768.f;
-    
+
     uint32_t magnitude_sq = (uint32_t)(input_x * input_x) + (uint32_t)(input_y * input_y);
     uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
 
     if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
-        uint32_t magnitude = sqrt(magnitude_sq);
-        float stickDeadzoneScale = FSHRT_MAX / (FSHRT_MAX - stickDeadzoneActual);
+        float magnitude = sqrt(magnitude_sq);
         float dir_x = (float)input_x / magnitude;
         float dir_y = (float)input_y / magnitude;
-        float dir_sum = fabsf(dir_x) + fabsf(dir_y);
+        float scale = 1.f / (fabs(dir_x) >= fabs(dir_y) ? fabs(dir_x) : fabs(dir_y));
+		float deadzone = stickDeadzoneActual / (FSHRT_MAX);
 
-        magnitude -= stickDeadzoneActual;
-        magnitude *= stickDeadzoneScale;
-        if (dir_sum >= 1)
-            magnitude /= (dir_sum);
-        magnitude /= 0x100;
+        magnitude /= FSHRT_MAX;
+        magnitude = scale * (magnitude - deadzone);
+        magnitude /= scale - deadzone;
+        magnitude *= 127;
         magnitude = magnitude >= 127 ? 127 : magnitude;
 
         *stick_x = dir_x * magnitude;
