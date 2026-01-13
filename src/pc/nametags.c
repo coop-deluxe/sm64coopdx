@@ -184,8 +184,9 @@ void nametags_render(void) {
             char name[MAX_CONFIG_STRING];
             const char* hookedString = NULL;
             u8* color = NULL;
+            bool displayHP = NULL;
 
-            smlua_call_event_hooks(HOOK_ON_NAMETAGS_RENDER, i, pos, &hookedString, &color);
+            smlua_call_event_hooks(HOOK_ON_NAMETAGS_RENDER, i, pos, &hookedString, &color, &displayHP);
             if (!djui_hud_world_pos_to_screen_pos(pos, out)) {
                 continue;
             }
@@ -201,7 +202,6 @@ void nametags_render(void) {
             }
 
             f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
-            f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
             out[1] -= 16 * scale;
 
             u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - scale, 0.f, 1.f);
@@ -233,13 +233,15 @@ void nametags_render(void) {
                     name_without_hex(name);
                 }
 
+                f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
+
                 djui_hud_print_outlined_text_interpolated(name,
                     e->prevPos[0] - measure, e->prevPos[1], e->prevScale, 1,
                     out[0] - measure,        out[1],        scale, 1, 0.25
                 );
             }
 
-            if (i != 0 && gNametagsSettings.showHealth) {
+            if (i != 0 && (displayHP || gNametagsSettings.showHealth)) {
                 djui_hud_set_color(255, 255, 255, alpha);
                 f32 healthScale = 90 * scale;
                 f32 prevHealthScale = 90 * e->prevScale;
