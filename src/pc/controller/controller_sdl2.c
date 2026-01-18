@@ -180,21 +180,20 @@ static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
     static const float FSHRT_MAX = 32768.f;
 
-    uint32_t magnitude_sq = (uint32_t)(input_x * input_x) + (uint32_t)(input_y * input_y);
-    uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
+    float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
+    float deadzone = configStickDeadzone * DEADZONE_STEP;
 
-    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
+    if (magnitude_sq > (deadzone * deadzone)) {
         float magnitude = sqrt(magnitude_sq);
         float dir_x = (float)input_x / magnitude;
         float dir_y = (float)input_y / magnitude;
-        float scale = 1.f / (fabs(dir_x) >= fabs(dir_y) ? fabs(dir_x) : fabs(dir_y));
-		float deadzone = stickDeadzoneActual / (FSHRT_MAX);
+        float scale = 1.f / fmaxf(fabsf(dir_x), fabsf(dir_y));
+        float max_magnitude = FSHRT_MAX * scale;
 
-        magnitude /= FSHRT_MAX;
-        magnitude = scale * (magnitude - deadzone);
-        magnitude /= scale - deadzone;
-        magnitude *= 127;
-        magnitude = magnitude >= 127 ? 127 : magnitude;
+        magnitude -= deadzone;
+        magnitude *= max_magnitude / (max_magnitude - deadzone);
+        magnitude /= 0x100;
+        magnitude = fminf(magnitude, scale * 127.f);
 
         *stick_x = dir_x * magnitude;
         *stick_y = -dir_y * magnitude;
