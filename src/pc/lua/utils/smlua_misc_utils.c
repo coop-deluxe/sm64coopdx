@@ -601,6 +601,45 @@ struct Mod* get_active_mod(void) {
     return gLuaActiveMod;
 }
 
+LuaTable get_mod_files(struct Mod* mod, const char* subDirectory) {
+    char* normalizedSubDir = malloc(strlen(subDirectory) + 2);
+    strcpy(normalizedSubDir, subDirectory);
+    normalize_path(normalizedSubDir);
+
+    size_t subDirLen = strlen(normalizedSubDir);
+    if (subDirLen > 0 && normalizedSubDir[subDirLen - 1] != '/') {
+        strcat(normalizedSubDir, "/");
+        subDirLen = strlen(normalizedSubDir);
+    }
+
+    struct lua_State *L = gLuaState;
+    if (!L) { return 0; }
+
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
+
+    lua_newtable(L);
+
+    int luaTableIndex = 1;
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        char* normalizedPath = strdup(file->relativePath);
+        normalize_path(normalizedPath);
+
+        if (strncmp(normalizedPath, normalizedSubDir, subDirLen) == 0) {
+            lua_pushstring(L, file->relativePath);
+            lua_rawseti(L, -2, luaTableIndex++);
+        }
+
+        free(normalizedPath);
+    }
+
+    LUA_STACK_CHECK_END(L);
+
+    free(normalizedSubDir);
+
+    return smlua_to_lua_table(L, -1);
+}
+
 ///
 
 void set_window_title(const char* title) {
