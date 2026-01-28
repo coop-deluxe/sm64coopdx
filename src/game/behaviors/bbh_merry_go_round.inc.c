@@ -42,7 +42,7 @@ static void handle_merry_go_round_music(void) {
         // for co-op, this means that this check needs to be separated from the music check, since music is client-side.
 
         // `marioFloorType` refers to the client's Mario
-        gMarioOnMerryGoRound = cur_obj_is_any_player_on_platform() || marioFloorType == SURFACE_MGR_MUSIC;
+        gMarioOnMerryGoRound = marioFloorType == SURFACE_MGR_MUSIC || cur_obj_is_any_player_on_platform();
         if (!gMarioOnMerryGoRound) {
             // check the other Marios' floors
             for (s32 i = 1; i < MAX_PLAYERS; i++) {
