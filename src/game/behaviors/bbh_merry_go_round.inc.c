@@ -37,7 +37,33 @@ static void handle_merry_go_round_music(void) {
         // The cur_obj_is_mario_on_platform check is redundant since the merry-go-round
         // has surface type 0x1A, so Mario cannot be on the merry-go-round
         // without being on a floor with surface type 0x1A (SURFACE_MGR_MUSIC).
-        gMarioOnMerryGoRound = cur_obj_is_any_player_on_platform();
+
+        // `gMarioOnMerryGoRound` is used to determine if the merry-go-round Boos should be active
+        // for co-op, this means that this check needs to be separated from the music check, since music is client-side.
+
+        // `marioFloorType` refers to the client's Mario
+        gMarioOnMerryGoRound = cur_obj_is_any_player_on_platform() || marioFloorType == SURFACE_MGR_MUSIC;
+        if (!gMarioOnMerryGoRound) {
+            // check the other Marios' floors
+            for (s32 i = 1; i < MAX_PLAYERS; i++) {
+                if (!is_player_active(&gMarioStates[i])) { continue; }
+
+                struct Object *otherMarioObject = gMarioStates[i].marioObj;
+                if (otherMarioObject == NULL) { continue; }
+
+                /*struct Surface *otherMarioFloor = 0;
+                find_floor(otherMarioObject->oPosX, otherMarioObject->oPosY, otherMarioObject->oPosZ, &otherMarioFloor);
+                if (otherMarioFloor == NULL) { continue; }
+
+                if (otherMarioFloor->type == SURFACE_MGR_MUSIC) {*/
+                if (otherMarioObject->oFloorType == SURFACE_MGR_MUSIC) {
+                    gMarioOnMerryGoRound = TRUE;
+                    break;
+                }
+            }
+        }
+
+        // continue with music check
         if (cur_obj_is_mario_on_platform() || marioFloorType == SURFACE_MGR_MUSIC) {
             // If Mario is in the merry-go-round's enclosure, play only the merry-go-round music.
             play_secondary_music(SEQ_EVENT_MERRY_GO_ROUND, 0, 78, 50);

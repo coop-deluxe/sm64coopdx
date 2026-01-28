@@ -535,7 +535,8 @@ static void (*sBooActions[])(void) = {
 };
 
 void bhv_boo_loop(void) {
-    if (o->oAction < 3) {
+    // only sync when Boo isn't in a death state
+    if (o->oAction < 3 || o->oAction == 5) {
         if (!sync_object_is_initialized(o->oSyncID)) {
             struct SyncObject* so = boo_sync_object_init();
             if (so) { so->syncDeathEvent = FALSE; }
