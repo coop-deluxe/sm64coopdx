@@ -987,6 +987,11 @@ static s32 bhv_cmd_call_native_ext(void) {
     }
 
     const char *funcStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
+    if (!funcStr) {
+        LOG_LUA("Could not retrieve function name from behavior command. Do you have an unclosed behavior script?");
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
 
     gSmLuaConvertSuccess = true;
     LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);

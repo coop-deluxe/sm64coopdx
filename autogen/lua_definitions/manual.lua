@@ -97,11 +97,6 @@ gServerSettings = {}
 --- Struct containing the settings for Nametags
 gNametagsSettings = {}
 
---- @type Camera
---- Struct contaning camera fields
---- - This camera is the same as `gMarioStates[i].area.camera` or `gCurrentArea.camera`
-gCamera = {}
-
 -----------
 -- hooks --
 -----------
