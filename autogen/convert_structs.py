@@ -291,6 +291,36 @@ def table_to_string(table):
         s += line + '\n'
     return s, count
 
+def extracted_functions_info(sid, extracted_functions):
+    for struct_with_methods, method_info in make_struct_methods.items():
+        if sid != struct_with_methods:
+            continue
+
+        for file in extracted_functions:
+            for func in file["functions"]:
+                if len(func["params"]) == 0:
+                    continue
+                
+                first_param_type = func["params"][0]["type"]
+                if first_param_type != f"struct {struct_with_methods}*":
+                    continue
+
+                real_name = func["identifier"]
+                trimmed_name = func["identifier"]
+                description = func["description"]
+                for remove_text in method_info["remove"]:
+                    text_pos = trimmed_name.find(remove_text)
+                    if text_pos == -1:
+                        continue
+
+                    remove_text_length = len(remove_text)
+                    if trimmed_name[text_pos - 1] == "_":
+                        trimmed_name = trimmed_name[:text_pos - 1] + trimmed_name[text_pos + remove_text_length:]
+                    elif trimmed_name[text_pos + remove_text_length] == "_":
+                        trimmed_name = trimmed_name[:text_pos] + trimmed_name[text_pos + remove_text_length + 1:]
+
+                yield trimmed_name, real_name, description
+
 ############################################################################
 
 def parse_struct(struct_str, sortFields = False):
@@ -582,43 +612,19 @@ def build_struct(struct):
             row.append(endStr                                                          )
         field_table.append(row)
 
-    for struct_with_methods, method_info in make_struct_methods.items():
-        if sid != struct_with_methods:
-            continue
-
-        for file in extracted_functions:
-            for func in file["functions"]:
-                if len(func["params"]) == 0:
-                    continue
-                
-                first_param_type = func["params"][0]["type"]
-                if first_param_type != f"struct {struct_with_methods}*":
-                    continue
-
-                name = '"%s", ' % func["identifier"]
-                for remove_text in method_info["remove"]:
-                    text_pos = name.find(remove_text)
-                    if text_pos == -1:
-                        continue
-
-                    remove_text_length = len(remove_text)
-                    if name[text_pos - 1] == "_":
-                        name = name[:text_pos - 1] + name[text_pos + remove_text_length:]
-                    elif name[text_pos + remove_text_length] == "_":
-                        name = name[:text_pos] + name[text_pos + remove_text_length + 1:]
-
-                row = [
-                    '    { ',
-                    name,
-                    'LVT_FUNCTION, ',
-                    '(size_t) "%s", ' % func['identifier'],
-                    'true, ',
-                    'LOT_NONE, ',
-                    '1, ',
-                    'sizeof(const char *)',
-                    ' },',
-                ]
-                field_table.append(row)
+    for name, real_name, _ in extracted_functions_info(sid, extracted_functions):
+        row = [
+            '    { ',
+            '"%s", ' % name,
+            'LVT_FUNCTION, ',
+            '(size_t) "%s", ' % real_name,
+            'true, ',
+            'LOT_NONE, ',
+            '1, ',
+            'sizeof(const char *)',
+            ' },',
+        ]
+        field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)
     field_count_define = 'LUA_%s_FIELD_COUNT' % identifier_to_caps(sid)
@@ -910,35 +916,10 @@ def def_struct(struct):
 
         s += '--- @field public %s %s\n' % (fid, ftype)
 
-    for struct_with_methods, method_info in make_struct_methods.items():
-        if sid != struct_with_methods:
-            continue
+    for name, real_name, description in extracted_functions_info(sid, extracted_functions):
+        signurate = get_function_signature(real_name)
+        s += '--- @field public %s %s %s\n' % (name, signurate, description)
 
-        for file in extracted_functions:
-            for func in file["functions"]:
-                if len(func["params"]) == 0:
-                    continue
-                
-                first_param_type = func["params"][0]["type"]
-                if first_param_type != f"struct {struct_with_methods}*":
-                    continue
-
-                name = '%s' % func["identifier"]
-                print(name)
-                description = func["description"]
-                signurate = get_function_signature(name)
-                for remove_text in method_info["remove"]:
-                    text_pos = name.find(remove_text)
-                    if text_pos == -1:
-                        continue
-
-                    remove_text_length = len(remove_text)
-                    if name[text_pos - 1] == "_":
-                        name = name[:text_pos - 1] + name[text_pos + remove_text_length:]
-                    elif name[text_pos + remove_text_length] == "_":
-                        name = name[:text_pos] + name[text_pos + remove_text_length + 1:]
-                    
-                s += '--- @field public %s %s %s\n' % (name, signurate, description)
     return s
 
 def def_structs(structs):
