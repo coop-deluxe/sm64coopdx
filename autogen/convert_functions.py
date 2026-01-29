@@ -1493,8 +1493,10 @@ def def_files(processed_files):
 
 ############################################################################
 
-def main():
+def main(extract_only=False):
     processed_files = process_files()
+    if extract_only:
+        return processed_files
 
     built_vec_types = build_vec_types()
     built_functions = build_functions(processed_files)

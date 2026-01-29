@@ -5,6 +5,7 @@ from extract_structs import *
 from extract_object_fields import *
 from common import *
 from vec_types import *
+from convert_functions import main as get_extracted_functions
 
 in_files = [
     "include/types.h",
@@ -179,6 +180,14 @@ override_types = {
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 
+extracted_functions = get_extracted_functions(True)
+
+make_struct_methods = {
+    "MarioState": { "remove": ["mario"] },
+    "Object": { "remove": ["object", "obj"] },
+    "Surface": { "remove": ["surface"] },
+}
+
 total_structs = 0
 total_fields = 0
 
@@ -255,6 +264,7 @@ def identifier_to_caps(identifier):
     return caps
 
 def table_to_string(table):
+    table.sort()
     count = 0
     columns = 0
     column_width = []
@@ -572,6 +582,44 @@ def build_struct(struct):
             row.append(endStr                                                          )
         field_table.append(row)
 
+    for struct_with_methods, method_info in make_struct_methods.items():
+        if sid != struct_with_methods:
+            continue
+
+        for file in extracted_functions:
+            for func in file["functions"]:
+                if len(func["params"]) == 0:
+                    continue
+                
+                first_param_type = func["params"][0]["type"]
+                if first_param_type != f"struct {struct_with_methods}*":
+                    continue
+
+                name = '"%s", ' % func["identifier"]
+                for remove_text in method_info["remove"]:
+                    text_pos = name.find(remove_text)
+                    if text_pos == -1:
+                        continue
+
+                    remove_text_length = len(remove_text)
+                    if name[text_pos - 1] == "_":
+                        name = name[:text_pos - 1] + name[text_pos + remove_text_length:]
+                    elif name[text_pos + remove_text_length] == "_":
+                        name = name[:text_pos] + name[text_pos + remove_text_length + 1:]
+
+                row = [
+                    '    { ',
+                    name,
+                    'LVT_FUNCTION, ',
+                    '(size_t) "%s", ' % func['identifier'],
+                    'true, ',
+                    'LOT_NONE, ',
+                    '1, ',
+                    'sizeof(const char *)',
+                    ' },',
+                ]
+                field_table.append(row)
+
     field_table_str, field_count = table_to_string(field_table)
     field_count_define = 'LUA_%s_FIELD_COUNT' % identifier_to_caps(sid)
     struct_lot = 'LOT_%s' % sid.upper()
@@ -862,6 +910,35 @@ def def_struct(struct):
 
         s += '--- @field public %s %s\n' % (fid, ftype)
 
+    for struct_with_methods, method_info in make_struct_methods.items():
+        if sid != struct_with_methods:
+            continue
+
+        for file in extracted_functions:
+            for func in file["functions"]:
+                if len(func["params"]) == 0:
+                    continue
+                
+                first_param_type = func["params"][0]["type"]
+                if first_param_type != f"struct {struct_with_methods}*":
+                    continue
+
+                name = '%s' % func["identifier"]
+                print(name)
+                description = func["description"]
+                signurate = get_function_signature(name)
+                for remove_text in method_info["remove"]:
+                    text_pos = name.find(remove_text)
+                    if text_pos == -1:
+                        continue
+
+                    remove_text_length = len(remove_text)
+                    if name[text_pos - 1] == "_":
+                        name = name[:text_pos - 1] + name[text_pos + remove_text_length:]
+                    elif name[text_pos + remove_text_length] == "_":
+                        name = name[:text_pos] + name[text_pos + remove_text_length + 1:]
+                    
+                s += '--- @field public %s %s %s\n' % (name, signurate, description)
     return s
 
 def def_structs(structs):
