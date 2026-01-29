@@ -866,7 +866,7 @@ def build_return_value(id, rtype, spoof_ret_as_bool):
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, id)
     elif '???' not in lot and lot != 'LOT_NONE':
         return '    smlua_push_object(L, %s, %s, NULL);\n' % (lot, id)
-    
+
     if spoof_ret_as_bool:
         lfunc = 'lua_pushboolean'
 
@@ -980,7 +980,12 @@ def build_function(function, do_extern, spoof_ret_as_bool):
     push_value = True
     if is_interact_func:
         # special case for interaction functions to call the hooks associated with interactions
-        s += "    lua_pushinteger(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
+        ctype = "integer"
+        if spoof_ret_as_bool:
+            ctype = "boolean"
+
+        begin = "    lua_push%s" % ctype
+        s += begin + "(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
     else:
         call_str = build_call(function, spoof_ret_as_bool)
         push_value = "lua_push" in call_str
