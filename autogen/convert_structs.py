@@ -291,12 +291,12 @@ def table_to_string(table):
         s += line + '\n'
     return s, count
 
-def extracted_functions_info(sid, extracted_functions):
+def extracted_functions_info(sid, processed_files):
     for struct_with_methods, method_info in make_struct_methods.items():
         if sid != struct_with_methods:
             continue
 
-        for file in extracted_functions:
+        for file in processed_files:
             for func in file["functions"]:
                 if len(func["params"]) == 0:
                     continue
@@ -308,6 +308,10 @@ def extracted_functions_info(sid, extracted_functions):
                 real_name = func["identifier"]
                 trimmed_name = func["identifier"]
                 description = func["description"]
+
+                if real_name in struct_functions_disallow:
+                    continue
+
                 for remove_text in method_info["remove"]:
                     text_pos = trimmed_name.find(remove_text)
                     if text_pos == -1:
@@ -613,7 +617,7 @@ def build_struct(struct):
         field_table.append(row)
 
     for name, real_name, _ in extracted_functions_info(sid, extracted_functions):
-        for func in spoof_functions:
+        for func in spoof_function_returns:
             if re.match(func, real_name):
                 real_name = real_name + "_SPOOFED"
                 break
@@ -882,7 +886,7 @@ def get_function_signature(function):
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
                 function_name = line.replace('(', ' ').split()[1]
-                for func in spoof_functions:
+                for func in spoof_function_returns:
                     if re.match(func, function_name):
                         function_return = "boolean"
                 if function_return:

@@ -1035,7 +1035,7 @@ def build_functions(processed_files):
         for function in processed_file['functions']:
             function['filename'] = processed_file['filename']
             s += build_function(function, processed_file['extern'], False)
-            for func in spoof_functions:
+            for func in spoof_function_returns:
                 if re.match(func, function["identifier"]):
                     s += build_function(function, processed_file['extern'], True)
     return s
@@ -1063,7 +1063,7 @@ def build_binds(processed_files):
 
         for function in processed_file['functions']:
             s += build_bind(function, False)
-            for func in spoof_functions:
+            for func in spoof_function_returns:
                 if re.match(func, function["identifier"]):
                     s += build_bind(function, True)
     return s
