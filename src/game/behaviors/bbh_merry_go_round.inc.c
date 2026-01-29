@@ -50,12 +50,7 @@ static void handle_merry_go_round_music(void) {
 
                 struct Object *otherMarioObject = gMarioStates[i].marioObj;
                 if (otherMarioObject == NULL) { continue; }
-
-                /*struct Surface *otherMarioFloor = 0;
-                find_floor(otherMarioObject->oPosX, otherMarioObject->oPosY, otherMarioObject->oPosZ, &otherMarioFloor);
-                if (otherMarioFloor == NULL) { continue; }
-
-                if (otherMarioFloor->type == SURFACE_MGR_MUSIC) {*/
+                
                 if (otherMarioObject->oFloorType == SURFACE_MGR_MUSIC) {
                     gMarioOnMerryGoRound = TRUE;
                     break;
