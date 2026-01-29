@@ -379,9 +379,7 @@ static void boo_chase_mario(f32 a0, s16 a1, f32 a2) {
     if (boo_vanish_or_appear()) {
         o->oInteractType = 0x8000;
 
-
-        u8 isMerryGoRoundBoo = (cur_obj_has_behavior(bhvMerryGoRoundBigBoo) || cur_obj_has_behavior(bhvMerryGoRoundBoo));
-        if (!isMerryGoRoundBoo && cur_obj_lateral_dist_from_obj_to_home(player) > 1500.0f) {
+        if (cur_obj_lateral_dist_from_obj_to_home(player) > 1500.0f) {
             sp1A = cur_obj_angle_to_home();
         } else {
             sp1A = angleToPlayer;
