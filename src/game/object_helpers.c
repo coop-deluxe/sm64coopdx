@@ -2946,15 +2946,17 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
 
     u8 marioInRoom = FALSE;
 
+    // check if any player character can "see" the object's room
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if (gMarioStates[i].currentRoom != 0) {
+        if (is_player_active(&gMarioStates[i]) && gMarioStates[i].currentRoom != 0) {
             s16 currentRoom = gMarioStates[i].currentRoom;
-            if (currentRoom == o->oRoom) {
+            if (
+                currentRoom == o->oRoom
+                || gDoorAdjacentRooms[currentRoom][0] == o->oRoom
+                || gDoorAdjacentRooms[currentRoom][1] == o->oRoom
+            ) {
                 marioInRoom = TRUE;
-            } else if (gDoorAdjacentRooms[currentRoom][0] == o->oRoom) {
-                marioInRoom = TRUE;
-            } else if (gDoorAdjacentRooms[currentRoom][1] == o->oRoom) {
-                marioInRoom = TRUE;
+                break;
             }
         }
     }
