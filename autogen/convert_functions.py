@@ -842,7 +842,7 @@ def build_param_after(param, i):
     else:
         return ''
 
-def build_return_value(id, rtype):
+def build_return_value(id, rtype, spoof_ret_as_bool):
     rtype = alter_type(rtype)
     lot = translate_type_to_lot(rtype)
 
@@ -866,10 +866,13 @@ def build_return_value(id, rtype):
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, id)
     elif '???' not in lot and lot != 'LOT_NONE':
         return '    smlua_push_object(L, %s, %s, NULL);\n' % (lot, id)
+    
+    if spoof_ret_as_bool:
+        lfunc = 'lua_pushboolean'
 
     return '    %s(L, %s);\n' % (lfunc, id)
 
-def build_call(function):
+def build_call(function, spoof_ret_as_bool):
     ftype = alter_type(function['type'])
     fid = function['identifier']
 
@@ -885,7 +888,7 @@ def build_call(function):
     if ftype in VECP_TYPES:
         return '    %s;\n' % ccall
 
-    return build_return_value(ccall, ftype)
+    return build_return_value(ccall, ftype, spoof_ret_as_bool)
 
 def split_function_parameters_and_returns(function):
     fparams = []
@@ -901,9 +904,12 @@ def split_function_parameters_and_returns(function):
             fparams.append(param)
     return fparams, freturns
 
-def build_function(function, do_extern):
+def build_function(function, do_extern, spoof_ret_as_bool):
     s = ''
     fid = function['identifier']
+    spoof_text = ""
+    if spoof_ret_as_bool:
+        spoof_text = "_SPOOFED"
 
     if fid in override_function_version_excludes:
         s += '#ifndef ' + override_function_version_excludes[fid] + '\n'
@@ -911,9 +917,9 @@ def build_function(function, do_extern):
     fparams, freturns = split_function_parameters_and_returns(function)
 
     if len(function['params']) <= 0:
-        s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s%s(UNUSED lua_State* L) {\n' % (function['identifier'], spoof_text)
     else:
-        s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+        s += 'int smlua_func_%s%s(lua_State* L) {\n' % (function['identifier'], spoof_text)
 
     # make sure the bhv functions have a current object
     fname = function['filename']
@@ -976,7 +982,7 @@ def build_function(function, do_extern):
         # special case for interaction functions to call the hooks associated with interactions
         s += "    lua_pushinteger(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
     else:
-        call_str = build_call(function)
+        call_str = build_call(function, spoof_ret_as_bool)
         push_value = "lua_push" in call_str
         s += call_str
 
@@ -998,7 +1004,7 @@ def build_function(function, do_extern):
         for param in freturns:
             pid = param['identifier']
             ptype = alter_type(param['rtype'])
-            s += build_return_value(pid, ptype)
+            s += build_return_value(pid, ptype, False)
         s += '\n'
 
     num_returns = max(1, push_value + len(freturns))
@@ -1028,11 +1034,16 @@ def build_functions(processed_files):
 
         for function in processed_file['functions']:
             function['filename'] = processed_file['filename']
-            s += build_function(function, processed_file['extern'])
+            s += build_function(function, processed_file['extern'], False)
+            for func in spoof_functions:
+                if re.match(func, function["identifier"]):
+                    s += build_function(function, processed_file['extern'], True)
     return s
 
-def build_bind(function):
+def build_bind(function, spoof_bind):
     fid = function['identifier']
+    if spoof_bind:
+        fid = fid + "_SPOOFED"
     s = 'smlua_bind_function(L, "%s", smlua_func_%s);' % (fid, fid)
     if function['implemented']:
         s = '    ' + s
@@ -1051,7 +1062,10 @@ def build_binds(processed_files):
         s += "\n    // " + processed_file['filename'] + "\n"
 
         for function in processed_file['functions']:
-            s += build_bind(function)
+            s += build_bind(function, False)
+            for func in spoof_functions:
+                if re.match(func, function["identifier"]):
+                    s += build_bind(function, True)
     return s
 
 def build_includes():

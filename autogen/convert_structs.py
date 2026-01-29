@@ -613,6 +613,11 @@ def build_struct(struct):
         field_table.append(row)
 
     for name, real_name, _ in extracted_functions_info(sid, extracted_functions):
+        for func in spoof_functions:
+            if re.match(func, real_name):
+                real_name = real_name + "_SPOOFED"
+                break
+
         row = [
             '    { ',
             '"%s", ' % name,
@@ -876,9 +881,12 @@ def get_function_signature(function):
                 sig = 'fun('
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
+                function_name = line.replace('(', ' ').split()[1]
+                for func in spoof_functions:
+                    if re.match(func, function_name):
+                        function_return = "boolean"
                 if function_return:
                     sig += ': %s' % (function_return)
-                function_name = line.replace('(', ' ').split()[1]
                 function_signatures[function_name] = sig
                 function_params.clear()
                 function_return = None

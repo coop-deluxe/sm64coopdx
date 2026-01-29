@@ -53,6 +53,10 @@ exclude_structs = [
 
 override_types = { "Gfx", "Vtx" }
 
+spoof_functions = [
+    "interact_*"
+]
+
 def extract_integer_datatype(c_type):
     c_type = c_type.strip().lower()
     c_type = re.sub(r'\*|\[.*?\]', '', c_type)
