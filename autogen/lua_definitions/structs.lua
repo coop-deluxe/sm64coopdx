@@ -217,6 +217,21 @@
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field public mtx Mat4
+--- @field public move_mario_head_c_up fun(c: Camera) Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
+--- @field public transition_next_state fun(c: Camera, frames: integer) Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
+--- @field public set_mode fun(c: Camera, mode: integer, frames: integer) Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
+--- @field public soft_reset fun(c: Camera) Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
+--- @field public reset fun(c: Camera) Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
+--- @field public offset_yaw_outward_radial fun(c: Camera, areaYaw: integer): integer Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
+--- @field public radial_input fun(c: Camera, unused: number): integer Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
+--- @field public handle_c_button_movement fun(c: Camera) Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
+--- @field public start_cutscene fun(c: Camera, cutscene: integer) Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
+--- @field public get_cutscene_from_mario_status fun(c: Camera): integer Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
+--- @field public approach_height fun(c: Camera, goal: number, inc: number) Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
+--- @field public course_processing fun(c: Camera): integer Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
+--- @field public rotate_around_walls fun(c: Camera, cPos: Vec3f, avoidYaw: integer, yawRange: integer): integer Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
+--- @field public play_cutscene fun(c: Camera) Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
+--- @field public set_mode_fixed fun(c: Camera, x: integer, y: integer, z: integer): integer Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
 
 --- @class ChainSegment
 --- @field public posX number
@@ -1443,6 +1458,25 @@
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
+--- @field public stream_destroy fun(audio: ModAudio) Destroys an `audio` stream
+--- @field public stream_play fun(audio: ModAudio, restart: boolean, volume: number) Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+--- @field public stream_pause fun(audio: ModAudio) Pauses an `audio` stream
+--- @field public stream_stop fun(audio: ModAudio) Stops an `audio` stream
+--- @field public stream_get_position fun(audio: ModAudio): number Gets the position of an `audio` stream in seconds
+--- @field public stream_set_position fun(audio: ModAudio, pos: number) Sets the position of an `audio` stream in seconds
+--- @field public stream_get_looping fun(audio: ModAudio): boolean Gets if an `audio` stream is looping or not
+--- @field public stream_set_looping fun(audio: ModAudio, looping: boolean) Sets if an `audio` stream is looping or not
+--- @field public stream_set_loop_points fun(audio: ModAudio, loopStart: integer, loopEnd: integer) Sets an `audio` stream's loop points in samples
+--- @field public stream_get_frequency fun(audio: ModAudio): number Gets the frequency of an `audio` stream
+--- @field public stream_set_frequency fun(audio: ModAudio, freq: number) Sets the frequency of an `audio` stream
+--- @field public stream_get_volume fun(audio: ModAudio): number Gets the volume of an `audio` stream
+--- @field public stream_set_volume fun(audio: ModAudio, volume: number) Sets the volume of an `audio` stream
+--- @field public sample_destroy fun(audio: ModAudio) Destroys an `audio` sample
+--- @field public sample_stop fun(audio: ModAudio) Stops an `audio` sample
+--- @field public sample_play fun(audio: ModAudio, position: Vec3f, volume: number) Plays an `audio` sample at `position` with `volume`
+--- @field public stream_get_tempo function [DEPRECATED: There may be a replacement for this function in the future]
+--- @field public stream_set_tempo function [DEPRECATED: There may be a replacement for this function in the future]
+--- @field public stream_set_speed function [DEPRECATED: There may be a replacement for this function in the future]
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1525,6 +1559,16 @@
 --- @field public paletteIndex integer
 --- @field public overridePaletteIndex integer
 --- @field public overridePaletteIndexLp integer
+--- @field public lag_compensation_get_local_state fun(otherNp: NetworkPlayer): MarioState Gets the local Mario's state stored in lag compensation history
+--- @field public set_description fun(np: NetworkPlayer, description: string, r: integer, g: integer, b: integer, a: integer) Sets the description field of `np`
+--- @field public set_override_location fun(np: NetworkPlayer, location: string) Overrides the location of `np`
+--- @field public get_palette_color_channel function Gets a red, green, or blue value from a part in `np`'s color palette
+--- @field public get_override_palette_color_channel function Gets a red, green, or blue value from a part in `np`'s override color palette
+--- @field public set_override_palette_color fun(np: NetworkPlayer, part: PlayerPart, color: Color) Sets the `part in `np`'s override color palette`
+--- @field public reset_override_palette fun(np: NetworkPlayer) Resets `np`'s override color palette
+--- @field public is_override_palette_same fun(np: NetworkPlayer): boolean Checks if `np`'s override color palette is identical to the regular color palette
+--- @field public color_to_palette function [DEPRECATED: Use `network_player_set_override_palette_color` instead]
+--- @field public palette_to_color function [DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]
 
 --- @class Object
 --- @field public header ObjectNode

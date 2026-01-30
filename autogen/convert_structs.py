@@ -186,6 +186,9 @@ make_struct_methods = {
     "MarioState": { "remove": ["mario"] },
     "Object": { "remove": ["object", "obj"] },
     "Surface": { "remove": ["surface"] },
+    "Camera": { "remove": ["camera"] },
+    "ModAudio": { "remove": ["audio"] },
+    "NetworkPlayer": { "remove": ["network_player"] },
 }
 
 total_structs = 0
