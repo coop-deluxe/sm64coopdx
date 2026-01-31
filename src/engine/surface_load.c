@@ -805,7 +805,10 @@ static void load_object_collision_model_internal(bool isSOC) {
 
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             f32 dist = dist_between_objects(gCurrentObject, gMarioStates[i].marioObj);
-            if (dist < tangibleDist) { anyPlayerInTangibleRange = TRUE; }
+            if (dist < tangibleDist) {
+                anyPlayerInTangibleRange = TRUE;
+                break;
+            }
         }
 
         // If the object collision is supposed to be loaded more than the
