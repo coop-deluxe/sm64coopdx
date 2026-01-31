@@ -1916,6 +1916,10 @@
 <br />
 
 - smlua_gfx_utils.h
+   - [enable_gfx_shader_flag](functions-6.md#enable_gfx_shader_flag)
+   - [set_gfx_shader_flag_value](functions-6.md#set_gfx_shader_flag_value)
+   - [enable_gfx_shader_flags_screen](functions-6.md#enable_gfx_shader_flags_screen)
+   - [clear_all_gfx_shader_flags](functions-6.md#clear_all_gfx_shader_flags)
    - [set_override_fov](functions-6.md#set_override_fov)
    - [set_override_near](functions-6.md#set_override_near)
    - [set_override_far](functions-6.md#set_override_far)

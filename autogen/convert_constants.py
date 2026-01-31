@@ -55,6 +55,7 @@ in_files = [
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
+    "src/pc/gfx/gfx_pc.h",
 ]
 
 exclude_constants = {

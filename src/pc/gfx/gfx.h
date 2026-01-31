@@ -43,6 +43,7 @@ struct GfxVertex {
     struct RGBA color;
     uint8_t fog_z;
     uint8_t clip_rej;
+    uint8_t world_geometry;
 };
 
 struct GfxDimensions {

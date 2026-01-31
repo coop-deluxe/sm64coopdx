@@ -4,6 +4,27 @@
 #include "game/skybox.h"
 #include "geo_commands.h"
 
+void enable_gfx_shader_flag(enum ShaderFlag flag, bool enabled) {
+    if (flag < 0 || flag >= SHADER_FLAG_MAX) { return; }
+    gShaderFlags[flag] = enabled ? 1 : 0;
+}
+
+void set_gfx_shader_flag_value(enum ShaderFlag flag, f32 value) {
+    if (flag < 0 || flag >= SHADER_FLAG_MAX) { return; }
+    gShaderFlagValues[flag] = value;
+}
+
+void enable_gfx_shader_flags_screen(bool enabled) {
+    gShaderFlagsScreen = enabled;
+}
+
+void clear_all_gfx_shader_flags(void) {
+    memset(gShaderFlags, 0, sizeof(gShaderFlags));
+    memset(gShaderFlagValues, 0, sizeof(gShaderFlagValues));
+}
+
+///
+
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
 }

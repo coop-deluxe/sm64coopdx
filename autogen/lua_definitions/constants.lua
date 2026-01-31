@@ -2975,6 +2975,25 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
 
+SHADER_FLAG_HUE           = 0 --- @type ShaderFlag
+SHADER_FLAG_SATURATION    = 1 --- @type ShaderFlag
+SHADER_FLAG_BRIGHTNESS    = 2 --- @type ShaderFlag
+SHADER_FLAG_CONTRAST      = 3 --- @type ShaderFlag
+SHADER_FLAG_EXPOSURE      = 4 --- @type ShaderFlag
+SHADER_FLAG_DITHERING     = 5 --- @type ShaderFlag
+SHADER_FLAG_POSTERIZATION = 6 --- @type ShaderFlag
+SHADER_FLAG_MAX           = 7 --- @type ShaderFlag
+
+--- @alias ShaderFlag
+--- | `SHADER_FLAG_HUE`
+--- | `SHADER_FLAG_SATURATION`
+--- | `SHADER_FLAG_BRIGHTNESS`
+--- | `SHADER_FLAG_CONTRAST`
+--- | `SHADER_FLAG_EXPOSURE`
+--- | `SHADER_FLAG_DITHERING`
+--- | `SHADER_FLAG_POSTERIZATION`
+--- | `SHADER_FLAG_MAX`
+
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)
 

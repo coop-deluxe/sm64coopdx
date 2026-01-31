@@ -4,6 +4,17 @@
 #include "types.h"
 #include "pc/gfx/gfx.h"
 
+enum ShaderFlag {
+    SHADER_FLAG_HUE,
+    SHADER_FLAG_SATURATION,
+    SHADER_FLAG_BRIGHTNESS,
+    SHADER_FLAG_CONTRAST,
+    SHADER_FLAG_EXPOSURE,
+    SHADER_FLAG_DITHERING,
+    SHADER_FLAG_POSTERIZATION,
+    SHADER_FLAG_MAX
+};
+
 struct GfxRenderingAPI;
 struct GfxWindowManagerAPI;
 
@@ -12,6 +23,10 @@ extern Color gLightingColor[2];
 extern Color gVertexColor;
 extern Color gFogColor;
 extern f32 gFogIntensity;
+
+extern int gShaderFlags[SHADER_FLAG_MAX];
+extern f32 gShaderFlagValues[SHADER_FLAG_MAX];
+extern bool gShaderFlagsScreen;
 
 #ifdef __cplusplus
 extern "C" {
