@@ -66,9 +66,7 @@ static void handle_merry_go_round_music(void) {
         }
     }
 
-    // `gMarioOnMerryGoRound` is used to determine if the merry-go-round Boos should be active
-    // for co-op, this means that this check needs to be separated from the music check, since music is client-side.
-
+    // COOP: floor check happens here
     // `marioFloorType` refers to the client's Mario
     gMarioOnMerryGoRound = marioFloorType == SURFACE_MGR_MUSIC || cur_obj_is_any_player_on_platform();
     if (!gMarioOnMerryGoRound) {
