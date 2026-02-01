@@ -7459,13 +7459,13 @@ Checks if the surface is a painting warp
 <br />
 
 
-## [enable_gfx_shader_flag](#enable_gfx_shader_flag)
+## [enable_shader_flag](#enable_shader_flag)
 
 ### Description
 Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
 
 ### Lua Example
-`enable_gfx_shader_flag(flag, enabled)`
+`enable_shader_flag(flag, enabled)`
 
 ### Parameters
 | Field | Type |
@@ -7477,19 +7477,19 @@ Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
 - None
 
 ### C Prototype
-`void enable_gfx_shader_flag(enum ShaderFlag flag, bool enabled);`
+`void enable_shader_flag(enum ShaderFlag flag, bool enabled);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [set_gfx_shader_flag_value](#set_gfx_shader_flag_value)
+## [set_shader_flag_value](#set_shader_flag_value)
 
 ### Description
 Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer
 
 ### Lua Example
-`set_gfx_shader_flag_value(flag, value)`
+`set_shader_flag_value(flag, value)`
 
 ### Parameters
 | Field | Type |
@@ -7501,19 +7501,19 @@ Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the render
 - None
 
 ### C Prototype
-`void set_gfx_shader_flag_value(enum ShaderFlag flag, f32 value);`
+`void set_shader_flag_value(enum ShaderFlag flag, f32 value);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [enable_gfx_shader_flags_screen](#enable_gfx_shader_flags_screen)
+## [enable_shader_flags_screen](#enable_shader_flags_screen)
 
 ### Description
 Enables custom shader flags applying to everything, including HUD elements and menus
 
 ### Lua Example
-`enable_gfx_shader_flags_screen(enabled)`
+`enable_shader_flags_screen(enabled)`
 
 ### Parameters
 | Field | Type |
@@ -7524,19 +7524,19 @@ Enables custom shader flags applying to everything, including HUD elements and m
 - None
 
 ### C Prototype
-`void enable_gfx_shader_flags_screen(bool enabled);`
+`void enable_shader_flags_screen(bool enabled);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [clear_all_gfx_shader_flags](#clear_all_gfx_shader_flags)
+## [clear_all_shader_flags](#clear_all_shader_flags)
 
 ### Description
 Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
 
 ### Lua Example
-`clear_all_gfx_shader_flags()`
+`clear_all_shader_flags()`
 
 ### Parameters
 - None
@@ -7545,7 +7545,7 @@ Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
 - None
 
 ### C Prototype
-`void clear_all_gfx_shader_flags(void);`
+`void clear_all_shader_flags(void);`
 
 [:arrow_up_small:](#)
 

@@ -722,7 +722,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     color_set(gSkyboxColor, 0xFF, 0xFF, 0xFF);
     color_set(gFogColor, 0xFF, 0xFF, 0xFF);
     gFogIntensity = 1.0f;
-    clear_all_gfx_shader_flags();
+    clear_all_shader_flags();
     gOverrideBackground = -1;
     gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
     gRomhackCameraSettings.centering = FALSE;

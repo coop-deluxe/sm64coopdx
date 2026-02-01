@@ -14,13 +14,13 @@ Vtx *vtx_allocate_internal(Vtx *vtx, u32 count);
 u32 gfx_get_length_no_sentinel(const Gfx *gfx);
 
 /* |description|Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
-void enable_gfx_shader_flag(enum ShaderFlag flag, bool enabled);
+void enable_shader_flag(enum ShaderFlag flag, bool enabled);
 /* |description|Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
-void set_gfx_shader_flag_value(enum ShaderFlag flag, f32 value);
+void set_shader_flag_value(enum ShaderFlag flag, f32 value);
 /* |description|Enables custom shader flags applying to everything, including HUD elements and menus|descriptionEnd| */
-void enable_gfx_shader_flags_screen(bool enabled);
+void enable_shader_flags_screen(bool enabled);
 /* |description|Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
-void clear_all_gfx_shader_flags(void);
+void clear_all_shader_flags(void);
 
 /* |description|Sets the override FOV|descriptionEnd| */
 void set_override_fov(f32 fov);

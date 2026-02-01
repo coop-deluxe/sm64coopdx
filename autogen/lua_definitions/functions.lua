@@ -10687,25 +10687,25 @@ end
 --- @param flag ShaderFlag
 --- @param enabled boolean
 --- Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
-function enable_gfx_shader_flag(flag, enabled)
+function enable_shader_flag(flag, enabled)
     -- ...
 end
 
 --- @param flag ShaderFlag
 --- @param value number
 --- Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer
-function set_gfx_shader_flag_value(flag, value)
+function set_shader_flag_value(flag, value)
     -- ...
 end
 
 --- @param enabled boolean
 --- Enables custom shader flags applying to everything, including HUD elements and menus
-function enable_gfx_shader_flags_screen(enabled)
+function enable_shader_flags_screen(enabled)
     -- ...
 end
 
 --- Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
-function clear_all_gfx_shader_flags()
+function clear_all_shader_flags()
     -- ...
 end
 
