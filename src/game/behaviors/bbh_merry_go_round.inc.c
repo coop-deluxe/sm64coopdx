@@ -71,6 +71,7 @@ static void handle_merry_go_round_music(void) {
     gMarioOnMerryGoRound = marioFloorType == SURFACE_MGR_MUSIC || cur_obj_is_any_player_on_platform();
     if (!gMarioOnMerryGoRound) {
         // check the other Marios' floors
+        // starting at 1 since local player was already checked
         for (s32 i = 1; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
 
