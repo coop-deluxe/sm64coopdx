@@ -2948,8 +2948,6 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
     // 2) They are on an object surface with no explicit room
     // In vanilla, a room of 0 stops the game from checking if the object shouldn't be rendered
     // In coop, this needs to be respected to ensure the object remains active in areas with rooms
-    //if (gMarioCurrentRoom == 0) { return; }
-
     u8 marioInRoom = FALSE;
 
     // check if any player character can "see" the object's room
