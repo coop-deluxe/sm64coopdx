@@ -797,7 +797,22 @@ static s32 bhv_cmd_load_collision_data(void) {
 // Command 0x2D: Sets the home position of the object to its current position.
 // Usage: SET_HOME()
 static s32 bhv_cmd_set_home(void) {
-    if (!(gCurrentObject->coopFlags & (COOP_OBJ_FLAG_LUA | COOP_OBJ_FLAG_NETWORK))) {
+    // COOP: only set home via behavior for the following cases
+    if (
+        // if the object wasn't created via Lua
+        !(gCurrentObject->coopFlags & COOP_OBJ_FLAG_LUA)
+        // if the object wasn't created via network
+        // OR
+        // the object has never had its home set via behavior AND its home is default (e.g. (0, 0, 0))
+        // (this case handles an object that needs its home set via behavior after being spawned by another player)
+        && (
+            !(gCurrentObject->coopFlags & COOP_OBJ_FLAG_NETWORK)
+            || (
+                !gCurrentObject->setHome
+                && gCurrentObject->oHomeX == 0.0f && gCurrentObject->oHomeY == 0.0f && gCurrentObject->oHomeZ == 0.0f
+            )
+        )
+    ) {
         gCurrentObject->oHomeX = gCurrentObject->oPosX;
         gCurrentObject->oHomeY = gCurrentObject->oPosY;
         gCurrentObject->oHomeZ = gCurrentObject->oPosZ;
