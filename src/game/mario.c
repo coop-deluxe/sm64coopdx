@@ -2221,6 +2221,7 @@ void init_single_mario(struct MarioState* m) {
 
     m->heldObj = NULL;
     m->heldByObj = NULL;
+    m->interactObj = NULL;
     m->riddenObj = NULL;
     m->usedObj = NULL;
     m->bubbleObj = NULL;
