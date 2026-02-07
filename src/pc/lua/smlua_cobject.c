@@ -560,7 +560,7 @@ static int smlua__get_field(lua_State* L) {
     }
 
     // CObject property
-    if (data->valueType == LVT_PROPERTY) {;
+    if (data->valueType == LVT_PROPERTY) {
         lua_getglobal(L, data->get);
         lua_pushvalue(L, 1);
         smlua_pcall(L, 1, 1, 0);
@@ -569,15 +569,15 @@ static int smlua__get_field(lua_State* L) {
     }
 
     u8* p = ((u8*)(intptr_t)pointer) + data->valueOffset;
-    if (data->count == 1) {
-        if (smlua_push_field(L, p, data)) {
-            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
+    if (data->count > 1) {
+        smlua_push_object(L, LOT_ARRAY, p, data);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA_LINE("_get_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
             return 0;
         }
     } else {
-        smlua_push_object(L, LOT_ARRAY, p, data);
-        if (!gSmLuaConvertSuccess) {
-            LOG_LUA_LINE("_set_field failed to retrieve value type '%d', key '%s'", data->valueType, key);
+        if (smlua_push_field(L, p, data)) {
+            LOG_LUA_LINE("_get_field on unimplemented type '%d', key '%s'", data->valueType, key);
             return 0;
         }
     }
@@ -672,6 +672,41 @@ static int smlua__set_field(lua_State* L) {
     return 1;
 }
 
+int smlua__iter(lua_State *L) {
+    lua_rawgeti(L, 1, 1);
+    int i = lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+    lua_rawgeti(L, 1, 2);
+    const CObject *cobj = lua_touserdata(L, -1);
+    lua_pop(L, 1);
+    
+    extern struct LuaObjectTable sLuaObjectAutogenTable[];
+    struct LuaObjectTable* ot = &sLuaObjectAutogenTable[cobj->lot - LOT_AUTOGEN_MIN - 1];
+    if (i >= ot->fieldCount) { return 0; }
+    
+    u8* pointer = (u8*)(intptr_t) cobj->pointer;
+    struct LuaObjectField* data = &ot->fields[i];
+    lua_pushstring(L, data->key);
+    smlua_push_field(L, pointer, data);
+
+    lua_pushinteger(L, ++i);
+    lua_rawseti(L, 1, 1);
+
+    return 2;
+}
+
+int smlua__pairs(lua_State *L) {
+    lua_pushcfunction(L, smlua__iter);
+
+    lua_newtable(L);
+    lua_pushinteger(L, 0); lua_rawseti(L, -2, 1);
+    lua_pushvalue  (L, 1); lua_rawseti(L, -2, 2);
+
+    lua_pushnil(L);
+    return 3;
+}
+
 int smlua__eq(lua_State *L) {
     const CObject *a = lua_touserdata(L, 1);
     const CObject *b = lua_touserdata(L, 2);
@@ -724,6 +759,7 @@ void smlua_cobject_init_globals(void) {
     luaL_Reg cObjectMethods[] = {
         { "__index",    smlua__get_field },
         { "__newindex", smlua__set_field },
+        { "__pairs",    smlua__pairs },
         { "__eq",       smlua__eq },
         { "__bnot",     smlua__bnot },
         { "__metatable", NULL },

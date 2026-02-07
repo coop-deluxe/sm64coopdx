@@ -21,10 +21,9 @@
 // Optional parameters must be contiguous until the last parameter (a mandatory parameter following an optional parameter is not allowed)
 #define OPTIONAL
 
-/* A macro to tell autogen the field `name` is a property member of the struct that calls `get` or `set` accessors
-    - get: fun(self) -> value
-    - set: fun(self, value)
-*/
+// A macro to tell autogen the field `name` is a property member of the struct that calls `get` or `set` accessors
+// - get: fun(self) -> value
+// - set: fun(self, value)
 #define PROPERTY(name, get, set)
 
 // A macro to tell autogen the field `name` is a function member of the struct that calls `c_function`

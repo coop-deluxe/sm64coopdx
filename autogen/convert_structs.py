@@ -574,8 +574,10 @@ def build_struct(struct):
             row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
             row.append('%s, '       % fimmutable)
             row.append('%s, '       % lot       )
-            row.append('%s, '       % size      )
-            row.append('sizeof(%s)' % ftype     )
+            if size != 1:
+                row.append('%s, '       % size      )
+                row.append('sizeof(%s)' % ftype     )
+            else: row[-1] = row[-1][:-2]
         row.extend(['\\'] * (8 - len(row)))
         row.append(endStr)
         if field.get('function'):
