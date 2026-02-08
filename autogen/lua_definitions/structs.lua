@@ -1730,7 +1730,7 @@
 --- @field public oCameraLakituSpeed number
 --- @field public oCameraLakituCircleRadius number
 --- @field public oCameraLakituFinishedDialog integer
---- @field public oCameraLakituUnk104 integer
+--- @field public oCameraLakituMusicPlayed integer
 --- @field public oCameraLakituPitchVel integer
 --- @field public oCameraLakituYawVel integer
 --- @field public oEnemyLakituNumSpinies integer
