@@ -70,9 +70,13 @@ void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
                 ringSpawner->oWaterRingSpawnerRingsCollected++;
                 if (ringSpawner->oWaterRingSpawnerRingsCollected < 6) {
                     spawn_orange_number(ringSpawner->oWaterRingSpawnerRingsCollected, 0, -40, 0);
+#ifdef VERSION_JP
+                    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+#else
                     play_sound(SOUND_MENU_COLLECT_SECRET
                                    + (((u8) ringSpawner->oWaterRingSpawnerRingsCollected - 1) << 16),
                                gGlobalSoundSource);
+#endif
                     if (ringSpawner->oWaterRingSpawnerRingsCollected == 5) {
                         ringSpawner->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
                     }

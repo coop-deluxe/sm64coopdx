@@ -63,7 +63,7 @@ void network_receive_spawn_star(struct Packet* p) {
         // This check is vital for objects which are network owned specfically.
         // Leaving this the only way to properly set the cutscene flags
         // for those who don't own the object.
-        // LOG_CONSOLE("network_receive_spawn_star: Network Player Index is %i, Our Global Index is %i.\n", networkPlayerIndex, gNetworkPlayers[0].globalIndex);
+        LOG_CONSOLE("network_receive_spawn_star: Network Player Index is %i, Our Global Index is %i.\n", networkPlayerIndex, gNetworkPlayers[0].globalIndex);
         if (networkPlayerIndex == gNetworkPlayers[0].globalIndex) {
             o->oStarSpawnExtCutsceneFlags = 1;
         } else {

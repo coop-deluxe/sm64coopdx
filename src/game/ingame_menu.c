@@ -3071,8 +3071,21 @@ s16 render_pause_courses_and_castle(void) {
 #define HUD_PRINT_CONGRATULATIONS 1
 
 void print_hud_course_complete_string(s8 str) {
+#ifdef VERSION_EU
+    u8 textHiScore[][15] = {
+        { TEXT_HUD_HI_SCORE },
+        { TEXT_HUD_HI_SCORE_FR },
+        { TEXT_HUD_HI_SCORE_DE }
+    };
+    u8 textCongratulations[][16] = {
+        { TEXT_HUD_CONGRATULATIONS },
+        { TEXT_HUD_CONGRATULATIONS_FR },
+        { TEXT_HUD_CONGRATULATIONS_DE }
+    };
+#else
     INGAME_TEXT_COPY(textHiScore, TEXT_HUD_HI_SCORE);
     INGAME_TEXT_COPY(textCongratulations, TEXT_HUD_CONGRATULATIONS);
+#endif
 
     u8 colorFade = sins(gDialogColorFadeTimer) * 50.0f + 200.0f;
 
@@ -3080,9 +3093,19 @@ void print_hud_course_complete_string(s8 str) {
     gDPSetEnvColor(gDisplayListHead++, colorFade, colorFade, colorFade, 255);
 
     if (str == HUD_PRINT_HISCORE) {
+#ifdef VERSION_EU
+        print_hud_lut_string(HUD_LUT_GLOBAL, get_str_x_pos_from_center_scale(160, textHiScore[gInGameLanguage], 12.0f),
+                  36, textHiScore[gInGameLanguage]);
+#else
         print_hud_lut_string(HUD_LUT_GLOBAL, TXT_HISCORE_X, TXT_HISCORE_Y, textHiScore);
+#endif
     } else { // HUD_PRINT_CONGRATULATIONS
+#ifdef VERSION_EU
+        print_hud_lut_string(HUD_LUT_GLOBAL, get_str_x_pos_from_center_scale(160, textCongratulations[gInGameLanguage], 12.0f),
+                  67, textCongratulations[gInGameLanguage]);
+#else
         print_hud_lut_string(HUD_LUT_GLOBAL, TXT_CONGRATS_X, 67, textCongratulations);
+#endif
     }
 
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
