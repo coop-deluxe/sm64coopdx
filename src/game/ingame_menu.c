@@ -3063,9 +3063,19 @@ s16 render_pause_courses_and_castle(void) {
     return 0;
 }
 
+#if defined(VERSION_JP)
+#define TXT_HISCORE_X 112
+#define TXT_HISCORE_Y 48
+#define TXT_CONGRATS_X 60
+#elif defined(VERSION_SH)
+#define TXT_HISCORE_X 118
+#define TXT_HISCORE_Y 48
+#define TXT_CONGRATS_X 70
+#else
 #define TXT_HISCORE_X 109
 #define TXT_HISCORE_Y 36
 #define TXT_CONGRATS_X 70
+#endif
 
 #define HUD_PRINT_HISCORE         0
 #define HUD_PRINT_CONGRATULATIONS 1
