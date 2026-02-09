@@ -48,7 +48,9 @@ void bhv_jet_stream_water_ring_init(void) {
 // sp2c = ringManager
 
 void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
-    struct Object* player = nearest_player_to_object(o);
+    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (!marioState) { return; }
+    struct Object* player = marioState->marioObj;
     if (!player) { return; }
     f32 marioDistInFront = water_ring_calc_mario_dist();
     struct Object *ringSpawner;
@@ -68,13 +70,12 @@ void water_ring_check_collection(f32 avgScale, struct Object *ringManager) {
                 ringSpawner->oWaterRingSpawnerRingsCollected++;
                 if (ringSpawner->oWaterRingSpawnerRingsCollected < 6) {
                     spawn_orange_number(ringSpawner->oWaterRingSpawnerRingsCollected, 0, -40, 0);
-#ifdef VERSION_JP
-                    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
-#else
                     play_sound(SOUND_MENU_COLLECT_SECRET
                                    + (((u8) ringSpawner->oWaterRingSpawnerRingsCollected - 1) << 16),
                                gGlobalSoundSource);
-#endif
+                    if (ringSpawner->oWaterRingSpawnerRingsCollected == 5) {
+                        ringSpawner->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
+                    }
                 }
 
                 ringManager->oWaterRingMgrLastRingCollected = o->oWaterRingIndex;
@@ -196,7 +197,7 @@ void bhv_jet_stream_ring_spawner_loop(void) {
         case JS_RING_SPAWNER_ACT_ACTIVE:
             water_ring_spawner_act_inactive();
 
-            if (o->oWaterRingSpawnerRingsCollected == 5) {
+            if (o->oWaterRingSpawnerRingsCollected == 5 && o->globalPlayerIndex == gNetworkPlayerLocal->globalIndex) {
                 spawn_mist_particles();
 
                 f32* starPos = gLevelValues.starPositions.JetstreamRingStarPos;

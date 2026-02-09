@@ -230,7 +230,6 @@ void king_bobomb_act_7(void) {
 void king_bobomb_act_8(void) {
     if (!(o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE)) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
-        struct Object *star = NULL;
 
         create_sound_spawner(SOUND_OBJ_KING_WHOMP_DEATH);
         cur_obj_hide();
@@ -244,7 +243,7 @@ void king_bobomb_act_8(void) {
 
         if (marioState && marioState->playerIndex == gNetworkPlayerLocal->localIndex) {
             f32* starPos = gLevelValues.starPositions.KingBobombStarPos;
-            star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
+            spawn_default_star(starPos[0], starPos[1], starPos[2]);
         }
 
         o->oPosY = objectPosY;
