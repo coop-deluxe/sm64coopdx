@@ -7,6 +7,7 @@ static s16 sYoshiHomeLocations[] = { 0, -5625, -1364, -5912, -1403, -4609, -1004
 static s16 sYoshiRespawnPos[] = { -12406, 1076, -8567 };
 static u8 sYoshiRespawnDuration = 2 * 30;
 static u8 sYoshiTalkingState = 0;
+static bool sYoshiNeeded = false;
 
 extern void push_mario_out_of_object(struct MarioState *m, struct Object *o, f32 padding);
 
@@ -23,6 +24,7 @@ void bhv_yoshi_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 }
 
 void bhv_yoshi_init(void) {
+    sOverrideYoshiAlive = false;
     sYoshiTalkingState = 0;
     o->oGravity = 2.0f;
     o->oFriction = 0.9f;
@@ -194,14 +196,7 @@ void yoshi_give_present_loop(void) {
         if (gHudDisplay.lives == 100) {
             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
             gMarioStates[0].specialTripleJump = true;
-            bool yoshiNeeded = false;
-            for (u8 i = 0; i < MAX_PLAYERS; i++) {
-                if (gNetworkPlayers[i].currLevelNum == LEVEL_CASTLE_GROUNDS && !gMarioStates[i].specialTripleJump) {
-                    yoshiNeeded = true;
-                    break;
-                }
-            }
-            if (yoshiNeeded) {
+            if (sYoshiNeeded) {
                 sYoshiTalkingState = 2;
                 o->oAction = YOSHI_ACT_IDLE;
             } else {
@@ -223,6 +218,22 @@ void yoshi_gone() {
 }
 
 void yoshi_reappear() {
+    if (gCurrLevelNum != LEVEL_CASTLE_GROUNDS || !dynos_level_is_vanilla_level(gCurrLevelNum)) {
+        o->oHomeX = sYoshiHomeLocations[2];
+        o->oHomeY = 3174.0f;
+        o->oHomeZ = sYoshiHomeLocations[3];
+        o->oPosX = o->oHomeX;
+        o->oPosY = o->oHomeY;
+        o->oPosZ = o->oHomeZ;
+        o->oForwardVel = 0.0f;
+        o->oVelY = 0.0f;
+        cur_obj_init_animation(0);
+        spawn_mist_particles();
+        cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
+        o->oAction = YOSHI_ACT_IDLE;
+        return;
+    }
+
     u8 decAmount = 4;
     if (o->oTimer == 0) {
         o->oHomeX = sYoshiHomeLocations[2];
@@ -307,21 +318,29 @@ void bhv_yoshi_loop(void) {
         set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
     }
 
-    bool yoshiNeeded = false;
-    for (u8 i = 0; i < MAX_PLAYERS; i++) {
-        if (gNetworkPlayers[i].currLevelNum == LEVEL_CASTLE_GROUNDS && !gMarioStates[i].specialTripleJump) {
-            yoshiNeeded = true;
-            break;
+    if (sOverrideYoshiAlive) {
+        LOG_CONSOLE("Overidden")
+        sYoshiNeeded = true;
+    } else if (save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) < 120) {
+        LOG_CONSOLE("Not sufficent star count")
+        sYoshiNeeded = false;
+    } else {
+        sYoshiNeeded = false;
+        for (u8 i = 0; i < MAX_PLAYERS; i++) {
+            if (gNetworkPlayers[i].currLevelNum == LEVEL_CASTLE_GROUNDS && !gMarioStates[i].specialTripleJump) {
+                sYoshiNeeded = true;
+                break;
+            }
         }
     }
 
-    if (!yoshiNeeded
+    if (!sYoshiNeeded
     && o->oAction != YOSHI_ACT_GONE
     && o->oAction != YOSHI_ACT_WALK_JUMP_OFF_ROOF
     && o->oAction != YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN
     && o->oAction != YOSHI_ACT_REAPPEAR) {
         o->oAction = YOSHI_ACT_WALK_JUMP_OFF_ROOF;
-    } else if (yoshiNeeded && o->oAction == YOSHI_ACT_GONE) {
+    } else if (sYoshiNeeded && o->oAction == YOSHI_ACT_GONE) {
         o->oAction = YOSHI_ACT_REAPPEAR;
     }
 

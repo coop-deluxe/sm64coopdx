@@ -75,11 +75,11 @@ s16 sPrevCheckMarioRoom = 0;
 /**
  * Override for whether or not Yoshi has walked/jumped off the roof.
  */
-s8 sOverrideYoshiDead = FALSE;
+s8 sOverrideYoshiAlive = FALSE;
 
-/* |description|Resets Yoshi as being alive|descriptionEnd| */
+/* |description|Marks Yoshi as alive|descriptionEnd| */
 void set_yoshi_as_not_dead(void) {
-    sOverrideYoshiDead = FALSE;
+    sOverrideYoshiAlive = FALSE;
 }
 
 /**
