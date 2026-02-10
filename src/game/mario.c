@@ -1058,6 +1058,14 @@ static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actio
                 mario_set_forward_vel(m, 16.0f);
             }
             break;
+
+        case ACT_THROWN_BACKWARD:
+        case ACT_THROWN_FORWARD:
+        case ACT_SOFT_BONK:
+            if (!(actionArg & PVP_ATTACK_KNOCKBACK_ACTION_ARG)) {
+                mario_set_forward_vel(m, m->forwardVel); // needed to update velocities
+            }
+            break;
     }
 
     m->peakHeight = m->pos[1];
