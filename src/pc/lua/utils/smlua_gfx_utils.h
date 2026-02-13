@@ -17,8 +17,8 @@ u32 gfx_get_length_no_sentinel(const Gfx *gfx);
 void enable_shader_flag(enum ShaderFlag flag, bool enabled);
 /* |description|Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
 void set_shader_flag_value(enum ShaderFlag flag, f32 value);
-/* |description|Enables custom shader flags applying to everything, including HUD elements and menus|descriptionEnd| */
-void enable_shader_flags_screen(bool enabled);
+/* |description|Enables custom shader flags as a global toggle, useful for disabling without manually going through every effect|descriptionEnd| */
+void enable_shader_flags_global(bool enabled);
 /* |description|Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
 void clear_all_shader_flags(void);
 

@@ -10699,8 +10699,8 @@ function set_shader_flag_value(flag, value)
 end
 
 --- @param enabled boolean
---- Enables custom shader flags applying to everything, including HUD elements and menus
-function enable_shader_flags_screen(enabled)
+--- Enables custom shader flags as a global toggle, useful for disabling without manually going through every effect
+function enable_shader_flags_global(enabled)
     -- ...
 end
 

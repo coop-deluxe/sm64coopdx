@@ -28,7 +28,7 @@ extern f32 gFogIntensity;
 extern int gShaderFlags[SHADER_FLAG_MAX];
 extern f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX];
 extern f32 gShaderFlagValues[SHADER_FLAG_MAX];
-extern bool gShaderFlagsScreen;
+extern bool gShaderFlagsEnabled;
 
 #ifdef __cplusplus
 extern "C" {

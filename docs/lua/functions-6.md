@@ -7507,13 +7507,13 @@ Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the render
 
 <br />
 
-## [enable_shader_flags_screen](#enable_shader_flags_screen)
+## [enable_shader_flags_global](#enable_shader_flags_global)
 
 ### Description
-Enables custom shader flags applying to everything, including HUD elements and menus
+Enables custom shader flags as a global toggle, useful for disabling without manually going through every effect
 
 ### Lua Example
-`enable_shader_flags_screen(enabled)`
+`enable_shader_flags_global(enabled)`
 
 ### Parameters
 | Field | Type |
@@ -7524,7 +7524,7 @@ Enables custom shader flags applying to everything, including HUD elements and m
 - None
 
 ### C Prototype
-`void enable_shader_flags_screen(bool enabled);`
+`void enable_shader_flags_global(bool enabled);`
 
 [:arrow_up_small:](#)
 

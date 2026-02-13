@@ -14,8 +14,8 @@ void set_shader_flag_value(enum ShaderFlag flag, f32 value) {
     gShaderFlagValues[flag] = value;
 }
 
-void enable_shader_flags_screen(bool enabled) {
-    gShaderFlagsScreen = enabled;
+void enable_shader_flags_global(bool enabled) {
+    gShaderFlagsEnabled = enabled;
 }
 
 AT_STARTUP void clear_all_shader_flags(void) {
