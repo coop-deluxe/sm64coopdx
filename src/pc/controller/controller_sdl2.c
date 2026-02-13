@@ -178,7 +178,7 @@ static inline void update_button(const int i, const bool new) {
 
 static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
-    static const float FSHRT_MAX = 32768.f;
+    static const float INPUT_ABS_MAX = 0x8000;
 
     float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
     float deadzone = configStickDeadzone * DEADZONE_STEP;
@@ -188,7 +188,7 @@ static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
         float dir_x = (float)input_x / magnitude;
         float dir_y = (float)input_y / magnitude;
         float scale = 1.f / fmaxf(fabsf(dir_x), fabsf(dir_y));
-        float max_magnitude = FSHRT_MAX * scale;
+        float max_magnitude = INPUT_ABS_MAX * scale;
 
         magnitude -= deadzone;
         magnitude *= max_magnitude / (max_magnitude - deadzone);
