@@ -2982,7 +2982,8 @@ SHADER_FLAG_CONTRAST      = 3 --- @type ShaderFlag
 SHADER_FLAG_EXPOSURE      = 4 --- @type ShaderFlag
 SHADER_FLAG_DITHERING     = 5 --- @type ShaderFlag
 SHADER_FLAG_POSTERIZATION = 6 --- @type ShaderFlag
-SHADER_FLAG_MAX           = 7 --- @type ShaderFlag
+SHADER_FLAG_SCANLINES     = 7 --- @type ShaderFlag
+SHADER_FLAG_MAX           = 8 --- @type ShaderFlag
 
 --- @alias ShaderFlag
 --- | `SHADER_FLAG_HUE`
@@ -2992,6 +2993,7 @@ SHADER_FLAG_MAX           = 7 --- @type ShaderFlag
 --- | `SHADER_FLAG_EXPOSURE`
 --- | `SHADER_FLAG_DITHERING`
 --- | `SHADER_FLAG_POSTERIZATION`
+--- | `SHADER_FLAG_SCANLINES`
 --- | `SHADER_FLAG_MAX`
 
 --- @type integer

@@ -506,6 +506,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "int levels = int(uShaderFlagValues[6]);");
         append_line(fs_buf, &fs_len, "texel.rgb = floor(texel.rgb * levels) / levels;");
         append_line(fs_buf, &fs_len, "}");
+
+        // scan lines
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[7] == 1) {");
+        append_line(fs_buf, &fs_len, "float scan = sin(gl_FragCoord.y * 1.5) * 0.04;");
+        append_line(fs_buf, &fs_len, "texel.rgb -= scan * uShaderFlagValues[7];");
+        append_line(fs_buf, &fs_len, "}");
     }
 
     if (opt_fog) {
