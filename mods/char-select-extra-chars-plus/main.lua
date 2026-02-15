@@ -1,5 +1,5 @@
--- name: [CS] Extra Characters Plus
--- description: [CS] Extra Characters Plus v1.1\nBy: \\#00ff00\\ULTRA BROS TEAM\n\ \n\\\#ffffff\\A CS Pack done by CoopDX members that not only gives opportunity to new roster additions but also provides unique movesets.\n\ \n\\\#00ff00\\It is RECOMMENDED to have the interpolation set to ACCURATE.\n\ \n\Delete the modcache file in sm64coopdx's roaming file and restart if multiplayer causes issues.\n\ \n\\\#ff0000\\REQUIRES Character Select v1.16 or newer for all of it's features to be used.
+-- name: \\##ff87b5\\[CS] Extra Characters Plus
+-- description: \\##ffffff\\[CS] Extra Characters Plus v1.3\nBy: \\#00ff00\\ULTRA BROS TEAM\n\ \n\\\#ffffff\\A CS Pack done by CoopDX members that not only gives opportunity to new roster additions but also provides unique movesets.\n\ \n\\\#00ff00\\It is RECOMMENDED to have the interpolation set to ACCURATE.\n\ \n\\\#ffff00\\Delete the modcache file in sm64coopdx's roaming file and restart if multiplayer causes issues.\n\ \n\\\#ff0000\\REQUIRES Character Select v1.16 or newer for all of it's features to be used.
 -- category: cs
 
 local TEXT_VANILLA_CAST = "CoopDX Characters"
@@ -14,9 +14,13 @@ end
 -- Additional Voicelines used for Characters
 YOSHI_SOUND_FLUTTER = CHAR_SOUND_MAX + 1
 
--- Edit Model for Sonic
---local E_MODEL_SUPERSONIC = smlua_model_util_get_id("segasupersonic_geo"),
-
+GAMEMODE_ACTIVE = false
+for i in pairs(gActiveMods) do
+    local mod = gActiveMods[i]
+    if (mod.incompatible and mod.incompatible:find("gamemode")) or (mod.category and mod.category:find("gamemode")) then
+        GAMEMODE_ACTIVE = true
+    end
+end
 
 -- Characters are stored in a table for ease of addition
 
@@ -30,15 +34,16 @@ extraCharacters = {
         "A very rare female toad with a bubbly personality who lives in a world of male toads! She seems to enjoy her hobby as a construction boss! Although for some reason, she seems to hate unions. Wonder why?",
         credits = "Coop Team / VA: MelissaMekrose",
         color = { r = 255, g = 70, b = 161 },
-        model = smlua_model_util_get_id("toadette_geo"),
+        model = smlua_model_util_get_id("ec_toadette_geo"),
         forceChar = CT_TOAD,
-        lifeIcon = get_texture_info("icon-toadette"),
+        lifeIcon = get_texture_info("icon-ec-toadette"),
+        graffiti = get_texture_info("char-select-ec-graffiti-toadette"),
         camScale = 0.8,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-toadette-meter-left"),
-                right = get_texture_info("char-select-toadette-meter-right"),
+                left    = get_texture_info("char-select-ec-toadette-meter-left"),
+                right   = get_texture_info("char-select-ec-toadette-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -52,10 +57,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("toadette_cap_geo"),
-            wing = smlua_model_util_get_id("toadette_wing_cap_geo"),
-            metal = smlua_model_util_get_id("toadette_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("toadette_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_toadette_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_toadette_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_toadette_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_toadette_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -69,7 +74,17 @@ extraCharacters = {
                 [CAP]    = 'f30080',
                 [EMBLEM] = 'f30080'
             },
-
+            {
+                name     = "Retro",
+                [PANTS]  = 'ffffff',
+                [SHIRT]  = 'f1318f',
+                [GLOVES] = 'FFFFFF',
+                [SHOES]  = 'f1318f',
+                [HAIR]   = 'f1318f',
+                [SKIN]   = 'f7c37f',
+                [CAP]    = 'f1318f',
+                [EMBLEM] = 'f1318f'
+            },
             {
                 name     = "Drill",
                 [PANTS]  = 'ffffff',
@@ -93,7 +108,6 @@ extraCharacters = {
                 [CAP]    = 'bdbdbd',
                 [EMBLEM] = '555555'
             },
-
             {
                 name     = "Poison",
                 [PANTS]  = '000000',
@@ -162,15 +176,16 @@ extraCharacters = {
         "The ruler of the Mushroom Kingdom, always ready to help Mario in his adventures and save her kingdom from the evil clutches of King Bowser! .........wait. What?! Why is she here?! How did she escape?! And who's the Peach we saw earlier?! This is confusing!",
         credits = "Coop Team / VA: SuperKirbyLover",
         color = { r = 239, g = 128, b = 177 },
-        model = smlua_model_util_get_id("peach_player_geo"),
+        model = smlua_model_util_get_id("ec_peach_player_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-peach"),
+        lifeIcon = get_texture_info("icon-ec-peach"),
+        graffiti = get_texture_info("char-select-ec-graffiti-peach"),
         camScale = 1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-peach-meter-left"),
-                right = get_texture_info("char-select-peach-meter-right"),
+                left    = get_texture_info("char-select-ec-peach-meter-left"),
+                right   = get_texture_info("char-select-ec-peach-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -184,25 +199,25 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("peach_player_cap_geo"),
-            wing = smlua_model_util_get_id("peach_player_wing_cap_geo"),
-            metal = smlua_model_util_get_id("peach_player_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("peach_player_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_peach_player_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_peach_player_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_peach_player_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_peach_player_metal_wing_cap_geo")
         },
         palettes = {
             {
                 name     = "Default",
-                [PANTS]  = 'ff5096',
-                [SHIRT]  = 'f8c8bb',
+                [PANTS]  = 'ee6283',
+                [SHIRT]  = 'ffc5bd',
                 [GLOVES] = 'ffffff',
-                [SHOES]  = '0000ff',
-                [HAIR]   = 'ffd302',
-                [SKIN]   = 'fec179',
-                [CAP]    = 'ffff00',
-                [EMBLEM] = '0082ff'
+                [SHOES]  = '1635ce',
+                [HAIR]   = 'ffbf18',
+                [SKIN]   = 'ffe6a4',
+                [CAP]    = 'ffde00',
+                [EMBLEM] = '0883d5'
             },
             {
-                name     = "Classic",
+                name     = "Retro",
                 [PANTS]  = 'b53120',
                 [SHIRT]  = 'ffffff',
                 [GLOVES] = 'ffffff',
@@ -370,15 +385,16 @@ extraCharacters = {
         "Princess of the Sarasaland who was once rescued by Mario against the evil alien, Tatanga! Boasting with energy, she has joined Mario and friends on occasional friendly events, such as golf, tennis, and parties! Try to stay on her good side, if you know what's best for ya!",
         credits = "Coop Team / VA: MorphiGalaxi",
         color = { r = 255, g = 97, b = 0 },
-        model = smlua_model_util_get_id("daisy_geo"),
+        model = smlua_model_util_get_id("ec_daisy_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-daisy"),
+        lifeIcon = get_texture_info("icon-ec-daisy"),
+        graffiti = get_texture_info("char-select-ec-graffiti-daisy"),
         camScale = 1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-daisy-meter-left"),
-                right = get_texture_info("char-select-daisy-meter-right"),
+                left    = get_texture_info("char-select-ec-daisy-meter-left"),
+                right   = get_texture_info("char-select-ec-daisy-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -392,10 +408,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("daisy_cap_geo"),
-            wing = smlua_model_util_get_id("daisy_wing_cap_geo"),
-            metal = smlua_model_util_get_id("daisy_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("daisy_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_daisy_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_daisy_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_daisy_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_daisy_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -408,6 +424,28 @@ extraCharacters = {
                 [SKIN]   = 'FDAE82',
                 [CAP]    = 'FF0000',
                 [EMBLEM] = '00FFFF'
+            },
+            {
+                name     = "LCD",
+                [PANTS]  = 'A8A8A8',
+                [SHIRT]  = '505050',
+                [GLOVES] = '505050',
+                [SHOES]  = 'A8A8A8',
+                [HAIR]   = '161616',
+                [SKIN]   = 'A8A8A8',
+                [CAP]    = '505050',
+                [EMBLEM] = 'A8A8A8'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = '944e13',
+                [SHIRT]  = 'd5d5d5',
+                [GLOVES] = 'dc9d38',
+                [SHOES]  = 'd5d5d5',
+                [HAIR]   = '944e13',
+                [SKIN]   = 'dc9d38',
+                [CAP]    = 'dc9d38',
+                [EMBLEM] = '944e13'
             },
             {
                 name     = "Modern",
@@ -431,19 +469,6 @@ extraCharacters = {
                 [CAP]    = 'f7ea6e',
                 [EMBLEM] = 'ce53b2',
             },
-
-            {
-                name     = "LCD",
-                [PANTS]  = 'A8A8A8',
-                [SHIRT]  = '505050',
-                [GLOVES] = '505050',
-                [SHOES]  = 'A8A8A8',
-                [HAIR]   = '161616',
-                [SKIN]   = 'A8A8A8',
-                [CAP]    = '505050',
-                [EMBLEM] = 'A8A8A8'
-            },
-
         },
         voices = {
             [CHAR_SOUND_ATTACKED] = { 'daisy_attacked_1.ogg', 'daisy_attacked_2.ogg', 'daisy_attacked_3.ogg' },
@@ -581,15 +606,16 @@ extraCharacters = {
         "A friendly dinosuar originating from Dinosuar Land where he reunited with Mario! These cute little guys come in different colors! Might suggest to stay back when they're in a very hungry mood...",
         credits = "Coop Team / VA: FunkyLion 'Yuyake'",
         color = { r = 0, g = 255, b = 0 },
-        model = smlua_model_util_get_id("yoshi_player_geo"),
+        model = smlua_model_util_get_id("ec_yoshi_player_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-yoshi"),
+        lifeIcon = get_texture_info("icon-ec-yoshi"),
+        graffiti = get_texture_info("char-select-ec-graffiti-yoshi"),
         camScale = 1.1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-yoshi-meter-left"),
-                right = get_texture_info("char-select-yoshi-meter-right"),
+                left    = get_texture_info("char-select-ec-yoshi-meter-left"),
+                right   = get_texture_info("char-select-ec-yoshi-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -603,10 +629,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("yoshi_player_cap_geo"),
-            wing = smlua_model_util_get_id("yoshi_player_wing_cap_geo"),
-            metal = smlua_model_util_get_id("yoshi_player_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("yoshi_player_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_yoshi_player_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_yoshi_player_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_yoshi_player_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_yoshi_player_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -621,13 +647,24 @@ extraCharacters = {
                 [EMBLEM] = { r = 0xFF, g = 0x00, b = 0x00 }
             },
             {
+                name     = "Retro",
+                [PANTS]  = 'FFFFFF',
+                [SHIRT]  = '468519',
+                [GLOVES] = 'FFFFFF',
+                [SHOES]  = 'b53121',
+                [HAIR]   = 'b53121',
+                [SKIN]   = 'FFFFFF',
+                [CAP]    = '468519',
+                [EMBLEM] = 'b53121'
+            },
+            {
                 name     = "Red",
                 [PANTS]  = 'FFFF00',
                 [SHIRT]  = 'FE0000',
                 [GLOVES] = 'FFFFFF',
                 [SHOES]  = '0000FF',
                 [HAIR]   = 'FF6800',
-                [SKIN]   = 'FEC179',
+                [SKIN]   = 'FEDE39',
                 [CAP]    = 'FF0000',
                 [EMBLEM] = 'FF0000'
             },
@@ -638,7 +675,7 @@ extraCharacters = {
                 [GLOVES] = 'FFFFFF',
                 [SHOES]  = 'cb2998',
                 [HAIR]   = 'ff6800',
-                [SKIN]   = 'fec179',
+                [SKIN]   = 'fede39',
                 [CAP]    = '004098',
                 [EMBLEM] = 'ff0000'
             },
@@ -649,7 +686,7 @@ extraCharacters = {
                 [GLOVES] = 'FFFFFF',
                 [SHOES]  = '00ff00',
                 [HAIR]   = 'ff8600',
-                [SKIN]   = 'fec179',
+                [SKIN]   = 'fede39',
                 [CAP]    = 'ffff00',
                 [EMBLEM] = 'ff0000'
             },
@@ -712,15 +749,16 @@ extraCharacters = {
         "A very feminine dinosuar who has fought against Mario during his dreams! How she came into reality is anyone's guess. It is said she was once a boy before she learned more about herself in life and eventually became a girl!",
         credits = "Coop Team / VA: LuUvvUCY 'Lucy'",
         color = { r = 254, g = 77, b = 127 },
-        model = smlua_model_util_get_id("birdo_geo"),
+        model = smlua_model_util_get_id("ec_birdo_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-birdo"),
+        lifeIcon = get_texture_info("icon-ec-birdo"),
+        graffiti = get_texture_info("char-select-ec-graffiti-birdo"),
         camScale = 1.1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-birdo-meter-left"),
-                right = get_texture_info("char-select-birdo-meter-right"),
+                left    = get_texture_info("char-select-ec-birdo-meter-left"),
+                right   = get_texture_info("char-select-ec-birdo-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -734,10 +772,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("birdo_cap_geo"),
-            wing = smlua_model_util_get_id("birdo_wing_cap_geo"),
-            metal = smlua_model_util_get_id("birdo_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("birdo_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_birdo_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_birdo_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_birdo_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_birdo_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -750,6 +788,17 @@ extraCharacters = {
                 [SKIN]   = 'FEC179',
                 [CAP]    = 'FE4D7F',
                 [EMBLEM] = 'FF0000'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = '6b1240',
+                [SHIRT]  = 'c82777',
+                [GLOVES] = 'FFFFFF',
+                [SHOES]  = 'c82777',
+                [HAIR]   = '6b1240',
+                [SKIN]   = 'c82777',
+                [CAP]    = 'c82777',
+                [EMBLEM] = '6b1240'
             },
             {
                 name     = "Green",
@@ -783,7 +832,7 @@ extraCharacters = {
                 [SKIN]   = '646464',
                 [CAP]    = '646464',
                 [EMBLEM] = '646464'
-            }
+            },
         },
         voices = {
             [CHAR_SOUND_ATTACKED] = "birdo_attacked.ogg",
@@ -846,15 +895,16 @@ extraCharacters = {
         "Owner of the Wrecking Crew company and former boss of the Mario Brothers before they moved to the plumbing business! He's had a vendetta against the bros since! Quite versitile with his hammer!",
         credits = "Coop Team / VA: VinnyVinesauce",
         color = { r = 88, g = 142, b = 255 },
-        model = smlua_model_util_get_id("foreman_spike_geo"),
+        model = smlua_model_util_get_id("ec_foreman_spike_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-spike"),
+        lifeIcon = get_texture_info("icon-ec-spike"),
+        graffiti = get_texture_info("char-select-ec-graffiti-foremanspike"),
         camScale = 1.1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-foremanspike-meter-left"),
-                right = get_texture_info("char-select-foremanspike-meter-right"),
+                left    = get_texture_info("char-select-ec-foremanspike-meter-left"),
+                right   = get_texture_info("char-select-ec-foremanspike-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -868,10 +918,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("foreman_spike_cap_geo"),
-            wing = smlua_model_util_get_id("foreman_spike_wing_cap_geo"),
-            metal = smlua_model_util_get_id("foreman_spike_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("foreman_spike_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_foreman_spike_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_foreman_spike_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_foreman_spike_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_foreman_spike_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -906,6 +956,28 @@ extraCharacters = {
                 [SKIN]   = 'fcbcb0',
                 [CAP]    = 'c84c0c',
                 [EMBLEM] = '0000a8'
+            },
+            {
+                name     = "1998",
+                [PANTS]  = '403228',
+                [SHIRT]  = '403228',
+                [GLOVES] = 'fec179',
+                [SHOES]  = '080808',
+                [HAIR]   = '1a161f',
+                [SKIN]   = 'fec179',
+                [CAP]    = '3c3841',
+                [EMBLEM] = '48c048'
+            },
+            {
+                name     = "Ballpicker",
+                [PANTS]  = 'a38dc4',
+                [SHIRT]  = '453c6f',
+                [GLOVES] = 'FFFFFF',
+                [SHOES]  = '342d59',
+                [HAIR]   = '2f1b42',
+                [SKIN]   = 'fec179',
+                [CAP]    = 'e5d117',
+                [EMBLEM] = 'b0ad6a'
             },
         },
         voices = {
@@ -964,15 +1036,16 @@ extraCharacters = {
         "Mayor of New Donk City who was originally saved by Mario in his days as a carpenter against the big ape, Donkey Kong!",
         credits = "Coop Team / VA: BeckyVO",
         color = { r = 207, g = 66, b = 57 },
-        model = smlua_model_util_get_id("pauline_geo"),
+        model = smlua_model_util_get_id("ec_pauline_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-pauline"),
+        lifeIcon = get_texture_info("icon-ec-pauline"),
+        graffiti = get_texture_info("char-select-ec-graffiti-pauline"),
         camScale = 1.1,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-pauline-meter-left"),
-                right = get_texture_info("char-select-pauline-meter-right"),
+                left    = get_texture_info("char-select-ec-pauline-meter-left"),
+                right   = get_texture_info("char-select-ec-pauline-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -986,10 +1059,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("pauline_cap_geo"),
-            wing = smlua_model_util_get_id("pauline_wing_cap_geo"),
-            metal = smlua_model_util_get_id("pauline_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("pauline_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_pauline_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_pauline_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_pauline_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_pauline_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -1013,6 +1086,17 @@ extraCharacters = {
                 [SKIN]   = 'f6e9b7',
                 [CAP]    = 'ff9fd5',
                 [EMBLEM] = 'ffffff'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = 'f057e8',
+                [SHIRT]  = 'f057e8',
+                [GLOVES] = 'f057e8',
+                [SHOES]  = 'f057e8',
+                [HAIR]   = 'ee7511',
+                [SKIN]   = 'fefcff',
+                [CAP]    = 'f057e8',
+                [EMBLEM] = 'f057e8'
             },
             {
                 name     = "Odd Rock",
@@ -1174,16 +1258,16 @@ extraCharacters = {
         "Protector of the cosmos and mother to billions of Lumas. She was once a little girl who lost her own mother after traveling the cosmos to help a little Luma find their own mother. She has taken her role as their mother since.",
         credits = "Coop Team / VA: GauntletQueen",
         color = { r = 143, g = 239, b = 246 },
-        model = smlua_model_util_get_id("rosalina_geo"),
+        model = smlua_model_util_get_id("ec_rosalina_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-rosalina"),
-        graffiti = get_texture_info("char-select-graffiti-rosalina"),
+        lifeIcon = get_texture_info("icon-ec-rosalina"),
+        graffiti = get_texture_info("char-select-ec-graffiti-rosalina"),
         camScale = 1.5,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-rosalina-meter-left"),
-                right = get_texture_info("char-select-rosalina-meter-right"),
+                left    = get_texture_info("char-select-ec-rosalina-meter-left"),
+                right   = get_texture_info("char-select-ec-rosalina-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -1197,10 +1281,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("rosalina_cap_geo"),
-            wing = smlua_model_util_get_id("rosalina_wing_cap_geo"),
-            metal = smlua_model_util_get_id("rosalina_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("rosalina_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_rosalina_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_rosalina_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_rosalina_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_rosalina_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -1213,6 +1297,17 @@ extraCharacters = {
                 [SKIN]   = 'FCE3CD',
                 [CAP]    = 'B7B7BB',
                 [EMBLEM] = 'FFFF00'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = 'a2dbe7',
+                [SHIRT]  = 'a2dbe7',
+                [GLOVES] = '3f798b',
+                [SHOES]  = 'a2dbe7',
+                [HAIR]   = '3f798b',
+                [SKIN]   = 'd49f45',
+                [CAP]    = 'a2dbe7',
+                [EMBLEM] = '3f798b'
             },
             {
                 name     = "Super Bell",
@@ -1235,7 +1330,7 @@ extraCharacters = {
                 [SKIN]   = 'FCE3CD',
                 [CAP]    = 'B7B7BB',
                 [EMBLEM] = 'FFF9E9'
-            }
+            },
         },
         voices = {
             [CHAR_SOUND_ATTACKED] = "rosalina_attacked.ogg",
@@ -1377,15 +1472,16 @@ extraCharacters = {
         description = "Who is this?! A Princess Peach imposter?! A very angsty girl who holds a very large axe for neferious purposes! How did she get here?! And why?",
         credits     = "Coop Team / VA: SlashOLantern",
         color       = { r = 255, g = 129, b = 69 },
-        model       = smlua_model_util_get_id("wapeach_geo"),
+        model       = smlua_model_util_get_id("ec_wapeach_geo"),
         forceChar   = CT_MARIO,
-        lifeIcon    = get_texture_info("icon-wapeach"),
+        lifeIcon    = get_texture_info("icon-ec-wapeach"),
+        graffiti    = get_texture_info("char-select-ec-graffiti-wapeach"),
         camScale    = 1,
         offset      = 0,
         meter = {
             label = {
-                left    = get_texture_info("char-select-wapeach-meter-left"),
-                right   = get_texture_info("char-select-wapeach-meter-right"),
+                left    = get_texture_info("char-select-ec-wapeach-meter-left"),
+                right   = get_texture_info("char-select-ec-wapeach-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -1399,10 +1495,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("wapeach_cap_geo"),
-            wing = smlua_model_util_get_id("wapeach_wing_cap_geo"),
-            metal = smlua_model_util_get_id("wapeach_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("wapeach_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_wapeach_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_wapeach_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_wapeach_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_wapeach_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -1428,6 +1524,17 @@ extraCharacters = {
                 [EMBLEM] = 'FF258C'
             },
             {
+                name     = "Retro",
+                [PANTS]  = '743b89',
+                [SHIRT]  = '743b89',
+                [GLOVES] = '743b89',
+                [SHOES]  = '743b89',
+                [HAIR]   = '9e4f14',
+                [SKIN]   = 'dc9d38',
+                [CAP]    = 'dc9d38',
+                [EMBLEM] = 'dc9d38'
+            },
+            {
                 name     = "Scene",
                 [PANTS]  = 'FF009E',
                 [SHIRT]  = 'FF0077',
@@ -1437,7 +1544,7 @@ extraCharacters = {
                 [SKIN]   = 'BF9468',
                 [CAP]    = 'FF5581',
                 [EMBLEM] = 'FFFFFF'
-            }
+            },
         },
         voices = {
             [CHAR_SOUND_ATTACKED] = "wapeach_attacked.ogg",
@@ -1498,15 +1605,16 @@ extraCharacters = {
         "King of the Apes! Son of the original Donkey Kong who battled Mario in the arcades. No matter which generation, the beef continues!",
         credits = "Coop Team / VA: Dean Seavor",
         color = { r = 131, g = 30, b = 20 },
-        model = smlua_model_util_get_id("dk_geo"),
+        model = smlua_model_util_get_id("ec_donkeykong_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-dk"),
+        lifeIcon = get_texture_info("icon-ec-donkeykong"),
+        graffiti = get_texture_info("char-select-ec-graffiti-donkeykong"),
         camScale = 1.5,
         offset = 0,
         meter = {
             label = {
-                left = get_texture_info("char-select-dk-meter-left"),
-                right = get_texture_info("char-select-dk-meter-right"),
+                left    = get_texture_info("char-select-ec-donkeykong-meter-left"),
+                right   = get_texture_info("char-select-ec-donkeykong-meter-right"),
             },
             pie = {
                 [1] = get_texture_info("char_select_custom_meter_pie1"),
@@ -1520,10 +1628,10 @@ extraCharacters = {
             }
         },
         caps = {
-            normal = smlua_model_util_get_id("dk_cap_geo"),
-            wing = smlua_model_util_get_id("dk_wing_cap_geo"),
-            metal = smlua_model_util_get_id("dk_metal_cap_geo"),
-            metalWing = smlua_model_util_get_id("dk_metal_wing_cap_geo")
+            normal      = smlua_model_util_get_id("ec_donkeykong_cap_geo"),
+            wing        = smlua_model_util_get_id("ec_donkeykong_wing_cap_geo"),
+            metal       = smlua_model_util_get_id("ec_donkeykong_metal_cap_geo"),
+            metalWing   = smlua_model_util_get_id("ec_donkeykong_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -1536,6 +1644,17 @@ extraCharacters = {
                 [SKIN]   = 'fec179',
                 [CAP]    = '831E14',
                 [EMBLEM] = 'FFE900'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = 'ee7511',
+                [SHIRT]  = 'ab0507',
+                [GLOVES] = 'f5bb9f',
+                [SHOES]  = 'f5bb9f',
+                [HAIR]   = 'ab0507',
+                [SKIN]   = 'f5bb9f',
+                [CAP]    = 'ab0507',
+                [EMBLEM] = 'f5bb9f'
             },
             {
                 name     = "Gorilla",
@@ -1559,17 +1678,6 @@ extraCharacters = {
                 [CAP]    = 'ffffff',
                 [EMBLEM] = 'FFE900',
             },
-            {
-                name     = "Retro",
-                [PANTS]  = 'ee7511',
-                [SHIRT]  = 'ab0507',
-                [GLOVES] = 'f5bb9f',
-                [SHOES]  = 'f5bb9f',
-                [HAIR]   = 'ab0507',
-                [SKIN]   = 'f5bb9f',
-                [CAP]    = 'ab0507',
-                [EMBLEM] = 'f5bb9f'
-            }
         },
         voices = {
             [CHAR_SOUND_ATTACKED] = "dk_attacked.ogg",
@@ -1708,33 +1816,18 @@ extraCharacters = {
         "A rebellious teenage hedgehog with a blue of attitude, originating from Christmas Island. How'd he got here is anyone's guess.",
         credits = "Coop Team / VA: ReeseiMental",
         color = { r = 0, g = 0, b = 255 },
-        model = smlua_model_util_get_id("segasonic_geo"),
+        model = smlua_model_util_get_id("ec_segasonic_geo"),
         forceChar = CT_MARIO,
-        lifeIcon = get_texture_info("icon-segasonic"),
-        graffiti = get_texture_info("char-select-graffiti-sonic"),
+        lifeIcon = get_texture_info("icon-ec-segasonic"),
+        graffiti = get_texture_info("char-select-ec-graffiti-sonic"),
         camScale = 0.9,
         offset = 0,
-        meter = {
-            label = {
-                left = get_texture_info("char-select-sonic-meter-left"),
-                right = get_texture_info("char-select-sonic-meter-right"),
-            },
-            pie = {
-                [1] = get_texture_info("char_select_custom_meter_pie1"),
-                [2] = get_texture_info("char_select_custom_meter_pie2"),
-                [3] = get_texture_info("char_select_custom_meter_pie3"),
-                [4] = get_texture_info("char_select_custom_meter_pie4"),
-                [5] = get_texture_info("char_select_custom_meter_pie5"),
-                [6] = get_texture_info("char_select_custom_meter_pie6"),
-                [7] = get_texture_info("char_select_custom_meter_pie7"),
-                [8] = get_texture_info("char_select_custom_meter_pie8"),
-            }
-        },
+        meter = require "movesets/Sonic" .meter,
         caps = {
-            normal =     smlua_model_util_get_id("segasonic_cap_geo"),
-            wing =       smlua_model_util_get_id("segasonic_wing_cap_geo"),
-            metal =      smlua_model_util_get_id("segasonic_metal_cap_geo"),
-            metalWing =  smlua_model_util_get_id("segasonic_metal_wing_cap_geo")
+            normal =     smlua_model_util_get_id("ec_segasonic_cap_geo"),
+            wing =       smlua_model_util_get_id("ec_segasonic_wing_cap_geo"),
+            metal =      smlua_model_util_get_id("ec_segasonic_metal_cap_geo"),
+            metalWing =  smlua_model_util_get_id("ec_segasonic_metal_wing_cap_geo")
         },
         palettes = {
             {
@@ -1746,6 +1839,17 @@ extraCharacters = {
                 [HAIR]   = 'FFFF00',
                 [SKIN]   = 'FEC179',
                 [CAP]    = '0000FF',
+                [EMBLEM] = '000000'
+            },
+            {
+                name     = "Retro",
+                [PANTS]  = '152a89',
+                [SHIRT]  = 'e1a037',
+                [GLOVES] = 'FFFFFF',
+                [SHOES]  = 'b98025',
+                [HAIR]   = '152a89',
+                [SKIN]   = 'e1a037',
+                [CAP]    = '152a89',
                 [EMBLEM] = '000000'
             },
             {
@@ -1836,11 +1940,6 @@ extraCharacters = {
                     return 'sonic_running'
                 end
             end,
-            [CHAR_ANIM_SHIVERING_RETURN_TO_IDLE] = function(m)
-                if gCSPlayers[m.playerIndex].movesetToggle then
-                    return 'sonic_shivering_stop'
-                end
-            end,
             [CHAR_ANIM_RUNNING_UNUSED] = function(m)
                 if gCSPlayers[m.playerIndex].movesetToggle then
                     return 'sonic_running3'
@@ -1886,7 +1985,9 @@ local ultraBrosCredits = {
         "Chars_64,Render Icons",
         "WaterVapor,DK Render",
         "wwolforam,Sonic Render",
+        "ThatGurlTilly,Birdo Model",
         "SMSAlfredo,Coder",
+        "Palettes,Ale64"
     },
     {
         name = TEXT_PACK_NAME .. " Voice Actors",
@@ -1904,7 +2005,22 @@ local ultraBrosCredits = {
     },
     {
         name = TEXT_PACK_NAME .. " Graffiti Artists",
-        "SAWhane,Sonic",
+        "WaflesAAA",
+        "SAWhane",
+        "FunkyLion",
+        "VioletArts",
+        "SullyBoy",
+        "Heylee"
+    },
+    {
+        name = TEXT_PACK_NAME .. " Pixel Artists",
+        "FunkyLion",
+        "EmilyEmmi",
+        "AquariusAlexx",
+        "Lyra",
+        "SonicZetrex",
+        "Glyph",
+        "Leohaha"
     },
 }
 
