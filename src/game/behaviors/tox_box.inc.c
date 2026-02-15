@@ -83,11 +83,11 @@ void bhv_tox_box_loop(void) {
         struct SyncObject* so = sync_object_init(o, 3000.0f);
         if (so) {
             so->maxUpdateRate = 10.0f;
-            sync_object_init_field(o, &o->oForwardVel);
-            sync_object_init_field(o, &o->oUnkC0);
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oFaceAngleRoll);
-            sync_object_init_field(o, &o->oToxBoxMovementStep);
+            sync_object_init_field(o, o->oForwardVel);
+            sync_object_init_field(o, o->oUnkC0);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oFaceAngleRoll);
+            sync_object_init_field(o, o->oToxBoxMovementStep);
         }
     }
     CUR_OBJ_CALL_ACTION_FUNCTION(sToxBoxActions);

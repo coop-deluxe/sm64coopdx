@@ -21,10 +21,10 @@ void bhv_breakable_box_small_init(void) {
     o->oAnimState = 1;
     o->activeFlags |= ACTIVE_FLAG_UNK9;
     sync_object_init(o, 1000.0f);
-    sync_object_init_field(o, &o->oBreakableBoxSmallReleased);
-    sync_object_init_field(o, &o->oBreakableBoxSmallFramesSinceReleased);
-    sync_object_init_field(o, &o->oAnimState);
-    sync_object_init_field(o, &o->oFlags);
+    sync_object_init_field(o, o->oBreakableBoxSmallReleased);
+    sync_object_init_field(o, o->oBreakableBoxSmallFramesSinceReleased);
+    sync_object_init_field(o, o->oAnimState);
+    sync_object_init_field(o, o->oFlags);
 }
 
 void small_breakable_box_spawn_dust(void) {

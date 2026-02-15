@@ -31,8 +31,8 @@ void bhv_donut_platform_spawner_update(void) {
 void bhv_donut_platform_update(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oGravity);
-        sync_object_init_field(o, &o->oIntangibleTimer);
+        sync_object_init_field(o, o->oGravity);
+        sync_object_init_field(o, o->oIntangibleTimer);
     }
 
     struct Object* player = nearest_player_to_object(o);

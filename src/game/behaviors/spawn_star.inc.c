@@ -108,9 +108,9 @@ void bhv_star_spawn_init(void) {
 void bhv_star_spawn_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000);
-        sync_object_init_field(o, &o->oBehParams);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oStarSpawnExtCutsceneFlags);
+        sync_object_init_field(o, o->oBehParams);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oStarSpawnExtCutsceneFlags);
     }
 
     switch (o->oAction) {
@@ -320,11 +320,11 @@ void bhv_hidden_red_coin_star_init(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oHiddenStarTriggerCounter);
-            sync_object_init_field(o, &o->oPosX);
-            sync_object_init_field(o, &o->oPosY);
-            sync_object_init_field(o, &o->oPosZ);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oHiddenStarTriggerCounter);
+            sync_object_init_field(o, o->oPosX);
+            sync_object_init_field(o, o->oPosY);
+            sync_object_init_field(o, o->oPosZ);
         }
     }
 }

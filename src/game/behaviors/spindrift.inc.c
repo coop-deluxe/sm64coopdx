@@ -15,7 +15,7 @@ struct ObjectHitbox sSpindriftHitbox = {
 void bhv_spindrift_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oFlags);
+        sync_object_init_field(o, o->oFlags);
     }
 
     struct Object* player = nearest_player_to_object(o);

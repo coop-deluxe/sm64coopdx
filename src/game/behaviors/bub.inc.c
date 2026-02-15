@@ -121,11 +121,11 @@ void bhv_bub_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            sync_object_init_field(o, &o->oCheepCheepUnkF4);
-            sync_object_init_field(o, &o->oCheepCheepUnkF8);
-            sync_object_init_field(o, &o->oCheepCheepUnkFC);
-            sync_object_init_field(o, &o->oCheepCheepUnk104);
-            sync_object_init_field(o, &o->oCheepCheepUnk108);
+            sync_object_init_field(o, o->oCheepCheepUnkF4);
+            sync_object_init_field(o, o->oCheepCheepUnkF8);
+            sync_object_init_field(o, o->oCheepCheepUnkFC);
+            sync_object_init_field(o, o->oCheepCheepUnk104);
+            sync_object_init_field(o, o->oCheepCheepUnk108);
         }
     }
 

@@ -63,10 +63,10 @@ s32 lll_octagonal_mesh_find_y_offset(s32 *a0, f32 *a1, s32 a2, s32 a3) {
 void bhv_lll_moving_octagonal_mesh_platform_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oHorizontalMovementUnkF8);
-        sync_object_init_field(o, &o->oHorizontalMovementUnkF4);
-        sync_object_init_field(o, &o->oHorizontalMovementUnk100);
-        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, o->oHorizontalMovementUnkF8);
+        sync_object_init_field(o, o->oHorizontalMovementUnkF4);
+        sync_object_init_field(o, o->oHorizontalMovementUnk100);
+        sync_object_init_field(o, o->oForwardVel);
     }
     if (o->oAction == 0) {
         o->oHorizontalMovementUnkF8 = 0;
