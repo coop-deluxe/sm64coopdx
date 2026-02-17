@@ -5103,6 +5103,12 @@ function le_set_ambient_color(r, g, b)
     -- ...
 end
 
+--- @param count integer
+--- Sets the max amount of lights that can affect a vertex
+function le_set_max_lights_per_vertex(count)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number

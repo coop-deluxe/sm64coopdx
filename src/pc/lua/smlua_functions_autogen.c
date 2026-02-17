@@ -15768,6 +15768,23 @@ int smlua_func_le_set_ambient_color(lua_State* L) {
     return 1;
 }
 
+int smlua_func_le_set_max_lights_per_vertex(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "le_set_max_lights_per_vertex", 1, top);
+        return 0;
+    }
+
+    u8 count = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "le_set_max_lights_per_vertex"); return 0; }
+
+    le_set_max_lights_per_vertex(count);
+
+    return 1;
+}
+
 int smlua_func_le_calculate_lighting_color(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37935,6 +37952,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "le_set_tone_mapping", smlua_func_le_set_tone_mapping);
     smlua_bind_function(L, "le_get_ambient_color", smlua_func_le_get_ambient_color);
     smlua_bind_function(L, "le_set_ambient_color", smlua_func_le_set_ambient_color);
+    smlua_bind_function(L, "le_set_max_lights_per_vertex", smlua_func_le_set_max_lights_per_vertex);
     smlua_bind_function(L, "le_calculate_lighting_color", smlua_func_le_calculate_lighting_color);
     smlua_bind_function(L, "le_calculate_lighting_color_with_normal", smlua_func_le_calculate_lighting_color_with_normal);
     smlua_bind_function(L, "le_calculate_lighting_dir", smlua_func_le_calculate_lighting_dir);
