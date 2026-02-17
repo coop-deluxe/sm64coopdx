@@ -2902,6 +2902,28 @@ Checks if the dialog from a specified `object` should start or continue for this
 
 <br />
 
+## [set_mario_npc_dialog](#set_mario_npc_dialog)
+
+### Lua Example
+`local integerValue = set_mario_npc_dialog(m, actionArg, inContinueDialogFunction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| actionArg | `integer` |
+| inContinueDialogFunction | `Function` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDialogFunction)(void));`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [general_star_dance_handler](#general_star_dance_handler)
 
 ### Description
@@ -3801,6 +3823,28 @@ Applies movement upon landing from a jump or fall. Adjusts velocity based on slo
 
 ### C Prototype
 `u32 common_landing_action(struct MarioState *m, s16 animation, u32 airAction);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [common_landing_cancels](#common_landing_cancels)
+
+### Lua Example
+`local integerValue = common_landing_cancels(m, landingAction, setAPressAction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| landingAction | [LandingAction](structs.md#LandingAction) |
+| setAPressAction | `Function` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 common_landing_cancels(struct MarioState *m, struct LandingAction *landingAction, s32 (*setAPressAction)(struct MarioState *, u32, u32));`
 
 [:arrow_up_small:](#)
 

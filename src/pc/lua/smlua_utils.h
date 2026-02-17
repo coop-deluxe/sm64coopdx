@@ -5,8 +5,6 @@
 #include "src/pc/network/packets/packet.h"
 
 extern u8 gSmLuaConvertSuccess;
-typedef int LuaFunction;
-typedef int LuaTable;
 
 typedef struct ByteString {
     const char *bytes;

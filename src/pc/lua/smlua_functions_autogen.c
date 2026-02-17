@@ -2,6 +2,7 @@
 /* SHOULD NOT BE MANUALLY CHANGED */
 
 #include "smlua.h"
+#include <ffi.h>
 
 #include "src/audio/external.h"
 #include "src/engine/math_util.h"
@@ -54,6 +55,45 @@
 #include "src/audio/seqplayer.h"
 #include "src/engine/lighting_engine.h"
 #include "src/pc/network/sync_object.h"
+
+
+  /////////////////
+ // ffi bridges //
+/////////////////
+
+static ffi_cif smlua_ffi_cif_u8__;
+static ffi_type* smlua_ffi_args_u8__[1];
+void smlua_ffi_bridge_u8__(UNUSED ffi_cif* cif, UNUSED void* ret, UNUSED void** args, void* userdata) {
+    struct LuaClosure* lc = (struct LuaClosure*) userdata;
+    lua_State* L = gLuaState;
+    if (!L) { return; }
+    int prevTop = lua_gettop(L);
+    smlua_push_lua_table(L, (LuaTable)lc->luaFunc);
+    if (lua_type(L, -1) != LUA_TFUNCTION) { lua_settop(L, prevTop); return; }
+    if (0 == smlua_pcall(L, 0, 1, 0)) {
+        if (ret) { *(u8*)ret = smlua_to_integer(L, -1); }
+    }
+    lua_settop(L, prevTop);
+}
+
+static ffi_cif smlua_ffi_cif_s32__MarioState_p_u32_u32;
+static ffi_type* smlua_ffi_args_s32__MarioState_p_u32_u32[3];
+void smlua_ffi_bridge_s32__MarioState_p_u32_u32(UNUSED ffi_cif* cif, UNUSED void* ret, UNUSED void** args, void* userdata) {
+    struct LuaClosure* lc = (struct LuaClosure*) userdata;
+    lua_State* L = gLuaState;
+    if (!L) { return; }
+    int prevTop = lua_gettop(L);
+    smlua_push_lua_table(L, (LuaTable)lc->luaFunc);
+    if (lua_type(L, -1) != LUA_TFUNCTION) { lua_settop(L, prevTop); return; }
+    smlua_push_object(L, LOT_MARIOSTATE, *(struct MarioState**)args[0], NULL);
+    lua_pushinteger(L, *(u32*)args[1]);
+    lua_pushinteger(L, *(u32*)args[2]);
+    if (0 == smlua_pcall(L, 3, 1, 0)) {
+        if (ret) { *(s32*)ret = smlua_to_integer(L, -1); }
+    }
+    lua_settop(L, prevTop);
+}
+
 
 
   ///////////////
@@ -18013,6 +18053,29 @@ int smlua_func_should_start_or_continue_dialog(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_mario_npc_dialog(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_mario_npc_dialog", 3, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_mario_npc_dialog"); return 0; }
+    s32 actionArg = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "set_mario_npc_dialog"); return 0; }
+    u8 (*inContinueDialogFunction)() = smlua_ffi_create_closure(smlua_to_lua_function(L, 3), smlua_ffi_bridge_u8__, &smlua_ffi_cif_u8__);
+    if (!inContinueDialogFunction) { LOG_LUA("Failed to create closure for function inContinueDialogFunction"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "set_mario_npc_dialog"); return 0; }
+
+    extern s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDialogFunction)(void));
+    lua_pushinteger(L, set_mario_npc_dialog(m, actionArg, inContinueDialogFunction));
+
+    return 1;
+}
+
 int smlua_func_general_star_dance_handler(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -18779,13 +18842,12 @@ int smlua_func_common_landing_action(lua_State* L) {
     return 1;
 }
 
-/*
 int smlua_func_common_landing_cancels(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "common_landing_cancels", 5, top);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "common_landing_cancels", 3, top);
         return 0;
     }
 
@@ -18793,19 +18855,15 @@ int smlua_func_common_landing_cancels(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "common_landing_cancels"); return 0; }
     struct LandingAction* landingAction = (struct LandingAction*)smlua_to_cobject(L, 2, LOT_LANDINGACTION);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "common_landing_cancels"); return 0; }
-//  s32 (*setAPressAction)(structMarioState* arg2 = (s32 (*setAPressAction)(structMarioState*)smlua_to_cobject(L, 3, LOT_???); <--- UNIMPLEMENTED
+    s32 (*setAPressAction)(struct MarioState *, u32, u32) = smlua_ffi_create_closure(smlua_to_lua_function(L, 3), smlua_ffi_bridge_s32__MarioState_p_u32_u32, &smlua_ffi_cif_s32__MarioState_p_u32_u32);
+    if (!setAPressAction) { LOG_LUA("Failed to create closure for function setAPressAction"); return 0; }
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "common_landing_cancels"); return 0; }
-    u32 arg3 = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "common_landing_cancels"); return 0; }
-//  u32) arg4 = (u32))smlua_to_cobject(L, 5, LOT_???); <--- UNIMPLEMENTED
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "common_landing_cancels"); return 0; }
 
     extern s32 common_landing_cancels(struct MarioState *m, struct LandingAction *landingAction, s32 (*setAPressAction)(struct MarioState *, u32, u32));
-    lua_pushinteger(L, common_landing_cancels(m, landingAction, arg2, arg3, arg4));
+    lua_pushinteger(L, common_landing_cancels(m, landingAction, setAPressAction));
 
     return 1;
 }
-*/
 
 int smlua_func_quicksand_jump_land_action(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -24436,6 +24494,35 @@ int smlua_func_current_mario_room_check(lua_State* L) {
     return 1;
 }
 
+int smlua_func_trigger_obj_dialog_when_facing(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "trigger_obj_dialog_when_facing", 6, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "trigger_obj_dialog_when_facing"); return 0; }
+    s32 * inDialog = (s32 *)smlua_to_cpointer(L, 2, LVT_S32_P);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "trigger_obj_dialog_when_facing"); return 0; }
+    s32 dialogID = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "trigger_obj_dialog_when_facing"); return 0; }
+    f32 dist = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "trigger_obj_dialog_when_facing"); return 0; }
+    s32 actionArg = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "trigger_obj_dialog_when_facing"); return 0; }
+    u8 (*inContinueDialogFunction)() = smlua_ffi_create_closure(smlua_to_lua_function(L, 6), smlua_ffi_bridge_u8__, &smlua_ffi_cif_u8__);
+    if (!inContinueDialogFunction) { LOG_LUA("Failed to create closure for function inContinueDialogFunction"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "trigger_obj_dialog_when_facing"); return 0; }
+
+    extern s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s32 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void));
+    lua_pushinteger(L, trigger_obj_dialog_when_facing(m, inDialog, dialogID, dist, actionArg, inContinueDialogFunction));
+
+    return 1;
+}
+
 int smlua_func_obj_check_floor_death(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29588,6 +29675,64 @@ int smlua_func_cur_obj_end_dialog(lua_State* L) {
 
     extern void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult);
     cur_obj_end_dialog(m, dialogFlags, dialogResult);
+
+    return 1;
+}
+
+int smlua_func_cur_obj_update_dialog(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "cur_obj_update_dialog", 6, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_update_dialog"); return 0; }
+    s32 actionArg = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_update_dialog"); return 0; }
+    s32 dialogFlags = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "cur_obj_update_dialog"); return 0; }
+    s32 dialogID = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "cur_obj_update_dialog"); return 0; }
+    s32 unused = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "cur_obj_update_dialog"); return 0; }
+    u8 (*inContinueDialogFunction)() = smlua_ffi_create_closure(smlua_to_lua_function(L, 6), smlua_ffi_bridge_u8__, &smlua_ffi_cif_u8__);
+    if (!inContinueDialogFunction) { LOG_LUA("Failed to create closure for function inContinueDialogFunction"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "cur_obj_update_dialog"); return 0; }
+
+    extern s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void));
+    lua_pushinteger(L, cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction));
+
+    return 1;
+}
+
+int smlua_func_cur_obj_update_dialog_with_cutscene(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 6) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "cur_obj_update_dialog_with_cutscene", 6, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_update_dialog_with_cutscene"); return 0; }
+    s32 actionArg = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_update_dialog_with_cutscene"); return 0; }
+    s32 dialogFlags = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "cur_obj_update_dialog_with_cutscene"); return 0; }
+    s32 cutsceneTable = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "cur_obj_update_dialog_with_cutscene"); return 0; }
+    s32 dialogID = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "cur_obj_update_dialog_with_cutscene"); return 0; }
+    u8 (*inContinueDialogFunction)() = smlua_ffi_create_closure(smlua_to_lua_function(L, 6), smlua_ffi_bridge_u8__, &smlua_ffi_cif_u8__);
+    if (!inContinueDialogFunction) { LOG_LUA("Failed to create closure for function inContinueDialogFunction"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "cur_obj_update_dialog_with_cutscene"); return 0; }
+
+    extern s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void));
+    lua_pushinteger(L, cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction));
 
     return 1;
 }
@@ -37011,6 +37156,16 @@ int smlua_func_sync_object_is_owned_locally(lua_State* L) {
 
 void smlua_bind_functions_autogen(void) {
     lua_State* L = gLuaState;
+    if (ffi_prep_cif(&smlua_ffi_cif_u8__, FFI_DEFAULT_ABI, 0, &ffi_type_uint8, smlua_ffi_args_u8__) != FFI_OK) {
+        LOG_ERROR("Failed to prepare ffi_cif for u8__");
+    }
+    smlua_ffi_args_s32__MarioState_p_u32_u32[0] = &ffi_type_pointer;
+    smlua_ffi_args_s32__MarioState_p_u32_u32[1] = &ffi_type_uint32;
+    smlua_ffi_args_s32__MarioState_p_u32_u32[2] = &ffi_type_uint32;
+    if (ffi_prep_cif(&smlua_ffi_cif_s32__MarioState_p_u32_u32, FFI_DEFAULT_ABI, 3, &ffi_type_sint32, smlua_ffi_args_s32__MarioState_p_u32_u32) != FFI_OK) {
+        LOG_ERROR("Failed to prepare ffi_cif for s32__MarioState_p_u32_u32");
+    }
+
 
     // area.h
     smlua_bind_function(L, "get_mario_spawn_type", smlua_func_get_mario_spawn_type);
@@ -38060,6 +38215,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cutscene_put_cap_on", smlua_func_cutscene_put_cap_on);
     smlua_bind_function(L, "mario_ready_to_speak", smlua_func_mario_ready_to_speak);
     smlua_bind_function(L, "should_start_or_continue_dialog", smlua_func_should_start_or_continue_dialog);
+    smlua_bind_function(L, "set_mario_npc_dialog", smlua_func_set_mario_npc_dialog);
     smlua_bind_function(L, "general_star_dance_handler", smlua_func_general_star_dance_handler);
     smlua_bind_function(L, "common_death_handler", smlua_func_common_death_handler);
     smlua_bind_function(L, "launch_mario_until_land", smlua_func_launch_mario_until_land);
@@ -38099,7 +38255,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "stomach_slide_action", smlua_func_stomach_slide_action);
     smlua_bind_function(L, "common_ground_knockback_action", smlua_func_common_ground_knockback_action);
     smlua_bind_function(L, "common_landing_action", smlua_func_common_landing_action);
-    //smlua_bind_function(L, "common_landing_cancels", smlua_func_common_landing_cancels); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "common_landing_cancels", smlua_func_common_landing_cancels);
     smlua_bind_function(L, "quicksand_jump_land_action", smlua_func_quicksand_jump_land_action);
     smlua_bind_function(L, "check_common_moving_cancels", smlua_func_check_common_moving_cancels);
     smlua_bind_function(L, "mario_execute_moving_action", smlua_func_mario_execute_moving_action);
@@ -38389,6 +38545,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_spawn_yellow_coins", smlua_func_obj_spawn_yellow_coins);
     smlua_bind_function(L, "obj_flicker_and_disappear", smlua_func_obj_flicker_and_disappear);
     smlua_bind_function(L, "current_mario_room_check", smlua_func_current_mario_room_check);
+    smlua_bind_function(L, "trigger_obj_dialog_when_facing", smlua_func_trigger_obj_dialog_when_facing);
     smlua_bind_function(L, "obj_check_floor_death", smlua_func_obj_check_floor_death);
     smlua_bind_function(L, "obj_lava_death", smlua_func_obj_lava_death);
     smlua_bind_function(L, "spawn_orange_number", smlua_func_spawn_orange_number);
@@ -38656,6 +38813,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_can_mario_activate_textbox", smlua_func_cur_obj_can_mario_activate_textbox);
     smlua_bind_function(L, "cur_obj_can_mario_activate_textbox_2", smlua_func_cur_obj_can_mario_activate_textbox_2);
     smlua_bind_function(L, "cur_obj_end_dialog", smlua_func_cur_obj_end_dialog);
+    smlua_bind_function(L, "cur_obj_update_dialog", smlua_func_cur_obj_update_dialog);
+    smlua_bind_function(L, "cur_obj_update_dialog_with_cutscene", smlua_func_cur_obj_update_dialog_with_cutscene);
     smlua_bind_function(L, "cur_obj_has_model", smlua_func_cur_obj_has_model);
     smlua_bind_function(L, "cur_obj_align_gfx_with_floor", smlua_func_cur_obj_align_gfx_with_floor);
     smlua_bind_function(L, "mario_is_within_rectangle", smlua_func_mario_is_within_rectangle);

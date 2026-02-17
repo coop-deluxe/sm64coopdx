@@ -3627,6 +3627,34 @@ Checks if a given room is Mario's current room, even if on an object
 
 <br />
 
+## [trigger_obj_dialog_when_facing](#trigger_obj_dialog_when_facing)
+
+### Description
+Checks if a given room is Mario's current room, even if on an object
+
+### Lua Example
+`local integerValue = trigger_obj_dialog_when_facing(m, inDialog, dialogID, dist, actionArg, inContinueDialogFunction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| inDialog | `Pointer` <`integer`> |
+| dialogID | `integer` |
+| dist | `number` |
+| actionArg | `integer` |
+| inContinueDialogFunction | `Function` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s32 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void));`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_check_floor_death](#obj_check_floor_death)
 
 ### Description

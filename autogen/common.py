@@ -69,6 +69,27 @@ def extract_integer_datatype(c_type):
 def get_path(p):
     return os.path.dirname(os.path.realpath(__file__)) + '/../' + p
 
+def split_arguments(args_str):
+    args = []
+    paren_level = 0
+    current_arg = ""
+    for char in args_str:
+        if char == '(' :
+            paren_level += 1
+        elif char == ')':
+            paren_level -= 1
+        
+        if char == ',' and paren_level == 0:
+            args.append(current_arg.strip())
+            current_arg = ""
+        else:
+            current_arg += char
+    
+    if current_arg:
+        args.append(current_arg.strip())
+    
+    return args
+
 def translate_type_to_lvt(ptype, allowArrays=False):
     pointerLvl = 0
 

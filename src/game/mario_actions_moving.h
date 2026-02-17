@@ -5,6 +5,16 @@
 
 #include "types.h"
 
+struct LandingAction {
+    s16 numFrames;
+    s16 unk02;
+    u32 verySteepAction;
+    u32 endAction;
+    u32 aPressedAction;
+    u32 offFloorAction;
+    u32 slideAction;
+};
+
 void play_step_sound(struct MarioState *m, s16 frame1, s16 frame2);
 s32 mario_execute_moving_action(struct MarioState *m);
 

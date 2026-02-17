@@ -56,6 +56,7 @@
 - [HudUtilsRotation](#HudUtilsRotation)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
+- [LandingAction](#LandingAction)
 - [LevelValues](#LevelValues)
 - [MarioAnimation](#MarioAnimation)
 - [MarioBodyState](#MarioBodyState)
@@ -1496,6 +1497,22 @@
 | lastFrameAction | `integer` |  |
 | unused | `integer` |  |
 | skipCameraInterpolationTimestamp | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [LandingAction](#LandingAction)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| numFrames | `integer` |  |
+| unk02 | `integer` |  |
+| verySteepAction | `integer` |  |
+| endAction | `integer` |  |
+| aPressedAction | `integer` |  |
+| offFloorAction | `integer` |  |
+| slideAction | `integer` |  |
 
 [:arrow_up_small:](#)
 

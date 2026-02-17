@@ -420,6 +420,7 @@ void smlua_shutdown(void) {
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    smlua_ffi_cleanup();
     mod_storage_shutdown();
     mod_fs_shutdown();
     lua_State* L = gLuaState;

@@ -3030,7 +3030,7 @@ end
 
 --- @param name string
 --- @return BehaviorId
---- gets a behavior ID from a behavior name
+--- Gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end
@@ -5945,6 +5945,14 @@ function should_start_or_continue_dialog(m, object)
 end
 
 --- @param m MarioState
+--- @param actionArg integer
+--- @param inContinueDialogFunction Function
+--- @return integer
+function set_mario_npc_dialog(m, actionArg, inContinueDialogFunction)
+    -- ...
+end
+
+--- @param m MarioState
 --- @param isInWater integer
 --- Manages the star collection dance sequence for Mario, both on land and in water. Plays music, spawns the celebration star, increments the star count, and triggers level exits or dialogs at the correct times
 function general_star_dance_handler(m, isInWater)
@@ -6228,6 +6236,14 @@ end
 --- @return integer
 --- Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
 function common_landing_action(m, animation, airAction)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param landingAction LandingAction
+--- @param setAPressAction Function
+--- @return integer
+function common_landing_cancels(m, landingAction, setAPressAction)
     -- ...
 end
 
@@ -8181,6 +8197,18 @@ function current_mario_room_check(room)
     -- ...
 end
 
+--- @param m MarioState
+--- @param inDialog Pointer_integer
+--- @param dialogID integer
+--- @param dist number
+--- @param actionArg integer
+--- @param inContinueDialogFunction Function
+--- @return integer
+--- Checks if a given room is Mario's current room, even if on an object
+function trigger_obj_dialog_when_facing(m, inDialog, dialogID, dist, actionArg, inContinueDialogFunction)
+    -- ...
+end
+
 --- @param collisionFlags integer
 --- @param floor Surface
 --- Checks if `floor`'s type is burning or death plane and if so change the current object's action accordingly
@@ -9755,6 +9783,28 @@ end
 --- @param dialogFlags integer
 --- @param dialogResult integer
 function cur_obj_end_dialog(m, dialogFlags, dialogResult)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param actionArg integer
+--- @param dialogFlags integer
+--- @param dialogID integer
+--- @param unused integer
+--- @param inContinueDialogFunction Function
+--- @return integer
+function cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param actionArg integer
+--- @param dialogFlags integer
+--- @param cutsceneTable integer
+--- @param dialogID integer
+--- @param inContinueDialogFunction Function
+--- @return integer
+function cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction)
     -- ...
 end
 
