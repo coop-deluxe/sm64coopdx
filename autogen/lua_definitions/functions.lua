@@ -11516,6 +11516,12 @@ function get_dialog_response()
     -- ...
 end
 
+--- @return integer
+--- Gets the active time stop flags, used to freeze specific objects during cutscenes
+function get_time_stop_flags()
+    -- ...
+end
+
 --- @return string
 --- Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 function get_local_discord_id()
@@ -11622,32 +11628,39 @@ function get_os_name()
 end
 
 --- @return GraphNodeRoot
---- Gets the current GraphNodeRoot
+--- Gets the current root node being processed
 function geo_get_current_root()
     -- ...
 end
 
 --- @return GraphNodeMasterList
---- Gets the current GraphNodeMasterList
+--- Gets the current master list node being processed
 function geo_get_current_master_list()
     -- ...
 end
 
 --- @return GraphNodePerspective
---- Gets the current GraphNodePerspective
+--- Gets the current perspective node being processed
 function geo_get_current_perspective()
     -- ...
 end
 
 --- @return GraphNodeCamera
---- Gets the current GraphNodeCamera
+--- Gets the current camera node being processed
 function geo_get_current_camera()
     -- ...
 end
 
 --- @return GraphNodeHeldObject
---- Gets the current GraphNodeHeldObject
+--- Gets the current held object node being processed
 function geo_get_current_held_object()
+    -- ...
+end
+
+--- @param node GraphNode
+--- @param obj GraphNodeObject
+--- Skips graph node interpolation for a frame
+function geo_skip_interpolation(node, obj)
     -- ...
 end
 
@@ -12059,6 +12072,18 @@ end
 --- @param index integer
 --- Sets the parameters of one of the two whirlpools (0-indexed) in an area
 function set_whirlpools(x, y, z, strength, area, index)
+    -- ...
+end
+
+--- @param o Object
+--- Skips object interpolation for a frame
+function obj_skip_interpolation(o)
+    -- ...
+end
+
+--- @param o Object
+--- Skips animation interpolation for a frame
+function obj_anim_skip_interpolation(o)
     -- ...
 end
 
