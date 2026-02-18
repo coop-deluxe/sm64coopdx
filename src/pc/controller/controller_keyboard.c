@@ -14,8 +14,11 @@
 #include "menu/file_select.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 
 static int keyboard_buttons_down;
+
+bool kb_keys_curr_down[512];
 
 #define MAX_KEYBINDS 64
 static int keyboard_mapping[MAX_KEYBINDS][2];
@@ -60,6 +63,11 @@ bool keyboard_on_key_up(int scancode) {
 
 void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
+    for (int scancode = 0; scancode < 512; ++scancode) {
+        gKeyboard[scancode].down = false;
+        gKeyboard[scancode].pressed = false;
+        gKeyboard[scancode].released = false;
+    }
 }
 
 void keyboard_on_text_input(char* text) {
@@ -110,7 +118,17 @@ static void keyboard_init(void) {
     keyboard_bindkeys();
 }
 
+
 static void keyboard_read(OSContPad *pad) {
+    for (int scancode = 0; scancode < 512; ++scancode) {
+        bool prev = gKeyboard[scancode].down;
+        bool curr = kb_keys_curr_down[scancode];
+
+        gKeyboard[scancode].down = curr;
+        gKeyboard[scancode].pressed = (!prev && curr);
+        gKeyboard[scancode].released = (prev && !curr);
+    }
+
     pad->button |= keyboard_buttons_down;
     const u32 xstick = keyboard_buttons_down & STICK_XMASK;
     const u32 ystick = keyboard_buttons_down & STICK_YMASK;

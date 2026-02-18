@@ -151,6 +151,8 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | Called when Mario's floor class logic updates, return a `SURFACE_CLASS_*` constant to override the type. | [MarioState](../structs.md#MarioState) mario, `integer` surfaceClass |
 | HOOK_ON_ADD_SURFACE | Called when collision surfaces are added. | [Surface](../structs.md#Surface) surface, `boolean` dynamic |
 | HOOK_ON_CLEAR_AREAS | Called when a level's areas are unloaded. | None |
+| HOOK_ON_TEXT_INPUT | Called when text input is detected. | `string` text |
+| HOOK_ON_TEXT_EDITING | Called when text complex input editing methods like IME | `string` text, `integer` start |
 
 ### Parameters
 

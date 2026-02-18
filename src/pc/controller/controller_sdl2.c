@@ -25,6 +25,7 @@
 #include "game/first_person_cam.h"
 #include "game/bettercamera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/djui/djui_hud_utils.h"
@@ -55,6 +56,18 @@ static u32 last_gamepad = 0;
 static s16 invert_s16(s16 val) {
     if (val == -0x8000) return 0x7FFF;
     return (s16)(-(s32)val);
+}
+
+// This uses the code from the comment in SDL2 SDL_gamecontroller.h https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h#L110
+static int get_gamepad_num(void) {
+    int nJoysticks = SDL_NumJoysticks();
+    int nGameControllers = 0;
+    for (int i = 0; i < nJoysticks; i++) {
+        if (SDL_IsGameController(i)) {
+            nGameControllers++;
+        }
+    }
+    return nGameControllers;
 }
 
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
@@ -108,6 +121,41 @@ static void controller_sdl_init(void) {
     }
     sBackgroundGamepad = configBackgroundGamepad;
 
+    // This enables features like rumble and LED
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "1");
+    SDL_SetHint(SDL_HINT_AUTO_UPDATE_SENSORS, "1");
+
+    // PlayStation
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS3, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+
+    // Nintendo
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_SWITCH, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_WII, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC, "1");
+
+    // Xbox
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX_360, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED, "1");
+    
+    // Misc
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_STADIA, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_LUNA, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_SHIELD, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_STEAM, "1");
+
     if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_EVENTS) != 0) {
         fprintf(stderr, "SDL init error: %s\n", SDL_GetError());
         return;
@@ -120,18 +168,11 @@ static void controller_sdl_init(void) {
 
     haptics_enabled = (SDL_InitSubSystem(SDL_INIT_HAPTIC) == 0);
 
-    // try loading an external gamecontroller mapping file
-    uint64_t gcsize = 0;
-    void *gcdata = fs_load_file("gamecontrollerdb.txt", &gcsize);
-    if (gcdata && gcsize) {
-        SDL_RWops *rw = SDL_RWFromConstMem(gcdata, gcsize);
-        if (rw) {
-            int nummaps = SDL_GameControllerAddMappingsFromRW(rw, SDL_TRUE);
-            if (nummaps >= 0)
-                printf("loaded %d controller mappings from 'gamecontrollerdb.txt'\n", nummaps);
-        }
-        free(gcdata);
+    if (!fs_sys_dir_exists(fs_get_write_path(DATABASES_DIRECTORY))) {
+        fs_sys_mkdir(fs_get_write_path(DATABASES_DIRECTORY));
     }
+    controller_maps_load(sys_resource_path(), true);
+    controller_maps_load(fs_get_write_path(DATABASES_DIRECTORY), false);
 
     if (gNewCamera.isMouse) { controller_mouse_enter_relative(); }
     controller_mouse_read_relative();
@@ -201,6 +242,57 @@ static void controller_sdl_read(OSContPad *pad) {
     if (configBackgroundGamepad != sBackgroundGamepad) {
         sBackgroundGamepad = configBackgroundGamepad;
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, sBackgroundGamepad ? "1" : "0");
+    }
+
+    for (int i = 0; i < get_gamepad_num() && i < MAX_GAMEPADS; ++i) {
+        gGamepads[i].index = i;
+        SDL_GameController *sdl_gamepad = NULL;
+        if (gGamepads[i].controller == NULL) {
+            sdl_gamepad = SDL_GameControllerOpen(i);
+        } else {
+            sdl_gamepad = gGamepads[i].controller;
+        }
+        if (sdl_gamepad == NULL) continue;
+        gGamepads[i].controller = sdl_gamepad;
+        gGamepads[i].name = SDL_GameControllerName(sdl_gamepad);
+        SDL_GameControllerSetPlayerIndex(sdl_gamepad, (int32_t)gGamepads[i].playerIndex);
+        for (int j = 0; j < SDL_CONTROLLER_BUTTON_MAX; ++j) {
+            gGamepads[i].buttons[j] = SDL_GameControllerGetButton(sdl_gamepad, j);
+        }
+        gGamepads[i].leftStick[0] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_LEFTX);
+        gGamepads[i].leftStick[1] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_LEFTY);
+        gGamepads[i].rightStick[0] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_RIGHTX);
+        gGamepads[i].rightStick[1] = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_RIGHTY);
+        gGamepads[i].leftTrigger = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+        gGamepads[i].rightTrigger = SDL_GameControllerGetAxis(sdl_gamepad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL_L, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO_L, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_ACCEL_R, SDL_TRUE);
+        SDL_GameControllerSetSensorEnabled(sdl_gamepad, SDL_SENSOR_GYRO_R, SDL_TRUE);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL, gGamepads[i].accelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO, gGamepads[i].gyro, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL_L, gGamepads[i].leftAccelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO_L, gGamepads[i].leftGyro, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_ACCEL_R, gGamepads[i].rightAccelerometer, 3);
+        SDL_GameControllerGetSensorData(sdl_gamepad, SDL_SENSOR_GYRO_R, gGamepads[i].rightGyro, 3);
+        if (gGamepads[i].rumbleDurationMs > 0) {  
+            SDL_GameControllerRumble(sdl_gamepad, gGamepads[i].rumbleLowFreq, gGamepads[i].rumbleHighFreq, gGamepads[i].rumbleDurationMs);  
+            gGamepads[i].rumbleLowFreq = 0;
+            gGamepads[i].rumbleHighFreq = 0;
+            gGamepads[i].rumbleDurationMs = 0;  
+        }
+        SDL_GameControllerSetLED(sdl_gamepad, gGamepads[i].ledColor[0], gGamepads[i].ledColor[1], gGamepads[i].ledColor[2]);
+        for (int j = 0; j < MAX_TOUCHPAD_FINGERS; ++j) {
+            Uint8 state;
+            float x, y, pressure;
+            SDL_GameControllerGetTouchpadFinger(sdl_gamepad, 0, j, &state, &x, &y, &pressure);
+            gGamepads[i].touchpad[j].touched = state;
+            gGamepads[i].touchpad[j].pos[0] = x;
+            gGamepads[i].touchpad[j].pos[1] = y;
+            gGamepads[i].touchpad[j].pressure = pressure;
+        }
     }
 
     if (configDisableGamepads) { return; }
@@ -369,6 +461,18 @@ static void controller_sdl_shutdown(void) {
         if (sdl_cntrl) {
             SDL_GameControllerClose(sdl_cntrl);
             sdl_cntrl = NULL;
+        }
+        if (sdl_joystick) {
+            SDL_JoystickClose(sdl_joystick);
+            sdl_joystick = NULL;
+        }
+        for (int i = 0; i < MAX_GAMEPADS; ++i) {
+            if (gGamepads[i].controller != NULL) {
+                SDL_GameControllerSetLED(gGamepads[i].controller, 0x0, 0x0, 0x0);
+                SDL_GameControllerSetPlayerIndex(gGamepads[i].controller, 0);
+                SDL_GameControllerClose(gGamepads[i].controller);
+                gGamepads[i].controller = NULL;
+            }
         }
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
     }

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "controller_api.h"
 
-# define VK_BASE_KEYBOARD 0x0000
+#define VK_BASE_KEYBOARD 0x0000
 
 #define SCANCODE_ESCAPE          1
 #define SCANCODE_BACKSPACE      14
@@ -43,6 +43,8 @@ bool keyboard_on_key_up(int scancode);
 void keyboard_on_all_keys_up(void);
 void keyboard_on_text_input(char* text);
 void keyboard_on_text_editing(char* text, int cursorPos);
+
+extern bool kb_keys_curr_down[512];
 
 #ifdef __cplusplus
 }
