@@ -2229,14 +2229,25 @@ CAM_EVENT_START_END_WAVING = 12
 --- @type integer
 CAM_EVENT_START_CREDITS = 13
 
-CT_MARIO   = 0 --- @type CharacterType
-CT_LUIGI   = 1 --- @type CharacterType
-CT_TOAD    = 2 --- @type CharacterType
-CT_WALUIGI = 3 --- @type CharacterType
-CT_WARIO   = 4 --- @type CharacterType
-CT_MAX     = 5 --- @type CharacterType
+--- @type integer
+MAX_CHARACTERS = 255
+
+--- @type integer
+MAX_CHARACTER_NAME_LEN = 128
+
+--- @type integer
+MAX_CHARACTER_AUDIOS_PER_SOUND = 8
+
+CT_UNALLOCATED = -1 --- @type CharacterType
+CT_MARIO       =  0 --- @type CharacterType
+CT_LUIGI       =  1 --- @type CharacterType
+CT_TOAD        =  2 --- @type CharacterType
+CT_WALUIGI     =  3 --- @type CharacterType
+CT_WARIO       =  4 --- @type CharacterType
+CT_MAX         =  5 --- @type CharacterType
 
 --- @alias CharacterType
+--- | `CT_UNALLOCATED`
 --- | `CT_MARIO`
 --- | `CT_LUIGI`
 --- | `CT_TOAD`
@@ -6771,7 +6782,16 @@ D_CBUTTONS = CONT_D
 PALETTES_DIRECTORY = "palettes"
 
 --- @type integer
-MAX_PRESET_PALETTES = 128
+MAX_PALETTE_NAME = 64
+
+--- @type integer
+MAX_PRESET_PALETTES = 256
+
+--- @type integer
+MAX_NORMAL_PRESET_PALETTES = 128
+
+--- @type integer
+MAX_MODDED_PRESET_PALETTES = 128
 
 PANTS           =   0 --- @type PlayerPart
 SHIRT           =   1 --- @type PlayerPart
@@ -8191,6 +8211,9 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
 
+--- @type integer
+MAX_HOOKED_BEHAVIORS = 1024
+
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue
@@ -8625,17 +8648,18 @@ E_MODEL_TOAD_PLAYER                        = 367 --- @type ModelExtendedId
 E_MODEL_TOADS_CAP                          = 368 --- @type ModelExtendedId
 E_MODEL_TOADS_METAL_CAP                    = 369 --- @type ModelExtendedId
 E_MODEL_TOADS_WING_CAP                     = 370 --- @type ModelExtendedId
-E_MODEL_WALUIGI                            = 371 --- @type ModelExtendedId
-E_MODEL_WALUIGIS_CAP                       = 372 --- @type ModelExtendedId
-E_MODEL_WALUIGIS_METAL_CAP                 = 373 --- @type ModelExtendedId
-E_MODEL_WALUIGIS_WING_CAP                  = 374 --- @type ModelExtendedId
-E_MODEL_WALUIGIS_WINGED_METAL_CAP          = 375 --- @type ModelExtendedId
-E_MODEL_WARIO                              = 376 --- @type ModelExtendedId
-E_MODEL_WARIOS_CAP                         = 377 --- @type ModelExtendedId
-E_MODEL_WARIOS_METAL_CAP                   = 378 --- @type ModelExtendedId
-E_MODEL_WARIOS_WING_CAP                    = 379 --- @type ModelExtendedId
-E_MODEL_WARIOS_WINGED_METAL_CAP            = 380 --- @type ModelExtendedId
-E_MODEL_MAX                                = 381 --- @type ModelExtendedId
+E_MODEL_TOADS_WINGED_METAL_CAP             = 371 --- @type ModelExtendedId
+E_MODEL_WALUIGI                            = 372 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_CAP                       = 373 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_METAL_CAP                 = 374 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_WING_CAP                  = 375 --- @type ModelExtendedId
+E_MODEL_WALUIGIS_WINGED_METAL_CAP          = 376 --- @type ModelExtendedId
+E_MODEL_WARIO                              = 377 --- @type ModelExtendedId
+E_MODEL_WARIOS_CAP                         = 378 --- @type ModelExtendedId
+E_MODEL_WARIOS_METAL_CAP                   = 379 --- @type ModelExtendedId
+E_MODEL_WARIOS_WING_CAP                    = 380 --- @type ModelExtendedId
+E_MODEL_WARIOS_WINGED_METAL_CAP            = 381 --- @type ModelExtendedId
+E_MODEL_MAX                                = 382 --- @type ModelExtendedId
 
 --- @alias ModelExtendedId
 --- | `E_MODEL_NONE`
@@ -9009,6 +9033,7 @@ E_MODEL_MAX                                = 381 --- @type ModelExtendedId
 --- | `E_MODEL_TOADS_CAP`
 --- | `E_MODEL_TOADS_METAL_CAP`
 --- | `E_MODEL_TOADS_WING_CAP`
+--- | `E_MODEL_TOADS_WINGED_METAL_CAP`
 --- | `E_MODEL_WALUIGI`
 --- | `E_MODEL_WALUIGIS_CAP`
 --- | `E_MODEL_WALUIGIS_METAL_CAP`

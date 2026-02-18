@@ -35,6 +35,8 @@ struct ModAudio {
 
 /* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */
 struct ModAudio* audio_stream_load(const char* filename);
+/* |description|Loads an `audio` stream by `filename` in `mod` (with extension)|descriptionEnd| */
+struct ModAudio* audio_stream_load_from_mod(struct Mod* mod, const char* filename);
 /* |description|Destroys an `audio` stream|descriptionEnd| */
 void audio_stream_destroy(struct ModAudio* audio);
 /* |description|Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.|descriptionEnd| */
@@ -65,6 +67,8 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume);
 void audio_sample_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
 struct ModAudio* audio_sample_load(const char* filename);
+/* |description|Loads an `audio` sample from `mod`|descriptionEnd| */
+struct ModAudio* audio_sample_load_from_mod(struct Mod* mod, const char* filename);
 /* |description|Destroys an `audio` sample|descriptionEnd| */
 void audio_sample_destroy(struct ModAudio* audio);
 /* |description|Stops an `audio` sample|descriptionEnd| */

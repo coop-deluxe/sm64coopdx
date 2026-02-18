@@ -442,7 +442,7 @@ static void djui_panel_player_update_camera_cutscene(void) {
 static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
     djui_panel_player_edit_palette_update_palette_display();
 
-    if (configPlayerModel >= CT_MAX) { configPlayerModel = CT_MARIO; }
+    if (configPlayerModel >= MAX_CHARACTERS) { configPlayerModel = CT_MARIO; }
     if (gNetworkPlayers[0].overrideModelIndex == gNetworkPlayers[0].modelIndex) { gNetworkPlayers[0].overrideModelIndex = configPlayerModel; }
 
     gNetworkPlayers[0].modelIndex = configPlayerModel;
@@ -450,6 +450,7 @@ static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
 
     if (gNetworkType != NT_NONE) {
         network_send_player_settings();
+        network_send_character();
     }
 }
 
@@ -497,23 +498,28 @@ void djui_panel_player_create(struct DjuiBase* caller) {
             djui_interactable_hook_focus(&inputbox1->base, djui_inputbox_on_focus_begin, NULL, djui_panel_player_name_on_focus_end);
         }
 
-        char* characterChoices[CT_MAX] = { 0 };
-        for (int i = 0; i < CT_MAX; i++) {
-            characterChoices[i] = gCharacters[i].name;
+        char* characterChoices[MAX_CHARACTERS] = { 0 };
+        int characterChoicesCount = 0;
+        for (int i = 0; i < MAX_CHARACTERS; i++) {
+            if (gCharacters[i].type != CT_UNALLOCATED) {
+                characterChoices[i] = gCharacters[i].name;
+                characterChoicesCount++;
+            }
         }
-        djui_selectionbox_create(body, DLANG(PLAYER, MODEL), characterChoices, CT_MAX, &configPlayerModel, djui_panel_player_value_changed);
+        djui_selectionbox_create(body, DLANG(PLAYER, MODEL), characterChoices, characterChoicesCount, &configPlayerModel, djui_panel_player_value_changed);
 
         player_palettes_reset();
         player_palettes_read(sys_resource_path(), true);
         player_palettes_read(fs_get_write_path(PALETTES_DIRECTORY), false);
 
         char* palettePresets[MAX_PRESET_PALETTES + 1] = { DLANG(PALETTE, CUSTOM) };
-        if (gPresetPaletteCount > 0) {
-            if (sPalettePresetIndex >= gPresetPaletteCount) {
+        int presetPaletteCount = gPresetPaletteCount + gModdedPresetPalettesCount;
+        if (presetPaletteCount > 0) {
+            if ((int)sPalettePresetIndex >= presetPaletteCount) {
                 sPalettePresetIndex = 0;
             }
 
-            for (int i = 0; i < gPresetPaletteCount; i++) {
+            for (int i = 0; i < presetPaletteCount; i++) {
                 palettePresets[i + 1] = gPresetPalettes[i].name;
 
                 if (memcmp(&configPlayerPalette, &gPresetPalettes[i].palette, sizeof(struct PlayerPalette)) == 0) {

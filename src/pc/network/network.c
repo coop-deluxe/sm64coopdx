@@ -729,6 +729,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     camera_reset_overrides();
     romhack_camera_reset_settings();
     free_vtx_scroll_targets();
+    reset_all_characters();
+    player_modded_palettes_reset();
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);

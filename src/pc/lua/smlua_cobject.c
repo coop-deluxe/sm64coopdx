@@ -727,14 +727,14 @@ void smlua_cobject_init_globals(void) {
 #define EXPOSE_GLOBAL_ARRAY(lot, ptr, iterator) \
     { \
         lua_newtable(L); \
-        int t = lua_gettop(gLuaState); \
+        int t = lua_gettop(L); \
         for (s32 i = 0; i < iterator; i++) { \
             lua_pushinteger(L, i); \
             smlua_push_object(L, lot, &ptr[i], NULL); \
             lua_settable(L, t); \
         } \
         lua_setglobal(L, #ptr); \
-    } \
+    }
 
 #define EXPOSE_GLOBAL(lot, ptr) smlua_push_object(L, lot, &ptr, NULL); lua_setglobal(L, #ptr);
 #define EXPOSE_GLOBAL_PTR(lot, ptr) smlua_push_object(L, lot, ptr, NULL); lua_setglobal(L, #ptr);
@@ -757,7 +757,7 @@ void smlua_cobject_init_globals(void) {
         lua_setglobal(L, "gActiveMods");
     }
 
-    EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, CT_MAX);
+    EXPOSE_GLOBAL_ARRAY(LOT_CHARACTER, gCharacters, MAX_CHARACTERS);
 
     EXPOSE_GLOBAL_ARRAY(LOT_CONTROLLER, gControllers, MAX_PLAYERS);
 

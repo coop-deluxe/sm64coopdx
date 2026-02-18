@@ -261,7 +261,7 @@ Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
 ### Description
-gets a behavior ID from a behavior name
+Gets a behavior ID from a behavior name
 
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`
@@ -2493,6 +2493,113 @@ Centers the ROM hack camera. This function is designed for non-standard level la
 <br />
 
 
+## [character_get_first_allocated_index](#character_get_first_allocated_index)
+
+### Description
+Gets the first allocated index.
+
+### Lua Example
+`local integerValue = character_get_first_allocated_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`int character_get_first_allocated_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_unallocated_index](#character_get_first_unallocated_index)
+
+### Description
+Gets the first unallocated index.
+
+### Lua Example
+`local integerValue = character_get_first_unallocated_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`int character_get_first_unallocated_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_allocated](#character_get_first_allocated)
+
+### Description
+Gets the first allocated character.
+
+### Lua Example
+`local characterValue = character_get_first_allocated()`
+
+### Parameters
+- None
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* character_get_first_allocated();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_unallocated](#character_get_first_unallocated)
+
+### Description
+Gets the first unallocated character.
+
+### Lua Example
+`local characterValue = character_get_first_unallocated()`
+
+### Parameters
+- None
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* character_get_first_unallocated();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_allocated_character_from_index](#get_allocated_character_from_index)
+
+### Description
+Gets an allocated Character struct from an index. If the index provided is not allocated, return `CT_MARIO`.
+
+### Lua Example
+`local characterValue = get_allocated_character_from_index(i)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| i | `integer` |
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* get_allocated_character_from_index(int i);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_character](#get_character)
 
 ### Description
@@ -2637,6 +2744,30 @@ Gets the animation ID to use for a specific character and animation combination.
 
 <br />
 
+## [get_modded_character_anim_string](#get_modded_character_anim_string)
+
+### Description
+Gets the current name of the animation used if the animation is modded.
+
+### Lua Example
+`local stringValue = get_modded_character_anim_string(m, characterAnim)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| characterAnim | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_modded_character_anim_string(struct MarioState* m, enum CharacterAnimID characterAnim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [update_character_anim_offset](#update_character_anim_offset)
 
 ### Description
@@ -2655,6 +2786,239 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ### C Prototype
 `void update_character_anim_offset(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_allocate](#character_allocate)
+
+### Lua Example
+`local characterValue, characterIndex = character_allocate()`
+
+### Parameters
+- None
+
+### Returns
+- [Character](structs.md#Character)
+- `integer`
+
+### C Prototype
+`struct Character* character_allocate(RET int *characterIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_deallocate](#character_deallocate)
+
+### Lua Example
+`character_deallocate(character)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_deallocate(struct Character* character);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_name](#character_set_name)
+
+### Description
+Set Character name for `character`
+
+### Lua Example
+`character_set_name(character, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_name(struct Character* character, const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_cap_enemy_gfx_name](#character_set_cap_enemy_gfx_name)
+
+### Description
+Set Character's cap enemy gfx for `character`. This is rendered on enemies that steal your caps
+
+### Lua Example
+`character_set_cap_enemy_gfx_name(character, gfxName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| gfxName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_cap_enemy_gfx_name(struct Character* character, const char* gfxName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_cap_enemy_decal_gfx_name](#character_set_cap_enemy_decal_gfx_name)
+
+### Description
+Set Character's cap enemy decal gfx for `character`. This is rendered on enemies that steal your caps
+
+### Lua Example
+`character_set_cap_enemy_decal_gfx_name(character, gfxName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| gfxName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_cap_enemy_decal_gfx_name(struct Character* character, const char* gfxName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_hud_head_texture](#character_set_hud_head_texture)
+
+### Description
+Set hud head texture for `character`. This is the texture that appears for the playerlist, life, and mario cam icon
+
+### Lua Example
+`character_set_hud_head_texture(character, texInfo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_hud_head_texture(struct Character* character, struct TextureInfo* texInfo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_add_sound](#character_add_sound)
+
+### Description
+Adds a `audioName` for `characterSound` on `character`. You can add multiple sound files to the same `characterSound` When you have multiple sounds, it picks between them at random.
+
+### Lua Example
+`character_add_sound(character, characterSound, audioName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+| audioName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_add_sound(struct Character* character, enum CharacterSound characterSound, const char* audioName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_remove_sounds](#character_remove_sounds)
+
+### Description
+Removes all sounds for `characterSound` on `character`. Every sound file will get removed from the character.
+
+### Lua Example
+`character_remove_sounds(character, characterSound)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_remove_sounds(struct Character* character, enum CharacterSound characterSound);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_animation](#character_set_animation)
+
+### Description
+Sets animation for `animID` using a registered smlua animation. You can regjster an smlua animation by using `smlua_util_register_animation`. The animation string you used to register the animation is the `animString` to be passed.
+
+### Lua Example
+`character_set_animation(character, animID, animString)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| animID | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+| animString | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_animation(struct Character* character, enum CharacterAnimID animID, const char* animString);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_remove_animation](#character_remove_animation)
+
+### Description
+Removes the animation for `animId` on `character`
+
+### Lua Example
+`character_remove_animation(character, animID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| animID | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_remove_animation(struct Character* character, enum CharacterAnimID animID);`
 
 [:arrow_up_small:](#)
 

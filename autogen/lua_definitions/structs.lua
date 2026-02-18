@@ -229,17 +229,15 @@
 --- @class Character
 --- @field public type CharacterType
 --- @field public name string
---- @field public hudHead integer
 --- @field public hudHeadTexture TextureInfo
---- @field public cameraHudHead integer
 --- @field public modelId integer
 --- @field public capModelId integer
 --- @field public capMetalModelId integer
 --- @field public capWingModelId integer
 --- @field public capMetalWingModelId integer
 --- @field public capEnemyLayer integer
---- @field public capEnemyGfx Pointer_Gfx
---- @field public capEnemyDecalGfx Pointer_Gfx
+--- @field public capEnemyGfx string
+--- @field public capEnemyDecalGfx string
 --- @field public torsoRotMult number
 --- @field public animOffsetEnabled integer
 --- @field public animOffsetLowYPoint number
@@ -501,6 +499,7 @@
 --- @field public soundLetsAGo integer
 --- @field public soundOkeyDokey integer
 --- @field public sounds integer[]
+--- @field public modIndexForAudio integer[]
 
 --- @class Controller
 --- @field public port integer
@@ -2144,6 +2143,11 @@
 --- @class PlayerPalette
 --- @field public parts Color[]
 
+--- @class PresetPalette
+--- @field public name string
+--- @field public palette PlayerPalette
+--- @field public active boolean
+
 --- @class RayIntersectionInfo
 --- @field public surface Surface
 --- @field public hitPos Vec3f
@@ -2389,8 +2393,8 @@
 
 --- @alias Pointer_integer integer
 --- @alias Pointer_Trajectory Trajectory
---- @alias Pointer_Gfx Gfx
 --- @alias Pointer_LevelScript LevelScript
+--- @alias Pointer_Gfx Gfx
 --- @alias Pointer_ObjectAnimPointer ObjectAnimPointer
 --- @alias Pointer_Collision Collision
 --- @alias Pointer_Mat4 Mat4
