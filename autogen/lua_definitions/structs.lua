@@ -2146,7 +2146,6 @@
 --- @class PresetPalette
 --- @field public name string
 --- @field public palette PlayerPalette
---- @field public active boolean
 
 --- @class RayIntersectionInfo
 --- @field public surface Surface

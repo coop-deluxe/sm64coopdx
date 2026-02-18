@@ -81,6 +81,7 @@ override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "Camera": [ "paletteEditorCapState" ],
     "Character": [ "moddedAnims", "modAudioSounds" ],
+    "PresetPalette": [ "active" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
@@ -102,6 +103,7 @@ override_field_deprecated = {
 
 override_field_immutable = {
     "Character": [ "name", "hudHeadTexture", "anim*", "sound*" ],
+    "PresetPalette": [ "name" ],
     "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId", "character" ],
     "MarioAnimation": [ "animDmaTable" ],
     "ObjectNode": [ "next", "prev" ],

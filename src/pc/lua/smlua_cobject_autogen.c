@@ -2473,11 +2473,10 @@ static struct LuaObjectField sPlayerPaletteFields[LUA_PLAYER_PALETTE_FIELD_COUNT
     { "parts", LVT_COBJECT, offsetof(struct PlayerPalette, parts), true, LOT_COLOR, PLAYER_PART_MAX, sizeof(Color) },
 };
 
-#define LUA_PRESET_PALETTE_FIELD_COUNT 3
+#define LUA_PRESET_PALETTE_FIELD_COUNT 2
 static struct LuaObjectField sPresetPaletteFields[LUA_PRESET_PALETTE_FIELD_COUNT] = {
-    { "active",  LVT_BOOL,    offsetof(struct PresetPalette, active),  false, LOT_NONE,          1, sizeof(bool)                 },
-    { "name",    LVT_STRING,  offsetof(struct PresetPalette, name),    false, LOT_NONE,          1, sizeof(char)                 },
-    { "palette", LVT_COBJECT, offsetof(struct PresetPalette, palette), true,  LOT_PLAYERPALETTE, 1, sizeof(struct PlayerPalette) },
+    { "name",    LVT_STRING,  offsetof(struct PresetPalette, name),    true, LOT_NONE,          1, sizeof(char)                 },
+    { "palette", LVT_COBJECT, offsetof(struct PresetPalette, palette), true, LOT_PLAYERPALETTE, 1, sizeof(struct PlayerPalette) },
 };
 
 #define LUA_RAY_INTERSECTION_INFO_FIELD_COUNT 2

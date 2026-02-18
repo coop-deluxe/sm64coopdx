@@ -2807,9 +2807,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| name | `string` |  |
+| name | `string` | read-only |
 | palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
-| active | `boolean` |  |
 
 [:arrow_up_small:](#)
 
