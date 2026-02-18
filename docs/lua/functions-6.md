@@ -4634,6 +4634,9 @@ Apply one frame of platform rotation to the object using the given platform
 
 ## [preset_palette_allocate](#preset_palette_allocate)
 
+### Description
+Allocates a preset palette that can be shown in the player customization screen. This returns a `PresetPalette` that can be used to customize the palette. Customization functions include `preset_palette_set_name` and `preset_palette_set_color_of_part`.
+
 ### Lua Example
 `local presetPaletteValue = preset_palette_allocate(name)`
 
@@ -4653,6 +4656,9 @@ Apply one frame of platform rotation to the object using the given platform
 <br />
 
 ## [preset_palette_set_name](#preset_palette_set_name)
+
+### Description
+Set's the name of a `PresetPalette`.
 
 ### Lua Example
 `preset_palette_set_name(palette, name)`
@@ -4674,6 +4680,9 @@ Apply one frame of platform rotation to the object using the given platform
 <br />
 
 ## [preset_palette_set_color_of_part](#preset_palette_set_color_of_part)
+
+### Description
+Set's the color of a player part for a `PresetPalette`.
 
 ### Lua Example
 `preset_palette_set_color_of_part(palette, playerPart, r, g, b)`

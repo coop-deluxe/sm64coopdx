@@ -3831,11 +3831,13 @@ end
 --- @param name string
 --- @return Character
 --- @return integer characterIndex
+--- Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
 function character_allocate(name)
     -- ...
 end
 
 --- @param character Character
+--- Deallocates your `character` from the `gCharacters` struct.
 function character_deallocate(character)
     -- ...
 end
@@ -9995,12 +9997,14 @@ end
 
 --- @param name string
 --- @return PresetPalette
+--- Allocates a preset palette that can be shown in the player customization screen. This returns a `PresetPalette` that can be used to customize the palette. Customization functions include `preset_palette_set_name` and `preset_palette_set_color_of_part`.
 function preset_palette_allocate(name)
     -- ...
 end
 
 --- @param palette PresetPalette
 --- @param name string
+--- Set's the name of a `PresetPalette`.
 function preset_palette_set_name(palette, name)
     -- ...
 end
@@ -10010,6 +10014,7 @@ end
 --- @param r integer
 --- @param g integer
 --- @param b integer
+--- Set's the color of a player part for a `PresetPalette`.
 function preset_palette_set_color_of_part(palette, playerPart, r, g, b)
     -- ...
 end

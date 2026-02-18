@@ -2793,6 +2793,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 
 ## [character_allocate](#character_allocate)
 
+### Description
+Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
+
 ### Lua Example
 `local characterValue, characterIndex = character_allocate(name)`
 
@@ -2813,6 +2816,9 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ## [character_deallocate](#character_deallocate)
+
+### Description
+Deallocates your `character` from the `gCharacters` struct.
 
 ### Lua Example
 `character_deallocate(character)`
