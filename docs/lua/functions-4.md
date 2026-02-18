@@ -147,6 +147,29 @@ Sets the lighting engine ambient color
 
 <br />
 
+## [le_set_max_lights_per_vertex](#le_set_max_lights_per_vertex)
+
+### Description
+Sets the max amount of lights that can affect a vertex
+
+### Lua Example
+`le_set_max_lights_per_vertex(count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| count | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_max_lights_per_vertex(u8 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description
