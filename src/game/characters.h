@@ -426,8 +426,14 @@ Useful for keeping Mario's animations visually aligned, particularly when transi
 |descriptionEnd| */
 void update_character_anim_offset(struct MarioState* m);
 
+/* |description|
+Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
+|descriptionEnd| */
 struct Character* character_allocate(const char* name, RET int *characterIndex);
 
+/* |description|
+Deallocates your `character` from the `gCharacters` struct.
+|descriptionEnd| */
 void character_deallocate(struct Character* character);
 
 /* |description|Set Character name for `character`|descriptionEnd| */

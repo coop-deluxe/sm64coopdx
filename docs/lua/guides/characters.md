@@ -33,9 +33,7 @@ Past this point, any mutable variables in `character` may be changed to your lik
 
 ### Animations
 
-#### TODO: I do not know where a player gets the data to register an animation, so this is super barebornes
-
-Adding an animation to a character first requires the animation to be registered with the `smlua_anim_util_register_animation` function. With this done, you can set your animation to the name you set when you called `smlua_anim_util_register_animation` with `character_set_animation`. This function takes in your `Character`, and more importantly, your animation id, which is the animation you want to replace, for example `CHAR_ANIM_SINGLE_JUMP`. The last parameter is the name of the animation registered with `smlua_anim_util_register_animation`. Animations may also be removed with
+Adding an animation to a character first requires the animation to be registered with the `smlua_anim_util_register_animation` function. The data needed for this can be obtained from multiple differente places, but the easiest for custom animations for models using fast64 is using [fast64-gart](https://github.com/maniscat2/fast64-gart). With this done, you can set your animation to the name you set when you called `smlua_anim_util_register_animation` with `character_set_animation`. This function takes in your `Character`, and more importantly, your animation id, which is the animation you want to replace, for example `CHAR_ANIM_SINGLE_JUMP`. The last parameter is the name of the animation registered with `smlua_anim_util_register_animation`. Animations may also be removed with `character_remove_animation`, which takes in your `Character`, and the animation id you want to remove the animation for, for example, `CHAR_ANIM_SINGLE_JUMP`.
 
 ### Sounds
 
