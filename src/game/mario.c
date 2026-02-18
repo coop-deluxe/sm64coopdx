@@ -65,7 +65,7 @@ s32 is_anim_at_end(struct MarioState *m) {
     if (!m) { return FALSE; }
     struct Object *o = m->marioObj;
 
-    if (o->header.gfx.animInfo.curAnim == NULL) { TRUE; }
+    if (o->header.gfx.animInfo.curAnim == NULL) { return TRUE; }
     return (o->header.gfx.animInfo.animFrame + 1) == o->header.gfx.animInfo.curAnim->loopEnd;
 }
 
