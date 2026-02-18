@@ -66,7 +66,7 @@ static void player_palettes_sort_characters(void) {
     int charPresetPaletteCount = 0;
 
     // copy character palettes first
-    for (int c = 0; c < CT_MAX; c++) { // heh, c++
+    for (int c = 0; c < CT_COUNT; c++) { // heh, c++
         for (int i = 0; i < gPresetPaletteCount; i++) {
             if (!strcmp(gPresetPalettes[i].name, gOriginalCharacters[c].name)) {
                 charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
@@ -77,7 +77,7 @@ static void player_palettes_sort_characters(void) {
     // copy modded palettes
     for (int i = 0; i < MAX_MODDED_PRESET_PALETTES; i++) {
         bool isCharPalette = false;
-        for (int c = 0; c < CT_MAX; c++) { // heh, c++
+        for (int c = 0; c < CT_COUNT; c++) { // heh, c++
             if (!strcmp(gModdedPresetPalettes[i].name, gOriginalCharacters[c].name)) {
                 isCharPalette = true;
                 break;
@@ -92,7 +92,7 @@ static void player_palettes_sort_characters(void) {
     // copy remaining palettes
     for (int i = 0; i < gPresetPaletteCount; i++) {
         bool isCharPalette = false;
-        for (int c = 0; c < CT_MAX; c++) { // heh, c++
+        for (int c = 0; c < CT_COUNT; c++) { // heh, c++
             if (!strcmp(gPresetPalettes[i].name, gOriginalCharacters[c].name)) {
                 isCharPalette = true;
                 break;

@@ -662,7 +662,6 @@
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
 | sounds | `Array` <`integer`> | read-only |
-| modIndexForAudio | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 

@@ -20,7 +20,7 @@ enum CharacterType {
     CT_WARIO,
 
     // must be last
-    CT_MAX
+    CT_COUNT
 };
 
 enum CharacterSound {

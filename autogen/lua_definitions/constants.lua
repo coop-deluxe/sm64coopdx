@@ -2244,7 +2244,7 @@ CT_LUIGI       =  1 --- @type CharacterType
 CT_TOAD        =  2 --- @type CharacterType
 CT_WALUIGI     =  3 --- @type CharacterType
 CT_WARIO       =  4 --- @type CharacterType
-CT_MAX         =  5 --- @type CharacterType
+CT_COUNT       =  5 --- @type CharacterType
 
 --- @alias CharacterType
 --- | `CT_UNALLOCATED`
@@ -2253,7 +2253,7 @@ CT_MAX         =  5 --- @type CharacterType
 --- | `CT_TOAD`
 --- | `CT_WALUIGI`
 --- | `CT_WARIO`
---- | `CT_MAX`
+--- | `CT_COUNT`
 
 CHAR_SOUND_YAH_WAH_HOO         =  0 --- @type CharacterSound
 CHAR_SOUND_HOOHOO              =  1 --- @type CharacterSound

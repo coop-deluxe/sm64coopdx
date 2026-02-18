@@ -98,7 +98,7 @@ struct Character gTemplateCharacter = {
     .soundLetsAGo          = SOUND_MARIO_LETS_A_GO,
     .soundOkeyDokey        = SOUND_MARIO_OKEY_DOKEY,
 };
-struct Character gOriginalCharacters[CT_MAX] = {
+struct Character gOriginalCharacters[CT_COUNT] = {
     [CT_MARIO] = {
         .type                  = CT_MARIO,
         .name                  = "Mario",
@@ -764,10 +764,10 @@ void character_remove_animation(struct Character* character, enum CharacterAnimI
 
 void reset_all_characters() {
     memcpy(gCharacters, gOriginalCharacters,
-           sizeof(struct Character) * CT_MAX);
+           sizeof(struct Character) * CT_COUNT);
 
     for (int i = 0; i < MAX_CHARACTERS; i++) {
-        if (i >= CT_MAX) {
+        if (i >= CT_COUNT) {
             gCharacters[i] = gTemplateCharacter;
         }
         // set audio and anim indexes to -1 so they don't trigger, since 0 is a valid index

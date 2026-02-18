@@ -784,7 +784,7 @@ NEXT_OPTION:
 
     gMasterVolume = (f32)configMasterVolume / 127.0f;
 
-    if (configPlayerModel >= CT_MAX) { configPlayerModel = CT_MARIO; }
+    if (configPlayerModel >= CT_COUNT) { configPlayerModel = CT_MARIO; }
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }

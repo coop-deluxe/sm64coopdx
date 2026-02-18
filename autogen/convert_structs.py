@@ -80,7 +80,7 @@ override_field_types = {
 override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "Camera": [ "paletteEditorCapState" ],
-    "Character": [ "moddedAnims", "modAudioSounds" ],
+    "Character": [ "moddedAnims", "modAudioSounds", "modIndexForAudio" ],
     "PresetPalette": [ "active" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],

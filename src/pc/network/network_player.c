@@ -44,7 +44,7 @@ bool network_player_name_valid(char* buffer) {
 }
 
 void network_player_init(void) {
-    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
+    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_COUNT) ? configPlayerModel : CT_MARIO;
     gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
     gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;

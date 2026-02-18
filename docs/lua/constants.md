@@ -888,7 +888,7 @@
 | CT_TOAD | 2 |
 | CT_WALUIGI | 3 |
 | CT_WARIO | 4 |
-| CT_MAX | 5 |
+| CT_COUNT | 5 |
 
 ### [enum CharacterSound](#CharacterSound)
 | Identifier | Value |

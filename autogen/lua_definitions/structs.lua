@@ -499,7 +499,6 @@
 --- @field public soundLetsAGo integer
 --- @field public soundOkeyDokey integer
 --- @field public sounds integer[]
---- @field public modIndexForAudio integer[]
 
 --- @class Controller
 --- @field public port integer

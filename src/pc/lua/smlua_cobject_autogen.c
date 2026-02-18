@@ -406,7 +406,7 @@ static struct LuaObjectField sChainSegmentFields[LUA_CHAIN_SEGMENT_FIELD_COUNT] 
     { "yaw",   LVT_S16, offsetof(struct ChainSegment, yaw),   false, LOT_NONE, 1, sizeof(s16) },
 };
 
-#define LUA_CHARACTER_FIELD_COUNT 273
+#define LUA_CHARACTER_FIELD_COUNT 272
 static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "animAPose",                          LVT_S32,      offsetof(struct Character, animAPose),                          true,  LOT_NONE,        1,              sizeof(s32)                },
     { "animAirForwardKb",                   LVT_S32,      offsetof(struct Character, animAirForwardKb),                   true,  LOT_NONE,        1,              sizeof(s32)                },
@@ -630,7 +630,6 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "capModelId",                         LVT_U32,      offsetof(struct Character, capModelId),                         false, LOT_NONE,        1,              sizeof(u32)                },
     { "capWingModelId",                     LVT_U32,      offsetof(struct Character, capWingModelId),                     false, LOT_NONE,        1,              sizeof(u32)                },
     { "hudHeadTexture",                     LVT_COBJECT,  offsetof(struct Character, hudHeadTexture),                     true,  LOT_TEXTUREINFO, 1,              sizeof(struct TextureInfo) },
-    { "modIndexForAudio",                   LVT_S16,      offsetof(struct Character, modIndexForAudio),                   false, LOT_NONE,        CHAR_SOUND_MAX, sizeof(s16)                },
     { "modelId",                            LVT_U32,      offsetof(struct Character, modelId),                            false, LOT_NONE,        1,              sizeof(u32)                },
     { "name",                               LVT_STRING,   offsetof(struct Character, name),                               true,  LOT_NONE,        1,              sizeof(char)               },
     { "soundAttacked",                      LVT_S32,      offsetof(struct Character, soundAttacked),                      true,  LOT_NONE,        1,              sizeof(s32)                },
