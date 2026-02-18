@@ -2794,17 +2794,19 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 ## [character_allocate](#character_allocate)
 
 ### Lua Example
-`local characterValue, characterIndex = character_allocate()`
+`local characterValue, characterIndex = character_allocate(name)`
 
 ### Parameters
-- None
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
 
 ### Returns
 - [Character](structs.md#Character)
 - `integer`
 
 ### C Prototype
-`struct Character* character_allocate(RET int *characterIndex);`
+`struct Character* character_allocate(const char* name, RET int *characterIndex);`
 
 [:arrow_up_small:](#)
 

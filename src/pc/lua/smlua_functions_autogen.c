@@ -12484,15 +12484,17 @@ int smlua_func_character_allocate(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "character_allocate", 0, top);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "character_allocate", 1, top);
         return 0;
     }
 
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "character_allocate"); return 0; }
 
     int characterIndex;
 
-    smlua_push_object(L, LOT_CHARACTER, character_allocate(&characterIndex), NULL);
+    smlua_push_object(L, LOT_CHARACTER, character_allocate(name, &characterIndex), NULL);
 
     lua_pushinteger(L, characterIndex);
 

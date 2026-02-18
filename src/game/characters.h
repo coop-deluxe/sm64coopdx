@@ -426,7 +426,7 @@ Useful for keeping Mario's animations visually aligned, particularly when transi
 |descriptionEnd| */
 void update_character_anim_offset(struct MarioState* m);
 
-struct Character* character_allocate(RET int *characterIndex);
+struct Character* character_allocate(const char* name, RET int *characterIndex);
 
 void character_deallocate(struct Character* character);
 

@@ -3828,9 +3828,10 @@ function update_character_anim_offset(m)
     -- ...
 end
 
+--- @param name string
 --- @return Character
 --- @return integer characterIndex
-function character_allocate()
+function character_allocate(name)
     -- ...
 end
 

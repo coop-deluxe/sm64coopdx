@@ -642,10 +642,11 @@ const char* get_modded_character_anim_string(struct MarioState* m, enum Characte
     return smlua_anim_util_animation_exists_using_index(character->moddedAnims[characterAnim]) ? smlua_anim_util_get_name_from_index(character->moddedAnims[characterAnim]) : NULL;
 }
 
-struct Character* character_allocate(RET int *characterIndex) {
+struct Character* character_allocate(const char* name, RET int *characterIndex) {
     *characterIndex = character_get_first_unallocated_index();
     struct Character* character = &gCharacters[*characterIndex];
     character->type = CT_MARIO;
+    character_set_name(character, name);
     return character;
 }
 
