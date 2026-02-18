@@ -261,7 +261,7 @@ void network_player_update(void) {
 }
 
 extern bool gCurrentlyJoining;
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u16 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {

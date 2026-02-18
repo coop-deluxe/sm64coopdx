@@ -7,7 +7,7 @@
 #include "pc/lua/smlua_autogen.h"
 // NOTE: do not include any additional headers
 
-#define MAX_CHARACTERS 255
+#define MAX_CHARACTERS 256
 #define MAX_CHARACTER_NAME_LEN 128
 #define MAX_CHARACTER_AUDIOS_PER_SOUND 8
 

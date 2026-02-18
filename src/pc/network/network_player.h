@@ -40,7 +40,7 @@ struct NetworkPlayer {
     bool currPositionValid;
     u8 fadeOpacity;
     u8 onRxSeqId;
-    u8 modelIndex;
+    u16 modelIndex;
     u8 gag;
     u32 ping;
     struct PlayerPalette palette;
@@ -54,7 +54,7 @@ struct NetworkPlayer {
 
     char overrideLocation[256];
 
-    u8 overrideModelIndex;
+    u16 overrideModelIndex;
     struct PlayerPalette overridePalette;
 
     u16 rxSeqIds[MAX_RX_SEQ_IDS];
@@ -106,7 +106,7 @@ bool network_player_is_override_palette_same(struct NetworkPlayer *np);
 
 void network_player_update(void);
 
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* playerPalette, const char* name, const char* discordId);
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u16 modelIndex, const struct PlayerPalette* playerPalette, const char* name, const char* discordId);
 u8 network_player_disconnected(u8 globalIndex);
 void construct_player_popup(struct NetworkPlayer* np, char* msg, const char* level);
 

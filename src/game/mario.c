@@ -2366,7 +2366,7 @@ void init_single_mario(struct MarioState* m) {
         m->wasNetworkVisible = false;
         gNetworkPlayers[playerIndex].fadeOpacity = 0;
     } else {
-        u8 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
+        u16 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
         struct Character* character = get_allocated_character_from_index(modelIndex);
         m->character = character;
         obj_set_model_extended(m->marioObj, m->character->modelId);
