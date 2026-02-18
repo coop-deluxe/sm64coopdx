@@ -1437,6 +1437,12 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
     return FALSE;
 }
 
+void lose_life_after_death_exit(struct MarioState *m) {
+    if (sDelayedWarpArg != WARP_ARG_EXIT_COURSE) {
+        m->numLives--;
+    }
+}
+
 s32 act_death_exit(struct MarioState *m) {
     if (!m) { return 0; }
     if (15 < m->actionTimer++
@@ -1447,6 +1453,7 @@ s32 act_death_exit(struct MarioState *m) {
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
         queue_rumble_data_mario(m, 5, 80);
+        lose_life_after_death_exit(m);
         // restore 7.75 units of health
         m->healCounter = 31;
     }
@@ -1463,6 +1470,7 @@ s32 act_unused_death_exit(struct MarioState *m) {
 #else
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
+        lose_life_after_death_exit(m);
         // restore 7.75 units of health
         m->healCounter = 31;
     }
@@ -1479,6 +1487,7 @@ s32 act_falling_death_exit(struct MarioState *m) {
 #else
         play_character_sound(m, CHAR_SOUND_OOOF2);
 #endif
+        lose_life_after_death_exit(m);
         queue_rumble_data_mario(m, 5, 80);
         // restore 7.75 units of health
         m->healCounter = 31;
@@ -1526,6 +1535,7 @@ s32 act_special_death_exit(struct MarioState *m) {
 
     if (launch_mario_until_land(m, ACT_HARD_BACKWARD_GROUND_KB, CHAR_ANIM_BACKWARD_AIR_KB, -24.0f)) {
         queue_rumble_data_mario(m, 5, 80);
+        lose_life_after_death_exit(m);
         m->healCounter = 31;
     }
     // show Mario

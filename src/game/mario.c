@@ -425,6 +425,7 @@ bool mario_can_bubble(struct MarioState* m) {
     if (m->playerIndex != 0) { return false; }
     if (m->action == ACT_BUBBLED) { return false; }
     if (!m->visibleToEnemies) { return false; }
+    if (m->numLives <= 0) { return false; }
 
     u8 allInBubble = TRUE;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
@@ -443,13 +444,13 @@ void mario_set_bubbled(struct MarioState* m) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
+    if (m->numLives <= 0) { return; }
 
     gLocalBubbleCounter = 20;
 
     drop_and_set_mario_action(m, ACT_BUBBLED, 0);
-    if (m->numLives > -1) {
-        m->numLives--;
-    }
+    m->numLives--;
+
     m->healCounter = 0;
     m->hurtCounter = 31;
     gCamera->cutscene = 0;

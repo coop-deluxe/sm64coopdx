@@ -869,8 +869,7 @@ void verify_warp(struct MarioState *m, bool killMario) {
         return;
     }
 
-    m->numLives--;
-    if (m->numLives < 0) {
+    if (m->numLives <= 0) {
         sDelayedWarpOp = WARP_OP_GAME_OVER;
     } else {
         sSourceWarpNodeId = WARP_NODE_DEATH;
@@ -925,8 +924,7 @@ s16 level_trigger_warp(struct MarioState *m, s32 warpOp) {
                 break;
 
             case WARP_OP_DEATH:
-                m->numLives--;
-                if (m->numLives <= -1) {
+                if (m->numLives <= 0) {
                     sDelayedWarpOp = WARP_OP_GAME_OVER;
                 }
                 sDelayedWarpTimer = 48;
