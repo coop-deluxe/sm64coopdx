@@ -3764,7 +3764,7 @@ end
 
 --- @param i integer
 --- @return Character
---- Gets an allocated Character struct from an index. If the index provided is not allocated, return `CT_MARIO`.
+--- Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.
 function get_allocated_character_from_index(i)
     -- ...
 end

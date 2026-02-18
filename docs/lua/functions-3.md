@@ -2580,7 +2580,7 @@ Gets the first unallocated character.
 ## [get_allocated_character_from_index](#get_allocated_character_from_index)
 
 ### Description
-Gets an allocated Character struct from an index. If the index provided is not allocated, return `CT_MARIO`.
+Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.
 
 ### Lua Example
 `local characterValue = get_allocated_character_from_index(i)`

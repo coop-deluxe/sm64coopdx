@@ -379,7 +379,7 @@ struct Character* character_get_first_allocated();
 /* |description|Gets the first unallocated character.|descriptionEnd| */
 struct Character* character_get_first_unallocated();
 
-/* |description|Gets an allocated Character struct from an index. If the index provided is not allocated, return `CT_MARIO`.|descriptionEnd| */
+/* |description|Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.|descriptionEnd| */
 struct Character* get_allocated_character_from_index(int i);
 
 /* |description|Gets a Character struct from `m`|descriptionEnd| */
