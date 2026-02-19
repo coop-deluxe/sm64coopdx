@@ -46,7 +46,44 @@ void nametags_render(void) {
     djui_hud_set_resolution(RESOLUTION_N64);
     djui_hud_set_font(FONT_SPECIAL);
 
-    for (u8 i = gNametagsSettings.showSelfTag ? 0 : 1; i < MAX_PLAYERS; i++) {
+    int playerIndicesDist[MAX_PLAYERS][2];
+
+    for (int i = 0; i < MAX_PLAYERS; ++i) {
+        playerIndicesDist[i][0] = -1;
+        playerIndicesDist[i][1] = 999999;
+    }
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct MarioState* m = &gMarioStates[i];
+
+        if (m->marioObj == NULL)
+            continue;
+
+        Vec3f* cameraPos = &gLakituState.curPos;
+        int dist = (int)vec3f_dist(m->pos, (f32*)cameraPos);
+
+        playerIndicesDist[i][0] = i;
+        playerIndicesDist[i][1] = (int)dist;
+    }
+
+    for (int i = 0; i < MAX_PLAYERS - 1; i++) {
+        for (int j = i + 1; j < MAX_PLAYERS; j++) {
+            if (playerIndicesDist[j][1] > playerIndicesDist[i][1]) {
+                int curIndex = playerIndicesDist[i][0];
+                int curDist  = playerIndicesDist[i][1];
+
+                playerIndicesDist[i][0] = playerIndicesDist[j][0];
+                playerIndicesDist[i][1] = playerIndicesDist[j][1];
+
+                playerIndicesDist[j][0] = curIndex;
+                playerIndicesDist[j][1] = curDist;
+            }
+        }
+    }
+
+    for (int idx = 0; idx < MAX_PLAYERS; idx++) {
+        int i = playerIndicesDist[idx][0];
+        if (!gNametagsSettings.showSelfTag && i == 0) { continue; }
         struct MarioState* m = &gMarioStates[i];
         if (!is_player_active(m)) { continue; }
         struct NetworkPlayer* np = &gNetworkPlayers[i];
