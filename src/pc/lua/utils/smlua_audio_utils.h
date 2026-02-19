@@ -2,6 +2,7 @@
 #define SMLUA_AUDIO_UTILS_H
 
 #include "pc/utils/miniaudio.h"
+#include "pc/mods/mod.h"
 
 /* |description|Resets all custom sequences back to vanilla|descriptionEnd| */
 void smlua_audio_utils_reset_all(void);
