@@ -121,6 +121,10 @@ f32 djui_hud_measure_text(const char* message);
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);
 /* |description|Prints interpolated DJUI HUD text onto the screen|descriptionEnd| */
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
+/* |description|Prints DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.|descriptionEnd| */
+void djui_hud_print_text_colored(const char* text, f32 x, f32 y, f32 scale);
+/* |description|Prints interpolated DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.|descriptionEnd| */
+void djui_hud_print_text_colored_interpolated(const char* text, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
 /* |description|Renders a DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders a DJUI HUD texture tile onto the screen|descriptionEnd| */

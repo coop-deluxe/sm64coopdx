@@ -261,7 +261,7 @@ Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
 ### Description
-gets a behavior ID from a behavior name
+Gets a behavior ID from a behavior name
 
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`
@@ -3438,6 +3438,61 @@ Prints interpolated DJUI HUD text onto the screen
 
 ### C Prototype
 `void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_colored](#djui_hud_print_text_colored)
+
+### Description
+Prints DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.
+
+### Lua Example
+`djui_hud_print_text_colored(text, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| text | `string` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_colored(const char* text, f32 x, f32 y, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_colored_interpolated](#djui_hud_print_text_colored_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.
+
+### Lua Example
+`djui_hud_print_text_colored_interpolated(text, prevX, prevY, prevScale, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| text | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScale | `number` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_colored_interpolated(const char* text, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
 
 [:arrow_up_small:](#)
 

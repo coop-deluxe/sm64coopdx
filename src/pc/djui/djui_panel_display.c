@@ -5,6 +5,7 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/network/network.h"
 
 #define MSAA_ORIGINAL_UNSET ((u32)-1)
 
@@ -16,6 +17,14 @@ static u32 sMsaaOriginal = MSAA_ORIGINAL_UNSET;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
+}
+
+static void djui_panel_display_nametags_show_self_tag_apply(UNUSED struct DjuiBase* caller) {
+    gNametagsSettings.showSelfTag = configNametagsShowSelfTag;
+}
+
+static void djui_panel_display_nametags_health_apply(UNUSED struct DjuiBase* caller) {
+    gNametagsSettings.showHealth = configNametagsShowHealth;
 }
 
 static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* caller) {
@@ -64,6 +73,8 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
+        djui_checkbox_create(body, DLANG(DISPLAY, NAMETAGS_SHOW_HEALTH), &configNametagsShowHealth, djui_panel_display_nametags_health_apply);
+        djui_checkbox_create(body, DLANG(DISPLAY, NAMETAGS_SHOW_SELF_TAG), &configNametagsShowSelfTag, djui_panel_display_nametags_show_self_tag_apply);
 
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FRAMERATE_MODE), framerateModeChoices, 3, &configFramerateMode, djui_panel_display_framerate_mode_change);

@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/utils/misc.h"
 
 #define FADE_SCALE 4.f
 
@@ -18,33 +19,19 @@ struct StateExtras {
 };
 static struct StateExtras sStateExtras[MAX_PLAYERS];
 
-void name_without_hex(char* input) {
-    s32 i, j;
-    bool inSlash = false;
-    for (i = j = 0; input[i] != '\0'; i++) {
-        if (input[i] == '\\') {
-            inSlash = !inSlash;
-        } else if (!inSlash) {
-            input[j++] = input[i]; // it just works
-        }
-    }
-
-    input[j] = '\0';
-}
-
 void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale, u8 r, u8 g, u8 b, u8 a, f32 outlineDarkness) {
     f32 offset = 1 * (scale * 2);
     f32 prevOffset = 1 * (prevScale * 2);
 
     // render outline
     djui_hud_set_color(r * outlineDarkness, g * outlineDarkness, b * outlineDarkness, a);
-    djui_hud_print_text_interpolated(text, prevX - prevOffset, prevY,              prevScale, x - offset, y,          scale);
-    djui_hud_print_text_interpolated(text, prevX + prevOffset, prevY,              prevScale, x + offset, y,          scale);
-    djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
-    djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
+    djui_hud_print_text_interpolated(str_remove_color_codes(text), prevX - prevOffset, prevY,              prevScale, x - offset, y,          scale);
+    djui_hud_print_text_interpolated(str_remove_color_codes(text), prevX + prevOffset, prevY,              prevScale, x + offset, y,          scale);
+    djui_hud_print_text_interpolated(str_remove_color_codes(text), prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
+    djui_hud_print_text_interpolated(str_remove_color_codes(text), prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
     // render text
     djui_hud_set_color(r, g, b, a);
-    djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale);
+    djui_hud_print_text_colored_interpolated(text, prevX, prevY, prevScale, x, y, scale);
     djui_hud_set_color(255, 255, 255, 255);
 }
 
@@ -96,7 +83,6 @@ void nametags_render(void) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {
                 snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
-                name_without_hex(name);
             }
             if (!djui_hud_world_pos_to_screen_pos(pos, out)) {
                 continue;
@@ -104,7 +90,7 @@ void nametags_render(void) {
             u8* color = network_get_player_text_color(m->playerIndex);
 
             f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
-            f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
+            f32 measure = djui_hud_measure_text(str_remove_color_codes(name)) * scale * 0.5f;
             out[1] -= 16 * scale;
 
             u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - scale, 0.f, 1.f);

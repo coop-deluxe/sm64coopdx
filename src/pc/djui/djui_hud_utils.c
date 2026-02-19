@@ -495,6 +495,98 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     interp->rotation = sRotation;
 }
 
+void djui_hud_print_text_colored(const char* text, f32 x, f32 y, f32 scale) {
+    if (text == NULL) return;
+
+    bool inSlash = false;
+    char hex[8] = {0};
+    int hexIndex = 0;
+
+    size_t len = strlen(text);
+
+    for (size_t i = 0; i < len; i++) {
+        char c = text[i];
+
+        if (c == '\\') {
+            inSlash = !inSlash;
+            if (inSlash) {
+                hexIndex = 0;
+                memset(hex, 0, sizeof(hex));
+            }
+        } else if (inSlash) {
+            if (hexIndex < 7 && c != '#') {
+                hex[hexIndex++] = c;
+                hex[hexIndex] = '\0';
+            }
+        } else {
+            if (strlen(hex) == 6) {
+                int r, g, b;
+                sscanf(hex, "%02x%02x%02x", &r, &g, &b);
+                djui_hud_set_color(r, g, b, sColor.a);
+                hexIndex = 0;
+                memset(hex, 0, sizeof(hex));
+            }
+
+            char str[2] = { c, '\0' };
+            djui_hud_print_text(str, x, y, scale);
+            x += djui_hud_measure_text(str) * scale;
+        }
+    }
+}
+
+void djui_hud_print_text_colored_interpolated(const char* text, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+    if (text == NULL) return;
+
+    bool inSlash = false;
+    char hex[8] = {0};
+    int hexIndex = 0;
+
+    size_t len = strlen(text);
+
+    f32 currentPrevX = prevX;
+    f32 currentX = x;
+
+    for (size_t i = 0; i < len; i++) {
+        char c = text[i];
+
+        if (c == '\\') {
+            inSlash = !inSlash;
+            if (inSlash) {
+                hexIndex = 0;
+                memset(hex, 0, sizeof(hex));
+            }
+            continue;
+        }
+
+        if (inSlash) {
+            if (hexIndex < 7 && c != '#') {
+                hex[hexIndex++] = c;
+                hex[hexIndex] = '\0';
+            }
+            continue;
+        }
+
+        if (strlen(hex) == 6) {
+            int r, g, b;
+            sscanf(hex, "%02x%02x%02x", &r, &g, &b);
+            djui_hud_set_color(r, g, b, sColor.a);
+            hexIndex = 0;
+            memset(hex, 0, sizeof(hex));
+        }
+
+        char str[2] = { c, '\0' };
+
+        djui_hud_print_text_interpolated(
+            str,
+            currentPrevX, prevY, prevScale,
+            currentX, y, scale
+        );
+
+        currentPrevX += djui_hud_measure_text(str) * prevScale;
+        currentX += djui_hud_measure_text(str) * scale;
+    }
+}
+
 static inline bool is_power_of_two(u32 n) {
     return (n > 0) && ((n & (n - 1)) == 0);
 }

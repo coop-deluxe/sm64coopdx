@@ -137,8 +137,8 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.pvpType = configPvpType;
     gServerSettings.headlessServer = gCLIOpts.headless && (inNetworkType == NT_SERVER);
 
-    gNametagsSettings.showHealth = false;
-    gNametagsSettings.showSelfTag = false;
+    gNametagsSettings.showHealth = configNametagsShowHealth;
+    gNametagsSettings.showSelfTag = configNametagsShowSelfTag;
 
     gPauseMenuHidden = false;
 

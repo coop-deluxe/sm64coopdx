@@ -168,6 +168,9 @@ extern bool         configDjuiThemeCenter;
 extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
+// Nametag settings
+extern bool         configNametagsShowSelfTag;
+extern bool         configNametagsShowHealth;
 // other
 extern unsigned int configRulesVersion;
 extern bool         configCompressOnStartup;

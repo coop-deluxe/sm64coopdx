@@ -207,6 +207,9 @@ bool         configDjuiThemeCenter                = true;
 bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
+// Nametag settings
+bool         configNametagsShowSelfTag            = false;
+bool         configNametagsShowHealth             = false;
 // other
 unsigned int configRulesVersion                   = 0;
 bool         configCompressOnStartup              = false;
@@ -362,6 +365,9 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
+    // Nametag settings
+    {.name = "coop_nametags_show_self_tag",    .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametagsShowSelfTag},
+    {.name = "coop_nametags_show_health",      .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametagsShowHealth},
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
     {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},

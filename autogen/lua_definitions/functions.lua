@@ -3030,7 +3030,7 @@ end
 
 --- @param name string
 --- @return BehaviorId
---- gets a behavior ID from a behavior name
+--- Gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end
@@ -4012,6 +4012,27 @@ end
 --- @param scale number
 --- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
+--- @param text string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.
+function djui_hud_print_text_colored(text, x, y, scale)
+    -- ...
+end
+
+--- @param text string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen. If the text contains a hex code, it will color the rest of the text that color.
+function djui_hud_print_text_colored_interpolated(text, prevX, prevY, prevScale, x, y, scale)
     -- ...
 end
 
