@@ -44,15 +44,15 @@ static int sort_player_indices_by_dist(const void* a, const void* b){
     int distA = 99999;
     int distB = 99999;
 
-    if (is_player_active(mA) && aNp->currAreaSyncValid) {
-        distA = (int)vec3f_dist(mA->pos, gLakituState.curPos);
+    if (is_player_active(mA) && aNp->currAreaSyncValid && mA->marioObj) {
+        distA = (int)mA->marioObj->header.gfx.cameraToObject[2];
     }
 
-    if (is_player_active(mB) && bNp->currAreaSyncValid) {
-        distB = (int)vec3f_dist(mB->pos, gLakituState.curPos);
+    if (is_player_active(mB) && bNp->currAreaSyncValid && mB->marioObj) {
+        distB = (int)mB->marioObj->header.gfx.cameraToObject[2];
     }
 
-    return distB - distA;
+    return distA - distB;
 }
 
 void nametags_render(void) {
