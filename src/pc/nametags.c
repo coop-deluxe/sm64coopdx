@@ -35,6 +35,26 @@ void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 
     djui_hud_set_color(255, 255, 255, 255);
 }
 
+static int sort_player_indices_by_dist(const void* a, const void* b){
+    struct NetworkPlayer* aNp = &gNetworkPlayers[*(int*)a];
+    struct NetworkPlayer* bNp = &gNetworkPlayers[*(int*)b];
+    struct MarioState* mA = &gMarioStates[aNp->localIndex];
+    struct MarioState* mB = &gMarioStates[bNp->localIndex];
+
+    int distA = 99999;
+    int distB = 99999;
+
+    if (is_player_active(mA) && aNp->currAreaSyncValid) {
+        distA = (int)vec3f_dist(mA->pos, gLakituState.curPos);
+    }
+
+    if (is_player_active(mB) && bNp->currAreaSyncValid) {
+        distB = (int)vec3f_dist(mB->pos, gLakituState.curPos);
+    }
+
+    return distB - distA;
+}
+
 void nametags_render(void) {
     if (gNetworkType == NT_NONE ||
         (!gNametagsSettings.showSelfTag && network_player_connected_count() == 1) ||
@@ -46,43 +66,14 @@ void nametags_render(void) {
     djui_hud_set_resolution(RESOLUTION_N64);
     djui_hud_set_font(FONT_SPECIAL);
 
-    int playerIndicesDist[MAX_PLAYERS][2];
-
-    for (int i = 0; i < MAX_PLAYERS; ++i) {
-        playerIndicesDist[i][0] = -1;
-        playerIndicesDist[i][1] = 999999;
-    }
-
+    int playerIndexes[MAX_PLAYERS];
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        struct MarioState* m = &gMarioStates[i];
-
-        if (m->marioObj == NULL)
-            continue;
-
-        Vec3f* cameraPos = &gLakituState.curPos;
-        int dist = (int)vec3f_dist(m->pos, (f32*)cameraPos);
-
-        playerIndicesDist[i][0] = i;
-        playerIndicesDist[i][1] = (int)dist;
+        playerIndexes[i] = i;
     }
-
-    for (int i = 0; i < MAX_PLAYERS - 1; i++) {
-        for (int j = i + 1; j < MAX_PLAYERS; j++) {
-            if (playerIndicesDist[j][1] > playerIndicesDist[i][1]) {
-                int curIndex = playerIndicesDist[i][0];
-                int curDist  = playerIndicesDist[i][1];
-
-                playerIndicesDist[i][0] = playerIndicesDist[j][0];
-                playerIndicesDist[i][1] = playerIndicesDist[j][1];
-
-                playerIndicesDist[j][0] = curIndex;
-                playerIndicesDist[j][1] = curDist;
-            }
-        }
-    }
+    qsort(playerIndexes, MAX_PLAYERS, sizeof(int), sort_player_indices_by_dist);
 
     for (int idx = 0; idx < MAX_PLAYERS; idx++) {
-        int i = playerIndicesDist[idx][0];
+        int i = playerIndexes[idx];
         if (!gNametagsSettings.showSelfTag && i == 0) { continue; }
         struct MarioState* m = &gMarioStates[i];
         if (!is_player_active(m)) { continue; }
