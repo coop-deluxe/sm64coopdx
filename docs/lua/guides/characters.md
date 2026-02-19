@@ -37,3 +37,106 @@ Sounds are done using sound files, like `.mp3`, `.aiff`, or `.ogg`. The function
 ## Section 3: Modifying and removing characters
 
 The `gCharacters` table is exposed to Lua, and fully modifiable. You should only modify characters if you absolutely have to, it's almost always better to create a new character. The `characterIndex` provided when you allocate a character with `character_allocate` is the index for `gCharacters` that points to your provided `character`. So, if for some reason you wanted to modify your character using the `gCharacters` table, you could. Removing a character can be done by simply calling `character_deallocate`, and passing in your [Character](../structs.md#Character).
+
+## Section 4: Syncing
+
+Characters don't actually have to be allocated in order for them to show up on other player's screens. For the most part syncing just works, but there's a few things that you have to consider:
+
+1. Always allocate your models, i.e `local E_MODEL_NEW_CHARACTER = smlua_model_util_get_id('new_character_geo')` in a predictable manner for every user. That means don't nest the initialization in a if statement, or anything like that. Doing so may lead to desynced player id's, and will cause syncing to not work.
+2. Your animations registered with `smlua_anim_util_register_animation` also has to be deterministic. Don't put those in if statements, always register the animation at the same time, or you risk an animation index desync.
+
+Following these steps, you should end up fine. These are unfortunate limitations with the current system, and ideally everything would just sync over the network, but we aren't there yet.
+
+## Section 5: An example for adding a [Character](../structs.md#Character)
+
+Here's a code example of adding a [Character](../structs.md#Character).
+
+```lua
+-- name: Example Character Mod!
+
+-- This is allocated in the file with no if statements around.
+-- This is deterministic, and so is safe
+local E_MODEL_NEW_CHARACTER = smlua_model_util_get_id('new_character_geo')
+-- This is also deterministic, even though it's in a table, every model is allocated in the same order everytime
+local CAPS_NEW_CHARACTER = {
+    normal = smlua_model_util_get_id("new_character_cap_geo"),
+    wing = smlua_model_util_get_id("new_character_wing_cap_geo"),
+    metal = smlua_model_util_get_id("new_character_metal_cap_geo"),
+    metalWing = smlua_model_util_get_id("new_character_metal_wing_cap_geo")
+}
+
+-- These are all the different sound files we will allocate later. You can have multiple sounds, so we do on some of them.
+local VOICETABLE_NEW_CHARACTER = {
+    [CHAR_SOUND_ATTACKED] = 'new_character_ouch.ogg',
+    [CHAR_SOUND_DOH] = 'new_character_bonk0.ogg',
+    [CHAR_SOUND_DROWNING] = 'new_character_death.ogg',
+    [CHAR_SOUND_DYING] = 'new_character_death.ogg',
+    [CHAR_SOUND_GROUND_POUND_WAH] = 'new_character_shaa.ogg',
+    [CHAR_SOUND_HAHA] = { 'new_character_laugh1.ogg', 'new_character_laugh0.ogg' },
+    [CHAR_SOUND_HAHA_2] = 'new_character_laugh1.ogg',
+    [CHAR_SOUND_HERE_WE_GO] = 'new_character_victory.ogg',
+    [CHAR_SOUND_HOOHOO] = 'new_character_att0.ogg',
+    [CHAR_SOUND_HRMM] = 'new_character_flourish.ogg',
+    [CHAR_SOUND_LETS_A_GO] = 'new_character_letsago.ogg',
+    [CHAR_SOUND_MAMA_MIA] = { 'new_character_speak0.ogg', 'new_character_speak1.ogg' },
+    [CHAR_SOUND_ON_FIRE] = 'new_character_ouch.ogg',
+    [CHAR_SOUND_OOOF] = 'new_character_bonk1.ogg',
+    [CHAR_SOUND_OOOF2] = 'new_character_bonk1.ogg',
+    [CHAR_SOUND_PUNCH_HOO] = 'new_character_att1.ogg',
+    [CHAR_SOUND_PUNCH_WAH] = 'new_character_jump1.ogg',
+    [CHAR_SOUND_PUNCH_YAH] = 'new_character_att0.ogg',
+    [CHAR_SOUND_SO_LONGA_BOWSER] = 'new_character_flourish.ogg',
+    [CHAR_SOUND_TWIRL_BOUNCE] = 'new_character_flourish.ogg',
+    [CHAR_SOUND_UH] = 'new_character_bonk1.ogg',
+    [CHAR_SOUND_UH2] = 'new_character_jump0.ogg',
+    [CHAR_SOUND_UH2_2] = 'new_character_bonk1.ogg',
+    [CHAR_SOUND_WAAAOOOW] = 'new_character_death.ogg',
+    [CHAR_SOUND_WAH2] = 'new_character_att0.ogg',
+    [CHAR_SOUND_WHOA] = 'new_character_bonk1.ogg',
+    [CHAR_SOUND_YAHOO] = 'new_character_shaa.ogg',
+    [CHAR_SOUND_YAHOO_WAHA_YIPPEE] = { 'new_character_yell0.ogg', 'new_character_yell1.ogg' },
+    [CHAR_SOUND_YAH_WAH_HOO] = { 'new_character_jump0.ogg', 'new_character_jump1.ogg' },
+}
+
+-- This is done deterministically, as it is not done in an if statement, and there is no code stopping execution of this file
+-- This is not real data, this is empty, as I don't want this file to be 700 lines long :D
+smlua_anim_util_register_animation('new_character_single_jump', 0, 0, 0, 0, 0, {})
+smlua_anim_util_register_animation('new_character_triple_jump', 0, 0, 0, 0, 0, {})
+
+-- These are your registered animation names, we put it in a table for easier use
+local NEW_CHARACTER_ANIMS = {
+    [CHAR_ANIM_SINGLE_JUMP] = 'new_character_single_jump',
+    [CHAR_ANIM_TRIPLE_JUMP] = 'new_character_triple_jump',
+}
+
+-- Allocate a character, we dismiss the index as we won't be using it
+local character, _ = character_allocate("NewChar!")
+
+-- set models
+character.modelId = E_MODEL_NEW_CHARACTER
+character.capModelId = CAPS_NEW_CHARACTER.normal
+character.capWingModelId = CAPS_NEW_CHARACTER.wing
+character.capMetalModelId = CAPS_NEW_CHARACTER.metal
+character.capMetalWingModelId = CAPS_NEW_CHARACTER.metalWing
+
+-- set sounds according to table above
+for k, v in pairs(VOICETABLE_NEW_CHARACTER) do
+    if type(v) == "string" then
+        character_add_sound(character, k, v)
+    elseif type(v) == "table" then
+        for i = 1, #v do
+            if type(v[i]) == "string" then
+                character_add_sound(character, k, v[i])
+            end
+        end
+    end
+end
+
+-- set animations according to table above
+for k, v in pairs(NEW_CHARACTER_ANIMS) do
+    character_set_animation(character, k, v)
+end
+
+-- and that's it! You should have an allocated character in your menu that works fine!
+
+```
