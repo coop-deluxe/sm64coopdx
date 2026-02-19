@@ -3030,7 +3030,7 @@ end
 
 --- @param name string
 --- @return BehaviorId
---- gets a behavior ID from a behavior name
+--- Gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end

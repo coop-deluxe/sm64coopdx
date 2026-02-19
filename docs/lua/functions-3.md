@@ -261,7 +261,7 @@ Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
 ### Description
-gets a behavior ID from a behavior name
+Gets a behavior ID from a behavior name
 
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`
