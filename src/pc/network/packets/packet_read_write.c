@@ -185,10 +185,7 @@ u8 packet_initial_read(struct Packet* packet) {
 void packet_read(struct Packet* packet, void* data, u16 length) {
     u16 cursor = packet->cursor;
     if (data == NULL) { packet->error = true; return; }
-    if (cursor + length >= PACKET_LENGTH) {
-        LOG_CONSOLE("Reached packet read length error!");
-        packet->error = true; return;
-    }
+    if (cursor + length >= PACKET_LENGTH) { packet->error = true; return; }
 
     memcpy(data, &packet->buffer[cursor], length);
     packet->cursor = cursor + length;
