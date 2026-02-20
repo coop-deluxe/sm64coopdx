@@ -849,7 +849,7 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return animFrame; }
 
-            if (mario_can_bubble(m)) {
+            if (mario_can_bubble(m) && m->numLives > 0) {
                 mario_set_bubbled(m);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
@@ -922,8 +922,7 @@ s32 act_quicksand_death(struct MarioState *m) {
                 bool allowDeath = true;
                 smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { return FALSE; }
-
-                if (mario_can_bubble(m)) {
+                if (mario_can_bubble(m) && m->numLives > 0) {
                     mario_set_bubbled(m);
                 } else {
                     level_trigger_warp(m, WARP_OP_DEATH);
@@ -947,7 +946,7 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
-            if (mario_can_bubble(m)) {
+            if (mario_can_bubble(m) && m->numLives > 0) {
                 m->health = 0xFF;
                 mario_set_bubbled(m);
             } else {
@@ -1884,7 +1883,7 @@ s32 act_squished(struct MarioState *m) {
             smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
             if (!allowDeath) { return FALSE; }
 
-            if (mario_can_bubble(m)) {
+            if (mario_can_bubble(m) && m->numLives > 0) {
                 mario_set_bubbled(m);
             } else {
                 // 0 units of health
