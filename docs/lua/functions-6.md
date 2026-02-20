@@ -4168,6 +4168,56 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 <br />
 
+## [cur_obj_update_dialog](#cur_obj_update_dialog)
+
+### Lua Example
+`local integerValue = cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| actionArg | `integer` |
+| dialogFlags | `integer` |
+| dialogID | `integer` |
+| unused | `integer` |
+| inContinueDialogFunction | `Function` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void));`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_update_dialog_with_cutscene](#cur_obj_update_dialog_with_cutscene)
+
+### Lua Example
+`local integerValue = cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| actionArg | `integer` |
+| dialogFlags | `integer` |
+| cutsceneTable | `integer` |
+| dialogID | `integer` |
+| inContinueDialogFunction | `Function` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void));`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [cur_obj_has_model](#cur_obj_has_model)
 
 ### Lua Example

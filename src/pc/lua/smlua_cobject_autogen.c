@@ -11,6 +11,7 @@
 #include "src/pc/djui/djui_theme.h"
 #include "src/game/object_helpers.h"
 #include "src/game/mario_step.h"
+#include "src/game/mario_actions_moving.h"
 #include "src/game/ingame_menu.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
 #include "src/pc/lua/utils/smlua_misc_utils.h"
@@ -1285,6 +1286,17 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "unusedVec1",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec1),                       true,  LOT_VEC3F, 1,  sizeof(Vec3f) },
     { "unusedVec2",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec2),                       true,  LOT_VEC3S, 1,  sizeof(Vec3s) },
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE,  1,  sizeof(s16)   },
+};
+
+#define LUA_LANDING_ACTION_FIELD_COUNT 7
+static struct LuaObjectField sLandingActionFields[LUA_LANDING_ACTION_FIELD_COUNT] = {
+    { "aPressedAction",  LVT_U32, offsetof(struct LandingAction, aPressedAction),  false, LOT_NONE, 1, sizeof(u32) },
+    { "endAction",       LVT_U32, offsetof(struct LandingAction, endAction),       false, LOT_NONE, 1, sizeof(u32) },
+    { "numFrames",       LVT_S16, offsetof(struct LandingAction, numFrames),       false, LOT_NONE, 1, sizeof(s16) },
+    { "offFloorAction",  LVT_U32, offsetof(struct LandingAction, offFloorAction),  false, LOT_NONE, 1, sizeof(u32) },
+    { "slideAction",     LVT_U32, offsetof(struct LandingAction, slideAction),     false, LOT_NONE, 1, sizeof(u32) },
+    { "unk02",           LVT_S16, offsetof(struct LandingAction, unk02),           false, LOT_NONE, 1, sizeof(s16) },
+    { "verySteepAction", LVT_U32, offsetof(struct LandingAction, verySteepAction), false, LOT_NONE, 1, sizeof(u32) },
 };
 
 #define LUA_LEVEL_VALUES_FIELD_COUNT 56
@@ -2737,6 +2749,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_HUDUTILSROTATION,             sHudUtilsRotationFields,             LUA_HUD_UTILS_ROTATION_FIELD_COUNT              },
     { LOT_INSTANTWARP,                  sInstantWarpFields,                  LUA_INSTANT_WARP_FIELD_COUNT                    },
     { LOT_LAKITUSTATE,                  sLakituStateFields,                  LUA_LAKITU_STATE_FIELD_COUNT                    },
+    { LOT_LANDINGACTION,                sLandingActionFields,                LUA_LANDING_ACTION_FIELD_COUNT                  },
     { LOT_LEVELVALUES,                  sLevelValuesFields,                  LUA_LEVEL_VALUES_FIELD_COUNT                    },
     { LOT_MARIOANIMATION,               sMarioAnimationFields,               LUA_MARIO_ANIMATION_FIELD_COUNT                 },
     { LOT_MARIOBODYSTATE,               sMarioBodyStateFields,               LUA_MARIO_BODY_STATE_FIELD_COUNT                },
@@ -2843,6 +2856,7 @@ const char *sLuaLotNames[] = {
 	[LOT_HUDUTILSROTATION] = "HudUtilsRotation",
 	[LOT_INSTANTWARP] = "InstantWarp",
 	[LOT_LAKITUSTATE] = "LakituState",
+	[LOT_LANDINGACTION] = "LandingAction",
 	[LOT_LEVELVALUES] = "LevelValues",
 	[LOT_MARIOANIMATION] = "MarioAnimation",
 	[LOT_MARIOBODYSTATE] = "MarioBodyState",

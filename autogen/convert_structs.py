@@ -17,6 +17,7 @@ in_files = [
     "src/pc/djui/djui_theme.h",
     "src/game/object_helpers.h",
     "src/game/mario_step.h",
+    "src/game/mario_actions_moving.h",
     "src/game/ingame_menu.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",

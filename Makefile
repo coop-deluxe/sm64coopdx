@@ -518,6 +518,8 @@ BIN_DIRS := bin bin/$(VERSION)
 # PC files
 SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/dev src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils src/pc/os
 
+C_FILES += src/pc/lua/smlua_ffi.c
+
 ifeq ($(DISCORD_SDK),1)
   SRC_DIRS += src/pc/discord
 endif
@@ -759,6 +761,10 @@ endif
 
 # Connfigure backend flags
 
+ifneq ($(WINDOWS_BUILD),1)
+  BACKEND_CFLAGS += $(shell pkg-config --cflags libffi)
+endif
+
 SDLCONFIG := $(CROSS)sdl2-config
 
 BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_API)=1
@@ -929,6 +935,13 @@ ifeq ($(ASAN),1)
 endif
 
 # Coop specific libraries
+
+# libffi
+ifeq ($(WINDOWS_BUILD),1)
+  LDFLAGS += -lffi
+else
+  LDFLAGS += $(shell pkg-config --libs libffi)
+endif
 
 # Zlib
 LDFLAGS += -lz

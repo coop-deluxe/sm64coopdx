@@ -1008,6 +1008,15 @@
 --- @field public unused integer
 --- @field public skipCameraInterpolationTimestamp integer
 
+--- @class LandingAction
+--- @field public numFrames integer
+--- @field public unk02 integer
+--- @field public verySteepAction integer
+--- @field public endAction integer
+--- @field public aPressedAction integer
+--- @field public offFloorAction integer
+--- @field public slideAction integer
+
 --- @class LevelValues
 --- @field public fixCollisionBugs integer
 --- @field public fixCollisionBugsRoundedCorners integer

@@ -8,6 +8,9 @@
 #include <stdbool.h>
 #include "types.h"
 
+typedef int LuaFunction;
+typedef int LuaTable;
+
 #include "smlua_cobject.h"
 #include "smlua_cobject_autogen.h"
 #include "smlua_utils.h"
@@ -15,6 +18,7 @@
 #include "smlua_functions_autogen.h"
 #include "smlua_hooks.h"
 #include "smlua_sync_table.h"
+#include "smlua_ffi.h"
 
 #include "pc/debuglog.h"
 #include "pc/djui/djui_console.h"
