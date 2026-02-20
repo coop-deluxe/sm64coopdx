@@ -1694,6 +1694,9 @@ static void update_game_sound(void) {
                             break;
                         case SOUND_BANK_ACTION:
                         case SOUND_BANK_MARIO_VOICE:
+                        case SOUND_BANK_LUIGI_VOICE:
+                        case SOUND_BANK_WARIO_VOICE:
+                        case SOUND_BANK_TOAD_VOICE:
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             queue_audio_cmd_s8(AUDIO_CMD_ARGS(AUDIO_CMD_REVERB, SEQ_PLAYER_SFX, channelIndex, 0),
                                           get_sound_reverb(bank, soundIndex, channelIndex));

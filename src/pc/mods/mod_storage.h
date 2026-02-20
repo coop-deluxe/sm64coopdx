@@ -1,11 +1,11 @@
 #ifndef MOD_STORAGE_H
 #define MOD_STORAGE_H
 
-#include <PR/ultratypes.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <PR/ultratypes.h>
+
 #include "pc/lua/smlua_utils.h"
 
 #define MAX_KEYS 4096

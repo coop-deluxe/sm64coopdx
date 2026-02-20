@@ -376,7 +376,7 @@ f32 djui_hud_measure_text(const char* message) {
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
-    gDjuiHudUtilsZ += 0.01f;
+    gDjuiHudUtilsZ += 0.001f;
 
     if (sLegacy) { scale *= 0.5f; }
 
@@ -426,7 +426,7 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
     f32 savedZ = gDjuiHudUtilsZ;
-    gDjuiHudUtilsZ += 0.01f;
+    gDjuiHudUtilsZ += 0.001f;
 
     if (sLegacy) {
         prevScale *= 0.5f;
@@ -507,7 +507,7 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.01f;
+    gDjuiHudUtilsZ += 0.001f;
 
     // translate position
     f32 translatedX = x;
@@ -541,7 +541,7 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH) {
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.01f;
+    gDjuiHudUtilsZ += 0.001f;
     if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
     if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
 
@@ -648,7 +648,7 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 }
 
 void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
-    gDjuiHudUtilsZ += 0.01f;
+    gDjuiHudUtilsZ += 0.001f;
 
     // translate position
     f32 translatedX = x;
