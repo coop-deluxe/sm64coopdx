@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define PACKET_LENGTH 3000
+#define PACKET_LENGTH 3500
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 #define PACKET_DESTINATION_SERVER ((u8)-2)
 

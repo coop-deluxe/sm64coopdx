@@ -4636,7 +4636,7 @@ SYNC_DISTANCE_ONLY_EVENTS = -2
 SYNC_DISTANCE_INFINITE = 0
 
 --- @type integer
-PACKET_LENGTH = 3000
+PACKET_LENGTH = 3500
 
 NS_SOCKET  = 0 --- @type NetworkSystemType
 NS_COOPNET = 1 --- @type NetworkSystemType
