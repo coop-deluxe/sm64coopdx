@@ -934,7 +934,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
                 le_calculate_lighting_color(vpos, color, 1.0f);
             } else {
-                le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+                le_calculate_vertex_lighting(v, vpos, color);
             }
 
             CTX_END(CTX_LIGHTING);

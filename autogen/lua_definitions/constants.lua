@@ -3297,7 +3297,7 @@ PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT = 10
 PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE = -5
 
 --- @type integer
-PVP_ATTACK_OVERRIDE_VANILLA_INVINCIBILITY = 0x0000FFFF
+PVP_ATTACK_KNOCKBACK_ACTION_ARG = 0x10000
 
 --- @type integer
 INT_STATUS_ATTACK_MASK = 0x000000FF
@@ -8211,6 +8211,9 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
+
+--- @type integer
+MAX_HOOKED_BEHAVIORS = 1024
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue

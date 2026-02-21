@@ -37,6 +37,7 @@
 #include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
+#include "src/audio/load.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -712,6 +713,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gOverrideFar = 0;
     gOverrideFOV = 0;
     gRoomOverride = -1;
+    gOverrideBank = -1;
     gCurrActStarNum = 0;
     gCurrActNum = 0;
     gCurrCreditsEntry = NULL;

@@ -16,7 +16,7 @@ bool smlua_call_event_hooks_HOOK_UPDATE() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_UPDATE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -46,7 +46,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_UPDATE(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_UPDATE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MARIO_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -76,7 +76,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_MARIO_UPDATE(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_MARIO_UPDATE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_MARIO_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -106,7 +106,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_MARIO_ACTION(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SET_MARIO_ACTION]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SET_MARIO_ACTION], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -141,7 +141,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 step
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_PHYS_STEP]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_PHYS_STEP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -186,7 +186,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_PVP_ATTACK(struct MarioState *attacker, s
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_PVP_ATTACK]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ALLOW_PVP_ATTACK], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -230,7 +230,7 @@ bool smlua_call_event_hooks_HOOK_ON_PVP_ATTACK(struct MarioState *attacker, stru
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PVP_ATTACK]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PVP_ATTACK], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -260,7 +260,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAYER_CONNECTED(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAYER_CONNECTED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAYER_CONNECTED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -290,7 +290,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAYER_DISCONNECTED(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAYER_DISCONNECTED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAYER_DISCONNECTED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -326,7 +326,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_INTERACT(struct MarioState *m, struct Obj
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_INTERACT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ALLOW_INTERACT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -370,7 +370,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACT(struct MarioState *m, struct Object
 
         // call the callback
         if (0 != smlua_call_hook(L, 4, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INTERACT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_INTERACT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -409,7 +409,7 @@ bool smlua_call_event_hooks_HOOK_ON_LEVEL_INIT(u8 warpType, s16 levelNum, u8 are
 
         // call the callback
         if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_LEVEL_INIT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_LEVEL_INIT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -448,7 +448,7 @@ bool smlua_call_event_hooks_HOOK_ON_WARP(u8 warpType, s16 levelNum, u8 areaIdx, 
 
         // call the callback
         if (0 != smlua_call_hook(L, 5, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_WARP]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_WARP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -472,7 +472,7 @@ bool smlua_call_event_hooks_HOOK_ON_SYNC_VALID() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SYNC_VALID]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SYNC_VALID], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -499,7 +499,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_UNLOAD(struct Object *obj) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_UNLOAD]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_OBJECT_UNLOAD], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -526,7 +526,7 @@ bool smlua_call_event_hooks_HOOK_ON_SYNC_OBJECT_UNLOAD(struct Object *obj) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SYNC_OBJECT_UNLOAD]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SYNC_OBJECT_UNLOAD], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -553,7 +553,7 @@ bool smlua_call_event_hooks_HOOK_ON_PAUSE_EXIT(bool usedExitToCastle, bool *allo
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PAUSE_EXIT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PAUSE_EXIT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -581,7 +581,7 @@ bool smlua_call_event_hooks_HOOK_GET_STAR_COLLECTION_DIALOG(s32 *dialogID) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_GET_STAR_COLLECTION_DIALOG]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_GET_STAR_COLLECTION_DIALOG], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -619,7 +619,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_CAMERA_MODE(struct Camera *c, s16 mode, 
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SET_CAMERA_MODE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SET_CAMERA_MODE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -651,7 +651,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_RENDER(struct Object *obj) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_RENDER]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_OBJECT_RENDER], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -681,7 +681,7 @@ bool smlua_call_event_hooks_HOOK_ON_DEATH(struct MarioState *m, bool *allowDeath
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DEATH]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_DEATH], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -714,7 +714,7 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_RECEIVE(s32 modIndex, s32 valueIndex)
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PACKET_RECEIVE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PACKET_RECEIVE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -740,7 +740,7 @@ bool smlua_call_event_hooks_HOOK_USE_ACT_SELECT(s32 levelNum, bool *useActSelect
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_USE_ACT_SELECT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_USE_ACT_SELECT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -773,7 +773,7 @@ bool smlua_call_event_hooks_HOOK_ON_CHANGE_CAMERA_ANGLE(s32 camAngleType, bool *
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CHANGE_CAMERA_ANGLE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_CHANGE_CAMERA_ANGLE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -805,7 +805,7 @@ bool smlua_call_event_hooks_HOOK_ON_SCREEN_TRANSITION(s32 transitionType, bool *
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SCREEN_TRANSITION]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SCREEN_TRANSITION], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -843,7 +843,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_HAZARD_SURFACE(struct MarioState *m, s32 
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_HAZARD_SURFACE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ALLOW_HAZARD_SURFACE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -881,7 +881,7 @@ bool smlua_call_event_hooks_HOOK_ON_CHAT_MESSAGE(struct MarioState *m, const cha
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CHAT_MESSAGE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_CHAT_MESSAGE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -919,7 +919,7 @@ bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelI
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_OBJECT_SET_MODEL]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_OBJECT_SET_MODEL], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -951,7 +951,7 @@ bool smlua_call_event_hooks_HOOK_CHARACTER_SOUND(struct MarioState *m, enum Char
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_CHARACTER_SOUND]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_CHARACTER_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -993,7 +993,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_SET_MARIO_ACTION(struct MarioState *m, u
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_SET_MARIO_ACTION]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_SET_MARIO_ACTION], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1022,7 +1022,7 @@ bool smlua_call_event_hooks_HOOK_JOINED_GAME() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_JOINED_GAME]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_JOINED_GAME], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1049,7 +1049,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_ANIM_UPDATE(struct Object *obj) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_ANIM_UPDATE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_OBJECT_ANIM_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1076,7 +1076,7 @@ bool smlua_call_event_hooks_HOOK_ON_DIALOG(s32 dialogID, bool *openDialogBox, co
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 2, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DIALOG]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_DIALOG], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1110,7 +1110,7 @@ bool smlua_call_event_hooks_HOOK_ON_EXIT() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_EXIT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_EXIT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1136,7 +1136,7 @@ bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride)
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_DIALOG_SOUND]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_DIALOG_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1172,7 +1172,7 @@ bool smlua_call_event_hooks_HOOK_ON_COLLIDE_LEVEL_BOUNDS(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_COLLIDE_LEVEL_BOUNDS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_COLLIDE_LEVEL_BOUNDS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1202,7 +1202,7 @@ bool smlua_call_event_hooks_HOOK_MIRROR_MARIO_RENDER(struct GraphNodeObject *mir
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MIRROR_MARIO_RENDER]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MIRROR_MARIO_RENDER], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1231,7 +1231,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED(struct M
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_PHYS_STEP_DEFACTO_SPEED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1263,7 +1263,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_LOAD(struct Object *obj) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_OBJECT_LOAD]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_OBJECT_LOAD], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1293,7 +1293,7 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *so
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PLAY_SOUND]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAY_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1331,7 +1331,7 @@ bool smlua_call_event_hooks_HOOK_ON_SEQ_LOAD(u32 seqPlayer, u32 seqId, s32 loadA
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_SEQ_LOAD]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SEQ_LOAD], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1373,7 +1373,7 @@ bool smlua_call_event_hooks_HOOK_ON_ATTACK_OBJECT(struct MarioState *m, struct O
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_ATTACK_OBJECT]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_ATTACK_OBJECT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1400,7 +1400,7 @@ bool smlua_call_event_hooks_HOOK_ON_LANGUAGE_CHANGED(const char *langName) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_LANGUAGE_CHANGED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_LANGUAGE_CHANGED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1424,7 +1424,7 @@ bool smlua_call_event_hooks_HOOK_ON_MODS_LOADED() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_MODS_LOADED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_MODS_LOADED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1448,7 +1448,7 @@ bool smlua_call_event_hooks_HOOK_ON_DJUI_THEME_CHANGED() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_DJUI_THEME_CHANGED]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_DJUI_THEME_CHANGED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1478,7 +1478,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS(struct GraphNode *node, s32 matS
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1508,7 +1508,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_GEO_PROCESS(struct GraphNode *node, s32 
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_GEO_PROCESS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_GEO_PROCESS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1538,7 +1538,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS_CHILDREN(struct GraphNode *paren
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS_CHILDREN]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_GEO_PROCESS_CHILDREN], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1568,7 +1568,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS(struct MarioStat
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1603,7 +1603,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACTIONS(struct MarioState *m) {
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INTERACTIONS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_INTERACTIONS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1636,7 +1636,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_FORCE_WATER_ACTION(struct MarioState *m, 
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ALLOW_FORCE_WATER_ACTION]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ALLOW_FORCE_WATER_ACTION], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1676,7 +1676,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_WARP(s16 destLevel, s16 destArea, s16 de
 
         // call the callback
         if (0 != smlua_call_hook(L, 4, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_BEFORE_WARP]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_WARP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1734,7 +1734,7 @@ bool smlua_call_event_hooks_HOOK_ON_INSTANT_WARP(u8 areaIdx, u8 nodeId, Vec3s di
 
         // call the callback
         if (0 != smlua_call_hook(L, 3, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_INSTANT_WARP]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_INSTANT_WARP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1766,7 +1766,7 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_FLOOR_CLASS(struct MarioState *m
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_FLOOR_CLASS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_FLOOR_CLASS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
 
@@ -1802,7 +1802,7 @@ bool smlua_call_event_hooks_HOOK_ON_ADD_SURFACE(struct Surface *surface, bool dy
 
         // call the callback
         if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_ADD_SURFACE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_ADD_SURFACE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1826,7 +1826,7 @@ bool smlua_call_event_hooks_HOOK_ON_CLEAR_AREAS() {
 
         // call the callback
         if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_CLEAR_AREAS]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_CLEAR_AREAS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1854,7 +1854,7 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_BYTESTRING_RECEIVE(s32 modIndex, s32 
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_PACKET_BYTESTRING_RECEIVE]);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PACKET_BYTESTRING_RECEIVE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
