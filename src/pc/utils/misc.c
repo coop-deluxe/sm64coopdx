@@ -530,7 +530,7 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
     memset(output_buffer, 0, buffer_size);
     if (num_strings <= 0) { return; }
 
-    // Calculate the total length of all strings
+    // calculate the total length of all strings
     int string_length[num_strings];
     int total_length = 0;
     for (int i = 0; i < num_strings; i++) {
@@ -542,7 +542,7 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
     int seperator_length = strlen(seperator);
     int seperators_length = (num_strings - 1) * seperator_length;
     if (seperators_length + 8 < buffer_size) {
-        // Shorten the largest string over and over until we fit
+        // shorten the largest string over and over until we fit
         while (total_length + seperators_length >= buffer_size) {
             int* largest = NULL;
             for (int i = 0; i < num_strings; i++) {
@@ -556,16 +556,16 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
         }
     }
 
-    // Fill the buffer
+    // fill the buffer
     int buffer_index = 0;
     for (int i = 0; i < num_strings; i++) {
-        // Concat string
+        // concat string
         int amount = MIN(buffer_size - buffer_index, string_length[i] + 1);
         if (amount <= 0) { break; }
         snprintf(&output_buffer[buffer_index], amount, "%s", strings[i]);
         buffer_index += string_length[i];
 
-        // Concat seperator
+        // concat seperator
         if (i != (num_strings - 1)) {
             int amount = MIN(buffer_size - buffer_index, seperator_length + 1);
             if (amount <= 0) { break; }
@@ -573,6 +573,8 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
+
+    output_buffer += buffer_index;
 }
 
 char *str_remove_color_codes(const char *str) {

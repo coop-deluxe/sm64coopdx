@@ -6,6 +6,7 @@
 #include "pc/network/version.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
+#include "pc/djui/djui_panel_host_mods.h"
 #include "pc/mods/mods.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
@@ -178,27 +179,82 @@ static void coopnet_populate_description(void) {
     int bufferLength = MAX_COOPNET_DESCRIPTION_LENGTH;
     // get version
     const char* version = get_version();
-    int versionLength = strlen(version);
-    snprintf(buffer, bufferLength, "%s", version);
+    int versionLength = snprintf(buffer, bufferLength, "%s\n", version);
     buffer += versionLength;
     bufferLength -= versionLength;
 
-    // get mod strings
+    struct ModCategory sCategories[] = {
+        { "ROMHACKS", "romhack" },
+        { "GAMEMODES", "gamemode" },
+        { "MOVESETS", "moveset" },
+        { "CHARACTER_SELECT", "cs" },
+    };
+
     if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount];
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        strings[i] = mod->name;
+
+    // add mods that are in a category
+    for (size_t i = 0; i < sizeof(sCategories) / sizeof(sCategories[0]); i++) {
+        struct ModCategory category = sCategories[i];
+
+        char* strings[gActiveMods.entryCount];
+        int strIndex = 0;
+        for (int j = 0; j < gActiveMods.entryCount; j++) {
+            struct Mod* mod = gActiveMods.entries[j];
+            char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+            if (modCategory && strstr(modCategory, sCategories[i].category)) {
+                strings[strIndex++] = mod->name;
+            }
+        }
+
+        if (strIndex == 0) { continue; }
+        int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", category.langKey));
+        buffer += s;
+        bufferLength -= s;
+
+        for (int j = 0; j < strIndex; j++) {
+            int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+            if (s < 0 || s >= bufferLength) {
+                LOG_ERROR("CoopNet description too long, some mods were not listed");
+                break;
+            }
+            buffer += s;
+            bufferLength -= s;
+        }
     }
 
-    // add seperator
-    char* sep = "\n\nMods:\n";
-    snprintf(buffer, bufferLength, "%s", sep);
-    buffer += strlen(sep);
-    bufferLength -= strlen(sep);
+    // add mods that are not in a category
+    char* strings[gActiveMods.entryCount];
+    int strIndex = 0;
+    for (int j = 0; j < gActiveMods.entryCount; j++) {
+        struct Mod* mod = gActiveMods.entries[j];
+        char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+        bool doContinue = false;
+        if (modCategory) {
+            for (size_t i = 0; i < sizeof(sCategories) / sizeof(sCategories[0]); i++) {
+                if (strstr(modCategory, sCategories[i].category)) {
+                    doContinue = true;
+                    break;
+                }
+            }
+        }
+        if (doContinue) { continue; }
+        strings[strIndex++] = mod->name;
+    }
 
-    // concat mod strings
-    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\\#dcdcdc\\\n");
+    if (strIndex == 0) { return; }
+    int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", "MISC"));
+    buffer += s;
+    bufferLength -= s;
+
+    for (int j = 0; j < strIndex; j++) {
+        int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+        if (s < 0 || s >= bufferLength) {
+            LOG_ERROR("CoopNet description too long, some mods were not listed");
+            break;
+        }
+        buffer += s;
+        bufferLength -= s;
+    }
 }
 
 void ns_coopnet_update(void) {
