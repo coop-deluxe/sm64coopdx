@@ -303,6 +303,7 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
         djui_base_set_size(&flowLayout->base, 1.0f, 32.0f);
         sSelectionbox = djui_selectionbox_create(&flowLayout->base, DLANG(LOBBIES, SORT_BY), sortChoices, numSortOptions, &configCoopNetSortSelected, djui_panel_join_on_sorting_change);
         djui_base_set_size(&sSelectionbox->base, 0.925, 32);
+        djui_base_set_size(&sSelectionbox->rect->base, 0.55, 1);
         struct DjuiButton* button = djui_button_create(&flowLayout->base, "", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_invert_sort);
         djui_base_set_alignment(&button->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
         djui_base_set_size_type(&button->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
