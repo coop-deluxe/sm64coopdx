@@ -18,6 +18,8 @@
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/dialog_table.h"
+#include "dialog_ids.h"
 
 #if defined(VERSION_EU) || defined(VERSION_SH)
 #define EU_FLOAT(x) x##f
@@ -838,7 +840,7 @@ void play_sound(s32 soundBits, f32 *pos) {
     MUTEX_LOCK(gAudioThread);
     
     pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+    smlua_call_event_hooks(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = 0;
@@ -851,7 +853,7 @@ void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
     MUTEX_LOCK(gAudioThread);
     
     pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks_on_play_sound(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+    smlua_call_event_hooks(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
@@ -2455,15 +2457,15 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
 /**
  * Called from threads: thread5_game_loop
  */
-void play_dialog_sound(u8 dialogID) {
+void play_dialog_sound(s32 dialogID) {
     s32 speaker;
 
-    if (dialogID >= DIALOG_COUNT) {
+    if (!IS_VALID_VANILLA_DIALOG(dialogID)) {
         dialogID = 0;
     }
 
     speaker = sDialogSpeaker[dialogID];
-    smlua_call_event_hooks_int_params_ret_int(HOOK_DIALOG_SOUND, speaker, &speaker);
+    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, &speaker);
     if (speaker < DS_MAX && speaker != 0xff) {
         play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
 

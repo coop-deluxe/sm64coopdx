@@ -1,7 +1,11 @@
 #include "smlua.h"
+#include "pc/lua/smlua_require.h"
+#include "pc/lua/smlua_live_reload.h"
 #include "game/hardcoded.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/mods/mod_storage.h"
+#include "pc/mods/mod_fs.h"
 #include "pc/crash_handler.h"
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
@@ -16,6 +20,7 @@ u8 gLuaInitializingScript = 0;
 u8 gSmLuaSuppressErrors = 0;
 struct Mod* gLuaLoadingMod = NULL;
 struct Mod* gLuaActiveMod = NULL;
+struct ModFile* gLuaActiveModFile = NULL;
 struct Mod* gLuaLastHookMod = NULL;
 
 void smlua_mod_error(void) {
@@ -190,12 +195,13 @@ static bool smlua_check_binary_header(struct ModFile *file) {
     return false;
 }
 
-static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex) {
-    if (!smlua_check_binary_header(file)) return;
+int smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bool isModInit) {
+    int rc = LUA_OK;
+    if (!smlua_check_binary_header(file)) { return LUA_ERRMEM; }
 
     lua_State* L = gLuaState;
 
-    lua_settop(L, 0);
+    s32 prevTop = lua_gettop(L);
 
     gSmLuaConvertSuccess = true;
     gLuaInitializingScript = 1;
@@ -205,7 +211,8 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     if (!f) {
         LOG_LUA("Failed to load lua script '%s': File not found.", file->cachedPath);
         gLuaInitializingScript = 0;
-        return;
+        lua_settop(L, prevTop);
+        return LUA_ERRFILE;
     }
 
     f_seek(f, 0, SEEK_END);
@@ -214,69 +221,90 @@ static void smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteI
     if (!buffer) {
         LOG_LUA("Failed to load lua script '%s': Cannot allocate buffer.", file->cachedPath);
         gLuaInitializingScript = 0;
-        return;
+        lua_settop(L, prevTop);
+        return LUA_ERRMEM;
     }
 
     f_rewind(f);
     if (f_read(buffer, 1, length, f) < length) {
         LOG_LUA("Failed to load lua script '%s': Unexpected early end of file.", file->cachedPath);
         gLuaInitializingScript = 0;
-        return;
+        lua_settop(L, prevTop);
+        return LUA_ERRFILE;
     }
     f_close(f);
     f_delete(f);
 
-    if (luaL_loadbuffer(L, buffer, length, file->cachedPath) != LUA_OK) { // only run on success
+    rc = luaL_loadbuffer(L, buffer, length, file->cachedPath);
+    if (rc != LUA_OK) { // only run on success
         LOG_LUA("Failed to load lua script '%s'.", file->cachedPath);
         LOG_LUA("%s", smlua_to_string(L, lua_gettop(L)));
         gLuaInitializingScript = 0;
         free(buffer);
-        return;
+        lua_settop(L, prevTop);
+        return rc;
     }
     free(buffer);
 
-    // check if this is the first time this mod has been loaded
-    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
-    bool firstInit = (lua_type(L, -1) == LUA_TNIL);
-    lua_pop(L, 1);
+    if (isModInit) {
+        // check if this is the first time this mod has been loaded
+        lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+        bool firstInit = (lua_type(L, -1) == LUA_TNIL);
+        lua_pop(L, 1);
 
-    // create mod's "global" table
-    if (firstInit) {
-        lua_newtable(L); // create _ENV tables
-        lua_newtable(L); // create metatable
-        lua_getglobal(L, "_G"); // get global table
+        // create mod's "global" table
+        if (firstInit) {
+            lua_newtable(L); // create _ENV tables
+            lua_newtable(L); // create metatable
+            lua_getglobal(L, "_G"); // get global table
 
-        // remove certain default functions
-        lua_pushstring(L, "load");           lua_pushnil(L); lua_settable(L, -3);
-        lua_pushstring(L, "loadfile");       lua_pushnil(L); lua_settable(L, -3);
-        lua_pushstring(L, "loadstring");     lua_pushnil(L); lua_settable(L, -3);
-        lua_pushstring(L, "collectgarbage"); lua_pushnil(L); lua_settable(L, -3);
-        lua_pushstring(L, "dofile");         lua_pushnil(L); lua_settable(L, -3);
+            // remove certain default functions
+            lua_pushstring(L, "load");           lua_pushnil(L); lua_settable(L, -3);
+            lua_pushstring(L, "loadfile");       lua_pushnil(L); lua_settable(L, -3);
+            lua_pushstring(L, "loadstring");     lua_pushnil(L); lua_settable(L, -3);
+            lua_pushstring(L, "collectgarbage"); lua_pushnil(L); lua_settable(L, -3);
+            lua_pushstring(L, "dofile");         lua_pushnil(L); lua_settable(L, -3);
 
-        // set global as the metatable
-        lua_setfield(L, -2, "__index");
-        lua_setmetatable(L, -2);
+            // set global as the metatable
+            lua_setfield(L, -2, "__index");
+            lua_setmetatable(L, -2);
 
-        // push to registry with path as name (must be unique)
-        lua_setfield(L, LUA_REGISTRYINDEX, mod->relativePath);
-    }
+            // push to registry with path as name (must be unique)
+            lua_setfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+        }
 
-    // load mod's "global" table
-    lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
-    lua_setupvalue(L, 1, 1); // set upvalue (_ENV)
+        // load mod's "global" table
+        lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+        lua_setupvalue(L, 1, 1); // set upvalue (_ENV)
 
-    // load per-file globals
-    if (firstInit) {
-        smlua_sync_table_init_globals(mod->relativePath, remoteIndex);
-        smlua_cobject_init_per_file_globals(mod->relativePath);
+        // load per-file globals
+        if (firstInit) {
+            smlua_sync_table_init_globals(mod->relativePath, remoteIndex);
+            smlua_cobject_init_per_file_globals(mod->relativePath);
+        }
+    } else {
+        // this block is run on files that are loaded for 'require' function
+        // get the mod's global table
+        lua_getfield(L, LUA_REGISTRYINDEX, mod->relativePath);
+        if (lua_isnil(L, -1)) {
+            lua_pop(L, 1);
+            LOG_LUA("mod environment not found");
+            lua_settop(L, prevTop);
+            return LUA_ERRRUN;
+        }
+        lua_setupvalue(L, -2, 1); // set _ENV
     }
 
     // run chunks
     LOG_INFO("Executing '%s'", file->relativePath);
-    if (smlua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
+    rc = smlua_pcall(L, 0, 1, 0);
+    if (rc != LUA_OK) {
         LOG_LUA("Failed to execute lua script '%s'.", file->cachedPath);
     }
+
     gLuaInitializingScript = 0;
+
+    return rc;
 }
 
 void smlua_init(void) {
@@ -304,6 +332,7 @@ void smlua_init(void) {
     smlua_bind_functions();
     smlua_bind_functions_autogen();
     smlua_bind_sync_table();
+    smlua_init_require_system();
 
     extern char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
@@ -324,12 +353,34 @@ void smlua_init(void) {
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
-            if (!(str_ends_with(file->relativePath, ".lua") || str_ends_with(file->relativePath, ".luac"))) {
+            // skip loading non-lua files
+            if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) {
                 continue;
             }
-            smlua_load_script(mod, file, i);
+
+            // skip loading scripts in subdirectories
+            if (strchr(file->relativePath, '/') != NULL || strchr(file->relativePath, '\\') != NULL) {
+                continue;
+            }
+
+            gLuaActiveModFile = file;
+
+            // file has been required by some module before this
+            if (!smlua_get_cached_module_result(L, mod, file)) {
+                smlua_mark_module_as_loading(L, mod, file);
+
+                s32 prevTop = lua_gettop(L);
+                int rc = smlua_load_script(mod, file, i, true);
+
+                if (rc == LUA_OK) {
+                    smlua_cache_module_result(L, mod, file, prevTop);
+                }
+            }
+
+            lua_settop(L, 0);
         }
         gLuaActiveMod = NULL;
+        gLuaActiveModFile = NULL;
         gLuaLoadingMod = NULL;
     }
 
@@ -339,6 +390,8 @@ void smlua_init(void) {
 void smlua_update(void) {
     lua_State* L = gLuaState;
     if (L == NULL) { return; }
+
+    if (network_allow_mod_dev_mode()) { smlua_live_reload_update(L); }
 
     audio_sample_destroy_pending_copies();
 
@@ -367,6 +420,8 @@ void smlua_shutdown(void) {
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    mod_storage_shutdown();
+    mod_fs_shutdown();
     lua_State* L = gLuaState;
     if (L != NULL) {
         lua_close(L);
@@ -374,5 +429,6 @@ void smlua_shutdown(void) {
     }
     gLuaLoadingMod = NULL;
     gLuaActiveMod = NULL;
+    gLuaActiveModFile = NULL;
     gLuaLastHookMod = NULL;
 }

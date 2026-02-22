@@ -84,6 +84,7 @@ void geo_layout_cmd_node_culling_radius(void);
 void geo_layout_cmd_node_background_ext(void);
 void geo_layout_cmd_node_switch_case_ext(void);
 void geo_layout_cmd_node_generated_ext(void);
+void geo_layout_cmd_bone(void);
 
 struct GraphNode *process_geo_layout(struct DynamicPool *a0, void *segptr);
 

@@ -3,7 +3,7 @@
 
 void bhv_water_mist_spawn_loop(void) {
     clear_particle_flags(0x20000);
-    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvMario)) {
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvMario) {
         obj_mark_for_deletion(o);
         return;
     }
@@ -11,7 +11,7 @@ void bhv_water_mist_spawn_loop(void) {
 }
 
 void bhv_water_mist_loop(void) {
-    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvMario)) {
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvMario) {
         obj_mark_for_deletion(o);
         return;
     }

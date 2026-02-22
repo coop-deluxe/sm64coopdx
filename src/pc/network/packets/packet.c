@@ -137,6 +137,7 @@ void packet_process(struct Packet* p) {
         case PACKET_REQUEST_FAILED:          network_receive_request_failed(p);          break;
 
         case PACKET_LUA_CUSTOM:              network_receive_lua_custom(p);              break;
+        case PACKET_LUA_CUSTOM_BYTESTRING:   network_receive_lua_custom_bytestring(p);   break;
 
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;

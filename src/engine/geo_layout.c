@@ -47,6 +47,7 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_node_background_ext,
     geo_layout_cmd_node_switch_case_ext,
     geo_layout_cmd_node_generated_ext,
+    geo_layout_cmd_bone,
 };
 
 struct GraphNode gObjParentGraphNode;
@@ -535,29 +536,45 @@ void geo_layout_cmd_node_rotation(void) {
   0x1D: Create scale scene graph node with optional display list
    cmd+0x01: u8 params
      (params & 0x80): if set, enable displayList field and drawingLayer
+     (params & 0x40): if set, enable scale XYZ
      (params & 0x0F): drawingLayer
    cmd+0x04: u32 scale (0x10000 = 1.0)
-  [cmd+0x08: void *displayList]
+     or
+   cmd+0x04: u32 scale X (0x10000 = 1.0)
+   cmd+0x08: u32 scale Y (0x10000 = 1.0)
+   cmd+0x0C: u32 scale Z (0x10000 = 1.0)
+  [cmd+0x08/0x10: void *displayList]
 */
 void geo_layout_cmd_node_scale(void) {
-    struct GraphNodeScale *graphNode;
-
     s16 drawingLayer = 0;
     s16 params = cur_geo_cmd_u8(0x01);
-    f32 scale = cur_geo_cmd_u32(0x04) / 65536.0f;
+    Vec3f scale;
     void *displayList = NULL;
+    bool isScaleXYZ = (params & 0x40) != 0;
 
-    if (params & 0x80) {
-        displayList = cur_geo_cmd_ptr(0x08);
-        drawingLayer = params & 0x0F;
-        gGeoLayoutCommand += 4 << CMD_SIZE_SHIFT;
+    if (isScaleXYZ) {
+        scale[0] = cur_geo_cmd_u32(0x04) / 65536.0f;
+        scale[1] = cur_geo_cmd_u32(0x08) / 65536.0f;
+        scale[2] = cur_geo_cmd_u32(0x0C) / 65536.0f;
+        gGeoLayoutCommand += 0x10 << CMD_SIZE_SHIFT;
+    } else {
+        scale[0] = cur_geo_cmd_u32(0x04) / 65536.0f;
+        gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
     }
 
-    graphNode = init_graph_node_scale(gGraphNodePool, NULL, drawingLayer, displayList, scale);
+    if (params & 0x80) {
+        displayList = cur_geo_cmd_ptr(0x00);
+        drawingLayer = params & 0x0F;
+        gGeoLayoutCommand += 0x04 << CMD_SIZE_SHIFT;
+    }
 
-    register_scene_graph_node(&graphNode->node);
+    struct GraphNode *graphNode = (
+        isScaleXYZ ?
+        (struct GraphNode *) init_graph_node_scale_xyz(gGraphNodePool, NULL, drawingLayer, displayList, scale) :
+        (struct GraphNode *) init_graph_node_scale(gGraphNodePool, NULL, drawingLayer, displayList, scale[0])
+    );
 
-    gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
+    register_scene_graph_node(graphNode);
 }
 
 // 0x1E: No operation
@@ -828,6 +845,47 @@ void geo_layout_cmd_node_generated_ext(void) {
     register_scene_graph_node(&graphNode->fnNode.node);
 
     gGeoLayoutCommand += 0x08 << CMD_SIZE_SHIFT;
+}
+
+/*
+  0x24: Create a scene graph node that is rotated by the object's animation + an initial rotation.
+*/
+void geo_layout_cmd_bone(void) {
+    struct GraphNodeBone *graphNode;
+    Vec3s translation;
+    Vec3s rotation;
+    s32 params = cur_geo_cmd_u8(0x01);
+    s32 drawingLayer = params;
+    Vec3f scale;
+    vec3f_copy(scale, gVec3fOne);
+
+    void *displayList;
+    s16 *cmdPos = (s16 *) gGeoLayoutCommand;
+
+    cmdPos = read_vec3s(translation, &cmdPos[2]);
+    cmdPos = read_vec3s(rotation, &cmdPos[0]);
+    if (params & 0x80) {
+        drawingLayer &= 0x0F;
+
+        vec3f_set(scale,
+            cur_geo_cmd_u32(0x10) / 65536.0f,
+            cur_geo_cmd_u32(0x14) / 65536.0f,
+            cur_geo_cmd_u32(0x18) / 65536.0f
+        );
+        cmdPos += 6 << CMD_SIZE_SHIFT;
+    }
+    displayList = *(void **) &cmdPos[0];
+    cmdPos += 2 << CMD_SIZE_SHIFT;
+
+    graphNode = init_graph_node_bone(
+        gGraphNodePool, NULL, 
+        drawingLayer, displayList, 
+        translation, rotation,
+        scale);
+
+    register_scene_graph_node(&graphNode->node);
+
+    gGeoLayoutCommand = (u8 *) cmdPos;
 }
 
 struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {

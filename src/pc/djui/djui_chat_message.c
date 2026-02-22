@@ -55,15 +55,15 @@ void djui_chat_message_create_from(u8 globalIndex, const char* message) {
         return;
     }
 
-    bool returnValue = true;
-    smlua_call_event_hooks_on_chat_message(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &returnValue);
-    if (!returnValue) {
+    bool allowMessage = true;
+    smlua_call_event_hooks(HOOK_ON_CHAT_MESSAGE, &gMarioStates[np->localIndex], message, &allowMessage);
+    if (!allowMessage) {
         return;
     }
 
     const char* playerColorString = network_get_player_text_color_string(np->localIndex);
-    char chatMsg[MAX_CHAT_MSG_LENGTH] = { 0 };
-    snprintf(chatMsg, MAX_CHAT_MSG_LENGTH, "%s%s\\#dcdcdc\\: %s", playerColorString, (np != NULL) ? np->name : "Player", message);
+    char chatMsg[MAX_CHAT_PACKET_LENGTH] = { 0 };
+    snprintf(chatMsg, MAX_CHAT_PACKET_LENGTH, "%s%s\\#dcdcdc\\: %s", playerColorString, (np != NULL) ? np->name : "Player", message);
 
     play_sound((globalIndex == gNetworkPlayerLocal->globalIndex) ? SOUND_MENU_MESSAGE_DISAPPEAR : SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource);
     djui_chat_message_create(chatMsg);

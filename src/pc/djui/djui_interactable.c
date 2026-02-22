@@ -198,12 +198,6 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    if (!gDjuiChatBoxFocus) {
-        for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
-        }
-    }
-
     bool keyFocused = (gInteractableFocus != NULL)
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_down != NULL);
@@ -285,9 +279,11 @@ bool djui_interactable_on_key_down(int scancode) {
 
 void djui_interactable_on_key_up(int scancode) {
 
-    bool keyFocused = (gInteractableFocus != NULL)
-                   && (gInteractableFocus->interactable != NULL)
-                   && (gInteractableFocus->interactable->on_key_up != NULL);
+    if (!gDjuiChatBoxFocus) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
+        }
+    }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
         for (int i = 0; i < MAX_BINDS; i++) {
@@ -303,6 +299,10 @@ void djui_interactable_on_key_up(int scancode) {
             }
         }
     }
+
+    bool keyFocused = (gInteractableFocus != NULL)
+                   && (gInteractableFocus->interactable != NULL)
+                   && (gInteractableFocus->interactable->on_key_up != NULL);
 
     if (keyFocused) {
         gInteractableFocus->interactable->on_key_up(gInteractableFocus, scancode);
@@ -422,7 +422,7 @@ void djui_interactable_update(void) {
     // update focused
     if (gInteractableFocus) {
         u16 mainButtons = PAD_BUTTON_A | PAD_BUTTON_B;
-        if ((mouseButtons & MOUSE_BUTTON_1) && !(sLastMouseButtons && MOUSE_BUTTON_1) && !djui_cursor_inside_base(gInteractableFocus)) {
+        if ((mouseButtons & MOUSE_BUTTON_1) && !(sLastMouseButtons & MOUSE_BUTTON_1) && !djui_cursor_inside_base(gInteractableFocus)) {
             // clicked outside of focus
             if (!gDjuiChatBoxFocus) {
                 djui_interactable_set_input_focus(NULL);
@@ -438,6 +438,10 @@ void djui_interactable_update(void) {
     } else if ((padButtons & PAD_BUTTON_B) && !(sLastInteractablePad.button & PAD_BUTTON_B)) {
         // pressed back button on controller
         djui_panel_back();
+
+        sLastInteractablePad = gInteractablePad;
+        sLastMouseButtons = mouseButtons;
+        return;
     } else if ((padButtons & PAD_BUTTON_START) && !(sLastInteractablePad.button & PAD_BUTTON_START)) {
         // pressed start button
         if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }

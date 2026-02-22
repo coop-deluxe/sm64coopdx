@@ -124,15 +124,15 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
-        if (str_ends_with(file_stat.m_filename, ".lua") || str_ends_with(file_stat.m_filename, ".luac")) {
+        if (path_ends_with(file_stat.m_filename, ".lua") || path_ends_with(file_stat.m_filename, ".luac")) {
             path_get_folder(file_stat.m_filename, luaPath);
             *isLua = true;
             break;
-        } else if (str_ends_with(file_stat.m_filename, ".tex")) {
+        } else if (path_ends_with(file_stat.m_filename, ".tex")) {
             *isDynos = true;
-        } else if (str_ends_with(file_stat.m_filename, ".png")) {
+        } else if (path_ends_with(file_stat.m_filename, ".png")) {
             *isDynos = true;
-        } else if (str_ends_with(file_stat.m_filename, ".bin")) {
+        } else if (path_ends_with(file_stat.m_filename, ".bin")) {
             *isDynos = true;
         }
     }
@@ -258,18 +258,18 @@ bool mod_import_file(char* path) {
     bool isPalette = false;
     bool ret = false;
 
-    if (gNetworkType != NT_NONE && !str_ends_with(path, ".ini")) {
+    if (gNetworkType != NT_NONE && !path_ends_with(path, ".ini")) {
         djui_popup_create(DLANG(NOTIF, IMPORT_FAIL_INGAME), 2);
         return false;
     }
 
-    if (str_ends_with(path, ".lua") || str_ends_with(path, ".luac")) {
+    if (path_ends_with(path, ".lua") || path_ends_with(path, ".luac")) {
         isLua = true;
         ret = mod_import_lua(path);
-    } else if (str_ends_with(path, ".ini")) {
+    } else if (path_ends_with(path, ".ini")) {
         isPalette = true;
         ret = mod_import_palette(path);
-    } else if (str_ends_with(path, ".zip")) {
+    } else if (path_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
     }
 

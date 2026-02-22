@@ -50,7 +50,7 @@ void DynOS_TexList_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData*> *
         bool found = false;
         for (auto& _Node : aGfxData->mTextures) {
             if (_Node->mData == aNode->mData[i]) {
-                DynOS_Pointer_Write(aFile, (const void *) (_Node), aGfxData);
+                DynOS_Pointer_Write(aFile, (const void *) (_Node), aGfxData, 0);
                 found = true;
                 break;
             }
@@ -76,7 +76,7 @@ DataNode<TexData*>* DynOS_TexList_Load(BinFile *aFile, GfxData *aGfxData) {
     _Node->mData = New<TexData*>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
         u32 _Value = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, 0, &_Node->mFlags);
         if (_Ptr == NULL) {
             PrintDataError("Could not read texture in texlist");
         } else {

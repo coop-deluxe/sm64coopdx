@@ -101,6 +101,10 @@ bool dynos_pack_get_exists(s32 index) {
     return false;
 }
 
+void dynos_generate_mod_pack(char* modPath) {
+    DynOS_Gfx_GenerateModPacks(modPath);
+}
+
 void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
@@ -111,22 +115,26 @@ void dynos_actor_override(struct Object* obj, void** aSharedChild) {
     DynOS_Actor_Override(obj, aSharedChild);
 }
 
-void dynos_add_actor_custom(s32 modIndex, const char *filePath, const char* geoName) {
-    DynOS_Actor_AddCustom(modIndex, filePath, geoName);
+bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName) {
+    return DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
 }
 
 const void* dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
 }
 
-bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, const char **token) {
-    return DynOS_Actor_GetModIndexAndToken(graphNode, tokenIndex, modIndex, token);
+bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, s32 *modFileIndex, const char **token) {
+    return DynOS_Actor_GetModIndexAndToken(graphNode, tokenIndex, modIndex, modFileIndex, token);
+}
+
+void dynos_actor_register_modified_graph_node(struct GraphNode *node) {
+    DynOS_Actor_RegisterModifiedGraphNode(node);
 }
 
 // -- collisions -- //
 
-void dynos_add_collision(const char *filePath, const char* collisionName) {
-    DynOS_Col_Activate(filePath, collisionName);
+bool dynos_add_collision(const char *filePath, const char* collisionName) {
+    return DynOS_Col_Activate(filePath, collisionName);
 }
 
 Collision* dynos_collision_get(const char* collisionName) {
@@ -135,13 +143,17 @@ Collision* dynos_collision_get(const char* collisionName) {
 
 // -- textures -- //
 
-void dynos_add_texture(const char *filePath, const char* textureName) {
+bool dynos_add_texture(const char *filePath, const char* textureName) {
     SysPath _FilePath = filePath;
-    DynOS_Tex_AddCustom(_FilePath, textureName);
+    return DynOS_Tex_AddCustom(_FilePath, textureName);
 }
 
 bool dynos_texture_get(const char* textureName, struct TextureInfo* outTextureInfo) {
     return DynOS_Tex_Get(textureName, outTextureInfo);
+}
+
+bool dynos_texture_get_from_data(const Texture *tex, struct TextureInfo* outTextureInfo) {
+    return DynOS_Tex_GetFromData(tex, outTextureInfo);
 }
 
 void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTextureInfo) {
@@ -150,6 +162,16 @@ void dynos_texture_override_set(const char* textureName, struct TextureInfo* ove
 
 void dynos_texture_override_reset(const char* textureName) {
     DynOS_Tex_Override_Reset(textureName);
+}
+
+u8 *dynos_texture_convert_to_rgba32(const Texture *tex, u32 width, u32 height, u8 fmt, u8 siz) {
+    switch (siz) {
+        case G_IM_SIZ_4b: return DynOS_Tex_ConvertToRGBA32(tex, (width * height) / 2, fmt, siz, NULL);
+        case G_IM_SIZ_8b: return DynOS_Tex_ConvertToRGBA32(tex, width * height, fmt, siz, NULL);
+        case G_IM_SIZ_16b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 2, fmt, siz, NULL);
+        case G_IM_SIZ_32b: return DynOS_Tex_ConvertToRGBA32(tex, width * height * 4, fmt, siz, NULL);
+    }
+    return NULL;
 }
 
 // -- movtexqcs -- //
@@ -224,8 +246,8 @@ void dynos_add_behavior(s32 modIndex, const char *filePath, const char *behavior
     DynOS_Bhv_Activate(modIndex, filePath, behaviorName);
 }
 
-s32 dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript) {
-    return DynOS_Bhv_GetActiveModIndex(bhvScript);
+bool dynos_behavior_get_active_mod_index(BehaviorScript *bhvScript, s32 *modIndex, s32 *modFileIndex) {
+    return DynOS_Bhv_GetActiveModIndex(bhvScript, modIndex, modFileIndex);
 }
 
 const char *dynos_behavior_get_token(BehaviorScript *bhvScript, u32 index) {
@@ -280,6 +302,10 @@ Gfx *dynos_gfx_get(const char *name, u32 *outLength) {
     return DynOS_Gfx_Get(name, outLength);
 }
 
+const char *dynos_gfx_get_name(Gfx *gfx) {
+    return DynOS_Gfx_GetName(gfx);
+}
+
 Gfx *dynos_gfx_create(const char *name, u32 length) {
     return DynOS_Gfx_Create(name, length);
 }
@@ -298,6 +324,10 @@ void dynos_gfx_delete_all() {
 
 Vtx *dynos_vtx_get(const char *name, u32 *outCount) {
     return DynOS_Vtx_Get(name, outCount);
+}
+
+const char *dynos_vtx_get_name(Vtx *vtx) {
+    return DynOS_Vtx_GetName(vtx);
 }
 
 Vtx *dynos_vtx_create(const char *name, u32 count) {

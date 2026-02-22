@@ -3,9 +3,37 @@ extern "C" {
 #include "pc/loading.h"
 }
 
+#define MOD_PATH_LEN 1024
+
+void DynOS_Gfx_GenerateModPacks(char* modPath) {
+    // If pack folder exists, generate bins
+    SysPath _LevelPackFolder = fstring("%s/levels", modPath);
+    if (fs_sys_dir_exists(_LevelPackFolder.c_str())) {
+        DynOS_Lvl_GeneratePack(_LevelPackFolder);
+    }
+
+    SysPath _ActorPackFolder = fstring("%s/actors", modPath);
+    if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
+        DynOS_Actor_GeneratePack(_ActorPackFolder);
+    }
+
+    SysPath _BehaviorPackFolder = fstring("%s/data", modPath);
+    if (fs_sys_dir_exists(_BehaviorPackFolder.c_str())) {
+        DynOS_Bhv_GeneratePack(_BehaviorPackFolder);
+    }
+
+    SysPath _TexturePackFolder = fstring("%s", modPath);
+    SysPath _TexturePackOutputFolder = fstring("%s/textures", modPath);
+    if (fs_sys_dir_exists(_TexturePackFolder.c_str())) {
+        DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder, true);
+    }
+}
+
 void DynOS_Gfx_GeneratePacks(const char* directory) {
     if (configSkipPackGeneration) { return; }
-    
+
+    static char sModPath[MOD_PATH_LEN] = "";
+
     LOADING_SCREEN_MUTEX(
         loading_screen_reset_progress_bar();
         snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In Path:\n\\#808080\\%s", directory);
@@ -25,28 +53,11 @@ void DynOS_Gfx_GeneratePacks(const char* directory) {
         if (SysPath(dir->d_name) == ".") continue;
         if (SysPath(dir->d_name) == "..") continue;
 
-        // If pack folder exists, generate bins
-        SysPath _LevelPackFolder = fstring("%s/%s/levels", directory, dir->d_name);
-        if (fs_sys_dir_exists(_LevelPackFolder.c_str())) {
-            DynOS_Lvl_GeneratePack(_LevelPackFolder);
-        }
+        // build mod path
+        snprintf(sModPath, MOD_PATH_LEN, "%s/%s", directory, dir->d_name);
 
-        SysPath _ActorPackFolder = fstring("%s/%s/actors", directory, dir->d_name);
-        if (fs_sys_dir_exists(_ActorPackFolder.c_str())) {
-            DynOS_Actor_GeneratePack(_ActorPackFolder);
-        }
-
-        SysPath _BehaviorPackFolder = fstring("%s/%s/data", directory, dir->d_name);
-        if (fs_sys_dir_exists(_BehaviorPackFolder.c_str())) {
-            DynOS_Bhv_GeneratePack(_BehaviorPackFolder);
-        }
-
-        SysPath _TexturePackFolder = fstring("%s/%s", directory, dir->d_name);
-        SysPath _TexturePackOutputFolder = fstring("%s/%s/textures", directory, dir->d_name);
-        if (fs_sys_dir_exists(_TexturePackFolder.c_str())) {
-            DynOS_Tex_GeneratePack(_TexturePackFolder, _TexturePackOutputFolder, true);
-        }
-
+        // generate packs
+        DynOS_Gfx_GenerateModPacks(sModPath);
         LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = (f32) i / (f32) pathCount);
     }
 

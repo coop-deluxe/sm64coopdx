@@ -30,6 +30,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
+#include "pc/lua/utils/smlua_model_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -41,7 +42,8 @@ static s8 sLevelsWithRooms[] = { LEVEL_BBH, LEVEL_CASTLE, LEVEL_HMC, -1 };
 
 #define o gCurrentObject
 
-s32 clear_move_flag(u32 *bitSet, s32 flag) {
+/* |description|Clears the `flag` from the `bitSet`|descriptionEnd| */
+s32 clear_move_flag(INOUT u32 *bitSet, s32 flag) {
     if (*bitSet & flag) {
         *bitSet &= flag ^ 0xFFFFFFFF;
         return TRUE;
@@ -272,7 +274,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
 }
 
-void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
+void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src) {
     if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
     dst[1][0] = src[1][0] * obj->header.gfx.scale[1];
@@ -295,7 +297,7 @@ void obj_apply_scale_to_matrix(struct Object *obj, Mat4 dst, Mat4 src) {
     dst[3][3] = src[3][3];
 }
 
-void create_transformation_from_matrices(Mat4 a0, Mat4 a1, Mat4 a2) {
+void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     f32 spC, sp8, sp4;
 
     spC = a2[3][0] * a2[0][0] + a2[3][1] * a2[0][1] + a2[3][2] * a2[0][2];
@@ -383,7 +385,7 @@ void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
     }
 }
 
-s32 approach_f32_signed(f32 *value, f32 target, f32 increment) {
+s32 approach_f32_signed(INOUT f32 *value, f32 target, f32 increment) {
     if (value == NULL) { return 0; }
     s32 reachedTarget = FALSE;
 
@@ -696,7 +698,7 @@ struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedAr
     obj->globalPlayerIndex = 0;
 
     geo_obj_init((struct GraphNodeObject *) &obj->header.gfx, dynos_model_get_geo(model), gVec3fZero, gVec3sZero);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, model);
+    smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, model, smlua_model_util_id_to_ext_id(model));
 
     return obj;
 }
@@ -809,8 +811,8 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
 }
 
 void obj_init_animation(struct Object *obj, s32 animIndex) {
-    if (!o || !obj) { return; }
-    struct AnimationTable *animations = o->oAnimations;
+    if (!obj) { return; }
+    struct AnimationTable *animations = obj->oAnimations;
     if (animations && (u32)animIndex < animations->count) {
         geo_obj_init_animation(&obj->header.gfx, animations->anims[animIndex]);
     }
@@ -824,7 +826,7 @@ Multiplies a vector by a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[0][i] * v[0] + m[1][i] * v[1] + m[2][i] * v[2];
@@ -839,7 +841,7 @@ Multiplies a vector by the transpose of a matrix of the form:
 `| 0 0 0 1 |`
 i.e. a matrix representing a linear transformation over 3 space
 |descriptionEnd| */
-void linear_mtxf_transpose_mul_vec3f(Mat4 m, Vec3f dst, Vec3f v) {
+void linear_mtxf_transpose_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v) {
     s32 i;
     for (i = 0; i < 3; i++) {
         dst[i] = m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2];
@@ -1078,7 +1080,7 @@ struct Object* cur_obj_find_nearest_pole(void) {
     return closestObj;
 }
 
-struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, f32 *dist) {
+struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist) {
     if (!behavior || !dist) { return NULL; }
 
     behavior = smlua_override_behavior(behavior);
@@ -1453,7 +1455,7 @@ void cur_obj_set_model(s32 modelID) {
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
-    smlua_call_event_hooks_object_model_param(HOOK_OBJECT_SET_MODEL, obj, modelID);
+    smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
 }
 
 void mario_set_flag(s32 flag) {
@@ -1518,7 +1520,7 @@ struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
     return floor;
 }
 
-void apply_drag_to_value(f32 *value, f32 dragStrength) {
+void apply_drag_to_value(INOUT f32 *value, f32 dragStrength) {
     f32 decel;
 
     if (*value != 0) {
@@ -3183,7 +3185,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
                     cur_obj_end_dialog(m, dialogFlags, gDialogResponse);
                 }
             } else if (dialogFlags & DIALOG_UNK1_FLAG_DEFAULT) {
-                if (get_dialog_id() == -1) {
+                if (get_dialog_id() == DIALOG_NONE) {
                     cur_obj_end_dialog(m, dialogFlags, 3);
                 }
             } else {

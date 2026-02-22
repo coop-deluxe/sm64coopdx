@@ -21,14 +21,12 @@ void spawn_wind_particles(s16 pitch, s16 yaw);
 s32 check_if_moving_over_floor(f32 a0, f32 a1);
 /* |description|Calculates the time it takes for the current object to follow an arc from `pos` to `goal`|descriptionEnd| */
 s32 arc_to_goal_pos(Vec3f goal, Vec3f pos, f32 yVel, f32 gravity);
-/* |description|Duplicate of vec3f_copy except without bad return|descriptionEnd| */
-void vec3f_copy_2(Vec3f dest, Vec3f src);
 /* |description|Moves Tox Box|descriptionEnd| */
 void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll);
 /* |description|Plays the penguin walking sound|descriptionEnd| */
 void play_penguin_walking_sound(s32 walk);
-/* |description|Updates the current object's angle from its move flags|descriptionEnd| */
-s32 update_angle_from_move_flags(s32 *angle);
+/* |description|Computes and returns an angle depending on the current object's angle and move flags|descriptionEnd| */
+s32 update_angle_from_move_flags(INOUT s32 *angle);
 /* |description|Spawns strong wind particles relative to the current object|descriptionEnd| */
 void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX, f32 relPosY, f32 relPosZ);
 
@@ -1147,10 +1145,6 @@ void bhv_yoshi_loop(void);
 void bhv_volcano_trap_loop(void);
 /* |description|Behavior loop function for UV texture scrolling|descriptionEnd| */
 void uv_update_scroll(void);
-/* |description|Spawns a lighting engine point light|descriptionEnd| */
-struct Object* spawn_ambient_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b);
-/* |description|Spawns a lighting engine ambient light|descriptionEnd| */
-struct Object* spawn_point_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius);
 /* |description|Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color|descriptionEnd| */
 void bhv_ambient_light_update(void);
 /* |description|Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius|descriptionEnd| */

@@ -279,7 +279,6 @@ void mod_cache_load(void) {
         gfx_shutdown();
     }
 
-    u16 count = 0;
     while (true) {
         u8 dataHash[16] = { 0 };
         u64 lastLoaded = 0;
@@ -298,7 +297,6 @@ void mod_cache_load(void) {
         mod_cache_add_internal(dataHash, lastLoaded, (char*)path);
 
         free((void*)path);
-        count++;
     }
     LOG_INFO("Loading mod cache complete");
 

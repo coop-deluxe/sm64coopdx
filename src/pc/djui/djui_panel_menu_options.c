@@ -109,6 +109,9 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
 
         djui_text_set_font(gDjuiPauseOptions, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
         djui_text_set_text(gDjuiPauseOptions, DLANG(MISC, R_BUTTON));
+
+        djui_text_set_font(gDjuiModReload, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
+        djui_text_set_text(gDjuiModReload, DLANG(MISC, L_BUTTON));
     }
     gDjuiChangingTheme = false;
 

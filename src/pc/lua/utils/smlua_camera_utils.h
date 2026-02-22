@@ -4,11 +4,6 @@
 #include "types.h"
 #include "game/camera.h"
 
-struct CameraOverride {
-    unsigned int value;
-    bool override;
-};
-
 /* |description|Resets camera config overrides|descriptionEnd| */
 void camera_reset_overrides(void);
 /* |description|Freezes the camera by not updating it|descriptionEnd| */
@@ -32,7 +27,7 @@ void camera_romhack_allow_dpad_usage(u8 allow);
 Toggles collision settings for the ROM hack camera.
 This enables or disables specific collision behaviors in modded levels
 |descriptionEnd| */
-void rom_hack_cam_set_collisions(u8 enable);
+void camera_romhack_set_collisions(u8 enable);
 
 /* |description|Sets the romhack camera's zoomed in distance (Default: 900)|descriptionEnd| */
 void camera_romhack_set_zoomed_in_dist(u32 val);

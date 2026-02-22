@@ -160,21 +160,35 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-bool str_ends_with(const char* string, const char* suffix) {
+bool str_starts_with(const char *string, const char *prefix) {
+    if (string == NULL || prefix == NULL) { return false; }
+
+    return strncmp(string, prefix, strlen(prefix)) == 0;
+}
+
+bool str_ends_with(const char *string, const char *suffix) {
     if (string == NULL || suffix == NULL) { return false; }
 
     size_t stringLength = strlen(string);
     size_t suffixLength = strlen(suffix);
+    return stringLength >= suffixLength && strncmp(string + stringLength - suffixLength, suffix, suffixLength) == 0;
+}
 
-    if (suffixLength > stringLength) { return false; }
+bool path_ends_with(const char* path, const char* suffix) {
+    if (path == NULL || suffix == NULL) { return false; }
+
+    size_t pathLength = strlen(path);
+    size_t suffixLength = strlen(suffix);
+
+    if (suffixLength > pathLength) { return false; }
 
 #ifdef _WIN32
     // Paths on Windows are case-insensitive and might have
     // upper-case or mixed-case endings.
-    return (0 == _stricmp(&(string[stringLength - suffixLength]), suffix));
+    return (0 == _stricmp(&(path[pathLength - suffixLength]), suffix));
 #else
     // Always expecting lower-case file paths and extensions
-    return (0 == strcmp(&(string[stringLength - suffixLength]), suffix));
+    return (0 == strcmp(&(path[pathLength - suffixLength]), suffix));
 #endif
 }
 
@@ -232,6 +246,61 @@ void path_get_folder(char* path, char* outpath) {
         p++;
     }
     *o = '\0';
+}
+
+int path_depth(const char* path) {
+    int depth = 0;
+    for (; *path; path++) {
+        if (*path == '/' || *path == '\\') {
+            depth++;
+        }
+    }
+    return depth;
+}
+
+void resolve_relative_path(const char* base, const char* path, char* output) {
+    char combined[SYS_MAX_PATH] = "";
+
+    // If path is absolute, copy as is. Otherwise, combine base and relative path
+    if (path[0] == '/' || path[0] == '\\') {
+        snprintf(combined, sizeof(combined), "%s", path);
+    } else {
+        snprintf(combined, sizeof(combined), "%s/%s", base, path);
+    }
+
+    char* tokens[64];
+    int tokenCount = 0;
+
+    // Tokenize path by separators
+    char* token = strtok(combined, "/\\");
+    while (token && tokenCount < 64) {
+        if (strcmp(token, "..") == 0) {
+            // Pop last token to go up a directory
+            if (tokenCount > 0) { tokenCount--; }
+
+        // Ignore "." (current directory) or empty tokens
+        } else if (strcmp(token, ".") != 0 && token[0] != '\0') {
+            tokens[tokenCount++] = token;
+        }
+
+        token = strtok(NULL, "/\\");
+    }
+
+    output[0] = '\0';
+
+    // Build output path from tokens
+    for (int i = 0; i < tokenCount; i++) {
+        if (i > 0) {
+            strncat(output, "/", SYS_MAX_PATH - strlen(output) - 1);
+        }
+        strncat(output, tokens[i], SYS_MAX_PATH - strlen(output) - 1);
+    }
+
+    normalize_path(output);
+}
+
+bool path_is_relative_to(const char* fullPath, const char* baseDir) {
+    return strncmp(fullPath, baseDir, strlen(baseDir)) == 0;
 }
 
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {

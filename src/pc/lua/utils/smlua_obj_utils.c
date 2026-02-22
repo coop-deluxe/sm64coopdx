@@ -121,8 +121,8 @@ struct Object *get_current_object(void) { return gCurrentObject; }
 struct Object *get_dialog_object(void) { return gContinueDialogFunctionObject; }
 struct Object *get_cutscene_focus(void) { return gCutsceneFocus; }
 struct Object *get_secondary_camera_focus(void) { return gSecondCameraFocus; }
-void *set_cutscene_focus(struct Object *o) { gCutsceneFocus = o; }
-void *set_secondary_camera_focus(struct Object *o) { gSecondCameraFocus = o; }
+void set_cutscene_focus(struct Object *o) { gCutsceneFocus = o; }
+void set_secondary_camera_focus(struct Object *o) { gSecondCameraFocus = o; }
 
 //
 // Helpers to iterate through the object table
@@ -365,6 +365,20 @@ struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedI
     sTmpSpi.model = loadedModelId;
 
     return &sTmpSpi;
+}
+
+struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId) {
+    static struct WaterDropletParams sTmpWdp = { 0 };
+    memset(&sTmpWdp, 0, sizeof(struct WaterDropletParams));
+
+    s16 loadedModelId = smlua_model_util_load(modelId);
+    sTmpWdp.model = loadedModelId;
+
+    const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
+    behavior = smlua_override_behavior(behavior);
+    sTmpWdp.behavior = behavior;
+
+    return &sTmpWdp;
 }
 
 struct ObjectHitbox* get_temp_object_hitbox(void) {

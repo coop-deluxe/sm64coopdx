@@ -1,88 +1,27 @@
 -- name: Lighting Engine Demo
--- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\Open the panel in the pause menu to see what you can do.
+-- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\Open the mod menu in the pause menu to see what you can do.
 
-local flashlightColor = { 255, 255, 200 }
+flashlightColor = { 255, 255, 200 }
+
+--- @param cmd Gfx
+--- @param op integer
+local function parse_dl(cmd, op)
+    if op == G_SETENVCOLOR then
+        gfx_set_command(cmd, "gsDPSetEnvColor(255, 255, 255, %i)", if_then_else(_G.dayNightCycleApi ~= nil and _G.dayNightCycleApi.is_dnc_enabled(), 0, 255))
+    end
+end
 
 --- @param node GraphNode
 function geo_hide_if_dnc(node)
     local dl = cast_graph_node(node.next)
-    gfx_parse(dl.displayList, function(cmd, op)
-        if op == G_SETENVCOLOR then
-            gfx_set_command(cmd, "gsDPSetEnvColor(255, 255, 255, %i)", if_then_else(_G.dayNightCycleApi ~= nil and _G.dayNightCycleApi.is_dnc_enabled(), 0, 255))
-        end
-    end)
+    gfx_parse(dl.displayList, parse_dl)
 end
 
---- @param o Object
-local function bhv_spawn_point_light(o)
-    local light = spawn_non_sync_object(
-        id_bhvPointLight,
-        E_MODEL_NONE,
-        o.oPosX, o.oPosY, o.oPosZ,
-        nil
-    )
-    if get_id_from_behavior(o.behavior) == id_bhvKoopaShell then
-        light.oBehParams = 0x00FF0032
-    else
-        light.oBehParams = 0xFFFFFF32
-    end
-    light.parentObj = o
-end
+local function update()
+    shading_update()
 
---- @param o Object
-function bhv_flashlight_loop(o)
-    local pos = gMarioStates[0].pos
-    local yaw = gFirstPersonCamera.yaw + 0x8000
-    o.oPosX = pos.x + sins(yaw) * 300
-    o.oPosY = pos.y + -gFirstPersonCamera.pitch * 0.06
-    o.oPosZ = pos.z + coss(yaw) * 300
-    le_set_light_pos(o.oLightID, o.oPosX, o.oPosY, o.oPosZ)
-    le_set_light_color(o.oLightID, flashlightColor[1], flashlightColor[2], flashlightColor[3])
-end
-
-local function spawn_flashlight()
-    local flashlight = spawn_non_sync_object(
-        bhvFlashlight,
-        E_MODEL_NONE,
-        0, 0, 0,
-        nil
-    )
-    flashlight.oBehParams = (flashlightColor[1] << 24) | (flashlightColor[2] << 16) | (flashlightColor[3] << 8) | (90)
-    return flashlight
-end
-
---- @param flashlight Object
-local function delete_flashlight(flashlight)
-    le_remove_light(flashlight.oLightID)
-    obj_mark_for_deletion(flashlight)
-    return nil
-end
-
---- @param m MarioState
-local function calculate_mario_lighting(m)
-    local color = { r = 0, g = 0, b = 0 }
-    local dir = { x = 0, y = 0, z = 0 }
-
-    le_calculate_lighting_color(m.pos, color, 0.25)
-    le_calculate_lighting_dir(m.pos, dir)
-
-    m.marioBodyState.lightR = color.r
-    m.marioBodyState.lightG = color.g
-    m.marioBodyState.lightB = color.b
-    m.marioBodyState.shadeR = m.marioBodyState.lightR * 0.5
-    m.marioBodyState.shadeG = m.marioBodyState.lightG * 0.5
-    m.marioBodyState.shadeB = m.marioBodyState.lightB * 0.5
-
-    m.marioBodyState.lightingDirX = -DEFAULT_LIGHTING_DIR + dir.x
-    m.marioBodyState.lightingDirY = -DEFAULT_LIGHTING_DIR + dir.y
-    m.marioBodyState.lightingDirZ = -DEFAULT_LIGHTING_DIR + dir.z
-end
-
---- @param m MarioState
-local function mario_update(m)
-    if m.playerIndex ~= 0 then return end
-
-    calculate_mario_lighting(m)
+    --- @type MarioState
+    local m = gMarioStates[0]
 
     if (m.controller.buttonPressed & L_JPAD) ~= 0 then
         audio_sample_play(SOUND_CUSTOM_FLASHLIGHT, m.pos, 1.0)
@@ -95,14 +34,27 @@ local function mario_update(m)
     end
 end
 
+local function on_level_init()
+    local levelNum = gNetworkPlayers[0].currLevelNum
+    if levelNum == LEVEL_HL or levelNum == LEVEL_CANALS then return end
+
+    le_set_ambient_color(30, 30, 75)
+end
+
 
 local function on_set_flashlight_color(index, value)
     flashlightColor[index + 1] = value
 end
 
-id_bhvKoopaShell = hook_behavior(id_bhvKoopaShell, OBJ_LIST_LEVEL, false, bhv_spawn_point_light, nil, "bhvKoopaShell")
+set_override_skybox(BACKGROUND_HAUNTED)
+set_fog_color(0, 30)
+set_fog_color(1, 30)
+set_fog_color(2, 75)
 
-hook_event(HOOK_MARIO_UPDATE, mario_update)
+djui_popup_create("Use Left D-Pad to turn on the flashlight.", 2)
+
+hook_event(HOOK_UPDATE, update)
+hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 
 hook_mod_menu_slider("Flashlight Red", flashlightColor[1], 0, 255, on_set_flashlight_color)
 hook_mod_menu_slider("Flashlight Green", flashlightColor[2], 0, 255, on_set_flashlight_color)

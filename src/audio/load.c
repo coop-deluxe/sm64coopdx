@@ -1553,11 +1553,9 @@ void preload_sequence(u32 seqId, u8 preloadMask) {
 void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync);
 
 void load_sequence(u32 player, u32 seqId, s32 loadAsync) {
-    s16 returnValue = -1;
-
-    smlua_call_event_hooks_on_seq_load(HOOK_ON_SEQ_LOAD, player, seqId, loadAsync, &returnValue);
-    if (returnValue > -1) {
-        seqId = returnValue;
+    u32 seqIdOverride = 0;
+    if (smlua_call_event_hooks(HOOK_ON_SEQ_LOAD, player, seqId, loadAsync, &seqIdOverride)) {
+        seqId = seqIdOverride;
     }
 
     if (!loadAsync) {

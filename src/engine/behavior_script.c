@@ -913,8 +913,9 @@ static s32 bhv_cmd_call_ext(void) {
 
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         return BHV_PROC_CONTINUE;
     }
@@ -946,8 +947,9 @@ static s32 bhv_cmd_call_ext(void) {
 static s32 bhv_cmd_goto_ext(void) {
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         return BHV_PROC_CONTINUE;
     }
@@ -976,8 +978,9 @@ static s32 bhv_cmd_goto_ext(void) {
 static s32 bhv_cmd_call_native_ext(void) {
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         gCurBhvCommand += 2;
         return BHV_PROC_CONTINUE;
@@ -994,18 +997,26 @@ static s32 bhv_cmd_call_native_ext(void) {
     }
 
     if (!gSmLuaConvertSuccess || funcRef == 0) {
-        LOG_LUA("Failed to call lua function, could not find lua function '%s'", funcStr);
+        LOG_LUA("Failed to call lua behavior function, could not find lua function '%s'", funcStr);
         gCurBhvCommand += 2;
         return BHV_PROC_CONTINUE;
     }
 
     // Get our mod.
-    if (modIndex >= gActiveMods.entryCount) {
-        LOG_LUA("Failed to call lua function, could not find mod");
+    if (modIndex < 0 || modIndex >= gActiveMods.entryCount) {
+        LOG_LUA("Failed to call lua behavior function, could not find mod");
         gCurBhvCommand += 2;
         return BHV_PROC_CONTINUE;
     }
     struct Mod *mod = gActiveMods.entries[modIndex];
+
+    // Get our mod file
+    if (modFileIndex < 0 || modFileIndex >= mod->fileCount) {
+        LOG_LUA("Failed to call lua behavior function, could not find mod file %d", modFileIndex);
+        gCurBhvCommand += 2;
+        return BHV_PROC_CONTINUE;
+    }
+    struct ModFile *modFile = &mod->files[modFileIndex];
 
     // Push the callback onto the stack
     lua_rawgeti(gLuaState, LUA_REGISTRYINDEX, funcRef);
@@ -1014,7 +1025,7 @@ static s32 bhv_cmd_call_native_ext(void) {
     smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject, NULL);
 
     // Call the callback
-    if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod)) {
+    if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod, modFile)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 
@@ -1029,8 +1040,9 @@ static s32 bhv_cmd_spawn_child_ext(void) {
 
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;
@@ -1076,8 +1088,9 @@ static s32 bhv_cmd_spawn_child_with_param_ext(void) {
 
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;
@@ -1123,8 +1136,9 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    s32 modIndex = dynos_behavior_get_active_mod_index(behavior);
-    if (modIndex == -1) {
+    s32 modIndex = -1;
+    s32 modFileIndex = -1;
+    if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
         gCurBhvCommand += 3;
         return BHV_PROC_CONTINUE;

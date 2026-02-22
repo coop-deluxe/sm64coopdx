@@ -208,7 +208,7 @@ jobs:
 
     build-macos-intel:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: macos-13
+        runs-on: macos-15-intel
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4

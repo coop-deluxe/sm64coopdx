@@ -874,6 +874,25 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oMacroUnk10C);
     bhv_constant(oMacroUnk110);
 
+    /* Mario */
+    bhv_constant(oMarioParticleFlags);
+    bhv_constant(oMarioPoleUnk108);
+    bhv_constant(oMarioReadingSignDYaw);
+    bhv_constant(oMarioPoleYawVel);
+    bhv_constant(oMarioCannonObjectYaw);
+    bhv_constant(oMarioTornadoYawVel);
+    bhv_constant(oMarioReadingSignDPosX);
+    bhv_constant(oMarioPolePos);
+    bhv_constant(oMarioCannonInputYaw);
+    bhv_constant(oMarioTornadoPosY);
+    bhv_constant(oMarioReadingSignDPosZ);
+    bhv_constant(oMarioWhirlpoolPosY);
+    bhv_constant(oMarioJumboStarCutscenePosZ);
+    bhv_constant(oMarioBurnTimer);
+    bhv_constant(oMarioLongJumpIsSlow);
+    bhv_constant(oMarioSteepJumpYaw);
+    bhv_constant(oMarioWalkingPitch);
+
     /* 1-UpHidden */
     bhv_constant(o1UpHiddenUnkF4);
     bhv_constant(o1UpForceSpawn);
@@ -1912,10 +1931,21 @@ static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, Da
     u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
+    // Remove (de-)referencing
+    if (_Arg.Length() > 0 && (_Arg[0] == '&' || _Arg[0] == '*')) {
+        _Arg.Remove(0);
+    }
+
     // Built-in functions
-    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin());
+    const void *_FunctionPtr = DynOS_Builtin_Func_GetFromName(_Arg.begin(), FUNCTION_BHV);
     if (_FunctionPtr != NULL) {
         return (s64) _FunctionPtr;
+    }
+    String error = DynOS_Builtin_Func_CheckMisuse(_Arg.begin(), FUNCTION_BHV);
+    if (!error.Empty()) {
+        PrintDataError("  ERROR: %s", error.begin());
+        *found = false;
+        return 0;
     }
 
     // Built-in actors
@@ -2107,6 +2137,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
 
     bhv_symbol_3(SET_INT_RAND_RSHIFT, 0, 0, 0);
     bhv_symbol_3(SET_RANDOM_INT, 0, 0, 0);
+    bhv_symbol_3(SET_RANDOM_FLOAT, 0, 0, 0);
     bhv_symbol_3(ADD_RANDOM_FLOAT, 0, 0, 0);
     bhv_symbol_3(ADD_INT_RAND_RSHIFT, 0, 0, 0);
     bhv_symbol_3(SUM_FLOAT, 0, 0, 0);
@@ -2465,7 +2496,7 @@ static void DynOS_Bhv_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Behavior
     for (u32 i = 0; i != aNode->mSize; ++i) {
         BehaviorScript *_Head = &aNode->mData[i];
         if (aGfxData->mPointerList.Find((void *) _Head) != -1) {
-            DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData);
+            DynOS_Pointer_Write(aFile, (const void *) (*_Head), aGfxData, FUNCTION_BHV);
         } else if (aGfxData->mLuaPointerList.Find((void *) _Head) != -1) {
             DynOS_Pointer_Lua_Write(aFile, *(u32 *)_Head, aGfxData);
         } else {
@@ -2553,7 +2584,7 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
             break;
         }
         u32 _Value = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, FUNCTION_BHV, &_Node->mFlags);
         if (_Ptr) {
             _Node->mData[i] = (uintptr_t) _Ptr;
         } else {
@@ -2602,18 +2633,6 @@ static String GetBehaviorFolder(const Array<Pair<u64, String>> &aBehaviorsFolder
 }
 
 static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _BehaviorsFolders, GfxData *_GfxData) {
-    // do not regen this folder if we find any existing bins
-    for (s32 bhvIndex = _GfxData->mBehaviorScripts.Count() - 1; bhvIndex >= 0; bhvIndex--) {
-        auto &_BhvNode = _GfxData->mBehaviorScripts[bhvIndex];
-        String _BhvRootName = _BhvNode->mName;
-
-        // If there is an existing binary file for this layout, skip and go to the next behavior.
-        SysPath _BinFilename = fstring("%s/%s.bhv", aPackFolder.c_str(), _BhvRootName.begin());
-        if (fs_sys_file_exists(_BinFilename.c_str())) {
-            return;
-        }
-    }
-
     // generate in reverse order to detect children
     for (s32 bhvIndex = _GfxData->mBehaviorScripts.Count() - 1; bhvIndex >= 0; bhvIndex--) {
         auto &_BhvNode = _GfxData->mBehaviorScripts[bhvIndex];
@@ -2660,6 +2679,11 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
 
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder) {
     Print("Processing behaviors: \"%s\"", aPackFolder.c_str());
+
+    if (!DynOS_ShouldGeneratePack2Ext(aPackFolder, ".bhv", ".c")) {
+        return;
+    }
+
     Array<Pair<u64, String>> _BehaviorsFolders;
     GfxData *_GfxData = New<GfxData>();
 

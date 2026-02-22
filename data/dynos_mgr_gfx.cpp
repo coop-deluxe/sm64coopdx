@@ -3,6 +3,7 @@
 extern "C" {
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_gfx_utils.h"
+#include "pc/mods/mods.h"
 }
 
 struct MapNode {
@@ -13,6 +14,7 @@ struct MapNode {
 
 // Maps read-only Gfx and Vtx buffers to their writable duplicates
 static std::map<const void *, struct MapNode> sRomToRamGfxVtxMap;
+static std::map<const void *, const void *> sRamToRomGfxVtxMap; // Reverse map for duplicate to vanilla lookup
 
 static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
     if (!aVtx) { return NULL; }
@@ -29,6 +31,7 @@ static Vtx *DynOS_Vtx_Duplicate(Vtx *aVtx, u32 vtxCount, bool shouldDuplicate) {
         Vtx *vtxDuplicate = vtx_allocate_internal(NULL, vtxCount);
         memcpy(vtxDuplicate, aVtx, vtxSize);
         sRomToRamGfxVtxMap[aVtx] = { (void *) vtxDuplicate, vtxSize, NULL };
+        sRamToRomGfxVtxMap[vtxDuplicate] = aVtx;
         return vtxDuplicate;
     }
 
@@ -69,7 +72,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
         }
 
         // Duplicate referenced vertices
-        if (op == G_VTX) {
+        if (op == G_VTX || op == G_VTX_EXT) {
             cmd->words.w1 = (uintptr_t) DynOS_Vtx_Duplicate((Vtx *) cmd->words.w1, C0(cmd, 12, 8), shouldDuplicate);
         }
     }
@@ -81,6 +84,7 @@ static Gfx *DynOS_Gfx_Duplicate(Gfx *aGfx, bool shouldDuplicate) {
         Gfx *gfxCopy = (Gfx *) malloc(gfxSize);
         memcpy(gfxCopy, gfxDuplicate, gfxSize);
         sRomToRamGfxVtxMap[aGfx] = { (void *) gfxDuplicate, gfxSize, gfxCopy };
+        sRamToRomGfxVtxMap[gfxDuplicate] = aGfx;
     }
 
     return gfxDuplicate;
@@ -136,24 +140,20 @@ Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
 
     // Check levels
     for (auto &lvl : DynOS_Lvl_GetArray()) {
-        if (modIndex == -1 || lvl.second->mModIndex == modIndex) {
-            for (auto &gfx : lvl.second->mDisplayLists) {
-                if (gfx->mName == aName) {
-                    *outLength = gfx->mSize;
-                    return gfx->mData;
-                }
+        for (auto &gfx : lvl.second->mDisplayLists) {
+            if (gfx->mName == aName) {
+                *outLength = gfx->mSize;
+                return gfx->mData;
             }
         }
     }
 
     // Check loaded actors
     for (auto &actor : DynOS_Actor_GetValidActors()) {
-        if (modIndex == -1 || actor.second.mGfxData->mModIndex == modIndex) {
-            for (auto &gfx : actor.second.mGfxData->mDisplayLists) {
-                if (gfx->mName == aName) {
-                    *outLength = gfx->mSize;
-                    return gfx->mData;
-                }
+        for (auto &gfx : actor.second.mGfxData->mDisplayLists) {
+            if (gfx->mName == aName) {
+                *outLength = gfx->mSize;
+                return gfx->mData;
             }
         }
     }
@@ -174,6 +174,42 @@ Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
     }
 
     return NULL;
+}
+
+const char *DynOS_Gfx_GetName(Gfx *aGfx) {
+    if (!aGfx) { return NULL; }
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+
+    // Check mod data
+    static std::string outName;
+    if (sModsDisplayLists.GetName(modIndex, aGfx, outName)) {
+        return outName.c_str();
+    }
+
+    // Check levels
+    for (auto &lvl : DynOS_Lvl_GetArray()) {
+        for (auto &gfx : lvl.second->mDisplayLists) {
+            if (gfx->mData == aGfx) {
+                return gfx->mName.begin();
+            }
+        }
+    }
+
+    // Check loaded actors
+    for (auto &actor : DynOS_Actor_GetValidActors()) {
+        for (auto &gfx : actor.second.mGfxData->mDisplayLists) {
+            if (gfx->mData == aGfx) {
+                return gfx->mName.begin();
+            }
+        }
+    }
+
+    // Check vanilla display lists
+    auto it = sRamToRomGfxVtxMap.find(aGfx);
+    if (it != sRamToRomGfxVtxMap.end()) {
+        return DynOS_Builtin_Gfx_GetFromData((const Gfx *) it->second);
+    }
+    return DynOS_Builtin_Gfx_GetFromData(aGfx);
 }
 
 Gfx *DynOS_Gfx_Create(const char *aName, u32 aLength) {
@@ -240,24 +276,51 @@ Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount) {
 
     // Check levels
     for (auto &lvl : DynOS_Lvl_GetArray()) {
-        if (modIndex == -1 || lvl.second->mModIndex == modIndex) {
-            for (auto &vtx : lvl.second->mVertices) {
-                if (vtx->mName == aName) {
-                    *outCount = vtx->mSize;
-                    return vtx->mData;
-                }
+        for (auto &vtx : lvl.second->mVertices) {
+            if (vtx->mName == aName) {
+                *outCount = vtx->mSize;
+                return vtx->mData;
             }
         }
     }
 
     // Check loaded actors
     for (auto &actor : DynOS_Actor_GetValidActors()) {
-        if (modIndex == -1 || actor.second.mGfxData->mModIndex == modIndex) {
-            for (auto &vtx : actor.second.mGfxData->mVertices) {
-                if (vtx->mName == aName) {
-                    *outCount = vtx->mSize;
-                    return vtx->mData;
-                }
+        for (auto &vtx : actor.second.mGfxData->mVertices) {
+            if (vtx->mName == aName) {
+                *outCount = vtx->mSize;
+                return vtx->mData;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+const char *DynOS_Vtx_GetName(Vtx *aVtx) {
+    if (!aVtx) { return NULL; }
+    s32 modIndex = (gLuaActiveMod ? gLuaActiveMod->index : -1);
+
+    // Check mod data
+    static std::string outName;
+    if (sModsVertexBuffers.GetName(modIndex, aVtx, outName)) {
+        return outName.c_str();
+    }
+
+    // Check levels
+    for (auto &lvl : DynOS_Lvl_GetArray()) {
+        for (auto &vtx : lvl.second->mVertices) {
+            if (vtx->mData == aVtx) {
+                return vtx->mName.begin();
+            }
+        }
+    }
+
+    // Check loaded actors
+    for (auto &actor : DynOS_Actor_GetValidActors()) {
+        for (auto &vtx : actor.second.mGfxData->mVertices) {
+            if (vtx->mData == aVtx) {
+                return vtx->mName.begin();
             }
         }
     }

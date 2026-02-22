@@ -265,7 +265,7 @@ static u8 bhv_mips_held_continue_dialog(void) {
  * Handles MIPS being held by Mario.
  */
 void bhv_mips_held(void) {
-    s16 dialogID;
+    s32 dialogID;
 
     if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
     struct Object* player = gMarioStates[o->heldByPlayerIndex].marioObj;

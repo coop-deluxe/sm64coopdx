@@ -142,4 +142,11 @@ Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);
 /* |description|Gets a table of the surface types from `data`|descriptionEnd| */
 void smlua_collision_util_find_surface_types(Collision* data);
 
+/* |description|Checks if the surface is quicksand|descriptionEnd| */
+bool surface_is_quicksand(struct Surface* surf);
+/* |description|Checks if the surface is not a hard surface|descriptionEnd| */
+bool surface_is_not_hard(struct Surface* surf);
+/* |description|Checks if the surface is a painting warp|descriptionEnd| */
+bool surface_is_painting_warp(struct Surface* surf);
+
 #endif

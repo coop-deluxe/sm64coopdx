@@ -11,21 +11,18 @@
     #define LANGUAGE_ARRAY(cmd) cmd
 #endif
 
-extern u8 *dialog_table_eu_en[];
 extern u8 *course_name_table_eu_en[];
 extern u8 *act_name_table_eu_en[];
 extern u8 *dialog_table_eu_en_original[];
 extern u8 *course_name_table_eu_en_original[];
 extern u8 *act_name_table_eu_en_original[];
 
-extern u8 *dialog_table_eu_fr[];
 extern u8 *course_name_table_eu_fr[];
 extern u8 *act_name_table_eu_fr[];
 extern u8 *dialog_table_eu_fr_original[];
 extern u8 *course_name_table_eu_fr_original[];
 extern u8 *act_name_table_eu_fr_original[];
 
-extern u8 *dialog_table_eu_de[];
 extern u8 *course_name_table_eu_de[];
 extern u8 *act_name_table_eu_de[];
 extern u8 *dialog_table_eu_de_original[];

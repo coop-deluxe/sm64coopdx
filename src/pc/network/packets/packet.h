@@ -73,6 +73,7 @@ enum PacketType {
     PACKET_REQUEST_FAILED,
 
     PACKET_LUA_CUSTOM,
+    PACKET_LUA_CUSTOM_BYTESTRING,
     
     PACKET_COMMAND,
     PACKET_MODERATOR,
@@ -380,5 +381,7 @@ void network_receive_request_failed(struct Packet* p);
 // packet_lua_custom.c
 void network_send_lua_custom(bool broadcast);
 void network_receive_lua_custom(struct Packet* p);
+void network_send_lua_custom_bytestring(bool broadcast);
+void network_receive_lua_custom_bytestring(struct Packet* p);
 
 #endif

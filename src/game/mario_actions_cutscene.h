@@ -14,5 +14,7 @@ s32 mario_ready_to_speak(struct MarioState* m);
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object);
 s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8(*inContinueDialogFunction)(void));
 s32 mario_execute_cutscene_action(struct MarioState *m);
+void cutscene_take_cap_off(struct MarioState *m);
+void cutscene_put_cap_on(struct MarioState *m);
 
 #endif // MARIO_ACTIONS_CUTSCENE_H

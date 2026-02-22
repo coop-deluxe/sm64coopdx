@@ -178,6 +178,8 @@ enum HUDDisplayFlag {
 /* |description|Returns if the level timer is running|descriptionEnd| */
 u8 level_control_timer_running(void);
 u16 level_control_timer(s32 timerOp);
+/* |description|Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled|descriptionEnd|*/
+bool pressed_pause(void);
 /* |description|Fades into a special warp with `arg` and using `color`|descriptionEnd| */
 void fade_into_special_warp(u32 arg, u32 color);
 void load_level_init_text(u32 arg);
@@ -191,6 +193,7 @@ void initiate_painting_warp(s16 paintingIndex);
 /* |description|Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`|descriptionEnd| */
 s16 level_trigger_warp(struct MarioState *m, s32 warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
+void set_play_mode(s16 playMode);
 /* |description|Special warps to arg (`SPECIAL_WARP_*`)|descriptionEnd| */
 void warp_special(s32 arg);
 /* |description|Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead|descriptionEnd| */

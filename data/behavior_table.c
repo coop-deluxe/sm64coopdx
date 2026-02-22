@@ -558,6 +558,8 @@ const struct BehaviorTableEntry gBehaviorTable[id_bhv_max_count] = {
 
 enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior) {
     if (behavior == NULL) { return id_bhv_max_count; }
+    if ((behavior[0] >> 24) != 0x00) { return id_bhv_max_count; } // check for BEGIN
+    if ((behavior[1] >> 24) != 0x39) { return id_bhv_max_count; } // check for ID
     return (enum BehaviorId)(behavior[1] & 0xFFFF);
 }
 

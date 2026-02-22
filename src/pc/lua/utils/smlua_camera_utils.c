@@ -2,6 +2,11 @@
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
 
+struct CameraOverride {
+    u32 value;
+    bool override;
+};
+
 static struct CameraOverride sOverrideCameraXSens            = { 0 };
 static struct CameraOverride sOverrideCameraYSens            = { 0 };
 static struct CameraOverride sOverrideCameraAggr             = { 0 };
@@ -64,7 +69,7 @@ void camera_romhack_allow_dpad_usage(u8 allow) {
     gRomhackCameraSettings.dpad = allow;
 }
 
-void rom_hack_cam_set_collisions(u8 enable) {
+void camera_romhack_set_collisions(u8 enable) {
     gRomhackCameraSettings.collisions = enable;
 }
 

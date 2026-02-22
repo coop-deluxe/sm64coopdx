@@ -17,8 +17,8 @@ _ReadOnlyTable = {
         local _table = rawget(t, '_table')
         return _table[k]
     end,
-    __newindex = function (t,k,v)
-    end
+    __newindex = function (_,k,_) error('Attempting to modify key `' .. k .. '` of read-only table') end,
+    __metatable = false
 }
 
 -----------
@@ -61,7 +61,7 @@ end
 -----------
 
 --- @type Vec3f
-gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = create_read_only_table({ x = 0, y = 0, z = 0 })
 
 --- @param bank number
 --- @param soundID number
@@ -70,7 +70,13 @@ gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 --- @return number
 function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     if flags == nil then flags = 0 end
-    return (bank << 28) | (soundID << 16) | (priority << 8) | flags | SOUND_STATUS_WAITING
+    return math.s32(
+        ((bank << SOUNDARGS_SHIFT_BANK) & SOUNDARGS_MASK_BANK) |
+        ((soundID << SOUNDARGS_SHIFT_SOUNDID) & SOUNDARGS_MASK_SOUNDID) |
+        ((priority << SOUNDARGS_SHIFT_PRIORITY) & SOUNDARGS_MASK_PRIORITY) |
+        (flags & SOUNDARGS_MASK_BITFLAGS) |
+        SOUND_STATUS_WAITING
+    )
 end
 
 -------------
@@ -169,14 +175,142 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
+--------------------------
+-- local math functions --
+--------------------------
+local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
+
+------------
+-- tweens --
+------------
+-- Unrelated to SM64, but these are for `math.tween`
+
+---@param x number
+---@return number
+IN_SINE        = function (x) return 1 - __math_cos((x * __math_pi) / 2) end
+---@param x number
+---@return number
+OUT_SINE       = function (x) return __math_sin((x * __math_pi) / 2) end
+---@param x number
+---@return number
+IN_OUT_SINE    = function (x) return -(__math_cos(__math_pi * x) - 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_SINE    = function (x) return x < 0.5 and 0.5 * __math_sin(x * __math_pi) or 1 - 0.5 * __math_cos(((x * 2 - 1) * (__math_pi / 2))) end
+---@param x number
+---@return number
+IN_QUAD        = function (x) return x ^ 2 end
+---@param x number
+---@return number
+OUT_QUAD       = function (x) return 1 - ((1 - x) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_QUAD    = function (x) return x < 0.5 and 2 * (x ^ 2) or 1 - ((-2 * x + 2) ^ 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUAD    = function (x) return x < 0.5 and 0.5 * (-(2 * x) * ((2 * x) - 2)) or 0.5 + 0.5 * (2 * x - 1) ^ 2 end
+---@param x number
+---@return number
+IN_CUBIC       = function (x) return x ^ 3 end
+---@param x number
+---@return number
+OUT_CUBIC      = function (x) return 1 - ((1 - x) ^ 3) end
+---@param x number
+---@return number
+IN_OUT_CUBIC   = function (x) return x < 0.5 and 4 * (x ^ 3) or 1 - ((-2 * x + 2) ^ 3) / 2 end
+---@param x number
+---@return number
+OUT_IN_CUBIC   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 3) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 3 end
+---@param x number
+---@return number
+IN_QUART       = function (x) return x ^ 4 end
+---@param x number
+---@return number
+OUT_QUART      = function (x) return 1 - ((1 - x) ^ 4) end
+---@param x number
+---@return number
+IN_OUT_QUART   = function (x) return x < 0.5 and 8 * (x ^ 4) or 1 - ((-2 * x + 2) ^ 4) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUART   = function (x) return x < 0.5 and 0.5 * (1 - ((2 * x - 1) ^ 4)) or 0.5 + 0.5 * (2 * x - 1) ^ 4 end
+---@param x number
+---@return number
+IN_QUINT       = function (x) return x ^ 5 end
+---@param x number
+---@return number
+OUT_QUINT      = function (x) return 1 - ((1 - x) ^ 5) end
+---@param x number
+---@return number
+IN_OUT_QUINT   = function (x) return x < 0.5 and 16 * (x ^ 5) or 1 - ((-2 * x + 2) ^ 5) / 2 end
+---@param x number
+---@return number
+OUT_IN_QUINT   = function (x) return x < 0.5 and 0.5 * (((2 * x - 1) ^ 5) + 1) or 0.5 + 0.5 * (2 * x - 1) ^ 5 end
+---@param x number
+---@return number
+IN_EXPO        = function (x) return x == 0 and x or 2 ^ (10 * x - 10) end
+---@param x number
+---@return number
+OUT_EXPO       = function (x) return x == 1 and x or 1 - (2 ^ (-10 * x)) end
+---@param x number
+---@return number
+IN_OUT_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and (2 ^ (20 * x - 10)) / 2 or (2 - (2 ^ (-20 * x + 10))) / 2 end
+---@param x number
+---@return number
+OUT_IN_EXPO    = function (x) return (x == 0 or x == 1) and x or x < 0.5 and 0.5 * (1 - 2 ^ (-20 * x)) or 0.5 + 0.5 * (2 ^ (20 * x - 20)) end
+---@param x number
+---@return number
+IN_CIRC        = function (x) return 1 - __math_sqrt(1 - (x ^ 2)) end
+---@param x number
+---@return number
+OUT_CIRC       = function (x) return __math_sqrt(1 - ((x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_OUT_CIRC    = function (x) return x < 0.5 and (1 - __math_sqrt(1 - ((2 * x) ^ 2))) / 2 or (__math_sqrt(1 - ((-2 * x + 2) ^ 2)) + 1) / 2 end
+---@param x number
+---@return number
+OUT_IN_CIRC    = function (x) return x < 0.5 and 0.5 * __math_sqrt(1 - (2 * x - 1) ^ 2) or 0.5 + 0.5 * (1 - __math_sqrt(1 - (2 * x - 1) ^ 2)) end
+---@param x number
+---@return number
+IN_BACK        = function (x) return (1.70158 + 1) * (x ^ 3) - 1.70158 * (x ^ 2) end
+---@param x number
+---@return number
+OUT_BACK       = function (x) return 1 + (1.70158 + 1) * ((x - 1) ^ 3) + 1.70158 * ((x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_OUT_BACK    = function (x) return x < 0.5 and (((2 * x) ^ 2) * (((1.70158 * 1.525) + 1) * 2 * x - (1.70158 * 1.525))) / 2 or (((2 * x - 2) ^ 2) * (((1.70158 * 1.525) + 1) * (x * 2 - 2) + (1.70158 * 1.525)) + 2) / 2 end
+---@param x number
+---@return number
+OUT_IN_BACK    = function (x) return x < 0.5 and 0.5 * (1 + (1.70158 + 1) * ((2 * x) - 1) ^ 3 + 1.70158 * ((2 * x) - 1) ^ 2) or 0.5 + 0.5 * ((1.70158 + 1) * (2 * x - 1) ^ 3 - 1.70158 * (2 * x - 1) ^ 2) end
+---@param x number
+---@return number
+IN_ELASTIC     = function (x) return (x == 0 or x == 1) and x or -(2 ^ (10 * x - 10)) * __math_sin((x * 10 - 10.75) * ((2 * __math_pi) / 3)) end
+---@param x number
+---@return number
+OUT_ELASTIC    = function (x) return (x == 0 or x == 1) and x or (2 ^ (-10 * x)) * __math_sin((x * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1 end
+---@param x number
+---@return number
+IN_OUT_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and (-0.5 * (2 ^ (20 * x - 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)))) or (0.5 * (2 ^ (-20 * x + 10)) * __math_sin((20 * x - 11.125) * ((2 * __math_pi) / 4.5)) + 1) end
+---@param x number
+---@return number
+OUT_IN_ELASTIC = function (x) return (x == 0 or x == 1) and x or (x < 0.5 and 0.5 * ((2 ^ (-10 * (x * 2))) * __math_sin(((x * 2) * 10 - 0.75) * ((2 * __math_pi) / 3)) + 1)) or 0.5 + 0.5 * (-(2 ^ (10 * ((x - 0.5) * 2) - 10)) * __math_sin((((x - 0.5) * 2) * 10 - 10.75) * ((2 * __math_pi) / 3))) end
+---@param x number
+---@return number
+IN_BOUNCE      = function (x) return 1 - OUT_BOUNCE(1 - x) end
+---@param x number
+---@return number
+OUT_BOUNCE     = function (x) if x < 1 / 2.75 then return 7.5625 * (x ^ 2) elseif x < 2 / 2.75 then x = x - 1.5 / 2.75 return 7.5625 * (x ^ 2) + 0.75 elseif x < 2.5 / 2.75 then x = x - 2.25 / 2.75 return 7.5625 * (x ^ 2) + 0.9375 else x = x - 2.625 / 2.75 return 7.5625 * (x ^ 2) + 0.984375 end end
+---@param x number
+---@return number
+IN_OUT_BOUNCE  = function (x) return x < 0.5 and (1 - OUT_BOUNCE(1 - 2 * x)) / 2 or (1 + OUT_BOUNCE(2 * x - 1)) / 2 end
+---@param x number
+---@return number
+OUT_IN_BOUNCE  = function (x) return x < 0.5 and 0.5 * OUT_BOUNCE(x * 2) or 0.5 + 0.5 * IN_BOUNCE(2 * x - 1) end
 
 --------------------
 -- math functions --
 --------------------
 --- Note: These functions don't exist in the Lua math library,
 --- and are useful enough to not have to redefine them in every mod
-
-local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil = math.min, math.max, math.sqrt, math.floor, math.ceil
 
 --- @param x number
 --- @return number
@@ -249,4 +383,74 @@ end
 --- Rounds `x` to the nearest integer value
 function math.round(x)
     return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
+end
+
+--- @param t function | number
+--- @param a number
+--- @param b number
+--- @param x number
+--- @return number
+--- Interpolates between `a` and `b` using delta `x` and a tweening or easing math function `t`
+function math.tween(t, a, b, x)
+    local y
+
+    if type(t) == 'function' then
+        y = a + t(x) * (b - a)
+    else
+        y = a + t * (b - a)
+    end
+
+    return y
+end
+
+local __common_signed_conversion = function (x, size)
+    x = __math_floor(x) & (1 << size) - 1
+    return x - ((x & (1 << (size - 1))) << 1)
+end
+
+local __common_unsigned_conversion = function (x, size)
+    return __math_floor(x) & (1 << size) - 1
+end
+
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s8` range
+--- - `[-128, 127]`
+function math.s8(x)
+    return __common_signed_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s16` range
+--- - `[-32768, 32767]`
+function math.s16(x)
+    return __common_signed_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `s32` range
+--- - `[-2147483648, 2147483647]`
+function math.s32(x)
+    return __common_signed_conversion(x, 32)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u8` range
+--- - `[0, 255]`
+function math.u8(x)
+    return __common_unsigned_conversion(x, 8)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u16` range
+--- - `[0, 65535]`
+function math.u16(x)
+    return __common_unsigned_conversion(x, 16)
+end
+--- @param x number
+--- @return integer
+--- Converts `x` into a valid `u32` range
+--- - `[0, 4294967295]`
+function math.u32(x)
+    return __common_unsigned_conversion(x, 32)
 end

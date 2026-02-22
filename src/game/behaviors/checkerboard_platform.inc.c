@@ -25,7 +25,7 @@ void bhv_checkerboard_elevator_group_init(void) {
         if (sp2C == NULL) { continue; }
         sp2C->oCheckerBoardPlatformUnk1AC = D_8032F754[sp34].unk2;
         sp2C->oTimer = 0;
-        vec3f_copy_2(sp2C->header.gfx.scale, D_8032F754[sp34].unk1);
+        vec3f_copy(sp2C->header.gfx.scale, D_8032F754[sp34].unk1);
     }
 }
 

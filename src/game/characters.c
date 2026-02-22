@@ -35,7 +35,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_MARIO,
         .name                  = "Mario",
         .hudHead               = '(',
-        .hudHeadTexture        = { .texture = (u8*)texture_hud_char_mario_head, .bitSize = 8, .width = 16, .height = 16, .name = "texture_hud_char_mario_head" },
+        .hudHeadTexture        = { .texture = texture_hud_char_mario_head, .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b, .name = "texture_hud_char_mario_head" },
         .cameraHudHead         = GLYPH_CAM_MARIO_HEAD,
         .modelId               = MODEL_MARIO,
         .capModelId            = MODEL_MARIOS_CAP,
@@ -101,7 +101,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_LUIGI,
         .name                  = "Luigi",
         .hudHead               = ')',
-        .hudHeadTexture        = { .texture = (u8*)texture_hud_char_luigi_head, .bitSize = 8, .width = 16, .height = 16, .name = "texture_hud_char_luigi_head" },
+        .hudHeadTexture        = { .texture = texture_hud_char_luigi_head, .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b, .name = "texture_hud_char_luigi_head" },
         .cameraHudHead         = GLYPH_CAM_LUIGI_HEAD,
         .modelId               = MODEL_LUIGI,
         .capModelId            = MODEL_LUIGIS_CAP,
@@ -167,7 +167,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_TOAD,
         .name                  = "Toad",
         .hudHead               = '|',
-        .hudHeadTexture        = { .texture = (u8*)texture_hud_char_toad_head, .bitSize = 8, .width = 16, .height = 16, .name = "texture_hud_char_toad_head" },
+        .hudHeadTexture        = { .texture = texture_hud_char_toad_head, .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b, .name = "texture_hud_char_toad_head" },
         .cameraHudHead         = GLYPH_CAM_TOAD_HEAD,
         .modelId               = MODEL_TOAD_PLAYER,
         .capModelId            = MODEL_TOADS_CAP,
@@ -233,7 +233,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_WALUIGI,
         .name                  = "Waluigi",
         .hudHead               = ']',
-        .hudHeadTexture        = { .texture = (u8*)texture_hud_char_waluigi_head, .bitSize = 8, .width = 16, .height = 16, .name = "texture_hud_char_waluigi_head" },
+        .hudHeadTexture        = { .texture = texture_hud_char_waluigi_head, .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b, .name = "texture_hud_char_waluigi_head" },
         .cameraHudHead         = GLYPH_CAM_WALUIGI_HEAD,
         .modelId               = MODEL_WALUIGI,
         .capModelId            = MODEL_WALUIGIS_CAP,
@@ -299,7 +299,7 @@ struct Character gCharacters[CT_MAX] = {
         .type                  = CT_WARIO,
         .name                  = "Wario",
         .hudHead               = '[',
-        .hudHeadTexture        = { .texture = (u8*)texture_hud_char_wario_head, .bitSize = 8, .width = 16, .height = 16, .name = "texture_hud_char_wario_head" },
+        .hudHeadTexture        = { .texture = texture_hud_char_wario_head, .width = 16, .height = 16, .format = G_IM_FMT_RGBA, .size = G_IM_SIZ_16b, .name = "texture_hud_char_wario_head" },
         .cameraHudHead         = GLYPH_CAM_WARIO_HEAD,
         .modelId               = MODEL_WARIO,
         .capModelId            = MODEL_WARIOS_CAP,
@@ -425,9 +425,9 @@ struct Character* get_character(struct MarioState* m) {
 static s32 get_character_sound(struct MarioState* m, enum CharacterSound characterSound) {
     if (m == NULL || m->marioObj == NULL) { return 0; }
 
-    s32 override = 0;
-    if (smlua_call_event_hooks_mario_character_sound_param_ret_int(HOOK_CHARACTER_SOUND, m, characterSound, &override)) {
-        return override;
+    s32 soundOverride = 0;
+    if (smlua_call_event_hooks(HOOK_CHARACTER_SOUND, m, characterSound, &soundOverride)) {
+        return soundOverride;
     }
 
     struct Character* character = ((m == NULL || m->character == NULL) ? &gCharacters[CT_MARIO] : m->character);

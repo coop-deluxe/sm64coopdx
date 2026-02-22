@@ -4274,7 +4274,7 @@ Vtx canals_dl_skybox_mesh_layer_5_vtx_0[46] = {
 };
 
 Gfx canals_dl_skybox_mesh_layer_5_tri_0[] = {
-	gsSPVertex(canals_dl_skybox_mesh_layer_5_vtx_0 + 0, 16, 0),
+	gsSPVertexNonGlobal(canals_dl_skybox_mesh_layer_5_vtx_0 + 0, 16, 0),
 	gsSP1Triangle(0, 1, 2, 0),
 	gsSP1Triangle(0, 3, 1, 0),
 	gsSP1Triangle(4, 3, 0, 0),
@@ -4289,7 +4289,7 @@ Gfx canals_dl_skybox_mesh_layer_5_tri_0[] = {
 	gsSP1Triangle(12, 11, 13, 0),
 	gsSP1Triangle(14, 12, 13, 0),
 	gsSP1Triangle(14, 13, 15, 0),
-	gsSPVertex(canals_dl_skybox_mesh_layer_5_vtx_0 + 16, 16, 0),
+	gsSPVertexNonGlobal(canals_dl_skybox_mesh_layer_5_vtx_0 + 16, 16, 0),
 	gsSP1Triangle(0, 1, 2, 0),
 	gsSP1Triangle(0, 2, 3, 0),
 	gsSP1Triangle(1, 0, 4, 0),
@@ -4304,7 +4304,7 @@ Gfx canals_dl_skybox_mesh_layer_5_tri_0[] = {
 	gsSP1Triangle(12, 11, 13, 0),
 	gsSP1Triangle(13, 11, 14, 0),
 	gsSP1Triangle(13, 14, 15, 0),
-	gsSPVertex(canals_dl_skybox_mesh_layer_5_vtx_0 + 32, 14, 0),
+	gsSPVertexNonGlobal(canals_dl_skybox_mesh_layer_5_vtx_0 + 32, 14, 0),
 	gsSP1Triangle(0, 1, 2, 0),
 	gsSP1Triangle(3, 1, 0, 0),
 	gsSP1Triangle(3, 4, 1, 0),

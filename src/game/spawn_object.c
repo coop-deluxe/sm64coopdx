@@ -220,7 +220,7 @@ void unload_object(struct Object *obj) {
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
     // Clear Mario object pointers
-    if (obj->behavior == smlua_override_behavior(bhvMario)) {
+    if (obj->behavior == bhvMario) {
         u8 playerIndex = obj->oBehParams - 1;
         if (playerIndex < MAX_PLAYERS) {
             gMarioObjects[playerIndex] = NULL;
@@ -239,13 +239,13 @@ void unload_object(struct Object *obj) {
             sync_object_forget(so->id);
         }
 
-        smlua_call_event_hooks_object_param(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
+        smlua_call_event_hooks(HOOK_ON_SYNC_OBJECT_UNLOAD, obj);
     }
 
     obj->firstSurface = 0;
     obj->numSurfaces = 0;
 
-    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_UNLOAD, obj);
+    smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
     deallocate_object(&gFreeObjectList, &obj->header);
 }
@@ -411,7 +411,7 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
             break;
     }
 
-    smlua_call_event_hooks_object_param(HOOK_ON_OBJECT_LOAD, obj);
+    smlua_call_event_hooks(HOOK_ON_OBJECT_LOAD, obj);
 
     return obj;
 }

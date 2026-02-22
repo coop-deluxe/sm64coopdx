@@ -8,7 +8,6 @@ struct DjuiFont {
     f32 xOffset;
     f32 yOffset;
     f32 defaultFontScale;
-    u8 textureBitSize;
     const Gfx* textBeginDisplayList;
     void (*render_char)(char*);
     f32 (*char_width)(char*);

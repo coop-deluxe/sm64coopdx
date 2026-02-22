@@ -245,8 +245,10 @@ u32 determine_interaction(struct MarioState *m, struct Object *o) {
         }
 
         // Fast attack
-        if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
-            return INT_FAST_ATTACK_OR_SHELL;
+        if (!(action == ACT_PUNCHING || action == ACT_MOVE_PUNCHING || action == ACT_JUMP_KICK)) {
+            if (m->forwardVel <= -26.0f || 26.0f <= m->forwardVel) {
+                return INT_FAST_ATTACK_OR_SHELL;
+            }
         }
     }
 
@@ -300,7 +302,7 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 
     o->oInteractStatus = attackType + (INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED);
 
-    smlua_call_event_hooks_interact_params_no_ret(HOOK_ON_ATTACK_OBJECT, m, o, interaction);
+    smlua_call_event_hooks(HOOK_ON_ATTACK_OBJECT, m, o, interaction);
     return attackType;
 }
 
@@ -454,6 +456,7 @@ void mario_retrieve_cap(struct MarioState* m) {
     if (!m) { return; }
     mario_drop_held_object(m);
     save_file_clear_flags(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
+    m->cap &= ~(SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI);
     m->flags &= ~MARIO_CAP_ON_HEAD;
     m->flags |= MARIO_NORMAL_CAP | MARIO_CAP_IN_HAND;
 }
@@ -1507,7 +1510,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     // see if it was an attack
     u32 interaction = determine_interaction(attacker, cVictim->marioObj);
     // Specfically override jump kicks to prevent low damage and low knockback kicks
-    if (interaction & INT_HIT_FROM_BELOW && attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
+    if (attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
     // Allow rollouts to attack
     else if (PLAYER_IN_ROLLOUT_FLIP(attacker)) { interaction = INT_HIT_FROM_BELOW; }
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
@@ -1515,9 +1518,9 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     }
 
     // call the Lua hook
-    bool allow = true;
-    smlua_call_event_hooks_mario_params_ret_bool(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, interaction, &allow);
-    if (!allow) {
+    bool allowAttack = true;
+    smlua_call_event_hooks(HOOK_ALLOW_PVP_ATTACK, attacker, cVictim, interaction, &allowAttack);
+    if (!allowAttack) {
         // Lua blocked the interaction
         return FALSE;
     }
@@ -1591,7 +1594,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     }
     victim->interactObj = NULL;
 
-    smlua_call_event_hooks_mario_params(HOOK_ON_PVP_ATTACK, attacker, victim, interaction);
+    smlua_call_event_hooks(HOOK_ON_PVP_ATTACK, attacker, victim, interaction);
     return FALSE;
 }
 
@@ -2154,6 +2157,10 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
                 capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
                 break;
+            
+            case MARIO_NORMAL_CAP:
+                m->cap = 0;
+                break;
         }
 
         if (capTime > m->capTimer) {
@@ -2339,14 +2346,14 @@ void check_kick_or_punch_wall(struct MarioState *m) {
 // Intended for interactions triggered by mods
 u32 process_interaction(struct MarioState *m, u32 interactType, struct Object *o, u32 (*interact_function)(struct MarioState *, u32 interactType, struct Object *)) {
     if (!m || !o) { return FALSE; }
-    bool allow = true;
-    smlua_call_event_hooks_interact_params_ret_bool(HOOK_ALLOW_INTERACT, m, o, interactType, &allow);
-    if (allow) {
+    bool allowInteract = true;
+    smlua_call_event_hooks(HOOK_ALLOW_INTERACT, m, o, interactType, &allowInteract);
+    if (allowInteract) {
         if (interact_function(m, interactType, o)) {
-            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, o, interactType, true);
+            smlua_call_event_hooks(HOOK_ON_INTERACT, m, o, interactType, true);
             return TRUE;
         } else {
-            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, o, interactType, false);
+            smlua_call_event_hooks(HOOK_ON_INTERACT, m, o, interactType, false);
         }
     }
     return FALSE;
@@ -2377,14 +2384,14 @@ void mario_process_interactions(struct MarioState *m) {
                 m->collidedObjInteractTypes &= ~interactType;
 
                 if (object && !(object->oInteractStatus & INT_STATUS_INTERACTED)) {
-                    bool allow = true;
-                    smlua_call_event_hooks_interact_params_ret_bool(HOOK_ALLOW_INTERACT, m, object, interactType, &allow);
-                    if (allow) {
+                    bool allowInteract = true;
+                    smlua_call_event_hooks(HOOK_ALLOW_INTERACT, m, object, interactType, &allowInteract);
+                    if (allowInteract) {
                         if (sInteractionHandlers[i].handler(m, interactType, object)) {
-                            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, true);
+                            smlua_call_event_hooks(HOOK_ON_INTERACT, m, object, interactType, true);
                             break;
                         } else {
-                            smlua_call_event_hooks_interact_params(HOOK_ON_INTERACT, m, object, interactType, false);
+                            smlua_call_event_hooks(HOOK_ON_INTERACT, m, object, interactType, false);
                         }
                     }
                 }
@@ -2405,7 +2412,7 @@ void mario_process_interactions(struct MarioState *m) {
         m->invincTimer -= 1;
     }
 
-    smlua_call_event_hooks_mario_param(HOOK_ON_INTERACTIONS, m);
+    smlua_call_event_hooks(HOOK_ON_INTERACTIONS, m);
 
     //! If the kick/punch flags are set and an object collision changes Mario's
     // action, he will get the kick/punch wall speed anyway.
@@ -2428,7 +2435,7 @@ void check_death_barrier(struct MarioState *m) {
 
     if (m->pos[1] < m->floorHeight + 2048.0f) {
         bool allowDeath = true;
-        smlua_call_event_hooks_mario_param_ret_bool(HOOK_ON_DEATH, m, &allowDeath);
+        smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
         if (!allowDeath) { return; }
 
         if (mario_can_bubble(m)) {
@@ -2460,10 +2467,12 @@ void check_death_barrier(struct MarioState *m) {
 
 void check_lava_boost(struct MarioState *m) {
     if (!m) { return; }
-    bool allow = true;
-    smlua_call_event_hooks_mario_param_and_int_ret_bool(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_FLOOR, &allow);
-    if (m->action == ACT_BUBBLED || (!allow)) { return; }
+    if (m->action == ACT_BUBBLED) { return; }
     if (!(m->action & ACT_FLAG_RIDING_SHELL) && m->pos[1] < m->floorHeight + 10.0f) {
+        bool allowHazard = true;
+        smlua_call_event_hooks(HOOK_ALLOW_HAZARD_SURFACE, m, HAZARD_TYPE_LAVA_FLOOR, &allowHazard);
+        if (!allowHazard) { return; }
+
         if (!(m->flags & MARIO_METAL_CAP)) {
             m->hurtCounter += (m->flags & MARIO_CAP_ON_HEAD) ? 12 : 18;
         }

@@ -18,6 +18,7 @@
 #include <utility>
 #include <string>
 #include <map>
+#include <initializer_list>
 extern "C" {
 #endif
 #include "config.h"

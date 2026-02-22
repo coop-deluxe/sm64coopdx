@@ -36,9 +36,9 @@ u32 mario_update_moving_sand(struct MarioState *m);
 u32 mario_update_windy_ground(struct MarioState *m);
 /* |description|Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height|descriptionEnd| */
 void stop_and_set_height_to_floor(struct MarioState *m);
-/* |description|Performs a full Mario stationary physics step (4 substeps) and returns an `GROUND_STEP_*` result|descriptionEnd| */
+/* |description|Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result|descriptionEnd| */
 s32 stationary_ground_step(struct MarioState *m);
-/* |description|Performs a full Mario ground physics step (4 substeps) and returns an `GROUND_STEP_*` result|descriptionEnd| */
+/* |description|Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result|descriptionEnd| */
 s32 perform_ground_step(struct MarioState *m);
 /* |description|Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result|descriptionEnd| */
 s32 perform_air_step(struct MarioState *m, u32 stepArg);

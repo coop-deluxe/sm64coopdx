@@ -13,6 +13,7 @@ typedef Pair<String, u32> PointerData;
 static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     // Lights
     for (auto& _Node : aGfxData->mLights) {
+        if (!_Node->mData) { continue; }
         if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
             return { _Node->mName, 1 };
         }
@@ -23,6 +24,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Light0s
     for (auto& _Node : aGfxData->mLight0s) {
+        if (!_Node->mData) { continue; }
         if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
             return { _Node->mName, 1 };
         }
@@ -33,6 +35,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Light_ts
     for (auto& _Node : aGfxData->mLightTs) {
+        if (!_Node->mData) { continue; }
         if (&_Node->mData->col[0] == aPtr) {
             return { _Node->mName, 1 };
         }
@@ -46,6 +49,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Ambient_ts
     for (auto& _Node : aGfxData->mAmbientTs) {
+        if (!_Node->mData) { continue; }
         if (&_Node->mData->col[0] == aPtr) {
             return { _Node->mName, 1 };
         }
@@ -81,7 +85,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
             return { _Node->mName, 0 };
         }
     }
-    
+
     // Collisions
     for (auto& _Node : aGfxData->mCollisions) {
         if (_Node->mData == aPtr) {
@@ -153,7 +157,7 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     if (builtinCol != NULL) {
         return { builtinCol, 0 };
     }
-    
+
     // Built-in Animations
     auto builtinAnim = DynOS_Builtin_Anim_GetFromData((const Animation *)aPtr);
     if (builtinAnim != NULL) {
@@ -209,7 +213,7 @@ void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData) {
     token.Write(aFile);
 }
 
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData) {
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType) {
 
     // NULL
     if (!aPtr) {
@@ -229,10 +233,15 @@ void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData) {
     }
 
     // Built-in functions
-    s32 _GeoFunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr);
-    if (_GeoFunctionIndex != -1) {
+    s32 _FunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr, aFuncType);
+    if (_FunctionIndex != -1) {
         aFile->Write<u32>(FUNCTION_CODE);
-        aFile->Write<s32>(_GeoFunctionIndex);
+        aFile->Write<s32>(_FunctionIndex);
+        return;
+    }
+    String error = DynOS_Builtin_Func_CheckMisuse(aPtr, aFuncType);
+    if (!error.Empty()) {
+        PrintDataError("  ERROR: %s", error.begin());
         return;
     }
 
@@ -355,7 +364,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
             return (void *) (_Node->mData + aPtrData);
         }
     }
-    
+
     // Behavior scripts
     for (auto &_Node : aGfxData->mBehaviorScripts) {
         if (_Node->mName == aPtrName) {
@@ -427,7 +436,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     if (builtinCol != NULL) {
         return (void*)builtinCol;
     }
-    
+
     // Built-in Animations
     auto builtinAnim = DynOS_Builtin_Anim_GetFromName(aPtrName.begin());
     if (builtinAnim != NULL) {
@@ -451,7 +460,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outFlags) {
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
@@ -469,13 +478,23 @@ void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8* outF
     // FUNC
     if (aValue == FUNCTION_CODE) {
         s32 _FunctionIndex = aFile->Read<s32>();
-        return (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex);
+        void *_FunctionPtr = (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex, aFuncType);
+        if (_FunctionPtr) {
+            return _FunctionPtr;
+        }
+        String error = DynOS_Builtin_Func_CheckMisuse(_FunctionIndex, aFuncType);
+        if (!error.Empty()) {
+            sys_fatal(error.begin());
+            return NULL;
+        }
+        sys_fatal("Invalid function index: %d", _FunctionIndex);
+        return NULL;
     }
 
     // PNTR
     if (aValue == POINTER_CODE) {
         String _PtrName; _PtrName.Read(aFile);
-        u32   _PtrData = aFile->Read<u32>();
+        u32 _PtrData = aFile->Read<u32>();
         return GetPointerFromData(aGfxData, _PtrName, _PtrData, outFlags);
     }
 

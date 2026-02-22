@@ -3,6 +3,7 @@ static u32 networkBowserAnimationIndex = 0;
 static u8 bowserIsDying = FALSE;
 static u8 bowserCutscenePlayed = FALSE;
 static u8 bowserIsCutscenePlayer = FALSE;
+static u8 bowserCutsceneGlobalIndex = UNKNOWN_GLOBAL_INDEX;
 
 void bowser_tail_anchor_act_0(void) {
     struct Object* bowser = o->parentObj;
@@ -38,10 +39,10 @@ s8 D_8032F4FC[] = { 7, 8, 9, 12, 13, 14, 15, 4, 3, 16, 17, 19, 3, 3, 3, 3 };
 s16 D_8032F50C[] = { 60, 0 };
 s16 D_8032F510[] = { 50, 0 };
 s8 D_8032F514[] = { 24, 42, 60, -1 };
-s16* sBowserDefeatedDialogText[3] = {
-    (s16*) &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
-    (s16*) &gBehaviorValues.dialogs.Bowser3DefeatedDialog
+enum DialogId* sBowserDefeatedDialogText[3] = {
+    &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
+    &gBehaviorValues.dialogs.Bowser3DefeatedDialog
 };
 s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1, -20, 134 },
                         { -1, 20, 154 }, { 1, 40, 164 },  { -1, -40, 174 },  { 1, -80, 179 },
@@ -777,6 +778,10 @@ void bowser_act_thrown_dropped(void)
             o->oAction = 4;
         else
             o->oAction = 12;
+        
+        if (is_nearest_mario_state_to_object(gMarioState, o)) {
+            network_send_object(o);
+        }
     }
 }
 
@@ -1125,8 +1130,17 @@ void bowser_act_ride_tilting_platform(void) {
     cur_obj_extend_animation_if_at_end();
 }
 
-void bowser_act_nothing(void) {
-    
+void bowser_act_nothing(void) { // start moving if cutscene player is inactive
+    if (bowserCutsceneGlobalIndex == UNKNOWN_GLOBAL_INDEX) {
+        return;
+    }
+
+    struct NetworkPlayer* np = network_player_from_global_index(bowserCutsceneGlobalIndex);
+    if (np == NULL || !is_player_active(&gMarioStates[np->localIndex])) {
+        bowserCutscenePlayed = TRUE;
+        bowser_initialize_action();
+        return;
+    }
 }
 
 s32 bowser_check_fallen_off_stage(void) // bowser off stage?
@@ -1232,6 +1246,7 @@ void bowser_held_update(void) {
         return;
     }
 
+    o->parentObj = player;
     o->oBowserUnkF4 &= ~0x20000;
     cur_obj_become_intangible();
 
@@ -1385,6 +1400,13 @@ static u8 bhv_bowser_ignore_if_true(void) {
     return FALSE;
 }
 
+static void bhv_bowser_on_received_post(UNUSED u8 localIndex) {
+    // prevent sync from putting bowser in text action instead of nothing action
+    if (!(bowserIsCutscenePlayer || bowserCutscenePlayed) && (o->oAction == 5 || o->oAction == 6)) {
+        o->oAction = 20;
+    }
+}
+
 void bhv_bowser_init(void) {
     bowserIsDying = FALSE;
     s32 level; // 0 is dw, 1 is fs, 2 is sky
@@ -1408,9 +1430,11 @@ void bhv_bowser_init(void) {
     // Make sure we're the first to trigger Bowser.
     if (!is_other_player_active()) {
         bowserIsCutscenePlayer = TRUE;
+        bowserCutsceneGlobalIndex = gNetworkPlayerLocal->globalIndex;
         o->oAction = 5; // bowser_act_text_wait
     } else { // If we aren't do nothing till we get our sync.
         bowserIsCutscenePlayer = FALSE;
+        bowserCutsceneGlobalIndex = UNKNOWN_GLOBAL_INDEX;
         o->oAction = 20; // bowser_act_nothing
     }
     
@@ -1419,9 +1443,11 @@ void bhv_bowser_init(void) {
         if (so) {
             so->override_ownership = bhv_bowser_override_ownership;
             so->ignore_if_true = bhv_bowser_ignore_if_true;
+            so->on_received_post = bhv_bowser_on_received_post;
             so->fullObjectSync = TRUE;
             sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
             sync_object_init_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
+            sync_object_init_field_with_size(o, &bowserCutsceneGlobalIndex, 8);
             sync_object_init_field(o, &networkBowserAnimationIndex);
             sync_object_init_field(o, &o->header.gfx.scale[0]);
             sync_object_init_field(o, &o->header.gfx.scale[1]);
@@ -1612,7 +1638,7 @@ void falling_bowser_plat_act_2(void) {
     if ((o->oTimer & 1) == 0 && o->oTimer < 14 && BHV_ARR_CHECK(D_8032F698, o->oBehParams2ndByte, struct Struct8032F698)) {
         sp22 = D_8032F698[o->oBehParams2ndByte].unk3 + (gDebugInfo[4][1] << 8);
         sp1C = -(o->oTimer / 2) * 290 + 1740;
-        vec3f_copy_2(sp24, &o->oPosX);
+        vec3f_copy(sp24, &o->oPosX);
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 + 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 + 5296) * sp1C;
         o->oPosY = 307.0f;
@@ -1620,7 +1646,7 @@ void falling_bowser_plat_act_2(void) {
         o->oPosX = D_8032F698[o->oBehParams2ndByte].unk1 + sins(sp22 - 5296) * sp1C;
         o->oPosZ = D_8032F698[o->oBehParams2ndByte].unk2 + coss(sp22 - 5296) * sp1C;
         spawn_mist_particles_variable(4, 0, 100);
-        vec3f_copy_2(&o->oPosX, sp24);
+        vec3f_copy(&o->oPosX, sp24);
     }
     cur_obj_move_using_fvel_and_gravity();
     if (o->oTimer > 300)

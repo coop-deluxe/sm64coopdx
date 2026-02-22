@@ -1,34 +1,31 @@
 #include "dynos.cpp.h"
 
-static Array<Pair<const char*, DataNode<Collision>*>>& DynosCollisions() {
-    static Array<Pair<const char*, DataNode<Collision>*>> sDynosCollisions;
+extern "C" {
+#include "pc/mods/mod_fs.h"
+}
+
+static std::vector<std::pair<std::string, DataNode<Collision>*>> &DynosCollisions() {
+    static std::vector<std::pair<std::string, DataNode<Collision>*>> sDynosCollisions;
     return sDynosCollisions;
 }
 
-void DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
+bool DynOS_Col_Activate(const SysPath &aFilename, const char *aCollisionName) {
     auto& _DynosCollisions = DynosCollisions();
 
     // check for duplicates
-    for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
-        if (!strcmp(_DynosCollisions[i].first, aCollisionName)) {
-            return;
+    for (auto &collision : _DynosCollisions) {
+        if (collision.first == aCollisionName) {
+            return true;
         }
     }
 
-    // Allocate name
-    u16 collisionLen = strlen(aCollisionName);
-    char* collisionName = (char*)calloc(1, sizeof(char) * (collisionLen + 1));
-    strcpy(collisionName, aCollisionName);
-
     // Load
-    DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aFilename, collisionName);
-    if (!_Node) {
-        free(collisionName);
-        return;
-    }
+    DataNode<Collision>* _Node = DynOS_Col_LoadFromBinary(aFilename, aCollisionName);
+    if (!_Node) { return false; }
 
     // Add to collisions
-    _DynosCollisions.Add({ collisionName, _Node });
+    _DynosCollisions.emplace_back(aCollisionName, _Node);
+    return true;
 }
 
 Collision* DynOS_Col_Get(const char* collisionName) {
@@ -45,9 +42,16 @@ Collision* DynOS_Col_Get(const char* collisionName) {
     }
 
     // check mod actor collisions
-    for (s32 i = 0; i < _DynosCollisions.Count(); ++i) {
-        if (!strcmp(_DynosCollisions[i].first, collisionName)) {
-            return _DynosCollisions[i].second->mData;
+    for (auto &collision : _DynosCollisions) {
+        if (collision.first == collisionName) {
+            return collision.second->mData;
+        }
+    }
+
+    // check modfs file
+    if (is_mod_fs_file(collisionName)) {
+        if (DynOS_Col_Activate(collisionName, collisionName)) {
+            return DynOS_Col_Get(collisionName);
         }
     }
 
@@ -57,10 +61,8 @@ Collision* DynOS_Col_Get(const char* collisionName) {
 
 void DynOS_Col_ModShutdown() {
     auto& _DynosCollisions = DynosCollisions();
-    while (_DynosCollisions.Count() > 0) {
-        auto& pair = _DynosCollisions[0];
-        free((void*)pair.first);
+    for (auto &pair : _DynosCollisions) {
         Delete(pair.second);
-        _DynosCollisions.Remove(0);
     }
+    _DynosCollisions.clear();
 }

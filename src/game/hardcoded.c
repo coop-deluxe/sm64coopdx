@@ -84,6 +84,7 @@ struct LevelValues gDefaultLevelValues = {
     .wingCapSequence                  = SEQ_EVENT_POWERUP,
     .metalCapSequence                 = SEQ_EVENT_METAL_CAP,
     .vanishCapSequence                = SEQ_EVENT_POWERUP,
+    .shellSequence                    = SEQ_EVENT_POWERUP | SEQ_VARIATION,
     .starPositions = {
         .KoopaBobStarPos              = {  3030.0f,  4500.0f, -4600.0f },
         .KoopaThiStarPos              = {  7100.0f, -1300.0f, -6000.0f },
@@ -128,6 +129,8 @@ struct LevelValues gDefaultLevelValues = {
     .zoomOutCameraOnPause             = TRUE,
     .jrbDarkenSkybox                  = TRUE,
     .wallMaxRadius                    = 200.0f,
+    .floorNormalMinY                  = 0.01,
+    .ceilNormalMaxY                   = -0.01,
 };
 
 struct LevelValues gLevelValues = { 0 };
@@ -165,6 +168,7 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .RespawnShellBoxes        = TRUE,
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,
+    .ProcessLODs              = FALSE,
     .CourtyardBoosRequirement = 12,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {

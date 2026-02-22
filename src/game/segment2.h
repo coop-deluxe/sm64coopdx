@@ -57,7 +57,6 @@ extern u8* main_hud_camera_lut[6];
 extern const Gfx dl_draw_text_bg_box[];
 extern const Gfx dl_draw_triangle[];
 extern const u8* seg2_dialog_original[];
-extern void *seg2_dialog_table[];
 extern const Gfx dl_billboard_num_0[];
 extern const Gfx dl_billboard_num_1[];
 extern const Gfx dl_billboard_num_2[];

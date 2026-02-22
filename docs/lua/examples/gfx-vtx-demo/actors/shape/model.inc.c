@@ -15,5 +15,6 @@ Gfx shape_template_dl[] = {
 /* [11] */ gsSPDisplayList(NULL),
 /* [12] */ gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
 /* [13] */ gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-/* [14] */ gsSPEndDisplayList(),
+/* [14] */ gsSPGeometryMode(G_TEXTURE_GEN, G_LIGHTING | G_CULL_BACK),
+/* [15] */ gsSPEndDisplayList(),
 };

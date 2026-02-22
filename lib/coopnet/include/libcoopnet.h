@@ -5,6 +5,7 @@
 #include <cstdint>
 extern "C" {
 class Connection;
+class Lobby;
 #endif
 
 #include <stdbool.h>
@@ -43,7 +44,8 @@ typedef struct {
     uint64_t (*DestIdFunction)(uint64_t aInput);
 #if defined(__cplusplus)
     bool (*ConnectionIsAllowed)(Connection*, bool);
-    void (*OnReceiveInfoBits)(Connection* aConnection, uint64_t aDestId, uint64_t aInfoBits, const char* aName);
+    bool (*LobbyConnectionIsAllowed)(Connection*, Lobby*);
+    void (*OnReceiveInfoBits)(Connection* aConnection, uint64_t aDestId, uint64_t aInfoBits, uint64_t aHash, const char* aName);
 #endif
 } CoopNetCallbacks;
 

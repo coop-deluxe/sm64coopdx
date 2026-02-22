@@ -99,51 +99,95 @@ local PALETTE_FL_WALUIGI = {
 
 -- Sounds --
 
-local DJ_TOAD_SOUNDS = {
-    SOUND_MARIO_YAH_WAH_HOO,
-    SOUND_MARIO_HOOHOO,
-    SOUND_MARIO_YAHOO,
-    SOUND_MARIO_UH,
-    SOUND_MARIO_HRMM,
-    SOUND_MARIO_WAH2,
-    SOUND_MARIO_WHOA,
-    SOUND_MARIO_EEUH,
-    SOUND_MARIO_ATTACKED,
-    SOUND_MARIO_OOOF,
-    SOUND_MARIO_OOOF2,
-    SOUND_MARIO_HERE_WE_GO,
-    SOUND_MARIO_YAWNING,
-    SOUND_MARIO_SNORING1,
-    SOUND_MARIO_SNORING2,
-    SOUND_MARIO_WAAAOOOW,
-    SOUND_MARIO_HAHA,
-    SOUND_MARIO_HAHA_2,
-    SOUND_MARIO_UH2,
-    SOUND_MARIO_UH2_2,
-    SOUND_MARIO_ON_FIRE,
-    SOUND_MARIO_DYING,
-    SOUND_MARIO_PANTING_COLD,
-    SOUND_MARIO_PANTING,
-    SOUND_MARIO_COUGHING1,
-    SOUND_MARIO_COUGHING2,
-    SOUND_MARIO_COUGHING3,
-    SOUND_MARIO_PUNCH_YAH,
-    SOUND_MARIO_PUNCH_HOO,
-    SOUND_MARIO_MAMA_MIA,
-    SOUND_MARIO_GROUND_POUND_WAH,
-    SOUND_MARIO_DROWNING,
-    SOUND_MARIO_PUNCH_WAH,
-    SOUND_MARIO_YAHOO_WAHA_YIPPEE,
-    SOUND_MARIO_DOH,
-    SOUND_MARIO_GAME_OVER,
-    SOUND_MARIO_HELLO,
-    SOUND_MARIO_PRESS_START_TO_PLAY,
-    SOUND_MARIO_TWIRL_BOUNCE,
-    SOUND_MARIO_SNORING3,
-    SOUND_MARIO_SO_LONGA_BOWSER,
-    SOUND_MARIO_IMA_TIRED,
-    SOUND_MARIO_LETS_A_GO,
-    SOUND_MARIO_OKEY_DOKEY
+local MARIO_SOUNDS = {
+    [CHAR_SOUND_OKEY_DOKEY]          = SOUND_MARIO_OKEY_DOKEY,
+    [CHAR_SOUND_LETS_A_GO]           = SOUND_MARIO_LETS_A_GO,
+    [CHAR_SOUND_PUNCH_YAH]           = SOUND_MARIO_PUNCH_YAH,
+    [CHAR_SOUND_PUNCH_WAH]           = SOUND_MARIO_PUNCH_WAH,
+    [CHAR_SOUND_WAH2]                = SOUND_MARIO_WAH2,
+    [CHAR_SOUND_PUNCH_HOO]           = SOUND_MARIO_PUNCH_HOO,
+    [CHAR_SOUND_YAH_WAH_HOO]         = SOUND_MARIO_YAH_WAH_HOO,
+    [CHAR_SOUND_HOOHOO]              = SOUND_MARIO_HOOHOO,
+    [CHAR_SOUND_YAHOO_WAHA_YIPPEE]   = SOUND_MARIO_YAHOO_WAHA_YIPPEE,
+    [CHAR_SOUND_UH]                  = SOUND_MARIO_UH,
+    [CHAR_SOUND_UH2]                 = SOUND_MARIO_UH2,
+    [CHAR_SOUND_UH2_2]               = SOUND_MARIO_UH2_2,
+    [CHAR_SOUND_HAHA]                = SOUND_MARIO_HAHA,
+    [CHAR_SOUND_HAHA_2]              = SOUND_MARIO_HAHA_2,
+    [CHAR_SOUND_YAHOO]               = SOUND_MARIO_YAHOO,
+    [CHAR_SOUND_DOH]                 = SOUND_MARIO_DOH,
+    [CHAR_SOUND_WHOA]                = SOUND_MARIO_WHOA,
+    [CHAR_SOUND_EEUH]                = SOUND_MARIO_EEUH,
+    [CHAR_SOUND_WAAAOOOW]            = SOUND_MARIO_WAAAOOOW,
+    [CHAR_SOUND_TWIRL_BOUNCE]        = SOUND_MARIO_TWIRL_BOUNCE,
+    [CHAR_SOUND_GROUND_POUND_WAH]    = SOUND_MARIO_GROUND_POUND_WAH,
+    [CHAR_SOUND_HRMM]                = SOUND_MARIO_HRMM,
+    [CHAR_SOUND_HERE_WE_GO]          = SOUND_MARIO_HERE_WE_GO,
+    [CHAR_SOUND_SO_LONGA_BOWSER]     = SOUND_MARIO_SO_LONGA_BOWSER,
+    [CHAR_SOUND_OOOF]                = SOUND_MARIO_OOOF,
+    [CHAR_SOUND_OOOF2]               = SOUND_MARIO_OOOF2,
+    [CHAR_SOUND_ATTACKED]            = SOUND_MARIO_ATTACKED,
+    [CHAR_SOUND_PANTING]             = SOUND_MARIO_PANTING,
+    [CHAR_SOUND_PANTING_COLD]        = SOUND_MARIO_PANTING_COLD,
+    [CHAR_SOUND_ON_FIRE]             = SOUND_MARIO_ON_FIRE,
+    [CHAR_SOUND_IMA_TIRED]           = SOUND_MARIO_IMA_TIRED,
+    [CHAR_SOUND_YAWNING]             = SOUND_MARIO_YAWNING,
+    [CHAR_SOUND_SNORING1]            = SOUND_MARIO_SNORING1,
+    [CHAR_SOUND_SNORING2]            = SOUND_MARIO_SNORING2,
+    [CHAR_SOUND_SNORING3]            = SOUND_MARIO_SNORING3,
+    [CHAR_SOUND_COUGHING1]           = SOUND_MARIO_COUGHING1,
+    [CHAR_SOUND_COUGHING2]           = SOUND_MARIO_COUGHING2,
+    [CHAR_SOUND_COUGHING3]           = SOUND_MARIO_COUGHING3,
+    [CHAR_SOUND_DYING]               = SOUND_MARIO_DYING,
+    [CHAR_SOUND_DROWNING]            = SOUND_MARIO_DROWNING,
+    [CHAR_SOUND_MAMA_MIA]            = SOUND_MARIO_MAMA_MIA,
+    [CHAR_SOUND_GAME_OVER]           = SOUND_MARIO_GAME_OVER,
+    [CHAR_SOUND_HELLO]               = SOUND_MARIO_HELLO,
+    [CHAR_SOUND_PRESS_START_TO_PLAY] = SOUND_MARIO_PRESS_START_TO_PLAY
+}
+
+local VOICETABLE_CJ_LUIGI = {
+    [CHAR_SOUND_OKEY_DOKEY]         = '0B_cj_luigi_okey_dokey.aiff',
+    [CHAR_SOUND_LETS_A_GO]          = '1A_cj_luigi_lets_a_go.aiff',
+    [CHAR_SOUND_PUNCH_YAH]          = '08_cj_luigi_punch_yah.aiff',
+    [CHAR_SOUND_PUNCH_WAH]          = '01_cj_luigi_jump_wah.aiff',
+    [CHAR_SOUND_WAH2]               = '07_cj_luigi_wah2.aiff',
+    [CHAR_SOUND_PUNCH_HOO]          = '09_cj_luigi_punch_hoo.aiff',
+    [CHAR_SOUND_YAH_WAH_HOO]        = { '00_cj_luigi_jump_hoo.aiff', '01_cj_luigi_jump_wah.aiff', '02_cj_luigi_yah.aiff' },
+    [CHAR_SOUND_HOOHOO]             = '01_cj_luigi_hoohoo.aiff',
+    [CHAR_SOUND_YAHOO_WAHA_YIPPEE]  = { '04_cj_luigi_yahoo.aiff', '18_cj_luigi_waha.aiff', '19_cj_luigi_yippee.aiff' },
+    [CHAR_SOUND_UH]                 = '05_cj_luigi_uh.aiff',
+    [CHAR_SOUND_UH2]                = '05_cj_luigi_uh2.aiff',
+    [CHAR_SOUND_UH2_2]              = '05_cj_luigi_uh2.aiff',
+    [CHAR_SOUND_HAHA]               = '03_cj_luigi_haha.aiff',
+    [CHAR_SOUND_HAHA_2]             = '03_cj_luigi_haha.aiff',
+    [CHAR_SOUND_YAHOO]              = '04_cj_luigi_yahoo.aiff',
+    [CHAR_SOUND_DOH]                = '10_cj_luigi_doh.aiff',
+    [CHAR_SOUND_WHOA]               = '08_cj_luigi_whoa.aiff',
+    [CHAR_SOUND_EEUH]               = '09_cj_luigi_eeuh.aiff',
+    [CHAR_SOUND_WAAAOOOW]           = '00_cj_luigi_waaaooow.aiff',
+    [CHAR_SOUND_TWIRL_BOUNCE]       = '14_cj_luigi_twirl_bounce.aiff',
+    [CHAR_SOUND_GROUND_POUND_WAH]   = '07_cj_luigi_wah2.aiff',
+    [CHAR_SOUND_HRMM]               = '06_cj_luigi_hrmm.aiff',
+    [CHAR_SOUND_HERE_WE_GO]         = '0C_cj_luigi_here_we_go.aiff',
+    [CHAR_SOUND_SO_LONGA_BOWSER]    = '16_cj_luigi_so_longa_bowser.aiff',
+    [CHAR_SOUND_OOOF]               = '0B_cj_luigi_ooof.aiff',
+    [CHAR_SOUND_OOOF2]              = '0B_cj_luigi_ooof.aiff',
+    [CHAR_SOUND_ATTACKED]           = '0A_cj_luigi_attacked.aiff',
+    [CHAR_SOUND_PANTING]            = '02_cj_luigi_panting.aiff',
+    [CHAR_SOUND_PANTING_COLD]       = '02_cj_luigi_panting.aiff',
+    [CHAR_SOUND_ON_FIRE]            = '04_cj_luigi_on_fire.aiff',
+    [CHAR_SOUND_IMA_TIRED]          = '17_cj_luigi_ima_tired.aiff',
+    [CHAR_SOUND_YAWNING]            = '0D_cj_luigi_yawning.aiff',
+    [CHAR_SOUND_SNORING1]           = '0E_cj_luigi_snoring1.aiff',
+    [CHAR_SOUND_SNORING2]           = '0F_cj_luigi_snoring2.aiff',
+    [CHAR_SOUND_SNORING3]           = '15_cj_luigi_snoring3.aiff',
+    [CHAR_SOUND_COUGHING1]          = '06_cj_luigi_coughing.aiff',
+    [CHAR_SOUND_COUGHING2]          = '06_cj_luigi_coughing.aiff',
+    [CHAR_SOUND_COUGHING3]          = '06_cj_luigi_coughing.aiff',
+    [CHAR_SOUND_DYING]              = '03_cj_luigi_dying.aiff',
+    [CHAR_SOUND_DROWNING]           = '0C_cj_luigi_drowning.aiff',
+    [CHAR_SOUND_MAMA_MIA]           = '0A_cj_luigi_mama_mia.aiff'
 }
 
 -- Loading Characters --
@@ -161,14 +205,24 @@ local function on_character_select_load()
     charSelect.character_add_palette_preset(E_MODEL_FLUFFA_WARIO, PALETTE_FL_WARIO)
     charSelect.character_add_palette_preset(E_MODEL_KEEB_WALUIGI, PALETTE_KB_WALUIGI)
     charSelect.character_add_palette_preset(E_MODEL_FLUFFA_WALUIGI, PALETTE_FL_WALUIGI)
+    charSelect.character_add_voice(E_MODEL_CJ_LUIGI, VOICETABLE_CJ_LUIGI)
+    charSelect.config_character_sounds()
 end
 
--- Djoslin Toad Sound
+
 --- @param m MarioState
 --- @param sound CharacterSound
+--- Pitched up Mario voice
+local MODEL_FREQ_TABLE = {
+    [E_MODEL_DJOSLIN_TOAD]    = 1.25,
+    [E_MODEL_VL_TONE_LUIGI]   = 1.1
+}
+
 local function character_sound(m, sound)
-    if obj_get_model_id_extended(m.marioObj) == E_MODEL_DJOSLIN_TOAD then
-        play_sound_with_freq_scale(DJ_TOAD_SOUNDS[sound + 1], m.marioObj.header.gfx.cameraToObject, 1.25)
+    local extendedModelId = obj_get_model_id_extended(m.marioObj)
+    local freqScale = MODEL_FREQ_TABLE[extendedModelId]
+    if freqScale then
+        play_sound_with_freq_scale(MARIO_SOUNDS[sound], m.marioObj.header.gfx.cameraToObject, freqScale)
         return NO_SOUND
     end
 end

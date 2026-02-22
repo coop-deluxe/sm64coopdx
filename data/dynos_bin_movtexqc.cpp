@@ -64,7 +64,7 @@ void DynOS_MovtexQC_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MovtexQC> 
     aFile->Write<u32>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         aFile->Write<s16>(aNode->mData[i].id);
-        DynOS_Pointer_Write(aFile, (const void *) (aNode->mData[i].quadArraySegmented), aGfxData);
+        DynOS_Pointer_Write(aFile, (const void *) (aNode->mData[i].quadArraySegmented), aGfxData, 0);
     }
 }
 
@@ -84,7 +84,7 @@ DataNode<MovtexQC>* DynOS_MovtexQC_Load(BinFile *aFile, GfxData *aGfxData) {
     for (u32 i = 0; i != _Node->mSize; ++i) {
         _Node->mData[i].id = aFile->Read<s16>();
         u32 _Value = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, 0, &_Node->mFlags);
         _Node->mData[i].quadArraySegmented = (Movtex*)_Ptr;
     }
 

@@ -486,9 +486,9 @@ s32 check_common_object_cancels(struct MarioState *m) {
     if (m->playerIndex != 0) { return FALSE; }
 
     if (m->pos[1] < m->waterLevel - 100) {
-        bool allow = true;
-        smlua_call_event_hooks_mario_param_and_bool_ret_bool(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allow);
-        if (allow) {
+        bool allowForceAction = true;
+        smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, false, &allowForceAction);
+        if (allowForceAction) {
             return set_water_plunge_action(m);
         }
     }
@@ -534,9 +534,9 @@ s32 mario_execute_object_action(struct MarioState *m) {
             case ACT_HOLDING_BOWSER:     cancel = act_holding_bowser(m);     break;
             case ACT_RELEASING_BOWSER:   cancel = act_releasing_bowser(m);   break;
             default:
-                LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
+                LOG_ERROR("Attempted to execute unimplemented action '%08X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

@@ -17,7 +17,6 @@
 
 # Libraries
 *.lib
-*.a
 *.la
 *.lo
 
@@ -91,3 +90,4 @@ todo-old.txt
 *.DS_Store
 tools/ido5.3_compiler/usr/lib/libc.so.1
 /.vs
+tools/audiofile/libaudiofile.a

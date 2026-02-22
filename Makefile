@@ -978,11 +978,11 @@ ifeq ($(COOPNET),1)
     ifeq ($(shell uname -m),arm64)
       LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_arm/ -l coopnet
       COOPNET_LIBS += ./lib/coopnet/mac_arm/libcoopnet.dylib
-      COOPNET_LIBS += ./lib/coopnet/mac_arm/libjuice.1.2.2.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_arm/libjuice.1.6.2.dylib
     else
       LDFLAGS += -Wl,-rpath,@loader_path -L./lib/coopnet/mac_intel/ -l coopnet
       COOPNET_LIBS += ./lib/coopnet/mac_intel/libcoopnet.dylib
-      COOPNET_LIBS += ./lib/coopnet/mac_intel/libjuice.1.2.2.dylib
+      COOPNET_LIBS += ./lib/coopnet/mac_intel/libjuice.1.6.2.dylib
     endif
   else ifeq ($(TARGET_RPI),1)
     ifneq (,$(findstring aarch64,$(machine)))
@@ -1603,7 +1603,7 @@ all:
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
-    cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libjuice.1.6.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
     install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \

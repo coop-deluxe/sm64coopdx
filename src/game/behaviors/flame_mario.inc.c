@@ -32,7 +32,7 @@ void bhv_black_smoke_mario_loop(void) {
 }
 
 void bhv_flame_mario_loop(void) {
-    if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvMario)) {
+    if (o->parentObj == NULL || o->parentObj->behavior != bhvMario) {
         obj_mark_for_deletion(o);
         return;
     }

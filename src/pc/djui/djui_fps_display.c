@@ -8,9 +8,10 @@ struct DjuiFpsDisplay {
 
 struct DjuiFpsDisplay *sFpsDisplay = NULL;
 
-void djui_fps_display_update(u16 fps) {
+void djui_fps_display_update(u32 fps) {
     if (configShowFPS && sFpsDisplay != NULL) {
         char fpsText[30] = "";
+        fps = fps > 99999 ? 99999 : fps; // Prevent overflowing the FPS display (cap at 99999)
         snprintf(fpsText, 30, "\\#dcdcdc\\FPS: \\#ffffff\\%d", fps);
         djui_text_set_text(sFpsDisplay->text, fpsText);
     }
@@ -31,7 +32,7 @@ void djui_fps_display_create(void) {
     struct DjuiFpsDisplay *fpsDisplay = calloc(1, sizeof(struct DjuiFpsDisplay));
     struct DjuiBase* base = &fpsDisplay->base;
     djui_base_init(NULL, base, NULL, djui_fps_display_on_destroy);
-    djui_base_set_size(base, 150, 50);
+    djui_base_set_size(base, 165, 50);
     djui_base_set_color(base, 0, 0, 0, 200);
     djui_base_set_border_color(base, 0, 0, 0, 160);
     djui_base_set_border_width(base, 4);

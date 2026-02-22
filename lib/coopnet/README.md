@@ -1,1 +1,1 @@
-Source code for coopnet is available at https://github.com/Isaac0-dev/coopnet
+Source code for coopnet is available at https://github.com/coop-deluxe/coopnet

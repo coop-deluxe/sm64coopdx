@@ -2,7 +2,7 @@
 
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-4.md)]
 
 
 ---
@@ -180,7 +180,7 @@ Gets a behavior ID from a behavior script
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
@@ -203,7 +203,7 @@ Gets a behavior ID from only vanilla behavior scripts
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
@@ -218,7 +218,7 @@ Gets a behavior ID from only vanilla behavior scripts
 Gets a behavior script from a behavior ID
 
 ### Lua Example
-`local PointerValue = get_behavior_from_id(id)`
+`local pointerValue = get_behavior_from_id(id)`
 
 ### Parameters
 | Field | Type |
@@ -272,7 +272,7 @@ gets a behavior ID from a behavior name
 | name | `string` |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior_name(const char* name);`
@@ -537,7 +537,7 @@ Converts an object's position to a `Vec3f` format. Useful for aligning object be
 - None
 
 ### C Prototype
-`void object_pos_to_vec3f(Vec3f dst, struct Object *o);`
+`void object_pos_to_vec3f(VEC_OUT Vec3f dst, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -562,6 +562,102 @@ Converts a `Vec3f` position to an object's internal format. Useful for syncing 3
 
 ### C Prototype
 `void vec3f_to_object_pos(struct Object *o, Vec3f src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_face_angle_to_vec3s](#object_face_angle_to_vec3s)
+
+### Description
+Converts an object's face angle to a `Vec3s` format
+
+### Lua Example
+`object_face_angle_to_vec3s(dst, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3s](structs.md#Vec3s) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void object_face_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_object_face_angle](#vec3s_to_object_face_angle)
+
+### Description
+Converts a `Vec3s` angle to an object's face angle internal format
+
+### Lua Example
+`vec3s_to_object_face_angle(o, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3s_to_object_face_angle(struct Object *o, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [object_move_angle_to_vec3s](#object_move_angle_to_vec3s)
+
+### Description
+Converts an object's move angle to a `Vec3s` format
+
+### Lua Example
+`object_move_angle_to_vec3s(dst, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [Vec3s](structs.md#Vec3s) |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- None
+
+### C Prototype
+`void object_move_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [vec3s_to_object_move_angle](#vec3s_to_object_move_angle)
+
+### Description
+Converts a `Vec3s` angle to an object's move angle internal format
+
+### Lua Example
+`vec3s_to_object_move_angle(o, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| o | [Object](structs.md#Object) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void vec3s_to_object_move_angle(struct Object *o, Vec3s src);`
 
 [:arrow_up_small:](#)
 
@@ -654,7 +750,7 @@ Activates a handheld camera shake effect. Calculates positional and focus adjust
 - None
 
 ### C Prototype
-`void shake_camera_handheld(Vec3f pos, Vec3f focus);`
+`void shake_camera_handheld(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -704,7 +800,7 @@ Checks for collisions between the camera and level geometry. Adjusts the camera'
 - `integer`
 
 ### C Prototype
-`s32 collide_with_walls(Vec3f pos, f32 offsetY, f32 radius);`
+`s32 collide_with_walls(VEC_OUT Vec3f pos, f32 offsetY, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -730,7 +826,7 @@ Clamps the camera's pitch angle between a maximum and minimum value. Prevents ov
 - `integer`
 
 ### C Prototype
-`s32 clamp_pitch(Vec3f from, Vec3f to, s16 maxPitch, s16 minPitch);`
+`s32 clamp_pitch(Vec3f from, VEC_OUT Vec3f to, s16 maxPitch, s16 minPitch);`
 
 [:arrow_up_small:](#)
 
@@ -764,23 +860,24 @@ Checks if a position is within 100 units of Mario's current position. Returns tr
 ## [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
 
 ### Description
-Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
+Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment. Returns FALSE if `dst` reaches `goal`
 
 ### Lua Example
-`local integerValue = set_or_approach_f32_asymptotic(dst, goal, scale)`
+`local integerValue, dst = set_or_approach_f32_asymptotic(dst, goal, scale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dst | `Pointer` <`number`> |
+| dst | `number` |
 | goal | `number` |
 | scale | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);`
+`s32 set_or_approach_f32_asymptotic(INOUT f32 *dst, f32 goal, f32 scale);`
 
 [:arrow_up_small:](#)
 
@@ -789,23 +886,24 @@ Smoothly transitions or directly sets a floating-point value (`dst`) to approach
 ## [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
 
 ### Description
-Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
+Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = approach_f32_asymptotic_bool(current, target, multiplier)`
+`local integerValue, current = approach_f32_asymptotic_bool(current, target, multiplier)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`number`> |
+| current | `number` |
 | target | `number` |
 | multiplier | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);`
+`s32 approach_f32_asymptotic_bool(INOUT f32 *current, f32 target, f32 multiplier);`
 
 [:arrow_up_small:](#)
 
@@ -839,23 +937,24 @@ Gradually approaches a floating-point value (`target`) using asymptotic smoothin
 ## [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
 
 ### Description
-Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
+Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches `target`
 
 ### Lua Example
-`local integerValue = approach_s16_asymptotic_bool(current, target, divisor)`
+`local integerValue, current = approach_s16_asymptotic_bool(current, target, divisor)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | divisor | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);`
+`s32 approach_s16_asymptotic_bool(INOUT s16 *current, s16 target, s16 divisor);`
 
 [:arrow_up_small:](#)
 
@@ -907,7 +1006,7 @@ Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) 
 - None
 
 ### C Prototype
-`void approach_vec3f_asymptotic(Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
+`void approach_vec3f_asymptotic(VEC_OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -934,7 +1033,7 @@ Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) usi
 - None
 
 ### C Prototype
-`void set_or_approach_vec3f_asymptotic(Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
+`void set_or_approach_vec3f_asymptotic(VEC_OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -943,23 +1042,24 @@ Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) usi
 ## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
 
 ### Description
-Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = camera_approach_s16_symmetric_bool(current, target, increment)`
+`local integerValue, current = camera_approach_s16_symmetric_bool(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | increment | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);`
+`s32 camera_approach_s16_symmetric_bool(INOUT s16 *current, s16 target, s16 increment);`
 
 [:arrow_up_small:](#)
 
@@ -968,23 +1068,24 @@ Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetri
 ## [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
 
 ### Description
-Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
+Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments. Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = set_or_approach_s16_symmetric(current, target, increment)`
+`local integerValue, current = set_or_approach_s16_symmetric(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | increment | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);`
+`s32 set_or_approach_s16_symmetric(INOUT s16 *current, s16 target, s16 increment);`
 
 [:arrow_up_small:](#)
 
@@ -993,23 +1094,24 @@ Smoothly transitions or directly sets a signed 16-bit value (`current`) to appro
 ## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
 
 ### Description
-Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = camera_approach_f32_symmetric_bool(current, target, increment)`
+`local integerValue, current = camera_approach_f32_symmetric_bool(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`number`> |
+| current | `number` |
 | target | `number` |
 | increment | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);`
+`s32 camera_approach_f32_symmetric_bool(INOUT f32 *current, f32 target, f32 increment);`
 
 [:arrow_up_small:](#)
 
@@ -1060,7 +1162,7 @@ Generates a random 3D vector with short integer components. Useful for randomize
 - None
 
 ### C Prototype
-`void random_vec3s(Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
+`void random_vec3s(VEC_OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
 
 [:arrow_up_small:](#)
 
@@ -1088,7 +1190,7 @@ Clamps a position within specified X and Z bounds and calculates the yaw angle f
 - `integer`
 
 ### C Prototype
-`s32 clamp_positions_and_find_yaw(Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
+`s32 clamp_positions_and_find_yaw(VEC_OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
 
 [:arrow_up_small:](#)
 
@@ -1141,7 +1243,7 @@ Scales a point along a line between two 3D points (`from` and `to`). The scaling
 - None
 
 ### C Prototype
-`void scale_along_line(Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
+`void scale_along_line(VEC_OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
 
 [:arrow_up_small:](#)
 
@@ -1198,24 +1300,22 @@ Determines the yaw angle (rotation around the Y-axis) from one 3D position (`fro
 ## [calculate_angles](#calculate_angles)
 
 ### Description
-Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
+Calculates and returns the pitch and yaw angles from one 3D position (`from`) to another (`to`)
 
 ### Lua Example
-`calculate_angles(from, to, pitch, yaw)`
+`local pitch, yaw = calculate_angles(from, to)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | from | [Vec3f](structs.md#Vec3f) |
 | to | [Vec3f](structs.md#Vec3f) |
-| pitch | `Pointer` <`integer`> |
-| yaw | `Pointer` <`integer`> |
 
 ### Returns
 - None
 
 ### C Prototype
-`void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);`
+`void calculate_angles(Vec3f from, Vec3f to, RET s16 *pitch, RET s16 *yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1288,7 +1388,7 @@ Rotates a vector around the XZ-plane by a specified yaw angle. The result is sto
 - None
 
 ### C Prototype
-`void rotate_in_xz(Vec3f dst, Vec3f src, s16 yaw);`
+`void rotate_in_xz(VEC_OUT Vec3f dst, Vec3f src, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1313,7 +1413,7 @@ Rotates a vector around the YZ-plane by a specified pitch angle. The result is s
 - None
 
 ### C Prototype
-`void rotate_in_yz(Vec3f dst, Vec3f src, s16 pitch);`
+`void rotate_in_yz(VEC_OUT Vec3f dst, Vec3f src, s16 pitch);`
 
 [:arrow_up_small:](#)
 
@@ -1441,7 +1541,7 @@ Activates a pitch-based shake effect. Adds vertical vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_pitch(Vec3f pos, Vec3f focus);`
+`void shake_camera_pitch(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1465,7 +1565,7 @@ Activates a yaw-based shake effect. Adds horizontal vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_yaw(Vec3f pos, Vec3f focus);`
+`void shake_camera_yaw(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1477,18 +1577,18 @@ Activates a yaw-based shake effect. Adds horizontal vibrational movement to the 
 Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
 
 ### Lua Example
-`shake_camera_roll(roll)`
+`local roll = shake_camera_roll(roll)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| roll | `Pointer` <`integer`> |
+| roll | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void shake_camera_roll(s16 *roll);`
+`void shake_camera_roll(INOUT s16 *roll);`
 
 [:arrow_up_small:](#)
 
@@ -1894,7 +1994,7 @@ Offsets a vector by rotating it in 3D space relative to a reference position. Th
 - None
 
 ### C Prototype
-`void offset_rotated(Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
+`void offset_rotated(VEC_OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
 
 [:arrow_up_small:](#)
 
@@ -1923,7 +2023,7 @@ Transitions the camera to the next Lakitu state, updating position and focus. Th
 - `integer`
 
 ### C Prototype
-`s16 next_lakitu_state(Vec3f newPos, Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
+`s16 next_lakitu_state(VEC_OUT Vec3f newPos, VEC_OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1993,7 +2093,7 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 - None
 
 ### C Prototype
-`void resolve_geometry_collisions(Vec3f pos, UNUSED Vec3f lastGood);`
+`void resolve_geometry_collisions(VEC_OUT Vec3f pos, UNUSED Vec3f lastGood);`
 
 [:arrow_up_small:](#)
 
@@ -2005,44 +2105,22 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 
 ### Lua Example
-`local integerValue = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
+`local integerValue, avoidYaw = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | c | [Camera](structs.md#Camera) |
 | cPos | [Vec3f](structs.md#Vec3f) |
-| avoidYaw | `Pointer` <`integer`> |
+| avoidYaw | `integer` |
 | yawRange | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [find_mario_floor_and_ceil](#find_mario_floor_and_ceil)
-
-### Description
-Finds the floor and ceiling directly above and below Mario's position. Updates Mario's geometry information for camera calculations
-
-### Lua Example
-`find_mario_floor_and_ceil(pg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pg | [PlayerGeometry](structs.md#PlayerGeometry) |
-
-### Returns
-- None
-
-### C Prototype
-`void find_mario_floor_and_ceil(struct PlayerGeometry *pg);`
+`s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, INOUT s16 *avoidYaw, s16 yawRange);`
 
 [:arrow_up_small:](#)
 
@@ -2090,7 +2168,7 @@ Starts a cutscene involving an object and displays dialog during the sequence. T
 - `integer`
 
 ### C Prototype
-`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s16 dialogID);`
+`s16 cutscene_object_with_dialog(u8 cutscene, struct Object *o, s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -2421,7 +2499,7 @@ Centers the ROM hack camera. This function is designed for non-standard level la
 Gets a Character struct from `m`
 
 ### Lua Example
-`local CharacterValue = get_character(m)`
+`local characterValue = get_character(m)`
 
 ### Parameters
 | Field | Type |
@@ -2429,7 +2507,7 @@ Gets a Character struct from `m`
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-[Character](structs.md#Character)
+- [Character](structs.md#Character)
 
 ### C Prototype
 `struct Character* get_character(struct MarioState* m);`
@@ -2782,13 +2860,13 @@ Sets the current DJUI HUD font
 Gets the current DJUI HUD color
 
 ### Lua Example
-`local DjuiColorValue = djui_hud_get_color()`
+`local djuiColorValue = djui_hud_get_color()`
 
 ### Parameters
 - None
 
 ### Returns
-[DjuiColor](structs.md#DjuiColor)
+- [DjuiColor](structs.md#DjuiColor)
 
 ### C Prototype
 `struct DjuiColor* djui_hud_get_color(void);`
@@ -2850,13 +2928,13 @@ Resets the current DJUI HUD color
 Gets the current DJUI HUD rotation
 
 ### Lua Example
-`local HudUtilsRotationValue = djui_hud_get_rotation()`
+`local hudUtilsRotationValue = djui_hud_get_rotation()`
 
 ### Parameters
 - None
 
 ### Returns
-[HudUtilsRotation](structs.md#HudUtilsRotation)
+- [HudUtilsRotation](structs.md#HudUtilsRotation)
 
 ### C Prototype
 `struct HudUtilsRotation* djui_hud_get_rotation(void);`
@@ -3044,10 +3122,31 @@ Returns the y coordinate of the mouse relative to the screen
 
 <br />
 
+## [djui_hud_is_mouse_locked](#djui_hud_is_mouse_locked)
+
+### Description
+Checks if the cursor is locked to the window
+
+### Lua Example
+`local booleanValue = djui_hud_is_mouse_locked()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_hud_is_mouse_locked(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
 
 ### Description
-Sets if the cursor is hidden and constrainted to the window
+Locks (or unlocks) the cursor to the window
 
 ### Lua Example
 `djui_hud_set_mouse_locked(locked)`
@@ -3172,6 +3271,100 @@ Returns the amount scrolled vertically (-down/up+)
 
 <br />
 
+## [djui_hud_set_viewport](#djui_hud_set_viewport)
+
+### Description
+Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
+
+### Lua Example
+`djui_hud_set_viewport(x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
+
+### Description
+Resets the viewport to a fullscreen state
+
+### Lua Example
+`djui_hud_reset_viewport()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_viewport(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_scissor](#djui_hud_set_scissor)
+
+### Description
+Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
+
+### Lua Example
+`djui_hud_set_scissor(x, y, width, height)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| width | `number` |
+| height | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_scissor](#djui_hud_reset_scissor)
+
+### Description
+Resets the scissor rectangle to a fullscreen state
+
+### Lua Example
+`djui_hud_reset_scissor()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_scissor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description
@@ -3250,6 +3443,130 @@ Prints interpolated DJUI HUD text onto the screen
 
 <br />
 
+## [djui_hud_render_texture](#djui_hud_render_texture)
+
+### Description
+Renders a DJUI HUD texture onto the screen
+
+### Lua Example
+`djui_hud_render_texture(texInfo, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
+
+### Description
+Renders a DJUI HUD texture tile onto the screen
+
+### Lua Example
+`djui_hud_render_texture_tile(texInfo, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `integer` |
+| tileY | `integer` |
+| tileW | `integer` |
+| tileH | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD texture onto the screen
+
+### Lua Example
+`djui_hud_render_texture_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleW | `number` |
+| prevScaleH | `number` |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+
+### Description
+Renders an interpolated DJUI HUD texture tile onto the screen
+
+### Lua Example
+`djui_hud_render_texture_tile_interpolated(texInfo, prevX, prevY, prevScaleW, prevScaleH, x, y, scaleW, scaleH, tileX, tileY, tileW, tileH)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleW | `number` |
+| prevScaleH | `number` |
+| x | `number` |
+| y | `number` |
+| scaleW | `number` |
+| scaleH | `number` |
+| tileX | `integer` |
+| tileY | `integer` |
+| tileW | `integer` |
+| tileH | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 prevX, f32 prevY, f32 prevScaleW, f32 prevScaleH, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_render_rect](#djui_hud_render_rect)
 
 ### Description
@@ -3301,6 +3618,33 @@ Renders an interpolated DJUI HUD rect onto the screen
 
 ### C Prototype
 `void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_render_line](#djui_hud_render_line)
+
+### Description
+Renders an DJUI HUD line onto the screen
+
+### Lua Example
+`djui_hud_render_line(p1X, p1Y, p2X, p2Y, size)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| p1X | `number` |
+| p1Y | `number` |
+| p2X | `number` |
+| p2Y | `number` |
+| size | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_render_line(f32 p1X, f32 p1Y, f32 p2X, f32 p2Y, f32 size);`
 
 [:arrow_up_small:](#)
 
@@ -3366,7 +3710,7 @@ Converts a world position to screen position
 - `boolean`
 
 ### C Prototype
-`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, Vec3f out);`
+`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -3836,7 +4180,7 @@ Plays a dialog sound corresponding to `dialogID`
 - None
 
 ### C Prototype
-`void play_dialog_sound(u8 dialogID);`
+`void play_dialog_sound(s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -4472,7 +4816,7 @@ Creates a dialog box with a dialog ID that rotates into view
 - None
 
 ### C Prototype
-`void create_dialog_box(s16 dialog);`
+`void create_dialog_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4496,7 +4840,7 @@ Creates a dialog box with a dialog variable
 - None
 
 ### C Prototype
-`void create_dialog_box_with_var(s16 dialog, s32 dialogVar);`
+`void create_dialog_box_with_var(s32 dialog, s32 dialogVar);`
 
 [:arrow_up_small:](#)
 
@@ -4519,7 +4863,7 @@ Creates a dialog box with a dialog ID that zooms into view
 - None
 
 ### C Prototype
-`void create_dialog_inverted_box(s16 dialog);`
+`void create_dialog_inverted_box(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4542,7 +4886,7 @@ Creates a dialog box with a response
 - None
 
 ### C Prototype
-`void create_dialog_box_with_response(s16 dialog);`
+`void create_dialog_box_with_response(s32 dialog);`
 
 [:arrow_up_small:](#)
 
@@ -4587,6 +4931,29 @@ Sets the in-game menu state. 0-1 is the courses box with the castle secret stars
 
 ### C Prototype
 `void set_menu_mode(s16 mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [handle_special_dialog_text](#handle_special_dialog_text)
+
+### Description
+The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.
+
+### Lua Example
+`handle_special_dialog_text(dialogID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogID | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void handle_special_dialog_text(s32 dialogID);`
 
 [:arrow_up_small:](#)
 
@@ -5752,7 +6119,7 @@ Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mar
 Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
 
 ### Lua Example
-`local ObjectValue = mario_get_collided_object(m, interactType)`
+`local objectValue = mario_get_collided_object(m, interactType)`
 
 ### Parameters
 | Field | Type |
@@ -5761,7 +6128,7 @@ Returns a collided object that matches a given interaction type from Mario's cur
 | interactType | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);`
@@ -5968,7 +6335,7 @@ Stores the local Mario's current state in lag compensation history
 Gets the local Mario's state stored in lag compensation history
 
 ### Lua Example
-`local MarioStateValue = lag_compensation_get_local_state(otherNp)`
+`local marioStateValue = lag_compensation_get_local_state(otherNp)`
 
 ### Parameters
 | Field | Type |
@@ -5976,7 +6343,7 @@ Gets the local Mario's state stored in lag compensation history
 | otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
@@ -6065,7 +6432,7 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
-`local PointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
+`local pointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
 
 ### Parameters
 | Field | Type |
@@ -6141,7 +6508,7 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as an AS
 Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
-`local PointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
+`local pointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
 
 ### Parameters
 | Field | Type |
@@ -6196,7 +6563,7 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as a dec
 Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 
 ### Lua Example
-`local ObjectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
+`local objectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
 
 ### Parameters
 | Field | Type |
@@ -6209,7 +6576,7 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
@@ -6245,6 +6612,27 @@ Returns if the level timer is running
 
 <br />
 
+## [pressed_pause](#pressed_pause)
+
+### Description
+Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
+
+### Lua Example
+`local booleanValue = pressed_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool pressed_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [fade_into_special_warp](#fade_into_special_warp)
 
 ### Description
@@ -6275,7 +6663,7 @@ Fades into a special warp with `arg` and using `color`
 Gets an instant warp from the current area's instant warp array (0-3)
 
 ### Lua Example
-`local InstantWarpValue = get_instant_warp(index)`
+`local instantWarpValue = get_instant_warp(index)`
 
 ### Parameters
 | Field | Type |
@@ -6283,7 +6671,7 @@ Gets an instant warp from the current area's instant warp array (0-3)
 | index | `integer` |
 
 ### Returns
-[InstantWarp](structs.md#InstantWarp)
+- [InstantWarp](structs.md#InstantWarp)
 
 ### C Prototype
 `struct InstantWarp *get_instant_warp(u8 index);`
@@ -6298,13 +6686,13 @@ Gets an instant warp from the current area's instant warp array (0-3)
 Gets a painting warp node from the local mario's floor type
 
 ### Lua Example
-`local WarpNodeValue = get_painting_warp_node()`
+`local warpNodeValue = get_painting_warp_node()`
 
 ### Parameters
 - None
 
 ### Returns
-[WarpNode](structs.md#WarpNode)
+- [WarpNode](structs.md#WarpNode)
 
 ### C Prototype
 `struct WarpNode *get_painting_warp_node(void);`
@@ -6383,6 +6771,32 @@ Special warps to arg (`SPECIAL_WARP_*`)
 
 <br />
 
+## [initiate_warp](#initiate_warp)
+
+### Description
+Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+
+### Lua Example
+`initiate_warp(destLevel, destArea, destWarpNode, arg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destWarpNode | `integer` |
+| arg | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [lvl_set_current_level](#lvl_set_current_level)
 
 ### Description
@@ -6406,261 +6820,7 @@ Sets the level number and handles the act select screen. `param` is used for ove
 [:arrow_up_small:](#)
 
 <br />
-
----
-# functions from lighting_engine.h
-
-<br />
-
-
-## [le_calculate_lighting_color](#le_calculate_lighting_color)
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color(Vec3f pos, Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_dir](#le_calculate_lighting_dir)
-
-### Description
-Calculates the lighting direction from a position and outputs the result in `out`
-
-### Lua Example
-`le_calculate_lighting_dir(pos, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_dir(Vec3f pos, Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_add_light](#le_add_light)
-
-### Description
-Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
-
-### Lua Example
-`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-| intensity | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_remove_light](#le_remove_light)
-
-### Description
-Removes a lighting engine point light corresponding to `id`
-
-### Lua Example
-`le_remove_light(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_remove_light(s32 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_count](#le_get_light_count)
-
-### Description
-Gets the total number of lights currently loaded in the lighting engine
-
-### Lua Example
-`local integerValue = le_get_light_count()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 le_get_light_count(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_ambient_color](#le_set_ambient_color)
-
-### Description
-Sets the lighting engine ambient color
-
-### Lua Example
-`le_set_ambient_color(r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_pos](#le_set_light_pos)
-
-### Description
-Sets a lighting engine point light's position to `x`, `y`, `z`
-
-### Lua Example
-`le_set_light_pos(id, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_pos(s32 id, f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_color](#le_set_light_color)
-
-### Description
-Sets a lighting engine point light's color to `r`, `g`, `b`
-
-### Lua Example
-`le_set_light_color(id, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_color(s32 id, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_radius](#le_set_light_radius)
-
-### Description
-Sets a lighting engine point light's `radius`
-
-### Lua Example
-`le_set_light_radius(id, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_radius(s32 id, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_intensity](#le_set_light_intensity)
-
-### Description
-Sets a lighting engine point light's `intensity`
-
-### Lua Example
-`le_set_light_intensity(id, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| intensity | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_intensity(s32 id, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
 ---
 
-[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [next >](functions-4.md)]
+[< prev](functions-2.md) | [1](functions.md) | [2](functions-2.md) | 3 | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | [7](functions-7.md) | [next >](functions-4.md)]
 

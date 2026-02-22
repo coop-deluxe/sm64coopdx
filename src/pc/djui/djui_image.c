@@ -2,17 +2,6 @@
 #include "game/segment2.h"
 #include "pc/network/network.h"
 
-  ////////////////
- // properties //
-////////////////
-
-void djui_image_set_image(struct DjuiImage* image, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
-    image->texture = texture;
-    image->textureWidth = textureWidth;
-    image->textureHeight = textureHeight;
-    image->textureBitSize = textureBitSize;
-}
-
   ////////////
  // events //
 ////////////
@@ -35,8 +24,9 @@ static bool djui_image_render(struct DjuiBase* base) {
 
     // render
     if (!djui_gfx_add_clipping(base)) {
+        const struct TextureInfo *info = &image->textureInfo;
         gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-        djui_gfx_render_texture(image->texture, image->textureWidth, image->textureHeight, image->textureBitSize, false);
+        djui_gfx_render_texture(info->texture, info->width, info->height, info->format, info->size, false);
     }
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
@@ -48,13 +38,17 @@ static void djui_image_destroy(struct DjuiBase* base) {
     free(image);
 }
 
-struct DjuiImage* djui_image_create(struct DjuiBase* parent, const u8* texture, u16 textureWidth, u16 textureHeight, u16 textureBitSize) {
+struct DjuiImage* djui_image_create(struct DjuiBase* parent, const Texture* texture, u16 width, u16 height, u8 fmt, u8 siz) {
     struct DjuiImage* image = calloc(1, sizeof(struct DjuiImage));
     struct DjuiBase* base   = &image->base;
 
     djui_base_init(parent, base, djui_image_render, djui_image_destroy);
 
-    djui_image_set_image(image, texture, textureWidth, textureHeight, textureBitSize);
+    image->textureInfo.texture = texture;
+    image->textureInfo.width = width;
+    image->textureInfo.height = height;
+    image->textureInfo.format = fmt;
+    image->textureInfo.size = siz;
 
     return image;
 }

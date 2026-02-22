@@ -13,4 +13,4 @@ if [ ! -f "$FILE" ]; then
     FILE=./build/us_pc/sm64coopdx
 fi
 
-$FILE &
+$FILE --console --server 7777 &

@@ -14,6 +14,14 @@
 #define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
 #define VERSION_IDENTIFIER "#define SM64COOPDX_VERSION \""
 
+/*
+
+NOTE: This entire update checker process should be replaced with one that uses GitHub's API
+to check for the latest release version. This would be more reliable and efficient than
+downloading and parsing a source file.
+
+*/
+
 static char sVersionUpdateTextBuffer[256] = { 0 };
 static char sRemoteVersion[8] = { 0 };
 
@@ -25,15 +33,19 @@ void show_update_popup(void) {
 }
 
 #if !(defined(_WIN32) || defined(_WIN64))
-size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
+typedef struct { char *str; size_t size; } Buffer;
+size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
     size_t realsize = size * nmemb;
+    Buffer *buf = (Buffer *) userdata;
 
     // allocate memory for the received data and copy it into the buffer
-    *data = realloc(*data, realsize + 1);
-    if (*data == NULL) { return 0; }
+    char *data = realloc(buf->str, buf->size + realsize + 1);
+    if (data == NULL) { return 0; }
 
-    memcpy(*data, ptr, realsize);
-    (*data)[realsize] = '\0'; // null-terminate the string
+    memcpy(&data[buf->size], ptr, realsize);
+    buf->size += realsize;
+    buf->str = data;
+    buf->str[buf->size] = '\0'; // null-terminate the string
 
     return realsize;
 }
@@ -42,17 +54,21 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char **data) {
 void parse_version(const char *data) {
     const char *version = strstr(data, VERSION_IDENTIFIER);
     if (version == NULL) { return; }
-    u8 len = strlen(VERSION_IDENTIFIER);
+    size_t len = strlen(VERSION_IDENTIFIER);
     version += len;
     const char *end = strchr(version, '"');
-    memcpy(sRemoteVersion, version, end - version);
-    sRemoteVersion[end - version] = '\0';
+    size_t versionLength = (size_t)(end - version);
+    if (versionLength > sizeof(sRemoteVersion) - 1) { return; }
+    memcpy(sRemoteVersion, version, versionLength);
+    sRemoteVersion[versionLength] = '\0';
 }
 
 // function to download a text file from the internet
 void get_version_remote(void) {
+    sRemoteVersion[0] = '\0';
+
 #if defined(_WIN32) || defined(_WIN64)
-    char buffer[0xFF];
+    char buffer[0xFF] = { 0 };
 
     // initialize WinINet
     HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
@@ -76,9 +92,9 @@ void get_version_remote(void) {
     DWORD dwSize = sizeof(contentLength);
     HttpQueryInfo(hUrl, HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER, &contentLength, &dwSize, NULL);
 
-    // read data from the URL
+    // read data from the URL, making room in the buffer for the null-terminator
     DWORD bytesRead;
-    if (!InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead)) {
+    if (!InternetReadFile(hUrl, buffer, sizeof(buffer) - 1, &bytesRead)) {
         printf("Failed to check for updates!\n");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
@@ -86,13 +102,12 @@ void get_version_remote(void) {
     }
 
     buffer[bytesRead] = '\0';
-    snprintf(sRemoteVersion, 8, "%s", buffer);
 
     // close handles
     InternetCloseHandle(hUrl);
     InternetCloseHandle(hInternet);
 #else
-    char* buffer = NULL;
+    Buffer data = { .str = NULL, .size = 0 };
 
     // initialize libcurl
     CURL *curl = curl_easy_init();
@@ -103,7 +118,7 @@ void get_version_remote(void) {
 
     // set properties
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 3); // only allow 3 seconds
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 3);
     curl_easy_setopt(curl, CURLOPT_URL, URL);
@@ -115,22 +130,22 @@ void get_version_remote(void) {
         curl_easy_cleanup(curl);
         return;
     }
-
-    if (!buffer) { return; }
-
-    snprintf(sRemoteVersion, 8, "%s", buffer);
+    char* buffer = data.str;
 
     // Clean up
     curl_easy_cleanup(curl);
 #endif
     parse_version(buffer);
+#if !(defined(_WIN32) || defined(_WIN64))
+    free(buffer);
+#endif
 }
 
 void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
-    if (sRemoteVersion[0] != '\0' && strcmp(sRemoteVersion, get_version())) {
+    if (sRemoteVersion[0] == 'v' && strcmp(sRemoteVersion, get_version())) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",

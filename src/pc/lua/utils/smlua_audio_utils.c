@@ -10,6 +10,7 @@
 #include "game/camera.h"
 #include "engine/math_util.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mod_fs.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/mods/mods_utils.h"
@@ -78,27 +79,37 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
         return true;
     }
 
-    static u8* buffer = NULL;
-    static long int length = 0;
+    u8* buffer = NULL;
+    u32 length = 0;
 
-    FILE* fp = f_open_r(override->filename);
-    if (!fp) { return false; }
-    f_seek(fp, 0L, SEEK_END);
-    length = f_tell(fp);
+    if (is_mod_fs_file(override->filename)) {
+        if (!mod_fs_read_file_from_uri(override->filename, (void **) &buffer, &length)) {
+            return false;
+        }
+    } else {
+        FILE* fp = f_open_r(override->filename);
+        if (!fp) { return false; }
+        f_seek(fp, 0L, SEEK_END);
+        length = f_tell(fp);
 
-    buffer = malloc(length+1);
-    if (buffer == NULL) {
-        LOG_ERROR("Failed to malloc m64 sound file");
+        buffer = malloc(length+1);
+        if (buffer == NULL) {
+            LOG_ERROR("Failed to malloc m64 sound file");
+            f_close(fp);
+            f_delete(fp);
+            return false;
+        }
+
+        f_seek(fp, 0L, SEEK_SET);
+        f_read(buffer, length, 1, fp);
+
         f_close(fp);
         f_delete(fp);
-        return false;
     }
 
-    f_seek(fp, 0L, SEEK_SET);
-    f_read(buffer, length, 1, fp);
-
-    f_close(fp);
-    f_delete(fp);
+    if (!buffer || !length) {
+        return false;
+    }
 
     // cache
     override->loaded = true;
@@ -110,6 +121,17 @@ bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
     return true;
 }
 
+static void smlua_audio_utils_create_audio_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath) {
+    struct AudioOverride* override = &sAudioOverrides[sequenceId];
+    if (override->enabled) { audio_init(); }
+    smlua_audio_utils_reset(override);
+    LOG_INFO("Loading audio: %s", filepath);
+    override->filename = strdup(filepath);
+    override->enabled = true;
+    override->bank = bankId;
+    sound_set_background_music_default_volume(sequenceId, defaultVolume);
+}
+
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name) {
     if (gLuaActiveMod == NULL) { return; }
     if (sequenceId >= MAX_AUDIO_OVERRIDE) {
@@ -119,6 +141,11 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 
     if (bankId >= 64) {
         LOG_LUA_LINE("Invalid bankId given to smlua_audio_utils_replace_sequence(): %d", bankId);
+        return;
+    }
+
+    if (is_mod_fs_file(m64Name)) {
+        smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, m64Name);
         return;
     }
 
@@ -134,19 +161,8 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         char relPath[SYS_MAX_PATH] = { 0 };
         snprintf(relPath, SYS_MAX_PATH-1, "%s", file->relativePath);
         normalize_path(relPath);
-        if (str_ends_with(relPath, m64path)) {
-            struct AudioOverride* override = &sAudioOverrides[sequenceId];
-            if (override->enabled) { audio_init(); }
-            smlua_audio_utils_reset(override);
-            LOG_INFO("Loading audio: %s", file->cachedPath);
-            override->filename = strdup(file->cachedPath);
-            override->enabled = true;
-            override->bank = bankId;
-#ifdef VERSION_EU
-            //sBackgroundMusicDefaultVolume[sequenceId] = defaultVolume;
-#else
-            sound_set_background_music_default_volume(sequenceId, defaultVolume);
-#endif
+        if (path_ends_with(relPath, m64path)) {
+            smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, file->cachedPath);
             return;
         }
     }
@@ -174,12 +190,12 @@ static void smlua_audio_custom_init(void) {
     }
 }
 
-static struct ModAudio* find_mod_audio(struct ModFile* file) {
+static struct ModAudio* find_mod_audio(const char *filepath) {
     struct DynamicPoolNode* node = sModAudioPool->tail;
     while (node) {
         struct DynamicPoolNode* prev = node->prev;
         struct ModAudio* audio = node->ptr;
-        if (audio->file == file) { return audio; }
+        if (strcmp(filepath, audio->filepath) == 0) { return audio; }
         node = prev;
     }
     return NULL;
@@ -209,7 +225,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     const char* fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
     const char** ft = fileTypes;
     while (*ft != NULL) {
-        if (str_ends_with((char*)filename, (char*)*ft)) {
+        if (path_ends_with(filename, *ft)) {
             validFileType = true;
             break;
         }
@@ -220,25 +236,35 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         return NULL;
     }
 
-    // find mod file in mod list
-    bool foundModFile = false;
-    struct ModFile* modFile = NULL;
-    u16 fileCount = gLuaActiveMod->fileCount;
-    for (u16 i = 0; i < fileCount; i++) {
-        struct ModFile* file = &gLuaActiveMod->files[i];
-        if(str_ends_with(file->relativePath, (char*)filename)) {
-            foundModFile = true;
-            modFile = file;
-            break;
+    const char *filepath = filename;
+    if (!is_mod_fs_file(filename)) {
+
+        // normalize filename
+        char normPath[SYS_MAX_PATH] = { 0 };
+        snprintf(normPath, SYS_MAX_PATH, "%s", filename);
+        normalize_path(normPath);
+
+        // find mod file in mod list
+        bool foundModFile = false;
+        struct ModFile* modFile = NULL;
+        u16 fileCount = gLuaActiveMod->fileCount;
+        for (u16 i = 0; i < fileCount; i++) {
+            struct ModFile* file = &gLuaActiveMod->files[i];
+            if(path_ends_with(file->relativePath, normPath)) {
+                foundModFile = true;
+                modFile = file;
+                break;
+            }
         }
-    }
-    if (!foundModFile) {
-        LOG_LUA_LINE("Could not find audio file: '%s'", filename);
-        return NULL;
+        if (!foundModFile) {
+            LOG_LUA_LINE("Could not find audio file: '%s'", filename);
+            return NULL;
+        }
+        filepath = modFile->cachedPath;
     }
 
     // find stream in ModAudio list
-    struct ModAudio* audio = find_mod_audio(modFile);
+    struct ModAudio* audio = find_mod_audio(filepath);
     if (audio) {
         if (isStream == audio->isStream) {
             return audio;
@@ -261,36 +287,52 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     }
 
     // remember file
-    audio->file = modFile;
+    audio->filepath = strdup(filepath);
 
-    // load audio
-    FILE *f = f_open_r(modFile->cachedPath);
-    if (!f) {
-        LOG_ERROR("failed to load audio file '%s': file not found", filename);
-        return NULL;
-    }
+    void *buffer = NULL;
+    u32 size = 0;
 
-    f_seek(f, 0, SEEK_END);
-    u32 size = f_tell(f);
-    f_rewind(f);
-    void *buffer = calloc(size, 1);
-    if (!buffer) {
+    if (is_mod_fs_file(filepath)) {
+        if (!mod_fs_read_file_from_uri(filepath, &buffer, &size)) {
+            LOG_ERROR("failed to load audio file '%s': an error occurred with modfs", filename);
+            return NULL;
+        }
+    } else {
+
+        // load audio
+        FILE *f = f_open_r(filepath);
+        if (!f) {
+            LOG_ERROR("failed to load audio file '%s': file not found", filename);
+            return NULL;
+        }
+
+        f_seek(f, 0, SEEK_END);
+        size = f_tell(f);
+        f_rewind(f);
+        buffer = calloc(size, 1);
+        if (!buffer) {
+            f_close(f);
+            f_delete(f);
+            LOG_ERROR("failed to load audio file '%s': cannot allocate buffer of size: %d", filename, size);
+            return NULL;
+        }
+
+        // read the audio buffer
+        if (f_read(buffer, 1, size, f) < size) {
+            free(buffer);
+            f_close(f);
+            f_delete(f);
+            LOG_ERROR("failed to load audio file '%s': cannot read audio buffer of size: %d", filename, size);
+            return NULL;
+        }
         f_close(f);
         f_delete(f);
-        LOG_ERROR("failed to load audio file '%s': cannot allocate buffer of size: %d", filename, size);
-        return NULL;
     }
 
-    // read the audio buffer
-    if (f_read(buffer, 1, size, f) < size) {
-        free(buffer);
-        f_close(f);
-        f_delete(f);
-        LOG_ERROR("failed to load audio file '%s': cannot read audio buffer of size: %d", filename, size);
+    if (!buffer || !size) {
+        LOG_ERROR("failed to load audio file '%s': failed to read audio data", filename);
         return NULL;
     }
-    f_close(f);
-    f_delete(f);
 
     // decode the audio buffer
     ma_result result = ma_decoder_init_memory(buffer, size, NULL, &audio->decoder);
@@ -604,6 +646,7 @@ void audio_custom_shutdown(void) {
                 audio_sample_destroy_copies(audio);
             }
             ma_sound_uninit(&audio->sound);
+            free((void *) audio->filepath);
         }
         dynamic_pool_free(sModAudioPool, audio);
         node = prev;

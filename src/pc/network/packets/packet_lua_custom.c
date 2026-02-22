@@ -6,7 +6,6 @@
 #include "pc/debuglog.h"
 
 void network_send_lua_custom(bool broadcast) {
-    LOG_INFO("Sending lua custom packet");
     lua_State* L = gLuaState;
     u16 zero = 0;
     s32 paramIndex = 1;
@@ -97,7 +96,6 @@ void network_send_lua_custom(bool broadcast) {
 }
 
 void network_receive_lua_custom(struct Packet* p) {
-    LOG_INFO("Receiving lua custom packet");
     lua_State* L = gLuaState;
     u16 modIndex = 0;
     u8  keyCount = 0;
@@ -129,6 +127,120 @@ void network_receive_lua_custom(struct Packet* p) {
         lua_settable(L, -3);
     }
 
-    smlua_call_event_hooks_value_param(HOOK_ON_PACKET_RECEIVE, modIndex, tableIndex);
+    smlua_call_event_hooks(HOOK_ON_PACKET_RECEIVE, modIndex, tableIndex);
     lua_pop(L, 1); // pop table
+}
+
+  ////////////////
+ // bytestring //
+////////////////
+
+#define MAX_BYTESTRING_LENGTH (PACKET_LENGTH - 15)
+
+void network_send_lua_custom_bytestring(bool broadcast) {
+    lua_State* L = gLuaState;
+    s32 paramIndex = 1;
+
+    if (!L) {
+        LOG_ERROR("Sent lua custom bytestring packet when lua is dead");
+        return;
+    }
+
+    // figure out mod index
+    if (gLuaActiveMod == NULL) {
+        LOG_LUA_LINE("Could not figure out the current active mod!");
+        return;
+    }
+    u16 modIndex = gLuaActiveMod->index;
+
+    // get local index
+    s32 toLocalIndex = 0;
+    if (!broadcast) {
+        toLocalIndex = smlua_to_integer(L, paramIndex++);
+        if (toLocalIndex <= 0 || toLocalIndex >= MAX_PLAYERS) {
+            LOG_LUA_LINE("Tried to send bytestring packet to invalid local index: %d", toLocalIndex)
+            return;
+        }
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("Invalid 'localIndex' type");
+            return;
+        }
+    }
+
+    // get reliability
+    bool reliability = smlua_to_boolean(L, paramIndex++);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Invalid 'reliable' type");
+        return;
+    }
+
+    // write packet header
+    struct Packet p = { 0 };
+    packet_init(&p, PACKET_LUA_CUSTOM_BYTESTRING, reliability, PLMT_NONE);
+    packet_write(&p, &modIndex, sizeof(u16));
+
+    // make sure value passed in is a string
+    s32 bytestringIndex = paramIndex;
+    if (lua_type(L, bytestringIndex) != LUA_TSTRING) {
+        LOG_LUA_LINE("Tried to send a bytestring packet with a non-string");
+        return;
+    }
+
+    // get string information
+    size_t totalLength = 0;
+    const char* bytestring = lua_tolstring(L, bytestringIndex, &totalLength);
+
+    // check length
+    if (totalLength <= 0 || totalLength > MAX_BYTESTRING_LENGTH) {
+        LOG_LUA_LINE("Tried to send a bytestring packet with an invalid length '%llu'. Must be above 0 and below '%u'", (u64)totalLength, MAX_BYTESTRING_LENGTH);
+    }
+
+    // write length
+    u16 bytestringLength = totalLength;
+    packet_write(&p, &bytestringLength, sizeof(u16));
+
+    // write bytestring
+    packet_write(&p, (char*)bytestring, totalLength);
+
+    // send packet
+    if (broadcast) {
+        network_send(&p);
+    } else {
+        network_send_to(toLocalIndex, &p);
+    }
+}
+
+void network_receive_lua_custom_bytestring(struct Packet* p) {
+    lua_State* L = gLuaState;
+    u16 modIndex = 0;
+    u16 bytestringLength = 0;
+    packet_read(p, &modIndex, sizeof(u16));
+    packet_read(p, &bytestringLength, sizeof(u16));
+
+    if (!L) {
+        LOG_ERROR("Received lua custom bytestring packet when lua is dead");
+        return;
+    }
+
+    if (bytestringLength == 0 || bytestringLength > MAX_BYTESTRING_LENGTH) {
+        LOG_ERROR("Received lua custom bytestring packet with an invalid length");
+        return;
+    }
+
+    // read byte string
+    static char sBytestring[MAX_BYTESTRING_LENGTH + 1] = "";
+    packet_read(p, &sBytestring, bytestringLength);
+
+    if (p->error) {
+        LOG_ERROR("Received malformed lua custom bytestring packet");
+        return;
+    }
+
+    // push bytestring
+    lua_pushlstring(L, sBytestring, bytestringLength);
+    s32 bytestringIndex = lua_gettop(L);
+
+    // call hook
+    smlua_call_event_hooks(HOOK_ON_PACKET_BYTESTRING_RECEIVE, modIndex, bytestringIndex);
+    lua_pop(L, 1); // pop bytestring
 }
