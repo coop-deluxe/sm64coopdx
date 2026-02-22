@@ -83,7 +83,7 @@ static int sort_coopnet_lobby_comp(const void* a, const void* b) {
     } else if (sortBy == LOBBY_SORTING_GAMEMODE) {
         retValue = strcmp(lobbyA->mode, lobbyB->mode);
     } else if (sortBy == LOBBY_SORTING_PLAYERS) {
-        retValue = lobbyA->playerCount - lobbyB->playerCount;
+        retValue = lobbyB->playerCount - lobbyA->playerCount;
     } else if (sortBy == LOBBY_SORTING_NONE) {
         retValue = lobbyA->lobbyId > lobbyB->lobbyId ? 1 : -1;
     }
