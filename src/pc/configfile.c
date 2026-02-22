@@ -174,6 +174,8 @@ unsigned int configHostSaveSlot                   = 1;
 char         configJoinIp[MAX_CONFIG_STRING]      = "";
 unsigned int configJoinPort                       = DEFAULT_PORT;
 unsigned int configNetworkSystem                  = 0;
+unsigned int configCoopNetSortSelected            = 0;
+bool         configCoopNetSortInverted            = false;
 unsigned int configPlayerInteraction              = 1;
 unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
@@ -333,6 +335,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_join_ip",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configJoinPort},
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT,   .uintValue   = &configNetworkSystem},
+    {.name = "coop_coop_net_sort_selected",    .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetSortSelected},
+    {.name = "coop_coop_net_sort_inverted",    .type = CONFIG_TYPE_BOOL,   .uintValue   = &configCoopNetSortInverted},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},
