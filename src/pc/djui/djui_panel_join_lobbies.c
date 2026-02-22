@@ -23,19 +23,19 @@ extern ALIGNED8 u8 texture_selectionbox_down_icon[];
 
 static struct LobbySortType sLobbySorting[] = {
     {
-        "SORTING_NONE",
+        "NONE",
         LOBBY_SORTING_NONE,
     },
     {
-        "SORTING_NAME",
+        "NAME",
         LOBBY_SORTING_NAME,
     },
     {
-        "SORTING_GAMEMODE",
+        "GAMEMODE",
         LOBBY_SORTING_GAMEMODE,
     },
     {
-        "SORTING_PLAYERS",
+        "PLAYERS",
         LOBBY_SORTING_PLAYERS,
     },
 };
