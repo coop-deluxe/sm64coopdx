@@ -35,7 +35,6 @@ void mods_get_main_mod_name(char* destination, u32 maxSize) {
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         if (!mod->enabled) { continue; }
-        LOG_CONSOLE("%s", mod->category)
         // always make gamemodes the main mod
         if ((mod->category && strcmp(mod->category, "gamemode") == 0)
         || (mod->incompatible && strcmp(mod->incompatible, "gamemode") == 0)) {
