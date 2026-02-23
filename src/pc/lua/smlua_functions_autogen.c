@@ -12318,7 +12318,7 @@ int smlua_func_djui_hud_reset_color(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_djui_hud_get_rotation(UNUSED lua_State* L) {
+int smlua_func_djui_hud_get_rotation(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
@@ -12328,9 +12328,17 @@ int smlua_func_djui_hud_get_rotation(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_HUDUTILSROTATION, djui_hud_get_rotation(), NULL);
+    s16 rotation;
+    f32 pivotX;
+    f32 pivotY;
 
-    return 1;
+    djui_hud_get_rotation(&rotation, &pivotX, &pivotY);
+
+    lua_pushinteger(L, rotation);
+    lua_pushnumber(L, pivotX);
+    lua_pushnumber(L, pivotY);
+
+    return 3;
 }
 
 int smlua_func_djui_hud_set_rotation(lua_State* L) {
@@ -12363,13 +12371,13 @@ int smlua_func_djui_hud_set_rotation_interpolated(lua_State* L) {
         return 0;
     }
 
-    s32 prevRotation = smlua_to_integer(L, 1);
+    s16 prevRotation = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_rotation_interpolated"); return 0; }
     f32 prevPivotX = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_rotation_interpolated"); return 0; }
     f32 prevPivotY = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_rotation_interpolated"); return 0; }
-    s32 rotation = smlua_to_integer(L, 4);
+    s16 rotation = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_rotation_interpolated"); return 0; }
     f32 pivotX = smlua_to_number(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_rotation_interpolated"); return 0; }
@@ -12377,6 +12385,69 @@ int smlua_func_djui_hud_set_rotation_interpolated(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_rotation_interpolated"); return 0; }
 
     djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_get_text_alignment(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_text_alignment", 0, top);
+        return 0;
+    }
+
+
+    f32 textHAlign;
+    f32 textVAlign;
+
+    djui_hud_get_text_alignment(&textHAlign, &textVAlign);
+
+    lua_pushnumber(L, textHAlign);
+    lua_pushnumber(L, textVAlign);
+
+    return 2;
+}
+
+int smlua_func_djui_hud_set_text_alignment(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_text_alignment", 2, top);
+        return 0;
+    }
+
+    f32 textHAlign = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_text_alignment"); return 0; }
+    f32 textVAlign = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_text_alignment"); return 0; }
+
+    djui_hud_set_text_alignment(textHAlign, textVAlign);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_text_alignment_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_text_alignment_interpolated", 4, top);
+        return 0;
+    }
+
+    f32 prevTextHAlign = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_text_alignment_interpolated"); return 0; }
+    f32 prevTextVAlign = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_text_alignment_interpolated"); return 0; }
+    f32 textHAlign = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_text_alignment_interpolated"); return 0; }
+    f32 textVAlign = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_text_alignment_interpolated"); return 0; }
+
+    djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign);
 
     return 1;
 }
@@ -37389,6 +37460,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_rotation", smlua_func_djui_hud_get_rotation);
     smlua_bind_function(L, "djui_hud_set_rotation", smlua_func_djui_hud_set_rotation);
     smlua_bind_function(L, "djui_hud_set_rotation_interpolated", smlua_func_djui_hud_set_rotation_interpolated);
+    smlua_bind_function(L, "djui_hud_get_text_alignment", smlua_func_djui_hud_get_text_alignment);
+    smlua_bind_function(L, "djui_hud_set_text_alignment", smlua_func_djui_hud_set_text_alignment);
+    smlua_bind_function(L, "djui_hud_set_text_alignment_interpolated", smlua_func_djui_hud_set_text_alignment_interpolated);
     smlua_bind_function(L, "djui_hud_get_screen_width", smlua_func_djui_hud_get_screen_width);
     smlua_bind_function(L, "djui_hud_get_screen_height", smlua_func_djui_hud_get_screen_height);
     smlua_bind_function(L, "djui_hud_get_mouse_x", smlua_func_djui_hud_get_mouse_x);

@@ -4,10 +4,138 @@
 #include "djui_hud_utils.h"
 #include "game/segment2.h"
 
-static u8 sSavedR = 0;
-static u8 sSavedG = 0;
-static u8 sSavedB = 0;
-static u8 sSavedA = 0;
+  ///////////
+ // color //
+///////////
+
+static const struct DjuiColor sDjuiTextDefaultColor = { 220, 220, 220, 255 };
+static struct DjuiColor sDjuiTextCurrentColor;
+
+bool djui_text_parse_color(char *begin, const char *end, bool ignoreAlpha, const struct DjuiColor *baseColor, char **nextChar, struct DjuiColor *parsedColor) {
+    char *c = begin;
+
+    // Not an escape
+    if (*c != '\\') {
+        return false;
+    }
+    c = djui_unicode_next_char(c);
+
+    // Not a color
+    if (*c != '#') {
+        return false;
+    }
+    c = djui_unicode_next_char(c);
+
+    // Parse color
+    u32 color = 0;
+    u8 length = 0;
+    while (c < end) {
+        if (*c == '\\') {
+            break;
+        }
+
+        u8 colorPiece = 0;
+        if (*c >= '0' && *c <= '9') { colorPiece = *c - '0'; }
+        else if (*c >= 'a' && *c <= 'f') { colorPiece = 10 + *c - 'a'; }
+        else if (*c >= 'A' && *c <= 'F') { colorPiece = 10 + *c - 'A'; }
+        else { // Not a valid color piece
+            return false;
+        }
+        color = (color << 4) | colorPiece;
+        length++;
+
+        c = djui_unicode_next_char(c);
+    }
+
+    // Unterminated color code
+    if (c == end) {
+        return false;
+    }
+
+    switch (length) {
+
+        // reset to base color
+        case 0: {
+            if (baseColor && parsedColor) {
+                *parsedColor = *baseColor;
+            }
+        } break;
+
+        // #rgb
+        case 3: {
+            if (parsedColor) {
+                u32 r = (color >> 8) & 0xF;
+                u32 g = (color >> 4) & 0xF;
+                u32 b = (color >> 0) & 0xF;
+                parsedColor->r = (r << 4) | r;
+                parsedColor->g = (g << 4) | g;
+                parsedColor->b = (b << 4) | b;
+                parsedColor->a = 0xFF;
+            }
+        } break;
+
+        // #rgba
+        case 4: {
+            if (parsedColor) {
+                u32 r = (color >> 12) & 0xF;
+                u32 g = (color >> 8) & 0xF;
+                u32 b = (color >> 4) & 0xF;
+                u32 a = (color >> 0) & 0xF;
+                parsedColor->r = (r << 4) | r;
+                parsedColor->g = (g << 4) | g;
+                parsedColor->b = (b << 4) | b;
+                parsedColor->a = ignoreAlpha ? 0xFF : ((a << 4) | a);
+            }
+        } break;
+
+        // #rrggbb
+        case 6: {
+            if (parsedColor) {
+                parsedColor->r = ((color >> 16) & 0xFF);
+                parsedColor->g = ((color >>  8) & 0xFF);
+                parsedColor->b = ((color >>  0) & 0xFF);
+                parsedColor->a = 0xFF;
+            }
+        } break;
+
+        // #rrggbbaa
+        case 8: {
+            if (parsedColor) {
+                parsedColor->r = ((color >> 24) & 0xFF);
+                parsedColor->g = ((color >> 16) & 0xFF);
+                parsedColor->b = ((color >>  8) & 0xFF);
+                parsedColor->a = ignoreAlpha ? 0xFF : ((color >> 0) & 0xFF);
+            }
+        } break;
+
+        // Invalid color
+        default: return false;
+    }
+
+    if (nextChar) {
+        *nextChar = djui_unicode_next_char(c);
+    }
+    return true;
+}
+
+void djui_text_remove_colors(char *str) {
+    char *colorStart = str;
+    const char *strEnd = str + strlen(str);
+    while ((colorStart = strstr(colorStart, "\\#"))) {
+        char *colorEnd;
+        if (djui_text_parse_color(colorStart, strEnd, false, NULL, &colorEnd, NULL) && colorEnd > colorStart) {
+            memmove(colorStart, colorEnd, strlen(colorEnd) + 1);
+        } else {
+            colorStart++;
+        }
+    }
+}
+
+char *djui_text_get_uncolored_string(const char *str) {
+    char *uncolored = strdup(str);
+    djui_text_remove_colors(uncolored);
+    return uncolored;
+}
 
   ////////////////
  // properties //
@@ -59,6 +187,10 @@ static f32 sTextRenderY = 0;
 static f32 sTextRenderLastX = 0;
 static f32 sTextRenderLastY = 0;
 
+bool djui_text_is_printable(const char *c) {
+    return c != NULL && (!iscntrl(*c) || *c == 0x7F); // the star
+}
+
 static void djui_text_translate(f32 x, f32 y) {
     sTextRenderX += x;
     sTextRenderY += y;
@@ -90,7 +222,7 @@ static void djui_text_render_char(struct DjuiText* text, char* c) {
         sTextRenderY += 1.0f / text->fontScale;
         gDPSetEnvColor(gDisplayListHead++, text->dropShadow.r, text->dropShadow.g, text->dropShadow.b, text->dropShadow.a);
         djui_text_render_single_char(text, c);
-        gDPSetEnvColor(gDisplayListHead++, sSavedR, sSavedG, sSavedB, sSavedA);
+        gDPSetEnvColor(gDisplayListHead++, sDjuiTextCurrentColor.r, sDjuiTextCurrentColor.g, sDjuiTextCurrentColor.b, sDjuiTextCurrentColor.a);
         sTextRenderX -= 1.0f / text->fontScale;
         sTextRenderY -= 1.0f / text->fontScale;
     }
@@ -99,16 +231,21 @@ static void djui_text_render_char(struct DjuiText* text, char* c) {
 
 static f32 djui_text_measure_word_width(struct DjuiText* text, char* message) {
     f32 width = 0;
-    bool skipping = false;
     char* c = message;
+    const char *end = message + strlen(message);
     while (*c != '\0') {
-        if (*c == ' ')  { return width; }
-        if (*c == '\n') { return width; }
-        if (*c == '\0') { return width; }
-        if (*c == '\\') { skipping = !skipping; }
-        if (!skipping) {
-            width += text->font->char_width(c);
+
+        // color code
+        if (djui_text_parse_color(c, end, true, NULL, &c, NULL)) {
+            continue;
         }
+
+        // end of word due to unprintable chars or space
+        if (!djui_text_is_printable(c) || *c == ' ') {
+            return width;
+        }
+
+        width += text->font->char_width(c);
         c = djui_unicode_next_char(c);
     }
     return width;
@@ -122,17 +259,18 @@ static void djui_text_read_line(struct DjuiText* text, char** message, f32* line
     u16 lastSafeEllipsesIndex = *index;
     u16 lastSafeEllipsesLineWidth = *lineWidth + ellipsesWidth;*/
 
-    bool skipping = false;
     char* c = *message;
+    const char *end = *message + strlen(*message);
     while (*c != '\0') {
         f32 charWidth = text->font->char_width(c);
 
-        // check for special escape sequences
-        if (*c == '\\') { skipping = !skipping; }
-        if (skipping || *c == '\\') {
+        // check for color code
+        if (*c == '\\') {
             lastC = c;
-            c = djui_unicode_next_char(c);
-            continue;
+            if (djui_text_parse_color(c, end, true, NULL, &c, NULL)) {
+                lastC = c;
+                continue;
+            }
         }
 
         // check for newline
@@ -212,59 +350,6 @@ f32 djui_text_find_width(struct DjuiText* text, u16 maxLines) {
     return largestWidth * text->fontScale;
 }
 
-static char* djui_text_render_line_parse_escape(char* c1, char* c2) {
-    bool parsingColor = (c1[1] == '#');
-    char* c = parsingColor ? (c1 + 2) : (c1 + 1);
-
-    u32 color = 0;
-    u8 colorPieces = 0;
-    while (c < c2) {
-        if (*c == '\\') { break; }
-        if (parsingColor) {
-            u8 colorPiece = 0;
-            if (*c >= '0' && *c <= '9') { colorPiece = *c - '0'; }
-            else if (*c >= 'a' && *c <= 'f') { colorPiece = 10 + *c - 'a'; }
-            else if (*c >= 'A' && *c <= 'F') { colorPiece = 10 + *c - 'A'; }
-            color = (color << 4) | colorPiece;
-            colorPieces++;
-        }
-        c = djui_unicode_next_char(c);
-    }
-
-    if (parsingColor) {
-       if (colorPieces == 3) {
-            u32 r = (color >> 8) & 0xF;
-            u32 g = (color >> 4) & 0xF;
-            u32 b = (color >> 0) & 0xF;
-            sSavedR = (r << 4) | r;
-            sSavedG = (g << 4) | g;
-            sSavedB = (b << 4) | b;
-        /*} else if (colorPieces == 4) {
-            u32 r = (color >> 12) & 0xF;
-            u32 g = (color >> 8) & 0xF;
-            u32 b = (color >> 4) & 0xF;
-            u32 a = (color >> 0) & 0xF;
-            sSavedR = (r << 4) | r;
-            sSavedG = (g << 4) | g;
-            sSavedB = (b << 4) | b;
-            sSavedA = (a << 4) | a;*/
-        } else if (colorPieces == 6) {
-            sSavedR = ((color >> 16) & 0xFF);
-            sSavedG = ((color >>  8) & 0xFF);
-            sSavedB = ((color >>  0) & 0xFF);
-        }/*else if (colorPieces == 8) {
-            sSavedR = ((color >> 24) & 0xFF);
-            sSavedG = ((color >> 16) & 0xFF);
-            sSavedB = ((color >>  8) & 0xFF);
-            sSavedA = ((color >>  0) & 0xFF);
-        }*/
-        gDPSetEnvColor(gDisplayListHead++, sSavedR, sSavedG, sSavedB, sSavedA);
-    }
-
-    c = djui_unicode_next_char(c);
-    return c;
-}
-
 static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32 lineWidth, bool ellipses) {
     struct DjuiBase* base     = &text->base;
     struct DjuiBaseRect* comp = &base->comp;
@@ -284,9 +369,13 @@ static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32
     }
 
     // render the line
+    text->font->render_begin();
+
     for (char* c = c1; c < c2;) {
-        if (*c == '\\') {
-            c = djui_text_render_line_parse_escape(c, c2);
+        struct DjuiColor parsedColor;
+        if (djui_text_parse_color(c, c2, true, &sDjuiTextDefaultColor, &c, &parsedColor)) {
+            gDPSetEnvColor(gDisplayListHead++, parsedColor.r, parsedColor.g, parsedColor.b, parsedColor.a);
+            sDjuiTextCurrentColor = parsedColor;
             continue;
         }
 
@@ -311,6 +400,8 @@ static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32
             c = djui_unicode_next_char(c);
         }
     }
+
+    text->font->render_end();
 
     // reset translation matrix
     djui_text_translate(-curWidth, text->font->lineHeight);
@@ -352,10 +443,7 @@ static bool djui_text_render(struct DjuiBase* base) {
 
     // set color
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
-    sSavedR = base->color.r;
-    sSavedG = base->color.g;
-    sSavedB = base->color.b;
-    sSavedA = base->color.a;
+    sDjuiTextCurrentColor = base->color;
 
     // count lines
     u16 maxLines = comp->height / ((f32)text->font->lineHeight * text->fontScale);

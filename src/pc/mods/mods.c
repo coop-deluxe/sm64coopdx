@@ -188,8 +188,8 @@ static void mods_sort(struct Mods* mods) {
         struct Mod* mod = mods->entries[i];
         for (s32 j = 0; j < i; ++j) {
             struct Mod* mod2 = mods->entries[j];
-            char* name = str_remove_color_codes(mod->name);
-            char* name2 = str_remove_color_codes(mod2->name);
+            char* name = djui_text_get_uncolored_string(mod->name);
+            char* name2 = djui_text_get_uncolored_string(mod2->name);
             if (strcmp(name, name2) < 0) {
                 mods->entries[i] = mod2;
                 mods->entries[j] = mod;

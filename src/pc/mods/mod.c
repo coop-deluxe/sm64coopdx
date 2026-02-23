@@ -638,7 +638,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
 
     // set category
     if (mod->category == NULL) {
-        char *modNameNoColor = str_remove_color_codes(mod->name);
+        char *modNameNoColor = djui_text_get_uncolored_string(mod->name);
         if (strstr(modNameNoColor, "[CS]") == modNameNoColor) {
             mod->category = strdup("cs");
         }

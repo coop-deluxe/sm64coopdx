@@ -1228,16 +1228,6 @@ static struct LuaObjectField sGraphNodeTranslationRotationFields[LUA_GRAPH_NODE_
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeTranslationRotation, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
 };
 
-#define LUA_HUD_UTILS_ROTATION_FIELD_COUNT 6
-static struct LuaObjectField sHudUtilsRotationFields[LUA_HUD_UTILS_ROTATION_FIELD_COUNT] = {
-    { "pivotX",       LVT_F32, offsetof(struct HudUtilsRotation, pivotX),       false, LOT_NONE, 1, sizeof(f32) },
-    { "pivotY",       LVT_F32, offsetof(struct HudUtilsRotation, pivotY),       false, LOT_NONE, 1, sizeof(f32) },
-    { "prevPivotX",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotX),   false, LOT_NONE, 1, sizeof(f32) },
-    { "prevPivotY",   LVT_F32, offsetof(struct HudUtilsRotation, prevPivotY),   false, LOT_NONE, 1, sizeof(f32) },
-    { "rotation",     LVT_F32, offsetof(struct HudUtilsRotation, rotation),     false, LOT_NONE, 1, sizeof(f32) },
-    { "rotationDiff", LVT_F32, offsetof(struct HudUtilsRotation, rotationDiff), false, LOT_NONE, 1, sizeof(f32) },
-};
-
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
 static struct LuaObjectField sInstantWarpFields[LUA_INSTANT_WARP_FIELD_COUNT] = {
     { "area",         LVT_U8,      offsetof(struct InstantWarp, area),         false, LOT_NONE,  1, sizeof(u8)    },
@@ -2734,7 +2724,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODESWITCHCASE,          sGraphNodeSwitchCaseFields,          LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT          },
     { LOT_GRAPHNODETRANSLATION,         sGraphNodeTranslationFields,         LUA_GRAPH_NODE_TRANSLATION_FIELD_COUNT          },
     { LOT_GRAPHNODETRANSLATIONROTATION, sGraphNodeTranslationRotationFields, LUA_GRAPH_NODE_TRANSLATION_ROTATION_FIELD_COUNT },
-    { LOT_HUDUTILSROTATION,             sHudUtilsRotationFields,             LUA_HUD_UTILS_ROTATION_FIELD_COUNT              },
     { LOT_INSTANTWARP,                  sInstantWarpFields,                  LUA_INSTANT_WARP_FIELD_COUNT                    },
     { LOT_LAKITUSTATE,                  sLakituStateFields,                  LUA_LAKITU_STATE_FIELD_COUNT                    },
     { LOT_LEVELVALUES,                  sLevelValuesFields,                  LUA_LEVEL_VALUES_FIELD_COUNT                    },
@@ -2840,7 +2829,6 @@ const char *sLuaLotNames[] = {
 	[LOT_GRAPHNODESWITCHCASE] = "GraphNodeSwitchCase",
 	[LOT_GRAPHNODETRANSLATION] = "GraphNodeTranslation",
 	[LOT_GRAPHNODETRANSLATIONROTATION] = "GraphNodeTranslationRotation",
-	[LOT_HUDUTILSROTATION] = "HudUtilsRotation",
 	[LOT_INSTANTWARP] = "InstantWarp",
 	[LOT_LAKITUSTATE] = "LakituState",
 	[LOT_LEVELVALUES] = "LevelValues",

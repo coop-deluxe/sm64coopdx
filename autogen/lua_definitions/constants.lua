@@ -2717,6 +2717,42 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
+--- @type number
+ROTATION_PIVOT_X_LEFT = 0.0
+
+--- @type number
+ROTATION_PIVOT_X_CENTER = 0.5
+
+--- @type number
+ROTATION_PIVOT_X_RIGHT = 1.0
+
+--- @type number
+ROTATION_PIVOT_Y_TOP = 0.0
+
+--- @type number
+ROTATION_PIVOT_Y_CENTER = 0.5
+
+--- @type number
+ROTATION_PIVOT_Y_BOTTOM = 1.0
+
+--- @type number
+TEXT_HALIGN_LEFT = 0.0
+
+--- @type number
+TEXT_HALIGN_CENTER = 0.5
+
+--- @type number
+TEXT_HALIGN_RIGHT = 1.0
+
+--- @type number
+TEXT_VALIGN_TOP = 0.0
+
+--- @type number
+TEXT_VALIGN_CENTER = 0.5
+
+--- @type number
+TEXT_VALIGN_BOTTOM = 1.0
+
 RESOLUTION_DJUI  = 0 --- @type HudUtilsResolution
 RESOLUTION_N64   = 1 --- @type HudUtilsResolution
 RESOLUTION_COUNT = 2 --- @type HudUtilsResolution
