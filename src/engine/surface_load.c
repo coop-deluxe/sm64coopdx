@@ -271,6 +271,8 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
 
     s16 cellZ, cellX;
 
+    smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, dynamic);
+
     minX = min_3(surface->vertex1[0], surface->vertex2[0], surface->vertex3[0]);
     minZ = min_3(surface->vertex1[2], surface->vertex2[2], surface->vertex3[2]);
     maxX = max_3(surface->vertex1[0], surface->vertex2[0], surface->vertex3[0]);
@@ -287,7 +289,6 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
         }
     }
 
-    smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, dynamic);
 }
 
 /**
