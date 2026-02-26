@@ -112,7 +112,8 @@ static u8* smlua_text_utils_convert(const char* str) {
 // Checks the first 3 characters
 static bool str_starts_with_spaces(const char* str) {
     for (u8 i = 0; i < 3; i++) {
-        if (str[i] != ' ') { return false; }
+        if (str[i] == '\0') { return false; }
+        if (str[i] != ' ')  { return false; }
     }
     return true;
 }
