@@ -38,7 +38,6 @@ struct ModCategory sCategories[] = {
     { "GAMEMODES", "gamemode" },
     { "MOVESETS", "moveset" },
     { "CHARACTER_SELECT", "cs" },
-    { "CHARACTERS", "character" },
 };
 static const int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
 
