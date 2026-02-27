@@ -50,6 +50,7 @@ struct PacketPlayerData {
     u8  framesSinceB;
     u8  wallKickTimer;
     u8  doubleJumpTimer;
+    u8  specialTripleJump;
     Vec3s faceAngle;
     Vec3s angleVel;
     s16 slideYaw;
@@ -120,6 +121,7 @@ static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m
     data->framesSinceB    = m->framesSinceB;
     data->wallKickTimer   = m->wallKickTimer;
     data->doubleJumpTimer = m->doubleJumpTimer;
+    data->specialTripleJump = m->specialTripleJump;
     memcpy(data->faceAngle, m->faceAngle, sizeof(s16) * 3);
     memcpy(data->angleVel,  m->angleVel,  sizeof(s16) * 3);
     data->slideYaw        = m->slideYaw;
@@ -185,6 +187,7 @@ static void write_packet_data(struct PacketPlayerData* data, struct MarioState* 
     m->framesSinceB    = data->framesSinceB;
     m->wallKickTimer   = data->wallKickTimer;
     m->doubleJumpTimer = data->doubleJumpTimer;
+    m->specialTripleJump = data->specialTripleJump;
     memcpy(m->faceAngle, data->faceAngle, sizeof(s16) * 3);
     memcpy(m->angleVel,  data->angleVel,  sizeof(s16) * 3);
     m->slideYaw        = data->slideYaw;

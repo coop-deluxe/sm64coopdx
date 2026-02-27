@@ -53,15 +53,13 @@ void bhv_camera_lakitu_init(void) {
             sync_object_init_field(o, &o->oCameraLakituFinishedDialog);
             sync_object_init_field(o, &o->oCameraLakituPitchVel);
 #ifndef VERSION_JP
-            sync_object_init_field(o, &o->oCameraLakituUnk104);
+            sync_object_init_field(o, &o->oCameraLakituMusicPlayed);
 #endif
         }
     }
 }
 
-static u8 camera_lakitu_intro_act_trigger_cutscene_continue_dialog(void) {
-    return (o->oAction == CAMERA_LAKITU_INTRO_ACT_TRIGGER_CUTSCENE);
-}
+u8 camera_lakitu_intro_act_show_dialog_continue_dialog(void) { return o->oCameraLakituFinishedDialog != TRUE; }
 
 /**
  * Wait for mario to stand on the bridge, then interrupt his action and enter
@@ -77,21 +75,18 @@ static void camera_lakitu_intro_act_trigger_cutscene(void) {
     if (player->oPosX > -544.0f && player->oPosX < 545.0f && player->oPosY > 800.0f
         && player->oPosZ > -2000.0f && player->oPosZ < -177.0f)
     {
-        if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_trigger_cutscene_continue_dialog) == 1) {
+        if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 1) {
             o->oAction = CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD;
         }
     }
 }
 
-static u8 camera_lakitu_intro_act_spawn_cloud_continue_dialog(void) {
-    return (o->oAction == CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD);
-}
 /**
  * Warp up into the air and spawn cloud, then enter the TODO action.
  */
 static void camera_lakitu_intro_act_spawn_cloud(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState && should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_spawn_cloud_continue_dialog) == 2) {
+    if (marioState && should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 2) {
         o->oAction = CAMERA_LAKITU_INTRO_ACT_UNK2;
 
         o->oPosX = 1800.0f;
@@ -105,8 +100,6 @@ static void camera_lakitu_intro_act_spawn_cloud(void) {
         spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
     }
 }
-
-u8 camera_lakitu_intro_act_show_dialog_continue_dialog(void) { return o->oCameraLakituFinishedDialog != TRUE; }
 
 /**
  * Circle down to mario, show the dialog, then fly away.
@@ -130,6 +123,8 @@ static void camera_lakitu_intro_act_show_dialog(void) {
         o->oFaceAnglePitch = obj_turn_pitch_toward_mario(marioState, 120.0f, 0);
     }
     o->oFaceAngleYaw = angleToPlayer;
+
+    should_start_or_continue_dialog(marioState, o);
 
     // After finishing dialog, fly away and despawn
     if (o->oCameraLakituFinishedDialog) {
@@ -167,9 +162,9 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                 approach_f32_ptr(&o->oCameraLakituCircleRadius, 200.0f, 50.0f);
                 if (distanceToPlayer < 1000.0f) {
 #ifndef VERSION_JP
-                    if (!o->oCameraLakituUnk104) {
+                    if (!o->oCameraLakituMusicPlayed) {
                         play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(15, SEQ_EVENT_CUTSCENE_LAKITU), 0);
-                        o->oCameraLakituUnk104 = TRUE;
+                        o->oCameraLakituMusicPlayed = TRUE;
                     }
 #endif
 

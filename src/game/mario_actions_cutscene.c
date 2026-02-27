@@ -237,7 +237,7 @@ s32 geo_switch_peach_eyes(s32 run, struct GraphNode *node, UNUSED s32 a2) {
 }
 
 // unused
-static void stub_is_textbox_active(u16 *a0) {
+UNUSED static void stub_is_textbox_active(u16 *a0) {
     if (get_dialog_id() == DIALOG_NONE) {
         *a0 = 0;
     }
@@ -1279,6 +1279,7 @@ s32 act_spawn_spin_airborne(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         return set_water_plunge_action(m);
     }
 
@@ -1311,6 +1312,7 @@ s32 act_spawn_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -1553,6 +1555,7 @@ s32 act_spawn_no_spin_landing(struct MarioState *m) {
         if (m == &gMarioStates[0]) {
             load_level_init_text(0);
         }
+        m->freeze = 2;
         set_mario_action(m, ACT_IDLE, 0);
     }
     return FALSE;
@@ -2176,7 +2179,7 @@ static s32 act_intro_cutscene(struct MarioState *m) {
     return FALSE;
 }
 
-static void jumbo_star_offset(struct MarioState* m) {
+UNUSED static void jumbo_star_offset(struct MarioState* m) {
     if (!m) { return; }
     m->pos[0] += 300.0f * sins(m->faceAngle[1] + 0x4000 * m->playerIndex);
     m->pos[2] += 300.0f * coss(m->faceAngle[1] + 0x4000 * m->playerIndex);

@@ -91,7 +91,7 @@ void bhv_star_spawn_init(void) {
     o->oForwardVel = o->oStarSpawnDisFromHome / 30.0f;
     o->oStarSpawnUnkFC = o->oPosY;
 
-    if (o->oStarSpawnExtCutsceneFlags && ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE)) {
+    if (o->oStarSpawnExtCutsceneFlags) {
         if (o->oBehParams2ndByte == 0 || gCurrCourseNum == COURSE_BBH)
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
         else
