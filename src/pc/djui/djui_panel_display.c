@@ -25,9 +25,10 @@ static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* cal
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     s32 frameLimit = atoi(inputbox1->buffer);
     if (frameLimit >= 30 && frameLimit <= 3000) {
-        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        djui_inputbox_set_text_color(inputbox1, theme->interactables.textColor.r, theme->interactables.textColor.g, theme->interactables.textColor.b, theme->interactables.textColor.a);
         configFrameLimit = frameLimit;
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);

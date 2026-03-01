@@ -96,6 +96,9 @@ void djui_chat_message_create(const char* message) {
     chatText->base.comp.width = maxTextWidth;
     f32 messageHeight = djui_text_count_lines(chatText, 10) * (chatText->font->lineHeight * chatText->font->defaultFontScale) + 8;
     djui_base_set_size(base, 1.0f, messageHeight);
+    if (gDjuiChatBox->chatFlow->base.height.value == 0) {
+        gDjuiChatBox->chatFlow->base.height.value += 2;
+    }
     gDjuiChatBox->chatFlow->base.height.value += messageHeight + gDjuiChatBox->chatFlow->margin.value;
     if (!gDjuiChatBox->scrolling) {
         gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
