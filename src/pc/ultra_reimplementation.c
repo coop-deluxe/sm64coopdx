@@ -4,6 +4,7 @@
 #include "macros.h"
 #include "platform.h"
 #include "fs/fs.h"
+#include "game/save_file.h"
 
 u8* gOverrideEeprom = NULL;
 
@@ -124,20 +125,22 @@ s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
     return 1;
 }
 
-s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
+s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
     if (gOverrideEeprom != NULL) {
         memcpy(buffer, gOverrideEeprom + address * 8, nbytes);
         return 0;
     }
 
-    u8 content[512];
+    u8 content[EEPROM_SIZE];
     s32 ret = -1;
 
-    fs_file_t *fp = fs_open(SAVE_FILENAME);
+    char filePath[256];
+    save_file_get_dir(fileIndex, filePath, 256);
+    fs_file_t *fp = fs_open(filePath);
     if (fp == NULL) {
         return -1;
     }
-    if (fs_read(fp, content, 512) == 512) {
+    if (fs_read(fp, content, EEPROM_SIZE) == EEPROM_SIZE) {
         memcpy(buffer, content + address * 8, nbytes);
         ret = 0;
     }
@@ -146,23 +149,29 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes)
     return ret;
 }
 
-s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
+s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
     if (gOverrideEeprom != NULL) {
         memcpy(gOverrideEeprom + address * 8, buffer, nbytes);
         return 0;
     }
 
-    u8 content[512] = { 0 };
-    if (address != 0 || nbytes != 512) {
-        osEepromLongRead(mq, 0, content, 512);
+    u8 content[EEPROM_SIZE] = { 0 };
+    if (address != 0 || nbytes != EEPROM_SIZE) {
+        osEepromLongRead(mq, fileIndex, 0, content, EEPROM_SIZE);
     }
     memcpy(content + address * 8, buffer, nbytes);
 
-    FILE *fp = fopen(fs_get_write_path(SAVE_FILENAME), "wb");
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) {
+        fs_sys_mkdir(fs_get_write_path(SAVE_DIRECTORY));
+    }
+
+    char filePath[256];
+    save_file_get_dir(fileIndex, filePath, 256);
+    FILE *fp = fopen(fs_get_write_path(filePath), "wb");
     if (fp == NULL) {
         return -1;
     }
-    s32 ret = fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
+    s32 ret = fwrite(content, 1, EEPROM_SIZE, fp) == EEPROM_SIZE ? 0 : -1;
     fclose(fp);
 
     return ret;

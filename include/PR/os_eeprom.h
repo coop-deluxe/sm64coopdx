@@ -21,7 +21,7 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_eeprom.h,v $
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:06 $
@@ -94,8 +94,8 @@ extern "C" {
 extern s32 osEepromProbe(OSMesgQueue *);
 extern s32 osEepromRead(OSMesgQueue *, u8, u8 *);
 extern s32 osEepromWrite(OSMesgQueue *, u8, u8 *);
-extern s32 osEepromLongRead(OSMesgQueue *, u8, u8 *, int);
-extern s32 osEepromLongWrite(OSMesgQueue *, u8, u8 *, int);
+extern s32 osEepromLongRead(OSMesgQueue *, u8, u8, u8 *, int);
+extern s32 osEepromLongWrite(OSMesgQueue *, u8, u8, u8 *, int);
 
 
 #endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */

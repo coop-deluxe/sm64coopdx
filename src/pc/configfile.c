@@ -19,7 +19,6 @@
 #include "network/moderator_list.h"
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
-#include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
 
@@ -58,12 +57,7 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
-char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
-    "SM64",
-    "SM64",
-    "SM64",
-    "SM64"
-};
+char configSaveNames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING] = { 0 };
 
 // Video/audio stuff
 ConfigWindow configWindow       = {

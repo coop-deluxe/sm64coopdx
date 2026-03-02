@@ -10,7 +10,7 @@ extern "C" {
 
 #define MAX_KEYS 4096
 #define MAX_KEY_VALUE_LENGTH 1024
-#define SAVE_DIRECTORY "sav"
+#define MS_SAVE_DIRECTORY "sav"
 #define SAVE_EXTENSION ".sav"
 
 /* |description|Saves a `key` corresponding to a string `value` to mod storage|descriptionEnd| */

@@ -12,8 +12,6 @@ static struct DjuiBase* sSaveButtonCaller = NULL;
 static struct DjuiButton* sSaveButtons[NUM_SAVE_FILES] = { NULL };
 static s32 sButtonTag = 0;
 
-static char* sSaveLetters[NUM_SAVE_FILES] = { "A", "B", "C", "D" };
-
 static void djui_panel_host_save_update_button(struct DjuiButton* button, int slot);
 
 static void djui_panel_host_save_save_name_change(UNUSED struct DjuiBase* caller) {
@@ -38,7 +36,9 @@ static void djui_panel_edit_create(struct DjuiBase* caller) {
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             char buffer[64] = { 0 };
-            djui_language_replace(DLANG(HOST_SAVE, EDIT_NAME), buffer, 64, '@', sSaveLetters[sButtonTag]);
+            char slotBuffer[4];
+            snprintf(slotBuffer, sizeof(slotBuffer), "%d", sButtonTag);
+            djui_language_replace(DLANG(HOST_SAVE, EDIT_NAME), buffer, 64, '@', slotBuffer);
             struct DjuiText* text = djui_text_create(&rect1->base, buffer);
             djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text->base, 220, 220, 220, 255);
@@ -65,6 +65,9 @@ static void djui_panel_edit_create(struct DjuiBase* caller) {
 
 static void djui_panel_host_save_update_button(struct DjuiButton* button, int slot) {
     char starString[64] = { 0 };
+    if (configSaveNames[slot][0] == '\0') {
+        snprintf(configSaveNames[slot], MAX_SAVE_NAME_STRING, "SM64");
+    }
     snprintf(starString, 64, "%c x%d - %s", '~' + 1, save_file_get_total_star_count(slot, 0, 24), configSaveNames[slot]);
     djui_text_set_text(button->text, starString);
 }

@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <PR/ultratypes.h>
 #include "game/player_palette.h"
+#include "pc/lua/smlua_autogen.h"
+#include "game/save_file.h"
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 #define CONFIGFILE_BACKUP "sm64config-backup.txt"
@@ -43,7 +45,7 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
-extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
+extern char configSaveNames[32][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;

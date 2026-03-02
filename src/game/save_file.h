@@ -8,8 +8,9 @@
 
 #include "course_table.h"
 
-#define EEPROM_SIZE 0x200
-#define NUM_SAVE_FILES 4
+#define NUM_SAVE_FILES 32
+// size of savebuffer
+#define EEPROM_SIZE 128
 
 struct SaveBlockSignature
 {
@@ -45,33 +46,18 @@ enum SaveFileIndex {
     SAVE_FILE_D
 };
 
-struct MainMenuSaveData
+struct SingleSaveFile
 {
-    // Each save file has a 2 bit "age" for each course. The higher this value,
-    // the older the high score is. This is used for tie-breaking when displaying
-    // on the high score screen.
-    u32 coinScoreAges[NUM_SAVE_FILES];
-    u16 soundMode;
-
-#ifdef VERSION_EU
-    u16 language;
-#define SUBTRAHEND 8
-#else
-#define SUBTRAHEND 6
-#endif
-
-    // Pad to match the EEPROM size of 0x200 (10 bytes on JP/US, 8 bytes on EU)
-    u8 filler[EEPROM_SIZE / 2 - SUBTRAHEND - NUM_SAVE_FILES * (4 + sizeof(struct SaveFile))];
-
-    struct SaveBlockSignature signature;
+    // Each save file has two copies. If one is bad, the other is used as a backup.
+    struct SaveFile files[2];
+    // Filler to make a single save file equal the eeprom size
+    u8 filler[EEPROM_SIZE - (sizeof(struct SaveFile) * 2)];
 };
 
 struct SaveBuffer
 {
-    // Each of the four save files has two copies. If one is bad, the other is used as a backup.
+    // For all save files, each save has two copies. If one is bad, the other is used as a backup.
     struct SaveFile files[NUM_SAVE_FILES][2];
-    // The main menu data has two copies. If one is bad, the other is used as a backup.
-    struct MainMenuSaveData menuData[2];
 };
 
 extern u8 gLastCompletedCourseNum;
@@ -134,11 +120,7 @@ s8 get_level_num_from_course_num(s16 courseNum);
 /* |description|Gets the level number's corresponding course number|descriptionEnd| */
 s8 get_level_course_num(s16 levelNum);
 
-/* |description|
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
-Useful for leaderboard tracking or displaying recent progress
-|descriptionEnd| */
-void touch_coin_score_age(s32 fileIndex, s32 courseIndex);
+void save_file_get_dir(int fileIndex, char* outPath, size_t size);
 
 /* |description|
 Saves the current state of the game into a specified save file. Includes data verification and backup management.
