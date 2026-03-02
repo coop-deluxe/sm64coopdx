@@ -34,8 +34,8 @@ void bhv_water_bomb_spawner_update(void) {
         if (so) {
             so->fullObjectSync = TRUE;
             so->maxUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oWaterBombSpawnerBombActive);
-            sync_object_init_field(o, &o->oWaterBombSpawnerTimeToSpawn);
+            sync_object_init_field(o, o->oWaterBombSpawnerBombActive);
+            sync_object_init_field(o, o->oWaterBombSpawnerTimeToSpawn);
         }
     }
 

@@ -220,7 +220,7 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
     // write the extra field
     for (u8 i = 0; i < so->extraFieldCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
-        packet_write(p, so->extraFields[i], so->extraFieldsSize[i] / 8);
+        packet_write(p, so->extraFields[i], so->extraFieldsSizeBytes[i]);
     }
 }
 
@@ -240,7 +240,7 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
     // read the extra fields
     for (u8 i = 0; i < extraFieldsCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
-        packet_read(p, so->extraFields[i], so->extraFieldsSize[i] / 8);
+        packet_read(p, so->extraFields[i], so->extraFieldsSizeBytes[i]);
     }
 }
 

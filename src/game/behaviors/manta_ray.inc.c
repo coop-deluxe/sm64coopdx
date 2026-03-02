@@ -42,13 +42,13 @@ void bhv_manta_ray_init(void) {
     cur_obj_scale(2.5f);
 
     sync_object_init(o, 4000.0f);
-    sync_object_init_field(o, &o->oMantaTargetPitch);
-    sync_object_init_field(o, &o->oMantaTargetYaw);
-    sync_object_init_field(o, &o->oWaterRingSpawnerRingsCollected);
-    sync_object_init_field(o, &o->oMoveAnglePitch);
-    sync_object_init_field(o, &o->oMoveAngleRoll);
+    sync_object_init_field(o, o->oMantaTargetPitch);
+    sync_object_init_field(o, o->oMantaTargetYaw);
+    sync_object_init_field(o, o->oWaterRingSpawnerRingsCollected);
+    sync_object_init_field(o, o->oMoveAnglePitch);
+    sync_object_init_field(o, o->oMoveAngleRoll);
     if (ringManager != NULL) {
-        sync_object_init_field(o, &ringManager->oWaterRingMgrNextRingIndex);
+        sync_object_init_field(o, ringManager->oWaterRingMgrNextRingIndex);
     }
 }
 

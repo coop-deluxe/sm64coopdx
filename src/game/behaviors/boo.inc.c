@@ -27,20 +27,20 @@ struct SyncObject* boo_sync_object_init(void) {
     struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
-    sync_object_init_field(o, &o->oBooBaseScale);
-    sync_object_init_field(o, &o->oBooNegatedAggressiveness);
-    sync_object_init_field(o, &o->oBooOscillationTimer);
-    sync_object_init_field(o, &o->oBooTargetOpacity);
-    sync_object_init_field(o, &o->oBooTurningSpeed);
-    sync_object_init_field(o, &o->oFaceAngleRoll);
-    sync_object_init_field(o, &o->oFaceAngleYaw);
-    sync_object_init_field(o, &o->oFlags);
-    sync_object_init_field(o, &o->oForwardVel);
-    sync_object_init_field(o, &o->oHealth);
-    sync_object_init_field(o, &o->oInteractStatus);
-    sync_object_init_field(o, &o->oInteractType);
-    sync_object_init_field(o, &o->oOpacity);
-    sync_object_init_field(o, &o->oRoom);
+    sync_object_init_field(o, o->oBooBaseScale);
+    sync_object_init_field(o, o->oBooNegatedAggressiveness);
+    sync_object_init_field(o, o->oBooOscillationTimer);
+    sync_object_init_field(o, o->oBooTargetOpacity);
+    sync_object_init_field(o, o->oBooTurningSpeed);
+    sync_object_init_field(o, o->oFaceAngleRoll);
+    sync_object_init_field(o, o->oFaceAngleYaw);
+    sync_object_init_field(o, o->oFlags);
+    sync_object_init_field(o, o->oForwardVel);
+    sync_object_init_field(o, o->oHealth);
+    sync_object_init_field(o, o->oInteractStatus);
+    sync_object_init_field(o, o->oInteractType);
+    sync_object_init_field(o, o->oOpacity);
+    sync_object_init_field(o, o->oRoom);
     return so;
 }
 
@@ -862,8 +862,8 @@ void bhv_boo_with_cage_loop(void) {
 void bhv_merry_go_round_boo_manager_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oMerryGoRoundBooManagerNumBoosSpawned);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oMerryGoRoundBooManagerNumBoosSpawned);
     }
 
     struct Object* player = nearest_player_to_object(o);
