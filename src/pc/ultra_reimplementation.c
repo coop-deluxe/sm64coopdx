@@ -125,6 +125,28 @@ s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
     return 1;
 }
 
+s32 osEepromLongReadLegacy(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
+    if (gOverrideEeprom != NULL) {
+        memcpy(buffer, gOverrideEeprom + address * 8, nbytes);
+        return 0;
+    }
+
+    u8 content[512];
+    s32 ret = -1;
+
+    fs_file_t *fp = fs_open(SAVE_FILENAME_OLD);
+    if (fp == NULL) {
+        return -1;
+    }
+    if (fs_read(fp, content, 512) == 512) {
+        memcpy(buffer, content + address * 8, nbytes);
+        ret = 0;
+    }
+    fs_close(fp);
+
+    return ret;
+}
+
 s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
     if (gOverrideEeprom != NULL) {
         memcpy(buffer, gOverrideEeprom + address * 8, nbytes);

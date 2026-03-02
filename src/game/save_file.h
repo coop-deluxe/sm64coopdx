@@ -8,7 +8,7 @@
 
 #include "course_table.h"
 
-#define NUM_SAVE_FILES 32
+#define NUM_SAVE_FILES 64
 // size of savebuffer
 #define EEPROM_SIZE 128
 
@@ -58,6 +58,35 @@ struct SaveBuffer
 {
     // For all save files, each save has two copies. If one is bad, the other is used as a backup.
     struct SaveFile files[NUM_SAVE_FILES][2];
+};
+
+// Legacy save info for loading old save files
+struct LegacyMainMenuSaveData
+{
+    // Each save file has a 2 bit "age" for each course. The higher this value,
+    // the older the high score is. This is used for tie-breaking when displaying
+    // on the high score screen.
+    u32 coinScoreAges[4];
+    u16 soundMode;
+
+#ifdef VERSION_EU
+    u16 language;
+#define SUBTRAHEND 8
+#else
+#define SUBTRAHEND 6
+#endif
+
+    // Pad to match the EEPROM size of 0x200 (10 bytes on JP/US, 8 bytes on EU)
+    u8 filler[512 / 2 - SUBTRAHEND - 4 * (4 + sizeof(struct SaveFile))];
+
+    struct SaveBlockSignature signature;
+};
+
+struct LegacySaveBuffer {
+    // Each of the four save files has two copies. If one is bad, the other is used as a backup.
+    struct SaveFile files[4][2];
+    // The main menu data has two copies. If one is bad, the other is used as a backup.
+    struct LegacyMainMenuSaveData menuData[2];
 };
 
 extern u8 gLastCompletedCourseNum;
@@ -121,6 +150,8 @@ s8 get_level_num_from_course_num(s16 courseNum);
 s8 get_level_course_num(s16 levelNum);
 
 void save_file_get_dir(int fileIndex, char* outPath, size_t size);
+
+s32 save_file_get_first_available_index();
 
 /* |description|
 Saves the current state of the game into a specified save file. Includes data verification and backup management.

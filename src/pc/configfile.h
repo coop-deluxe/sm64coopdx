@@ -45,7 +45,7 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
-extern char configSaveNames[32][MAX_SAVE_NAME_STRING];
+extern char configSaveNames[64][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;

@@ -98,11 +98,6 @@ s8 get_level_course_num(s16 levelNum) {
     return gLevelToCourseNumTable[levelNum];
 }
 
-void save_file_get_dir(int fileIndex, char* outPath, size_t size) {
-    snprintf(outPath, size, "%s%s%d.bin", SAVE_DIRECTORY, SAVE_FILENAME, fileIndex);
-    printf("Returning filepath: %s\n", outPath);
-}
-
 /**
  * Byteswap all multibyte fields in a SaveBlockSignature.
  */
@@ -274,6 +269,20 @@ static void save_file_bswap(struct SaveBuffer *buf) {
     }
 }
 
+void save_file_get_dir(int fileIndex, char* outPath, size_t size) {
+    snprintf(outPath, size, "%s%s%d.bin", SAVE_DIRECTORY, SAVE_FILENAME, fileIndex);
+}
+
+s32 save_file_get_first_available_index() {
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return 0;
+    for (int i = 0; i < NUM_SAVE_FILES; i++) {
+        char filePath[256];
+        save_file_get_dir(i, filePath, 256);
+        if (!fs_sys_file_exists(fs_get_write_path(filePath))) return i;
+    }
+    return NUM_SAVE_FILES;
+}
+
 void save_file_do_save(s32 fileIndex, s8 forceSave) {
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
     if (gNetworkType != NT_SERVER) {
@@ -306,8 +315,11 @@ void save_file_erase(s32 fileIndex) {
     bzero(&gSaveBuffer.files[fileIndex][0], sizeof(gSaveBuffer.files[fileIndex][0]));
     bzero(&gSaveBuffer.files[fileIndex][1], sizeof(gSaveBuffer.files[fileIndex][1]));
 
-    gSaveFileModified = TRUE;
-    save_file_do_save(fileIndex, TRUE);
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return;
+    char filepath[256];
+    save_file_get_dir(fileIndex, filepath, 256);
+    if (!fs_sys_file_exists(fs_get_write_path(filepath))) return;
+    remove(fs_get_write_path(filepath));
 }
 
 void save_file_reload(u8 loadAll) {
@@ -348,6 +360,17 @@ void save_file_load_all(UNUSED u8 reload) {
     //s32 file;
 
     gSaveFileModified = FALSE;
+
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) {
+        // Attempt to get and convert old save data into new
+        struct LegacySaveBuffer saveBuffer = { 0 };
+        s32 status = osEepromLongReadLegacy(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer));
+        // 0 is success
+        if (status == 0) {
+            for (int i = 0; i < 4; i++)
+                write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
+        }
+    }
 
     bzero(&gSaveBuffer, sizeof(gSaveBuffer));
 
