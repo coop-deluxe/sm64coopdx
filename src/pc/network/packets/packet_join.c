@@ -101,7 +101,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName, sJoinRequestDiscordId);
 
     char filePath[256];
-    save_file_get_dir(gCurrSaveFileNum - 1, filePath, 256);
+    save_file_get_dir(gCurrSaveFileNum - 1, filePath, 256, NULL);
     fs_file_t* fp = fs_open(filePath);
     if (fp != NULL) {
         fs_read(fp, eeprom, EEPROM_SIZE);

@@ -57,7 +57,6 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
-char configSaveNames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING] = { 0 };
 
 // Video/audio stuff
 ConfigWindow configWindow       = {
@@ -522,36 +521,11 @@ static void dynos_pack_write(FILE* file) {
     }
 }
 
-static void save_name_read(char** tokens, int numTokens) {
-    if (numTokens < 2) { return; }
-    char fullSaveName[MAX_SAVE_NAME_STRING] = { 0 };
-    int index = 0;
-    for (int i = 1; i < numTokens; i++) {
-        if (i == 1) {
-            index = atoi(tokens[i]);
-        } else {
-            if (i > 2) {
-                strncat(fullSaveName, " ", MAX_SAVE_NAME_STRING - 1);
-            }
-            strncat(fullSaveName, tokens[i], MAX_SAVE_NAME_STRING - 1);
-        }
-
-    }
-    snprintf(configSaveNames[index], MAX_SAVE_NAME_STRING, "%s", fullSaveName);
-}
-
-static void save_name_write(FILE* file) {
-    for (int i = 0; i < NUM_SAVE_FILES; i++) {
-        fprintf(file, "%s %d %s\n", "save-name:", i, configSaveNames[i]);
-    }
-}
-
 static const struct FunctionConfigOption functionOptions[] = {
     { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
     { .name = "moderator:",  .read = moderator_read,  .write = moderator_write  },
     { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },
-    { .name = "save-name:",  .read = save_name_read,  .write = save_name_write  }
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

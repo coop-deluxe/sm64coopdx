@@ -64,7 +64,7 @@ static void mod_storage_get_filename(char* dest) {
     const char* path = fs_get_write_path(MS_SAVE_DIRECTORY); // get user path
     snprintf(dest, SYS_MAX_PATH - 1, "%s/%s", path, gLuaActiveMod->relativePath); // append sav folder
     strdelete(dest, ".lua"); // delete ".lua" from sav name
-    strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
+    strcat(dest, MS_SAVE_EXTENSION); // append MS_SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes
 }
 

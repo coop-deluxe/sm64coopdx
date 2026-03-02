@@ -14,6 +14,8 @@
 #include "macros.h"
 #include "pc/network/network.h"
 #include "pc/lua/utils/smlua_level_utils.h"
+#include "pc/mods/mod.h"
+#include "pc/mods/mods_utils.h"
 #include "pc/utils/misc.h"
 
 #ifndef bcopy
@@ -269,15 +271,88 @@ static void save_file_bswap(struct SaveBuffer *buf) {
     }
 }
 
-void save_file_get_dir(int fileIndex, char* outPath, size_t size) {
-    snprintf(outPath, size, "%s%s%d.bin", SAVE_DIRECTORY, SAVE_FILENAME, fileIndex);
+/**
+ * Converts old 512 byte save files into 4 new 128 byte save files
+ */
+static void save_file_convert_old_to_new() {
+    struct LegacySaveBuffer saveBuffer = { 0 };
+    s32 status = osEepromLongReadLegacy(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer));
+    if (status == 0) {
+        for (int i = 0; i < 4; i++)
+            write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
+    }
 }
 
+/**
+ * Gets all save file names
+*/
+void save_file_get_all_filenames(char filenames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING]) {
+    char* directory = (char*)fs_get_write_path(SAVE_DIRECTORY);
+    if (!directory) return;
+
+    if (!fs_sys_dir_exists(directory)) return;
+    struct dirent* dir = NULL;
+
+    DIR* d = opendir(directory);
+    if (!d) { return; }
+
+    // iterate
+    char path[SYS_MAX_PATH] = { 0 };
+    while ((dir = readdir(d)) != NULL) {
+        // sanity check
+        if (!directory_sanity_check(dir, directory, path)) continue;
+        snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
+        if (strlen(path) == 0 || strlen(path) >= 256) continue;
+
+        // verify filename follows format (index)_(name)(SAVE_EXTENSION)
+        int index = 0;
+        char name[MAX_SAVE_NAME_STRING];
+        char extension[12];
+        if (sscanf(path, "%d_%31[^.]%11s", &index, name, extension) == 3) {
+            if (index < 0 || index >= NUM_SAVE_FILES) continue;
+            if (strlen(name) == 0) continue;
+            if (strcmp(extension, SAVE_EXTENSION) != 0) continue;
+            snprintf(filenames[index], 256, "%s", name);
+        }
+    }
+
+    closedir(d);
+}
+
+/**
+ * Gets save file name for index. If it does not exist, use SM64
+*/
+void save_file_get_filename_at_index(int fileIndex, char outFilename[MAX_SAVE_NAME_STRING]) {
+    char filenames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING] = { 0 };
+    save_file_get_all_filenames(filenames);
+    if (filenames[fileIndex] && filenames[fileIndex][0] != '\0') {
+        snprintf(outFilename, MAX_SAVE_NAME_STRING, "%s", filenames[fileIndex]);
+    } else {
+        snprintf(outFilename, MAX_SAVE_NAME_STRING, "%s", "SM64");
+    }
+}
+
+/**
+ * Get directory for a save file at index
+*/
+void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* overrideName) {
+    char name[MAX_SAVE_NAME_STRING] = { 0 };
+    if (overrideName == NULL) {
+        save_file_get_filename_at_index(fileIndex, name);
+    } else {
+        snprintf(name, MAX_SAVE_NAME_STRING, "%s", overrideName);
+    }
+    snprintf(outPath, size, "%s%d_%s%s", SAVE_DIRECTORY, fileIndex, name, SAVE_EXTENSION);
+}
+
+/**
+ * Gets the first available index that is not being used
+*/
 s32 save_file_get_first_available_index() {
     if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return 0;
     for (int i = 0; i < NUM_SAVE_FILES; i++) {
         char filePath[256];
-        save_file_get_dir(i, filePath, 256);
+        save_file_get_dir(i, filePath, 256, NULL);
         if (!fs_sys_file_exists(fs_get_write_path(filePath))) return i;
     }
     return NUM_SAVE_FILES;
@@ -317,7 +392,7 @@ void save_file_erase(s32 fileIndex) {
 
     if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return;
     char filepath[256];
-    save_file_get_dir(fileIndex, filepath, 256);
+    save_file_get_dir(fileIndex, filepath, 256, NULL);
     if (!fs_sys_file_exists(fs_get_write_path(filepath))) return;
     remove(fs_get_write_path(filepath));
 }
@@ -362,14 +437,7 @@ void save_file_load_all(UNUSED u8 reload) {
     gSaveFileModified = FALSE;
 
     if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) {
-        // Attempt to get and convert old save data into new
-        struct LegacySaveBuffer saveBuffer = { 0 };
-        s32 status = osEepromLongReadLegacy(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer));
-        // 0 is success
-        if (status == 0) {
-            for (int i = 0; i < 4; i++)
-                write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
-        }
+        save_file_convert_old_to_new();
     }
 
     bzero(&gSaveBuffer, sizeof(gSaveBuffer));

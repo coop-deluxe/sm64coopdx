@@ -134,7 +134,7 @@ s32 osEepromLongReadLegacy(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int n
     u8 content[512];
     s32 ret = -1;
 
-    fs_file_t *fp = fs_open(SAVE_FILENAME_OLD);
+    fs_file_t *fp = fs_open(SAVE_FILENAME);
     if (fp == NULL) {
         return -1;
     }
@@ -157,7 +157,7 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffe
     s32 ret = -1;
 
     char filePath[256];
-    save_file_get_dir(fileIndex, filePath, 256);
+    save_file_get_dir(fileIndex, filePath, 256, NULL);
     fs_file_t *fp = fs_open(filePath);
     if (fp == NULL) {
         return -1;
@@ -188,7 +188,7 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buff
     }
 
     char filePath[256];
-    save_file_get_dir(fileIndex, filePath, 256);
+    save_file_get_dir(fileIndex, filePath, 256, NULL);
     FILE *fp = fopen(fs_get_write_path(filePath), "wb");
     if (fp == NULL) {
         return -1;

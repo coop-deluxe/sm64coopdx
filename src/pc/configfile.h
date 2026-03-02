@@ -5,7 +5,7 @@
 #include <PR/ultratypes.h>
 #include "game/player_palette.h"
 #include "pc/lua/smlua_autogen.h"
-#include "game/save_file.h"
+#include "game/area.h"
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 #define CONFIGFILE_BACKUP "sm64config-backup.txt"
@@ -13,7 +13,6 @@
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
-#define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
 #define DEFAULT_COOPNET_IP "net.coop64.us"
@@ -44,8 +43,6 @@ enum RefreshRateMode {
     RRM_UNLIMITED,
     RRM_MAX
 };
-
-extern char configSaveNames[64][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;

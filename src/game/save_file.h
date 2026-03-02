@@ -9,6 +9,7 @@
 #include "course_table.h"
 
 #define NUM_SAVE_FILES 64
+#define MAX_SAVE_NAME_STRING 32
 // size of savebuffer
 #define EEPROM_SIZE 128
 
@@ -149,7 +150,11 @@ s8 get_level_num_from_course_num(s16 courseNum);
 /* |description|Gets the level number's corresponding course number|descriptionEnd| */
 s8 get_level_course_num(s16 levelNum);
 
-void save_file_get_dir(int fileIndex, char* outPath, size_t size);
+void save_file_get_all_filenames(char filenames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING]);
+
+void save_file_get_filename_at_index(int fileIndex, char outFilename[MAX_SAVE_NAME_STRING]);
+
+void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* overrideName);
 
 s32 save_file_get_first_available_index();
 
