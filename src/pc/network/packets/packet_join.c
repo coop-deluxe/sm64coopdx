@@ -102,7 +102,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     char filePath[256];
     save_file_get_dir(gCurrSaveFileNum - 1, filePath, 256);
-    fs_file_t* fp = fs_open(fs_get_write_path(filePath));
+    fs_file_t* fp = fs_open(filePath);
     if (fp != NULL) {
         fs_read(fp, eeprom, EEPROM_SIZE);
         fs_close(fp);
