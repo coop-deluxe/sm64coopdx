@@ -95,6 +95,8 @@ void packet_process(struct Packet* p) {
         case PACKET_MODERATOR:               network_receive_moderator(p);               break;
         case PACKET_KEEP_ALIVE:              network_receive_keep_alive(p);              break;
         case PACKET_LEAVING:                 network_receive_leaving(p);                 break;
+        case PACKET_DOWNLOAD_SAVE_REQUEST:   network_receive_download_saves_request(p);  break;
+        case PACKET_DOWNLOAD_SAVE_FILE:      network_receive_download_save(p);           break;
         case PACKET_SAVE_FILE:               network_receive_save_file(p);               break;
         case PACKET_SAVE_SET_FLAG:           network_receive_save_set_flag(p);           break;
         case PACKET_SAVE_REMOVE_FLAG:        network_receive_save_remove_flag(p);        break;

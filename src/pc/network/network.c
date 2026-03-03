@@ -239,6 +239,8 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
         || (packetType == PACKET_MOD_LIST_ENTRY)
         || (packetType == PACKET_MOD_LIST_FILE)
         || (packetType == PACKET_MOD_LIST_DONE)
+        || (packetType == PACKET_DOWNLOAD_SAVE_REQUEST)
+        || (packetType == PACKET_DOWNLOAD_SAVE_FILE)
         || (packetType == PACKET_DOWNLOAD_REQUEST)
         || (packetType == PACKET_DOWNLOAD)
         || (packetType == PACKET_KEEP_ALIVE)
