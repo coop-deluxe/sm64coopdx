@@ -6,7 +6,7 @@
 #include "fs/fs.h"
 #include "game/save_file.h"
 
-u8* gOverrideEeprom = NULL;
+u8* gOverrideEeprom[NUM_SAVE_FILES] = { NULL };
 
 extern OSMgrArgs piMgrArgs;
 
@@ -126,11 +126,6 @@ s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
 }
 
 s32 osEepromLongReadLegacy(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
-    if (gOverrideEeprom != NULL) {
-        memcpy(buffer, gOverrideEeprom + address * 8, nbytes);
-        return 0;
-    }
-
     u8 content[512];
     s32 ret = -1;
 
@@ -148,8 +143,8 @@ s32 osEepromLongReadLegacy(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int n
 }
 
 s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
-    if (gOverrideEeprom != NULL) {
-        memcpy(buffer, gOverrideEeprom + address * 8, nbytes);
+    if (gOverrideEeprom[fileIndex] != NULL) {
+        memcpy(buffer, gOverrideEeprom[fileIndex] + address * 8, nbytes);
         return 0;
     }
 
@@ -172,8 +167,8 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffe
 }
 
 s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
-    if (gOverrideEeprom != NULL) {
-        memcpy(gOverrideEeprom + address * 8, buffer, nbytes);
+    if (gOverrideEeprom[fileIndex] != NULL) {
+        memcpy(gOverrideEeprom[fileIndex] + address * 8, buffer, nbytes);
         return 0;
     }
 

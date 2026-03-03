@@ -4,7 +4,7 @@
 #include "game/save_file.h"
 #include "pc/debuglog.h"
 
-extern u8* gOverrideEeprom;
+extern u8* gOverrideEeprom[NUM_SAVE_FILES];
 static u8 eeprom[NUM_SAVE_FILES][EEPROM_SIZE] = { 0 };
 static int filledEepromData = 0;
 static int chunks = (NUM_SAVE_FILES * EEPROM_SIZE + (PACKET_LENGTH - 8) - 1) / (PACKET_LENGTH - 8);
@@ -86,6 +86,9 @@ void network_receive_download_save(struct Packet* p) {
     }
 
     if (filledEepromData == NUM_SAVE_FILES * EEPROM_SIZE) {
+        for (int i = 0; i < NUM_SAVE_FILES; i++) {
+            gOverrideEeprom[i] = eeprom[i];
+        }
         filledEepromData = 0;
         network_send_join_request();
     } else if (filledEepromData > NUM_SAVE_FILES * EEPROM_SIZE) {

@@ -27,10 +27,7 @@
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 
-extern u8* gOverrideEeprom;
-static u8 eeprom[EEPROM_SIZE] = { 0 };
-
-static u8   sJoinRequestPlayerModel;
+static u8 sJoinRequestPlayerModel;
 static struct PlayerPalette sJoinRequestPlayerPalette;
 static char sJoinRequestPlayerName[MAX_CONFIG_STRING];
 static char sJoinRequestDiscordId[64];
@@ -40,7 +37,6 @@ void network_send_join_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
     gNetworkSentJoin = true;
-    gOverrideEeprom = eeprom;
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
@@ -99,15 +95,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     // do connection event
     network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName, sJoinRequestDiscordId);
-
-    char filePath[256];
-    save_file_get_dir(gCurrSaveFileNum - 1, filePath, 256, NULL);
-    fs_file_t* fp = fs_open(filePath);
-    if (fp != NULL) {
-        fs_read(fp, eeprom, EEPROM_SIZE);
-        fs_close(fp);
-    }
-
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     LOG_INFO("sending version: %s", version);
@@ -128,7 +115,6 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
-    packet_write(&p, eeprom, sizeof(u8) * EEPROM_SIZE);
 
     network_send_to(globalIndex, &p);
     LOG_INFO("sending join packet");
@@ -141,8 +127,6 @@ void network_receive_join(struct Packet* p) {
     if (gNetworkPlayerLocal != NULL) { return; }
     LOG_INFO("received join packet");
     gCurrentlyJoining = true;
-
-    gOverrideEeprom = eeprom;
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
@@ -181,7 +165,6 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));
-    packet_read(p, eeprom, sizeof(u8) * EEPROM_SIZE);
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
     network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
