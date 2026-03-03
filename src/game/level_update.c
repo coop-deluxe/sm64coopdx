@@ -18,6 +18,7 @@
 #include "sound_init.h"
 #include "mario.h"
 #include "camera.h"
+#include "bettercamera.h"
 #include "object_list_processor.h"
 #include "ingame_menu.h"
 #include "obj_behaviors.h"
@@ -469,8 +470,16 @@ void init_mario_after_warp(void) {
         gMarioState->usedObj = spawnNode->object;
     }
 
-    if (gCurrentArea && sWarpDest.type != WARP_TYPE_SAME_AREA) {
+    if (gCurrentArea) {
         reset_camera(gCurrentArea->camera);
+        if (sWarpDest.type == WARP_TYPE_SAME_AREA && gCurrentArea->camera->mode == CAMERA_MODE_NEWCAM) {
+            // When we warp to a level in the same area, the camera mode never has the chance
+            // to reset. This is bad if our camera mode is newcam, since when init cam is called
+            // our old camera mode will be set to newcam, which causes newcam to not be able to be
+            // turned off. The fix is setting our mode to newcam's old mode
+            gCurrentArea->camera->mode = gNewCamera.savedMode;
+            gCurrentArea->camera->defMode = gNewCamera.savedDefMode;
+        }
     }
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
     sDelayedWarpOp = WARP_OP_NONE;
