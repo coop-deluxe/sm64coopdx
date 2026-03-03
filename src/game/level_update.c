@@ -469,7 +469,7 @@ void init_mario_after_warp(void) {
         gMarioState->usedObj = spawnNode->object;
     }
 
-    if (gCurrentArea) {
+    if (gCurrentArea && sWarpDest.type != WARP_TYPE_SAME_AREA) {
         reset_camera(gCurrentArea->camera);
     }
     sWarpDest.type = WARP_TYPE_NOT_WARPING;
