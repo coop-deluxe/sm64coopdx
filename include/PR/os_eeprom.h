@@ -94,8 +94,8 @@ extern "C" {
 extern s32 osEepromProbe(OSMesgQueue *);
 extern s32 osEepromRead(OSMesgQueue *, u8, u8 *);
 extern s32 osEepromWrite(OSMesgQueue *, u8, u8 *);
-extern s32 osEepromLongReadLegacy(OSMesgQueue *, u8 , u8 *, int);
-extern s32 osEepromLongRead(OSMesgQueue *, u8, u8, u8 *, int);
+extern s32 osEepromLongRead(OSMesgQueue *, u8 , u8 *, int, char *, size_t);
+extern s32 osEepromLongReadFile(OSMesgQueue *, u8, u8, u8 *, int);
 extern s32 osEepromLongWrite(OSMesgQueue *, u8, u8, u8 *, int);
 
 

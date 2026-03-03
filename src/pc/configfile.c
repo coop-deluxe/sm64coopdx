@@ -21,6 +21,7 @@
 #include "djui/djui_hud_utils.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
+#include "game/save_file.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -756,6 +757,15 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
+
+    if (configHostSaveSlot >= NUM_SAVE_FILES) {
+        configHostSaveSlot = save_file_get_first_active_index() + 1;
+    } else {
+        char filePath[256];
+        save_file_get_dir(configHostSaveSlot - 1, filePath, 256, NULL);
+        if (!fs_sys_file_exists(fs_get_write_path(filePath)))
+            configHostSaveSlot = save_file_get_first_active_index() + 1;
+    }
 
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;

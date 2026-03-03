@@ -119,7 +119,7 @@ override_disallowed_functions = {
     "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
-    "src/game/save_file.h":                      [ "save_file_get_all_filenames", "save_file_get_dir", "save_file_get_first_available_index" ],
+    "src/game/save_file.h":                      [ "save_file_get_all_filenames", "save_file_get_dir", "save_file_get_first_available_index", "save_file_get_amount_of_available_indexes", "save_file_get_first_active_index" ],
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup", "network_player_name_valid" ],

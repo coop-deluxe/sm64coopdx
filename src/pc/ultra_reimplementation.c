@@ -125,24 +125,24 @@ s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
     return 1;
 }
 
-s32 osEepromLongReadLegacy(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
-    u8 content[512];
+s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes, char *path, size_t size) {
+    u8 content[size];
     s32 ret = -1;
 
-    fs_file_t *fp = fs_open(SAVE_FILENAME);
-    if (fp == NULL) {
+    FILE *fp = fopen(path, "rb");
+    if (!fp) {
         return -1;
     }
-    if (fs_read(fp, content, 512) == 512) {
+    if (fread(content, 1, size, fp) == size) {
         memcpy(buffer, content + address * 8, nbytes);
         ret = 0;
     }
-    fs_close(fp);
+    fclose(fp);
 
     return ret;
 }
 
-s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
+s32 osEepromLongReadFile(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buffer, int nbytes) {
     if (gOverrideEeprom[fileIndex] != NULL) {
         memcpy(buffer, gOverrideEeprom[fileIndex] + address * 8, nbytes);
         return 0;
@@ -174,7 +174,7 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 fileIndex, u8 address, u8 *buff
 
     u8 content[EEPROM_SIZE] = { 0 };
     if (address != 0 || nbytes != EEPROM_SIZE) {
-        osEepromLongRead(mq, fileIndex, 0, content, EEPROM_SIZE);
+        osEepromLongReadFile(mq, fileIndex, 0, content, EEPROM_SIZE);
     }
     memcpy(content + address * 8, buffer, nbytes);
 

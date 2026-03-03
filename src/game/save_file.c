@@ -123,9 +123,9 @@ static inline void bswap_savefile(struct SaveFile *data) {
  * Read from EEPROM to a given address.
  * The EEPROM address is computed using the offset of the destination address from gSaveBuffer.
  * Try at most 4 times, and return 0 on success. On failure, return the status returned from
- * osEepromLongRead. It also returns 0 if EEPROM isn't loaded correctly in the system.
+ * osEepromLongReadFile. It also returns 0 if EEPROM isn't loaded correctly in the system.
  */
-static s32 read_eeprom_data(u8 file, void *buffer, s32 size) {
+s32 read_eeprom_data(u8 file, void *buffer, s32 size) {
     s32 status = 0;
 
     if (gEepromProbe != 0) {
@@ -135,7 +135,7 @@ static s32 read_eeprom_data(u8 file, void *buffer, s32 size) {
         do {
             block_until_rumble_pak_free();
             triesLeft--;
-            status = osEepromLongRead(&gSIEventMesgQueue, file, offset, buffer, size);
+            status = osEepromLongReadFile(&gSIEventMesgQueue, file, offset, buffer, size);
             release_rumble_pak_control();
         } while (triesLeft > 0 && status != 0);
     }
@@ -149,7 +149,7 @@ static s32 read_eeprom_data(u8 file, void *buffer, s32 size) {
  * Try at most 4 times, and return 0 on success. On failure, return the status returned from
  * osEepromLongWrite. Unlike read_eeprom_data, return 1 if EEPROM isn't loaded.
  */
-static s32 write_eeprom_data(u8 file, void *buffer, s32 size, const uintptr_t baseofs) {
+s32 write_eeprom_data(u8 file, void *buffer, s32 size, const uintptr_t baseofs) {
     s32 status = 1;
 
     if (gEepromProbe != 0) {
@@ -276,7 +276,7 @@ static void save_file_bswap(struct SaveBuffer *buf) {
  */
 static void save_file_convert_old_to_new() {
     struct LegacySaveBuffer saveBuffer = { 0 };
-    s32 status = osEepromLongReadLegacy(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer));
+    s32 status = osEepromLongRead(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer), (char*)fs_get_write_path(SAVE_FILENAME), 512);
     if (status == 0) {
         for (int i = 0; i < 4; i++)
             write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
@@ -346,7 +346,7 @@ void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* override
 }
 
 /**
- * Gets the first available index that is not being used
+ * Gets the first available index that is not being used. Returns the number of save files on failure
 */
 s32 save_file_get_first_available_index() {
     if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return 0;
@@ -356,6 +356,33 @@ s32 save_file_get_first_available_index() {
         if (!fs_sys_file_exists(fs_get_write_path(filePath))) return i;
     }
     return NUM_SAVE_FILES;
+}
+
+/**
+ * Gets the first available index that is active. Returns 0 on failure
+*/
+s32 save_file_get_first_active_index() {
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return 0;
+    for (int i = 0; i < NUM_SAVE_FILES; i++) {
+        char filePath[256];
+        save_file_get_dir(i, filePath, 256, NULL);
+        if (fs_sys_file_exists(fs_get_write_path(filePath))) return i;
+    }
+    return 0;
+}
+
+/**
+ * Gets the amount of available indexes
+*/
+s32 save_file_get_amount_of_available_indexes() {
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return 0;
+    int count = 0;
+    for (int i = 0; i < NUM_SAVE_FILES; i++) {
+        char filePath[256];
+        save_file_get_dir(i, filePath, 256, NULL);
+        if (!fs_sys_file_exists(fs_get_write_path(filePath))) count++;
+    }
+    return count;
 }
 
 void save_file_do_save(s32 fileIndex, s8 forceSave) {

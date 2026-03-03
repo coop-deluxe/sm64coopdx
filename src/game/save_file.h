@@ -144,6 +144,9 @@ extern struct WarpCheckpoint gWarpCheckpoint;
 extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
 
+s32 read_eeprom_data(u8 file, void *buffer, s32 size);
+s32 write_eeprom_data(u8 file, void *buffer, s32 size, const uintptr_t baseofs);
+
 /* |description|Gets the course number's corresponding level number|descriptionEnd| */
 s8 get_level_num_from_course_num(s16 courseNum);
 
@@ -157,6 +160,10 @@ void save_file_get_filename_at_index(int fileIndex, char outFilename[MAX_SAVE_NA
 void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* overrideName);
 
 s32 save_file_get_first_available_index();
+
+s32 save_file_get_amount_of_available_indexes();
+
+s32 save_file_get_first_active_index();
 
 /* |description|
 Saves the current state of the game into a specified save file. Includes data verification and backup management.
@@ -176,7 +183,7 @@ Erases the backup data for the current save file without affecting the primary s
 void save_file_erase_current_backup_save(void);
 
 BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex);
-void save_file_load_all(u8 reload);
+void save_file_load_all(UNUSED u8 reload);
 
 /* |description|
 Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified.
