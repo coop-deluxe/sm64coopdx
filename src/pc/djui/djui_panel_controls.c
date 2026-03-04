@@ -40,7 +40,6 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #ifndef HANDHELD
         djui_checkbox_create(body, DLANG(CONTROLS, DISABLE_GAMEPADS), &configDisableGamepads, NULL);
 #endif
-        djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
 #ifdef HAVE_SDL2
         int numJoys = SDL_NumJoysticks();
