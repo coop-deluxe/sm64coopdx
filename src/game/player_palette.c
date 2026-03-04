@@ -15,7 +15,6 @@ static ini_t* sPalette = NULL;
 struct PresetPalette gPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
 u16 gPresetPaletteCount = 0;
 struct PresetPalette gModdedPresetPalettes[MAX_MODDED_PRESET_PALETTES] = { 0 };
-u16 gModdedPresetPalettesCount = 0;
 
 static bool player_palette_init(const char* palettesPath, char* palette, bool appendPalettes) {
     // free old ini
@@ -46,7 +45,6 @@ void player_palettes_reset(void) {
 
 void player_modded_palettes_reset(void) {
     memset(&gModdedPresetPalettes, 0, sizeof(gModdedPresetPalettes));
-    gModdedPresetPalettesCount = 0;
 }
 
 static u8 read_value(const char* data) {
@@ -85,7 +83,6 @@ static void player_palettes_sort_characters(void) {
         }
         if (!isCharPalette && gModdedPresetPalettes[i].active) {
             charPresetPalettes[charPresetPaletteCount++] = gModdedPresetPalettes[i];
-            gModdedPresetPalettesCount++;
         }
     }
 
@@ -99,6 +96,7 @@ static void player_palettes_sort_characters(void) {
             }
         }
         if (!isCharPalette) {
+            if (charPresetPaletteCount >= MAX_PRESET_PALETTES) break;
             charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
         }
     }

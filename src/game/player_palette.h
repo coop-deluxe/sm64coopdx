@@ -31,7 +31,6 @@ extern const struct PlayerPalette DEFAULT_MARIO_PALETTE;
 extern struct PresetPalette gPresetPalettes[MAX_PRESET_PALETTES];
 extern u16 gPresetPaletteCount;
 extern struct PresetPalette gModdedPresetPalettes[MAX_MODDED_PRESET_PALETTES];
-extern u16 gModdedPresetPalettesCount;
 
 void player_palettes_reset(void);
 void player_modded_palettes_reset(void);
