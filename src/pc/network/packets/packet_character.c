@@ -55,6 +55,10 @@ void network_send_character_to(u8 sendToGlobalIndex) {
         LOG_ERROR("network_send_character_to: Character is NULL, could not send packet");
         return;
     }
+    if (!gNetworkPlayerLocal) {
+        LOG_ERROR("network_send_character_to: gNetworkPlayerLocal is NULL");
+        return;
+    }
     struct Packet p = { 0 };
     packet_init(&p, PACKET_CHARACTER, true, PLMT_NONE);
     packet_write(&p, &gNetworkPlayerLocal->globalIndex, sizeof(u8));

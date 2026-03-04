@@ -450,7 +450,6 @@ static void djui_panel_player_value_changed(UNUSED struct DjuiBase* caller) {
 
     if (gNetworkType != NT_NONE) {
         network_send_player_settings();
-        network_send_character();
     }
 }
 

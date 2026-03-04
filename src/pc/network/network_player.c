@@ -58,11 +58,15 @@ void network_player_update_model(u8 localIndex) {
 
     if (localIndex == 0) {
         struct Character* character = get_allocated_character_from_index(np->overrideModelIndex);
-        m->character = character;
+        if (character && m->character != character) {
+            m->character = character;
+            network_send_character();
+        }
     } else if (!m->character) {
         // set to template character
         m->character = malloc(sizeof(struct Character));
         *m->character = gTemplateCharacter;
+        network_send_character();
     }
 
     if (m->marioObj == NULL || m->marioObj->behavior != bhvMario || !m->character) { return; }
