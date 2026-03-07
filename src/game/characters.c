@@ -634,7 +634,7 @@ const char* get_modded_character_anim_string(struct MarioState* m, enum Characte
 struct Character* character_allocate(const char* name, RET int *characterIndex) {
     *characterIndex = character_get_first_unallocated_index();
     struct Character* character = &gCharacters[*characterIndex];
-    character->type = CT_MARIO;
+    character->type = *characterIndex;
     character_set_name(character, name);
     return character;
 }
