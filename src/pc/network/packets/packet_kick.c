@@ -8,6 +8,10 @@ f32 sLastReconnectTime = -9999999;
 f32 sLastNotifyTime = -9999999;
 
 void network_send_kick(u8 localIndex, enum KickReasonType kickReason) {
+    if (localIndex == 0) {
+        LOG_ERROR("Trying to send kick to myself?");
+        return;
+    }
     u8 kickReasonType = kickReason;
     struct Packet p = { 0 };
     packet_init(&p, PACKET_KICK, true, PLMT_NONE);
@@ -22,8 +26,8 @@ void network_receive_kick(struct Packet* p) {
         return;
     }
 
-    if (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER) {
-        LOG_ERROR("Kick came from non-server... refuse!");
+    if (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER && !gNetworkPlayers[p->localIndex].moderator) {
+        LOG_ERROR("Kick came from non-server and non-moderator... refuse!");
         return;
     }
 

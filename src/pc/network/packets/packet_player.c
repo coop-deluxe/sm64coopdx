@@ -253,7 +253,7 @@ void network_receive_player(struct Packet* p) {
         }
 #else
         network_send_kick(np->localIndex, EKT_KICKED);
-        network_player_disconnected(np->localIndex);
+        network_player_disconnected(np->globalIndex);
         return;
 #endif
     }

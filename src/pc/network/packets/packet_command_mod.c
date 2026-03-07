@@ -2,8 +2,7 @@
 #include "../network.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_chat_message.h"
-#include "pc/network/ban_list.h"
-#include "pc/network/moderator_list.h"
+#include "pc/network/moderation.h"
 #include "pc/debuglog.h"
 
 void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
@@ -23,7 +22,7 @@ void network_receive_chat_command(struct Packet *p) {
         return;
     }
 
-    if (!moderator_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
+    if (!moderation_list_contains(MODERATION_LIST_TYPE_MODERATOR, gNetworkSystem->get_id_str(p->localIndex))) {
         LOG_ERROR("recieved moderator command from non moderator");
         return;
     }
@@ -48,21 +47,29 @@ void network_receive_chat_command(struct Packet *p) {
     }
     if (CCC == CCC_BAN) {
         network_send_kick(np->localIndex, EKT_BANNED);
-        ban_list_add(gNetworkSystem->get_id_str(np->localIndex), false);
+        // TODO: Moderation: Allow you to insert a reason
+        moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", false);
         snprintf(message, 256, "\\#fff982\\Banned '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
     }
-    network_player_disconnected(np->localIndex);
+    network_player_disconnected(np->globalIndex);
     djui_chat_message_create(message);
 }
 
 void network_send_moderator(u8 localIndex) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_MODERATOR, false, PLMT_NONE);
+    packet_write(&p, &gNetworkPlayerLocal[localIndex].moderator, sizeof(bool));
     network_send_to(localIndex, &p);
 }
 
 void network_receive_moderator(struct Packet *p) {
-    if (gNetworkPlayers[0].moderator || (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER)) return;
-    gNetworkPlayers[0].moderator = true;
-    djui_chat_message_create(DLANG(CHAT, MOD_GRANTED));
+    if (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER) return;
+    bool moderator;
+    packet_read(p, &moderator, sizeof(bool));
+    if (gNetworkPlayers[0].moderator == moderator) {
+        LOG_ERROR("Server moderator is telling me to be what I already am! Ignoring...");
+        return;
+    }
+    gNetworkPlayers[0].moderator = moderator;
+    djui_chat_message_create(moderator ? DLANG(CHAT, MOD_GRANTED) : DLANG(CHAT, MOD_REVOKED));
 }

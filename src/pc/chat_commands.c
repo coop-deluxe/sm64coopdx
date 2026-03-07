@@ -4,8 +4,7 @@
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_chat_message.h"
 #include "chat_commands.h"
-#include "pc/network/ban_list.h"
-#include "pc/network/moderator_list.h"
+#include "pc/network/moderation.h"
 #include "pc/debuglog.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/mods/mods_utils.h"
@@ -75,7 +74,9 @@ bool exec_chat_command(char* command) {
                 chat_construct_player_message(np, DLANG(CHAT, BANNING));
                 if (gNetworkType == NT_SERVER) {
                     network_send_kick(np->localIndex, EKT_BANNED);
-                    ban_list_add(gNetworkSystem->get_id_str(np->localIndex), false);
+
+                    // TODO: Moderation: Allow you to insert a reason
+                    moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", false);
                     network_player_disconnected(np->localIndex);
                 } else {
                     network_send_chat_command(np->globalIndex, CCC_BAN);
@@ -86,7 +87,8 @@ bool exec_chat_command(char* command) {
         if (gNetworkType == NT_SERVER && ccc == CCC_PERMBAN) {
             chat_construct_player_message(np, DLANG(CHAT, PERM_BANNING));
             network_send_kick(np->localIndex, EKT_BANNED);
-            ban_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
+            // TODO: Moderation: Allow you to insert a reason
+            moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", true);
             network_player_disconnected(np->localIndex);
             return true;
         }
@@ -94,7 +96,8 @@ bool exec_chat_command(char* command) {
             chat_construct_player_message(np, DLANG(CHAT, ADD_MODERATOR));
             np->moderator = true;
             network_send_moderator(np->localIndex);
-            moderator_list_add(gNetworkSystem->get_id_str(np->localIndex), true);
+            // TODO: Moderation: Allow you to insert a reason
+            moderation_list_add(MODERATION_LIST_TYPE_MODERATOR, np->localIndex, "", true);
             return true;
         }
     }
@@ -120,7 +123,7 @@ bool exec_chat_command(char* command) {
         djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
         return true;
     }
-  
+
     if (str_starts_with(command, "/kick ")) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
@@ -205,7 +208,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with(command, "/moderator ")) {     
+    if (str_starts_with(command, "/moderator ")) {
         if (gNetworkType != NT_SERVER) {
             djui_chat_message_create(DLANG(CHAT, SERVER_ONLY));
             return true;

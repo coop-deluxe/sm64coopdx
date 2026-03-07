@@ -391,10 +391,12 @@ void djui_base_destroy(struct DjuiBase* base) {
     }
 
     // deallocate interactable
-    if (base->interactable != NULL) {
-        free(base->interactable);
-        base->interactable = NULL;
-    }
+    free(base->interactable);
+    base->interactable = NULL;
+
+    // deallocate ctag
+    free(base->cTag);
+    base->cTag = NULL;
 
     // remove from interactable variable
     if (base == gDjuiHovered)           { gDjuiHovered = NULL; }

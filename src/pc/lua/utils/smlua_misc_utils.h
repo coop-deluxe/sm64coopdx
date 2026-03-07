@@ -37,7 +37,7 @@ enum ActSelectHudPart {
     ACT_SELECT_HUD_ACT_NAME = 1 << 3,
     ACT_SELECT_HUD_STAR_NUM = 1 << 4,
     ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
-	
+
 	ACT_SELECT_HUD_NONE = 0,
 	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
@@ -50,7 +50,6 @@ struct DateTime {
     s32 minute;
     s32 second;
 };
-
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);

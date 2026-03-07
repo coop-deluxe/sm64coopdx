@@ -48,9 +48,12 @@ void network_send_join_request(void) {
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
-    packet_write(&p, &configPlayerModel,   sizeof(u8));
-    packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
-    packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
+    packet_write(&p, &configPlayerModel,     sizeof(u8));
+    packet_write(&p, &configPlayerPalette,   sizeof(struct PlayerPalette));
+    packet_write(&p, &configPlayerName,      sizeof(u8) * MAX_CONFIG_STRING);
+    char discordId[64];
+    snprintf(discordId, 64, "%s", get_local_discord_id());
+    packet_write(&p, &discordId, sizeof(u8) * 64);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     LOG_INFO("sending join request");
@@ -66,10 +69,12 @@ void network_receive_join_request(struct Packet* p) {
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
         packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
         packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
+        packet_read(p, &sJoinRequestDiscordId,     sizeof(u8) * 64);
     } else {
         sJoinRequestPlayerModel = 0;
         sJoinRequestPlayerPalette = DEFAULT_MARIO_PALETTE;
         snprintf(sJoinRequestPlayerName, MAX_CONFIG_STRING, "%s", "Player");
+        snprintf(sJoinRequestDiscordId, 64, "%s", "0");
     }
 
     network_send_join(p);
