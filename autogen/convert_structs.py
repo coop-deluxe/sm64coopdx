@@ -182,13 +182,63 @@ reversed_override_types = {v: k for k, v in override_types.items()}
 
 extracted_functions = get_extracted_functions(True)
 
-make_struct_methods = {
-    "MarioState": { "remove": ["mario"] },
-    "Object": { "remove": ["object", "obj"] },
-    "Surface": { "remove": ["surface"] },
-    "Camera": { "remove": ["camera"] },
-    "ModAudio": { "remove": ["audio"] },
-    "NetworkPlayer": { "remove": ["network_player"] },
+remove_from_struct_methods = {
+    "MarioState": ["mario"],
+    "Object": ["object", "obj"],
+    "Surface": ["surface"],
+    "Camera": ["camera"],
+    "ModAudio": ["audio"],
+    "NetworkPlayer": ["network_player"],
+}
+
+override_struct_method_name = {
+    # Prevent renaming altogether
+    "is_nearest_player_to_object": "is_nearest_player_to_object",
+
+    # Minimally rename, referring to self once necessary
+    "obj_is_near_to_and_facing_mario": "obj_is_near_to_and_facing_self",
+    "obj_turn_pitch_toward_mario": "obj_turn_pitch_toward_self",
+    "cur_obj_lateral_dist_from_obj_to_home": "cur_obj_lateral_dist_from_self_to_home",
+
+    # Reordered names to make sense for methods
+    "cur_obj_can_mario_activate_textbox": "can_activate_textbox_with_cur_obj",
+    "cur_obj_can_mario_activate_textbox_2": "can_activate_textbox_with_cur_obj_2",
+    "cur_obj_end_dialog": "end_dialog_with_cur_obj",
+    "cur_obj_set_vel_from_mario_vel": "set_vel_to_cur_obj_vel",
+    "cur_obj_spawn_loot_coin_at_mario_pos": "spawn_loot_coin_at_pos_from_cur_obj",
+    "cur_obj_set_pos_relative": "set_pos_relative_to_cur_obj",
+
+    # Makes more grammatical sense once converted to a method
+    "does_mario_have_blown_cap": "has_blown_cap",
+    "does_mario_have_normal_cap_on_head": "has_normal_cap_on_head",
+    "dist_between_object_and_point": "dist_to_point",
+    "dist_between_objects": "dist_to_object",
+    "obj_is_mario_ground_pounding_platform": "is_ground_pounding_platform",
+    "lateral_dist_between_objects": "lateral_dist_to_object",
+
+    # Contains unnecessary words after being converted
+    "init_single_mario": "init",
+    "is_nearest_mario_state_to_object": "is_nearest_to_object",
+    "is_player_active": "is_active",
+    "is_player_in_local_area": "is_in_local_area",
+    "mario_obj_angle_to_object": "angle_to_object",
+    "cur_obj_disable_rendering_and_become_intangible": "disable_rendering_and_become_intangible",
+    "cur_obj_enable_rendering_and_become_tangible": "enable_rendering_and_become_tangible",
+    "get_mario_state_from_object": "get_mario_state",
+    "is_point_close_to_object": "is_point_close",
+    "nearest_interacting_mario_state_to_object": "nearest_interacting_mario_state",
+    "nearest_interacting_player_to_object": "nearest_interacting_player",
+    "nearest_mario_state_to_object": "nearest_mario_state",
+    "nearest_player_to_object": "nearest_player",
+    "nearest_possible_mario_state_to_object": "nearest_possible_mario_state",
+
+    # Removed necessary words after being converted, so add back in
+    "obj_angle_to_object": "angle_to_object",
+    "obj_attack_collided_from_other_object": "attack_collided_from_other_object",
+    "obj_check_if_collided_with_object": "check_if_collided_with_object",
+    "obj_get_collided_object": "get_collided_object",
+    "obj_pitch_to_object": "pitch_to_object",
+    "obj_turn_toward_object": "turn_toward_object",
 }
 
 total_structs = 0
@@ -295,7 +345,7 @@ def table_to_string(table):
     return s, count
 
 def extracted_functions_info(sid, processed_files):
-    for struct_with_methods, method_info in make_struct_methods.items():
+    for struct_with_methods, remove_texts in remove_from_struct_methods.items():
         if sid != struct_with_methods:
             continue
 
@@ -303,7 +353,7 @@ def extracted_functions_info(sid, processed_files):
             for func in file["functions"]:
                 if len(func["params"]) == 0:
                     continue
-                
+
                 first_param_type = func["params"][0]["type"]
                 if first_param_type != f"struct {struct_with_methods}*":
                     continue
@@ -315,16 +365,20 @@ def extracted_functions_info(sid, processed_files):
                 if real_name in struct_functions_disallow:
                     continue
 
-                for remove_text in method_info["remove"]:
-                    text_pos = trimmed_name.find(remove_text)
+                for text in remove_texts:
+                    text_pos = trimmed_name.find(text)
                     if text_pos == -1:
                         continue
 
-                    remove_text_length = len(remove_text)
+                    remove_text_length = len(text)
                     if trimmed_name[text_pos - 1] == "_":
                         trimmed_name = trimmed_name[:text_pos - 1] + trimmed_name[text_pos + remove_text_length:]
                     elif trimmed_name[text_pos + remove_text_length] == "_":
                         trimmed_name = trimmed_name[:text_pos] + trimmed_name[text_pos + remove_text_length + 1:]
+
+                for name, override in override_struct_method_name.items():
+                    if real_name == name:
+                        trimmed_name = override
 
                 yield trimmed_name, real_name, description
 

@@ -1235,14 +1235,14 @@
 --- @field public interact_cap fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
 --- @field public interact_grabbable fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
 --- @field public interact_text fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
---- @field public obj_angle_to_object fun(m: MarioState, o: Object): integer Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
+--- @field public angle_to_object fun(m: MarioState, o: Object): integer Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
 --- @field public stop_riding_object fun(m: MarioState) Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
 --- @field public grab_used_object fun(m: MarioState) Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
 --- @field public drop_held_object fun(m: MarioState) Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
 --- @field public throw_held_object fun(m: MarioState) Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
 --- @field public stop_riding_and_holding fun(m: MarioState) Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
---- @field public does_have_normal_cap_on_head fun(m: MarioState): boolean Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
---- @field public does_have_blown_cap fun(m: MarioState): boolean Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+--- @field public has_normal_cap_on_head fun(m: MarioState): boolean Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
+--- @field public has_blown_cap fun(m: MarioState): boolean Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
 --- @field public blow_off_cap fun(m: MarioState, capSpeed: number) Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
 --- @field public lose_cap_to_enemy fun(m: MarioState, arg: integer): boolean Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
 --- @field public retrieve_cap fun(m: MarioState) Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
@@ -1299,7 +1299,7 @@
 --- @field public transition_submerged_to_walking fun(m: MarioState): boolean Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states. Useful for restoring standard ground movement when emerging from water
 --- @field public set_water_plunge_action fun(m: MarioState): boolean Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
 --- @field public force_idle_state fun(m: MarioState): boolean Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
---- @field public init_single fun(m: MarioState) Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
+--- @field public init fun(m: MarioState) Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
 --- @field public set_particle_flags fun(m: MarioState, flags: integer, clear: integer) Sets Mario's particle flags to spawn various visual effects (dust, water splashes, etc.), with an option to clear or set new flags
 --- @field public update_wall fun(m: MarioState, wcd: WallCollisionData) Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
 --- @field public play_flip_sounds fun(m: MarioState, frame1: integer, frame2: integer, frame3: integer) Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips). If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
@@ -1412,19 +1412,19 @@
 --- @field public spline_get_weights fun(m: MarioState, result: Vec4f, t: number, c: integer) Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
 --- @field public anim_spline_init fun(m: MarioState, keyFrames: Pointer_Vec4s) Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
 --- @field public anim_spline_poll fun(m: MarioState, result: Vec3f): boolean Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
---- @field public is_player_active fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area and isn't bubbled
---- @field public is_player_in_local_area fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area
---- @field public is_nearest_state_to_object fun(m: MarioState, obj: Object): boolean Checks if `m` is the nearest Mario to `obj`
---- @field public obj_is_near_to_and_facing fun(m: MarioState, maxDist: number, maxAngleDiff: integer): boolean Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
---- @field public obj_turn_pitch_toward fun(m: MarioState, targetOffsetY: number, turnAmount: integer): integer Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
---- @field public cur_obj_set_vel_from_vel fun(m: MarioState, f12: number, f14: number) 
+--- @field public is_active fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area and isn't bubbled
+--- @field public is_in_local_area fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area
+--- @field public is_nearest_to_object fun(m: MarioState, obj: Object): boolean Checks if `m` is the nearest Mario to `obj`
+--- @field public obj_is_near_to_and_facing_self fun(m: MarioState, maxDist: number, maxAngleDiff: integer): boolean Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
+--- @field public obj_turn_pitch_toward_self fun(m: MarioState, targetOffsetY: number, turnAmount: integer): integer Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
+--- @field public set_vel_to_cur_obj_vel fun(m: MarioState, f12: number, f14: number) 
 --- @field public is_in_air_action fun(m: MarioState): boolean 
 --- @field public is_dive_sliding fun(m: MarioState): boolean 
---- @field public cur_obj_spawn_loot_coin_at_pos fun(m: MarioState) 
---- @field public obj_is_ground_pounding_platform fun(m: MarioState, obj: Object): boolean 
---- @field public cur_obj_can_activate_textbox fun(m: MarioState, radius: number, height: number, unused: integer): boolean 
---- @field public cur_obj_can_activate_textbox_2 fun(m: MarioState, radius: number, height: number): boolean 
---- @field public cur_obj_end_dialog fun(m: MarioState, dialogFlags: integer, dialogResult: integer) 
+--- @field public spawn_loot_coin_at_pos_from_cur_obj fun(m: MarioState) 
+--- @field public is_ground_pounding_platform fun(m: MarioState, obj: Object): boolean 
+--- @field public can_activate_textbox_with_cur_obj fun(m: MarioState, radius: number, height: number, unused: integer): boolean 
+--- @field public can_activate_textbox_with_cur_obj_2 fun(m: MarioState, radius: number, height: number): boolean 
+--- @field public end_dialog_with_cur_obj fun(m: MarioState, dialogFlags: integer, dialogResult: integer) 
 --- @field public queue_rumble_data fun(m: MarioState, a0: integer, a1: integer) Queues rumble data for Mario
 --- @field public reset_rumble_timers fun(m: MarioState) Resets rumble timers
 --- @field public reset_rumble_timers_2 fun(m: MarioState, a0: integer) Resets rumble timers and sets a field based on `a0`
@@ -2346,16 +2346,16 @@
 --- @field public get_mario_cap_flag fun(capObject: Object): integer Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
 --- @field public find_mario_anim_flags_and_translation fun(o: Object, yaw: integer, translation: Vec3s): integer Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 --- @field public execute_mario_action fun(o: Object): integer Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
---- @field public get_mario_state_from fun(o: Object): MarioState Gets the MarioState corresponding to the provided object if the object is a Mario object
+--- @field public get_mario_state fun(o: Object): MarioState Gets the MarioState corresponding to the provided object if the object is a Mario object
 --- @field public orient_graph fun(obj: Object, normalX: number, normalY: number, normalZ: number) Orients an object with the given normals, typically the surface under the object.
 --- @field public move_xyz_using_fvel_and_yaw fun(obj: Object) Don't use this function outside of of a context where the current object and `obj` are the same. Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
---- @field public nearest_mario_state_to fun(obj: Object): MarioState Gets the nearest active Mario who isn't bubbled to `obj`
---- @field public nearest_possible_mario_state_to fun(obj: Object): MarioState Gets the nearest possible Mario to `obj` despite anything like bubbled state or enemy visibility
---- @field public nearest_player_to fun(obj: Object): Object Gets the nearest player (Mario Object) to `obj`
---- @field public nearest_interacting_mario_state_to fun(obj: Object): MarioState Gets the nearest interacting Mario to `obj`
---- @field public nearest_interacting_player_to fun(obj: Object): Object Gets the nearest interacting player (Mario Object) to `obj`
---- @field public is_nearest_player_to fun(m: Object, obj: Object): boolean Checks if `m` is the nearest player (Mario Object) to `obj`
---- @field public is_point_close_to fun(obj: Object, x: number, y: number, z: number, dist: integer): boolean Checks if a point is within `dist` of `obj`
+--- @field public nearest_mario_state fun(obj: Object): MarioState Gets the nearest active Mario who isn't bubbled to `obj`
+--- @field public nearest_possible_mario_state fun(obj: Object): MarioState Gets the nearest possible Mario to `obj` despite anything like bubbled state or enemy visibility
+--- @field public nearest_player fun(obj: Object): Object Gets the nearest player (Mario Object) to `obj`
+--- @field public nearest_interacting_mario_state fun(obj: Object): MarioState Gets the nearest interacting Mario to `obj`
+--- @field public nearest_interacting_player fun(obj: Object): Object Gets the nearest interacting player (Mario Object) to `obj`
+--- @field public is_nearest_player_to_object fun(m: Object, obj: Object): boolean Checks if `m` is the nearest player (Mario Object) to `obj`
+--- @field public is_point_close fun(obj: Object, x: number, y: number, z: number, dist: integer): boolean Checks if a point is within `dist` of `obj`
 --- @field public set_visibility fun(obj: Object, dist: integer) Sets an object as visible if within a certain distance of Mario's graphical position
 --- @field public return_home_if_safe fun(obj: Object, homeX: number, y: number, homeZ: number, dist: integer): boolean Turns an object towards home if Mario is not near to it
 --- @field public return_and_displace_home fun(obj: Object, homeX: number, homeY: number, homeZ: number, baseDisp: integer) Randomly displaces an objects home if RNG says to, and turns the object towards its home
@@ -2363,13 +2363,13 @@
 --- @field public flicker_and_disappear fun(obj: Object, lifeSpan: integer): boolean Controls whether certain objects should flicker/when to despawn
 --- @field public apply_scale_to_matrix fun(obj: Object, dst: Mat4, src: Mat4) 
 --- @field public set_held_state fun(obj: Object, heldBehavior: Pointer_BehaviorScript) 
---- @field public lateral_dist_betweens fun(obj1: Object, obj2: Object): number 
---- @field public dist_betweens fun(obj1: Object, obj2: Object): number 
---- @field public dist_between_and_point fun(obj: Object, pointX: number, pointY: number, pointZ: number): number 
---- @field public angle_to fun(obj1: Object, obj2: Object): integer 
---- @field public pitch_to fun(obj: Object, target: Object): integer 
+--- @field public lateral_dist_to_object fun(obj1: Object, obj2: Object): number 
+--- @field public dist_to_object fun(obj1: Object, obj2: Object): number 
+--- @field public dist_to_point fun(obj: Object, pointX: number, pointY: number, pointZ: number): number 
+--- @field public angle_to_object fun(obj1: Object, obj2: Object): integer 
+--- @field public pitch_to_object fun(obj: Object, target: Object): integer 
 --- @field public angle_to_point fun(obj: Object, pointX: number, pointZ: number): integer 
---- @field public turn_toward fun(obj: Object, target: Object, angleIndex: integer, turnAmount: integer): integer 
+--- @field public turn_toward_object fun(obj: Object, target: Object, angleIndex: integer, turnAmount: integer): integer 
 --- @field public set_parent_relative_pos fun(obj: Object, relX: integer, relY: integer, relZ: integer) 
 --- @field public set_pos fun(obj: Object, x: integer, y: integer, z: integer) 
 --- @field public set_angle fun(obj: Object, pitch: integer, yaw: integer, roll: integer) 
@@ -2392,17 +2392,16 @@
 --- @field public scale fun(obj: Object, scale: number) 
 --- @field public init_animation_with_accel_and_sound fun(obj: Object, animIndex: integer, accel: number) 
 --- @field public init_animation_with_sound function 
---- @field public cur_enable_rendering_and_become_tangible fun(obj: Object) 
---- @field public cur_disable_rendering_and_become_intangible fun(obj: Object) 
---- @field public cur_set_pos_relative fun(other: Object, dleft: number, dy: number, dforward: number) 
+--- @field public enable_rendering_and_become_tangible fun(obj: Object) 
+--- @field public disable_rendering_and_become_intangible fun(obj: Object) 
+--- @field public set_pos_relative_to_cur_obj fun(other: Object, dleft: number, dy: number, dforward: number) 
 --- @field public set_face_angle_to_move_angle fun(obj: Object) 
 --- @field public mark_for_deletion fun(obj: Object) Marks an object to be unloaded at the end of the frame
 --- @field public become_tangible fun(obj: Object) 
---- @field public check_if_collided_with fun(obj1: Object, obj2: Object): boolean 
+--- @field public check_if_collided_with_object fun(obj1: Object, obj2: Object): boolean 
 --- @field public set_behavior fun(obj: Object, behavior: Pointer_BehaviorScript) 
 --- @field public has_behavior fun(obj: Object, behavior: Pointer_BehaviorScript): boolean 
---- @field public cur_lateral_dist_from_obj_to_home fun(obj: Object): number 
---- @field public cur_start_cam_event fun(obj: Object, cameraEvent: integer) 
+--- @field public cur_obj_lateral_dist_from_self_to_home fun(obj: Object): number 
 --- @field public set_billboard fun(obj: Object) 
 --- @field public set_cylboard fun(obj: Object) 
 --- @field public set_hitbox_radius_and_height fun(o: Object, radius: number, height: number) 
@@ -2424,7 +2423,7 @@
 --- @field public set_hitbox fun(obj: Object, hitbox: ObjectHitbox) 
 --- @field public set_collision_data function 
 --- @field public is_hidden fun(obj: Object): boolean 
---- @field public attack_collided_from_other fun(obj: Object): boolean 
+--- @field public attack_collided_from_other_object fun(obj: Object): boolean 
 --- @field public copy_behavior_params fun(dst: Object, src: Object) 
 --- @field public set_respawn_info_bits fun(obj: Object, bits: integer) Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
 --- @field public apply_platform_displacement fun(o: Object, platform: Object) Apply one frame of platform rotation to the object using the given platform
@@ -2442,7 +2441,7 @@
 --- @field public get_next_with_same_behavior_id_and_field_s32 fun(o: Object, fieldIndex: integer, value: integer): Object Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
 --- @field public get_next_with_same_behavior_id_and_field_f32 fun(o: Object, fieldIndex: integer, value: number): Object Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
 --- @field public get_nearest_with_behavior_id fun(o: Object, behaviorId: BehaviorId): Object Gets the nearest object with `behaviorId` to `o`
---- @field public get_collided fun(o: Object, index: integer): Object Gets the corresponding collided object to an index from `o`
+--- @field public get_collided_object fun(o: Object, index: integer): Object Gets the corresponding collided object to an index from `o`
 --- @field public get_field_u32 fun(o: Object, fieldIndex: integer): integer Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
 --- @field public get_field_s32 fun(o: Object, fieldIndex: integer): integer Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
 --- @field public get_field_f32 fun(o: Object, fieldIndex: integer): number Sets the float value from the field corresponding to `fieldIndex`

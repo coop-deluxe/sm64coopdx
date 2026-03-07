@@ -123,10 +123,9 @@ spoof_function_returns = [
     "turn_obj_away_from_steep_floor",
 ]
 
-# This is here until I figure out how to automatically check
-# if a function is not implemented
 struct_functions_disallow = [
-    "common_landing_cancels"
+    "common_landing_cancels",
+    "cur_obj_start_cam_event",
 ]
 
 def extract_integer_datatype(c_type):
