@@ -4,6 +4,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_moderator_menu.h"
+#include "djui_panel_moderator_menu_inspect.h"
 #include "djui_panel_moderation_list.h"
 #include "djui_panel_moderation_confirm_action.h"
 #include "pc/network/network.h"
@@ -13,7 +14,7 @@ static struct DjuiFlowLayout* sLayout = NULL;
 static struct DjuiPaginated* sPaginated = NULL;
 
 static void djui_panel_moderator_menu_action_button_click(struct DjuiBase* caller) {
-    djui_panel_moderation_confirm_create(caller, caller->uTag, caller->tag, false, djui_panel_moderator_menu_reload);
+    djui_panel_moderation_confirm_create(caller, caller->uTag, caller->tag, caller->bTag, djui_panel_moderator_menu_reload);
 }
 
 static void djui_panel_moderator_add_players(struct DjuiBase* layoutBase) {
@@ -32,12 +33,13 @@ static void djui_panel_moderator_add_players(struct DjuiBase* layoutBase) {
         djui_base_set_size_type(&flowLayout->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&flowLayout->base, 1, 32);
         {
-            struct DjuiButton* playerButton = djui_button_create(&flowLayout->base, np->name, DJUI_BUTTON_STYLE_NORMAL, NULL);
+            struct DjuiButton* playerButton = djui_button_create(&flowLayout->base, np->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderator_menu_inspector_create);
             u8 playerColor[3];
             memcpy(playerColor, network_get_player_text_color(i), 3);
             djui_base_set_color(&playerButton->text->base, playerColor[0], playerColor[1], playerColor[2], 255);
             djui_base_set_size_type(&playerButton->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&playerButton->base, 0.4, 32);
+            playerButton->base.tag = i;
 
             struct DjuiButton* kickButton = djui_button_create(&flowLayout->base, DLANG(MODERATION, KICK), DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderator_menu_action_button_click);
             djui_base_set_size_type(&kickButton->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -56,6 +58,7 @@ static void djui_panel_moderator_add_players(struct DjuiBase* layoutBase) {
             djui_base_set_size(&modButton->base, 1.0, 32);
             djui_base_set_enabled(&modButton->base, gNetworkType == NT_SERVER);
             modButton->base.uTag = np->moderator ? MODERATION_ACTION_UNMOD : MODERATION_ACTION_MOD;
+            modButton->base.bTag = true;
             modButton->base.tag = i;
         }
     }

@@ -8,6 +8,7 @@
 #include "pc/network/moderation.h"
 
 static char* sReason = NULL;
+static bool sPermanent = false;
 void (*sOnYesClick)(struct DjuiBase*) = NULL;
 
 static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
@@ -20,13 +21,13 @@ static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
             network_kick_player(player, sReason);
             break;
         case MODERATION_ACTION_BAN:
-            network_ban_player(player, sReason, false);
+            network_ban_player(player, sReason, sPermanent);
             break;
         case MODERATION_ACTION_UNBAN:
             network_unban_player(address);
             break;
         case MODERATION_ACTION_MOD:
-            network_mod_player(player, sReason, true);
+            network_mod_player(player, sReason, sPermanent);
             break;
         case MODERATION_ACTION_UNMOD:
             network_unmod_player(address);
@@ -37,6 +38,7 @@ static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
 
     free(sReason);
     sReason = NULL;
+    sPermanent = false;
     djui_panel_menu_back(caller);
 
     if (sOnYesClick) sOnYesClick(caller);
@@ -76,7 +78,17 @@ static void djui_panel_moderation_confirm_set_title_and_message(u8 action, char*
     }
 }
 
+static void djui_panel_moderation_confirm_destroy(struct DjuiBase* base) {
+    struct DjuiThreePanel* threePanel = (struct DjuiThreePanel*)base;
+    free(threePanel);
+    free(sReason);
+    sReason = NULL;
+    sPermanent = false;
+}
+
 void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* title, char* message, u8 localIndex, u8 action, bool permanent, char* address, void (*on_yes_click)(struct DjuiBase*)) {
+    sPermanent = permanent;
+
     struct DjuiThreePanel* panel = djui_panel_menu_create(title, false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
@@ -86,7 +98,7 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
         if (action == MODERATION_ACTION_BAN || action == MODERATION_ACTION_MOD) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
             {
-                struct DjuiText* text1 = djui_text_create(&rect1->base, "Reason:");
+                struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(MODERATION, REASON));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_color(&text1->base, 220, 220, 220, 255);
                 djui_base_set_size(&text1->base, 0.585f, 64);
@@ -99,6 +111,8 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
                 djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
                 djui_interactable_hook_value_change(&inputbox1->base, djui_panel_moderation_confirm_reason_text_change);
             }
+
+            djui_checkbox_create(body, DLANG(MODERATION, PERMANENT), &sPermanent, NULL);
         }
 
         djui_base_set_size(&text->base, 1.0f, 64);
@@ -116,17 +130,19 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
             struct DjuiButton* yesButton = djui_button_right_create(&rect2->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderation_call_action);
             yesButton->base.tag = localIndex;
             yesButton->base.uTag = action;
-            yesButton->base.bTag = permanent;
             yesButton->base.cTag = strdup(address);
             sOnYesClick = on_yes_click;
         }
     }
 
+    panel->base.destroy = djui_panel_moderation_confirm_destroy;
     djui_panel_add(caller, panel, NULL);
 }
 
 void djui_panel_moderation_confirm_create(struct DjuiBase* caller, u8 action, u8 localIndex, bool permanent, void (*on_yes_click)(struct DjuiBase*)) {
     if (localIndex >= MAX_PLAYERS) return;
+    struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
+    if (!np->connected) return;
     char* title = NULL;
     char message[256] = { 0 };
     djui_panel_moderation_confirm_set_title_and_message(action, &title, message, (char*)network_get_complete_player_name(localIndex));

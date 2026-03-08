@@ -73,7 +73,7 @@ void djui_panel_moderation_list_inspect_create(struct DjuiBase* caller) {
 
         if (entry->reason && strcmp(entry->reason, "") != 0) {
             char reasonStr[512];
-            djui_language_replace(DLANG(MODERATION, REASON), reasonStr, 512, '@', entry->reason);
+            djui_language_replace(DLANG(MODERATION, REASON_INFO), reasonStr, 512, '@', entry->reason);
             struct DjuiText* reasonText = djui_text_create(body, reasonStr);
             djui_base_set_color(&reasonText->base, 220, 220, 220, 255);
             djui_base_set_size_type(&reasonText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -81,7 +81,6 @@ void djui_panel_moderation_list_inspect_create(struct DjuiBase* caller) {
             djui_base_compute_tree(&reasonText->base);
             u16 reasonLines = djui_text_count_lines(reasonText, 12);
             f32 reasonHeight = 32 * reasonLines;
-            printf("Reason lines is %u, with reason height being %f\n", reasonLines, reasonHeight);
             djui_base_set_size(&reasonText->base, 1, reasonHeight);
             djui_text_set_alignment(reasonText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(reasonText, 64, 64, 64, 100);
