@@ -7910,6 +7910,13 @@ function network_get_player_text_color_string(localIndex)
     -- ...
 end
 
+--- @param localIndex integer
+--- @return string
+--- Gets the complete player name, including the player's starting hex code.
+function network_get_complete_player_name(localIndex)
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the game can currently be paused in singleplayer
 function network_check_singleplayer_pause()

@@ -53,6 +53,14 @@ const char* network_get_player_text_color_string(u8 localIndex) {
     return sColorString;
 }
 
+const char* network_get_complete_player_name(u8 localIndex) {
+    if (localIndex >= MAX_PLAYERS) { localIndex = 0; }
+    static char buffer[MAX_CONFIG_STRING + 10];
+    const char* colorString = network_get_player_text_color_string(localIndex);
+    snprintf(buffer, MAX_CONFIG_STRING + 10, "%s%s", colorString, gNetworkPlayers[localIndex].name);
+    return buffer;
+}
+
 extern s16 gMenuMode;
 bool network_check_singleplayer_pause(void) {
     return ((gMenuMode != -1) || (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) &&

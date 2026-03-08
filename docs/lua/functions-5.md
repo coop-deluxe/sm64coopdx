@@ -2758,6 +2758,29 @@ Gets the DJUI hex color code string for the player corresponding to `localIndex`
 
 <br />
 
+## [network_get_complete_player_name](#network_get_complete_player_name)
+
+### Description
+Gets the complete player name, including the player's starting hex code.
+
+### Lua Example
+`local stringValue = network_get_complete_player_name(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_get_complete_player_name(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
 
 ### Description

@@ -182,7 +182,9 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
         djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
         djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
-        djui_button_create(body, "Moderation Lists", DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderation_list_create);
+        if (gDjuiInMainMenu) {
+            djui_button_create(body, DLANG(HOST, MODERATION_LISTS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderation_list_create);
+        }
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {

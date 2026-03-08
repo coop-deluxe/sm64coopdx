@@ -17,6 +17,8 @@ bool network_is_moderator(void);
 u8* network_get_player_text_color(u8 localIndex);
 /* |description|Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color|descriptionEnd| */
 const char* network_get_player_text_color_string(u8 localIndex);
+/* |description|Gets the complete player name, including the player's starting hex code.|descriptionEnd| */
+const char* network_get_complete_player_name(u8 localIndex);
 
 /* |description|Checks if the game can currently be paused in singleplayer|descriptionEnd| */
 bool network_check_singleplayer_pause(void);
