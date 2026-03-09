@@ -48,7 +48,7 @@ struct DjuiSearchbox* djui_searchbox_create(struct DjuiBase* parent, void (*on_v
     searchInputBox->yOffset = 0;
     searchbox->inputbox = searchInputBox;
 
-    struct DjuiText* text = djui_text_create(&searchInputBox->base, "Search...");
+    struct DjuiText* text = djui_text_create(&searchInputBox->base, DLANG(MENU, SEARCH));
     djui_base_set_color(&text->base, disabledTextColor.r, disabledTextColor.g, disabledTextColor.b, disabledTextColor.a);
     djui_base_set_alignment(&text->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
