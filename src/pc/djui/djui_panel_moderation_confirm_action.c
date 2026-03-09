@@ -101,13 +101,13 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
                 struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(MODERATION, REASON));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_color(&text1->base, 220, 220, 220, 255);
-                djui_base_set_size(&text1->base, 0.585f, 64);
+                djui_base_set_size(&text1->base, 0.4f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
                 djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
                 struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 256);
                 djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_size(&inputbox1->base, 0.45f, 32);
+                djui_base_set_size(&inputbox1->base, 0.75, 32);
                 djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
                 djui_interactable_hook_value_change(&inputbox1->base, djui_panel_moderation_confirm_reason_text_change);
             }
