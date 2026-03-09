@@ -10,6 +10,7 @@ enum ModerationActions {
     MODERATION_ACTION_COUNT,
 };
 
+void djui_reload_moderation_panels();
 void network_kick_player(u8 localIndex, char* reason);
 void network_ban_player(u8 localIndex, char* reason, bool permanent);
 void network_unban_player(char* address);

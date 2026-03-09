@@ -2,8 +2,17 @@
 #include <string.h>
 #include <PR/ultratypes.h>
 #include "moderation.h"
+#include "pc/djui/djui_panel_moderator_menu.h"
+#include "pc/djui/djui_panel_moderation_list.h"
+#include "pc/djui/djui_panel_moderator_menu_inspect.h"
 #include "pc/debuglog.h"
 #include "pc/ini.h"
+
+void djui_reload_moderation_panels() {
+    djui_panel_moderator_menu_reload();
+    djui_panel_moderation_list_reload();
+    djui_panel_moderator_inspector_reload();
+}
 
 void network_kick_player(u8 localIndex, char* reason) {
     if (gNetworkPlayerLocal->moderator) {
