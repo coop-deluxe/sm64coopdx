@@ -391,10 +391,10 @@ void bhv_king_bobomb_loop(void) {
         if (so) {
             so->override_ownership = bhv_king_bobomb_override_ownership;
             so->ignore_if_true = bhv_king_bobomb_ignore_if_true;
-            sync_object_init_field(o, &o->oKingBobombUnk88);
-            sync_object_init_field(o, &o->oFlags);
-            sync_object_init_field(o, &o->oHealth);
-            sync_object_init_field(o, &o->oInteractStatus);
+            sync_object_init_field(o, o->oKingBobombUnk88);
+            sync_object_init_field(o, o->oFlags);
+            sync_object_init_field(o, o->oHealth);
+            sync_object_init_field(o, o->oInteractStatus);
         }
     }
 

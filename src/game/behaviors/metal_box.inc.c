@@ -28,7 +28,7 @@ s32 check_if_moving_over_floor(f32 a0, f32 a1) {
 void bhv_pushable_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 1000.0f);
-        sync_object_init_field(o, &o->oMoveAngleYaw);
+        sync_object_init_field(o, o->oMoveAngleYaw);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);

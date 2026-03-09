@@ -80,6 +80,7 @@ in_files = [
     "src/audio/seqplayer.h",
     "src/engine/lighting_engine.h",
     "src/pc/network/sync_object.h",
+    "src/audio/load.h",
 ]
 
 override_allowed_functions = {
@@ -99,6 +100,7 @@ override_allowed_functions = {
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", "handle_special_dialog_text" ],
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
     "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
+    "src/audio/load.h":                     [ "set_sound_bank_override" ],
 }
 
 override_disallowed_functions = {
@@ -120,14 +122,14 @@ override_disallowed_functions = {
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
     "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup", "network_player_name_valid" ],
-    "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
-    "src/game/obj_behaviors.c":                 [ "debug_", "turn_obj_away_from_surface" ],
+    "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "geo_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
+    "src/game/obj_behaviors.c":                 [ "debug_", "geo_", "turn_obj_away_from_surface"],
     "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
     "src/game/spawn_sound.h":                   [ "exec_anim_sound_state" ],
     "src/game/level_info.h":                    [ "_name_table", "convert_string_" ],
     "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                        [ "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
-    "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room" ],
+    "src/game/camera.h":                        [ "geo_", "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
+    "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room", "geo_" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified"],
@@ -825,7 +827,7 @@ def build_param(fid, param, i):
         lot = translate_type_to_lot(ptype)
         s = '  %s %s = (%s)smlua_to_cobject(L, %d, %s);' % (ptype, pid, ptype, i, lot)
 
-        if '???' in lot or "GRAPHNODE" in lot:
+        if '???' in lot:
             s = '//' + s + ' <--- UNIMPLEMENTED'
         else:
             s = '  ' + s

@@ -30,7 +30,7 @@ struct SyncObject {
     void (*override_ownership)(u8* shouldOverride, u8* shouldOwn);
     void (*on_forget)(void);
     void* extraFields[MAX_SYNC_OBJECT_FIELDS];
-    u8 extraFieldsSize[MAX_SYNC_OBJECT_FIELDS];
+    u8 extraFieldsSizeBytes[MAX_SYNC_OBJECT_FIELDS];
     bool rememberLastReliablePacket;
     bool lastReliablePacketIsStale;
     u16 extendedModelId;
@@ -43,14 +43,17 @@ struct SyncObject {
   ////////////
  // system //
 ////////////
+
 void sync_objects_init_system(void);
 void sync_objects_update(void);
 void sync_objects_clear(void);
 void sync_object_forget(u32 syncId);
 void sync_object_forget_last_reliable_packet(u32 syncId);
 struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance);
-void sync_object_init_field(struct Object *o, void* field);
-void sync_object_init_field_with_size(struct Object *o, void* field, u8 size);
+void sync_object_init_field_with_size(struct Object *o, void *field, u8 sizeBytes);
+
+#define sync_object_init_field(o, field) \
+    sync_object_init_field_with_size(o, &field, sizeof(field))
 
   /////////////
  // getters //

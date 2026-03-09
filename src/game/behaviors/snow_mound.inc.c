@@ -37,9 +37,9 @@ void bhv_snow_mound_spawn_loop(void) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->override_ownership = bhv_snow_mound_spawn_override_ownership;
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
         }
     }
 
