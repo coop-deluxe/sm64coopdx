@@ -177,7 +177,7 @@ unsigned int configNetworkSystem                  = 0;
 unsigned int configPlayerInteraction              = 1;
 unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
-bool         configNametags                       = true;
+unsigned int configNametags                       = 1;
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
@@ -336,7 +336,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},
-    {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
+    {.name = "coop_nametags",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configNametags},
     {.name = "coop_mod_dev_mode",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configModDevMode},
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},

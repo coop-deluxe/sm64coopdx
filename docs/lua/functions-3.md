@@ -3414,6 +3414,34 @@ Prints DJUI HUD text onto the screen
 
 <br />
 
+## [djui_hud_print_outlined_text](#djui_hud_print_outlined_text)
+
+### Description
+Prints outlined DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_outlined_text(message, x, y, scale, outlineThickness, outlineDarkness)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+| outlineThickness | `number` |
+| outlineDarkness | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_outlined_text(const char* message, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 ### Description
@@ -3438,6 +3466,38 @@ Prints interpolated DJUI HUD text onto the screen
 
 ### C Prototype
 `void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_outlined_text_interpolated](#djui_hud_print_outlined_text_interpolated)
+
+### Description
+Prints outlined interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_outlined_text_interpolated(message, prevX, prevY, prevScale, prevOutlineThickness, x, y, scale, outlineThickness, outlineDarkness)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScale | `number` |
+| prevOutlineThickness | `number` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+| outlineThickness | `number` |
+| outlineDarkness | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_outlined_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 prevOutlineThickness, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness);`
 
 [:arrow_up_small:](#)
 

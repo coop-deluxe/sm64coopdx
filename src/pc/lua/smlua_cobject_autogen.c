@@ -2502,7 +2502,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "enablePlayersInLevelDisplay", LVT_U8,  offsetof(struct ServerSettings, enablePlayersInLevelDisplay), false, LOT_NONE, 1, sizeof(u8)                      },
     { "headlessServer",              LVT_U8,  offsetof(struct ServerSettings, headlessServer),              false, LOT_NONE, 1, sizeof(u8)                      },
     { "maxPlayers",                  LVT_U8,  offsetof(struct ServerSettings, maxPlayers),                  false, LOT_NONE, 1, sizeof(u8)                      },
-    { "nametags",                    LVT_U8,  offsetof(struct ServerSettings, nametags),                    false, LOT_NONE, 1, sizeof(u8)                      },
+    { "nametags",                    LVT_U8,  offsetof(struct ServerSettings, nametags),                    false, LOT_NONE, 1, sizeof(enum NametagsType)                      },
     { "pauseAnywhere",               LVT_U8,  offsetof(struct ServerSettings, pauseAnywhere),               false, LOT_NONE, 1, sizeof(u8)                      },
     { "playerInteractions",          LVT_S32, offsetof(struct ServerSettings, playerInteractions),          false, LOT_NONE, 1, sizeof(enum PlayerInteractions) },
     { "playerKnockbackStrength",     LVT_U8,  offsetof(struct ServerSettings, playerKnockbackStrength),     false, LOT_NONE, 1, sizeof(u8)                      },

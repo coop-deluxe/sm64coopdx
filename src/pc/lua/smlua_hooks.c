@@ -157,7 +157,7 @@ bool smlua_call_event_hooks_HOOK_ON_HUD_RENDER_BEHIND(void (*resetFunc)(void)) {
     return smlua_call_event_hooks_on_hud_render(resetFunc, true);
 }
 
-bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, const char **playerNameOverride) {
+bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, const char **playerNameOverride, u8 **colorOverride, bool *displayHP) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -188,7 +188,7 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
             return true;
         }
 
-        // if it's a table, override name, pos or both
+        // if it's a table, override name, pos, color and/or displayHP
         if (lua_type(L, -1) == LUA_TTABLE) {
             bool override = false;
 
@@ -205,6 +205,42 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
             if (lua_type(L, -1) == LUA_TTABLE) {
                 extern void smlua_get_vec3f(Vec3f dest, int index);
                 smlua_get_vec3f(pos, -1);
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            //color
+            lua_getfield(L, -1, "color");
+            if (lua_istable(L, -1)) {
+
+                *colorOverride = calloc(3, sizeof(u8));
+
+                lua_getfield(L, -1, "r");
+                if(lua_isnumber(L, -1)){
+                    (*colorOverride)[0] = smlua_to_integer(L, -1);
+                }
+                lua_pop(L, 1);
+
+                lua_getfield(L, -1, "g");
+                if(lua_isnumber(L, -1)){
+                    (*colorOverride)[1] = smlua_to_integer(L, -1);
+                }
+                lua_pop(L, 1);
+
+                lua_getfield(L, -1, "b");
+                if(lua_isnumber(L, -1)){
+                    (*colorOverride)[2] = smlua_to_integer(L, -1);
+                }
+                lua_pop(L, 1);
+
+                override = true;
+            }
+            lua_pop(L, 1);
+
+            //display power meter
+            lua_getfield(L, -1, "displayHP");
+            if (lua_isboolean(L, -1)) {
+                *displayHP = smlua_to_boolean(L, -1);
                 override = true;
             }
             lua_pop(L, 1);
@@ -918,7 +954,7 @@ char** smlua_get_chat_maincommands_list(void) {
     for (s32 i = 0; i < defaultCmdsCount; i++) {
         if (defaultCmds[i] != NULL) {
             defaultCmdsCountNew++;
-        } else if (gServerSettings.nametags && defaultCmds[i] == NULL) {
+        } else if (gServerSettings.nametags != NAMETAGS_DISABLED && defaultCmds[i] == NULL) {
             defaultCmds[i] = "nametags";
             defaultCmdsCountNew++;
             break;
@@ -940,7 +976,7 @@ char** smlua_get_chat_maincommands_list(void) {
 }
 
 char** smlua_get_chat_subcommands_list(const char* maincommand) {
-    if (gServerSettings.nametags && strcmp(maincommand, "nametags") == 0) {
+    if (gServerSettings.nametags != NAMETAGS_DISABLED && strcmp(maincommand, "nametags") == 0) {
         s32 count = 2;
         char** subcommands = (char**) malloc((count + 1) * sizeof(char*));
         subcommands[0] = strdup("show-tag");

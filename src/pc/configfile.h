@@ -142,7 +142,7 @@ extern unsigned int configNetworkSystem;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
-extern bool         configNametags;
+extern unsigned int configNametags;
 extern bool         configModDevMode;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;

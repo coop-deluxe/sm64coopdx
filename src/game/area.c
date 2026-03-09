@@ -457,7 +457,7 @@ void render_game(void) {
             djui_reset_hud_params();
             create_dl_ortho_matrix();
             djui_gfx_displaylist_begin();
-            if (gServerSettings.nametags && !gDjuiInMainMenu) {
+            if (gServerSettings.nametags != NAMETAGS_DISABLED && !gDjuiInMainMenu) {
                 nametags_render();
             }
             smlua_call_event_hooks(HOOK_ON_HUD_RENDER_BEHIND, djui_reset_hud_params);

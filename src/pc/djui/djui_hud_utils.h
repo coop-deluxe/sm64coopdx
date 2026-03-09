@@ -119,8 +119,12 @@ void djui_hud_reset_scissor(void);
 f32 djui_hud_measure_text(const char* message);
 /* |description|Prints DJUI HUD text onto the screen|descriptionEnd| */
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);
+/* |description|Prints outlined DJUI HUD text onto the screen|descriptionEnd| */
+void djui_hud_print_outlined_text(const char* message, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness);
 /* |description|Prints interpolated DJUI HUD text onto the screen|descriptionEnd| */
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
+/* |description|Prints outlined interpolated DJUI HUD text onto the screen|descriptionEnd| */
+void djui_hud_print_outlined_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 prevOutlineThickness, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness);
 /* |description|Renders a DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders a DJUI HUD texture tile onto the screen|descriptionEnd| */

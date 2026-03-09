@@ -4004,6 +4004,17 @@ function djui_hud_print_text(message, x, y, scale)
 end
 
 --- @param message string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- @param outlineThickness number
+--- @param outlineDarkness number
+--- Prints outlined DJUI HUD text onto the screen
+function djui_hud_print_outlined_text(message, x, y, scale, outlineThickness, outlineDarkness)
+    -- ...
+end
+
+--- @param message string
 --- @param prevX number
 --- @param prevY number
 --- @param prevScale number
@@ -4012,6 +4023,21 @@ end
 --- @param scale number
 --- Prints interpolated DJUI HUD text onto the screen
 function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param prevOutlineThickness number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- @param outlineThickness number
+--- @param outlineDarkness number
+--- Prints outlined interpolated DJUI HUD text onto the screen
+function djui_hud_print_outlined_text_interpolated(message, prevX, prevY, prevScale, prevOutlineThickness, x, y, scale, outlineThickness, outlineDarkness)
     -- ...
 end
 

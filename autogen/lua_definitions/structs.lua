@@ -2171,7 +2171,7 @@
 --- @field public enablePlayersInLevelDisplay integer
 --- @field public enablePlayerList integer
 --- @field public headlessServer integer
---- @field public nametags integer
+--- @field public nametags NametagsType
 --- @field public maxPlayers integer
 --- @field public pauseAnywhere integer
 

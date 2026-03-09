@@ -423,6 +423,22 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
+void djui_hud_print_outlined_text(const char* message, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness) {
+    outlineThickness = clamp(outlineThickness, 0, 1);
+    f32 offset = outlineThickness * scale * 2;
+
+    struct DjuiColor *color = djui_hud_get_color();
+
+    djui_hud_set_color(color->r * outlineDarkness, color->g * outlineDarkness, color->b * outlineDarkness, color->a);
+    djui_hud_print_text(message, x - offset, y, scale);
+    djui_hud_print_text(message, x + offset, y, scale);
+    djui_hud_print_text(message, x, y - offset, scale);
+    djui_hud_print_text(message, x, y + offset, scale);
+
+    djui_hud_set_color(color->r, color->g, color->b, color->a);
+    djui_hud_print_text(message, x, y, scale);
+}
+
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
     f32 savedZ = gDjuiHudUtilsZ;
@@ -493,6 +509,26 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     interp->z = savedZ;
     interp->resolution = sResolution;
     interp->rotation = sRotation;
+}
+
+void djui_hud_print_outlined_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 prevOutlineThickness, f32 x, f32 y, f32 scale, f32 outlineThickness, f32 outlineDarkness) {
+    
+    outlineThickness = clamp(outlineThickness, 0, 1);
+    prevOutlineThickness = clamp(prevOutlineThickness, 0, 1);
+
+    f32 offset = outlineThickness * scale * 2;
+    f32 prevOffset = prevOutlineThickness * prevScale * 2;
+
+    struct DjuiColor *color = djui_hud_get_color();
+
+    djui_hud_set_color(color->r * outlineDarkness, color->g * outlineDarkness, color->b * outlineDarkness, color->a);
+    djui_hud_print_text_interpolated(message, prevX - prevOffset, prevY, prevScale, x - offset, y, scale);
+    djui_hud_print_text_interpolated(message, prevX + prevOffset, prevY, prevScale, x + offset, y, scale);
+    djui_hud_print_text_interpolated(message, prevX, prevY - prevOffset, prevScale, x, y - offset, scale);
+    djui_hud_print_text_interpolated(message, prevX, prevY + prevOffset, prevScale, x, y + offset, scale);
+
+    djui_hud_set_color(color->r, color->g, color->b, color->a);
+    djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale);
 }
 
 static inline bool is_power_of_two(u32 n) {
