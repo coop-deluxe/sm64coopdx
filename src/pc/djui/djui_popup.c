@@ -67,14 +67,14 @@ static void djui_popup_create_internal(const char* message, int lines, int paddi
 }
 
 void djui_popup_create(const char* message, int lines) {
-    int linesReq = (int)ceilf(djui_hud_measure_text(str_remove_color_codes(message)) / DJUI_POPUP_WIDTH);
+    int linesReq = (int)ceilf(djui_hud_measure_text(djui_text_get_uncolored_string(NULL, strlen(message + 1), message)) / DJUI_POPUP_WIDTH);
     if (linesReq < 1) linesReq = 1;
     if (linesReq > lines) linesReq = lines;
     djui_popup_create_internal(message, linesReq, lines - linesReq);
 }
 
 void djui_popup_create_auto_scaling(const char* message, int paddingLines) {
-    int linesReq = (int)ceilf(djui_hud_measure_text(str_remove_color_codes(message)) / DJUI_POPUP_WIDTH);
+    int linesReq = (int)ceilf(djui_hud_measure_text(djui_text_get_uncolored_string(NULL, strlen(message + 1), message)) / DJUI_POPUP_WIDTH);
     if (linesReq < 1) linesReq = 1;
     djui_popup_create_internal(message, linesReq, paddingLines);
 }
