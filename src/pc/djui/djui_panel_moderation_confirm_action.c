@@ -113,7 +113,7 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
                 djui_interactable_hook_value_change(&inputbox1->base, djui_panel_moderation_confirm_reason_text_change);
             }
 
-            if (action != MODERATION_ACTION_KICK) djui_checkbox_create(body, DLANG(MODERATION, PERMANENT), &sPermanent, NULL);
+            if (action != MODERATION_ACTION_KICK && gNetworkType == NT_SERVER) djui_checkbox_create(body, DLANG(MODERATION, PERMANENT), &sPermanent, NULL);
         }
 
         djui_base_set_size(&text->base, 1.0f, 64);
