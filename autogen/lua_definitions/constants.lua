@@ -8191,6 +8191,9 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
 --- | `HOOK_MAX`
 
+--- @type integer
+MAX_HOOKED_BEHAVIORS = 1024
+
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue
