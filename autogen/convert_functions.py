@@ -949,12 +949,7 @@ def build_function(function, do_extern):
             sparam = build_param(fid, param, i)
             param_var, param_value = sparam.split('=')
             param_type = param_var.replace(pid, '').strip()
-
-            if '*' in param_type:
-                s += '    %s = (%s) NULL;\n' % (param_var.strip(), param_type)
-            else:
-                s += '    %s = (%s) 0;\n' % (param_var.strip(), param_type)
-
+            s += '    %s = (%s) %s;\n' % (param_var.strip(), param_type, "NULL" if '*' in param_type else "0")
             s += '    if (top >= %d) {\n' % (i)
             s += '        %s = %s\n' % (pid, param_value.strip())
             s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
