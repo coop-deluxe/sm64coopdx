@@ -25,9 +25,9 @@ void bhv_ship_part_3_loop(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->maxUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oFaceAngleRoll);
-            sync_object_init_field(o, &o->oShipPart3UnkF4);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oFaceAngleRoll);
+            sync_object_init_field(o, o->oShipPart3UnkF4);
         }
     }
 
@@ -49,13 +49,13 @@ void bhv_jrb_sliding_box_loop(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->maxUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oFaceAngleRoll);
-            sync_object_init_field(o, &o->oJrbSlidingBoxUnkF8);
-            sync_object_init_field(o, &o->oJrbSlidingBoxUnkFC);
-            sync_object_init_field(o, &o->oParentRelativePosX);
-            sync_object_init_field(o, &o->oParentRelativePosY);
-            sync_object_init_field(o, &o->oParentRelativePosZ);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oFaceAngleRoll);
+            sync_object_init_field(o, o->oJrbSlidingBoxUnkF8);
+            sync_object_init_field(o, o->oJrbSlidingBoxUnkFC);
+            sync_object_init_field(o, o->oParentRelativePosX);
+            sync_object_init_field(o, o->oParentRelativePosY);
+            sync_object_init_field(o, o->oParentRelativePosZ);
         }
     }
 

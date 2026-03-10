@@ -3,11 +3,11 @@
 void bhv_wdw_express_elevator_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oPrevAction);
-        sync_object_init_field(o, &o->oTimer);
-        sync_object_init_field(o, &o->oVelY);
-        sync_object_init_field(o, &o->oPosY);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oPrevAction);
+        sync_object_init_field(o, o->oTimer);
+        sync_object_init_field(o, o->oVelY);
+        sync_object_init_field(o, o->oPosY);
     }
 
     o->oVelY = 0.0f;

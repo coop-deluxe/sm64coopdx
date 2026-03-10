@@ -1342,7 +1342,7 @@ def doc_function(fname, function):
         s += '- None\n'
 
     s += '\n### Returns\n'
-    if rtype != None:
+    if len(rvalues) > 0:
         for _, ptype, plink in rvalues:
             if plink:
                 s += '- [%s](%s)\n' % (ptype, plink)

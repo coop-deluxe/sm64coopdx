@@ -53,7 +53,7 @@ void bhv_big_boulder_loop(void) {
 void bhv_big_boulder_generator_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field(o, o->oTimer);
     }
 
     struct Object *sp1C;

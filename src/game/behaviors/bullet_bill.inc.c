@@ -9,9 +9,9 @@ void bhv_bullet_bill_init(void) {
     o->oBulletBillInitialMoveYaw = o->oMoveAngleYaw;
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
-        sync_object_init_field(o, &o->oFaceAngleRoll);
-        sync_object_init_field(o, &o->oForwardVel);
+        sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oFaceAngleRoll);
+        sync_object_init_field(o, o->oForwardVel);
     }
 }
 

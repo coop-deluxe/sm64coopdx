@@ -32,11 +32,11 @@ void bhv_moneybag_init(void) {
     o->oOpacity = 0;
 
     sync_object_init(o, 4000.0f);
-    sync_object_init_field(o, &o->oHomeX);
-    sync_object_init_field(o, &o->oHomeY);
-    sync_object_init_field(o, &o->oHomeZ);
-    sync_object_init_field(o, &o->oMoneybagJumpState);
-    sync_object_init_field(o, &o->oOpacity);
+    sync_object_init_field(o, o->oHomeX);
+    sync_object_init_field(o, o->oHomeY);
+    sync_object_init_field(o, o->oHomeZ);
+    sync_object_init_field(o, o->oMoneybagJumpState);
+    sync_object_init_field(o, o->oOpacity);
 }
 
 void moneybag_check_mario_collision(void) {
@@ -228,9 +228,9 @@ void bhv_moneybag_hidden_loop(void) {
 
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oPrevAction);
-        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oPrevAction);
+        sync_object_init_field(o, o->oTimer);
     }
 
     switch (o->oAction) {

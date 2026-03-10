@@ -186,10 +186,10 @@ void water_ring_spawner_act_inactive(void) {
 void bhv_jet_stream_ring_spawner_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oWaterRingSpawnerRingsCollected);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oPrevAction);
-        sync_object_init_field(o, &o->oTimer);
+        sync_object_init_field(o, o->oWaterRingSpawnerRingsCollected);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oPrevAction);
+        sync_object_init_field(o, o->oTimer);
     }
 
     switch (o->oAction) {
