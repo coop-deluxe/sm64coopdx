@@ -68,7 +68,7 @@ bool exec_chat_command(char* command) {
                     network_send_kick(np->localIndex, EKT_KICKED, reason);
                     network_player_disconnected(np->localIndex);
                 } else {
-                    network_send_chat_command(np->globalIndex, CCC_KICK);
+                    network_send_chat_command(np->globalIndex, CCC_KICK, reason);
                 }
                 return true;
             }
@@ -79,11 +79,10 @@ bool exec_chat_command(char* command) {
                 if (gNetworkType == NT_SERVER) {
                     network_send_kick(np->localIndex, EKT_BANNED, reason);
 
-                    // TODO: Moderation: Allow you to insert a reason
                     moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, reason, false);
                     network_player_disconnected(np->localIndex);
                 } else {
-                    network_send_chat_command(np->globalIndex, CCC_BAN);
+                    network_send_chat_command(np->globalIndex, CCC_BAN, reason);
                 }
                 return true;
             }
@@ -91,7 +90,6 @@ bool exec_chat_command(char* command) {
         if (gNetworkType == NT_SERVER && ccc == CCC_PERMBAN) {
             chat_construct_player_message(np, DLANG(CHAT, PERM_BANNING));
             network_send_kick(np->localIndex, EKT_BANNED, reason);
-            // TODO: Moderation: Allow you to insert a reason
             moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, reason, true);
             network_player_disconnected(np->localIndex);
             return true;
@@ -100,7 +98,6 @@ bool exec_chat_command(char* command) {
             chat_construct_player_message(np, DLANG(CHAT, ADD_MODERATOR));
             np->moderator = true;
             network_send_moderator(np->localIndex);
-            // TODO: Moderation: Allow you to insert a reason
             moderation_list_add(MODERATION_LIST_TYPE_MODERATOR, np->localIndex, reason, true);
             return true;
         }

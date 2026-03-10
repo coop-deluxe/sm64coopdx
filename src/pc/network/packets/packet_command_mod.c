@@ -5,7 +5,7 @@
 #include "pc/network/moderation.h"
 #include "pc/debuglog.h"
 
-void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
+void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc, char* reason) {
     if (!gNetworkPlayers[0].moderator) return;
 
     u8 cccType = ccc; struct Packet p = { 0 };
@@ -13,6 +13,14 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     packet_init(&p, PACKET_COMMAND, false, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &cccType, sizeof(u8));
+    u16 reasonLength = 0;
+    if (reason) {
+        u16 reasonLength = strlen(reason);
+        packet_write(&p, &reasonLength, sizeof(u16));
+        packet_write(&p, reason, sizeof(u8) * reasonLength);
+    } else {
+        packet_write(&p, &reasonLength, sizeof(u16));
+    }
     network_send_to(gNetworkPlayerServer->localIndex, &p);
 }
 
@@ -27,8 +35,13 @@ void network_receive_chat_command(struct Packet *p) {
         return;
     }
     u8 CCC; u8 player;
+    u16 reasonLength = 0;
+    char reason[MAX_REASON_LENGTH] = { 0 };
     packet_read(p, &player, sizeof(u8));
     packet_read(p, &CCC, sizeof(u8));
+    packet_read(p, &reasonLength, sizeof(u16));
+    if (reasonLength >= MAX_REASON_LENGTH) reasonLength = MAX_REASON_LENGTH - 1;
+    packet_read(p, reason, sizeof(u8) * reasonLength);
 
     if (CCC != CCC_KICK && CCC != CCC_BAN) {
         LOG_ERROR("recieved an invalid chat command: %d", CCC);
@@ -42,13 +55,12 @@ void network_receive_chat_command(struct Packet *p) {
     }
     char message[256] = { 0 };
     if (CCC == CCC_KICK) {
-        network_send_kick(np->localIndex, EKT_KICKED, NULL);
+        network_send_kick(np->localIndex, EKT_KICKED, reason);
         snprintf(message, 256, "\\#fff982\\Kicked '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
     }
     if (CCC == CCC_BAN) {
-        network_send_kick(np->localIndex, EKT_BANNED, NULL);
-        // TODO: Moderation: Allow you to insert a reason
-        moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", false);
+        network_send_kick(np->localIndex, EKT_BANNED, reason);
+        moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, reason, false);
         snprintf(message, 256, "\\#fff982\\Banned '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
     }
     network_player_disconnected(np->globalIndex);

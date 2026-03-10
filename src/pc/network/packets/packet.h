@@ -243,7 +243,7 @@ void network_send_kick(u8 localIndex, enum KickReasonType kickReason, char* reas
 void network_receive_kick(struct Packet* p);
 
 // packet_command_mod.c
-void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC);
+void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC, char* reason);
 void network_receive_chat_command(struct Packet* p);
 
 // packet_moderator.c
