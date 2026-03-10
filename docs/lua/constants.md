@@ -1150,6 +1150,18 @@
 <br />
 
 ## [djui_hud_utils.h](#djui_hud_utils.h)
+- ROTATION_PIVOT_X_LEFT
+- ROTATION_PIVOT_X_CENTER
+- ROTATION_PIVOT_X_RIGHT
+- ROTATION_PIVOT_Y_TOP
+- ROTATION_PIVOT_Y_CENTER
+- ROTATION_PIVOT_Y_BOTTOM
+- TEXT_HALIGN_LEFT
+- TEXT_HALIGN_CENTER
+- TEXT_HALIGN_RIGHT
+- TEXT_VALIGN_TOP
+- TEXT_VALIGN_CENTER
+- TEXT_VALIGN_BOTTOM
 
 ### [enum HudUtilsResolution](#HudUtilsResolution)
 | Identifier | Value |
@@ -1168,6 +1180,7 @@
 ### [enum DjuiFontType](#DjuiFontType)
 | Identifier | Value |
 | :--------- | :---- |
+| FONT_LEGACY | -1 |
 | FONT_NORMAL | 0 |
 | FONT_MENU | 1 |
 | FONT_HUD | 2 |

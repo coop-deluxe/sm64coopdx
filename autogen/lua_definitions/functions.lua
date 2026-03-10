@@ -3856,7 +3856,9 @@ function djui_hud_reset_color()
     -- ...
 end
 
---- @return HudUtilsRotation
+--- @return integer rotation
+--- @return number pivotX
+--- @return number pivotY
 --- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
@@ -3878,6 +3880,29 @@ end
 --- @param pivotY number
 --- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
+--- @return number textHAlign
+--- @return number textVAlign
+--- Gets the current DJUI HUD text alignment
+function djui_hud_get_text_alignment()
+    -- ...
+end
+
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment
+function djui_hud_set_text_alignment(textHAlign, textVAlign)
+    -- ...
+end
+
+--- @param prevTextHAlign number
+--- @param prevTextVAlign number
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment interpolated
+function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
 end
 

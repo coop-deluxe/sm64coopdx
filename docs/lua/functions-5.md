@@ -2968,7 +2968,7 @@ Determines an object's forward speed multiplier.
 | floor_nY | `number` |
 
 ### Returns
-- None
+- `number`
 
 ### C Prototype
 `void calc_obj_friction(RET f32 *objFriction, f32 floor_nY);`
@@ -4442,7 +4442,7 @@ Begin by increasing the current object's scale by `scaleVel`, and slowly decreas
 | blinkLength | `integer` |
 
 ### Returns
-- None
+- `integer`
 
 ### C Prototype
 `void obj_update_blinking(INOUT s32 *blinkTimer, s16 baseCycleLength, s16 cycleLengthRange, s16 blinkLength);`
@@ -4766,7 +4766,8 @@ Treats far home as Mario. Returns the distance and angle to the nearest player
 | threshold | `number` |
 
 ### Returns
-- None
+- `integer`
+- `integer`
 
 ### C Prototype
 `void treat_far_home_as_mario(f32 threshold, RET s32* distanceToPlayer, RET s32* angleToPlayer);`
