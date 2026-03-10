@@ -37,7 +37,7 @@ static void djui_popup_destroy(struct DjuiBase* base) {
     free(popup);
 }
 
-static void djui_popup_create_interal(const char* message, int lines, int paddingLines) {
+static void djui_popup_create_internal(const char* message, int lines, int paddingLines) {
     if (djui_is_popup_disabled()) { return; }
     if (paddingLines < 0) paddingLines = 0;
     struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
@@ -67,16 +67,16 @@ static void djui_popup_create_interal(const char* message, int lines, int paddin
 }
 
 void djui_popup_create(const char* message, int lines) {
-    int linesReq = (int)ceilf(djui_hud_measure_text(message) / DJUI_POPUP_WIDTH);
+    int linesReq = (int)ceilf(djui_hud_measure_text(str_remove_color_codes(message)) / DJUI_POPUP_WIDTH);
     if (linesReq < 1) linesReq = 1;
     if (linesReq > lines) linesReq = lines;
-    djui_popup_create_interal(message, linesReq, lines - linesReq);
+    djui_popup_create_internal(message, linesReq, lines - linesReq);
 }
 
 void djui_popup_create_auto_scaling(const char* message, int paddingLines) {
-    int linesReq = (int)ceilf(djui_hud_measure_text(message) / DJUI_POPUP_WIDTH);
+    int linesReq = (int)ceilf(djui_hud_measure_text(str_remove_color_codes(message)) / DJUI_POPUP_WIDTH);
     if (linesReq < 1) linesReq = 1;
-    djui_popup_create_interal(message, linesReq, paddingLines);
+    djui_popup_create_internal(message, linesReq, paddingLines);
 }
 
 void djui_popup_update(void) {
