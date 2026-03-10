@@ -67,10 +67,12 @@ void djui_panel_moderator_menu_inspector_create(struct DjuiBase* caller) {
         banButton->base.uTag = MODERATION_ACTION_BAN;
         banButton->base.tag = np->localIndex;
 
-        sModButton = djui_button_create(body, np->moderator ? DLANG(MODERATION, UNMOD) : DLANG(MODERATION, MOD), DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderator_menu_action_button_click);
-        sModButton->base.uTag = np->moderator ? MODERATION_ACTION_UNMOD : MODERATION_ACTION_MOD;
-        sModButton->base.bTag = true;
-        sModButton->base.tag = np->localIndex;
+        if (gNetworkType == NT_SERVER) {
+            sModButton = djui_button_create(body, np->moderator ? DLANG(MODERATION, UNMOD) : DLANG(MODERATION, MOD), DJUI_BUTTON_STYLE_NORMAL, djui_panel_moderator_menu_action_button_click);
+            sModButton->base.uTag = np->moderator ? MODERATION_ACTION_UNMOD : MODERATION_ACTION_MOD;
+            sModButton->base.bTag = true;
+            sModButton->base.tag = np->localIndex;
+        }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
