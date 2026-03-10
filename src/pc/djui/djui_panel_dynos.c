@@ -45,7 +45,7 @@ static void djui_panel_dynos_add_packs(struct DjuiBase* base) {
         if (!dynos_pack_get_exists(i)) continue;
         bool tmp = dynos_pack_get_enabled(i);
         const char* pack = dynos_pack_get_name(i);
-        if (sSearchInputbox != NULL && sSearchInputbox->buffer != NULL && !strcasestr(str_remove_color_codes(pack), sSearchInputbox->buffer)) continue;
+        if (sSearchInputbox != NULL && sSearchInputbox->buffer != NULL && !strcasestr(djui_text_get_uncolored_string(NULL, strlen(pack) + 1, pack), sSearchInputbox->buffer)) continue;
 
         struct DjuiCheckbox* checkbox1 = djui_checkbox_create(base, pack, &tmp, djui_panel_dynos_apply);
         checkbox1->base.tag = i;
