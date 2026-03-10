@@ -155,8 +155,17 @@ void packet_receive(struct Packet* p) {
     // refuse packets from banned players
     if (gNetworkType == NT_SERVER) {
         if (moderation_list_contains(MODERATION_LIST_TYPE_BAN, gNetworkSystem->get_id_str(p->localIndex))) {
+            char* reason = NULL;
+            struct ModerationList* list = moderation_list_get_list_by_type(MODERATION_LIST_TYPE_BAN);
+            for (u16 i = 0; i < list->count; i++) {
+                struct ModerationEntry* entry = list->list[i];
+                if (strcmp(entry->address, gNetworkSystem->get_id_str(p->localIndex)) == 0) {
+                    reason = entry->reason;
+                    break;
+                }
+            }
             LOG_INFO("kicking banned player");
-            network_send_kick(0, EKT_BANNED, NULL);
+            network_send_kick(0, EKT_BANNED, reason);
             return;
         }
     }
