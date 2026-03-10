@@ -11,9 +11,9 @@
 u8 gQueuedDisconnect = QUEUED_DISCONNECT_NONE;
 
 void djui_reload_moderation_panels() {
-    djui_panel_moderator_menu_reload();
-    djui_panel_moderation_list_reload();
-    djui_panel_moderator_inspector_reload();
+    djui_panel_moderator_menu_reload(NULL);
+    djui_panel_moderation_list_reload(NULL);
+    djui_panel_moderator_inspector_reload(NULL);
 }
 
 void network_kick_player(u8 localIndex, char* reason) {

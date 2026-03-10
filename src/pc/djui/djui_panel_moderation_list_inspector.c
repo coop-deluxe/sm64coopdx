@@ -15,7 +15,7 @@ static u16 sListIndex = 0;
 
 static void djui_panel_moderation_list_inspect_action_exit(UNUSED struct DjuiBase* caller) {
     djui_panel_back_by(2);
-    djui_panel_moderation_list_reload();
+    djui_panel_moderation_list_reload(NULL);
 }
 
 static void djui_panel_moderation_list_action_button_click(struct DjuiBase* caller) {

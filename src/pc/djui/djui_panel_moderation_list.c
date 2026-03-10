@@ -49,7 +49,7 @@ static void djui_panel_moderation_list_populate_list(struct DjuiBase* layoutBase
     }
 }
 
-void djui_panel_moderation_list_reload() {
+void djui_panel_moderation_list_reload(UNUSED struct DjuiBase* caller) {
     if (!sLayout || !sPaginated) return;
     djui_base_destroy_children(&sLayout->base);
     djui_panel_moderation_list_populate_list(&sLayout->base);
@@ -65,7 +65,7 @@ static void djui_panel_moderation_list_destroy(struct DjuiBase* base) {
 
 static bool djui_panel_moderation_list_on_back(UNUSED struct DjuiBase* base) {
     if (!gDjuiInMainMenu) {
-        djui_panel_moderator_menu_reload();
+        djui_panel_moderator_menu_reload(NULL);
     }
     return false;
 }

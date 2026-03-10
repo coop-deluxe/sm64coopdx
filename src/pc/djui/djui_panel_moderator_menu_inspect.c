@@ -13,7 +13,7 @@
 struct DjuiButton* sModButton = NULL;
 static u8 sSelectedIndex = 0;
 
-static void djui_panel_moderator_inspector_validate_and_reload();
+static void djui_panel_moderator_inspector_validate_and_reload(UNUSED struct DjuiBase* caller);
 
 static void djui_panel_moderator_menu_action_button_click(struct DjuiBase* caller) {
     djui_panel_moderation_confirm_create(caller, caller->uTag, caller->tag, caller->bTag, djui_panel_moderator_inspector_validate_and_reload);
@@ -25,15 +25,15 @@ static void djui_panel_moderator_menu_inspector_destroy(struct DjuiBase* base) {
     sModButton = NULL;
 }
 
-static void djui_panel_moderator_inspector_validate_and_reload() {
-    djui_panel_moderator_menu_reload();
+static void djui_panel_moderator_inspector_validate_and_reload(UNUSED struct DjuiBase* caller) {
+    djui_panel_moderator_menu_reload(caller);
     if (sSelectedIndex >= MAX_PLAYERS) djui_panel_back_by(2);
     struct NetworkPlayer* np = &gNetworkPlayers[sSelectedIndex];
     if (!np->connected) djui_panel_back_by(2);
-    djui_panel_moderator_inspector_reload();
+    djui_panel_moderator_inspector_reload(NULL);
 }
 
-void djui_panel_moderator_inspector_reload() {
+void djui_panel_moderator_inspector_reload(UNUSED struct DjuiBase* caller) {
     if (!sModButton) return;
     if (sSelectedIndex >= MAX_PLAYERS) return;
     struct NetworkPlayer* np = &gNetworkPlayers[sSelectedIndex];
