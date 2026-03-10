@@ -197,11 +197,6 @@ void mod_clear(struct Mod* mod) {
         }
     }
 
-    if (mod->name != NULL) {
-        free(mod->name);
-        mod->name = NULL;
-    }
-
     if (mod->incompatible != NULL) {
         free(mod->incompatible);
         mod->incompatible = NULL;
@@ -449,7 +444,7 @@ static void mod_extract_fields(struct Mod* mod) {
     fseek(f, 0, SEEK_SET);
 
     // default to null
-    mod->name = NULL;
+    mod->name[0] = 0;
     mod->incompatible = NULL;
     mod->category = NULL;
     mod->description = NULL;
@@ -457,7 +452,7 @@ static void mod_extract_fields(struct Mod* mod) {
     mod->ignoreScriptWarnings = false;
 
     // read line-by-line
-    #define BUFFER_SIZE MAX(MAX(MOD_NAME_MAX_LENGTH, MOD_INCOMPATIBLE_MAX_LENGTH), MOD_DESCRIPTION_MAX_LENGTH)
+    #define BUFFER_SIZE MAX(MAX(MOD_NAME_SIZE, MOD_INCOMPATIBLE_SIZE), MOD_DESCRIPTION_SIZE)
     char buffer[BUFFER_SIZE] = { 0 };
     while (!feof(f)) {
         file_get_line(buffer, BUFFER_SIZE, f);
@@ -470,24 +465,23 @@ static void mod_extract_fields(struct Mod* mod) {
 
         // extract the field
         char* extracted = NULL;
-        if (mod->name == NULL && (extracted = extract_lua_field("-- name:", buffer))) {
-            mod->name = calloc(MOD_NAME_MAX_LENGTH + 1, sizeof(char));
-            if (snprintf(mod->name, MOD_NAME_MAX_LENGTH, "%s", extracted) < 0) {
+        if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
+            if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod name field '%s'", mod->name);
             }
         } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
-            mod->incompatible = calloc(MOD_INCOMPATIBLE_MAX_LENGTH + 1, sizeof(char));
-            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_MAX_LENGTH, "%s", extracted) < 0) {
+            mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
+            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
             }
         } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
-            mod->category = calloc(MOD_CATEGORY_MAX_LENGTH + 1, sizeof(char));
-            if (snprintf(mod->category, MOD_CATEGORY_MAX_LENGTH, "%s", extracted) < 0) {
+            mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
+            if (snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod category field '%s'", mod->category);
             }
         } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
-            mod->description = calloc(MOD_DESCRIPTION_MAX_LENGTH + 1, sizeof(char));
-            if (snprintf(mod->description, MOD_DESCRIPTION_MAX_LENGTH, "%s", extracted) < 0) {
+            mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
+            if (snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod description field '%s'", mod->description);
             }
         } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
@@ -632,17 +626,19 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     mod_extract_fields(mod);
 
     // set name
-    if (mod->name == NULL) {
-        mod->name = strdup(modName);
+    if (!mod->name[0]) {
+        if (snprintf(mod->name, MOD_NAME_SIZE, "%s", modName) < 0) {
+            LOG_INFO("Truncated mod name field '%s'", mod->name);
+        }
     }
 
     // set category
     if (mod->category == NULL) {
-        char *modNameNoColor = djui_text_get_uncolored_string(mod->name);
+        char modNameNoColor[MOD_NAME_SIZE];
+        djui_text_get_uncolored_string(modNameNoColor, MOD_NAME_SIZE, mod->name);
         if (strstr(modNameNoColor, "[CS]") == modNameNoColor) {
             mod->category = strdup("cs");
         }
-        free(modNameNoColor);
     }
 
     // print

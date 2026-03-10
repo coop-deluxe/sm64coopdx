@@ -13,7 +13,7 @@ struct DjuiText {
 
 bool djui_text_parse_color(char *begin, const char *end, bool ignoreAlpha, const struct DjuiColor *baseColor, char **nextChar, struct DjuiColor *parsedColor);
 void djui_text_remove_colors(char *str);
-char *djui_text_get_uncolored_string(const char *str);
+char *djui_text_get_uncolored_string(char *dest, size_t length, const char *str);
 
 void djui_text_set_text(struct DjuiText* text, const char* message);
 void djui_text_set_font(struct DjuiText* text, const struct DjuiFont* font);

@@ -119,6 +119,7 @@ bool djui_text_parse_color(char *begin, const char *end, bool ignoreAlpha, const
 }
 
 void djui_text_remove_colors(char *str) {
+    if (!str) { return; }
     char *colorStart = str;
     const char *strEnd = str + strlen(str);
     while ((colorStart = strstr(colorStart, "\\#"))) {
@@ -131,10 +132,17 @@ void djui_text_remove_colors(char *str) {
     }
 }
 
-char *djui_text_get_uncolored_string(const char *str) {
-    char *uncolored = strdup(str);
-    djui_text_remove_colors(uncolored);
-    return uncolored;
+char *djui_text_get_uncolored_string(char *dest, size_t length, const char *str) {
+    if (!dest) {
+        dest = malloc(length * sizeof(char));
+        if (!dest) {
+            return NULL;
+        }
+    }
+    strncpy(dest, str, length - 1);
+    dest[length - 1] = 0;
+    djui_text_remove_colors(dest);
+    return dest;
 }
 
   ////////////////

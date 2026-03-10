@@ -30,7 +30,8 @@ enum HudUtilsFilter {
 };
 
 enum DjuiFontType {
-    FONT_NORMAL,
+    FONT_LEGACY = -1,
+    FONT_NORMAL = 0,
     FONT_MENU,
     FONT_HUD,
     FONT_ALIASED,

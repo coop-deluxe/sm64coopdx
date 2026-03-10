@@ -1474,7 +1474,7 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "incompatible",         LVT_STRING_P, offsetof(struct Mod, incompatible),         true, LOT_NONE, 1, sizeof(char*)  },
     { "index",                LVT_S32,      offsetof(struct Mod, index),                true, LOT_NONE, 1, sizeof(s32)    },
     { "isDirectory",          LVT_BOOL,     offsetof(struct Mod, isDirectory),          true, LOT_NONE, 1, sizeof(bool)   },
-    { "name",                 LVT_STRING_P, offsetof(struct Mod, name),                 true, LOT_NONE, 1, sizeof(char*)  },
+    { "name",                 LVT_STRING,   offsetof(struct Mod, name),                 true, LOT_NONE, 1, sizeof(char)   },
     { "pausable",             LVT_BOOL,     offsetof(struct Mod, pausable),             true, LOT_NONE, 1, sizeof(bool)   },
     { "relativePath",         LVT_STRING,   offsetof(struct Mod, relativePath),         true, LOT_NONE, 1, sizeof(char)   },
     { "renderBehindHud",      LVT_BOOL,     offsetof(struct Mod, renderBehindHud),      true, LOT_NONE, 1, sizeof(bool)   },

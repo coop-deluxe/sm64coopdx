@@ -2771,16 +2771,18 @@ FILTER_COUNT   = 2 --- @type HudUtilsFilter
 --- | `FILTER_LINEAR`
 --- | `FILTER_COUNT`
 
-FONT_NORMAL      = 0 --- @type DjuiFontType
-FONT_MENU        = 1 --- @type DjuiFontType
-FONT_HUD         = 2 --- @type DjuiFontType
-FONT_ALIASED     = 3 --- @type DjuiFontType
-FONT_CUSTOM_HUD  = 4 --- @type DjuiFontType
-FONT_RECOLOR_HUD = 5 --- @type DjuiFontType
-FONT_SPECIAL     = 6 --- @type DjuiFontType
-FONT_COUNT       = 7 --- @type DjuiFontType
+FONT_LEGACY      = -1 --- @type DjuiFontType
+FONT_NORMAL      =  0 --- @type DjuiFontType
+FONT_MENU        =  1 --- @type DjuiFontType
+FONT_HUD         =  2 --- @type DjuiFontType
+FONT_ALIASED     =  3 --- @type DjuiFontType
+FONT_CUSTOM_HUD  =  4 --- @type DjuiFontType
+FONT_RECOLOR_HUD =  5 --- @type DjuiFontType
+FONT_SPECIAL     =  6 --- @type DjuiFontType
+FONT_COUNT       =  7 --- @type DjuiFontType
 
 --- @alias DjuiFontType
+--- | `FONT_LEGACY`
 --- | `FONT_NORMAL`
 --- | `FONT_MENU`
 --- | `FONT_HUD`

@@ -24,6 +24,8 @@
 
 #include "engine/math_util.h"
 
+#define INTERP_INIT(v) {v, v}
+
 typedef struct {
     f32 prev, curr;
 } InterpFieldF32;
@@ -50,13 +52,13 @@ static struct HudUtilsState sHudUtilsState = {
     .font = FONT_NORMAL,
     .color = { 255, 255, 255, 255 },
     .rotation = {
-        .degrees = { 0, 0 },
-        .pivotX = { ROTATION_PIVOT_X_LEFT, ROTATION_PIVOT_X_LEFT },
-        .pivotY = { ROTATION_PIVOT_Y_TOP, ROTATION_PIVOT_Y_TOP },
+        .degrees = INTERP_INIT(0),
+        .pivotX = INTERP_INIT(ROTATION_PIVOT_X_LEFT),
+        .pivotY = INTERP_INIT(ROTATION_PIVOT_Y_TOP),
     },
     .textAlignment = {
-        .h = { TEXT_HALIGN_LEFT, TEXT_HALIGN_LEFT },
-        .v = { TEXT_VALIGN_TOP, TEXT_VALIGN_TOP },
+        .h = INTERP_INIT(TEXT_HALIGN_LEFT),
+        .v = INTERP_INIT(TEXT_VALIGN_TOP),
     },
 };
 
@@ -264,7 +266,11 @@ struct InterpHud *djui_hud_create_interp() {
     struct InterpHud *interp = &sInterpHuds[sInterpHudCount++];
     interp->z = gDjuiHudUtilsZ;
     interp->state = sHudUtilsState;
-    interp->gfx = growing_array_init(interp->gfx, 8, malloc, free);
+    if (!interp->gfx) {
+        interp->gfx = growing_array_init(NULL, 8, malloc, free);
+    } else {
+        interp->gfx->count = 0;
+    }
 
     return interp;
 }

@@ -1179,6 +1179,7 @@
 ### [enum DjuiFontType](#DjuiFontType)
 | Identifier | Value |
 | :--------- | :---- |
+| FONT_LEGACY | -1 |
 | FONT_NORMAL | 0 |
 | FONT_MENU | 1 |
 | FONT_HUD | 2 |
