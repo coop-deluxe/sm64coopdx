@@ -31,6 +31,7 @@
 #include "game/rumble_init.h"
 #include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/network/moderation.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -520,6 +521,30 @@ const char* get_coopnet_id(UNUSED s8 localIndex) {
 #else
     return "-1";
 #endif
+}
+
+///
+
+void network_disconnect(enum DisconnectType dcType, OPTIONAL const char* reason) {
+    switch (dcType) {
+        case DC_KICK:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot kick the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_KICK, 0, (char*)reason, false);
+            break;
+        case DC_BAN:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot ban the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_BAN, 0, (char*)reason, false);
+            break;
+        default:
+            gQueuedDisconnect = dcType;
+            break;
+    }
 }
 
 ///

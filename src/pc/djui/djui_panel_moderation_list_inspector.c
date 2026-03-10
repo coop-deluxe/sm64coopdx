@@ -71,9 +71,10 @@ void djui_panel_moderation_list_inspect_create(struct DjuiBase* caller) {
             djui_text_set_drop_shadow(discordIdText, 64, 64, 64, 100);
         }
 
-        if (entry->reason && strcmp(entry->reason, "") != 0) {
-            char reasonStr[512];
-            djui_language_replace(DLANG(MODERATION, REASON_INFO), reasonStr, 512, '@', entry->reason);
+        if (entry->reason[0] != '\0') {
+            int reasonStrLen = MAX_REASON_LENGTH + strlen(DLANG(MODERATION, REASON_INFO)) + 1;
+            char reasonStr[reasonStrLen];
+            djui_language_replace(DLANG(MODERATION, REASON_INFO), reasonStr, reasonStrLen, '@', entry->reason);
             struct DjuiText* reasonText = djui_text_create(body, reasonStr);
             djui_base_set_color(&reasonText->base, 220, 220, 220, 255);
             djui_base_set_size_type(&reasonText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

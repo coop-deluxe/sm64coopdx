@@ -84,6 +84,7 @@
     - [enum LuaActionHookType](#enum-LuaActionHookType)
     - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
+    - [enum DisconnectType](#enum-DisconnectType)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
     - [enum ActSelectHudPart](#enum-ActSelectHudPart)
@@ -3532,6 +3533,13 @@
 <br />
 
 ## [smlua_misc_utils.h](#smlua_misc_utils.h)
+
+### [enum DisconnectType](#DisconnectType)
+| Identifier | Value |
+| :--------- | :---- |
+| DC_LEAVE | 0 |
+| DC_KICK | 1 |
+| DC_BAN | 2 |
 
 ### [enum HudDisplayValue](#HudDisplayValue)
 | Identifier | Value |

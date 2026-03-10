@@ -809,6 +809,7 @@
 <br />
 
 - djui_popup.h
+   - [djui_popup_create_auto_scaling](functions-3.md#djui_popup_create_auto_scaling)
    - [djui_popup_create](functions-3.md#djui_popup_create)
 
 <br />
@@ -2057,6 +2058,7 @@
    - [get_time_stop_flags](functions-7.md#get_time_stop_flags)
    - [get_local_discord_id](functions-7.md#get_local_discord_id)
    - [get_coopnet_id](functions-7.md#get_coopnet_id)
+   - [network_disconnect](functions-7.md#network_disconnect)
    - [get_volume_master](functions-7.md#get_volume_master)
    - [get_volume_level](functions-7.md#get_volume_level)
    - [get_volume_sfx](functions-7.md#get_volume_sfx)

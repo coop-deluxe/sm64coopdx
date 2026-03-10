@@ -4,6 +4,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_moderator_menu.h"
+#include "djui_panel_moderator_menu_inspect.h"
 #include "djui_panel_moderation_list.h"
 #include "djui_panel_moderation_confirm_action.h"
 #include "pc/network/network.h"
@@ -12,14 +13,24 @@
 struct DjuiButton* sModButton = NULL;
 static u8 sSelectedIndex = 0;
 
+static void djui_panel_moderator_inspector_validate_and_reload();
+
 static void djui_panel_moderator_menu_action_button_click(struct DjuiBase* caller) {
-    djui_panel_moderation_confirm_create(caller, caller->uTag, caller->tag, caller->bTag, djui_panel_moderator_menu_reload);
+    djui_panel_moderation_confirm_create(caller, caller->uTag, caller->tag, caller->bTag, djui_panel_moderator_inspector_validate_and_reload);
 }
 
 static void djui_panel_moderator_menu_inspector_destroy(struct DjuiBase* base) {
     struct DjuiThreePanel* threePanel = (struct DjuiThreePanel*)base;
     free(threePanel);
     sModButton = NULL;
+}
+
+static void djui_panel_moderator_inspector_validate_and_reload() {
+    djui_panel_moderator_menu_reload();
+    if (sSelectedIndex >= MAX_PLAYERS) djui_panel_back_by(2);
+    struct NetworkPlayer* np = &gNetworkPlayers[sSelectedIndex];
+    if (!np->connected) djui_panel_back_by(2);
+    djui_panel_moderator_inspector_reload();
 }
 
 void djui_panel_moderator_inspector_reload() {

@@ -238,7 +238,8 @@ void network_send_chat(char* message, u8 globalIndex);
 void network_receive_chat(struct Packet* p);
 
 // packet_kick.c
-void network_send_kick(u8 localIndex, enum KickReasonType kickReason);
+void network_create_kick_popup(enum KickReasonType kickReason, char* reason);
+void network_send_kick(u8 localIndex, enum KickReasonType kickReason, char* reason);
 void network_receive_kick(struct Packet* p);
 
 // packet_command_mod.c

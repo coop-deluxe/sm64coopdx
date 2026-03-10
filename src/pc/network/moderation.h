@@ -1,6 +1,8 @@
 #pragma once
 #include <stdbool.h>
 
+#define QUEUED_DISCONNECT_NONE 255
+
 enum ModerationActions {
     MODERATION_ACTION_KICK,
     MODERATION_ACTION_BAN,
@@ -9,6 +11,8 @@ enum ModerationActions {
     MODERATION_ACTION_UNMOD,
     MODERATION_ACTION_COUNT,
 };
+
+extern u8 gQueuedDisconnect;
 
 void djui_reload_moderation_panels();
 void network_kick_player(u8 localIndex, char* reason);

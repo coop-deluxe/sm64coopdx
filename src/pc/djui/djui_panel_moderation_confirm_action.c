@@ -84,6 +84,7 @@ static void djui_panel_moderation_confirm_destroy(struct DjuiBase* base) {
     free(sReason);
     sReason = NULL;
     sPermanent = false;
+    sOnYesClick = NULL;
 }
 
 void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* title, char* message, u8 localIndex, u8 action, bool permanent, char* address, void (*on_yes_click)(struct DjuiBase*)) {
@@ -95,7 +96,7 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
         struct DjuiText* text = djui_text_create(body, message);
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
 
-        if (action == MODERATION_ACTION_BAN || action == MODERATION_ACTION_MOD) {
+        if (action == MODERATION_ACTION_KICK || action == MODERATION_ACTION_BAN || action == MODERATION_ACTION_MOD) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
             {
                 struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(MODERATION, REASON));
@@ -112,7 +113,7 @@ void djui_panel_moderation_confirm_create_body(struct DjuiBase* caller, char* ti
                 djui_interactable_hook_value_change(&inputbox1->base, djui_panel_moderation_confirm_reason_text_change);
             }
 
-            djui_checkbox_create(body, DLANG(MODERATION, PERMANENT), &sPermanent, NULL);
+            if (action != MODERATION_ACTION_KICK) djui_checkbox_create(body, DLANG(MODERATION, PERMANENT), &sPermanent, NULL);
         }
 
         djui_base_set_size(&text->base, 1.0f, 64);

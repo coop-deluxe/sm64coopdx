@@ -42,11 +42,11 @@ void network_receive_chat_command(struct Packet *p) {
     }
     char message[256] = { 0 };
     if (CCC == CCC_KICK) {
-        network_send_kick(np->localIndex, EKT_KICKED);
+        network_send_kick(np->localIndex, EKT_KICKED, NULL);
         snprintf(message, 256, "\\#fff982\\Kicked '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);
     }
     if (CCC == CCC_BAN) {
-        network_send_kick(np->localIndex, EKT_BANNED);
+        network_send_kick(np->localIndex, EKT_BANNED, NULL);
         // TODO: Moderation: Allow you to insert a reason
         moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", false);
         snprintf(message, 256, "\\#fff982\\Banned '%s%s\\#fff982\\'!", network_get_player_text_color_string(np->localIndex), np->name);

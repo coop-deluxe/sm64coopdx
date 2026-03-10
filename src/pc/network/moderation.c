@@ -8,6 +8,8 @@
 #include "pc/debuglog.h"
 #include "pc/ini.h"
 
+u8 gQueuedDisconnect = QUEUED_DISCONNECT_NONE;
+
 void djui_reload_moderation_panels() {
     djui_panel_moderator_menu_reload();
     djui_panel_moderation_list_reload();
@@ -28,7 +30,7 @@ void network_kick_player(u8 localIndex, char* reason) {
         LOG_ERROR("Tried to perform moderation on disconnected player!");
         return;
     }
-    network_send_kick(np->localIndex, EKT_KICKED);
+    network_send_kick(np->localIndex, EKT_KICKED, reason);
     network_player_disconnected(np->globalIndex);
 }
 
@@ -47,7 +49,7 @@ void network_ban_player(u8 localIndex, char* reason, bool permanent) {
         return;
     }
     moderation_list_add(MODERATION_LIST_TYPE_BAN, localIndex, reason, permanent);
-    network_send_kick(np->localIndex, EKT_BANNED);
+    network_send_kick(np->localIndex, EKT_BANNED, reason);
     network_player_disconnected(np->globalIndex);
 }
 

@@ -5,6 +5,7 @@
 
 #define MODERATION_LIST_FILEPATH "moderation_list.ini"
 #define MAX_MODERATION_LIST_ENTRIES 1024
+#define MAX_REASON_LENGTH 256
 
 enum ModerationListType {
     MODERATION_LIST_TYPE_BAN,
@@ -18,7 +19,7 @@ struct ModerationEntry {
     u8 playerColor[3];
     char* address;
     char* discordId;
-    char* reason;
+    char reason[MAX_REASON_LENGTH];
     bool permanent;
 };
 

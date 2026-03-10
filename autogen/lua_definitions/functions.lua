@@ -4150,6 +4150,13 @@ function djui_menu_get_rainbow_string_color(color)
 end
 
 --- @param message string
+--- @param paddingLines integer
+--- Creates an auto-scaling popup that says `message` which will always show the entire message with padding lines of 'paddingLines'
+function djui_popup_create_auto_scaling(message, paddingLines)
+    -- ...
+end
+
+--- @param message string
 --- @param lines integer
 --- Creates a popup that says `message` and has `lines`
 function djui_popup_create(message, lines)
@@ -11551,6 +11558,13 @@ end
 --- @return string
 --- Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
 function get_coopnet_id(localIndex)
+    -- ...
+end
+
+--- @param dcType DisconnectType
+--- @param reason? string
+--- Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
+function network_disconnect(dcType, reason)
     -- ...
 end
 

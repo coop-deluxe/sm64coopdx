@@ -96,7 +96,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
             }
         }
         if (globalIndex == UNKNOWN_LOCAL_INDEX || connectedCount >= gServerSettings.maxPlayers) {
-            network_send_kick(0, EKT_FULL_PARTY);
+            network_send_kick(0, EKT_FULL_PARTY, NULL);
             return;
         }
     }

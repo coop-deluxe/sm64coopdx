@@ -10,7 +10,7 @@ bool sValidActions[MODERATION_ACTION_COUNT] = {
 
 void network_send_moderation_action(u8 action, u8 localIndex, char* reason, bool permanent) {
     SOFT_ASSERT(gNetworkType != NT_SERVER);
-    if (!gNetworkPlayerLocal->moderator) {
+    if (!gNetworkPlayerLocal->moderator && localIndex != 0) {
         LOG_ERROR("Tried to send moderation action as a non-moderator!");
         return;
     }
@@ -18,7 +18,7 @@ void network_send_moderation_action(u8 action, u8 localIndex, char* reason, bool
     if (!np->connected) {
         LOG_ERROR("Moderator tried to perform moderation on a disconnected player!");
     }
-    if (np->moderator) {
+    if (np->moderator && localIndex != 0) {
         LOG_ERROR("Moderator tried to perform moderation on another moderator!");
         return;
     }
@@ -32,16 +32,17 @@ void network_send_moderation_action(u8 action, u8 localIndex, char* reason, bool
     packet_init(&p, PACKET_MODERATION_ACTION, false, PLMT_NONE);
     packet_write(&p, &action, sizeof(u8));
     packet_write(&p, &np->globalIndex, sizeof(u8));
+    u16 reasonLength = 0;
     if (reason) {
         u16 reasonLength = strlen(reason);
         packet_write(&p, &reasonLength, sizeof(u16));
-        packet_write(&p, &reason, sizeof(u8) * reasonLength);
+        packet_write(&p, reason, sizeof(u8) * reasonLength);
     } else {
-        packet_write(&p, 0, sizeof(u16));
+        packet_write(&p, &reasonLength, sizeof(u16));
     }
     packet_write(&p, &permanent, sizeof(bool));
 
-    network_send_to(gNetworkPlayerServer->globalIndex, &p);
+    network_send_to(gNetworkPlayerServer->localIndex, &p);
 }
 
 void network_receive_moderation_action(struct Packet* p) {
@@ -50,7 +51,7 @@ void network_receive_moderation_action(struct Packet* p) {
     enum ModerationActions action = MODERATION_ACTION_COUNT;
     u8 globalIndex = 0;
     u16 reasonLength = 0;
-    char* reason = NULL;
+    char reason[MAX_REASON_LENGTH] = { 0 };
     bool permanent = false;
 
     packet_read(p, &action, sizeof(u8));
@@ -71,7 +72,8 @@ void network_receive_moderation_action(struct Packet* p) {
     }
 
     packet_read(p, &reasonLength, sizeof(u16));
-    packet_read(p, &reason, sizeof(u8) * reasonLength);
+    if (reasonLength >= MAX_REASON_LENGTH) reasonLength = MAX_REASON_LENGTH - 1;
+    packet_read(p, reason, sizeof(u8) * reasonLength);
     packet_read(p, &permanent, sizeof(bool));
 
     switch (action) {

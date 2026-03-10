@@ -6,6 +6,7 @@
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
+#include "moderation.h"
 #include "pc/configfile.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel.h"
@@ -498,7 +499,7 @@ void network_rehost_begin(void) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
 
-        network_send_kick(i, EKT_REJOIN);
+        network_send_kick(i, EKT_REJOIN, NULL);
         network_player_disconnected(i);
     }
 
@@ -634,6 +635,13 @@ void network_update(void) {
     if ((gNetworkType == NT_NONE) && !gDjuiInMainMenu) {
         network_reset_reconnect_and_rehost();
         network_shutdown(true, false, false, false);
+    }
+
+    if (gNetworkType != NT_NONE && !gDjuiInMainMenu && gQueuedDisconnect != QUEUED_DISCONNECT_NONE) {
+        network_reset_reconnect_and_rehost();
+        network_shutdown(true, false, false, false);
+    } else {
+        gQueuedDisconnect = QUEUED_DISCONNECT_NONE;
     }
 }
 

@@ -5,7 +5,9 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "djui_hud_utils.h"
 
+#define DJUI_POPUP_WIDTH 400.0f
 #define DJUI_POPUP_LIFETIME 6.0f
 
 struct DjuiPopupList {
@@ -35,31 +37,46 @@ static void djui_popup_destroy(struct DjuiBase* base) {
     free(popup);
 }
 
-void djui_popup_create(const char* message, int lines) {
+static void djui_popup_create_interal(const char* message, int lines, int paddingLines) {
     if (djui_is_popup_disabled()) { return; }
+    if (paddingLines < 0) paddingLines = 0;
     struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
     struct DjuiBase* base = &popup->base;
 
-    f32 height = lines * 32 + 32;
+    f32 height = (lines + paddingLines) * 32 + 32;
     djui_base_init(&gDjuiRoot->base, base, djui_popup_render, djui_popup_destroy);
     djui_base_set_alignment(base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
     djui_base_set_location(base, 8, -height);
-    djui_base_set_size(base, 400, height);
+    djui_base_set_size(base, DJUI_POPUP_WIDTH, height);
     djui_base_set_border_width(base, 4);
     djui_base_set_color(base, 0, 0, 0, 220);
     djui_base_set_border_color(base, 0, 0, 0, 180);
 
     struct DjuiText* text = djui_text_create(base, message);
-    djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-    djui_base_set_size(&text->base, 1.0f, 1.0f);
+    djui_base_set_alignment(&text->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&text->base, 1.0f, lines * 32.0f);
     djui_base_set_color(&text->base, 220, 220, 220, 255);
-    djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
     djui_text_set_drop_shadow(text, 0, 0, 0, 64);
     popup->text = text;
 
     sPopupListY -= height + 4;
     djui_popup_add_to_list(popup);
     play_sound(SOUND_MENU_PINCH_MARIO_FACE, gGlobalSoundSource);
+}
+
+void djui_popup_create(const char* message, int lines) {
+    int linesReq = (int)ceilf(djui_hud_measure_text(message) / DJUI_POPUP_WIDTH);
+    if (linesReq < 1) linesReq = 1;
+    if (linesReq > lines) linesReq = lines;
+    djui_popup_create_interal(message, linesReq, lines - linesReq);
+}
+
+void djui_popup_create_auto_scaling(const char* message, int paddingLines) {
+    int linesReq = (int)ceilf(djui_hud_measure_text(message) / DJUI_POPUP_WIDTH);
+    if (linesReq < 1) linesReq = 1;
+    djui_popup_create_interal(message, linesReq, paddingLines);
 }
 
 void djui_popup_update(void) {

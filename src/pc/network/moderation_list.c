@@ -92,7 +92,7 @@ void moderation_list_load() {
             entry->playerColor[2] = strtol(safe_ini_get(iniFile, entrySection, "playerColorB"), NULL, 0);
             entry->address = strdup(safe_ini_get(iniFile, entrySection, "address"));
             entry->discordId = strdup(safe_ini_get(iniFile, entrySection, "discordId"));
-            entry->reason = strdup(safe_ini_get(iniFile, entrySection, "reason"));
+            snprintf(entry->reason, MAX_REASON_LENGTH, "%s", safe_ini_get(iniFile, entrySection, "reason"));
 
             list->list[list->count++] = entry;
         }
@@ -114,7 +114,7 @@ void moderation_list_add(enum ModerationListType type, u8 localIndex, char* reas
     memcpy(entry->playerColor, network_get_player_text_color(np->localIndex), 3);
     entry->address = strdup(gNetworkSystem->get_id_str(localIndex));
     entry->discordId = strdup(network_discord_id_from_local_index(localIndex));
-    entry->reason = strdup(reason ? reason : "");
+    snprintf(entry->reason, MAX_REASON_LENGTH, "%s", reason ? reason : "");
     entry->permanent = permanent;
     time(&entry->time);
 
@@ -131,7 +131,6 @@ void moderation_list_remove(enum ModerationListType type, char* address) {
             free(list->list[i]->playerName);
             free(list->list[i]->address);
             free(list->list[i]->discordId);
-            free(list->list[i]->reason);
             free(list->list[i]);
 
             for (u16 j = i; j < list->count - 1; j++) {

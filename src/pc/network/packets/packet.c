@@ -156,7 +156,7 @@ void packet_receive(struct Packet* p) {
     if (gNetworkType == NT_SERVER) {
         if (moderation_list_contains(MODERATION_LIST_TYPE_BAN, gNetworkSystem->get_id_str(p->localIndex))) {
             LOG_INFO("kicking banned player");
-            network_send_kick(0, EKT_BANNED);
+            network_send_kick(0, EKT_BANNED, NULL);
             return;
         }
     }
@@ -179,7 +179,7 @@ void packet_receive(struct Packet* p) {
         }
         if (packetType != PACKET_PLAYER) {
             LOG_INFO("closing connection for packetType: %d", packetType);
-            network_send_kick(0, EKT_CLOSE_CONNECTION);
+            network_send_kick(0, EKT_CLOSE_CONNECTION, NULL);
         }
         LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
         return;

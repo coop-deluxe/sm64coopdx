@@ -54,14 +54,18 @@ bool exec_chat_command(char* command) {
     enum ChatConfirmCommand ccc = sConfirming;
     sConfirming = CCC_NONE;
 
-    if (ccc != CCC_NONE && strcmp("/confirm", command) == 0) {
+    if (ccc != CCC_NONE && (strcmp("/confirm", command) == 0 || str_starts_with(command, "/confirm "))) {
         struct NetworkPlayer* np = &gNetworkPlayers[sConfirmPlayerIndex];
         if (!np->connected) return true;
+        char* reason = NULL;
+        if (str_starts_with(command, "/confirm ")) {
+            reason = &command[9];
+        }
         if (gNetworkType == NT_SERVER || npl->moderator) {
             if (ccc == CCC_KICK) {
                 chat_construct_player_message(np, DLANG(CHAT, KICKING));
                 if (gNetworkType == NT_SERVER) {
-                    network_send_kick(np->localIndex, EKT_KICKED);
+                    network_send_kick(np->localIndex, EKT_KICKED, reason);
                     network_player_disconnected(np->localIndex);
                 } else {
                     network_send_chat_command(np->globalIndex, CCC_KICK);
@@ -73,10 +77,10 @@ bool exec_chat_command(char* command) {
             if (ccc == CCC_BAN) {
                 chat_construct_player_message(np, DLANG(CHAT, BANNING));
                 if (gNetworkType == NT_SERVER) {
-                    network_send_kick(np->localIndex, EKT_BANNED);
+                    network_send_kick(np->localIndex, EKT_BANNED, reason);
 
                     // TODO: Moderation: Allow you to insert a reason
-                    moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", false);
+                    moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, reason, false);
                     network_player_disconnected(np->localIndex);
                 } else {
                     network_send_chat_command(np->globalIndex, CCC_BAN);
@@ -86,9 +90,9 @@ bool exec_chat_command(char* command) {
         }
         if (gNetworkType == NT_SERVER && ccc == CCC_PERMBAN) {
             chat_construct_player_message(np, DLANG(CHAT, PERM_BANNING));
-            network_send_kick(np->localIndex, EKT_BANNED);
+            network_send_kick(np->localIndex, EKT_BANNED, reason);
             // TODO: Moderation: Allow you to insert a reason
-            moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, "", true);
+            moderation_list_add(MODERATION_LIST_TYPE_BAN, np->localIndex, reason, true);
             network_player_disconnected(np->localIndex);
             return true;
         }
@@ -97,7 +101,7 @@ bool exec_chat_command(char* command) {
             np->moderator = true;
             network_send_moderator(np->localIndex);
             // TODO: Moderation: Allow you to insert a reason
-            moderation_list_add(MODERATION_LIST_TYPE_MODERATOR, np->localIndex, "", true);
+            moderation_list_add(MODERATION_LIST_TYPE_MODERATOR, np->localIndex, reason, true);
             return true;
         }
     }
