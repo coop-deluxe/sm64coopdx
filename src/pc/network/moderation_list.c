@@ -45,7 +45,8 @@ void moderation_list_save() {
             struct ModerationEntry* entry = list->list[i];
             if (!entry) continue;
             fprintf(file, "[Entry %u for %u]\n", i, type);
-            fprintf(file, "time = %ld\n", entry->time);
+            // windows <3
+            fprintf(file, "time = %lld\n", (long long)entry->time);
             fprintf(file, "playerName = %s\n", entry->playerName);
             fprintf(file, "playerColorR = %d\n", entry->playerColor[0]);
             fprintf(file, "playerColorG = %d\n", entry->playerColor[1]);
