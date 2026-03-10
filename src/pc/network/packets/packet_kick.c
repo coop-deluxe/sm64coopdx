@@ -40,10 +40,6 @@ void network_create_kick_popup(enum KickReasonType kickReason, char* reason) {
 }
 
 void network_send_kick(u8 localIndex, enum KickReasonType kickReason, char* reason) {
-    if (localIndex == 0) {
-        LOG_ERROR("Trying to send kick to myself?");
-        return;
-    }
     u8 kickReasonType = kickReason;
     struct Packet p = { 0 };
     packet_init(&p, PACKET_KICK, true, PLMT_NONE);
