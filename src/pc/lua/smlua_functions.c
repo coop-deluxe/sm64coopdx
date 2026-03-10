@@ -945,7 +945,7 @@ int smlua_func_get_uncolored_string(lua_State* L) {
     const char *str = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("get_uncolored_string: Failed to convert parameter 1"); return 0; }
 
-    char *strNoColor = str_remove_color_codes(str);
+    char *strNoColor = djui_text_get_uncolored_string(NULL, strlen(str) + 1, str);
     lua_pushstring(L, strNoColor);
     free(strNoColor);
 

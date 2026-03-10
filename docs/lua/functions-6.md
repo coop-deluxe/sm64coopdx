@@ -1963,7 +1963,7 @@ Marks an object to be unloaded at the end of the frame
 | dragStrength | `number` |
 
 ### Returns
-- None
+- `number`
 
 ### C Prototype
 `void apply_drag_to_value(INOUT f32 *value, f32 dragStrength);`
