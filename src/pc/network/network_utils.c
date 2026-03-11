@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include "network_utils.h"
+#include "moderation.h"
 #include "game/camera.h"
 #include "game/level_update.h"
 #include "game/mario_misc.h"
 #include "pc/mods/mods.h"
+#include "pc/debuglog.h"
+#include "pc/lua/smlua.h"
 
 u8 network_global_index_from_local(u8 localIndex) {
     if (gNetworkType == NT_SERVER) { return localIndex; }
@@ -70,4 +73,26 @@ bool network_check_singleplayer_pause(void) {
 const char* network_discord_id_from_local_index(u8 localIndex) {
     if (localIndex >= MAX_PLAYERS) { return "0"; }
     return gNetworkPlayers[localIndex].discordId;
+}
+
+void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason) {
+    switch (dcType) {
+        case DC_KICK:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot kick the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_KICK, 0, (char*)reason, false);
+            break;
+        case DC_BAN:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot ban the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_BAN, 0, (char*)reason, false);
+            break;
+        default:
+            gQueuedDisconnect = dcType;
+            break;
+    }
 }

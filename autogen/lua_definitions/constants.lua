@@ -8275,15 +8275,6 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- @type integer
 MAX_HOOKED_BEHAVIORS = 1024
 
-DC_LEAVE = 0 --- @type DisconnectType
-DC_KICK  = 1 --- @type DisconnectType
-DC_BAN   = 2 --- @type DisconnectType
-
---- @alias DisconnectType
---- | `DC_LEAVE`
---- | `DC_KICK`
---- | `DC_BAN`
-
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue

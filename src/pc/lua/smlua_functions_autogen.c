@@ -23591,6 +23591,31 @@ int smlua_func_network_discord_id_from_local_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_disconnect(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 0 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "network_disconnect", 0, 2, top);
+        return 0;
+    }
+
+    int dcType = (int) 0;
+    if (top >= 1) {
+        dcType = smlua_to_integer(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_disconnect"); return 0; }
+    }
+    const char* reason = (const char*) NULL;
+    if (top >= 2) {
+        reason = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_disconnect"); return 0; }
+    }
+
+    network_disconnect(dcType, reason);
+
+    return 1;
+}
+
   /////////////////////
  // obj_behaviors.c //
 /////////////////////
@@ -34141,31 +34166,6 @@ int smlua_func_get_coopnet_id(lua_State* L) {
     return 1;
 }
 
-int smlua_func_network_disconnect(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top < 0 || top > 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "network_disconnect", 0, 2, top);
-        return 0;
-    }
-
-    int dcType = (int) 0;
-    if (top >= 1) {
-        dcType = smlua_to_integer(L, 1);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_disconnect"); return 0; }
-    }
-    const char* reason = (const char*) NULL;
-    if (top >= 2) {
-        reason = smlua_to_string(L, 2);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_disconnect"); return 0; }
-    }
-
-    network_disconnect(dcType, reason);
-
-    return 1;
-}
-
 int smlua_func_get_volume_master(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38136,6 +38136,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_get_complete_player_name", smlua_func_network_get_complete_player_name);
     smlua_bind_function(L, "network_check_singleplayer_pause", smlua_func_network_check_singleplayer_pause);
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
+    smlua_bind_function(L, "network_disconnect", smlua_func_network_disconnect);
 
     // obj_behaviors.c
     smlua_bind_function(L, "set_yoshi_as_not_dead", smlua_func_set_yoshi_as_not_dead);
@@ -38736,7 +38737,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_time_stop_flags", smlua_func_get_time_stop_flags);
     smlua_bind_function(L, "get_local_discord_id", smlua_func_get_local_discord_id);
     smlua_bind_function(L, "get_coopnet_id", smlua_func_get_coopnet_id);
-    smlua_bind_function(L, "network_disconnect", smlua_func_network_disconnect);
     smlua_bind_function(L, "get_volume_master", smlua_func_get_volume_master);
     smlua_bind_function(L, "get_volume_level", smlua_func_get_volume_level);
     smlua_bind_function(L, "get_volume_sfx", smlua_func_get_volume_sfx);

@@ -1439,6 +1439,7 @@
    - [network_get_complete_player_name](functions-5.md#network_get_complete_player_name)
    - [network_check_singleplayer_pause](functions-5.md#network_check_singleplayer_pause)
    - [network_discord_id_from_local_index](functions-5.md#network_discord_id_from_local_index)
+   - [network_disconnect](functions-5.md#network_disconnect)
 
 <br />
 
@@ -2061,7 +2062,6 @@
    - [get_time_stop_flags](functions-7.md#get_time_stop_flags)
    - [get_local_discord_id](functions-7.md#get_local_discord_id)
    - [get_coopnet_id](functions-7.md#get_coopnet_id)
-   - [network_disconnect](functions-7.md#network_disconnect)
    - [get_volume_master](functions-7.md#get_volume_master)
    - [get_volume_level](functions-7.md#get_volume_level)
    - [get_volume_sfx](functions-7.md#get_volume_sfx)

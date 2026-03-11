@@ -525,30 +525,6 @@ const char* get_coopnet_id(UNUSED s8 localIndex) {
 
 ///
 
-void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason) {
-    switch (dcType) {
-        case DC_KICK:
-            if (gNetworkType == NT_SERVER) {
-                LOG_LUA("network_disconnect: Cannot kick the server!");
-                return;
-            }
-            network_send_moderation_action(MODERATION_ACTION_KICK, 0, (char*)reason, false);
-            break;
-        case DC_BAN:
-            if (gNetworkType == NT_SERVER) {
-                LOG_LUA("network_disconnect: Cannot ban the server!");
-                return;
-            }
-            network_send_moderation_action(MODERATION_ACTION_BAN, 0, (char*)reason, false);
-            break;
-        default:
-            gQueuedDisconnect = dcType;
-            break;
-    }
-}
-
-///
-
 f32 get_volume_master(void) {
     return gLuaVolumeMaster;
 }

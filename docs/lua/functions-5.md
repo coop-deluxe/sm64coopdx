@@ -2825,6 +2825,30 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 
 <br />
 
+## [network_disconnect](#network_disconnect)
+
+### Description
+Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
+
+### Lua Example
+`network_disconnect(dcType, reason)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dcType | [enum DisconnectType](constants.md#enum-DisconnectType) |
+| reason | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from obj_behaviors.c
 
