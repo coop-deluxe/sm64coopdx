@@ -1031,7 +1031,6 @@ Makes Mario act like he was popped from a bubble. Useful for custom bubble poppi
 |descriptionEnd| */
 void mario_pop_bubble(struct MarioState* m) {
     if (!m) { return; }
-    m->numLives--;
     m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
     m->hurtCounter = 0;
     m->healCounter = 31;

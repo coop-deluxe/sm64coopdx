@@ -445,6 +445,8 @@ void mario_set_bubbled(struct MarioState* m) {
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
 
+    m->numLives--;
+
     gLocalBubbleCounter = 20;
 
     drop_and_set_mario_action(m, ACT_BUBBLED, 0);

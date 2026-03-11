@@ -137,7 +137,7 @@ bool mario_is_ground_pound_landing(struct MarioState *m);
 /* |description|
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 |descriptionEnd| */
-bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow)
+bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow);
 
 /* |description|
 Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
