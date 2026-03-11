@@ -67,6 +67,8 @@ USE_APP ?= 1
 MIN_MACOS_VERSION ?= 11
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
+# Build for the web (Emscripten/WebAssembly)
+TARGET_WEB ?= 0
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -135,6 +137,24 @@ ifeq ($(HOST_OS),Linux)
     #Rasberry Pi zero, 2, 3, etc
     TARGET_RPI = 1
   endif
+endif
+
+# Emscripten (WebAssembly) overrides
+
+ifeq ($(TARGET_WEB),1)
+  $(info Compiling for Web (Emscripten/WebAssembly))
+  CC      := emcc
+  CXX     := em++
+  LD      := emcc
+  AR      := emar
+  RENDER_API    := GL
+  WINDOW_API    := SDL2
+  AUDIO_API     := SDL2
+  CONTROLLER_API := SDL2
+  DISCORD_SDK   := 0
+  COOPNET       := 0
+  DEFINES += USE_GLES=1
+  DEFINES += TARGET_WEB=1
 endif
 
 # MXE overrides
@@ -363,6 +383,10 @@ ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
   DEFINES += USE_GLES=1
 endif
 
+ifeq ($(TARGET_WEB),1) # WebGL uses GLES2 shader path
+  DEFINES += USE_GLES=1
+endif
+
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
      DEFINES += OSX_BUILD=1
 endif
@@ -497,6 +521,10 @@ ifeq ($(TARGET_RK3588),1)
   EXE := $(BUILD_DIR)/sm64coopdx.arm
 endif
 
+ifeq ($(TARGET_WEB),1)
+  EXE := $(BUILD_DIR)/sm64coopdx.html
+endif
+
 ELF            := $(BUILD_DIR)/$(TARGET).elf
 LIBULTRA       := $(BUILD_DIR)/libultra.a
 LD_SCRIPT      := sm64.ld
@@ -513,11 +541,16 @@ BIN_DIRS := bin bin/$(VERSION)
 # PC files
 SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/dev src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils src/pc/os
 
-ifeq ($(DISCORD_SDK),1)
-  SRC_DIRS += src/pc/discord
-endif
+ifeq ($(TARGET_WEB),0)
+  ifeq ($(DISCORD_SDK),1)
+    SRC_DIRS += src/pc/discord
+  endif
 
-SRC_DIRS += src/pc/mumble
+  SRC_DIRS += src/pc/mumble
+else
+  # Web build: add web-specific source directory
+  SRC_DIRS += src/pc/web
+endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
 ULTRA_BIN_DIRS := lib/bin
@@ -560,6 +593,17 @@ ifeq ($(TARGET_N64),0)
 
 	C_FILES           := $(filter-out src/game/main.c,$(C_FILES))
 	ULTRA_C_FILES     := $(addprefix lib/src/,$(ULTRA_C_FILES))
+
+	ifeq ($(TARGET_WEB),1)
+	  # Exclude platform-specific socket implementations (replaced by socket_websocket.c)
+	  C_FILES := $(filter-out src/pc/network/socket/socket_linux.c,$(C_FILES))
+	  C_FILES := $(filter-out src/pc/network/socket/socket_windows.c,$(C_FILES))
+	  # Exclude update checker (not applicable on web)
+	  C_FILES := $(filter-out src/pc/update_checker.c,$(C_FILES))
+	  # Add web-specific source files
+	  C_FILES += src/pc/network/socket/socket_websocket.c
+	  C_FILES += src/pc/web/web_main.c
+	endif
 endif
 
 # Sound files
@@ -770,7 +814,9 @@ ifeq ($(WINDOW_API),DXGI)
   BACKEND_LDFLAGS += -ld3dcompiler -ldxgi -ldxguid
   BACKEND_LDFLAGS += -lsetupapi -ldinput8 -luser32 -lgdi32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion -luuid -static
 else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
-  ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_WEB),1)
+    # Emscripten provides GL/SDL via -s flags in LDFLAGS; no native libs needed here
+  else ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
@@ -813,7 +859,10 @@ else ifeq ($(SDL1_USED),1)
 endif
 
 ifneq ($(SDL1_USED)$(SDL2_USED),00)
-  ifeq ($(OSX_BUILD),1)
+  ifeq ($(TARGET_WEB),1)
+    # Emscripten provides SDL2 via -s USE_SDL=2; no sdl2-config needed
+    BACKEND_CFLAGS += -s USE_SDL=2
+  else ifeq ($(OSX_BUILD),1)
     # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
     OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
     BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
@@ -821,10 +870,12 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
 
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
-  else
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
+  ifneq ($(TARGET_WEB),1)
+    ifeq ($(WINDOWS_BUILD),1)
+      BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
+    else
+      BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
+    endif
   endif
 endif
 
@@ -875,7 +926,15 @@ ifeq ($(TARGET_N64),1)
   endif
 endif
 
-ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(TARGET_WEB),1)
+  LDFLAGS := $(OPT_FLAGS) $(BACKEND_LDFLAGS) \
+    -s USE_SDL=2 -s USE_ZLIB=1 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
+    -s INITIAL_MEMORY=268435456 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 \
+    -s FULL_ES2=1 -s FORCE_FILESYSTEM=1 \
+    -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS"]' \
+    -s ASYNCIFY -lidbfs.js \
+    --shell-file src/pc/web/shell.html
+else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
@@ -893,7 +952,9 @@ endif
 
 # used by crash handler and loading screen on linux
 ifeq ($(WINDOWS_BUILD),0)
-  LDFLAGS += -rdynamic -ldl -pthread
+  ifneq ($(TARGET_WEB),1)
+    LDFLAGS += -rdynamic -ldl -pthread
+  endif
 endif
 
 # icon
@@ -925,18 +986,27 @@ endif
 
 # Coop specific libraries
 
-# Zlib
-LDFLAGS += -lz
+# Zlib (Emscripten provides zlib via -s USE_ZLIB=1)
+ifneq ($(TARGET_WEB),1)
+  LDFLAGS += -lz
+endif
 
-# Update checker library
-ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS += -lwininet
-else
-  LDFLAGS += -lcurl
+# Update checker library (not applicable on web)
+ifneq ($(TARGET_WEB),1)
+  ifeq ($(WINDOWS_BUILD),1)
+    LDFLAGS += -lwininet
+  else
+    LDFLAGS += -lcurl
+  endif
 endif
 
 # Lua
-ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(TARGET_WEB),1)
+  # For web builds, Lua source is compiled directly via SRC_DIRS; no prebuilt .a needed
+  LUA_SRC_DIR := lib/lua/src
+  SRC_DIRS += $(LUA_SRC_DIR)
+  INCLUDE_DIRS += $(LUA_SRC_DIR)
+else ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
     LDFLAGS += -Llib/lua/win32 -l:liblua53.a
   else
@@ -993,14 +1063,16 @@ ifeq ($(COOPNET),1)
 endif
 
 # Network/Discord (ugh, needs cleanup)
-ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS += -lws2_32 -lwsock32
-  ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
-  endif
-else
-  ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+ifneq ($(TARGET_WEB),1)
+  ifeq ($(WINDOWS_BUILD),1)
+    LDFLAGS += -lws2_32 -lwsock32
+    ifeq ($(DISCORD_SDK),1)
+      LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
+    endif
+  else
+    ifeq ($(DISCORD_SDK),1)
+      LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+    endif
   endif
 endif
 
@@ -1008,7 +1080,9 @@ IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)),0)
 ifeq ($(IS_DEV_OR_DEBUG),0)
   CFLAGS += -fno-ident -fno-common -ffile-prefix-map="$(PWD)"=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
   ifeq ($(OSX_BUILD),0)
-    LDFLAGS += -Wl,--build-id=none
+    ifneq ($(TARGET_WEB),1)
+      LDFLAGS += -Wl,--build-id=none
+    endif
   endif
 else
   # Stuff for showing the git hash and build time in dev builds
@@ -1025,7 +1099,9 @@ CFLAGS += -fPIE
 export LANG := C
 
 ifeq ($(OSX_BUILD),0)
-  LDFLAGS += -latomic
+  ifneq ($(TARGET_WEB),1)
+    LDFLAGS += -latomic
+  endif
 endif
 
 #==============================================================================#
@@ -1080,6 +1156,12 @@ endif
 ifeq ($(TARGET_RK3588),1)
   CC_CHECK_CFLAGS += -DTARGET_RK3588
   CFLAGS += -DTARGET_RK3588
+endif
+
+# Check for web option
+ifeq ($(TARGET_WEB),1)
+  CC_CHECK_CFLAGS += -DTARGET_WEB
+  CFLAGS += -DTARGET_WEB
 endif
 
 # Check for texture fix option

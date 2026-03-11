@@ -1,7 +1,12 @@
 #ifndef THREADING_H
 #define THREADING_H
 
+#ifdef TARGET_WEB
+typedef int pthread_t;
+typedef int pthread_mutex_t;
+#else
 #include <pthread.h>
+#endif
 
 #include "cliopts.h"
 #include "types.h"

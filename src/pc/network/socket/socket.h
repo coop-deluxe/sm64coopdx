@@ -1,7 +1,9 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#ifdef WINSOCK
+#ifdef TARGET_WEB
+#include "socket_websocket.h"
+#elif defined(WINSOCK)
 #include "socket_windows.h"
 #else
 #include "socket_linux.h"

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SM64 CoopDX - Web</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1a1a2e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e0e0e0;
+    }
+
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      outline: none;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #overlay h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    #overlay .subtitle {
+      font-size: 1rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    #rom-picker {
+      background: #16213e;
+      border: 2px dashed #0f3460;
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    #rom-picker:hover {
+      border-color: #e94560;
+      background: #1a1a3e;
+    }
+
+    #rom-picker p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #rom-picker .hint {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    #rom-file {
+      display: none;
+    }
+
+    #progress-container {
+      width: 320px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #progress-bar-outer {
+      width: 100%;
+      height: 8px;
+      background: #16213e;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    #progress-bar-inner {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    #status {
+      font-size: 0.9rem;
+      color: #aaa;
+      text-align: center;
+      min-height: 1.5em;
+    }
+
+    #error-msg {
+      color: #e94560;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      min-height: 1.5em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h1>SM64 CoopDX</h1>
+    <p class="subtitle">WebAssembly Port</p>
+
+    <div id="rom-picker" onclick="document.getElementById('rom-file').click()">
+      <p>Click to select a ROM file</p>
+      <p class="hint">Accepts .z64, .n64, .v64 (US version)</p>
+    </div>
+    <input type="file" id="rom-file" accept=".z64,.n64,.v64">
+
+    <div id="progress-container">
+      <div id="progress-bar-outer">
+        <div id="progress-bar-inner"></div>
+      </div>
+      <div id="status">Initializing...</div>
+    </div>
+
+    <div id="error-msg"></div>
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+  </div>
+
+  <script>
+    var ROM_DB_NAME = 'sm64coopdx_rom';
+    var ROM_DB_STORE = 'roms';
+    var ROM_DB_KEY = 'baserom';
+    var ROM_PATH = '/baserom.us.z64';
+    var Z64_MAGIC = 0x80371240;
+
+    var romReady = false;
+    var audioResumed = false;
+
+    // ---- IndexedDB helpers ----
+
+    function openRomDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(ROM_DB_NAME, 1);
+        req.onupgradeneeded = function(e) {
+          e.target.result.createObjectStore(ROM_DB_STORE);
+        };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function getCachedRom() {
+      return openRomDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(ROM_DB_STORE, 'readonly');
+          var store = tx.objectStore(ROM_DB_STORE);
+          var req = store.get(ROM_DB_KEY);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { resolve(null); };
+        });
+      });
+    }
+
+    function cacheRom(arrayBuffer) {
+      return openRomDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(ROM_DB_STORE, 'readwrite');
+          var store = tx.objectStore(ROM_DB_STORE);
+          store.put(arrayBuffer, ROM_DB_KEY);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    // ---- ROM validation ----
+
+    function validateZ64(arrayBuffer) {
+      if (arrayBuffer.byteLength < 0x800000) {
+        return false;
+      }
+      var view = new DataView(arrayBuffer);
+      var magic = view.getUint32(0, false);
+      return magic === Z64_MAGIC;
+    }
+
+    function byteswapN64(buf) {
+      // .n64 (little-endian) -> .z64 (big-endian): swap every 4 bytes
+      var arr = new Uint8Array(buf);
+      for (var i = 0; i < arr.length; i += 4) {
+        var a = arr[i], b = arr[i+1], c = arr[i+2], d = arr[i+3];
+        arr[i] = d; arr[i+1] = c; arr[i+2] = b; arr[i+3] = a;
+      }
+      return buf;
+    }
+
+    function byteswapV64(buf) {
+      // .v64 (byte-swapped) -> .z64: swap every 2 bytes
+      var arr = new Uint8Array(buf);
+      for (var i = 0; i < arr.length; i += 2) {
+        var tmp = arr[i];
+        arr[i] = arr[i+1];
+        arr[i+1] = tmp;
+      }
+      return buf;
+    }
+
+    function normalizeRom(arrayBuffer, filename) {
+      var ext = filename.split('.').pop().toLowerCase();
+      if (ext === 'n64') {
+        arrayBuffer = byteswapN64(arrayBuffer);
+      } else if (ext === 'v64') {
+        arrayBuffer = byteswapV64(arrayBuffer);
+      }
+      return arrayBuffer;
+    }
+
+    // ---- UI helpers ----
+
+    function showError(msg) {
+      document.getElementById('error-msg').textContent = msg;
+    }
+
+    function setStatus(msg) {
+      document.getElementById('status').textContent = msg;
+    }
+
+    function setProgress(pct) {
+      document.getElementById('progress-bar-inner').style.width = pct + '%';
+    }
+
+    function showProgress() {
+      document.getElementById('rom-picker').style.display = 'none';
+      document.getElementById('progress-container').style.display = 'flex';
+    }
+
+    function hideOverlay() {
+      document.getElementById('overlay').classList.add('hidden');
+      document.getElementById('canvas').focus();
+    }
+
+    // ---- Write ROM to Emscripten FS ----
+
+    function writeRomToFS(arrayBuffer) {
+      try {
+        var data = new Uint8Array(arrayBuffer);
+        FS.writeFile(ROM_PATH, data);
+        if (typeof _web_rom_loaded === 'function') {
+          _web_rom_loaded();
+        }
+        romReady = true;
+        setStatus('ROM loaded. Starting game...');
+        setProgress(100);
+        setTimeout(hideOverlay, 500);
+      } catch (e) {
+        showError('Failed to write ROM to virtual filesystem: ' + e.message);
+      }
+    }
+
+    // ---- ROM file handler ----
+
+    function handleRomFile(file) {
+      showError('');
+      showProgress();
+      setStatus('Reading ROM file...');
+      setProgress(20);
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        setProgress(50);
+        setStatus('Validating ROM...');
+
+        var buf = normalizeRom(e.target.result, file.name);
+
+        if (!validateZ64(buf)) {
+          showError('Invalid ROM file. Please provide a valid SM64 US ROM (.z64 format).');
+          document.getElementById('rom-picker').style.display = '';
+          document.getElementById('progress-container').style.display = 'none';
+          return;
+        }
+
+        setProgress(70);
+        setStatus('Caching ROM for future visits...');
+
+        cacheRom(buf).then(function() {
+          setProgress(90);
+          setStatus('Writing ROM to virtual filesystem...');
+          writeRomToFS(buf);
+        }).catch(function() {
+          // Cache failed but we can still continue
+          setStatus('Writing ROM to virtual filesystem...');
+          writeRomToFS(buf);
+        });
+      };
+
+      reader.onerror = function() {
+        showError('Failed to read ROM file.');
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    document.getElementById('rom-file').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        handleRomFile(e.target.files[0]);
+      }
+    });
+
+    // ---- Audio context resume on first interaction ----
+
+    function resumeAudio() {
+      if (audioResumed) return;
+      var ctx = Module.audioContext || (typeof AudioContext !== 'undefined' && new AudioContext());
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+      }
+      audioResumed = true;
+    }
+
+    document.addEventListener('click', resumeAudio, { once: false });
+    document.addEventListener('keydown', resumeAudio, { once: false });
+
+    // ---- Check for cached ROM on load ----
+
+    function checkCachedRom() {
+      getCachedRom().then(function(buf) {
+        if (buf) {
+          showProgress();
+          setStatus('Found cached ROM. Loading...');
+          setProgress(50);
+
+          // Wait for Emscripten FS to be ready
+          function tryWriteRom() {
+            if (typeof FS !== 'undefined') {
+              writeRomToFS(buf);
+            } else {
+              setTimeout(tryWriteRom, 100);
+            }
+          }
+          tryWriteRom();
+        }
+      }).catch(function() {
+        // No cached ROM, show picker (already visible by default)
+      });
+    }
+
+    // ---- Emscripten Module configuration ----
+
+    var Module = {
+      canvas: (function() {
+        return document.getElementById('canvas');
+      })(),
+
+      print: function(text) {
+        console.log('[SM64] ' + text);
+      },
+
+      printErr: function(text) {
+        console.error('[SM64] ' + text);
+      },
+
+      setStatus: function(text) {
+        if (text) {
+          setStatus(text);
+        }
+      },
+
+      monitorRunDependencies: function(left) {
+        if (left === 0) {
+          // All dependencies loaded
+          setStatus('All resources loaded.');
+        } else {
+          setStatus('Loading... (' + left + ' remaining)');
+        }
+      },
+
+      onRuntimeInitialized: function() {
+        setStatus('Runtime initialized.');
+        checkCachedRom();
+      },
+
+      locateFile: function(path) {
+        return path;
+      }
+    };
+
+    window.onerror = function(msg, url, line) {
+      setStatus('Error: ' + msg);
+      showError('An error occurred. Check the browser console for details.');
+    };
+  </script>
+
+  {{{ SCRIPT }}}
+
+</body>
+</html>

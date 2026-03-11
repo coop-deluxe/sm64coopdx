@@ -5,6 +5,11 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #include "sm64.h"
 
 #include "pc/lua/smlua.h"
@@ -439,6 +444,16 @@ void game_exit(void) {
     exit(0);
 }
 
+#ifdef TARGET_WEB
+static void web_one_iteration(void) {
+    debug_context_reset();
+    CTX_BEGIN(CTX_TOTAL);
+    WAPI.main_loop(produce_one_frame);
+    CTX_END(CTX_TOTAL);
+    djui_lua_profiler_update();
+}
+#endif
+
 void* main_game_init(UNUSED void* dummy) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
@@ -448,9 +463,11 @@ void* main_game_init(UNUSED void* dummy) {
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
+#ifndef TARGET_WEB
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
     }
+#endif
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
@@ -480,7 +497,7 @@ int main(int argc, char *argv[]) {
     gCLIOpts.headless = true;
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(TARGET_WEB)
     // handle Windows console
     if (gCLIOpts.console || gCLIOpts.headless) {
         SetConsoleOutputCP(CP_UTF8);
@@ -603,6 +620,10 @@ int main(int argc, char *argv[]) {
     }
 
     // main loop
+#ifdef TARGET_WEB
+    emscripten_set_main_loop(web_one_iteration, 0, 0);
+    return 0;
+#else
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
@@ -624,4 +645,5 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
+#endif
 }
