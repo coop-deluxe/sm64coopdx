@@ -34145,13 +34145,16 @@ int smlua_func_network_disconnect(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top < 1 || top > 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "network_disconnect", 1, 2, top);
+    if (top < 0 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "network_disconnect", 0, 2, top);
         return 0;
     }
 
-    int dcType = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_disconnect"); return 0; }
+    int dcType = (int) 0;
+    if (top >= 1) {
+        dcType = smlua_to_integer(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_disconnect"); return 0; }
+    }
     const char* reason = (const char*) NULL;
     if (top >= 2) {
         reason = smlua_to_string(L, 2);

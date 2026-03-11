@@ -11586,7 +11586,7 @@ function get_coopnet_id(localIndex)
     -- ...
 end
 
---- @param dcType DisconnectType
+--- @param dcType? DisconnectType
 --- @param reason? string
 --- Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
 function network_disconnect(dcType, reason)

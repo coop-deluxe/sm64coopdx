@@ -1858,7 +1858,7 @@ Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) 
 - None
 
 ### C Prototype
-`void network_disconnect(enum DisconnectType dcType, OPTIONAL const char* reason);`
+`void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason);`
 
 [:arrow_up_small:](#)
 

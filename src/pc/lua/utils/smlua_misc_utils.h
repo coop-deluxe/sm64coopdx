@@ -226,7 +226,7 @@ const char* get_local_discord_id(void);
 const char* get_coopnet_id(s8 localIndex);
 
 /* |description|Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).|descriptionEnd| */
-void network_disconnect(enum DisconnectType dcType, OPTIONAL const char* reason);
+void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason);
 
 /* |description|Gets the master volume level|descriptionEnd| */
 f32 get_volume_master(void);

@@ -525,7 +525,7 @@ const char* get_coopnet_id(UNUSED s8 localIndex) {
 
 ///
 
-void network_disconnect(enum DisconnectType dcType, OPTIONAL const char* reason) {
+void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason) {
     switch (dcType) {
         case DC_KICK:
             if (gNetworkType == NT_SERVER) {
