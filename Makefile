@@ -550,6 +550,8 @@ ifeq ($(TARGET_WEB),0)
 else
   # Web build: add web-specific source directory
   SRC_DIRS += src/pc/web
+  # Compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
+  SRC_DIRS += lib/lua/lua-5.3.6/src
 endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
@@ -595,14 +597,18 @@ ifeq ($(TARGET_N64),0)
 	ULTRA_C_FILES     := $(addprefix lib/src/,$(ULTRA_C_FILES))
 
 	ifeq ($(TARGET_WEB),1)
-	  # Exclude platform-specific socket implementations (replaced by socket_websocket.c)
+	  # Exclude platform-specific files replaced by web equivalents
+	  C_FILES := $(filter-out src/pc/network/socket/socket.c,$(C_FILES))
 	  C_FILES := $(filter-out src/pc/network/socket/socket_linux.c,$(C_FILES))
 	  C_FILES := $(filter-out src/pc/network/socket/socket_windows.c,$(C_FILES))
+	  C_FILES := $(filter-out src/pc/thread.c,$(C_FILES))
 	  # Exclude update checker (not applicable on web)
 	  C_FILES := $(filter-out src/pc/update_checker.c,$(C_FILES))
-	  # Add web-specific source files
-	  C_FILES += src/pc/network/socket/socket_websocket.c
-	  C_FILES += src/pc/web/web_main.c
+	  # Note: socket_websocket.c, thread_web.c, and web_main.c are auto-discovered
+	  # via SRC_DIRS (src/pc/network/socket, src/pc, src/pc/web)
+	  # Exclude Lua standalone interpreter/compiler (they have their own main())
+	  C_FILES := $(filter-out lib/lua/lua-5.3.6/src/lua.c,$(C_FILES))
+	  C_FILES := $(filter-out lib/lua/lua-5.3.6/src/luac.c,$(C_FILES))
 	endif
 endif
 
@@ -699,6 +705,7 @@ ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 endif
 
+ifneq ($(TARGET_WEB),1)
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   CC      := cc
   CXX     := g++
@@ -728,6 +735,7 @@ else
     COPT    := $(IDO_ROOT)/copt
   endif
 endif
+endif # !TARGET_WEB
 
 ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   CPP := cpp -P
@@ -860,8 +868,8 @@ endif
 
 ifneq ($(SDL1_USED)$(SDL2_USED),00)
   ifeq ($(TARGET_WEB),1)
-    # Emscripten provides SDL2 via -s USE_SDL=2; no sdl2-config needed
-    BACKEND_CFLAGS += -s USE_SDL=2
+    # Emscripten provides SDL2 and zlib via -s flags; no sdl2-config/pkg-config needed
+    BACKEND_CFLAGS += -s USE_SDL=2 -s USE_ZLIB=1
   else ifeq ($(OSX_BUILD),1)
     # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
     OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
@@ -884,6 +892,10 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 # Check code syntax with host compiler
 CC_CHECK := $(CC)
+ifeq ($(TARGET_WEB),1)
+  # Emscripten's emcc understands -s flags; host gcc does not
+  CC_CHECK := emcc
+endif
 
 ifeq ($(WINDOWS_BUILD),1)
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
@@ -932,7 +944,7 @@ ifeq ($(TARGET_WEB),1)
     -s INITIAL_MEMORY=268435456 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 \
     -s FULL_ES2=1 -s FORCE_FILESYSTEM=1 \
     -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS"]' \
-    -s ASYNCIFY -lidbfs.js \
+    -s ASYNCIFY -lidbfs.js -lwebsocket.js \
     --shell-file src/pc/web/shell.html
 else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
@@ -1002,9 +1014,8 @@ endif
 
 # Lua
 ifeq ($(TARGET_WEB),1)
-  # For web builds, Lua source is compiled directly via SRC_DIRS; no prebuilt .a needed
-  LUA_SRC_DIR := lib/lua/src
-  SRC_DIRS += $(LUA_SRC_DIR)
+  # For web builds, compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
+  LUA_SRC_DIR := lib/lua/lua-5.3.6/src
   INCLUDE_DIRS += $(LUA_SRC_DIR)
 else ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)

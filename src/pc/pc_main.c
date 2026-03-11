@@ -8,6 +8,8 @@
 #ifdef TARGET_WEB
 #include <emscripten.h>
 #include <emscripten/html5.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
 #include "sm64.h"
@@ -483,7 +485,9 @@ void* main_game_init(UNUSED void* dummy) {
     audio_init();
     sound_init();
     network_player_init();
+#ifndef TARGET_WEB
     mumble_init();
+#endif
 
     gGameInited = true;
     return NULL;
@@ -507,7 +511,16 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-#ifdef _WIN32
+#ifdef TARGET_WEB
+    // Web builds use MEMFS; create user directory before fs_init
+    {
+        struct stat st = {0};
+        if (stat("/sm64coopdx", &st) == -1) {
+            mkdir("/sm64coopdx", 0755);
+        }
+    }
+    fs_init("/sm64coopdx");
+#elif defined(_WIN32)
     if (gCLIOpts.savePath[0]) {
         char portable_path[SYS_MAX_PATH] = {};
         sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, gCLIOpts.savePath);
@@ -590,7 +603,9 @@ int main(int argc, char *argv[]) {
     djui_init_late();
     djui_console_message_dequeue();
 
+#ifndef TARGET_WEB
     show_update_popup();
+#endif
 
     // initialize network
     if (gCLIOpts.network == NT_CLIENT) {
