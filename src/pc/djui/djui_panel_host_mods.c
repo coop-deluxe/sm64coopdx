@@ -158,7 +158,11 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
                 break;
             }
         }
-        if (sSearchInputbox != NULL && sSearchInputbox->buffer != NULL && !strcasestr(djui_text_get_uncolored_string(NULL, strlen(mod->name) + 1, mod->name), sSearchInputbox->buffer)) {
+        // filter results
+        if (sSearchInputbox != NULL &&
+            sSearchInputbox->buffer != NULL &&
+            !strcasestr(djui_text_get_uncolored_string(NULL, strlen(mod->name) + 1, mod->name), sSearchInputbox->buffer)
+        ) {
             continue;
         }
         struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
