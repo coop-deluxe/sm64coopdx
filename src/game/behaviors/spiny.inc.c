@@ -241,15 +241,15 @@ void bhv_spiny_update(void) {
             so->on_sent_pre = bhv_spiny_on_sent_pre;
             so->override_ownership = bhv_spiny_override_ownership;
 
-            sync_object_init_field(o, &o->oGraphYOffset);
-            sync_object_init_field(o, &o->oFaceAngleYaw);
-            sync_object_init_field(o, &o->oSpinyTimeUntilTurn);
-            sync_object_init_field(o, &o->oSpinyTargetYaw);
-            sync_object_init_field(o, &o->oSpinyTurningAwayFromWall);
-            sync_object_init_field(o, &o->oMoveFlags);
-            sync_object_init_field(o, &o->oInteractType);
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &spinyAnimCache);
+            sync_object_init_field(o, o->oGraphYOffset);
+            sync_object_init_field(o, o->oFaceAngleYaw);
+            sync_object_init_field(o, o->oSpinyTimeUntilTurn);
+            sync_object_init_field(o, o->oSpinyTargetYaw);
+            sync_object_init_field(o, o->oSpinyTurningAwayFromWall);
+            sync_object_init_field(o, o->oMoveFlags);
+            sync_object_init_field(o, o->oInteractType);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, spinyAnimCache);
         }
 
 

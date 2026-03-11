@@ -3030,7 +3030,7 @@ end
 
 --- @param name string
 --- @return BehaviorId
---- gets a behavior ID from a behavior name
+--- Gets a behavior ID from a behavior name
 function get_id_from_behavior_name(name)
     -- ...
 end
@@ -3856,7 +3856,9 @@ function djui_hud_reset_color()
     -- ...
 end
 
---- @return HudUtilsRotation
+--- @return integer rotation
+--- @return number pivotX
+--- @return number pivotY
 --- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
@@ -3878,6 +3880,29 @@ end
 --- @param pivotY number
 --- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
+--- @return number textHAlign
+--- @return number textVAlign
+--- Gets the current DJUI HUD text alignment
+function djui_hud_get_text_alignment()
+    -- ...
+end
+
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment
+function djui_hud_set_text_alignment(textHAlign, textVAlign)
+    -- ...
+end
+
+--- @param prevTextHAlign number
+--- @param prevTextVAlign number
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment interpolated
+function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
 end
 
@@ -5237,6 +5262,12 @@ end
 --- @param useSurfaceNormals boolean
 --- Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
 function le_set_light_use_surface_normals(id, useSurfaceNormals)
+    -- ...
+end
+
+--- @param bank integer
+--- Overrides the soundbank, set to -1 to reset
+function set_sound_bank_override(bank)
     -- ...
 end
 

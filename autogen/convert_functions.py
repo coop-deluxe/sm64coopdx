@@ -80,6 +80,7 @@ in_files = [
     "src/audio/seqplayer.h",
     "src/engine/lighting_engine.h",
     "src/pc/network/sync_object.h",
+    "src/audio/load.h",
 ]
 
 override_allowed_functions = {
@@ -99,6 +100,7 @@ override_allowed_functions = {
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", "handle_special_dialog_text" ],
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
     "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
+    "src/audio/load.h":                     [ "set_sound_bank_override" ],
 }
 
 override_disallowed_functions = {
@@ -949,7 +951,7 @@ def build_function(function, do_extern):
             sparam = build_param(fid, param, i)
             param_var, param_value = sparam.split('=')
             param_type = param_var.replace(pid, '').strip()
-            s += '    %s = (%s) NULL;\n' % (param_var.strip(), param_type)
+            s += '    %s = (%s) %s;\n' % (param_var.strip(), param_type, "NULL" if '*' in param_type else "0")
             s += '    if (top >= %d) {\n' % (i)
             s += '        %s = %s\n' % (pid, param_value.strip())
             s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
@@ -1340,7 +1342,7 @@ def doc_function(fname, function):
         s += '- None\n'
 
     s += '\n### Returns\n'
-    if rtype != None:
+    if len(rvalues) > 0:
         for _, ptype, plink in rvalues:
             if plink:
                 s += '- [%s](%s)\n' % (ptype, plink)

@@ -12,8 +12,8 @@ void bhv_bbh_tilting_trap_platform_loop(void) {
 
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 1000.0f);
-        sync_object_init_field(o, &o->oAngleVelPitch);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oAngleVelPitch);
+        sync_object_init_field(o, o->oFaceAnglePitch);
     }
 
     f32 x = 0;

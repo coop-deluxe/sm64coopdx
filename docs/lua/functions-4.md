@@ -584,6 +584,35 @@ Sets whether a lighting engine point light will use a surface's normals to deter
 <br />
 
 ---
+# functions from load.h
+
+<br />
+
+
+## [set_sound_bank_override](#set_sound_bank_override)
+
+### Description
+Overrides the soundbank, set to -1 to reset
+
+### Lua Example
+`set_sound_bank_override(bank)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| bank | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_sound_bank_override(s32 bank);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from mario.h
 
 <br />
@@ -5105,7 +5134,9 @@ Calculates the distance between two points in 3D space (`from` and `to`), as wel
 | to | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `number`
+- `integer`
+- `integer`
 
 ### C Prototype
 `void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, RET f32 *dist, RET s16 *pitch, RET s16 *yaw);`

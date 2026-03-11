@@ -6,10 +6,10 @@ void bhv_sl_snowman_wind_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oSubAction);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oSubAction);
         }
     }
 

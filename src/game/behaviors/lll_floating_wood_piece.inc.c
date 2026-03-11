@@ -3,7 +3,7 @@
 void bhv_lll_wood_piece_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 1000.0f);
-        sync_object_init_field(o, &o->oLllWoodPieceOscillationTimer);
+        sync_object_init_field(o, o->oLllWoodPieceOscillationTimer);
     }
 
     if (o->oTimer == 0)

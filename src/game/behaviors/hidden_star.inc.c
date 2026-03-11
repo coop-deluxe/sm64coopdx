@@ -23,12 +23,12 @@ void bhv_hidden_star_init(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oHiddenStarTriggerCounter);
-            sync_object_init_field(o, &o->oPosX);
-            sync_object_init_field(o, &o->oPosY);
-            sync_object_init_field(o, &o->oPosZ);
-            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oHiddenStarTriggerCounter);
+            sync_object_init_field(o, o->oPosX);
+            sync_object_init_field(o, o->oPosY);
+            sync_object_init_field(o, o->oPosZ);
+            sync_object_init_field(o, o->oTimer);
         }
     }
 }

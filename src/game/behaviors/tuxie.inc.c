@@ -155,8 +155,8 @@ void (*sTuxiesMotherActions[])(void) = { tuxies_mother_act_0, tuxies_mother_act_
 void bhv_tuxies_mother_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oSubAction);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oSubAction);
     }
     o->activeFlags |= ACTIVE_FLAG_UNK10;
     cur_obj_update_floor_and_walls();

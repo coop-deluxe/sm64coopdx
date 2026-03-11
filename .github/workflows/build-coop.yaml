@@ -26,7 +26,7 @@ jobs:
                 cd tools
                 g++ -std=c++17 -o hash_file hash_file.cpp
                 echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
-            
+
             - name: Zip the game
               run: |
                 cd ./build/us_pc
@@ -37,7 +37,7 @@ jobs:
               with:
                 name: sm64coopdx-linux
                 path: ./build/us_pc/sm64coopdx_Linux.zip
-    
+
     build-steamos:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
@@ -58,7 +58,7 @@ jobs:
                 cd tools
                 g++ -std=c++17 -o hash_file hash_file.cpp
                 echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
-            
+
             - name: Zip the game
               run: |
                 cd ./build/us_pc
@@ -108,7 +108,7 @@ jobs:
                 cd tools
                 g++ -std=c++17 -o hash_file.exe hash_file.cpp
                 echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
-            
+
             - name: Zip the game
               run: |
                 cd ./build/us_pc
@@ -158,7 +158,7 @@ jobs:
                 cd tools
                 g++ -std=c++17 -o hash_file.exe hash_file.cpp
                 echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
-            
+
             - name: Zip the game
               run: |
                 cd ./build/us_pc
@@ -172,17 +172,36 @@ jobs:
 
     build-macos-arm:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: macos-latest
+        runs-on: macos-26
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 sdl2 pkg-config glew glfw3 coreutils
+                brew install make mingw-w64 pkg-config glfw3 coreutils
+
+            - name: Compile glew
+              run: |
+                export MACOSX_DEPLOYMENT_TARGET=11
+                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
+                tar -xzf glew.tar.gz
+                cd glew-2.2.0
+                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
+                make install GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
+
+            - name: Compile SDL2
+              run: |
+                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
+                tar -xzf SDL2.tar.gz
+                cd SDL2-2.30.9
+                ./configure --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
+                make -j$(sysctl -n hw.ncpu)
+                make install
 
             - name: Build the game
               run: |
+                export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
             - name: Code sign the app (Ad-Hoc)
@@ -199,7 +218,7 @@ jobs:
               run: |
                 cd ./build/us_pc
                 zip -r sm64coopdx_macOS_ARM.zip sm64coopdx.app
-            
+
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
@@ -215,7 +234,25 @@ jobs:
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 coreutils
+                brew install make mingw-w64 gcc@9 pkg-config glfw3 coreutils
+
+            - name: Compile glew
+              run: |
+                export MACOSX_DEPLOYMENT_TARGET=10.15
+                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
+                tar -xzf glew.tar.gz
+                cd glew-2.2.0
+                make SYSTEM=darwin CC="clang -arch x86_64 -mmacosx-version-min=10.15"
+                make install
+
+            - name: Compile SDL2
+              run: |
+                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
+                tar -xzf SDL2.tar.gz
+                cd SDL2-2.30.9
+                ./configure --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=10.15"
+                make -j$(sysctl -n hw.ncpu)
+                make install
 
             - name: Build the game
               run: |
@@ -235,7 +272,7 @@ jobs:
               run: |
                 cd ./build/us_pc
                 zip -r sm64coopdx_macOS_Intel.zip sm64coopdx.app
-            
+
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:

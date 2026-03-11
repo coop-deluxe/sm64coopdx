@@ -763,6 +763,9 @@
    - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
+   - [djui_hud_get_text_alignment](functions-3.md#djui_hud_get_text_alignment)
+   - [djui_hud_set_text_alignment](functions-3.md#djui_hud_set_text_alignment)
+   - [djui_hud_set_text_alignment_interpolated](functions-3.md#djui_hud_set_text_alignment_interpolated)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
@@ -994,6 +997,11 @@
    - [le_set_light_intensity](functions-4.md#le_set_light_intensity)
    - [le_get_light_use_surface_normals](functions-4.md#le_get_light_use_surface_normals)
    - [le_set_light_use_surface_normals](functions-4.md#le_set_light_use_surface_normals)
+
+<br />
+
+- load.h
+   - [set_sound_bank_override](functions-4.md#set_sound_bank_override)
 
 <br />
 
