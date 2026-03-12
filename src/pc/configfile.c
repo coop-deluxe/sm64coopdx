@@ -180,7 +180,11 @@ unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
+#ifdef TARGET_WEB
+bool         configSkipIntro                      = 1;
+#else
 bool         configSkipIntro                      = 0;
+#endif
 bool         configPauseAnywhere                  = false;
 bool         configMenuStaffRoll                  = false;
 unsigned int configMenuLevel                      = 0;
