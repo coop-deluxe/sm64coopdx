@@ -9,10 +9,6 @@
 
 #include "sound_data.h"
 
-#ifdef TARGET_WEB
-#include "audio_web.h"
-#endif
-
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
@@ -1288,6 +1284,12 @@ void func_sh_802f3ed4(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED void *vAddr, UNUS
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
+#ifdef TARGET_WEB
+    // Audio disabled on web: sound bank data has 64-bit pointer layout from
+    // host build tools, causing memory access violations on 32-bit WASM.
+    (void)bankId; (void)arg1;
+    return NULL;
+#endif
     UNUSED u32 pad1[4];
     u32 buf[4];
     u32 numInstruments, numDrums;
@@ -1309,18 +1311,8 @@ struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
     audio_dma_copy_immediate((uintptr_t) ctlData, buf, 0x10);
     numInstruments = buf[0];
     numDrums = buf[1];
-#ifdef TARGET_WEB
-    // Sound bank data has 64-bit pointer layout from host build tools.
-    // On 32-bit WASM, struct field offsets don't match the binary data.
-    // Use the web-specific converter to rewrite 64-bit structs to 32-bit
-    // layout and patch pointers in one step.
-    web_patch_bank_64to32(ctlData + 0x10, (u32)alloc,
-                          ret, gAlTbl->seqArray[bankId].offset,
-                          numInstruments, numDrums);
-#else
     audio_dma_copy_immediate((uintptr_t)(ctlData + 0x10), ret, alloc);
     patch_audio_bank(ret, gAlTbl->seqArray[bankId].offset, numInstruments, numDrums);
-#endif
     gCtlEntries[bankId].numInstruments = (u8) numInstruments;
     gCtlEntries[bankId].numDrums = (u8) numDrums;
     gCtlEntries[bankId].instruments = ret->instruments;
@@ -1332,6 +1324,11 @@ struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *seqPlayer) {
+#ifdef TARGET_WEB
+    // Audio disabled on web (see bank_load_immediate comment).
+    (void)bankId; (void)arg1; (void)seqPlayer;
+    return NULL;
+#endif
     u32 numInstruments, numDrums;
     UNUSED u32 pad1[2];
     u32 buf[4];
@@ -1339,9 +1336,7 @@ struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *s
     size_t alloc;
     struct AudioBank *ret;
     u8 *ctlData;
-#ifndef TARGET_WEB
     OSMesgQueue *mesgQueue;
-#endif
 #if defined(VERSION_EU)
     UNUSED u32 pad3;
 #endif
@@ -1359,20 +1354,6 @@ struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *s
     numInstruments = buf[0];
     numDrums = buf[1];
     seqPlayer->loadingBankId = (u8) bankId;
-#ifdef TARGET_WEB
-    // On 32-bit WASM, the bank body has 64-bit struct layout.  Use the
-    // web-specific converter to load synchronously (the PC DMA is already
-    // a memcpy, so "async" is effectively immediate anyway).
-    web_patch_bank_64to32(ctlData + 0x10, (u32)alloc,
-                          ret, gAlTbl->seqArray[bankId].offset,
-                          numInstruments, numDrums);
-    gCtlEntries[bankId].numInstruments = (u8) numInstruments;
-    gCtlEntries[bankId].numDrums = (u8) numDrums;
-    gCtlEntries[bankId].instruments = ret->instruments;
-    gCtlEntries[bankId].drums = ret->drums;
-    gBankLoadStatus[bankId] = SOUND_LOAD_STATUS_COMPLETE;
-    seqPlayer->bankDmaInProgress = FALSE;
-#else /* !TARGET_WEB */
 #if defined(VERSION_EU)
     gCtlEntries[bankId].numInstruments = numInstruments;
     gCtlEntries[bankId].numDrums = numDrums;
@@ -1400,7 +1381,6 @@ struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *s
     audio_dma_partial_copy_async(&seqPlayer->bankDmaCurrDevAddr, &seqPlayer->bankDmaCurrMemAddr,
                                  &seqPlayer->bankDmaRemaining, mesgQueue, &seqPlayer->bankDmaIoMesg);
     gBankLoadStatus[bankId] = SOUND_LOAD_STATUS_IN_PROGRESS;
-#endif /* TARGET_WEB */
     return ret;
 }
 #endif

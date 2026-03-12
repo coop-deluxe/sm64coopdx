@@ -551,7 +551,7 @@ else
   # Web build: add web-specific source directory
   SRC_DIRS += src/pc/web
   # Compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
-  SRC_DIRS += lib/lua/lua-5.3.6/src
+  SRC_DIRS += lib/lua/lua-5.3.6
 endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
@@ -607,8 +607,8 @@ ifeq ($(TARGET_N64),0)
 	  # Note: socket_websocket.c, thread_web.c, and web_main.c are auto-discovered
 	  # via SRC_DIRS (src/pc/network/socket, src/pc, src/pc/web)
 	  # Exclude Lua standalone interpreter/compiler (they have their own main())
-	  C_FILES := $(filter-out lib/lua/lua-5.3.6/src/lua.c,$(C_FILES))
-	  C_FILES := $(filter-out lib/lua/lua-5.3.6/src/luac.c,$(C_FILES))
+	  # Exclude Lua standalone interpreter (has its own main())
+	  C_FILES := $(filter-out lib/lua/lua-5.3.6/lua.c,$(C_FILES))
 	endif
 endif
 
@@ -1020,7 +1020,7 @@ endif
 # Lua
 ifeq ($(TARGET_WEB),1)
   # For web builds, compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
-  LUA_SRC_DIR := lib/lua/lua-5.3.6/src
+  LUA_SRC_DIR := lib/lua/lua-5.3.6
   INCLUDE_DIRS += $(LUA_SRC_DIR)
 else ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
@@ -1459,21 +1459,11 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 
 $(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl.tmp
-ifeq ($(TARGET_WEB),1)
-	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sound_data.tbl.tmp $(SOUND_BIN_DIR)/sound_data.tbl
-else
-	$(V)mv $(SOUND_BIN_DIR)/sound_data.tbl.tmp $(SOUND_BIN_DIR)/sound_data.tbl
-endif
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
 
 $(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl.tmp
-ifeq ($(TARGET_WEB),1)
-	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sound_data.ctl.tmp $(SOUND_BIN_DIR)/sound_data.ctl
-else
-	$(V)mv $(SOUND_BIN_DIR)/sound_data.ctl.tmp $(SOUND_BIN_DIR)/sound_data.ctl
-endif
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
 
 $(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
@@ -1487,12 +1477,7 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 
 $(SOUND_BIN_DIR)/sequences.bin:
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin.tmp
-ifeq ($(TARGET_WEB),1)
-	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sequences.bin.tmp $(SOUND_BIN_DIR)/sequences.bin
-else
-	$(V)mv $(SOUND_BIN_DIR)/sequences.bin.tmp $(SOUND_BIN_DIR)/sequences.bin
-endif
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
 	@true
