@@ -492,17 +492,8 @@ static void web_auto_network(void) {
     if (web_auto_network_done) return;
     if (!gGameInited) return; // wait until game is fully initialized
     web_auto_network_done = true;
-    printf("[Web] web_auto_network: join='%s' host='%s'\n", sWebJoinParam, sWebHostParam);
-
-    // Give the player stars so all doors/levels are accessible for testing
-    extern void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);
-    for (int c = 0; c < 15; c++) {
-        save_file_set_star_flags(0, c, 0x7F); // all 7 stars per course
-    }
-    gMarioStates[0].numStars = 120;
 
     if (sWebJoinParam[0] != '\0') {
-        printf("[Web] Auto-join from URL: %s", sWebJoinParam);
 
         char joinHost[256] = {0};
         int joinPort = DEFAULT_PORT;
@@ -528,7 +519,7 @@ static void web_auto_network(void) {
     } else if (sWebHostParam[0] != '\0') {
         int port = atoi(sWebHostParam);
         if (port <= 0 || port > 65535) port = DEFAULT_PORT;
-        printf("[Web] Auto-host from URL on port %d", port);
+        LOG_INFO("Auto-host from URL on port %d", port);
 
         configNetworkSystem = NS_SOCKET;
         configHostPort = port;
@@ -673,7 +664,7 @@ int main(int argc, char *argv[]) {
         if (j) stringToUTF8(j, $0, 256);
         if (h) stringToUTF8(h, $1, 256);
     }, sWebJoinParam, sWebHostParam);
-    printf("[Web] URL params: join='%s' host='%s'\n", sWebJoinParam, sWebHostParam);
+    LOG_INFO("[Web] URL params: join='%s' host='%s'", sWebJoinParam, sWebHostParam);
 #endif
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
