@@ -488,10 +488,38 @@ static char sWebRoomParam[256] = {0};
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;
 static bool web_auto_network_done = false;
+static bool web_peer_waiting = false; // Waiting for PeerJS to resolve host/client
 
 static void web_auto_network(void) {
+    // Check if we're waiting for PeerJS to resolve host/client role
+    if (web_peer_waiting) {
+        int isConnected = EM_ASM_INT({ return PeerNetwork.isConnected() ? 1 : 0; });
+        if (!isConnected) return; // still waiting
+
+        int isHost = EM_ASM_INT({ return PeerNetwork.isHost ? 1 : 0; });
+        web_peer_waiting = false;
+        web_auto_network_done = true;
+
+        if (isHost) {
+            printf("[PeerJS C] Room resolved: we are HOST\n");
+            configNetworkSystem = NS_SOCKET;
+
+            static struct Object sHackyObjectRoom = { 0 };
+            gMarioStates[0].marioObj = &sHackyObjectRoom;
+
+            extern void djui_panel_do_host(bool reconnecting, bool playSound);
+            djui_panel_do_host(false, false);
+        } else {
+            printf("[PeerJS C] Room resolved: we are CLIENT\n");
+            network_reset_reconnect_and_rehost();
+            network_set_system(NS_SOCKET);
+            network_init(NT_CLIENT, false);
+        }
+        return;
+    }
+
     if (web_auto_network_done) return;
-    if (!gGameInited) return; // wait until game is fully initialized
+    if (!gGameInited) return;
     web_auto_network_done = true;
 
     if (sWebJoinParam[0] != '\0') {
@@ -532,16 +560,18 @@ static void web_auto_network(void) {
         djui_panel_do_host(false, false);
     } else if (sWebRoomParam[0] != '\0') {
         // PeerJS room-based networking: ?room=ROOMID
-        // Mimic the GUI join flow: start as NT_CLIENT.
-        // PeerJS will try host first, fail if taken, fall back to client.
-        // If PeerJS becomes host (room was free), ns_socket_update detects
-        // this and the game acts as host despite being NT_CLIENT initially.
-        // NOTE: for a true host, the user should open the page first.
+        // Initialize PeerJS from JS to determine host/client role before
+        // calling any C network init. This avoids the NT_SERVER→NT_CLIENT
+        // transition that clears player state.
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sWebRoomParam);
-        network_reset_reconnect_and_rehost();
-        network_set_system(NS_SOCKET);
-        network_init(NT_CLIENT, false);
+
+        // Start PeerJS — it will resolve host/client asynchronously
+        EM_ASM({ PeerNetwork.init(UTF8ToString($0)); }, sWebRoomParam);
+
+        // Enter waiting state — web_auto_network will poll until resolved
+        web_peer_waiting = true;
+        web_auto_network_done = false;
     }
 }
 

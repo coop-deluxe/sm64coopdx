@@ -241,33 +241,6 @@ static void ns_socket_update(void) {
     // Update isHost flag from PeerJS state
     sIsHostMode = peer_is_host();
 
-    // Detect when PeerJS connection is established and handle role assignment
-    bool isConnected = peer_is_connected();
-    if (!sRoleResolved && isConnected) {
-        sRoleResolved = true;
-
-        if (sIsHostMode) {
-            // We claimed the room — we're the HOST.
-            // We started as NT_CLIENT, need to switch to NT_SERVER.
-            printf("[PeerJS C] We are the HOST — switching to server mode\n");
-            sPreservePeerConnection = true;
-            network_shutdown(false, false, false, false);
-
-            static struct Object sHackyPeer = { 0 };
-            gMarioStates[0].marioObj = &sHackyPeer;
-            configNetworkSystem = NS_SOCKET;
-
-            extern void djui_panel_do_host(bool reconnecting, bool playSound);
-            djui_panel_do_host(false, false);
-        } else if (!sSentModListRequest) {
-            // We're a CLIENT — just send the mod list request to join
-            printf("[PeerJS C] We are a CLIENT — sending mod list request\n");
-            network_send_mod_list_request();
-            sSentModListRequest = true;
-        }
-    }
-    if (isConnected) sWasPeerConnected = true;
-
     // Drain PeerJS received packets into ring buffer
     peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
 
@@ -325,6 +298,10 @@ static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength
         u16 slotId = 0;
         if (localIndex > 0 && localIndex < MAX_PLAYERS) {
             slotId = sAddr[localIndex].sin6_port;
+        }
+        static int sSendLogCount = 0;
+        if (++sSendLogCount <= 20 && slotId > 0) {
+            printf("[PeerJS C] HOST send: localIndex=%d slotId=%d len=%d\n", localIndex, slotId, dataLength);
         }
         peer_send(slotId, data, dataLength);
     } else {
