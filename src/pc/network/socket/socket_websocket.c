@@ -138,6 +138,11 @@ void resolve_domain(struct sockaddr_in6 *addr) {
     (void)addr;
 }
 
+// Track if we've sent the initial mod list request (only for clients)
+static bool sSentModListRequest = false;
+// Track if PeerJS was connected last frame (to detect new connections)
+static bool sWasPeerConnected = false;
+
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
     if (networkType == NT_NONE) {
         LOG_INFO("Network type NONE, skipping PeerJS connection");
@@ -161,17 +166,11 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
     peer_init(roomId);
 
     // PeerJS auto-determines host vs client based on who registers the room ID first.
-    // For now, set sIsHostMode based on the requested networkType.
-    // It will be updated each frame via peer_is_host().
-    if (networkType == NT_SERVER) {
-        sIsHostMode = true;
-    } else {
-        sIsHostMode = false;
-        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", roomId);
-        djui_connect_menu_open();
-        gNetworkType = NT_CLIENT;
-        network_send_mod_list_request();
-    }
+    // Don't send mod list request yet — wait until PeerJS is actually connected.
+    // The update function will detect connection and send it.
+    sSentModListRequest = false;
+    sWasPeerConnected = false;
+    sIsHostMode = (networkType == NT_SERVER);
 
     return true;
 }
@@ -215,11 +214,28 @@ static bool ns_socket_match_addr(void* addr1, void* addr2) {
 static void ns_socket_update(void) {
     if (gNetworkType == NT_NONE) { return; }
 
-    // Drain PeerJS received packets into ring buffer
-    peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
-
     // Update isHost flag from PeerJS state
     sIsHostMode = peer_is_host();
+
+    // Detect when PeerJS connection is established
+    bool isConnected = peer_is_connected();
+    if (isConnected && !sWasPeerConnected) {
+        sWasPeerConnected = true;
+        LOG_INFO("PeerJS connection established (isHost=%d)", sIsHostMode);
+
+        if (!sIsHostMode && !sSentModListRequest) {
+            // We're a client and just connected to the host — send mod list request
+            gNetworkType = NT_CLIENT;
+            djui_connect_menu_open();
+            network_send_mod_list_request();
+            sSentModListRequest = true;
+            LOG_INFO("Sent mod list request to host");
+        }
+    }
+    sWasPeerConnected = isConnected;
+
+    // Drain PeerJS received packets into ring buffer
+    peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
 
     // Process ring buffer: each entry is [u16 slotId][u16 packetLen][packetData...]
     while (ringbuf_available() >= 4) {

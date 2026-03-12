@@ -532,12 +532,13 @@ static void web_auto_network(void) {
         djui_panel_do_host(false, false);
     } else if (sWebRoomParam[0] != '\0') {
         // PeerJS room-based networking: ?room=ROOMID
-        // The first player to claim the room ID becomes host, others join as clients.
-        // We use NT_SERVER here; PeerJS auto-determines actual host/client role.
-        LOG_INFO("Auto-connect to PeerJS room '%s'", sWebRoomParam);
-
+        // PeerJS auto-determines host vs client: first player to claim the
+        // room ID becomes host, subsequent players join as clients.
+        // We always start as NT_SERVER (host). If PeerJS determines we're
+        // actually a client, ns_socket_update will switch to NT_CLIENT.
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
         configNetworkSystem = NS_SOCKET;
+        configHostPort = DEFAULT_PORT;
 
         static struct Object sHackyObjectRoom = { 0 };
         gMarioStates[0].marioObj = &sHackyObjectRoom;
