@@ -563,6 +563,14 @@ void network_update(void) {
         gNetworkStartupTimer--;
     }
 
+#ifdef TARGET_WEB
+    // On web, WebSocket messages are buffered asynchronously between ticks.
+    // Drain the receive buffer BEFORE timeout checks so lastReceived is current.
+    if (gNetworkSystem != NULL) {
+        gNetworkSystem->update();
+    }
+#endif
+
     network_rehost_update();
     network_reconnect_update();
 
