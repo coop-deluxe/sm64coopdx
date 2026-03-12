@@ -142,6 +142,8 @@ void resolve_domain(struct sockaddr_in6 *addr) {
 static bool sSentModListRequest = false;
 // Track if PeerJS was connected last frame (to detect new connections)
 static bool sWasPeerConnected = false;
+// Track if PeerJS role has been resolved
+static bool sRoleResolved = false;
 
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
     if (networkType == NT_NONE) {
@@ -167,9 +169,10 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
 
     // PeerJS auto-determines host vs client based on who registers the room ID first.
     // Don't send mod list request yet — wait until PeerJS is actually connected.
-    // The update function will detect connection and send it.
+    // The update function will detect connection and handle role assignment.
     sSentModListRequest = false;
     sWasPeerConnected = false;
+    sRoleResolved = false;
     sIsHostMode = (networkType == NT_SERVER);
 
     return true;
@@ -217,22 +220,33 @@ static void ns_socket_update(void) {
     // Update isHost flag from PeerJS state
     sIsHostMode = peer_is_host();
 
-    // Detect when PeerJS connection is established
+    // Detect when PeerJS connection is established and handle role assignment
     bool isConnected = peer_is_connected();
-    if (isConnected && !sWasPeerConnected) {
-        sWasPeerConnected = true;
-        LOG_INFO("PeerJS connection established (isHost=%d)", sIsHostMode);
+    if (!sRoleResolved && isConnected) {
+        sRoleResolved = true;
 
-        if (!sIsHostMode && !sSentModListRequest) {
-            // We're a client and just connected to the host — send mod list request
+        if (sIsHostMode) {
+            LOG_INFO("PeerJS: we are the HOST");
+            // Host path — already set up by djui_panel_do_host, nothing extra needed
+        } else {
+            // We're a CLIENT but the C code was initialized as NT_SERVER by ?room= flow.
+            // We need to reinitialize as client. Since we can't safely call
+            // network_shutdown from inside ns_socket_update, just switch the type
+            // and send the handshake. The peer_init already connected us to the host.
+            LOG_INFO("PeerJS: we are a CLIENT — reinitializing network as NT_CLIENT");
+
             gNetworkType = NT_CLIENT;
+            snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
+
+            // Open the "Joining..." UI
             djui_connect_menu_open();
+
+            // Send the initial handshake
             network_send_mod_list_request();
             sSentModListRequest = true;
-            LOG_INFO("Sent mod list request to host");
         }
     }
-    sWasPeerConnected = isConnected;
+    if (isConnected) sWasPeerConnected = true;
 
     // Drain PeerJS received packets into ring buffer
     peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
