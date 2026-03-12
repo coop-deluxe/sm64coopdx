@@ -62,8 +62,6 @@ static struct HudUtilsState sHudUtilsState = {
     },
 };
 
-static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
-
 f32 gDjuiHudUtilsZ = 0;
 bool gDjuiHudLockMouse = false;
 
@@ -315,12 +313,8 @@ void djui_hud_set_font(s8 fontType) {
     sHudUtilsState.font = fontType;
 }
 
-struct DjuiColor* djui_hud_get_color(void) {
-    sRefColor.r = sHudUtilsState.color.r;
-    sRefColor.g = sHudUtilsState.color.g;
-    sRefColor.b = sHudUtilsState.color.b;
-    sRefColor.a = sHudUtilsState.color.a;
-    return &sRefColor;
+struct DjuiColor djui_hud_get_color(void) {
+    return sHudUtilsState.color;
 }
 
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {

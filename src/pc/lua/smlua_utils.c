@@ -408,7 +408,7 @@ inline static uintptr_t smlua_get_pointer_key(void *ptr, u16 lt) {
     return (lt * 0x9E3779B97F4A7C15) ^ ((uintptr_t) ptr >> 3);
 }
 
-CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
+CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo, bool dynamic) {
     if (p == NULL) {
         lua_pushnil(L);
         return NULL;
@@ -433,11 +433,17 @@ CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo) {
     cobject->lot = lot;
     cobject->freed = false;
     cobject->info = extraInfo;
+    cobject->dynamic = dynamic;
     lua_rawgeti(L, LUA_REGISTRYINDEX, gSmLuaCObjectMetatable);
     lua_setmetatable(L, -2);
-    lua_pushinteger(L, key);
-    lua_pushvalue(L, -2); // Duplicate userdata
-    lua_settable(L, -4);
+
+    // Don't push the cobject to the gSmLuaCObjects table if it's dynamic allocation
+    // Its data pointer is never the same and it will prevent the GC to collect it
+    if (!dynamic) {
+        lua_pushinteger(L, key);
+        lua_pushvalue(L, -2); // Duplicate userdata
+        lua_settable(L, -4);
+    }
     lua_remove(L, -2); // Remove gSmLuaCObjects table
 
     LUA_STACK_CHECK_END(L);

@@ -7171,6 +7171,35 @@ Sets if the camera should account for surfaces
 <br />
 
 
+## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+
+### Description
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with a non-zero `precision`
+
+### Lua Example
+`local rayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, OPTIONAL f32 precision);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [collision_find_floor](#collision_find_floor)
 
 ### Description
@@ -7280,7 +7309,7 @@ Returns a temporary wall collision data pointer
 - [WallCollisionData](structs.md#WallCollisionData)
 
 ### C Prototype
-`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+`struct WallCollisionData collision_get_temp_wall_collision_data(void);`
 
 [:arrow_up_small:](#)
 

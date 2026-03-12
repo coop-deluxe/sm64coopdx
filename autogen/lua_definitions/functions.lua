@@ -10635,6 +10635,19 @@ function camera_set_checking_surfaces(value)
     -- ...
 end
 
+--- @param startX number
+--- @param startY number
+--- @param startZ number
+--- @param dirX number
+--- @param dirY number
+--- @param dirZ number
+--- @param precision? number
+--- @return RayIntersectionInfo
+--- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with a non-zero `precision`
+function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param z number
@@ -11133,20 +11146,6 @@ end
 --- @return integer
 --- Gets the area update counter incremented when objects are updated
 function get_area_update_counter()
-    -- ...
-end
-
---- @param initialValue integer
---- @return Pointer_integer
---- Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
-function get_temp_s32_pointer(initialValue)
-    -- ...
-end
-
---- @param pointer Pointer_integer
---- @return integer
---- Gets the signed 32-bit integer value from `pointer`
-function deref_s32_pointer(pointer)
     -- ...
 end
 

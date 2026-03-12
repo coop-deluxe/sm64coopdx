@@ -196,7 +196,7 @@ def init():
             SMLUA_TYPES[typename] = {
 "input": """
         // push {name}
-        smlua_push_object(L, %s, {name}, NULL);
+        smlua_push_object(L, %s, {name}, NULL, false);
 """ % (lot)
             }
 

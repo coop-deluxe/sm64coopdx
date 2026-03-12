@@ -2870,7 +2870,7 @@ Gets the current DJUI HUD color
 - [DjuiColor](structs.md#DjuiColor)
 
 ### C Prototype
-`struct DjuiColor* djui_hud_get_color(void);`
+`struct DjuiColor djui_hud_get_color(void);`
 
 [:arrow_up_small:](#)
 

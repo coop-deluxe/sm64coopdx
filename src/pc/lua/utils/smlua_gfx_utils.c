@@ -192,7 +192,7 @@ void gfx_parse(Gfx* cmd, LuaFunction func) {
 
             default:
                 lua_rawgeti(L, LUA_REGISTRYINDEX, func);
-                smlua_push_object(L, LOT_GFX, cmd, NULL);
+                smlua_push_object(L, LOT_GFX, cmd, NULL, false);
                 lua_pushinteger(L, op);
                 if (smlua_pcall(L, 2, 1, 0) != 0) {
                     LOG_LUA("Failed to call the gfx_parse callback: %u", func);

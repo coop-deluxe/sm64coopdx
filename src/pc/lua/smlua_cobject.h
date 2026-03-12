@@ -60,6 +60,7 @@ typedef struct {
     u16 lot;
     bool freed;
     void *info;
+    bool dynamic;
 } CObject;
 
 typedef struct {

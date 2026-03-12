@@ -689,7 +689,7 @@ bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* ob
         lua_rawgeti(L, LUA_REGISTRYINDEX, reference);
 
         // push object
-        smlua_push_object(L, LOT_OBJECT, object, NULL);
+        smlua_push_object(L, LOT_OBJECT, object, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hooked->mod, hooked->modFile)) {

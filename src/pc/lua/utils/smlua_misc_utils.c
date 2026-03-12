@@ -40,8 +40,6 @@
 #include "pc/network/coopnet/coopnet.h"
 #endif
 
-static struct DateTime sDateTime;
-
 ///
 
 u32 get_network_area_timer(void) {
@@ -50,22 +48,6 @@ u32 get_network_area_timer(void) {
 
 u16 get_area_update_counter(void) {
     return gAreaUpdateCounter;
-}
-
-///
-
-s32* get_temp_s32_pointer(s32 initialValue) {
-    static s32 value = 0;
-    value = initialValue;
-    return &value;
-}
-
-s32 deref_s32_pointer(s32* pointer) {
-    if (pointer == NULL) {
-        LOG_LUA_LINE("Tried to dereference null pointer!");
-        return 0;
-    }
-    return *pointer;
 }
 
 ///
@@ -452,18 +434,19 @@ s64 get_time(void) {
     return time(NULL);
 }
 
-struct DateTime* get_date_and_time(void) {
+struct DateTime get_date_and_time(void) {
     time_t currentTime;
     time(&currentTime);
     struct tm *lt = localtime(&currentTime);
 
-    sDateTime.year = lt->tm_year;
-    sDateTime.month = lt->tm_mon;
-    sDateTime.day = lt->tm_mday;
-    sDateTime.hour = lt->tm_hour;
-    sDateTime.minute = lt->tm_min;
-    sDateTime.second = lt->tm_sec;
-    return &sDateTime;
+    struct DateTime dt = {0};
+    dt.year = lt->tm_year;
+    dt.month = lt->tm_mon;
+    dt.day = lt->tm_mday;
+    dt.hour = lt->tm_hour;
+    dt.minute = lt->tm_min;
+    dt.second = lt->tm_sec;
+    return dt;
 }
 
 ///

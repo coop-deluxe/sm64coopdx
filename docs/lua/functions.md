@@ -21,7 +21,6 @@
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
-   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
@@ -1905,6 +1904,7 @@
 <br />
 
 - smlua_collision_utils.h
+   - [collision_find_surface_on_ray](functions-6.md#collision_find_surface_on_ray)
    - [collision_find_floor](functions-6.md#collision_find_floor)
    - [collision_find_ceil](functions-6.md#collision_find_ceil)
    - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
@@ -1992,8 +1992,6 @@
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-7.md#get_network_area_timer)
    - [get_area_update_counter](functions-7.md#get_area_update_counter)
-   - [get_temp_s32_pointer](functions-7.md#get_temp_s32_pointer)
-   - [deref_s32_pointer](functions-7.md#deref_s32_pointer)
    - [djui_popup_create_global](functions-7.md#djui_popup_create_global)
    - [djui_is_popup_disabled](functions-7.md#djui_is_popup_disabled)
    - [djui_set_popup_disabled_override](functions-7.md#djui_set_popup_disabled_override)
@@ -2515,34 +2513,6 @@ Registers a vertex buffer to be used for a scrolling texture. Should be used wit
 
 ### C Prototype
 `void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
-
-Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
-
-### Lua Example
-`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| startX | `number` |
-| startY | `number` |
-| startZ | `number` |
-| dirX | `number` |
-| dirY | `number` |
-| dirZ | `number` |
-| precision (optional) | `number` |
-
-### Returns
-- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
-
-### C Prototype
-`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 

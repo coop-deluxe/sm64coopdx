@@ -56,7 +56,7 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     if (objSetupFunction != 0) {
         lua_State* L = gLuaState;
         lua_rawgeti(L, LUA_REGISTRYINDEX, objSetupFunction);
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
         if (0 != smlua_pcall(L, 1, 0, 0)) {
             LOG_LUA("Failed to call the object setup callback: %u", objSetupFunction);
         }
@@ -357,34 +357,31 @@ void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 
 // Misc object helpers
 //
 
-struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
-    static struct SpawnParticlesInfo sTmpSpi = { 0 };
-    memset(&sTmpSpi, 0, sizeof(struct SpawnParticlesInfo));
+struct SpawnParticlesInfo obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId) {
+    struct SpawnParticlesInfo spi = { 0 };
 
     u16 loadedModelId = smlua_model_util_load(modelId);
-    sTmpSpi.model = loadedModelId;
+    spi.model = loadedModelId;
 
-    return &sTmpSpi;
+    return spi;
 }
 
-struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId) {
-    static struct WaterDropletParams sTmpWdp = { 0 };
-    memset(&sTmpWdp, 0, sizeof(struct WaterDropletParams));
+struct WaterDropletParams obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId) {
+    struct WaterDropletParams wdp = { 0 };
 
     s16 loadedModelId = smlua_model_util_load(modelId);
-    sTmpWdp.model = loadedModelId;
+    wdp.model = loadedModelId;
 
     const BehaviorScript *behavior = get_behavior_from_id(behaviorId);
     behavior = smlua_override_behavior(behavior);
-    sTmpWdp.behavior = behavior;
+    wdp.behavior = behavior;
 
-    return &sTmpWdp;
+    return wdp;
 }
 
-struct ObjectHitbox* get_temp_object_hitbox(void) {
-    static struct ObjectHitbox sTmpHitbox = { 0 };
-    memset(&sTmpHitbox, 0, sizeof(struct ObjectHitbox));
-    return &sTmpHitbox;
+struct ObjectHitbox get_temp_object_hitbox(void) {
+    struct ObjectHitbox hitbox = { 0 };
+    return hitbox;
 }
 
 bool obj_is_attackable(struct Object *o) {

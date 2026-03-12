@@ -343,52 +343,6 @@ Gets the area update counter incremented when objects are updated
 
 <br />
 
-## [get_temp_s32_pointer](#get_temp_s32_pointer)
-
-### Description
-Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
-
-### Lua Example
-`local pointerValue = get_temp_s32_pointer(initialValue)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| initialValue | `integer` |
-
-### Returns
-- `Pointer` <`integer`>
-
-### C Prototype
-`s32* get_temp_s32_pointer(s32 initialValue);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [deref_s32_pointer](#deref_s32_pointer)
-
-### Description
-Gets the signed 32-bit integer value from `pointer`
-
-### Lua Example
-`local integerValue = deref_s32_pointer(pointer)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pointer | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 deref_s32_pointer(s32* pointer);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [djui_popup_create_global](#djui_popup_create_global)
 
 ### Description
@@ -1683,7 +1637,7 @@ Gets the system clock's date and time
 - [DateTime](structs.md#DateTime)
 
 ### C Prototype
-`struct DateTime* get_date_and_time(void);`
+`struct DateTime get_date_and_time(void);`
 
 [:arrow_up_small:](#)
 
@@ -3185,7 +3139,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 - [SpawnParticlesInfo](structs.md#SpawnParticlesInfo)
 
 ### C Prototype
-`struct SpawnParticlesInfo* obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);`
+`struct SpawnParticlesInfo obj_get_temp_spawn_particles_info(enum ModelExtendedId modelId);`
 
 [:arrow_up_small:](#)
 
@@ -3209,7 +3163,7 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 - [WaterDropletParams](structs.md#WaterDropletParams)
 
 ### C Prototype
-`struct WaterDropletParams* obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);`
+`struct WaterDropletParams obj_get_temp_water_droplet_params(enum ModelExtendedId modelId, enum BehaviorId behaviorId);`
 
 [:arrow_up_small:](#)
 
@@ -3230,7 +3184,7 @@ Returns a temporary object hitbox pointer
 - [ObjectHitbox](structs.md#ObjectHitbox)
 
 ### C Prototype
-`struct ObjectHitbox* get_temp_object_hitbox(void);`
+`struct ObjectHitbox get_temp_object_hitbox(void);`
 
 [:arrow_up_small:](#)
 

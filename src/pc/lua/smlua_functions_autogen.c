@@ -474,7 +474,7 @@ int smlua_func_area_get_warp_node(lua_State* L) {
     u8 id = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node(id), NULL);
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node(id), NULL, false);
 
     return 1;
 }
@@ -489,7 +489,7 @@ int smlua_func_area_get_any_warp_node(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_any_warp_node(), NULL);
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_any_warp_node(), NULL, false);
 
     return 1;
 }
@@ -506,7 +506,7 @@ int smlua_func_area_get_warp_node_from_params(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_get_warp_node_from_params"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node_from_params(o), NULL);
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_get_warp_node_from_params(o), NULL, false);
 
     return 1;
 }
@@ -9746,7 +9746,7 @@ int smlua_func_spawn_default_star(lua_State* L) {
     f32 z = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_default_star"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_default_star(x, y, z), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_default_star(x, y, z), NULL, false);
 
     return 1;
 }
@@ -9767,7 +9767,7 @@ int smlua_func_spawn_red_coin_cutscene_star(lua_State* L) {
     f32 z = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_red_coin_cutscene_star"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_red_coin_cutscene_star(x, y, z), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_red_coin_cutscene_star(x, y, z), NULL, false);
 
     return 1;
 }
@@ -9788,7 +9788,7 @@ int smlua_func_spawn_no_exit_star(lua_State* L) {
     f32 z = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "spawn_no_exit_star"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_no_exit_star(x, y, z), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_no_exit_star(x, y, z), NULL, false);
 
     return 1;
 }
@@ -12006,7 +12006,7 @@ int smlua_func_get_character(lua_State* L) {
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_character"); return 0; }
 
-    smlua_push_object(L, LOT_CHARACTER, get_character(m), NULL);
+    smlua_push_object(L, LOT_CHARACTER, get_character(m), NULL, false);
 
     return 1;
 }
@@ -12275,7 +12275,11 @@ int smlua_func_djui_hud_get_color(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_DJUICOLOR, djui_hud_get_color(), NULL);
+
+    struct DjuiColor *p = malloc(sizeof(struct DjuiColor));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "djui_hud_get_color"); return 0; }
+    *p = djui_hud_get_color();
+    smlua_push_object(L, LOT_DJUICOLOR, p, NULL, true);
 
     return 1;
 }
@@ -14930,7 +14934,7 @@ int smlua_func_mario_get_collided_object(lua_State* L) {
     u32 interactType = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_get_collided_object"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, mario_get_collided_object(m, interactType), NULL);
+    smlua_push_object(L, LOT_OBJECT, mario_get_collided_object(m, interactType), NULL, false);
 
     return 1;
 }
@@ -15093,7 +15097,7 @@ int smlua_func_lag_compensation_get_local_state(lua_State* L) {
     struct NetworkPlayer* otherNp = (struct NetworkPlayer*)smlua_to_cobject(L, 1, LOT_NETWORKPLAYER);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "lag_compensation_get_local_state"); return 0; }
 
-    smlua_push_object(L, LOT_MARIOSTATE, lag_compensation_get_local_state(otherNp), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, lag_compensation_get_local_state(otherNp), NULL, false);
 
     return 1;
 }
@@ -15286,7 +15290,7 @@ int smlua_func_area_create_warp_node(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 6, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "area_create_warp_node"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECTWARPNODE, area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o), NULL);
+    smlua_push_object(L, LOT_OBJECTWARPNODE, area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o), NULL, false);
 
     return 1;
 }
@@ -15356,7 +15360,7 @@ int smlua_func_get_instant_warp(lua_State* L) {
     u8 index = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_instant_warp"); return 0; }
 
-    smlua_push_object(L, LOT_INSTANTWARP, get_instant_warp(index), NULL);
+    smlua_push_object(L, LOT_INSTANTWARP, get_instant_warp(index), NULL, false);
 
     return 1;
 }
@@ -15371,7 +15375,7 @@ int smlua_func_get_painting_warp_node(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_WARPNODE, get_painting_warp_node(), NULL);
+    smlua_push_object(L, LOT_WARPNODE, get_painting_warp_node(), NULL, false);
 
     return 1;
 }
@@ -16530,7 +16534,7 @@ int smlua_func_resolve_and_return_wall_collisions(lua_State* L) {
     f32 radius = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "resolve_and_return_wall_collisions"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, resolve_and_return_wall_collisions(pos, offset, radius), NULL);
+    smlua_push_object(L, LOT_SURFACE, resolve_and_return_wall_collisions(pos, offset, radius), NULL, false);
 
     smlua_push_vec3f(pos, 1);
 
@@ -16584,7 +16588,7 @@ int smlua_func_vec3f_find_ceil(lua_State* L) {
 
     lua_pushnumber(L, vec3f_find_ceil(pos, height, &ceil));
 
-    smlua_push_object(L, LOT_SURFACE, ceil, NULL);
+    smlua_push_object(L, LOT_SURFACE, ceil, NULL, false);
 
     return 2;
 }
@@ -16609,7 +16613,7 @@ int smlua_func_vec3f_mario_ceil(lua_State* L) {
 
     lua_pushnumber(L, vec3f_mario_ceil(pos, height, &ceil));
 
-    smlua_push_object(L, LOT_SURFACE, ceil, NULL);
+    smlua_push_object(L, LOT_SURFACE, ceil, NULL, false);
 
     return 2;
 }
@@ -17053,7 +17057,7 @@ int smlua_func_get_mario_state_from_object(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_state_from_object"); return 0; }
 
-    smlua_push_object(L, LOT_MARIOSTATE, get_mario_state_from_object(o), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, get_mario_state_from_object(o), NULL, false);
 
     return 1;
 }
@@ -19184,7 +19188,7 @@ int smlua_func_geo_get_mario_state(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_MARIOSTATE, geo_get_mario_state(), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, geo_get_mario_state(), NULL, false);
 
     return 1;
 }
@@ -19199,7 +19203,7 @@ int smlua_func_geo_get_body_state(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_MARIOBODYSTATE, geo_get_body_state(), NULL);
+    smlua_push_object(L, LOT_MARIOBODYSTATE, geo_get_body_state(), NULL, false);
 
     return 1;
 }
@@ -22397,7 +22401,7 @@ int smlua_func_mod_fs_get(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_get"); return 0; }
     }
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_get(modPath), NULL);
+    smlua_push_object(L, LOT_MODFS, mod_fs_get(modPath), NULL, false);
 
     return 1;
 }
@@ -22417,7 +22421,7 @@ int smlua_func_mod_fs_reload(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_reload"); return 0; }
     }
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_reload(modPath), NULL);
+    smlua_push_object(L, LOT_MODFS, mod_fs_reload(modPath), NULL, false);
 
     return 1;
 }
@@ -22432,7 +22436,7 @@ int smlua_func_mod_fs_create(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_create(), NULL);
+    smlua_push_object(L, LOT_MODFS, mod_fs_create(), NULL, false);
 
     return 1;
 }
@@ -22470,7 +22474,7 @@ int smlua_func_mod_fs_get_file(lua_State* L) {
     const char* filepath = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_get_file"); return 0; }
 
-    smlua_push_object(L, LOT_MODFSFILE, mod_fs_get_file(modFs, filepath), NULL);
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_get_file(modFs, filepath), NULL, false);
 
     return 1;
 }
@@ -22491,7 +22495,7 @@ int smlua_func_mod_fs_create_file(lua_State* L) {
     bool text = smlua_to_boolean(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_create_file"); return 0; }
 
-    smlua_push_object(L, LOT_MODFSFILE, mod_fs_create_file(modFs, filepath, text), NULL);
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_create_file(modFs, filepath, text), NULL, false);
 
     return 1;
 }
@@ -23275,7 +23279,7 @@ int smlua_func_network_player_from_global_index(lua_State* L) {
     u8 globalIndex = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_player_from_global_index"); return 0; }
 
-    smlua_push_object(L, LOT_NETWORKPLAYER, network_player_from_global_index(globalIndex), NULL);
+    smlua_push_object(L, LOT_NETWORKPLAYER, network_player_from_global_index(globalIndex), NULL, false);
 
     return 1;
 }
@@ -23296,7 +23300,7 @@ int smlua_func_get_network_player_from_level(lua_State* L) {
     s16 levelNum = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "get_network_player_from_level"); return 0; }
 
-    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_level(courseNum, actNum, levelNum), NULL);
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_level(courseNum, actNum, levelNum), NULL, false);
 
     return 1;
 }
@@ -23319,7 +23323,7 @@ int smlua_func_get_network_player_from_area(lua_State* L) {
     s16 areaIndex = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "get_network_player_from_area"); return 0; }
 
-    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_area(courseNum, actNum, levelNum, areaIndex), NULL);
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_from_area(courseNum, actNum, levelNum, areaIndex), NULL, false);
 
     return 1;
 }
@@ -23334,7 +23338,7 @@ int smlua_func_get_network_player_smallest_global(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_smallest_global(), NULL);
+    smlua_push_object(L, LOT_NETWORKPLAYER, get_network_player_smallest_global(), NULL, false);
 
     return 1;
 }
@@ -23938,7 +23942,7 @@ int smlua_func_nearest_mario_state_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "nearest_mario_state_to_object"); return 0; }
 
     extern struct MarioState* nearest_mario_state_to_object(struct Object *obj);
-    smlua_push_object(L, LOT_MARIOSTATE, nearest_mario_state_to_object(obj), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, nearest_mario_state_to_object(obj), NULL, false);
 
     return 1;
 }
@@ -23956,7 +23960,7 @@ int smlua_func_nearest_possible_mario_state_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "nearest_possible_mario_state_to_object"); return 0; }
 
     extern struct MarioState* nearest_possible_mario_state_to_object(struct Object *obj);
-    smlua_push_object(L, LOT_MARIOSTATE, nearest_possible_mario_state_to_object(obj), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, nearest_possible_mario_state_to_object(obj), NULL, false);
 
     return 1;
 }
@@ -23974,7 +23978,7 @@ int smlua_func_nearest_player_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "nearest_player_to_object"); return 0; }
 
     extern struct Object* nearest_player_to_object(struct Object *obj);
-    smlua_push_object(L, LOT_OBJECT, nearest_player_to_object(obj), NULL);
+    smlua_push_object(L, LOT_OBJECT, nearest_player_to_object(obj), NULL, false);
 
     return 1;
 }
@@ -23992,7 +23996,7 @@ int smlua_func_nearest_interacting_mario_state_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "nearest_interacting_mario_state_to_object"); return 0; }
 
     extern struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj);
-    smlua_push_object(L, LOT_MARIOSTATE, nearest_interacting_mario_state_to_object(obj), NULL);
+    smlua_push_object(L, LOT_MARIOSTATE, nearest_interacting_mario_state_to_object(obj), NULL, false);
 
     return 1;
 }
@@ -24010,7 +24014,7 @@ int smlua_func_nearest_interacting_player_to_object(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "nearest_interacting_player_to_object"); return 0; }
 
     extern struct Object *nearest_interacting_player_to_object(struct Object *obj);
-    smlua_push_object(L, LOT_OBJECT, nearest_interacting_player_to_object(obj), NULL);
+    smlua_push_object(L, LOT_OBJECT, nearest_interacting_player_to_object(obj), NULL, false);
 
     return 1;
 }
@@ -25269,7 +25273,7 @@ int smlua_func_obj_spit_fire(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "obj_spit_fire"); return 0; }
 
     extern struct Object* obj_spit_fire(s16 relativePosX, s16 relativePosY, s16 relativePosZ, f32 scale, s32 model, f32 startSpeed, f32 endSpeed, s16 movePitch);
-    smlua_push_object(L, LOT_OBJECT, obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, startSpeed, endSpeed, movePitch), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, startSpeed, endSpeed, movePitch), NULL, false);
 
     return 1;
 }
@@ -25885,7 +25889,7 @@ int smlua_func_spawn_water_droplet(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_water_droplet"); return 0; }
 
     extern struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params);
-    smlua_push_object(L, LOT_OBJECT, spawn_water_droplet(parent, params), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_water_droplet(parent, params), NULL, false);
 
     return 1;
 }
@@ -26531,7 +26535,7 @@ int smlua_func_cur_obj_nearest_object_with_behavior(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_nearest_object_with_behavior"); return 0; }
 
     extern struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);
-    smlua_push_object(L, LOT_OBJECT, cur_obj_nearest_object_with_behavior(behavior), NULL);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_nearest_object_with_behavior(behavior), NULL, false);
 
     return 1;
 }
@@ -26565,7 +26569,7 @@ int smlua_func_cur_obj_find_nearest_pole(UNUSED lua_State* L) {
 
 
     extern struct Object* cur_obj_find_nearest_pole(void);
-    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_pole(), NULL);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_pole(), NULL, false);
 
     return 1;
 }
@@ -26585,7 +26589,7 @@ int smlua_func_cur_obj_find_nearest_object_with_behavior(lua_State* L) {
     f32 dist;
 
     extern struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist);
-    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_object_with_behavior(behavior, &dist), NULL);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearest_object_with_behavior(behavior, &dist), NULL, false);
 
     lua_pushnumber(L, dist);
 
@@ -26623,7 +26627,7 @@ int smlua_func_find_unimportant_object(UNUSED lua_State* L) {
 
 
     extern struct Object *find_unimportant_object(void);
-    smlua_push_object(L, LOT_OBJECT, find_unimportant_object(), NULL);
+    smlua_push_object(L, LOT_OBJECT, find_unimportant_object(), NULL, false);
 
     return 1;
 }
@@ -26675,7 +26679,7 @@ int smlua_func_find_object_with_behavior(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "find_object_with_behavior"); return 0; }
 
     extern struct Object *find_object_with_behavior(const BehaviorScript *behavior);
-    smlua_push_object(L, LOT_OBJECT, find_object_with_behavior(behavior), NULL);
+    smlua_push_object(L, LOT_OBJECT, find_object_with_behavior(behavior), NULL, false);
 
     return 1;
 }
@@ -26695,7 +26699,7 @@ int smlua_func_cur_obj_find_nearby_held_actor(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "cur_obj_find_nearby_held_actor"); return 0; }
 
     extern struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist);
-    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearby_held_actor(behavior, maxDist), NULL);
+    smlua_push_object(L, LOT_OBJECT, cur_obj_find_nearby_held_actor(behavior, maxDist), NULL, false);
 
     return 1;
 }
@@ -27157,7 +27161,7 @@ int smlua_func_cur_obj_update_floor_height_and_get_floor(UNUSED lua_State* L) {
 
 
     extern struct Surface *cur_obj_update_floor_height_and_get_floor(void);
-    smlua_push_object(L, LOT_SURFACE, cur_obj_update_floor_height_and_get_floor(), NULL);
+    smlua_push_object(L, LOT_SURFACE, cur_obj_update_floor_height_and_get_floor(), NULL, false);
 
     return 1;
 }
@@ -28838,7 +28842,7 @@ int smlua_func_spawn_star_with_no_lvl_exit(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "spawn_star_with_no_lvl_exit"); return 0; }
 
     extern struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24);
-    smlua_push_object(L, LOT_OBJECT, spawn_star_with_no_lvl_exit(sp20, sp24), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_star_with_no_lvl_exit(sp20, sp24), NULL, false);
 
     return 1;
 }
@@ -30341,7 +30345,7 @@ int smlua_func_get_mario_vanilla_animation(lua_State* L) {
     u16 index = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mario_vanilla_animation"); return 0; }
 
-    smlua_push_object(L, LOT_ANIMATION, get_mario_vanilla_animation(index), NULL);
+    smlua_push_object(L, LOT_ANIMATION, get_mario_vanilla_animation(index), NULL, false);
 
     return 1;
 }
@@ -30436,7 +30440,7 @@ int smlua_func_audio_stream_load(lua_State* L) {
     const char* filename = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_load"); return 0; }
 
-    smlua_push_object(L, LOT_MODAUDIO, audio_stream_load(filename), NULL);
+    smlua_push_object(L, LOT_MODAUDIO, audio_stream_load(filename), NULL, false);
 
     return 1;
 }
@@ -30690,7 +30694,7 @@ int smlua_func_audio_sample_load(lua_State* L) {
     const char* filename = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_sample_load"); return 0; }
 
-    smlua_push_object(L, LOT_MODAUDIO, audio_sample_load(filename), NULL);
+    smlua_push_object(L, LOT_MODAUDIO, audio_sample_load(filename), NULL, false);
 
     return 1;
 }
@@ -31573,6 +31577,42 @@ int smlua_func_camera_set_checking_surfaces(lua_State* L) {
  // smlua_collision_utils.h //
 /////////////////////////////
 
+int smlua_func_collision_find_surface_on_ray(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 6 || top > 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "collision_find_surface_on_ray", 6, 7, top);
+        return 0;
+    }
+
+    f32 startX = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "collision_find_surface_on_ray"); return 0; }
+    f32 startY = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "collision_find_surface_on_ray"); return 0; }
+    f32 startZ = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_surface_on_ray"); return 0; }
+    f32 dirX = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "collision_find_surface_on_ray"); return 0; }
+    f32 dirY = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "collision_find_surface_on_ray"); return 0; }
+    f32 dirZ = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "collision_find_surface_on_ray"); return 0; }
+    f32 precision = (f32) 0;
+    if (top >= 7) {
+        precision = smlua_to_number(L, 7);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "collision_find_surface_on_ray"); return 0; }
+    }
+
+
+    struct RayIntersectionInfo *p = malloc(sizeof(struct RayIntersectionInfo));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "collision_find_surface_on_ray"); return 0; }
+    *p = collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision);
+    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, p, NULL, true);
+
+    return 1;
+}
+
 int smlua_func_collision_find_floor(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31589,7 +31629,7 @@ int smlua_func_collision_find_floor(lua_State* L) {
     f32 z = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_floor"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, collision_find_floor(x, y, z), NULL);
+    smlua_push_object(L, LOT_SURFACE, collision_find_floor(x, y, z), NULL, false);
 
     return 1;
 }
@@ -31610,7 +31650,7 @@ int smlua_func_collision_find_ceil(lua_State* L) {
     f32 z = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "collision_find_ceil"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, collision_find_ceil(x, y, z), NULL);
+    smlua_push_object(L, LOT_SURFACE, collision_find_ceil(x, y, z), NULL, false);
 
     return 1;
 }
@@ -31625,7 +31665,7 @@ int smlua_func_get_water_surface_pseudo_floor(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_SURFACE, get_water_surface_pseudo_floor(), NULL);
+    smlua_push_object(L, LOT_SURFACE, get_water_surface_pseudo_floor(), NULL, false);
 
     return 1;
 }
@@ -31657,7 +31697,11 @@ int smlua_func_collision_get_temp_wall_collision_data(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_WALLCOLLISIONDATA, collision_get_temp_wall_collision_data(), NULL);
+
+    struct WallCollisionData *p = malloc(sizeof(struct WallCollisionData));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "collision_get_temp_wall_collision_data"); return 0; }
+    *p = collision_get_temp_wall_collision_data();
+    smlua_push_object(L, LOT_WALLCOLLISIONDATA, p, NULL, true);
 
     return 1;
 }
@@ -31676,7 +31720,7 @@ int smlua_func_get_surface_from_wcd_index(lua_State* L) {
     s8 index = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_surface_from_wcd_index"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, get_surface_from_wcd_index(wcd, index), NULL);
+    smlua_push_object(L, LOT_SURFACE, get_surface_from_wcd_index(wcd, index), NULL, false);
 
     return 1;
 }
@@ -32294,7 +32338,7 @@ int smlua_func_gfx_get_display_list(lua_State* L) {
     Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_display_list"); return 0; }
 
-    smlua_push_object(L, LOT_GFX, gfx_get_display_list(cmd), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_get_display_list(cmd), NULL, false);
 
     return 1;
 }
@@ -32311,7 +32355,7 @@ int smlua_func_gfx_get_vertex_buffer(lua_State* L) {
     Gfx * cmd = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_vertex_buffer"); return 0; }
 
-    smlua_push_object(L, LOT_VTX, gfx_get_vertex_buffer(cmd), NULL);
+    smlua_push_object(L, LOT_VTX, gfx_get_vertex_buffer(cmd), NULL, false);
 
     return 1;
 }
@@ -32364,7 +32408,7 @@ int smlua_func_gfx_get_from_name(lua_State* L) {
 
     u32 length;
 
-    smlua_push_object(L, LOT_GFX, gfx_get_from_name(name, &length), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_get_from_name(name, &length), NULL, false);
 
     lua_pushinteger(L, length);
 
@@ -32419,7 +32463,7 @@ int smlua_func_gfx_get_command(lua_State* L) {
     u32 offset = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_get_command"); return 0; }
 
-    smlua_push_object(L, LOT_GFX, gfx_get_command(gfx, offset), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_get_command(gfx, offset), NULL, false);
 
     return 1;
 }
@@ -32436,7 +32480,7 @@ int smlua_func_gfx_get_next_command(lua_State* L) {
     Gfx * gfx = (Gfx *)smlua_to_cobject(L, 1, LOT_GFX);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_next_command"); return 0; }
 
-    smlua_push_object(L, LOT_GFX, gfx_get_next_command(gfx), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_get_next_command(gfx), NULL, false);
 
     return 1;
 }
@@ -32476,7 +32520,7 @@ int smlua_func_gfx_create(lua_State* L) {
     u32 length = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_create"); return 0; }
 
-    smlua_push_object(L, LOT_GFX, gfx_create(name, length), NULL);
+    smlua_push_object(L, LOT_GFX, gfx_create(name, length), NULL, false);
 
     return 1;
 }
@@ -32546,7 +32590,7 @@ int smlua_func_vtx_get_from_name(lua_State* L) {
 
     u32 count;
 
-    smlua_push_object(L, LOT_VTX, vtx_get_from_name(name, &count), NULL);
+    smlua_push_object(L, LOT_VTX, vtx_get_from_name(name, &count), NULL, false);
 
     lua_pushinteger(L, count);
 
@@ -32601,7 +32645,7 @@ int smlua_func_vtx_get_vertex(lua_State* L) {
     u32 offset = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vtx_get_vertex"); return 0; }
 
-    smlua_push_object(L, LOT_VTX, vtx_get_vertex(vtx, offset), NULL);
+    smlua_push_object(L, LOT_VTX, vtx_get_vertex(vtx, offset), NULL, false);
 
     return 1;
 }
@@ -32618,7 +32662,7 @@ int smlua_func_vtx_get_next_vertex(lua_State* L) {
     Vtx * vtx = (Vtx *)smlua_to_cobject(L, 1, LOT_VTX);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "vtx_get_next_vertex"); return 0; }
 
-    smlua_push_object(L, LOT_VTX, vtx_get_next_vertex(vtx), NULL);
+    smlua_push_object(L, LOT_VTX, vtx_get_next_vertex(vtx), NULL, false);
 
     return 1;
 }
@@ -32658,7 +32702,7 @@ int smlua_func_vtx_create(lua_State* L) {
     u32 count = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "vtx_create"); return 0; }
 
-    smlua_push_object(L, LOT_VTX, vtx_create(name, count), NULL);
+    smlua_push_object(L, LOT_VTX, vtx_create(name, count), NULL, false);
 
     return 1;
 }
@@ -32747,7 +32791,7 @@ int smlua_func_smlua_level_util_get_info(lua_State* L) {
     s16 levelNum = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info"); return 0; }
 
-    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info(levelNum), NULL);
+    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info(levelNum), NULL, false);
 
     return 1;
 }
@@ -32764,7 +32808,7 @@ int smlua_func_smlua_level_util_get_info_from_short_name(lua_State* L) {
     const char* shortName = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info_from_short_name"); return 0; }
 
-    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName), NULL);
+    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_short_name(shortName), NULL, false);
 
     return 1;
 }
@@ -32781,7 +32825,7 @@ int smlua_func_smlua_level_util_get_info_from_course_num(lua_State* L) {
     u8 courseNum = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_level_util_get_info_from_course_num"); return 0; }
 
-    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_course_num(courseNum), NULL);
+    smlua_push_object(L, LOT_CUSTOMLEVELINFO, smlua_level_util_get_info_from_course_num(courseNum), NULL, false);
 
     return 1;
 }
@@ -32976,40 +33020,6 @@ int smlua_func_get_area_update_counter(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_get_temp_s32_pointer(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_temp_s32_pointer", 1, top);
-        return 0;
-    }
-
-    s32 initialValue = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_temp_s32_pointer"); return 0; }
-
-    smlua_push_pointer(L, LVT_S32_P, (void*)get_temp_s32_pointer(initialValue), NULL);
-
-    return 1;
-}
-
-int smlua_func_deref_s32_pointer(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "deref_s32_pointer", 1, top);
-        return 0;
-    }
-
-    s32* pointer = (s32*)smlua_to_cpointer(L, 1, LVT_S32_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "deref_s32_pointer"); return 0; }
-
-    lua_pushinteger(L, deref_s32_pointer(pointer));
-
-    return 1;
-}
-
 int smlua_func_djui_popup_create_global(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33161,7 +33171,7 @@ int smlua_func_djui_menu_get_theme(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_DJUITHEME, djui_menu_get_theme(), NULL);
+    smlua_push_object(L, LOT_DJUITHEME, djui_menu_get_theme(), NULL, false);
 
     return 1;
 }
@@ -33991,7 +34001,11 @@ int smlua_func_get_date_and_time(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_DATETIME, get_date_and_time(), NULL);
+
+    struct DateTime *p = malloc(sizeof(struct DateTime));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "get_date_and_time"); return 0; }
+    *p = get_date_and_time();
+    smlua_push_object(L, LOT_DATETIME, p, NULL, true);
 
     return 1;
 }
@@ -34296,7 +34310,7 @@ int smlua_func_get_active_mod(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_MOD, get_active_mod(), NULL);
+    smlua_push_object(L, LOT_MOD, get_active_mod(), NULL, false);
 
     return 1;
 }
@@ -34358,7 +34372,7 @@ int smlua_func_geo_get_current_root(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_GRAPHNODEROOT, geo_get_current_root(), NULL);
+    smlua_push_object(L, LOT_GRAPHNODEROOT, geo_get_current_root(), NULL, false);
 
     return 1;
 }
@@ -34373,7 +34387,7 @@ int smlua_func_geo_get_current_master_list(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_GRAPHNODEMASTERLIST, geo_get_current_master_list(), NULL);
+    smlua_push_object(L, LOT_GRAPHNODEMASTERLIST, geo_get_current_master_list(), NULL, false);
 
     return 1;
 }
@@ -34388,7 +34402,7 @@ int smlua_func_geo_get_current_perspective(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_GRAPHNODEPERSPECTIVE, geo_get_current_perspective(), NULL);
+    smlua_push_object(L, LOT_GRAPHNODEPERSPECTIVE, geo_get_current_perspective(), NULL, false);
 
     return 1;
 }
@@ -34403,7 +34417,7 @@ int smlua_func_geo_get_current_camera(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_GRAPHNODECAMERA, geo_get_current_camera(), NULL);
+    smlua_push_object(L, LOT_GRAPHNODECAMERA, geo_get_current_camera(), NULL, false);
 
     return 1;
 }
@@ -34418,7 +34432,7 @@ int smlua_func_geo_get_current_held_object(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_GRAPHNODEHELDOBJECT, geo_get_current_held_object(), NULL);
+    smlua_push_object(L, LOT_GRAPHNODEHELDOBJECT, geo_get_current_held_object(), NULL, false);
 
     return 1;
 }
@@ -34523,7 +34537,7 @@ int smlua_func_spawn_sync_object(lua_State* L) {
     LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_sync_object"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL, false);
 
     return 1;
 }
@@ -34550,7 +34564,7 @@ int smlua_func_spawn_non_sync_object(lua_State* L) {
     LuaFunction objSetupFunction = smlua_to_lua_function(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "spawn_non_sync_object"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL);
+    smlua_push_object(L, LOT_OBJECT, spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction), NULL, false);
 
     return 1;
 }
@@ -34656,7 +34670,7 @@ int smlua_func_geo_get_current_object(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECT, geo_get_current_object(), NULL);
+    smlua_push_object(L, LOT_OBJECT, geo_get_current_object(), NULL, false);
 
     return 1;
 }
@@ -34671,7 +34685,7 @@ int smlua_func_get_current_object(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECT, get_current_object(), NULL);
+    smlua_push_object(L, LOT_OBJECT, get_current_object(), NULL, false);
 
     return 1;
 }
@@ -34686,7 +34700,7 @@ int smlua_func_get_dialog_object(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECT, get_dialog_object(), NULL);
+    smlua_push_object(L, LOT_OBJECT, get_dialog_object(), NULL, false);
 
     return 1;
 }
@@ -34701,7 +34715,7 @@ int smlua_func_get_cutscene_focus(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECT, get_cutscene_focus(), NULL);
+    smlua_push_object(L, LOT_OBJECT, get_cutscene_focus(), NULL, false);
 
     return 1;
 }
@@ -34716,7 +34730,7 @@ int smlua_func_get_secondary_camera_focus(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECT, get_secondary_camera_focus(), NULL);
+    smlua_push_object(L, LOT_OBJECT, get_secondary_camera_focus(), NULL, false);
 
     return 1;
 }
@@ -34767,7 +34781,7 @@ int smlua_func_obj_get_first(lua_State* L) {
     int objList = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_first"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_first(objList), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_first(objList), NULL, false);
 
     return 1;
 }
@@ -34784,7 +34798,7 @@ int smlua_func_obj_get_first_with_behavior_id(lua_State* L) {
     int behaviorId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_first_with_behavior_id"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id(behaviorId), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id(behaviorId), NULL, false);
 
     return 1;
 }
@@ -34805,7 +34819,7 @@ int smlua_func_obj_get_first_with_behavior_id_and_field_s32(lua_State* L) {
     s32 value = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_get_first_with_behavior_id_and_field_s32"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value), NULL, false);
 
     return 1;
 }
@@ -34826,7 +34840,7 @@ int smlua_func_obj_get_first_with_behavior_id_and_field_f32(lua_State* L) {
     f32 value = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_get_first_with_behavior_id_and_field_f32"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value), NULL, false);
 
     return 1;
 }
@@ -34843,7 +34857,7 @@ int smlua_func_obj_get_next(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_next"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_next(o), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_next(o), NULL, false);
 
     return 1;
 }
@@ -34860,7 +34874,7 @@ int smlua_func_obj_get_next_with_same_behavior_id(lua_State* L) {
     struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_next_with_same_behavior_id"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id(o), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id(o), NULL, false);
 
     return 1;
 }
@@ -34881,7 +34895,7 @@ int smlua_func_obj_get_next_with_same_behavior_id_and_field_s32(lua_State* L) {
     s32 value = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_get_next_with_same_behavior_id_and_field_s32"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value), NULL, false);
 
     return 1;
 }
@@ -34902,7 +34916,7 @@ int smlua_func_obj_get_next_with_same_behavior_id_and_field_f32(lua_State* L) {
     f32 value = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_get_next_with_same_behavior_id_and_field_f32"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value), NULL, false);
 
     return 1;
 }
@@ -34921,7 +34935,7 @@ int smlua_func_obj_get_nearest_object_with_behavior_id(lua_State* L) {
     int behaviorId = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_nearest_object_with_behavior_id"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_nearest_object_with_behavior_id(o, behaviorId), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_nearest_object_with_behavior_id(o, behaviorId), NULL, false);
 
     return 1;
 }
@@ -34957,7 +34971,7 @@ int smlua_func_obj_get_collided_object(lua_State* L) {
     s16 index = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_collided_object"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, obj_get_collided_object(o, index), NULL);
+    smlua_push_object(L, LOT_OBJECT, obj_get_collided_object(o, index), NULL, false);
 
     return 1;
 }
@@ -35138,7 +35152,11 @@ int smlua_func_obj_get_temp_spawn_particles_info(lua_State* L) {
     int modelId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_get_temp_spawn_particles_info"); return 0; }
 
-    smlua_push_object(L, LOT_SPAWNPARTICLESINFO, obj_get_temp_spawn_particles_info(modelId), NULL);
+
+    struct SpawnParticlesInfo *p = malloc(sizeof(struct SpawnParticlesInfo));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "obj_get_temp_spawn_particles_info"); return 0; }
+    *p = obj_get_temp_spawn_particles_info(modelId);
+    smlua_push_object(L, LOT_SPAWNPARTICLESINFO, p, NULL, true);
 
     return 1;
 }
@@ -35157,7 +35175,11 @@ int smlua_func_obj_get_temp_water_droplet_params(lua_State* L) {
     int behaviorId = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_temp_water_droplet_params"); return 0; }
 
-    smlua_push_object(L, LOT_WATERDROPLETPARAMS, obj_get_temp_water_droplet_params(modelId, behaviorId), NULL);
+
+    struct WaterDropletParams *p = malloc(sizeof(struct WaterDropletParams));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "obj_get_temp_water_droplet_params"); return 0; }
+    *p = obj_get_temp_water_droplet_params(modelId, behaviorId);
+    smlua_push_object(L, LOT_WATERDROPLETPARAMS, p, NULL, true);
 
     return 1;
 }
@@ -35172,7 +35194,11 @@ int smlua_func_get_temp_object_hitbox(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_OBJECTHITBOX, get_temp_object_hitbox(), NULL);
+
+    struct ObjectHitbox *p = malloc(sizeof(struct ObjectHitbox));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%s'", "get_temp_object_hitbox"); return 0; }
+    *p = get_temp_object_hitbox();
+    smlua_push_object(L, LOT_OBJECTHITBOX, p, NULL, true);
 
     return 1;
 }
@@ -35516,7 +35542,7 @@ int smlua_func_smlua_text_utils_dialog_get(lua_State* L) {
     int dialogId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_get"); return 0; }
 
-    smlua_push_object(L, LOT_DIALOGENTRY, smlua_text_utils_dialog_get(dialogId), NULL);
+    smlua_push_object(L, LOT_DIALOGENTRY, smlua_text_utils_dialog_get(dialogId), NULL, false);
 
     return 1;
 }
@@ -36351,7 +36377,7 @@ int smlua_func_find_ceil(lua_State* L) {
 
     lua_pushnumber(L, find_ceil(posX, posY, posZ, &pceil));
 
-    smlua_push_object(L, LOT_SURFACE, pceil, NULL);
+    smlua_push_object(L, LOT_SURFACE, pceil, NULL, false);
 
     return 2;
 }
@@ -36443,7 +36469,7 @@ int smlua_func_find_floor(lua_State* L) {
 
     lua_pushnumber(L, find_floor(xPos, yPos, zPos, &pfloor));
 
-    smlua_push_object(L, LOT_SURFACE, pfloor, NULL);
+    smlua_push_object(L, LOT_SURFACE, pfloor, NULL, false);
 
     return 2;
 }
@@ -36598,7 +36624,7 @@ int smlua_func_load_static_object_collision(UNUSED lua_State* L) {
     }
 
 
-    smlua_push_object(L, LOT_STATICOBJECTCOLLISION, load_static_object_collision(), NULL);
+    smlua_push_object(L, LOT_STATICOBJECTCOLLISION, load_static_object_collision(), NULL, false);
 
     return 1;
 }
@@ -36636,7 +36662,7 @@ int smlua_func_get_static_object_surface(lua_State* L) {
     u32 index = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_static_object_surface"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, get_static_object_surface(col, index), NULL);
+    smlua_push_object(L, LOT_SURFACE, get_static_object_surface(col, index), NULL, false);
 
     return 1;
 }
@@ -36655,7 +36681,7 @@ int smlua_func_obj_get_surface_from_index(lua_State* L) {
     u32 index = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_get_surface_from_index"); return 0; }
 
-    smlua_push_object(L, LOT_SURFACE, obj_get_surface_from_index(o, index), NULL);
+    smlua_push_object(L, LOT_SURFACE, obj_get_surface_from_index(o, index), NULL, false);
 
     return 1;
 }
@@ -36693,7 +36719,7 @@ int smlua_func_sync_object_get_object(lua_State* L) {
     u32 syncId = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sync_object_get_object"); return 0; }
 
-    smlua_push_object(L, LOT_OBJECT, sync_object_get_object(syncId), NULL);
+    smlua_push_object(L, LOT_OBJECT, sync_object_get_object(syncId), NULL, false);
 
     return 1;
 }
@@ -38521,6 +38547,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
 
     // smlua_collision_utils.h
+    smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
     smlua_bind_function(L, "collision_find_floor", smlua_func_collision_find_floor);
     smlua_bind_function(L, "collision_find_ceil", smlua_func_collision_find_ceil);
     smlua_bind_function(L, "get_water_surface_pseudo_floor", smlua_func_get_water_surface_pseudo_floor);
@@ -38606,8 +38633,6 @@ void smlua_bind_functions_autogen(void) {
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
     smlua_bind_function(L, "get_area_update_counter", smlua_func_get_area_update_counter);
-    smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
-    smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
     smlua_bind_function(L, "djui_popup_create_global", smlua_func_djui_popup_create_global);
     smlua_bind_function(L, "djui_is_popup_disabled", smlua_func_djui_is_popup_disabled);
     smlua_bind_function(L, "djui_set_popup_disabled_override", smlua_func_djui_set_popup_disabled_override);

@@ -137,7 +137,6 @@ override_disallowed_functions = {
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
-    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/mods/mod_storage.h":                [ "mod_storage_shutdown" ],
     "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
@@ -229,7 +228,6 @@ manual_index_documentation = """
    - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
-   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
@@ -517,34 +515,6 @@ Registers a vertex buffer to be used for a scrolling texture. Should be used wit
 
 ### C Prototype
 `void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
-
-Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
-
-### Lua Example
-`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| startX | `number` |
-| startY | `number` |
-| startZ | `number` |
-| dirX | `number` |
-| dirY | `number` |
-| dirZ | `number` |
-| precision (optional) | `number` |
-
-### Returns
-- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
-
-### C Prototype
-`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
 
 [:arrow_up_small:](#)
 
@@ -867,7 +837,15 @@ def build_return_value(id, rtype):
         lvt = translate_type_to_lvt(rtype)
         return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, id)
     elif '???' not in lot and lot != 'LOT_NONE':
-        return '    smlua_push_object(L, %s, %s, NULL);\n' % (lot, id)
+        if '*' in rtype:
+            return '    smlua_push_object(L, %s, %s, NULL, false);\n' % (lot, id)
+        else:
+            return '''
+    %s *p = malloc(sizeof(%s));
+    if (!p) { LOG_LUA("Cannot allocate pointer for the return value of function '%%s'", "%s"); return 0; }
+    *p = %s;
+    smlua_push_object(L, %s, p, NULL, true);
+''' % (rtype, rtype, id[:id.find('(')], id, lot)
 
     return '    %s(L, %s);\n' % (lfunc, id)
 

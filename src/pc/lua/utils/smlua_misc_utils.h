@@ -57,11 +57,6 @@ u32 get_network_area_timer(void);
 /* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
 u16 get_area_update_counter(void);
 
-/* |description|Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`|descriptionEnd| */
-s32* get_temp_s32_pointer(s32 initialValue);
-/* |description|Gets the signed 32-bit integer value from `pointer`|descriptionEnd| */
-s32 deref_s32_pointer(s32* pointer);
-
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
 void djui_popup_create_global(const char* message, int lines);
 /* |description|Returns if popups are disabled|descriptionEnd| */
@@ -199,7 +194,7 @@ void set_ttc_speed_setting(s16 speed);
 /* |description|Gets the Unix Timestamp|descriptionEnd| */
 s64 get_time(void);
 /* |description|Gets the system clock's date and time|descriptionEnd| */
-struct DateTime* get_date_and_time(void);
+struct DateTime get_date_and_time(void);
 
 /* |description|Gets the non overridden environment effect (e.g. snow)|descriptionEnd| */
 u16 get_envfx(void);
