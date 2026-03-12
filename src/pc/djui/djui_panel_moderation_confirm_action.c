@@ -16,7 +16,7 @@ static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
     u8 action = caller->uTag;
     char* address = caller->cTag;
 
-    switch(action) {
+    switch (action) {
         case MODERATION_ACTION_KICK:
             network_kick_player(player, sReason);
             break;
@@ -31,8 +31,6 @@ static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
             break;
         case MODERATION_ACTION_UNMOD:
             network_unmod_player(address);
-            break;
-        default:
             break;
     }
 

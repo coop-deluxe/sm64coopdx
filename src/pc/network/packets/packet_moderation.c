@@ -83,7 +83,5 @@ void network_receive_moderation_action(struct Packet* p) {
         case MODERATION_ACTION_BAN:
             network_ban_player(np->localIndex, reason, permanent);
             break;
-        default:
-            break;
     }
 }
