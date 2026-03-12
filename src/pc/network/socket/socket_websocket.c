@@ -241,6 +241,22 @@ static void ns_socket_update(void) {
     // Update isHost flag from PeerJS state
     sIsHostMode = peer_is_host();
 
+    // Detect when PeerJS connects and handle role
+    bool isConnected = peer_is_connected();
+    if (!sRoleResolved && isConnected) {
+        sRoleResolved = true;
+        if (!sIsHostMode && !sSentModListRequest) {
+            // We're a client but started as NT_SERVER via djui_panel_do_host.
+            // Just switch the type and send the handshake — no shutdown needed.
+            printf("[PeerJS C] We are a CLIENT — switching to NT_CLIENT\n");
+            gNetworkType = NT_CLIENT;
+            network_send_mod_list_request();
+            sSentModListRequest = true;
+        } else if (sIsHostMode) {
+            printf("[PeerJS C] We are the HOST\n");
+        }
+    }
+
     // Drain PeerJS received packets into ring buffer
     peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
 
