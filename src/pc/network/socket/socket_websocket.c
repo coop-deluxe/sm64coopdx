@@ -23,10 +23,22 @@ static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
 // Host mode: whether we're hosting through the proxy
 static bool sIsHostMode = false;
 
-// Proxy address: configurable via configJoinIp when in host mode
-// Default: ws://localhost:8765
-#define DEFAULT_PROXY_HOST "localhost"
+// Proxy port (proxy runs on same host as the page was loaded from)
 #define DEFAULT_PROXY_PORT 8765
+
+// Get the hostname the page was loaded from (e.g. "10.0.0.76" or "localhost")
+static const char* get_page_hostname(void) {
+    static char hostname[256] = {0};
+    if (hostname[0] == '\0') {
+        const char* h = emscripten_run_script_string("window.location.hostname");
+        if (h && h[0]) {
+            snprintf(hostname, sizeof(hostname), "%s", h);
+        } else {
+            snprintf(hostname, sizeof(hostname), "localhost");
+        }
+    }
+    return hostname;
+}
 
 char gGetHostName[MAX_CONFIG_STRING] = "";
 
@@ -164,7 +176,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         if (hostPort == 0) { hostPort = DEFAULT_PORT; }
 
         // Use proxy address — configJoinIp may be empty, use default proxy
-        const char* proxyHost = DEFAULT_PROXY_HOST;
+        const char* proxyHost = get_page_hostname();
         unsigned int proxyPort = DEFAULT_PROXY_PORT;
 
         // If configJoinIp has a value like "proxyhost:proxyport", parse it
@@ -194,7 +206,7 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         } else {
             // Connect to proxy, which forwards to the target UDP server
             snprintf(wsUrl, sizeof(wsUrl), "ws://%s:%u/?target=%s:%u",
-                DEFAULT_PROXY_HOST, DEFAULT_PROXY_PORT, configJoinIp, port);
+                get_page_hostname(), DEFAULT_PROXY_PORT, configJoinIp, port);
         }
 
         LOG_INFO("CLIENT MODE: Connecting via %s", wsUrl);
