@@ -414,9 +414,106 @@
       }, 500);
     }
 
-    // ---- Check for cached ROM on load ----
+    // ---- ROM URL loading via #rom=URL or ?rom=URL ----
+
+    function getRomUrl() {
+      // Check hash first: #rom=URL
+      var hash = window.location.hash;
+      if (hash && hash.indexOf('#rom=') === 0) {
+        return decodeURIComponent(hash.substring(5));
+      }
+      // Check query param: ?rom=URL
+      var params = new URLSearchParams(window.location.search);
+      var romParam = params.get('rom');
+      if (romParam) return romParam;
+      return null;
+    }
+
+    function loadRomFromUrl(url) {
+      showProgress();
+      setStatus('Downloading ROM from URL...');
+      setProgress(10);
+      console.log('[Web] Fetching ROM from: ' + url);
+
+      fetch(url).then(function(response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        var total = parseInt(response.headers.get('content-length') || '0');
+        var reader = response.body.getReader();
+        var chunks = [];
+        var loaded = 0;
+
+        function pump() {
+          return reader.read().then(function(result) {
+            if (result.done) return;
+            chunks.push(result.value);
+            loaded += result.value.length;
+            if (total > 0) {
+              setProgress(10 + Math.round((loaded / total) * 60));
+              setStatus('Downloading ROM... ' + Math.round(loaded / 1024 / 1024) + ' MB');
+            }
+            return pump();
+          });
+        }
+
+        return pump().then(function() {
+          // Combine chunks
+          var totalLen = 0;
+          for (var i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+          var buf = new Uint8Array(totalLen);
+          var offset = 0;
+          for (var i = 0; i < chunks.length; i++) {
+            buf.set(chunks[i], offset);
+            offset += chunks[i].length;
+          }
+          return buf.buffer;
+        });
+      }).then(function(arrayBuffer) {
+        setProgress(75);
+        setStatus('Validating ROM...');
+        // Normalize and validate
+        var normalized = normalizeRom(arrayBuffer, url);
+        if (!validateZ64(normalized)) {
+          showError('Downloaded file is not a valid SM64 US ROM.');
+          return;
+        }
+        setProgress(85);
+        setStatus('Caching ROM...');
+        cacheRom(normalized).then(function() {
+          setStatus('Writing ROM to virtual filesystem...');
+          function tryWrite() {
+            if (typeof FS !== 'undefined') {
+              writeRomToFS(normalized);
+            } else {
+              setTimeout(tryWrite, 100);
+            }
+          }
+          tryWrite();
+        }).catch(function() {
+          // Cache failed but continue
+          function tryWrite() {
+            if (typeof FS !== 'undefined') {
+              writeRomToFS(normalized);
+            } else {
+              setTimeout(tryWrite, 100);
+            }
+          }
+          tryWrite();
+        });
+      }).catch(function(err) {
+        console.error('[Web] ROM download failed:', err);
+        showError('Failed to download ROM: ' + err.message);
+        // Fall back to showing the file picker
+        document.getElementById('rom-picker').style.display = '';
+        document.getElementById('progress-container').style.display = 'none';
+      });
+    }
+
+    // ---- Check for cached ROM or URL ROM on load ----
 
     function checkCachedRom() {
+      var romUrl = getRomUrl();
+
+      // First check if we have a cached ROM
       getCachedRom().then(function(buf) {
         if (buf) {
           showProgress();
@@ -431,9 +528,29 @@
             }
           }
           tryWriteRom();
+        } else if (romUrl) {
+          // No cache but URL provided — download it
+          function tryLoad() {
+            if (typeof FS !== 'undefined') {
+              loadRomFromUrl(romUrl);
+            } else {
+              setTimeout(tryLoad, 100);
+            }
+          }
+          tryLoad();
         }
+        // else: no cache, no URL — file picker is already visible
       }).catch(function() {
-        // No cached ROM, show picker
+        if (romUrl) {
+          function tryLoad() {
+            if (typeof FS !== 'undefined') {
+              loadRomFromUrl(romUrl);
+            } else {
+              setTimeout(tryLoad, 100);
+            }
+          }
+          tryLoad();
+        }
       });
     }
 
