@@ -616,19 +616,32 @@
       _setupHost: function() {
         this.peer.on('connection', function(conn) {
           var slotId = PeerNetwork.nextSlotId++;
-          PeerNetwork.connections[conn.peer] = conn;
-          PeerNetwork.peerToSlot[conn.peer] = slotId;
-          PeerNetwork.slotToPeer[slotId] = conn.peer;
-          console.log('[PeerJS] Client connected: slot ' + slotId + ' peer ' + conn.peer + ' open=' + conn.open);
+          console.log('[PeerJS] Client connecting: slot ' + slotId + ' peer ' + conn.peer);
 
+          // Set up data handler immediately (works before or after open)
           conn.on('data', function(data) {
-            // Received from client - queue with slot ID for C code
             var arr = new Uint8Array(data);
             if (PeerNetwork.recvBuffer.length < 3) {
               console.log('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
             }
             PeerNetwork.recvBuffer.push({ slotId: slotId, data: arr });
           });
+
+          // Register connection for sending only after open
+          conn.on('open', function() {
+            PeerNetwork.connections[conn.peer] = conn;
+            PeerNetwork.peerToSlot[conn.peer] = slotId;
+            PeerNetwork.slotToPeer[slotId] = conn.peer;
+            console.log('[PeerJS] Client ready: slot ' + slotId + ' peer ' + conn.peer);
+          });
+
+          // If already open (can happen), register immediately
+          if (conn.open) {
+            PeerNetwork.connections[conn.peer] = conn;
+            PeerNetwork.peerToSlot[conn.peer] = slotId;
+            PeerNetwork.slotToPeer[slotId] = conn.peer;
+            console.log('[PeerJS] Client ready (immediate): slot ' + slotId);
+          }
 
           conn.on('close', function() {
             console.log('[PeerJS] Client disconnected: slot ' + slotId);
