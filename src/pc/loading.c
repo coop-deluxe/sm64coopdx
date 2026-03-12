@@ -3,6 +3,9 @@
 #ifdef LOADING_SCREEN_SUPPORTED
 
 #include <assert.h>
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 #include "djui/djui.h"
 #include "pc/djui/djui_unicode.h"
@@ -180,6 +183,9 @@ void render_loading_screen(void) {
     // loading screen loop
     while (!gGameInited) {
         WAPI.main_loop(loading_screen_produce_one_frame);
+#ifdef TARGET_WEB
+        emscripten_sleep(16); // yield to browser (~60fps)
+#endif
     }
 
     int err = join_thread(&gLoadingThread);
@@ -189,10 +195,21 @@ void render_loading_screen(void) {
 void render_rom_setup_screen(void) {
     if (!sLoading) { init_loading_screen(); }
 
+#ifdef TARGET_WEB
+    loading_screen_set_segment_text("Select your SM64 ROM using the file picker above");
+#else
     loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
+#endif
 
     while (!gRomIsValid) {
         WAPI.main_loop(loading_screen_produce_one_frame);
+#ifdef TARGET_WEB
+        // Re-check the filesystem each iteration in case JS wrote the ROM
+        if (!gRomIsValid) {
+            main_rom_handler();
+        }
+        emscripten_sleep(100); // yield to browser so ROM file picker can work
+#endif
     }
 }
 

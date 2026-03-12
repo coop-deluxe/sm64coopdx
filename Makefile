@@ -943,8 +943,11 @@ ifeq ($(TARGET_WEB),1)
     -s USE_SDL=2 -s USE_ZLIB=1 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
     -s INITIAL_MEMORY=268435456 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 \
     -s FULL_ES2=1 -s FORCE_FILESYSTEM=1 \
-    -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS"]' \
-    -s ASYNCIFY -lidbfs.js -lwebsocket.js \
+    -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","allocateUTF8"]' \
+    -s EXPORTED_FUNCTIONS='["_main","_rom_on_drop_file","_web_rom_loaded","_web_get_rom_status","_web_save_to_idb","_web_fs_init","_malloc","_free"]' \
+    -s ASYNCIFY \
+    -s ASYNCIFY_STACK_SIZE=65536 \
+    -lidbfs.js -lwebsocket.js \
     --shell-file src/pc/web/shell.html
 else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
@@ -1454,11 +1457,21 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 
 $(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl.tmp
+ifeq ($(TARGET_WEB),1)
+	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sound_data.tbl.tmp $(SOUND_BIN_DIR)/sound_data.tbl
+else
+	$(V)mv $(SOUND_BIN_DIR)/sound_data.tbl.tmp $(SOUND_BIN_DIR)/sound_data.tbl
+endif
 
 $(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl.tmp
+ifeq ($(TARGET_WEB),1)
+	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sound_data.ctl.tmp $(SOUND_BIN_DIR)/sound_data.ctl
+else
+	$(V)mv $(SOUND_BIN_DIR)/sound_data.ctl.tmp $(SOUND_BIN_DIR)/sound_data.ctl
+endif
 
 $(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
@@ -1472,7 +1485,12 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 
 $(SOUND_BIN_DIR)/sequences.bin:
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin.tmp
+ifeq ($(TARGET_WEB),1)
+	$(V)$(PYTHON) $(TOOLS_DIR)/convert_sound_32bit.py $(SOUND_BIN_DIR)/sequences.bin.tmp $(SOUND_BIN_DIR)/sequences.bin
+else
+	$(V)mv $(SOUND_BIN_DIR)/sequences.bin.tmp $(SOUND_BIN_DIR)/sequences.bin
+endif
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
 	@true

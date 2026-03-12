@@ -1038,6 +1038,13 @@ void patch_audio_bank(s32 bankId, struct AudioBank *mem, struct PatchStruct *pat
 #else
 void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32 numDrums) {
 #endif
+#ifdef TARGET_WEB
+    // Sound bank data has 64-bit pointer layout from host build tools.
+    // On 32-bit WASM, struct field offsets don't match the data, causing OOB access.
+    // Skip bank patching — audio will be silent until data is regenerated for 32-bit.
+    (void)mem;
+    return;
+#endif
     struct Instrument *instrument;
 #if defined(VERSION_SH)
     void **itInstrs;

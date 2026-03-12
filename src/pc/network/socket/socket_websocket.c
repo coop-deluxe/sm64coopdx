@@ -121,6 +121,12 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         return false;
     }
 
+    if (networkType == NT_NONE) {
+        // No networking requested — just initialize quietly
+        LOG_INFO("Network type NONE, skipping WebSocket connection");
+        return true;
+    }
+
     // Client mode
     unsigned int port = configJoinPort;
     if (port == 0) { port = DEFAULT_PORT; }

@@ -484,10 +484,10 @@ void* main_game_init(UNUSED void* dummy) {
 
     audio_init();
     sound_init();
-    network_player_init();
 #ifndef TARGET_WEB
     mumble_init();
 #endif
+    network_player_init();
 
     gGameInited = true;
     return NULL;

@@ -20,20 +20,15 @@
       color: #e0e0e0;
     }
 
-    #canvas-container {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     #canvas {
-      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: contain;
+      display: block;
       outline: none;
+      z-index: 1;
     }
 
     #overlay {
@@ -159,19 +154,17 @@
     <div id="error-msg"></div>
   </div>
 
-  <div id="canvas-container">
-    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
-  </div>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 
   <script>
     var ROM_DB_NAME = 'sm64coopdx_rom';
     var ROM_DB_STORE = 'roms';
     var ROM_DB_KEY = 'baserom';
-    var ROM_PATH = '/baserom.us.z64';
     var Z64_MAGIC = 0x80371240;
 
     var romReady = false;
     var audioResumed = false;
+    var gameStarted = false;
 
     // ---- IndexedDB helpers ----
 
@@ -222,7 +215,6 @@
     }
 
     function byteswapN64(buf) {
-      // .n64 (little-endian) -> .z64 (big-endian): swap every 4 bytes
       var arr = new Uint8Array(buf);
       for (var i = 0; i < arr.length; i += 4) {
         var a = arr[i], b = arr[i+1], c = arr[i+2], d = arr[i+3];
@@ -232,7 +224,6 @@
     }
 
     function byteswapV64(buf) {
-      // .v64 (byte-swapped) -> .z64: swap every 2 bytes
       var arr = new Uint8Array(buf);
       for (var i = 0; i < arr.length; i += 2) {
         var tmp = arr[i];
@@ -276,21 +267,37 @@
       document.getElementById('canvas').focus();
     }
 
-    // ---- Write ROM to Emscripten FS ----
+    // ---- Write ROM to Emscripten FS and tell the game ----
+
+    function getWritePath() {
+      // Match the path used by fs_init in pc_main.c ("/sm64coopdx/")
+      return '/sm64coopdx/';
+    }
 
     function writeRomToFS(arrayBuffer) {
       try {
         var data = new Uint8Array(arrayBuffer);
-        FS.writeFile(ROM_PATH, data);
-        if (typeof _web_rom_loaded === 'function') {
-          _web_rom_loaded();
-        }
+        var writePath = getWritePath();
+
+        // Ensure write directory exists
+        try { FS.mkdir(writePath); } catch(e) { /* exists */ }
+
+        var romPath = writePath + 'baserom.us.z64';
+        FS.writeFile(romPath, data);
+        console.log('[Web] ROM written to ' + romPath + ' (' + data.length + ' bytes)');
+
+        // The C game loop in render_rom_setup_screen polls the filesystem
+        // via main_rom_handler() and will find the ROM automatically.
+        // No need to call into WASM from here.
+
         romReady = true;
-        setStatus('ROM loaded. Starting game...');
+        setStatus('ROM loaded. Game is starting...');
         setProgress(100);
-        setTimeout(hideOverlay, 500);
+        // Auto-hide overlay after a brief delay to let the game start rendering
+        setTimeout(hideOverlay, 1500);
       } catch (e) {
         showError('Failed to write ROM to virtual filesystem: ' + e.message);
+        console.error('[Web] writeRomToFS error:', e);
       }
     }
 
@@ -324,7 +331,6 @@
           setStatus('Writing ROM to virtual filesystem...');
           writeRomToFS(buf);
         }).catch(function() {
-          // Cache failed but we can still continue
           setStatus('Writing ROM to virtual filesystem...');
           writeRomToFS(buf);
         });
@@ -343,19 +349,49 @@
       }
     });
 
+    // Also handle drag-and-drop onto the page
+    document.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    document.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.dataTransfer.files.length > 0) {
+        handleRomFile(e.dataTransfer.files[0]);
+      }
+    });
+
     // ---- Audio context resume on first interaction ----
 
     function resumeAudio() {
       if (audioResumed) return;
-      var ctx = Module.audioContext || (typeof AudioContext !== 'undefined' && new AudioContext());
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-      }
+      // SDL2 Emscripten creates the audio context as Module.SDL2.audioContext
+      try {
+        var ctx = (Module.SDL2 && Module.SDL2.audioContext) ||
+                  (typeof AudioContext !== 'undefined' && new AudioContext());
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+        }
+      } catch(e) {}
       audioResumed = true;
     }
 
-    document.addEventListener('click', resumeAudio, { once: false });
-    document.addEventListener('keydown', resumeAudio, { once: false });
+    document.addEventListener('click', resumeAudio);
+    document.addEventListener('keydown', resumeAudio);
+
+    // ---- Watch for game rendering to start ----
+
+    function watchForGameStart() {
+      // Once the game has started rendering, hide the overlay
+      // The game's loading screen replaces our overlay
+      var checkInterval = setInterval(function() {
+        if (gameStarted) {
+          hideOverlay();
+          clearInterval(checkInterval);
+        }
+      }, 500);
+    }
 
     // ---- Check for cached ROM on load ----
 
@@ -366,9 +402,8 @@
           setStatus('Found cached ROM. Loading...');
           setProgress(50);
 
-          // Wait for Emscripten FS to be ready
           function tryWriteRom() {
-            if (typeof FS !== 'undefined') {
+            if (typeof FS !== 'undefined' && typeof Module._main === 'function') {
               writeRomToFS(buf);
             } else {
               setTimeout(tryWriteRom, 100);
@@ -377,7 +412,7 @@
           tryWriteRom();
         }
       }).catch(function() {
-        // No cached ROM, show picker (already visible by default)
+        // No cached ROM, show picker
       });
     }
 
@@ -388,8 +423,15 @@
         return document.getElementById('canvas');
       })(),
 
+      // Don't run main automatically; we control startup
+      noInitialRun: false,
+
       print: function(text) {
         console.log('[SM64] ' + text);
+        // Detect when game rendering begins
+        if (text && (text.indexOf('Game Init') !== -1 || text.indexOf('initialized') !== -1)) {
+          gameStarted = true;
+        }
       },
 
       printErr: function(text) {
@@ -404,7 +446,6 @@
 
       monitorRunDependencies: function(left) {
         if (left === 0) {
-          // All dependencies loaded
           setStatus('All resources loaded.');
         } else {
           setStatus('Loading... (' + left + ' remaining)');
@@ -412,8 +453,9 @@
       },
 
       onRuntimeInitialized: function() {
-        setStatus('Runtime initialized.');
+        setStatus('Runtime initialized. Checking for ROM...');
         checkCachedRom();
+        watchForGameStart();
       },
 
       locateFile: function(path) {
@@ -422,8 +464,10 @@
     };
 
     window.onerror = function(msg, url, line) {
-      setStatus('Error: ' + msg);
-      showError('An error occurred. Check the browser console for details.');
+      if (msg && msg.indexOf('abort') !== -1) {
+        // Fatal error
+        showError('An error occurred. Check the browser console for details.');
+      }
     };
   </script>
 
