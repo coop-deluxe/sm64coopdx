@@ -488,8 +488,51 @@ static char sWebRoomParam[256] = {0};
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;
 static bool web_auto_network_done = false;
+static bool web_peer_waiting = false;
 
 static void web_auto_network(void) {
+    // Poll for PeerJS role resolution
+    if (web_peer_waiting) {
+        // Check if PeerJS has determined our role yet
+        int roleKnown = EM_ASM_INT({
+            // Host: isHost is set in the 'open' callback
+            // Client: isHost is false after _joinAsClient creates the peer
+            // We know the role once the peer is open (host) or we've fallen
+            // back to client (peer exists and isHost is explicitly false)
+            if (!PeerNetwork.peer) return 0;
+            if (PeerNetwork.isHost) return 1; // confirmed host
+            // For client: check if we've started joining (peer exists, not host)
+            if (PeerNetwork.peer.id && !PeerNetwork.isHost && PeerNetwork.peer.disconnected === false) {
+                // Check if we have a connection to the host
+                var conn = PeerNetwork.connections[PeerNetwork.hostPeerId];
+                if (conn && conn.open) return 2; // confirmed client, connected
+            }
+            return 0; // still resolving
+        });
+
+        if (roleKnown == 0) return; // still waiting
+
+        web_peer_waiting = false;
+        web_auto_network_done = true;
+
+        if (roleKnown == 1) {
+            // HOST: use djui_panel_do_host (creates game session)
+            printf("[PeerJS C] Room resolved: HOST — starting game session\n");
+            configNetworkSystem = NS_SOCKET;
+            static struct Object sHackyObj = { 0 };
+            gMarioStates[0].marioObj = &sHackyObj;
+            extern void djui_panel_do_host(bool reconnecting, bool playSound);
+            djui_panel_do_host(false, false);
+        } else {
+            // CLIENT: use the GUI join flow (network_init + mod list)
+            printf("[PeerJS C] Room resolved: CLIENT — joining host\n");
+            network_reset_reconnect_and_rehost();
+            network_set_system(NS_SOCKET);
+            network_init(NT_CLIENT, false);
+        }
+        return;
+    }
+
     if (web_auto_network_done) return;
     if (!gGameInited) return;
     web_auto_network_done = true;
@@ -532,21 +575,13 @@ static void web_auto_network(void) {
         djui_panel_do_host(false, false);
     } else if (sWebRoomParam[0] != '\0') {
         // PeerJS room-based networking: ?room=ROOMID
-        // Start as HOST via djui_panel_do_host (creates game session).
-        // PeerJS will try to register the room ID. If the room is already
-        // taken, ns_socket_update detects we're a client and just switches
-        // gNetworkType + sends the mod list request. The game session
-        // created by djui_panel_do_host still works in client mode since
-        // the session state gets overwritten during the join handshake.
+        // Start PeerJS from JS to determine role, then poll in
+        // web_auto_network until resolved (re-enter each tick).
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sWebRoomParam);
-        configNetworkSystem = NS_SOCKET;
-
-        static struct Object sHackyObjectRoom = { 0 };
-        gMarioStates[0].marioObj = &sHackyObjectRoom;
-
-        extern void djui_panel_do_host(bool reconnecting, bool playSound);
-        djui_panel_do_host(false, false);
+        EM_ASM({ PeerNetwork.init(UTF8ToString($0)); }, sWebRoomParam);
+        web_peer_waiting = true;
+        web_auto_network_done = false;
     }
 }
 

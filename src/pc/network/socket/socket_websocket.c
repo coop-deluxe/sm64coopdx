@@ -241,20 +241,11 @@ static void ns_socket_update(void) {
     // Update isHost flag from PeerJS state
     sIsHostMode = peer_is_host();
 
-    // Detect when PeerJS connects and handle role assignment
-    bool isConnected = peer_is_connected();
-    if (!sRoleResolved && isConnected) {
-        sRoleResolved = true;
-        if (sIsHostMode) {
-            // We're the HOST — switch from NT_CLIENT to NT_SERVER
-            printf("[PeerJS C] We are the HOST\n");
-            gNetworkType = NT_SERVER;
-        } else if (!sSentModListRequest) {
-            // We're a CLIENT — send the join handshake
-            printf("[PeerJS C] We are a CLIENT — sending mod list request\n");
-            network_send_mod_list_request();
-            sSentModListRequest = true;
-        }
+    // For GUI-initiated joins, detect when PeerJS connects and send mod list
+    if (!sSentModListRequest && !sIsHostMode && peer_is_connected()) {
+        sSentModListRequest = true;
+        printf("[PeerJS C] Connection ready — sending mod list request\n");
+        network_send_mod_list_request();
     }
 
     // Drain PeerJS received packets into ring buffer
