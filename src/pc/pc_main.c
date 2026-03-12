@@ -532,10 +532,11 @@ static void web_auto_network(void) {
         djui_panel_do_host(false, false);
     } else if (sWebRoomParam[0] != '\0') {
         // PeerJS room-based networking: ?room=ROOMID
-        // PeerJS auto-determines host vs client.
-        // Start as host — if room is already taken, PeerJS falls back to
-        // client and ns_socket_update handles the NT_CLIENT switch.
+        // Start as host via djui_panel_do_host. PeerJS tries to register the room;
+        // if already taken, ns_socket_update detects we're a client and
+        // does a clean shutdown+reinit as NT_CLIENT.
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sWebRoomParam);
         configNetworkSystem = NS_SOCKET;
 
         static struct Object sHackyObjectRoom = { 0 };

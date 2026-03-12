@@ -73,6 +73,11 @@ EM_JS(int, peer_drain_recv, (uint8_t* ringBuf, int ringBufSize, int* headPtr, in
     var packets = PeerNetwork.drainRecvBuffer();
     if (packets.length === 0) return 0;
 
+    if (!window._peerDrainLogCount) window._peerDrainLogCount = 0;
+    if (window._peerDrainLogCount++ < 5) {
+        console.log('[PeerJS drain] packets=' + packets.length + ' ringBuf=' + ringBuf + ' size=' + ringBufSize + ' headPtr=' + headPtr + ' tail=' + tailVal);
+    }
+
     var head = HEAP32[headPtr >> 2];
     var drained = 0;
 
@@ -111,6 +116,9 @@ EM_JS(int, peer_drain_recv, (uint8_t* ringBuf, int ringBufSize, int* headPtr, in
     }
 
     HEAP32[headPtr >> 2] = head;
+    if (window._peerDrainLogCount <= 5) {
+        console.log('[PeerJS drain] drained=' + drained + ' newHead=' + head);
+    }
     return drained;
 });
 
@@ -226,22 +234,29 @@ static void ns_socket_update(void) {
         sRoleResolved = true;
 
         if (sIsHostMode) {
-            LOG_INFO("PeerJS: we are the HOST");
-            // Host path — already set up by djui_panel_do_host, nothing extra needed
+            printf("[PeerJS C] We are the HOST\n");
+            // Host path — already set up by djui_panel_do_host
         } else {
-            // We're a CLIENT but the C code was initialized as NT_SERVER by ?room= flow.
-            // We need to reinitialize as client. Since we can't safely call
-            // network_shutdown from inside ns_socket_update, just switch the type
-            // and send the handshake. The peer_init already connected us to the host.
-            LOG_INFO("PeerJS: we are a CLIENT — reinitializing network as NT_CLIENT");
+            // We're a CLIENT — the C code was set up as NT_SERVER by djui_panel_do_host.
+            // Do a full network shutdown and reinitialize as NT_CLIENT.
+            // The PeerJS connection persists because peer_shutdown is NOT called here —
+            // only the C-side network state is reset.
+            printf("[PeerJS C] We are a CLIENT — reinitializing as NT_CLIENT\n");
 
-            gNetworkType = NT_CLIENT;
+            // Reset network state without touching PeerJS
+            gNetworkType = NT_NONE;
+            gNetworkSentJoin = false;
+
+            // Reinitialize as client
             snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
+            snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", configJoinIp);
+            network_set_system(NS_SOCKET);
 
-            // Open the "Joining..." UI
-            djui_connect_menu_open();
+            // Set type directly (don't call network_init which would call
+            // ns_socket_initialize again and create a second PeerJS peer)
+            gNetworkType = NT_CLIENT;
 
-            // Send the initial handshake
+            // Send the join handshake
             network_send_mod_list_request();
             sSentModListRequest = true;
         }

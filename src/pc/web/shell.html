@@ -623,7 +623,11 @@
 
           conn.on('data', function(data) {
             // Received from client - queue with slot ID for C code
-            PeerNetwork.recvBuffer.push({ slotId: slotId, data: new Uint8Array(data) });
+            var arr = new Uint8Array(data);
+            if (PeerNetwork.recvBuffer.length < 3) {
+              console.log('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
+            }
+            PeerNetwork.recvBuffer.push({ slotId: slotId, data: arr });
           });
 
           conn.on('close', function() {
@@ -651,7 +655,11 @@
 
           conn.on('data', function(data) {
             // Received from host - queue for C code (no slot prefix in client mode)
-            PeerNetwork.recvBuffer.push({ slotId: 0, data: new Uint8Array(data) });
+            var arr = new Uint8Array(data);
+            if (PeerNetwork.recvBuffer.length < 3) {
+              console.log('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
+            }
+            PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
           });
 
           conn.on('close', function() {
@@ -662,7 +670,12 @@
       },
 
       // Send data to a specific slot (host mode) or to host (client mode)
+      _sendCount: 0,
       send: function(slotId, data) {
+        this._sendCount++;
+        if (this._sendCount <= 3) {
+          console.log('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost);
+        }
         if (this.isHost) {
           if (slotId === 0) {
             // Broadcast to all clients
