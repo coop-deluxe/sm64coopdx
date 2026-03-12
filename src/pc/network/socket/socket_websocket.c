@@ -1,5 +1,5 @@
 #ifdef TARGET_WEB
-#include <emscripten/websocket.h>
+#include <emscripten.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,30 +15,11 @@ static u8 sRecvBuf[WS_RECV_BUF_SIZE];
 static u32 sRecvBufHead = 0;
 static u32 sRecvBufTail = 0;
 
-static EMSCRIPTEN_WEBSOCKET_T sWebSocket = 0;
-static bool sWebSocketConnected = false;
 static SOCKET sCurSocket = INVALID_SOCKET;
 static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
 
-// Host mode: whether we're hosting through the proxy
+// Host mode: whether we're hosting through PeerJS
 static bool sIsHostMode = false;
-
-// Proxy port (proxy runs on same host as the page was loaded from)
-#define DEFAULT_PROXY_PORT 8765
-
-// Get the hostname the page was loaded from (e.g. "10.0.0.76" or "localhost")
-static const char* get_page_hostname(void) {
-    static char hostname[256] = {0};
-    if (hostname[0] == '\0') {
-        const char* h = emscripten_run_script_string("window.location.hostname");
-        if (h && h[0]) {
-            snprintf(hostname, sizeof(hostname), "%s", h);
-        } else {
-            snprintf(hostname, sizeof(hostname), "localhost");
-        }
-    }
-    return hostname;
-}
 
 char gGetHostName[MAX_CONFIG_STRING] = "";
 
@@ -50,13 +31,6 @@ static u32 ringbuf_available(void) {
         : (WS_RECV_BUF_SIZE - sRecvBufTail + sRecvBufHead);
 }
 
-static void ringbuf_write(const u8* data, u32 len) {
-    for (u32 i = 0; i < len; i++) {
-        sRecvBuf[sRecvBufHead] = data[i];
-        sRecvBufHead = (sRecvBufHead + 1) % WS_RECV_BUF_SIZE;
-    }
-}
-
 static void ringbuf_read(u8* data, u32 len) {
     for (u32 i = 0; i < len; i++) {
         data[i] = sRecvBuf[sRecvBufTail];
@@ -64,51 +38,86 @@ static void ringbuf_read(u8* data, u32 len) {
     }
 }
 
-// --- WebSocket callbacks ---
+// --- PeerJS EM_JS interface ---
 
-static EM_BOOL on_ws_open(int eventType, const EmscriptenWebSocketOpenEvent* event, void* userData) {
-    (void)eventType; (void)event; (void)userData;
-    LOG_INFO("WebSocket connected (host mode: %s)", sIsHostMode ? "yes" : "no");
-    sWebSocketConnected = true;
-    return EM_TRUE;
-}
+// Initialize PeerJS with a room ID
+EM_JS(int, peer_init, (const char* roomId), {
+    var id = UTF8ToString(roomId);
+    PeerNetwork.init(id);
+    return 0;
+});
 
-static EM_BOOL on_ws_message(int eventType, const EmscriptenWebSocketMessageEvent* event, void* userData) {
-    (void)eventType; (void)userData;
+// Send binary data. In host mode, slotId determines recipient (0=broadcast).
+// In client mode, slotId is ignored (always sends to host).
+EM_JS(int, peer_send, (int slotId, const uint8_t* data, int len), {
+    var buf = HEAPU8.subarray(data, data + len);
+    // Must copy since the WASM memory view may be invalidated
+    var copy = new Uint8Array(buf);
+    PeerNetwork.send(slotId, copy.buffer);
+    return 0;
+});
 
-    if (!event->isText && event->numBytes > 0) {
-        u16 pktLen = (u16)event->numBytes;
-        u32 needed = (u32)pktLen + 2; // 2-byte length prefix in ring buffer
-        u32 freeSpace = WS_RECV_BUF_SIZE - ringbuf_available() - 1;
-        if (needed > freeSpace) {
-            LOG_ERROR("WebSocket receive buffer full, dropping packet (%u bytes)", pktLen);
-            return EM_TRUE;
+// Check if connected
+EM_JS(int, peer_is_connected, (), {
+    return PeerNetwork.isConnected() ? 1 : 0;
+});
+
+// Check if we are the host
+EM_JS(int, peer_is_host, (), {
+    return PeerNetwork.isHost ? 1 : 0;
+});
+
+// Drain received packets into C ring buffer
+// Returns number of packets drained
+EM_JS(int, peer_drain_recv, (uint8_t* ringBuf, int ringBufSize, int* headPtr, int tailVal), {
+    var packets = PeerNetwork.drainRecvBuffer();
+    if (packets.length === 0) return 0;
+
+    var head = HEAP32[headPtr >> 2];
+    var drained = 0;
+
+    for (var i = 0; i < packets.length; i++) {
+        var pkt = packets[i];
+        var slotId = pkt.slotId;
+        var data = pkt.data;
+        // Need: 2 bytes slot + 2 bytes length + data
+        var needed = 4 + data.length;
+
+        // Check free space
+        var used = (head >= tailVal) ? (head - tailVal) : (ringBufSize - tailVal + head);
+        var freeSpace = ringBufSize - used - 1;
+        if (needed > freeSpace) break;
+
+        // Write slot ID (u16 LE)
+        HEAPU8[ringBuf + head] = slotId & 0xFF;
+        head = (head + 1) % ringBufSize;
+        HEAPU8[ringBuf + head] = (slotId >> 8) & 0xFF;
+        head = (head + 1) % ringBufSize;
+
+        // Write length (u16 LE)
+        var len = data.length;
+        HEAPU8[ringBuf + head] = len & 0xFF;
+        head = (head + 1) % ringBufSize;
+        HEAPU8[ringBuf + head] = (len >> 8) & 0xFF;
+        head = (head + 1) % ringBufSize;
+
+        // Write data
+        for (var j = 0; j < len; j++) {
+            HEAPU8[ringBuf + head] = data[j];
+            head = (head + 1) % ringBufSize;
         }
 
-        // Write length prefix (little-endian u16)
-        u8 lenBuf[2];
-        lenBuf[0] = (u8)(pktLen & 0xFF);
-        lenBuf[1] = (u8)((pktLen >> 8) & 0xFF);
-        ringbuf_write(lenBuf, 2);
-        ringbuf_write(event->data, pktLen);
+        drained++;
     }
 
-    return EM_TRUE;
-}
+    HEAP32[headPtr >> 2] = head;
+    return drained;
+});
 
-static EM_BOOL on_ws_close(int eventType, const EmscriptenWebSocketCloseEvent* event, void* userData) {
-    (void)eventType; (void)event; (void)userData;
-    LOG_INFO("WebSocket closed");
-    sWebSocketConnected = false;
-    sWebSocket = 0;
-    return EM_TRUE;
-}
-
-static EM_BOOL on_ws_error(int eventType, const EmscriptenWebSocketErrorEvent* event, void* userData) {
-    (void)eventType; (void)event; (void)userData;
-    LOG_ERROR("WebSocket error");
-    return EM_TRUE;
-}
+// Shutdown PeerJS
+EM_JS(void, peer_shutdown, (), {
+    PeerNetwork.shutdown();
+});
 
 // --- Socket interface ---
 
@@ -118,108 +127,53 @@ SOCKET socket_initialize(void) {
 
 void socket_shutdown(SOCKET socket) {
     (void)socket;
-    if (sWebSocket) {
-        emscripten_websocket_close(sWebSocket, 1000, "shutdown");
-        emscripten_websocket_delete(sWebSocket);
-        sWebSocket = 0;
-    }
-    sWebSocketConnected = false;
+    peer_shutdown();
     sIsHostMode = false;
     sRecvBufHead = 0;
     sRecvBufTail = 0;
 }
 
-// DNS resolution is handled by the browser
+// DNS resolution is handled by the browser/PeerJS
 void resolve_domain(struct sockaddr_in6 *addr) {
     (void)addr;
 }
 
-// --- Helper: create WebSocket connection to proxy ---
-
-static bool ws_connect(const char* wsUrl) {
-    EmscriptenWebSocketCreateAttributes attr;
-    emscripten_websocket_init_create_attributes(&attr);
-    attr.url = wsUrl;
-    attr.protocols = NULL;
-    attr.createOnMainThread = EM_TRUE;
-
-    sWebSocket = emscripten_websocket_new(&attr);
-    if (sWebSocket <= 0) {
-        LOG_ERROR("Failed to create WebSocket (error %d)", sWebSocket);
-        return false;
-    }
-
-    emscripten_websocket_set_onopen_callback(sWebSocket, NULL, on_ws_open);
-    emscripten_websocket_set_onmessage_callback(sWebSocket, NULL, on_ws_message);
-    emscripten_websocket_set_onclose_callback(sWebSocket, NULL, on_ws_close);
-    emscripten_websocket_set_onerror_callback(sWebSocket, NULL, on_ws_error);
-
-    return true;
-}
-
 static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool reconnecting) {
     if (networkType == NT_NONE) {
-        LOG_INFO("Network type NONE, skipping WebSocket connection");
+        LOG_INFO("Network type NONE, skipping PeerJS connection");
         return true;
     }
 
     sCurSocket = socket_initialize();
     if (sCurSocket == INVALID_SOCKET) { return false; }
 
-    char wsUrl[512];
+    // Get room ID from URL params or config
+    const char* roomId = emscripten_run_script_string(
+        "(new URLSearchParams(window.location.search)).get('room') || 'default'");
 
+    // If configJoinIp has a value, use it as the room ID (set from DJUI or URL ?room= param)
+    if (configJoinIp[0] != '\0') {
+        roomId = configJoinIp;
+    }
+
+    LOG_INFO("PeerJS init: room='%s' networkType=%d", roomId, networkType);
+
+    peer_init(roomId);
+
+    // PeerJS auto-determines host vs client based on who registers the room ID first.
+    // For now, set sIsHostMode based on the requested networkType.
+    // It will be updated each frame via peer_is_host().
     if (networkType == NT_SERVER) {
-        // HOST MODE: Connect to proxy with ?host=PORT
-        // The proxy will open a UDP listener for native clients
         sIsHostMode = true;
-        unsigned int hostPort = configHostPort;
-        if (hostPort == 0) { hostPort = DEFAULT_PORT; }
-
-        // Use proxy address — configJoinIp may be empty, use default proxy
-        const char* proxyHost = get_page_hostname();
-        unsigned int proxyPort = DEFAULT_PROXY_PORT;
-
-        // If configJoinIp has a value like "proxyhost:proxyport", parse it
-        // Otherwise use defaults
-        if (configJoinIp[0] != '\0') {
-            proxyHost = configJoinIp;
-        }
-
-        snprintf(wsUrl, sizeof(wsUrl), "ws://%s:%u/?host=%u", proxyHost, proxyPort, hostPort);
-        LOG_INFO("HOST MODE: Connecting to proxy at %s (UDP port %u)", wsUrl, hostPort);
-
-        if (!ws_connect(wsUrl)) { return false; }
-
-        LOG_INFO("Host mode initialized via proxy");
-        return true;
-
     } else {
-        // CLIENT MODE: Connect to proxy with ?target=HOST:PORT
         sIsHostMode = false;
-        unsigned int port = configJoinPort;
-        if (port == 0) { port = DEFAULT_PORT; }
-
-        // Check if configJoinIp looks like it's already a WebSocket URL
-        if (strncmp(configJoinIp, "ws://", 5) == 0 || strncmp(configJoinIp, "wss://", 6) == 0) {
-            // Direct WebSocket URL to proxy
-            snprintf(wsUrl, sizeof(wsUrl), "%s", configJoinIp);
-        } else {
-            // Connect to proxy, which forwards to the target UDP server
-            snprintf(wsUrl, sizeof(wsUrl), "ws://%s:%u/?target=%s:%u",
-                get_page_hostname(), DEFAULT_PROXY_PORT, configJoinIp, port);
-        }
-
-        LOG_INFO("CLIENT MODE: Connecting via %s", wsUrl);
-        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
-
-        if (!ws_connect(wsUrl)) { LOG_ERROR("ws_connect failed"); return false; }
-
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", roomId);
         djui_connect_menu_open();
         gNetworkType = NT_CLIENT;
-
         network_send_mod_list_request();
-        return true;
     }
+
+    return true;
 }
 
 static s64 ns_socket_get_id(UNUSED u8 localId) {
@@ -229,14 +183,13 @@ static s64 ns_socket_get_id(UNUSED u8 localId) {
 static char* ns_socket_get_id_str(u8 localId) {
     if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
     static char id_str[64] = { 0 };
-    snprintf(id_str, sizeof(id_str), "ws-%d", localId);
+    snprintf(id_str, sizeof(id_str), "peer-%d", localId);
     return id_str;
 }
 
 static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
     SOFT_ASSERT(localId > 0);
     SOFT_ASSERT(localId < MAX_PLAYERS);
-    // In host mode, the proxy assigns slot IDs that map to localIndex.
     // Store the slot ID in the sin6_port field for tracking.
     sAddr[localId].sin6_port = localId;
     LOG_INFO("saved addr for id %d", localId);
@@ -262,12 +215,20 @@ static bool ns_socket_match_addr(void* addr1, void* addr2) {
 static void ns_socket_update(void) {
     if (gNetworkType == NT_NONE) { return; }
 
-    while (ringbuf_available() >= 2) {
-        u8 lenBuf[2];
+    // Drain PeerJS received packets into ring buffer
+    peer_drain_recv(sRecvBuf, WS_RECV_BUF_SIZE, (int*)&sRecvBufHead, sRecvBufTail);
+
+    // Update isHost flag from PeerJS state
+    sIsHostMode = peer_is_host();
+
+    // Process ring buffer: each entry is [u16 slotId][u16 packetLen][packetData...]
+    while (ringbuf_available() >= 4) {
+        u8 hdrBuf[4];
         u32 savedTail = sRecvBufTail;
 
-        ringbuf_read(lenBuf, 2);
-        u16 pktLen = (u16)(lenBuf[0] | (lenBuf[1] << 8));
+        ringbuf_read(hdrBuf, 4);
+        u16 slotId = (u16)(hdrBuf[0] | (hdrBuf[1] << 8));
+        u16 pktLen = (u16)(hdrBuf[2] | (hdrBuf[3] << 8));
 
         if (pktLen == 0 || pktLen > PACKET_LENGTH) {
             LOG_ERROR("Invalid packet length %u, resetting ring buffer", pktLen);
@@ -281,17 +242,11 @@ static void ns_socket_update(void) {
             break;
         }
 
-        u8 rawData[PACKET_LENGTH + 4];
+        u8 rawData[PACKET_LENGTH];
         ringbuf_read(rawData, pktLen);
 
-        if (sIsHostMode && pktLen >= 3) {
-            // HOST MODE: first 2 bytes are the proxy's slot ID
-            u16 slotId = (u16)(rawData[0] | (rawData[1] << 8));
-            u8* packetData = rawData + 2;
-            u16 packetLen = pktLen - 2;
-
-            // Map slot ID to localIndex
-            // The proxy assigns slot IDs starting from 1, which maps nicely to localIndex
+        if (sIsHostMode) {
+            // HOST MODE: slotId from PeerJS identifies the client
             u8 localIndex = (slotId > 0 && slotId < MAX_PLAYERS) ? (u8)slotId : UNKNOWN_LOCAL_INDEX;
 
             // Store the slot ID so we can send back to this client
@@ -299,9 +254,9 @@ static void ns_socket_update(void) {
                 sAddr[localIndex].sin6_port = slotId;
             }
 
-            network_receive(localIndex, &sAddr[localIndex < MAX_PLAYERS ? localIndex : 0], packetData, packetLen);
+            network_receive(localIndex, &sAddr[localIndex < MAX_PLAYERS ? localIndex : 0], rawData, pktLen);
         } else {
-            // CLIENT MODE: raw packet from server
+            // CLIENT MODE: all packets come from host
             u8 localIndex = UNKNOWN_LOCAL_INDEX;
             network_receive(localIndex, &sAddr[0], rawData, pktLen);
         }
@@ -311,39 +266,23 @@ static void ns_socket_update(void) {
 static int ns_socket_send(u8 localIndex, void* address, u8* data, u16 dataLength) {
     (void)address;
 
-    if (!sWebSocketConnected || !sWebSocket) {
+    if (!peer_is_connected()) {
         return SOCKET_ERROR;
     }
 
     if (sIsHostMode) {
-        // HOST MODE: prepend 2-byte slot ID
-        // localIndex 0 or UNKNOWN = broadcast (slot 0)
+        // HOST MODE: send to specific slot or broadcast (slot 0)
         u16 slotId = 0;
         if (localIndex > 0 && localIndex < MAX_PLAYERS) {
             slotId = sAddr[localIndex].sin6_port;
         }
-
-        u8 buf[PACKET_LENGTH + 2];
-        buf[0] = (u8)(slotId & 0xFF);
-        buf[1] = (u8)((slotId >> 8) & 0xFF);
-        memcpy(buf + 2, data, dataLength);
-
-        EMSCRIPTEN_RESULT res = emscripten_websocket_send_binary(sWebSocket, buf, dataLength + 2);
-        if (res != EMSCRIPTEN_RESULT_SUCCESS) {
-            LOG_ERROR("WebSocket send failed (host mode, slot %u): result %d", slotId, res);
-            return SOCKET_ERROR;
-        }
+        peer_send(slotId, data, dataLength);
     } else {
-        // CLIENT MODE: send raw packet
+        // CLIENT MODE: send to host
         if (localIndex != 0) {
             if (gNetworkType == NT_CLIENT && gNetworkPlayers[localIndex].type != NPT_SERVER) { return SOCKET_ERROR; }
         }
-
-        EMSCRIPTEN_RESULT res = emscripten_websocket_send_binary(sWebSocket, data, dataLength);
-        if (res != EMSCRIPTEN_RESULT_SUCCESS) {
-            LOG_ERROR("WebSocket send failed (client mode): result %d", res);
-            return SOCKET_ERROR;
-        }
+        peer_send(0, data, dataLength);
     }
 
     return NO_ERROR;

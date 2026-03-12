@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SM64 CoopDX - Web</title>
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -143,6 +144,13 @@
       <p class="hint">Accepts .z64, .n64, .v64 (US version)</p>
     </div>
     <input type="file" id="rom-file" accept=".z64,.n64,.v64">
+
+    <div id="room-config" style="display:none; margin-bottom: 1rem; text-align: center;">
+      <p style="margin-bottom: 0.5rem; color: #aaa;">Room ID (share to play together):</p>
+      <input type="text" id="room-id-input" placeholder="Enter room name..."
+             style="padding: 8px 16px; border-radius: 6px; border: 1px solid #0f3460;
+                    background: #16213e; color: #e0e0e0; font-size: 1rem; width: 250px; text-align: center;">
+    </div>
 
     <div id="progress-container">
       <div id="progress-bar-outer">
@@ -553,6 +561,157 @@
         }
       });
     }
+
+    // ---- PeerJS WebRTC networking module ----
+
+    var PeerNetwork = {
+      peer: null,           // Our PeerJS Peer instance
+      connections: {},      // peerId -> DataConnection (for host: all clients; for client: just the host)
+      isHost: false,
+      roomId: null,
+      hostPeerId: null,
+      recvBuffer: [],       // Array of {slotId, data} for the C code to consume
+      nextSlotId: 1,        // For host: assign slot IDs to connecting peers
+      peerToSlot: {},       // peerId -> slotId
+      slotToPeer: {},       // slotId -> peerId
+
+      // Get room ID from URL: ?room=ROOMID
+      getRoomId: function() {
+        var params = new URLSearchParams(window.location.search);
+        return params.get('room') || null;
+      },
+
+      // Generate the PeerJS peer ID for a host from room ID
+      hostPeerIdFromRoom: function(roomId) {
+        return 'sm64-' + roomId + '-host';
+      },
+
+      // Initialize: try to be host first, if host already exists, become client
+      init: function(roomId) {
+        this.roomId = roomId;
+        this.hostPeerId = this.hostPeerIdFromRoom(roomId);
+
+        // Try to register as host
+        this.peer = new Peer(this.hostPeerId);
+
+        this.peer.on('open', function(id) {
+          // Successfully registered as host
+          console.log('[PeerJS] Hosting room: ' + roomId + ' (peer ID: ' + id + ')');
+          PeerNetwork.isHost = true;
+          PeerNetwork._setupHost();
+        });
+
+        this.peer.on('error', function(err) {
+          if (err.type === 'unavailable-id') {
+            // Host already exists - join as client
+            console.log('[PeerJS] Room ' + roomId + ' exists, joining as client...');
+            PeerNetwork.peer.destroy();
+            PeerNetwork._joinAsClient();
+          } else {
+            console.error('[PeerJS] Error:', err);
+          }
+        });
+      },
+
+      _setupHost: function() {
+        this.peer.on('connection', function(conn) {
+          var slotId = PeerNetwork.nextSlotId++;
+          PeerNetwork.connections[conn.peer] = conn;
+          PeerNetwork.peerToSlot[conn.peer] = slotId;
+          PeerNetwork.slotToPeer[slotId] = conn.peer;
+          console.log('[PeerJS] Client connected: slot ' + slotId + ' peer ' + conn.peer);
+
+          conn.on('data', function(data) {
+            // Received from client - queue with slot ID for C code
+            PeerNetwork.recvBuffer.push({ slotId: slotId, data: new Uint8Array(data) });
+          });
+
+          conn.on('close', function() {
+            console.log('[PeerJS] Client disconnected: slot ' + slotId);
+            delete PeerNetwork.connections[conn.peer];
+            delete PeerNetwork.peerToSlot[conn.peer];
+            delete PeerNetwork.slotToPeer[slotId];
+          });
+        });
+      },
+
+      _joinAsClient: function() {
+        // Create a new peer with random ID
+        this.peer = new Peer();
+        this.isHost = false;
+
+        this.peer.on('open', function(id) {
+          console.log('[PeerJS] Our peer ID: ' + id + ', connecting to host...');
+          var conn = PeerNetwork.peer.connect(PeerNetwork.hostPeerId, { reliable: true, serialization: 'binary' });
+          PeerNetwork.connections[PeerNetwork.hostPeerId] = conn;
+
+          conn.on('open', function() {
+            console.log('[PeerJS] Connected to host!');
+          });
+
+          conn.on('data', function(data) {
+            // Received from host - queue for C code (no slot prefix in client mode)
+            PeerNetwork.recvBuffer.push({ slotId: 0, data: new Uint8Array(data) });
+          });
+
+          conn.on('close', function() {
+            console.log('[PeerJS] Disconnected from host');
+            delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          });
+        });
+      },
+
+      // Send data to a specific slot (host mode) or to host (client mode)
+      send: function(slotId, data) {
+        if (this.isHost) {
+          if (slotId === 0) {
+            // Broadcast to all clients
+            for (var peerId in this.connections) {
+              var conn = this.connections[peerId];
+              if (conn.open) conn.send(data);
+            }
+          } else {
+            var peerId = this.slotToPeer[slotId];
+            if (peerId && this.connections[peerId] && this.connections[peerId].open) {
+              this.connections[peerId].send(data);
+            }
+          }
+        } else {
+          // Client: send to host
+          var conn = this.connections[this.hostPeerId];
+          if (conn && conn.open) conn.send(data);
+        }
+      },
+
+      // Drain received packets into C ring buffer
+      // Called from C via EM_JS
+      drainRecvBuffer: function() {
+        var packets = this.recvBuffer;
+        this.recvBuffer = [];
+        return packets;
+      },
+
+      // Check if connected
+      isConnected: function() {
+        if (this.isHost) return true; // Host is always "connected"
+        var conn = this.connections[this.hostPeerId];
+        return conn && conn.open;
+      },
+
+      shutdown: function() {
+        for (var peerId in this.connections) {
+          this.connections[peerId].close();
+        }
+        this.connections = {};
+        if (this.peer) this.peer.destroy();
+        this.peer = null;
+        this.isHost = false;
+        this.peerToSlot = {};
+        this.slotToPeer = {};
+        this.nextSlotId = 1;
+        this.recvBuffer = [];
+      }
+    };
 
     // ---- Emscripten Module configuration ----
 

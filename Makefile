@@ -948,7 +948,7 @@ ifeq ($(TARGET_WEB),1)
     -s ASYNCIFY \
     -s ASYNCIFY_STACK_SIZE=65536 \
     -s EXIT_RUNTIME=0 \
-    -lidbfs.js -lwebsocket.js \
+    -lidbfs.js \
     --preload-file lang@/sm64coopdx/lang \
     --shell-file src/pc/web/shell.html
 else ifeq ($(WINDOWS_BUILD),1)

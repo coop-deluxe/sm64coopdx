@@ -483,6 +483,7 @@ void game_exit(void) {
 // URL params parsed at startup, used by web_auto_network
 static char sWebJoinParam[256] = {0};
 static char sWebHostParam[256] = {0};
+static char sWebRoomParam[256] = {0};
 
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;
@@ -526,6 +527,20 @@ static void web_auto_network(void) {
 
         static struct Object sHackyObjectUrl = { 0 };
         gMarioStates[0].marioObj = &sHackyObjectUrl;
+
+        extern void djui_panel_do_host(bool reconnecting, bool playSound);
+        djui_panel_do_host(false, false);
+    } else if (sWebRoomParam[0] != '\0') {
+        // PeerJS room-based networking: ?room=ROOMID
+        // The first player to claim the room ID becomes host, others join as clients.
+        // We use NT_SERVER here; PeerJS auto-determines actual host/client role.
+        LOG_INFO("Auto-connect to PeerJS room '%s'", sWebRoomParam);
+
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
+        configNetworkSystem = NS_SOCKET;
+
+        static struct Object sHackyObjectRoom = { 0 };
+        gMarioStates[0].marioObj = &sHackyObjectRoom;
 
         extern void djui_panel_do_host(bool reconnecting, bool playSound);
         djui_panel_do_host(false, false);
@@ -661,10 +676,12 @@ int main(int argc, char *argv[]) {
         var params = new URLSearchParams(window.location.search);
         var j = params.get('join') || '';
         var h = params.get('host') || '';
+        var r = params.get('room') || '';
         if (j) stringToUTF8(j, $0, 256);
         if (h) stringToUTF8(h, $1, 256);
-    }, sWebJoinParam, sWebHostParam);
-    LOG_INFO("[Web] URL params: join='%s' host='%s'", sWebJoinParam, sWebHostParam);
+        if (r) stringToUTF8(r, $2, 256);
+    }, sWebJoinParam, sWebHostParam, sWebRoomParam);
+    LOG_INFO("[Web] URL params: join='%s' host='%s' room='%s'", sWebJoinParam, sWebHostParam, sWebRoomParam);
 #endif
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
