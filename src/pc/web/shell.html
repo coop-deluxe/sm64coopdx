@@ -485,12 +485,32 @@
       }
     };
 
-    window.onerror = function(msg, url, line) {
+    window.onerror = function(msg, url, line, col, error) {
+      console.error('[Web Shell] onerror:', msg, url, line, col, error);
       if (msg && msg.indexOf('abort') !== -1) {
-        // Fatal error
         showError('An error occurred. Check the browser console for details.');
       }
     };
+
+    window.onunhandledrejection = function(event) {
+      console.error('[Web Shell] unhandled rejection:', event.reason);
+    };
+
+    // Monitor if the main loop stops
+    var _webLastIterTime = Date.now();
+    var _origRAF = window.requestAnimationFrame;
+    window.requestAnimationFrame = function(cb) {
+      return _origRAF.call(window, function(ts) {
+        _webLastIterTime = Date.now();
+        try { cb(ts); } catch(e) { console.error('[Web Shell] rAF callback exception:', e); }
+      });
+    };
+    setInterval(function() {
+      var stalled = Date.now() - _webLastIterTime;
+      if (stalled > 3000) {
+        console.warn('[Web Shell] Main loop stalled for ' + stalled + 'ms!');
+      }
+    }, 2000);
   </script>
 
   {{{ SCRIPT }}}

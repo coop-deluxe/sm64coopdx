@@ -233,6 +233,31 @@ static u32 get_target_refresh_rate() {
 }
 
 void produce_interpolation_frames_and_delay(void) {
+#ifdef TARGET_WEB
+    // On web, rendering is handled by web_one_iteration's rAF loop.
+    // This function's internal render+delay loop would spin endlessly
+    // since we disabled all delay/sleep functions for web.
+    // Just render one frame and return.
+    {
+        gRenderingInterpolated = true;
+        gRenderingDelta = 1.0f;
+        gFramePercentage = 1.0f;
+
+        gfx_start_frame();
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations(1.0f); }
+        send_display_list(gGfxSPTask);
+        gfx_end_frame_render();
+        gfx_display_frame();
+        sDrawnFrames++;
+
+        gRenderingInterpolated = false;
+
+        f64 curTime = clock_elapsed_f64();
+        if (curTime >= sFpsTimeLast + 1.0) { compute_fps(curTime); }
+        sFrameTimeStart = curTime;
+    }
+    return;
+#endif
     u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
@@ -374,6 +399,11 @@ void produce_one_frame(void) {
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
+#ifdef TARGET_WEB
+    static int sDummyFrameCount = 0;
+    sDummyFrameCount++;
+    EM_ASM({ console.log("[Web] produce_one_dummy_frame #" + $0); }, sDummyFrameCount);
+#endif
     // measure frame start time
     f64 frameStart = clock_elapsed_f64();
     f64 targetFrameTime = 1.0 / 60.0; // update at 60fps
@@ -411,7 +441,13 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     f64 elapsed = frameEnd - frameStart;
     f64 remaining = targetFrameTime - elapsed;
     if (remaining > 0) {
+#ifdef TARGET_WEB
+        // Skip WAPI.delay on web — it uses emscripten_sleep which causes
+        // ASYNCIFY to unwind the stack inside the rAF callback, freezing the game.
+        // The rAF loop handles frame pacing instead.
+#else
         WAPI.delay((u32)(remaining * 1000.0));
+#endif
     }
 
     gfx_end_frame();
@@ -504,6 +540,13 @@ static void web_auto_network(void) {
 }
 
 static void web_one_iteration(void) {
+    static int sIterCount = 0;
+    sIterCount++;
+    // Log every 300th frame and also when we detect potential stall
+    if (sIterCount % 300 == 0) {
+        EM_ASM({ console.log("[Web] web_one_iteration #" + $0); }, sIterCount);
+    }
+
     double now = emscripten_get_now() / 1000.0; // ms -> seconds
 
     // Initialize on first call
@@ -514,24 +557,71 @@ static void web_one_iteration(void) {
     // Auto-join/host from URL params (runs once when game is ready)
     web_auto_network();
 
+    // Handle SDL events every frame (window resize, keyboard, etc.)
+    WAPI.handle_events();
+
     double elapsed = now - web_last_tick_time;
 
     // Game logic runs at 30 Hz (33.33ms per tick)
-    // Use the full produce_one_frame path which handles SDL events,
-    // level transitions, loading screens, and internal ASYNCIFY sleeps.
+    // Only run a game tick when enough time has accumulated
     if (elapsed >= sFrameTime) {
-        debug_context_reset();
-        CTX_BEGIN(CTX_TOTAL);
-        WAPI.main_loop(produce_one_frame);
-        CTX_END(CTX_TOTAL);
-        djui_lua_profiler_update();
+        // Cap at 2 ticks to prevent spiral of death
+        int ticks = (int)(elapsed / sFrameTime);
+        if (ticks > 2) { ticks = 2; }
 
-        web_last_tick_time += sFrameTime;
-        // Prevent drift: if we fell behind by more than one frame, reset
-        if ((emscripten_get_now() / 1000.0) - web_last_tick_time > sFrameTime) {
-            web_last_tick_time = emscripten_get_now() / 1000.0;
+        for (int i = 0; i < ticks; i++) {
+            debug_context_reset();
+            CTX_BEGIN(CTX_TOTAL);
+
+            CTX_EXTENT(CTX_NETWORK, network_update);
+            CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+#ifdef TARGET_WEB
+            game_loop_one_iteration();
+#else
+            CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
+#endif
+            CTX_EXTENT(CTX_SMLUA, smlua_update);
+
+            if (gAudioThread.state == INVALID) {
+                CTX_EXTENT(CTX_AUDIO, buffer_audio);
+            }
+
+            CTX_END(CTX_TOTAL);
+        }
+
+        web_last_tick_time += ticks * sFrameTime;
+        if (now - web_last_tick_time > sFrameTime) {
+            web_last_tick_time = now;
+        }
+
+        web_game_tick_ready = true;
+    }
+
+    // Render an interpolation frame every rAF call
+    if (web_game_tick_ready) {
+        double delta_frac = (now - web_last_tick_time) / sFrameTime;
+        if (delta_frac < 0) delta_frac = 0;
+        if (delta_frac > 1) delta_frac = 1;
+
+        gRenderingInterpolated = true;
+        gRenderingDelta = (f32)delta_frac;
+        gFramePercentage = (f32)delta_frac;
+
+        gfx_start_frame();
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations((f32)delta_frac); }
+        send_display_list(gGfxSPTask);
+        gfx_end_frame_render();
+        gfx_display_frame();
+        sDrawnFrames++;
+
+        gRenderingInterpolated = false;
+
+        if (now >= sFpsTimeLast + 1.0) {
+            compute_fps(now);
         }
     }
+
+    djui_lua_profiler_update();
 }
 #endif
 

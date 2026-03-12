@@ -69,7 +69,13 @@ static void (*m_scroll)(float, float) = NULL;
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
 static inline void gfx_sdl_set_vsync(const bool enabled) {
+#ifdef TARGET_WEB
+    // On web, don't touch swap interval at all.
+    // Vsync is handled by requestAnimationFrame via emscripten_set_main_loop.
+    (void)enabled;
+#else
     SDL_GL_SetSwapInterval(enabled);
+#endif
 }
 
 static void gfx_sdl_set_fullscreen(void) {
@@ -290,7 +296,14 @@ static double gfx_sdl_get_time(void) {
 }
 
 static void gfx_sdl_delay(u32 ms) {
+#ifdef TARGET_WEB
+    // Don't use SDL_Delay on web — it uses emscripten_sleep which
+    // conflicts with emscripten_set_main_loop and causes freezes.
+    // Frame pacing is handled by requestAnimationFrame.
+    (void)ms;
+#else
     SDL_Delay(ms);
+#endif
 }
 
 static int gfx_sdl_get_max_msaa(void) {

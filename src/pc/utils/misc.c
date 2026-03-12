@@ -94,6 +94,13 @@ bool clock_is_date(u8 month, u8 day) {
 // delay functions lack accuracy sometimes due to os scheduling
 // busy-waiting is bad practice but it's very accurate so we use a hybrid
 void precise_delay_f64(f64 delaySec) {
+#ifdef TARGET_WEB
+    // On web, delays are handled by requestAnimationFrame.
+    // Don't busy-wait or call SDL_Delay — both block the main thread
+    // and conflict with emscripten_set_main_loop.
+    (void)delaySec;
+    return;
+#endif
     const f64 sleepMargin = 0.002; // 2 ms margin before we switch to busy-waiting
 
     f64 start = clock_elapsed_f64();

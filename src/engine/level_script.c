@@ -1,5 +1,8 @@
 #include <ultra64.h>
 #include <string.h>
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 #include "sm64.h"
 #include "audio/external.h"
@@ -1128,11 +1131,22 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
     sCurrentCmd = cmd;
 
     CTX_BEGIN(CTX_LEVEL_SCRIPT);
+#ifdef TARGET_WEB
+    int _lsCmdCount = 0;
+#endif
     while (sScriptStatus == SCRIPT_RUNNING) {
         sCurrentCmd = dynos_swap_cmd(sCurrentCmd);
         void *dynosCurrCmd = (void *) sCurrentCmd;
 
         if (sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
+#ifdef TARGET_WEB
+            _lsCmdCount++;
+            if (_lsCmdCount > 50000) {
+                EM_ASM({ console.error("[Web] level_script_execute stuck! cmd type=" + $0 + " count=" + $1); }, sCurrentCmd->type, _lsCmdCount);
+                sScriptStatus = SCRIPT_PAUSED; // break out
+                break;
+            }
+#endif
             LevelScriptJumpTable[sCurrentCmd->type]();
         }
 
