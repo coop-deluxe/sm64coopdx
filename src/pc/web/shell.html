@@ -263,7 +263,9 @@
     }
 
     function hideOverlay() {
-      document.getElementById('overlay').classList.add('hidden');
+      var el = document.getElementById('overlay');
+      if (el.classList.contains('hidden')) return;
+      el.classList.add('hidden');
       document.getElementById('canvas').focus();
     }
 
@@ -293,8 +295,8 @@
         romReady = true;
         setStatus('ROM loaded. Game is starting...');
         setProgress(100);
-        // Auto-hide overlay after a brief delay to let the game start rendering
-        setTimeout(hideOverlay, 1500);
+        // Start polling for actual game rendering before hiding overlay
+        waitForGameRender();
       } catch (e) {
         showError('Failed to write ROM to virtual filesystem: ' + e.message);
         console.error('[Web] writeRomToFS error:', e);
@@ -381,6 +383,25 @@
     document.addEventListener('keydown', resumeAudio);
 
     // ---- Watch for game rendering to start ----
+
+    function waitForGameRender() {
+      var canvas = document.getElementById('canvas');
+      var checkInterval = setInterval(function() {
+        try {
+          var ctx = canvas.getContext('webgl2') || canvas.getContext('webgl');
+          if (ctx) {
+            var pixels = new Uint8Array(4);
+            ctx.readPixels(canvas.width/2, canvas.height/2, 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, pixels);
+            if (pixels[0] > 0 || pixels[1] > 0 || pixels[2] > 0) {
+              hideOverlay();
+              clearInterval(checkInterval);
+            }
+          }
+        } catch(e) {}
+      }, 200);
+      // Fallback: hide after 8 seconds regardless
+      setTimeout(function() { clearInterval(checkInterval); hideOverlay(); }, 8000);
+    }
 
     function watchForGameStart() {
       // Once the game has started rendering, hide the overlay

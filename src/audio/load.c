@@ -1038,13 +1038,6 @@ void patch_audio_bank(s32 bankId, struct AudioBank *mem, struct PatchStruct *pat
 #else
 void patch_audio_bank(struct AudioBank *mem, u8 *offset, u32 numInstruments, u32 numDrums) {
 #endif
-#ifdef TARGET_WEB
-    // Sound bank data has 64-bit pointer layout from host build tools.
-    // On 32-bit WASM, struct field offsets don't match the data, causing OOB access.
-    // Skip bank patching — audio will be silent until data is regenerated for 32-bit.
-    (void)mem;
-    return;
-#endif
     struct Instrument *instrument;
 #if defined(VERSION_SH)
     void **itInstrs;
@@ -1291,6 +1284,16 @@ void func_sh_802f3ed4(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED void *vAddr, UNUS
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
+#ifdef TARGET_WEB
+    // Sound bank data has 64-bit pointer layout from host build tools.
+    // On 32-bit WASM, struct field offsets don't match the binary data, causing
+    // out-of-bounds access when patch_audio_bank tries to walk the bank body.
+    // Skip bank loading entirely — audio will be silent until bank data is
+    // regenerated for 32-bit targets.
+    (void)bankId;
+    (void)arg1;
+    return NULL;
+#endif
     UNUSED u32 pad1[4];
     u32 buf[4];
     u32 numInstruments, numDrums;
@@ -1325,6 +1328,15 @@ struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *seqPlayer) {
+#ifdef TARGET_WEB
+    // Sound bank data has 64-bit pointer layout from host build tools.
+    // On 32-bit WASM, struct field offsets don't match the binary data.
+    // Skip bank loading entirely — audio will be silent.
+    (void)bankId;
+    (void)arg1;
+    (void)seqPlayer;
+    return NULL;
+#endif
     u32 numInstruments, numDrums;
     UNUSED u32 pad1[2];
     u32 buf[4];

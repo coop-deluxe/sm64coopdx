@@ -948,6 +948,7 @@ ifeq ($(TARGET_WEB),1)
     -s ASYNCIFY \
     -s ASYNCIFY_STACK_SIZE=65536 \
     -lidbfs.js -lwebsocket.js \
+    --preload-file lang@/sm64coopdx/lang \
     --shell-file src/pc/web/shell.html
 else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
