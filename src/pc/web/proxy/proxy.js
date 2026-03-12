@@ -44,12 +44,14 @@ const wss = new WebSocketServer({ server: httpServer, perMessageDeflate: false }
 // CLIENT MODE: Browser joins native server
 // ============================================================================
 function handleClientMode(ws, targetHost, targetPort, label) {
-    const udp = dgram.createSocket("udp6");
+    // Use udp4 for IPv4 addresses, udp6 for IPv6
+    const isIPv6 = targetHost.includes(":");
+    const udp = dgram.createSocket(isIPv6 ? "udp6" : "udp4");
     let sent = 0, recv = 0, closed = false;
 
-    function cleanup() {
+    function cleanup(reason) {
         if (closed) return; closed = true;
-        console.log(`[${label}] Ended (sent:${sent} recv:${recv})`);
+        console.log(`[${label}] Ended: ${reason} (sent:${sent} recv:${recv})`);
         try { udp.close(); } catch(_) {}
         if (ws.readyState <= 1) try { ws.close(); } catch(_) {}
     }
@@ -61,26 +63,30 @@ function handleClientMode(ws, targetHost, targetPort, label) {
     ws.on("message", (data, isBinary) => {
         if (!isBinary || closed) return;
         sent++;
-        udp.send(data, targetPort, targetHost, (err) => { if (err) cleanup(); });
+        console.log(`[${label}] WS->UDP: ${data.length} bytes`);
+        udp.send(data, targetPort, targetHost, (err) => {
+            if (err) { console.error(`[${label}] UDP send err: ${err.message}`); cleanup("udp send error"); }
+        });
     });
 
     // UDP -> WS
-    udp.on("message", (msg) => {
+    udp.on("message", (msg, rinfo) => {
         if (closed) return;
         recv++;
-        try { ws.send(msg, { binary: true }); } catch(_) { cleanup(); }
+        console.log(`[${label}] UDP->WS: ${msg.length} bytes from ${rinfo.address}:${rinfo.port}`);
+        try { ws.send(msg, { binary: true }); } catch(e) { cleanup("ws send error: " + e.message); }
     });
 
-    udp.on("error", (e) => { console.error(`[${label}] UDP err: ${e.message}`); cleanup(); });
-    ws.on("close", cleanup);
-    ws.on("error", (e) => { console.error(`[${label}] WS err: ${e.message}`); cleanup(); });
+    udp.on("error", (e) => { console.error(`[${label}] UDP err: ${e.message}`); cleanup("udp error"); });
+    ws.on("close", (code, reason) => { cleanup(`ws closed code=${code} reason=${reason}`); });
+    ws.on("error", (e) => { console.error(`[${label}] WS err: ${e.message}`); cleanup("ws error"); });
 }
 
 // ============================================================================
 // HOST MODE: Browser hosts, native clients join via UDP
 // ============================================================================
 function handleHostMode(ws, hostPort, label) {
-    const udp = dgram.createSocket({ type: "udp6", reuseAddr: true });
+    const udp = dgram.createSocket({ type: "udp4", reuseAddr: true });
     let closed = false;
 
     // Client tracking: addr -> slot, slot -> addr
@@ -108,7 +114,7 @@ function handleHostMode(ws, hostPort, label) {
 
     // Bind to the requested port
     try {
-        udp.bind(hostPort, "::");
+        udp.bind(hostPort, "0.0.0.0");
     } catch (e) {
         console.error(`[${label}] Failed to bind port ${hostPort}: ${e.message}`);
         ws.close();
@@ -124,13 +130,14 @@ function handleHostMode(ws, hostPort, label) {
             slot = nextSlot++;
             addrToSlot.set(key, slot);
             slotToAddr.set(slot, { address: rinfo.address, port: rinfo.port });
-            console.log(`[${label}] Client slot ${slot}: ${key}`);
+            console.log(`[${label}] New client slot ${slot}: ${key}`);
         }
+        console.log(`[${label}] UDP->WS: ${msg.length} bytes from slot ${slot} (${key})`);
         // Prepend 2-byte LE slot ID
         const buf = Buffer.alloc(2 + msg.length);
         buf.writeUInt16LE(slot, 0);
         msg.copy(buf, 2);
-        try { ws.send(buf, { binary: true }); } catch(_) { cleanup(); }
+        try { ws.send(buf, { binary: true }); } catch(e) { cleanup("ws send error"); }
     });
 
     // WebSocket host -> Native UDP client (strip slot prefix)
@@ -138,6 +145,7 @@ function handleHostMode(ws, hostPort, label) {
         if (!isBinary || closed || data.length < 3) return;
         const slot = data.readUInt16LE(0);
         const payload = data.slice(2);
+        console.log(`[${label}] WS->UDP: ${payload.length} bytes to slot ${slot}`);
 
         if (slot === 0) {
             // Broadcast to all clients
