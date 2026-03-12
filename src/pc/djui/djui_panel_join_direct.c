@@ -171,6 +171,13 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
 
 static void djui_panel_join_direct_ip_text_set(struct DjuiInputbox* inputbox1) {
     char buffer[256] = { 0 };
+#ifdef TARGET_WEB
+    if (strlen(configJoinIp) > 0) {
+        snprintf(buffer, 256, "%s", configJoinIp);
+    } else {
+        snprintf(buffer, 256, "default");
+    }
+#else
     if (strlen(configJoinIp) > 0 && configJoinPort != DEFAULT_PORT) {
         if (snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort) < 0) { LOG_INFO("truncating IP"); }
     } else if (strlen(configJoinIp) > 0) {
@@ -178,6 +185,7 @@ static void djui_panel_join_direct_ip_text_set(struct DjuiInputbox* inputbox1) {
     } else {
         if (snprintf(buffer, 256, "localhost") < 0) { LOG_INFO("truncating IP"); }
     }
+#endif
 
     djui_inputbox_set_text(inputbox1, buffer);
 }
@@ -189,7 +197,13 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
         return;
     }
     network_reset_reconnect_and_rehost();
+#ifdef TARGET_WEB
+    // On web, the input is a PeerJS room ID, not an IP:port
+    snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+    snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+#else
     djui_panel_join_direct_ip_text_set_new();
+#endif
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT, false);
     djui_panel_join_message_create(caller);
@@ -200,7 +214,11 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+#ifdef TARGET_WEB
+        struct DjuiText* text1 = djui_text_create(body, "Enter a Room ID to join.\nShare the same Room ID to play together.");
+#else
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));
+#endif
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, 100);
         djui_base_compute_tree(&text1->base);
