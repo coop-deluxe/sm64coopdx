@@ -20,6 +20,8 @@ static struct sockaddr_in6 sAddr[MAX_PLAYERS] = { 0 };
 
 // Host mode: whether we're hosting through PeerJS
 static bool sIsHostMode = false;
+// Skip PeerJS destruction on next shutdown (for server→client transition)
+static bool sPreservePeerConnection = false;
 
 char gGetHostName[MAX_CONFIG_STRING] = "";
 
@@ -135,7 +137,12 @@ SOCKET socket_initialize(void) {
 
 void socket_shutdown(SOCKET socket) {
     (void)socket;
-    peer_shutdown();
+    if (sPreservePeerConnection) {
+        // Server→client transition: keep PeerJS alive, just reset ring buffer
+        sPreservePeerConnection = false;
+    } else {
+        peer_shutdown();
+    }
     sIsHostMode = false;
     sRecvBufHead = 0;
     sRecvBufTail = 0;
@@ -173,7 +180,11 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
 
     LOG_INFO("PeerJS init: room='%s' networkType=%d", roomId, networkType);
 
-    peer_init(roomId);
+    // Only initialize PeerJS if not already connected (avoids double-init
+    // when ?room= flow transitions from NT_SERVER to NT_CLIENT)
+    if (!peer_is_connected()) {
+        peer_init(roomId);
+    }
 
     // PeerJS auto-determines host vs client based on who registers the room ID first.
     // Don't send mod list request yet — wait until PeerJS is actually connected.
@@ -238,26 +249,20 @@ static void ns_socket_update(void) {
             // Host path — already set up by djui_panel_do_host
         } else {
             // We're a CLIENT — the C code was set up as NT_SERVER by djui_panel_do_host.
-            // Do a full network shutdown and reinitialize as NT_CLIENT.
-            // The PeerJS connection persists because peer_shutdown is NOT called here —
-            // only the C-side network state is reset.
-            printf("[PeerJS C] We are a CLIENT — reinitializing as NT_CLIENT\n");
+            // Do a full reinitialize as NT_CLIENT using network_init which properly
+            // sets up all client-side state (player list, sync objects, etc).
+            // ns_socket_initialize will skip peer_init since we're already connected.
+            printf("[PeerJS C] We are a CLIENT — full reinit as NT_CLIENT\n");
 
-            // Reset network state without touching PeerJS
-            gNetworkType = NT_NONE;
-            gNetworkSentJoin = false;
+            // Shut down server-side state but keep PeerJS connection alive
+            sPreservePeerConnection = true;
+            network_shutdown(false, false, false, false);
 
-            // Reinitialize as client
+            // Full client initialization
             snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
             snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", configJoinIp);
             network_set_system(NS_SOCKET);
-
-            // Set type directly (don't call network_init which would call
-            // ns_socket_initialize again and create a second PeerJS peer)
-            gNetworkType = NT_CLIENT;
-
-            // Send the join handshake
-            network_send_mod_list_request();
+            network_init(NT_CLIENT, false);
             sSentModListRequest = true;
         }
     }
