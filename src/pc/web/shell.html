@@ -480,7 +480,8 @@
       },
 
       locateFile: function(path) {
-        return path;
+        // Cache-bust WASM and data files during development
+        return path + '?v=' + Date.now();
       }
     };
 

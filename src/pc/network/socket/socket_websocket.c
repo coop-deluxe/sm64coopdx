@@ -118,7 +118,9 @@ SOCKET socket_initialize(void) {
 
 void socket_shutdown(SOCKET socket) {
     (void)socket;
+    LOG_INFO("socket_shutdown called, sWebSocket=%d", sWebSocket);
     if (sWebSocket) {
+        LOG_INFO("closing WebSocket...");
         emscripten_websocket_close(sWebSocket, 1000, "shutdown");
         emscripten_websocket_delete(sWebSocket);
         sWebSocket = 0;
@@ -210,14 +212,15 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         }
 
         LOG_INFO("CLIENT MODE: Connecting via %s", wsUrl);
+        LOG_INFO("CLIENT MODE: configJoinIp='%s' configJoinPort=%d", configJoinIp, configJoinPort);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
 
-        if (!ws_connect(wsUrl)) { return false; }
+        if (!ws_connect(wsUrl)) { LOG_ERROR("ws_connect failed!"); return false; }
 
         djui_connect_menu_open();
         gNetworkType = NT_CLIENT;
 
-        LOG_INFO("Client mode initialized");
+        LOG_INFO("Client mode initialized, sending mod list request");
         network_send_mod_list_request();
         return true;
     }

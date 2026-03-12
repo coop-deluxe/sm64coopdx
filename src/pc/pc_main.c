@@ -562,6 +562,9 @@ void* main_game_init(UNUSED void* dummy) {
 }
 
 int main(int argc, char *argv[]) {
+#ifdef TARGET_WEB
+    printf("[WEB BUILD] Build timestamp: " __DATE__ " " __TIME__ "\n");
+#endif
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
@@ -704,8 +707,9 @@ int main(int argc, char *argv[]) {
 
     // main loop
 #ifdef TARGET_WEB
-    emscripten_set_main_loop(web_one_iteration, 0, 0);
-    return 0;
+    // simulate_infinite_loop=1: main() never returns, preventing Emscripten
+    // runtime cleanup from closing WebSockets and other resources
+    emscripten_set_main_loop(web_one_iteration, 0, 1);
 #else
     while (true) {
         debug_context_reset();

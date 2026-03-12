@@ -238,12 +238,20 @@ void network_player_update(void) {
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
+#ifdef TARGET_WEB
+        static int sDebugCounter = 0;
+        if (++sDebugCounter % 30 == 0) {
+            LOG_INFO("CLIENT timeout check: elapsed=%.2f lastRecv=%.2f now=%.2f limit=%.1f",
+                elapsed, np->lastReceived, clock_elapsed(), NETWORK_PLAYER_TIMEOUT * 1.5f);
+        }
+#endif
+
 #ifdef DEVELOPMENT
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f && (gNetworkSystem != &gNetworkSystemSocket)) {
 #else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
 #endif
-            LOG_INFO("dropping due to no server connectivity");
+            LOG_INFO("DISCONNECTING: elapsed=%.2f lastRecv=%.2f now=%.2f", elapsed, np->lastReceived, clock_elapsed());
             network_shutdown(false, false, true, false);
         }
 

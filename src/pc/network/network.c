@@ -679,6 +679,7 @@ void network_mod_dev_mode_reload(void) {
 
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
+    LOG_INFO("network_shutdown called (sendLeaving=%d exiting=%d popup=%d reconnecting=%d)", sendLeaving, exiting, popup, reconnecting);
     smlua_call_event_hooks(HOOK_ON_EXIT);
 
     if (gDjuiChatBox != NULL) {
