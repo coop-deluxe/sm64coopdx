@@ -33,14 +33,12 @@ bool djui_language_init(char* lang) {
 }
 
 static char* djui_language_get_english(const char *section, const char *key) {
-    if (!sEnglishLang) { return (char*)key; }
     char* value = (char*)ini_get(sEnglishLang, section, key);
     if (!value) { return (char*)key; }
     return value;
 }
 
 char* djui_language_get(const char *section, const char *key) {
-    if (!sLang) { return djui_language_get_english(section, key); }
     char* value = (char*)ini_get(sLang, section, key);
     if (!value) { return djui_language_get_english(section, key); }
     return value;
