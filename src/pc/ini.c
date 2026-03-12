@@ -215,9 +215,7 @@ fail:
  * Deletes ini_t struct from memory.
  */
 void ini_free(ini_t *ini) {
-  if (ini) {
-    free(ini->data);
-  }
+  if (ini) free(ini->data);
   free(ini);
 }
 
