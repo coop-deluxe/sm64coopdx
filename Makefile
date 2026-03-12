@@ -944,7 +944,7 @@ ifeq ($(TARGET_WEB),1)
     -s INITIAL_MEMORY=268435456 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 \
     -s FULL_ES2=1 -s FORCE_FILESYSTEM=1 \
     -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","allocateUTF8"]' \
-    -s EXPORTED_FUNCTIONS='["_main","_rom_on_drop_file","_web_rom_loaded","_web_get_rom_status","_web_save_to_idb","_web_fs_init","_malloc","_free"]' \
+    -s EXPORTED_FUNCTIONS='["_main","_rom_on_drop_file","_web_rom_loaded","_web_get_rom_status","_web_save_to_idb","_web_fs_init","_web_one_iteration","_malloc","_free"]' \
     -s ASYNCIFY \
     -s ASYNCIFY_STACK_SIZE=65536 \
     -s EXIT_RUNTIME=0 \

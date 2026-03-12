@@ -1132,7 +1132,9 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
 
     CTX_BEGIN(CTX_LEVEL_SCRIPT);
 #ifdef TARGET_WEB
+    double _lsStartMs = emscripten_get_now();
     int _lsCmdCount = 0;
+    extern volatile int gWebAbortFlag;
 #endif
     while (sScriptStatus == SCRIPT_RUNNING) {
         sCurrentCmd = dynos_swap_cmd(sCurrentCmd);
@@ -1141,10 +1143,15 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
         if (sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
 #ifdef TARGET_WEB
             _lsCmdCount++;
-            if (_lsCmdCount > 50000) {
-                EM_ASM({ console.error("[Web] level_script_execute stuck! cmd type=" + $0 + " count=" + $1); }, sCurrentCmd->type, _lsCmdCount);
-                sScriptStatus = SCRIPT_PAUSED; // break out
-                break;
+            if ((_lsCmdCount & 0x3FF) == 0) { // check every 1024 iterations
+                double _elapsedMs = emscripten_get_now() - _lsStartMs;
+                if (_elapsedMs > 3000.0) {
+                    printf("[Web] level_script_execute TIMEOUT: %d cmds in %.0fms, last cmd type=0x%02X\n",
+                        _lsCmdCount, _elapsedMs, sCurrentCmd->type);
+                    gWebAbortFlag = 1;
+                    sScriptStatus = SCRIPT_PAUSED;
+                    break;
+                }
             }
 #endif
             LevelScriptJumpTable[sCurrentCmd->type]();

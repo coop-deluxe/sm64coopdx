@@ -1,5 +1,10 @@
 #ifdef WAPI_SDL2
 
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #ifdef __MINGW32__
 #define FOR_WINDOWS 1
 #else
@@ -285,7 +290,14 @@ static bool gfx_sdl_start_frame(void) {
 }
 
 static void gfx_sdl_swap_buffers_begin(void) {
+#ifdef TARGET_WEB
+    // On web, SDL_GL_SwapWindow can trigger emscripten_sleep via
+    // eglSwapBuffers, which conflicts with emscripten_set_main_loop.
+    // Use the Emscripten-specific commit call instead.
+    emscripten_webgl_commit_frame();
+#else
     SDL_GL_SwapWindow(wnd);
+#endif
 }
 
 static void gfx_sdl_swap_buffers_end(void) {

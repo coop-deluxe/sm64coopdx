@@ -499,6 +499,13 @@ static void web_auto_network(void) {
     web_auto_network_done = true;
     printf("[Web] web_auto_network: join='%s' host='%s'\n", sWebJoinParam, sWebHostParam);
 
+    // Give the player stars so all doors/levels are accessible for testing
+    extern void save_file_set_star_flags(s32 fileIndex, s32 courseIndex, u32 starFlags);
+    for (int c = 0; c < 15; c++) {
+        save_file_set_star_flags(0, c, 0x7F); // all 7 stars per course
+    }
+    gMarioStates[0].numStars = 120;
+
     if (sWebJoinParam[0] != '\0') {
         printf("[Web] Auto-join from URL: %s", sWebJoinParam);
 
@@ -539,10 +546,29 @@ static void web_auto_network(void) {
     }
 }
 
-static void web_one_iteration(void) {
+// Global abort flag — set by watchdog, checked by hot loops
+volatile int gWebAbortFlag = 0;
+
+EMSCRIPTEN_KEEPALIVE
+void web_one_iteration(void) {
     static int sIterCount = 0;
     sIterCount++;
-    // Log every 300th frame and also when we detect potential stall
+
+    // JavaScript watchdog: detect if this C function never returns
+    EM_ASM({
+        window._wasm_iter_start = performance.now();
+        if (!window._wasm_watchdog) {
+            window._wasm_watchdog = setInterval(function() {
+                if (window._wasm_iter_start > 0) {
+                    var elapsed = performance.now() - window._wasm_iter_start;
+                    if (elapsed > 2000) {
+                        console.error('[WATCHDOG] web_one_iteration stuck for ' + Math.round(elapsed) + 'ms!');
+                    }
+                }
+            }, 500);
+        }
+    });
+
     if (sIterCount % 300 == 0) {
         EM_ASM({ console.log("[Web] web_one_iteration #" + $0); }, sIterCount);
     }
@@ -582,9 +608,13 @@ static void web_one_iteration(void) {
 #endif
             CTX_EXTENT(CTX_SMLUA, smlua_update);
 
+#ifndef TARGET_WEB
+            // Audio disabled on web — the 64-bit audio bank data causes
+            // memory access out of bounds crashes when loading new level music
             if (gAudioThread.state == INVALID) {
                 CTX_EXTENT(CTX_AUDIO, buffer_audio);
             }
+#endif
 
             CTX_END(CTX_TOTAL);
         }
@@ -622,6 +652,9 @@ static void web_one_iteration(void) {
     }
 
     djui_lua_profiler_update();
+
+    // Clear watchdog — we returned successfully
+    EM_ASM({ window._wasm_iter_start = 0; });
 }
 #endif
 
@@ -765,11 +798,19 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
+#ifdef TARGET_WEB
+    // Force null audio on web — the audio bank converter produces
+    // corrupt pointers that cause memory access out of bounds when
+    // loading music for new levels. SDL2 ScriptProcessorNode also
+    // crashes independently via HandleAudioProcess.
+    audio_api = &audio_null;
+#else
     if (gCLIOpts.headless) audio_api = &audio_null;
 #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
 #endif
     if (!audio_api) audio_api = &audio_null;
+#endif
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -817,10 +858,21 @@ int main(int argc, char *argv[]) {
 
     // main loop
 #ifdef TARGET_WEB
-    // simulate_infinite_loop=0: main() returns after setting up the callback,
-    // but the callback keeps running. We use EXIT_RUNTIME=0 (default) to
-    // prevent Emscripten from cleaning up when main() returns.
-    emscripten_set_main_loop(web_one_iteration, 0, 0);
+    // Use a JavaScript rAF loop instead of emscripten_set_main_loop.
+    // emscripten_set_main_loop can silently stop scheduling callbacks
+    // during ASYNCIFY interactions. A JS rAF loop is more robust.
+    EM_ASM({
+        var iterate = Module.cwrap('web_one_iteration', null, []);
+        function gameLoop() {
+            try {
+                iterate();
+            } catch(e) {
+                console.error('[Web] gameLoop exception:', e);
+            }
+            requestAnimationFrame(gameLoop);
+        }
+        requestAnimationFrame(gameLoop);
+    });
     return 0;
 #else
     while (true) {
