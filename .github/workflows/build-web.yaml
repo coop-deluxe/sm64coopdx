@@ -1,0 +1,69 @@
+name: Build Web (Emscripten) & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, feature/emscripten-web-port ]
+  workflow_dispatch:
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-web:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev zip
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.64
+
+      - name: Verify Emscripten
+        run: emcc --version
+
+      - name: Build for web
+        run: |
+          emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site
+          cp build/us_pc/sm64coopdx.html _site/index.html
+          cp build/us_pc/sm64coopdx.js _site/
+          cp build/us_pc/sm64coopdx.wasm _site/
+          cp build/us_pc/sm64coopdx.data _site/ 2>/dev/null || true
+          # Copy proxy for reference (not served, but useful in the repo)
+          mkdir -p _site/proxy
+          cp src/pc/web/proxy/proxy.js _site/proxy/
+          cp src/pc/web/proxy/package.json _site/proxy/
+          cp src/pc/web/proxy/README.md _site/proxy/ 2>/dev/null || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build-web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
