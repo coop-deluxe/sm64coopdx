@@ -7,30 +7,42 @@
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
 
+static ini_t* sEnglishLang = NULL;
 static ini_t* sLang = NULL;
 
 bool djui_language_init(char* lang) {
     // free old ini
-    if (sLang != NULL) {
-        ini_free(sLang);
-        sLang = NULL;
-    }
+    ini_free(sLang);
+    sLang = NULL;
+    ini_free(sEnglishLang);
+    sEnglishLang = NULL;
 
     // construct path
     char path[SYS_MAX_PATH] = "";
     if (!lang || lang[0] == '\0') { lang = "English"; }
     snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", sys_resource_path(), lang);
 
-    // load
+    // load normal lang
     sLang = ini_load(path);
+
+    // load english lang
+    snprintf(path, SYS_MAX_PATH, "%s/lang/English.ini", sys_resource_path());
+    sEnglishLang = ini_load(path);
 
     return sLang != NULL;
 }
 
-char* djui_language_get(const char *section, const char *key) {
-    if (!sLang) { return (char*)key; }
-    char* value = (char*)ini_get(sLang, section, key);
+static char* djui_language_get_english(const char *section, const char *key) {
+    if (!sEnglishLang) { return (char*)key; }
+    char* value = (char*)ini_get(sEnglishLang, section, key);
     if (!value) { return (char*)key; }
+    return value;
+}
+
+char* djui_language_get(const char *section, const char *key) {
+    if (!sLang) { return djui_language_get_english(section, key); }
+    char* value = (char*)ini_get(sLang, section, key);
+    if (!value) { return djui_language_get_english(section, key); }
     return value;
 }
 
