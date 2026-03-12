@@ -182,17 +182,19 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
 
     // Only initialize PeerJS if not already connected (avoids double-init
     // when ?room= flow transitions from NT_SERVER to NT_CLIENT)
-    if (!peer_is_connected()) {
+    bool alreadyConnected = peer_is_connected();
+    if (!alreadyConnected) {
         peer_init(roomId);
+        // Reset role detection flags only for fresh connections
+        sSentModListRequest = false;
+        sWasPeerConnected = false;
+        sRoleResolved = false;
+        sIsHostMode = (networkType == NT_SERVER);
+    } else {
+        // Already connected (server→client transition) — keep role flags,
+        // just update the mode
+        sIsHostMode = (networkType == NT_SERVER);
     }
-
-    // PeerJS auto-determines host vs client based on who registers the room ID first.
-    // Don't send mod list request yet — wait until PeerJS is actually connected.
-    // The update function will detect connection and handle role assignment.
-    sSentModListRequest = false;
-    sWasPeerConnected = false;
-    sRoleResolved = false;
-    sIsHostMode = (networkType == NT_SERVER);
 
     return true;
 }
@@ -245,24 +247,22 @@ static void ns_socket_update(void) {
         sRoleResolved = true;
 
         if (sIsHostMode) {
-            printf("[PeerJS C] We are the HOST\n");
-            // Host path — already set up by djui_panel_do_host
-        } else {
-            // We're a CLIENT — the C code was set up as NT_SERVER by djui_panel_do_host.
-            // Do a full reinitialize as NT_CLIENT using network_init which properly
-            // sets up all client-side state (player list, sync objects, etc).
-            // ns_socket_initialize will skip peer_init since we're already connected.
-            printf("[PeerJS C] We are a CLIENT — full reinit as NT_CLIENT\n");
-
-            // Shut down server-side state but keep PeerJS connection alive
+            // We claimed the room — we're the HOST.
+            // We started as NT_CLIENT, need to switch to NT_SERVER.
+            printf("[PeerJS C] We are the HOST — switching to server mode\n");
             sPreservePeerConnection = true;
             network_shutdown(false, false, false, false);
 
-            // Full client initialization
-            snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
-            snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", configJoinIp);
-            network_set_system(NS_SOCKET);
-            network_init(NT_CLIENT, false);
+            static struct Object sHackyPeer = { 0 };
+            gMarioStates[0].marioObj = &sHackyPeer;
+            configNetworkSystem = NS_SOCKET;
+
+            extern void djui_panel_do_host(bool reconnecting, bool playSound);
+            djui_panel_do_host(false, false);
+        } else if (!sSentModListRequest) {
+            // We're a CLIENT — just send the mod list request to join
+            printf("[PeerJS C] We are a CLIENT — sending mod list request\n");
+            network_send_mod_list_request();
             sSentModListRequest = true;
         }
     }
