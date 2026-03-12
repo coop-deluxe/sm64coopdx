@@ -77,11 +77,8 @@ void network_receive_moderation_action(struct Packet* p) {
     packet_read(p, &permanent, sizeof(bool));
 
     switch (action) {
-        case MODERATION_ACTION_KICK:
-            network_kick_player(np->localIndex, reason);
-            break;
-        case MODERATION_ACTION_BAN:
-            network_ban_player(np->localIndex, reason, permanent);
-            break;
+        case MODERATION_ACTION_KICK: network_kick_player(np->localIndex, reason);           break;
+        case MODERATION_ACTION_BAN:  network_ban_player(np->localIndex, reason, permanent); break;
+        default: break;
     }
 }

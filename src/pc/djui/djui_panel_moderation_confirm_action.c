@@ -17,21 +17,12 @@ static void djui_panel_moderation_call_action(struct DjuiBase* caller) {
     char* address = caller->cTag;
 
     switch (action) {
-        case MODERATION_ACTION_KICK:
-            network_kick_player(player, sReason);
-            break;
-        case MODERATION_ACTION_BAN:
-            network_ban_player(player, sReason, sPermanent);
-            break;
-        case MODERATION_ACTION_UNBAN:
-            network_unban_player(address);
-            break;
-        case MODERATION_ACTION_MOD:
-            network_mod_player(player, sReason, sPermanent);
-            break;
-        case MODERATION_ACTION_UNMOD:
-            network_unmod_player(address);
-            break;
+        case MODERATION_ACTION_KICK:  network_kick_player(player, sReason);            break;
+        case MODERATION_ACTION_BAN:   network_ban_player(player, sReason, sPermanent); break;
+        case MODERATION_ACTION_UNBAN: network_unban_player(address);                   break;
+        case MODERATION_ACTION_MOD:   network_mod_player(player, sReason, sPermanent); break;
+        case MODERATION_ACTION_UNMOD: network_unmod_player(address);                   break;
+        default: break;
     }
 
     free(sReason);
