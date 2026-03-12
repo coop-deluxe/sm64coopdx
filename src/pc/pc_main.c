@@ -447,11 +447,79 @@ void game_exit(void) {
 }
 
 #ifdef TARGET_WEB
+#include <emscripten/html5.h>
+
+static double web_last_tick_time = 0;
+static bool web_game_tick_ready = false;
+
 static void web_one_iteration(void) {
-    debug_context_reset();
-    CTX_BEGIN(CTX_TOTAL);
-    WAPI.main_loop(produce_one_frame);
-    CTX_END(CTX_TOTAL);
+    double now = emscripten_get_now() / 1000.0; // ms -> seconds
+
+    // Initialize on first call
+    if (web_last_tick_time == 0) {
+        web_last_tick_time = now;
+    }
+
+    double elapsed = now - web_last_tick_time;
+
+    // Game logic runs at 30 Hz (33.33ms per tick)
+    // Only run a game tick when enough time has accumulated
+    if (elapsed >= sFrameTime) {
+        // Catch up but cap at 2 ticks to prevent spiral of death
+        int ticks = (int)(elapsed / sFrameTime);
+        if (ticks > 2) { ticks = 2; }
+
+        for (int i = 0; i < ticks; i++) {
+            debug_context_reset();
+            CTX_BEGIN(CTX_TOTAL);
+
+            CTX_EXTENT(CTX_NETWORK, network_update);
+            CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+            CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
+            CTX_EXTENT(CTX_SMLUA, smlua_update);
+
+            if (gAudioThread.state == INVALID) {
+                CTX_EXTENT(CTX_AUDIO, buffer_audio);
+            }
+
+            CTX_END(CTX_TOTAL);
+        }
+
+        web_last_tick_time += ticks * sFrameTime;
+        // Prevent drift accumulation
+        if (now - web_last_tick_time > sFrameTime) {
+            web_last_tick_time = now;
+        }
+
+        web_game_tick_ready = true;
+    }
+
+    // Render an interpolation frame every rAF call
+    // Delta = how far we are between the last tick and the next
+    if (web_game_tick_ready) {
+        double delta_frac = (now - web_last_tick_time) / sFrameTime;
+        if (delta_frac < 0) delta_frac = 0;
+        if (delta_frac > 1) delta_frac = 1;
+
+        gRenderingInterpolated = true;
+        gRenderingDelta = (f32)delta_frac;
+        gFramePercentage = (f32)delta_frac;
+
+        gfx_start_frame();
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations((f32)delta_frac); }
+        send_display_list(gGfxSPTask);
+        gfx_end_frame_render();
+        gfx_display_frame();
+        sDrawnFrames++;
+
+        gRenderingInterpolated = false;
+
+        // FPS counter
+        if (now >= sFpsTimeLast + 1.0) {
+            compute_fps(now);
+        }
+    }
+
     djui_lua_profiler_update();
 }
 #endif
