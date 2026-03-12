@@ -1,8 +1,5 @@
 #include <ultra64.h>
 #include <string.h>
-#ifdef TARGET_WEB
-#include <emscripten.h>
-#endif
 
 #include "sm64.h"
 #include "audio/external.h"
@@ -1131,29 +1128,11 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
     sCurrentCmd = cmd;
 
     CTX_BEGIN(CTX_LEVEL_SCRIPT);
-#ifdef TARGET_WEB
-    double _lsStartMs = emscripten_get_now();
-    int _lsCmdCount = 0;
-    extern volatile int gWebAbortFlag;
-#endif
     while (sScriptStatus == SCRIPT_RUNNING) {
         sCurrentCmd = dynos_swap_cmd(sCurrentCmd);
         void *dynosCurrCmd = (void *) sCurrentCmd;
 
         if (sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
-#ifdef TARGET_WEB
-            _lsCmdCount++;
-            if ((_lsCmdCount & 0x3FF) == 0) { // check every 1024 iterations
-                double _elapsedMs = emscripten_get_now() - _lsStartMs;
-                if (_elapsedMs > 3000.0) {
-                    printf("[Web] level_script_execute TIMEOUT: %d cmds in %.0fms, last cmd type=0x%02X\n",
-                        _lsCmdCount, _elapsedMs, sCurrentCmd->type);
-                    gWebAbortFlag = 1;
-                    sScriptStatus = SCRIPT_PAUSED;
-                    break;
-                }
-            }
-#endif
             LevelScriptJumpTable[sCurrentCmd->type]();
         }
 

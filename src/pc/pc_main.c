@@ -399,11 +399,6 @@ void produce_one_frame(void) {
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB) {
-#ifdef TARGET_WEB
-    static int sDummyFrameCount = 0;
-    sDummyFrameCount++;
-    EM_ASM({ console.log("[Web] produce_one_dummy_frame #" + $0); }, sDummyFrameCount);
-#endif
     // measure frame start time
     f64 frameStart = clock_elapsed_f64();
     f64 targetFrameTime = 1.0 / 60.0; // update at 60fps
@@ -546,33 +541,8 @@ static void web_auto_network(void) {
     }
 }
 
-// Global abort flag — set by watchdog, checked by hot loops
-volatile int gWebAbortFlag = 0;
-
 EMSCRIPTEN_KEEPALIVE
 void web_one_iteration(void) {
-    static int sIterCount = 0;
-    sIterCount++;
-
-    // JavaScript watchdog: detect if this C function never returns
-    EM_ASM({
-        window._wasm_iter_start = performance.now();
-        if (!window._wasm_watchdog) {
-            window._wasm_watchdog = setInterval(function() {
-                if (window._wasm_iter_start > 0) {
-                    var elapsed = performance.now() - window._wasm_iter_start;
-                    if (elapsed > 2000) {
-                        console.error('[WATCHDOG] web_one_iteration stuck for ' + Math.round(elapsed) + 'ms!');
-                    }
-                }
-            }, 500);
-        }
-    });
-
-    if (sIterCount % 300 == 0) {
-        EM_ASM({ console.log("[Web] web_one_iteration #" + $0); }, sIterCount);
-    }
-
     double now = emscripten_get_now() / 1000.0; // ms -> seconds
 
     // Initialize on first call
@@ -652,9 +622,6 @@ void web_one_iteration(void) {
     }
 
     djui_lua_profiler_update();
-
-    // Clear watchdog — we returned successfully
-    EM_ASM({ window._wasm_iter_start = 0; });
 }
 #endif
 

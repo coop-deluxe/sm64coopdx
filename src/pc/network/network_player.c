@@ -238,20 +238,11 @@ void network_player_update(void) {
         if (!np->connected) { return; }
         float elapsed = (clock_elapsed() - np->lastReceived);
 
-#ifdef TARGET_WEB
-        static int sDebugCounter = 0;
-        if (++sDebugCounter % 30 == 0) {
-            printf("[Web] CLIENT timeout: elapsed=%.2f lastRecv=%.2f now=%.2f limit=%.1f connected=%d\n",
-                elapsed, np->lastReceived, clock_elapsed(), NETWORK_PLAYER_TIMEOUT * 1.5f, np->connected);
-        }
-#endif
-
 #ifdef DEVELOPMENT
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f && (gNetworkSystem != &gNetworkSystemSocket)) {
 #else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
 #endif
-            printf("[Web] DISCONNECTING: elapsed=%.2f lastRecv=%.2f now=%.2f\n", elapsed, np->lastReceived, clock_elapsed());
             network_shutdown(false, false, true, false);
         }
 

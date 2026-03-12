@@ -622,26 +622,12 @@
         try { cb(ts); } catch(e) { console.error('[Web Shell] rAF callback exception:', e); }
       });
     };
-    // Also intercept setTimeout since Emscripten may use it instead of rAF
-    var _origST = window.setTimeout;
-    var _emMainLoopId = null;
-    window.setTimeout = function(cb, ms) {
-      var id = _origST.call(window, function() {
-        if (id === _emMainLoopId) _webLastIterTime = Date.now();
-        if (typeof cb === 'function') {
-          try { cb(); } catch(e) { console.error('[Web Shell] setTimeout callback exception:', e); }
-        }
-      }, ms);
-      // Track the first setTimeout(0) as the likely main loop
-      if (ms === 0 && _emMainLoopId === null && _webLastIterTime > 0) _emMainLoopId = id;
-      return id;
-    };
     setInterval(function() {
       var stalled = Date.now() - _webLastIterTime;
-      if (stalled > 3000) {
+      if (stalled > 10000) {
         console.warn('[Web Shell] Main loop stalled for ' + stalled + 'ms!');
       }
-    }, 2000);
+    }, 5000);
 
     // Detect WebGL context loss
     document.getElementById('canvas').addEventListener('webglcontextlost', function(e) {

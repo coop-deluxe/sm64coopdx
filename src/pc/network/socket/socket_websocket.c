@@ -118,9 +118,7 @@ SOCKET socket_initialize(void) {
 
 void socket_shutdown(SOCKET socket) {
     (void)socket;
-    printf("[Web] socket_shutdown called, sWebSocket=%d", sWebSocket);
     if (sWebSocket) {
-        printf("[Web] closing WebSocket...");
         emscripten_websocket_close(sWebSocket, 1000, "shutdown");
         emscripten_websocket_delete(sWebSocket);
         sWebSocket = 0;
@@ -211,16 +209,14 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
                 get_page_hostname(), DEFAULT_PROXY_PORT, configJoinIp, port);
         }
 
-        printf("[Web] CLIENT MODE: Connecting via %s", wsUrl);
-        printf("[Web] CLIENT MODE: configJoinIp='%s' configJoinPort=%d", configJoinIp, configJoinPort);
+        LOG_INFO("CLIENT MODE: Connecting via %s", wsUrl);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", configJoinIp);
 
-        if (!ws_connect(wsUrl)) { printf("[Web] ws_connect failed!"); return false; }
+        if (!ws_connect(wsUrl)) { LOG_ERROR("ws_connect failed"); return false; }
 
         djui_connect_menu_open();
         gNetworkType = NT_CLIENT;
 
-        printf("[Web] Client mode initialized, sending mod list request");
         network_send_mod_list_request();
         return true;
     }

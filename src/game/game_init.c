@@ -599,15 +599,7 @@ void thread5_game_loop(UNUSED void *arg) {
     gGlobalTimer++;
 }
 
-#ifdef TARGET_WEB
-#include <time.h>
-extern volatile int gWebAbortFlag;
-#endif
-
 void game_loop_one_iteration(void) {
-#ifdef TARGET_WEB
-    clock_t _gloi_start = clock();
-#endif
     profiler_log_thread5_time(THREAD5_START);
 
     // if any controllers are plugged in, start read the data for when
@@ -617,29 +609,11 @@ void game_loop_one_iteration(void) {
         osContStartReadData(&gSIEventMesgQueue);
     }
 
-#ifdef TARGET_WEB
-#define WEB_CHECK_TIMEOUT(label) do { \
-    clock_t _now = clock(); \
-    double _secs = (double)(_now - _gloi_start) / CLOCKS_PER_SEC; \
-    if (_secs > 2.0) { \
-        gWebAbortFlag = 1; \
-        printf("[Web] TIMEOUT after %s (%.1fs elapsed)\n", label, _secs); \
-        return; \
-    } \
-} while(0)
-#else
-#define WEB_CHECK_TIMEOUT(label)
-#endif
     audio_game_loop_tick();
-    WEB_CHECK_TIMEOUT("audio_game_loop_tick");
     config_gfx_pool();
-    WEB_CHECK_TIMEOUT("config_gfx_pool");
     read_controller_inputs();
-    WEB_CHECK_TIMEOUT("read_controller_inputs");
     levelCommandAddr = level_script_execute(levelCommandAddr);
-    WEB_CHECK_TIMEOUT("level_script_execute");
     display_and_vsync();
-    WEB_CHECK_TIMEOUT("display_and_vsync");
 
     // when debug info is enabled, print the "BUF %d" information.
     if (gShowDebugText) {
