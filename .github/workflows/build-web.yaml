@@ -34,6 +34,20 @@ jobs:
         with:
           version: 3.1.64
 
+      - name: Cache Emscripten system libs
+        uses: actions/cache@v4
+        with:
+          path: ~/.emscripten_cache
+          key: emsdk-3.1.64-${{ runner.os }}
+
+      - name: Cache build objects
+        uses: actions/cache@v4
+        with:
+          path: build/us_pc
+          key: build-web-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
+          restore-keys: |
+            build-web-${{ runner.os }}-
+
       - name: Verify Emscripten
         run: emcc --version
 
