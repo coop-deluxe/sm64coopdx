@@ -22,7 +22,7 @@ bool djui_language_init(char* lang) {
     if (!lang || lang[0] == '\0') { lang = "English"; }
     snprintf(path, SYS_MAX_PATH, "%s/lang/%s.ini", sys_resource_path(), lang);
 
-    // load normal lang
+    // load user lang
     sLang = ini_load(path);
 
     // load english lang
