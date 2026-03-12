@@ -619,7 +619,7 @@
           PeerNetwork.connections[conn.peer] = conn;
           PeerNetwork.peerToSlot[conn.peer] = slotId;
           PeerNetwork.slotToPeer[slotId] = conn.peer;
-          console.log('[PeerJS] Client connected: slot ' + slotId + ' peer ' + conn.peer);
+          console.log('[PeerJS] Client connected: slot ' + slotId + ' peer ' + conn.peer + ' open=' + conn.open);
 
           conn.on('data', function(data) {
             // Received from client - queue with slot ID for C code
