@@ -449,8 +449,59 @@ void game_exit(void) {
 #ifdef TARGET_WEB
 #include <emscripten/html5.h>
 
+// URL params parsed at startup, used by web_auto_network
+static char sWebJoinParam[256] = {0};
+static char sWebHostParam[256] = {0};
+
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;
+static bool web_auto_network_done = false;
+
+static void web_auto_network(void) {
+    if (web_auto_network_done) return;
+    if (!gGameInited) return; // wait until game is fully initialized
+    web_auto_network_done = true;
+    printf("[Web] web_auto_network: join='%s' host='%s'\n", sWebJoinParam, sWebHostParam);
+
+    if (sWebJoinParam[0] != '\0') {
+        printf("[Web] Auto-join from URL: %s", sWebJoinParam);
+
+        char joinHost[256] = {0};
+        int joinPort = DEFAULT_PORT;
+        char* colon = strchr(sWebJoinParam, ':');
+        if (colon) {
+            int hostLen = (int)(colon - sWebJoinParam);
+            if (hostLen > 0 && hostLen < 256) {
+                memcpy(joinHost, sWebJoinParam, hostLen);
+                joinHost[hostLen] = '\0';
+            }
+            joinPort = atoi(colon + 1);
+            if (joinPort <= 0 || joinPort > 65535) joinPort = DEFAULT_PORT;
+        } else {
+            snprintf(joinHost, sizeof(joinHost), "%s", sWebJoinParam);
+        }
+
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", joinHost);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", joinHost);
+        configJoinPort = joinPort;
+        network_reset_reconnect_and_rehost();
+        network_set_system(NS_SOCKET);
+        network_init(NT_CLIENT, false);
+    } else if (sWebHostParam[0] != '\0') {
+        int port = atoi(sWebHostParam);
+        if (port <= 0 || port > 65535) port = DEFAULT_PORT;
+        printf("[Web] Auto-host from URL on port %d", port);
+
+        configNetworkSystem = NS_SOCKET;
+        configHostPort = port;
+
+        static struct Object sHackyObjectUrl = { 0 };
+        gMarioStates[0].marioObj = &sHackyObjectUrl;
+
+        extern void djui_panel_do_host(bool reconnecting, bool playSound);
+        djui_panel_do_host(false, false);
+    }
+}
 
 static void web_one_iteration(void) {
     double now = emscripten_get_now() / 1000.0; // ms -> seconds
@@ -459,6 +510,9 @@ static void web_one_iteration(void) {
     if (web_last_tick_time == 0) {
         web_last_tick_time = now;
     }
+
+    // Auto-join/host from URL params (runs once when game is ready)
+    web_auto_network();
 
     double elapsed = now - web_last_tick_time;
 
@@ -564,6 +618,15 @@ void* main_game_init(UNUSED void* dummy) {
 int main(int argc, char *argv[]) {
 #ifdef TARGET_WEB
     printf("[WEB BUILD] Build timestamp: " __DATE__ " " __TIME__ "\n");
+    // Read URL params NOW before any ASYNCIFY sleep points can cause re-entry
+    EM_ASM({
+        var params = new URLSearchParams(window.location.search);
+        var j = params.get('join') || '';
+        var h = params.get('host') || '';
+        if (j) stringToUTF8(j, $0, 256);
+        if (h) stringToUTF8(h, $1, 256);
+    }, sWebJoinParam, sWebHostParam);
+    printf("[Web] URL params: join='%s' host='%s'\n", sWebJoinParam, sWebHostParam);
 #endif
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
@@ -707,9 +770,11 @@ int main(int argc, char *argv[]) {
 
     // main loop
 #ifdef TARGET_WEB
-    // simulate_infinite_loop=1: main() never returns, preventing Emscripten
-    // runtime cleanup from closing WebSockets and other resources
-    emscripten_set_main_loop(web_one_iteration, 0, 1);
+    // simulate_infinite_loop=0: main() returns after setting up the callback,
+    // but the callback keeps running. We use EXIT_RUNTIME=0 (default) to
+    // prevent Emscripten from cleaning up when main() returns.
+    emscripten_set_main_loop(web_one_iteration, 0, 0);
+    return 0;
 #else
     while (true) {
         debug_context_reset();

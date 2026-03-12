@@ -429,6 +429,13 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
+#ifdef TARGET_WEB
+    // On web client, packets from server arrive with UNKNOWN_LOCAL_INDEX.
+    // Update the server player's lastReceived to prevent timeout disconnect.
+    if (gNetworkType == NT_CLIENT && gNetworkPlayerServer != NULL && gNetworkPlayerServer->connected) {
+        gNetworkPlayerServer->lastReceived = clock_elapsed();
+    }
+#endif
 
     // subtract and check hash
     if (!packet_check_hash(&p)) {
@@ -679,7 +686,7 @@ void network_mod_dev_mode_reload(void) {
 
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
-    LOG_INFO("network_shutdown called (sendLeaving=%d exiting=%d popup=%d reconnecting=%d)", sendLeaving, exiting, popup, reconnecting);
+    printf("[Web] network_shutdown called (sendLeaving=%d exiting=%d popup=%d reconnecting=%d)", sendLeaving, exiting, popup, reconnecting);
     smlua_call_event_hooks(HOOK_ON_EXIT);
 
     if (gDjuiChatBox != NULL) {

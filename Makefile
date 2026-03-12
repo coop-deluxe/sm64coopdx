@@ -947,6 +947,7 @@ ifeq ($(TARGET_WEB),1)
     -s EXPORTED_FUNCTIONS='["_main","_rom_on_drop_file","_web_rom_loaded","_web_get_rom_status","_web_save_to_idb","_web_fs_init","_malloc","_free"]' \
     -s ASYNCIFY \
     -s ASYNCIFY_STACK_SIZE=65536 \
+    -s EXIT_RUNTIME=0 \
     -lidbfs.js -lwebsocket.js \
     --preload-file lang@/sm64coopdx/lang \
     --shell-file src/pc/web/shell.html

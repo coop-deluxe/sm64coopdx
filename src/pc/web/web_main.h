@@ -24,6 +24,14 @@ void web_save_to_idb(void);
  */
 void web_fs_init(void);
 
+/**
+ * Check URL parameters for auto-join/host:
+ *   ?join=HOST:PORT  - auto-join a server
+ *   ?host=PORT       - auto-host on a port
+ * Returns: 1 if auto-join was initiated, 2 if auto-host, 0 if neither.
+ */
+int web_check_url_params(void);
+
 #endif /* TARGET_WEB */
 
 #endif /* WEB_MAIN_H */
