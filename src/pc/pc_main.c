@@ -532,15 +532,21 @@ static void web_auto_network(void) {
         djui_panel_do_host(false, false);
     } else if (sWebRoomParam[0] != '\0') {
         // PeerJS room-based networking: ?room=ROOMID
-        // Always start as NT_CLIENT (same as GUI join flow).
-        // PeerJS auto-detects role: if room is free, we become host and
-        // ns_socket_update switches gNetworkType to NT_SERVER.
-        // If room exists, we join as client normally.
+        // Start as HOST via djui_panel_do_host (creates game session).
+        // PeerJS will try to register the room ID. If the room is already
+        // taken, ns_socket_update detects we're a client and just switches
+        // gNetworkType + sends the mod list request. The game session
+        // created by djui_panel_do_host still works in client mode since
+        // the session state gets overwritten during the join handshake.
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
         snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sWebRoomParam);
-        network_reset_reconnect_and_rehost();
-        network_set_system(NS_SOCKET);
-        network_init(NT_CLIENT, false);
+        configNetworkSystem = NS_SOCKET;
+
+        static struct Object sHackyObjectRoom = { 0 };
+        gMarioStates[0].marioObj = &sHackyObjectRoom;
+
+        extern void djui_panel_do_host(bool reconnecting, bool playSound);
+        djui_panel_do_host(false, false);
     }
 }
 
