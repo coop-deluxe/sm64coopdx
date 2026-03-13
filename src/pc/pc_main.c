@@ -488,8 +488,8 @@ static char sWebRoomParam[256] = {0};
 
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;
-static bool web_auto_network_done = false;
-static bool web_peer_waiting = false;
+bool web_auto_network_done = false;
+bool web_peer_waiting = false;
 
 static void web_auto_network(void) {
     // Poll for PeerJS role resolution

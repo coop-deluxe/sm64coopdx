@@ -12,6 +12,9 @@
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "macros.h"
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 static struct DjuiInputbox* sInputboxIp = NULL;
 
@@ -198,15 +201,24 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
     }
     network_reset_reconnect_and_rehost();
 #ifdef TARGET_WEB
-    // On web, the input is a PeerJS room ID, not an IP:port
+    // On web, use PeerJS auto-detect: try to be host, fall back to client.
+    // This is the same flow as the ?room= URL parameter.
     snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
     snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+    EM_ASM({ PeerNetwork.init(UTF8ToString($0)); }, sInputboxIp->buffer);
+    // The web_auto_network() poll loop in pc_main.c will detect the role
+    // and call djui_panel_do_host() or network_init(NT_CLIENT) accordingly.
+    extern bool web_auto_network_done;
+    extern bool web_peer_waiting;
+    web_peer_waiting = true;
+    web_auto_network_done = false;
+    djui_panel_shutdown();
 #else
     djui_panel_join_direct_ip_text_set_new();
-#endif
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT, false);
     djui_panel_join_message_create(caller);
+#endif
 }
 
 void djui_panel_join_direct_create(struct DjuiBase* caller) {
@@ -215,7 +227,7 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
 #ifdef TARGET_WEB
-        struct DjuiText* text1 = djui_text_create(body, "Enter a Room ID to join.\nShare the same Room ID to play together.");
+        struct DjuiText* text1 = djui_text_create(body, "Enter a Room ID.\nShare the same ID to play together.\nFirst player hosts, others join automatically.");
 #else
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));
 #endif
@@ -240,7 +252,11 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
+#ifdef TARGET_WEB
+            struct DjuiButton* button2 = djui_button_create(&rect2->base, "PLAY", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_direct_do_join);
+#else
             struct DjuiButton* button2 = djui_button_create(&rect2->base, DLANG(JOIN, JOIN), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_direct_do_join);
+#endif
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             defaultBase = &button2->base;

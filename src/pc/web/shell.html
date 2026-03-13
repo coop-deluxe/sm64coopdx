@@ -1533,26 +1533,30 @@
       _saveEnabledState: function() {
         if (!this._cwraps) return;
         var c = this._cwraps;
-        var enabled = [];
+        // Save {path: enabled} map so we can distinguish "disabled" from "new"
+        var state = {};
         for (var i = 0; i < c.getCount(); i++) {
-          if (c.getEnabled(i)) enabled.push(c.getPath(i));
+          state[c.getPath(i)] = !!c.getEnabled(i);
         }
-        localStorage.setItem('sm64coopdx_mods_enabled', JSON.stringify(enabled));
+        localStorage.setItem('sm64coopdx_mods_enabled', JSON.stringify(state));
       },
 
       _restoreEnabledState: function() {
         if (!this._cwraps) return;
+        var c = this._cwraps;
         var json = localStorage.getItem('sm64coopdx_mods_enabled');
-        if (!json) return;
-        try {
-          var enabled = JSON.parse(json);
-          var c = this._cwraps;
-          for (var i = 0; i < c.getCount(); i++) {
-            var path = c.getPath(i);
-            var shouldEnable = enabled.indexOf(path) !== -1;
-            c.setEnabled(i, shouldEnable ? 1 : 0);
+        var saved = null;
+        try { if (json) saved = JSON.parse(json); } catch(e) {}
+        for (var i = 0; i < c.getCount(); i++) {
+          var path = c.getPath(i);
+          if (saved && path in saved) {
+            // Known mod — restore saved state
+            c.setEnabled(i, saved[path] ? 1 : 0);
+          } else {
+            // New mod (not in saved state) — enable by default
+            c.setEnabled(i, 1);
           }
-        } catch(e) {}
+        }
       },
 
       deleteMod: function(index) {
