@@ -203,6 +203,14 @@ void packet_receive(struct Packet* p) {
 
     // parse the packet without processing the rest
     if (packet_initial_read(p)) {
+        if (gNetworkType == NT_SERVER) {
+            static int sRxLog = 0;
+            if (++sRxLog <= 80) {
+                printf("[HOST RX] pktType=%d localIdx=%d broadcast=%d connected=[%d,%d,%d]\n",
+                    packetType, p->localIndex, p->requestBroadcast,
+                    gNetworkPlayers[1].connected, gNetworkPlayers[2].connected, gNetworkPlayers[3].connected);
+            }
+        }
         if (gNetworkType == NT_SERVER && p->destGlobalId != PACKET_DESTINATION_BROADCAST && p->destGlobalId != 0 && packetType != PACKET_ACK && packetType != PACKET_MOD_LIST_REQUEST) {
             // this packet is meant for someone else
             struct Packet p2 = { 0 };
@@ -226,8 +234,8 @@ void packet_receive(struct Packet* p) {
             for (s32 i = 1; i < MAX_PLAYERS; i++) {
                 if (!gNetworkPlayers[i].connected) { continue; }
                 if (i == p->localIndex) { continue; }
-                if (++sBroadcastLogCount <= 30) {
-                    LOG_INFO("broadcast relay: pktType=%d from=%d to=%d", packetType, p->localIndex, i);
+                if (++sBroadcastLogCount <= 50) {
+                    printf("[RELAY] pktType=%d from=%d to=%d\n", packetType, p->localIndex, i);
                 }
                 struct Packet p2 = { 0 };
                 packet_duplicate(p, &p2);
