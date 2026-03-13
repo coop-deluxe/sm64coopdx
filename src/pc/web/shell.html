@@ -156,15 +156,18 @@
       cursor: pointer; padding: 0 4px;
     }
     #mod-close-btn:hover { color: #e94560; }
-    #mod-upload-area {
-      margin: 12px 20px; padding: 18px; text-align: center;
+    #mod-upload-row {
+      display: flex; gap: 8px; margin: 12px 20px;
+    }
+    .mod-upload-btn {
+      flex: 1; padding: 14px 8px; text-align: center;
       background: #16213e; border: 2px dashed #0f3460; border-radius: 8px;
       cursor: pointer; transition: border-color 0.2s;
     }
-    #mod-upload-area:hover { border-color: #e94560; }
-    #mod-upload-area p { margin: 0; font-size: 0.95rem; }
-    #mod-upload-area .hint { font-size: 0.8rem; color: #666; margin-top: 4px; }
-    #mod-upload-file { display: none; }
+    .mod-upload-btn:hover { border-color: #e94560; }
+    .mod-upload-btn p { margin: 0; font-size: 0.9rem; }
+    .mod-upload-btn .hint { font-size: 0.75rem; color: #666; margin-top: 3px; }
+    .mod-upload-hidden { display: none; }
     #mod-list {
       flex: 1; overflow-y: auto; padding: 0 20px 16px;
       min-height: 100px; max-height: 50vh;
@@ -289,11 +292,18 @@
         <h2>Mod Manager</h2>
         <button id="mod-close-btn" title="Close">&times;</button>
       </div>
-      <div id="mod-upload-area" onclick="document.getElementById('mod-upload-file').click()">
-        <p>Click to upload mod files</p>
-        <p class="hint">Accepts .lua or .zip mod files</p>
+      <div id="mod-upload-row">
+        <div class="mod-upload-btn" onclick="document.getElementById('mod-upload-lua').click()">
+          <p>Upload .lua</p>
+          <p class="hint">Lua mod scripts</p>
+        </div>
+        <div class="mod-upload-btn" onclick="document.getElementById('mod-upload-zip').click()">
+          <p>Upload .zip</p>
+          <p class="hint">Mod packages</p>
+        </div>
       </div>
-      <input type="file" id="mod-upload-file" accept=".lua,.luac,.zip" multiple>
+      <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
+      <input type="file" id="mod-upload-zip" class="mod-upload-hidden" accept=".zip" multiple>
       <div id="mod-list"></div>
     </div>
   </div>
@@ -1538,13 +1548,17 @@
     document.getElementById('mod-overlay').addEventListener('click', function(e) {
       if (e.target === this) ModManager.hide();
     });
-    document.getElementById('mod-upload-file').addEventListener('change', function(e) {
+    document.getElementById('mod-upload-lua').addEventListener('change', function(e) {
       ModManager.uploadFiles(e.target.files);
       e.target.value = '';
     });
-    // Drag and drop on upload area
-    document.getElementById('mod-upload-area').addEventListener('dragover', function(e) { e.preventDefault(); });
-    document.getElementById('mod-upload-area').addEventListener('drop', function(e) {
+    document.getElementById('mod-upload-zip').addEventListener('change', function(e) {
+      ModManager.uploadFiles(e.target.files);
+      e.target.value = '';
+    });
+    // Drag and drop on upload row
+    document.getElementById('mod-upload-row').addEventListener('dragover', function(e) { e.preventDefault(); });
+    document.getElementById('mod-upload-row').addEventListener('drop', function(e) {
       e.preventDefault();
       ModManager.uploadFiles(e.dataTransfer.files);
     });
