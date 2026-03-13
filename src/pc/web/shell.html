@@ -794,12 +794,23 @@
       },
 
       preRun: [function() {
+        try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
+
         // Restore saved config from localStorage before main() runs
         var saved = localStorage.getItem('sm64coopdx_config');
         if (saved) {
-          try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
           FS.writeFile('/sm64coopdx/sm64config.txt', saved);
           console.log('[Web Shell] Restored config from localStorage (' + saved.length + ' bytes)');
+        }
+
+        // Restore save file from localStorage
+        var saveB64 = localStorage.getItem('sm64coopdx_save');
+        if (saveB64) {
+          var bin = atob(saveB64);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          FS.writeFile('/sm64coopdx/sm64_save_file.bin', arr);
+          console.log('[Web Shell] Restored save file from localStorage (' + arr.length + ' bytes)');
         }
       }]
     };

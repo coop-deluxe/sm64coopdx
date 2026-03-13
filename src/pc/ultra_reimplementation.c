@@ -4,6 +4,9 @@
 #include "macros.h"
 #include "platform.h"
 #include "fs/fs.h"
+#ifdef TARGET_WEB
+#include "web/web_main.h"
+#endif
 
 u8* gOverrideEeprom = NULL;
 
@@ -164,6 +167,10 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes
     }
     s32 ret = fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
     fclose(fp);
+
+#ifdef TARGET_WEB
+    web_save_savefile();
+#endif
 
     return ret;
 }

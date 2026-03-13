@@ -14,9 +14,14 @@ void web_rom_loaded(void);
 int web_get_rom_status(void);
 
 /**
- * Triggers FS.syncfs() to persist IDBFS data (saves, config, mods) to IndexedDB.
+ * Persists config to localStorage.
  */
 void web_save_to_idb(void);
+
+/**
+ * Persists save file (sm64_save_file.bin) to localStorage.
+ */
+void web_save_savefile(void);
 
 /**
  * Initializes IDBFS mounts at /save, /mods, /config and loads persisted data

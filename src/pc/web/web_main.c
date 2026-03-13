@@ -41,6 +41,22 @@ void web_save_to_idb(void) {
     );
 }
 
+EMSCRIPTEN_KEEPALIVE
+void web_save_savefile(void) {
+    emscripten_run_script(
+        "try {"
+        "  var data = FS.readFile('/sm64coopdx/sm64_save_file.bin');"
+        "  var bin = '';"
+        "  for (var i = 0; i < data.length; i++) bin += String.fromCharCode(data[i]);"
+        "  var b64 = btoa(bin);"
+        "  localStorage.setItem('sm64coopdx_save', b64);"
+        "  console.log('[Web] Save file persisted to localStorage (' + data.length + ' bytes)');"
+        "} catch(e) {"
+        "  console.error('[Web] Failed to save save-file to localStorage:', e);"
+        "}"
+    );
+}
+
 // Config is restored from localStorage in shell.html preRun (before main).
 void web_fs_init(void) {
     printf("[Web] Config persistence via localStorage.\n");
