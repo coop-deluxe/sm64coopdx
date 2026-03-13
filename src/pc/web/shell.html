@@ -455,7 +455,23 @@
         romReady = true;
         setStatus('ROM loaded. Game is starting...');
         setProgress(100);
-        hideOverlay();
+
+        // If joining a room via URL, keep the overlay until fully connected
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('room')) {
+          setStatus('Connecting to room...');
+          var joinCheck = setInterval(function() {
+            // PeerNetwork.isConnected() returns true once host is ready or client is connected
+            if (typeof PeerNetwork !== 'undefined' && PeerNetwork.peer && PeerNetwork.isConnected()) {
+              clearInterval(joinCheck);
+              hideOverlay();
+            }
+          }, 200);
+          // Fallback: hide after 15s regardless
+          setTimeout(function() { clearInterval(joinCheck); hideOverlay(); }, 15000);
+        } else {
+          hideOverlay();
+        }
       } catch (e) {
         showError('Failed to write ROM to virtual filesystem: ' + e.message);
         console.error('[Web] writeRomToFS error:', e);
