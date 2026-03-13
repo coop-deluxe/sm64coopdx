@@ -102,6 +102,7 @@ int web_check_url_params(void) {
 
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/mods/mod_import.h"
 
 EMSCRIPTEN_KEEPALIVE
 void web_mods_refresh(void) {
@@ -144,6 +145,16 @@ EMSCRIPTEN_KEEPALIVE
 const char* web_mods_get_relative_path(int index) {
     if (index < 0 || index >= gLocalMods.entryCount) return "";
     return gLocalMods.entries[index]->relativePath;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int web_mod_import_file(const char* path) {
+    bool ret = mod_import_file((char*)path);
+    if (ret) {
+        mods_refresh_local();
+        mods_update_selectable();
+    }
+    return ret ? 1 : 0;
 }
 
 #endif /* TARGET_WEB */

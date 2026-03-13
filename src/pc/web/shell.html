@@ -241,9 +241,9 @@
       </div>
       <div id="mod-upload-area" onclick="document.getElementById('mod-upload-file').click()">
         <p>Click to upload mod files</p>
-        <p class="hint">Accepts .lua files or mod directories</p>
+        <p class="hint">Accepts .lua or .zip mod files</p>
       </div>
-      <input type="file" id="mod-upload-file" accept=".lua,.luac" multiple>
+      <input type="file" id="mod-upload-file" accept=".lua,.luac,.zip" multiple>
       <div id="mod-list"></div>
     </div>
   </div>
@@ -1213,6 +1213,34 @@
         try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
         keys.forEach(function(filename) {
           var data = entries[filename];
+          // Check if this is a directory mod (stored as JSON manifest string)
+          if (typeof data === 'string') {
+            try {
+              var manifest = JSON.parse(data);
+              if (manifest._isDir && manifest.files) {
+                var modDir = MOD_VFS_PATH + filename;
+                try { FS.mkdir(modDir); } catch(ex) {}
+                var filePaths = Object.keys(manifest.files);
+                filePaths.forEach(function(rpath) {
+                  // Ensure subdirectories exist
+                  var parts = rpath.split('/');
+                  var dir = modDir;
+                  for (var p = 0; p < parts.length - 1; p++) {
+                    dir += '/' + parts[p];
+                    try { FS.mkdir(dir); } catch(ex) {}
+                  }
+                  // Decode base64 and write file
+                  var b64 = manifest.files[rpath];
+                  var bin = atob(b64);
+                  var arr = new Uint8Array(bin.length);
+                  for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+                  FS.writeFile(modDir + '/' + rpath, arr);
+                });
+                console.log('[ModManager] Restored directory mod: ' + filename + ' (' + filePaths.length + ' files)');
+                return;
+              }
+            } catch(ex) { /* not JSON, treat as raw data */ }
+          }
           FS.writeFile(MOD_VFS_PATH + filename, new Uint8Array(data));
           console.log('[ModManager] Restored mod: ' + filename + ' (' + data.byteLength + ' bytes)');
         });
@@ -1236,7 +1264,8 @@
             getDesc:    Module.cwrap('web_mods_get_description', 'string', ['number']),
             getEnabled: Module.cwrap('web_mods_get_enabled', 'number', ['number']),
             setEnabled: Module.cwrap('web_mods_set_enabled', null, ['number', 'number']),
-            getPath:    Module.cwrap('web_mods_get_relative_path', 'string', ['number'])
+            getPath:    Module.cwrap('web_mods_get_relative_path', 'string', ['number']),
+            importFile: Module.cwrap('web_mod_import_file', 'number', ['string'])
           };
           return true;
         } catch(e) { return false; }
@@ -1264,7 +1293,7 @@
         var count = c.getCount();
 
         if (count === 0) {
-          list.innerHTML = '<div id="mod-empty">No mods installed. Upload .lua files above.</div>';
+          list.innerHTML = '<div id="mod-empty">No mods installed. Upload .lua or .zip files above.</div>';
           return;
         }
 
@@ -1286,7 +1315,7 @@
       },
 
       uploadFiles: function(files) {
-        if (!files.length) return;
+        if (!files.length || !this._initCwraps()) return;
         var self = this;
         var pending = files.length;
         try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
@@ -1296,20 +1325,83 @@
           reader.onload = function(e) {
             var data = new Uint8Array(e.target.result);
             var filename = file.name;
-            // Write to Emscripten VFS
-            FS.writeFile(MOD_VFS_PATH + filename, data);
-            // Persist to IndexedDB
-            modDbPut(filename, e.target.result).then(function() {
-              console.log('[ModManager] Uploaded and persisted: ' + filename);
-            }).catch(function(err) {
-              console.error('[ModManager] Failed to persist ' + filename + ':', err);
-            });
+            var isZip = filename.toLowerCase().endsWith('.zip');
+
+            if (isZip) {
+              // Write zip to a temp path, let C extract it to the mods directory
+              var tmpPath = '/tmp/' + filename;
+              try { FS.mkdir('/tmp'); } catch(ex) {}
+              FS.writeFile(tmpPath, data);
+              self._cwraps.importFile(tmpPath);
+              try { FS.unlink(tmpPath); } catch(ex) {}
+              // After import, persist all files now in the mods directory to IndexedDB
+              self._persistModsDir();
+            } else {
+              // .lua/.luac — write directly to mods dir and persist
+              FS.writeFile(MOD_VFS_PATH + filename, data);
+              modDbPut(filename, e.target.result).then(function() {
+                console.log('[ModManager] Uploaded and persisted: ' + filename);
+              }).catch(function(err) {
+                console.error('[ModManager] Failed to persist ' + filename + ':', err);
+              });
+            }
             if (--pending === 0) {
               self.refresh();
             }
           };
           reader.readAsArrayBuffer(file);
         });
+      },
+
+      // Scan the VFS mods directory and persist every file to IndexedDB
+      _persistModsDir: function() {
+        try {
+          var entries = FS.readdir(MOD_VFS_PATH).filter(function(f) { return f !== '.' && f !== '..'; });
+          entries.forEach(function(filename) {
+            try {
+              var stat = FS.stat(MOD_VFS_PATH + filename);
+              if (FS.isDir(stat.mode)) {
+                // For directories, persist as a JSON manifest of their files
+                var dirFiles = {};
+                var _scanDir = function(base, rel) {
+                  FS.readdir(base).filter(function(f) { return f !== '.' && f !== '..'; }).forEach(function(f) {
+                    var full = base + '/' + f;
+                    var s = FS.stat(full);
+                    var rpath = rel ? rel + '/' + f : f;
+                    if (FS.isDir(s.mode)) {
+                      _scanDir(full, rpath);
+                    } else {
+                      dirFiles[rpath] = FS.readFile(full).buffer;
+                    }
+                  });
+                };
+                _scanDir(MOD_VFS_PATH + filename, '');
+                // Store directory mod as a special object
+                var manifest = { _isDir: true, files: {} };
+                var fileKeys = Object.keys(dirFiles);
+                fileKeys.forEach(function(rpath) {
+                  // Convert ArrayBuffer to base64 for JSON storage
+                  var arr = new Uint8Array(dirFiles[rpath]);
+                  var bin = '';
+                  for (var i = 0; i < arr.length; i++) bin += String.fromCharCode(arr[i]);
+                  manifest.files[rpath] = btoa(bin);
+                });
+                modDbPut(filename, JSON.stringify(manifest)).then(function() {
+                  console.log('[ModManager] Persisted directory mod: ' + filename + ' (' + fileKeys.length + ' files)');
+                });
+              } else {
+                var fileData = FS.readFile(MOD_VFS_PATH + filename);
+                modDbPut(filename, fileData.buffer).then(function() {
+                  console.log('[ModManager] Persisted: ' + filename);
+                });
+              }
+            } catch(ex) {
+              console.warn('[ModManager] Failed to persist ' + filename + ':', ex);
+            }
+          });
+        } catch(ex) {
+          console.warn('[ModManager] Failed to scan mods dir:', ex);
+        }
       },
 
       toggleMod: function(index) {
@@ -1323,8 +1415,24 @@
         if (!this._cwraps) return;
         var path = this._cwraps.getPath(index);
         var filename = path.split('/').pop();
-        // Remove from VFS
-        try { FS.unlink(MOD_VFS_PATH + filename); } catch(e) {}
+        // Remove from VFS (file or directory)
+        try {
+          var stat = FS.stat(MOD_VFS_PATH + filename);
+          if (FS.isDir(stat.mode)) {
+            // Recursively remove directory
+            var rmrf = function(p) {
+              FS.readdir(p).filter(function(f) { return f !== '.' && f !== '..'; }).forEach(function(f) {
+                var full = p + '/' + f;
+                var s = FS.stat(full);
+                if (FS.isDir(s.mode)) rmrf(full); else FS.unlink(full);
+              });
+              FS.rmdir(p);
+            };
+            rmrf(MOD_VFS_PATH + filename);
+          } else {
+            FS.unlink(MOD_VFS_PATH + filename);
+          }
+        } catch(e) {}
         // Remove from IndexedDB
         modDbDelete(filename).then(function() {
           console.log('[ModManager] Deleted: ' + filename);
