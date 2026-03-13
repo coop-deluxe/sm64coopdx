@@ -445,14 +445,16 @@ void ssgi_render(void) {
     float inv_proj[16];
     invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
 
-    // Extract near/far from projection matrix
+    // Extract near/far from projection matrix (row-major: P[row][col])
+    // In row-major N64 convention: P[2][2] is the z-scale, P[2][3] is the z-translate
     float P22 = ssgi_proj_matrix[2][2];
-    float P32 = ssgi_proj_matrix[3][2];
-    float cam_near = P32 / (P22 - 1.0f);
-    float cam_far  = P32 / (P22 + 1.0f);
+    float P23 = ssgi_proj_matrix[2][3];
+    float cam_near = P23 / (P22 - 1.0f);
+    float cam_far  = P23 / (P22 + 1.0f);
     if (cam_near < 0) cam_near = -cam_near;
     if (cam_far < 0) cam_far = -cam_far;
 
+    // P[1][1] in row-major is the Y scale factor
     float half_proj_scale = (float)ssgi_height * fabsf(ssgi_proj_matrix[1][1]) * 0.5f;
 
     // Temporal noise
@@ -473,7 +475,9 @@ void ssgi_render(void) {
     glUniform1i(loc_ao_tDepth, 0);
 
     glUniform2f(loc_ao_uResolution, (float)ssgi_width, (float)ssgi_height);
-    glUniformMatrix4fv(loc_ao_uProjMatrixInverse, 1, GL_FALSE, inv_proj);
+    // coopdx stores matrices row-major (M[row][col], vertex * M convention).
+    // GL_TRUE transposes to column-major for GLSL (M * vector convention).
+    glUniformMatrix4fv(loc_ao_uProjMatrixInverse, 1, GL_TRUE, inv_proj);
     glUniform1f(loc_ao_uCameraNear, cam_near);
     glUniform1f(loc_ao_uCameraFar, cam_far);
     glUniform1f(loc_ao_uHalfProjScale, half_proj_scale);
