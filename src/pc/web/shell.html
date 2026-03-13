@@ -347,9 +347,9 @@
     <div class="touch-cbtn" id="tb-cr">▶</div>
   </div>
 
-  <!-- Hidden input for mobile keyboard. Positioned offscreen but focusable. -->
-  <input type="text" id="mobile-text-proxy" autocomplete="off" autocorrect="off" autocapitalize="off"
-         style="position:fixed;left:-9999px;top:50%;width:1px;height:1px;opacity:0;z-index:999;">
+  <!-- Proxy input for mobile keyboard. Must be on-screen and visible enough for iOS to show keyboard. -->
+  <input type="text" id="mobile-text-proxy" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+         style="position:fixed;top:0;left:0;width:100%;height:40px;opacity:0.01;z-index:-1;pointer-events:none;font-size:16px;">
 
   <script>
     var ROM_DB_NAME = 'sm64coopdx_rom';
@@ -1844,54 +1844,73 @@
     }, 1000);
 
     // ---- Mobile keyboard proxy for DJUI text input ----
+    // Mobile browsers require focus() to happen inside a user-gesture event handler.
+    // We set a flag from C and then the next touch/click on the canvas triggers focus.
     var WebMobileInput = {
       _el: document.getElementById('mobile-text-proxy'),
       _active: false,
+      _wantShow: false,
 
       show: function() {
-        this._active = true;
+        // Called from C — can't focus here (not a user gesture).
+        // Set flag so the next touch/click triggers focus.
+        this._wantShow = true;
+        // Also try immediate focus (works on some Android browsers)
+        this._el.style.pointerEvents = 'auto';
+        this._el.style.zIndex = '200';
         this._el.value = '';
-        this._el.style.left = '0';
-        this._el.style.opacity = '0';
-        this._el.focus();
-        // Route typed characters to the canvas as keyboard events
+        this._el.focus({ preventScroll: true });
+        this._active = true;
       },
 
       hide: function() {
         this._active = false;
+        this._wantShow = false;
         this._el.blur();
-        this._el.style.left = '-9999px';
+        this._el.style.pointerEvents = 'none';
+        this._el.style.zIndex = '-1';
         document.getElementById('canvas').focus();
+      },
+
+      // Called from touch/click handler — this IS a user gesture
+      _tryFocus: function() {
+        if (this._wantShow) {
+          this._wantShow = false;
+          this._el.value = '';
+          this._el.style.pointerEvents = 'auto';
+          this._el.style.zIndex = '200';
+          this._el.focus({ preventScroll: true });
+          this._active = true;
+        }
       }
     };
 
-    // Forward input from the proxy element to the Emscripten canvas
+    // Hook into touch/click on canvas — if DJUI just requested keyboard, focus the proxy
+    // This runs inside the user gesture so mobile browsers will show the keyboard
+    document.getElementById('canvas').addEventListener('touchend', function() {
+      WebMobileInput._tryFocus();
+    });
+    document.getElementById('canvas').addEventListener('click', function() {
+      WebMobileInput._tryFocus();
+    });
+
+    // Forward input from the proxy to the canvas as SDL-compatible events
     document.getElementById('mobile-text-proxy').addEventListener('input', function(e) {
       if (!WebMobileInput._active) return;
       var val = e.target.value;
       if (val.length > 0) {
-        // Dispatch each character as a textInput event on the canvas
         var canvas = document.getElementById('canvas');
         for (var i = 0; i < val.length; i++) {
-          // Use SDL's text input event pathway
-          var ev = new InputEvent('textInput', { data: val[i], bubbles: true });
-          canvas.dispatchEvent(ev);
-          // Also try the Emscripten SDL text input handler directly
-          if (typeof Module !== 'undefined' && Module.SDL2) {
-            var textEvent = new Event('textInput');
-            textEvent.data = val[i];
-            canvas.dispatchEvent(textEvent);
-          }
+          canvas.dispatchEvent(new KeyboardEvent('keypress', {
+            key: val[i], charCode: val.charCodeAt(i), bubbles: true
+          }));
         }
-        // Clear for next input
         e.target.value = '';
       }
     });
 
-    // Also handle keydown events (e.g. backspace, enter) from the proxy
     document.getElementById('mobile-text-proxy').addEventListener('keydown', function(e) {
       if (!WebMobileInput._active) return;
-      // Forward key events to the canvas so SDL picks them up
       var canvas = document.getElementById('canvas');
       canvas.dispatchEvent(new KeyboardEvent('keydown', {
         key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, bubbles: true
