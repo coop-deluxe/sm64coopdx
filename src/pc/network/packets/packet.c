@@ -222,9 +222,13 @@ void packet_receive(struct Packet* p) {
     // broadcast packet
     if (p->requestBroadcast) {
         if (gNetworkType == NT_SERVER && gNetworkSystem->requireServerBroadcast) {
+            static int sBroadcastLogCount = 0;
             for (s32 i = 1; i < MAX_PLAYERS; i++) {
                 if (!gNetworkPlayers[i].connected) { continue; }
                 if (i == p->localIndex) { continue; }
+                if (++sBroadcastLogCount <= 30) {
+                    LOG_INFO("broadcast relay: pktType=%d from=%d to=%d", packetType, p->localIndex, i);
+                }
                 struct Packet p2 = { 0 };
                 packet_duplicate(p, &p2);
                 network_send_to(i, &p2);
