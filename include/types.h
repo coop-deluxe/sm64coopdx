@@ -232,7 +232,6 @@ struct ObjectNode
     struct GraphNodeObject gfx;
     struct ObjectNode *next;
     struct ObjectNode *prev;
-    struct ObjectPoolNode* pool;
 };
 
 // NOTE: Since ObjectNode is the first member of Object, it is difficult to determine

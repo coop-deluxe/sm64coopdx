@@ -2067,7 +2067,6 @@
 --- @field public gfx GraphNodeObject
 --- @field public next ObjectNode
 --- @field public prev ObjectNode
---- @field public pool ObjectPoolNode
 
 --- @class ObjectPoolNode
 --- @field public pool Object[]

@@ -155,7 +155,7 @@ static void deallocate_object(struct ObjectNode *obj) {
     if (obj->next) { obj->next->prev = obj->prev; }
     if (obj->prev) { obj->prev->next = obj->next; }
 
-    // Insert at beginning of free list
+    // Insert at beginning of the first available free list
     for (struct ObjectPoolNode* node = &gObjectPool; node != NULL; node = node->next) {
         if (node->freeList.next == NULL) { continue; }
         obj->next = node->freeList.next;
@@ -181,8 +181,6 @@ void init_free_object_list(struct ObjectPoolNode* node) {
 
     // End the list
     obj->header.next = NULL;
-    // Attach pool
-    obj->header.pool = node;
 }
 
 /**

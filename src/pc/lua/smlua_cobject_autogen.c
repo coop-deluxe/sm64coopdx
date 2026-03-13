@@ -2382,12 +2382,11 @@ static struct LuaObjectField sObjectHitboxFields[LUA_OBJECT_HITBOX_FIELD_COUNT] 
     { "radius",            LVT_S16, offsetof(struct ObjectHitbox, radius),            false, LOT_NONE, 1, sizeof(s16) },
 };
 
-#define LUA_OBJECT_NODE_FIELD_COUNT 4
+#define LUA_OBJECT_NODE_FIELD_COUNT 3
 static struct LuaObjectField sObjectNodeFields[LUA_OBJECT_NODE_FIELD_COUNT] = {
-    { "gfx",  LVT_COBJECT,   offsetof(struct ObjectNode, gfx),  true,  LOT_GRAPHNODEOBJECT, 1, sizeof(struct GraphNodeObject) },
-    { "next", LVT_COBJECT_P, offsetof(struct ObjectNode, next), true,  LOT_OBJECTNODE,      1, sizeof(struct ObjectNode*)     },
-    { "pool", LVT_COBJECT_P, offsetof(struct ObjectNode, pool), false, LOT_OBJECTPOOLNODE,  1, sizeof(struct ObjectPoolNode*) },
-    { "prev", LVT_COBJECT_P, offsetof(struct ObjectNode, prev), true,  LOT_OBJECTNODE,      1, sizeof(struct ObjectNode*)     },
+    { "gfx",  LVT_COBJECT,   offsetof(struct ObjectNode, gfx),  true, LOT_GRAPHNODEOBJECT, 1, sizeof(struct GraphNodeObject) },
+    { "next", LVT_COBJECT_P, offsetof(struct ObjectNode, next), true, LOT_OBJECTNODE,      1, sizeof(struct ObjectNode*)     },
+    { "prev", LVT_COBJECT_P, offsetof(struct ObjectNode, prev), true, LOT_OBJECTNODE,      1, sizeof(struct ObjectNode*)     },
 };
 
 #define LUA_OBJECT_POOL_NODE_FIELD_COUNT 3

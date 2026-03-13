@@ -2688,7 +2688,6 @@
 | gfx | [GraphNodeObject](structs.md#GraphNodeObject) | read-only |
 | next | [ObjectNode](structs.md#ObjectNode) | read-only |
 | prev | [ObjectNode](structs.md#ObjectNode) | read-only |
-| pool | [ObjectPoolNode](structs.md#ObjectPoolNode) |  |
 
 [:arrow_up_small:](#)
 
