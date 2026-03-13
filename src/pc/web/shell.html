@@ -321,7 +321,7 @@
       <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
       <input type="file" id="mod-upload-zip" class="mod-upload-hidden" accept=".zip" multiple>
       <div id="mod-url-row">
-        <input type="text" id="mod-url-input" placeholder="Paste direct .lua or .zip URL...">
+        <input type="text" id="mod-url-input" placeholder="Paste .lua or .zip URL (GitHub links OK)...">
         <button id="mod-url-btn">Download</button>
       </div>
       <div id="mod-url-status"></div>
@@ -1558,6 +1558,14 @@
       },
 
       // Download a mod from a direct .lua or .zip URL
+      // Convert github.com blob URLs to raw.githubusercontent.com
+      _toRawUrl: function(url) {
+        // https://github.com/USER/REPO/blob/BRANCH/PATH → https://raw.githubusercontent.com/USER/REPO/BRANCH/PATH
+        var m = url.match(/^https?:\/\/github\.com\/([^\/]+\/[^\/]+)\/blob\/(.+)$/);
+        if (m) return 'https://raw.githubusercontent.com/' + m[1] + '/' + m[2];
+        return url;
+      },
+
       downloadModFromUrl: function(inputUrl) {
         if (!this._initCwraps()) return;
         var self = this;
@@ -1565,11 +1573,14 @@
         var btn = document.getElementById('mod-url-btn');
         var input = document.getElementById('mod-url-input');
 
+        // Resolve GitHub blob URLs to raw URLs
+        var fetchUrl = self._toRawUrl(inputUrl.trim());
+
         // Extract filename from URL
-        var urlPath = inputUrl.split('?')[0].split('#')[0];
+        var urlPath = fetchUrl.split('?')[0].split('#')[0];
         var filename = urlPath.split('/').pop() || 'mod.lua';
         if (!filename.match(/\.(lua|luac|zip)$/i)) {
-          statusEl.textContent = 'URL must point directly to a .lua or .zip file.';
+          statusEl.textContent = 'URL must point to a .lua or .zip file.';
           statusEl.style.color = '#e94560';
           return;
         }
@@ -1578,7 +1589,7 @@
         statusEl.style.color = '#888';
         btn.disabled = true;
 
-        fetch(inputUrl).then(function(resp) {
+        fetch(fetchUrl).then(function(resp) {
           if (!resp.ok) throw new Error('HTTP ' + resp.status);
           return resp.arrayBuffer();
         }).then(function(buf) {
