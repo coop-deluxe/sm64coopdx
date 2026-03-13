@@ -562,6 +562,143 @@
       });
     }
 
+    // ---- Background tab keep-alive guard ----
+    // Browsers throttle timers and can freeze WebRTC data channels when a tab
+    // is backgrounded. We use three complementary techniques to prevent this:
+    //  1. Web Locks API — holds a lock that keeps the event loop alive
+    //  2. Silent audio oscillator — prevents aggressive timer throttling
+    //  3. Visibility change detection — logs warnings and increases keepalive
+
+    var BackgroundGuard = {
+      _lockHeld: false,
+      _audioCtx: null,
+      _oscillator: null,
+      _gainNode: null,
+      _keepaliveInterval: null,
+      _visible: true,
+
+      start: function() {
+        this._startWebLock();
+        this._startSilentAudio();
+        this._startVisibilityWatch();
+        this._startKeepalive();
+        console.log('[BackgroundGuard] Started — tab will stay alive when backgrounded');
+      },
+
+      // 1. Web Locks API: acquiring a lock keeps the tab's event loop from being frozen
+      _startWebLock: function() {
+        if (!navigator.locks) {
+          console.warn('[BackgroundGuard] Web Locks API not available');
+          return;
+        }
+        // Request a lock and never release it — the promise stays pending forever,
+        // which signals the browser that this tab is doing important work.
+        navigator.locks.request('sm64coopdx-keepalive', { mode: 'exclusive' }, function() {
+          BackgroundGuard._lockHeld = true;
+          console.log('[BackgroundGuard] Web Lock acquired');
+          // Return a promise that never resolves to hold the lock
+          return new Promise(function() {});
+        }).catch(function(e) {
+          console.warn('[BackgroundGuard] Web Lock failed:', e);
+        });
+      },
+
+      // 2. Silent audio: a near-inaudible oscillator prevents Chrome from
+      //    aggressively throttling timers (Chrome treats tabs with audio differently)
+      _startSilentAudio: function() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          this._audioCtx = new AC();
+          this._oscillator = this._audioCtx.createOscillator();
+          this._gainNode = this._audioCtx.createGain();
+          // Essentially inaudible
+          this._gainNode.gain.value = 0.001;
+          this._oscillator.frequency.value = 1; // 1 Hz — below hearing range
+          this._oscillator.connect(this._gainNode);
+          this._gainNode.connect(this._audioCtx.destination);
+          this._oscillator.start();
+          console.log('[BackgroundGuard] Silent audio started');
+        } catch (e) {
+          console.warn('[BackgroundGuard] Silent audio failed:', e);
+        }
+      },
+
+      // 3. Visibility change: warn in console and increase PeerJS keepalive
+      _startVisibilityWatch: function() {
+        var self = this;
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            self._visible = false;
+            console.warn('[BackgroundGuard] Tab is now HIDDEN — keep-alive active');
+            // Resume audio context if it was suspended by the browser
+            if (self._audioCtx && self._audioCtx.state === 'suspended') {
+              self._audioCtx.resume().catch(function() {});
+            }
+          } else {
+            self._visible = true;
+            console.log('[BackgroundGuard] Tab is VISIBLE again');
+          }
+        });
+      },
+
+      // 4. Periodic PeerJS ping: send a tiny keepalive through data channels
+      //    so the WebRTC SCTP association doesn't go idle. Normal interval is 5s,
+      //    but when hidden we use 1s to be safe.
+      _startKeepalive: function() {
+        var KEEPALIVE_BYTE = 0xFF; // single-byte marker the C side will ignore (too small to be a valid packet)
+        var self = this;
+
+        // Use a worker-based timer that isn't throttled in background tabs.
+        // Inline worker via Blob URL avoids needing an extra file.
+        var workerCode = 'var interval=null;onmessage=function(e){if(interval)clearInterval(interval);interval=setInterval(function(){postMessage("tick")},e.data);}';
+        try {
+          var blob = new Blob([workerCode], { type: 'application/javascript' });
+          var worker = new Worker(URL.createObjectURL(blob));
+          worker.onmessage = function() { self._sendKeepalive(); };
+          // Start with 5s interval
+          worker.postMessage(5000);
+          self._keepaliveWorker = worker;
+
+          document.addEventListener('visibilitychange', function() {
+            // Tighten interval when hidden
+            worker.postMessage(document.hidden ? 1000 : 5000);
+          });
+        } catch (e) {
+          // Fallback to setInterval (will be throttled but better than nothing)
+          console.warn('[BackgroundGuard] Worker timer failed, falling back to setInterval');
+          this._keepaliveInterval = setInterval(function() { self._sendKeepalive(); }, 3000);
+        }
+      },
+
+      _sendKeepalive: function() {
+        if (!PeerNetwork.peer || PeerNetwork.peer.destroyed) return;
+        var ping = new Uint8Array([0xFF]);
+        if (PeerNetwork.isHost) {
+          for (var peerId in PeerNetwork.connections) {
+            var conn = PeerNetwork.connections[peerId];
+            if (conn && conn.open) {
+              try { conn.send(ping); } catch (e) {}
+            }
+          }
+        } else {
+          var conn = PeerNetwork.connections[PeerNetwork.hostPeerId];
+          if (conn && conn.open) {
+            try { conn.send(ping); } catch (e) {}
+          }
+        }
+      },
+
+      stop: function() {
+        if (this._oscillator) { try { this._oscillator.stop(); } catch(e) {} }
+        if (this._audioCtx) { try { this._audioCtx.close(); } catch(e) {} }
+        if (this._keepaliveInterval) clearInterval(this._keepaliveInterval);
+        if (this._keepaliveWorker) this._keepaliveWorker.terminate();
+        this._lockHeld = false;
+        console.log('[BackgroundGuard] Stopped');
+      }
+    };
+
     // ---- PeerJS WebRTC networking module ----
 
     var PeerNetwork = {
@@ -599,6 +736,7 @@
           console.log('[PeerJS] Hosting room: ' + roomId + ' (peer ID: ' + id + ')');
           PeerNetwork.isHost = true;
           PeerNetwork._setupHost();
+          BackgroundGuard.start();
         });
 
         this.peer.on('error', function(err) {
@@ -621,6 +759,8 @@
           // Set up data handler immediately (works before or after open)
           conn.on('data', function(data) {
             var arr = new Uint8Array(data);
+            // Ignore keepalive pings (single 0xFF byte)
+            if (arr.length === 1 && arr[0] === 0xFF) return;
             if (PeerNetwork.recvBuffer.length < 3) {
               console.log('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
             }
@@ -664,11 +804,14 @@
 
           conn.on('open', function() {
             console.log('[PeerJS] Connected to host!');
+            BackgroundGuard.start();
           });
 
           conn.on('data', function(data) {
             // Received from host - queue for C code (no slot prefix in client mode)
             var arr = new Uint8Array(data);
+            // Ignore keepalive pings (single 0xFF byte)
+            if (arr.length === 1 && arr[0] === 0xFF) return;
             if (PeerNetwork.recvBuffer.length < 3) {
               console.log('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
             }
@@ -732,6 +875,7 @@
       },
 
       shutdown: function() {
+        BackgroundGuard.stop();
         for (var peerId in this.connections) {
           this.connections[peerId].close();
         }
