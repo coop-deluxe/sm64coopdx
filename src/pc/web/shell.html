@@ -347,6 +347,10 @@
     <div class="touch-cbtn" id="tb-cr">▶</div>
   </div>
 
+  <!-- Hidden input for mobile keyboard. Positioned offscreen but focusable. -->
+  <input type="text" id="mobile-text-proxy" autocomplete="off" autocorrect="off" autocapitalize="off"
+         style="position:fixed;left:-9999px;top:50%;width:1px;height:1px;opacity:0;z-index:999;">
+
   <script>
     var ROM_DB_NAME = 'sm64coopdx_rom';
     var ROM_DB_STORE = 'roms';
@@ -1229,6 +1233,13 @@
       }]
     };
 
+    // Ensure PeerJS disconnects cleanly when the page unloads
+    window.addEventListener('beforeunload', function() {
+      if (typeof PeerNetwork !== 'undefined' && PeerNetwork.peer) {
+        PeerNetwork.shutdown();
+      }
+    });
+
     window.onerror = function(msg, url, line, col, error) {
       console.error('[Web Shell] onerror:', msg, url, line, col, error);
       if (msg && msg.indexOf('abort') !== -1) {
@@ -1831,6 +1842,68 @@
         } catch(e) {}
       }
     }, 1000);
+
+    // ---- Mobile keyboard proxy for DJUI text input ----
+    var WebMobileInput = {
+      _el: document.getElementById('mobile-text-proxy'),
+      _active: false,
+
+      show: function() {
+        this._active = true;
+        this._el.value = '';
+        this._el.style.left = '0';
+        this._el.style.opacity = '0';
+        this._el.focus();
+        // Route typed characters to the canvas as keyboard events
+      },
+
+      hide: function() {
+        this._active = false;
+        this._el.blur();
+        this._el.style.left = '-9999px';
+        document.getElementById('canvas').focus();
+      }
+    };
+
+    // Forward input from the proxy element to the Emscripten canvas
+    document.getElementById('mobile-text-proxy').addEventListener('input', function(e) {
+      if (!WebMobileInput._active) return;
+      var val = e.target.value;
+      if (val.length > 0) {
+        // Dispatch each character as a textInput event on the canvas
+        var canvas = document.getElementById('canvas');
+        for (var i = 0; i < val.length; i++) {
+          // Use SDL's text input event pathway
+          var ev = new InputEvent('textInput', { data: val[i], bubbles: true });
+          canvas.dispatchEvent(ev);
+          // Also try the Emscripten SDL text input handler directly
+          if (typeof Module !== 'undefined' && Module.SDL2) {
+            var textEvent = new Event('textInput');
+            textEvent.data = val[i];
+            canvas.dispatchEvent(textEvent);
+          }
+        }
+        // Clear for next input
+        e.target.value = '';
+      }
+    });
+
+    // Also handle keydown events (e.g. backspace, enter) from the proxy
+    document.getElementById('mobile-text-proxy').addEventListener('keydown', function(e) {
+      if (!WebMobileInput._active) return;
+      // Forward key events to the canvas so SDL picks them up
+      var canvas = document.getElementById('canvas');
+      canvas.dispatchEvent(new KeyboardEvent('keydown', {
+        key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, bubbles: true
+      }));
+    });
+    document.getElementById('mobile-text-proxy').addEventListener('keyup', function(e) {
+      if (!WebMobileInput._active) return;
+      var canvas = document.getElementById('canvas');
+      canvas.dispatchEvent(new KeyboardEvent('keyup', {
+        key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, bubbles: true
+      }));
+    });
   </script>
 
   {{{ SCRIPT }}}
