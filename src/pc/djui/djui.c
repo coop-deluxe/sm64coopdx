@@ -7,7 +7,6 @@
 #include "djui_panel_join_message.h"
 #include "djui_ctx_display.h"
 #include "djui_fps_display.h"
-#include "djui_playerlist_display.h"
 #include "djui_lua_profiler.h"
 #include "../debuglog.h"
 #include "pc/cliopts.h"
@@ -62,7 +61,6 @@ void djui_shutdown(void) {
     }
 
     djui_fps_display_destroy();
-    djui_playerlist_display_destroy();
     djui_ctx_display_destroy();
     djui_lua_profiler_destroy();
 
@@ -129,7 +127,6 @@ void djui_init(void) {
     djui_console_create();
 
     djui_fps_display_create();
-    djui_playerlist_display_create();
     djui_ctx_display_create();
     djui_lua_profiler_create();
 
@@ -221,7 +218,6 @@ void djui_render(void) {
     }
 
     djui_fps_display_render();
-    djui_playerlist_display_render();
     djui_ctx_display_render();
 
     if (sDjuiLuaErrorTimeout > 0) {
