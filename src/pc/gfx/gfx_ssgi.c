@@ -15,6 +15,10 @@
 #include <stdio.h>
 #include <math.h>
 
+#ifdef USE_GLES
+#include <emscripten/html5.h>
+#endif
+
 // ---- Shader sources (embedded) ----
 
 // Use #version 100 (GLSL ES 1.00) for WebGL compatibility.
@@ -313,6 +317,20 @@ static void ssgi_destroy_fbos(void) {
 void ssgi_init(void) {
     if (ssgi_initialized) return;
 
+#ifdef USE_GLES
+    // WebGL requires explicit extension activation for depth textures
+    {
+        EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx = emscripten_webgl_get_current_context();
+        if (!emscripten_webgl_enable_extension(ctx, "WEBGL_depth_texture") &&
+            !emscripten_webgl_enable_extension(ctx, "OES_depth_texture")) {
+            printf("[SSGI] Depth texture extension not available — disabling SSGI\n");
+            ssgi_enabled = false;
+            return;
+        }
+        printf("[SSGI] Depth texture extension enabled\n");
+    }
+#endif
+
     // Compile shaders
     ssgi_ao_program = link_program(vert_src, ao_frag_src);
     ssgi_composite_program = link_program(vert_src, composite_frag_src);
@@ -371,7 +389,10 @@ void ssgi_start_frame(void) {
         ssgi_resize(w, h);
     }
 
+    // After resize, check if SSGI was disabled due to FBO failure
+    if (!ssgi_enabled) return;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
+    if (!ssgi_scene_fbo) return;
 
     // Redirect rendering into the scene FBO
     glBindFramebuffer(GL_FRAMEBUFFER, ssgi_scene_fbo);
