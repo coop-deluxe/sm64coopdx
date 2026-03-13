@@ -686,20 +686,27 @@
       _sendCount: 0,
       send: function(slotId, data) {
         this._sendCount++;
-        if (this._sendCount <= 3) {
-          console.log('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost);
+        if (this._sendCount <= 10) {
+          console.log('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost + ' slots=' + JSON.stringify(this.slotToPeer) + ' conns=' + Object.keys(this.connections).length);
         }
         if (this.isHost) {
           if (slotId === 0) {
             // Broadcast to all clients
+            var count = 0;
             for (var peerId in this.connections) {
               var conn = this.connections[peerId];
-              if (conn.open) conn.send(data);
+              if (conn.open) { conn.send(data); count++; }
             }
+            if (this._sendCount <= 10) console.log('[PeerJS] broadcast to ' + count + ' clients');
           } else {
             var peerId = this.slotToPeer[slotId];
             if (peerId && this.connections[peerId] && this.connections[peerId].open) {
               this.connections[peerId].send(data);
+            } else {
+              if (!this._relayFailLogged) this._relayFailLogged = 0;
+              if (++this._relayFailLogged <= 20) {
+                console.warn('[PeerJS] RELAY FAIL: slot=' + slotId + ' peerId=' + peerId + ' connExists=' + !!(peerId && this.connections[peerId]) + ' slots=' + JSON.stringify(this.slotToPeer));
+              }
             }
           }
         } else {
