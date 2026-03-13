@@ -22,9 +22,8 @@
 
 /**
  * The maximum number of objects that can be loaded at once.
- * Kept for compatibility, but is unused.
  */
-#define OBJECT_POOL_CAPACITY 0xFFFFFFFF
+#define OBJECT_POOL_CAPACITY 4096
 /**
  * The maximum number of objects that can be in a single pool node.
  * A higher number might be better for less fragmentation.

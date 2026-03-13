@@ -108,12 +108,15 @@ struct Object* try_allocate_object(struct ObjectNode* destList, struct ObjectPoo
         }
         destList->prev = nextObj;
     } else {
-        if (node->next != NULL) {
-            return try_allocate_object(destList, node->next);
+        if (gPrevFrameObjectCount > OBJECT_POOL_CAPACITY) {
+            return NULL;
         }
 
-        node->next = (struct ObjectPoolNode*)calloc(1, sizeof(struct ObjectPoolNode));
-        reinit_objects(node->next);
+        if (node->next == NULL) {
+            node->next = (struct ObjectPoolNode*)calloc(1, sizeof(struct ObjectPoolNode));
+            reinit_objects(node->next);
+        }
+
         return try_allocate_object(destList, node->next);
     }
 
@@ -288,6 +291,10 @@ struct Object *allocate_object(struct ObjectNode *objList) {
             // If an unimportant object does exist, unload it and take its slot.
             unload_object(unimportantObj);
             obj = try_allocate_object(objList, &gObjectPool);
+            if (obj == NULL) {
+                return NULL;
+            }
+
             if (gCurrentObject == obj) {
                 //! Uh oh, the unimportant object was in the middle of
                 //  updating! This could cause some interesting logic errors,
