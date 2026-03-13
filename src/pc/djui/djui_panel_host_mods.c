@@ -32,12 +32,12 @@ struct ThreadHandle gModRefreshThread = { 0 };
 
 struct ModCategory sCategories[] = {
     // lang key, mod category
-    { "ALL", NULL },
-    { "MISC", NULL },
-    { "ROMHACKS", "romhack" },
-    { "GAMEMODES", "gamemode" },
-    { "MOVESETS", "moveset" },
-    { "CHARACTER_SELECT", "cs" },
+    { "ALL", { NULL } },
+    { "MISC", { NULL } },
+    { "ROMHACKS", { "romhack" } },
+    { "GAMEMODES", { "gamemode" } },
+    { "MOVESETS", { "moveset" } },
+    { "CHARACTERS", { "cs", "character" } },
 };
 static const int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
 
@@ -95,7 +95,7 @@ static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
 static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mods_update_selectable();
 
-    if (mods_get_enabled_count() - mods_get_character_select_count() >= 10) {
+    if (mods_get_enabled_count() - mods_get_characters_count() >= 10) {
         if (!sWarned) {
             sWarned = true;
             djui_popup_create(DLANG(HOST_MODS, WARNING), 3);
@@ -130,6 +130,15 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     sTooltip = NULL;
 }
 
+static bool mods_category_is_in_list(const char* category, const char** categoryList) {
+    for (int i = 0; i < MAX_CATEGORY_STRINGS; i++) {
+        if (categoryList[i] && strstr(category, categoryList[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     bool foundAny = false;
     for (int i = 0; i < gLocalMods.entryCount; i++) {
@@ -141,7 +150,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
                 bool doContinue = false;
                 if (category) {
                     for (int i = MOD_CATEGORY_START; i < numCategories; i++) {
-                        if (strstr(category, sCategories[i].category)) {
+                        if (mods_category_is_in_list(category, sCategories[i].category)) {
                             doContinue = true;
                             break;
                         }
@@ -151,7 +160,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
                 break;
             }
             default: {
-                if (!category || !strstr(category, sCategories[sSelectedCategory].category)) {
+                if (!category || !mods_category_is_in_list(category, sCategories[sSelectedCategory].category)) {
                     continue;
                 }
                 break;

@@ -246,7 +246,7 @@ static void mr_blizzard_act_death(void) {
             if (o->oAnimState) {
                 gMarioStates[0].cap &= ~SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
-                cap = spawn_object_relative(0, 5, 105, 0, o, gMarioStates[0].character->capModelId, bhvNormalCap);
+                cap = spawn_object_relative(0, 5, 105, 0, o, smlua_model_util_load(gMarioStates[0].character->capModelId), bhvNormalCap);
                 if (cap != NULL) {
                     cap->globalPlayerIndex = o->globalPlayerIndex;
                     cap->oMoveAngleYaw = o->oFaceAngleYaw + (o->oFaceAngleRoll < 0 ? 0x4000 : -0x4000);

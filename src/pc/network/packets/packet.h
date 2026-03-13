@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define PACKET_LENGTH 3000
+#define PACKET_LENGTH 3500
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 #define PACKET_DESTINATION_SERVER ((u8)-2)
 
@@ -16,6 +16,8 @@ struct NetworkPlayer;
 enum PacketType {
     PACKET_ACK,
     PACKET_PLAYER,
+    PACKET_CHARACTER,
+    PACKET_CHARACTER_REQUEST,
     PACKET_OBJECT,
     PACKET_SPAWN_OBJECTS,
     PACKET_SPAWN_STAR,
@@ -74,7 +76,7 @@ enum PacketType {
 
     PACKET_LUA_CUSTOM,
     PACKET_LUA_CUSTOM_BYTESTRING,
-    
+
     PACKET_COMMAND,
     PACKET_MODERATOR,
 
@@ -191,6 +193,14 @@ void packet_ordered_update(void);
 // packet_player.c
 void network_update_player(void);
 void network_receive_player(struct Packet* p);
+
+// packet_character.c
+void network_send_character();
+void network_request_all_characters();
+void network_request_character_from(u8 requestGlobalIndex);
+void network_send_character_to(u8 sendToGlobalIndex);
+void network_receive_character(struct Packet* p);
+void network_receive_character_request(struct Packet* p);
 
 // packet_object.c
 void network_send_object(struct Object* o);

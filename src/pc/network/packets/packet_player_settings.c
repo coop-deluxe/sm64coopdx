@@ -47,7 +47,8 @@ void network_receive_player_settings(struct Packet* p) {
     }
 
     // sanity check
-    if (playerModel >= CT_MAX) { playerModel = CT_MARIO; }
+    if (playerModel >= MAX_CHARACTERS) { playerModel = MAX_CHARACTERS; }
+    if (gCharacters[playerModel].type == CT_UNALLOCATED) { playerModel = character_get_first_allocated_index(); }
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     if (!np) { LOG_ERROR("Failed to retrieve network player."); return; }

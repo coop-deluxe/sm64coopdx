@@ -74,6 +74,7 @@
 - [PaintingValues](#PaintingValues)
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerPalette](#PlayerPalette)
+- [PresetPalette](#PresetPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
 - [ServerSettings](#ServerSettings)
@@ -388,24 +389,22 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| type | [enum CharacterType](constants.md#enum-CharacterType) | read-only |
+| type | [enum CharacterType](constants.md#enum-CharacterType) |  |
 | name | `string` | read-only |
-| hudHead | `integer` | read-only |
 | hudHeadTexture | [TextureInfo](structs.md#TextureInfo) | read-only |
-| cameraHudHead | `integer` | read-only |
-| modelId | `integer` | read-only |
-| capModelId | `integer` | read-only |
-| capMetalModelId | `integer` | read-only |
-| capWingModelId | `integer` | read-only |
-| capMetalWingModelId | `integer` | read-only |
-| capEnemyLayer | `integer` | read-only |
-| capEnemyGfx | `Pointer` <`Gfx`> | read-only |
-| capEnemyDecalGfx | `Pointer` <`Gfx`> | read-only |
-| torsoRotMult | `number` | read-only |
-| animOffsetEnabled | `integer` | read-only |
-| animOffsetLowYPoint | `number` | read-only |
-| animOffsetFeet | `number` | read-only |
-| animOffsetHand | `number` | read-only |
+| modelId | `integer` |  |
+| capModelId | `integer` |  |
+| capMetalModelId | `integer` |  |
+| capWingModelId | `integer` |  |
+| capMetalWingModelId | `integer` |  |
+| capEnemyLayer | `integer` |  |
+| capEnemyGfx | `string` | read-only |
+| capEnemyDecalGfx | `string` | read-only |
+| torsoRotMult | `number` |  |
+| animOffsetEnabled | `integer` |  |
+| animOffsetLowYPoint | `number` |  |
+| animOffsetFeet | `number` |  |
+| animOffsetHand | `number` |  |
 | animSlowLedgeGrab | `integer` | read-only |
 | animFallOverBackwards | `integer` | read-only |
 | animBackwardAirKb | `integer` | read-only |
@@ -1638,7 +1637,7 @@
 | quicksandDepth | `number` |  |
 | controller | [Controller](structs.md#Controller) | read-only |
 | marioBodyState | [MarioBodyState](structs.md#MarioBodyState) | read-only |
-| character | [Character](structs.md#Character) |  |
+| character | [Character](structs.md#Character) | read-only |
 | terrainSoundAddend | `integer` |  |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
 | nonInstantWarpPos | [Vec3f](structs.md#Vec3f) | read-only |
@@ -2782,6 +2781,17 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | parts | `Array` <`Color`> | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PresetPalette](#PresetPalette)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| name | `string` | read-only |
+| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
 
 [:arrow_up_small:](#)
 

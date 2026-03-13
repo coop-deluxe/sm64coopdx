@@ -77,17 +77,11 @@ override_field_types = {
     "Object": { "oAnimations": "ObjectAnimPointer*" },
 }
 
-override_field_mutable = {
-    "NetworkPlayer": [
-        "overrideModelIndex",
-        "overridePalette",
-        "overridePaletteIndex",
-    ],
-}
-
 override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "Camera": [ "paletteEditorCapState" ],
+    "Character": [ "moddedAnims", "modAudioSounds", "modIndexForAudio" ],
+    "PresetPalette": [ "active" ],
     "MarioState": [ "visibleToEnemies" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
@@ -108,10 +102,11 @@ override_field_deprecated = {
 }
 
 override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId" ],
+    "Character": [ "name", "hudHeadTexture", "anim*", "sound*" ],
+    "PresetPalette": [ "name" ],
+    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId", "character" ],
     "MarioAnimation": [ "animDmaTable" ],
     "ObjectNode": [ "next", "prev" ],
-    "Character": [ "*" ],
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
@@ -147,6 +142,11 @@ override_field_immutable = {
     "StaticObjectCollision": [ "*" ],
 }
 
+override_field_mutable = {
+    "NetworkPlayer": [ "overrideModelIndex", "overridePalette", "overridePaletteIndex", ],
+    "Character": [ "animOffsetEnabled", "animOffsetLowYPoint", "animOffsetFeet", "animOffsetHand" ]
+}
+
 override_field_version_excludes = {
     "oCameraLakituUnk104": "VERSION_JP",
     "oCoinUnk1B0": "VERSION_JP",
@@ -155,7 +155,7 @@ override_field_version_excludes = {
 override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
-    "src/game/player_palette.h": [ "PlayerPalette" ],
+    "src/game/player_palette.h": [ "PlayerPalette", "PresetPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ],
 }
@@ -388,10 +388,8 @@ def output_fuzz_struct(struct):
         fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
-
+        if is_field_overridden(sid, fid, override_field_invisible):
+            continue
         if '(' in fid or '[' in fid or ']' in fid:
             continue
 
@@ -470,6 +468,19 @@ def build_vec_types():
 
 ############################################################################
 
+def is_field_overridden(sid, fid, override_dict):
+    if sid in override_dict:
+        for pattern in override_dict[sid]:
+            if pattern == '*':
+                return True
+            if pattern.endswith('*') and fid.startswith(pattern[:-1]):
+                return True
+            if fid == pattern:
+                return True
+    return False
+
+############################################################################
+
 sLuaObjectTable = []
 sLotAutoGenList = []
 
@@ -488,13 +499,11 @@ def get_struct_field_info(struct, field):
     if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
 
-    if sid in override_field_immutable:
-        if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
-            fimmutable = 'true'
+    if is_field_overridden(sid, fid, override_field_immutable):
+        fimmutable = 'true'
 
-    if sid in override_field_mutable:
-        if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
-            fimmutable = 'false'
+    if is_field_overridden(sid, fid, override_field_mutable):
+        fimmutable = 'false'
 
     if ftype == cobject_function_identifier:
         fimmutable = 'true'
@@ -530,9 +539,8 @@ def build_struct(struct):
         if re.search(r'\[([^\]]+)\]', ftype):
             ftype = re.sub(r'\[[^\]]*\]', '', ftype).strip()
 
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+        if is_field_overridden(sid, fid, override_field_invisible):
+            continue
 
         name = sid
         if sid in reversed_override_types:
@@ -709,13 +717,11 @@ def doc_struct_field(struct, field):
     fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
     sid = struct['identifier']
-    if sid in override_field_invisible:
-        if fid in override_field_invisible[sid]:
-            return '', False
+    if is_field_overridden(sid, fid, override_field_invisible):
+        return '', False
 
-    if sid in override_field_deprecated:
-        if fid in override_field_deprecated[sid]:
-            return '', False
+    if is_field_overridden(sid, fid, override_field_deprecated):
+        return '', False
 
     if '???' in lvt or '???' in lot:
         return '', False
@@ -842,9 +848,8 @@ def def_struct(struct):
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+        if is_field_overridden(sid, fid, override_field_invisible):
+            continue
 
         if '???' in lvt or '???' in lot:
             continue

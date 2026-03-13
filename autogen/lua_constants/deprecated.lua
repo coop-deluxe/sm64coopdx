@@ -27,3 +27,9 @@ sqrf = math.sqr
 clamp = math.clamp
 clampf = math.clamp
 hypotf = math.hypot
+
+-------------------------
+-- Character functions --
+-------------------------
+
+CT_MAX = 5

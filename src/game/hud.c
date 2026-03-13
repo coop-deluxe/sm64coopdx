@@ -336,7 +336,9 @@ void render_hud_icon(Vtx *vtx, const Texture *texture, u32 fmt, u32 siz, s32 tex
  */
 void render_hud_mario_lives(void) {
     gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
-    render_hud_icon(NULL, gMarioState->character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22), HUD_TOP_Y + 16, 16, 16, 0, 0, 16, 16);
+    if (gMarioState->character->hudHeadTexture.texture != NULL) {
+        render_hud_icon(NULL, gMarioState->character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22), HUD_TOP_Y + 16, 16, 16, 0, 0, 16, 16);
+    }
     print_text(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(38), HUD_TOP_Y, "*"); // 'X' glyph
     print_text_fmt_int(GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(54), HUD_TOP_Y, "%d", gHudDisplay.lives);
 }
@@ -568,7 +570,9 @@ void render_hud_camera_status(void) {
 
     switch (sCameraHUD.status & CAM_STATUS_MODE_GROUP) {
         case CAM_STATUS_MARIO:
-            render_hud_tex_lut(x + 16, y, (*cameraLUT)[(gMarioStates[0].character) ? gMarioStates[0].character->cameraHudHead : GLYPH_CAM_MARIO_HEAD]);
+            if (gMarioStates[0].character && gMarioStates[0].character->hudHeadTexture.texture) {
+                render_hud_icon(NULL, gMarioState->character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x + 16, SCREEN_HEIGHT - y, 16, 16, 0, 0, 16, 16);
+            }
             break;
         case CAM_STATUS_LAKITU:
             render_hud_tex_lut(x + 16, y, (*cameraLUT)[GLYPH_CAM_LAKITU_HEAD]);

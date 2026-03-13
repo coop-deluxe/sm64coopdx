@@ -10,6 +10,7 @@
 #include "game/hardcoded.h"
 #include "game/object_helpers.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/network/socket/socket.h"
 #include "lag_compensation.h"
 #ifdef DISCORD_SDK
@@ -43,7 +44,7 @@ bool network_player_name_valid(char* buffer) {
 }
 
 void network_player_init(void) {
-    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_MAX) ? configPlayerModel : CT_MARIO;
+    gNetworkPlayers[0].modelIndex = (configPlayerModel < CT_COUNT) ? configPlayerModel : CT_MARIO;
     gNetworkPlayers[0].palette = configPlayerPalette;
     gNetworkPlayers[0].overrideModelIndex = gNetworkPlayers[0].modelIndex;
     gNetworkPlayers[0].overridePalette = gNetworkPlayers[0].palette;
@@ -55,12 +56,21 @@ void network_player_update_model(u8 localIndex) {
     if (m == NULL) { return; }
     struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
 
-    u8 index = np->overrideModelIndex;
-    if (index >= CT_MAX) { index = 0; }
-    m->character = &gCharacters[index];
+    if (localIndex == 0) {
+        struct Character* character = get_allocated_character_from_index(np->overrideModelIndex);
+        if (character && m->character != character) {
+            m->character = character;
+            network_send_character();
+        }
+    } else if (!m->character) {
+        // set to template character
+        m->character = malloc(sizeof(struct Character));
+        *m->character = gTemplateCharacter;
+        network_send_character();
+    }
 
-    if (m->marioObj == NULL || m->marioObj->behavior != bhvMario) { return; }
-    obj_set_model(m->marioObj, m->character->modelId);
+    if (m->marioObj == NULL || m->marioObj->behavior != bhvMario || !m->character) { return; }
+    obj_set_model_extended(m->marioObj, m->character->modelId);
 }
 
 bool network_player_any_connected(void) {
@@ -255,7 +265,7 @@ void network_player_update(void) {
 }
 
 extern bool gCurrentlyJoining;
-u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
+u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u16 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {
@@ -278,7 +288,7 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     if (discordId[0] == '\0') {
         discordId = sDefaultDiscordId;
     }
-    if (modelIndex >= CT_MAX) { modelIndex = 0; }
+    if (modelIndex >= MAX_CHARACTERS) { modelIndex = 0; }
 
     // if already connected, update a few things
     if (np->connected) {

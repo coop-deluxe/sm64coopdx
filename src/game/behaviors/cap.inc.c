@@ -257,7 +257,7 @@ void bhv_normal_cap_loop(void) {
         o->globalPlayerIndex = 0;
     }
 
-    obj_set_model(o, gMarioStates[network_local_index_from_global(o->globalPlayerIndex)].character->capModelId);
+    obj_set_model(o, smlua_model_util_load(gMarioStates[network_local_index_from_global(o->globalPlayerIndex)].character->capModelId));
 }
 
 void bhv_vanish_cap_init(void) {
