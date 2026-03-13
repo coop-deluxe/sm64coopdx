@@ -1084,6 +1084,8 @@
 
       preRun: [function() {
         try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
+        try { FS.mkdir('/sm64coopdx/mods'); } catch (e) {}
+        try { FS.mkdir('/sm64coopdx/.tmp'); } catch (e) {}
 
         // Restore saved config from localStorage before main() runs
         var saved = localStorage.getItem('sm64coopdx_config');
