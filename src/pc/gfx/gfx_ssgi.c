@@ -265,8 +265,12 @@ static void ssgi_create_fbos(int w, int h) {
     glGenTextures(1, &ssgi_scene_depth_tex);
     glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
 #ifdef USE_GLES
-    // WebGL/GLES: GL_DEPTH_COMPONENT with GL_UNSIGNED_INT (WEBGL_depth_texture extension)
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+    // WebGL 2 / GLES 3: use GL_DEPTH_COMPONENT24 (0x81A6) as internal format
+    // This is core in WebGL 2 and doesn't need the depth texture extension.
+    #ifndef GL_DEPTH_COMPONENT24
+    #define GL_DEPTH_COMPONENT24 0x81A6
+    #endif
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 #else
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 #endif
@@ -318,16 +322,27 @@ void ssgi_init(void) {
     if (ssgi_initialized) return;
 
 #ifdef USE_GLES
-    // WebGL requires explicit extension activation for depth textures
+    // WebGL 1 requires WEBGL_depth_texture extension for depth texture FBO attachments.
+    // WebGL 2 has depth textures as core — no extension needed.
+    // Try to enable the extension; if it fails, we may be on WebGL 2 where it's built-in.
     {
         EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx = emscripten_webgl_get_current_context();
-        if (!emscripten_webgl_enable_extension(ctx, "WEBGL_depth_texture") &&
-            !emscripten_webgl_enable_extension(ctx, "OES_depth_texture")) {
-            printf("[SSGI] Depth texture extension not available — disabling SSGI\n");
+        EM_BOOL hasExt = emscripten_webgl_enable_extension(ctx, "WEBGL_depth_texture");
+        if (!hasExt) hasExt = emscripten_webgl_enable_extension(ctx, "OES_depth_texture");
+
+        // Check WebGL version — if 2+, depth textures are core
+        int webglVersion = EM_ASM_INT({
+            var c = document.getElementById('canvas');
+            var gl = c.getContext('webgl2');
+            return gl ? 2 : 1;
+        });
+
+        if (!hasExt && webglVersion < 2) {
+            printf("[SSGI] Depth texture extension not available and WebGL < 2 — disabling SSGI\n");
             ssgi_enabled = false;
             return;
         }
-        printf("[SSGI] Depth texture extension enabled\n");
+        printf("[SSGI] Depth textures available (WebGL %d)\n", webglVersion);
     }
 #endif
 
