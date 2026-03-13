@@ -201,18 +201,15 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
     }
     network_reset_reconnect_and_rehost();
 #ifdef TARGET_WEB
-    // On web, use PeerJS auto-detect: try to be host, fall back to client.
-    // This is the same flow as the ?room= URL parameter.
-    snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
-    snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
-    EM_ASM({ PeerNetwork.init(UTF8ToString($0)); }, sInputboxIp->buffer);
-    // The web_auto_network() poll loop in pc_main.c will detect the role
-    // and call djui_panel_do_host() or network_init(NT_CLIENT) accordingly.
-    extern bool web_auto_network_done;
-    extern bool web_peer_waiting;
-    web_peer_waiting = true;
-    web_auto_network_done = false;
-    djui_panel_shutdown();
+    // Set ?room= in the URL and reload — the existing ?room= auto-detect
+    // flow in web_auto_network() handles host/client role resolution.
+    EM_ASM({
+        var room = UTF8ToString($0);
+        var url = new URL(window.location.href);
+        url.searchParams.set('room', room);
+        window.location.href = url.toString();
+    }, sInputboxIp->buffer);
+    return;
 #else
     djui_panel_join_direct_ip_text_set_new();
     network_set_system(NS_SOCKET);
