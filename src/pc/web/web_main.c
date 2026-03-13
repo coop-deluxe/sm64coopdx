@@ -31,19 +31,19 @@ int web_get_rom_status(void) {
 EMSCRIPTEN_KEEPALIVE
 void web_save_to_idb(void) {
     emscripten_run_script(
-        "if (typeof FS !== 'undefined' && FS.syncfs) {"
-        "  FS.syncfs(false, function(err) {"
-        "    if (err) console.error('[Web] FS.syncfs save failed:', err);"
-        "    else console.log('[Web] FS.syncfs save complete.');"
-        "  });"
+        "try {"
+        "  var data = FS.readFile('/sm64coopdx/sm64config.txt', {encoding:'utf8'});"
+        "  localStorage.setItem('sm64coopdx_config', data);"
+        "  console.log('[Web] Config saved to localStorage (' + data.length + ' bytes)');"
+        "} catch(e) {"
+        "  console.error('[Web] Failed to save config to localStorage:', e);"
         "}"
     );
 }
 
-// IDBFS is mounted and synced from shell.html preRun (before main),
-// so web_fs_init is a no-op — the directory already exists with persisted data.
+// Config is restored from localStorage in shell.html preRun (before main).
 void web_fs_init(void) {
-    printf("[Web] IDBFS mount on /sm64coopdx (loaded via preRun).\n");
+    printf("[Web] Config persistence via localStorage.\n");
 }
 
 // --- URL parameter auto-join/host ---

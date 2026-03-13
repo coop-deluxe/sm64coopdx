@@ -787,16 +787,13 @@
       },
 
       preRun: [function() {
-        // Mount IDBFS on /sm64coopdx before main() so configfile_load finds saved settings
-        try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
-        FS.mount(IDBFS, {}, '/sm64coopdx');
-        // addRunDependency blocks main() until removeRunDependency is called
-        Module.addRunDependency('idbfs-load');
-        FS.syncfs(true, function(err) {
-          if (err) console.error('[Web Shell] IDBFS load failed:', err);
-          else console.log('[Web Shell] IDBFS loaded from IndexedDB.');
-          Module.removeRunDependency('idbfs-load');
-        });
+        // Restore saved config from localStorage before main() runs
+        var saved = localStorage.getItem('sm64coopdx_config');
+        if (saved) {
+          try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
+          FS.writeFile('/sm64coopdx/sm64config.txt', saved);
+          console.log('[Web Shell] Restored config from localStorage (' + saved.length + ' bytes)');
+        }
       }]
     };
 
