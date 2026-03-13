@@ -132,83 +132,6 @@
       min-height: 1.5em;
       text-align: center;
     }
-
-    /* Player list overlay */
-    #player-list {
-      position: fixed;
-      bottom: 12px;
-      left: 12px;
-      z-index: 50;
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(4px);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-family: monospace;
-      font-size: 13px;
-      color: #e0e0e0;
-      pointer-events: auto;
-      display: none;
-      min-width: 180px;
-      max-width: 320px;
-      user-select: none;
-    }
-
-    #player-list .pl-header {
-      font-size: 11px;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      padding-bottom: 3px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    #player-list .pl-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 0;
-    }
-
-    #player-list .pl-row.pl-self {
-      color: #5bf;
-    }
-
-    #player-list .pl-name {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    #player-list .pl-loc {
-      font-size: 11px;
-      color: #999;
-      max-width: 100px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    #player-list .pl-tp {
-      background: rgba(233, 69, 96, 0.7);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 1px 6px;
-      font-size: 11px;
-      cursor: pointer;
-      font-family: monospace;
-      flex-shrink: 0;
-    }
-
-    #player-list .pl-tp:hover {
-      background: rgba(233, 69, 96, 1.0);
-    }
-
-    #player-list .pl-tp:active {
-      transform: scale(0.95);
-    }
   </style>
 </head>
 <body>
@@ -240,11 +163,6 @@
   </div>
 
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
-
-  <div id="player-list">
-    <div class="pl-header">Players</div>
-    <div id="pl-rows"></div>
-  </div>
 
   <script>
     var ROM_DB_NAME = 'sm64coopdx_rom';
@@ -1137,106 +1055,6 @@
     document.getElementById('canvas').addEventListener('webglcontextrestored', function(e) {
       console.warn('[Web Shell] WebGL context restored');
     });
-
-    // ---- Player list overlay ----
-    var PlayerList = {
-      el: document.getElementById('player-list'),
-      rowsEl: document.getElementById('pl-rows'),
-      _started: false,
-      _cwraps: null,
-
-      start: function() {
-        if (this._started) return;
-        this._started = true;
-        var self = this;
-        // Poll at 2 Hz — lightweight since it's just reading a few ints/strings
-        setInterval(function() { self.update(); }, 500);
-      },
-
-      _initCwraps: function() {
-        if (this._cwraps) return true;
-        if (typeof Module === 'undefined' || !Module.cwrap) return false;
-        try {
-          this._cwraps = {
-            getCount:    Module.cwrap('web_get_player_count', 'number', []),
-            getConn:     Module.cwrap('web_get_player_connected', 'number', ['number']),
-            getName:     Module.cwrap('web_get_player_name', 'string', ['number']),
-            getLoc:      Module.cwrap('web_get_player_location', 'string', ['number']),
-            getLocal:    Module.cwrap('web_get_local_player_index', 'number', []),
-            isInGame:    Module.cwrap('web_is_in_game', 'number', []),
-            teleport:    Module.cwrap('web_teleport_to_player', null, ['number'])
-          };
-          return true;
-        } catch(e) {
-          return false;
-        }
-      },
-
-      update: function() {
-        if (!this._initCwraps()) return;
-        var c = this._cwraps;
-
-        // Hide if not in a network game
-        if (!c.isInGame()) {
-          this.el.style.display = 'none';
-          return;
-        }
-
-        var count = c.getCount();
-        var localIdx = c.getLocal();
-        var html = '';
-        var anyPlayer = false;
-
-        for (var i = 0; i < count; i++) {
-          if (!c.getConn(i)) continue;
-          anyPlayer = true;
-          var name = c.getName(i) || ('Player ' + i);
-          var loc  = c.getLoc(i) || '';
-          var isSelf = (i === localIdx);
-
-          html += '<div class="pl-row' + (isSelf ? ' pl-self' : '') + '">';
-          html += '<span class="pl-name">' + this._esc(name) + '</span>';
-          html += '<span class="pl-loc">' + this._esc(loc) + '</span>';
-          if (!isSelf) {
-            html += '<button class="pl-tp" data-idx="' + i + '" title="Teleport to ' + this._esc(name) + '">TP</button>';
-          }
-          html += '</div>';
-        }
-
-        if (anyPlayer) {
-          this.el.style.display = '';
-          this.rowsEl.innerHTML = html;
-        } else {
-          this.el.style.display = 'none';
-        }
-      },
-
-      _esc: function(s) {
-        var d = document.createElement('div');
-        d.appendChild(document.createTextNode(s));
-        return d.innerHTML;
-      }
-    };
-
-    // Handle TP button clicks via event delegation (rows are rebuilt each update)
-    document.getElementById('pl-rows').addEventListener('click', function(e) {
-      var btn = e.target.closest('.pl-tp');
-      if (!btn) return;
-      var idx = parseInt(btn.getAttribute('data-idx'), 10);
-      if (PlayerList._cwraps && !isNaN(idx)) {
-        PlayerList._cwraps.teleport(idx);
-      }
-      // Refocus canvas so game input isn't lost
-      document.getElementById('canvas').focus();
-    });
-
-    // Start polling once the game has started
-    var _plCheck = setInterval(function() {
-      if (gameStarted && typeof Module !== 'undefined' && Module.cwrap) {
-        clearInterval(_plCheck);
-        PlayerList.start();
-      }
-    }, 1000);
   </script>
 
   {{{ SCRIPT }}}
