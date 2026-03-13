@@ -665,6 +665,9 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
         } else {
             mtxf_mul(rsp.P_matrix, matrix, rsp.P_matrix);
         }
+        // Capture projection matrix for SSGI post-processing
+        extern void ssgi_set_projection_matrix(const float mtx[4][4]);
+        ssgi_set_projection_matrix(rsp.P_matrix);
     } else { // G_MTX_MODELVIEW
         if ((parameters & G_MTX_PUSH) && rsp.modelview_matrix_stack_size < MAX_MATRIX_STACK_SIZE) {
             ++rsp.modelview_matrix_stack_size;

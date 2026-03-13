@@ -14,6 +14,7 @@
 #endif
 
 #include "sm64.h"
+#include "gfx/gfx_ssgi.h"
 
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
@@ -248,6 +249,8 @@ void produce_interpolation_frames_and_delay(void) {
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(1.0f); }
         send_display_list(gGfxSPTask);
         gfx_end_frame_render();
+        ssgi_render();
+        ssgi_composite();
         gfx_display_frame();
         sDrawnFrames++;
 
@@ -295,6 +298,8 @@ void produce_interpolation_frames_and_delay(void) {
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame_render();
+        ssgi_render();
+        ssgi_composite();
 
         // delay if our framerate is capped
         if (shouldDelay) {
@@ -656,6 +661,8 @@ void web_one_iteration(void) {
         if (!gSkipInterpolationTitleScreen) { patch_interpolations((f32)delta_frac); }
         send_display_list(gGfxSPTask);
         gfx_end_frame_render();
+        ssgi_render();
+        ssgi_composite();
         gfx_display_frame();
         sDrawnFrames++;
 
