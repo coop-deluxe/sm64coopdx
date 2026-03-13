@@ -45,11 +45,15 @@ jobs:
         with:
           path: build/us_pc
           key: build-web-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
-          restore-keys: |
-            build-web-${{ runner.os }}-
 
       - name: Verify Emscripten
         run: emcc --version
+
+      - name: Clean stale build objects
+        run: |
+          # Remove any stale .o/.d files to avoid EM_ASM index mismatches
+          find build/us_pc -name '*.o' -delete 2>/dev/null || true
+          find build/us_pc -name '*.d' -delete 2>/dev/null || true
 
       - name: Build for web
         run: |
