@@ -530,6 +530,10 @@ void obj_anim_skip_interpolation(struct Object *o) {
     if (o) { o->header.gfx.animInfo.prevAnimFrameTimestamp = 0; }
 }
 
+u32 obj_get_count(void) {
+    return gObjectCounter;
+}
+
 #ifdef DEVELOPMENT
 void obj_randomize(struct Object* o) {
     if (!o) { return; }

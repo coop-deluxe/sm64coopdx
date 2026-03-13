@@ -644,11 +644,11 @@ void clear_dynamic_surfaces(void) {
 
         clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
 
-        for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-            struct Object *obj = &gObjectPool[i];
+        traverse_object_pools(
+            struct Object *obj = &node->pool[i];
             obj->firstSurface = 0;
             obj->numSurfaces = 0;
-        }
+        )
     }
 }
 

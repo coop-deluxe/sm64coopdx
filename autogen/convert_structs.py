@@ -35,6 +35,7 @@ in_files = [
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
     "include/PR/gbi.h",
+    "src/game/object_list_processor.h",
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'

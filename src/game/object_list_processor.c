@@ -71,7 +71,7 @@ u32 gTimeStopState;
 /**
  * The pool that objects are allocated from.
  */
-struct Object gObjectPool[OBJECT_POOL_CAPACITY];
+struct ObjectPoolNode gObjectPool = { 0 };
 
 /**
  * A special object whose purpose is to act as a parent for macro objects.
@@ -87,8 +87,9 @@ struct ObjectNode *gObjectLists;
 
 /**
  * A singly linked list of available slots in the object pool.
+ * Now stored in gObjectPool.
  */
-struct ObjectNode gFreeObjectList;
+//struct ObjectNode gFreeObjectList;
 
 /**
  * The object representing Mario.
@@ -568,11 +569,20 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
     }
 }
 
+void free_pool_nodes(struct ObjectPoolNode* node) {
+    if (node->next == NULL) {
+        free(node);
+        return;
+    }
+
+    free_pool_nodes(node->next);
+    free(node);
+}
+
 /**
  * Clear objects, dynamic surfaces, and some miscellaneous level data used by objects.
  */
 void clear_objects(void) {
-    s32 i;
     sync_objects_clear();
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
@@ -586,22 +596,39 @@ void clear_objects(void) {
         gMarioStates[i].currentRoom = 0;
     }
 
-    for (i = 0; i < 60; i++) {
+    for (s32 i = 0; i < 60; i++) {
         gDoorAdjacentRooms[i][0] = 0;
         gDoorAdjacentRooms[i][1] = 0;
     }
 
     debug_unknown_level_select_check();
 
-    init_free_object_list();
+    if (gObjectPool.next != NULL) {
+        free_pool_nodes(gObjectPool.next);
+        gObjectPool.next = NULL;
+    }
+
+    init_free_object_list(&gObjectPool);
     clear_object_lists(gObjectListArray);
 
-    for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
-        geo_reset_object_node(&gObjectPool[i].header.gfx);
+    for (u32 i = 0; i < OBJECT_POOL_NODE_CAPACITY; i++) {
+        gObjectPool.pool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        geo_reset_object_node(&gObjectPool.pool[i].header.gfx);
     }
 
     gObjectLists = gObjectListArray;
+
+    clear_dynamic_surfaces();
+    geo_clear_interp_data();
+}
+
+void reinit_objects(struct ObjectPoolNode* node) {
+    init_free_object_list(node);
+
+    for (u32 i = 0; i < OBJECT_POOL_NODE_CAPACITY; i++) {
+        node->pool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        geo_reset_object_node(&node->pool[i].header.gfx);
+    }
 
     clear_dynamic_surfaces();
     geo_clear_interp_data();
@@ -613,7 +640,8 @@ void clear_objects(void) {
 void update_terrain_objects(void) {
     gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SPAWNER]);
     //! This was meant to be +=
-    gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
+    // Since this counter does not affect gameplay at all, fix the bug
+    gObjectCounter += update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
 }
 
 /**

@@ -81,17 +81,22 @@ struct LinkedList *unused_try_allocate(struct LinkedList *destList,
  * to the end of destList (doubly linked). Return the object, or NULL if
  * freeList is empty.
  */
-struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNode *freeList) {
+struct Object* try_allocate_object(struct ObjectNode* destList, struct ObjectPoolNode* node) {
     struct ObjectNode *nextObj = NULL;
 
-    if (destList == NULL || freeList == NULL) {
-        fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because either the destList %p or freeList %p was NULL!\n", destList, freeList);
+    if (node == NULL) {
+        fprintf(stderr, "FATAL ERROR: Failed to try and allocate an object because the pool %p was NULL!\n", node);
         return NULL;
     }
 
-    if ((nextObj = freeList->next) != NULL) {
+    if (destList == NULL) {
+        fprintf(stderr, "FATAL ERROR: Failed to try and allocate an object because the destList %p was NULL!\n", destList);
+        return NULL;
+    }
+
+    if ((nextObj = node->freeList.next) != NULL) {
         // Remove from free list
-        freeList->next = nextObj->next;
+        node->freeList.next = nextObj->next;
 
         // Insert at end of destination list
         nextObj->prev = destList->prev;
@@ -103,7 +108,13 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
         }
         destList->prev = nextObj;
     } else {
-        return NULL;
+        if (node->next != NULL) {
+            return try_allocate_object(destList, node->next);
+        }
+
+        node->next = (struct ObjectPoolNode*)calloc(1, sizeof(struct ObjectPoolNode));
+        reinit_objects(node->next);
+        return try_allocate_object(destList, node->next);
     }
 
     geo_remove_child(&nextObj->gfx.node);
@@ -138,35 +149,40 @@ void unused_deallocate(struct LinkedList *freeList, struct LinkedList *node) {
  * Remove the given object from the object list that it's currently in, and
  * insert it at the beginning of the free list (singly linked).
  */
-static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *obj) {
-    if (!obj || !freeList) { return; }
+static void deallocate_object(struct ObjectNode *obj) {
+    if (obj == NULL) { return; }
     // Remove from object list
     if (obj->next) { obj->next->prev = obj->prev; }
     if (obj->prev) { obj->prev->next = obj->next; }
 
     // Insert at beginning of free list
-    obj->next = freeList->next;
-    freeList->next = obj;
+    for (struct ObjectPoolNode* node = &gObjectPool; node != NULL; node = node->next) {
+        if (node->freeList.next == NULL) { continue; }
+        obj->next = node->freeList.next;
+        node->freeList.next = obj;
+    }
 }
 
 /**
  * Add every object in the pool to the free object list.
  */
-void init_free_object_list(void) {
-    s32 poolLength = OBJECT_POOL_CAPACITY;
+void init_free_object_list(struct ObjectPoolNode* node) {
+    if (node == NULL) { return; }
 
     // Add the first object in the pool to the free list
-    struct Object *obj = &gObjectPool[0];
-    gFreeObjectList.next = (struct ObjectNode *) obj;
+    struct Object *obj = &node->pool[0];
+    node->freeList.next = (struct ObjectNode*)obj;
 
     // Link each object in the pool to the following object
-    for (s32 i = 0; i < poolLength - 1; i++) {
+    for (s32 i = 0; i < OBJECT_POOL_NODE_CAPACITY - 1; i++) {
         obj->header.next = &(obj + 1)->header;
         obj++;
     }
 
     // End the list
     obj->header.next = NULL;
+    // Attach pool
+    obj->header.pool = node;
 }
 
 /**
@@ -247,7 +263,7 @@ void unload_object(struct Object *obj) {
 
     smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
-    deallocate_object(&gFreeObjectList, &obj->header);
+    deallocate_object(&obj->header);
 }
 
 /**
@@ -257,7 +273,7 @@ void unload_object(struct Object *obj) {
  */
 struct Object *allocate_object(struct ObjectNode *objList) {
     if (!objList) { return NULL; }
-    struct Object *obj = try_allocate_object(objList, &gFreeObjectList);
+    struct Object *obj = try_allocate_object(objList, &gObjectPool);
 
     // The object list is full if the newly created pointer is NULL.
     // If this happens, we first attempt to unload unimportant objects
@@ -273,7 +289,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
         } else {
             // If an unimportant object does exist, unload it and take its slot.
             unload_object(unimportantObj);
-            obj = try_allocate_object(objList, &gFreeObjectList);
+            obj = try_allocate_object(objList, &gObjectPool);
             if (gCurrentObject == obj) {
                 //! Uh oh, the unimportant object was in the middle of
                 //  updating! This could cause some interesting logic errors,

@@ -2143,6 +2143,7 @@
    - [set_whirlpools](functions-7.md#set_whirlpools)
    - [obj_skip_interpolation](functions-7.md#obj_skip_interpolation)
    - [obj_anim_skip_interpolation](functions-7.md#obj_anim_skip_interpolation)
+   - [obj_get_count](functions-7.md#obj_get_count)
 
 <br />
 
