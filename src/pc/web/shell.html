@@ -44,7 +44,6 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
-      transition: opacity 0.5s ease;
     }
 
     #overlay.hidden {
@@ -303,8 +302,7 @@
         romReady = true;
         setStatus('ROM loaded. Game is starting...');
         setProgress(100);
-        // Start polling for actual game rendering before hiding overlay
-        waitForGameRender();
+        hideOverlay();
       } catch (e) {
         showError('Failed to write ROM to virtual filesystem: ' + e.message);
         console.error('[Web] writeRomToFS error:', e);
