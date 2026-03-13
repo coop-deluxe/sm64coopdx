@@ -784,7 +784,20 @@
       locateFile: function(path) {
         // Cache-bust WASM and data files during development
         return path + '?v=' + Date.now();
-      }
+      },
+
+      preRun: [function() {
+        // Mount IDBFS on /sm64coopdx before main() so configfile_load finds saved settings
+        try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
+        FS.mount(IDBFS, {}, '/sm64coopdx');
+        // addRunDependency blocks main() until removeRunDependency is called
+        Module.addRunDependency('idbfs-load');
+        FS.syncfs(true, function(err) {
+          if (err) console.error('[Web Shell] IDBFS load failed:', err);
+          else console.log('[Web Shell] IDBFS loaded from IndexedDB.');
+          Module.removeRunDependency('idbfs-load');
+        });
+      }]
     };
 
     window.onerror = function(msg, url, line, col, error) {

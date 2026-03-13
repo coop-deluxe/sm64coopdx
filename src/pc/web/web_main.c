@@ -40,23 +40,10 @@ void web_save_to_idb(void) {
     );
 }
 
-EM_JS(void, web_mount_idbfs, (), {
-    var dir = "/sm64coopdx";
-    try { FS.mkdir(dir); } catch (e) { /* may exist */ }
-    FS.mount(IDBFS, {}, dir);
-    // Synchronously wait for IndexedDB data to load using Asyncify
-    return Asyncify.handleSleep(function(wakeUp) {
-        FS.syncfs(true, function(err) {
-            if (err) console.error("[Web] IDBFS load failed:", err);
-            else console.log("[Web] IDBFS loaded from IndexedDB.");
-            wakeUp();
-        });
-    });
-});
-
+// IDBFS is mounted and synced from shell.html preRun (before main),
+// so web_fs_init is a no-op — the directory already exists with persisted data.
 void web_fs_init(void) {
-    web_mount_idbfs();
-    printf("[Web] IDBFS mount on /sm64coopdx initialized.\n");
+    printf("[Web] IDBFS mount on /sm64coopdx (loaded via preRun).\n");
 }
 
 // --- URL parameter auto-join/host ---
