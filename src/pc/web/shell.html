@@ -749,6 +749,15 @@
             console.error('[PeerJS] Error:', err);
           }
         });
+
+        this.peer.on('disconnected', function() {
+          // Lost connection to PeerJS signaling server — existing data channels
+          // stay alive, but new clients can't join. Try to reconnect.
+          if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
+            console.warn('[PeerJS] Host lost signaling server, reconnecting...');
+            PeerNetwork.peer.reconnect();
+          }
+        });
       },
 
       _setupHost: function() {
@@ -792,37 +801,84 @@
         });
       },
 
+      _reconnectTimer: null,
+      _reconnectAttempts: 0,
+      _maxReconnectAttempts: 30,   // try for ~60 seconds
+      _shuttingDown: false,        // true when intentional shutdown
+
       _joinAsClient: function() {
         // Create a new peer with random ID
         this.peer = new Peer();
         this.isHost = false;
+        this._shuttingDown = false;
 
         this.peer.on('open', function(id) {
           console.log('[PeerJS] Our peer ID: ' + id + ', connecting to host...');
-          var conn = PeerNetwork.peer.connect(PeerNetwork.hostPeerId, { reliable: true, serialization: 'binary' });
-          PeerNetwork.connections[PeerNetwork.hostPeerId] = conn;
-
-          conn.on('open', function() {
-            console.log('[PeerJS] Connected to host!');
-            BackgroundGuard.start();
-          });
-
-          conn.on('data', function(data) {
-            // Received from host - queue for C code (no slot prefix in client mode)
-            var arr = new Uint8Array(data);
-            // Ignore keepalive pings (single 0xFF byte)
-            if (arr.length === 1 && arr[0] === 0xFF) return;
-            if (PeerNetwork.recvBuffer.length < 3) {
-              console.log('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
-            }
-            PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
-          });
-
-          conn.on('close', function() {
-            console.log('[PeerJS] Disconnected from host');
-            delete PeerNetwork.connections[PeerNetwork.hostPeerId];
-          });
+          PeerNetwork._connectToHost();
         });
+
+        this.peer.on('disconnected', function() {
+          // Lost connection to PeerJS signaling server — try to reconnect
+          if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
+            console.warn('[PeerJS] Lost signaling server, reconnecting...');
+            PeerNetwork.peer.reconnect();
+          }
+        });
+      },
+
+      _connectToHost: function() {
+        if (!this.peer || this.peer.destroyed || this._shuttingDown) return;
+
+        var conn = this.peer.connect(this.hostPeerId, { reliable: true, serialization: 'binary' });
+        this.connections[this.hostPeerId] = conn;
+
+        conn.on('open', function() {
+          console.log('[PeerJS] Connected to host!');
+          PeerNetwork._reconnectAttempts = 0;
+          if (PeerNetwork._reconnectTimer) {
+            clearTimeout(PeerNetwork._reconnectTimer);
+            PeerNetwork._reconnectTimer = null;
+          }
+          BackgroundGuard.start();
+        });
+
+        conn.on('data', function(data) {
+          // Received from host - queue for C code (no slot prefix in client mode)
+          var arr = new Uint8Array(data);
+          // Ignore keepalive pings (single 0xFF byte)
+          if (arr.length === 1 && arr[0] === 0xFF) return;
+          if (PeerNetwork.recvBuffer.length < 3) {
+            console.log('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
+          }
+          PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
+        });
+
+        conn.on('close', function() {
+          console.warn('[PeerJS] Disconnected from host');
+          delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          PeerNetwork._scheduleReconnect();
+        });
+
+        conn.on('error', function(err) {
+          console.error('[PeerJS] Connection error:', err);
+          delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          PeerNetwork._scheduleReconnect();
+        });
+      },
+
+      _scheduleReconnect: function() {
+        if (this._shuttingDown || this._reconnectTimer) return;
+        if (this._reconnectAttempts >= this._maxReconnectAttempts) {
+          console.error('[PeerJS] Max reconnect attempts reached, giving up');
+          return;
+        }
+        this._reconnectAttempts++;
+        var delay = Math.min(2000 * this._reconnectAttempts, 10000); // 2s, 4s, 6s, ... cap at 10s
+        console.log('[PeerJS] Reconnecting in ' + delay + 'ms (attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ')');
+        this._reconnectTimer = setTimeout(function() {
+          PeerNetwork._reconnectTimer = null;
+          PeerNetwork._connectToHost();
+        }, delay);
       },
 
       // Send data to a specific slot (host mode) or to host (client mode)
@@ -875,6 +931,12 @@
       },
 
       shutdown: function() {
+        this._shuttingDown = true;
+        if (this._reconnectTimer) {
+          clearTimeout(this._reconnectTimer);
+          this._reconnectTimer = null;
+        }
+        this._reconnectAttempts = 0;
         BackgroundGuard.stop();
         for (var peerId in this.connections) {
           this.connections[peerId].close();

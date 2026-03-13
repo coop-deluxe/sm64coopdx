@@ -873,14 +873,32 @@ int main(int argc, char *argv[]) {
     // during ASYNCIFY interactions. A JS rAF loop is more robust.
     EM_ASM({
         var iterate = Module.cwrap('web_one_iteration', null, []);
+        var _bgTimeout = null;  // setTimeout ID when running in background mode
+
         function gameLoop() {
             try {
                 iterate();
             } catch(e) {
                 console.error('[Web] gameLoop exception:', e);
             }
-            requestAnimationFrame(gameLoop);
+            // When hidden, rAF stops firing. Use setTimeout fallback
+            // to keep network alive (even throttled to ~1/sec is enough).
+            if (document.hidden) {
+                _bgTimeout = setTimeout(gameLoop, 50);
+            } else {
+                _bgTimeout = null;
+                requestAnimationFrame(gameLoop);
+            }
         }
+
+        // On visibility change, kick-start the loop if returning from hidden
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && _bgTimeout === null) {
+                // Tab became visible again — switch back to rAF
+                requestAnimationFrame(gameLoop);
+            }
+        });
+
         requestAnimationFrame(gameLoop);
     });
     return 0;
