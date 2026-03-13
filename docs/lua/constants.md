@@ -90,6 +90,7 @@
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
 - [sounds.h](#soundsh)
+- [surface_load.h](#surface_loadh)
 - [surface_terrains.h](#surface_terrainsh)
 - [types.h](#typesh)
     - [enum SpTaskState](#enum-SpTaskState)
@@ -4478,6 +4479,15 @@
 - SOUND_OBJ2_MONTY_MOLE_APPEAR
 - SOUND_OBJ2_BOSS_DIALOG_GRUNT
 - SOUND_OBJ2_MRI_SPINNING
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_load.h](#surface_load.h)
+- SURFACE_POOL_STATIC
+- SURFACE_POOL_DYNAMIC
+- SURFACE_POOL_SOC
 
 [:arrow_up_small:](#)
 

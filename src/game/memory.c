@@ -246,6 +246,34 @@ void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count)
     }
 }
 
+/**
+ * Swap-and-pop the entry at position `index` out of the array.
+ * The slot is filled by the last live entry, and the count is decremented.
+ * Returns true if the index was valid.
+ */
+bool growing_array_swap_and_pop_index(struct GrowingArray *array, u32 index) {
+    if (!array || index >= array->count) { return false; }
+    array->count--;
+    void *tmp            = array->buffer[index];
+    array->buffer[index] = array->buffer[array->count];
+    array->buffer[array->count] = tmp;
+    return true;
+}
+
+/**
+ * Swap-and-pop the first slot whose pointer equals `ptr`.
+ * Returns true if the entry was found and removed.
+ */
+bool growing_array_swap_and_pop(struct GrowingArray *array, void *ptr) {
+    if (!array) { return false; }
+    for (u32 i = 0; i < array->count; i++) {
+        if (array->buffer[i] == ptr) {
+            return growing_array_swap_and_pop_index(array, i);
+        }
+    }
+    return false;
+}
+
 void growing_array_free(struct GrowingArray **array) {
     if (*array) {
         for (u32 i = 0; i != (*array)->capacity; ++i) {

@@ -1914,6 +1914,9 @@
    - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
    - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
    - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
    - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
    - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
    - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
@@ -2223,6 +2226,7 @@
    - [load_static_object_collision](functions-7.md#load_static_object_collision)
    - [toggle_static_object_collision](functions-7.md#toggle_static_object_collision)
    - [get_static_object_surface](functions-7.md#get_static_object_surface)
+   - [remove_static_object_collision](functions-7.md#remove_static_object_collision)
    - [obj_get_surface_from_index](functions-7.md#obj_get_surface_from_index)
    - [surface_has_force](functions-7.md#surface_has_force)
 

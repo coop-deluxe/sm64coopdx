@@ -1,10 +1,12 @@
 #include "types.h"
 
+#include "engine/math_util.h"
 #include "engine/surface_collision.h"
 #include "include/surface_terrains.h"
 #include "game/mario_step.h"
 #include "game/area.h"
 #include "engine/surface_load.h"
+#include "game/game_init.h"
 
 #include "pc/lua/smlua.h"
 #include "smlua_collision_utils.h"
@@ -236,6 +238,150 @@ void smlua_collision_util_find_surface_types(Collision* data) {
 
     // Couldn't find anything
     lua_pushnil(L);
+}
+
+/**
+ * Compute the normal, plane equation, and Y bounds for a triangle.
+ * Only writes to the surface on success. Returns false if the triangle
+ * is degenerate, leaving the surface completely untouched.
+ */
+static bool calc_surface_fields(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3) {
+    s32 x1 = vertex1[0], y1 = vertex1[1], z1 = vertex1[2];
+    s32 x2 = vertex2[0], y2 = vertex2[1], z2 = vertex2[2];
+    s32 x3 = vertex3[0], y3 = vertex3[1], z3 = vertex3[2];
+
+    // Compute normal via cross product: (v2 - v1) x (v3 - v2)
+    f32 nx = (y2 - y1) * (z3 - z2) - (z2 - z1) * (y3 - y2);
+    f32 ny = (z2 - z1) * (x3 - x2) - (x2 - x1) * (z3 - z2);
+    f32 nz = (x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2);
+    f32 mag = sqrtf(nx * nx + ny * ny + nz * nz);
+
+    // Reject degenerate triangles without touching the surface
+    if (mag < 0.0001f) { return false; }
+
+    mag = 1.0f / mag;
+
+    // All checks passed; commit fields to the surface
+    surface->normal.x = nx * mag;
+    surface->normal.y = ny * mag;
+    surface->normal.z = nz * mag;
+    surface->originOffset = -(surface->normal.x * x1 + surface->normal.y * y1 + surface->normal.z * z1);
+
+    surface->lowerY = MIN(MIN(y1, y2), y3) - 5;
+    surface->upperY = MAX(MAX(y1, y2), y3) + 5;
+
+    return true;
+}
+
+struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3) {
+    s32 poolType = dynamic ? SURFACE_POOL_DYNAMIC : SURFACE_POOL_STATIC;
+
+    // Allocate surface from the appropriate pool
+    struct Surface *surface = alloc_surface(poolType);
+    if (surface == NULL) { return NULL; }
+
+    // Compute normal, plane equation, and Y bounds
+    if (!calc_surface_fields(surface, vertex1, vertex2, vertex3)) {
+        // Degenerate triangle: reclaim the pool slot that alloc_surface reserved.
+        // Cannot use delete_surface() here because the surface was never added
+        // to a partition or counter, so delete_surface's counter decrements
+        // would cause drift.
+        smlua_invalidate_surface(surface);
+        swap_and_pop_surface_pool(poolType, surface);
+        gSurfacesAllocated--;
+        return NULL;
+    }
+
+    // Set vertices (prevVertex = vertex for first frame)
+    vec3s_copy(surface->vertex1, vertex1);
+    vec3s_copy(surface->vertex2, vertex2);
+    vec3s_copy(surface->vertex3, vertex3);
+    vec3s_copy(surface->prevVertex1, vertex1);
+    vec3s_copy(surface->prevVertex2, vertex2);
+    vec3s_copy(surface->prevVertex3, vertex3);
+    surface->modifiedTimestamp = gGlobalTimer;
+
+    // Set surface properties
+    surface->type = surfaceType;
+    surface->force = 0;
+    surface->flags = dynamic ? SURFACE_FLAG_DYNAMIC : 0;
+    surface->room = 0;
+    surface->object = NULL;
+
+    // Snapshot node count before add_surface allocates nodes
+    s32 nodesBefore = gSurfaceNodesAllocated;
+
+    // Add to spatial partition
+    add_surface(surface);
+
+    s32 nodesAdded = gSurfaceNodesAllocated - nodesBefore;
+
+    // Update surface/node counters to stay in sync with load_area_terrain
+    if (poolType == SURFACE_POOL_STATIC) {
+        gNumStaticSurfaces++;
+        gNumStaticSurfaceNodes += nodesAdded;
+    }
+
+    return surface;
+}
+
+void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3) {
+    if (surface == NULL) { return; }
+
+    s32 poolType = surface->poolType;
+
+    // Snapshot node count before removal
+    s32 nodesBefore = gSurfaceNodesAllocated;
+
+    // Remove from old spatial partition cells
+    remove_surface_from_partition(surface);
+
+    // Compute normal, plane equation, and Y bounds (surface is untouched on failure)
+    if (!calc_surface_fields(surface, vertex1, vertex2, vertex3)) {
+        // Degenerate triangle: re-add at old position without firing the hook
+        add_surface_without_hook(surface);
+
+        // Fix node counter drift from the remove + re-add round-trip
+        s32 nodeDelta = gSurfaceNodesAllocated - nodesBefore;
+        if (poolType == SURFACE_POOL_STATIC) {
+            gNumStaticSurfaceNodes += nodeDelta;
+        } else if (poolType == SURFACE_POOL_SOC) {
+            gNumSOCSurfaceNodes += nodeDelta;
+        }
+        return;
+    }
+
+    // Update previous vertices for interpolation
+    vec3s_copy(surface->prevVertex1, surface->vertex1);
+    vec3s_copy(surface->prevVertex2, surface->vertex2);
+    vec3s_copy(surface->prevVertex3, surface->vertex3);
+
+    // Set new vertices
+    vec3s_copy(surface->vertex1, vertex1);
+    vec3s_copy(surface->vertex2, vertex2);
+    vec3s_copy(surface->vertex3, vertex3);
+    surface->modifiedTimestamp = gGlobalTimer;
+
+    // Clear X_PROJECTION flag so add_surface can re-evaluate it
+    surface->flags &= ~SURFACE_FLAG_X_PROJECTION;
+
+    // Re-add to spatial partition without firing the hook (this is a move, not a new insertion)
+    add_surface_without_hook(surface);
+
+    // Update gNum*SurfaceNodes to account for the net change;
+    // cell range may differ after a move, so node count can change.
+    s32 nodeDelta = gSurfaceNodesAllocated - nodesBefore;
+    if (poolType == SURFACE_POOL_STATIC) {
+        gNumStaticSurfaceNodes += nodeDelta;
+    } else if (poolType == SURFACE_POOL_SOC) {
+        gNumSOCSurfaceNodes += nodeDelta;
+    }
+    // Dynamic nodes are reset each frame, no tracking needed
+}
+
+void smlua_collision_delete_surface(struct Surface *surface) {
+    if (surface == NULL) { return; }
+    delete_surface(surface);
 }
 
 bool surface_is_quicksand(struct Surface* surf) {

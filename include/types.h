@@ -282,10 +282,13 @@ struct Object
     enum AreaTimerType areaTimerType;
     
     Mat4 transform;
-    
+
+    // Obsolete: pool index is no longer stable
     u32 firstSurface;
+
+    // Tracks the number of dynamic surfaces currently owned by this object.
     u32 numSurfaces;
-    
+
     u32 heldByPlayerIndex;
     
     u8 setHome;
@@ -344,14 +347,15 @@ struct Waypoint
 struct Surface
 {
     // For optimization reasons, See MarioState
-    
+
     s16 type;
     s8 flags;
     s8 room;
+    s8 poolType;
     s16 force;
     s16 lowerY;
     s16 upperY;
-    
+
     Vec3s vertex1;
     Vec3s vertex2;
     Vec3s vertex3;
@@ -363,10 +367,11 @@ struct Surface
       f32 y;
       f32 z;
     } normal;
-    
+
     f32 originOffset;
     u32 modifiedTimestamp;
-    
+    u32 socId;
+
     struct Object *object;
 };
 
