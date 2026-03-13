@@ -168,6 +168,22 @@
     .mod-upload-btn p { margin: 0; font-size: 0.9rem; }
     .mod-upload-btn .hint { font-size: 0.75rem; color: #666; margin-top: 3px; }
     .mod-upload-hidden { display: none; }
+    #mod-url-row {
+      display: flex; gap: 8px; margin: 0 20px 10px; align-items: center;
+    }
+    #mod-url-input {
+      flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #0f3460;
+      background: #16213e; color: #e0e0e0; font-size: 0.85rem;
+    }
+    #mod-url-input::placeholder { color: #555; }
+    #mod-url-btn {
+      padding: 8px 14px; border-radius: 6px; border: none;
+      background: #e94560; color: #fff; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+    }
+    #mod-url-btn:hover { background: #ff5575; }
+    #mod-url-btn:disabled { background: #555; cursor: default; }
+    #mod-url-status { font-size: 0.75rem; color: #888; margin: 0 20px 8px; min-height: 1em; }
     #mod-list {
       flex: 1; overflow-y: auto; padding: 0 20px 16px;
       min-height: 100px; max-height: 50vh;
@@ -304,6 +320,11 @@
       </div>
       <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
       <input type="file" id="mod-upload-zip" class="mod-upload-hidden" accept=".zip" multiple>
+      <div id="mod-url-row">
+        <input type="text" id="mod-url-input" placeholder="Paste mod URL or mods.sm64coopdx.com link...">
+        <button id="mod-url-btn">Download</button>
+      </div>
+      <div id="mod-url-status"></div>
       <div id="mod-list"></div>
     </div>
   </div>
@@ -1534,6 +1555,111 @@
           console.log('[ModManager] Deleted: ' + filename);
         });
         this.refresh();
+      },
+
+      // Download a mod from a URL (direct .lua/.zip or mods.sm64coopdx.com page)
+      downloadModFromUrl: function(inputUrl) {
+        if (!this._initCwraps()) return;
+        var self = this;
+        var statusEl = document.getElementById('mod-url-status');
+        var btn = document.getElementById('mod-url-btn');
+        var input = document.getElementById('mod-url-input');
+
+        statusEl.textContent = 'Downloading...';
+        statusEl.style.color = '#888';
+        btn.disabled = true;
+
+        // Resolve the actual download URL
+        var url = self._resolveModUrl(inputUrl);
+
+        // Use a CORS proxy if needed (mods.sm64coopdx.com won't have CORS headers)
+        var fetchUrl = url;
+        var needsProxy = !url.match(/^blob:/) && !url.startsWith(window.location.origin);
+        if (needsProxy) {
+          // Try multiple common CORS proxies
+          fetchUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+        }
+
+        fetch(fetchUrl).then(function(resp) {
+          if (!resp.ok) throw new Error('HTTP ' + resp.status);
+          // Try to get filename from Content-Disposition or URL
+          var filename = self._filenameFromResponse(resp, url);
+          return resp.arrayBuffer().then(function(buf) {
+            return { filename: filename, buffer: buf };
+          });
+        }).then(function(result) {
+          var data = new Uint8Array(result.buffer);
+          var filename = result.filename;
+          try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+
+          if (filename.toLowerCase().endsWith('.zip')) {
+            // Write to temp, import via C (extracts zip)
+            var tmpPath = '/tmp/' + filename;
+            try { FS.mkdir('/tmp'); } catch(e) {}
+            FS.writeFile(tmpPath, data);
+            self._cwraps.importFile(tmpPath);
+            try { FS.unlink(tmpPath); } catch(e) {}
+            self._persistModsDir();
+          } else {
+            // Direct file (.lua etc)
+            FS.writeFile(MOD_VFS_PATH + filename, data);
+            modDbPut(filename, result.buffer).then(function() {
+              console.log('[ModManager] Downloaded and persisted: ' + filename);
+            });
+          }
+
+          statusEl.textContent = 'Downloaded: ' + filename;
+          statusEl.style.color = '#2ecc71';
+          input.value = '';
+          self.refresh();
+        }).catch(function(err) {
+          console.error('[ModManager] URL download failed:', err);
+          statusEl.textContent = 'Download failed: ' + err.message;
+          statusEl.style.color = '#e94560';
+        }).finally(function() {
+          btn.disabled = false;
+        });
+      },
+
+      // Convert mod page URLs to direct download URLs
+      _resolveModUrl: function(url) {
+        // mods.sm64coopdx.com mod page → append /download
+        var match = url.match(/mods\.sm64coopdx\.com\/mods\/([^\/]+)\/?$/);
+        if (match) {
+          return url.replace(/\/?$/, '/download');
+        }
+        // Already a /download URL
+        if (url.match(/mods\.sm64coopdx\.com\/mods\/[^\/]+\/download/)) {
+          return url;
+        }
+        // Raw URL — use as-is
+        return url;
+      },
+
+      // Extract filename from response headers or URL
+      _filenameFromResponse: function(resp, url) {
+        // Try Content-Disposition header
+        var cd = resp.headers.get('content-disposition');
+        if (cd) {
+          var m = cd.match(/filename[*]?=(?:UTF-8''|"?)([^";\n]+)/i);
+          if (m) return decodeURIComponent(m[1].trim());
+        }
+        // Fall back to URL path
+        var path = url.split('?')[0].split('#')[0];
+        var segments = path.split('/').filter(function(s) { return s; });
+        var last = segments[segments.length - 1] || 'mod.lua';
+        // If the last segment is "download", use the slug before it
+        if (last === 'download' && segments.length >= 2) {
+          var slug = segments[segments.length - 2];
+          // Extract name from slug like "move-your-body-freely-coop-dx.1137"
+          var name = slug.replace(/\.\d+$/, '').replace(/-/g, '_');
+          return name + '.lua';
+        }
+        // Ensure it has an extension
+        if (!last.match(/\.(lua|luac|zip)$/i)) {
+          last = last + '.lua';
+        }
+        return last;
       }
     };
 
@@ -1568,6 +1694,17 @@
       if (toggle) { ModManager.toggleMod(parseInt(toggle.getAttribute('data-toggle'), 10)); return; }
       var del = e.target.closest('[data-delete]');
       if (del) { ModManager.deleteMod(parseInt(del.getAttribute('data-delete'), 10)); return; }
+    });
+    // URL download handler
+    document.getElementById('mod-url-btn').addEventListener('click', function() {
+      var url = document.getElementById('mod-url-input').value.trim();
+      if (url) ModManager.downloadModFromUrl(url);
+    });
+    document.getElementById('mod-url-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var url = e.target.value.trim();
+        if (url) ModManager.downloadModFromUrl(url);
+      }
     });
 
     // ---- Touch Gamepad ----
