@@ -37,6 +37,17 @@ void web_fs_init(void);
  */
 int web_check_url_params(void);
 
+/**
+ * Player list API for web overlay.
+ */
+int web_get_player_count(void);
+int web_get_player_connected(int index);
+const char* web_get_player_name(int index);
+const char* web_get_player_location(int index);
+int web_get_local_player_index(void);
+int web_is_in_game(void);
+void web_teleport_to_player(int index);
+
 #endif /* TARGET_WEB */
 
 #endif /* WEB_MAIN_H */
