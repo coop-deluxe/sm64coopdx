@@ -144,11 +144,61 @@ static const char *composite_frag_src =
     SHADER_VERSION
     "uniform sampler2D tScene;\n"
     "uniform sampler2D tAO;\n"
+    "uniform sampler2D tDepth;\n"
+    "uniform mat4 uDbgInvProj;\n"
+    "uniform vec2 uDbgResolution;\n"
     "varying vec2 vUv;\n"
+    "\n"
+    "vec3 dbgGetViewPos(vec2 uv, float d) {\n"
+    "    vec4 cp = vec4(uv*2.0-1.0, d*2.0-1.0, 1.0);\n"
+    "    vec4 vp = uDbgInvProj * cp;\n"
+    "    return vp.xyz / vp.w;\n"
+    "}\n"
+    "vec3 dbgGetNormal(vec2 uv) {\n"
+    "    vec2 inv = 1.0 / uDbgResolution;\n"
+    "    float c0 = texture2D(tDepth, uv).r;\n"
+    "    vec3 ce = dbgGetViewPos(uv, c0);\n"
+    "    vec3 dx = dbgGetViewPos(uv+vec2(inv.x,0.0), texture2D(tDepth, uv+vec2(inv.x,0.0)).r) - ce;\n"
+    "    vec3 dy = dbgGetViewPos(uv+vec2(0.0,inv.y), texture2D(tDepth, uv+vec2(0.0,inv.y)).r) - ce;\n"
+    "    return normalize(cross(dx, dy));\n"
+    "}\n"
+    "\n"
     "void main() {\n"
     "    vec4 scene = texture2D(tScene, vUv);\n"
     "    float ao = texture2D(tAO, vUv).r;\n"
-    "    gl_FragColor = vec4(scene.rgb * ao, scene.a);\n"
+    "    vec4 result = vec4(scene.rgb * ao, scene.a);\n"
+    "\n"
+    "    // Debug thumbnails across the top (25% height, 4 panels)\n"
+    "    float thumbH = 0.25;\n"
+    "    if (vUv.y < thumbH) {\n"
+    "        float panel = vUv.x * 4.0;\n"
+    "        int idx = int(floor(panel));\n"
+    "        vec2 tuv = vec2(fract(panel), vUv.y / thumbH);\n"
+    "\n"
+    "        if (idx == 0) {\n"
+    "            // Panel 0: Raw depth buffer (grayscale)\n"
+    "            float d = texture2D(tDepth, tuv).r;\n"
+    "            // Visualize with contrast enhancement\n"
+    "            d = pow(d, 50.0); // depth is mostly near 1.0, this brings out detail\n"
+    "            result = vec4(vec3(d), 1.0);\n"
+    "        } else if (idx == 1) {\n"
+    "            // Panel 1: Linearized depth\n"
+    "            float d = texture2D(tDepth, tuv).r;\n"
+    "            vec3 vp = dbgGetViewPos(tuv, d);\n"
+    "            float lin = clamp(-vp.z / 20000.0, 0.0, 1.0);\n"
+    "            result = vec4(vec3(lin), 1.0);\n"
+    "        } else if (idx == 2) {\n"
+    "            // Panel 2: Reconstructed normals\n"
+    "            vec3 n = dbgGetNormal(tuv);\n"
+    "            result = vec4(n * 0.5 + 0.5, 1.0);\n"
+    "        } else {\n"
+    "            // Panel 3: AO only\n"
+    "            float a = texture2D(tAO, tuv).r;\n"
+    "            result = vec4(vec3(a), 1.0);\n"
+    "        }\n"
+    "    }\n"
+    "\n"
+    "    gl_FragColor = result;\n"
     "}\n";
 
 // ---- State ----
@@ -174,7 +224,7 @@ static GLint loc_ao_uAoIntensity, loc_ao_uRadius, loc_ao_uExpFactor, loc_ao_uThi
 static GLint loc_ao_uTemporalDirection, loc_ao_uTemporalOffset;
 
 // Composite program uniforms
-static GLint loc_comp_tScene, loc_comp_tAO;
+static GLint loc_comp_tScene, loc_comp_tAO, loc_comp_tDepth, loc_comp_uDbgInvProj, loc_comp_uDbgResolution;
 
 // Projection matrix from gfx_pc.c
 static float ssgi_proj_matrix[4][4];
@@ -372,6 +422,9 @@ void ssgi_init(void) {
 
     loc_comp_tScene = glGetUniformLocation(ssgi_composite_program, "tScene");
     loc_comp_tAO = glGetUniformLocation(ssgi_composite_program, "tAO");
+    loc_comp_tDepth = glGetUniformLocation(ssgi_composite_program, "tDepth");
+    loc_comp_uDbgInvProj = glGetUniformLocation(ssgi_composite_program, "uDbgInvProj");
+    loc_comp_uDbgResolution = glGetUniformLocation(ssgi_composite_program, "uDbgResolution");
 
     // Fullscreen quad VBO — save/restore existing VBO binding
     GLint prev_vbo;
@@ -529,6 +582,16 @@ void ssgi_composite(void) {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, ssgi_ao_tex);
     glUniform1i(loc_comp_tAO, 1);
+
+    // Debug: pass depth texture and inverse projection for debug thumbnails
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
+    glUniform1i(loc_comp_tDepth, 2);
+
+    float inv_proj[16];
+    invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
+    glUniformMatrix4fv(loc_comp_uDbgInvProj, 1, GL_TRUE, inv_proj);
+    glUniform2f(loc_comp_uDbgResolution, (float)ssgi_width, (float)ssgi_height);
 
     draw_fullscreen_quad();
 
