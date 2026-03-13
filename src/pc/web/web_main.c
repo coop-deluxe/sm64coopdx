@@ -98,4 +98,52 @@ int web_check_url_params(void) {
     return 0; // neither
 }
 
+// --- Mod management API for web overlay ---
+
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
+
+EMSCRIPTEN_KEEPALIVE
+void web_mods_refresh(void) {
+    mods_refresh_local();
+    mods_update_selectable();
+    printf("[Web] Mods refreshed: %d mods found\n", gLocalMods.entryCount);
+}
+
+EMSCRIPTEN_KEEPALIVE
+int web_mods_get_count(void) {
+    return gLocalMods.entryCount;
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_mods_get_name(int index) {
+    if (index < 0 || index >= gLocalMods.entryCount) return "";
+    return gLocalMods.entries[index]->name;
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_mods_get_description(int index) {
+    if (index < 0 || index >= gLocalMods.entryCount) return "";
+    return gLocalMods.entries[index]->description ? gLocalMods.entries[index]->description : "";
+}
+
+EMSCRIPTEN_KEEPALIVE
+int web_mods_get_enabled(int index) {
+    if (index < 0 || index >= gLocalMods.entryCount) return 0;
+    return gLocalMods.entries[index]->enabled ? 1 : 0;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void web_mods_set_enabled(int index, int enabled) {
+    if (index < 0 || index >= gLocalMods.entryCount) return;
+    gLocalMods.entries[index]->enabled = enabled ? true : false;
+    mods_update_selectable();
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_mods_get_relative_path(int index) {
+    if (index < 0 || index >= gLocalMods.entryCount) return "";
+    return gLocalMods.entries[index]->relativePath;
+}
+
 #endif /* TARGET_WEB */

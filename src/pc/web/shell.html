@@ -131,6 +131,76 @@
       min-height: 1.5em;
       text-align: center;
     }
+
+    /* Mod Manager Overlay */
+    #mod-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e0e0e0;
+    }
+    #mod-overlay.visible { display: flex; }
+    #mod-panel {
+      background: #1a1a2e; border: 2px solid #0f3460; border-radius: 12px;
+      width: 520px; max-height: 80vh; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    #mod-panel-header {
+      padding: 16px 20px; border-bottom: 1px solid #0f3460;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #mod-panel-header h2 { margin: 0; font-size: 1.3rem; }
+    #mod-close-btn {
+      background: none; border: none; color: #888; font-size: 1.5rem;
+      cursor: pointer; padding: 0 4px;
+    }
+    #mod-close-btn:hover { color: #e94560; }
+    #mod-upload-area {
+      margin: 12px 20px; padding: 18px; text-align: center;
+      background: #16213e; border: 2px dashed #0f3460; border-radius: 8px;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    #mod-upload-area:hover { border-color: #e94560; }
+    #mod-upload-area p { margin: 0; font-size: 0.95rem; }
+    #mod-upload-area .hint { font-size: 0.8rem; color: #666; margin-top: 4px; }
+    #mod-upload-file { display: none; }
+    #mod-list {
+      flex: 1; overflow-y: auto; padding: 0 20px 16px;
+      min-height: 100px; max-height: 50vh;
+    }
+    .mod-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 6px; margin-top: 6px;
+      background: #16213e;
+    }
+    .mod-item .mod-info { flex: 1; min-width: 0; }
+    .mod-item .mod-name {
+      font-weight: 600; font-size: 0.95rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mod-item .mod-desc {
+      font-size: 0.75rem; color: #888; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mod-toggle {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: #333; border: none; cursor: pointer;
+      position: relative; flex-shrink: 0; transition: background 0.2s;
+    }
+    .mod-toggle.on { background: #2ecc71; }
+    .mod-toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; transition: transform 0.2s;
+    }
+    .mod-toggle.on::after { transform: translateX(16px); }
+    .mod-delete {
+      background: none; border: none; color: #666;
+      cursor: pointer; font-size: 1.1rem; padding: 2px 6px; flex-shrink: 0;
+    }
+    .mod-delete:hover { color: #e94560; }
+    #mod-empty { color: #666; text-align: center; padding: 24px 0; font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -162,6 +232,21 @@
   </div>
 
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+
+  <div id="mod-overlay">
+    <div id="mod-panel">
+      <div id="mod-panel-header">
+        <h2>Mod Manager</h2>
+        <button id="mod-close-btn" title="Close">&times;</button>
+      </div>
+      <div id="mod-upload-area" onclick="document.getElementById('mod-upload-file').click()">
+        <p>Click to upload mod files</p>
+        <p class="hint">Accepts .lua files or mod directories</p>
+      </div>
+      <input type="file" id="mod-upload-file" accept=".lua,.luac" multiple>
+      <div id="mod-list"></div>
+    </div>
+  </div>
 
   <script>
     var ROM_DB_NAME = 'sm64coopdx_rom';
@@ -1016,6 +1101,14 @@
           FS.writeFile('/sm64coopdx/sm64_save_file.bin', arr);
           console.log('[Web Shell] Restored save file from localStorage (' + arr.length + ' bytes)');
         }
+
+        // Restore mods from IndexedDB (async — block main() until done)
+        Module.addRunDependency('restore-mods');
+        restoreModsFromDB().then(function() {
+          Module.removeRunDependency('restore-mods');
+        }).catch(function() {
+          Module.removeRunDependency('restore-mods');
+        });
       }]
     };
 
@@ -1052,6 +1145,221 @@
     });
     document.getElementById('canvas').addEventListener('webglcontextrestored', function(e) {
       console.warn('[Web Shell] WebGL context restored');
+    });
+
+    // ---- Mod Manager ----
+    var MOD_DB_NAME = 'sm64coopdx_mods';
+    var MOD_DB_STORE = 'files';
+    var MOD_VFS_PATH = '/sm64coopdx/mods/';
+
+    function openModDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(MOD_DB_NAME, 1);
+        req.onupgradeneeded = function(e) { e.target.result.createObjectStore(MOD_DB_STORE); };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function modDbGetAll() {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve) {
+          var tx = db.transaction(MOD_DB_STORE, 'readonly');
+          var store = tx.objectStore(MOD_DB_STORE);
+          var req = store.getAllKeys();
+          var entries = {};
+          req.onsuccess = function() {
+            var keys = req.result;
+            if (!keys.length) { resolve({}); return; }
+            var done = 0;
+            keys.forEach(function(key) {
+              store.get(key).onsuccess = function(e) {
+                entries[key] = e.target.result;
+                if (++done === keys.length) resolve(entries);
+              };
+            });
+          };
+          req.onerror = function() { resolve({}); };
+        });
+      });
+    }
+
+    function modDbPut(filename, data) {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(MOD_DB_STORE, 'readwrite');
+          tx.objectStore(MOD_DB_STORE).put(data, filename);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    function modDbDelete(filename) {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve) {
+          var tx = db.transaction(MOD_DB_STORE, 'readwrite');
+          tx.objectStore(MOD_DB_STORE).delete(filename);
+          tx.oncomplete = function() { resolve(); };
+        });
+      });
+    }
+
+    // Restore mods from IndexedDB into Emscripten VFS
+    function restoreModsFromDB() {
+      return modDbGetAll().then(function(entries) {
+        var keys = Object.keys(entries);
+        if (!keys.length) return;
+        try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+        keys.forEach(function(filename) {
+          var data = entries[filename];
+          FS.writeFile(MOD_VFS_PATH + filename, new Uint8Array(data));
+          console.log('[ModManager] Restored mod: ' + filename + ' (' + data.byteLength + ' bytes)');
+        });
+        console.log('[ModManager] Restored ' + keys.length + ' mod(s) from IndexedDB');
+      }).catch(function(e) {
+        console.warn('[ModManager] Failed to restore mods:', e);
+      });
+    }
+
+    var ModManager = {
+      _cwraps: null,
+
+      _initCwraps: function() {
+        if (this._cwraps) return true;
+        if (typeof Module === 'undefined' || !Module.cwrap) return false;
+        try {
+          this._cwraps = {
+            refresh:    Module.cwrap('web_mods_refresh', null, []),
+            getCount:   Module.cwrap('web_mods_get_count', 'number', []),
+            getName:    Module.cwrap('web_mods_get_name', 'string', ['number']),
+            getDesc:    Module.cwrap('web_mods_get_description', 'string', ['number']),
+            getEnabled: Module.cwrap('web_mods_get_enabled', 'number', ['number']),
+            setEnabled: Module.cwrap('web_mods_set_enabled', null, ['number', 'number']),
+            getPath:    Module.cwrap('web_mods_get_relative_path', 'string', ['number'])
+          };
+          return true;
+        } catch(e) { return false; }
+      },
+
+      show: function() {
+        document.getElementById('mod-overlay').classList.add('visible');
+        this.refresh();
+      },
+
+      hide: function() {
+        document.getElementById('mod-overlay').classList.remove('visible');
+        document.getElementById('canvas').focus();
+      },
+
+      refresh: function() {
+        if (!this._initCwraps()) return;
+        this._cwraps.refresh();
+        this._renderList();
+      },
+
+      _renderList: function() {
+        var c = this._cwraps;
+        var list = document.getElementById('mod-list');
+        var count = c.getCount();
+
+        if (count === 0) {
+          list.innerHTML = '<div id="mod-empty">No mods installed. Upload .lua files above.</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < count; i++) {
+          var name = c.getName(i) || ('Mod ' + i);
+          var desc = c.getDesc(i) || '';
+          var enabled = c.getEnabled(i);
+          var path = c.getPath(i);
+          html += '<div class="mod-item" data-idx="' + i + '">';
+          html += '<div class="mod-info"><div class="mod-name">' + _esc(name) + '</div>';
+          if (desc) html += '<div class="mod-desc">' + _esc(desc) + '</div>';
+          html += '</div>';
+          html += '<button class="mod-toggle' + (enabled ? ' on' : '') + '" data-toggle="' + i + '" title="' + (enabled ? 'Disable' : 'Enable') + '"></button>';
+          html += '<button class="mod-delete" data-delete="' + i + '" data-path="' + _esc(path) + '" title="Delete">&times;</button>';
+          html += '</div>';
+        }
+        list.innerHTML = html;
+      },
+
+      uploadFiles: function(files) {
+        if (!files.length) return;
+        var self = this;
+        var pending = files.length;
+        try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+
+        Array.from(files).forEach(function(file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var data = new Uint8Array(e.target.result);
+            var filename = file.name;
+            // Write to Emscripten VFS
+            FS.writeFile(MOD_VFS_PATH + filename, data);
+            // Persist to IndexedDB
+            modDbPut(filename, e.target.result).then(function() {
+              console.log('[ModManager] Uploaded and persisted: ' + filename);
+            }).catch(function(err) {
+              console.error('[ModManager] Failed to persist ' + filename + ':', err);
+            });
+            if (--pending === 0) {
+              self.refresh();
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        });
+      },
+
+      toggleMod: function(index) {
+        if (!this._cwraps) return;
+        var enabled = this._cwraps.getEnabled(index);
+        this._cwraps.setEnabled(index, enabled ? 0 : 1);
+        this._renderList();
+      },
+
+      deleteMod: function(index) {
+        if (!this._cwraps) return;
+        var path = this._cwraps.getPath(index);
+        var filename = path.split('/').pop();
+        // Remove from VFS
+        try { FS.unlink(MOD_VFS_PATH + filename); } catch(e) {}
+        // Remove from IndexedDB
+        modDbDelete(filename).then(function() {
+          console.log('[ModManager] Deleted: ' + filename);
+        });
+        this.refresh();
+      }
+    };
+
+    function _esc(s) {
+      var d = document.createElement('div');
+      d.appendChild(document.createTextNode(s));
+      return d.innerHTML;
+    }
+
+    // Event handlers for mod overlay
+    document.getElementById('mod-close-btn').addEventListener('click', function() { ModManager.hide(); });
+    document.getElementById('mod-overlay').addEventListener('click', function(e) {
+      if (e.target === this) ModManager.hide();
+    });
+    document.getElementById('mod-upload-file').addEventListener('change', function(e) {
+      ModManager.uploadFiles(e.target.files);
+      e.target.value = '';
+    });
+    // Drag and drop on upload area
+    document.getElementById('mod-upload-area').addEventListener('dragover', function(e) { e.preventDefault(); });
+    document.getElementById('mod-upload-area').addEventListener('drop', function(e) {
+      e.preventDefault();
+      ModManager.uploadFiles(e.dataTransfer.files);
+    });
+    // Event delegation for toggle and delete buttons
+    document.getElementById('mod-list').addEventListener('click', function(e) {
+      var toggle = e.target.closest('[data-toggle]');
+      if (toggle) { ModManager.toggleMod(parseInt(toggle.getAttribute('data-toggle'), 10)); return; }
+      var del = e.target.closest('[data-delete]');
+      if (del) { ModManager.deleteMod(parseInt(del.getAttribute('data-delete'), 10)); return; }
     });
   </script>
 

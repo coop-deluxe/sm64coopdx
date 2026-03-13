@@ -8,10 +8,19 @@
 #include "pc/controller/controller_sdl.h"
 #include "pc/pc_main.h"
 #include "pc/update_checker.h"
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
 bool gDjuiPanelMainCreated = false;
+
+#ifdef TARGET_WEB
+static void djui_panel_main_mods(UNUSED struct DjuiBase* caller) {
+    emscripten_run_script("if (typeof ModManager !== 'undefined') ModManager.show();");
+}
+#endif
 
 static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
     game_exit();
@@ -49,6 +58,10 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             if (!configExCoopTheme) { djui_base_set_location(&button2->base, 0, -30); }
             struct DjuiButton* button3 = djui_button_create(body, DLANG(MAIN, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
             if (!configExCoopTheme) { djui_base_set_location(&button3->base, 0, -30); }
+#ifdef TARGET_WEB
+            struct DjuiButton* buttonMods = djui_button_create(body, "MODS", DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_mods);
+            if (!configExCoopTheme) { djui_base_set_location(&buttonMods->base, 0, -30); }
+#endif
             struct DjuiButton* button4 = djui_button_create(body, DLANG(MAIN, QUIT), DJUI_BUTTON_STYLE_BACK, djui_panel_main_quit);
             if (!configExCoopTheme) { djui_base_set_location(&button4->base, 0, -30); }
         }
