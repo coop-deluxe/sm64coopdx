@@ -17,8 +17,16 @@
 
 // ---- Shader sources (embedded) ----
 
+// Use #version 100 (GLSL ES 1.00) for WebGL compatibility.
+// On desktop GL, #version 120 would work but ES 1.00 is a subset that works everywhere.
+#ifdef USE_GLES
+#define SHADER_VERSION "#version 100\n" "precision mediump float;\n"
+#else
+#define SHADER_VERSION "#version 120\n"
+#endif
+
 static const char *vert_src =
-    "#version 120\n"
+    SHADER_VERSION
     "attribute vec2 aPosition;\n"
     "varying vec2 vUv;\n"
     "void main() {\n"
@@ -27,7 +35,7 @@ static const char *vert_src =
     "}\n";
 
 static const char *ao_frag_src =
-    "#version 120\n"
+    SHADER_VERSION
     "#define PI 3.14159265\n"
     "#define HALF_PI 1.57079632\n"
     "#define SLICE_COUNT 2\n"
@@ -129,7 +137,7 @@ static const char *ao_frag_src =
     "}\n";
 
 static const char *composite_frag_src =
-    "#version 120\n"
+    SHADER_VERSION
     "uniform sampler2D tScene;\n"
     "uniform sampler2D tAO;\n"
     "varying vec2 vUv;\n"
@@ -253,10 +261,10 @@ static void ssgi_create_fbos(int w, int h) {
     glGenTextures(1, &ssgi_scene_depth_tex);
     glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
 #ifdef USE_GLES
-    // GLES 2.0: use GL_DEPTH_COMPONENT with GL_UNSIGNED_INT
+    // WebGL/GLES: GL_DEPTH_COMPONENT with GL_UNSIGNED_INT (WEBGL_depth_texture extension)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 #else
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 #endif
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -332,12 +340,14 @@ void ssgi_init(void) {
     loc_comp_tScene = glGetUniformLocation(ssgi_composite_program, "tScene");
     loc_comp_tAO = glGetUniformLocation(ssgi_composite_program, "tAO");
 
-    // Fullscreen quad VBO
+    // Fullscreen quad VBO — save/restore existing VBO binding
+    GLint prev_vbo;
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &prev_vbo);
     float quad[] = { -1, -1,  1, -1,  -1, 1,  1, 1 };
     glGenBuffers(1, &ssgi_quad_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, ssgi_quad_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, prev_vbo);
 
     ssgi_initialized = true;
     printf("[SSGI] Initialized (AO-only, GLSL 1.20)\n");
