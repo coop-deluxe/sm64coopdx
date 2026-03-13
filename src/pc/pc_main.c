@@ -10,6 +10,7 @@
 #include <emscripten/html5.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "web/web_main.h"
 #endif
 
 #include "sm64.h"
@@ -739,13 +740,9 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef TARGET_WEB
-    // Web builds use MEMFS; create user directory before fs_init
-    {
-        struct stat st = {0};
-        if (stat("/sm64coopdx", &st) == -1) {
-            mkdir("/sm64coopdx", 0755);
-        }
-    }
+    // Mount IDBFS on /sm64coopdx and load persisted data from IndexedDB
+    // (config, saves, etc.) before fs_init so configfile_load finds saved settings
+    web_fs_init();
     fs_init("/sm64coopdx");
 #elif defined(_WIN32)
     if (gCLIOpts.savePath[0]) {

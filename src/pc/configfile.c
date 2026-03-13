@@ -13,6 +13,10 @@
 #include "gfx/gfx_window_manager_api.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
+
+#ifdef TARGET_WEB
+#include "web/web_main.h"
+#endif
 #include "mods/mods.h"
 #include "network/ban_list.h"
 #include "crash_handler.h"
@@ -899,4 +903,9 @@ void configfile_save(const char *filename) {
     }
 
     fclose(file);
+
+#ifdef TARGET_WEB
+    // Persist config to IndexedDB so settings survive browser refresh
+    web_save_to_idb();
+#endif
 }

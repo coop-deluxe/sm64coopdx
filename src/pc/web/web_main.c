@@ -41,20 +41,22 @@ void web_save_to_idb(void) {
 }
 
 EM_JS(void, web_mount_idbfs, (), {
-    var dirs = ["/save", "/mods", "/config"];
-    for (var i = 0; i < dirs.length; i++) {
-        try { FS.mkdir(dirs[i]); } catch (e) { /* may exist */ }
-        FS.mount(IDBFS, {}, dirs[i]);
-    }
-    FS.syncfs(true, function(err) {
-        if (err) console.error("[Web] IDBFS load failed:", err);
-        else console.log("[Web] IDBFS loaded.");
+    var dir = "/sm64coopdx";
+    try { FS.mkdir(dir); } catch (e) { /* may exist */ }
+    FS.mount(IDBFS, {}, dir);
+    // Synchronously wait for IndexedDB data to load using Asyncify
+    return Asyncify.handleSleep(function(wakeUp) {
+        FS.syncfs(true, function(err) {
+            if (err) console.error("[Web] IDBFS load failed:", err);
+            else console.log("[Web] IDBFS loaded from IndexedDB.");
+            wakeUp();
+        });
     });
 });
 
 void web_fs_init(void) {
     web_mount_idbfs();
-    printf("[Web] IDBFS mounts initialized for /save, /mods, /config.\n");
+    printf("[Web] IDBFS mount on /sm64coopdx initialized.\n");
 }
 
 // --- URL parameter auto-join/host ---
