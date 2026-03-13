@@ -5,10 +5,10 @@
 #include "djui_panel_playerlist.h"
 #include "djui_panel_modlist.h"
 #include "game/level_info.h"
-#include "game/level_update.h"
 #include "game/area.h"
 #include "game/mario.h"
 #include "game/mario_misc.h"
+#include "data/dynos.c.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -42,17 +42,19 @@ static void playerlist_tp_click(struct DjuiBase* base) {
     if (!np->connected) return;
     if (gNetworkPlayerLocal && np->localIndex == gNetworkPlayerLocal->localIndex) return;
 
-    s16 targetLevel = np->currLevelNum;
-    s16 targetArea  = np->currAreaIndex;
-
-    if (gCurrLevelNum == targetLevel && gCurrAreaIndex == targetArea) {
-        // Same level and area — just copy position
-        gMarioStates[0].pos[0] = gMarioStates[targetIndex].pos[0];
-        gMarioStates[0].pos[1] = gMarioStates[targetIndex].pos[1];
-        gMarioStates[0].pos[2] = gMarioStates[targetIndex].pos[2];
+    if (gCurrLevelNum == np->currLevelNum && gCurrAreaIndex == np->currAreaIndex) {
+        // Same level and area — copy position directly
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            if (gNetworkPlayers[i].localIndex == np->localIndex && gNetworkPlayers[i].connected) {
+                gMarioStates[0].pos[0] = gMarioStates[i].pos[0];
+                gMarioStates[0].pos[1] = gMarioStates[i].pos[1];
+                gMarioStates[0].pos[2] = gMarioStates[i].pos[2];
+                break;
+            }
+        }
     } else {
-        // Different level — warp there
-        initiate_warp(targetLevel, targetArea, 0x0A, 0);
+        // Different level — use dynos warp (handles music, transitions, network sync)
+        dynos_warp_to_level(np->currLevelNum, np->currAreaIndex, np->currActNum);
     }
 }
 
