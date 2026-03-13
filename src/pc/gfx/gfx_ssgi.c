@@ -185,7 +185,7 @@ static const char *composite_frag_src =
     "            // Panel 1: Linearized depth\n"
     "            float d = texture2D(tDepth, tuv).r;\n"
     "            vec3 vp = dbgGetViewPos(tuv, d);\n"
-    "            float lin = clamp(-vp.z / 20000.0, 0.0, 1.0);\n"
+    "            float lin = clamp(length(vp) / 5000.0, 0.0, 1.0);\n"
     "            result = vec4(vec3(lin), 1.0);\n"
     "        } else if (idx == 2) {\n"
     "            // Panel 2: Reconstructed normals\n"
@@ -498,12 +498,12 @@ void ssgi_render(void) {
     float inv_proj[16];
     invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
 
-    // Extract near/far from projection matrix (row-major: P[row][col])
-    // In row-major N64 convention: P[2][2] is the z-scale, P[2][3] is the z-translate
+    // Extract near/far from the GLSL-convention projection matrix.
+    // P_glsl = transpose(P_row). P_glsl[2][2] = P_row[2][2], P_glsl[3][2] = P_row[2][3].
     float P22 = ssgi_proj_matrix[2][2];
-    float P23 = ssgi_proj_matrix[2][3];
-    float cam_near = P23 / (P22 - 1.0f);
-    float cam_far  = P23 / (P22 + 1.0f);
+    float P32 = ssgi_proj_matrix[2][3];  // P_row[2][3] = P_glsl[3][2]
+    float cam_near = P32 / (P22 - 1.0f);
+    float cam_far  = P32 / (P22 + 1.0f);
     if (cam_near < 0) cam_near = -cam_near;
     if (cam_far < 0) cam_far = -cam_far;
 
@@ -528,9 +528,10 @@ void ssgi_render(void) {
     glUniform1i(loc_ao_tDepth, 0);
 
     glUniform2f(loc_ao_uResolution, (float)ssgi_width, (float)ssgi_height);
-    // coopdx stores matrices row-major (M[row][col], vertex * M convention).
-    // GL_TRUE transposes to column-major for GLSL (M * vector convention).
-    glUniformMatrix4fv(loc_ao_uProjMatrixInverse, 1, GL_TRUE, inv_proj);
+    // coopdx stores P as row-major float[4][4] (vertex * P convention).
+    // invert_matrix reads flat data as column-major, so it implicitly transposes P
+    // before inverting: result = inv(P^T) = inv(P_glsl). Pass with GL_FALSE.
+    glUniformMatrix4fv(loc_ao_uProjMatrixInverse, 1, GL_FALSE, inv_proj);
     glUniform1f(loc_ao_uCameraNear, cam_near);
     glUniform1f(loc_ao_uCameraFar, cam_far);
     glUniform1f(loc_ao_uHalfProjScale, half_proj_scale);
@@ -590,7 +591,7 @@ void ssgi_composite(void) {
 
     float inv_proj[16];
     invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
-    glUniformMatrix4fv(loc_comp_uDbgInvProj, 1, GL_TRUE, inv_proj);
+    glUniformMatrix4fv(loc_comp_uDbgInvProj, 1, GL_FALSE, inv_proj);
     glUniform2f(loc_comp_uDbgResolution, (float)ssgi_width, (float)ssgi_height);
 
     draw_fullscreen_quad();
