@@ -321,7 +321,7 @@
       <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
       <input type="file" id="mod-upload-zip" class="mod-upload-hidden" accept=".zip" multiple>
       <div id="mod-url-row">
-        <input type="text" id="mod-url-input" placeholder="Paste mod URL or mods.sm64coopdx.com link...">
+        <input type="text" id="mod-url-input" placeholder="Paste direct .lua or .zip URL...">
         <button id="mod-url-btn">Download</button>
       </div>
       <div id="mod-url-status"></div>
@@ -1557,7 +1557,7 @@
         this.refresh();
       },
 
-      // Download a mod from a URL (direct .lua/.zip or mods.sm64coopdx.com page)
+      // Download a mod from a direct .lua or .zip URL
       downloadModFromUrl: function(inputUrl) {
         if (!this._initCwraps()) return;
         var self = this;
@@ -1565,35 +1565,27 @@
         var btn = document.getElementById('mod-url-btn');
         var input = document.getElementById('mod-url-input');
 
-        statusEl.textContent = 'Downloading...';
+        // Extract filename from URL
+        var urlPath = inputUrl.split('?')[0].split('#')[0];
+        var filename = urlPath.split('/').pop() || 'mod.lua';
+        if (!filename.match(/\.(lua|luac|zip)$/i)) {
+          statusEl.textContent = 'URL must point directly to a .lua or .zip file.';
+          statusEl.style.color = '#e94560';
+          return;
+        }
+
+        statusEl.textContent = 'Downloading ' + filename + '...';
         statusEl.style.color = '#888';
         btn.disabled = true;
 
-        // Resolve the actual download URL
-        var url = self._resolveModUrl(inputUrl);
-
-        // Use a CORS proxy if needed (mods.sm64coopdx.com won't have CORS headers)
-        var fetchUrl = url;
-        var needsProxy = !url.match(/^blob:/) && !url.startsWith(window.location.origin);
-        if (needsProxy) {
-          // Try multiple common CORS proxies
-          fetchUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
-        }
-
-        fetch(fetchUrl).then(function(resp) {
+        fetch(inputUrl).then(function(resp) {
           if (!resp.ok) throw new Error('HTTP ' + resp.status);
-          // Try to get filename from Content-Disposition or URL
-          var filename = self._filenameFromResponse(resp, url);
-          return resp.arrayBuffer().then(function(buf) {
-            return { filename: filename, buffer: buf };
-          });
-        }).then(function(result) {
-          var data = new Uint8Array(result.buffer);
-          var filename = result.filename;
+          return resp.arrayBuffer();
+        }).then(function(buf) {
+          var data = new Uint8Array(buf);
           try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
 
           if (filename.toLowerCase().endsWith('.zip')) {
-            // Write to temp, import via C (extracts zip)
             var tmpPath = '/tmp/' + filename;
             try { FS.mkdir('/tmp'); } catch(e) {}
             FS.writeFile(tmpPath, data);
@@ -1601,9 +1593,8 @@
             try { FS.unlink(tmpPath); } catch(e) {}
             self._persistModsDir();
           } else {
-            // Direct file (.lua etc)
             FS.writeFile(MOD_VFS_PATH + filename, data);
-            modDbPut(filename, result.buffer).then(function() {
+            modDbPut(filename, buf).then(function() {
               console.log('[ModManager] Downloaded and persisted: ' + filename);
             });
           }
@@ -1619,47 +1610,6 @@
         }).finally(function() {
           btn.disabled = false;
         });
-      },
-
-      // Convert mod page URLs to direct download URLs
-      _resolveModUrl: function(url) {
-        // mods.sm64coopdx.com mod page → append /download
-        var match = url.match(/mods\.sm64coopdx\.com\/mods\/([^\/]+)\/?$/);
-        if (match) {
-          return url.replace(/\/?$/, '/download');
-        }
-        // Already a /download URL
-        if (url.match(/mods\.sm64coopdx\.com\/mods\/[^\/]+\/download/)) {
-          return url;
-        }
-        // Raw URL — use as-is
-        return url;
-      },
-
-      // Extract filename from response headers or URL
-      _filenameFromResponse: function(resp, url) {
-        // Try Content-Disposition header
-        var cd = resp.headers.get('content-disposition');
-        if (cd) {
-          var m = cd.match(/filename[*]?=(?:UTF-8''|"?)([^";\n]+)/i);
-          if (m) return decodeURIComponent(m[1].trim());
-        }
-        // Fall back to URL path
-        var path = url.split('?')[0].split('#')[0];
-        var segments = path.split('/').filter(function(s) { return s; });
-        var last = segments[segments.length - 1] || 'mod.lua';
-        // If the last segment is "download", use the slug before it
-        if (last === 'download' && segments.length >= 2) {
-          var slug = segments[segments.length - 2];
-          // Extract name from slug like "move-your-body-freely-coop-dx.1137"
-          var name = slug.replace(/\.\d+$/, '').replace(/-/g, '_');
-          return name + '.lua';
-        }
-        // Ensure it has an extension
-        if (!last.match(/\.(lua|luac|zip)$/i)) {
-          last = last + '.lua';
-        }
-        return last;
       }
     };
 
