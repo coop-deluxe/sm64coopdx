@@ -1401,6 +1401,7 @@
       refresh: function() {
         if (!this._initCwraps()) return;
         this._cwraps.refresh();
+        this._restoreEnabledState();
         this._renderList();
       },
 
@@ -1525,7 +1526,33 @@
         if (!this._cwraps) return;
         var enabled = this._cwraps.getEnabled(index);
         this._cwraps.setEnabled(index, enabled ? 0 : 1);
+        this._saveEnabledState();
         this._renderList();
+      },
+
+      _saveEnabledState: function() {
+        if (!this._cwraps) return;
+        var c = this._cwraps;
+        var enabled = [];
+        for (var i = 0; i < c.getCount(); i++) {
+          if (c.getEnabled(i)) enabled.push(c.getPath(i));
+        }
+        localStorage.setItem('sm64coopdx_mods_enabled', JSON.stringify(enabled));
+      },
+
+      _restoreEnabledState: function() {
+        if (!this._cwraps) return;
+        var json = localStorage.getItem('sm64coopdx_mods_enabled');
+        if (!json) return;
+        try {
+          var enabled = JSON.parse(json);
+          var c = this._cwraps;
+          for (var i = 0; i < c.getCount(); i++) {
+            var path = c.getPath(i);
+            var shouldEnable = enabled.indexOf(path) !== -1;
+            c.setEnabled(i, shouldEnable ? 1 : 0);
+          }
+        } catch(e) {}
       },
 
       deleteMod: function(index) {
