@@ -157,4 +157,46 @@ int web_mod_import_file(const char* path) {
     return ret ? 1 : 0;
 }
 
+// --- Touch gamepad input ---
+
+#include "pc/controller/controller_keyboard.h"
+
+// Inject keyboard key down/up events from JS touch handlers
+EMSCRIPTEN_KEEPALIVE
+void web_touch_key_down(int scancode) {
+    keyboard_on_key_down(scancode);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void web_touch_key_up(int scancode) {
+    keyboard_on_key_up(scancode);
+}
+
+// Direct analog stick override (applied each frame from JS)
+static s8 sWebStickX = 0;
+static s8 sWebStickY = 0;
+static bool sWebStickActive = false;
+
+EMSCRIPTEN_KEEPALIVE
+void web_touch_set_stick(int x, int y) {
+    sWebStickX = (s8)(x > 127 ? 127 : (x < -128 ? -128 : x));
+    sWebStickY = (s8)(y > 127 ? 127 : (y < -128 ? -128 : y));
+    sWebStickActive = true;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void web_touch_clear_stick(void) {
+    sWebStickX = 0;
+    sWebStickY = 0;
+    sWebStickActive = false;
+}
+
+// Called from osContGetReadData patch to apply web touch stick
+void web_touch_apply_stick(s8 *stick_x, s8 *stick_y) {
+    if (sWebStickActive) {
+        *stick_x = sWebStickX;
+        *stick_y = sWebStickY;
+    }
+}
+
 #endif /* TARGET_WEB */

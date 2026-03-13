@@ -59,6 +59,11 @@ void osContGetReadData(OSContPad *pad) {
     for (size_t i = 0; i < sizeof(controller_implementations) / sizeof(struct ControllerAPI *); i++) {
         controller_implementations[i]->read(pad);
     }
+
+#ifdef TARGET_WEB
+    extern void web_touch_apply_stick(s8 *stick_x, s8 *stick_y);
+    web_touch_apply_stick(&pad->stick_x, &pad->stick_y);
+#endif
 }
 
 u32 controller_get_raw_key(void) {
