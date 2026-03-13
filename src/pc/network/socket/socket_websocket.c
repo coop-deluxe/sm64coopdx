@@ -286,8 +286,8 @@ static void ns_socket_update(void) {
 
             network_receive(localIndex, &sAddr[localIndex < MAX_PLAYERS ? localIndex : 0], rawData, pktLen);
         } else {
-            // CLIENT MODE: all packets come from host
-            u8 localIndex = UNKNOWN_LOCAL_INDEX;
+            // CLIENT MODE: all packets come from host (server relay)
+            u8 localIndex = (gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : UNKNOWN_LOCAL_INDEX;
             network_receive(localIndex, &sAddr[0], rawData, pktLen);
         }
     }
