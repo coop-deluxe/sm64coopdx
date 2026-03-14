@@ -52,7 +52,7 @@ __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
 }
 
 #define ROM_ASSET_LOAD_MARIO_ANIM(_name, _ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
-static u16 _name[(_segmentedSize) / 2] = { 0 }; \
+UNUSED static u16 _name[(_segmentedSize) / 2] = { 0 }; \
 __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
     rom_assets_queue(_ptr, ROM_ASSET_ANIM, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
 }

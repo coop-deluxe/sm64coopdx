@@ -2238,7 +2238,7 @@ ROM_ASSET_LOAD_TEXTURE(texture_waterbox_mist, "textures/segment2/segment2.13458.
 ROM_ASSET_LOAD_TEXTURE(texture_waterbox_lava, "textures/segment2/segment2.13C58.rgba16.inc.c", 0x00108a40, 48390, 0x00016ab8, 2048);
 
 // Unreferenced light group
-static const Lights1 segment2_lights_unused = gdSPDefLights1(
+UNUSED static const Lights1 segment2_lights_unused = gdSPDefLights1(
     0x40, 0x40, 0x40,
     0xff, 0xff, 0xff, 0x28, 0x28, 0x28
 );

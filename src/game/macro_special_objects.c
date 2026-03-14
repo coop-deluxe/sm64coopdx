@@ -90,7 +90,7 @@ struct Object* spawn_macro_abs_special(s32 model, const BehaviorScript *behavior
     return newObj;
 }
 
-static void spawn_macro_coin_unknown(const BehaviorScript *behavior, s16 a1[]) {
+UNUSED static void spawn_macro_coin_unknown(const BehaviorScript *behavior, s16 a1[]) {
     struct Object *sp3C;
     s16 model;
 

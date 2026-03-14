@@ -111,10 +111,10 @@ static u8 D_801BAEA0;
 static struct ObjGadget *sTimerGadgets[GD_NUM_TIMERS]; // @ 801BAEA8
 static u32 D_801BAF28;                                 // RAM addr offset?
 static s16 sTriangleBuf[13][8];                          // [[s16; 8]; 13]? vert indices?
-static u32 unref_801bb000[3];
+UNUSED static u32 unref_801bb000[3];
 static u8 *sMemBlockPoolBase; // @ 801BB00C
 static u32 sAllocMemory;      // @ 801BB010; malloc-ed bytes
-static u32 unref_801bb014;
+UNUSED static u32 unref_801bb014;
 static s32 D_801BB018;
 static s32 D_801BB01C;
 static void *sLoadedTextures[0x10];          // texture pointers
@@ -134,11 +134,11 @@ static s32 sVertexBufStartIndex;                  // Vtx start in GD Dl
 static struct ObjView *sCarSceneView;   // @ 801BB0D0
 static s32 sUpdateYoshiScene;           // @ 801BB0D4; update dl Vtx from ObjVertex?
 static s32 sUpdateMarioScene;           // @ 801BB0D8; update dl Vtx from ObjVertex?
-static u32 unref_801bb0dc;
+UNUSED static u32 unref_801bb0dc;
 static s32 sUpdateCarScene; // @ 801BB0E0; guess, not really used
-static u32 unref_801bb0e4;
+UNUSED static u32 unref_801bb0e4;
 static struct GdVec3f sTextDrawPos;  // position to draw text? only set in one function, never used
-static u32 unref_801bb0f8[2];
+UNUSED static u32 unref_801bb0f8[2];
 static Mtx sIdnMtx;           // @ 801BB100
 static Mat4f sInitIdnMat4;    // @ 801BB140
 static s8 sVtxCvrtNormBuf[3]; // @ 801BB180
@@ -168,21 +168,21 @@ static LookAt D_801BE7D0[3];
 #if defined(VERSION_JP) || defined(VERSION_US)
 static OSMesgQueue D_801BE830; // controller msg queue
 static OSMesg D_801BE848[10];
-static u32 unref_801be870[16];
+UNUSED static u32 unref_801be870[16];
 static OSMesgQueue D_801BE8B0;
 static OSMesgQueue sGdDMAQueue; // @ 801BE8C8
-static u32 unref_801be8e0[25];
+UNUSED static u32 unref_801be8e0[25];
 static OSMesg sGdMesgBuf[1]; // @ 801BE944
-static u32 unref_801be948[13];
+UNUSED static u32 unref_801be948[13];
 static OSMesg sGdDMACompleteMsg; // msg buf for D_801BE8B0 queue
-static OSIoMesg sGdDMAReqMesg;
+UNUSED static OSIoMesg sGdDMAReqMesg;
 static struct ObjView *D_801BE994; // store if View flag 0x40 set
 #endif
 
 // data
-static u32 unref_801a8670 = 0;
+UNUSED static u32 unref_801a8670 = 0;
 static s32 D_801A8674 = 0;
-static u32 unref_801a8678 = 0;
+UNUSED static u32 unref_801a8678 = 0;
 static s32 D_801A867C = 0;
 static s32 D_801A8680 = 0;
 static f32 sTracked1FrameTime = 0.0f; // @ 801A8684
@@ -197,11 +197,11 @@ static struct GdTimer *D_801A86A4 = NULL; // timer for dlgen, dynamics, or rcp
 static struct GdTimer *D_801A86A8 = NULL; // timer for dlgen, dynamics, or rcp
 static struct GdTimer *D_801A86AC = NULL; // timer for dlgen, dynamics, or rcp
 s32 gGdFrameBufNum = 0;                      // @ 801A86B0
-static u32 unref_801a86B4 = 0;
+UNUSED static u32 unref_801a86B4 = 0;
 static struct ObjShape *sHandShape = NULL; // @ 801A86B8
 static s32 D_801A86BC = 1;
 static s32 D_801A86C0 = 0; // gd_dl id for something?
-static u32 unref_801a86C4 = 10;
+UNUSED static u32 unref_801a86C4 = 10;
 static s32 sMtxParamType = G_MTX_PROJECTION;
 static struct GdVec3f D_801A86CC = { 1.0f, 1.0f, 1.0f };
 static struct ObjView *sActiveView = NULL;  // @ 801A86D8 current view? used when drawing dl
@@ -212,10 +212,10 @@ static struct ObjView *sMenuView = NULL; // @ 801A86E8
 static u32 sItemsInMenu = 0;             // @ 801A86EC
 static s32 sDebugViewsCount = 0;               // number of elements in the sDebugViews array
 static s32 sCurrDebugViewIndex = 0;             // @ 801A86F4; timing activate cool down counter?
-static u32 unref_801a86F8 = 0;
+UNUSED static u32 unref_801a86F8 = 0;
 static struct GdDisplayList *sCurrentGdDl = NULL; // @ 801A86FC
 static u32 sGdDlCount = 0;                        // @ 801A8700
-static struct DynListBankInfo sDynLists[] = {     // @ 801A8704
+UNUSED static struct DynListBankInfo sDynLists[] = {     // @ 801A8704
     { STD_LIST_BANK, dynlist_test_cube },
     { STD_LIST_BANK, dynlist_spot_shape },
     { STD_LIST_BANK, dynlist_mario_master },
@@ -223,13 +223,13 @@ static struct DynListBankInfo sDynLists[] = {     // @ 801A8704
 };
 
 // textures and display list data
-static Gfx gd_texture1_dummy_aligner1[] = { // @ 801A8728
+UNUSED static Gfx gd_texture1_dummy_aligner1[] = { // @ 801A8728
     gsSPEndDisplayList(),
 };
 
 ROM_ASSET_LOAD_TEXTURE(gd_texture_hand_open, "textures/intro_raw/hand_open.rgba16.inc.c", 0x00258d80, 2048, 0x00000000, 2048);
 
-static Gfx gd_texture2_dummy_aligner1[] = {
+UNUSED static Gfx gd_texture2_dummy_aligner1[] = {
     gsSPEndDisplayList()
 };
 
@@ -461,11 +461,11 @@ static Gfx gd_dl_sparkle[] = {
     gsSPClearGeometryMode(G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR),
     gsDPSetRenderMode(G_RM_AA_ZB_TEX_EDGE, G_RM_NOOP2),
     gsSPTexture(0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, 
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD,
                 G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, 
+    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD,
                 G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPVertex(gd_vertex_sparkle, 4, 0),
@@ -630,7 +630,7 @@ static Gfx *gd_silver_sparkle_dl_array[] = {
 #endif
 };
 
-static Gfx gd_texture3_dummy_aligner1[] = {
+UNUSED static Gfx gd_texture3_dummy_aligner1[] = {
     gsSPEndDisplayList(),
 };
 
@@ -642,7 +642,7 @@ static Gfx gd_dl_mario_face_shine[] = {
     gsDPSetTexturePersp(G_TP_PERSP),
     gsDPSetTextureFilter(G_TF_BILERP),
     gsDPSetCombineMode(G_CC_HILITERGBA, G_CC_HILITERGBA),
-    gsDPLoadTextureBlock(gd_texture_mario_face_shine, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, 0, 
+    gsDPLoadTextureBlock(gd_texture_mario_face_shine, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, 0,
                         G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsDPPipeSync(),
     gsSPEndDisplayList(),
@@ -673,13 +673,13 @@ static Gfx gd_dl_rdp_init[] = {
     gsSPEndDisplayList(),
 };
 
-static u32 gd_unused_pad1 = 0;
+UNUSED static u32 gd_unused_pad1 = 0;
 
 float sGdPerspTimer = 1.0;
 
-static u32 gd_unused_pad2 = 0;
+UNUSED static u32 gd_unused_pad2 = 0;
 
-static Gfx gd_texture4_dummy_aligner1[] = {
+UNUSED static Gfx gd_texture4_dummy_aligner1[] = {
     gsDPPipeSync(),
     gsSPEndDisplayList(),
 };
@@ -696,7 +696,7 @@ static Vtx_t gd_unused_mesh_vertex_group2[] = {
     {{ 3, -7,  0}, 0, {  0,  0}, {  0xFF, 0x00, 0x00, 0xFF}},
 };
 
-static Gfx gd_dl_unused_mesh[] = {
+UNUSED static Gfx gd_dl_unused_mesh[] = {
     gsDPPipeSync(),
     gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
     gsSPClearGeometryMode(0xFFFFFFFF),
@@ -1261,7 +1261,7 @@ void gd_vblank(void) {
 }
 
 /**
- * Copies the player1 controller data from p1cont to sGdContPads[0]. 
+ * Copies the player1 controller data from p1cont to sGdContPads[0].
  */
 void gd_copy_p1_contpad(OSContPad *p1cont) {
     u32 i;                                    // 24
@@ -2361,7 +2361,7 @@ void parse_p1_controller(void) {
     f32 aspect = GFX_DIMENSIONS_ASPECT_RATIO;
     aspect *= 0.75;
 
-    // Copy current inputs to previous 
+    // Copy current inputs to previous
     u8 *src = (u8 *) gdctrl;
     u8 *dest = (u8 *) gdctrl->prevFrame;
     for (u32 i = 0; i < sizeof(struct GdControl); i++) {
@@ -3279,7 +3279,7 @@ void stub_renderer_14(UNUSED s8 *arg0) {
  * functions from IRIS GL.
  * @param buf  pointer to an array of 16-bit values
  * @param len  maximum number of values to store
- */ 
+ */
 void init_pick_buf(s16 *buf, s32 len) {
     buf[0] = 0;
     buf[1] = 0;
@@ -3498,7 +3498,7 @@ void gd_put_sprite(u16 *sprite, s32 x, s32 y, s32 wx, s32 wy) {
     // Must be game screen aspect ratio, not GFX window aspect ratio
     f32 aspect = ((float) SCREEN_WIDTH) / ((float) SCREEN_HEIGHT ) * 0.75;
     x *= aspect;
-    
+
     gSPDisplayList(next_gfx(), osVirtualToPhysical(gd_dl_sprite_start_tex_block));
     for (r = 0; r < wy; r += 32) {
         for (c = 0; c < wx; c += 32) {
