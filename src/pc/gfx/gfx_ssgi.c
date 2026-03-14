@@ -332,12 +332,10 @@ static void ssgi_create_fbos(int w, int h) {
     glGenTextures(1, &ssgi_scene_depth_tex);
     glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
 #ifdef USE_GLES
-    // WebGL 2 / GLES 3: use GL_DEPTH_COMPONENT24 (0x81A6) as internal format
-    // This is core in WebGL 2 and doesn't need the depth texture extension.
-    #ifndef GL_DEPTH_COMPONENT24
-    #define GL_DEPTH_COMPONENT24 0x81A6
-    #endif
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+    // WebGL 2 / GLES: use GL_DEPTH_COMPONENT16 for maximum mobile compatibility.
+    // Many Android GPUs (Mali, PowerVR, older Adreno) don't support 24-bit depth
+    // textures reliably in WebGL 2, causing FBO incompleteness → black screen.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
 #else
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 #endif
