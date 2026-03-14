@@ -126,6 +126,7 @@ static const char *ao_frag_src =
     "    float nd=interleavedGradientNoise(sc);\n"
     "    float irs=fract(no+uTemporalOffset)+rand((vUv+vec2(uTemporalDirection*0.02))*2.0-1.0);\n"
     "    float ao=0.0;\n"
+    "    float dbg_h1=0.0,dbg_h2=0.0,dbg_n=0.0,dbg_mhcR=0.0,dbg_mhcL=0.0;\n"
     "    for(int i=0;i<SLICE_COUNT;i++) {\n"
     "        float fi=float(i);\n"
     "        float ra=(fi+nd+uTemporalDirection)*PI/float(SLICE_COUNT);\n"
@@ -141,12 +142,14 @@ static const char *ao_frag_src =
     "        float mhcL=findMaxHorizon(vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd);\n"
     "        float h1=max(0.0,asin(clamp(mhcR,-1.0,1.0)));\n"
     "        float h2=max(0.0,asin(clamp(mhcL,-1.0,1.0)));\n"
+    "        dbg_h1=h1; dbg_h2=h2; dbg_n=n; dbg_mhcR=mhcR; dbg_mhcL=mhcL;\n"
     "        ao+=0.25*(-cos(2.0*h1-n)+cos(n)+2.0*h1*sin(n));\n"
     "        ao+=0.25*(-cos(2.0*h2+n)+cos(n)-2.0*h2*sin(n));\n"
     "    }\n"
     "    ao/=float(SLICE_COUNT);\n"
     "    float vis=clamp(pow(clamp(1.0-ao,0.0,1.0),uAoIntensity),0.0,1.0);\n"
-    "    gl_FragColor=vec4(vec3(vis),1.0);\n"
+    "    // Debug: R=raw maxHorizonCos_R [-1,1]→[0,1], G=raw maxHorizonCos_L, B=raw ao, A=1\n"
+    "    gl_FragColor=vec4(dbg_mhcR*0.5+0.5, dbg_mhcL*0.5+0.5, ao, 1.0);\n"
     "}\n";
 
 static const char *composite_frag_src =
@@ -179,18 +182,31 @@ static const char *composite_frag_src =
     "\n"
     "void main() {\n"
     "    vec4 scene = texture2D(tScene, vUv);\n"
-    "    float ao = texture2D(tAO, vUv).r;\n"
-    "    vec4 result = vec4(scene.rgb * ao, scene.a);\n"
+    "    vec4 aoData = texture2D(tAO, vUv);\n"
+    "    // R=occluded fraction, G=h1/halfpi, B=h2/halfpi\n"
+    "    float vis = clamp(1.0 - aoData.r, 0.0, 1.0);\n"
+    "    vec4 result = vec4(scene.rgb * vis, scene.a);\n"
     "\n"
-    "    // Debug: normals + AO thumbnails in top-right corner\n"
-    "    float thumbS = 0.2;\n"
-    "    if (vUv.x > (1.0 - thumbS) && vUv.y < thumbS) {\n"
-    "        // AO only\n"
-    "        vec2 tuv = vec2((vUv.x-(1.0-thumbS))/thumbS, vUv.y/thumbS);\n"
-    "        result = vec4(vec3(texture2D(tAO, tuv).r), 1.0);\n"
-    "    } else if (vUv.x > (1.0 - thumbS*2.0) && vUv.x <= (1.0 - thumbS) && vUv.y < thumbS) {\n"
-    "        // Normals\n"
-    "        vec2 tuv = vec2((vUv.x-(1.0-thumbS*2.0))/thumbS, vUv.y/thumbS);\n"
+    "    // Debug thumbnails: raw AO channels, visibility, normals\n"
+    "    float thumbS = 0.15;\n"
+    "    if (vUv.y < thumbS) {\n"
+    "        float panel = vUv.x * 5.0;\n"
+    "        int idx = int(floor(panel));\n"
+    "        vec2 tuv = vec2(fract(panel), vUv.y / thumbS);\n"
+    "        vec4 ad = texture2D(tAO, tuv);\n"
+    "        if (idx == 0) {\n"
+    "            result = vec4(vec3(ad.r), 1.0);\n"  // maxHorizonCos Right (0.5=tangent, >0.5=occluded)
+    "        } else if (idx == 1) {\n"
+    "            result = vec4(vec3(ad.g), 1.0);\n"  // maxHorizonCos Left
+    "        } else if (idx == 2) {\n"
+    "            result = vec4(vec3(ad.b), 1.0);\n"  // Raw ao (occluded fraction)
+    "        } else if (idx == 3) {\n"
+    "            result = vec4(vec3(1.0-ad.b), 1.0);\n"  // Visibility (1-ao)
+    "        } else {\n"
+    "            result = vec4(dbgN(tuv)*0.5+0.5, 1.0);\n"  // Normals
+    "        }\n"
+    "    } else if (vUv.x > (1.0 - thumbS*2.0) && vUv.x <= (1.0 - thumbS) && vUv.y < thumbS*2.0) {\n"
+    "        vec2 tuv = vec2((vUv.x-(1.0-thumbS*2.0))/thumbS, (vUv.y-thumbS)/thumbS);\n"
     "        result = vec4(dbgN(tuv)*0.5+0.5, 1.0);\n"
     "    }\n"
     "\n"
@@ -206,7 +222,7 @@ static bool ssgi_enabled = true;
 unsigned int gSSGI_AoIntensity = 15;  // ÷10 → 1.5
 unsigned int gSSGI_Radius      = 15;  // ÷10 → 1.5
 unsigned int gSSGI_Thickness   = 3;   // ÷10 → 0.3
-unsigned int gSSGI_Enabled     = 1;   // 0=off, 1=on
+unsigned int gSSGI_Enabled     = 0;   // 0=off, 1=on (disabled by default)
 
 static GLuint ssgi_scene_fbo;
 static GLuint ssgi_scene_color_tex;
