@@ -122,6 +122,8 @@ void djui_init(void) {
     djui_base_set_visible(&sDjuiLuaError->base, false);
     djui_base_set_color(&sDjuiLuaError->base, 255, 0, 0, 255);
 
+    djui_themes_load();
+
     djui_panel_playerlist_create(NULL);
 
     djui_console_create();

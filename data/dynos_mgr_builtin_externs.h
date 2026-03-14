@@ -1549,6 +1549,7 @@ extern ALIGNED8 const Texture texture_font_title[];
 extern ALIGNED8 const Texture texture_font_hud[];
 extern ALIGNED8 const Texture texture_font_hud_recolor[];
 extern ALIGNED8 const Texture texture_font_special[];
+extern ALIGNED8 const Texture texture_font_classic[];
 extern ALIGNED8 const Texture texture_selectionbox_back_icon[];
 extern ALIGNED8 const Texture texture_selectionbox_forward_icon[];
 extern ALIGNED8 const Texture texture_font_jp[];

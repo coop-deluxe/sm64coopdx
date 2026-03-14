@@ -1,28 +1,33 @@
 #include "djui.h"
 
-static void djui_checkbox_update_style(struct DjuiBase* base) {
+void djui_checkbox_update_style(struct DjuiBase* base) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
     if (!checkbox) { return; }
+
+    enum DjuiThemeElements borderElement;
+    enum DjuiThemeElements textElement;
+    enum DjuiThemeElements rectValueElement;
+
     if (!checkbox->base.enabled) {
-        djui_base_set_border_color(&checkbox->rect->base, 93, 93, 93, 255);
-        djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&checkbox->text->base, 100, 100, 100, 255);
-        djui_base_set_color(&checkbox->rectValue->base, 100, 100, 100, 255);
+        borderElement = DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED;
+        textElement = DJUI_THEME_ELEMENT_TEXT_DISABLED;
+        rectValueElement = DJUI_THEME_ELEMENT_CHECKBOX_DISABLED;
     } else if (gDjuiCursorDownOn == base) {
-        djui_base_set_border_color(&checkbox->rect->base, 20, 170, 255, 255);
-        djui_base_set_color(&checkbox->rect->base, 255, 255, 255, 32);
-        djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&checkbox->rectValue->base, 255, 255, 255, 255);
+        borderElement = DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
+        rectValueElement = DJUI_THEME_ELEMENT_CHECKBOX_DOWN;
     } else if (gDjuiHovered == base) {
-        djui_base_set_border_color(&checkbox->rect->base, 0, 120, 215, 255);
-        djui_base_set_color(&checkbox->text->base, 229, 241, 251, 255);
-        djui_base_set_color(&checkbox->rectValue->base, 229, 241, 251, 255);
+        borderElement = DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
+        rectValueElement = DJUI_THEME_ELEMENT_CHECKBOX_HOVER;
     } else {
-        djui_base_set_border_color(&checkbox->rect->base, 173, 173, 173, 255);
-        djui_base_set_color(&checkbox->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&checkbox->text->base, 220, 220, 220, 255);
-        djui_base_set_color(&checkbox->rectValue->base, 220, 220, 220, 255);
+        borderElement = DJUI_THEME_ELEMENT_CHECKBOX_BORDER;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
+        rectValueElement = DJUI_THEME_ELEMENT_CHECKBOX;
     }
+    djui_base_set_border_color_with_color(&checkbox->rect->base, configDjuiTheme.elements[borderElement]);
+    djui_base_set_color_with_color(&checkbox->text->base, configDjuiTheme.elements[textElement]);
+    djui_base_set_color_with_color(&checkbox->rectValue->base, configDjuiTheme.elements[rectValueElement]);
     djui_base_set_visible(&checkbox->rectValue->base, *checkbox->value);
 }
 

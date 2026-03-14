@@ -67,8 +67,8 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, DLANG(HOST_MESSAGE, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
-            struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, DLANG(HOST_MESSAGE, HOST), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_message_do_host);
+            struct DjuiButton* btnBack = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
 
             if (hideHostButton) {
                 djui_base_set_size(&btnBack->base, 1.0f, 64);

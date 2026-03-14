@@ -1,34 +1,41 @@
 #include "djui.h"
 
-static void djui_slider_update_style(struct DjuiBase* base) {
+void djui_slider_update_style(struct DjuiBase* base) {
     struct DjuiSlider* slider = (struct DjuiSlider*)base;
     f32 x = slider->rect->base.elem.x;
     bool activeRegion = (gCursorX >= x);
 
+    enum DjuiThemeElements borderElement;
+    enum DjuiThemeElements rectValueElement;
+    enum DjuiThemeElements textElement;
+
     if (!slider->base.enabled) {
-        djui_base_set_border_color(&slider->rect->base, 93, 93, 93, 255);
-        djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&slider->text->base, 100, 100, 100, 255);
-        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 100, 100, 100, 255); }
+        borderElement = DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED;
+        rectValueElement = DJUI_THEME_ELEMENT_SLIDER_DISABLED;
+        textElement = DJUI_THEME_ELEMENT_TEXT_DISABLED;
     } else if (gInteractableFocus == base) {
-        djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
-        djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
-        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255); }
+        borderElement = DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN;
+        rectValueElement = DJUI_THEME_ELEMENT_SLIDER_DOWN;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
     } else if (gDjuiCursorDownOn == base && activeRegion) {
-        djui_base_set_border_color(&slider->rect->base, 20, 170, 255, 255);
-        djui_base_set_color(&slider->rect->base, 255, 255, 255, 32);
-        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 255, 255, 255, 255); }
+        borderElement = DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN;
+        rectValueElement = DJUI_THEME_ELEMENT_SLIDER_DOWN;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
     } else if (gDjuiHovered == base && activeRegion) {
-        djui_base_set_border_color(&slider->rect->base, 0, 120, 215, 255);
-        djui_base_set_color(&slider->text->base, 229, 241, 251, 255);
-        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 229, 241, 251, 255); }
+        borderElement = DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER;
+        rectValueElement = DJUI_THEME_ELEMENT_SLIDER_HOVER;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
     } else {
-        djui_base_set_border_color(&slider->rect->base, 173, 173, 173, 255);
-        djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
-        djui_base_set_color(&slider->text->base, 220, 220, 220, 255);
-        if (slider->updateRectValueColor) { djui_base_set_color(&slider->rectValue->base, 220, 220, 220, 255); }
+        borderElement = DJUI_THEME_ELEMENT_SLIDER_BORDER;
+        rectValueElement = DJUI_THEME_ELEMENT_SLIDER;
+        textElement = DJUI_THEME_ELEMENT_TEXT;
+    }
+
+    djui_base_set_border_color_with_color(&slider->rect->base, configDjuiTheme.elements[borderElement]);
+    djui_base_set_color(&slider->rect->base, 0, 0, 0, 0);
+    djui_base_set_color_with_color(&slider->text->base, configDjuiTheme.elements[textElement]);
+    if (slider->updateRectValueColor) {
+        djui_base_set_color_with_color(&slider->rectValue->base, configDjuiTheme.elements[rectValueElement]);
     }
 }
 
@@ -37,7 +44,9 @@ void djui_slider_update_value(struct DjuiBase* base) {
     u32  min   = slider->min;
     u32  max   = slider->max;
     u32* value = slider->value;
-    djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
+    if (slider->rectValue != NULL && value != NULL) {
+        djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
+    }
 }
 
 static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {

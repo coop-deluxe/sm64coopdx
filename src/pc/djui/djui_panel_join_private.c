@@ -27,7 +27,7 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         u16 directLines = djui_text_count_lines(text1, 12);
         f32 directTextHeight = 32 * 0.8125f * directLines + 8;
         djui_base_set_size(&text1->base, 1.0f, directTextHeight);
-        djui_base_set_color(&text1->base, 220, 220, 220, 255);
+        djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
 
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
         inputbox1->passwordChar[0] = '#';
@@ -37,11 +37,11 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect2->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_create(&rect2->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            struct DjuiButton* button2 = djui_button_create(&rect2->base, DLANG(LOBBIES, SEARCH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_private_lobbies);
+            struct DjuiButton* button2 = djui_button_create(&rect2->base, DLANG(LOBBIES, SEARCH), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_join_private_lobbies);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             defaultBase = &button2->base;

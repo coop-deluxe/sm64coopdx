@@ -61,15 +61,15 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
     {
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
-            djui_button_left_create(&rect1->base, DLANG(PAUSE, PLAYER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_create);
-            djui_button_right_create(&rect1->base, DLANG(PAUSE, DYNOS_PACKS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_create);
+            djui_button_left_create(&rect1->base, DLANG(PAUSE, PLAYER), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_create);
+            djui_button_right_create(&rect1->base, DLANG(PAUSE, DYNOS_PACKS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_dynos_create);
         }
 
-        struct DjuiButton* button3 = djui_button_create(body, DLANG(PAUSE, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
+        struct DjuiButton* button3 = djui_button_create(body, DLANG(PAUSE, OPTIONS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_create);
         defaultBase = &button3->base;
 
         if (gNetworkType == NT_SERVER) {
-            djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
+            djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_create);
         }
 
         struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
@@ -93,23 +93,23 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
             char buffer[256] = { 0 };
             if (gHookedModMenuElementsCount == 1 && gHookedModMenuElements[0].element == MOD_MENU_ELEMENT_BUTTON) {
                 snprintf(buffer, 256, "%s - %s", hooked->mod->name, hooked->name);
-                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
+                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_PRIMARY, djui_panel_mod_menu_mod_button);
                 button->base.tag = 0;
             } else {
                 snprintf(buffer, 256, "%s", hooked->mod->name);
-                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
+                struct DjuiButton* button = djui_button_create(body, buffer, DJUI_BUTTON_STYLE_PRIMARY, djui_panel_mod_menu_mod_create);
                 button->base.tag = hooked->mod->index;
             }
         } else if (gHookedModMenuElementsCount > 0) {
-            djui_button_create(body, DLANG(PAUSE, MOD_MENU), DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_create);
+            djui_button_create(body, DLANG(PAUSE, MOD_MENU), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_mod_menu_create);
         }
 
-        djui_button_create(body, DLANG(PAUSE, RESUME), DJUI_BUTTON_STYLE_NORMAL, djui_panel_pause_resume);
+        djui_button_create(body, DLANG(PAUSE, RESUME), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_pause_resume);
 
         if (gNetworkType == NT_SERVER) {
-            djui_button_create(body, DLANG(PAUSE, STOP_HOSTING), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
+            djui_button_create(body, DLANG(PAUSE, STOP_HOSTING), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_pause_quit);
         } else {
-            djui_button_create(body, DLANG(PAUSE, DISCONNECT), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
+            djui_button_create(body, DLANG(PAUSE, DISCONNECT), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_pause_quit);
         }
     }
 

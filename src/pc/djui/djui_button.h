@@ -9,10 +9,11 @@ struct DjuiButton {
 };
 
 enum DjuiButtonStyle {
-    DJUI_BUTTON_STYLE_NORMAL,
-    DJUI_BUTTON_STYLE_BACK,
+    DJUI_BUTTON_STYLE_PRIMARY,
+    DJUI_BUTTON_STYLE_SECONDARY,
 };
 
+void djui_button_update_style(struct DjuiBase* base);
 void djui_button_set_style(struct DjuiButton* button, enum DjuiButtonStyle style);
 
 struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*));

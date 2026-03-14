@@ -2822,7 +2822,8 @@ FONT_ALIASED     =  3 --- @type DjuiFontType
 FONT_CUSTOM_HUD  =  4 --- @type DjuiFontType
 FONT_RECOLOR_HUD =  5 --- @type DjuiFontType
 FONT_SPECIAL     =  6 --- @type DjuiFontType
-FONT_COUNT       =  7 --- @type DjuiFontType
+FONT_CLASSIC     =  7 --- @type DjuiFontType
+FONT_COUNT       =  8 --- @type DjuiFontType
 
 --- @alias DjuiFontType
 --- | `FONT_LEGACY`
@@ -2833,6 +2834,7 @@ FONT_COUNT       =  7 --- @type DjuiFontType
 --- | `FONT_CUSTOM_HUD`
 --- | `FONT_RECOLOR_HUD`
 --- | `FONT_SPECIAL`
+--- | `FONT_CLASSIC`
 --- | `FONT_COUNT`
 
 DJUI_RAINBOW_COLOR_RED    = 0 --- @type DjuiRainbowColor

@@ -46,7 +46,7 @@ static bool djui_panel_host_port_valid(void) {
 static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* sInputboxPort = (struct DjuiInputbox*)caller;
     if (djui_panel_host_port_valid()) {
-        djui_inputbox_set_text_color(sInputboxPort, 0, 0, 0, 255);
+        djui_inputbox_reset_text_color(sInputboxPort);
     } else {
         djui_inputbox_set_text_color(sInputboxPort, 255, 0, 0, 255);
     }
@@ -109,7 +109,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             {
                 struct DjuiText* text1 = djui_text_create(&sRectPort->base, DLANG(HOST, PORT));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_color(&text1->base, 220, 220, 220, 255);
+                djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
                 djui_base_set_size(&text1->base, 0.585f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
                 djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -138,7 +138,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             {
                 struct DjuiText* text1 = djui_text_create(&sRectPassword->base, DLANG(HOST, PASSWORD));
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_color(&text1->base, 220, 220, 220, 255);
+                djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
                 djui_base_set_size(&text1->base, 0.585f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
                 if (gNetworkType == NT_SERVER) {
@@ -174,21 +174,21 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
             char starString[64] = { 0 };
             snprintf(starString, 64, "%c x%d - %s", '~' + 1, save_file_get_total_star_count(configHostSaveSlot - 1, 0, 24), configSaveNames[configHostSaveSlot - 1]);
-            struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_save_create);
+            struct DjuiButton* button1 = djui_button_create(&rect2->base, starString, DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_save_create);
             djui_base_set_size(&button1->base, 0.45f, 32);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 
-        djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
-        djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
+        djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_settings_create);
+        djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_mods_create);
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
+            struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_host_do_host);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
 
