@@ -279,21 +279,32 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
 
 static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, const char** fileTypes, bool recursive) {
 
+    // heap-allocate path buffers to avoid blowing the stack on recursive calls
+    // (SYS_MAX_PATH is 4096, so 3 buffers = ~12KB per recursion level)
+    char* dirPath = calloc(SYS_MAX_PATH, 1);
+    char* path = calloc(SYS_MAX_PATH, 1);
+    char* relativePath = calloc(SYS_MAX_PATH, 1);
+    if (!dirPath || !path || !relativePath) {
+        LOG_ERROR("Failed to allocate path buffers");
+        free(dirPath); free(path); free(relativePath);
+        return false;
+    }
+
     // concat directory
-    char dirPath[SYS_MAX_PATH] = { 0 };
     if (!concat_path(dirPath, fullPath, (char*)subDir)) {
         LOG_ERROR("Could not concat directory '%s' + '%s'", fullPath, subDir);
+        free(dirPath); free(path); free(relativePath);
         return false;
     }
 
     // open subdirectory
     struct dirent* dir = NULL;
     DIR* d = opendir(dirPath);
-    if (!d) { return true; }
+    if (!d) { free(dirPath); free(path); free(relativePath); return true; }
+
+    bool result = true;
 
     // iterate subdirectory
-    char path[SYS_MAX_PATH] = { 0 };
-    char relativePath[SYS_MAX_PATH] = { 0 };
     while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, dirPath, path)) { continue; }
@@ -301,14 +312,14 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         if (strlen(subDir) > 0) {
             if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s/%s", subDir, dir->d_name) < 0) {
                 LOG_ERROR("Could not concat %s path!", subDir);
-                closedir(d);
-                return false;
+                result = false;
+                break;
             }
         } else {
             if (snprintf(relativePath, SYS_MAX_PATH - 1, "%s", dir->d_name) < 0) {
                 LOG_ERROR("Could not concat %s path!", subDir);
-                closedir(d);
-                return false;
+                result = false;
+                break;
             }
         }
 
@@ -322,8 +333,8 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
 
             // Recursively process subdirectory
             if (!mod_load_files_dir(mod, fullPath, relativePath, fileTypes, recursive)) {
-                closedir(d);
-                return false;
+                result = false;
+                break;
             }
             continue;
         }
@@ -342,12 +353,16 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         // allocate file
         struct ModFile* file = mod_allocate_file(mod, relativePath);
         if (file == NULL) {
-            return false;
+            result = false;
+            break;
         }
     }
 
     closedir(d);
-    return true;
+    free(dirPath);
+    free(path);
+    free(relativePath);
+    return result;
 }
 
 static bool mod_load_files(struct Mod* mod, char* fullPath) {
