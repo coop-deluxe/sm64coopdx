@@ -113,9 +113,9 @@ static const char *ao_frag_src =
     "            mhc=max(mhc,hc);\n"
     "        }\n"
     "    }\n"
-    "    float ha=acos(clamp(mhc,-1.0,1.0));\n"
+    "    float ha=min(acos(clamp(mhc,-1.0,1.0)),HALF_PI);\n"
     "    float na=n*sd;\n"
-    "    return clamp((ha-na)/PI,0.0,1.0);\n"
+    "    return clamp((ha-na)/HALF_PI,0.0,1.0);\n"
     "}\n"
     "void main() {\n"
     "    float depth=texture2D(tDepth,vUv).r;\n"
@@ -143,8 +143,7 @@ static const char *ao_frag_src =
     "        ao+=horizonAO(-1.0,vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
     "    }\n"
     "    ao/=float(SLICE_COUNT*2);\n"
-    "    ao=clamp(ao*2.0,0.0,1.0);\n"
-    "    ao=clamp(pow(ao,uAoIntensity),0.0,1.0);\n"
+    "    ao=clamp(pow(clamp(ao,0.0,1.0),uAoIntensity),0.0,1.0);\n"
     "    gl_FragColor=vec4(vec3(ao),1.0);\n"
     "}\n";
 
