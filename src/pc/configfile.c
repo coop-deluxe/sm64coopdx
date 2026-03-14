@@ -201,7 +201,7 @@ unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
 // DJUI settings
-struct DjuiTheme configDjuiTheme = { 0 };
+struct DjuiTheme configDjuiTheme                  = { 0 };
 #ifdef HANDHELD
 bool         configDjuiThemeCenter                = false;
 #else
