@@ -168,9 +168,10 @@ static void djui_panel_theme_font_setting_change(UNUSED struct DjuiBase* caller)
 }
 
 static void djui_panel_theme_header_font_setting_change(UNUSED struct DjuiBase* caller) {
-    u8 djuiHeaderFontChoices[5] = {
+    u8 djuiHeaderFontChoices[6] = {
         FONT_NORMAL,
         FONT_MENU,
+        FONT_CUSTOM_HUD,
         FONT_ALIASED,
         FONT_SPECIAL,
         FONT_CLASSIC
@@ -404,6 +405,8 @@ static bool djui_panel_theme_renderer(struct DjuiBase* base) {
     struct DjuiBase* headerBase = djui_three_panel_get_header(threePanel);
     struct DjuiText* headerText = (struct DjuiText*)headerBase;
     djui_text_set_font(headerText, gDjuiFonts[configDjuiTheme.headerFont]);
+    // if only we had unified font sizes and I didn't have to do this hack
+    djui_text_set_font_scale(headerText, configDjuiTheme.headerFont == FONT_CUSTOM_HUD ? 96 : 64);
     if (!configDjuiTheme.useRainbowColor) {
         djui_text_set_text(headerText, DLANG(DJUI_THEMES, THEMES_TITLE));
         djui_base_set_color_with_color(headerBase, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR]);
@@ -557,21 +560,23 @@ void djui_panel_themes_create(struct DjuiBase* caller) {
         djui_base_set_border_color(&sColorRect->base, 173, 173, 173, 255);
 
         u8 djuiHeaderFontSelectIndexes[FONT_COUNT] = {
-            [FONT_NORMAL] = 0,
-            [FONT_MENU] = 1,
-            [FONT_ALIASED] = 2,
-            [FONT_SPECIAL] = 3,
-            [FONT_CLASSIC] = 4,
+            [FONT_NORMAL]     = 0,
+            [FONT_MENU]       = 1,
+            [FONT_CUSTOM_HUD] = 2,
+            [FONT_ALIASED]    = 3,
+            [FONT_SPECIAL]    = 4,
+            [FONT_CLASSIC]    = 5,
         };
         sDjuiHeaderFontSelected = djuiHeaderFontSelectIndexes[configDjuiTheme.headerFont];
-        char* djuiHeaderFontChoices[5] = {
+        char* djuiHeaderFontChoices[6] = {
             DLANG(DJUI_THEMES, FONT_NORMAL),
             DLANG(DJUI_THEMES, FONT_MENU),
+            DLANG(DJUI_THEMES, FONT_CUSTOM_HUD),
             DLANG(DJUI_THEMES, FONT_ALIASED),
             DLANG(DJUI_THEMES, FONT_SPECIAL),
             DLANG(DJUI_THEMES, FONT_CLASSIC)
         };
-        sSelectionboxes[sSelectionboxesCount++] = djui_selectionbox_create(body, DLANG(DJUI_THEMES, HEADER_FONT), djuiHeaderFontChoices, 5, &sDjuiHeaderFontSelected, djui_panel_theme_header_font_setting_change);
+        sSelectionboxes[sSelectionboxesCount++] = djui_selectionbox_create(body, DLANG(DJUI_THEMES, HEADER_FONT), djuiHeaderFontChoices, 6, &sDjuiHeaderFontSelected, djui_panel_theme_header_font_setting_change);
 
         sCheckboxes[sCheckboxesCount++] = djui_checkbox_create(body, DLANG(DJUI_THEMES, USE_RAINBOW), &configDjuiTheme.useRainbowColor, djui_panel_themes_reload);
         sCheckboxes[sCheckboxesCount++] = djui_checkbox_create(body, DLANG(DJUI_THEMES, GRADIENTS), &configDjuiTheme.gradients, djui_panel_themes_reload);

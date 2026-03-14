@@ -2,6 +2,7 @@
 #include "djui_panel.h"
 #include "djui_unicode.h"
 #include "djui_panel_menu.h"
+#include "djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
@@ -90,7 +91,8 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText, bool forcedLeftS
         djui_base_set_location(&header->base, 0, DJUI_PANEL_HEADER_OFFSET);
         djui_text_set_alignment(header, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         djui_text_set_font(header, gDjuiFonts[headerFont]);
-        djui_text_set_font_scale(header, 64);
+        // if only we had unified font sizes and I didn't have to do this hack
+        djui_text_set_font_scale(header, headerFont == FONT_CUSTOM_HUD ? 96 : 64);
 
         struct DjuiFlowLayout* body = djui_flow_layout_create(&panel->base);
         djui_base_set_alignment(&body->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
