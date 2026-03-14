@@ -283,6 +283,13 @@ void patch_mtx_interpolated(f32 delta) {
         f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
         guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
+
+        // Capture perspective parameters for SSGI post-processing
+        extern void ssgi_set_perspective(float near, float far, float fov, float aspect);
+        ssgi_set_perspective(near, far, fovInterpolated, sPerspectiveAspect);
+        extern void ssgi_set_projection_matrix(const float mtx[4][4]);
+        ssgi_set_projection_matrix(sPerspectiveMtx->m);
+
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 

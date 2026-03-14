@@ -106,14 +106,16 @@ static const char *ao_frag_src =
     "        vec3 sv=getViewPosition(su,sd2);\n"
     "        vec3 hd=sv-vp;\n"
     "        float hl=length(hd);\n"
-    "        if(hl>0.001 && hl<uThickness) {\n"
+    "        if(hl>0.001) {\n"
     "            float hc=dot(hd/hl,vd);\n"
+    "            float fade=1.0-clamp(hl/uThickness,0.0,1.0);\n"
+    "            hc=mix(-1.0,hc,fade);\n"
     "            mhc=max(mhc,hc);\n"
     "        }\n"
     "    }\n"
-    "    float ha=acos(clamp(mhc,-1.0,1.0));\n"
-    "    float na=n*sd;\n"
-    "    return clamp((ha-na)/PI,0.0,1.0);\n"
+    "    // Return horizon angle for GTAO integration\n"
+    "    float h=acos(clamp(mhc,-1.0,1.0));\n"
+    "    return h;\n"
     "}\n"
     "void main() {\n"
     "    float depth=texture2D(tDepth,vUv).r;\n"
@@ -137,12 +139,14 @@ static const char *ao_frag_src =
     "        vec3 prnn=normalize(prn);\n"
     "        float cn=clamp(dot(prnn,vd),-1.0,1.0);\n"
     "        float n=-sign(dot(prn,tn))*acos(cn);\n"
-    "        ao+=horizonAO(1.0,vec2(1.0,1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
-    "        ao+=horizonAO(-1.0,vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
+    "        float h1=horizonAO(1.0,vec2(1.0,1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
+    "        float h2=horizonAO(-1.0,vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
+    "        // GTAO cosine-weighted integrated AO per slice\n"
+    "        ao+=0.25*(-cos(2.0*h1-n)+cos(n)+2.0*h1*sin(n));\n"
+    "        ao+=0.25*(-cos(2.0*h2-n)+cos(n)+2.0*h2*sin(n));\n"
     "    }\n"
-    "    ao/=float(SLICE_COUNT*2);\n"
-    "    ao=clamp(ao*2.0,0.0,1.0);\n"  // Remap: flat surface (0.5) → 1.0, corners → darker
-    "    ao=clamp(pow(ao,uAoIntensity),0.0,1.0);\n"
+    "    ao/=float(SLICE_COUNT);\n"
+    "    ao=clamp(pow(clamp(ao,0.0,1.0),uAoIntensity),0.0,1.0);\n"
     "    gl_FragColor=vec4(vec3(ao),1.0);\n"
     "}\n";
 
@@ -225,9 +229,13 @@ static GLint loc_ao_uTemporalDirection, loc_ao_uTemporalOffset;
 // Composite program uniforms
 static GLint loc_comp_tScene, loc_comp_tAO, loc_comp_tDepth, loc_comp_uDbgResolution, loc_comp_uDbgNear, loc_comp_uDbgFar, loc_comp_uDbgProjScale;
 
-// Projection matrix from gfx_pc.c
+// Projection parameters from rendering_graph_node.c
 static float ssgi_proj_matrix[4][4];
 static bool ssgi_proj_valid = false;
+static float ssgi_near = 100.0f, ssgi_far = 12800.0f;
+static float ssgi_fov = 45.0f, ssgi_aspect = 1.333f;
+static bool ssgi_persp_valid = false;
+static bool ssgi_scene_fbo_bound = false;
 static uint32_t ssgi_frame_count = 0;
 
 // ---- Helpers ----
@@ -466,6 +474,7 @@ void ssgi_start_frame(void) {
 
     // Redirect rendering into the scene FBO
     glBindFramebuffer(GL_FRAMEBUFFER, ssgi_scene_fbo);
+    ssgi_scene_fbo_bound = true;
 }
 
 static void draw_fullscreen_quad(void) {
@@ -477,7 +486,7 @@ static void draw_fullscreen_quad(void) {
 }
 
 void ssgi_render(void) {
-    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
+    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled || !ssgi_persp_valid) return;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
 
     ssgi_frame_count++;
@@ -517,16 +526,18 @@ void ssgi_render(void) {
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_BLEND);
 
-    // SM64's P_matrix is a combined projection+viewport transform (not standard GL).
-    // The actual perspective parameters (FOV, near, far) are baked into MP_matrix.
-    // Use SM64's known camera defaults: near=100, far=12800, FOV=45deg.
-    float cam_near = 100.0f;
-    float cam_far  = 12800.0f;
-    float fov_rad  = 45.0f * 3.14159265f / 180.0f;
-    float aspect   = (float)ssgi_width / (float)ssgi_height;
-    float proj_y   = 1.0f / tanf(fov_rad * 0.5f);  // cot(fov/2)
+    // Use perspective parameters captured from rendering_graph_node.c
+    float cam_near = ssgi_near;
+    float cam_far  = ssgi_far;
+    float fov_rad  = ssgi_fov * 3.14159265f / 180.0f;
+    float aspect   = ssgi_aspect > 0.01f ? ssgi_aspect : ((float)ssgi_width / (float)ssgi_height);
+    float proj_y   = 1.0f / tanf(fov_rad * 0.5f);
     float proj_x   = proj_y / aspect;
     float half_proj_scale = (float)ssgi_height * proj_y * 0.5f;
+
+    // Also compute inverse projection matrix for potential future use
+    float inv_proj[16];
+    invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
 
     // Temporal noise
     static const float temporal_rotations[] = {60, 300, 180, 240, 120, 0};
@@ -570,6 +581,9 @@ void ssgi_render(void) {
 
 void ssgi_composite(void) {
     if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
+    // If ortho switch already composited, skip (UI rendered directly to default FB)
+    if (!ssgi_scene_fbo_bound) return;
+    ssgi_scene_fbo_bound = false;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
 
     // Save state
@@ -605,13 +619,13 @@ void ssgi_composite(void) {
 
     glUniform2f(loc_comp_uDbgResolution, (float)ssgi_width, (float)ssgi_height);
     {
-        float dfov = 45.0f * 3.14159265f / 180.0f;
-        float dasp = (float)ssgi_width / (float)ssgi_height;
+        float dfov = ssgi_fov * 3.14159265f / 180.0f;
+        float dasp = ssgi_aspect > 0.01f ? ssgi_aspect : ((float)ssgi_width / (float)ssgi_height);
         float dpy = 1.0f / tanf(dfov * 0.5f);
         glUniform2f(loc_comp_uDbgProjScale, dpy / dasp, dpy);
     }
-    glUniform1f(loc_comp_uDbgNear, 100.0f);
-    glUniform1f(loc_comp_uDbgFar, 12800.0f);
+    glUniform1f(loc_comp_uDbgNear, ssgi_near);
+    glUniform1f(loc_comp_uDbgFar, ssgi_far);
 
     draw_fullscreen_quad();
 
@@ -626,6 +640,28 @@ void ssgi_composite(void) {
 void ssgi_set_projection_matrix(const float mtx[4][4]) {
     memcpy(ssgi_proj_matrix, mtx, sizeof(ssgi_proj_matrix));
     ssgi_proj_valid = true;
+}
+
+void ssgi_set_perspective(float near, float far, float fov, float aspect) {
+    ssgi_near = near;
+    ssgi_far = far;
+    ssgi_fov = fov;
+    ssgi_aspect = aspect;
+    ssgi_persp_valid = true;
+}
+
+void ssgi_on_ortho_switch(void) {
+    // Called when the display list switches from perspective to ortho projection.
+    // Flush pending 3D geometry, run SSGI, composite to default FB.
+    // Then remaining draws (UI) go directly to default FB without AO.
+    if (!ssgi_scene_fbo_bound || !ssgi_enabled || !gSSGI_Enabled) return;
+
+    extern void gfx_flush(void);
+    gfx_flush();
+    ssgi_render();
+    ssgi_composite();
+    ssgi_scene_fbo_bound = false;
+    // Remaining UI draws now go to default framebuffer (0)
 }
 
 bool ssgi_is_enabled(void) {

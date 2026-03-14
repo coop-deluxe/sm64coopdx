@@ -9,7 +9,9 @@ void ssgi_start_frame(void);   // Bind scene FBO
 void ssgi_render(void);        // AO pass
 void ssgi_composite(void);     // Combine scene × AO → default framebuffer
 void ssgi_set_projection_matrix(const float mtx[4][4]);
+void ssgi_set_perspective(float near, float far, float fov, float aspect);
 bool ssgi_is_enabled(void);
+void ssgi_on_ortho_switch(void);  // Call when switching from perspective to ortho
 
 // Tunable parameters (unsigned int × 10 for DJUI slider, divided by 10.0 in shader)
 extern unsigned int gSSGI_AoIntensity;  // ÷10 → float. Power curve: higher = subtler (default 15 → 1.5)
