@@ -109,7 +109,7 @@ static const char *ao_frag_src =
     "        if(hl>0.001) {\n"
     "            float hc=dot(hd/hl,vd);\n"
     "            float tc=clamp(hl/uThickness,0.0,1.0);\n"
-    "            hc=mix(hc,-1.0,1.0-tc);\n"
+    "            hc=mix(hc,-1.0,tc);\n"
     "            mhc=max(mhc,hc);\n"
     "        }\n"
     "    }\n"
