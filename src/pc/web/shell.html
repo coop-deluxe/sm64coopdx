@@ -1412,7 +1412,9 @@
       refresh: function() {
         if (!this._initCwraps()) return;
         this._cwraps.refresh();
-        this._restoreEnabledState();
+        // Mod enabled state is managed by the C config file (sm64config.txt)
+        // which persists to localStorage via configfile_save()/web_save_to_idb().
+        // Do NOT override it from JS — just render what the C side says.
         this._renderList();
       },
 
@@ -1537,7 +1539,6 @@
         if (!this._cwraps) return;
         var enabled = this._cwraps.getEnabled(index);
         this._cwraps.setEnabled(index, enabled ? 0 : 1);
-        this._saveEnabledState();
         this._renderList();
       },
 
