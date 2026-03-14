@@ -580,10 +580,7 @@ void ssgi_render(void) {
 }
 
 void ssgi_composite(void) {
-    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
-    // If ortho switch already composited, skip (UI rendered directly to default FB)
-    if (!ssgi_scene_fbo_bound) return;
-    ssgi_scene_fbo_bound = false;
+    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled || !ssgi_persp_valid) return;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
 
     // Save state

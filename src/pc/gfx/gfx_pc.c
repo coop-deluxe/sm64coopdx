@@ -661,12 +661,9 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
 
     if (parameters & G_MTX_PROJECTION) {
         if (parameters & G_MTX_LOAD) {
-            // Detect ortho matrix switch (m[2][3]==0 for ortho, -1 for perspective)
-            // When switching to ortho, trigger SSGI composite before UI renders
-            if (matrix[2][3] == 0.0f) {
-                extern void ssgi_on_ortho_switch(void);
-                ssgi_on_ortho_switch();
-            }
+            // TODO: Ortho switch detection for 3D/UI split (disabled for now,
+            // causes rendering issues with mid-frame state changes)
+            // if (matrix[2][3] == 0.0f) { ssgi_on_ortho_switch(); }
             mtxf_copy(rsp.P_matrix, matrix);
         } else {
             mtxf_mul(rsp.P_matrix, matrix, rsp.P_matrix);
