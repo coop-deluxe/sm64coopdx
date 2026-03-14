@@ -56,11 +56,18 @@ static const char *ao_frag_src =
     "uniform float uThickness;\n"
     "uniform float uTemporalDirection;\n"
     "uniform float uTemporalOffset;\n"
+    "uniform vec2 uProjScaleXY;\n"  // P[0][0], P[1][1]
     "varying vec2 vUv;\n"
+    "float linearizeDepth(float d) {\n"
+    "    float z_ndc = d * 2.0 - 1.0;\n"
+    "    return (2.0 * uCameraNear * uCameraFar) / (uCameraFar + uCameraNear - z_ndc * (uCameraFar - uCameraNear));\n"
+    "}\n"
     "vec3 getViewPosition(vec2 uv, float d) {\n"
-    "    vec4 cp = vec4(uv*2.0-1.0, d*2.0-1.0, 1.0);\n"
-    "    vec4 vp = uProjMatrixInverse * cp;\n"
-    "    return vp.xyz/vp.w;\n"
+    "    float z = -linearizeDepth(d);\n"  // negative: camera looks down -Z
+    "    vec2 ndc = uv * 2.0 - 1.0;\n"
+    "    float x = ndc.x * (-z) / uProjScaleXY.x;\n"
+    "    float y = ndc.y * (-z) / uProjScaleXY.y;\n"
+    "    return vec3(x, y, z);\n"
     "}\n"
     "float interleavedGradientNoise(vec2 p) {\n"
     "    return fract(52.9829189*fract(dot(p,vec2(0.06711056,0.00583715))));\n"
@@ -145,14 +152,20 @@ static const char *composite_frag_src =
     "uniform sampler2D tScene;\n"
     "uniform sampler2D tAO;\n"
     "uniform sampler2D tDepth;\n"
-    "uniform mat4 uDbgInvProj;\n"
     "uniform vec2 uDbgResolution;\n"
+    "uniform float uDbgNear;\n"
+    "uniform float uDbgFar;\n"
+    "uniform vec2 uDbgProjScale;\n"
     "varying vec2 vUv;\n"
     "\n"
+    "float dbgLinearize(float d) {\n"
+    "    float z_ndc = d * 2.0 - 1.0;\n"
+    "    return (2.0 * uDbgNear * uDbgFar) / (uDbgFar + uDbgNear - z_ndc * (uDbgFar - uDbgNear));\n"
+    "}\n"
     "vec3 dbgGetViewPos(vec2 uv, float d) {\n"
-    "    vec4 cp = vec4(uv*2.0-1.0, d*2.0-1.0, 1.0);\n"
-    "    vec4 vp = uDbgInvProj * cp;\n"
-    "    return vp.xyz / vp.w;\n"
+    "    float z = -dbgLinearize(d);\n"
+    "    vec2 ndc = uv * 2.0 - 1.0;\n"
+    "    return vec3(ndc.x * (-z) / uDbgProjScale.x, ndc.y * (-z) / uDbgProjScale.y, z);\n"
     "}\n"
     "vec3 dbgGetNormal(vec2 uv) {\n"
     "    vec2 inv = 1.0 / uDbgResolution;\n"
@@ -168,31 +181,35 @@ static const char *composite_frag_src =
     "    float ao = texture2D(tAO, vUv).r;\n"
     "    vec4 result = vec4(scene.rgb * ao, scene.a);\n"
     "\n"
-    "    // Debug thumbnails across the top (25% height, 4 panels)\n"
+    "    // Debug thumbnails across the top (25% height, 5 panels)\n"
     "    float thumbH = 0.25;\n"
     "    if (vUv.y < thumbH) {\n"
-    "        float panel = vUv.x * 4.0;\n"
+    "        float panel = vUv.x * 5.0;\n"
     "        int idx = int(floor(panel));\n"
     "        vec2 tuv = vec2(fract(panel), vUv.y / thumbH);\n"
     "\n"
     "        if (idx == 0) {\n"
-    "            // Panel 0: Raw depth buffer (grayscale)\n"
+    "            // Panel 0: Raw depth buffer (contrast enhanced)\n"
     "            float d = texture2D(tDepth, tuv).r;\n"
-    "            // Visualize with contrast enhancement\n"
-    "            d = pow(d, 50.0); // depth is mostly near 1.0, this brings out detail\n"
+    "            d = pow(d, 50.0);\n"
     "            result = vec4(vec3(d), 1.0);\n"
     "        } else if (idx == 1) {\n"
-    "            // Panel 1: Linearized depth\n"
+    "            // Panel 1: Linear depth using near/far (no matrix)\n"
+    "            float d = texture2D(tDepth, tuv).r;\n"
+    "            float z_ndc = d * 2.0 - 1.0;\n"
+    "            float lin_z = (2.0 * uDbgNear * uDbgFar) / (uDbgFar + uDbgNear - z_ndc * (uDbgFar - uDbgNear));\n"
+    "            result = vec4(vec3(clamp(lin_z / uDbgFar, 0.0, 1.0)), 1.0);\n"
+    "        } else if (idx == 2) {\n"
+    "            // Panel 2: Inv-proj reconstructed depth (Z magnitude)\n"
     "            float d = texture2D(tDepth, tuv).r;\n"
     "            vec3 vp = dbgGetViewPos(tuv, d);\n"
-    "            float lin = clamp(length(vp) / 5000.0, 0.0, 1.0);\n"
-    "            result = vec4(vec3(lin), 1.0);\n"
-    "        } else if (idx == 2) {\n"
-    "            // Panel 2: Reconstructed normals\n"
+    "            result = vec4(vec3(clamp(length(vp) / 5000.0, 0.0, 1.0)), 1.0);\n"
+    "        } else if (idx == 3) {\n"
+    "            // Panel 3: Reconstructed normals\n"
     "            vec3 n = dbgGetNormal(tuv);\n"
     "            result = vec4(n * 0.5 + 0.5, 1.0);\n"
     "        } else {\n"
-    "            // Panel 3: AO only\n"
+    "            // Panel 4: AO only\n"
     "            float a = texture2D(tAO, tuv).r;\n"
     "            result = vec4(vec3(a), 1.0);\n"
     "        }\n"
@@ -219,12 +236,12 @@ static GLuint ssgi_composite_program;
 
 // AO program uniforms
 static GLint loc_ao_tDepth, loc_ao_uResolution, loc_ao_uHalfProjScale;
-static GLint loc_ao_uProjMatrixInverse, loc_ao_uCameraNear, loc_ao_uCameraFar;
+static GLint loc_ao_uProjMatrixInverse, loc_ao_uCameraNear, loc_ao_uCameraFar, loc_ao_uProjScaleXY;
 static GLint loc_ao_uAoIntensity, loc_ao_uRadius, loc_ao_uExpFactor, loc_ao_uThickness;
 static GLint loc_ao_uTemporalDirection, loc_ao_uTemporalOffset;
 
 // Composite program uniforms
-static GLint loc_comp_tScene, loc_comp_tAO, loc_comp_tDepth, loc_comp_uDbgInvProj, loc_comp_uDbgResolution;
+static GLint loc_comp_tScene, loc_comp_tAO, loc_comp_tDepth, loc_comp_uDbgResolution, loc_comp_uDbgNear, loc_comp_uDbgFar, loc_comp_uDbgProjScale;
 
 // Projection matrix from gfx_pc.c
 static float ssgi_proj_matrix[4][4];
@@ -411,6 +428,7 @@ void ssgi_init(void) {
     loc_ao_uResolution = glGetUniformLocation(ssgi_ao_program, "uResolution");
     loc_ao_uHalfProjScale = glGetUniformLocation(ssgi_ao_program, "uHalfProjScale");
     loc_ao_uProjMatrixInverse = glGetUniformLocation(ssgi_ao_program, "uProjMatrixInverse");
+    loc_ao_uProjScaleXY = glGetUniformLocation(ssgi_ao_program, "uProjScaleXY");
     loc_ao_uCameraNear = glGetUniformLocation(ssgi_ao_program, "uCameraNear");
     loc_ao_uCameraFar = glGetUniformLocation(ssgi_ao_program, "uCameraFar");
     loc_ao_uAoIntensity = glGetUniformLocation(ssgi_ao_program, "uAoIntensity");
@@ -423,8 +441,10 @@ void ssgi_init(void) {
     loc_comp_tScene = glGetUniformLocation(ssgi_composite_program, "tScene");
     loc_comp_tAO = glGetUniformLocation(ssgi_composite_program, "tAO");
     loc_comp_tDepth = glGetUniformLocation(ssgi_composite_program, "tDepth");
-    loc_comp_uDbgInvProj = glGetUniformLocation(ssgi_composite_program, "uDbgInvProj");
     loc_comp_uDbgResolution = glGetUniformLocation(ssgi_composite_program, "uDbgResolution");
+    loc_comp_uDbgNear = glGetUniformLocation(ssgi_composite_program, "uDbgNear");
+    loc_comp_uDbgFar = glGetUniformLocation(ssgi_composite_program, "uDbgFar");
+    loc_comp_uDbgProjScale = glGetUniformLocation(ssgi_composite_program, "uDbgProjScale");
 
     // Fullscreen quad VBO — save/restore existing VBO binding
     GLint prev_vbo;
@@ -480,6 +500,27 @@ void ssgi_render(void) {
 
     ssgi_frame_count++;
 
+    // Debug: print projection matrix once
+    static bool printed_matrix = false;
+    if (!printed_matrix) {
+        printed_matrix = true;
+        printf("[SSGI] Projection matrix (row-major P[row][col]):\n");
+        for (int r = 0; r < 4; r++) {
+            printf("[SSGI]   [%f, %f, %f, %f]\n",
+                ssgi_proj_matrix[r][0], ssgi_proj_matrix[r][1],
+                ssgi_proj_matrix[r][2], ssgi_proj_matrix[r][3]);
+        }
+        printf("[SSGI] P[2][2]=%f P[2][3]=%f P[3][2]=%f\n",
+            ssgi_proj_matrix[2][2], ssgi_proj_matrix[2][3], ssgi_proj_matrix[3][2]);
+        float dbg_P22 = ssgi_proj_matrix[2][2];
+        float dbg_P32 = ssgi_proj_matrix[3][2];
+        float dbg_near = dbg_P32 / (dbg_P22 - 1.0f);
+        float dbg_far  = dbg_P32 / (dbg_P22 + 1.0f);
+        printf("[SSGI] Extracted near=%f far=%f\n", dbg_near, dbg_far);
+        printf("[SSGI] P[0][0]=%f P[1][1]=%f (xy projection scales)\n",
+            ssgi_proj_matrix[0][0], ssgi_proj_matrix[1][1]);
+    }
+
     // Save GL state
     GLint prev_fbo, prev_program, prev_vbo;
     GLboolean prev_depth_test, prev_scissor, prev_blend;
@@ -494,21 +535,16 @@ void ssgi_render(void) {
     glDisable(GL_SCISSOR_TEST);
     glDisable(GL_BLEND);
 
-    // Compute inverse projection matrix
-    float inv_proj[16];
-    invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
-
-    // Extract near/far from the GLSL-convention projection matrix.
-    // P_glsl = transpose(P_row). P_glsl[2][2] = P_row[2][2], P_glsl[3][2] = P_row[2][3].
-    float P22 = ssgi_proj_matrix[2][2];
-    float P32 = ssgi_proj_matrix[2][3];  // P_row[2][3] = P_glsl[3][2]
-    float cam_near = P32 / (P22 - 1.0f);
-    float cam_far  = P32 / (P22 + 1.0f);
-    if (cam_near < 0) cam_near = -cam_near;
-    if (cam_far < 0) cam_far = -cam_far;
-
-    // P[1][1] in row-major is the Y scale factor
-    float half_proj_scale = (float)ssgi_height * fabsf(ssgi_proj_matrix[1][1]) * 0.5f;
+    // SM64's P_matrix is a combined projection+viewport transform (not standard GL).
+    // The actual perspective parameters (FOV, near, far) are baked into MP_matrix.
+    // Use SM64's known camera defaults: near=100, far=12800, FOV=45deg.
+    float cam_near = 100.0f;
+    float cam_far  = 12800.0f;
+    float fov_rad  = 45.0f * 3.14159265f / 180.0f;
+    float aspect   = (float)ssgi_width / (float)ssgi_height;
+    float proj_y   = 1.0f / tanf(fov_rad * 0.5f);  // cot(fov/2)
+    float proj_x   = proj_y / aspect;
+    float half_proj_scale = (float)ssgi_height * proj_y * 0.5f;
 
     // Temporal noise
     static const float temporal_rotations[] = {60, 300, 180, 240, 120, 0};
@@ -528,10 +564,7 @@ void ssgi_render(void) {
     glUniform1i(loc_ao_tDepth, 0);
 
     glUniform2f(loc_ao_uResolution, (float)ssgi_width, (float)ssgi_height);
-    // coopdx stores P as row-major float[4][4] (vertex * P convention).
-    // invert_matrix reads flat data as column-major, so it implicitly transposes P
-    // before inverting: result = inv(P^T) = inv(P_glsl). Pass with GL_FALSE.
-    glUniformMatrix4fv(loc_ao_uProjMatrixInverse, 1, GL_FALSE, inv_proj);
+    glUniform2f(loc_ao_uProjScaleXY, proj_x, proj_y);
     glUniform1f(loc_ao_uCameraNear, cam_near);
     glUniform1f(loc_ao_uCameraFar, cam_far);
     glUniform1f(loc_ao_uHalfProjScale, half_proj_scale);
@@ -589,10 +622,16 @@ void ssgi_composite(void) {
     glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
     glUniform1i(loc_comp_tDepth, 2);
 
-    float inv_proj[16];
-    invert_matrix((const float *)ssgi_proj_matrix, inv_proj);
-    glUniformMatrix4fv(loc_comp_uDbgInvProj, 1, GL_FALSE, inv_proj);
     glUniform2f(loc_comp_uDbgResolution, (float)ssgi_width, (float)ssgi_height);
+    {
+        float dfov = 45.0f * 3.14159265f / 180.0f;
+        float dasp = (float)ssgi_width / (float)ssgi_height;
+        float dpy = 1.0f / tanf(dfov * 0.5f);
+        float dpx = dpy / dasp;
+        glUniform2f(loc_comp_uDbgProjScale, dpx, dpy);
+    }
+    glUniform1f(loc_comp_uDbgNear, 100.0f);
+    glUniform1f(loc_comp_uDbgFar, 12800.0f);
 
     draw_fullscreen_quad();
 
