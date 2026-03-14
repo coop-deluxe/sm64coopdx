@@ -308,10 +308,13 @@ static bool gfx_sdl_start_frame(void) {
 
 static void gfx_sdl_swap_buffers_begin(void) {
 #ifdef TARGET_WEB
-    // On web, SDL_GL_SwapWindow can trigger emscripten_sleep via
-    // eglSwapBuffers, which conflicts with emscripten_set_main_loop.
-    // Use the Emscripten-specific commit call instead.
-    emscripten_webgl_commit_frame();
+    // On web, the framebuffer is implicitly presented when the
+    // requestAnimationFrame callback returns to the browser event loop.
+    // Do NOT call emscripten_webgl_commit_frame() — that's only for
+    // explicit swap control mode and causes black screens on Android
+    // Chrome (see emscripten issue #10309).
+    // Do NOT call SDL_GL_SwapWindow — it's a no-op on Emscripten but
+    // can trigger emscripten_sleep via eglSwapBuffers with ASYNCIFY.
 #else
     SDL_GL_SwapWindow(wnd);
 #endif
