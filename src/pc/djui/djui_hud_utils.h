@@ -80,6 +80,8 @@ void djui_hud_set_font(s8 fontType);
 struct DjuiColor* djui_hud_get_color(void);
 /* |description|Sets the current DJUI HUD global color|descriptionEnd| */
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
+/* |description|Sets the current DJUI HUD global color interpolated|descriptionEnd| */
+void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD global color|descriptionEnd| */
 void djui_hud_reset_color(void);
 /* |description|Gets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */

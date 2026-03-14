@@ -12303,6 +12303,37 @@ int smlua_func_djui_hud_set_color(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_set_color_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_color_interpolated", 8, top);
+        return 0;
+    }
+
+    u8 prevR = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_color_interpolated"); return 0; }
+    u8 prevG = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_color_interpolated"); return 0; }
+    u8 prevB = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_color_interpolated"); return 0; }
+    u8 prevA = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_color_interpolated"); return 0; }
+    u8 r = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_color_interpolated"); return 0; }
+    u8 g = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_color_interpolated"); return 0; }
+    u8 b = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_set_color_interpolated"); return 0; }
+    u8 a = smlua_to_integer(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_set_color_interpolated"); return 0; }
+
+    djui_hud_set_color_interpolated(prevR, prevG, prevB, prevA, r, g, b, a);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_reset_color(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37570,6 +37601,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_set_font", smlua_func_djui_hud_set_font);
     smlua_bind_function(L, "djui_hud_get_color", smlua_func_djui_hud_get_color);
     smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
+    smlua_bind_function(L, "djui_hud_set_color_interpolated", smlua_func_djui_hud_set_color_interpolated);
     smlua_bind_function(L, "djui_hud_reset_color", smlua_func_djui_hud_reset_color);
     smlua_bind_function(L, "djui_hud_get_text_color", smlua_func_djui_hud_get_text_color);
     smlua_bind_function(L, "djui_hud_set_text_color", smlua_func_djui_hud_set_text_color);

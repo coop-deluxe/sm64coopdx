@@ -759,6 +759,7 @@
    - [djui_hud_set_font](functions-3.md#djui_hud_set_font)
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
+   - [djui_hud_set_color_interpolated](functions-3.md#djui_hud_set_color_interpolated)
    - [djui_hud_reset_color](functions-3.md#djui_hud_reset_color)
    - [djui_hud_get_text_color](functions-3.md#djui_hud_get_text_color)
    - [djui_hud_set_text_color](functions-3.md#djui_hud_set_text_color)

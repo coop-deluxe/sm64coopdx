@@ -3851,6 +3851,19 @@ function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
+--- @param prevR integer
+--- @param prevG integer
+--- @param prevB integer
+--- @param prevA integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Sets the current DJUI HUD global color interpolated
+function djui_hud_set_color_interpolated(prevR, prevG, prevB, prevA, r, g, b, a)
+    -- ...
+end
+
 --- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
     -- ...

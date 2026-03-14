@@ -154,6 +154,7 @@ enum InterpHudType {
     INTERP_HUD_HALIGN,
     INTERP_HUD_VALIGN,
     INTERP_HUD_NEW_LINE,
+    INTERP_HUD_COLOR,
 };
 
 typedef struct {
@@ -164,8 +165,15 @@ typedef struct {
 
 struct InterpHud {
     f32 z;
-    InterpFieldF32 posX, posY;
-    InterpFieldF32 scaleX, scaleY;
+    union {
+        struct {
+            InterpFieldF32 posX, posY;
+            InterpFieldF32 scaleX, scaleY;
+        };
+        struct {
+            InterpFieldF32 r, g, b, a;
+        };
+    };
     f32 width, height;
     struct HudUtilsState state;
     struct GrowingArray *gfx;
@@ -259,6 +267,10 @@ void patch_djui_hud(f32 delta) {
                     f32 lineWidth = gfx->params[0];
                     create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - textHAlign), -font->lineHeight, 0);
                 } break;
+
+                case INTERP_HUD_COLOR: {
+                    gDPSetEnvColor(gDisplayListHead++, x, y, scaleW, scaleH);
+                } break;
             }
         }
     }
@@ -349,6 +361,25 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     sHudUtilsState.color.a = a;
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
+
+void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a) {
+    struct InterpHud *interp = djui_hud_create_interp();
+    if (interp) {
+        interp->r.prev = prevR;
+        interp->g.prev = prevG;
+        interp->b.prev = prevB;
+        interp->a.prev = prevA;
+        interp->r.curr = r;
+        interp->g.curr = g;
+        interp->b.curr = b;
+        interp->a.curr = a;
+
+        djui_hud_create_interp_gfx(interp, INTERP_HUD_COLOR);
+    }
+
+    djui_hud_set_color(r, g, b, a);
+}
+
 
 void djui_hud_reset_color(void) {
     sHudUtilsState.color.r = 255;
