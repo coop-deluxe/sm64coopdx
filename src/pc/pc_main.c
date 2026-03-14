@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "web/web_main.h"
+#include "web/web_lobby.h"
 #endif
 
 #include "sm64.h"
@@ -529,6 +530,10 @@ static void web_auto_network(void) {
             gMarioStates[0].marioObj = &sHackyObj;
             extern void djui_panel_do_host(bool reconnecting, bool playSound);
             djui_panel_do_host(false, false);
+
+            // Register with lobby server
+            bool unlisted = EM_ASM_INT({ return localStorage.getItem('sm64coopdx_unlisted') === 'true' ? 1 : 0; });
+            ns_web_lobby_register(sWebRoomParam, unlisted);
         } else {
             // CLIENT: use the GUI join flow (network_init + mod list)
             printf("[PeerJS C] Room resolved: CLIENT — joining host\n");

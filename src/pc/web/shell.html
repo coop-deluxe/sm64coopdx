@@ -359,6 +359,10 @@
 
     var romReady = false;
     var audioResumed = false;
+
+    // Lobby server URL (set to your deployed Cloudflare Worker)
+    // Override this before loading the WASM module if deploying to a custom domain
+    window.LOBBY_API_URL = 'https://sm64coopdx-lobby.YOUR_SUBDOMAIN.workers.dev/api';
     var gameStarted = false;
 
     // ---- IndexedDB helpers ----
@@ -1233,8 +1237,12 @@
       }]
     };
 
-    // Ensure PeerJS disconnects cleanly when the page unloads
+    // Ensure PeerJS disconnects and lobby unregisters cleanly when the page unloads
     window.addEventListener('beforeunload', function() {
+      // Unregister from lobby server (uses sendBeacon for reliability)
+      if (typeof Module !== 'undefined' && Module.ccall) {
+        try { Module.ccall('web_lobby_shutdown', null, [], []); } catch(e) {}
+      }
       if (typeof PeerNetwork !== 'undefined' && PeerNetwork.peer) {
         PeerNetwork.shutdown();
       }

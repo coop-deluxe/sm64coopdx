@@ -18,6 +18,7 @@
 
 #ifdef TARGET_WEB
 static struct DjuiInputbox* sInputboxRoomId = NULL;
+static unsigned int sUnlisted = 0;
 #else
 static struct DjuiRect* sRectPort = NULL;
 static struct DjuiInputbox* sInputboxPort = NULL;
@@ -88,10 +89,12 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
     EM_ASM({
         var room = UTF8ToString($0);
+        var unlisted = $1 ? 'true' : 'false';
+        localStorage.setItem('sm64coopdx_unlisted', unlisted);
         var url = new URL(window.location.href);
         url.searchParams.set('room', room);
         window.location.href = url.toString();
-    }, sInputboxRoomId->buffer);
+    }, sInputboxRoomId->buffer, sUnlisted);
     return;
 #else
     if (!djui_panel_host_port_valid()) {
@@ -150,6 +153,15 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             } else {
                 djui_inputbox_set_text(sInputboxRoomId, "default");
             }
+        }
+
+        // Unlisted toggle (web-only, stored in localStorage via JS)
+        {
+            char* unlistedChoices[] = { "No", "Yes" };
+            // sUnlisted is file-scope
+            // Read initial value from JS localStorage
+            sUnlisted = EM_ASM_INT({ return localStorage.getItem('sm64coopdx_unlisted') === 'true' ? 1 : 0; });
+            djui_selectionbox_create(body, "Unlisted", unlistedChoices, 2, &sUnlisted, NULL);
         }
 #else
         #ifdef COOPNET

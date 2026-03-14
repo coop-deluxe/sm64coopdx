@@ -21,6 +21,7 @@ bool gDjuiPanelMainCreated = false;
 static void djui_panel_main_mods(UNUSED struct DjuiBase* caller) {
     emscripten_run_script("if (typeof ModManager !== 'undefined') ModManager.show();");
 }
+
 #endif
 
 static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
@@ -51,18 +52,12 @@ void djui_panel_main_create(struct DjuiBase* caller) {
                 djui_base_set_location(&logo->base, 0, -30);
             }
 
-#ifdef TARGET_WEB
-            struct DjuiButton* button1 = djui_button_create(body, "PLAY", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
-            if (!configExCoopTheme) { djui_base_set_location(&button1->base, 0, -30); }
-            djui_cursor_input_controlled_center(&button1->base);
-#else
             struct DjuiButton* button1 = djui_button_create(body, DLANG(MAIN, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
             if (!configExCoopTheme) { djui_base_set_location(&button1->base, 0, -30); }
             djui_cursor_input_controlled_center(&button1->base);
 
             struct DjuiButton* button2 = djui_button_create(body, DLANG(MAIN, JOIN), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_create);
             if (!configExCoopTheme) { djui_base_set_location(&button2->base, 0, -30); }
-#endif
             struct DjuiButton* button3 = djui_button_create(body, DLANG(MAIN, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
             if (!configExCoopTheme) { djui_base_set_location(&button3->base, 0, -30); }
 #ifdef TARGET_WEB

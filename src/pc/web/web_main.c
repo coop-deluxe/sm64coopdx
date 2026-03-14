@@ -157,6 +157,37 @@ int web_mod_import_file(const char* path) {
     return ret ? 1 : 0;
 }
 
+// --- Lobby metadata exports ---
+
+#include "pc/configfile.h"
+#include "pc/network/version.h"
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_get_player_name(void) {
+    return configPlayerName;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int web_get_max_players(void) {
+    return (int)configAmountOfPlayers;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int web_get_active_mod_count(void) {
+    return gActiveMods.entryCount;
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_get_active_mod_name(int index) {
+    if (index < 0 || index >= gActiveMods.entryCount) return "";
+    return gActiveMods.entries[index]->name;
+}
+
+EMSCRIPTEN_KEEPALIVE
+const char* web_get_version(void) {
+    return get_version();
+}
+
 // --- Touch gamepad input ---
 
 #include "pc/controller/controller_keyboard.h"
