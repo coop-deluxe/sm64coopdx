@@ -158,22 +158,21 @@ static const char *composite_frag_src =
     "uniform vec2 uDbgProjScale;\n"
     "varying vec2 vUv;\n"
     "\n"
-    "float dbgLinearize(float d) {\n"
+    "float dbgLinZ(float d) {\n"
     "    float z_ndc = d * 2.0 - 1.0;\n"
-    "    return (2.0 * uDbgNear * uDbgFar) / (uDbgFar + uDbgNear - z_ndc * (uDbgFar - uDbgNear));\n"
+    "    return (2.0*uDbgNear*uDbgFar)/(uDbgFar+uDbgNear-z_ndc*(uDbgFar-uDbgNear));\n"
     "}\n"
-    "vec3 dbgGetViewPos(vec2 uv, float d) {\n"
-    "    float z = -dbgLinearize(d);\n"
-    "    vec2 ndc = uv * 2.0 - 1.0;\n"
-    "    return vec3(ndc.x * (-z) / uDbgProjScale.x, ndc.y * (-z) / uDbgProjScale.y, z);\n"
+    "vec3 dbgVP(vec2 uv, float d) {\n"
+    "    float z = -dbgLinZ(d);\n"
+    "    vec2 ndc = uv*2.0-1.0;\n"
+    "    return vec3(ndc.x*(-z)/uDbgProjScale.x, ndc.y*(-z)/uDbgProjScale.y, z);\n"
     "}\n"
-    "vec3 dbgGetNormal(vec2 uv) {\n"
-    "    vec2 inv = 1.0 / uDbgResolution;\n"
-    "    float c0 = texture2D(tDepth, uv).r;\n"
-    "    vec3 ce = dbgGetViewPos(uv, c0);\n"
-    "    vec3 dx = dbgGetViewPos(uv+vec2(inv.x,0.0), texture2D(tDepth, uv+vec2(inv.x,0.0)).r) - ce;\n"
-    "    vec3 dy = dbgGetViewPos(uv+vec2(0.0,inv.y), texture2D(tDepth, uv+vec2(0.0,inv.y)).r) - ce;\n"
-    "    return normalize(cross(dx, dy));\n"
+    "vec3 dbgN(vec2 uv) {\n"
+    "    vec2 inv = 1.0/uDbgResolution;\n"
+    "    vec3 c = dbgVP(uv, texture2D(tDepth,uv).r);\n"
+    "    vec3 dx = dbgVP(uv+vec2(inv.x,0.0), texture2D(tDepth,uv+vec2(inv.x,0.0)).r)-c;\n"
+    "    vec3 dy = dbgVP(uv+vec2(0.0,inv.y), texture2D(tDepth,uv+vec2(0.0,inv.y)).r)-c;\n"
+    "    return normalize(cross(dx,dy));\n"
     "}\n"
     "\n"
     "void main() {\n"
@@ -181,38 +180,16 @@ static const char *composite_frag_src =
     "    float ao = texture2D(tAO, vUv).r;\n"
     "    vec4 result = vec4(scene.rgb * ao, scene.a);\n"
     "\n"
-    "    // Debug thumbnails across the top (25% height, 5 panels)\n"
-    "    float thumbH = 0.25;\n"
-    "    if (vUv.y < thumbH) {\n"
-    "        float panel = vUv.x * 5.0;\n"
-    "        int idx = int(floor(panel));\n"
-    "        vec2 tuv = vec2(fract(panel), vUv.y / thumbH);\n"
-    "\n"
-    "        if (idx == 0) {\n"
-    "            // Panel 0: Raw depth buffer (contrast enhanced)\n"
-    "            float d = texture2D(tDepth, tuv).r;\n"
-    "            d = pow(d, 50.0);\n"
-    "            result = vec4(vec3(d), 1.0);\n"
-    "        } else if (idx == 1) {\n"
-    "            // Panel 1: Linear depth using near/far (no matrix)\n"
-    "            float d = texture2D(tDepth, tuv).r;\n"
-    "            float z_ndc = d * 2.0 - 1.0;\n"
-    "            float lin_z = (2.0 * uDbgNear * uDbgFar) / (uDbgFar + uDbgNear - z_ndc * (uDbgFar - uDbgNear));\n"
-    "            result = vec4(vec3(clamp(lin_z / uDbgFar, 0.0, 1.0)), 1.0);\n"
-    "        } else if (idx == 2) {\n"
-    "            // Panel 2: Inv-proj reconstructed depth (Z magnitude)\n"
-    "            float d = texture2D(tDepth, tuv).r;\n"
-    "            vec3 vp = dbgGetViewPos(tuv, d);\n"
-    "            result = vec4(vec3(clamp(length(vp) / 5000.0, 0.0, 1.0)), 1.0);\n"
-    "        } else if (idx == 3) {\n"
-    "            // Panel 3: Reconstructed normals\n"
-    "            vec3 n = dbgGetNormal(tuv);\n"
-    "            result = vec4(n * 0.5 + 0.5, 1.0);\n"
-    "        } else {\n"
-    "            // Panel 4: AO only\n"
-    "            float a = texture2D(tAO, tuv).r;\n"
-    "            result = vec4(vec3(a), 1.0);\n"
-    "        }\n"
+    "    // Debug: normals + AO thumbnails in top-right corner\n"
+    "    float thumbS = 0.2;\n"
+    "    if (vUv.x > (1.0 - thumbS) && vUv.y < thumbS) {\n"
+    "        // AO only\n"
+    "        vec2 tuv = vec2((vUv.x-(1.0-thumbS))/thumbS, vUv.y/thumbS);\n"
+    "        result = vec4(vec3(texture2D(tAO, tuv).r), 1.0);\n"
+    "    } else if (vUv.x > (1.0 - thumbS*2.0) && vUv.x <= (1.0 - thumbS) && vUv.y < thumbS) {\n"
+    "        // Normals\n"
+    "        vec2 tuv = vec2((vUv.x-(1.0-thumbS*2.0))/thumbS, vUv.y/thumbS);\n"
+    "        result = vec4(dbgN(tuv)*0.5+0.5, 1.0);\n"
     "    }\n"
     "\n"
     "    gl_FragColor = result;\n"
@@ -222,6 +199,12 @@ static const char *composite_frag_src =
 
 static bool ssgi_initialized = false;
 static bool ssgi_enabled = true;
+
+// Tunable parameters (exposed for UI)
+float gSSGI_AoIntensity = 1.5f;
+float gSSGI_Radius      = 1.5f;
+float gSSGI_Thickness   = 0.3f;
+bool  gSSGI_Enabled     = true;
 
 static GLuint ssgi_scene_fbo;
 static GLuint ssgi_scene_color_tex;
@@ -468,7 +451,7 @@ void ssgi_resize(int width, int height) {
 }
 
 void ssgi_start_frame(void) {
-    if (!ssgi_enabled || !ssgi_initialized) return;
+    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
 
     // Ensure FBOs match current window size
     int w = gfx_current_dimensions.width;
@@ -495,7 +478,7 @@ static void draw_fullscreen_quad(void) {
 }
 
 void ssgi_render(void) {
-    if (!ssgi_enabled || !ssgi_initialized || !ssgi_proj_valid) return;
+    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
 
     ssgi_frame_count++;
@@ -568,10 +551,10 @@ void ssgi_render(void) {
     glUniform1f(loc_ao_uCameraNear, cam_near);
     glUniform1f(loc_ao_uCameraFar, cam_far);
     glUniform1f(loc_ao_uHalfProjScale, half_proj_scale);
-    glUniform1f(loc_ao_uAoIntensity, 1.0f);
-    glUniform1f(loc_ao_uRadius, 5.0f);
+    glUniform1f(loc_ao_uAoIntensity, gSSGI_AoIntensity);
+    glUniform1f(loc_ao_uRadius, gSSGI_Radius);
     glUniform1f(loc_ao_uExpFactor, 2.0f);
-    glUniform1f(loc_ao_uThickness, 1.0f);
+    glUniform1f(loc_ao_uThickness, gSSGI_Thickness);
     glUniform1f(loc_ao_uTemporalDirection, temp_dir);
     glUniform1f(loc_ao_uTemporalOffset, temp_off);
 
@@ -587,7 +570,7 @@ void ssgi_render(void) {
 }
 
 void ssgi_composite(void) {
-    if (!ssgi_enabled || !ssgi_initialized || !ssgi_proj_valid) return;
+    if (!ssgi_enabled || !ssgi_initialized || !gSSGI_Enabled) return;
     if (ssgi_width <= 0 || ssgi_height <= 0) return;
 
     // Save state
@@ -617,7 +600,6 @@ void ssgi_composite(void) {
     glBindTexture(GL_TEXTURE_2D, ssgi_ao_tex);
     glUniform1i(loc_comp_tAO, 1);
 
-    // Debug: pass depth texture and inverse projection for debug thumbnails
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, ssgi_scene_depth_tex);
     glUniform1i(loc_comp_tDepth, 2);
@@ -627,8 +609,7 @@ void ssgi_composite(void) {
         float dfov = 45.0f * 3.14159265f / 180.0f;
         float dasp = (float)ssgi_width / (float)ssgi_height;
         float dpy = 1.0f / tanf(dfov * 0.5f);
-        float dpx = dpy / dasp;
-        glUniform2f(loc_comp_uDbgProjScale, dpx, dpy);
+        glUniform2f(loc_comp_uDbgProjScale, dpy / dasp, dpy);
     }
     glUniform1f(loc_comp_uDbgNear, 100.0f);
     glUniform1f(loc_comp_uDbgFar, 12800.0f);
