@@ -554,7 +554,7 @@ void ssgi_render(void) {
     glUniform1f(loc_ao_uAoIntensity, (float)gSSGI_AoIntensity / 10.0f);
     glUniform1f(loc_ao_uRadius, (float)gSSGI_Radius / 10.0f);
     glUniform1f(loc_ao_uExpFactor, 2.0f);
-    glUniform1f(loc_ao_uThickness, (float)gSSGI_Thickness / 10.0f);
+    glUniform1f(loc_ao_uThickness, (float)gSSGI_Thickness * 50.0f);  // N64 scale: 50-1000 units
     glUniform1f(loc_ao_uTemporalDirection, temp_dir);
     glUniform1f(loc_ao_uTemporalOffset, temp_off);
 
