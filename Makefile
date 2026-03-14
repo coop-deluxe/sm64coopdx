@@ -951,6 +951,7 @@ ifeq ($(TARGET_WEB),1)
     -s EXIT_RUNTIME=0 \
     -lidbfs.js \
     --preload-file lang@/sm64coopdx/lang \
+    $(if $(wildcard mods),--preload-file mods@/sm64coopdx/mods) \
     --shell-file src/pc/web/shell.html
 else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
