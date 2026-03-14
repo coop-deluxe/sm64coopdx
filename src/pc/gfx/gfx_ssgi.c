@@ -106,10 +106,8 @@ static const char *ao_frag_src =
     "        vec3 sv=getViewPosition(su,sd2);\n"
     "        vec3 hd=sv-vp;\n"
     "        float hl=length(hd);\n"
-    "        if(hl>0.001) {\n"
+    "        if(hl>0.001 && hl<uThickness) {\n"
     "            float hc=dot(hd/hl,vd);\n"
-    "            float tc=clamp(hl/uThickness,0.0,1.0);\n"
-    "            hc=mix(hc,-1.0,tc);\n"
     "            mhc=max(mhc,hc);\n"
     "        }\n"
     "    }\n"
@@ -143,7 +141,8 @@ static const char *ao_frag_src =
     "        ao+=horizonAO(-1.0,vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
     "    }\n"
     "    ao/=float(SLICE_COUNT*2);\n"
-    "    ao=clamp(pow(clamp(ao,0.0,1.0),uAoIntensity),0.0,1.0);\n"
+    "    ao=clamp(ao*2.0,0.0,1.0);\n"  // Remap: flat surface (0.5) → 1.0, corners → darker
+    "    ao=clamp(pow(ao,uAoIntensity),0.0,1.0);\n"
     "    gl_FragColor=vec4(vec3(ao),1.0);\n"
     "}\n";
 
