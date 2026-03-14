@@ -200,11 +200,11 @@ static const char *composite_frag_src =
 static bool ssgi_initialized = false;
 static bool ssgi_enabled = true;
 
-// Tunable parameters (exposed for UI)
-float gSSGI_AoIntensity = 1.5f;
-float gSSGI_Radius      = 1.5f;
-float gSSGI_Thickness   = 0.3f;
-bool  gSSGI_Enabled     = true;
+// Tunable parameters (unsigned int × 10 for DJUI slider compatibility)
+unsigned int gSSGI_AoIntensity = 15;  // ÷10 → 1.5
+unsigned int gSSGI_Radius      = 15;  // ÷10 → 1.5
+unsigned int gSSGI_Thickness   = 3;   // ÷10 → 0.3
+unsigned int gSSGI_Enabled     = 1;   // 0=off, 1=on
 
 static GLuint ssgi_scene_fbo;
 static GLuint ssgi_scene_color_tex;
@@ -551,10 +551,10 @@ void ssgi_render(void) {
     glUniform1f(loc_ao_uCameraNear, cam_near);
     glUniform1f(loc_ao_uCameraFar, cam_far);
     glUniform1f(loc_ao_uHalfProjScale, half_proj_scale);
-    glUniform1f(loc_ao_uAoIntensity, gSSGI_AoIntensity);
-    glUniform1f(loc_ao_uRadius, gSSGI_Radius);
+    glUniform1f(loc_ao_uAoIntensity, (float)gSSGI_AoIntensity / 10.0f);
+    glUniform1f(loc_ao_uRadius, (float)gSSGI_Radius / 10.0f);
     glUniform1f(loc_ao_uExpFactor, 2.0f);
-    glUniform1f(loc_ao_uThickness, gSSGI_Thickness);
+    glUniform1f(loc_ao_uThickness, (float)gSSGI_Thickness / 10.0f);
     glUniform1f(loc_ao_uTemporalDirection, temp_dir);
     glUniform1f(loc_ao_uTemporalOffset, temp_off);
 

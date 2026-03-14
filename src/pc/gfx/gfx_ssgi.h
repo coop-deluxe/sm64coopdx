@@ -11,10 +11,10 @@ void ssgi_composite(void);     // Combine scene × AO → default framebuffer
 void ssgi_set_projection_matrix(const float mtx[4][4]);
 bool ssgi_is_enabled(void);
 
-// Tunable parameters
-extern float gSSGI_AoIntensity;  // Power curve: higher = subtler (default 1.5)
-extern float gSSGI_Radius;       // Sample radius in world units (default 1.5)
-extern float gSSGI_Thickness;    // Thickness for depth rejection (default 0.3)
-extern bool  gSSGI_Enabled;      // Master on/off
+// Tunable parameters (unsigned int × 10 for DJUI slider, divided by 10.0 in shader)
+extern unsigned int gSSGI_AoIntensity;  // ÷10 → float. Power curve: higher = subtler (default 15 → 1.5)
+extern unsigned int gSSGI_Radius;       // ÷10 → float. Sample radius (default 15 → 1.5)
+extern unsigned int gSSGI_Thickness;    // ÷10 → float. Depth rejection (default 3 → 0.3)
+extern unsigned int gSSGI_Enabled;      // 0=off, 1=on
 
 #endif
