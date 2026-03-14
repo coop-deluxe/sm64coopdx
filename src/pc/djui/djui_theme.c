@@ -222,7 +222,7 @@ void djui_themes_save(struct DjuiTheme* theme, bool setThemeArray) {
     snprintf(ppath, SYS_MAX_PATH, "%s/%s.ini", themesPath, theme->name);
     fs_sys_mkdir(themesPath);
 
-    LOG_INFO("Saving theme as '%s.ini'\n", theme->name);
+    LOG_INFO("Saving theme as '%s.ini'", theme->name);
     FILE* file = fopen(ppath, "w");
     if (!file) {
         LOG_ERROR("Failed to save theme %s", theme->name);
