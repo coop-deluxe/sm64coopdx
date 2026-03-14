@@ -1615,26 +1615,6 @@ Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ?
 
 <br />
 
-## [cur_obj_check_frame_prior_current_frame](#cur_obj_check_frame_prior_current_frame)
-
-### Lua Example
-`local integerValue = cur_obj_check_frame_prior_current_frame(a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `Pointer` <`integer`> |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 cur_obj_check_frame_prior_current_frame(s16 *a0);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [mario_is_in_air_action](#mario_is_in_air_action)
 
 ### Lua Example

@@ -18,34 +18,26 @@ struct StateExtras {
 };
 static struct StateExtras sStateExtras[MAX_PLAYERS];
 
-void name_without_hex(char* input) {
-    s32 i, j;
-    bool inSlash = false;
-    for (i = j = 0; input[i] != '\0'; i++) {
-        if (input[i] == '\\') {
-            inSlash = !inSlash;
-        } else if (!inSlash) {
-            input[j++] = input[i]; // it just works
-        }
-    }
-
-    input[j] = '\0';
-}
-
 void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale, u8 r, u8 g, u8 b, u8 a, f32 outlineDarkness) {
     f32 offset = 1 * (scale * 2);
     f32 prevOffset = 1 * (prevScale * 2);
 
+    djui_hud_set_text_color(r, g, b, 255);
+
     // render outline
-    djui_hud_set_color(r * outlineDarkness, g * outlineDarkness, b * outlineDarkness, a);
+    djui_hud_set_color(255 * outlineDarkness, 255 * outlineDarkness, 255 * outlineDarkness, a);
     djui_hud_print_text_interpolated(text, prevX - prevOffset, prevY,              prevScale, x - offset, y,          scale);
     djui_hud_print_text_interpolated(text, prevX + prevOffset, prevY,              prevScale, x + offset, y,          scale);
     djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
     djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
+
     // render text
-    djui_hud_set_color(r, g, b, a);
+    djui_hud_set_color(255, 255, 255, a);
     djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale);
+
+    // reset colors
     djui_hud_set_color(255, 255, 255, 255);
+    djui_hud_set_text_color(255, 255, 255, 255);
 }
 
 void nametags_render(void) {
@@ -59,7 +51,21 @@ void nametags_render(void) {
     djui_hud_set_resolution(RESOLUTION_N64);
     djui_hud_set_font(FONT_SPECIAL);
 
-    for (u8 i = gNametagsSettings.showSelfTag ? 0 : 1; i < MAX_PLAYERS; i++) {
+    struct NametagInfo {
+        s32 playerIndex;
+        Vec3f pos;
+        f32 scale;
+        char name[MAX_CONFIG_STRING];
+    };
+    struct NametagInfo nametags[MAX_PLAYERS] = {0};
+    s32 numNametags = 0;
+
+    extern bool gDjuiHudToWorldCalcViewport;
+    gDjuiHudToWorldCalcViewport = false;
+
+    // sort nametags by their distance to the camera
+    // insertion sort is quick enough for such small array
+    for (s32 i = gNametagsSettings.showSelfTag ? 0 : 1; i < MAX_PLAYERS; i++) {
         struct MarioState* m = &gMarioStates[i];
         if (!is_player_active(m)) { continue; }
         struct NetworkPlayer* np = &gNetworkPlayers[i];
@@ -84,8 +90,6 @@ void nametags_render(void) {
         vec3f_copy(pos, m->marioBodyState->headPos);
         pos[1] += 100;
 
-        extern bool gDjuiHudToWorldCalcViewport;
-        gDjuiHudToWorldCalcViewport = false;
         if ((i != 0 || (i == 0 && m->action != ACT_FIRST_PERSON)) &&
             djui_hud_world_pos_to_screen_pos(pos, out)) {
 
@@ -96,61 +100,85 @@ void nametags_render(void) {
                 snprintf(name, MAX_CONFIG_STRING, "%s", hookedString);
             } else {
                 snprintf(name, MAX_CONFIG_STRING, "%s", np->name);
-                name_without_hex(name);
             }
             if (!djui_hud_world_pos_to_screen_pos(pos, out)) {
                 continue;
             }
-            u8* color = network_get_player_text_color(m->playerIndex);
 
             f32 scale = -300 / out[2] * djui_hud_get_fov_coeff();
-            f32 measure = djui_hud_measure_text(name) * scale * 0.5f;
-            out[1] -= 16 * scale;
 
-            u8 alpha = (i == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - scale, 0.f, 1.f);
-
-            struct StateExtras* e = &sStateExtras[i];
-            if (!e->inited) {
-                vec3f_copy(e->prevPos, out);
-                e->prevScale = scale;
-                e->inited = true;
+            s32 j = 0;
+            for (; j < numNametags; ++j) {
+                if (scale < nametags[j].scale) {
+                    memmove(nametags + j + 1, nametags + j, sizeof(struct NametagInfo) * (numNametags - j));
+                    break;
+                }
             }
 
-            // Apply viewport for credits
-            extern Vp *gViewportOverride;
-            extern Vp *gViewportClip;
-            extern Vp gViewportFullscreen;
-            Vp *viewport = gViewportOverride == NULL ? gViewportClip : gViewportOverride;
-            if (viewport) {
-                make_viewport_clip_rect(viewport);
-                gSPViewport(gDisplayListHead++, viewport);
-            }
-
-            djui_hud_print_outlined_text_interpolated(name,
-                e->prevPos[0] - measure, e->prevPos[1], e->prevScale,
-                       out[0] - measure,        out[1],        scale,
-                color[0], color[1], color[2], alpha, 0.25);
-
-            if (i != 0 && gNametagsSettings.showHealth) {
-                djui_hud_set_color(255, 255, 255, alpha);
-                f32 healthScale = 90 * scale;
-                f32 prevHealthScale = 90 * e->prevScale;
-                hud_render_power_meter_interpolated(m->health,
-                    e->prevPos[0] - (prevHealthScale * 0.5f), e->prevPos[1] - 72 * scale, prevHealthScale, prevHealthScale,
-                           out[0] - (    healthScale * 0.5f),        out[1] - 72 * scale,     healthScale,     healthScale
-                );
-            }
-
-            // Reset viewport
-            if (viewport) {
-                gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
-                gSPViewport(gDisplayListHead++, &gViewportFullscreen);
-            }
-
-            vec3f_copy(e->prevPos, out);
-            e->prevScale = scale;
+            nametags[j].playerIndex = i;
+            vec3f_copy(nametags[j].pos, out);
+            nametags[j].scale = scale;
+            memcpy(nametags[j].name, name, sizeof(name));
+            numNametags++;
         }
-        gDjuiHudToWorldCalcViewport = true;
+    }
+
+    gDjuiHudToWorldCalcViewport = true;
+
+    // render nametags
+    for (s32 k = 0; k < numNametags; ++k) {
+        struct NametagInfo *nametag = &nametags[k];
+        struct MarioState *m = &gMarioStates[nametag->playerIndex];
+        struct NetworkPlayer *np = &gNetworkPlayers[nametag->playerIndex];
+
+        u8* color = network_get_player_text_color(m->playerIndex);
+        f32 measure = djui_hud_measure_text(nametag->name) * nametag->scale * 0.5f;
+        nametag->pos[1] -= 16 * nametag->scale;
+
+        u8 alpha = (nametag->playerIndex == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - nametag->scale, 0.f, 1.f);
+
+        struct StateExtras* e = &sStateExtras[nametag->playerIndex];
+        if (!e->inited) {
+            vec3f_copy(e->prevPos, nametag->pos);
+            e->prevScale = nametag->scale;
+            e->inited = true;
+        }
+
+        // Apply viewport for credits
+        extern Vp *gViewportOverride;
+        extern Vp *gViewportClip;
+        extern Vp gViewportFullscreen;
+        Vp *viewport = gViewportOverride == NULL ? gViewportClip : gViewportOverride;
+        if (viewport) {
+            make_viewport_clip_rect(viewport);
+            gSPViewport(gDisplayListHead++, viewport);
+        }
+
+        // render name
+        djui_hud_print_outlined_text_interpolated(nametag->name,
+              e->prevPos[0] - measure,   e->prevPos[1],   e->prevScale,
+            nametag->pos[0] - measure, nametag->pos[1], nametag->scale,
+            color[0], color[1], color[2], alpha, 0.25);
+
+        // render power meter
+        if (nametag->playerIndex != 0 && gNametagsSettings.showHealth) {
+            djui_hud_set_color(255, 255, 255, alpha);
+            f32 healthScale = 90 * nametag->scale;
+            f32 prevHealthScale = 90 * e->prevScale;
+            hud_render_power_meter_interpolated(m->health,
+                  e->prevPos[0] - (prevHealthScale * 0.5f),   e->prevPos[1] - 72 * nametag->scale, prevHealthScale, prevHealthScale,
+                nametag->pos[0] - (    healthScale * 0.5f), nametag->pos[1] - 72 * nametag->scale,     healthScale,     healthScale
+            );
+        }
+
+        // Reset viewport
+        if (viewport) {
+            gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
+            gSPViewport(gDisplayListHead++, &gViewportFullscreen);
+        }
+
+        vec3f_copy(e->prevPos, nametag->pos);
+        e->prevScale = nametag->scale;
     }
 }
 
