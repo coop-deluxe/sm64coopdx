@@ -90,11 +90,11 @@ static const char *ao_frag_src =
     "    if(abs(dpdyA.z)<abs(dpdy.z)) dpdy=dpdyA;\n"
     "    return normalize(cross(dpdx,dpdy));\n"
     "}\n"
-    "float findMaxHorizon(vec2 ud, float R, vec3 vp, vec2 sdt, float irs, vec2 uv, vec3 vd) {\n"
-    "    float sr=R*(uResolution.x/2.0)/16.0;\n"
-    "    sr/=float(STEP_COUNT)+1.0;\n"
-    "    float rvs=max(1.0,float(STEP_COUNT-1))*sr;\n"
-    "    float mhc=-1.0;\n"
+    "float horizonAO(float sd, vec2 ud, float R, vec3 vp, vec2 sdt, float irs, vec2 uv, vec3 vd, float n) {\n"
+    "    float sr = R*(uResolution.x/2.0)/16.0;\n"
+    "    sr /= float(STEP_COUNT)+1.0;\n"
+    "    float rvs = max(1.0,float(STEP_COUNT-1))*sr;\n"
+    "    float mhc = -1.0;\n"
     "    for(int i=0;i<STEP_COUNT;i++) {\n"
     "        float fi=float(i);\n"
     "        float ro=sr*(fi+irs);\n"
@@ -113,7 +113,9 @@ static const char *ao_frag_src =
     "            mhc=max(mhc,hc);\n"
     "        }\n"
     "    }\n"
-    "    return mhc;\n"
+    "    float ha=acos(clamp(mhc,-1.0,1.0));\n"
+    "    float na=n*sd;\n"
+    "    return clamp((ha-na)/PI,0.0,1.0);\n"
     "}\n"
     "void main() {\n"
     "    float depth=texture2D(tDepth,vUv).r;\n"
@@ -126,7 +128,6 @@ static const char *ao_frag_src =
     "    float nd=interleavedGradientNoise(sc);\n"
     "    float irs=fract(no+uTemporalOffset)+rand((vUv+vec2(uTemporalDirection*0.02))*2.0-1.0);\n"
     "    float ao=0.0;\n"
-    "    float dbg_h1=0.0,dbg_h2=0.0,dbg_n=0.0,dbg_mhcR=0.0,dbg_mhcL=0.0;\n"
     "    for(int i=0;i<SLICE_COUNT;i++) {\n"
     "        float fi=float(i);\n"
     "        float ra=(fi+nd+uTemporalDirection)*PI/float(SLICE_COUNT);\n"
@@ -138,18 +139,13 @@ static const char *ao_frag_src =
     "        vec3 prnn=normalize(prn);\n"
     "        float cn=clamp(dot(prnn,vd),-1.0,1.0);\n"
     "        float n=-sign(dot(prn,tn))*acos(cn);\n"
-    "        float mhcR=findMaxHorizon(vec2(1.0,1.0),uRadius,vp,sdt,irs,vUv,vd);\n"
-    "        float mhcL=findMaxHorizon(vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd);\n"
-    "        float h1=max(0.0,asin(clamp(mhcR,-1.0,1.0)));\n"
-    "        float h2=max(0.0,asin(clamp(mhcL,-1.0,1.0)));\n"
-    "        dbg_h1=h1; dbg_h2=h2; dbg_n=n; dbg_mhcR=mhcR; dbg_mhcL=mhcL;\n"
-    "        ao+=0.25*(-cos(2.0*h1-n)+cos(n)+2.0*h1*sin(n));\n"
-    "        ao+=0.25*(-cos(2.0*h2+n)+cos(n)-2.0*h2*sin(n));\n"
+    "        ao+=horizonAO(1.0,vec2(1.0,1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
+    "        ao+=horizonAO(-1.0,vec2(-1.0,-1.0),uRadius,vp,sdt,irs,vUv,vd,n);\n"
     "    }\n"
-    "    ao/=float(SLICE_COUNT);\n"
-    "    float vis=clamp(pow(clamp(1.0-ao,0.0,1.0),uAoIntensity),0.0,1.0);\n"
-    "    // Debug: R=raw maxHorizonCos_R [-1,1]→[0,1], G=raw maxHorizonCos_L, B=raw ao, A=1\n"
-    "    gl_FragColor=vec4(dbg_mhcR*0.5+0.5, dbg_mhcL*0.5+0.5, ao, 1.0);\n"
+    "    ao/=float(SLICE_COUNT*2);\n"
+    "    ao=clamp(ao*2.0,0.0,1.0);\n"
+    "    ao=clamp(pow(ao,uAoIntensity),0.0,1.0);\n"
+    "    gl_FragColor=vec4(vec3(ao),1.0);\n"
     "}\n";
 
 static const char *composite_frag_src =
@@ -182,10 +178,8 @@ static const char *composite_frag_src =
     "\n"
     "void main() {\n"
     "    vec4 scene = texture2D(tScene, vUv);\n"
-    "    vec4 aoData = texture2D(tAO, vUv);\n"
-    "    // R=occluded fraction, G=h1/halfpi, B=h2/halfpi\n"
-    "    float vis = clamp(1.0 - aoData.r, 0.0, 1.0);\n"
-    "    vec4 result = vec4(scene.rgb * vis, scene.a);\n"
+    "    float ao = texture2D(tAO, vUv).r;\n"
+    "    vec4 result = vec4(scene.rgb * ao, scene.a);\n"
     "\n"
     "    // Debug thumbnails: raw AO channels, visibility, normals\n"
     "    float thumbS = 0.15;\n"
@@ -195,13 +189,14 @@ static const char *composite_frag_src =
     "        vec2 tuv = vec2(fract(panel), vUv.y / thumbS);\n"
     "        vec4 ad = texture2D(tAO, tuv);\n"
     "        if (idx == 0) {\n"
-    "            result = vec4(vec3(ad.r), 1.0);\n"  // maxHorizonCos Right (0.5=tangent, >0.5=occluded)
+    "            result = vec4(vec3(ad.r), 1.0);\n"  // AO (visibility, 1=bright)
     "        } else if (idx == 1) {\n"
-    "            result = vec4(vec3(ad.g), 1.0);\n"  // maxHorizonCos Left
+    "            result = vec4(vec3(1.0-ad.r), 1.0);\n"  // Inverted (occlusion only)
     "        } else if (idx == 2) {\n"
-    "            result = vec4(vec3(ad.b), 1.0);\n"  // Raw ao (occluded fraction)
+    "            float dd = texture2D(tDepth, tuv).r;\n"
+    "            result = vec4(vec3(pow(dd,50.0)), 1.0);\n"  // Depth
     "        } else if (idx == 3) {\n"
-    "            result = vec4(vec3(1.0-ad.b), 1.0);\n"  // Visibility (1-ao)
+    "            result = vec4(dbgN(tuv)*0.5+0.5, 1.0);\n"  // Normals
     "        } else {\n"
     "            result = vec4(dbgN(tuv)*0.5+0.5, 1.0);\n"  // Normals
     "        }\n"
