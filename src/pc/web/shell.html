@@ -315,7 +315,7 @@
         </div>
         <div class="mod-upload-btn" onclick="document.getElementById('mod-upload-zip').click()">
           <p>Upload .zip</p>
-          <p class="hint">Mod packages</p>
+          <p class="hint">Mods &amp; DynOS packs</p>
         </div>
       </div>
       <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
@@ -1279,6 +1279,7 @@
     var MOD_DB_NAME = 'sm64coopdx_mods';
     var MOD_DB_STORE = 'files';
     var MOD_VFS_PATH = '/sm64coopdx/mods/';
+    var DYNOS_VFS_PATH = '/sm64coopdx/dynos/packs/';
 
     function openModDB() {
       return new Promise(function(resolve, reject) {
@@ -1334,45 +1335,59 @@
     }
 
     // Restore mods from IndexedDB into Emscripten VFS
+    // Restore a single DB entry to the VFS
+    function restoreDbEntry(dbKey, data, vfsPath, label) {
+      var filename = dbKey;
+      // Check if this is a directory entry (stored as JSON manifest string)
+      if (typeof data === 'string') {
+        try {
+          var manifest = JSON.parse(data);
+          if (manifest._isDir && manifest.files) {
+            var dir = vfsPath + filename;
+            try { FS.mkdir(dir); } catch(ex) {}
+            var filePaths = Object.keys(manifest.files);
+            filePaths.forEach(function(rpath) {
+              var parts = rpath.split('/');
+              var sub = dir;
+              for (var p = 0; p < parts.length - 1; p++) {
+                sub += '/' + parts[p];
+                try { FS.mkdir(sub); } catch(ex) {}
+              }
+              var b64 = manifest.files[rpath];
+              var bin = atob(b64);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              FS.writeFile(dir + '/' + rpath, arr);
+            });
+            console.log('[ModManager] Restored ' + label + ' dir: ' + filename + ' (' + filePaths.length + ' files)');
+            return;
+          }
+        } catch(ex) { /* not JSON, treat as raw data */ }
+      }
+      FS.writeFile(vfsPath + filename, new Uint8Array(data));
+      console.log('[ModManager] Restored ' + label + ': ' + filename + ' (' + data.byteLength + ' bytes)');
+    }
+
     function restoreModsFromDB() {
       return modDbGetAll().then(function(entries) {
         var keys = Object.keys(entries);
         if (!keys.length) return;
         try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
-        keys.forEach(function(filename) {
-          var data = entries[filename];
-          // Check if this is a directory mod (stored as JSON manifest string)
-          if (typeof data === 'string') {
-            try {
-              var manifest = JSON.parse(data);
-              if (manifest._isDir && manifest.files) {
-                var modDir = MOD_VFS_PATH + filename;
-                try { FS.mkdir(modDir); } catch(ex) {}
-                var filePaths = Object.keys(manifest.files);
-                filePaths.forEach(function(rpath) {
-                  // Ensure subdirectories exist
-                  var parts = rpath.split('/');
-                  var dir = modDir;
-                  for (var p = 0; p < parts.length - 1; p++) {
-                    dir += '/' + parts[p];
-                    try { FS.mkdir(dir); } catch(ex) {}
-                  }
-                  // Decode base64 and write file
-                  var b64 = manifest.files[rpath];
-                  var bin = atob(b64);
-                  var arr = new Uint8Array(bin.length);
-                  for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-                  FS.writeFile(modDir + '/' + rpath, arr);
-                });
-                console.log('[ModManager] Restored directory mod: ' + filename + ' (' + filePaths.length + ' files)');
-                return;
-              }
-            } catch(ex) { /* not JSON, treat as raw data */ }
+        try { FS.mkdir('/sm64coopdx/dynos'); } catch(e) {}
+        try { FS.mkdir(DYNOS_VFS_PATH); } catch(e) {}
+        var modCount = 0, dynosCount = 0;
+        keys.forEach(function(dbKey) {
+          var data = entries[dbKey];
+          if (dbKey.indexOf('dynos:') === 0) {
+            // DynOS pack entry — strip prefix and restore to dynos/packs/
+            restoreDbEntry(dbKey.substring(6), data, DYNOS_VFS_PATH, 'dynos');
+            dynosCount++;
+          } else {
+            restoreDbEntry(dbKey, data, MOD_VFS_PATH, 'mod');
+            modCount++;
           }
-          FS.writeFile(MOD_VFS_PATH + filename, new Uint8Array(data));
-          console.log('[ModManager] Restored mod: ' + filename + ' (' + data.byteLength + ' bytes)');
         });
-        console.log('[ModManager] Restored ' + keys.length + ' mod(s) from IndexedDB');
+        console.log('[ModManager] Restored ' + modCount + ' mod(s) and ' + dynosCount + ' DynOS pack(s) from IndexedDB');
       }).catch(function(e) {
         console.warn('[ModManager] Failed to restore mods:', e);
       });
@@ -1466,7 +1481,8 @@
               self._cwraps.importFile(tmpPath);
               try { FS.unlink(tmpPath); } catch(ex) {}
               // After import, persist all files now in the mods directory to IndexedDB
-              self._persistModsDir();
+              self._persistVfsDir(MOD_VFS_PATH, '', 'mod');
+              self._persistVfsDir(DYNOS_VFS_PATH, 'dynos:', 'dynos');
             } else {
               // .lua/.luac — write directly to mods dir and persist
               FS.writeFile(MOD_VFS_PATH + filename, data);
@@ -1484,13 +1500,14 @@
         });
       },
 
-      // Scan the VFS mods directory and persist every file to IndexedDB
-      _persistModsDir: function() {
+      // Persist a VFS directory tree to IndexedDB with a key prefix
+      _persistVfsDir: function(vfsPath, dbKeyPrefix, label) {
         try {
-          var entries = FS.readdir(MOD_VFS_PATH).filter(function(f) { return f !== '.' && f !== '..'; });
+          var entries = FS.readdir(vfsPath).filter(function(f) { return f !== '.' && f !== '..'; });
           entries.forEach(function(filename) {
+            var dbKey = dbKeyPrefix + filename;
             try {
-              var stat = FS.stat(MOD_VFS_PATH + filename);
+              var stat = FS.stat(vfsPath + filename);
               if (FS.isDir(stat.mode)) {
                 // For directories, persist as a JSON manifest of their files
                 var dirFiles = {};
@@ -1506,32 +1523,30 @@
                     }
                   });
                 };
-                _scanDir(MOD_VFS_PATH + filename, '');
-                // Store directory mod as a special object
+                _scanDir(vfsPath + filename, '');
                 var manifest = { _isDir: true, files: {} };
                 var fileKeys = Object.keys(dirFiles);
                 fileKeys.forEach(function(rpath) {
-                  // Convert ArrayBuffer to base64 for JSON storage
                   var arr = new Uint8Array(dirFiles[rpath]);
                   var bin = '';
                   for (var i = 0; i < arr.length; i++) bin += String.fromCharCode(arr[i]);
                   manifest.files[rpath] = btoa(bin);
                 });
-                modDbPut(filename, JSON.stringify(manifest)).then(function() {
-                  console.log('[ModManager] Persisted directory mod: ' + filename + ' (' + fileKeys.length + ' files)');
+                modDbPut(dbKey, JSON.stringify(manifest)).then(function() {
+                  console.log('[ModManager] Persisted ' + label + ' dir: ' + filename + ' (' + fileKeys.length + ' files)');
                 });
               } else {
-                var fileData = FS.readFile(MOD_VFS_PATH + filename);
-                modDbPut(filename, fileData.buffer).then(function() {
-                  console.log('[ModManager] Persisted: ' + filename);
+                var fileData = FS.readFile(vfsPath + filename);
+                modDbPut(dbKey, fileData.buffer).then(function() {
+                  console.log('[ModManager] Persisted ' + label + ': ' + filename);
                 });
               }
             } catch(ex) {
-              console.warn('[ModManager] Failed to persist ' + filename + ':', ex);
+              console.warn('[ModManager] Failed to persist ' + label + ' ' + filename + ':', ex);
             }
           });
         } catch(ex) {
-          console.warn('[ModManager] Failed to scan mods dir:', ex);
+          console.warn('[ModManager] Failed to scan ' + label + ' dir:', ex);
         }
       },
 
@@ -1645,7 +1660,8 @@
             FS.writeFile(tmpPath, data);
             self._cwraps.importFile(tmpPath);
             try { FS.unlink(tmpPath); } catch(e) {}
-            self._persistModsDir();
+            self._persistVfsDir(MOD_VFS_PATH, '', 'mod');
+              self._persistVfsDir(DYNOS_VFS_PATH, 'dynos:', 'dynos');
           } else {
             FS.writeFile(MOD_VFS_PATH + filename, data);
             modDbPut(filename, buf).then(function() {
