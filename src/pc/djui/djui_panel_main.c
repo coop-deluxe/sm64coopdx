@@ -52,7 +52,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             }
 
 #ifdef TARGET_WEB
-            struct DjuiButton* button1 = djui_button_create(body, "PLAY", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_direct_create);
+            struct DjuiButton* button1 = djui_button_create(body, "PLAY", DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
             if (!configExCoopTheme) { djui_base_set_location(&button1->base, 0, -30); }
             djui_cursor_input_controlled_center(&button1->base);
 #else
