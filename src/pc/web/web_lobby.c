@@ -32,7 +32,7 @@ void web_lobby_on_query_finish(void) {
 EM_JS(void, web_lobby_fetch_rooms, (), {
     var baseUrl = (typeof window !== 'undefined' && window.LOBBY_API_URL)
         ? window.LOBBY_API_URL
-        : 'https://sm64coopdx-lobby.YOUR_SUBDOMAIN.workers.dev/api';
+        : 'https://sm64coopdx-lobby.makeshifted.workers.dev/api';
 
     fetch(baseUrl + '/rooms')
         .then(function(r) { return r.json(); })
@@ -85,7 +85,7 @@ EM_JS(void, web_lobby_do_register, (const char* roomIdC, const char* hostNameC,
                                      int unlisted), {
     var baseUrl = (typeof window !== 'undefined' && window.LOBBY_API_URL)
         ? window.LOBBY_API_URL
-        : 'https://sm64coopdx-lobby.YOUR_SUBDOMAIN.workers.dev/api';
+        : 'https://sm64coopdx-lobby.makeshifted.workers.dev/api';
 
     var body = {
         roomId: UTF8ToString(roomIdC),
@@ -128,7 +128,7 @@ EM_JS(void, web_lobby_do_register, (const char* roomIdC, const char* hostNameC,
 EM_JS(void, web_lobby_do_unregister, (const char* roomIdC), {
     var baseUrl = (typeof window !== 'undefined' && window.LOBBY_API_URL)
         ? window.LOBBY_API_URL
-        : 'https://sm64coopdx-lobby.YOUR_SUBDOMAIN.workers.dev/api';
+        : 'https://sm64coopdx-lobby.makeshifted.workers.dev/api';
 
     if (window._webLobbyHeartbeat) {
         clearInterval(window._webLobbyHeartbeat);
