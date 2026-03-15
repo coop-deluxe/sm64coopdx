@@ -8,6 +8,8 @@
 #include "pc/configfile.h"
 #include "djui_inputbox.h"
 
+static unsigned int sKnockbackIndex = 0;
+
 void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -16,9 +18,7 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PLAYER_INTERACTION), iChoices, 3, &gServerSettings.playerInteractions, NULL);
         djui_base_set_enabled(&selectionbox1->base, false);
 
-        unsigned int sKnockbackIndex = (gServerSettings.playerKnockbackStrength <= 20)
-                        ? 0
-                        : ((gServerSettings.playerKnockbackStrength <= 40) ? 1 : 2);
+        sKnockbackIndex = (gServerSettings.playerKnockbackStrength <= 20) ? 0 : ((gServerSettings.playerKnockbackStrength <= 40) ? 1 : 2);
         char* kChoices[3] = { DLANG(HOST_SETTINGS, WEAK), DLANG(HOST_SETTINGS, NORMAL), DLANG(HOST_SETTINGS, TOO_MUCH) };
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, KNOCKBACK_STRENGTH), kChoices, 3, &sKnockbackIndex, NULL);
         djui_base_set_enabled(&selectionbox2->base, false);
@@ -27,9 +27,8 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PVP_MODE), pChoices, 2, &gServerSettings.pvpType, NULL);
         djui_base_set_enabled(&selectionbox3->base, false);
 
-        unsigned int sStayInLevelAfterStar = gServerSettings.stayInLevelAfterStar;
         char* lChoices[3] = { DLANG(HOST_SETTINGS, LEAVE_LEVEL), DLANG(HOST_SETTINGS, STAY_IN_LEVEL), DLANG(HOST_SETTINGS, NONSTOP) };
-        struct DjuiSelectionbox* selectionbox4 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &sStayInLevelAfterStar, NULL);
+        struct DjuiSelectionbox* selectionbox4 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &gServerSettings.stayInLevelAfterStar, NULL);
         djui_base_set_enabled(&selectionbox4->base, false);
 
         char* bChoices[3] = { DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_OFF), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON_CAP) };
