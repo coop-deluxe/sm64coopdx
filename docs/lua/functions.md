@@ -2071,6 +2071,7 @@
    - [set_environment_region](functions-7.md#set_environment_region)
    - [mod_file_exists](functions-7.md#mod_file_exists)
    - [get_active_mod](functions-7.md#get_active_mod)
+   - [get_mod_files](functions-7.md#get_mod_files)
    - [set_window_title](functions-7.md#set_window_title)
    - [reset_window_title](functions-7.md#reset_window_title)
    - [get_os_name](functions-7.md#get_os_name)
