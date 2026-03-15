@@ -34633,15 +34633,18 @@ int smlua_func_get_mod_files(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_mod_files", 2, top);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "get_mod_files", 1, 2, top);
         return 0;
     }
 
     struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mod_files"); return 0; }
-    const char* subDirectory = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mod_files"); return 0; }
+    const char* subDirectory = (const char*) NULL;
+    if (top >= 2) {
+        subDirectory = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mod_files"); return 0; }
+    }
 
     smlua_push_lua_table(L, get_mod_files(mod, subDirectory));
 

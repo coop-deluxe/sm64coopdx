@@ -11605,7 +11605,7 @@ function get_active_mod()
 end
 
 --- @param mod Mod
---- @param subDirectory string
+--- @param subDirectory? string
 --- @return table
 --- Gets all files a mod contains
 function get_mod_files(mod, subDirectory)

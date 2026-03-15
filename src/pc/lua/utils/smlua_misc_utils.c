@@ -601,7 +601,7 @@ struct Mod* get_active_mod(void) {
     return gLuaActiveMod;
 }
 
-LuaTable get_mod_files(struct Mod* mod, const char* subDirectory) {
+LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
     if (!mod || !subDirectory) {
         struct lua_State *L = gLuaState;
         if (L) {

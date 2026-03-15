@@ -2104,7 +2104,7 @@ Gets all files a mod contains
 - `table`
 
 ### C Prototype
-`LuaTable get_mod_files(struct Mod* mod, const char* subDirectory);`
+`LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory);`
 
 [:arrow_up_small:](#)
 
