@@ -8,14 +8,19 @@
 #include "pc/configfile.h"
 #include "djui_inputbox.h"
 
+static unsigned int sPlayerInteractions = 0;
 static unsigned int sKnockbackIndex = 0;
+static unsigned int sPvpType = 0;
+static unsigned int sStayInLevelAfterStar = 0;
+static unsigned int sBouncyLevelBounds = 0;
 
 void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+        sPlayerInteractions = gServerSettings.playerInteractions;
         char* iChoices[3] = { DLANG(HOST_SETTINGS, NONSOLID), DLANG(HOST_SETTINGS, SOLID), DLANG(HOST_SETTINGS, FRIENDLY_FIRE) };
-        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PLAYER_INTERACTION), iChoices, 3, &gServerSettings.playerInteractions, NULL);
+        struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PLAYER_INTERACTION), iChoices, 3, &sPlayerInteractions, NULL);
         djui_base_set_enabled(&selectionbox1->base, false);
 
         sKnockbackIndex = (gServerSettings.playerKnockbackStrength <= 20) ? 0 : ((gServerSettings.playerKnockbackStrength <= 40) ? 1 : 2);
@@ -23,16 +28,19 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         struct DjuiSelectionbox* selectionbox2 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, KNOCKBACK_STRENGTH), kChoices, 3, &sKnockbackIndex, NULL);
         djui_base_set_enabled(&selectionbox2->base, false);
 
+        sPvpType = gServerSettings.pvpType;
         char* pChoices[2] = { DLANG(HOST_SETTINGS, CLASSIC_PVP), DLANG(HOST_SETTINGS, REVAMPED_PVP) };
-        struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PVP_MODE), pChoices, 2, &gServerSettings.pvpType, NULL);
+        struct DjuiSelectionbox* selectionbox3 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, PVP_MODE), pChoices, 2, &sPvpType, NULL);
         djui_base_set_enabled(&selectionbox3->base, false);
 
+        sStayInLevelAfterStar = gServerSettings.stayInLevelAfterStar;
         char* lChoices[3] = { DLANG(HOST_SETTINGS, LEAVE_LEVEL), DLANG(HOST_SETTINGS, STAY_IN_LEVEL), DLANG(HOST_SETTINGS, NONSTOP) };
-        struct DjuiSelectionbox* selectionbox4 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &gServerSettings.stayInLevelAfterStar, NULL);
+        struct DjuiSelectionbox* selectionbox4 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, ON_STAR_COLLECTION), lChoices, 3, &sStayInLevelAfterStar, NULL);
         djui_base_set_enabled(&selectionbox4->base, false);
 
+        sBouncyLevelBounds = gServerSettings.bouncyLevelBounds;
         char* bChoices[3] = { DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_OFF), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON), DLANG(HOST_SETTINGS, BOUNCY_BOUNDS_ON_CAP) };
-        struct DjuiSelectionbox* selectionbox5 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, BOUNCY_LEVEL_BOUNDS), bChoices, 3, &gServerSettings.bouncyLevelBounds, NULL);
+        struct DjuiSelectionbox* selectionbox5 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, BOUNCY_LEVEL_BOUNDS), bChoices, 3, &sBouncyLevelBounds, NULL);
         djui_base_set_enabled(&selectionbox5->base, false);
 
         struct DjuiCheckbox* checkbox1 = djui_checkbox_create(body, DLANG(HOST_SETTINGS, SKIP_INTRO_CUTSCENE), (bool*)&gServerSettings.skipIntro, NULL);
