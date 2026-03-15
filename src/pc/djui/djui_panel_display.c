@@ -120,11 +120,13 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* drawDistanceChoices[6] = { DLANG(DISPLAY, D0P5X), DLANG(DISPLAY, D1X), DLANG(DISPLAY, D1P5X), DLANG(DISPLAY, D3X), DLANG(DISPLAY, D10X), DLANG(DISPLAY, D100X) };
         djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, 6, &configDrawDistance, NULL);
 
-        // SSAO settings
+#ifndef TARGET_WEB
+        // SSAO settings (disabled on web — WebGL error spam and no perf benefit)
         djui_checkbox_create(body, "SSAO", &gSSGI_Enabled, NULL);
         djui_slider_create(body, "AO Intensity", &gSSGI_AoIntensity, 1, 50, NULL);
         djui_slider_create(body, "AO Radius", &gSSGI_Radius, 1, 50, NULL);
         djui_slider_create(body, "AO Thickness", &gSSGI_Thickness, 1, 20, NULL);
+#endif
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 

@@ -596,6 +596,17 @@ static void web_auto_network(void) {
     }
 }
 
+// Per-section frame profiler (accumulates, logs every ~5 seconds)
+static double sProf_network = 0, sProf_interp_before = 0, sProf_gameloop = 0;
+static double sProf_smlua = 0, sProf_gfx_start = 0, sProf_interp = 0;
+static double sProf_displaylist = 0, sProf_gfx_end = 0, sProf_ssgi = 0;
+static double sProf_gfx_display = 0;
+static int sProf_ticks = 0, sProf_renders = 0, sProf_rafs = 0;
+static double sProf_lastLog = 0;
+
+#define PROF_START() double _pt = emscripten_get_now()
+#define PROF_LAP(accum) do { double _now = emscripten_get_now(); accum += _now - _pt; _pt = _now; } while(0)
+
 EMSCRIPTEN_KEEPALIVE
 void web_one_iteration(void) {
     double now = emscripten_get_now() / 1000.0; // ms -> seconds
@@ -603,6 +614,7 @@ void web_one_iteration(void) {
     // Initialize on first call
     if (web_last_tick_time == 0) {
         web_last_tick_time = now;
+        sProf_lastLog = now;
     }
 
     // Auto-join/host from URL params (runs once when game is ready)
@@ -624,24 +636,31 @@ void web_one_iteration(void) {
             debug_context_reset();
             CTX_BEGIN(CTX_TOTAL);
 
+            PROF_START();
             CTX_EXTENT(CTX_NETWORK, network_update);
+            PROF_LAP(sProf_network);
+
             CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+            PROF_LAP(sProf_interp_before);
+
 #ifdef TARGET_WEB
             game_loop_one_iteration();
 #else
             CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 #endif
+            PROF_LAP(sProf_gameloop);
+
             CTX_EXTENT(CTX_SMLUA, smlua_update);
+            PROF_LAP(sProf_smlua);
 
 #ifndef TARGET_WEB
-            // Audio disabled on web — the 64-bit audio bank data causes
-            // memory access out of bounds crashes when loading new level music
             if (gAudioThread.state == INVALID) {
                 CTX_EXTENT(CTX_AUDIO, buffer_audio);
             }
 #endif
 
             CTX_END(CTX_TOTAL);
+            sProf_ticks++;
         }
 
         web_last_tick_time += ticks * sFrameTime;
@@ -662,20 +681,66 @@ void web_one_iteration(void) {
         gRenderingDelta = (f32)delta_frac;
         gFramePercentage = (f32)delta_frac;
 
+        PROF_START();
         gfx_start_frame();
+        PROF_LAP(sProf_gfx_start);
+
         if (!gSkipInterpolationTitleScreen) { patch_interpolations((f32)delta_frac); }
+        PROF_LAP(sProf_interp);
+
         send_display_list(gGfxSPTask);
+        PROF_LAP(sProf_displaylist);
+
         gfx_end_frame_render();
+        PROF_LAP(sProf_gfx_end);
+
+#ifndef TARGET_WEB
         ssgi_render();
         ssgi_composite();
+#endif
+        PROF_LAP(sProf_ssgi);
+
         gfx_display_frame();
+        PROF_LAP(sProf_gfx_display);
+
         sDrawnFrames++;
+        sProf_renders++;
 
         gRenderingInterpolated = false;
 
         if (now >= sFpsTimeLast + 1.0) {
             compute_fps(now);
         }
+    }
+
+    sProf_rafs++;
+    // Log profile every ~5 seconds
+    if (now - sProf_lastLog >= 5.0 && sProf_ticks > 0) {
+        int t = sProf_ticks > 0 ? sProf_ticks : 1;
+        int r = sProf_renders > 0 ? sProf_renders : 1;
+        EM_ASM({
+            console.log('[Prof] rafs=' + $0 + ' ticks=' + $1 + ' renders=' + $2
+                + ' | per TICK: net=' + ($3/$1).toFixed(1)
+                + ' interp_b=' + ($4/$1).toFixed(1)
+                + ' gameloop=' + ($5/$1).toFixed(1)
+                + ' lua=' + ($6/$1).toFixed(1)
+                + 'ms | per RENDER: gfx_start=' + ($7/$2).toFixed(1)
+                + ' interp=' + ($8/$2).toFixed(1)
+                + ' displist=' + ($9/$2).toFixed(1)
+                + ' gfx_end=' + ($10/$2).toFixed(1)
+                + ' ssgi=' + ($11/$2).toFixed(1)
+                + ' gfx_disp=' + ($12/$2).toFixed(1) + 'ms');
+        }, sProf_rafs, sProf_ticks, sProf_renders,
+           sProf_network, sProf_interp_before, sProf_gameloop,
+           sProf_smlua, sProf_gfx_start, sProf_interp, sProf_displaylist,
+           sProf_gfx_end, sProf_ssgi, sProf_gfx_display);
+
+        sProf_network = sProf_interp_before = sProf_gameloop = 0;
+        sProf_smlua = sProf_gfx_start = sProf_interp = 0;
+        sProf_displaylist = sProf_gfx_end = sProf_ssgi = 0;
+        sProf_gfx_display = 0;
+        sProf_ticks = sProf_renders = sProf_rafs = 0;
+        sProf_lastLog = now;
     }
 
     djui_lua_profiler_update();
