@@ -1731,9 +1731,6 @@ void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
     }
 }
 
-UNUSED static void stub_obj_helpers_1(void) {
-}
-
 void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
     if (!o) { return; }
     if (radius > 0.1L) {
@@ -2723,9 +2720,6 @@ void bhv_dust_smoke_loop(void) {
     o->oSmokeTimer++;
 }
 
-UNUSED static void stub_obj_helpers_2(void) {
-}
-
 s32 cur_obj_set_direction_table(s8 *a0) {
     if (!o) { return 0; }
     o->oToxBoxMovementPattern = a0;
@@ -2908,9 +2902,6 @@ s32 is_item_in_array(s8 item, s8 *array) {
     }
 
     return FALSE;
-}
-
-UNUSED static void stub_obj_helpers_5(void) {
 }
 
 void bhv_init_room(void) {

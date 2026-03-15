@@ -390,7 +390,6 @@ DataNode<T>* FindDataNode(DataNodes<T>& aDataNodes, String& aName, u32 aModelIde
 
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
-    UNUSED u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Integers

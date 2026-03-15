@@ -1928,7 +1928,6 @@ DataNode<T> *FindDataNode(DataNodes<T> &aDataNodes, String &aName, u32 aModelIde
 
 static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, u64 &aTokenIndex, bool *found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
-    UNUSED u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Remove (de-)referencing

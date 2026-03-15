@@ -28,61 +28,7 @@ struct ObjShape *gShapeRedSpark = NULL;    // @ 801A82EC
 struct ObjShape *gShapeSilverSpark = NULL;    // @ 801A82F0
 struct ObjShape *gShapeRedStar = NULL;     // @ 801A82F4
 struct ObjShape *gShapeSilverStar = NULL;  // @ 801A82F8
-
-// Not sure what this data is, but it looks like stub animation data
-
-UNUSED static struct GdAnimTransform unusedAnimData1[] = {
-    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
-};
-
-UNUSED static struct AnimDataInfo unusedAnim1 = { ARRAY_COUNT(unusedAnimData1), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData1 };
-
-UNUSED static struct GdAnimTransform unusedAnimData2[] = {
-    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
-};
-
-UNUSED static struct AnimDataInfo unusedAnim2 = { ARRAY_COUNT(unusedAnimData2), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData2 };
-
-UNUSED static struct GdAnimTransform unusedAnimData3[] = {
-    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
-};
-
-UNUSED static struct AnimDataInfo unusedAnim3 = { ARRAY_COUNT(unusedAnimData3), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData3 };
-
-UNUSED static s32 sUnref801A838C[6] = { 0 };
 struct ObjShape *sSimpleShape = NULL;
-UNUSED static s32 sUnref801A83A8[31] = { 0 };
-UNUSED static struct DynList sSimpleDylist[8] = {  // unused
-    BeginList(),
-    StartGroup("simpleg"),
-    MakeDynObj(D_NET, "simple"),
-    SetType(3),
-    SetShapePtrPtr(&sSimpleShape),
-    EndGroup("simpleg"),
-    UseObj("simpleg"),
-    EndList(),
-};
-static struct DynList sDynlist801A84E4[3] = {
-    BeginList(),
-    SetFlag(0x1800),
-    EndList(),
-};
-UNUSED static struct DynList sDynlist801A85B3[5] = {
-    BeginList(), CallList(sDynlist801A84E4), SetFlag(0x400), SetFriction(0.04, 0.01, 0.01),
-    EndList(),
-};
-UNUSED static struct DynList sDynlist801A85A4[4] = {
-    BeginList(),
-    CallList(sDynlist801A84E4),
-    SetFriction(0.04, 0.01, 0.01),
-    EndList(),
-};
-UNUSED static struct DynList sDynlist801A8604[4] = {
-    BeginList(),
-    CallList(sDynlist801A84E4),
-    SetFriction(0.005, 0.005, 0.005),
-    EndList(),
-};
 static f64 D_801A8668 = 0.0;
 
 // bss

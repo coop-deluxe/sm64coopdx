@@ -422,11 +422,6 @@ void temporary_pools_init(struct PoolSplit *a) {
 }
 #undef SOUND_ALLOC_FUNC
 
-#if defined(VERSION_JP) || defined(VERSION_US)
-UNUSED static void unused_803163D4(void) {
-}
-#endif
-
 #ifdef VERSION_SH
 void *alloc_bank_or_seq(s32 poolIdx, s32 size, s32 arg3, s32 id) {
 #else

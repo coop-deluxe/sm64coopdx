@@ -23,7 +23,6 @@
 // bss
 static char sDefSettingsMenuStr[0x100];
 static struct GdVec3f sStaticVec;
-UNUSED static struct GdVec3f unusedVec;
 static struct ObjGadget *sCurGadgetPtr;
 
 // forward declarations

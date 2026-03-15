@@ -196,7 +196,6 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Vertices
     String _VtxArrayName = "";
-    UNUSED uintptr_t _VtxArrayStart = 0;
     for (auto& _Node : aGfxData->mVertices) {
         if (_Node->mData == aPtr) {
             return { _Node->mName, _Offset };
