@@ -59,16 +59,22 @@ jobs:
         run: |
           emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
 
+      - name: Prepare stable artifact
+        run: |
+          mkdir -p _stable/proxy
+          cp build/us_pc/sm64coopdx.html _stable/
+          cp build/us_pc/sm64coopdx.js _stable/
+          cp build/us_pc/sm64coopdx.wasm _stable/
+          cp build/us_pc/sm64coopdx.data _stable/ 2>/dev/null || true
+          cp src/pc/web/proxy/proxy.js _stable/proxy/ 2>/dev/null || true
+          cp src/pc/web/proxy/package.json _stable/proxy/ 2>/dev/null || true
+          cp src/pc/web/proxy/README.md _stable/proxy/ 2>/dev/null || true
+
       - name: Upload stable build
         uses: actions/upload-artifact@v4
         with:
           name: stable-build
-          path: |
-            build/us_pc/sm64coopdx.html
-            build/us_pc/sm64coopdx.js
-            build/us_pc/sm64coopdx.wasm
-            build/us_pc/sm64coopdx.data
-            src/pc/web/proxy/
+          path: _stable/
 
   build-audio:
     runs-on: ubuntu-22.04
@@ -113,15 +119,19 @@ jobs:
         run: |
           emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
 
+      - name: Prepare audio artifact
+        run: |
+          mkdir -p _audio
+          cp build/us_pc/sm64coopdx.html _audio/
+          cp build/us_pc/sm64coopdx.js _audio/
+          cp build/us_pc/sm64coopdx.wasm _audio/
+          cp build/us_pc/sm64coopdx.data _audio/ 2>/dev/null || true
+
       - name: Upload audio build
         uses: actions/upload-artifact@v4
         with:
           name: audio-build
-          path: |
-            build/us_pc/sm64coopdx.html
-            build/us_pc/sm64coopdx.js
-            build/us_pc/sm64coopdx.wasm
-            build/us_pc/sm64coopdx.data
+          path: _audio/
 
   deploy:
     needs: [build-stable, build-audio]
@@ -147,18 +157,17 @@ jobs:
           mkdir -p _site/audio _site/proxy
 
           # Stable build at root
-          cp artifacts/stable/build/us_pc/sm64coopdx.html _site/index.html
-          cp artifacts/stable/build/us_pc/sm64coopdx.js _site/
-          cp artifacts/stable/build/us_pc/sm64coopdx.wasm _site/
-          cp artifacts/stable/build/us_pc/sm64coopdx.data _site/ 2>/dev/null || true
-          cp artifacts/stable/src/pc/web/proxy/proxy.js _site/proxy/ 2>/dev/null || true
-          cp artifacts/stable/src/pc/web/proxy/package.json _site/proxy/ 2>/dev/null || true
+          cp artifacts/stable/sm64coopdx.html _site/index.html
+          cp artifacts/stable/sm64coopdx.js _site/
+          cp artifacts/stable/sm64coopdx.wasm _site/
+          cp artifacts/stable/sm64coopdx.data _site/ 2>/dev/null || true
+          cp -r artifacts/stable/proxy/* _site/proxy/ 2>/dev/null || true
 
           # Audio branch at /audio/
-          cp artifacts/audio/build/us_pc/sm64coopdx.html _site/audio/index.html
-          cp artifacts/audio/build/us_pc/sm64coopdx.js _site/audio/
-          cp artifacts/audio/build/us_pc/sm64coopdx.wasm _site/audio/
-          cp artifacts/audio/build/us_pc/sm64coopdx.data _site/audio/ 2>/dev/null || true
+          cp artifacts/audio/sm64coopdx.html _site/audio/index.html
+          cp artifacts/audio/sm64coopdx.js _site/audio/
+          cp artifacts/audio/sm64coopdx.wasm _site/audio/
+          cp artifacts/audio/sm64coopdx.data _site/audio/ 2>/dev/null || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
