@@ -892,12 +892,13 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             }
 
             // if lighting engine is enabled and either we want to affect all shaded surfaces or the lighting engine geometry mode is on
-            if (le_is_enabled() && ((le_get_mode() != LE_MODE_AFFECT_ONLY_GEOMETRY_MODE) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
+            if (le_is_enabled() && luaVertexColor && ((le_get_mode() != LE_MODE_AFFECT_ONLY_GEOMETRY_MODE) || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
                 Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
-                CTX_BEGIN(CTX_LIGHTING);
 
                 Vec3f vpos    = { v->ob[0], v->ob[1], v->ob[2] };
                 Vec3f vnormal = { nx, ny, nz };
+
+                CTX_BEGIN(CTX_LIGHTING);
 
                 // transform vpos and vnormal to world space
                 gfx_local_to_world_space(vpos, vnormal);
@@ -913,9 +914,10 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
         // if lighting engine is enabled and we should affect all vertex colored surfaces or the lighting engine geometry mode is on
         } else if (le_is_enabled() && !(rsp.geometry_mode & G_LIGHT_MAP_EXT) && (affectAllVertexColored || (rsp.geometry_mode & G_LIGHTING_ENGINE_EXT))) {
             Color color = { gLEAmbientColor[0], gLEAmbientColor[1], gLEAmbientColor[2] };
-            CTX_BEGIN(CTX_LIGHTING);
 
             Vec3f vpos = { v->ob[0], v->ob[1], v->ob[2] };
+
+            CTX_BEGIN(CTX_LIGHTING);
 
             // transform vpos to world space
             gfx_local_to_world_space(vpos, NULL);
@@ -927,7 +929,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
             if (affectAllVertexColored && !(rsp.geometry_mode & G_LIGHTING_ENGINE_EXT)) {
                 le_calculate_lighting_color(vpos, color, 1.0f);
             } else {
-                le_calculate_vertex_lighting((Vtx_t*)v, vpos, color);
+                le_calculate_vertex_lighting(v, vpos, color);
             }
 
             CTX_END(CTX_LIGHTING);

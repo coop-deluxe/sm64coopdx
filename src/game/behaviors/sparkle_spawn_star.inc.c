@@ -84,9 +84,9 @@ void slow_star_rotation(void) {
 void bhv_spawned_star_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000);
-        sync_object_init_field(o, &o->oBehParams);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oStarSpawnExtCutsceneFlags);
+        sync_object_init_field(o, o->oBehParams);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oStarSpawnExtCutsceneFlags);
     }
 
     if (o->oAction == 0) {

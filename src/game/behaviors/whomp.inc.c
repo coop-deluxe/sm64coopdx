@@ -276,11 +276,11 @@ void (*sWhompActions[])(void) = {
 void bhv_whomp_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oAngleVelPitch);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
-        sync_object_init_field(o, &o->oForwardVel);
-        sync_object_init_field(o, &o->oHealth);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oAngleVelPitch);
+        sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oForwardVel);
+        sync_object_init_field(o, o->oHealth);
+        sync_object_init_field(o, o->oFaceAnglePitch);
     }
 
     cur_obj_update_floor_and_walls();

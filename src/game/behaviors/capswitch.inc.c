@@ -62,7 +62,7 @@ void (*sCapSwitchActions[])(void) = { cap_switch_act_0, cap_switch_act_1,
 void bhv_cap_switch_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &capSwitchForcePress);
+        sync_object_init_field(o, capSwitchForcePress);
     }
 
     CUR_OBJ_CALL_ACTION_FUNCTION(sCapSwitchActions);

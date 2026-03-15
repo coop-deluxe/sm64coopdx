@@ -111,17 +111,17 @@ void bubba_act_1(void) {
 void bhv_bubba_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oBubbaUnkF4);
-        sync_object_init_field(o, &o->oBubbaUnkF8);
-        sync_object_init_field(o, &o->oBubbaUnkFC);
-        sync_object_init_field(o, &o->oBubbaUnk100);
-        sync_object_init_field(o, &o->oBubbaUnk104);
-        sync_object_init_field(o, &o->oBubbaUnk108);
-        sync_object_init_field(o, &o->oBubbaUnk10C);
-        sync_object_init_field(o, &o->oBubbaUnk1AC);
-        sync_object_init_field(o, &o->oBubbaUnk1B0);
-        sync_object_init_field(o, &o->oAnimState);
-        sync_object_init_field(o, &o->oMoveAnglePitch);
+        sync_object_init_field(o, o->oBubbaUnkF4);
+        sync_object_init_field(o, o->oBubbaUnkF8);
+        sync_object_init_field(o, o->oBubbaUnkFC);
+        sync_object_init_field(o, o->oBubbaUnk100);
+        sync_object_init_field(o, o->oBubbaUnk104);
+        sync_object_init_field(o, o->oBubbaUnk108);
+        sync_object_init_field(o, o->oBubbaUnk10C);
+        sync_object_init_field(o, o->oBubbaUnk1AC);
+        sync_object_init_field(o, o->oBubbaUnk1B0);
+        sync_object_init_field(o, o->oAnimState);
+        sync_object_init_field(o, o->oMoveAnglePitch);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
