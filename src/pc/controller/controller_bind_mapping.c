@@ -106,11 +106,17 @@ const char* translate_bind_to_name(int bind) {
     // mouse
     if (bind >= VK_BASE_SDL_MOUSE) {
         int mouse_button = (bind - VK_BASE_SDL_MOUSE);
-        if (mouse_button == 1) { return "L Mouse"; }
-        if (mouse_button == 2) { return "M Mouse"; }
-        if (mouse_button == 3) { return "R Mouse"; }
-        snprintf(name, 8, "Mouse %d", bind - VK_BASE_SDL_MOUSE);
-        return name;
+        switch (mouse_button) {
+            case 1: return "L Mouse";
+            case 2: return "M Mouse";
+            case 3: return "R Mouse";
+            case 6: return "Scroll Up";
+            case 7: return "Scroll Down";
+            default: {
+                snprintf(name, 11, "Mouse %d", mouse_button);
+                return name;
+            }
+        }
     }
 
     // gamepad
