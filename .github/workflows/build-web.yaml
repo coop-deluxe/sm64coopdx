@@ -2,7 +2,7 @@ name: Build Web (Emscripten) & Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, feature/emscripten-web-port ]
+    branches: [ main, feature/emscripten-web-port, feature/web-audio ]
   workflow_dispatch:
 
 # Allow only one concurrent deployment
@@ -16,12 +16,13 @@ permissions:
   id-token: write
 
 jobs:
-  build-web:
+  build-stable:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout repository
+      - name: Checkout stable branch
         uses: actions/checkout@v4
         with:
+          ref: feature/emscripten-web-port
           submodules: recursive
 
       - name: Install dependencies
@@ -40,48 +41,128 @@ jobs:
           path: ~/.emscripten_cache
           key: emsdk-3.1.64-${{ runner.os }}
 
-      - name: Cache build objects
+      - name: Cache stable build objects
         uses: actions/cache@v4
         with:
           path: build/us_pc
-          key: build-web-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
+          key: build-web-stable-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
 
       - name: Verify Emscripten
         run: emcc --version
 
       - name: Clean stale build objects
         run: |
-          # Remove any stale .o/.d files to avoid EM_ASM index mismatches
           find build/us_pc -name '*.o' -delete 2>/dev/null || true
           find build/us_pc -name '*.d' -delete 2>/dev/null || true
 
-      - name: Build for web
+      - name: Build stable for web
         run: |
           emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
 
-      - name: Prepare Pages artifact
-        run: |
-          mkdir -p _site
-          cp build/us_pc/sm64coopdx.html _site/index.html
-          cp build/us_pc/sm64coopdx.js _site/
-          cp build/us_pc/sm64coopdx.wasm _site/
-          cp build/us_pc/sm64coopdx.data _site/ 2>/dev/null || true
-          # Copy proxy for reference (not served, but useful in the repo)
-          mkdir -p _site/proxy
-          cp src/pc/web/proxy/proxy.js _site/proxy/
-          cp src/pc/web/proxy/package.json _site/proxy/
-          cp src/pc/web/proxy/README.md _site/proxy/ 2>/dev/null || true
+      - name: Upload stable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: stable-build
+          path: |
+            build/us_pc/sm64coopdx.html
+            build/us_pc/sm64coopdx.js
+            build/us_pc/sm64coopdx.wasm
+            build/us_pc/sm64coopdx.data
+            src/pc/web/proxy/
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+  build-audio:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout audio branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/web-audio
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev zip
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.64
+
+      - name: Cache Emscripten system libs
+        uses: actions/cache@v4
+        with:
+          path: ~/.emscripten_cache
+          key: emsdk-3.1.64-${{ runner.os }}
+
+      - name: Cache audio build objects
+        uses: actions/cache@v4
+        with:
+          path: build/us_pc
+          key: build-web-audio-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
+
+      - name: Verify Emscripten
+        run: emcc --version
+
+      - name: Clean stale build objects
+        run: |
+          find build/us_pc -name '*.o' -delete 2>/dev/null || true
+          find build/us_pc -name '*.d' -delete 2>/dev/null || true
+
+      - name: Build audio branch for web
+        run: |
+          emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
+
+      - name: Upload audio build
+        uses: actions/upload-artifact@v4
+        with:
+          name: audio-build
+          path: |
+            build/us_pc/sm64coopdx.html
+            build/us_pc/sm64coopdx.js
+            build/us_pc/sm64coopdx.wasm
+            build/us_pc/sm64coopdx.data
 
   deploy:
-    needs: build-web
+    needs: [build-stable, build-audio]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Download stable build
+        uses: actions/download-artifact@v4
+        with:
+          name: stable-build
+          path: artifacts/stable
+
+      - name: Download audio build
+        uses: actions/download-artifact@v4
+        with:
+          name: audio-build
+          path: artifacts/audio
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p _site/audio _site/proxy
+
+          # Stable build at root
+          cp artifacts/stable/build/us_pc/sm64coopdx.html _site/index.html
+          cp artifacts/stable/build/us_pc/sm64coopdx.js _site/
+          cp artifacts/stable/build/us_pc/sm64coopdx.wasm _site/
+          cp artifacts/stable/build/us_pc/sm64coopdx.data _site/ 2>/dev/null || true
+          cp artifacts/stable/src/pc/web/proxy/proxy.js _site/proxy/ 2>/dev/null || true
+          cp artifacts/stable/src/pc/web/proxy/package.json _site/proxy/ 2>/dev/null || true
+
+          # Audio branch at /audio/
+          cp artifacts/audio/build/us_pc/sm64coopdx.html _site/audio/index.html
+          cp artifacts/audio/build/us_pc/sm64coopdx.js _site/audio/
+          cp artifacts/audio/build/us_pc/sm64coopdx.wasm _site/audio/
+          cp artifacts/audio/build/us_pc/sm64coopdx.data _site/audio/ 2>/dev/null || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
