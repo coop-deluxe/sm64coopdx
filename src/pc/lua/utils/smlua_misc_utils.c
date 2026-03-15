@@ -602,7 +602,7 @@ struct Mod* get_active_mod(void) {
 }
 
 LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
-    if (!mod || !subDirectory) {
+    if (!mod) {
         struct lua_State *L = gLuaState;
         if (L) {
             lua_newtable(L);
@@ -612,7 +612,7 @@ LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
     }
 
     char normalizedSubDir[SYS_MAX_PATH] = { 0 };
-    snprintf(normalizedSubDir, SYS_MAX_PATH, "%s", subDirectory);
+    snprintf(normalizedSubDir, SYS_MAX_PATH, "%s", subDirectory ? subDirectory : "");
     normalize_path(normalizedSubDir);
 
     size_t subDirLen = strlen(normalizedSubDir);
