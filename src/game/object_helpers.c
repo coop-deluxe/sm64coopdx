@@ -1333,21 +1333,6 @@ s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
     }
 }
 
-s32 cur_obj_check_frame_prior_current_frame(s16 *a0) {
-    if (!o) { return 0; }
-    s16 sp6 = o->header.gfx.animInfo.animFrame;
-
-    while (*a0 != -1) {
-        if (*a0 == sp6) {
-            return TRUE;
-        }
-
-        a0++;
-    }
-
-    return FALSE;
-}
-
 s32 mario_is_in_air_action(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->action & ACT_FLAG_AIR) {

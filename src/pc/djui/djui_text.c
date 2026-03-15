@@ -382,8 +382,10 @@ static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32
     for (char* c = c1; c < c2;) {
         struct DjuiColor parsedColor;
         if (djui_text_parse_color(c, c2, true, &sDjuiTextDefaultColor, &c, &parsedColor)) {
-            gDPSetEnvColor(gDisplayListHead++, parsedColor.r, parsedColor.g, parsedColor.b, parsedColor.a);
-            sDjuiTextCurrentColor = parsedColor;
+            sDjuiTextCurrentColor.r = parsedColor.r;
+            sDjuiTextCurrentColor.g = parsedColor.g;
+            sDjuiTextCurrentColor.b = parsedColor.b;
+            gDPSetEnvColor(gDisplayListHead++, sDjuiTextCurrentColor.r, sDjuiTextCurrentColor.g, sDjuiTextCurrentColor.b, sDjuiTextCurrentColor.a);
             continue;
         }
 

@@ -2923,6 +2923,74 @@ Resets the current DJUI HUD color
 
 <br />
 
+## [djui_hud_get_text_color](#djui_hud_get_text_color)
+
+### Description
+Gets the current DJUI HUD text default color
+
+### Lua Example
+`local djuiColorValue = djui_hud_get_text_color()`
+
+### Parameters
+- None
+
+### Returns
+- [DjuiColor](structs.md#DjuiColor)
+
+### C Prototype
+`struct DjuiColor* djui_hud_get_text_color(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_text_color](#djui_hud_set_text_color)
+
+### Description
+Sets the current DJUI HUD text default color
+
+### Lua Example
+`djui_hud_set_text_color(r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_text_color](#djui_hud_reset_text_color)
+
+### Description
+Resets the current DJUI HUD text default color
+
+### Lua Example
+`djui_hud_reset_text_color()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_text_color(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_rotation](#djui_hud_get_rotation)
 
 ### Description
