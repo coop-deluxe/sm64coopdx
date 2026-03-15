@@ -550,9 +550,7 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, RET struct Surface **pceil) {
     // Increment the debug tracker.
     gNumCalls.ceil += 1;
 
-    if (smlua_call_event_hooks(HOOK_ON_FIND_CEIL, posX, posY, posZ, pceil, &height)) {
-        return height;
-    }
+    smlua_call_event_hooks(HOOK_ON_FIND_CEIL, posX, posY, posZ, pceil, &height);
 
     return height;
 }
@@ -892,9 +890,7 @@ f32 find_floor(f32 xPos, f32 yPos, f32 zPos, RET struct Surface **pfloor) {
     // Increment the debug tracker.
     gNumCalls.floor += 1;
 
-    if (smlua_call_event_hooks(HOOK_ON_FIND_FLOOR, xPos, yPos, zPos, pfloor, &height)) {
-        return height;
-    }
+    smlua_call_event_hooks(HOOK_ON_FIND_FLOOR, xPos, yPos, zPos, pfloor, &height);
 
     return height;
 }
@@ -936,9 +932,7 @@ f32 find_water_level(f32 x, f32 z) {
         }
     }
 
-    if (smlua_call_event_hooks(HOOK_ON_FIND_WATER_LEVEL, x, z, &waterLevel)) {
-        return waterLevel;
-    }
+    smlua_call_event_hooks(HOOK_ON_FIND_WATER_LEVEL, x, z, &waterLevel);
 
     return waterLevel;
 }
@@ -981,9 +975,7 @@ f32 find_poison_gas_level(f32 x, f32 z) {
         }
     }
 
-    if (smlua_call_event_hooks(HOOK_ON_FIND_POISON_GAS_LEVEL, x, z, &gasLevel)) {
-        return gasLevel;
-    }
+    smlua_call_event_hooks(HOOK_ON_FIND_POISON_GAS_LEVEL, x, z, &gasLevel);
 
     return gasLevel;
 }
