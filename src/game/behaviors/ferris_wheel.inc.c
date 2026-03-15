@@ -52,7 +52,7 @@ void bhv_ferris_wheel_axle_init(void) {
     if (so) {
         so->hasStandardFields = FALSE;
         so->maxUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oFaceAngleRoll);
+        sync_object_init_field(o, o->oFaceAngleRoll);
     }
 }
 
@@ -61,9 +61,9 @@ void bhv_ferris_wheel_platform_init(void) {
     if (so) {
         so->hasStandardFields = FALSE;
         so->maxUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oPosX);
-        sync_object_init_field(o, &o->oPosY);
-        sync_object_init_field(o, &o->oPosZ);
+        sync_object_init_field(o, o->oPosX);
+        sync_object_init_field(o, o->oPosY);
+        sync_object_init_field(o, o->oPosZ);
     }
 }
 

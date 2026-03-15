@@ -227,11 +227,11 @@ void bhv_chuckya_loop(void) {
         if (so != NULL) {
             so->override_ownership = bhv_chuckya_override_ownership;
             so->ignore_if_true = bhv_chuckya_ignore_if_true;
-            sync_object_init_field(o, &o->oChuckyaUnk88);
-            sync_object_init_field(o, &o->oChuckyaUnkF8);
-            sync_object_init_field(o, &o->oChuckyaUnkFC);
-            sync_object_init_field(o, &o->oChuckyaUnk100);
-            sync_object_init_field(o, &o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oChuckyaUnk88);
+            sync_object_init_field(o, o->oChuckyaUnkF8);
+            sync_object_init_field(o, o->oChuckyaUnkFC);
+            sync_object_init_field(o, o->oChuckyaUnk100);
+            sync_object_init_field(o, o->oFaceAnglePitch);
         }
     }
 

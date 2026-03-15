@@ -1,6 +1,22 @@
 #ifndef DJUI_HUD_UTILS_H
 #define DJUI_HUD_UTILS_H
 
+// Common pivot values for rotation
+#define ROTATION_PIVOT_X_LEFT       0.0
+#define ROTATION_PIVOT_X_CENTER     0.5
+#define ROTATION_PIVOT_X_RIGHT      1.0
+#define ROTATION_PIVOT_Y_TOP        0.0
+#define ROTATION_PIVOT_Y_CENTER     0.5
+#define ROTATION_PIVOT_Y_BOTTOM     1.0
+
+// Common alignment values for text alignment
+#define TEXT_HALIGN_LEFT            0.0
+#define TEXT_HALIGN_CENTER          0.5
+#define TEXT_HALIGN_RIGHT           1.0
+#define TEXT_VALIGN_TOP             0.0
+#define TEXT_VALIGN_CENTER          0.5
+#define TEXT_VALIGN_BOTTOM          1.0
+
 enum HudUtilsResolution {
     RESOLUTION_DJUI,
     RESOLUTION_N64,
@@ -14,7 +30,8 @@ enum HudUtilsFilter {
 };
 
 enum DjuiFontType {
-    FONT_NORMAL,
+    FONT_LEGACY = -1,
+    FONT_NORMAL = 0,
     FONT_MENU,
     FONT_HUD,
     FONT_ALIASED,
@@ -22,15 +39,6 @@ enum DjuiFontType {
     FONT_RECOLOR_HUD,
     FONT_SPECIAL,
     FONT_COUNT,
-};
-
-struct HudUtilsRotation {
-    f32 rotation;
-    f32 rotationDiff;
-    f32 prevPivotX;
-    f32 prevPivotY;
-    f32 pivotX;
-    f32 pivotY;
 };
 
 struct GlobalTextures {
@@ -63,7 +71,7 @@ u8 djui_hud_get_filter(void);
 /* |description|Sets the current DJUI HUD texture filter|descriptionEnd| */
 void djui_hud_set_filter(enum HudUtilsFilter filterType);
 /* |description|Gets the current DJUI HUD font|descriptionEnd| */
-u8 djui_hud_get_font(void);
+s8 djui_hud_get_font(void);
 /* |description|Sets the current DJUI HUD font|descriptionEnd| */
 void djui_hud_set_font(s8 fontType);
 /* |description|Gets the current DJUI HUD color|descriptionEnd| */
@@ -73,11 +81,17 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD color|descriptionEnd| */
 void djui_hud_reset_color(void);
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
-struct HudUtilsRotation* djui_hud_get_rotation(void);
+void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
 /* |description|Sets the current DJUI HUD rotation interpolated|descriptionEnd| */
-void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);
+void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);
+/* |description|Gets the current DJUI HUD text alignment|descriptionEnd| */
+void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);
+/* |description|Sets the current DJUI HUD text alignment|descriptionEnd| */
+void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);
+/* |description|Sets the current DJUI HUD text alignment interpolated|descriptionEnd| */
+void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);
 
 /* |description|Gets the screen width in the current DJUI HUD resolution|descriptionEnd| */
 u32 djui_hud_get_screen_width(void);

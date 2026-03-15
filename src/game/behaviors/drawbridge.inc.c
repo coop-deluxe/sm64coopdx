@@ -21,10 +21,10 @@ void bhv_lll_drawbridge_spawner_init(void) {
         sync_object_init(o, 3000.0f);
         for (s32 i = 0; i < 2; i++) {
             if (drawbridge[i] == NULL) { continue; }
-            sync_object_init_field(o, &drawbridge[i]->oFaceAngleRoll);
-            sync_object_init_field(o, &drawbridge[i]->oAction);
-            sync_object_init_field(o, &drawbridge[i]->oPrevAction);
-            sync_object_init_field(o, &drawbridge[i]->oTimer);
+            sync_object_init_field(o, drawbridge[i]->oFaceAngleRoll);
+            sync_object_init_field(o, drawbridge[i]->oAction);
+            sync_object_init_field(o, drawbridge[i]->oPrevAction);
+            sync_object_init_field(o, drawbridge[i]->oTimer);
         }
     }
 

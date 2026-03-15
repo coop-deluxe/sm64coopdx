@@ -398,30 +398,13 @@ u32 smlua_get_action_interaction_type(struct MarioState* m) {
  // hooked behaviors //
 //////////////////////
 
-struct LuaHookedBehavior {
-    u32 behaviorId;
-    u32 overrideId;
-    u32 originalId;
-    BehaviorScript *behavior;
-    const BehaviorScript* originalBehavior;
-    const char* bhvName;
-    int initReference;
-    int loopReference;
-    bool replace;
-    bool luaBehavior;
-    struct Mod* mod;
-    struct ModFile* modFile;
-};
-
-#define MAX_HOOKED_BEHAVIORS 1024
-
-static struct LuaHookedBehavior sHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
-static int sHookedBehaviorsCount = 0;
+struct LuaHookedBehavior gHookedBehaviors[MAX_HOOKED_BEHAVIORS] = { 0 };
+int gHookedBehaviorsCount = 0;
 
 enum BehaviorId smlua_get_original_behavior_id(const BehaviorScript* behavior) {
     enum BehaviorId id = get_id_from_behavior(behavior);
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &gHookedBehaviors[i];
         if (hooked->behavior == behavior) {
             id = hooked->overrideId;
         }
@@ -443,8 +426,8 @@ const BehaviorScript* smlua_get_hooked_behavior_from_id(enum BehaviorId id, bool
     lua_State *L = gLuaState;
     if (L == NULL) { return NULL; }
 
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &gHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
         if (returnOriginal && !hooked->replace) { return hooked->originalBehavior; }
         return hooked->behavior;
@@ -457,8 +440,8 @@ bool smlua_is_behavior_hooked(const BehaviorScript *behavior) {
     if (L == NULL) { return false; }
 
     enum BehaviorId id = get_id_from_behavior(behavior);
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior *hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior *hooked = &gHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
         return hooked->luaBehavior;
     }
@@ -467,8 +450,8 @@ bool smlua_is_behavior_hooked(const BehaviorScript *behavior) {
 }
 
 const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id) {
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior *hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior *hooked = &gHookedBehaviors[i];
         if (hooked->behaviorId != id && hooked->overrideId != id) { continue; }
         return hooked->bhvName;
     }
@@ -476,7 +459,7 @@ const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id) {
 }
 
 int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
-    if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
+    if (gHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_ERROR("Hooked behaviors exceeded maximum references!");
         return 0;
     }
@@ -490,8 +473,8 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
 
     u8 newBehavior = originalBehaviorId >= id_bhv_max_count;
 
-    struct LuaHookedBehavior *hooked = &sHookedBehaviors[sHookedBehaviorsCount];
-    u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
+    struct LuaHookedBehavior *hooked = &gHookedBehaviors[gHookedBehaviorsCount];
+    u16 customBehaviorId = (gHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
     hooked->behavior = bhvScript;
     hooked->behavior[1] = (BehaviorScript)BC_B0H(0x39, customBehaviorId); // This is ID(customBehaviorId)
     hooked->behaviorId = customBehaviorId;
@@ -506,7 +489,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     hooked->mod = gLuaActiveMod;
     hooked->modFile = gLuaActiveModFile;
 
-    sHookedBehaviorsCount++;
+    gHookedBehaviorsCount++;
 
     // We want to push the behavior into the global LUA state. So mods can access it.
     // It's also used for some things that would normally access a LUA behavior instead.
@@ -531,7 +514,7 @@ int smlua_hook_behavior(lua_State* L) {
 
     int paramCount = lua_gettop(L);
 
-    if (sHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
+    if (gHookedBehaviorsCount >= MAX_HOOKED_BEHAVIORS) {
         LOG_LUA_LINE("Hooked behaviors exceeded maximum references!");
         return 0;
     }
@@ -634,8 +617,8 @@ int smlua_hook_behavior(lua_State* L) {
         bhvName = sGenericBhvName;
     }
 
-    struct LuaHookedBehavior* hooked = &sHookedBehaviors[sHookedBehaviorsCount];
-    u16 customBehaviorId = (sHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
+    struct LuaHookedBehavior* hooked = &gHookedBehaviors[gHookedBehaviorsCount];
+    u16 customBehaviorId = (gHookedBehaviorsCount & 0xFFFF) | LUA_BEHAVIOR_FLAG;
     hooked->behavior = calloc(4, sizeof(BehaviorScript));
     hooked->behavior[0] = (BehaviorScript)BC_BB(0x00, objectList); // This is BEGIN(objectList)
     hooked->behavior[1] = (BehaviorScript)BC_B0H(0x39, customBehaviorId); // This is ID(customBehaviorId)
@@ -653,7 +636,7 @@ int smlua_hook_behavior(lua_State* L) {
     hooked->mod = gLuaActiveMod;
     hooked->modFile = gLuaActiveModFile;
 
-    sHookedBehaviorsCount++;
+    gHookedBehaviorsCount++;
 
     // We want to push the behavior into the global LUA state. So mods can access it.
     // It's also used for some things that would normally access a LUA behavior instead.
@@ -670,8 +653,8 @@ int smlua_hook_behavior(lua_State* L) {
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &gHookedBehaviors[i];
 
         // find behavior
         if (object->behavior != hooked->behavior) {
@@ -969,7 +952,7 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
-            char* noColorsDesc = str_remove_color_codes(hook->description);
+            char* noColorsDesc = djui_text_get_uncolored_string(NULL, strlen(hook->description) + 1, hook->description);
             char* startSubcommands = strstr(noColorsDesc, "[");
             char* endSubcommands = strstr(noColorsDesc, "]");
 
@@ -1518,8 +1501,8 @@ void smlua_hook_replace_function_references(lua_State* L, int oldReference, int 
         smlua_hook_replace_function_reference(L, &hooked->reference, oldReference, newReference);
     }
 
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &gHookedBehaviors[i];
         smlua_hook_replace_function_reference(L, &hooked->initReference, oldReference, newReference);
         smlua_hook_replace_function_reference(L, &hooked->loopReference, oldReference, newReference);
     }
@@ -1574,8 +1557,8 @@ void smlua_clear_hooks(void) {
     }
     gHookedModMenuElementsCount = 0;
 
-    for (int i = 0; i < sHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior* hooked = &sHookedBehaviors[i];
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior* hooked = &gHookedBehaviors[i];
 
         // If this is NULL. We can't do anything with it.
         if (hooked->behavior != NULL) {
@@ -1601,7 +1584,7 @@ void smlua_clear_hooks(void) {
         hooked->mod = NULL;
         hooked->modFile = NULL;
     }
-    sHookedBehaviorsCount = 0;
+    gHookedBehaviorsCount = 0;
     memset(gLuaMarioActionIndex, 0, sizeof(gLuaMarioActionIndex));
 }
 

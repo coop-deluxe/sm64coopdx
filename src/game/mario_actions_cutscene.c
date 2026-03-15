@@ -1825,11 +1825,17 @@ s32 act_squished(struct MarioState *m) {
             if (m->actionTimer >= 15) {
                 // 1 unit of health
                 if (m->health < 0x0100) {
-                    //level_trigger_warp(m, WARP_OP_DEATH);
-                    // woosh, he's gone!
-                    //set_mario_action(m, ACT_DISAPPEARED, 0);
-                    drop_and_set_mario_action(m, ACT_DEATH_ON_BACK, 0);
-                    m->squishTimer = 0;
+                    bool allowDeath = true;
+                    smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
+                    if (!allowDeath) { return FALSE; }
+
+                    if (mario_can_bubble(m)) {
+                        mario_set_bubbled(m);
+                    } else {
+                        level_trigger_warp(m, WARP_OP_DEATH);
+                        // woosh, he's gone!
+                        set_mario_action(m, ACT_DISAPPEARED, 0);
+                    }
                 } else if (m->hurtCounter == 0) {
                     // un-squish animation
                     m->squishTimer = 30;

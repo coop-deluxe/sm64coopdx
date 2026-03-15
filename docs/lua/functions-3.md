@@ -261,7 +261,7 @@ Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
 ### Description
-gets a behavior ID from a behavior name
+Gets a behavior ID from a behavior name
 
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`
@@ -1312,7 +1312,8 @@ Calculates and returns the pitch and yaw angles from one 3D position (`from`) to
 | to | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `integer`
+- `integer`
 
 ### C Prototype
 `void calculate_angles(Vec3f from, Vec3f to, RET s16 *pitch, RET s16 *yaw);`
@@ -1585,7 +1586,7 @@ Applies a roll-based shake effect to the camera. Simulates rotational disturbanc
 | roll | `integer` |
 
 ### Returns
-- None
+- `integer`
 
 ### C Prototype
 `void shake_camera_roll(INOUT s16 *roll);`
@@ -2825,7 +2826,7 @@ Gets the current DJUI HUD font
 - `integer`
 
 ### C Prototype
-`u8 djui_hud_get_font(void);`
+`s8 djui_hud_get_font(void);`
 
 [:arrow_up_small:](#)
 
@@ -2928,16 +2929,18 @@ Resets the current DJUI HUD color
 Gets the current DJUI HUD rotation
 
 ### Lua Example
-`local hudUtilsRotationValue = djui_hud_get_rotation()`
+`local rotation, pivotX, pivotY = djui_hud_get_rotation()`
 
 ### Parameters
 - None
 
 ### Returns
-- [HudUtilsRotation](structs.md#HudUtilsRotation)
+- `integer`
+- `number`
+- `number`
 
 ### C Prototype
-`struct HudUtilsRotation* djui_hud_get_rotation(void);`
+`void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -2990,7 +2993,79 @@ Sets the current DJUI HUD rotation interpolated
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation_interpolated(s32 prevRotation, f32 prevPivotX, f32 prevPivotY, s32 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_text_alignment](#djui_hud_get_text_alignment)
+
+### Description
+Gets the current DJUI HUD text alignment
+
+### Lua Example
+`local textHAlign, textVAlign = djui_hud_get_text_alignment()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+- `number`
+
+### C Prototype
+`void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_text_alignment](#djui_hud_set_text_alignment)
+
+### Description
+Sets the current DJUI HUD text alignment
+
+### Lua Example
+`djui_hud_set_text_alignment(textHAlign, textVAlign)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textHAlign | `number` |
+| textVAlign | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_text_alignment_interpolated](#djui_hud_set_text_alignment_interpolated)
+
+### Description
+Sets the current DJUI HUD text alignment interpolated
+
+### Lua Example
+`djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevTextHAlign | `number` |
+| prevTextVAlign | `number` |
+| textHAlign | `number` |
+| textVAlign | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);`
 
 [:arrow_up_small:](#)
 
