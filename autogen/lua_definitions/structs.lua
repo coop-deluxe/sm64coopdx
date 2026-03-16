@@ -217,6 +217,21 @@
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field public mtx Mat4
+--- @field public move_mario_head_c_up fun(c: Camera) Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
+--- @field public transition_next_state fun(c: Camera, frames: integer) Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
+--- @field public set_mode fun(c: Camera, mode: integer, frames: integer) Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
+--- @field public soft_reset fun(c: Camera) Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
+--- @field public reset fun(c: Camera) Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
+--- @field public offset_yaw_outward_radial fun(c: Camera, areaYaw: integer): integer Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
+--- @field public radial_input fun(c: Camera, unused: number): integer Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
+--- @field public handle_c_button_movement fun(c: Camera) Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
+--- @field public start_cutscene fun(c: Camera, cutscene: integer) Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
+--- @field public get_cutscene_from_mario_status fun(c: Camera): integer Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
+--- @field public approach_height fun(c: Camera, goal: number, inc: number) Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
+--- @field public course_processing fun(c: Camera): integer Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
+--- @field public rotate_around_walls fun(c: Camera, cPos: Vec3f, avoidYaw: integer, yawRange: integer): integer Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
+--- @field public play_cutscene fun(c: Camera) Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
+--- @field public set_mode_fixed fun(c: Camera, x: integer, y: integer, z: integer): integer Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
 
 --- @class ChainSegment
 --- @field public posX number
@@ -1174,6 +1189,242 @@
 --- @field public floorAngle integer
 --- @field public waterLevel integer
 --- @field public currentRoom integer
+--- @field public get_character fun(m: MarioState): Character Gets a Character struct from `m`
+--- @field public play_character_sound fun(m: MarioState, characterSound: CharacterSound) Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
+--- @field public play_character_sound_offset fun(m: MarioState, characterSound: CharacterSound, offset: integer) Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
+--- @field public play_character_sound_if_no_flag fun(m: MarioState, characterSound: CharacterSound, flags: integer) Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
+--- @field public get_character_anim_offset fun(m: MarioState): number Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
+--- @field public get_character_anim fun(m: MarioState, characterAnim: CharacterAnimID): integer Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
+--- @field public update_character_anim_offset fun(m: MarioState) Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
+--- @field public first_person_check_cancels fun(m: MarioState): boolean Checks common cancels for first person
+--- @field public interact_coin fun(m: MarioState, interactType: integer, o: Object): boolean Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, and coin management
+--- @field public interact_water_ring fun(m: MarioState, interactType: integer, o: Object): boolean Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages
+--- @field public interact_star_or_key fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star). Useful for the main progression system of collecting Stars and unlocking new areas
+--- @field public interact_bbh_entrance fun(m: MarioState, interactType: integer, o: Object): boolean Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
+--- @field public interact_warp fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
+--- @field public interact_warp_door fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog. Useful for restricting access to certain areas based on progression
+--- @field public interact_door fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement. Useful for controlling access to locked areas and providing progression gating in the game
+--- @field public interact_cannon_base fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior. Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
+--- @field public interact_player fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with another player (in multiplayer scenarios). Checks if Mario and another player collide and resolves any special behavior like bouncing on top. Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
+--- @field public interact_igloo_barrier fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap. Useful for enforcing require-caps to access certain areas
+--- @field public interact_tornado fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily. Useful for desert levels or areas where environmental hazards lift Mario into the air
+--- @field public interact_whirlpool fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for hazards that trap Mario like whirlpools
+--- @field public interact_strong_wind fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental wind hazards
+--- @field public interact_flame fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump. Useful for simulating fire damage and hazards in levels
+--- @field public interact_snufit_bullet fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
+--- @field public interact_clam_or_bubba fun(m: MarioState, interactType: integer, o: Object): boolean Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
+--- @field public interact_bully fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
+--- @field public interact_shock fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles
+--- @field public interact_mr_blizzard fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
+--- @field public interact_hit_from_below fun(m: MarioState, interactType: integer, o: Object): boolean Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
+--- @field public interact_bounce_top fun(m: MarioState, interactType: integer, o: Object): boolean Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes. Useful for enemy defeat mechanics and platform bouncing
+--- @field public interact_spiny_walking fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
+--- @field public interact_damage fun(m: MarioState, interactType: integer, o: Object): boolean Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and managing damage related behaviors
+--- @field public interact_breakable fun(m: MarioState, interactType: integer, o: Object): boolean Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
+--- @field public interact_koopa_shell fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for implementing Koopa Shell behavior
+--- @field public interact_pole fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics
+--- @field public interact_hoot fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level. Useful for special traversal mechanics and shortcuts within a course
+--- @field public interact_cap fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
+--- @field public interact_grabbable fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
+--- @field public interact_text fun(m: MarioState, interactType: integer, o: Object): boolean Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
+--- @field public angle_to_object fun(m: MarioState, o: Object): integer Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
+--- @field public stop_riding_object fun(m: MarioState) Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
+--- @field public grab_used_object fun(m: MarioState) Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
+--- @field public drop_held_object fun(m: MarioState) Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
+--- @field public throw_held_object fun(m: MarioState) Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
+--- @field public stop_riding_and_holding fun(m: MarioState) Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
+--- @field public has_normal_cap_on_head fun(m: MarioState): boolean Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
+--- @field public has_blown_cap fun(m: MarioState): boolean Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+--- @field public blow_off_cap fun(m: MarioState, capSpeed: number) Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
+--- @field public lose_cap_to_enemy fun(m: MarioState, arg: integer): boolean Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
+--- @field public retrieve_cap fun(m: MarioState) Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
+--- @field public get_collided_object fun(m: MarioState, interactType: integer): Object Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
+--- @field public check_object_grab fun(m: MarioState): boolean Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process. Useful for picking up objects, throwing enemies, or grabbing special items
+--- @field public passes_pvp_interaction_checks fun(attacker: MarioState, victim: MarioState): boolean Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer where players can harm each other
+--- @field public should_push_or_pull_door fun(m: MarioState, o: Object): boolean Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position. Useful for animating door interactions realistically, depending on which side Mario approaches from
+--- @field public take_damage_and_knock_back fun(m: MarioState, o: Object): boolean Handles the logic of Mario taking damage and being knocked back by a damaging object. Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects. Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
+--- @field public determine_interaction fun(m: MarioState, o: Object): integer Determines how Mario interacts with a given object based on his current action, position, and other state variables. Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`). Useful for handling different types of player-object collisions, attacks, and object behaviors
+--- @field public level_trigger_warp fun(m: MarioState, warpOp: integer): integer Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
+--- @field public is_anim_at_end fun(m: MarioState): boolean Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation). Useful for deciding when to transition out of an animation-driven action
+--- @field public is_anim_past_end fun(m: MarioState): boolean Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames). Useful for advanced checks where slightly early transitions or timing are needed before the final frame
+--- @field public set_animation fun(m: MarioState, targetAnimID: integer): integer Sets Mario's current animation to `targetAnimID` at a default acceleration (no speed change)
+--- @field public set_anim_with_accel fun(m: MarioState, targetAnimID: integer, accel: integer): integer Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation. Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
+--- @field public set_character_animation fun(m: MarioState, targetAnimID: CharacterAnimID): integer Sets the character-specific animation at its default rate (no acceleration)
+--- @field public set_character_anim_with_accel fun(m: MarioState, targetAnimID: CharacterAnimID, accel: integer): integer Sets a character-specific animation where the animation speed is adjusted by `accel`. Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
+--- @field public set_anim_to_frame fun(m: MarioState, animFrame: integer) Sets the current animation frame to a specific `animFrame`
+--- @field public is_anim_past_frame fun(m: MarioState, animFrame: integer): boolean Checks if Mario's current animation is past a specified `animFrame`. Useful for conditional logic where an action can branch after reaching a specific point in the animation
+--- @field public update_pos_for_anim fun(m: MarioState) Applies the translation from Mario's current animation to his world position. Considers animation flags (horizontal/vertical translation)
+--- @field public return_anim_y_translation fun(m: MarioState): integer Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation. Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
+--- @field public play_sound_if_no_flag fun(m: MarioState, soundBits: integer, flags: integer) Plays a sound if Mario does not currently have a specific flag set. Once played, the flag is set to prevent immediate repeats
+--- @field public play_jump_sound fun(m: MarioState) Plays Mario's jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
+--- @field public adjust_sound_for_speed fun(m: MarioState) Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
+--- @field public play_sound_and_spawn_particles fun(m: MarioState, soundBits: integer, waveParticleType: integer) Plays the specified sound effect and spawns surface-appropriate particles (e.g., water splash, snow, sand). Checks if Mario is metal to adjust audio accordingly
+--- @field public play_action_sound fun(m: MarioState, soundBits: integer, waveParticleType: integer) Plays an action sound once per action, optionally spawning wave or dust particles depending on the surface. This sets the `MARIO_ACTION_SOUND_PLAYED` flag to prevent repeats
+--- @field public play_landing_sound fun(m: MarioState, soundBits: integer) Plays a normal landing sound (or metal landing sound if Mario is metal) and spawns appropriate particle effects (water splash, dust, etc.)
+--- @field public play_landing_sound_once fun(m: MarioState, soundBits: integer) A variant of `play_mario_landing_sound` that ensures the sound is only played once per action. Uses `play_mario_action_sound` internally
+--- @field public play_heavy_landing_sound fun(m: MarioState, soundBits: integer) Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped. Useful for making big impact landings stand out aurally
+--- @field public play_heavy_landing_sound_once fun(m: MarioState, soundBits: integer) A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally). Useful for consistent heavy landing effects without repetition
+--- @field public play_sound fun(m: MarioState, primarySoundBits: integer, scondarySoundBits: integer) Plays a given action sound (like a jump or landing) and also a Mario voice line if certain conditions are met. It manages flags to avoid repeated sounds
+--- @field public is_crouching fun(m: MarioState): boolean Returns true if Mario is in any of the crouching or crawling states, checking his current action
+--- @field public is_ground_pound_landing fun(m: MarioState): boolean Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
+--- @field public can_bubble fun(m: MarioState): boolean Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
+--- @field public set_bubbled fun(m: MarioState) Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
+--- @field public set_forward_vel fun(m: MarioState, speed: number) Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`. Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
+--- @field public get_floor_class fun(m: MarioState): integer Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces. Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
+--- @field public get_terrain_sound_addend fun(m: MarioState): integer Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
+--- @field public facing_downhill fun(m: MarioState, turnYaw: integer): boolean Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope. Useful for deciding if Mario will walk or slide on sloped floors
+--- @field public floor_is_slippery fun(m: MarioState): boolean Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides). Useful for deciding if Mario should transition to sliding or maintain normal traction
+--- @field public floor_is_slope fun(m: MarioState): boolean Checks whether Mario's floor is a slope, i.e., not flat but not necessarily steep. This depends on the floor's surface class and angle
+--- @field public floor_is_steep fun(m: MarioState): boolean Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+--- @field public find_floor_height_relative_polar fun(m: MarioState, angleFromMario: integer, distFromMario: number): number Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`). Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
+--- @field public find_floor_slope fun(m: MarioState, yawOffset: integer): integer Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction. Useful for slope-based calculations such as setting walking or sliding behaviors
+--- @field public update_sound_and_camera fun(m: MarioState) Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping. Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
+--- @field public set_steep_jump_action fun(m: MarioState) Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly. Useful for forcing special jump states on surfaces exceeding normal slope limits
+--- @field public set_y_vel_based_on_fspeed fun(m: MarioState, initialVelY: number, multiplier: number) Adjusts Mario's vertical velocity (`m.vel.y`) based on his forward speed. This function also accounts for conditions like quicksand to halve velocity
+--- @field public set_action fun(m: MarioState, action: integer, actionArg: integer): boolean Sets Mario's action to the specified `action` and `actionArg`, routing through group-specific transition functions (e.g., airborne actions). Resets sound flags and updates internal timers
+--- @field public set_jump_from_landing fun(m: MarioState): boolean When Mario lands on the ground, decides whether to jump again (single, double, triple) or enter a steep jump if the floor is very steep. Handles quicksand logic as well
+--- @field public set_jumping_action fun(m: MarioState, action: integer, actionArg: integer): boolean Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
+--- @field public drop_and_set_action fun(m: MarioState, action: integer, actionArg: integer): boolean Drops any currently held object and sets Mario to a new action. This function is typically used when Mario transitions to states where he cannot hold objects
+--- @field public hurt_and_set_action fun(m: MarioState, action: integer, actionArg: integer, hurtCounter: integer): boolean Increments Mario's `hurtCounter` and immediately sets a new action. Often used when Mario takes damage and transitions into a knockback or stunned action.
+--- @field public check_common_action_exits fun(m: MarioState): boolean Checks for inputs that cause common action transitions (jump, freefall, walking, sliding). Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
+--- @field public check_common_hold_action_exits fun(m: MarioState): boolean Checks for inputs that cause common hold-action transitions (hold jump, hold freefall, hold walking, hold sliding)
+--- @field public transition_submerged_to_walking fun(m: MarioState): boolean Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states. Useful for restoring standard ground movement when emerging from water
+--- @field public set_water_plunge_action fun(m: MarioState): boolean Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
+--- @field public force_idle_state fun(m: MarioState): boolean Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
+--- @field public init fun(m: MarioState) Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
+--- @field public set_particle_flags fun(m: MarioState, flags: integer, clear: integer) Sets Mario's particle flags to spawn various visual effects (dust, water splashes, etc.), with an option to clear or set new flags
+--- @field public update_wall fun(m: MarioState, wcd: WallCollisionData) Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
+--- @field public play_flip_sounds fun(m: MarioState, frame1: integer, frame2: integer, frame3: integer) Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips). If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
+--- @field public play_far_fall_sound fun(m: MarioState) Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying. If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
+--- @field public play_knockback_sound fun(m: MarioState) Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs depending on whether Mario's forward velocity is high enough to be considered a strong knockback
+--- @field public lava_boost_on_wall fun(m: MarioState): boolean Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity. Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`. Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
+--- @field public check_fall_damage fun(m: MarioState, hardFallAction: integer): boolean Evaluates whether Mario should take fall damage based on the height difference between his peak and current position. If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied. Useful for determining if Mario's fall warrants a health penalty or a special landing action
+--- @field public check_kick_or_dive_in_air fun(m: MarioState): boolean Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity. Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
+--- @field public should_get_stuck_in_ground fun(m: MarioState): boolean Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.). Returns true if Mario should be stuck, false otherwise
+--- @field public check_fall_damage_or_get_stuck fun(m: MarioState, hardFallAction: integer): boolean Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
+--- @field public check_horizontal_wind fun(m: MarioState): boolean Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
+--- @field public update_air_with_turn fun(m: MarioState) Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag, approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
+--- @field public update_air_without_turn fun(m: MarioState) Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
+--- @field public update_lava_boost_or_twirling fun(m: MarioState) Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
+--- @field public update_flying_yaw fun(m: MarioState) Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
+--- @field public update_flying_pitch fun(m: MarioState) Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity and clamps the final pitch angle to a certain range, simulating a smooth flight control
+--- @field public update_flying fun(m: MarioState) Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input, applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
+--- @field public common_air_action_step fun(m: MarioState, landAction: integer, animation: integer, stepArg: integer): boolean Performs a standard step update for air actions without knockback, typically used for jumps or freefalls. Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`. Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
+--- @field public common_air_knockback_step fun(m: MarioState, landAction: integer, hardFallAction: integer, animation: integer, speed: number): boolean A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`, and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
+--- @field public check_wall_kick fun(m: MarioState): boolean Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A) and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
+--- @field public check_common_airborne_cancels fun(m: MarioState): boolean Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action if on certain wind surfaces. Also resets `m.quicksandDepth`
+--- @field public execute_airborne_action fun(m: MarioState): boolean Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed. Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
+--- @field public add_tree_leaf_particles fun(m: MarioState) Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor. In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
+--- @field public play_climbing_sounds fun(m: MarioState, b: integer) Plays the appropriate climbing sound effect depending on whether Mario is on a tree or a pole. If `b == 1`, it plays the "climbing up" sound; otherwise, it plays the "sliding down" sound
+--- @field public set_pole_position fun(m: MarioState, offsetY: number): integer Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor. Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
+--- @field public perform_hanging_step fun(m: MarioState, nextPos: Vec3f): integer Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
+--- @field public update_hang_moving fun(m: MarioState): integer Updates Mario's velocity and position while he is moving across a hangable ceiling. It calls `perform_hanging_step()` to handle collisions and movement logic, returning a status code indicating if Mario is still hanging or if he left the ceiling
+--- @field public update_hang_stationary fun(m: MarioState) Keeps Mario stationary while he is hanging from a ceiling. This function zeroes out his velocity and ensures he remains aligned with the ceiling
+--- @field public let_go_of_ledge fun(m: MarioState): boolean Handles Mario letting go of a ledge by adjusting his position and setting his velocity to make him fall away from the ledge. The action then transitions to a 'soft bonk' state
+--- @field public climb_up_ledge fun(m: MarioState) Moves Mario onto the top of a ledge once he finishes climbing it. This shifts Mario forward slightly on the ledge and updates his animation accordingly
+--- @field public update_ledge_climb_camera fun(m: MarioState) Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
+--- @field public update_ledge_climb fun(m: MarioState, animation: integer, endAction: integer) Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
+--- @field public pop_bubble fun(m: MarioState) Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
+--- @field public check_common_automatic_cancels fun(m: MarioState): boolean Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
+--- @field public execute_automatic_action fun(m: MarioState): boolean Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water. Returns true if the action was canceled and a new action was set, or false otherwise
+--- @field public get_star_collection_dialog fun(m: MarioState): integer Determines which (if any) dialog to show when Mario collects a star. Checks milestone star counts against `prevNumStarsForDialog`, and returns a dialog ID if a milestone is reached. Otherwise, returns 0
+--- @field public handle_save_menu fun(m: MarioState) Handles interactions with the save menu after collecting a star/key. Checks the user's selection (e.g., Save and Continue) and performs the corresponding action, such as saving the file or returning Mario to idle
+--- @field public cutscene_take_cap_off fun(m: MarioState) Transitions Mario's state from wearing the cap on his head to holding it in his hand. Clears the `MARIO_CAP_ON_HEAD` flag, sets the `MARIO_CAP_IN_HAND` flag, and plays the 'take cap off' sound
+--- @field public cutscene_put_cap_on fun(m: MarioState) Transitions Mario's state from having the cap in his hand to wearing it on his head. Clears the `MARIO_CAP_IN_HAND` flag, sets the `MARIO_CAP_ON_HEAD` flag, and plays the 'put cap on' sound
+--- @field public ready_to_speak fun(m: MarioState): boolean Checks if Mario's current action allows him to speak. For Mario to be ready, his action must be in a 'stationary' or 'moving' group (or waiting for dialog), and he must not be riding a shell, invulnerable, or in first-person mode
+--- @field public should_start_or_continue_dialog fun(m: MarioState, object: Object): boolean Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
+--- @field public general_star_dance_handler fun(m: MarioState, isInWater: integer) Manages the star collection dance sequence for Mario, both on land and in water. Plays music, spawns the celebration star, increments the star count, and triggers level exits or dialogs at the correct times
+--- @field public common_death_handler fun(m: MarioState, animation: integer, frameToDeathWarp: integer): integer Handles shared logic for Mario's various death states. Plays the specified death animation (`animation`), checks for a specific frame (`frameToDeathWarp`) to trigger a warp or bubble state if allowed, and sets Mario's eye state to 'dead'
+--- @field public launch_until_land fun(m: MarioState, endAction: integer, animation: integer, forwardVel: number): integer Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
+--- @field public stuck_in_ground_handler fun(m: MarioState, animation: integer, unstuckFrame: integer, target2: integer, target3: integer, endAction: integer) Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
+--- @field public execute_cutscene_action fun(m: MarioState): boolean Executes Mario's current cutscene action based on his `action` field. Includes various story-related sequences like entering doors, collecting stars, and final boss cutscenes. Delegates to the appropriate function for each cutscene action
+--- @field public tilt_body_running fun(m: MarioState): integer Tilts Mario's body according to his running speed and slope angle. Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
+--- @field public play_step_sound fun(m: MarioState, frame1: integer, frame2: integer) Checks the current animation frame against two specified frames to trigger footstep sounds. Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
+--- @field public align_with_floor fun(m: MarioState) Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
+--- @field public begin_walking_action fun(m: MarioState, forwardVel: number, action: integer, actionArg: integer): boolean Sets Mario's facing yaw to his intended yaw, applies a specified forward velocity, and transitions to the given action (e.g., `ACT_WALKING`).
+--- @field public check_ledge_climb_down fun(m: MarioState): boolean Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower. If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
+--- @field public slide_bonk fun(m: MarioState, fastAction: integer, slowAction: integer) Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
+--- @field public set_triple_jump_action fun(m: MarioState, action: integer, actionArg: integer): boolean Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
+--- @field public update_sliding_angle fun(m: MarioState, accel: number, lossFactor: number) Adjusts Mario's slide velocity and facing angle when on a slope. Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill). Handles facing-direction changes and maximum speed limits
+--- @field public update_sliding fun(m: MarioState, stopSpeed: number): boolean Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness. Also checks if speed has slowed below a threshold to end the slide. Returns `true` if sliding has stopped
+--- @field public apply_slope_accel fun(m: MarioState) Applies acceleration or deceleration based on the slope of the floor. On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
+--- @field public apply_landing_accel fun(m: MarioState, frictionFactor: number): boolean Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped. Capped in such a way that Mario eventually stops or stabilizes on flatter ground
+--- @field public update_shell_speed fun(m: MarioState) Controls Mario's speed when riding a Koopa Shell on the ground.
+--- @field public apply_slope_decel fun(m: MarioState, decelCoef: number): boolean Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness. This function can completely stop Mario if the slope is gentle enough or if friction is high
+--- @field public update_decelerating_speed fun(m: MarioState): boolean Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
+--- @field public update_walking_speed fun(m: MarioState) Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand). Caps speed at a certain value and may reduce it slightly on steep slopes
+--- @field public should_begin_sliding fun(m: MarioState): boolean Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
+--- @field public analog_stick_held_back fun(m: MarioState): boolean Checks if the analog stick is held significantly behind Mario's current facing angle. Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
+--- @field public check_ground_dive_or_punch fun(m: MarioState): boolean Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly). Returns `true` if the action was changed to either a dive or a punching attack
+--- @field public begin_braking_action fun(m: MarioState): boolean Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise. Also handles the scenario where Mario is up against a wall, transitioning to a standing state
+--- @field public anim_and_audio_for_walk fun(m: MarioState) Handles the animation and audio (footstep sounds) for normal walking or running. The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
+--- @field public anim_and_audio_for_hold_walk fun(m: MarioState) Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box). Adjusts the animation speed dynamically based on Mario's velocity
+--- @field public anim_and_audio_for_heavy_walk fun(m: MarioState) Plays the appropriate animation and footstep sounds for walking while carrying a heavy object. Sets the character animation speed based on Mario's intended movement speed
+--- @field public push_or_sidle_wall fun(m: MarioState, startPos: Vec3f) When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
+--- @field public tilt_body_walking fun(m: MarioState, startYaw: integer) Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running. The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
+--- @field public tilt_body_ground_shell fun(m: MarioState, startYaw: integer) Tilts Mario's torso and head while riding a shell on the ground to reflect turning. Similar to other tilt functions but tuned for shell-riding speeds and angles
+--- @field public tilt_body_butt_slide fun(m: MarioState) Tilts Mario's torso while butt sliding based on analog input direction and magnitude. Gives the appearance that Mario is balancing or leaning into a turn
+--- @field public common_slide_action fun(m: MarioState, endAction: integer, airAction: integer, animation: integer) Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
+--- @field public common_slide_action_with_jump fun(m: MarioState, stopAction: integer, jumpAction: integer, airAction: integer, animation: integer): boolean Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay. If the sliding slows enough, Mario transitions to a specified stopping action
+--- @field public stomach_slide_action fun(m: MarioState, stopAction: integer, airAction: integer, animation: integer): boolean Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed. Uses `common_slide_action` for the core movement logic
+--- @field public common_ground_knockback_action fun(m: MarioState, animation: integer, arg2: integer, arg3: integer, arg4: integer): boolean Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
+--- @field public common_landing_action fun(m: MarioState, animation: integer, airAction: integer): boolean Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
+--- @field public quicksand_jump_land_action fun(m: MarioState, animation1: integer, animation2: integer, endAction: integer, airAction: integer): integer Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+--- @field public check_common_moving_cancels fun(m: MarioState): boolean Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
+--- @field public execute_moving_action fun(m: MarioState): boolean Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
+--- @field public animated_stationary_ground_step fun(m: MarioState, animation: integer, endAction: integer) Performs a stationary step, sets `m`'s animation and sets action to `endAction` once the animation finishes
+--- @field public update_punch_sequence fun(m: MarioState): boolean Updates Mario's punching state
+--- @field public check_common_object_cancels fun(m: MarioState): boolean Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action if Mario is dead
+--- @field public execute_object_action fun(m: MarioState): boolean Executes Mario's current object action by first checking common object cancels, then updating quicksand state. Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
+--- @field public check_common_idle_cancels fun(m: MarioState): boolean Checks for and handles common conditions that would cancel Mario's current idle action.
+--- @field public check_common_hold_idle_cancels fun(m: MarioState): boolean Checks for and handles common conditions that would cancel Mario's current idle holding object action.
+--- @field public play_anim_sound fun(m: MarioState, actionState: integer, animFrame: integer, sound: integer) Plays a `sound` if Mario's action state and animation frame match the parameters
+--- @field public stopping_step fun(m: MarioState, animID: integer, action: integer) Runs a stationary step, sets the character animation, and changes action if the animation has ended
+--- @field public landing_step fun(m: MarioState, animID: integer, action: integer): boolean Runs a stationary step, sets the character animation, and changes action if the animation has ended
+--- @field public check_common_landing_cancels fun(m: MarioState, action: integer): boolean Checks for and handles common conditions that would cancel Mario's current landing action.
+--- @field public exit_palette_editor fun(m: MarioState, c: Camera): boolean 
+--- @field public check_common_stationary_cancels fun(m: MarioState): boolean Checks for and handles common conditions that would cancel Mario's current stationary action.
+--- @field public execute_stationary_action fun(m: MarioState): boolean Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state. Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
+--- @field public set_swimming_at_surface_particles fun(m: MarioState, particleFlag: integer) Sets Mario's particle flags if he's at the surface of a water box
+--- @field public perform_water_full_step fun(m: MarioState, nextPos: Vec3f): integer Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality
+--- @field public apply_water_current fun(m: MarioState, step: Vec3f) Calculates a water current and outputs it in `step`
+--- @field public perform_water_step fun(m: MarioState): integer Performs a water step
+--- @field public float_surface_gfx fun(m: MarioState) Controls the bobbing that happens when you swim near the water surface
+--- @field public execute_submerged_action fun(m: MarioState): boolean Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0. Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
+--- @field public bonk_reflection fun(m: MarioState, negateSpeed: integer) Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
+--- @field public update_quicksand fun(m: MarioState, sinkingSpeed: number): boolean Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
+--- @field public push_off_steep_floor fun(m: MarioState, action: integer, actionArg: integer): boolean Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
+--- @field public update_moving_sand fun(m: MarioState): boolean Pushes Mario in the direction of the quicksand based on the floor surface
+--- @field public update_windy_ground fun(m: MarioState): boolean Pushes Mario in the direction of the wind based on the floor surface
+--- @field public stop_and_set_height_to_floor fun(m: MarioState) Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
+--- @field public stationary_ground_step fun(m: MarioState): integer Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
+--- @field public perform_ground_step fun(m: MarioState): integer Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
+--- @field public perform_air_step fun(m: MarioState, stepArg: integer): integer Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
+--- @field public set_vel_from_pitch_and_yaw fun(m: MarioState) Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
+--- @field public spline_get_weights fun(m: MarioState, result: Vec4f, t: number, c: integer) Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
+--- @field public anim_spline_init fun(m: MarioState, keyFrames: Pointer_Vec4s) Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
+--- @field public anim_spline_poll fun(m: MarioState, result: Vec3f): boolean Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
+--- @field public is_active fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area and isn't bubbled
+--- @field public is_in_local_area fun(m: MarioState): boolean Checks if `m` is in the current course/act/level/area
+--- @field public is_nearest_to_object fun(m: MarioState, obj: Object): boolean Checks if `m` is the nearest Mario to `obj`
+--- @field public obj_is_near_to_and_facing_self fun(m: MarioState, maxDist: number, maxAngleDiff: integer): boolean Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
+--- @field public obj_turn_pitch_toward_self fun(m: MarioState, targetOffsetY: number, turnAmount: integer): integer Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
+--- @field public set_vel_to_cur_obj_vel fun(m: MarioState, f12: number, f14: number) 
+--- @field public is_in_air_action fun(m: MarioState): boolean 
+--- @field public is_dive_sliding fun(m: MarioState): boolean 
+--- @field public spawn_loot_coin_at_pos_from_cur_obj fun(m: MarioState) 
+--- @field public is_ground_pounding_platform fun(m: MarioState, obj: Object): boolean 
+--- @field public can_activate_textbox_with_cur_obj fun(m: MarioState, radius: number, height: number, unused: integer): boolean 
+--- @field public can_activate_textbox_with_cur_obj_2 fun(m: MarioState, radius: number, height: number): boolean 
+--- @field public end_dialog_with_cur_obj fun(m: MarioState, dialogFlags: integer, dialogResult: integer) 
+--- @field public queue_rumble_data fun(m: MarioState, a0: integer, a1: integer) Queues rumble data for Mario
+--- @field public reset_rumble_timers fun(m: MarioState) Resets rumble timers
+--- @field public reset_rumble_timers_2 fun(m: MarioState, a0: integer) Resets rumble timers and sets a field based on `a0`
+--- @field public get_hand_foot_pos_x fun(m: MarioState, index: integer): number Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+--- @field public get_hand_foot_pos_y fun(m: MarioState, index: integer): number Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
+--- @field public get_hand_foot_pos_z fun(m: MarioState, index: integer): number Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+--- @field public get_anim_part_pos fun(m: MarioState, animPart: integer, pos: Vec3f): boolean Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
+--- @field public get_anim_part_rot fun(m: MarioState, animPart: integer, rot: Vec3s): boolean Retrieves the animated part rotation associated to `animPart` from the MarioState `m` and stores it into `rot`. Returns `true` on success or `false` on failure
 
 --- @class Mod
 --- @field public name string
@@ -1199,6 +1450,25 @@
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
+--- @field public stream_destroy fun(audio: ModAudio) Destroys an `audio` stream
+--- @field public stream_play fun(audio: ModAudio, restart: boolean, volume: number) Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
+--- @field public stream_pause fun(audio: ModAudio) Pauses an `audio` stream
+--- @field public stream_stop fun(audio: ModAudio) Stops an `audio` stream
+--- @field public stream_get_position fun(audio: ModAudio): number Gets the position of an `audio` stream in seconds
+--- @field public stream_set_position fun(audio: ModAudio, pos: number) Sets the position of an `audio` stream in seconds
+--- @field public stream_get_looping fun(audio: ModAudio): boolean Gets if an `audio` stream is looping or not
+--- @field public stream_set_looping fun(audio: ModAudio, looping: boolean) Sets if an `audio` stream is looping or not
+--- @field public stream_set_loop_points fun(audio: ModAudio, loopStart: integer, loopEnd: integer) Sets an `audio` stream's loop points in samples
+--- @field public stream_get_frequency fun(audio: ModAudio): number Gets the frequency of an `audio` stream
+--- @field public stream_set_frequency fun(audio: ModAudio, freq: number) Sets the frequency of an `audio` stream
+--- @field public stream_get_volume fun(audio: ModAudio): number Gets the volume of an `audio` stream
+--- @field public stream_set_volume fun(audio: ModAudio, volume: number) Sets the volume of an `audio` stream
+--- @field public sample_destroy fun(audio: ModAudio) Destroys an `audio` sample
+--- @field public sample_stop fun(audio: ModAudio) Stops an `audio` sample
+--- @field public sample_play fun(audio: ModAudio, position: Vec3f, volume: number) Plays an `audio` sample at `position` with `volume`
+--- @field public stream_get_tempo function [DEPRECATED: There may be a replacement for this function in the future]
+--- @field public stream_set_tempo function [DEPRECATED: There may be a replacement for this function in the future]
+--- @field public stream_set_speed function [DEPRECATED: There may be a replacement for this function in the future]
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1281,6 +1551,16 @@
 --- @field public paletteIndex integer
 --- @field public overridePaletteIndex integer
 --- @field public overridePaletteIndexLp integer
+--- @field public lag_compensation_get_local_state fun(otherNp: NetworkPlayer): MarioState Gets the local Mario's state stored in lag compensation history
+--- @field public set_description fun(np: NetworkPlayer, description: string, r: integer, g: integer, b: integer, a: integer) Sets the description field of `np`
+--- @field public set_override_location fun(np: NetworkPlayer, location: string) Overrides the location of `np`
+--- @field public get_palette_color_channel function Gets a red, green, or blue value from a part in `np`'s color palette
+--- @field public get_override_palette_color_channel function Gets a red, green, or blue value from a part in `np`'s override color palette
+--- @field public set_override_palette_color fun(np: NetworkPlayer, part: PlayerPart, color: Color) Sets the `part in `np`'s override color palette`
+--- @field public reset_override_palette fun(np: NetworkPlayer) Resets `np`'s override color palette
+--- @field public is_override_palette_same fun(np: NetworkPlayer): boolean Checks if `np`'s override color palette is identical to the regular color palette
+--- @field public color_to_palette function [DEPRECATED: Use `network_player_set_override_palette_color` instead]
+--- @field public palette_to_color function [DEPRECATED: Use `network_player_get_palette_color` or `network_player_get_override_palette_color` instead]
 
 --- @class Object
 --- @field public header ObjectNode
@@ -2046,6 +2326,136 @@
 --- @field public oYoshiTargetYaw integer
 --- @field public oBreakableWallForce integer
 --- @field public oLightID integer
+--- @field public get_mario_spawn_type fun(o: Object): integer Derives a `MARIO_SPAWN_*` constant from `o`
+--- @field public area_get_warp_node_from_params fun(o: Object): ObjectWarpNode Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
+--- @field public bhv_spawn_star_no_level_exit fun(object: Object, params: integer, networkSendEvent: integer) Spawns a Star parented to `object` that won't make Mario exit the level with an ID corresponding to `params`' first byte
+--- @field public update_gfx_pos_and_angle fun(obj: Object) Updates an object's graphical position and angle
+--- @field public vec3f_to_pos fun(o: Object, src: Vec3f) Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
+--- @field public vec3s_to_face_angle fun(o: Object, src: Vec3s) Converts a `Vec3s` angle to an object's face angle internal format
+--- @field public vec3s_to_move_angle fun(o: Object, src: Vec3s) Converts a `Vec3s` angle to an object's move angle internal format
+--- @field public rotate_towards_point fun(o: Object, point: Vec3f, pitchOff: integer, yawOff: integer, pitchDiv: integer, yawDiv: integer) Rotates an object toward a specific point in 3D space. Gradually updates the object's pitch and yaw angles to face the target
+--- @field public get_door_save_file_flag fun(door: Object): integer Retrieves the save file flag associated with a door, based on the number of stars required to open it. Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
+--- @field public get_mario_cap_flag fun(capObject: Object): integer Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
+--- @field public find_mario_anim_flags_and_translation fun(o: Object, yaw: integer, translation: Vec3s): integer Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
+--- @field public execute_mario_action fun(o: Object): integer Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
+--- @field public get_mario_state fun(o: Object): MarioState Gets the MarioState corresponding to the provided object if the object is a Mario object
+--- @field public orient_graph fun(obj: Object, normalX: number, normalY: number, normalZ: number) Orients an object with the given normals, typically the surface under the object.
+--- @field public move_xyz_using_fvel_and_yaw fun(obj: Object) Don't use this function outside of of a context where the current object and `obj` are the same. Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+--- @field public nearest_mario_state fun(obj: Object): MarioState Gets the nearest active Mario who isn't bubbled to `obj`
+--- @field public nearest_possible_mario_state fun(obj: Object): MarioState Gets the nearest possible Mario to `obj` despite anything like bubbled state or enemy visibility
+--- @field public nearest_player fun(obj: Object): Object Gets the nearest player (Mario Object) to `obj`
+--- @field public nearest_interacting_mario_state fun(obj: Object): MarioState Gets the nearest interacting Mario to `obj`
+--- @field public nearest_interacting_player fun(obj: Object): Object Gets the nearest interacting player (Mario Object) to `obj`
+--- @field public is_nearest_player_to_object fun(m: Object, obj: Object): boolean Checks if `m` is the nearest player (Mario Object) to `obj`
+--- @field public is_point_close fun(obj: Object, x: number, y: number, z: number, dist: integer): boolean Checks if a point is within `dist` of `obj`
+--- @field public set_visibility fun(obj: Object, dist: integer) Sets an object as visible if within a certain distance of Mario's graphical position
+--- @field public return_home_if_safe fun(obj: Object, homeX: number, y: number, homeZ: number, dist: integer): boolean Turns an object towards home if Mario is not near to it
+--- @field public return_and_displace_home fun(obj: Object, homeX: number, homeY: number, homeZ: number, baseDisp: integer) Randomly displaces an objects home if RNG says to, and turns the object towards its home
+--- @field public spawn_yellow_coins fun(obj: Object, nCoins: integer) Spawns a number of coins at the location of an object with a random forward velocity, y velocity, and direction
+--- @field public flicker_and_disappear fun(obj: Object, lifeSpan: integer): boolean Controls whether certain objects should flicker/when to despawn
+--- @field public apply_scale_to_matrix fun(obj: Object, dst: Mat4, src: Mat4) 
+--- @field public set_held_state fun(obj: Object, heldBehavior: Pointer_BehaviorScript) 
+--- @field public lateral_dist_to_object fun(obj1: Object, obj2: Object): number 
+--- @field public dist_to_object fun(obj1: Object, obj2: Object): number 
+--- @field public dist_to_point fun(obj: Object, pointX: number, pointY: number, pointZ: number): number 
+--- @field public angle_to_object fun(obj1: Object, obj2: Object): integer 
+--- @field public pitch_to_object fun(obj: Object, target: Object): integer 
+--- @field public angle_to_point fun(obj: Object, pointX: number, pointZ: number): integer 
+--- @field public turn_toward_object fun(obj: Object, target: Object, angleIndex: integer, turnAmount: integer): integer 
+--- @field public set_parent_relative_pos fun(obj: Object, relX: integer, relY: integer, relZ: integer) 
+--- @field public set_pos fun(obj: Object, x: integer, y: integer, z: integer) 
+--- @field public set_angle fun(obj: Object, pitch: integer, yaw: integer, roll: integer) 
+--- @field public set_move_angle fun(obj: Object, pitch: integer, yaw: integer, roll: integer) 
+--- @field public set_face_angle fun(obj: Object, pitch: integer, yaw: integer, roll: integer) 
+--- @field public set_gfx_angle fun(obj: Object, pitch: integer, yaw: integer, roll: integer) 
+--- @field public set_gfx_pos fun(obj: Object, x: number, y: number, z: number) 
+--- @field public set_gfx_scale fun(obj: Object, x: number, y: number, z: number) 
+--- @field public spawn_water_droplet fun(parent: Object, params: WaterDropletParams): Object 
+--- @field public build_relative_transform fun(obj: Object) 
+--- @field public copy_graph_y_offset fun(dst: Object, src: Object) 
+--- @field public copy_pos_and_angle fun(dst: Object, src: Object) 
+--- @field public copy_pos fun(dst: Object, src: Object) 
+--- @field public copy_angle fun(dst: Object, src: Object) 
+--- @field public set_gfx_pos_from_pos fun(obj: Object) 
+--- @field public init_animation fun(obj: Object, animIndex: integer) 
+--- @field public apply_scale_to_transform fun(obj: Object) 
+--- @field public copy_scale fun(dst: Object, src: Object) 
+--- @field public scale_xyz fun(obj: Object, xScale: number, yScale: number, zScale: number) 
+--- @field public scale fun(obj: Object, scale: number) 
+--- @field public init_animation_with_accel_and_sound fun(obj: Object, animIndex: integer, accel: number) 
+--- @field public init_animation_with_sound function 
+--- @field public enable_rendering_and_become_tangible fun(obj: Object) 
+--- @field public disable_rendering_and_become_intangible fun(obj: Object) 
+--- @field public set_pos_relative_to_cur_obj fun(other: Object, dleft: number, dy: number, dforward: number) 
+--- @field public set_face_angle_to_move_angle fun(obj: Object) 
+--- @field public mark_for_deletion fun(obj: Object) Marks an object to be unloaded at the end of the frame
+--- @field public become_tangible fun(obj: Object) 
+--- @field public check_if_collided_with_object fun(obj1: Object, obj2: Object): boolean 
+--- @field public set_behavior fun(obj: Object, behavior: Pointer_BehaviorScript) 
+--- @field public has_behavior fun(obj: Object, behavior: Pointer_BehaviorScript): boolean 
+--- @field public cur_obj_lateral_dist_from_self_to_home fun(obj: Object): number 
+--- @field public set_billboard fun(obj: Object) 
+--- @field public set_cylboard fun(obj: Object) 
+--- @field public set_hitbox_radius_and_height fun(o: Object, radius: number, height: number) 
+--- @field public set_hurtbox_radius_and_height fun(o: Object, radius: number, height: number) 
+--- @field public spawn_loot_coins fun(obj: Object, numCoins: integer, sp30: number, coinBehavior: Pointer_BehaviorScript, posJitter: integer, model: integer) 
+--- @field public spawn_loot_blue_coins fun(obj: Object, numCoins: integer, sp28: number, posJitter: integer) 
+--- @field public spawn_loot_yellow_coins fun(obj: Object, numCoins: integer, sp28: number) 
+--- @field public set_pos_relative fun(obj: Object, other: Object, dleft: number, dy: number, dforward: number) 
+--- @field public set_gfx_pos_at_obj_pos fun(obj1: Object, obj2: Object) 
+--- @field public translate_local fun(obj: Object, posIndex: integer, localTranslateIndex: integer) Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
+--- @field public build_transform_from_pos_and_angle fun(obj: Object, posIndex: integer, angleIndex: integer) 
+--- @field public set_throw_matrix_from_transform fun(obj: Object) 
+--- @field public build_transform_relative_to_parent fun(obj: Object) 
+--- @field public create_transform_from_self fun(obj: Object) 
+--- @field public scale_random fun(obj: Object, rangeLength: number, minScale: number) 
+--- @field public translate_xyz_random fun(obj: Object, rangeLength: number) 
+--- @field public translate_xz_random fun(obj: Object, rangeLength: number) 
+--- @field public build_vel_from_transform fun(a0: Object) 
+--- @field public set_hitbox fun(obj: Object, hitbox: ObjectHitbox) 
+--- @field public set_collision_data function 
+--- @field public is_hidden fun(obj: Object): boolean 
+--- @field public attack_collided_from_other_object fun(obj: Object): boolean 
+--- @field public copy_behavior_params fun(dst: Object, src: Object) 
+--- @field public set_respawn_info_bits fun(obj: Object, bits: integer) Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
+--- @field public apply_platform_displacement fun(o: Object, platform: Object) Apply one frame of platform rotation to the object using the given platform
+--- @field public queue_rumble_data fun(object: Object, a0: integer, a1: integer) Queues rumble data for object, factoring in its distance from Mario
+--- @field public smlua_anim_util_set_animation fun(obj: Object, name: string) Sets the animation of `obj` to the animation `name` corresponds to
+--- @field public smlua_anim_util_get_current_animation_name fun(obj: Object): string Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
+--- @field public has_behavior_id fun(o: Object, behaviorId: BehaviorId): boolean Checks if an object has `behaviorId`
+--- @field public has_model_extended fun(o: Object, modelId: ModelExtendedId): boolean Checks if an object's model is equal to `modelId`
+--- @field public get_model_id_extended fun(o: Object): ModelExtendedId Returns an object's extended model id
+--- @field public set_model_extended fun(o: Object, modelId: ModelExtendedId) Sets an object's model to `modelId`
+--- @field public set_cutscene_focus fun(o: Object) Sets the cutscene focus object
+--- @field public set_secondary_camera_focus fun(o: Object) Sets the secondary camera focus object
+--- @field public get_next fun(o: Object): Object Gets the next object in an object list
+--- @field public get_next_with_same_behavior_id fun(o: Object): Object Gets the next object loaded with the same behavior ID
+--- @field public get_next_with_same_behavior_id_and_field_s32 fun(o: Object, fieldIndex: integer, value: integer): Object Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+--- @field public get_next_with_same_behavior_id_and_field_f32 fun(o: Object, fieldIndex: integer, value: number): Object Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
+--- @field public get_nearest_with_behavior_id fun(o: Object, behaviorId: BehaviorId): Object Gets the nearest object with `behaviorId` to `o`
+--- @field public get_collided_object fun(o: Object, index: integer): Object Gets the corresponding collided object to an index from `o`
+--- @field public get_field_u32 fun(o: Object, fieldIndex: integer): integer Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- @field public get_field_s32 fun(o: Object, fieldIndex: integer): integer Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- @field public get_field_f32 fun(o: Object, fieldIndex: integer): number Sets the float value from the field corresponding to `fieldIndex`
+--- @field public get_field_s16 fun(o: Object, fieldIndex: integer, fieldSubIndex: integer): integer Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- @field public set_field_u32 fun(o: Object, fieldIndex: integer, value: integer) Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- @field public set_field_s32 fun(o: Object, fieldIndex: integer, value: integer) Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- @field public set_field_f32 fun(o: Object, fieldIndex: integer, value: number) Sets the float value from the field corresponding to `fieldIndex`
+--- @field public set_field_s16 fun(o: Object, fieldIndex: integer, fieldSubIndex: integer, value: integer) Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- @field public is_attackable fun(o: Object): boolean Checks if `o` is attackable
+--- @field public is_breakable fun(o: Object): boolean Checks if `o` is breakable
+--- @field public is_bully fun(o: Object): boolean Checks if `o` is a Bully
+--- @field public is_coin fun(o: Object): boolean Checks if `o` is a coin
+--- @field public is_exclamation_box fun(o: Object): boolean Checks if `o` is an exclamation box
+--- @field public is_grabbable fun(o: Object): boolean Checks if `o` is grabbable
+--- @field public is_mushroom_1up fun(o: Object): boolean Checks if `o` is a 1-Up Mushroom
+--- @field public is_secret fun(o: Object): boolean Checks if `o` is a secret
+--- @field public is_valid_for_interaction fun(o: Object): boolean Checks if `o` is activated, tangible, and interactible
+--- @field public check_hitbox_overlap fun(o1: Object, o2: Object): boolean Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
+--- @field public check_overlap_with_hitbox_params fun(o: Object, x: number, y: number, z: number, h: number, r: number, d: number): boolean Checks if `o`'s hitbox is colliding with the parameters of a hitbox
+--- @field public set_vel fun(o: Object, vx: number, vy: number, vz: number) Sets an object's velocity to `vx`, `vy`, and `vz`
+--- @field public move_xyz fun(o: Object, dx: number, dy: number, dz: number) Moves the object in the direction of `dx`, `dy`, and `dz`
+--- @field public get_surface_from_index fun(o: Object, index: integer): Surface Gets a surface corresponding to `index` from the surface pool buffer
 
 --- @class ObjectHitbox
 --- @field public interactType integer
@@ -2248,6 +2658,13 @@
 --- @field public originOffset number
 --- @field public modifiedTimestamp integer
 --- @field public object Object
+--- @field public turn_obj_away_from_steep_floor fun(objFloor: Surface, floorY: number, objVelX: number, objVelZ: number): boolean Turns an object away from steep floors, similarly to walls.
+--- @field public calc_new_obj_vel_and_pos_y fun(objFloor: Surface, objFloorY: number, objVelX: number, objVelZ: number) Updates an objects speed for gravity and updates Y position.
+--- @field public calc_new_obj_vel_and_pos_y_underwater fun(objFloor: Surface, floorY: number, objVelX: number, objVelZ: number, waterY: number) Adjusts the current object's veloicty and y position for being underwater
+--- @field public is_quicksand fun(surf: Surface): boolean Checks if the surface is quicksand
+--- @field public is_not_hard fun(surf: Surface): boolean Checks if the surface is not a hard surface
+--- @field public is_painting_warp fun(surf: Surface): boolean Checks if the surface is a painting warp
+--- @field public closest_point_to_triangle fun(surf: Surface, src: Vec3f, out: Vec3f) Gets the closest point of the triangle to `src` and returns it in `out`.
 
 --- @class TextureInfo
 --- @field public texture Pointer_Texture
