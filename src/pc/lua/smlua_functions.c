@@ -990,7 +990,7 @@ int smlua_func_gfx_set_command(lua_State* L) {
     }
 
     // Parse the command
-    const u32 errorSize = 0x400;
+    u32 errorSize = 0x400;
     char errorMsg[errorSize];
     if (!dynos_smlua_parse_gfx_command(L, gfx, command, specifiersCount != 0, errorMsg, errorSize)) {
         LOG_LUA_LINE("gfx_set_command: Command \"%s\": %s", command, errorMsg);

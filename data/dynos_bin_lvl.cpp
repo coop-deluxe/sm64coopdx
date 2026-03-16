@@ -390,7 +390,6 @@ DataNode<T>* FindDataNode(DataNodes<T>& aDataNodes, String& aName, u32 aModelIde
 
 static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode<LevelScript>* aNode, u64& aTokenIndex, bool* found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
-    u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Integers
@@ -744,7 +743,7 @@ static void ParseLevelScriptSymbol(GfxData* aGfxData, DataNode<LevelScript>* aNo
     // dialog
     if (_Symbol == "SHOW_DIALOG") {
         u64 topTokenIndex = aTokenIndex;
-        
+
         u32 luaParams = 0;
         LevelScript index = ParseLevelScriptObjectSymbolArgInternal(aGfxData, aNode, aTokenIndex, &luaParams, SHOW_DIALOG_EXT_LUA_INDEX);
         LevelScript dialogId = ParseLevelScriptObjectSymbolArgInternal(aGfxData, aNode, aTokenIndex, &luaParams, SHOW_DIALOG_EXT_LUA_DIALOG);

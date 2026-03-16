@@ -36,7 +36,7 @@ static void _debuglog_print_short_filename(const char* filename) {
     }
 }
 
-static void _debuglog_print_log(const char* logType, char* filename) {
+static inline void _debuglog_print_log(const char* logType, char* filename) {
     _debuglog_print_timestamp();
     _debuglog_print_network_type();
     _debuglog_print_log_type(logType);

@@ -51,7 +51,7 @@ static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down
 static void gfx_dummy_wm_set_scroll_callback(UNUSED void (*on_scroll)(float, float)) {
 }
 
-static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
+UNUSED static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
 }
 
 static void gfx_dummy_wm_main_loop(void (*run_one_game_iter)(void)) {

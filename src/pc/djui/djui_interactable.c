@@ -124,7 +124,7 @@ static void djui_interactable_on_focus_end(struct DjuiBase* base) {
     CALL_CALLBACK(on_focus_end);
 }
 
-static void djui_interactable_on_value_change(struct DjuiBase* base) {
+UNUSED static void djui_interactable_on_value_change(struct DjuiBase* base) {
     if (base               == NULL) { return; }
     if (base->interactable == NULL) { return; }
 
