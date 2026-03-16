@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "libcoopnet.h"
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -25,9 +26,7 @@ static struct DjuiText* sTooltip = NULL;
 static char* sPassword = NULL;
 
 static void djui_panel_join_lobby_description_create(void) {
-    f32 bodyHeight = 600;
-
-    struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
+    struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 0, 1200, 0);
     struct DjuiThreePanelTheme theme = gDjuiThemes[configDjuiTheme]->threePanels;
 
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
@@ -47,10 +46,11 @@ static void djui_panel_join_lobby_description_create(void) {
         djui_flow_layout_set_flow_direction(body, DJUI_FLOW_DIR_DOWN);
 
         struct DjuiText* description = djui_text_create(&panel->base, "");
-        djui_base_set_size_type(&description->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
-        djui_base_set_size(&description->base, 1.0f, 1.0f);
+        djui_base_set_alignment(&description->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_base_set_size_type(&description->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&description->base, 1.0f, 32);
         djui_base_set_color(&description->base, 222, 222, 222, 255);
-        djui_text_set_alignment(description, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
+        djui_text_set_alignment(description, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
         sTooltip = description;
     }
     sDescriptionPanel = panel;
@@ -59,6 +59,11 @@ static void djui_panel_join_lobby_description_create(void) {
 static void djui_lobby_on_hover(struct DjuiBase* base) {
     struct DjuiLobbyEntry* entry = (struct DjuiLobbyEntry*)base;
     djui_text_set_text(sTooltip, entry->description);
+    djui_base_compute_tree(&sDescriptionPanel->base);
+    u16 lines = djui_text_count_lines(sTooltip, 48);
+    f32 textHeight = 32 * 0.8125f * lines + 8;
+    sDescriptionPanel->bodySize.value = textHeight;
+    djui_base_set_size(&sTooltip->base, 1.0f, textHeight);
 }
 
 static void djui_lobby_on_hover_end(UNUSED struct DjuiBase* base) {
@@ -74,23 +79,22 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
     djui_panel_join_message_create(caller);
 }
 
-void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
+void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED int64_t aTimestamp, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
 
     char playerText[64] = "";
-    snprintf(playerText, 63, "%u/%u", aConnections, aMaxConnections);
+    snprintf(playerText, 64, "%u/%u", aConnections, aMaxConnections);
 
-
-    char mode[64] = "";
-    snprintf(mode, 64, "%s", aMode);
+    char mode[COOPNET_MAX_MODE_LEN] = "";
+    snprintf(mode, COOPNET_MAX_MODE_LEN, "%s", aMode);
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     bool disabled = strcmp(version, aVersion) != 0;
     if (disabled) {
-        snprintf(mode, 64, "\\#ff0000\\[%s]", aVersion);
+        snprintf(mode, COOPNET_MAX_MODE_LEN, "\\#ff0000\\[%s]", aVersion);
     }
 
     struct DjuiBase* layoutBase = &sLobbyLayout->base;

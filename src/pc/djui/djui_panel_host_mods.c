@@ -34,8 +34,8 @@ struct ModCategory sCategories[] = {
     // lang key, mod category
     { "ALL", NULL },
     { "MISC", NULL },
-    { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
+    { "ROMHACKS", "romhack" },
     { "MOVESETS", "moveset" },
     { "CHARACTER_SELECT", "cs" },
 };

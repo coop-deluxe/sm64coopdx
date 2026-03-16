@@ -16,11 +16,9 @@
 
 #ifdef COOPNET
 
-#define MAX_COOPNET_DESCRIPTION_LENGTH 1024
-
 uint64_t gCoopNetDesiredLobby = 0;
-char gCoopNetPassword[64] = "";
-char sCoopNetDescription[MAX_COOPNET_DESCRIPTION_LENGTH] = "";
+char gCoopNetPassword[COOPNET_MAX_PASSWORD_LEN] = "";
+char sCoopNetDescription[COOPNET_MAX_DESCRIPTION_LEN] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -176,16 +174,22 @@ bool ns_coopnet_is_connected(void) {
 
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = MAX_COOPNET_DESCRIPTION_LENGTH;
+    int bufferLength = COOPNET_MAX_DESCRIPTION_LEN;
     // get version
     const char* version = get_version();
     int versionLength = snprintf(buffer, bufferLength, "%s\n", version);
     buffer += versionLength;
     bufferLength -= versionLength;
 
+    // add seperator
+    char* sep = "\nMods:\n";
+    snprintf(buffer, bufferLength, "%s", sep);
+    buffer += strlen(sep);
+    bufferLength -= strlen(sep);
+
     struct ModCategory sCategories[] = {
-        { "ROMHACKS", "romhack" },
         { "GAMEMODES", "gamemode" },
+        { "ROMHACKS", "romhack" },
         { "MOVESETS", "moveset" },
         { "CHARACTER_SELECT", "cs" },
     };
@@ -201,7 +205,7 @@ static void coopnet_populate_description(void) {
         for (int j = 0; j < gActiveMods.entryCount; j++) {
             struct Mod* mod = gActiveMods.entries[j];
             char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
-            if (modCategory && strstr(modCategory, sCategories[i].category)) {
+            if (modCategory && strcasestr(modCategory, sCategories[i].category)) {
                 strings[strIndex++] = mod->name;
             }
         }
@@ -263,15 +267,15 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
-            char mode[64] = "";
-            mods_get_main_mod_name(mode, 64);
+            char mode[MOD_NAME_SIZE] = "";
+            mods_get_main_mod_name(mode, MOD_NAME_SIZE);
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
                 coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
             } else {
                 LOG_INFO("Create lobby");
-                snprintf(gCoopNetPassword, 64, "%s", configPassword);
+                snprintf(gCoopNetPassword, COOPNET_MAX_PASSWORD_LEN, "%s", configPassword);
                 coopnet_populate_description();
                 coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription);
             }
