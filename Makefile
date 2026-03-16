@@ -1216,7 +1216,7 @@ $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
+	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
