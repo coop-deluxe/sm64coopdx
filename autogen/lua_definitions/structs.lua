@@ -1197,7 +1197,6 @@
 --- @class ModAudio
 --- @field public filepath string
 --- @field public isStream boolean
---- @field public baseVolume number
 --- @field public loaded boolean
 
 --- @class ModFs

@@ -5827,6 +5827,29 @@ Sets if an `audio` stream is looping or not
 
 <br />
 
+## [audio_stream_get_loop_points](#audio_stream_get_loop_points)
+
+### Description
+Gets an `audio` stream's loop points in samples
+
+### Lua Example
+`local loopStart, loopEnd = audio_stream_get_loop_points(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
 
 ### Description
@@ -5846,7 +5869,7 @@ Sets an `audio` stream's loop points in samples
 - None
 
 ### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd);`
 
 [:arrow_up_small:](#)
 
@@ -7361,7 +7384,7 @@ Gets the `level` terrain collision from `area`
 Gets a table of the surface types from `data`
 
 ### Lua Example
-`smlua_collision_util_find_surface_types(data)`
+`local tableValue = smlua_collision_util_find_surface_types(data)`
 
 ### Parameters
 | Field | Type |
@@ -7369,10 +7392,10 @@ Gets a table of the surface types from `data`
 | data | `Pointer` <`Collision`> |
 
 ### Returns
-- None
+- `table`
 
 ### C Prototype
-`void smlua_collision_util_find_surface_types(Collision* data);`
+`LuaTable smlua_collision_util_find_surface_types(Collision* data);`
 
 [:arrow_up_small:](#)
 
