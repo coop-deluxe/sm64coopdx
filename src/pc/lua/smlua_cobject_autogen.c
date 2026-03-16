@@ -2576,7 +2576,7 @@ static struct LuaObjectField sStaticObjectCollisionFields[LUA_STATIC_OBJECT_COLL
     { "length", LVT_U16, offsetof(struct StaticObjectCollision, length), true, LOT_NONE, 1, sizeof(u16) },
 };
 
-#define LUA_SURFACE_FIELD_COUNT 16
+#define LUA_SURFACE_FIELD_COUNT 18
 static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "flags",             LVT_S8,        offsetof(struct Surface, flags),             false, LOT_NONE,   1, sizeof(s8)             },
     { "force",             LVT_S16,       offsetof(struct Surface, force),             false, LOT_NONE,   1, sizeof(s16)            },
@@ -2585,10 +2585,12 @@ static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "normal",            LVT_COBJECT,   offsetof(struct Surface, normal),            true,  LOT_VEC3F,  1, sizeof(Vec3f)          },
     { "object",            LVT_COBJECT_P, offsetof(struct Surface, object),            false, LOT_OBJECT, 1, sizeof(struct Object*) },
     { "originOffset",      LVT_F32,       offsetof(struct Surface, originOffset),      false, LOT_NONE,   1, sizeof(f32)            },
+    { "poolType",          LVT_S8,        offsetof(struct Surface, poolType),          true,  LOT_NONE,   1, sizeof(s8)             },
     { "prevVertex1",       LVT_COBJECT,   offsetof(struct Surface, prevVertex1),       true,  LOT_VEC3S,  1, sizeof(Vec3s)          },
     { "prevVertex2",       LVT_COBJECT,   offsetof(struct Surface, prevVertex2),       true,  LOT_VEC3S,  1, sizeof(Vec3s)          },
     { "prevVertex3",       LVT_COBJECT,   offsetof(struct Surface, prevVertex3),       true,  LOT_VEC3S,  1, sizeof(Vec3s)          },
     { "room",              LVT_S8,        offsetof(struct Surface, room),              false, LOT_NONE,   1, sizeof(s8)             },
+    { "socId",             LVT_U32,       offsetof(struct Surface, socId),             true,  LOT_NONE,   1, sizeof(u32)            },
     { "type",              LVT_S16,       offsetof(struct Surface, type),              false, LOT_NONE,   1, sizeof(s16)            },
     { "upperY",            LVT_S16,       offsetof(struct Surface, upperY),            false, LOT_NONE,   1, sizeof(s16)            },
     { "vertex1",           LVT_COBJECT,   offsetof(struct Surface, vertex1),           true,  LOT_VEC3S,  1, sizeof(Vec3s)          },

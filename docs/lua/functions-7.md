@@ -5062,6 +5062,29 @@ Gets a surface corresponding to `index` from the static object collision
 
 <br />
 
+## [remove_static_object_collision](#remove_static_object_collision)
+
+### Description
+Removes all surfaces belonging to a static object collision and reclaims the SOC metadata
+
+### Lua Example
+`remove_static_object_collision(col)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| col | [StaticObjectCollision](structs.md#StaticObjectCollision) |
+
+### Returns
+- None
+
+### C Prototype
+`void remove_static_object_collision(struct StaticObjectCollision *col);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [obj_get_surface_from_index](#obj_get_surface_from_index)
 
 ### Description
