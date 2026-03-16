@@ -121,11 +121,15 @@ static void djui_panel_edit_create(struct DjuiBase* caller) {
             djui_interactable_hook_value_change(&sSaveNameInputBox->base, djui_panel_host_save_save_name_change);
         }
 
-        if (!sEditing)
-            djui_button_create(body, DLANG(HOST_SAVE, CREATE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_create_create);
-        else
-            djui_button_create(body, DLANG(HOST_SAVE, EDIT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_edit_save);
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        struct DjuiRect* rect = djui_rect_container_create(body, 64);
+        {
+            djui_button_left_create(&rect->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            if (!sEditing) {
+                djui_button_right_create(&rect->base, DLANG(HOST_SAVE, CREATE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_create_create);
+            } else {
+                djui_button_right_create(&rect->base, DLANG(HOST_SAVE, APPLY), DJUI_BUTTON_STYLE_NORMAL, djui_panel_edit_save);
+            }
+        }
     }
 
     djui_panel_add(caller, panel, NULL);
