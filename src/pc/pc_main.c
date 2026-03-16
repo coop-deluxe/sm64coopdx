@@ -653,11 +653,9 @@ void web_one_iteration(void) {
             CTX_EXTENT(CTX_SMLUA, smlua_update);
             PROF_LAP(sProf_smlua);
 
-#ifndef TARGET_WEB
             if (gAudioThread.state == INVALID) {
                 CTX_EXTENT(CTX_AUDIO, buffer_audio);
             }
-#endif
 
             CTX_END(CTX_TOTAL);
             sProf_ticks++;
@@ -775,9 +773,7 @@ void* main_game_init(UNUSED void* dummy) {
 
     audio_init();
     sound_init();
-#ifndef TARGET_WEB
     mumble_init();
-#endif
     network_player_init();
 
     gGameInited = true;
@@ -885,19 +881,11 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-#ifdef TARGET_WEB
-    // Force null audio on web — the audio bank converter produces
-    // corrupt pointers that cause memory access out of bounds when
-    // loading music for new levels. SDL2 ScriptProcessorNode also
-    // crashes independently via HandleAudioProcess.
-    audio_api = &audio_null;
-#else
     if (gCLIOpts.headless) audio_api = &audio_null;
 #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
 #endif
     if (!audio_api) audio_api = &audio_null;
-#endif
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);

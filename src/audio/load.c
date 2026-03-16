@@ -1284,12 +1284,6 @@ void func_sh_802f3ed4(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED void *vAddr, UNUS
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
-#ifdef TARGET_WEB
-    // Audio disabled on web: sound bank data has 64-bit pointer layout from
-    // host build tools, causing memory access violations on 32-bit WASM.
-    (void)bankId; (void)arg1;
-    return NULL;
-#endif
     UNUSED u32 pad1[4];
     u32 buf[4];
     u32 numInstruments, numDrums;
@@ -1324,11 +1318,6 @@ struct AudioBank *bank_load_immediate(s32 bankId, s32 arg1) {
 
 #ifndef VERSION_SH
 struct AudioBank *bank_load_async(s32 bankId, s32 arg1, struct SequencePlayer *seqPlayer) {
-#ifdef TARGET_WEB
-    // Audio disabled on web (see bank_load_immediate comment).
-    (void)bankId; (void)arg1; (void)seqPlayer;
-    return NULL;
-#endif
     u32 numInstruments, numDrums;
     UNUSED u32 pad1[2];
     u32 buf[4];
