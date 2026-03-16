@@ -29,12 +29,24 @@ struct LocalEnabledPath {
 struct LocalEnabledPath* sLocalEnabledPaths = NULL;
 
 void mods_get_main_mod_name(char* destination, u32 maxSize) {
+    struct Mod* selectedRomhack = NULL;
     struct Mod* picked = NULL;
     size_t pickedSize = 0;
 
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         if (!mod->enabled) { continue; }
+        // always make gamemodes the main mod
+        if ((mod->category && strcmp(mod->category, "gamemode") == 0)
+        || (mod->incompatible && strcmp(mod->incompatible, "gamemode") == 0)) {
+            picked = mod;
+            break;
+        }
+        // prioritize romhacks
+        if ((mod->category && strcmp(mod->category, "romhack") == 0)
+        || (mod->incompatible && strcmp(mod->incompatible, "romhack") == 0)) {
+            selectedRomhack = mod;
+        }
         size_t size = mod_get_lua_size(mod);
         if (size > pickedSize) {
             picked = mod;
@@ -42,6 +54,7 @@ void mods_get_main_mod_name(char* destination, u32 maxSize) {
         }
     }
 
+    if (selectedRomhack) { picked = selectedRomhack; }
     snprintf(destination, maxSize, "%s", picked ? picked->name : "Super Mario 64");
 }
 

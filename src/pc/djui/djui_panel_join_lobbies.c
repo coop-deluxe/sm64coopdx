@@ -4,6 +4,7 @@
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_join_lobbies.h"
 #include "djui_lobby_entry.h"
 #include "djui_panel_rules.h"
 #include "pc/network/network.h"
@@ -18,12 +19,84 @@
 
 #define DJUI_DESC_PANEL_WIDTH (410.0f + (16 * 2.0f))
 
+extern ALIGNED8 u8 texture_selectionbox_up_icon[];
+extern ALIGNED8 u8 texture_selectionbox_down_icon[];
+
+static struct LobbySortType sLobbySorting[] = {
+    {
+        "NONE",
+        LOBBY_SORTING_NONE,
+    },
+    {
+        "NAME",
+        LOBBY_SORTING_NAME,
+    },
+    {
+        "GAMEMODE",
+        LOBBY_SORTING_GAMEMODE,
+    },
+    {
+        "PLAYERS",
+        LOBBY_SORTING_PLAYERS,
+    },
+};
+static const int numSortOptions = sizeof(sLobbySorting) / sizeof(sLobbySorting[0]);
+
+static struct CoopnetLobby** sCoopnetLobbies = NULL;
+static unsigned int sCoopnetLobbyCount = 0;
+
 static struct DjuiPaginated* sLobbyPaginated = NULL;
 static struct DjuiFlowLayout* sLobbyLayout = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
+static struct DjuiSelectionbox* sSelectionbox = NULL;
+static struct DjuiImage* sSortInvertImage = NULL;
+static unsigned int sSavedLobbyStartCount = 0;
+
 static char* sPassword = NULL;
+
+static void free_coopnet_lobbies() {
+    for (unsigned int i = 0; i < sCoopnetLobbyCount; i++)
+    {
+        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        if (!lobby) { continue; }
+        free(lobby->playerText);
+        free(lobby->hostName);
+        free(lobby->mode);
+        free(lobby->description);
+        free(lobby);
+    }
+
+    free(sCoopnetLobbies);
+    sCoopnetLobbies = NULL;
+    sCoopnetLobbyCount = 0;
+}
+
+static int sort_coopnet_lobby_comp(const void* a, const void* b) {
+    const struct CoopnetLobby* lobbyA = *(const struct CoopnetLobby**)a;
+    const struct CoopnetLobby* lobbyB = *(const struct CoopnetLobby**)b;
+
+    int retValue = 0;
+    enum LobbySorting sortBy = sLobbySorting[configCoopNetSortSelected].sortType;
+    if (sortBy == LOBBY_SORTING_NAME) {
+        retValue = strcmp(lobbyA->hostName, lobbyB->hostName);
+    } else if (sortBy == LOBBY_SORTING_GAMEMODE) {
+        retValue = strcmp(lobbyA->mode, lobbyB->mode);
+    } else if (sortBy == LOBBY_SORTING_PLAYERS) {
+        retValue = lobbyB->playerCount - lobbyA->playerCount;
+    } else if (sortBy == LOBBY_SORTING_NONE) {
+        retValue = lobbyA->lobbyId > lobbyB->lobbyId ? 1 : -1;
+    }
+
+    retValue *= configCoopNetSortInverted ? -1 : 1;
+    if (lobbyA->disabled != lobbyB->disabled) {
+        retValue = lobbyA->disabled ? 1 : -1;
+    } else if (retValue == 0) {
+        retValue = lobbyA->lobbyId > lobbyB->lobbyId ? 1 : -1;
+    }
+    return retValue;
+}
 
 static void djui_panel_join_lobby_description_create(void) {
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 0, 1200, 0);
@@ -56,6 +129,7 @@ static void djui_panel_join_lobby_description_create(void) {
     sDescriptionPanel = panel;
 }
 
+
 static void djui_lobby_on_hover(struct DjuiBase* base) {
     struct DjuiLobbyEntry* entry = (struct DjuiLobbyEntry*)base;
     djui_text_set_text(sTooltip, entry->description);
@@ -79,6 +153,22 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
     djui_panel_join_message_create(caller);
 }
 
+static void djui_panel_join_on_sorting_change(UNUSED struct DjuiBase* base) {
+    qsort(sCoopnetLobbies, sCoopnetLobbyCount, sizeof(sCoopnetLobbies[0]), sort_coopnet_lobby_comp);
+    djui_base_destroy_children(&sLobbyLayout->base);
+    for (unsigned int i = 0; i < sCoopnetLobbyCount; i++) {
+        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        struct DjuiLobbyEntry* entry = djui_lobby_entry_create(&sLobbyLayout->base, lobby->hostName, lobby->mode, lobby->playerText, lobby->description, lobby->disabled, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
+        entry->base.tag = (s64)lobby->lobbyId;
+    }
+}
+
+static void djui_panel_join_invert_sort(UNUSED struct DjuiBase* caller) {
+    configCoopNetSortInverted = !configCoopNetSortInverted;
+    sSortInvertImage->textureInfo.texture = configCoopNetSortInverted ? texture_selectionbox_up_icon : texture_selectionbox_down_icon;
+    djui_panel_join_on_sorting_change(NULL);
+}
+
 void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED int64_t aTimestamp, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
@@ -97,16 +187,47 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
         snprintf(mode, COOPNET_MAX_MODE_LEN, "\\#ff0000\\[%s]", aVersion);
     }
 
-    struct DjuiBase* layoutBase = &sLobbyLayout->base;
-    struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, (char*)aHostName, (char*)mode, playerText, (char*)aDescription, disabled, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
-    entry->base.tag = (s64)aLobbyId;
-    djui_paginated_update_page_buttons(sLobbyPaginated);
+    struct CoopnetLobby* lobby = malloc(sizeof(struct CoopnetLobby));
+
+    if (!lobby) {
+        LOG_ERROR("Failed to allocate memory to lobby!");
+        return;
+    }
+
+    lobby->lobbyId = aLobbyId;
+    lobby->playerCount = aConnections;
+    lobby->playerText = strdup(playerText);
+    lobby->hostName = strdup(aHostName);
+    lobby->mode = strdup(mode);
+    lobby->description = strdup(aDescription);
+    lobby->disabled = disabled;
+
+    struct CoopnetLobby** lobbies = realloc(sCoopnetLobbies, (sCoopnetLobbyCount + 1) * sizeof(struct CoopnetLobby*));
+    if (!lobbies) {
+        LOG_ERROR("Failed to reallocate memory to lobbies!");
+        return;
+    }
+    sCoopnetLobbies = lobbies;
+    sCoopnetLobbies[sCoopnetLobbyCount] = lobby;
+    sCoopnetLobbyCount++;
 }
 
 void djui_panel_join_query_finish(void) {
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
     if (!sRefreshButton) { return; }
+
+    qsort(sCoopnetLobbies, sCoopnetLobbyCount, sizeof(sCoopnetLobbies[0]), sort_coopnet_lobby_comp);
+
+    djui_base_destroy_children(&sLobbyLayout->base);
+    djui_base_set_enabled(&sLobbyLayout->base, true);
+    struct DjuiBase* layoutBase = &sLobbyLayout->base;
+    for (unsigned int i = 0; i < sCoopnetLobbyCount; i++) {
+        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        struct DjuiLobbyEntry* entry = djui_lobby_entry_create(layoutBase, lobby->hostName, lobby->mode, lobby->playerText, lobby->description, lobby->disabled, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
+        entry->base.tag = (s64)lobby->lobbyId;
+    }
+
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESH));
     djui_base_set_enabled(&sRefreshButton->base, true);
 
@@ -117,7 +238,9 @@ void djui_panel_join_query_finish(void) {
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_text_set_drop_shadow(text, 64, 64, 64, 100);
     }
+    sLobbyPaginated->startIndex = sSavedLobbyStartCount;
     djui_paginated_update_page_buttons(sLobbyPaginated);
+    djui_panel_join_on_sorting_change(NULL);
 }
 
 void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
@@ -126,6 +249,8 @@ void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
     sRefreshButton = NULL;
     sLobbyLayout = NULL;
     sLobbyPaginated = NULL;
+    sSavedLobbyStartCount = 0;
+    free_coopnet_lobbies();
 
     if (sDescriptionPanel != NULL) {
         djui_base_destroy(&sDescriptionPanel->base);
@@ -134,10 +259,18 @@ void djui_panel_join_lobbies_on_destroy(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_join_lobbies_refresh(UNUSED struct DjuiBase* caller) {
+    sSavedLobbyStartCount = sLobbyPaginated->startIndex;
+    djui_base_set_enabled(&sLobbyLayout->base, false);
     djui_base_destroy_children(&sLobbyLayout->base);
+    for (unsigned int i = 0; i < sCoopnetLobbyCount; i++) {
+        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        struct DjuiLobbyEntry* entry = djui_lobby_entry_create(&sLobbyLayout->base, lobby->hostName, lobby->mode, lobby->playerText, lobby->description, true, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
+        entry->base.tag = (s64)lobby->lobbyId;
+    }
     djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESHING));
     djui_base_set_enabled(&sRefreshButton->base, false);
     djui_paginated_update_page_buttons(sLobbyPaginated);
+    free_coopnet_lobbies();
     ns_coopnet_query(djui_panel_join_query, djui_panel_join_query_finish, sPassword);
 }
 
@@ -146,6 +279,9 @@ void djui_panel_join_lobbies_value_changed(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* password) {
+    if (configCoopNetSortSelected > numSortOptions) {
+        configCoopNetSortSelected = numSortOptions;
+    }
     if (sPassword) { free(sPassword); sPassword = NULL; }
     sPassword = strdup(password);
     bool private = (strlen(password) > 0);
@@ -162,6 +298,27 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
         true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+        char* sortChoices[sizeof(sLobbySorting)];
+        for (int i = 0; i < numSortOptions; i++) {
+            sortChoices[i] = djui_language_get("LOBBIES", sLobbySorting[i].langKey);
+        }
+        struct DjuiFlowLayout* flowLayout = djui_flow_layout_create(body);
+        djui_base_set_color(&flowLayout->base, 0, 0, 0, 0);
+        djui_base_set_size_type(&flowLayout->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&flowLayout->base, 1.0f, 32.0f);
+        sSelectionbox = djui_selectionbox_create(&flowLayout->base, DLANG(LOBBIES, SORT_BY), sortChoices, numSortOptions, &configCoopNetSortSelected, djui_panel_join_on_sorting_change);
+        djui_base_set_size(&sSelectionbox->base, 0.925, 32);
+        djui_base_set_size(&sSelectionbox->rect->base, 0.55, 1);
+        struct DjuiButton* button = djui_button_create(&flowLayout->base, "", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_invert_sort);
+        djui_base_set_alignment(&button->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        djui_base_set_size_type(&button->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&button->base, 32, 32);
+        sSortInvertImage = djui_image_create(&button->base, configCoopNetSortInverted ? texture_selectionbox_up_icon : texture_selectionbox_down_icon, 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+        djui_base_set_size(&sSortInvertImage->base, 16, 16);
+        djui_base_set_alignment(&sSortInvertImage->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        djui_flow_layout_set_margin(flowLayout, 16);
+        djui_flow_layout_set_flow_direction(flowLayout, DJUI_FLOW_DIR_RIGHT);
+
         sLobbyPaginated = djui_paginated_create(body, 10);
         sLobbyLayout = sLobbyPaginated->layout;
         djui_flow_layout_set_margin(sLobbyLayout, 4);
