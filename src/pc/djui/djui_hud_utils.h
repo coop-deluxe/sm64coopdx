@@ -75,7 +75,7 @@ s8 djui_hud_get_font(void);
 /* |description|Sets the current DJUI HUD font|descriptionEnd| */
 void djui_hud_set_font(s8 fontType);
 /* |description|Gets the current DJUI HUD color|descriptionEnd| */
-struct DjuiColor* djui_hud_get_color(void);
+struct DjuiColor djui_hud_get_color(void);
 /* |description|Sets the current DJUI HUD color|descriptionEnd| */
 void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD color|descriptionEnd| */

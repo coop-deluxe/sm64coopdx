@@ -351,19 +351,6 @@ function add_scroll_target(index, name)
     -- ...
 end
 
---- @param startX number Start position X
---- @param startY number Start position Y
---- @param startZ number Start position Z
---- @param dirX number Direction X
---- @param dirY number Direction Y
---- @param dirZ number Direction Z
---- @param precision? number Optional; How precise the raycast should be. The default value is 3.0, the higher the number, the more precise.
---- @return RayIntersectionInfo
---- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`
-function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
-    -- ...
-end
-
 --- @param contents ExclamationBoxContent[]
 --- Sets the contents that the exclamation box spawns.
 --- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`

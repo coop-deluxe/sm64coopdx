@@ -840,34 +840,6 @@ int smlua_func_add_scroll_target(lua_State* L) {
     return 1;
 }
 
-  /////////////
- // raycast //
-/////////////
-
-int smlua_func_collision_find_surface_on_ray(lua_State* L) {
-    if (!smlua_functions_valid_param_range(L, 6, 7)) { return 0; }
-    int paramCount = lua_gettop(L);
-
-    f32 startX = smlua_to_number(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 1"); return 0; }
-    f32 startY = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 2"); return 0; }
-    f32 startZ = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 3"); return 0; }
-    f32 dirX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 4"); return 0; }
-    f32 dirY = smlua_to_number(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 5"); return 0; }
-    f32 dirZ = smlua_to_number(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 6"); return 0; }
-    f32 precision = paramCount == 7 ? smlua_to_number(L, 7) : 3.0f;
-    if (!gSmLuaConvertSuccess) { LOG_LUA("collision_find_surface_on_ray: Failed to convert parameter 7"); return 0; }
-
-    smlua_push_object(L, LOT_RAYINTERSECTIONINFO, collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision), NULL);
-
-    return 1;
-}
-
   ////////////////
  // graph node //
 ////////////////
@@ -927,7 +899,7 @@ int smlua_func_cast_graph_node(lua_State* L) {
         return 0;
     }
 
-    smlua_push_object(L, lot, graphNode, NULL);
+    smlua_push_object(L, lot, graphNode, NULL, false);
 
     // Register this graph node as modified so it can be reset later
     dynos_actor_register_modified_graph_node(graphNode);
@@ -1027,7 +999,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
-    smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);

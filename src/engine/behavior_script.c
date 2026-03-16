@@ -1042,7 +1042,7 @@ static s32 bhv_cmd_call_native_ext(void) {
     lua_rawgeti(gLuaState, LUA_REGISTRYINDEX, funcRef);
 
     // Push object
-    smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject, NULL);
+    smlua_push_object(gLuaState, LOT_OBJECT, gCurrentObject, NULL, false);
 
     // Call the callback
     if (0 != smlua_call_hook(gLuaState, 1, 0, 0, mod, modFile)) {

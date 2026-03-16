@@ -319,7 +319,7 @@ bool smlua_call_event_hooks_HOOK_ALLOW_INTERACT(struct MarioState *m, struct Obj
         lua_remove(L, -2);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // push interactType
         lua_pushinteger(L, interactType);
@@ -360,7 +360,7 @@ bool smlua_call_event_hooks_HOOK_ON_INTERACT(struct MarioState *m, struct Object
         lua_remove(L, -2);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // push interactType
         lua_pushinteger(L, interactType);
@@ -495,7 +495,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_UNLOAD(struct Object *obj) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
@@ -522,7 +522,7 @@ bool smlua_call_event_hooks_HOOK_ON_SYNC_OBJECT_UNLOAD(struct Object *obj) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
@@ -609,7 +609,7 @@ bool smlua_call_event_hooks_HOOK_ON_SET_CAMERA_MODE(struct Camera *c, s16 mode, 
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push c
-        smlua_push_object(L, LOT_CAMERA, c, NULL);
+        smlua_push_object(L, LOT_CAMERA, c, NULL, false);
 
         // push mode
         lua_pushinteger(L, mode);
@@ -647,7 +647,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_RENDER(struct Object *obj) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
@@ -909,7 +909,7 @@ bool smlua_call_event_hooks_HOOK_OBJECT_SET_MODEL(struct Object *obj, s32 modelI
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // push modelID
         lua_pushinteger(L, modelID);
@@ -1045,7 +1045,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_ANIM_UPDATE(struct Object *obj) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
@@ -1195,7 +1195,7 @@ bool smlua_call_event_hooks_HOOK_MIRROR_MARIO_RENDER(struct GraphNodeObject *mir
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push mirrorMario
-        smlua_push_object(L, LOT_GRAPHNODEOBJECT, mirrorMario, NULL);
+        smlua_push_object(L, LOT_GRAPHNODEOBJECT, mirrorMario, NULL, false);
 
         // push playerIndex
         lua_pushinteger(L, playerIndex);
@@ -1259,7 +1259,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_LOAD(struct Object *obj) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
@@ -1366,7 +1366,7 @@ bool smlua_call_event_hooks_HOOK_ON_ATTACK_OBJECT(struct MarioState *m, struct O
         lua_remove(L, -2);
 
         // push obj
-        smlua_push_object(L, LOT_OBJECT, obj, NULL);
+        smlua_push_object(L, LOT_OBJECT, obj, NULL, false);
 
         // push interaction
         lua_pushinteger(L, interaction);
@@ -1471,7 +1471,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS(struct GraphNode *node, s32 matS
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push node
-        smlua_push_object(L, LOT_GRAPHNODE, node, NULL);
+        smlua_push_object(L, LOT_GRAPHNODE, node, NULL, false);
 
         // push matStackIndex
         lua_pushinteger(L, matStackIndex);
@@ -1501,7 +1501,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_GEO_PROCESS(struct GraphNode *node, s32 
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push node
-        smlua_push_object(L, LOT_GRAPHNODE, node, NULL);
+        smlua_push_object(L, LOT_GRAPHNODE, node, NULL, false);
 
         // push matStackIndex
         lua_pushinteger(L, matStackIndex);
@@ -1531,7 +1531,7 @@ bool smlua_call_event_hooks_HOOK_ON_GEO_PROCESS_CHILDREN(struct GraphNode *paren
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push parent
-        smlua_push_object(L, LOT_GRAPHNODE, parent, NULL);
+        smlua_push_object(L, LOT_GRAPHNODE, parent, NULL, false);
 
         // push matStackIndex
         lua_pushinteger(L, matStackIndex);
@@ -1795,7 +1795,7 @@ bool smlua_call_event_hooks_HOOK_ON_ADD_SURFACE(struct Surface *surface, bool dy
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
         // push surface
-        smlua_push_object(L, LOT_SURFACE, surface, NULL);
+        smlua_push_object(L, LOT_SURFACE, surface, NULL, false);
 
         // push dynamic
         lua_pushboolean(L, dynamic);

@@ -114,7 +114,9 @@ struct GlobalObjectCollisionData {
 
 extern struct GlobalObjectCollisionData gGlobalObjectCollisionData;
 
-struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);
+/* |description|Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with a non-zero `precision`|descriptionEnd| */
+struct RayIntersectionInfo collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, OPTIONAL f32 precision);
+
 /* |description|Finds a potential floor at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_floor(f32 x, f32 y, f32 z);
 
@@ -128,7 +130,7 @@ struct Surface* get_water_surface_pseudo_floor(void);
 Collision* smlua_collision_util_get(const char* name);
 
 /* |description|Returns a temporary wall collision data pointer|descriptionEnd| */
-struct WallCollisionData* collision_get_temp_wall_collision_data(void);
+struct WallCollisionData collision_get_temp_wall_collision_data(void);
 
 /* |description|Gets the surface corresponding to `index` from `wcd`|descriptionEnd| */
 struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);

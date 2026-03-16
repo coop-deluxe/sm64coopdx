@@ -407,8 +407,10 @@ void smlua_update(void) {
     // doing incremental garbage collection.
     // The real fix would be to make smlua produce less
     // garbage.
-    // lua_gc(L, LUA_GCSTOP, 0);
-    // lua_gc(L, LUA_GCCOLLECT, 0);
+    // EDIT²: smlua is so lazy during its GC that userdata is
+    // never garbage collected. Perform a GC cycle at the end
+    // of each frame to make sure it doesn't "forget" about it.
+    lua_gc(L, LUA_GCSTEP, 0);
 }
 
 void smlua_shutdown(void) {
