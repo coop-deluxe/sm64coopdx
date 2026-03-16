@@ -5,6 +5,8 @@ enum LobbySorting {
     LOBBY_SORTING_NAME,
     LOBBY_SORTING_GAMEMODE,
     LOBBY_SORTING_PLAYERS,
+    LOBBY_SORTING_TIME,
+    LOBBY_SORTING_SIZE,
     LOBBY_SORTING_COUNT,
 };
 
@@ -20,6 +22,8 @@ struct CoopnetLobby {
     char* mode;
     char* playerText;
     char* description;
+    int64_t timestamp;
+    size_t modSize;
     bool disabled;
 };
 

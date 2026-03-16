@@ -336,7 +336,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_join_port",                 .type = CONFIG_TYPE_UINT,   .uintValue   = &configJoinPort},
     {.name = "coop_network_system",            .type = CONFIG_TYPE_UINT,   .uintValue   = &configNetworkSystem},
     {.name = "coop_coop_net_sort_selected",    .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetSortSelected},
-    {.name = "coop_coop_net_sort_inverted",    .type = CONFIG_TYPE_BOOL,   .uintValue   = &configCoopNetSortInverted},
+    {.name = "coop_coop_net_sort_inverted",    .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCoopNetSortInverted},
     {.name = "coop_player_interaction",        .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerInteraction},
     {.name = "coop_player_knockback_strength", .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerKnockbackStrength},
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},

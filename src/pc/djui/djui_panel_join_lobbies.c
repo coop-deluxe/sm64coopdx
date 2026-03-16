@@ -39,6 +39,14 @@ static struct LobbySortType sLobbySorting[] = {
         "PLAYERS",
         LOBBY_SORTING_PLAYERS,
     },
+    {
+        "TIME",
+        LOBBY_SORTING_TIME,
+    },
+    {
+        "SIZE",
+        LOBBY_SORTING_SIZE,
+    },
 };
 static const int numSortOptions = sizeof(sLobbySorting) / sizeof(sLobbySorting[0]);
 
@@ -85,6 +93,10 @@ static int sort_coopnet_lobby_comp(const void* a, const void* b) {
         retValue = strcmp(lobbyA->mode, lobbyB->mode);
     } else if (sortBy == LOBBY_SORTING_PLAYERS) {
         retValue = lobbyB->playerCount - lobbyA->playerCount;
+    } else if (sortBy == LOBBY_SORTING_TIME) {
+        retValue = lobbyA->timestamp > lobbyB->timestamp ? 1 : -1;
+    } else if (sortBy == LOBBY_SORTING_SIZE) {
+        retValue = lobbyA->modSize > lobbyB->modSize ? 1 : -1;
     } else if (sortBy == LOBBY_SORTING_NONE) {
         retValue = lobbyA->lobbyId > lobbyB->lobbyId ? 1 : -1;
     }
@@ -169,7 +181,7 @@ static void djui_panel_join_invert_sort(UNUSED struct DjuiBase* caller) {
     djui_panel_join_on_sorting_change(NULL);
 }
 
-void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED int64_t aTimestamp, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
+void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, int64_t aTimestamp, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription, size_t aModSize) {
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
@@ -200,11 +212,14 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     lobby->hostName = strdup(aHostName);
     lobby->mode = strdup(mode);
     lobby->description = strdup(aDescription);
+    lobby->timestamp = aTimestamp;
+    lobby->modSize = aModSize;
     lobby->disabled = disabled;
 
     struct CoopnetLobby** lobbies = realloc(sCoopnetLobbies, (sCoopnetLobbyCount + 1) * sizeof(struct CoopnetLobby*));
     if (!lobbies) {
         LOG_ERROR("Failed to reallocate memory to lobbies!");
+        free(lobby);
         return;
     }
     sCoopnetLobbies = lobbies;
