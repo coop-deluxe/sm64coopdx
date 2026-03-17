@@ -26,8 +26,6 @@
       background: #0a0e1a;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: #e0e0e0;
-      /* iOS edge-to-edge: extend into safe area insets */
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     #canvas {
@@ -36,8 +34,6 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      /* Use 100dvh on supporting browsers for true fullscreen on iOS */
-      height: 100dvh;
       display: block;
       outline: none;
       z-index: 1;
@@ -239,7 +235,7 @@
     }
     #touch-gamepad.visible { display: block; }
     #touch-stick-zone {
-      position: absolute; left: 0; bottom: 0; width: 35vw; height: 60vh;
+      position: absolute; left: 10px; bottom: 10px; width: 160px; height: 160px;
       pointer-events: auto; touch-action: none;
     }
     #touch-stick-base {
@@ -1396,25 +1392,6 @@
       }
     });
 
-    // ---- Canvas resize handler for orientation changes ----
-    function resizeCanvas() {
-      var canvas = document.getElementById('canvas');
-      if (!canvas) return;
-      var dpr = window.devicePixelRatio || 1;
-      var w = Math.round(window.innerWidth * dpr);
-      var h = Math.round(window.innerHeight * dpr);
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-    }
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('orientationchange', function() {
-      // Delay to let the browser settle the new viewport dimensions
-      setTimeout(resizeCanvas, 200);
-    });
-    resizeCanvas();
-
     // ---- PWA Service Worker ----
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(function() {});
@@ -1951,77 +1928,27 @@
         console.log('[TouchGamepad] Initialized');
       },
 
-      // Track which buttons are pressed per touch ID
-      _touchToButton: {},
-
       _setupButtons: function() {
         var self = this;
-        // Build list of button elements with their centers and scancodes
-        self._buttons = [];
         var ids = Object.keys(this.KEYS);
         ids.forEach(function(id) {
           var el = document.getElementById(id);
           if (!el) return;
-          self._buttons.push({ id: id, el: el, sc: self.KEYS[id] });
-        });
-
-        // Find closest button within a reasonable distance threshold
-        var MAX_SNAP_DIST = 80; // pixels — max distance to snap to a button
-        function closestButton(tx, ty) {
-          var best = null, bestDist = Infinity;
-          for (var i = 0; i < self._buttons.length; i++) {
-            var b = self._buttons[i];
-            var r = b.el.getBoundingClientRect();
-            var cx = r.left + r.width / 2;
-            var cy = r.top + r.height / 2;
-            var d = Math.sqrt((tx - cx) * (tx - cx) + (ty - cy) * (ty - cy));
-            if (d < bestDist) { bestDist = d; best = b; }
-          }
-          // Only snap if within threshold — otherwise let the touch pass through to DJUI/canvas
-          return bestDist <= MAX_SNAP_DIST ? best : null;
-        }
-
-        // Listen on the canvas element so touches pass through to DJUI when
-        // they're not near any gamepad button. The gamepad overlay stays pointer-events:none.
-        var canvas = document.getElementById('canvas');
-
-        canvas.addEventListener('touchstart', function(e) {
-          for (var i = 0; i < e.changedTouches.length; i++) {
-            var t = e.changedTouches[i];
-            // Skip if in stick zone
-            if (t.clientX < window.innerWidth * 0.35 && t.clientY > window.innerHeight * 0.4) continue;
-            var btn = closestButton(t.clientX, t.clientY);
-            if (btn) {
-              self._touchToButton[t.identifier] = btn;
-              btn.el.classList.add('pressed');
-              self._keyDown(btn.sc);
-            }
-            // Don't preventDefault — let it pass through for DJUI clicks
-          }
-        }, { passive: true });
-
-        canvas.addEventListener('touchend', function(e) {
-          for (var i = 0; i < e.changedTouches.length; i++) {
-            var t = e.changedTouches[i];
-            var btn = self._touchToButton[t.identifier];
-            if (btn) {
-              btn.el.classList.remove('pressed');
-              self._keyUp(btn.sc);
-              delete self._touchToButton[t.identifier];
-            }
-          }
-        }, { passive: true });
-
-        canvas.addEventListener('touchcancel', function(e) {
-          for (var i = 0; i < e.changedTouches.length; i++) {
-            var t = e.changedTouches[i];
-            var btn = self._touchToButton[t.identifier];
-            if (btn) {
-              btn.el.classList.remove('pressed');
-              self._keyUp(btn.sc);
-              delete self._touchToButton[t.identifier];
-            }
-          }
+          var sc = self.KEYS[id];
+          el.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            el.classList.add('pressed');
+            self._keyDown(sc);
+          }, { passive: false });
+          el.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            el.classList.remove('pressed');
+            self._keyUp(sc);
+          }, { passive: false });
+          el.addEventListener('touchcancel', function(e) {
+            el.classList.remove('pressed');
+            self._keyUp(sc);
+          });
         });
       },
 
@@ -2029,25 +1956,16 @@
         var self = this;
         var zone = document.getElementById('touch-stick-zone');
         var base = document.getElementById('touch-stick-base');
-        var knob = this._knob;
-        var RADIUS = 60; // max displacement in pixels
+        var RADIUS = 50; // max displacement in pixels
 
-        // Anchor-based joystick: initial touch position is the center,
-        // all movement is relative to that anchor point.
         zone.addEventListener('touchstart', function(e) {
           e.preventDefault();
           var touch = e.changedTouches[0];
           self._stickTouchId = touch.identifier;
-          // Use the initial touch position as the anchor (not the visual base center)
-          self._stickCenterX = touch.clientX;
-          self._stickCenterY = touch.clientY;
-          // Move the visual base to center on the touch point
-          base.style.position = 'fixed';
-          base.style.left = (touch.clientX - 60) + 'px';
-          base.style.top = (touch.clientY - 60) + 'px';
-          base.style.bottom = 'auto';
-          knob.style.transform = 'translate(0px, 0px)';
-          self._setStick(0, 0);
+          var rect = base.getBoundingClientRect();
+          self._stickCenterX = rect.left + rect.width / 2;
+          self._stickCenterY = rect.top + rect.height / 2;
+          self._updateStick(touch.clientX, touch.clientY, RADIUS);
         }, { passive: false });
 
         zone.addEventListener('touchmove', function(e) {
@@ -2064,12 +1982,7 @@
           for (var i = 0; i < e.changedTouches.length; i++) {
             if (e.changedTouches[i].identifier === self._stickTouchId) {
               self._stickTouchId = null;
-              knob.style.transform = 'translate(0px, 0px)';
-              // Reset base to default CSS position
-              base.style.position = '';
-              base.style.left = '';
-              base.style.top = '';
-              base.style.bottom = '';
+              self._knob.style.transform = 'translate(0px, 0px)';
               self._clearStick();
               break;
             }
