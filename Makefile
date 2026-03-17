@@ -1274,6 +1274,17 @@ endef
 #all: $(ROM)
 all: $(EXE)
 
+# Copy PWA assets to build directory for web builds
+ifeq ($(TARGET_WEB),1)
+pwa: $(EXE)
+	@$(PRINT) "$(GREEN)Copying PWA assets $(NO_COL)\n"
+	$(V)mkdir -p $(BUILD_DIR)/icons
+	$(V)cp src/pc/web/pwa/manifest.json $(BUILD_DIR)/
+	$(V)cp src/pc/web/pwa/sw.js $(BUILD_DIR)/
+	$(V)cp src/pc/web/pwa/icon-*.png $(BUILD_DIR)/icons/
+all: pwa
+endif
+
 ifeq ($(WINDOWS_BUILD),1)
 MAPFILE = $(BUILD_DIR)/coop.map
 exemap: $(EXE)
