@@ -132,13 +132,10 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_StartTextInput();
 
 #ifdef TARGET_WEB
-    // On web/mobile, disable MSAA — many mobile GPUs don't support it in WebGL
-    // and it can cause context creation to fail (black screen on Android).
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-    // Request 16-bit depth for maximum mobile compatibility.
-    // Many Android GPUs (Mali, PowerVR) don't support 24-bit depth in WebGL 2.
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    // Web: try 4x MSAA with 24-bit depth, fall back if context creation fails
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 #else
     if (configWindow.msaa > 0) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
@@ -166,10 +163,27 @@ static void gfx_sdl_init(const char *window_title) {
     );
     ctx = SDL_GL_CreateContext(wnd);
 
+#ifdef TARGET_WEB
+    if (!ctx) {
+        // MSAA or 24-bit depth not supported (common on mobile WebGL).
+        // Retry with no MSAA and 16-bit depth.
+        printf("WebGL context failed with MSAA — retrying without\n");
+        SDL_DestroyWindow(wnd);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+        wnd = SDL_CreateWindow(
+            window_title,
+            xpos, ypos, configWindow.w, configWindow.h,
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+        );
+        ctx = SDL_GL_CreateContext(wnd);
+    }
+#endif
+
     if (!ctx) {
         printf("SDL_GL_CreateContext failed: %s\n", SDL_GetError());
 #ifdef TARGET_WEB
-        // Log to browser console for debugging
         EM_ASM({ console.error('[SM64] WebGL context creation failed: ' + UTF8ToString($0)); }, SDL_GetError());
 #endif
     }
