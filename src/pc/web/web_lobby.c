@@ -14,10 +14,10 @@ static WebLobbyQueryCallbackPtr sQueryCallback = NULL;
 static WebLobbyQueryFinishCallbackPtr sQueryFinishCallback = NULL;
 
 EMSCRIPTEN_KEEPALIVE
-void web_lobby_on_room(uint64_t lobbyId, uint16_t connections, uint16_t maxConnections,
+void web_lobby_on_room(int lobbyId, int connections, int maxConnections,
                        const char* version, const char* hostName, const char* description) {
     if (sQueryCallback) {
-        sQueryCallback(lobbyId, 0, connections, maxConnections,
+        sQueryCallback((uint64_t)lobbyId, 0, (uint16_t)connections, (uint16_t)maxConnections,
                        "sm64coopdx", version, hostName, "", description);
     }
 }
