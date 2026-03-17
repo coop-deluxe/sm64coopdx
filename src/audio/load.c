@@ -1643,9 +1643,6 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
     }
 #endif
 
-    eu_stubbed_printf_2("Seq %d:Default Load Id is %d\n", seqId, seqPlayer->defaultBank[0]);
-    eu_stubbed_printf_0("Seq Loading Start\n");
-
     seqPlayer->seqId = seqId;
 #ifndef VERSION_SH
     sequenceData = get_bank_or_seq(&gSeqLoadedPool, 2, seqId);
@@ -1670,7 +1667,6 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
         }
     }
 
-    eu_stubbed_printf_1("SEQ  %d ALREADY CACHED\n", seqId);
     init_sequence_player(player);
     seqPlayer->scriptState.depth = 0;
     seqPlayer->delay = 0;
