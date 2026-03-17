@@ -175,6 +175,14 @@ static struct GrowingArray *sInterpHuds = NULL;
 static u32 sInterpHudCount = 0;
 static bool sColorAltered = false;
 
+static void interp_hud_free(void *ptr) {
+    struct InterpHud *interp = ptr;
+    if (interp) {
+        growing_array_free(&interp->gfx);
+        free(interp);
+    }
+}
+
 void patch_djui_hud_before(void) {
     sInterpHudCount = 0;
 }
@@ -262,10 +270,6 @@ void patch_djui_hud(f32 delta) {
 }
 
 static struct InterpHud *djui_hud_create_interp() {
-    if (!sInterpHuds) {
-        sInterpHuds = growing_array_init(sInterpHuds, 16, malloc, free);
-    }
-
     struct InterpHud *interp = (
         sInterpHudCount < sInterpHuds->count ?
         sInterpHuds->buffer[sInterpHudCount] :
@@ -296,15 +300,7 @@ static InterpHudGfx *djui_hud_create_interp_gfx(struct InterpHud *interp, enum I
 }
 
 void djui_hud_clear_interp_data() {
-    if (sInterpHuds) {
-        for (u32 i = 0; i < sInterpHuds->count; ++i) {
-            struct InterpHud *interp = sInterpHuds->buffer[i];
-            if (interp) {
-                growing_array_free(&interp->gfx);
-            }
-        }
-        growing_array_free(&sInterpHuds);
-    }
+    sInterpHuds = growing_array_init(sInterpHuds, 16, malloc, interp_hud_free);
     sInterpHudCount = 0;
 }
 
