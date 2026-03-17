@@ -120,6 +120,10 @@ Key flags in Makefile (~lines 941-952):
 
 Discord SDK, CoopNet (cloud hosting), Mumble voice, update checker, native threading.
 
+### iOS Viewport / Fullscreen Notes
+
+Using `viewport-fit=cover` in the viewport meta tag gives true edge-to-edge fullscreen rendering on iOS (no black bars in portrait or landscape). However, dynamically switching `viewport-fit` between orientations causes touch coordinate offsets on the gamepad overlay buttons — the `position: fixed` elements end up misaligned with where touches register. The current approach uses the default viewport (`width=device-width, initial-scale=1.0`) which has correct touch mapping but leaves a status bar gap in portrait and side bars in landscape on iOS. A future fix could use `viewport-fit=cover` permanently if the touch gamepad coordinates are adjusted to account for `env(safe-area-inset-*)` offsets.
+
 ## Key Files
 
 | File | Role |
