@@ -139,6 +139,8 @@ struct WarpCheckpoint {
     /*0x04*/ u8 warpNode;
 };
 
+struct WarpNode;
+
 extern struct WarpCheckpoint gWarpCheckpoint;
 
 extern s8 gMainMenuDataModified;
@@ -164,6 +166,8 @@ s32 save_file_get_first_available_index();
 s32 save_file_get_amount_of_available_indexes();
 
 s32 save_file_get_first_active_index();
+
+bool save_file_rename_file(s32 fileIndex, char* name);
 
 /* |description|
 Saves the current state of the game into a specified save file. Includes data verification and backup management.

@@ -4,6 +4,7 @@
 #include "macros.h"
 #include "platform.h"
 #include "fs/fs.h"
+#include "configfile.h"
 #include "game/save_file.h"
 
 u8* gOverrideEeprom[NUM_SAVE_FILES] = { NULL };

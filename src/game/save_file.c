@@ -277,9 +277,10 @@ static void save_file_bswap(struct SaveBuffer *buf) {
 static void save_file_convert_old_to_new() {
     struct LegacySaveBuffer saveBuffer = { 0 };
     s32 status = osEepromLongRead(&gSIEventMesgQueue, 0, (void*)&saveBuffer, sizeof(saveBuffer), (char*)fs_get_write_path(SAVE_FILENAME), 512);
-    if (status == 0) {
-        for (int i = 0; i < 4; i++)
-            write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
+    if (status != 0) return;
+    for (int i = 0; i < 4; i++) {
+        write_eeprom_data(i, saveBuffer.files[i], sizeof(saveBuffer.files[i]), 0);
+        save_file_rename_file(i, configSaveNames[i]);
     }
 }
 
@@ -385,6 +386,45 @@ s32 save_file_get_amount_of_available_indexes() {
     return count;
 }
 
+/**
+ * Renames a specific save file. Returns false on failure
+*/
+bool save_file_rename_file(s32 fileIndex, char* name) {
+    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return false;
+    if (strstr(name, ".")) return false;
+
+    char filePath[SYS_MAX_PATH];
+    save_file_get_dir(fileIndex, filePath, 256, NULL);
+    char newFilePath[SYS_MAX_PATH];
+    save_file_get_dir(fileIndex, newFilePath, 256, name);
+
+    if (strcmp(filePath, newFilePath) == 0) return false;
+    if (!fs_sys_file_exists(fs_get_write_path(filePath))) return false;
+
+    // write the save data of the file to a variable
+    u8 content[EEPROM_SIZE] = { 0 };
+    fs_file_t* oldFile = fs_open(filePath);
+    if (oldFile == NULL) return false;
+    fs_read(oldFile, content, EEPROM_SIZE);
+    fs_close(oldFile);
+
+    // create a new file with the data
+    FILE* fp = fopen(fs_get_write_path(newFilePath), "wb");
+    if (fp == NULL) return false;
+    bool success = fwrite(content, 1, EEPROM_SIZE, fp) == EEPROM_SIZE;
+    fclose(fp);
+    if (success) {
+        // nuke old file!
+        remove(fs_get_write_path(filePath));
+    } else {
+        // uh oh! new file failed to be written to :( nuke new file!!
+        remove(fs_get_write_path(newFilePath));
+    }
+}
+
+/**
+ * Saves file data to the disk
+*/
 void save_file_do_save(s32 fileIndex, s8 forceSave) {
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
     if (gNetworkType != NT_SERVER) {
@@ -411,6 +451,9 @@ void save_file_do_save(s32 fileIndex, s8 forceSave) {
     }
 }
 
+/**
+ * Erases save file ingame and from the disk
+*/
 void save_file_erase(s32 fileIndex) {
     if (INVALID_FILE_INDEX(fileIndex)) { return; }
 
@@ -424,6 +467,9 @@ void save_file_erase(s32 fileIndex) {
     remove(fs_get_write_path(filepath));
 }
 
+/**
+ * Reloads save file from the disk and updates mario's stars
+*/
 void save_file_reload(u8 loadAll) {
     gSaveFileModified = TRUE;
     update_all_mario_stars();
@@ -435,6 +481,9 @@ void save_file_reload(u8 loadAll) {
     }
 }
 
+/**
+ * Erases the current backup save
+*/
 void save_file_erase_current_backup_save(void) {
     if (INVALID_FILE_INDEX(gCurrSaveFileNum-1)) { return; }
     if (gNetworkType != NT_SERVER) { return; }
@@ -458,6 +507,9 @@ BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
     save_file_do_save(destFileIndex, TRUE);
 }
 
+/**
+ * Loads save file data from disk
+*/
 void save_file_load_all(UNUSED u8 reload) {
     //s32 file;
 

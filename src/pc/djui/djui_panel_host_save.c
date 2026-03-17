@@ -26,33 +26,7 @@ static void djui_panel_host_reload_saves() {
 }
 
 static void djui_panel_host_save_update_save_name() {
-    if (!fs_sys_dir_exists(fs_get_write_path(SAVE_DIRECTORY))) return;
-    if (strstr(sSaveName, ".")) return;
-    char filePath[256];
-    save_file_get_dir(sButtonTag, filePath, 256, NULL);
-    char newFilePath[256];
-    save_file_get_dir(sButtonTag, newFilePath, 256, sSaveName);
-    if (strcmp(filePath, newFilePath) == 0) return;
-    if (!fs_sys_file_exists(fs_get_write_path(filePath))) return;
-    // write the save data of the file to a variable
-    u8 content[EEPROM_SIZE] = { 0 };
-    fs_file_t* oldFile = fs_open(filePath);
-    if (oldFile == NULL) return;
-    fs_read(oldFile, content, EEPROM_SIZE);
-    fs_close(oldFile);
-    // create a new file with the data
-    FILE* fp = fopen(fs_get_write_path(newFilePath), "wb");
-    if (fp == NULL) return;
-    bool success = fwrite(content, 1, EEPROM_SIZE, fp) == EEPROM_SIZE;
-    fclose(fp);
-    if (success) {
-        // nuke old file
-        remove(fs_get_write_path(filePath));
-    } else {
-        // uh oh! New file failed to be written to. Nuke new file
-        remove(fs_get_write_path(newFilePath));
-    }
-
+    save_file_rename_file(sButtonTag, sSaveName);
     djui_panel_host_reload_saves();
 }
 
