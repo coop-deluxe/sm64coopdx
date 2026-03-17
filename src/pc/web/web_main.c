@@ -46,13 +46,15 @@ void web_save_savefile(void) {
     emscripten_run_script(
         "try {"
         "  var data = FS.readFile('/sm64coopdx/sm64_save_file.bin');"
+        "  if (window.cacheSavedGame) {"
+        "    window.cacheSavedGame(new Uint8Array(data));"
+        "    console.log('[Web] Save file persisted to IndexedDB (' + data.length + ' bytes)');"
+        "  }"
         "  var bin = '';"
         "  for (var i = 0; i < data.length; i++) bin += String.fromCharCode(data[i]);"
-        "  var b64 = btoa(bin);"
-        "  localStorage.setItem('sm64coopdx_save', b64);"
-        "  console.log('[Web] Save file persisted to localStorage (' + data.length + ' bytes)');"
+        "  localStorage.setItem('sm64coopdx_save', btoa(bin));"
         "} catch(e) {"
-        "  console.error('[Web] Failed to save save-file to localStorage:', e);"
+        "  console.error('[Web] Failed to save save-file:', e);"
         "}"
     );
 }

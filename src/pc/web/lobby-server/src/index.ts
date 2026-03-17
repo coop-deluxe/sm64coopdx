@@ -6,16 +6,11 @@ interface Env {
   ROOM_REGISTRY: DurableObjectNamespace;
 }
 
-const ALLOWED_ORIGINS = [
-  "https://zalo.github.io",
-  "http://localhost:8083",
-];
-
 function corsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get("Origin") ?? "";
-  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : "";
+  // Allow any origin — this is a public game lobby
+  const origin = request.headers.get("Origin") ?? "*";
   return {
-    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };

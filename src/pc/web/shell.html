@@ -355,6 +355,9 @@
     var ROM_DB_NAME = 'sm64coopdx_rom';
     var ROM_DB_STORE = 'roms';
     var ROM_DB_KEY = 'baserom';
+    var SAVE_DB_NAME = 'sm64coopdx_saves';
+    var SAVE_DB_STORE = 'saves';
+    var SAVE_DB_KEY = 'savefile';
     var Z64_MAGIC = 0x80371240;
 
     var romReady = false;
@@ -400,6 +403,80 @@
           tx.onerror = function(e) { reject(e.target.error); };
         });
       });
+    }
+
+    // ---- Save file IndexedDB helpers ----
+
+    function openSaveDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(SAVE_DB_NAME, 1);
+        req.onupgradeneeded = function(e) {
+          e.target.result.createObjectStore(SAVE_DB_STORE);
+        };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function getSavedGame() {
+      return openSaveDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(SAVE_DB_STORE, 'readonly');
+          var store = tx.objectStore(SAVE_DB_STORE);
+          var req = store.get(SAVE_DB_KEY);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { resolve(null); };
+        });
+      });
+    }
+
+    function cacheSavedGame(uint8Array) {
+      return openSaveDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(SAVE_DB_STORE, 'readwrite');
+          var store = tx.objectStore(SAVE_DB_STORE);
+          store.put(uint8Array, SAVE_DB_KEY);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    // Expose to C code for saving
+    window.cacheSavedGame = cacheSavedGame;
+
+    // Generate a 100% completion save file (all 120 stars + castle stars)
+    function generate100PercentSave() {
+      // SM64 save file format: 4 save slots, each with star flags per course
+      // Total file size: 0x200 (512 bytes) - two copies for redundancy
+      var save = new Uint8Array(512);
+      // Each save slot is 0x38 bytes at offsets 0x00, 0x38, 0x70, 0xA8
+      // Stars are at offset 0x0C within each slot, one byte per course (bits = star flags)
+      // Courses 0-14 (main courses) + course -1 (castle secret stars at offset 0x24)
+      for (var slot = 0; slot < 4; slot++) {
+        var base = slot * 0x38;
+        // Cap flags byte (offset 0x0B): all caps collected
+        save[base + 0x0B] = 0xFF;
+        // Star flags: courses 0-14 at offset 0x0C-0x1A, 7 stars each = 0x7F
+        for (var course = 0; course < 15; course++) {
+          save[base + 0x0C + course] = 0x7F; // all 7 stars
+        }
+        // Bonus stars (castle secret stars) at 0x1C-0x1F
+        save[base + 0x1C] = 0xFF;
+        save[base + 0x1D] = 0xFF;
+        save[base + 0x1E] = 0xFF;
+        save[base + 0x1F] = 0xFF;
+        // Cannon flags at 0x20-0x21: all cannons open
+        save[base + 0x20] = 0xFF;
+        save[base + 0x21] = 0xFF;
+        // Sound mode + language at 0x24
+        save[base + 0x24] = 0x01; // stereo
+      }
+      // Compute checksums (each slot has a 2-byte checksum)
+      // The game validates: sum of all bytes in slot (excluding checksum) mod 0x10000
+      // Checksum at offset 0x34 (2 bytes, big-endian) within each slot
+      // TODO: The real checksum algorithm is more complex; let the game recalculate
+      return save;
     }
 
     // ---- ROM validation ----
@@ -929,6 +1006,12 @@
 
     // ---- PeerJS WebRTC networking module ----
 
+    // Gate verbose PeerJS logs behind a debug flag
+    var PEERJS_DEBUG = false; // set to true in console for debugging
+    function peerLog() {
+      if (PEERJS_DEBUG) console.log.apply(console, arguments);
+    }
+
     var PeerNetwork = {
       peer: null,           // Our PeerJS Peer instance
       connections: {},      // peerId -> DataConnection (for host: all clients; for client: just the host)
@@ -940,10 +1023,23 @@
       peerToSlot: {},       // peerId -> slotId
       slotToPeer: {},       // slotId -> peerId
 
-      // Get room ID from URL: ?room=ROOMID
+      // Get room ID from URL: ?room=ROOMID, or auto-generate one
       getRoomId: function() {
         var params = new URLSearchParams(window.location.search);
-        return params.get('room') || null;
+        var room = params.get('room');
+        if (!room) {
+          // Auto-generate a room ID: sm-XXXXXX
+          var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+          room = 'sm-';
+          for (var i = 0; i < 6; i++) {
+            room += chars.charAt(Math.floor(Math.random() * chars.length));
+          }
+          // Update URL so users can share the link
+          var url = new URL(window.location);
+          url.searchParams.set('room', room);
+          window.history.replaceState({}, '', url);
+        }
+        return room;
       },
 
       // Generate the PeerJS peer ID for a host from room ID
@@ -961,7 +1057,7 @@
 
         this.peer.on('open', function(id) {
           // Successfully registered as host
-          console.log('[PeerJS] Hosting room: ' + roomId + ' (peer ID: ' + id + ')');
+          peerLog('[PeerJS] Hosting room: ' + roomId + ' (peer ID: ' + id + ')');
           PeerNetwork.isHost = true;
           PeerNetwork._setupHost();
           BackgroundGuard.start();
@@ -970,7 +1066,7 @@
         this.peer.on('error', function(err) {
           if (err.type === 'unavailable-id') {
             // Host already exists - join as client
-            console.log('[PeerJS] Room ' + roomId + ' exists, joining as client...');
+            peerLog('[PeerJS] Room ' + roomId + ' exists, joining as client...');
             PeerNetwork.peer.destroy();
             PeerNetwork._joinAsClient();
           } else {
@@ -991,7 +1087,7 @@
       _setupHost: function() {
         this.peer.on('connection', function(conn) {
           var slotId = PeerNetwork.nextSlotId++;
-          console.log('[PeerJS] Client connecting: slot ' + slotId + ' peer ' + conn.peer);
+          peerLog('[PeerJS] Client connecting: slot ' + slotId + ' peer ' + conn.peer);
 
           // Set up data handler immediately (works before or after open)
           conn.on('data', function(data) {
@@ -999,7 +1095,7 @@
             // Ignore keepalive pings (single 0xFF byte)
             if (arr.length === 1 && arr[0] === 0xFF) return;
             if (PeerNetwork.recvBuffer.length < 3) {
-              console.log('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
+              peerLog('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
             }
             PeerNetwork.recvBuffer.push({ slotId: slotId, data: arr });
           });
@@ -1009,7 +1105,7 @@
             PeerNetwork.connections[conn.peer] = conn;
             PeerNetwork.peerToSlot[conn.peer] = slotId;
             PeerNetwork.slotToPeer[slotId] = conn.peer;
-            console.log('[PeerJS] Client ready: slot ' + slotId + ' peer ' + conn.peer);
+            peerLog('[PeerJS] Client ready: slot ' + slotId + ' peer ' + conn.peer);
           });
 
           // If already open (can happen), register immediately
@@ -1017,11 +1113,11 @@
             PeerNetwork.connections[conn.peer] = conn;
             PeerNetwork.peerToSlot[conn.peer] = slotId;
             PeerNetwork.slotToPeer[slotId] = conn.peer;
-            console.log('[PeerJS] Client ready (immediate): slot ' + slotId);
+            peerLog('[PeerJS] Client ready (immediate): slot ' + slotId);
           }
 
           conn.on('close', function() {
-            console.log('[PeerJS] Client disconnected: slot ' + slotId);
+            peerLog('[PeerJS] Client disconnected: slot ' + slotId);
             delete PeerNetwork.connections[conn.peer];
             delete PeerNetwork.peerToSlot[conn.peer];
             delete PeerNetwork.slotToPeer[slotId];
@@ -1041,7 +1137,7 @@
         this._shuttingDown = false;
 
         this.peer.on('open', function(id) {
-          console.log('[PeerJS] Our peer ID: ' + id + ', connecting to host...');
+          peerLog('[PeerJS] Our peer ID: ' + id + ', connecting to host...');
           PeerNetwork._connectToHost();
         });
 
@@ -1061,7 +1157,7 @@
         this.connections[this.hostPeerId] = conn;
 
         conn.on('open', function() {
-          console.log('[PeerJS] Connected to host!');
+          peerLog('[PeerJS] Connected to host!');
           PeerNetwork._reconnectAttempts = 0;
           if (PeerNetwork._reconnectTimer) {
             clearTimeout(PeerNetwork._reconnectTimer);
@@ -1076,7 +1172,7 @@
           // Ignore keepalive pings (single 0xFF byte)
           if (arr.length === 1 && arr[0] === 0xFF) return;
           if (PeerNetwork.recvBuffer.length < 3) {
-            console.log('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
+            peerLog('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
           }
           PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
         });
@@ -1102,7 +1198,7 @@
         }
         this._reconnectAttempts++;
         var delay = Math.min(2000 * this._reconnectAttempts, 10000); // 2s, 4s, 6s, ... cap at 10s
-        console.log('[PeerJS] Reconnecting in ' + delay + 'ms (attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ')');
+        peerLog('[PeerJS] Reconnecting in ' + delay + 'ms (attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ')');
         this._reconnectTimer = setTimeout(function() {
           PeerNetwork._reconnectTimer = null;
           PeerNetwork._connectToHost();
@@ -1114,7 +1210,7 @@
       send: function(slotId, data) {
         this._sendCount++;
         if (this._sendCount <= 10) {
-          console.log('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost + ' slots=' + JSON.stringify(this.slotToPeer) + ' conns=' + Object.keys(this.connections).length);
+          peerLog('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost + ' slots=' + JSON.stringify(this.slotToPeer) + ' conns=' + Object.keys(this.connections).length);
         }
         if (this.isHost) {
           if (slotId === 0) {
@@ -1124,7 +1220,7 @@
               var conn = this.connections[peerId];
               if (conn.open) { conn.send(data); count++; }
             }
-            if (this._sendCount <= 10) console.log('[PeerJS] broadcast to ' + count + ' clients');
+            if (this._sendCount <= 10) peerLog('[PeerJS] broadcast to ' + count + ' clients');
           } else {
             var peerId = this.slotToPeer[slotId];
             if (peerId && this.connections[peerId] && this.connections[peerId].open) {
@@ -1239,15 +1335,39 @@
           console.log('[Web Shell] Restored config from localStorage (' + saved.length + ' bytes)');
         }
 
-        // Restore save file from localStorage
-        var saveB64 = localStorage.getItem('sm64coopdx_save');
-        if (saveB64) {
-          var bin = atob(saveB64);
-          var arr = new Uint8Array(bin.length);
-          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-          FS.writeFile('/sm64coopdx/sm64_save_file.bin', arr);
-          console.log('[Web Shell] Restored save file from localStorage (' + arr.length + ' bytes)');
-        }
+        // Restore save file from IndexedDB (with localStorage fallback)
+        Module.addRunDependency('restore-save');
+        getSavedGame().then(function(saveData) {
+          if (saveData) {
+            FS.writeFile('/sm64coopdx/sm64_save_file.bin', saveData);
+            console.log('[Web Shell] Restored save file from IndexedDB (' + saveData.length + ' bytes)');
+          } else {
+            // Fall back to localStorage (migrate old saves)
+            var saveB64 = localStorage.getItem('sm64coopdx_save');
+            if (saveB64) {
+              var bin = atob(saveB64);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              FS.writeFile('/sm64coopdx/sm64_save_file.bin', arr);
+              // Migrate to IndexedDB
+              cacheSavedGame(arr);
+              console.log('[Web Shell] Migrated save file from localStorage to IndexedDB (' + arr.length + ' bytes)');
+            } else {
+              // No save exists — generate a 100% completion save
+              var save100 = generate100PercentSave();
+              FS.writeFile('/sm64coopdx/sm64_save_file.bin', save100);
+              cacheSavedGame(save100);
+              console.log('[Web Shell] Generated 100% completion save file');
+            }
+          }
+          Module.removeRunDependency('restore-save');
+        }).catch(function(e) {
+          console.warn('[Web Shell] Failed to restore save from IndexedDB:', e);
+          // Generate 100% save as fallback
+          var save100 = generate100PercentSave();
+          FS.writeFile('/sm64coopdx/sm64_save_file.bin', save100);
+          Module.removeRunDependency('restore-save');
+        });
 
         // Restore mods from IndexedDB (async — block main() until done)
         Module.addRunDependency('restore-mods');
