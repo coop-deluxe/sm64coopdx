@@ -1034,23 +1034,10 @@
       peerToSlot: {},       // peerId -> slotId
       slotToPeer: {},       // slotId -> peerId
 
-      // Get room ID from URL: ?room=ROOMID, or auto-generate one
+      // Get room ID from URL: ?room=ROOMID (auto-generated in main() if absent)
       getRoomId: function() {
         var params = new URLSearchParams(window.location.search);
-        var room = params.get('room');
-        if (!room) {
-          // Auto-generate a room ID: sm-XXXXXX
-          var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-          room = 'sm-';
-          for (var i = 0; i < 6; i++) {
-            room += chars.charAt(Math.floor(Math.random() * chars.length));
-          }
-          // Update URL so users can share the link
-          var url = new URL(window.location);
-          url.searchParams.set('room', room);
-          window.history.replaceState({}, '', url);
-        }
-        return room;
+        return params.get('room') || null;
       },
 
       // Generate the PeerJS peer ID for a host from room ID
@@ -1195,8 +1182,15 @@
         });
 
         conn.on('error', function(err) {
-          console.error('[PeerJS] Connection error:', err);
+          var msg = err.type || err.message || String(err);
+          console.error('[PeerJS] Connection error:', msg);
           delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          // If this is the first connection attempt and it fails immediately,
+          // the room likely doesn't exist
+          if (PeerNetwork._reconnectAttempts === 0 && msg.indexOf('peer-unavailable') !== -1) {
+            alert('Room "' + (PeerNetwork.roomId || '?') + '" not found.\n\nThe host may have disconnected. Try a different room or refresh to host your own.');
+            return;
+          }
           PeerNetwork._scheduleReconnect();
         });
       },
@@ -1205,6 +1199,7 @@
         if (this._shuttingDown || this._reconnectTimer) return;
         if (this._reconnectAttempts >= this._maxReconnectAttempts) {
           console.error('[PeerJS] Max reconnect attempts reached, giving up');
+          alert('Failed to join room "' + (this.roomId || '?') + '": could not connect to host after ' + this._maxReconnectAttempts + ' attempts.\n\nThe room may no longer exist. Try a different room or refresh to host your own.');
           return;
         }
         this._reconnectAttempts++;
@@ -1951,7 +1946,8 @@
           self._buttons.push({ id: id, el: el, sc: self.KEYS[id] });
         });
 
-        // Find closest button to a touch point
+        // Find closest button within a reasonable distance threshold
+        var MAX_SNAP_DIST = 80; // pixels — max distance to snap to a button
         function closestButton(tx, ty) {
           var best = null, bestDist = Infinity;
           for (var i = 0; i < self._buttons.length; i++) {
@@ -1959,45 +1955,45 @@
             var r = b.el.getBoundingClientRect();
             var cx = r.left + r.width / 2;
             var cy = r.top + r.height / 2;
-            var d = (tx - cx) * (tx - cx) + (ty - cy) * (ty - cy);
+            var d = Math.sqrt((tx - cx) * (tx - cx) + (ty - cy) * (ty - cy));
             if (d < bestDist) { bestDist = d; best = b; }
           }
-          return best;
+          // Only snap if within threshold — otherwise let the touch pass through to DJUI/canvas
+          return bestDist <= MAX_SNAP_DIST ? best : null;
         }
 
-        // Use a single overlay listener on the gamepad div for all button touches
-        var gp = document.getElementById('touch-gamepad');
-        gp.style.pointerEvents = 'auto';
+        // Listen on the canvas element so touches pass through to DJUI when
+        // they're not near any gamepad button. The gamepad overlay stays pointer-events:none.
+        var canvas = document.getElementById('canvas');
 
-        gp.addEventListener('touchstart', function(e) {
+        canvas.addEventListener('touchstart', function(e) {
           for (var i = 0; i < e.changedTouches.length; i++) {
             var t = e.changedTouches[i];
-            // Ignore if this touch is in the stick zone (left third of screen)
+            // Skip if in stick zone
             if (t.clientX < window.innerWidth * 0.35 && t.clientY > window.innerHeight * 0.4) continue;
             var btn = closestButton(t.clientX, t.clientY);
             if (btn) {
-              e.preventDefault();
               self._touchToButton[t.identifier] = btn;
               btn.el.classList.add('pressed');
               self._keyDown(btn.sc);
             }
+            // Don't preventDefault — let it pass through for DJUI clicks
           }
-        }, { passive: false });
+        }, { passive: true });
 
-        gp.addEventListener('touchend', function(e) {
+        canvas.addEventListener('touchend', function(e) {
           for (var i = 0; i < e.changedTouches.length; i++) {
             var t = e.changedTouches[i];
             var btn = self._touchToButton[t.identifier];
             if (btn) {
-              e.preventDefault();
               btn.el.classList.remove('pressed');
               self._keyUp(btn.sc);
               delete self._touchToButton[t.identifier];
             }
           }
-        }, { passive: false });
+        }, { passive: true });
 
-        gp.addEventListener('touchcancel', function(e) {
+        canvas.addEventListener('touchcancel', function(e) {
           for (var i = 0; i < e.changedTouches.length; i++) {
             var t = e.changedTouches[i];
             var btn = self._touchToButton[t.identifier];
