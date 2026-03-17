@@ -2,7 +2,7 @@
   "name": "SM64CoopDX",
   "short_name": "SM64Coop",
   "description": "Super Mario 64 online multiplayer in the browser",
-  "start_url": "./sm64coopdx.html",
+  "start_url": "./",
   "display": "fullscreen",
   "orientation": "any",
   "background_color": "#0a0e1a",
