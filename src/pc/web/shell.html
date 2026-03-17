@@ -1396,6 +1396,25 @@
       }
     });
 
+    // ---- Canvas resize handler for orientation changes ----
+    function resizeCanvas() {
+      var canvas = document.getElementById('canvas');
+      if (!canvas) return;
+      var dpr = window.devicePixelRatio || 1;
+      var w = Math.round(window.innerWidth * dpr);
+      var h = Math.round(window.innerHeight * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', function() {
+      // Delay to let the browser settle the new viewport dimensions
+      setTimeout(resizeCanvas, 200);
+    });
+    resizeCanvas();
+
     // ---- PWA Service Worker ----
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(function() {});

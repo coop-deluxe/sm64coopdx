@@ -147,11 +147,16 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&sInputboxRoomId->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&sInputboxRoomId->base, 0.45f, 32);
             djui_base_set_alignment(&sInputboxRoomId->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            // Pre-fill with last used room ID from configJoinIp
-            if (strlen(configJoinIp) > 0) {
-                djui_inputbox_set_text(sInputboxRoomId, configJoinIp);
-            } else {
-                djui_inputbox_set_text(sInputboxRoomId, "default");
+            // Pre-fill with a random room ID (sm-XXXXXX)
+            {
+                char roomBuf[32];
+                static const char chars[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+                snprintf(roomBuf, sizeof(roomBuf), "sm-");
+                for (int ri = 0; ri < 6; ri++) {
+                    roomBuf[3 + ri] = chars[rand() % (sizeof(chars) - 1)];
+                }
+                roomBuf[9] = '\0';
+                djui_inputbox_set_text(sInputboxRoomId, roomBuf);
             }
         }
 

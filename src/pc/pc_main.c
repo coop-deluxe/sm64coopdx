@@ -787,15 +787,6 @@ int main(int argc, char *argv[]) {
         var j = params.get('join') || '';
         var h = params.get('host') || '';
         var r = params.get('room') || '';
-        // Auto-generate a room ID if none specified (and not joining/hosting via IP)
-        if (!r && !j && !h) {
-            var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            r = 'sm-';
-            for (var i = 0; i < 6; i++) r += chars.charAt(Math.floor(Math.random() * chars.length));
-            var url = new URL(window.location);
-            url.searchParams.set('room', r);
-            window.history.replaceState({}, '', url);
-        }
         if (j) stringToUTF8(j, $0, 256);
         if (h) stringToUTF8(h, $1, 256);
         if (r) stringToUTF8(r, $2, 256);
