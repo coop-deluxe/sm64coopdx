@@ -1460,17 +1460,24 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(RM) $@.dummy1
 	@$(RM) $@.dummy2
 
-$(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
+# Web builds use 32-bit LE sound data from sound/web/; native uses sound/
+ifeq ($(TARGET_WEB),1)
+  SOUND_DATA_SRC := sound/web
+else
+  SOUND_DATA_SRC := sound
+endif
 
-$(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
+$(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_DATA_SRC)/sound_data_compressed.tbl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/sound_data.tbl
 
-$(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
+$(SOUND_BIN_DIR)/sound_data.ctl: $(SOUND_DATA_SRC)/sound_data_compressed.ctl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/bank_sets_compressed $(SOUND_BIN_DIR)/bank_sets
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/sound_data.ctl
+
+$(SOUND_BIN_DIR)/bank_sets: $(SOUND_DATA_SRC)/bank_sets_compressed
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/bank_sets
 
 $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
@@ -1480,7 +1487,7 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 
 $(SOUND_BIN_DIR)/sequences.bin:
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $(SOUND_DATA_SRC)/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
 	@true
