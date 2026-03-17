@@ -490,7 +490,7 @@ void game_exit(void) {
 // URL params parsed at startup, used by web_auto_network
 static char sWebJoinParam[256] = {0};
 static char sWebHostParam[256] = {0};
-static char sWebRoomParam[256] = {0};
+char sWebRoomParam[256] = {0};
 
 static double web_last_tick_time = 0;
 static bool web_game_tick_ready = false;

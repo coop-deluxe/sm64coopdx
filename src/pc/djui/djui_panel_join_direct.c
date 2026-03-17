@@ -201,14 +201,24 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
     }
     network_reset_reconnect_and_rehost();
 #ifdef TARGET_WEB
-    // Set ?room= in the URL and reload — the existing ?room= auto-detect
-    // flow in web_auto_network() handles host/client role resolution.
-    EM_ASM({
-        var room = UTF8ToString($0);
-        var url = new URL(window.location.href);
-        url.searchParams.set('room', room);
-        window.location.href = url.toString();
-    }, sInputboxIp->buffer);
+    // Start PeerJS with the entered room ID and update the URL
+    {
+        extern char sWebRoomParam[256];
+        extern bool web_auto_network_done;
+        extern bool web_peer_waiting;
+        snprintf(sWebRoomParam, sizeof(sWebRoomParam), "%s", sInputboxIp->buffer);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+        EM_ASM({
+            var room = UTF8ToString($0);
+            var url = new URL(window.location.href);
+            url.searchParams.set('room', room);
+            window.history.replaceState({}, '', url);
+            PeerNetwork.init(room);
+        }, sInputboxIp->buffer);
+        web_peer_waiting = true;
+        web_auto_network_done = false;
+    }
     return;
 #else
     djui_panel_join_direct_ip_text_set_new();
