@@ -1,6 +1,8 @@
 #ifndef DJUI_HUD_UTILS_H
 #define DJUI_HUD_UTILS_H
 
+#include "pc/lua/smlua.h"
+
 // Common pivot values for rotation
 #define ROTATION_PIVOT_X_LEFT       0.0
 #define ROTATION_PIVOT_X_CENTER     0.5
@@ -93,7 +95,7 @@ void djui_hud_reset_text_color(void);
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */
-void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);
+void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivotY);
 /* |description|Sets the current DJUI HUD rotation interpolated|descriptionEnd| */
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);
 /* |description|Gets the current DJUI HUD text alignment|descriptionEnd| */

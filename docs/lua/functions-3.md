@@ -3063,7 +3063,7 @@ Sets the current DJUI HUD rotation
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivotY);`
 
 [:arrow_up_small:](#)
 

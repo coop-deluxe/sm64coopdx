@@ -3898,8 +3898,8 @@ function djui_hud_get_rotation()
 end
 
 --- @param rotation integer
---- @param pivotX number
---- @param pivotY number
+--- @param pivotX? number
+--- @param pivotY? number
 --- Sets the current DJUI HUD rotation
 function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...

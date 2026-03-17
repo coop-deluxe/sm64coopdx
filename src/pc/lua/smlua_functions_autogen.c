@@ -12429,17 +12429,23 @@ int smlua_func_djui_hud_set_rotation(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_rotation", 3, top);
+    if (top < 1 || top > 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "djui_hud_set_rotation", 1, 3, top);
         return 0;
     }
 
     s16 rotation = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_rotation"); return 0; }
-    f32 pivotX = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_rotation"); return 0; }
-    f32 pivotY = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_rotation"); return 0; }
+    f32 pivotX = (f32) 0;
+    if (top >= 2) {
+        pivotX = smlua_to_number(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_rotation"); return 0; }
+    }
+    f32 pivotY = (f32) 0;
+    if (top >= 3) {
+        pivotY = smlua_to_number(L, 3);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_rotation"); return 0; }
+    }
 
     djui_hud_set_rotation(rotation, pivotX, pivotY);
 
