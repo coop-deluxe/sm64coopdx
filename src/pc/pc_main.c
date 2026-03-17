@@ -692,10 +692,8 @@ void web_one_iteration(void) {
         gfx_end_frame_render();
         PROF_LAP(sProf_gfx_end);
 
-#ifndef TARGET_WEB
         ssgi_render();
         ssgi_composite();
-#endif
         PROF_LAP(sProf_ssgi);
 
         gfx_display_frame();

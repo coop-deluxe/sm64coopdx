@@ -579,22 +579,44 @@
     });
 
     // ---- Audio context resume on first interaction ----
+    // iOS Safari requires touchstart (not just click) and the AudioContext
+    // must be created or resumed inside a user gesture handler.
 
     function resumeAudio() {
       if (audioResumed) return;
-      // SDL2 Emscripten creates the audio context as Module.SDL2.audioContext
       try {
-        var ctx = (Module.SDL2 && Module.SDL2.audioContext) ||
-                  (typeof AudioContext !== 'undefined' && new AudioContext());
+        // Try SDL2's context first (created by Emscripten audio backend)
+        var ctx = Module.SDL2 && Module.SDL2.audioContext;
         if (ctx && ctx.state === 'suspended') {
           ctx.resume();
+        }
+        // Also try webkitAudioContext for older iOS Safari
+        if (!ctx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) {
+            ctx = new AC();
+            if (ctx.state === 'suspended') ctx.resume();
+          }
         }
       } catch(e) {}
       audioResumed = true;
     }
 
-    document.addEventListener('click', resumeAudio);
-    document.addEventListener('keydown', resumeAudio);
+    // Continuously retry resume — iOS sometimes needs multiple attempts
+    // because SDL2's AudioContext may not exist yet on first touch
+    function resumeAudioRetry() {
+      if (audioResumed) return;
+      resumeAudio();
+      if (!audioResumed) {
+        // SDL2 context not ready yet; retry on next interaction
+        audioResumed = false;
+      }
+    }
+
+    document.addEventListener('click', resumeAudioRetry);
+    document.addEventListener('keydown', resumeAudioRetry);
+    document.addEventListener('touchstart', resumeAudioRetry);
+    document.addEventListener('touchend', resumeAudioRetry);
 
     // ---- Watch for game rendering to start ----
 

@@ -154,6 +154,26 @@ local function always_triple_jump_update(m, action)
 	end
 end
 
+--- Adds stars progressively each frame while enabled
+local sAddStarsTimer = 0
+local function add_stars_update(m)
+    if m.playerIndex ~= 0 then return end
+    sAddStarsTimer = sAddStarsTimer + 1
+    if sAddStarsTimer % 30 ~= 1 then return end -- once per second
+
+    -- Add one star to a course that isn't full yet
+    for course = 0, 24 do
+        local currentFlags = save_file_get_star_flags(0, course)
+        for bit = 0, 6 do
+            if (currentFlags & (1 << bit)) == 0 then
+                save_file_set_star_flags(0, course, (1 << bit))
+                play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource)
+                return
+            end
+        end
+    end
+end
+
 register_cheat(
     "moonJump",
     {
@@ -284,6 +304,16 @@ register_cheat(
     },
     HOOK_BEFORE_MARIO_UPDATE,
     blj_anywhere_update,
+    true
+)
+
+register_cheat(
+    "addStars",
+    {
+        ["English"] = "Add Stars",
+    },
+    HOOK_MARIO_UPDATE,
+    add_stars_update,
     true
 )
 

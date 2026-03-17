@@ -721,11 +721,7 @@ static void gfx_opengl_init(void) {
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#ifndef TARGET_WEB
-    // SSGI uses GL features (depth textures, FBOs) that generate WebGL errors
-    // on some browsers, and the error spam tanks DevTools performance
     ssgi_init();
-#endif
 }
 
 static void gfx_opengl_on_resize(void) {
@@ -734,10 +730,7 @@ static void gfx_opengl_on_resize(void) {
 static void gfx_opengl_start_frame(void) {
     frame_count++;
 
-#ifndef TARGET_WEB
-    // Redirect rendering into the SSGI scene FBO (if enabled)
     ssgi_start_frame();
-#endif
 
     glDisable(GL_SCISSOR_TEST);
     glDepthMask(GL_TRUE); // Must be set to clear Z-buffer
