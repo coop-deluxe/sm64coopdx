@@ -51,6 +51,7 @@ struct DateTime {
     s32 second;
 };
 
+extern bool gOverrideHOLP;
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);

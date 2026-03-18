@@ -384,7 +384,7 @@ bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s r
     return true;
 }
 
-extern bool gOverrideHOLP;
+bool gOverrideHOLP = true;
 bool get_character_holp_override() {
     return gOverrideHOLP;
 }

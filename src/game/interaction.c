@@ -33,6 +33,7 @@
 #include "pc/network/lag_compensation.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
+#include "pc/lua/utils/smlua_misc_utils.h"
 
 u8 sDelayInvincTimer;
 s16 gInteractionInvulnerable;
@@ -93,7 +94,6 @@ static u8 sDisplayingDoorText = FALSE;
 static u8 sJustTeleported = FALSE;
 u8 gPssSlideStarted = FALSE;
 extern u8 gLastCollectedStarOrKey;
-bool gOverrideHOLP = true;
 
 /**
  * Returns the type of cap Mario is wearing.
