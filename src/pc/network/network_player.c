@@ -243,7 +243,6 @@ void network_player_update(void) {
 #else
         if (elapsed > NETWORK_PLAYER_TIMEOUT * 1.5f) {
 #endif
-            LOG_INFO("dropping due to no server connectivity");
             network_shutdown(false, false, true, false);
         }
 

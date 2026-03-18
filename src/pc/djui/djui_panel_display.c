@@ -5,6 +5,7 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/gfx/gfx_ssgi.h"
 
 #define MSAA_ORIGINAL_UNSET ((u32)-1)
 
@@ -118,6 +119,11 @@ void djui_panel_display_create(struct DjuiBase* caller) {
 
         char* drawDistanceChoices[6] = { DLANG(DISPLAY, D0P5X), DLANG(DISPLAY, D1X), DLANG(DISPLAY, D1P5X), DLANG(DISPLAY, D3X), DLANG(DISPLAY, D10X), DLANG(DISPLAY, D100X) };
         djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, 6, &configDrawDistance, NULL);
+
+        djui_checkbox_create(body, "SSAO", &gSSGI_Enabled, NULL);
+        djui_slider_create(body, "AO Intensity", &gSSGI_AoIntensity, 1, 50, NULL);
+        djui_slider_create(body, "AO Radius", &gSSGI_Radius, 1, 50, NULL);
+        djui_slider_create(body, "AO Thickness", &gSSGI_Thickness, 1, 20, NULL);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 

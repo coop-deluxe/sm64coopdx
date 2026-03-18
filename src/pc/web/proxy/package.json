@@ -1,0 +1,12 @@
+{
+  "name": "sm64coopdx-ws-udp-proxy",
+  "version": "1.0.0",
+  "description": "WebSocket-to-UDP proxy for SM64CoopDX web port",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

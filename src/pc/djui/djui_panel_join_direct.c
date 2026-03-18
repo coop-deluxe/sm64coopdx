@@ -12,6 +12,9 @@
 #include "pc/configfile.h"
 #include "pc/debuglog.h"
 #include "macros.h"
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 static struct DjuiInputbox* sInputboxIp = NULL;
 
@@ -171,6 +174,13 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
 
 static void djui_panel_join_direct_ip_text_set(struct DjuiInputbox* inputbox1) {
     char buffer[256] = { 0 };
+#ifdef TARGET_WEB
+    if (strlen(configJoinIp) > 0) {
+        snprintf(buffer, 256, "%s", configJoinIp);
+    } else {
+        snprintf(buffer, 256, "default");
+    }
+#else
     if (strlen(configJoinIp) > 0 && configJoinPort != DEFAULT_PORT) {
         if (snprintf(buffer, 256, "%s:%d", configJoinIp, configJoinPort) < 0) { LOG_INFO("truncating IP"); }
     } else if (strlen(configJoinIp) > 0) {
@@ -178,6 +188,7 @@ static void djui_panel_join_direct_ip_text_set(struct DjuiInputbox* inputbox1) {
     } else {
         if (snprintf(buffer, 256, "localhost") < 0) { LOG_INFO("truncating IP"); }
     }
+#endif
 
     djui_inputbox_set_text(inputbox1, buffer);
 }
@@ -189,10 +200,32 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
         return;
     }
     network_reset_reconnect_and_rehost();
+#ifdef TARGET_WEB
+    // Start PeerJS with the entered room ID and update the URL
+    {
+        extern char sWebRoomParam[256];
+        extern bool web_auto_network_done;
+        extern bool web_peer_waiting;
+        snprintf(sWebRoomParam, sizeof(sWebRoomParam), "%s", sInputboxIp->buffer);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sInputboxIp->buffer);
+        EM_ASM({
+            var room = UTF8ToString($0);
+            var url = new URL(window.location.href);
+            url.searchParams.set('room', room);
+            window.history.replaceState({}, '', url);
+            PeerNetwork.init(room);
+        }, sInputboxIp->buffer);
+        web_peer_waiting = true;
+        web_auto_network_done = false;
+    }
+    return;
+#else
     djui_panel_join_direct_ip_text_set_new();
     network_set_system(NS_SOCKET);
     network_init(NT_CLIENT, false);
     djui_panel_join_message_create(caller);
+#endif
 }
 
 void djui_panel_join_direct_create(struct DjuiBase* caller) {
@@ -200,7 +233,11 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN, JOIN_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+#ifdef TARGET_WEB
+        struct DjuiText* text1 = djui_text_create(body, "Enter a Room ID.\nShare the same ID to play together.\nFirst player hosts, others join automatically.");
+#else
         struct DjuiText* text1 = djui_text_create(body, DLANG(JOIN, JOIN_SOCKET));
+#endif
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, 100);
         djui_base_compute_tree(&text1->base);
@@ -222,7 +259,11 @@ void djui_panel_join_direct_create(struct DjuiBase* caller) {
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
+#ifdef TARGET_WEB
+            struct DjuiButton* button2 = djui_button_create(&rect2->base, "PLAY", DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_direct_do_join);
+#else
             struct DjuiButton* button2 = djui_button_create(&rect2->base, DLANG(JOIN, JOIN), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_direct_do_join);
+#endif
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             defaultBase = &button2->base;

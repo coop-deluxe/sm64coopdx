@@ -5,7 +5,17 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include "web/web_main.h"
+#include "web/web_lobby.h"
+#endif
+
 #include "sm64.h"
+#include "gfx/gfx_ssgi.h"
 
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
@@ -226,6 +236,33 @@ static u32 get_target_refresh_rate() {
 }
 
 void produce_interpolation_frames_and_delay(void) {
+#ifdef TARGET_WEB
+    // On web, rendering is handled by web_one_iteration's rAF loop.
+    // This function's internal render+delay loop would spin endlessly
+    // since we disabled all delay/sleep functions for web.
+    // Just render one frame and return.
+    {
+        gRenderingInterpolated = true;
+        gRenderingDelta = 1.0f;
+        gFramePercentage = 1.0f;
+
+        gfx_start_frame();
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations(1.0f); }
+        send_display_list(gGfxSPTask);
+        gfx_end_frame_render();
+        ssgi_render();
+        ssgi_composite();
+        gfx_display_frame();
+        sDrawnFrames++;
+
+        gRenderingInterpolated = false;
+
+        f64 curTime = clock_elapsed_f64();
+        if (curTime >= sFpsTimeLast + 1.0) { compute_fps(curTime); }
+        sFrameTimeStart = curTime;
+    }
+    return;
+#endif
     u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
@@ -262,6 +299,8 @@ void produce_interpolation_frames_and_delay(void) {
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame_render();
+        ssgi_render();
+        ssgi_composite();
 
         // delay if our framerate is capped
         if (shouldDelay) {
@@ -404,7 +443,13 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     f64 elapsed = frameEnd - frameStart;
     f64 remaining = targetFrameTime - elapsed;
     if (remaining > 0) {
+#ifdef TARGET_WEB
+        // Skip WAPI.delay on web — it uses emscripten_sleep which causes
+        // ASYNCIFY to unwind the stack inside the rAF callback, freezing the game.
+        // The rAF loop handles frame pacing instead.
+#else
         WAPI.delay((u32)(remaining * 1000.0));
+#endif
     }
 
     gfx_end_frame();
@@ -439,6 +484,265 @@ void game_exit(void) {
     exit(0);
 }
 
+#ifdef TARGET_WEB
+#include <emscripten/html5.h>
+
+// URL params parsed at startup, used by web_auto_network
+static char sWebJoinParam[256] = {0};
+static char sWebHostParam[256] = {0};
+char sWebRoomParam[256] = {0};
+
+static double web_last_tick_time = 0;
+static bool web_game_tick_ready = false;
+bool web_auto_network_done = false;
+bool web_peer_waiting = false;
+
+static void web_auto_network(void) {
+    // Poll for PeerJS role resolution
+    if (web_peer_waiting) {
+        // Check if PeerJS has determined our role yet
+        int roleKnown = EM_ASM_INT({
+            // Host: isHost is set in the 'open' callback
+            // Client: isHost is false after _joinAsClient creates the peer
+            // We know the role once the peer is open (host) or we've fallen
+            // back to client (peer exists and isHost is explicitly false)
+            if (!PeerNetwork.peer) return 0;
+            if (PeerNetwork.isHost) return 1; // confirmed host
+            // For client: check if we've started joining (peer exists, not host)
+            if (PeerNetwork.peer.id && !PeerNetwork.isHost && PeerNetwork.peer.disconnected === false) {
+                // Check if we have a connection to the host
+                var conn = PeerNetwork.connections[PeerNetwork.hostPeerId];
+                if (conn && conn.open) return 2; // confirmed client, connected
+            }
+            return 0; // still resolving
+        });
+
+        if (roleKnown == 0) return; // still waiting
+
+        web_peer_waiting = false;
+        web_auto_network_done = true;
+
+        if (roleKnown == 1) {
+            // HOST: use djui_panel_do_host (creates game session)
+            printf("[PeerJS C] Room resolved: HOST — starting game session\n");
+            configNetworkSystem = NS_SOCKET;
+            static struct Object sHackyObj = { 0 };
+            gMarioStates[0].marioObj = &sHackyObj;
+            extern void djui_panel_do_host(bool reconnecting, bool playSound);
+            djui_panel_do_host(false, false);
+
+            // Register with lobby server
+            bool unlisted = EM_ASM_INT({ return localStorage.getItem('sm64coopdx_unlisted') === 'true' ? 1 : 0; });
+            ns_web_lobby_register(sWebRoomParam, unlisted);
+        } else {
+            // CLIENT: use the GUI join flow (network_init + mod list)
+            printf("[PeerJS C] Room resolved: CLIENT — joining host\n");
+            network_reset_reconnect_and_rehost();
+            network_set_system(NS_SOCKET);
+            network_init(NT_CLIENT, false);
+        }
+        return;
+    }
+
+    if (web_auto_network_done) return;
+    if (!gGameInited) return;
+    web_auto_network_done = true;
+
+    if (sWebJoinParam[0] != '\0') {
+
+        char joinHost[256] = {0};
+        int joinPort = DEFAULT_PORT;
+        char* colon = strchr(sWebJoinParam, ':');
+        if (colon) {
+            int hostLen = (int)(colon - sWebJoinParam);
+            if (hostLen > 0 && hostLen < 256) {
+                memcpy(joinHost, sWebJoinParam, hostLen);
+                joinHost[hostLen] = '\0';
+            }
+            joinPort = atoi(colon + 1);
+            if (joinPort <= 0 || joinPort > 65535) joinPort = DEFAULT_PORT;
+        } else {
+            snprintf(joinHost, sizeof(joinHost), "%s", sWebJoinParam);
+        }
+
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", joinHost);
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", joinHost);
+        configJoinPort = joinPort;
+        network_reset_reconnect_and_rehost();
+        network_set_system(NS_SOCKET);
+        network_init(NT_CLIENT, false);
+    } else if (sWebHostParam[0] != '\0') {
+        int port = atoi(sWebHostParam);
+        if (port <= 0 || port > 65535) port = DEFAULT_PORT;
+        LOG_INFO("Auto-host from URL on port %d", port);
+
+        configNetworkSystem = NS_SOCKET;
+        configHostPort = port;
+
+        static struct Object sHackyObjectUrl = { 0 };
+        gMarioStates[0].marioObj = &sHackyObjectUrl;
+
+        extern void djui_panel_do_host(bool reconnecting, bool playSound);
+        djui_panel_do_host(false, false);
+    } else if (sWebRoomParam[0] != '\0') {
+        // PeerJS room-based networking: ?room=ROOMID
+        // Start PeerJS from JS to determine role, then poll in
+        // web_auto_network until resolved (re-enter each tick).
+        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", sWebRoomParam);
+        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", sWebRoomParam);
+        EM_ASM({ PeerNetwork.init(UTF8ToString($0)); }, sWebRoomParam);
+        web_peer_waiting = true;
+        web_auto_network_done = false;
+    }
+}
+
+// Per-section frame profiler (accumulates, logs every ~5 seconds)
+static double sProf_network = 0, sProf_interp_before = 0, sProf_gameloop = 0;
+static double sProf_smlua = 0, sProf_gfx_start = 0, sProf_interp = 0;
+static double sProf_displaylist = 0, sProf_gfx_end = 0, sProf_ssgi = 0;
+static double sProf_gfx_display = 0;
+static int sProf_ticks = 0, sProf_renders = 0, sProf_rafs = 0;
+static double sProf_lastLog = 0;
+
+#define PROF_START() double _pt = emscripten_get_now()
+#define PROF_LAP(accum) do { double _now = emscripten_get_now(); accum += _now - _pt; _pt = _now; } while(0)
+
+EMSCRIPTEN_KEEPALIVE
+void web_one_iteration(void) {
+    double now = emscripten_get_now() / 1000.0; // ms -> seconds
+
+    // Initialize on first call
+    if (web_last_tick_time == 0) {
+        web_last_tick_time = now;
+        sProf_lastLog = now;
+    }
+
+    // Auto-join/host from URL params (runs once when game is ready)
+    web_auto_network();
+
+    // Handle SDL events every frame (window resize, keyboard, etc.)
+    WAPI.handle_events();
+
+    double elapsed = now - web_last_tick_time;
+
+    // Game logic runs at 30 Hz (33.33ms per tick)
+    // Only run a game tick when enough time has accumulated
+    if (elapsed >= sFrameTime) {
+        // Cap at 2 ticks to prevent spiral of death
+        int ticks = (int)(elapsed / sFrameTime);
+        if (ticks > 2) { ticks = 2; }
+
+        for (int i = 0; i < ticks; i++) {
+            debug_context_reset();
+            CTX_BEGIN(CTX_TOTAL);
+
+            PROF_START();
+            CTX_EXTENT(CTX_NETWORK, network_update);
+            PROF_LAP(sProf_network);
+
+            CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+            PROF_LAP(sProf_interp_before);
+
+#ifdef TARGET_WEB
+            game_loop_one_iteration();
+#else
+            CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
+#endif
+            PROF_LAP(sProf_gameloop);
+
+            CTX_EXTENT(CTX_SMLUA, smlua_update);
+            PROF_LAP(sProf_smlua);
+
+            if (gAudioThread.state == INVALID) {
+                CTX_EXTENT(CTX_AUDIO, buffer_audio);
+            }
+
+            CTX_END(CTX_TOTAL);
+            sProf_ticks++;
+        }
+
+        web_last_tick_time += ticks * sFrameTime;
+        if (now - web_last_tick_time > sFrameTime) {
+            web_last_tick_time = now;
+        }
+
+        web_game_tick_ready = true;
+    }
+
+    // Render an interpolation frame every rAF call
+    if (web_game_tick_ready) {
+        double delta_frac = (now - web_last_tick_time) / sFrameTime;
+        if (delta_frac < 0) delta_frac = 0;
+        if (delta_frac > 1) delta_frac = 1;
+
+        gRenderingInterpolated = true;
+        gRenderingDelta = (f32)delta_frac;
+        gFramePercentage = (f32)delta_frac;
+
+        PROF_START();
+        gfx_start_frame();
+        PROF_LAP(sProf_gfx_start);
+
+        if (!gSkipInterpolationTitleScreen) { patch_interpolations((f32)delta_frac); }
+        PROF_LAP(sProf_interp);
+
+        send_display_list(gGfxSPTask);
+        PROF_LAP(sProf_displaylist);
+
+        gfx_end_frame_render();
+        PROF_LAP(sProf_gfx_end);
+
+        ssgi_render();
+        ssgi_composite();
+        PROF_LAP(sProf_ssgi);
+
+        gfx_display_frame();
+        PROF_LAP(sProf_gfx_display);
+
+        sDrawnFrames++;
+        sProf_renders++;
+
+        gRenderingInterpolated = false;
+
+        if (now >= sFpsTimeLast + 1.0) {
+            compute_fps(now);
+        }
+    }
+
+    sProf_rafs++;
+    // Log profile every ~5 seconds
+    if (now - sProf_lastLog >= 5.0 && sProf_ticks > 0) {
+        int t = sProf_ticks > 0 ? sProf_ticks : 1;
+        int r = sProf_renders > 0 ? sProf_renders : 1;
+        EM_ASM({
+            console.log('[Prof] rafs=' + $0 + ' ticks=' + $1 + ' renders=' + $2
+                + ' | per TICK: net=' + ($3/$1).toFixed(1)
+                + ' interp_b=' + ($4/$1).toFixed(1)
+                + ' gameloop=' + ($5/$1).toFixed(1)
+                + ' lua=' + ($6/$1).toFixed(1)
+                + 'ms | per RENDER: gfx_start=' + ($7/$2).toFixed(1)
+                + ' interp=' + ($8/$2).toFixed(1)
+                + ' displist=' + ($9/$2).toFixed(1)
+                + ' gfx_end=' + ($10/$2).toFixed(1)
+                + ' ssgi=' + ($11/$2).toFixed(1)
+                + ' gfx_disp=' + ($12/$2).toFixed(1) + 'ms');
+        }, sProf_rafs, sProf_ticks, sProf_renders,
+           sProf_network, sProf_interp_before, sProf_gameloop,
+           sProf_smlua, sProf_gfx_start, sProf_interp, sProf_displaylist,
+           sProf_gfx_end, sProf_ssgi, sProf_gfx_display);
+
+        sProf_network = sProf_interp_before = sProf_gameloop = 0;
+        sProf_smlua = sProf_gfx_start = sProf_interp = 0;
+        sProf_displaylist = sProf_gfx_end = sProf_ssgi = 0;
+        sProf_gfx_display = 0;
+        sProf_ticks = sProf_renders = sProf_rafs = 0;
+        sProf_lastLog = now;
+    }
+
+    djui_lua_profiler_update();
+}
+#endif
+
 void* main_game_init(UNUSED void* dummy) {
     // load language
     if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
@@ -448,9 +752,11 @@ void* main_game_init(UNUSED void* dummy) {
     enable_queued_dynos_packs();
     sync_objects_init_system();
 
+#ifndef TARGET_WEB
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
     }
+#endif
 
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
     rom_assets_load();
@@ -465,14 +771,28 @@ void* main_game_init(UNUSED void* dummy) {
 
     audio_init();
     sound_init();
-    network_player_init();
     mumble_init();
+    network_player_init();
 
     gGameInited = true;
     return NULL;
 }
 
 int main(int argc, char *argv[]) {
+#ifdef TARGET_WEB
+    printf("[WEB BUILD] Build timestamp: " __DATE__ " " __TIME__ "\n");
+    // Read URL params NOW before any ASYNCIFY sleep points can cause re-entry
+    EM_ASM({
+        var params = new URLSearchParams(window.location.search);
+        var j = params.get('join') || '';
+        var h = params.get('host') || '';
+        var r = params.get('room') || '';
+        if (j) stringToUTF8(j, $0, 256);
+        if (h) stringToUTF8(h, $1, 256);
+        if (r) stringToUTF8(r, $2, 256);
+    }, sWebJoinParam, sWebHostParam, sWebRoomParam);
+    LOG_INFO("[Web] URL params: join='%s' host='%s' room='%s'", sWebJoinParam, sWebHostParam, sWebRoomParam);
+#endif
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
@@ -480,7 +800,7 @@ int main(int argc, char *argv[]) {
     gCLIOpts.headless = true;
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(TARGET_WEB)
     // handle Windows console
     if (gCLIOpts.console || gCLIOpts.headless) {
         SetConsoleOutputCP(CP_UTF8);
@@ -490,7 +810,12 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-#ifdef _WIN32
+#ifdef TARGET_WEB
+    // Mount IDBFS on /sm64coopdx and load persisted data from IndexedDB
+    // (config, saves, etc.) before fs_init so configfile_load finds saved settings
+    web_fs_init();
+    fs_init("/sm64coopdx");
+#elif defined(_WIN32)
     if (gCLIOpts.savePath[0]) {
         char portable_path[SYS_MAX_PATH] = {};
         sys_windows_short_path_from_mbs(portable_path, SYS_MAX_PATH, gCLIOpts.savePath);
@@ -573,7 +898,9 @@ int main(int argc, char *argv[]) {
     djui_init_late();
     djui_console_message_dequeue();
 
+#ifndef TARGET_WEB
     show_update_popup();
+#endif
 
     // initialize network
     if (gCLIOpts.network == NT_CLIENT) {
@@ -603,6 +930,42 @@ int main(int argc, char *argv[]) {
     }
 
     // main loop
+#ifdef TARGET_WEB
+    // Use a JavaScript rAF loop instead of emscripten_set_main_loop.
+    // emscripten_set_main_loop can silently stop scheduling callbacks
+    // during ASYNCIFY interactions. A JS rAF loop is more robust.
+    EM_ASM({
+        var iterate = Module.cwrap('web_one_iteration', null, []);
+        var _bgTimeout = null;  // setTimeout ID when running in background mode
+
+        function gameLoop() {
+            try {
+                iterate();
+            } catch(e) {
+                console.error('[Web] gameLoop exception:', e);
+            }
+            // When hidden, rAF stops firing. Use setTimeout fallback
+            // to keep network alive (even throttled to ~1/sec is enough).
+            if (document.hidden) {
+                _bgTimeout = setTimeout(gameLoop, 50);
+            } else {
+                _bgTimeout = null;
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // On visibility change, kick-start the loop if returning from hidden
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && _bgTimeout === null) {
+                // Tab became visible again — switch back to rAF
+                requestAnimationFrame(gameLoop);
+            }
+        });
+
+        requestAnimationFrame(gameLoop);
+    });
+    return 0;
+#else
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
@@ -624,4 +987,5 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
+#endif
 }

@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <title>SM64 CoopDX - Web</title>
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0a0e1a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e0e0e0;
+    }
+
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      outline: none;
+      z-index: 1;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #overlay h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    #overlay .subtitle {
+      font-size: 1rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    #rom-picker {
+      background: #16213e;
+      border: 2px dashed #0f3460;
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    #rom-picker:hover {
+      border-color: #e94560;
+      background: #1a1a3e;
+    }
+
+    #rom-picker p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #rom-picker .hint {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    #rom-file {
+      display: none;
+    }
+
+    #progress-container {
+      width: 320px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #progress-bar-outer {
+      width: 100%;
+      height: 8px;
+      background: #16213e;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    #progress-bar-inner {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    #status {
+      font-size: 0.9rem;
+      color: #aaa;
+      text-align: center;
+      min-height: 1.5em;
+    }
+
+    #error-msg {
+      color: #e94560;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      min-height: 1.5em;
+      text-align: center;
+    }
+
+    /* Mod Manager Overlay */
+    #mod-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e0e0e0;
+    }
+    #mod-overlay.visible { display: flex; }
+    #mod-panel {
+      background: #1a1a2e; border: 2px solid #0f3460; border-radius: 12px;
+      width: 520px; max-height: 80vh; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    #mod-panel-header {
+      padding: 16px 20px; border-bottom: 1px solid #0f3460;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #mod-panel-header h2 { margin: 0; font-size: 1.3rem; }
+    #mod-close-btn {
+      background: none; border: none; color: #888; font-size: 1.5rem;
+      cursor: pointer; padding: 0 4px;
+    }
+    #mod-close-btn:hover { color: #e94560; }
+    #mod-upload-row {
+      display: flex; gap: 8px; margin: 12px 20px;
+    }
+    .mod-upload-btn {
+      flex: 1; padding: 14px 8px; text-align: center;
+      background: #16213e; border: 2px dashed #0f3460; border-radius: 8px;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .mod-upload-btn:hover { border-color: #e94560; }
+    .mod-upload-btn p { margin: 0; font-size: 0.9rem; }
+    .mod-upload-btn .hint { font-size: 0.75rem; color: #666; margin-top: 3px; }
+    .mod-upload-hidden { display: none; }
+    #mod-url-row {
+      display: flex; gap: 8px; margin: 0 20px 10px; align-items: center;
+    }
+    #mod-url-input {
+      flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #0f3460;
+      background: #16213e; color: #e0e0e0; font-size: 0.85rem;
+    }
+    #mod-url-input::placeholder { color: #555; }
+    #mod-url-btn {
+      padding: 8px 14px; border-radius: 6px; border: none;
+      background: #e94560; color: #fff; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+    }
+    #mod-url-btn:hover { background: #ff5575; }
+    #mod-url-btn:disabled { background: #555; cursor: default; }
+    #mod-url-status { font-size: 0.75rem; color: #888; margin: 0 20px 8px; min-height: 1em; }
+    #mod-list {
+      flex: 1; overflow-y: auto; padding: 0 20px 16px;
+      min-height: 100px; max-height: 50vh;
+    }
+    .mod-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 6px; margin-top: 6px;
+      background: #16213e;
+    }
+    .mod-item .mod-info { flex: 1; min-width: 0; }
+    .mod-item .mod-name {
+      font-weight: 600; font-size: 0.95rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mod-item .mod-desc {
+      font-size: 0.75rem; color: #888; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mod-toggle {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: #333; border: none; cursor: pointer;
+      position: relative; flex-shrink: 0; transition: background 0.2s;
+    }
+    .mod-toggle.on { background: #2ecc71; }
+    .mod-toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; transition: transform 0.2s;
+    }
+    .mod-toggle.on::after { transform: translateX(16px); }
+    .mod-delete {
+      background: none; border: none; color: #666;
+      cursor: pointer; font-size: 1.1rem; padding: 2px 6px; flex-shrink: 0;
+    }
+    .mod-delete:hover { color: #e94560; }
+    #mod-empty { color: #666; text-align: center; padding: 24px 0; font-size: 0.9rem; }
+
+    /* Touch Gamepad */
+    #touch-gamepad {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 5; pointer-events: none; user-select: none; -webkit-user-select: none;
+    }
+    #touch-gamepad.visible { display: block; }
+    #touch-stick-zone {
+      position: absolute; left: 10px; bottom: 10px; width: 160px; height: 160px;
+      pointer-events: auto; touch-action: none;
+    }
+    #touch-stick-base {
+      position: absolute; left: 20px; bottom: 20px; width: 120px; height: 120px;
+      border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.2);
+    }
+    #touch-stick-knob {
+      position: absolute; width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(255,255,255,0.35); left: 35px; top: 35px;
+      pointer-events: none; transition: none;
+    }
+    .touch-btn {
+      position: absolute; pointer-events: auto; touch-action: none;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: monospace; font-weight: bold; color: rgba(255,255,255,0.7);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .touch-btn:active, .touch-btn.pressed { background: rgba(255,255,255,0.3) !important; }
+    #tb-a { right: 20px; bottom: 100px; width: 64px; height: 64px; background: rgba(255,255,255,0.12); font-size: 22px; }
+    #tb-b { right: 90px; bottom: 50px; width: 56px; height: 56px; background: rgba(255,255,255,0.1); font-size: 18px; }
+    #tb-z { right: 160px; bottom: 100px; width: 50px; height: 50px; background: rgba(255,255,255,0.08); font-size: 16px; }
+    #tb-start { top: 10px; left: 50%; transform: translateX(-50%); width: 60px; height: 34px;
+      border-radius: 17px; background: rgba(255,255,255,0.08); font-size: 11px; }
+    #tb-r { right: 20px; top: 10px; width: 50px; height: 34px;
+      border-radius: 17px; background: rgba(255,255,255,0.08); font-size: 14px; }
+    #tb-l { left: 10px; top: 10px; width: 50px; height: 34px;
+      border-radius: 17px; background: rgba(255,255,255,0.08); font-size: 14px; }
+    /* C-buttons cluster */
+    .touch-cbtn {
+      position: absolute; pointer-events: auto; touch-action: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: monospace; font-size: 12px; font-weight: bold;
+      color: rgba(255,200,50,0.7); background: rgba(255,200,50,0.08);
+      border: 2px solid rgba(255,200,50,0.15);
+    }
+    .touch-cbtn:active, .touch-cbtn.pressed { background: rgba(255,200,50,0.3) !important; }
+    #tb-cu { right: 110px; bottom: 210px; }
+    #tb-cd { right: 110px; bottom: 140px; }
+    #tb-cl { right: 145px; bottom: 175px; }
+    #tb-cr { right: 75px; bottom: 175px; }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h1>SM64 CoopDX</h1>
+    <p class="subtitle">WebAssembly Port</p>
+
+    <div id="rom-picker" onclick="document.getElementById('rom-file').click()">
+      <p>Click to select a ROM file</p>
+      <p class="hint">Accepts .z64, .n64, .v64 (US version)</p>
+    </div>
+    <input type="file" id="rom-file" accept=".z64,.n64,.v64">
+
+    <div id="room-config" style="display:none; margin-bottom: 1rem; text-align: center;">
+      <p style="margin-bottom: 0.5rem; color: #aaa;">Room ID (share to play together):</p>
+      <input type="text" id="room-id-input" placeholder="Enter room name..."
+             style="padding: 8px 16px; border-radius: 6px; border: 1px solid #0f3460;
+                    background: #16213e; color: #e0e0e0; font-size: 1rem; width: 250px; text-align: center;">
+    </div>
+
+    <div id="progress-container">
+      <div id="progress-bar-outer">
+        <div id="progress-bar-inner"></div>
+      </div>
+      <div id="status">Initializing...</div>
+    </div>
+
+    <div id="error-msg"></div>
+  </div>
+
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+
+  <div id="mod-overlay">
+    <div id="mod-panel">
+      <div id="mod-panel-header">
+        <h2>Mod Manager</h2>
+        <button id="mod-close-btn" title="Close">&times;</button>
+      </div>
+      <div id="mod-upload-row">
+        <div class="mod-upload-btn" onclick="document.getElementById('mod-upload-lua').click()">
+          <p>Upload .lua</p>
+          <p class="hint">Lua mod scripts</p>
+        </div>
+        <div class="mod-upload-btn" onclick="document.getElementById('mod-upload-zip').click()">
+          <p>Upload .zip</p>
+          <p class="hint">Mods &amp; DynOS packs</p>
+        </div>
+      </div>
+      <input type="file" id="mod-upload-lua" class="mod-upload-hidden" accept=".lua,.luac" multiple>
+      <input type="file" id="mod-upload-zip" class="mod-upload-hidden" accept=".zip" multiple>
+      <div id="mod-url-row">
+        <input type="text" id="mod-url-input" placeholder="Paste .lua or .zip URL (GitHub links OK)...">
+        <button id="mod-url-btn">Download</button>
+      </div>
+      <div id="mod-url-status"></div>
+      <div id="mod-list"></div>
+    </div>
+  </div>
+
+  <div id="touch-gamepad">
+    <div id="touch-stick-zone">
+      <div id="touch-stick-base">
+        <div id="touch-stick-knob"></div>
+      </div>
+    </div>
+    <div class="touch-btn" id="tb-a">A</div>
+    <div class="touch-btn" id="tb-b">B</div>
+    <div class="touch-btn" id="tb-z">Z</div>
+    <div class="touch-btn" id="tb-start">START</div>
+    <div class="touch-btn" id="tb-r">R</div>
+    <div class="touch-btn" id="tb-l">L</div>
+    <div class="touch-cbtn" id="tb-cu">▲</div>
+    <div class="touch-cbtn" id="tb-cd">▼</div>
+    <div class="touch-cbtn" id="tb-cl">◀</div>
+    <div class="touch-cbtn" id="tb-cr">▶</div>
+  </div>
+
+  <!-- Proxy input for mobile keyboard. Must be on-screen and visible enough for iOS to show keyboard. -->
+  <input type="text" id="mobile-text-proxy" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+         style="position:fixed;top:0;left:0;width:100%;height:40px;opacity:0.01;z-index:-1;pointer-events:none;font-size:16px;">
+
+  <script>
+    var ROM_DB_NAME = 'sm64coopdx_rom';
+    var ROM_DB_STORE = 'roms';
+    var ROM_DB_KEY = 'baserom';
+    var SAVE_DB_NAME = 'sm64coopdx_saves';
+    var SAVE_DB_STORE = 'saves';
+    var SAVE_DB_KEY = 'savefile';
+    var Z64_MAGIC = 0x80371240;
+
+    var romReady = false;
+    var audioResumed = false;
+
+    // Lobby server URL (set to your deployed Cloudflare Worker)
+    // Override this before loading the WASM module if deploying to a custom domain
+    window.LOBBY_API_URL = 'https://sm64coopdx-lobby.makeshifted.workers.dev/api';
+    var gameStarted = false;
+
+    // ---- IndexedDB helpers ----
+
+    function openRomDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(ROM_DB_NAME, 1);
+        req.onupgradeneeded = function(e) {
+          e.target.result.createObjectStore(ROM_DB_STORE);
+        };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function getCachedRom() {
+      return openRomDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(ROM_DB_STORE, 'readonly');
+          var store = tx.objectStore(ROM_DB_STORE);
+          var req = store.get(ROM_DB_KEY);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { resolve(null); };
+        });
+      });
+    }
+
+    function cacheRom(arrayBuffer) {
+      return openRomDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(ROM_DB_STORE, 'readwrite');
+          var store = tx.objectStore(ROM_DB_STORE);
+          store.put(arrayBuffer, ROM_DB_KEY);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    // ---- Save file IndexedDB helpers ----
+
+    function openSaveDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(SAVE_DB_NAME, 1);
+        req.onupgradeneeded = function(e) {
+          e.target.result.createObjectStore(SAVE_DB_STORE);
+        };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function getSavedGame() {
+      return openSaveDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(SAVE_DB_STORE, 'readonly');
+          var store = tx.objectStore(SAVE_DB_STORE);
+          var req = store.get(SAVE_DB_KEY);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { resolve(null); };
+        });
+      });
+    }
+
+    function cacheSavedGame(uint8Array) {
+      return openSaveDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(SAVE_DB_STORE, 'readwrite');
+          var store = tx.objectStore(SAVE_DB_STORE);
+          store.put(uint8Array, SAVE_DB_KEY);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    // Expose to C code for saving
+    window.cacheSavedGame = cacheSavedGame;
+
+    // Generate a 100% completion save file (all 120 stars + castle stars)
+    function generate100PercentSave() {
+      // SM64 save file format: 4 save slots, each with star flags per course
+      // Total file size: 0x200 (512 bytes) - two copies for redundancy
+      var save = new Uint8Array(512);
+      // Each save slot is 0x38 bytes at offsets 0x00, 0x38, 0x70, 0xA8
+      // Stars are at offset 0x0C within each slot, one byte per course (bits = star flags)
+      // Courses 0-14 (main courses) + course -1 (castle secret stars at offset 0x24)
+      for (var slot = 0; slot < 4; slot++) {
+        var base = slot * 0x38;
+        // Cap flags byte (offset 0x0B): all caps collected
+        save[base + 0x0B] = 0xFF;
+        // Star flags: courses 0-14 at offset 0x0C-0x1A, 7 stars each = 0x7F
+        for (var course = 0; course < 15; course++) {
+          save[base + 0x0C + course] = 0x7F; // all 7 stars
+        }
+        // Bonus stars (castle secret stars) at 0x1C-0x1F
+        save[base + 0x1C] = 0xFF;
+        save[base + 0x1D] = 0xFF;
+        save[base + 0x1E] = 0xFF;
+        save[base + 0x1F] = 0xFF;
+        // Cannon flags at 0x20-0x21: all cannons open
+        save[base + 0x20] = 0xFF;
+        save[base + 0x21] = 0xFF;
+        // Sound mode + language at 0x24
+        save[base + 0x24] = 0x01; // stereo
+      }
+      // Compute checksums (each slot has a 2-byte checksum)
+      // The game validates: sum of all bytes in slot (excluding checksum) mod 0x10000
+      // Checksum at offset 0x34 (2 bytes, big-endian) within each slot
+      // TODO: The real checksum algorithm is more complex; let the game recalculate
+      return save;
+    }
+
+    // ---- ROM validation ----
+
+    function validateZ64(arrayBuffer) {
+      if (arrayBuffer.byteLength < 0x800000) {
+        return false;
+      }
+      var view = new DataView(arrayBuffer);
+      var magic = view.getUint32(0, false);
+      return magic === Z64_MAGIC;
+    }
+
+    function byteswapN64(buf) {
+      var arr = new Uint8Array(buf);
+      for (var i = 0; i < arr.length; i += 4) {
+        var a = arr[i], b = arr[i+1], c = arr[i+2], d = arr[i+3];
+        arr[i] = d; arr[i+1] = c; arr[i+2] = b; arr[i+3] = a;
+      }
+      return buf;
+    }
+
+    function byteswapV64(buf) {
+      var arr = new Uint8Array(buf);
+      for (var i = 0; i < arr.length; i += 2) {
+        var tmp = arr[i];
+        arr[i] = arr[i+1];
+        arr[i+1] = tmp;
+      }
+      return buf;
+    }
+
+    function normalizeRom(arrayBuffer, filename) {
+      var ext = filename.split('.').pop().toLowerCase();
+      if (ext === 'n64') {
+        arrayBuffer = byteswapN64(arrayBuffer);
+      } else if (ext === 'v64') {
+        arrayBuffer = byteswapV64(arrayBuffer);
+      }
+      return arrayBuffer;
+    }
+
+    // ---- UI helpers ----
+
+    function showError(msg) {
+      document.getElementById('error-msg').textContent = msg;
+    }
+
+    function setStatus(msg) {
+      document.getElementById('status').textContent = msg;
+    }
+
+    function setProgress(pct) {
+      document.getElementById('progress-bar-inner').style.width = pct + '%';
+    }
+
+    function showProgress() {
+      document.getElementById('rom-picker').style.display = 'none';
+      document.getElementById('progress-container').style.display = 'flex';
+    }
+
+    function hideOverlay() {
+      var el = document.getElementById('overlay');
+      if (el.classList.contains('hidden')) return;
+      el.classList.add('hidden');
+      document.getElementById('canvas').focus();
+    }
+
+    // ---- Write ROM to Emscripten FS and tell the game ----
+
+    function getWritePath() {
+      // Match the path used by fs_init in pc_main.c ("/sm64coopdx/")
+      return '/sm64coopdx/';
+    }
+
+    function writeRomToFS(arrayBuffer) {
+      try {
+        var data = new Uint8Array(arrayBuffer);
+        var writePath = getWritePath();
+
+        // Ensure write directory exists
+        try { FS.mkdir(writePath); } catch(e) { /* exists */ }
+
+        var romPath = writePath + 'baserom.us.z64';
+        FS.writeFile(romPath, data);
+        console.log('[Web] ROM written to ' + romPath + ' (' + data.length + ' bytes)');
+
+        // The C game loop in render_rom_setup_screen polls the filesystem
+        // via main_rom_handler() and will find the ROM automatically.
+        // No need to call into WASM from here.
+
+        romReady = true;
+        setStatus('ROM loaded. Game is starting...');
+        setProgress(100);
+
+        // If joining a room via URL, keep the overlay until fully connected
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('room')) {
+          setStatus('Connecting to room...');
+          var joinCheck = setInterval(function() {
+            // PeerNetwork.isConnected() returns true once host is ready or client is connected
+            if (typeof PeerNetwork !== 'undefined' && PeerNetwork.peer && PeerNetwork.isConnected()) {
+              clearInterval(joinCheck);
+              hideOverlay();
+            }
+          }, 200);
+          // Fallback: hide after 5s regardless
+          setTimeout(function() { clearInterval(joinCheck); hideOverlay(); }, 5000);
+        } else {
+          hideOverlay();
+        }
+      } catch (e) {
+        showError('Failed to write ROM to virtual filesystem: ' + e.message);
+        console.error('[Web] writeRomToFS error:', e);
+      }
+    }
+
+    // ---- ROM file handler ----
+
+    function handleRomFile(file) {
+      showError('');
+      showProgress();
+      setStatus('Reading ROM file...');
+      setProgress(20);
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        setProgress(50);
+        setStatus('Validating ROM...');
+
+        var buf = normalizeRom(e.target.result, file.name);
+
+        if (!validateZ64(buf)) {
+          showError('Invalid ROM file. Please provide a valid SM64 US ROM (.z64 format).');
+          document.getElementById('rom-picker').style.display = '';
+          document.getElementById('progress-container').style.display = 'none';
+          return;
+        }
+
+        setProgress(70);
+        setStatus('Caching ROM for future visits...');
+
+        cacheRom(buf).then(function() {
+          setProgress(90);
+          setStatus('Writing ROM to virtual filesystem...');
+          writeRomToFS(buf);
+        }).catch(function() {
+          setStatus('Writing ROM to virtual filesystem...');
+          writeRomToFS(buf);
+        });
+      };
+
+      reader.onerror = function() {
+        showError('Failed to read ROM file.');
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    document.getElementById('rom-file').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        handleRomFile(e.target.files[0]);
+      }
+    });
+
+    // Also handle drag-and-drop onto the page
+    document.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    document.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.dataTransfer.files.length > 0) {
+        handleRomFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // ---- Audio context resume on first interaction ----
+    // iOS Safari requires touchstart (not just click) and the AudioContext
+    // must be created or resumed inside a user gesture handler.
+
+    function resumeAudio() {
+      if (audioResumed) return;
+      try {
+        // Try SDL2's context first (created by Emscripten audio backend)
+        var ctx = Module.SDL2 && Module.SDL2.audioContext;
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        // Also try webkitAudioContext for older iOS Safari
+        if (!ctx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) {
+            ctx = new AC();
+            if (ctx.state === 'suspended') ctx.resume();
+          }
+        }
+      } catch(e) {}
+      audioResumed = true;
+    }
+
+    // Continuously retry resume — iOS sometimes needs multiple attempts
+    // because SDL2's AudioContext may not exist yet on first touch
+    function resumeAudioRetry() {
+      if (audioResumed) return;
+      resumeAudio();
+      if (!audioResumed) {
+        // SDL2 context not ready yet; retry on next interaction
+        audioResumed = false;
+      }
+    }
+
+    document.addEventListener('click', resumeAudioRetry);
+    document.addEventListener('keydown', resumeAudioRetry);
+    document.addEventListener('touchstart', resumeAudioRetry);
+    document.addEventListener('touchend', resumeAudioRetry);
+
+    // ---- Watch for game rendering to start ----
+
+    function waitForGameRender() {
+      var canvas = document.getElementById('canvas');
+      var checkInterval = setInterval(function() {
+        try {
+          var ctx = canvas.getContext('webgl2') || canvas.getContext('webgl');
+          if (ctx) {
+            var pixels = new Uint8Array(4);
+            ctx.readPixels(canvas.width/2, canvas.height/2, 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, pixels);
+            if (pixels[0] > 0 || pixels[1] > 0 || pixels[2] > 0) {
+              hideOverlay();
+              clearInterval(checkInterval);
+            }
+          }
+        } catch(e) {}
+      }, 200);
+      // Fallback: hide after 8 seconds regardless
+      setTimeout(function() { clearInterval(checkInterval); hideOverlay(); }, 8000);
+    }
+
+    function watchForGameStart() {
+      // Once the game has started rendering, hide the overlay
+      // The game's loading screen replaces our overlay
+      var checkInterval = setInterval(function() {
+        if (gameStarted) {
+          hideOverlay();
+          clearInterval(checkInterval);
+        }
+      }, 500);
+    }
+
+    // ---- ROM URL loading via #rom=URL or ?rom=URL ----
+
+    function getRomUrl() {
+      // Check hash first: #rom=URL
+      var hash = window.location.hash;
+      if (hash && hash.indexOf('#rom=') === 0) {
+        return decodeURIComponent(hash.substring(5));
+      }
+      // Check query param: ?rom=URL
+      var params = new URLSearchParams(window.location.search);
+      var romParam = params.get('rom');
+      if (romParam) return romParam;
+      return null;
+    }
+
+    function loadRomFromUrl(url) {
+      showProgress();
+      setStatus('Downloading ROM from URL...');
+      setProgress(10);
+      console.log('[Web] Fetching ROM from: ' + url);
+
+      fetch(url).then(function(response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        var total = parseInt(response.headers.get('content-length') || '0');
+        var reader = response.body.getReader();
+        var chunks = [];
+        var loaded = 0;
+
+        function pump() {
+          return reader.read().then(function(result) {
+            if (result.done) return;
+            chunks.push(result.value);
+            loaded += result.value.length;
+            if (total > 0) {
+              setProgress(10 + Math.round((loaded / total) * 60));
+              setStatus('Downloading ROM... ' + Math.round(loaded / 1024 / 1024) + ' MB');
+            }
+            return pump();
+          });
+        }
+
+        return pump().then(function() {
+          // Combine chunks
+          var totalLen = 0;
+          for (var i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+          var buf = new Uint8Array(totalLen);
+          var offset = 0;
+          for (var i = 0; i < chunks.length; i++) {
+            buf.set(chunks[i], offset);
+            offset += chunks[i].length;
+          }
+          return buf.buffer;
+        });
+      }).then(function(arrayBuffer) {
+        setProgress(75);
+        setStatus('Validating ROM...');
+        // Normalize and validate
+        var normalized = normalizeRom(arrayBuffer, url);
+        if (!validateZ64(normalized)) {
+          showError('Downloaded file is not a valid SM64 US ROM.');
+          return;
+        }
+        setProgress(85);
+        setStatus('Caching ROM...');
+        cacheRom(normalized).then(function() {
+          setStatus('Writing ROM to virtual filesystem...');
+          function tryWrite() {
+            if (typeof FS !== 'undefined') {
+              writeRomToFS(normalized);
+            } else {
+              setTimeout(tryWrite, 100);
+            }
+          }
+          tryWrite();
+        }).catch(function() {
+          // Cache failed but continue
+          function tryWrite() {
+            if (typeof FS !== 'undefined') {
+              writeRomToFS(normalized);
+            } else {
+              setTimeout(tryWrite, 100);
+            }
+          }
+          tryWrite();
+        });
+      }).catch(function(err) {
+        console.error('[Web] ROM download failed:', err);
+        showError('Failed to download ROM: ' + err.message);
+        // Fall back to showing the file picker
+        document.getElementById('rom-picker').style.display = '';
+        document.getElementById('progress-container').style.display = 'none';
+      });
+    }
+
+    // ---- Check for cached ROM or URL ROM on load ----
+
+    function checkCachedRom() {
+      var romUrl = getRomUrl();
+
+      // First check if we have a cached ROM
+      getCachedRom().then(function(buf) {
+        if (buf) {
+          showProgress();
+          setStatus('Found cached ROM. Loading...');
+          setProgress(50);
+
+          function tryWriteRom() {
+            if (typeof FS !== 'undefined' && typeof Module._main === 'function') {
+              writeRomToFS(buf);
+            } else {
+              setTimeout(tryWriteRom, 100);
+            }
+          }
+          tryWriteRom();
+        } else if (romUrl) {
+          // No cache but URL provided — download it
+          function tryLoad() {
+            if (typeof FS !== 'undefined') {
+              loadRomFromUrl(romUrl);
+            } else {
+              setTimeout(tryLoad, 100);
+            }
+          }
+          tryLoad();
+        }
+        // else: no cache, no URL — file picker is already visible
+      }).catch(function() {
+        if (romUrl) {
+          function tryLoad() {
+            if (typeof FS !== 'undefined') {
+              loadRomFromUrl(romUrl);
+            } else {
+              setTimeout(tryLoad, 100);
+            }
+          }
+          tryLoad();
+        }
+      });
+    }
+
+    // ---- Background tab keep-alive guard ----
+    // Browsers throttle timers and can freeze WebRTC data channels when a tab
+    // is backgrounded. We use three complementary techniques to prevent this:
+    //  1. Web Locks API — holds a lock that keeps the event loop alive
+    //  2. Silent audio oscillator — prevents aggressive timer throttling
+    //  3. Visibility change detection — logs warnings and increases keepalive
+
+    var BackgroundGuard = {
+      _lockHeld: false,
+      _audioCtx: null,
+      _oscillator: null,
+      _gainNode: null,
+      _keepaliveInterval: null,
+      _visible: true,
+
+      start: function() {
+        this._startWebLock();
+        this._startSilentAudio();
+        this._startVisibilityWatch();
+        this._startKeepalive();
+        console.log('[BackgroundGuard] Started — tab will stay alive when backgrounded');
+      },
+
+      // 1. Web Locks API: acquiring a lock keeps the tab's event loop from being frozen
+      _startWebLock: function() {
+        if (!navigator.locks) {
+          console.warn('[BackgroundGuard] Web Locks API not available');
+          return;
+        }
+        // Request a lock and never release it — the promise stays pending forever,
+        // which signals the browser that this tab is doing important work.
+        navigator.locks.request('sm64coopdx-keepalive', { mode: 'exclusive' }, function() {
+          BackgroundGuard._lockHeld = true;
+          console.log('[BackgroundGuard] Web Lock acquired');
+          // Return a promise that never resolves to hold the lock
+          return new Promise(function() {});
+        }).catch(function(e) {
+          console.warn('[BackgroundGuard] Web Lock failed:', e);
+        });
+      },
+
+      // 2. Silent audio: a near-inaudible oscillator prevents Chrome from
+      //    aggressively throttling timers (Chrome treats tabs with audio differently)
+      _startSilentAudio: function() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          this._audioCtx = new AC();
+          this._oscillator = this._audioCtx.createOscillator();
+          this._gainNode = this._audioCtx.createGain();
+          // Essentially inaudible
+          this._gainNode.gain.value = 0.001;
+          this._oscillator.frequency.value = 1; // 1 Hz — below hearing range
+          this._oscillator.connect(this._gainNode);
+          this._gainNode.connect(this._audioCtx.destination);
+          this._oscillator.start();
+          console.log('[BackgroundGuard] Silent audio started');
+        } catch (e) {
+          console.warn('[BackgroundGuard] Silent audio failed:', e);
+        }
+      },
+
+      // 3. Visibility change: warn in console and increase PeerJS keepalive
+      _startVisibilityWatch: function() {
+        var self = this;
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            self._visible = false;
+            console.warn('[BackgroundGuard] Tab is now HIDDEN — keep-alive active');
+            // Resume audio context if it was suspended by the browser
+            if (self._audioCtx && self._audioCtx.state === 'suspended') {
+              self._audioCtx.resume().catch(function() {});
+            }
+          } else {
+            self._visible = true;
+            console.log('[BackgroundGuard] Tab is VISIBLE again');
+          }
+        });
+      },
+
+      // 4. Periodic PeerJS ping: send a tiny keepalive through data channels
+      //    so the WebRTC SCTP association doesn't go idle. Normal interval is 5s,
+      //    but when hidden we use 1s to be safe.
+      _startKeepalive: function() {
+        var KEEPALIVE_BYTE = 0xFF; // single-byte marker the C side will ignore (too small to be a valid packet)
+        var self = this;
+
+        // Use a worker-based timer that isn't throttled in background tabs.
+        // Inline worker via Blob URL avoids needing an extra file.
+        var workerCode = 'var interval=null;onmessage=function(e){if(interval)clearInterval(interval);interval=setInterval(function(){postMessage("tick")},e.data);}';
+        try {
+          var blob = new Blob([workerCode], { type: 'application/javascript' });
+          var worker = new Worker(URL.createObjectURL(blob));
+          worker.onmessage = function() { self._sendKeepalive(); };
+          // Start with 5s interval
+          worker.postMessage(5000);
+          self._keepaliveWorker = worker;
+
+          document.addEventListener('visibilitychange', function() {
+            // Tighten interval when hidden
+            worker.postMessage(document.hidden ? 1000 : 5000);
+          });
+        } catch (e) {
+          // Fallback to setInterval (will be throttled but better than nothing)
+          console.warn('[BackgroundGuard] Worker timer failed, falling back to setInterval');
+          this._keepaliveInterval = setInterval(function() { self._sendKeepalive(); }, 3000);
+        }
+      },
+
+      _sendKeepalive: function() {
+        if (!PeerNetwork.peer || PeerNetwork.peer.destroyed) return;
+        var ping = new Uint8Array([0xFF]);
+        if (PeerNetwork.isHost) {
+          for (var peerId in PeerNetwork.connections) {
+            var conn = PeerNetwork.connections[peerId];
+            if (conn && conn.open) {
+              try { conn.send(ping); } catch (e) {}
+            }
+          }
+        } else {
+          var conn = PeerNetwork.connections[PeerNetwork.hostPeerId];
+          if (conn && conn.open) {
+            try { conn.send(ping); } catch (e) {}
+          }
+        }
+      },
+
+      stop: function() {
+        if (this._oscillator) { try { this._oscillator.stop(); } catch(e) {} }
+        if (this._audioCtx) { try { this._audioCtx.close(); } catch(e) {} }
+        if (this._keepaliveInterval) clearInterval(this._keepaliveInterval);
+        if (this._keepaliveWorker) this._keepaliveWorker.terminate();
+        this._lockHeld = false;
+        console.log('[BackgroundGuard] Stopped');
+      }
+    };
+
+    // ---- PeerJS WebRTC networking module ----
+
+    // Gate verbose PeerJS logs behind a debug flag
+    var PEERJS_DEBUG = false; // set to true in console for debugging
+    function peerLog() {
+      if (PEERJS_DEBUG) console.log.apply(console, arguments);
+    }
+
+    var PeerNetwork = {
+      peer: null,           // Our PeerJS Peer instance
+      connections: {},      // peerId -> DataConnection (for host: all clients; for client: just the host)
+      isHost: false,
+      roomId: null,
+      hostPeerId: null,
+      recvBuffer: [],       // Array of {slotId, data} for the C code to consume
+      nextSlotId: 1,        // For host: assign slot IDs to connecting peers
+      peerToSlot: {},       // peerId -> slotId
+      slotToPeer: {},       // slotId -> peerId
+
+      // Get room ID from URL: ?room=ROOMID (auto-generated in main() if absent)
+      getRoomId: function() {
+        var params = new URLSearchParams(window.location.search);
+        return params.get('room') || null;
+      },
+
+      // Generate the PeerJS peer ID for a host from room ID
+      hostPeerIdFromRoom: function(roomId) {
+        return 'sm64-' + roomId + '-host';
+      },
+
+      // Initialize: try to be host first, if host already exists, become client
+      init: function(roomId) {
+        this.roomId = roomId;
+        this.hostPeerId = this.hostPeerIdFromRoom(roomId);
+
+        // Try to register as host
+        this.peer = new Peer(this.hostPeerId);
+
+        this.peer.on('open', function(id) {
+          console.log('[Net] HOST ready — room="' + roomId + '" peerId=' + id + ' slots=0/' + PeerNetwork.MAX_SLOTS);
+          PeerNetwork.isHost = true;
+          PeerNetwork._setupHost();
+          BackgroundGuard.start();
+        });
+
+        this.peer.on('error', function(err) {
+          var type = err.type || 'unknown';
+          var msg = err.message || String(err);
+          if (type === 'unavailable-id') {
+            console.log('[Net] Room "' + roomId + '" already hosted — joining as client');
+            PeerNetwork.peer.destroy();
+            PeerNetwork._joinAsClient();
+          } else {
+            console.error('[Net] HOST signaling error type=' + type + ' msg=' + msg);
+          }
+        });
+
+        this.peer.on('disconnected', function() {
+          var occupied = Object.keys(PeerNetwork.slotToPeer).length;
+          if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
+            console.warn('[Net] HOST lost signaling server (clients still connected: ' + occupied + ') — reconnecting...');
+            PeerNetwork.peer.reconnect();
+          }
+        });
+
+        this.peer.on('close', function() {
+          console.warn('[Net] HOST peer destroyed');
+        });
+      },
+
+      // Max slots: must match MAX_PLAYERS in C (16). Slots 1-15 are valid.
+      MAX_SLOTS: 15,
+
+      // Close a specific client connection by slot ID (called from C when rejecting)
+      kickSlot: function(slotId) {
+        var peerId = PeerNetwork.slotToPeer[slotId];
+        if (peerId && PeerNetwork.connections[peerId]) {
+          console.log('[Net] HOST kicking slot=' + slotId + ' peer=' + peerId + ' (game-layer disconnect)');
+          PeerNetwork.connections[peerId].close();
+          delete PeerNetwork.connections[peerId];
+          delete PeerNetwork.peerToSlot[peerId];
+          delete PeerNetwork.slotToPeer[slotId];
+        }
+      },
+
+      // Find a free slot (1..MAX_SLOTS), reusing freed slots
+      _allocSlot: function() {
+        for (var s = 1; s <= PeerNetwork.MAX_SLOTS; s++) {
+          if (!PeerNetwork.slotToPeer[s]) return s;
+        }
+        return -1; // no free slot
+      },
+
+      _setupHost: function() {
+        this.peer.on('connection', function(conn) {
+          var occupied = Object.keys(PeerNetwork.slotToPeer).length;
+          // Allocate a slot, reject if full
+          var slotId = PeerNetwork._allocSlot();
+          if (slotId < 0) {
+            console.warn('[Net] HOST rejected peer=' + conn.peer + ' — server full (' + occupied + '/' + PeerNetwork.MAX_SLOTS + ')');
+            conn.close();
+            return;
+          }
+          console.log('[Net] HOST incoming peer=' + conn.peer + ' assigned slot=' + slotId + ' (' + (occupied+1) + '/' + PeerNetwork.MAX_SLOTS + ')');
+          // Reserve the slot immediately so concurrent connections don't double-allocate
+          PeerNetwork.slotToPeer[slotId] = conn.peer;
+
+          // Set up data handler immediately (works before or after open)
+          conn.on('data', function(data) {
+            var arr = new Uint8Array(data);
+            // Ignore keepalive pings (single 0xFF byte)
+            if (arr.length === 1 && arr[0] === 0xFF) return;
+            if (PeerNetwork.recvBuffer.length < 3) {
+              peerLog('[Net] HOST recv slot=' + slotId + ' bytes=' + arr.length);
+            }
+            PeerNetwork.recvBuffer.push({ slotId: slotId, data: arr });
+          });
+
+          // Register connection for sending only after open
+          conn.on('open', function() {
+            PeerNetwork.connections[conn.peer] = conn;
+            PeerNetwork.peerToSlot[conn.peer] = slotId;
+            PeerNetwork.slotToPeer[slotId] = conn.peer;
+            var now_occupied = Object.keys(PeerNetwork.slotToPeer).length;
+            console.log('[Net] HOST client CONNECTED slot=' + slotId + ' peer=' + conn.peer + ' (' + now_occupied + '/' + PeerNetwork.MAX_SLOTS + ')');
+          });
+
+          // If already open (can happen), register immediately
+          if (conn.open) {
+            PeerNetwork.connections[conn.peer] = conn;
+            PeerNetwork.peerToSlot[conn.peer] = slotId;
+            PeerNetwork.slotToPeer[slotId] = conn.peer;
+            var now_occupied2 = Object.keys(PeerNetwork.slotToPeer).length;
+            console.log('[Net] HOST client CONNECTED (immediate) slot=' + slotId + ' (' + now_occupied2 + '/' + PeerNetwork.MAX_SLOTS + ')');
+          }
+
+          conn.on('close', function() {
+            var remaining = Object.keys(PeerNetwork.slotToPeer).length - 1;
+            console.log('[Net] HOST client DISCONNECTED slot=' + slotId + ' peer=' + conn.peer + ' (' + remaining + ' remaining)');
+            delete PeerNetwork.connections[conn.peer];
+            delete PeerNetwork.peerToSlot[conn.peer];
+            delete PeerNetwork.slotToPeer[slotId];
+          });
+
+          conn.on('error', function(err) {
+            console.error('[Net] HOST connection error slot=' + slotId + ' peer=' + conn.peer + ':', err.type || err.message || err);
+          });
+        });
+      },
+
+      _reconnectTimer: null,
+      _reconnectAttempts: 0,
+      _maxReconnectAttempts: 30,   // try for ~60 seconds
+      _shuttingDown: false,        // true when intentional shutdown
+
+      _joinAsClient: function() {
+        // Create a new peer with random ID
+        this.peer = new Peer();
+        this.isHost = false;
+        this._shuttingDown = false;
+
+        this.peer.on('open', function(id) {
+          console.log('[Net] CLIENT peer ready id=' + id + ', connecting to room="' + PeerNetwork.roomId + '"...');
+          PeerNetwork._connectToHost();
+        });
+
+        this.peer.on('disconnected', function() {
+          if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
+            console.warn('[Net] CLIENT lost signaling server — reconnecting...');
+            PeerNetwork.peer.reconnect();
+          }
+        });
+
+        this.peer.on('error', function(err) {
+          console.error('[Net] CLIENT peer error type=' + (err.type || 'unknown') + ':', err.message || err);
+        });
+
+        this.peer.on('close', function() {
+          console.warn('[Net] CLIENT peer destroyed');
+        });
+      },
+
+      _connectToHost: function() {
+        if (!this.peer || this.peer.destroyed || this._shuttingDown) return;
+
+        var conn = this.peer.connect(this.hostPeerId, { reliable: true, serialization: 'binary' });
+        this.connections[this.hostPeerId] = conn;
+
+        conn.on('open', function() {
+          console.log('[Net] CLIENT connected to host room="' + PeerNetwork.roomId + '"');
+          PeerNetwork._reconnectAttempts = 0;
+          if (PeerNetwork._reconnectTimer) {
+            clearTimeout(PeerNetwork._reconnectTimer);
+            PeerNetwork._reconnectTimer = null;
+          }
+          BackgroundGuard.start();
+        });
+
+        conn.on('data', function(data) {
+          var arr = new Uint8Array(data);
+          if (arr.length === 1 && arr[0] === 0xFF) return;
+          if (PeerNetwork.recvBuffer.length < 3) {
+            peerLog('[Net] CLIENT recv from host bytes=' + arr.length);
+          }
+          PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
+        });
+
+        conn.on('close', function() {
+          console.warn('[Net] CLIENT disconnected from host room="' + PeerNetwork.roomId + '" — scheduling reconnect');
+          delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          PeerNetwork._scheduleReconnect();
+        });
+
+        conn.on('error', function(err) {
+          var msg = err.type || err.message || String(err);
+          console.error('[Net] CLIENT connection error type=' + (err.type||'?') + ' room="' + PeerNetwork.roomId + '":', msg);
+          delete PeerNetwork.connections[PeerNetwork.hostPeerId];
+          if (PeerNetwork._reconnectAttempts === 0 && msg.indexOf('peer-unavailable') !== -1) {
+            alert('Room "' + (PeerNetwork.roomId || '?') + '" not found.\n\nThe host may have disconnected. Try a different room or refresh to host your own.');
+            return;
+          }
+          PeerNetwork._scheduleReconnect();
+        });
+      },
+
+      _scheduleReconnect: function() {
+        if (this._shuttingDown || this._reconnectTimer) return;
+        if (this._reconnectAttempts >= this._maxReconnectAttempts) {
+          console.error('[Net] CLIENT gave up reconnecting to room="' + (this.roomId||'?') + '" after ' + this._maxReconnectAttempts + ' attempts');
+          alert('Failed to join room "' + (this.roomId || '?') + '": could not connect to host after ' + this._maxReconnectAttempts + ' attempts.\n\nThe room may no longer exist. Try a different room or refresh to host your own.');
+          return;
+        }
+        this._reconnectAttempts++;
+        var delay = Math.min(2000 * this._reconnectAttempts, 10000);
+        console.log('[Net] CLIENT reconnect attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ' in ' + delay + 'ms room="' + (this.roomId||'?') + '"');
+        this._reconnectTimer = setTimeout(function() {
+          PeerNetwork._reconnectTimer = null;
+          PeerNetwork._connectToHost();
+        }, delay);
+      },
+
+      // Send data to a specific slot (host mode) or to host (client mode)
+      _sendCount: 0,
+      send: function(slotId, data) {
+        this._sendCount++;
+        if (this._sendCount <= 10) {
+          peerLog('[PeerJS] SEND slot=' + slotId + ' len=' + (data.byteLength || data.length) + ' isHost=' + this.isHost + ' slots=' + JSON.stringify(this.slotToPeer) + ' conns=' + Object.keys(this.connections).length);
+        }
+        if (this.isHost) {
+          if (slotId === 0) {
+            // Broadcast to all clients
+            var count = 0;
+            for (var peerId in this.connections) {
+              var conn = this.connections[peerId];
+              if (conn.open) { conn.send(data); count++; }
+            }
+            if (this._sendCount <= 10) peerLog('[PeerJS] broadcast to ' + count + ' clients');
+          } else {
+            var peerId = this.slotToPeer[slotId];
+            if (peerId && this.connections[peerId] && this.connections[peerId].open) {
+              this.connections[peerId].send(data);
+            } else {
+              if (!this._relayFailLogged) this._relayFailLogged = 0;
+              if (++this._relayFailLogged <= 20) {
+                console.warn('[PeerJS] RELAY FAIL: slot=' + slotId + ' peerId=' + peerId + ' connExists=' + !!(peerId && this.connections[peerId]) + ' slots=' + JSON.stringify(this.slotToPeer));
+              }
+            }
+          }
+        } else {
+          // Client: send to host
+          var conn = this.connections[this.hostPeerId];
+          if (conn && conn.open) conn.send(data);
+        }
+      },
+
+      // Drain received packets into C ring buffer
+      // Called from C via EM_JS
+      drainRecvBuffer: function() {
+        var packets = this.recvBuffer;
+        this.recvBuffer = [];
+        return packets;
+      },
+
+      // Check if connected
+      isConnected: function() {
+        if (this.isHost) return true; // Host is always "connected"
+        var conn = this.connections[this.hostPeerId];
+        return conn && conn.open;
+      },
+
+      shutdown: function() {
+        this._shuttingDown = true;
+        if (this._reconnectTimer) {
+          clearTimeout(this._reconnectTimer);
+          this._reconnectTimer = null;
+        }
+        this._reconnectAttempts = 0;
+        BackgroundGuard.stop();
+        for (var peerId in this.connections) {
+          this.connections[peerId].close();
+        }
+        this.connections = {};
+        if (this.peer) this.peer.destroy();
+        this.peer = null;
+        this.isHost = false;
+        this.peerToSlot = {};
+        this.slotToPeer = {};
+        this.nextSlotId = 1;
+        this.recvBuffer = [];
+      }
+    };
+
+    // ---- Emscripten Module configuration ----
+
+    var Module = {
+      canvas: (function() {
+        return document.getElementById('canvas');
+      })(),
+
+      // Don't run main automatically; we control startup
+      noInitialRun: false,
+
+      print: function(text) {
+        console.log('[SM64] ' + text);
+        // Detect when game rendering begins
+        if (text && (text.indexOf('Game Init') !== -1 || text.indexOf('initialized') !== -1)) {
+          gameStarted = true;
+        }
+      },
+
+      printErr: function(text) {
+        console.error('[SM64] ' + text);
+      },
+
+      setStatus: function(text) {
+        if (text) {
+          setStatus(text);
+        }
+      },
+
+      monitorRunDependencies: function(left) {
+        if (left === 0) {
+          setStatus('All resources loaded.');
+        } else {
+          setStatus('Loading... (' + left + ' remaining)');
+        }
+      },
+
+      onRuntimeInitialized: function() {
+        setStatus('Runtime initialized. Checking for ROM...');
+        checkCachedRom();
+        watchForGameStart();
+      },
+
+      locateFile: function(path) {
+        // Cache-bust WASM and data files during development
+        return path + '?v=' + Date.now();
+      },
+
+      preRun: [function() {
+        try { FS.mkdir('/sm64coopdx'); } catch (e) { /* may exist */ }
+        try { FS.mkdir('/sm64coopdx/mods'); } catch (e) {}
+        try { FS.mkdir('/sm64coopdx/.tmp'); } catch (e) {}
+
+        // Restore saved config from localStorage before main() runs
+        var saved = localStorage.getItem('sm64coopdx_config');
+        if (saved) {
+          FS.writeFile('/sm64coopdx/sm64config.txt', saved);
+          console.log('[Web Shell] Restored config from localStorage (' + saved.length + ' bytes)');
+        }
+
+        // Restore save file from IndexedDB (with localStorage fallback)
+        Module.addRunDependency('restore-save');
+        getSavedGame().then(function(saveData) {
+          if (saveData) {
+            FS.writeFile('/sm64coopdx/sm64_save_file.bin', saveData);
+            console.log('[Web Shell] Restored save file from IndexedDB (' + saveData.length + ' bytes)');
+          } else {
+            // Fall back to localStorage (migrate old saves)
+            var saveB64 = localStorage.getItem('sm64coopdx_save');
+            if (saveB64) {
+              var bin = atob(saveB64);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              FS.writeFile('/sm64coopdx/sm64_save_file.bin', arr);
+              // Migrate to IndexedDB
+              cacheSavedGame(arr);
+              console.log('[Web Shell] Migrated save file from localStorage to IndexedDB (' + arr.length + ' bytes)');
+            } else {
+              // No save exists — generate a 100% completion save
+              var save100 = generate100PercentSave();
+              FS.writeFile('/sm64coopdx/sm64_save_file.bin', save100);
+              cacheSavedGame(save100);
+              console.log('[Web Shell] Generated 100% completion save file');
+            }
+          }
+          Module.removeRunDependency('restore-save');
+        }).catch(function(e) {
+          console.warn('[Web Shell] Failed to restore save from IndexedDB:', e);
+          // Generate 100% save as fallback
+          var save100 = generate100PercentSave();
+          FS.writeFile('/sm64coopdx/sm64_save_file.bin', save100);
+          Module.removeRunDependency('restore-save');
+        });
+
+        // Restore mods from IndexedDB (async — block main() until done)
+        Module.addRunDependency('restore-mods');
+        restoreModsFromDB().then(function() {
+          Module.removeRunDependency('restore-mods');
+        }).catch(function() {
+          Module.removeRunDependency('restore-mods');
+        });
+      }]
+    };
+
+    // Ensure PeerJS disconnects and lobby unregisters cleanly when the page unloads
+    window.addEventListener('beforeunload', function() {
+      // Unregister from lobby server (uses sendBeacon for reliability)
+      if (typeof Module !== 'undefined' && Module.ccall) {
+        try { Module.ccall('web_lobby_shutdown', null, [], []); } catch(e) {}
+      }
+      if (typeof PeerNetwork !== 'undefined' && PeerNetwork.peer) {
+        PeerNetwork.shutdown();
+      }
+    });
+
+    // ---- PWA Service Worker ----
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function() {});
+    }
+
+    window.onerror = function(msg, url, line, col, error) {
+      console.error('[Web Shell] onerror:', msg, url, line, col, error);
+      if (msg && msg.indexOf('abort') !== -1) {
+        showError('An error occurred. Check the browser console for details.');
+      }
+    };
+
+    window.onunhandledrejection = function(event) {
+      console.error('[Web Shell] unhandled rejection:', event.reason);
+    };
+
+    // Monitor if the main loop stops
+    var _webLastIterTime = Date.now();
+    var _origRAF = window.requestAnimationFrame;
+    window.requestAnimationFrame = function(cb) {
+      return _origRAF.call(window, function(ts) {
+        _webLastIterTime = Date.now();
+        try { cb(ts); } catch(e) { console.error('[Web Shell] rAF callback exception:', e); }
+      });
+    };
+    setInterval(function() {
+      var stalled = Date.now() - _webLastIterTime;
+      if (stalled > 10000) {
+        console.warn('[Web Shell] Main loop stalled for ' + stalled + 'ms!');
+      }
+    }, 5000);
+
+    // Detect WebGL context loss
+    document.getElementById('canvas').addEventListener('webglcontextlost', function(e) {
+      console.error('[Web Shell] WebGL context LOST!', e);
+    });
+    document.getElementById('canvas').addEventListener('webglcontextrestored', function(e) {
+      console.warn('[Web Shell] WebGL context restored');
+    });
+
+    // ---- Mod Manager ----
+    var MOD_DB_NAME = 'sm64coopdx_mods';
+    var MOD_DB_STORE = 'files';
+    var MOD_VFS_PATH = '/sm64coopdx/mods/';
+    var DYNOS_VFS_PATH = '/sm64coopdx/dynos/packs/';
+
+    function openModDB() {
+      return new Promise(function(resolve, reject) {
+        var req = indexedDB.open(MOD_DB_NAME, 1);
+        req.onupgradeneeded = function(e) { e.target.result.createObjectStore(MOD_DB_STORE); };
+        req.onsuccess = function(e) { resolve(e.target.result); };
+        req.onerror = function(e) { reject(e.target.error); };
+      });
+    }
+
+    function modDbGetAll() {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve) {
+          var tx = db.transaction(MOD_DB_STORE, 'readonly');
+          var store = tx.objectStore(MOD_DB_STORE);
+          var req = store.getAllKeys();
+          var entries = {};
+          req.onsuccess = function() {
+            var keys = req.result;
+            if (!keys.length) { resolve({}); return; }
+            var done = 0;
+            keys.forEach(function(key) {
+              store.get(key).onsuccess = function(e) {
+                entries[key] = e.target.result;
+                if (++done === keys.length) resolve(entries);
+              };
+            });
+          };
+          req.onerror = function() { resolve({}); };
+        });
+      });
+    }
+
+    function modDbPut(filename, data) {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve, reject) {
+          var tx = db.transaction(MOD_DB_STORE, 'readwrite');
+          tx.objectStore(MOD_DB_STORE).put(data, filename);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function(e) { reject(e.target.error); };
+        });
+      });
+    }
+
+    function modDbDelete(filename) {
+      return openModDB().then(function(db) {
+        return new Promise(function(resolve) {
+          var tx = db.transaction(MOD_DB_STORE, 'readwrite');
+          tx.objectStore(MOD_DB_STORE).delete(filename);
+          tx.oncomplete = function() { resolve(); };
+        });
+      });
+    }
+
+    // Restore mods from IndexedDB into Emscripten VFS
+    // Restore a single DB entry to the VFS
+    function restoreDbEntry(dbKey, data, vfsPath, label) {
+      var filename = dbKey;
+      // Check if this is a directory entry (stored as JSON manifest string)
+      if (typeof data === 'string') {
+        try {
+          var manifest = JSON.parse(data);
+          if (manifest._isDir && manifest.files) {
+            var dir = vfsPath + filename;
+            try { FS.mkdir(dir); } catch(ex) {}
+            var filePaths = Object.keys(manifest.files);
+            filePaths.forEach(function(rpath) {
+              var parts = rpath.split('/');
+              var sub = dir;
+              for (var p = 0; p < parts.length - 1; p++) {
+                sub += '/' + parts[p];
+                try { FS.mkdir(sub); } catch(ex) {}
+              }
+              var b64 = manifest.files[rpath];
+              var bin = atob(b64);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              FS.writeFile(dir + '/' + rpath, arr);
+            });
+            console.log('[ModManager] Restored ' + label + ' dir: ' + filename + ' (' + filePaths.length + ' files)');
+            return;
+          }
+        } catch(ex) { /* not JSON, treat as raw data */ }
+      }
+      FS.writeFile(vfsPath + filename, new Uint8Array(data));
+      console.log('[ModManager] Restored ' + label + ': ' + filename + ' (' + data.byteLength + ' bytes)');
+    }
+
+    function restoreModsFromDB() {
+      return modDbGetAll().then(function(entries) {
+        var keys = Object.keys(entries);
+        if (!keys.length) return;
+        try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+        try { FS.mkdir('/sm64coopdx/dynos'); } catch(e) {}
+        try { FS.mkdir(DYNOS_VFS_PATH); } catch(e) {}
+        var modCount = 0, dynosCount = 0;
+        keys.forEach(function(dbKey) {
+          var data = entries[dbKey];
+          if (dbKey.indexOf('dynos:') === 0) {
+            // DynOS pack entry — strip prefix and restore to dynos/packs/
+            restoreDbEntry(dbKey.substring(6), data, DYNOS_VFS_PATH, 'dynos');
+            dynosCount++;
+          } else {
+            restoreDbEntry(dbKey, data, MOD_VFS_PATH, 'mod');
+            modCount++;
+          }
+        });
+        console.log('[ModManager] Restored ' + modCount + ' mod(s) and ' + dynosCount + ' DynOS pack(s) from IndexedDB');
+      }).catch(function(e) {
+        console.warn('[ModManager] Failed to restore mods:', e);
+      });
+    }
+
+    var ModManager = {
+      _cwraps: null,
+
+      _initCwraps: function() {
+        if (this._cwraps) return true;
+        if (typeof Module === 'undefined' || !Module.cwrap) return false;
+        try {
+          this._cwraps = {
+            refresh:    Module.cwrap('web_mods_refresh', null, []),
+            getCount:   Module.cwrap('web_mods_get_count', 'number', []),
+            getName:    Module.cwrap('web_mods_get_name', 'string', ['number']),
+            getDesc:    Module.cwrap('web_mods_get_description', 'string', ['number']),
+            getEnabled: Module.cwrap('web_mods_get_enabled', 'number', ['number']),
+            setEnabled: Module.cwrap('web_mods_set_enabled', null, ['number', 'number']),
+            getPath:    Module.cwrap('web_mods_get_relative_path', 'string', ['number']),
+            importFile: Module.cwrap('web_mod_import_file', 'number', ['string'])
+          };
+          return true;
+        } catch(e) { return false; }
+      },
+
+      show: function() {
+        document.getElementById('mod-overlay').classList.add('visible');
+        this.refresh();
+      },
+
+      hide: function() {
+        document.getElementById('mod-overlay').classList.remove('visible');
+        document.getElementById('canvas').focus();
+      },
+
+      refresh: function() {
+        if (!this._initCwraps()) return;
+        this._cwraps.refresh();
+        // Mod enabled state is managed by the C config file (sm64config.txt)
+        // which persists to localStorage via configfile_save()/web_save_to_idb().
+        // Do NOT override it from JS — just render what the C side says.
+        this._renderList();
+      },
+
+      _renderList: function() {
+        var c = this._cwraps;
+        var list = document.getElementById('mod-list');
+        var count = c.getCount();
+
+        if (count === 0) {
+          list.innerHTML = '<div id="mod-empty">No mods installed. Upload .lua or .zip files above.</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < count; i++) {
+          var name = c.getName(i) || ('Mod ' + i);
+          var desc = c.getDesc(i) || '';
+          var enabled = c.getEnabled(i);
+          var path = c.getPath(i);
+          html += '<div class="mod-item" data-idx="' + i + '">';
+          html += '<div class="mod-info"><div class="mod-name">' + _esc(name) + '</div>';
+          if (desc) html += '<div class="mod-desc">' + _esc(desc) + '</div>';
+          html += '</div>';
+          html += '<button class="mod-toggle' + (enabled ? ' on' : '') + '" data-toggle="' + i + '" title="' + (enabled ? 'Disable' : 'Enable') + '"></button>';
+          html += '<button class="mod-delete" data-delete="' + i + '" data-path="' + _esc(path) + '" title="Delete">&times;</button>';
+          html += '</div>';
+        }
+        list.innerHTML = html;
+      },
+
+      uploadFiles: function(files) {
+        if (!files.length || !this._initCwraps()) return;
+        var self = this;
+        var pending = files.length;
+        try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+
+        Array.from(files).forEach(function(file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var data = new Uint8Array(e.target.result);
+            var filename = file.name;
+            var isZip = filename.toLowerCase().endsWith('.zip');
+
+            if (isZip) {
+              // Write zip to a temp path, let C extract it to the mods directory
+              var tmpPath = '/tmp/' + filename;
+              try { FS.mkdir('/tmp'); } catch(ex) {}
+              FS.writeFile(tmpPath, data);
+              self._cwraps.importFile(tmpPath);
+              try { FS.unlink(tmpPath); } catch(ex) {}
+              // After import, persist all files now in the mods directory to IndexedDB
+              self._persistVfsDir(MOD_VFS_PATH, '', 'mod');
+              self._persistVfsDir(DYNOS_VFS_PATH, 'dynos:', 'dynos');
+            } else {
+              // .lua/.luac — write directly to mods dir and persist
+              FS.writeFile(MOD_VFS_PATH + filename, data);
+              modDbPut(filename, e.target.result).then(function() {
+                console.log('[ModManager] Uploaded and persisted: ' + filename);
+              }).catch(function(err) {
+                console.error('[ModManager] Failed to persist ' + filename + ':', err);
+              });
+            }
+            if (--pending === 0) {
+              self.refresh();
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        });
+      },
+
+      // Persist a VFS directory tree to IndexedDB with a key prefix
+      _persistVfsDir: function(vfsPath, dbKeyPrefix, label) {
+        try {
+          var entries = FS.readdir(vfsPath).filter(function(f) { return f !== '.' && f !== '..'; });
+          entries.forEach(function(filename) {
+            var dbKey = dbKeyPrefix + filename;
+            try {
+              var stat = FS.stat(vfsPath + filename);
+              if (FS.isDir(stat.mode)) {
+                // For directories, persist as a JSON manifest of their files
+                var dirFiles = {};
+                var _scanDir = function(base, rel) {
+                  FS.readdir(base).filter(function(f) { return f !== '.' && f !== '..'; }).forEach(function(f) {
+                    var full = base + '/' + f;
+                    var s = FS.stat(full);
+                    var rpath = rel ? rel + '/' + f : f;
+                    if (FS.isDir(s.mode)) {
+                      _scanDir(full, rpath);
+                    } else {
+                      dirFiles[rpath] = FS.readFile(full).buffer;
+                    }
+                  });
+                };
+                _scanDir(vfsPath + filename, '');
+                var manifest = { _isDir: true, files: {} };
+                var fileKeys = Object.keys(dirFiles);
+                fileKeys.forEach(function(rpath) {
+                  var arr = new Uint8Array(dirFiles[rpath]);
+                  var bin = '';
+                  for (var i = 0; i < arr.length; i++) bin += String.fromCharCode(arr[i]);
+                  manifest.files[rpath] = btoa(bin);
+                });
+                modDbPut(dbKey, JSON.stringify(manifest)).then(function() {
+                  console.log('[ModManager] Persisted ' + label + ' dir: ' + filename + ' (' + fileKeys.length + ' files)');
+                });
+              } else {
+                var fileData = FS.readFile(vfsPath + filename);
+                modDbPut(dbKey, fileData.buffer).then(function() {
+                  console.log('[ModManager] Persisted ' + label + ': ' + filename);
+                });
+              }
+            } catch(ex) {
+              console.warn('[ModManager] Failed to persist ' + label + ' ' + filename + ':', ex);
+            }
+          });
+        } catch(ex) {
+          console.warn('[ModManager] Failed to scan ' + label + ' dir:', ex);
+        }
+      },
+
+      toggleMod: function(index) {
+        if (!this._cwraps) return;
+        var enabled = this._cwraps.getEnabled(index);
+        this._cwraps.setEnabled(index, enabled ? 0 : 1);
+        this._renderList();
+      },
+
+      _saveEnabledState: function() {
+        if (!this._cwraps) return;
+        var c = this._cwraps;
+        // Save {path: enabled} map so we can distinguish "disabled" from "new"
+        var state = {};
+        for (var i = 0; i < c.getCount(); i++) {
+          state[c.getPath(i)] = !!c.getEnabled(i);
+        }
+        localStorage.setItem('sm64coopdx_mods_enabled', JSON.stringify(state));
+      },
+
+      _restoreEnabledState: function() {
+        if (!this._cwraps) return;
+        var c = this._cwraps;
+        var json = localStorage.getItem('sm64coopdx_mods_enabled');
+        var saved = null;
+        try { if (json) saved = JSON.parse(json); } catch(e) {}
+        for (var i = 0; i < c.getCount(); i++) {
+          var path = c.getPath(i);
+          if (saved && path in saved) {
+            // Known mod — restore saved state
+            c.setEnabled(i, saved[path] ? 1 : 0);
+          } else {
+            // New mod (not in saved state) — enable by default
+            c.setEnabled(i, 1);
+          }
+        }
+      },
+
+      deleteMod: function(index) {
+        if (!this._cwraps) return;
+        var path = this._cwraps.getPath(index);
+        var filename = path.split('/').pop();
+        // Remove from VFS (file or directory)
+        try {
+          var stat = FS.stat(MOD_VFS_PATH + filename);
+          if (FS.isDir(stat.mode)) {
+            // Recursively remove directory
+            var rmrf = function(p) {
+              FS.readdir(p).filter(function(f) { return f !== '.' && f !== '..'; }).forEach(function(f) {
+                var full = p + '/' + f;
+                var s = FS.stat(full);
+                if (FS.isDir(s.mode)) rmrf(full); else FS.unlink(full);
+              });
+              FS.rmdir(p);
+            };
+            rmrf(MOD_VFS_PATH + filename);
+          } else {
+            FS.unlink(MOD_VFS_PATH + filename);
+          }
+        } catch(e) {}
+        // Remove from IndexedDB
+        modDbDelete(filename).then(function() {
+          console.log('[ModManager] Deleted: ' + filename);
+        });
+        this.refresh();
+      },
+
+      // Download a mod from a direct .lua or .zip URL
+      // Convert github.com blob URLs to raw.githubusercontent.com
+      _toRawUrl: function(url) {
+        // https://github.com/USER/REPO/blob/BRANCH/PATH → https://raw.githubusercontent.com/USER/REPO/BRANCH/PATH
+        var m = url.match(/^https?:\/\/github\.com\/([^\/]+\/[^\/]+)\/blob\/(.+)$/);
+        if (m) return 'https://raw.githubusercontent.com/' + m[1] + '/' + m[2];
+        return url;
+      },
+
+      downloadModFromUrl: function(inputUrl) {
+        if (!this._initCwraps()) return;
+        var self = this;
+        var statusEl = document.getElementById('mod-url-status');
+        var btn = document.getElementById('mod-url-btn');
+        var input = document.getElementById('mod-url-input');
+
+        // Resolve GitHub blob URLs to raw URLs
+        var fetchUrl = self._toRawUrl(inputUrl.trim());
+
+        // Extract filename from URL
+        var urlPath = fetchUrl.split('?')[0].split('#')[0];
+        var filename = urlPath.split('/').pop() || 'mod.lua';
+        if (!filename.match(/\.(lua|luac|zip)$/i)) {
+          statusEl.textContent = 'URL must point to a .lua or .zip file.';
+          statusEl.style.color = '#e94560';
+          return;
+        }
+
+        statusEl.textContent = 'Downloading ' + filename + '...';
+        statusEl.style.color = '#888';
+        btn.disabled = true;
+
+        fetch(fetchUrl).then(function(resp) {
+          if (!resp.ok) throw new Error('HTTP ' + resp.status);
+          return resp.arrayBuffer();
+        }).then(function(buf) {
+          var data = new Uint8Array(buf);
+          try { FS.mkdir(MOD_VFS_PATH); } catch(e) {}
+
+          if (filename.toLowerCase().endsWith('.zip')) {
+            var tmpPath = '/tmp/' + filename;
+            try { FS.mkdir('/tmp'); } catch(e) {}
+            FS.writeFile(tmpPath, data);
+            self._cwraps.importFile(tmpPath);
+            try { FS.unlink(tmpPath); } catch(e) {}
+            self._persistVfsDir(MOD_VFS_PATH, '', 'mod');
+              self._persistVfsDir(DYNOS_VFS_PATH, 'dynos:', 'dynos');
+          } else {
+            FS.writeFile(MOD_VFS_PATH + filename, data);
+            modDbPut(filename, buf).then(function() {
+              console.log('[ModManager] Downloaded and persisted: ' + filename);
+            });
+          }
+
+          statusEl.textContent = 'Downloaded: ' + filename;
+          statusEl.style.color = '#2ecc71';
+          input.value = '';
+          self.refresh();
+        }).catch(function(err) {
+          console.error('[ModManager] URL download failed:', err);
+          statusEl.textContent = 'Download failed: ' + err.message;
+          statusEl.style.color = '#e94560';
+        }).finally(function() {
+          btn.disabled = false;
+        });
+      }
+    };
+
+    function _esc(s) {
+      var d = document.createElement('div');
+      d.appendChild(document.createTextNode(s));
+      return d.innerHTML;
+    }
+
+    // Event handlers for mod overlay
+    document.getElementById('mod-close-btn').addEventListener('click', function() { ModManager.hide(); });
+    document.getElementById('mod-overlay').addEventListener('click', function(e) {
+      if (e.target === this) ModManager.hide();
+    });
+    document.getElementById('mod-upload-lua').addEventListener('change', function(e) {
+      ModManager.uploadFiles(e.target.files);
+      e.target.value = '';
+    });
+    document.getElementById('mod-upload-zip').addEventListener('change', function(e) {
+      ModManager.uploadFiles(e.target.files);
+      e.target.value = '';
+    });
+    // Drag and drop on upload row
+    document.getElementById('mod-upload-row').addEventListener('dragover', function(e) { e.preventDefault(); });
+    document.getElementById('mod-upload-row').addEventListener('drop', function(e) {
+      e.preventDefault();
+      ModManager.uploadFiles(e.dataTransfer.files);
+    });
+    // Event delegation for toggle and delete buttons
+    document.getElementById('mod-list').addEventListener('click', function(e) {
+      var toggle = e.target.closest('[data-toggle]');
+      if (toggle) { ModManager.toggleMod(parseInt(toggle.getAttribute('data-toggle'), 10)); return; }
+      var del = e.target.closest('[data-delete]');
+      if (del) { ModManager.deleteMod(parseInt(del.getAttribute('data-delete'), 10)); return; }
+    });
+    // URL download handler
+    document.getElementById('mod-url-btn').addEventListener('click', function() {
+      var url = document.getElementById('mod-url-input').value.trim();
+      if (url) ModManager.downloadModFromUrl(url);
+    });
+    document.getElementById('mod-url-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var url = e.target.value.trim();
+        if (url) ModManager.downloadModFromUrl(url);
+      }
+    });
+
+    // ---- Touch Gamepad ----
+    var TouchGamepad = {
+      _active: false,
+      _keyDown: null,
+      _keyUp: null,
+      _setStick: null,
+      _clearStick: null,
+      _stickTouchId: null,
+      _stickCenterX: 0,
+      _stickCenterY: 0,
+      _knob: null,
+      _baseRect: null,
+
+      // Default scancodes matching configfile.c defaults
+      KEYS: {
+        'tb-a':     0x0026,  // Z key → A button
+        'tb-b':     0x0033,  // X key → B button
+        'tb-z':     0x0025,  // Left Shift → Z trigger
+        'tb-start': 0x0039,  // Space → Start
+        'tb-r':     0x0036,  // Right Shift → R trigger
+        'tb-l':     0x002A,  // Left Shift → L trigger
+        'tb-cu':    0x0148,  // Numpad 8 → C-Up
+        'tb-cd':    0x0150,  // Numpad 2 → C-Down
+        'tb-cl':    0x014B,  // Numpad 4 → C-Left
+        'tb-cr':    0x014D   // Numpad 6 → C-Right
+      },
+
+      init: function() {
+        // Detect touch device
+        if (!('ontouchstart' in window) && navigator.maxTouchPoints <= 0) return;
+
+        this._keyDown = Module.cwrap('web_touch_key_down', null, ['number']);
+        this._keyUp = Module.cwrap('web_touch_key_up', null, ['number']);
+        this._setStick = Module.cwrap('web_touch_set_stick', null, ['number', 'number']);
+        this._clearStick = Module.cwrap('web_touch_clear_stick', null, []);
+        this._knob = document.getElementById('touch-stick-knob');
+
+        document.getElementById('touch-gamepad').classList.add('visible');
+        this._active = true;
+        this._setupButtons();
+        this._setupStick();
+        console.log('[TouchGamepad] Initialized');
+      },
+
+      _setupButtons: function() {
+        var self = this;
+        var ids = Object.keys(this.KEYS);
+        ids.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var sc = self.KEYS[id];
+          el.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            el.classList.add('pressed');
+            self._keyDown(sc);
+          }, { passive: false });
+          el.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            el.classList.remove('pressed');
+            self._keyUp(sc);
+          }, { passive: false });
+          el.addEventListener('touchcancel', function(e) {
+            el.classList.remove('pressed');
+            self._keyUp(sc);
+          });
+        });
+      },
+
+      _setupStick: function() {
+        var self = this;
+        var zone = document.getElementById('touch-stick-zone');
+        var base = document.getElementById('touch-stick-base');
+        var RADIUS = 50; // max displacement in pixels
+
+        zone.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          var touch = e.changedTouches[0];
+          self._stickTouchId = touch.identifier;
+          var rect = base.getBoundingClientRect();
+          self._stickCenterX = rect.left + rect.width / 2;
+          self._stickCenterY = rect.top + rect.height / 2;
+          self._updateStick(touch.clientX, touch.clientY, RADIUS);
+        }, { passive: false });
+
+        zone.addEventListener('touchmove', function(e) {
+          e.preventDefault();
+          for (var i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === self._stickTouchId) {
+              self._updateStick(e.changedTouches[i].clientX, e.changedTouches[i].clientY, RADIUS);
+              break;
+            }
+          }
+        }, { passive: false });
+
+        var endStick = function(e) {
+          for (var i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === self._stickTouchId) {
+              self._stickTouchId = null;
+              self._knob.style.transform = 'translate(0px, 0px)';
+              self._clearStick();
+              break;
+            }
+          }
+        };
+        zone.addEventListener('touchend', endStick, { passive: false });
+        zone.addEventListener('touchcancel', endStick);
+      },
+
+      _updateStick: function(touchX, touchY, maxR) {
+        var dx = touchX - this._stickCenterX;
+        var dy = touchY - this._stickCenterY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > maxR) { dx = dx / dist * maxR; dy = dy / dist * maxR; dist = maxR; }
+        // Move knob visual
+        this._knob.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+        // Convert to -128..127 range
+        var sx = Math.round((dx / maxR) * 127);
+        var sy = Math.round((-dy / maxR) * 127); // Y inverted
+        this._setStick(sx, sy);
+      }
+    };
+
+    // Start touch gamepad once WASM is ready
+    var _tgCheck = setInterval(function() {
+      if (typeof Module !== 'undefined' && Module.cwrap) {
+        try {
+          Module.cwrap('web_touch_key_down', null, ['number']);
+          clearInterval(_tgCheck);
+          TouchGamepad.init();
+        } catch(e) {}
+      }
+    }, 1000);
+
+    // ---- Mobile keyboard proxy for DJUI text input ----
+    // Mobile browsers require focus() to happen inside a user-gesture event handler.
+    // We set a flag from C and then the next touch/click on the canvas triggers focus.
+    var WebMobileInput = {
+      _el: document.getElementById('mobile-text-proxy'),
+      _active: false,
+      _wantShow: false,
+
+      show: function() {
+        // Called from C — can't focus here (not a user gesture).
+        // Set flag so the next touch/click triggers focus.
+        this._wantShow = true;
+        // Also try immediate focus (works on some Android browsers)
+        this._el.style.pointerEvents = 'auto';
+        this._el.style.zIndex = '200';
+        this._el.value = '';
+        this._el.focus({ preventScroll: true });
+        this._active = true;
+      },
+
+      hide: function() {
+        this._active = false;
+        this._wantShow = false;
+        this._el.blur();
+        this._el.style.pointerEvents = 'none';
+        this._el.style.zIndex = '-1';
+        document.getElementById('canvas').focus();
+      },
+
+      // Called from touch/click handler — this IS a user gesture
+      _tryFocus: function() {
+        if (this._wantShow) {
+          this._wantShow = false;
+          this._el.value = '';
+          this._el.style.pointerEvents = 'auto';
+          this._el.style.zIndex = '200';
+          this._el.focus({ preventScroll: true });
+          this._active = true;
+        }
+      }
+    };
+
+    // Hook into touch/click on canvas — if DJUI just requested keyboard, focus the proxy
+    // This runs inside the user gesture so mobile browsers will show the keyboard
+    document.getElementById('canvas').addEventListener('touchend', function() {
+      WebMobileInput._tryFocus();
+    });
+    document.getElementById('canvas').addEventListener('click', function() {
+      WebMobileInput._tryFocus();
+    });
+
+    // Forward input from the proxy to the canvas as SDL-compatible events
+    document.getElementById('mobile-text-proxy').addEventListener('input', function(e) {
+      if (!WebMobileInput._active) return;
+      var val = e.target.value;
+      if (val.length > 0) {
+        var canvas = document.getElementById('canvas');
+        for (var i = 0; i < val.length; i++) {
+          canvas.dispatchEvent(new KeyboardEvent('keypress', {
+            key: val[i], charCode: val.charCodeAt(i), bubbles: true
+          }));
+        }
+        e.target.value = '';
+      }
+    });
+
+    document.getElementById('mobile-text-proxy').addEventListener('keydown', function(e) {
+      if (!WebMobileInput._active) return;
+      var canvas = document.getElementById('canvas');
+      canvas.dispatchEvent(new KeyboardEvent('keydown', {
+        key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, bubbles: true
+      }));
+    });
+    document.getElementById('mobile-text-proxy').addEventListener('keyup', function(e) {
+      if (!WebMobileInput._active) return;
+      var canvas = document.getElementById('canvas');
+      canvas.dispatchEvent(new KeyboardEvent('keyup', {
+        key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, bubbles: true
+      }));
+    });
+  </script>
+
+  {{{ SCRIPT }}}
+
+</body>
+</html>

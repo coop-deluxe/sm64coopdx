@@ -419,9 +419,7 @@ void sequence_channel_enable(struct SequencePlayer *seqPlayer, u8 channelIndex, 
 void sequence_player_disable(struct SequencePlayer *seqPlayer) {
     if (!seqPlayer) { return; }
     MUTEX_LOCK(gAudioThread);
-    
-    LOG_DEBUG("Disabling sequence player %p", seqPlayer);
-    
+
     sequence_player_disable_all_channels(seqPlayer);
     note_pool_clear(&seqPlayer->notePool);
     seqPlayer->finished = TRUE;
@@ -2491,7 +2489,6 @@ void sequence_player_process_sequence(struct SequencePlayer *seqPlayer) {
         seqPlayer->defaultBank[0] != 0xff &&
 #endif
         IS_BANK_LOAD_COMPLETE(seqPlayer->defaultBank[0]) == FALSE)) {
-        eu_stubbed_printf_1("Disappear Sequence or Bank %d\n", seqPlayer->seqId);
         sequence_player_disable(seqPlayer);
         return;
     }

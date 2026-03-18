@@ -5,7 +5,10 @@
 #include "djui_panel_playerlist.h"
 #include "djui_panel_modlist.h"
 #include "game/level_info.h"
+#include "game/area.h"
+#include "game/mario.h"
 #include "game/mario_misc.h"
+#include "data/dynos.c.h"
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -29,6 +32,31 @@ static struct DjuiText* djuiTextNames[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextDescriptions[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextLocations[MAX_PLAYERS] = { 0 };
 static struct DjuiText* djuiTextAct[MAX_PLAYERS] = { 0 };
+static struct DjuiButton* djuiTpButtons[MAX_PLAYERS] = { 0 };
+
+// Teleport to the player whose localIndex is stored in the button's tag
+static void playerlist_tp_click(struct DjuiBase* base) {
+    s32 targetIndex = (s32)base->tag;
+    if (targetIndex < 0 || targetIndex >= MAX_PLAYERS) return;
+    struct NetworkPlayer *np = &gNetworkPlayers[targetIndex];
+    if (!np->connected) return;
+    if (gNetworkPlayerLocal && np->localIndex == gNetworkPlayerLocal->localIndex) return;
+
+    if (gCurrLevelNum == np->currLevelNum && gCurrAreaIndex == np->currAreaIndex) {
+        // Same level and area — copy position directly
+        for (s32 i = 0; i < MAX_PLAYERS; i++) {
+            if (gNetworkPlayers[i].localIndex == np->localIndex && gNetworkPlayers[i].connected) {
+                gMarioStates[0].pos[0] = gMarioStates[i].pos[0];
+                gMarioStates[0].pos[1] = gMarioStates[i].pos[1];
+                gMarioStates[0].pos[2] = gMarioStates[i].pos[2];
+                break;
+            }
+        }
+    } else {
+        // Different level — use dynos warp (handles music, transitions, network sync)
+        dynos_warp_to_level(np->currLevelNum, np->currAreaIndex, np->currActNum);
+    }
+}
 
 const u8 sPlayerListSize = 16;
 u8 sPageIndex = 0;
@@ -82,6 +110,11 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     );
     djui_text_set_text(djuiTextAct[i], sActNum);
     djui_base_set_size(&djuiTextAct[i]->base, configShowPing ? 65 : 100, 32.0f);
+
+    // Show TP button for other players, hide for self
+    bool isSelf = (gNetworkPlayerLocal && np->localIndex == gNetworkPlayerLocal->localIndex);
+    djui_base_set_visible(&djuiTpButtons[i]->base, visible && !isSelf);
+    djuiTpButtons[i]->base.tag = np->localIndex;
 }
 
 void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bool* skipRender) {
@@ -106,6 +139,7 @@ void djui_panel_playerlist_on_render_pre(UNUSED struct DjuiBase* base, UNUSED bo
 
     while (j < MAX_PLAYERS) {
         djui_base_set_visible(&djuiRow[j]->base, false);
+        djui_base_set_visible(&djuiTpButtons[j]->base, false);
         j++;
     }
 }
@@ -125,7 +159,7 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
     panel->base.on_render_pre = djui_panel_playerlist_on_render_pre;
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&panel->base, 710, bodyHeight + (32 + 16) + 32 + 32);
+    djui_base_set_size(&panel->base, 760, bodyHeight + (32 + 16) + 32 + 32);
     djui_base_set_visible(&panel->base, false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     djui_flow_layout_set_margin((struct DjuiFlowLayout*)body, 4);
@@ -176,5 +210,11 @@ void djui_panel_playerlist_create(UNUSED struct DjuiBase* caller) {
         djui_base_set_color(&t5->base, t, t, t, 255);
         djui_text_set_alignment(t5, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         djuiTextAct[i] = t5;
+
+        struct DjuiButton* tp = djui_button_create(&row->base, "TP", DJUI_BUTTON_STYLE_NORMAL, playerlist_tp_click);
+        djui_base_set_size_type(&tp->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&tp->base, 40, 28);
+        djui_base_set_visible(&tp->base, false);
+        djuiTpButtons[i] = tp;
     }
 }

@@ -154,6 +154,7 @@ local function always_triple_jump_update(m, action)
 	end
 end
 
+
 register_cheat(
     "moonJump",
     {

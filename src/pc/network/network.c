@@ -169,6 +169,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         dynos_behavior_hook_all_custom_behaviors();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
+        gNetworkPlayers[0].moderator = true; // Host is always admin
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
@@ -429,6 +430,13 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
+#ifdef TARGET_WEB
+    // On web client, packets from server arrive with UNKNOWN_LOCAL_INDEX.
+    // Update the server player's lastReceived to prevent timeout disconnect.
+    if (gNetworkType == NT_CLIENT && gNetworkPlayerServer != NULL && gNetworkPlayerServer->connected) {
+        gNetworkPlayerServer->lastReceived = clock_elapsed();
+    }
+#endif
 
     // subtract and check hash
     if (!packet_check_hash(&p)) {
@@ -562,6 +570,14 @@ void network_update(void) {
     if (gNetworkStartupTimer > 0) {
         gNetworkStartupTimer--;
     }
+
+#ifdef TARGET_WEB
+    // On web, WebSocket messages are buffered asynchronously between ticks.
+    // Drain the receive buffer BEFORE timeout checks so lastReceived is current.
+    if (gNetworkSystem != NULL) {
+        gNetworkSystem->update();
+    }
+#endif
 
     network_rehost_update();
     network_reconnect_update();

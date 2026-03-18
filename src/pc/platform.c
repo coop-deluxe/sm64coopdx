@@ -253,7 +253,11 @@ const char *sys_user_path(void)
 }
 
 const char *sys_resource_path(void) {
+#ifdef TARGET_WEB
+    return "/sm64coopdx";
+#else
     return sys_exe_path_dir();
+#endif
 }
 
 const char *sys_exe_path_dir(void)
@@ -332,7 +336,9 @@ const char *sys_user_path(void) {
 
 const char *sys_resource_path(void)
 {
-#ifdef __APPLE__ // Kinda lazy, but I don't know how to add CoreFoundation.framework
+#ifdef TARGET_WEB
+    return "/sm64coopdx";
+#elif defined(__APPLE__) // Kinda lazy, but I don't know how to add CoreFoundation.framework
     static char path[SYS_MAX_PATH];
     if ('\0' != path[0]) { return path; }
 

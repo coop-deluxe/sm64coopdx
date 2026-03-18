@@ -1,0 +1,114 @@
+name: Build Web (Emscripten) & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, feature/emscripten-web-port ]
+  workflow_dispatch:
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-stable:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout stable branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/emscripten-web-port
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev zip
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.64
+
+      - name: Cache Emscripten system libs
+        uses: actions/cache@v4
+        with:
+          path: ~/.emscripten_cache
+          key: emsdk-3.1.64-${{ runner.os }}
+
+      - name: Cache stable build objects
+        uses: actions/cache@v4
+        with:
+          path: build/us_pc
+          key: build-web-stable-${{ runner.os }}-${{ hashFiles('src/**', 'include/**', 'lib/**', 'Makefile', 'sound/**', 'levels/**', 'actors/**', 'assets/**') }}
+
+      - name: Verify Emscripten
+        run: emcc --version
+
+      - name: Clean stale build objects
+        run: |
+          find build/us_pc -name '*.o' -delete 2>/dev/null || true
+          find build/us_pc -name '*.d' -delete 2>/dev/null || true
+
+      - name: Build stable for web
+        run: |
+          emmake make TARGET_WEB=1 VERSION=us -j$(nproc)
+
+      - name: Prepare stable artifact
+        run: |
+          mkdir -p _stable/proxy _stable/icons
+          cp build/us_pc/sm64coopdx.html _stable/
+          cp build/us_pc/sm64coopdx.js _stable/
+          cp build/us_pc/sm64coopdx.wasm _stable/
+          cp build/us_pc/sm64coopdx.data _stable/ 2>/dev/null || true
+          cp build/us_pc/manifest.json _stable/ 2>/dev/null || true
+          cp build/us_pc/sw.js _stable/ 2>/dev/null || true
+          cp build/us_pc/icons/*.png _stable/icons/ 2>/dev/null || true
+          cp src/pc/web/proxy/proxy.js _stable/proxy/ 2>/dev/null || true
+          cp src/pc/web/proxy/package.json _stable/proxy/ 2>/dev/null || true
+          cp src/pc/web/proxy/README.md _stable/proxy/ 2>/dev/null || true
+
+      - name: Upload stable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: stable-build
+          path: _stable/
+
+  deploy:
+    needs: [build-stable]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download stable build
+        uses: actions/download-artifact@v4
+        with:
+          name: stable-build
+          path: artifacts/stable
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p _site/proxy _site/icons
+
+          # Build at root
+          cp artifacts/stable/sm64coopdx.html _site/index.html
+          cp artifacts/stable/sm64coopdx.js _site/
+          cp artifacts/stable/sm64coopdx.wasm _site/
+          cp artifacts/stable/sm64coopdx.data _site/ 2>/dev/null || true
+          cp artifacts/stable/manifest.json _site/ 2>/dev/null || true
+          cp artifacts/stable/sw.js _site/ 2>/dev/null || true
+          cp -r artifacts/stable/icons/* _site/icons/ 2>/dev/null || true
+          cp -r artifacts/stable/proxy/* _site/proxy/ 2>/dev/null || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

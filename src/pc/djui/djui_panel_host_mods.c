@@ -198,6 +198,11 @@ static void* threaded_mod_refresh(UNUSED void* unused) {
 
 static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     djui_base_destroy_children(&sModLayout->base);
+#ifdef TARGET_WEB
+    // On web, threading is synchronous (no-op), so threaded_mod_refresh runs
+    // inline inside init_thread_handle. Just call it directly.
+    threaded_mod_refresh(NULL);
+#else
     if (init_thread_handle(&gModRefreshThread, threaded_mod_refresh, NULL, NULL, 0) == 0) {
         djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESHING));
         djui_base_set_enabled(&sRefreshButton->base, false);
@@ -206,6 +211,7 @@ static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     } else {
         threaded_mod_refresh(NULL);
     }
+#endif
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {

@@ -13,6 +13,10 @@
 #include "gfx/gfx_window_manager_api.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
+
+#ifdef TARGET_WEB
+#include "web/web_main.h"
+#endif
 #include "mods/mods.h"
 #include "network/ban_list.h"
 #include "crash_handler.h"
@@ -104,7 +108,7 @@ unsigned int configKeyY[MAX_BINDS]                = { 0x0032,     0x1003,     VK
 unsigned int configKeyStart[MAX_BINDS]            = { 0x0039,     0x1006,     VK_INVALID };
 unsigned int configKeyL[MAX_BINDS]                = { 0x002A,     0x1009,     0x1104     };
 unsigned int configKeyR[MAX_BINDS]                = { 0x0036,     0x100A,     0x101B     };
-unsigned int configKeyZ[MAX_BINDS]                = { 0x0025,     0x1007,     0x101A     };
+unsigned int configKeyZ[MAX_BINDS]                = { 0x0025,     0x1007,     0x1102     };
 unsigned int configKeyCUp[MAX_BINDS]              = { 0x0148,     VK_INVALID, VK_INVALID };
 unsigned int configKeyCDown[MAX_BINDS]            = { 0x0150,     VK_INVALID, VK_INVALID };
 unsigned int configKeyCLeft[MAX_BINDS]            = { 0x014B,     VK_INVALID, VK_INVALID };
@@ -180,7 +184,11 @@ unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
+#ifdef TARGET_WEB
+bool         configSkipIntro                      = 1;
+#else
 bool         configSkipIntro                      = 0;
+#endif
 bool         configPauseAnywhere                  = false;
 bool         configMenuStaffRoll                  = false;
 unsigned int configMenuLevel                      = 0;
@@ -895,4 +903,9 @@ void configfile_save(const char *filename) {
     }
 
     fclose(file);
+
+#ifdef TARGET_WEB
+    // Persist config to IndexedDB so settings survive browser refresh
+    web_save_to_idb();
+#endif
 }

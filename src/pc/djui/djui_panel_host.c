@@ -12,9 +12,17 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/update_checker.h"
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
+#ifdef TARGET_WEB
+static struct DjuiInputbox* sInputboxRoomId = NULL;
+static unsigned int sUnlisted = 0;
+#else
 static struct DjuiRect* sRectPort = NULL;
 static struct DjuiInputbox* sInputboxPort = NULL;
+#endif
 #ifdef COOPNET
 static struct DjuiRect* sRectPassword = NULL;
 static struct DjuiInputbox* sInputboxPassword = NULL;
@@ -27,6 +35,7 @@ static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) 
 }
 #endif
 
+#ifndef TARGET_WEB
 static bool djui_panel_host_port_valid(void) {
     char* buffer = sInputboxPort->buffer;
     int port = 0;
@@ -51,6 +60,7 @@ static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
         djui_inputbox_set_text_color(sInputboxPort, 255, 0, 0, 255);
     }
 }
+#endif
 
 #ifdef COOPNET
 static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller) {
@@ -63,6 +73,30 @@ static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller)
 
 extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
+#ifdef TARGET_WEB
+    // Web: save config (persists mod selections + settings to localStorage),
+    // then reload with ?room= so web_auto_network() will host with these settings.
+    if (!sInputboxRoomId || strlen(sInputboxRoomId->buffer) < 1) {
+        if (sInputboxRoomId) {
+            djui_interactable_set_input_focus(&sInputboxRoomId->base);
+            djui_inputbox_select_all(sInputboxRoomId);
+        }
+        return;
+    }
+
+    // Save config so mod enabled state and host settings persist across reload
+    configfile_save(configfile_name());
+
+    EM_ASM({
+        var room = UTF8ToString($0);
+        var unlisted = $1 ? 'true' : 'false';
+        localStorage.setItem('sm64coopdx_unlisted', unlisted);
+        var url = new URL(window.location.href);
+        url.searchParams.set('room', room);
+        window.location.href = url.toString();
+    }, sInputboxRoomId->buffer, sUnlisted);
+    return;
+#else
     if (!djui_panel_host_port_valid()) {
         djui_interactable_set_input_focus(&sInputboxPort->base);
         djui_inputbox_select_all(sInputboxPort);
@@ -84,15 +118,57 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     } else {
         djui_panel_host_message_create(caller);
     }
+#endif
 }
 
 void djui_panel_host_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
+#ifdef TARGET_WEB
+    struct DjuiThreePanel* panel = djui_panel_menu_create("PLAY", false);
+#else
     struct DjuiThreePanel* panel = djui_panel_menu_create(
         (gNetworkType == NT_SERVER) ? DLANG(HOST, SERVER_TITLE) : DLANG(HOST, HOST_TITLE),
         false);
+#endif
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+#ifdef TARGET_WEB
+        // Room ID input
+        struct DjuiRect* rectRoom = djui_rect_container_create(body, 32);
+        {
+            struct DjuiText* textRoom = djui_text_create(&rectRoom->base, "Room ID");
+            djui_base_set_size_type(&textRoom->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&textRoom->base, 220, 220, 220, 255);
+            djui_base_set_size(&textRoom->base, 0.585f, 64);
+            djui_base_set_alignment(&textRoom->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(textRoom, 64, 64, 64, 100);
+
+            sInputboxRoomId = djui_inputbox_create(&rectRoom->base, 128);
+            djui_base_set_size_type(&sInputboxRoomId->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&sInputboxRoomId->base, 0.45f, 32);
+            djui_base_set_alignment(&sInputboxRoomId->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            // Pre-fill with a random room ID (sm-XXXXXX)
+            {
+                char roomBuf[32];
+                static const char chars[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+                snprintf(roomBuf, sizeof(roomBuf), "sm-");
+                for (int ri = 0; ri < 6; ri++) {
+                    roomBuf[3 + ri] = chars[rand() % (sizeof(chars) - 1)];
+                }
+                roomBuf[9] = '\0';
+                djui_inputbox_set_text(sInputboxRoomId, roomBuf);
+            }
+        }
+
+        // Unlisted toggle (web-only, stored in localStorage via JS)
+        {
+            char* unlistedChoices[] = { "No", "Yes" };
+            // sUnlisted is file-scope
+            // Read initial value from JS localStorage
+            sUnlisted = EM_ASM_INT({ return localStorage.getItem('sm64coopdx_unlisted') === 'true' ? 1 : 0; });
+            djui_selectionbox_create(body, "Unlisted", unlistedChoices, 2, &sUnlisted, NULL);
+        }
+#else
         #ifdef COOPNET
         char* nChoices[] = { DLANG(HOST, DIRECT_CONNECTION), DLANG(HOST, COOPNET) };
         struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(HOST, NETWORK_SYSTEM), nChoices, 2, &configNetworkSystem, djui_panel_host_network_system_change);
@@ -162,6 +238,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             }
 #endif
         }
+#endif
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
         {
@@ -184,19 +261,36 @@ void djui_panel_host_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_create(&rect3->base,
+#ifdef TARGET_WEB
+                DLANG(MENU, BACK),
+#else
+                (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK),
+#endif
+                DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
+            struct DjuiButton* button2 = djui_button_create(&rect3->base,
+#ifdef TARGET_WEB
+                "PLAY",
+#else
+                (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST),
+#endif
+                DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
 
+#ifdef TARGET_WEB
+            defaultBase = &button2->base;
+#else
             defaultBase = (gNetworkType == NT_SERVER)
                         ? &button1->base
                         : &button2->base;
+#endif
         }
 
+#ifndef TARGET_WEB
         if (gUpdateMessage) {
             struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
             djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -204,6 +298,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_color(&message->base, 255, 255, 160, 255);
             djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         }
+#endif
     }
 
     djui_panel_add(caller, panel, defaultBase);

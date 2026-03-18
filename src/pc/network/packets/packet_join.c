@@ -128,6 +128,11 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
+    // Include host's customization so client doesn't use hardcoded defaults
+    packet_write(&p, &gNetworkPlayers[0].modelIndex, sizeof(u8));
+    packet_write(&p, &gNetworkPlayers[0].palette, sizeof(struct PlayerPalette));
+    packet_write(&p, &gNetworkPlayers[0].name, sizeof(u8) * MAX_CONFIG_STRING);
+
     network_send_to(globalIndex, &p);
     LOG_INFO("sending join packet");
 
@@ -181,7 +186,17 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
-    network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
+    // Read host's customization (model, palette, name)
+    u8 hostModel = 0;
+    struct PlayerPalette hostPalette = DEFAULT_MARIO_PALETTE;
+    char hostName[MAX_CONFIG_STRING] = "Player";
+    if (p->cursor < p->dataLength) {
+        packet_read(p, &hostModel, sizeof(u8));
+        packet_read(p, &hostPalette, sizeof(struct PlayerPalette));
+        packet_read(p, &hostName, sizeof(u8) * MAX_CONFIG_STRING);
+    }
+
+    network_player_connected(NPT_SERVER, 0, hostModel, &hostPalette, hostName, "0");
     network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
     djui_chat_box_create();
 

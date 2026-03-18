@@ -1,5 +1,10 @@
 #ifdef WAPI_SDL2
 
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #ifdef __MINGW32__
 #define FOR_WINDOWS 1
 #else
@@ -69,7 +74,13 @@ static void (*m_scroll)(float, float) = NULL;
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
 static inline void gfx_sdl_set_vsync(const bool enabled) {
+#ifdef TARGET_WEB
+    // On web, don't touch swap interval at all.
+    // Vsync is handled by requestAnimationFrame via emscripten_set_main_loop.
+    (void)enabled;
+#else
     SDL_GL_SetSwapInterval(enabled);
+#endif
 }
 
 static void gfx_sdl_set_fullscreen(void) {
@@ -120,14 +131,20 @@ static void gfx_sdl_init(const char *window_title) {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_StartTextInput();
 
+#ifdef TARGET_WEB
+    // Web: try 4x MSAA with 24-bit depth, fall back if context creation fails
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+#else
     if (configWindow.msaa > 0) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, configWindow.msaa);
     } else {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
     }
-
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+#endif
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 #ifdef USE_GLES
@@ -145,6 +162,31 @@ static void gfx_sdl_init(const char *window_title) {
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
     ctx = SDL_GL_CreateContext(wnd);
+
+#ifdef TARGET_WEB
+    if (!ctx) {
+        // MSAA or 24-bit depth not supported (common on mobile WebGL).
+        // Retry with no MSAA and 16-bit depth.
+        printf("WebGL context failed with MSAA — retrying without\n");
+        SDL_DestroyWindow(wnd);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+        wnd = SDL_CreateWindow(
+            window_title,
+            xpos, ypos, configWindow.w, configWindow.h,
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+        );
+        ctx = SDL_GL_CreateContext(wnd);
+    }
+#endif
+
+    if (!ctx) {
+        printf("SDL_GL_CreateContext failed: %s\n", SDL_GetError());
+#ifdef TARGET_WEB
+        EM_ASM({ console.error('[SM64] WebGL context creation failed: ' + UTF8ToString($0)); }, SDL_GetError());
+#endif
+    }
 
     gfx_sdl_set_vsync(configWindow.vsync);
 
@@ -279,7 +321,17 @@ static bool gfx_sdl_start_frame(void) {
 }
 
 static void gfx_sdl_swap_buffers_begin(void) {
+#ifdef TARGET_WEB
+    // On web, the framebuffer is implicitly presented when the
+    // requestAnimationFrame callback returns to the browser event loop.
+    // Do NOT call emscripten_webgl_commit_frame() — that's only for
+    // explicit swap control mode and causes black screens on Android
+    // Chrome (see emscripten issue #10309).
+    // Do NOT call SDL_GL_SwapWindow — it's a no-op on Emscripten but
+    // can trigger emscripten_sleep via eglSwapBuffers with ASYNCIFY.
+#else
     SDL_GL_SwapWindow(wnd);
+#endif
 }
 
 static void gfx_sdl_swap_buffers_end(void) {
@@ -290,7 +342,14 @@ static double gfx_sdl_get_time(void) {
 }
 
 static void gfx_sdl_delay(u32 ms) {
+#ifdef TARGET_WEB
+    // Don't use SDL_Delay on web — it uses emscripten_sleep which
+    // conflicts with emscripten_set_main_loop and causes freezes.
+    // Frame pacing is handled by requestAnimationFrame.
+    (void)ms;
+#else
     SDL_Delay(ms);
+#endif
 }
 
 static int gfx_sdl_get_max_msaa(void) {

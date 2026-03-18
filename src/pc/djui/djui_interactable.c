@@ -295,6 +295,8 @@ void djui_interactable_on_key_up(int scancode) {
                     djui_base_set_visible(&gDjuiModList->base, false);
                 }
                 gAttemptingToOpenPlayerlist = false;
+                // Hide cursor when playerlist closes (it was enabled for TP buttons)
+                djui_cursor_set_visible(false);
                 break;
             }
         }

@@ -67,6 +67,8 @@ USE_APP ?= 1
 MIN_MACOS_VERSION ?= 11
 # Make some small adjustments for handheld devices
 HANDHELD ?= 0
+# Build for the web (Emscripten/WebAssembly)
+TARGET_WEB ?= 0
 
 # Various workarounds for weird toolchains
 NO_BZERO_BCOPY ?= 0
@@ -135,6 +137,24 @@ ifeq ($(HOST_OS),Linux)
     #Rasberry Pi zero, 2, 3, etc
     TARGET_RPI = 1
   endif
+endif
+
+# Emscripten (WebAssembly) overrides
+
+ifeq ($(TARGET_WEB),1)
+  $(info Compiling for Web (Emscripten/WebAssembly))
+  CC      := emcc
+  CXX     := em++
+  LD      := emcc
+  AR      := emar
+  RENDER_API    := GL
+  WINDOW_API    := SDL2
+  AUDIO_API     := SDL2
+  CONTROLLER_API := SDL2
+  DISCORD_SDK   := 0
+  COOPNET       := 0
+  DEFINES += USE_GLES=1
+  DEFINES += TARGET_WEB=1
 endif
 
 # MXE overrides
@@ -363,6 +383,10 @@ ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
   DEFINES += USE_GLES=1
 endif
 
+ifeq ($(TARGET_WEB),1) # WebGL uses GLES2 shader path
+  DEFINES += USE_GLES=1
+endif
+
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
      DEFINES += OSX_BUILD=1
 endif
@@ -497,6 +521,10 @@ ifeq ($(TARGET_RK3588),1)
   EXE := $(BUILD_DIR)/sm64coopdx.arm
 endif
 
+ifeq ($(TARGET_WEB),1)
+  EXE := $(BUILD_DIR)/sm64coopdx.html
+endif
+
 ELF            := $(BUILD_DIR)/$(TARGET).elf
 LIBULTRA       := $(BUILD_DIR)/libultra.a
 LD_SCRIPT      := sm64.ld
@@ -513,11 +541,18 @@ BIN_DIRS := bin bin/$(VERSION)
 # PC files
 SRC_DIRS += src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes src/pc/mods src/pc/dev src/pc/network src/pc/network/packets src/pc/network/socket src/pc/network/coopnet src/pc/utils src/pc/utils/miniz src/pc/djui src/pc/lua src/pc/lua/utils src/pc/os
 
-ifeq ($(DISCORD_SDK),1)
-  SRC_DIRS += src/pc/discord
-endif
+ifeq ($(TARGET_WEB),0)
+  ifeq ($(DISCORD_SDK),1)
+    SRC_DIRS += src/pc/discord
+  endif
 
-SRC_DIRS += src/pc/mumble
+  SRC_DIRS += src/pc/mumble
+else
+  # Web build: add web-specific source directory
+  SRC_DIRS += src/pc/web
+  # Compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
+  SRC_DIRS += lib/lua/lua-5.3.6
+endif
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
 ULTRA_BIN_DIRS := lib/bin
@@ -560,6 +595,21 @@ ifeq ($(TARGET_N64),0)
 
 	C_FILES           := $(filter-out src/game/main.c,$(C_FILES))
 	ULTRA_C_FILES     := $(addprefix lib/src/,$(ULTRA_C_FILES))
+
+	ifeq ($(TARGET_WEB),1)
+	  # Exclude platform-specific files replaced by web equivalents
+	  C_FILES := $(filter-out src/pc/network/socket/socket.c,$(C_FILES))
+	  C_FILES := $(filter-out src/pc/network/socket/socket_linux.c,$(C_FILES))
+	  C_FILES := $(filter-out src/pc/network/socket/socket_windows.c,$(C_FILES))
+	  C_FILES := $(filter-out src/pc/thread.c,$(C_FILES))
+	  # Exclude update checker (not applicable on web)
+	  C_FILES := $(filter-out src/pc/update_checker.c,$(C_FILES))
+	  # Note: socket_websocket.c, thread_web.c, and web_main.c are auto-discovered
+	  # via SRC_DIRS (src/pc/network/socket, src/pc, src/pc/web)
+	  # Exclude Lua standalone interpreter/compiler (they have their own main())
+	  # Exclude Lua standalone interpreter (has its own main())
+	  C_FILES := $(filter-out lib/lua/lua-5.3.6/lua.c,$(C_FILES))
+	endif
 endif
 
 # Sound files
@@ -655,6 +705,7 @@ ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 endif
 
+ifneq ($(TARGET_WEB),1)
 ifeq ($(WINDOWS_AUTO_BUILDER),1)
   CC      := cc
   CXX     := g++
@@ -684,6 +735,7 @@ else
     COPT    := $(IDO_ROOT)/copt
   endif
 endif
+endif # !TARGET_WEB
 
 ifeq ($(WINDOWS_BUILD),1) # fixes compilation in MXE on Linux and WSL
   CPP := cpp -P
@@ -770,7 +822,9 @@ ifeq ($(WINDOW_API),DXGI)
   BACKEND_LDFLAGS += -ld3dcompiler -ldxgi -ldxguid
   BACKEND_LDFLAGS += -lsetupapi -ldinput8 -luser32 -lgdi32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion -luuid -static
 else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
-  ifeq ($(WINDOWS_BUILD),1)
+  ifeq ($(TARGET_WEB),1)
+    # Emscripten provides GL/SDL via -s flags in LDFLAGS; no native libs needed here
+  else ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
@@ -813,7 +867,10 @@ else ifeq ($(SDL1_USED),1)
 endif
 
 ifneq ($(SDL1_USED)$(SDL2_USED),00)
-  ifeq ($(OSX_BUILD),1)
+  ifeq ($(TARGET_WEB),1)
+    # Emscripten provides SDL2 and zlib via -s flags; no sdl2-config/pkg-config needed
+    BACKEND_CFLAGS += -s USE_SDL=2 -s USE_ZLIB=1
+  else ifeq ($(OSX_BUILD),1)
     # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
     OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
     BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
@@ -821,10 +878,12 @@ ifneq ($(SDL1_USED)$(SDL2_USED),00)
     BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
   endif
 
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
-  else
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
+  ifneq ($(TARGET_WEB),1)
+    ifeq ($(WINDOWS_BUILD),1)
+      BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
+    else
+      BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
+    endif
   endif
 endif
 
@@ -833,6 +892,10 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 # Check code syntax with host compiler
 CC_CHECK := $(CC)
+ifeq ($(TARGET_WEB),1)
+  # Emscripten's emcc understands -s flags; host gcc does not
+  CC_CHECK := emcc
+endif
 
 ifeq ($(WINDOWS_BUILD),1)
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
@@ -875,7 +938,23 @@ ifeq ($(TARGET_N64),1)
   endif
 endif
 
-ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(TARGET_WEB),1)
+  LDFLAGS := $(OPT_FLAGS) $(BACKEND_LDFLAGS) \
+    -s USE_SDL=2 -s USE_ZLIB=1 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
+    -s INITIAL_MEMORY=268435456 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=1 \
+    -s FULL_ES2=1 -s FORCE_FILESYSTEM=1 \
+    -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","allocateUTF8"]' \
+    -s EXPORTED_FUNCTIONS='["_main","_rom_on_drop_file","_web_rom_loaded","_web_get_rom_status","_web_save_to_idb","_web_fs_init","_web_one_iteration","_malloc","_free","_web_mods_refresh","_web_mods_get_count","_web_mods_get_name","_web_mods_get_description","_web_mods_get_enabled","_web_mods_set_enabled","_web_mods_get_relative_path","_web_mod_import_file","_web_touch_key_down","_web_touch_key_up","_web_touch_set_stick","_web_touch_clear_stick","_web_get_player_name","_web_get_max_players","_web_get_active_mod_count","_web_get_active_mod_name","_web_get_version","_web_lobby_on_room","_web_lobby_on_query_finish","_web_lobby_shutdown"]' \
+    -s ASYNCIFY \
+    -s ASYNCIFY_STACK_SIZE=65536 \
+    -s STACK_SIZE=2097152 \
+    -s EXIT_RUNTIME=0 \
+    -lidbfs.js \
+    --preload-file lang@/sm64coopdx/lang \
+    $(if $(wildcard mods),--preload-file mods@/sm64coopdx/mods) \
+    $(if $(wildcard dynos),--preload-file dynos@/sm64coopdx/dynos) \
+    --shell-file src/pc/web/shell.html
+else ifeq ($(WINDOWS_BUILD),1)
   LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -Llib -lpthread $(BACKEND_LDFLAGS) -static -mconsole
   ifeq ($(CROSS),)
     LDFLAGS += -no-pie
@@ -893,7 +972,9 @@ endif
 
 # used by crash handler and loading screen on linux
 ifeq ($(WINDOWS_BUILD),0)
-  LDFLAGS += -rdynamic -ldl -pthread
+  ifneq ($(TARGET_WEB),1)
+    LDFLAGS += -rdynamic -ldl -pthread
+  endif
 endif
 
 # icon
@@ -925,18 +1006,26 @@ endif
 
 # Coop specific libraries
 
-# Zlib
-LDFLAGS += -lz
+# Zlib (Emscripten provides zlib via -s USE_ZLIB=1)
+ifneq ($(TARGET_WEB),1)
+  LDFLAGS += -lz
+endif
 
-# Update checker library
-ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS += -lwininet
-else
-  LDFLAGS += -lcurl
+# Update checker library (not applicable on web)
+ifneq ($(TARGET_WEB),1)
+  ifeq ($(WINDOWS_BUILD),1)
+    LDFLAGS += -lwininet
+  else
+    LDFLAGS += -lcurl
+  endif
 endif
 
 # Lua
-ifeq ($(WINDOWS_BUILD),1)
+ifeq ($(TARGET_WEB),1)
+  # For web builds, compile Lua 5.3 from source (prebuilt .a is native, can't link in WASM)
+  LUA_SRC_DIR := lib/lua/lua-5.3.6
+  INCLUDE_DIRS += $(LUA_SRC_DIR)
+else ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(TARGET_BITS), 32)
     LDFLAGS += -Llib/lua/win32 -l:liblua53.a
   else
@@ -993,14 +1082,16 @@ ifeq ($(COOPNET),1)
 endif
 
 # Network/Discord (ugh, needs cleanup)
-ifeq ($(WINDOWS_BUILD),1)
-  LDFLAGS += -lws2_32 -lwsock32
-  ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
-  endif
-else
-  ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+ifneq ($(TARGET_WEB),1)
+  ifeq ($(WINDOWS_BUILD),1)
+    LDFLAGS += -lws2_32 -lwsock32
+    ifeq ($(DISCORD_SDK),1)
+      LDFLAGS += -Wl,-Bdynamic -L./lib/discordsdk/ -ldiscord_game_sdk -Wl,-Bstatic
+    endif
+  else
+    ifeq ($(DISCORD_SDK),1)
+      LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+    endif
   endif
 endif
 
@@ -1008,7 +1099,9 @@ IS_DEV_OR_DEBUG := $(or $(filter 1,$(DEVELOPMENT)),$(filter 1,$(DEBUG)),0)
 ifeq ($(IS_DEV_OR_DEBUG),0)
   CFLAGS += -fno-ident -fno-common -ffile-prefix-map="$(PWD)"=. -D__DATE__="\"\"" -D__TIME__="\"\"" -Wno-builtin-macro-redefined
   ifeq ($(OSX_BUILD),0)
-    LDFLAGS += -Wl,--build-id=none
+    ifneq ($(TARGET_WEB),1)
+      LDFLAGS += -Wl,--build-id=none
+    endif
   endif
 else
   # Stuff for showing the git hash and build time in dev builds
@@ -1025,7 +1118,9 @@ CFLAGS += -fPIE
 export LANG := C
 
 ifeq ($(OSX_BUILD),0)
-  LDFLAGS += -latomic
+  ifneq ($(TARGET_WEB),1)
+    LDFLAGS += -latomic
+  endif
 endif
 
 #==============================================================================#
@@ -1080,6 +1175,12 @@ endif
 ifeq ($(TARGET_RK3588),1)
   CC_CHECK_CFLAGS += -DTARGET_RK3588
   CFLAGS += -DTARGET_RK3588
+endif
+
+# Check for web option
+ifeq ($(TARGET_WEB),1)
+  CC_CHECK_CFLAGS += -DTARGET_WEB
+  CFLAGS += -DTARGET_WEB
 endif
 
 # Check for texture fix option
@@ -1172,6 +1273,17 @@ endef
 
 #all: $(ROM)
 all: $(EXE)
+
+# Copy PWA assets to build directory for web builds
+ifeq ($(TARGET_WEB),1)
+pwa: $(EXE)
+	@$(PRINT) "$(GREEN)Copying PWA assets $(NO_COL)\n"
+	$(V)mkdir -p $(BUILD_DIR)/icons
+	$(V)cp src/pc/web/pwa/manifest.json $(BUILD_DIR)/
+	$(V)cp src/pc/web/pwa/sw.js $(BUILD_DIR)/
+	$(V)cp src/pc/web/pwa/icon-*.png $(BUILD_DIR)/icons/
+all: pwa
+endif
 
 ifeq ($(WINDOWS_BUILD),1)
 MAPFILE = $(BUILD_DIR)/coop.map
@@ -1359,17 +1471,24 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(RM) $@.dummy1
 	@$(RM) $@.dummy2
 
-$(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
+# Web builds use 32-bit LE sound data from sound/web/; native uses sound/
+ifeq ($(TARGET_WEB),1)
+  SOUND_DATA_SRC := sound/web
+else
+  SOUND_DATA_SRC := sound
+endif
 
-$(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
+$(SOUND_BIN_DIR)/sound_data.tbl: $(SOUND_DATA_SRC)/sound_data_compressed.tbl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/sound_data.tbl
 
-$(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
+$(SOUND_BIN_DIR)/sound_data.ctl: $(SOUND_DATA_SRC)/sound_data_compressed.ctl
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/bank_sets_compressed $(SOUND_BIN_DIR)/bank_sets
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/sound_data.ctl
+
+$(SOUND_BIN_DIR)/bank_sets: $(SOUND_DATA_SRC)/bank_sets_compressed
+	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $< $(SOUND_BIN_DIR)/bank_sets
 
 $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
@@ -1379,7 +1498,7 @@ $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 
 $(SOUND_BIN_DIR)/sequences.bin:
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
+	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py $(SOUND_DATA_SRC)/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
 
 $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
 	@true

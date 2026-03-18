@@ -163,7 +163,7 @@ void ext_gfx_run_dl(Gfx* cmd);
     return 0;
 }*/
 
-static void gfx_flush(void) {
+void gfx_flush(void) {
     if (buf_vbo_len > 0) {
         gfx_rapi->draw_triangles(buf_vbo, buf_vbo_len, buf_vbo_num_tris);
         buf_vbo_len = 0;
@@ -661,6 +661,9 @@ static void OPTIMIZE_O3 gfx_sp_matrix(uint8_t parameters, const int32_t *addr) {
 
     if (parameters & G_MTX_PROJECTION) {
         if (parameters & G_MTX_LOAD) {
+            // TODO: Ortho switch detection for 3D/UI split (disabled for now,
+            // causes rendering issues with mid-frame state changes)
+            // if (matrix[2][3] == 0.0f) { ssgi_on_ortho_switch(); }
             mtxf_copy(rsp.P_matrix, matrix);
         } else {
             mtxf_mul(rsp.P_matrix, matrix, rsp.P_matrix);

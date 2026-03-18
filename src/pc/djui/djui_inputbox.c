@@ -7,6 +7,9 @@
 #include "pc/pc_main.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
+#ifdef TARGET_WEB
+#include <emscripten.h>
+#endif
 
 #define DJUI_INPUTBOX_YOFF (-3)
 #define DJUI_INPUTBOX_MAX_BLINK 50
@@ -330,10 +333,22 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     gDjuiInputHeldControl = 0;
     gDjuiInputHeldAlt     = 0;
     wm_api->start_text_input();
+#ifdef TARGET_WEB
+    // Mobile browsers need an actual <input> element focused to show the virtual keyboard.
+    // SDL_StartTextInput alone isn't sufficient on iOS/Android.
+    emscripten_run_script(
+        "if (typeof WebMobileInput !== 'undefined') WebMobileInput.show();"
+    );
+#endif
 }
 
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
     wm_api->stop_text_input();
+#ifdef TARGET_WEB
+    emscripten_run_script(
+        "if (typeof WebMobileInput !== 'undefined') WebMobileInput.hide();"
+    );
+#endif
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
