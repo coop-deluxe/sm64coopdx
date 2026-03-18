@@ -124,6 +124,7 @@ enum InteractionFlag {
 
 extern s16 gInteractionInvulnerable;
 extern u8 gPssSlideStarted;
+extern bool gOverrideHOLP;
 
 /* |description|
 Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.

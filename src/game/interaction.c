@@ -93,6 +93,7 @@ static u8 sDisplayingDoorText = FALSE;
 static u8 sJustTeleported = FALSE;
 u8 gPssSlideStarted = FALSE;
 extern u8 gLastCollectedStarOrKey;
+bool gOverrideHOLP = true;
 
 /**
  * Returns the type of cap Mario is wearing.
@@ -346,14 +347,18 @@ void mario_drop_held_object(struct MarioState *m) {
         if (m->marioBodyState) {
             // Set HOLP to Mario's position to prevent the bugs with custom characters
             // holding objects. The held object will still appear at their hand visually.
-            m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
-            m->marioBodyState->heldObjLastPosition[1] = m->pos[1];
-            m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]);
-            
+            if (gOverrideHOLP == TRUE) {
+                m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
+                m->marioBodyState->heldObjLastPosition[1] = m->pos[1];
+                m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]); 
+            }
+
             m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0];
             m->heldObj->oPosY = m->pos[1];
             m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2];
         }
+
+        
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
@@ -378,13 +383,20 @@ void mario_throw_held_object(struct MarioState *m) {
 
         if (m->marioBodyState) {
             // Set HOLP again
-            m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
-            m->marioBodyState->heldObjLastPosition[1] = m->pos[1] + 79.0f;
-            m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]);
-            
-            m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0];
-            m->heldObj->oPosY = m->marioBodyState->heldObjLastPosition[1];
-            m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2];
+            if (gOverrideHOLP == TRUE) {
+                m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
+                m->marioBodyState->heldObjLastPosition[1] = m->pos[1];
+                m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]); 
+
+                m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0];
+                m->heldObj->oPosY = m->marioBodyState->heldObjLastPosition[1];
+                m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2];
+
+            } else {
+                m->heldObj->oPosX = m->marioBodyState->heldObjLastPosition[0] + 32.0f * sins(m->faceAngle[1]);
+                m->heldObj->oPosY = m->marioBodyState->heldObjLastPosition[1];
+                m->heldObj->oPosZ = m->marioBodyState->heldObjLastPosition[2] + 32.0f * coss(m->faceAngle[1]);
+            }
         }
 
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];

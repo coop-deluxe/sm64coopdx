@@ -173,6 +173,14 @@ bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f p
 Retrieves the animated part rotation associated to `animPart` from the MarioState `m` and stores it into `rot`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
 bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot);
+/* |description|
+Retrieves the boolean value of the variable gOverrideHOLP.
+|descriptionEnd| */
+bool get_character_holp_info();
+/* |description|
+Override's the HOLP position to be at a custom character's hand position instead of Mario's. Set at 'true' by default to prevent inconsistencies with custom characters.
+|descriptionEnd| */
+bool set_character_holp_override(bool value);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);

@@ -31,6 +31,7 @@
 #include "game/rumble_init.h"
 #include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "game/interaction.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -381,6 +382,15 @@ bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s r
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3s_copy(rot, m->marioBodyState->animPartsRot[animPart]);
     return true;
+}
+
+extern bool gOverrideHOLP;
+bool get_character_holp_info() {
+    return gOverrideHOLP;
+}
+
+bool set_character_holp_override(bool value) {
+    gOverrideHOLP = value;
 }
 
 ///
