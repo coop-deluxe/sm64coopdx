@@ -385,11 +385,11 @@ bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s r
 }
 
 extern bool gOverrideHOLP;
-bool get_character_holp_info() {
+bool get_character_holp_override() {
     return gOverrideHOLP;
 }
 
-bool set_character_holp_info(bool value) {
+bool set_character_holp_override(bool value) {
     gOverrideHOLP = value;
 }
 
