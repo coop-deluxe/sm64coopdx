@@ -124,6 +124,11 @@ EM_JS(int, peer_drain_recv, (uint8_t* ringBuf, int ringBufSize, int* headPtr, in
     return drained;
 });
 
+// Close a specific client slot (kick rejected/excess connections)
+EM_JS(void, peer_kick_slot, (int slotId), {
+    PeerNetwork.kickSlot(slotId);
+});
+
 // Shutdown PeerJS
 EM_JS(void, peer_shutdown, (), {
     PeerNetwork.shutdown();
@@ -221,6 +226,10 @@ static void ns_socket_save_id(u8 localId, UNUSED s64 networkId) {
 static void ns_socket_clear_id(u8 localId) {
     if (localId == 0) { return; }
     SOFT_ASSERT(localId < MAX_PLAYERS);
+    // Close the WebRTC connection for this slot so it stops sending packets
+    if (sIsHostMode && sAddr[localId].sin6_port != 0) {
+        peer_kick_slot(sAddr[localId].sin6_port);
+    }
     memset(&sAddr[localId], 0, sizeof(struct sockaddr_in6));
     LOG_INFO("cleared addr for id %d", localId);
 }

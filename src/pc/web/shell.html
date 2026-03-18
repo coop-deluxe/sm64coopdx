@@ -1078,10 +1078,44 @@
         });
       },
 
+      // Max slots: must match MAX_PLAYERS in C (16). Slots 1-15 are valid.
+      MAX_SLOTS: 15,
+
+      // Close a specific client connection by slot ID (called from C when rejecting)
+      kickSlot: function(slotId) {
+        var peerId = PeerNetwork.slotToPeer[slotId];
+        if (peerId && PeerNetwork.connections[peerId]) {
+          PeerNetwork.connections[peerId].close();
+          delete PeerNetwork.connections[peerId];
+          delete PeerNetwork.peerToSlot[peerId];
+          delete PeerNetwork.slotToPeer[slotId];
+        }
+        // Reclaim the slot so nextSlotId can reuse low numbers
+        if (slotId < PeerNetwork.nextSlotId - 1) {
+          // Can't easily reuse mid-range; just reset if all slots freed
+        }
+      },
+
+      // Find a free slot (1..MAX_SLOTS), reusing freed slots
+      _allocSlot: function() {
+        for (var s = 1; s <= PeerNetwork.MAX_SLOTS; s++) {
+          if (!PeerNetwork.slotToPeer[s]) return s;
+        }
+        return -1; // no free slot
+      },
+
       _setupHost: function() {
         this.peer.on('connection', function(conn) {
-          var slotId = PeerNetwork.nextSlotId++;
+          // Allocate a slot, reject if full
+          var slotId = PeerNetwork._allocSlot();
+          if (slotId < 0) {
+            console.warn('[PeerJS] Connection rejected — server full');
+            conn.close();
+            return;
+          }
           peerLog('[PeerJS] Client connecting: slot ' + slotId + ' peer ' + conn.peer);
+          // Reserve the slot immediately so concurrent connections don't double-allocate
+          PeerNetwork.slotToPeer[slotId] = conn.peer;
 
           // Set up data handler immediately (works before or after open)
           conn.on('data', function(data) {
