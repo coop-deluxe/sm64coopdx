@@ -68,7 +68,7 @@ bool coopnet_is_connected(void);
 CoopNetRc coopnet_begin(const char* aHost, uint32_t aPort, const char* aName, uint64_t aDestId);
 CoopNetRc coopnet_shutdown(void);
 CoopNetRc coopnet_update(void);
-CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword, const char* aDescription, size_t modSize);
+CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword, const char* aDescription, size_t aModSize);
 CoopNetRc coopnet_lobby_update(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription, size_t aModSize);
 CoopNetRc coopnet_lobby_join(uint64_t aLobbyId, const char* aPassword);
 CoopNetRc coopnet_lobby_leave(uint64_t aLobbyId);
