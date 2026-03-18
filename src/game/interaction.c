@@ -347,7 +347,7 @@ void mario_drop_held_object(struct MarioState *m) {
         if (m->marioBodyState) {
             // Set HOLP to Mario's position to prevent the bugs with custom characters
             // holding objects. The held object will still appear at their hand visually.
-            if (gOverrideHOLP == TRUE) {
+            if (gOverrideHOLP == true) {
                 m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
                 m->marioBodyState->heldObjLastPosition[1] = m->pos[1];
                 m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]); 
@@ -383,7 +383,7 @@ void mario_throw_held_object(struct MarioState *m) {
 
         if (m->marioBodyState) {
             // Set HOLP again
-            if (gOverrideHOLP == TRUE) {
+            if (gOverrideHOLP == true) {
                 m->marioBodyState->heldObjLastPosition[0] = m->pos[0] + 32.0f * sins(m->faceAngle[1]);
                 m->marioBodyState->heldObjLastPosition[1] = m->pos[1];
                 m->marioBodyState->heldObjLastPosition[2] = m->pos[2] + 22.0f * coss(m->faceAngle[1]); 

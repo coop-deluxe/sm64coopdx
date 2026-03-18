@@ -389,7 +389,7 @@ bool get_character_holp_info() {
     return gOverrideHOLP;
 }
 
-bool set_character_holp_override(bool value) {
+bool set_character_holp_info(bool value) {
     gOverrideHOLP = value;
 }
 

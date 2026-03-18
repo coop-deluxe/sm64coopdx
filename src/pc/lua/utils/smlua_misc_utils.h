@@ -180,7 +180,7 @@ bool get_character_holp_info();
 /* |description|
 Override's the HOLP position to be at a custom character's hand position instead of Mario's. Set at 'true' by default to prevent inconsistencies with custom characters.
 |descriptionEnd| */
-bool set_character_holp_override(bool value);
+bool set_character_holp_info(bool value);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);
