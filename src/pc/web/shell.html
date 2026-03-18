@@ -1050,31 +1050,34 @@
         this.peer = new Peer(this.hostPeerId);
 
         this.peer.on('open', function(id) {
-          // Successfully registered as host
-          peerLog('[PeerJS] Hosting room: ' + roomId + ' (peer ID: ' + id + ')');
+          console.log('[Net] HOST ready — room="' + roomId + '" peerId=' + id + ' slots=0/' + PeerNetwork.MAX_SLOTS);
           PeerNetwork.isHost = true;
           PeerNetwork._setupHost();
           BackgroundGuard.start();
         });
 
         this.peer.on('error', function(err) {
-          if (err.type === 'unavailable-id') {
-            // Host already exists - join as client
-            peerLog('[PeerJS] Room ' + roomId + ' exists, joining as client...');
+          var type = err.type || 'unknown';
+          var msg = err.message || String(err);
+          if (type === 'unavailable-id') {
+            console.log('[Net] Room "' + roomId + '" already hosted — joining as client');
             PeerNetwork.peer.destroy();
             PeerNetwork._joinAsClient();
           } else {
-            console.error('[PeerJS] Error:', err);
+            console.error('[Net] HOST signaling error type=' + type + ' msg=' + msg);
           }
         });
 
         this.peer.on('disconnected', function() {
-          // Lost connection to PeerJS signaling server — existing data channels
-          // stay alive, but new clients can't join. Try to reconnect.
+          var occupied = Object.keys(PeerNetwork.slotToPeer).length;
           if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
-            console.warn('[PeerJS] Host lost signaling server, reconnecting...');
+            console.warn('[Net] HOST lost signaling server (clients still connected: ' + occupied + ') — reconnecting...');
             PeerNetwork.peer.reconnect();
           }
+        });
+
+        this.peer.on('close', function() {
+          console.warn('[Net] HOST peer destroyed');
         });
       },
 
@@ -1085,14 +1088,11 @@
       kickSlot: function(slotId) {
         var peerId = PeerNetwork.slotToPeer[slotId];
         if (peerId && PeerNetwork.connections[peerId]) {
+          console.log('[Net] HOST kicking slot=' + slotId + ' peer=' + peerId + ' (game-layer disconnect)');
           PeerNetwork.connections[peerId].close();
           delete PeerNetwork.connections[peerId];
           delete PeerNetwork.peerToSlot[peerId];
           delete PeerNetwork.slotToPeer[slotId];
-        }
-        // Reclaim the slot so nextSlotId can reuse low numbers
-        if (slotId < PeerNetwork.nextSlotId - 1) {
-          // Can't easily reuse mid-range; just reset if all slots freed
         }
       },
 
@@ -1106,14 +1106,15 @@
 
       _setupHost: function() {
         this.peer.on('connection', function(conn) {
+          var occupied = Object.keys(PeerNetwork.slotToPeer).length;
           // Allocate a slot, reject if full
           var slotId = PeerNetwork._allocSlot();
           if (slotId < 0) {
-            console.warn('[PeerJS] Connection rejected — server full');
+            console.warn('[Net] HOST rejected peer=' + conn.peer + ' — server full (' + occupied + '/' + PeerNetwork.MAX_SLOTS + ')');
             conn.close();
             return;
           }
-          peerLog('[PeerJS] Client connecting: slot ' + slotId + ' peer ' + conn.peer);
+          console.log('[Net] HOST incoming peer=' + conn.peer + ' assigned slot=' + slotId + ' (' + (occupied+1) + '/' + PeerNetwork.MAX_SLOTS + ')');
           // Reserve the slot immediately so concurrent connections don't double-allocate
           PeerNetwork.slotToPeer[slotId] = conn.peer;
 
@@ -1123,7 +1124,7 @@
             // Ignore keepalive pings (single 0xFF byte)
             if (arr.length === 1 && arr[0] === 0xFF) return;
             if (PeerNetwork.recvBuffer.length < 3) {
-              peerLog('[PeerJS] HOST recv from slot ' + slotId + ': ' + arr.length + ' bytes');
+              peerLog('[Net] HOST recv slot=' + slotId + ' bytes=' + arr.length);
             }
             PeerNetwork.recvBuffer.push({ slotId: slotId, data: arr });
           });
@@ -1133,7 +1134,8 @@
             PeerNetwork.connections[conn.peer] = conn;
             PeerNetwork.peerToSlot[conn.peer] = slotId;
             PeerNetwork.slotToPeer[slotId] = conn.peer;
-            peerLog('[PeerJS] Client ready: slot ' + slotId + ' peer ' + conn.peer);
+            var now_occupied = Object.keys(PeerNetwork.slotToPeer).length;
+            console.log('[Net] HOST client CONNECTED slot=' + slotId + ' peer=' + conn.peer + ' (' + now_occupied + '/' + PeerNetwork.MAX_SLOTS + ')');
           });
 
           // If already open (can happen), register immediately
@@ -1141,14 +1143,20 @@
             PeerNetwork.connections[conn.peer] = conn;
             PeerNetwork.peerToSlot[conn.peer] = slotId;
             PeerNetwork.slotToPeer[slotId] = conn.peer;
-            peerLog('[PeerJS] Client ready (immediate): slot ' + slotId);
+            var now_occupied2 = Object.keys(PeerNetwork.slotToPeer).length;
+            console.log('[Net] HOST client CONNECTED (immediate) slot=' + slotId + ' (' + now_occupied2 + '/' + PeerNetwork.MAX_SLOTS + ')');
           }
 
           conn.on('close', function() {
-            peerLog('[PeerJS] Client disconnected: slot ' + slotId);
+            var remaining = Object.keys(PeerNetwork.slotToPeer).length - 1;
+            console.log('[Net] HOST client DISCONNECTED slot=' + slotId + ' peer=' + conn.peer + ' (' + remaining + ' remaining)');
             delete PeerNetwork.connections[conn.peer];
             delete PeerNetwork.peerToSlot[conn.peer];
             delete PeerNetwork.slotToPeer[slotId];
+          });
+
+          conn.on('error', function(err) {
+            console.error('[Net] HOST connection error slot=' + slotId + ' peer=' + conn.peer + ':', err.type || err.message || err);
           });
         });
       },
@@ -1165,16 +1173,23 @@
         this._shuttingDown = false;
 
         this.peer.on('open', function(id) {
-          peerLog('[PeerJS] Our peer ID: ' + id + ', connecting to host...');
+          console.log('[Net] CLIENT peer ready id=' + id + ', connecting to room="' + PeerNetwork.roomId + '"...');
           PeerNetwork._connectToHost();
         });
 
         this.peer.on('disconnected', function() {
-          // Lost connection to PeerJS signaling server — try to reconnect
           if (!PeerNetwork._shuttingDown && PeerNetwork.peer && !PeerNetwork.peer.destroyed) {
-            console.warn('[PeerJS] Lost signaling server, reconnecting...');
+            console.warn('[Net] CLIENT lost signaling server — reconnecting...');
             PeerNetwork.peer.reconnect();
           }
+        });
+
+        this.peer.on('error', function(err) {
+          console.error('[Net] CLIENT peer error type=' + (err.type || 'unknown') + ':', err.message || err);
+        });
+
+        this.peer.on('close', function() {
+          console.warn('[Net] CLIENT peer destroyed');
         });
       },
 
@@ -1185,7 +1200,7 @@
         this.connections[this.hostPeerId] = conn;
 
         conn.on('open', function() {
-          peerLog('[PeerJS] Connected to host!');
+          console.log('[Net] CLIENT connected to host room="' + PeerNetwork.roomId + '"');
           PeerNetwork._reconnectAttempts = 0;
           if (PeerNetwork._reconnectTimer) {
             clearTimeout(PeerNetwork._reconnectTimer);
@@ -1195,28 +1210,24 @@
         });
 
         conn.on('data', function(data) {
-          // Received from host - queue for C code (no slot prefix in client mode)
           var arr = new Uint8Array(data);
-          // Ignore keepalive pings (single 0xFF byte)
           if (arr.length === 1 && arr[0] === 0xFF) return;
           if (PeerNetwork.recvBuffer.length < 3) {
-            peerLog('[PeerJS] CLIENT recv from host: ' + arr.length + ' bytes');
+            peerLog('[Net] CLIENT recv from host bytes=' + arr.length);
           }
           PeerNetwork.recvBuffer.push({ slotId: 0, data: arr });
         });
 
         conn.on('close', function() {
-          console.warn('[PeerJS] Disconnected from host');
+          console.warn('[Net] CLIENT disconnected from host room="' + PeerNetwork.roomId + '" — scheduling reconnect');
           delete PeerNetwork.connections[PeerNetwork.hostPeerId];
           PeerNetwork._scheduleReconnect();
         });
 
         conn.on('error', function(err) {
           var msg = err.type || err.message || String(err);
-          console.error('[PeerJS] Connection error:', msg);
+          console.error('[Net] CLIENT connection error type=' + (err.type||'?') + ' room="' + PeerNetwork.roomId + '":', msg);
           delete PeerNetwork.connections[PeerNetwork.hostPeerId];
-          // If this is the first connection attempt and it fails immediately,
-          // the room likely doesn't exist
           if (PeerNetwork._reconnectAttempts === 0 && msg.indexOf('peer-unavailable') !== -1) {
             alert('Room "' + (PeerNetwork.roomId || '?') + '" not found.\n\nThe host may have disconnected. Try a different room or refresh to host your own.');
             return;
@@ -1228,13 +1239,13 @@
       _scheduleReconnect: function() {
         if (this._shuttingDown || this._reconnectTimer) return;
         if (this._reconnectAttempts >= this._maxReconnectAttempts) {
-          console.error('[PeerJS] Max reconnect attempts reached, giving up');
+          console.error('[Net] CLIENT gave up reconnecting to room="' + (this.roomId||'?') + '" after ' + this._maxReconnectAttempts + ' attempts');
           alert('Failed to join room "' + (this.roomId || '?') + '": could not connect to host after ' + this._maxReconnectAttempts + ' attempts.\n\nThe room may no longer exist. Try a different room or refresh to host your own.');
           return;
         }
         this._reconnectAttempts++;
-        var delay = Math.min(2000 * this._reconnectAttempts, 10000); // 2s, 4s, 6s, ... cap at 10s
-        peerLog('[PeerJS] Reconnecting in ' + delay + 'ms (attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ')');
+        var delay = Math.min(2000 * this._reconnectAttempts, 10000);
+        console.log('[Net] CLIENT reconnect attempt ' + this._reconnectAttempts + '/' + this._maxReconnectAttempts + ' in ' + delay + 'ms room="' + (this.roomId||'?') + '"');
         this._reconnectTimer = setTimeout(function() {
           PeerNetwork._reconnectTimer = null;
           PeerNetwork._connectToHost();
