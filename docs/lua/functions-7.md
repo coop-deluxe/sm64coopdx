@@ -1441,6 +1441,50 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 
 <br />
 
+## [get_character_holp_override](#get_character_holp_override)
+
+### Description
+Retrieves the boolean value of the variable gOverrideHOLP.
+
+### Lua Example
+`local booleanValue = get_character_holp_override()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_character_holp_override();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_character_holp_override](#set_character_holp_override)
+
+### Description
+Override's the HOLP position to be at a custom character's hand position instead of Mario's. Set at 'true' by default to prevent inconsistencies with custom characters.
+
+### Lua Example
+`local booleanValue = set_character_holp_override(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool set_character_holp_override(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Description

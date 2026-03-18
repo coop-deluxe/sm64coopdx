@@ -11456,6 +11456,19 @@ function get_mario_anim_part_rot(m, animPart, rot)
     -- ...
 end
 
+--- @return boolean
+--- Retrieves the boolean value of the variable gOverrideHOLP.
+function get_character_holp_override()
+    -- ...
+end
+
+--- @param value boolean
+--- @return boolean
+--- Override's the HOLP position to be at a custom character's hand position instead of Mario's. Set at 'true' by default to prevent inconsistencies with custom characters.
+function set_character_holp_override(value)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()

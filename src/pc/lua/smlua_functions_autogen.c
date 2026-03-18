@@ -33809,6 +33809,38 @@ int smlua_func_get_mario_anim_part_rot(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_character_holp_override(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_character_holp_override", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, get_character_holp_override());
+
+    return 1;
+}
+
+int smlua_func_set_character_holp_override(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_character_holp_override", 1, top);
+        return 0;
+    }
+
+    bool value = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_character_holp_override"); return 0; }
+
+    lua_pushboolean(L, set_character_holp_override(value));
+
+    return 1;
+}
+
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38677,6 +38709,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_mario_anim_part_pos", smlua_func_get_mario_anim_part_pos);
     smlua_bind_function(L, "get_mario_anim_part_rot", smlua_func_get_mario_anim_part_rot);
+    smlua_bind_function(L, "get_character_holp_override", smlua_func_get_character_holp_override);
+    smlua_bind_function(L, "set_character_holp_override", smlua_func_set_character_holp_override);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

@@ -750,6 +750,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLuaVolumeLevel = 127;
     gLuaVolumeSfx = 127;
     gLuaVolumeEnv = 127;
+    gOverrideHOLP = true;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
