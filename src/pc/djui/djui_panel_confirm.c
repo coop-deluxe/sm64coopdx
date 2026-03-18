@@ -13,7 +13,7 @@ void djui_panel_confirm_create(struct DjuiBase* caller, char* title, char* messa
         djui_base_set_size(&text->base, 1.0f, 64);
         djui_base_compute_tree(&text->base);
         u16 lines = djui_text_count_lines(text, 12);
-        f32 textHeight = 32 * text->font->lineHeight * lines + 8;
+        f32 textHeight = 32 * 0.8125f * lines + 8;
         djui_base_set_size(&text->base, 1.0f, textHeight);
 
         djui_base_set_color(&text->base, 220, 220, 220, 255);
