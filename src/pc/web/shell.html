@@ -376,10 +376,11 @@
 
     // PeerJS signaling server config — uses our self-hosted server on the lobby worker
     // to avoid rate limits on the free 0.peerjs.com server
+    // PeerJS appends '/peerjs' to path, so path:'/' → /peerjs on the server
     window.PEERJS_CONFIG = {
       host: 'sm64coopdx-lobby.makeshifted.workers.dev',
       port: 443,
-      path: '/peerjs',
+      path: '/',
       secure: true,
       config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
     };
