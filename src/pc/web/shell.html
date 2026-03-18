@@ -373,6 +373,16 @@
     // Lobby server URL (set to your deployed Cloudflare Worker)
     // Override this before loading the WASM module if deploying to a custom domain
     window.LOBBY_API_URL = 'https://sm64coopdx-lobby.makeshifted.workers.dev/api';
+
+    // PeerJS signaling server config — uses our self-hosted server on the lobby worker
+    // to avoid rate limits on the free 0.peerjs.com server
+    window.PEERJS_CONFIG = {
+      host: 'sm64coopdx-lobby.makeshifted.workers.dev',
+      port: 443,
+      path: '/peerjs',
+      secure: true,
+      config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
+    };
     var gameStarted = false;
 
     // ---- IndexedDB helpers ----
@@ -1047,7 +1057,7 @@
         this.hostPeerId = this.hostPeerIdFromRoom(roomId);
 
         // Try to register as host
-        this.peer = new Peer(this.hostPeerId);
+        this.peer = new Peer(this.hostPeerId, window.PEERJS_CONFIG || {});
 
         this.peer.on('open', function(id) {
           // Successfully registered as host
@@ -1126,7 +1136,7 @@
 
       _joinAsClient: function() {
         // Create a new peer with random ID
-        this.peer = new Peer();
+        this.peer = new Peer(undefined, window.PEERJS_CONFIG || {});
         this.isHost = false;
         this._shuttingDown = false;
 

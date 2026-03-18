@@ -88,6 +88,13 @@ export default {
       });
     }
 
+    // PeerJS signaling WebSocket — route to DO (WebSocket upgrade)
+    if (url.pathname === "/peerjs" && request.headers.get("Upgrade") === "websocket") {
+      const id = env.ROOM_REGISTRY.idFromName("global");
+      const stub = env.ROOM_REGISTRY.get(id);
+      return stub.fetch(request);
+    }
+
     if (!url.pathname.startsWith("/api/")) {
       return new Response("Not Found", { status: 404 });
     }
