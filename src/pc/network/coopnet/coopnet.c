@@ -194,7 +194,7 @@ static void coopnet_populate_description(void) {
     bufferLength -= versionLength;
 
     // get mod size
-    int modsSizeLength = snprintf(buffer, bufferLength, "\nMods Size: %s\n", get_size_string(gActiveMods.size));
+    int modsSizeLength = snprintf(buffer, bufferLength, "\nTotal Mod Size: %s\n", get_size_string(gActiveMods.size));
     buffer += modsSizeLength;
     bufferLength -= modsSizeLength;
 
