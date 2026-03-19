@@ -13,19 +13,16 @@ struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
     if (scroll) {
 
         // If we need to, realloc the block of vertices
-        if ((!scroll->hasOffset && offset > 0) || size < scroll->size) {
-            if (scroll->hasOffset) { return NULL; }
+        if (!scroll->hasOffset && (offset > 0 || size < scroll->size)) {
             if (size > scroll->size) { size = scroll->size; } // Don't use an invalid size
-            if (size + offset >= scroll->size) { return NULL; } // If the offset is invalid, Abort.
-            scroll->hasOffset = true;
+            if (offset > 0 && size + offset >= scroll->size) { return NULL; } // If the offset is invalid, Abort.
             Vtx* *newVtx = malloc(size * sizeof(Vtx*));
             if (!newVtx) { return NULL; }
-            for (u32 i = 0; i < size; i++) {
-                newVtx[i] = scroll->vertices[i + offset];
-            }
+            memcpy(newVtx, scroll->vertices + offset, size * sizeof(Vtx*));
             free(scroll->vertices);
             scroll->vertices = newVtx;
             scroll->size = size;
+            scroll->hasOffset = true;
         }
 
         return scroll;
@@ -86,8 +83,9 @@ void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size, bool hasOffset) {
     if (!newArray) {
         newArray = malloc(newSize);
         if (!newArray) { return; }
-        memcpy(newArray, scroll->vertices, oldSize);
-        memset(newArray + scroll->size, 0, size * sizeof(Vtx*));
+        if (scroll->vertices && oldSize > 0) {
+            memcpy(newArray, scroll->vertices, oldSize);
+        }
         free(scroll->vertices);
     }
 

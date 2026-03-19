@@ -70,13 +70,9 @@ static inline void shift_UV_NORMAL(struct ScrollTarget *scroll, u16 vertcount, s
         verts[0]->n.flag++;
     } else {
         if (bhv < SCROLL_UV_X) {
-            for (i = 0; i < vertcount; i++) {
-                scroll->prevF32[i] = scroll->interpF32[i];
-            }
+            memcpy(scroll->prevF32, scroll->interpF32, vertcount * sizeof(f32));
         } else {
-            for (i = 0; i < vertcount; i++) {
-                scroll->prevS16[i] = scroll->interpS16[i];
-            }
+            memcpy(scroll->prevS16, scroll->interpS16, vertcount * sizeof(s16));
         }
     }
 }
@@ -135,6 +131,12 @@ void uv_update_scroll(void) {
         if (bhv < SCROLL_UV_X) {
             scroll->interpF32 = malloc(scroll->size * sizeof(f32));
             scroll->prevF32 = malloc(scroll->size * sizeof(f32));
+            if (!scroll->interpF32 || !scroll->prevF32) {
+                free(scroll->interpF32);
+                free(scroll->prevF32);
+                scroll->interpF32 = scroll->prevF32 = NULL;
+                return;
+            }
 
             u8 bhvIndex = MIN(bhv, 2);
             for (u32 k = 0; k < scroll->size; k++) {
@@ -143,6 +145,12 @@ void uv_update_scroll(void) {
         } else {
             scroll->interpS16 = malloc(scroll->size * sizeof(s16));
             scroll->prevS16 = malloc(scroll->size * sizeof(s16));
+            if (!scroll->interpS16 || !scroll->prevS16) {
+                free(scroll->interpS16);
+                free(scroll->prevS16);
+                scroll->interpS16 = scroll->prevS16 = NULL;
+                return;
+            }
 
             u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
             for (u32 k = 0; k < scroll->size; k++) {
