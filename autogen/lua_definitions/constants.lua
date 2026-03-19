@@ -8207,7 +8207,13 @@ HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
 HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
 HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
 HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
-HOOK_MAX                                    = 60 --- @type LuaHookedEventType
+HOOK_ON_FIND_WALL_COLLISION                 = 60 --- @type LuaHookedEventType
+HOOK_ON_FIND_CEIL                           = 61 --- @type LuaHookedEventType
+HOOK_ON_FIND_FLOOR                          = 62 --- @type LuaHookedEventType
+HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
+HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
+HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
+HOOK_MAX                                    = 66 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8270,6 +8276,12 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_ADD_SURFACE`
 --- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
+--- | `HOOK_ON_FIND_WALL_COLLISION`
+--- | `HOOK_ON_FIND_CEIL`
+--- | `HOOK_ON_FIND_FLOOR`
+--- | `HOOK_ON_FIND_WATER_LEVEL`
+--- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
+--- | `HOOK_ON_FIND_SURFACE_ON_RAY`
 --- | `HOOK_MAX`
 
 --- @type integer

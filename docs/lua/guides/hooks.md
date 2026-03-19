@@ -151,6 +151,12 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_MARIO_OVERRIDE_FLOOR_CLASS | Called when Mario's floor class logic updates, return a `SURFACE_CLASS_*` constant to override the type. | [MarioState](../structs.md#MarioState) mario, `integer` surfaceClass |
 | HOOK_ON_ADD_SURFACE | Called when collision surfaces are added. | [Surface](../structs.md#Surface) surface, `boolean` dynamic |
 | HOOK_ON_CLEAR_AREAS | Called when a level's areas are unloaded. | None |
+| HOOK_ON_FIND_WALL_COLLISION | Called after wall collision detection completes. You can modify the `colData` fields directly. Return a number to override `numCollisions` | `number` posX, `number` posY, `number` posZ, [WallCollisionData](../structs.md#WallCollisionData) colData |
+| HOOK_ON_FIND_CEIL | Called after ceiling detection completes. Return `height` to override height, or `height, surface` to override both | `number` posX, `number` posY, `number` posZ, [Surface](../structs.md#Surface) ceil, `number` height |
+| HOOK_ON_FIND_FLOOR | Called after floor detection completes. Return `height` to override height, or `height, surface` to override both | `number` posX, `number` posY, `number` posZ, [Surface](../structs.md#Surface) floor, `number` height |
+| HOOK_ON_FIND_WATER_LEVEL | Called after water level detection completes. Return a number to override the water level | `number` x, `number` z, `number` waterLevel |
+| HOOK_ON_FIND_POISON_GAS_LEVEL | Called after poison gas level detection completes. Return a number to override the gas level | `number` x, `number` z, `number` gasLevel |
+| HOOK_ON_FIND_SURFACE_ON_RAY | Called after ray-surface intersection completes. Return `surface` to override the hit surface, or `surface, hitPos` to override both | `Vec3f` orig, `Vec3f` dir, [Surface](../structs.md#Surface) hitSurface, `Vec3f` hitPos |
 
 ### Parameters
 

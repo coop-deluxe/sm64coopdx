@@ -11,6 +11,8 @@
 // forward declare
 struct Camera;
 struct WarpDest;
+struct WallCollisionData;
+struct Surface;
 
 // ! Hooks must be added at the end
 enum LuaHookedEventType {
@@ -74,6 +76,12 @@ enum LuaHookedEventType {
     HOOK_ON_ADD_SURFACE,
     HOOK_ON_CLEAR_AREAS,
     HOOK_ON_PACKET_BYTESTRING_RECEIVE,
+    HOOK_ON_FIND_WALL_COLLISION,
+    HOOK_ON_FIND_CEIL,
+    HOOK_ON_FIND_FLOOR,
+    HOOK_ON_FIND_WATER_LEVEL,
+    HOOK_ON_FIND_POISON_GAS_LEVEL,
+    HOOK_ON_FIND_SURFACE_ON_RAY,
     HOOK_MAX,
 };
 
