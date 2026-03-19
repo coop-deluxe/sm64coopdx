@@ -133,16 +133,16 @@ void uv_update_scroll(void) {
         scroll->hasInterpInit = true;
         scroll->bhv = bhv;
         if (bhv < SCROLL_UV_X) {
-            scroll->interpF32 = calloc(scroll->size, sizeof(f32));
-            scroll->prevF32 = calloc(scroll->size, sizeof(f32));
+            scroll->interpF32 = malloc(scroll->size * sizeof(f32));
+            scroll->prevF32 = malloc(scroll->size * sizeof(f32));
 
             u8 bhvIndex = MIN(bhv, 2);
             for (u32 k = 0; k < scroll->size; k++) {
                 scroll->interpF32[k] = verts[k]->n.ob[bhvIndex];
             }
         } else {
-            scroll->interpS16 = calloc(scroll->size, sizeof(s16));
-            scroll->prevS16 = calloc(scroll->size, sizeof(s16));
+            scroll->interpS16 = malloc(scroll->size * sizeof(s16));
+            scroll->prevS16 = malloc(scroll->size * sizeof(s16));
 
             u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
             for (u32 k = 0; k < scroll->size; k++) {
@@ -153,15 +153,9 @@ void uv_update_scroll(void) {
 
     // Prepare for interpolation
     if (bhv < SCROLL_UV_X) {
-        u8 bhvIndex = MIN(bhv, 2);
-        for (u32 i = 0; i < scroll->size; i++) {
-            scroll->prevF32[i] = verts[i]->n.ob[bhvIndex];
-        }
+        memcpy(scroll->prevF32, scroll->interpF32, scroll->size * sizeof(f32));
     } else {
-        u8 bhvIndex = MIN(bhv-SCROLL_UV_X, 1);
-        for (u32 i = 0; i < scroll->size; i++) {
-            scroll->prevS16[i] = verts[i]->n.tc[bhvIndex];
-        }
+        memcpy(scroll->prevS16, scroll->interpS16, scroll->size * sizeof(s16));
     }
     scroll->needInterp = true;
 
