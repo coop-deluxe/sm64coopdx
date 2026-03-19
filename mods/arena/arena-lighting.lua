@@ -16,6 +16,7 @@ local function on_level_init()
     end
 end
 
+--[[
 --- @param m MarioState
 local function mario_update(m)
     if gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_CITY then
@@ -43,4 +44,5 @@ local function mario_update(m)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+]]
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)

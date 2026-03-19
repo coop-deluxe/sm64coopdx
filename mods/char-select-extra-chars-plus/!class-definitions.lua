@@ -2,6 +2,8 @@
 --- @meta
 
 --- @class LuigiState
+--- @field public scuttle integer
+--- @field public lastHurtCounter integer
 
 --- @class ToadState
 
@@ -44,7 +46,7 @@
 --- @field public peakHeight integer
 --- @field public actionADone boolean
 --- @field public actionBDone boolean
---- @field public bounced boolean
+--- @field public bounceCooldown integer
 --- @field public spindashState integer
 --- @field public instashieldTimer integer
 --- @field public oxygen integer
@@ -53,6 +55,8 @@
 --- @field public physTimer integer
 --- @field public lastforwardPos Vec3f
 --- @field public realFVel number
+--- @field public wallSpam number
+--- @field public prevWallAngle number
 
 --- @class CharacterState
 --- @field public mario MarioState

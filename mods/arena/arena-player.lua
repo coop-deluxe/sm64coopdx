@@ -445,6 +445,8 @@ function mario_update(m)
 
     -- update palette
     if s.team == 1 then
+        -- restrict_palettes = true
+        --[[
         network_player_set_override_palette_color(np, PANTS, { r = 225, g = 5, b = 49 })
         network_player_set_override_palette_color(np, SHIRT, { r = 40, g = 10, b = 10 })
         network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
@@ -453,7 +455,16 @@ function mario_update(m)
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 40, g = 10, b = 10 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+        ]]
+        m.marioBodyState.shadeR = 255
+        m.marioBodyState.shadeG = 83
+        m.marioBodyState.shadeB = 29
+        m.marioBodyState.lightR = 255
+        m.marioBodyState.lightG = 255
+        m.marioBodyState.lightB = 255
     elseif s.team == 2 then
+        -- restrict_palettes = true
+        --[[
         network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
         network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
         network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
@@ -462,8 +473,38 @@ function mario_update(m)
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+        ]]
+        m.marioBodyState.shadeR = 0
+        m.marioBodyState.shadeG = 240
+        m.marioBodyState.shadeB = 255
+        m.marioBodyState.lightR = 255
+        m.marioBodyState.lightG = 255
+        m.marioBodyState.lightB = 255
     else
-        network_player_reset_override_palette(np)
+        restrict_palettes = false
+        -- network_player_reset_override_palette(np)
+        if gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_CITY then
+		    m.marioBodyState.lightR = 255
+            m.marioBodyState.lightG = 225
+            m.marioBodyState.lightB = 115
+            m.marioBodyState.shadeR = 19
+            m.marioBodyState.shadeG = 58
+            m.marioBodyState.shadeB = 212
+	    elseif gNetworkPlayers[0].currLevelNum == LEVEL_ARENA_RAINBOW then
+		    m.marioBodyState.lightR = 255
+            m.marioBodyState.lightG = 255
+            m.marioBodyState.lightB = 255
+            m.marioBodyState.shadeR = 19
+            m.marioBodyState.shadeG = 58
+            m.marioBodyState.shadeB = 212
+        else
+            m.marioBodyState.lightR = 255
+            m.marioBodyState.lightG = 255
+            m.marioBodyState.lightB = 255
+            m.marioBodyState.shadeR = 100
+            m.marioBodyState.shadeG = 100
+            m.marioBodyState.shadeB = 100
+        end
     end
 
     -- set metal

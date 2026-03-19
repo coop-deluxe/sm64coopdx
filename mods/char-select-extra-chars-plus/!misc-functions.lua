@@ -5,9 +5,7 @@
 --- @param accel? number
 --- Plays a custom animation for MarioState `m`
 function play_custom_anim(m, name, accel)
-    accel = accel or 0x10000
-
-    m.marioObj.header.gfx.animInfo.animAccel = accel
+    m.marioObj.header.gfx.animInfo.animAccel = accel or 0x10000
 
     if (smlua_anim_util_get_current_animation_name(m.marioObj) ~= name or m.marioObj.header.gfx.animInfo.animID ~= -1) then
         m.marioObj.header.gfx.animInfo.animID = -1
@@ -28,4 +26,23 @@ function string.split(str, splitAt)
         table.insert(result, match)
     end
     return result
+end
+
+--- @param x integer
+--- @param min integer
+--- @param max integer
+--- @param inclusive? boolean
+--- @return boolean
+function in_between(x, min, max, inclusive)
+    if inclusive then
+        if x >= min and x <= max then
+            return true
+        end
+    end
+
+    if x > min and x < max then
+        return true
+    end
+
+    return false
 end
