@@ -607,6 +607,54 @@ struct Mod* get_active_mod(void) {
     return gLuaActiveMod;
 }
 
+LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
+    if (!mod) {
+        struct lua_State *L = gLuaState;
+        if (L) {
+            lua_newtable(L);
+            return smlua_to_lua_table(L, -1);
+        }
+        return 0;
+    }
+
+    char normalizedSubDir[SYS_MAX_PATH] = { 0 };
+    snprintf(normalizedSubDir, SYS_MAX_PATH, "%s", subDirectory ? subDirectory : "");
+    normalize_path(normalizedSubDir);
+
+    size_t subDirLen = strlen(normalizedSubDir);
+    if (subDirLen > 0 && subDirLen + 1 < SYS_MAX_PATH && normalizedSubDir[subDirLen - 1] != '/') {
+        strcat(normalizedSubDir, "/");
+        subDirLen = strlen(normalizedSubDir);
+    }
+
+    struct lua_State *L = gLuaState;
+    if (!L) { return 0; }
+
+    LUA_STACK_CHECK_BEGIN_NUM(L, 1);
+
+    lua_newtable(L);
+
+    int luaTableIndex = 1;
+    for (int i = 0; i < mod->fileCount; i++) {
+        struct ModFile* file = &mod->files[i];
+        char normalizedPath[SYS_MAX_PATH] = { 0 };
+        if (snprintf(normalizedPath, SYS_MAX_PATH, "%s", file->relativePath) < 0) {
+            LOG_ERROR("Failed to copy relativePath for normalization: %s", file->relativePath);
+            continue;
+        }
+        normalize_path(normalizedPath);
+
+        if (strncmp(normalizedPath, normalizedSubDir, subDirLen) == 0) {
+            lua_pushstring(L, file->relativePath);
+            lua_rawseti(L, -2, luaTableIndex++);
+        }
+    }
+
+    LUA_STACK_CHECK_END(L);
+
+    return smlua_to_lua_table(L, -1);
+}
+
 ///
 
 void set_window_title(const char* title) {

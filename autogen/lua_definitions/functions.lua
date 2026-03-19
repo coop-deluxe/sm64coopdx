@@ -11647,6 +11647,14 @@ function get_active_mod()
     -- ...
 end
 
+--- @param mod Mod
+--- @param subDirectory? string
+--- @return table
+--- Gets all files a mod contains
+function get_mod_files(mod, subDirectory)
+    -- ...
+end
+
 --- @param title string
 --- Sets the window title to a custom title
 function set_window_title(title)
