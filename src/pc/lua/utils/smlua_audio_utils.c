@@ -161,7 +161,7 @@ u8 smlua_audio_utils_allocate_sequence(void) {
         }
     }
     LOG_ERROR("Cannot allocate more custom sequences.");
-    return 0;
+    return MAX_AUDIO_OVERRIDE;
 }
 
   ///////////////
