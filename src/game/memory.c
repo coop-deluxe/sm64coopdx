@@ -185,10 +185,41 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
  // growing array //
 ///////////////////
 
+static void growing_array_free_elements(struct GrowingArray *array) {
+    if (array) {
+        for (u32 i = 0; i != array->capacity; ++i) {
+            if (array->buffer[i]) {
+                array->free(array->buffer[i]);
+                array->buffer[i] = NULL;
+            }
+        }
+        array->count = 0;
+    }
+}
+
 struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity, GrowingArrayAllocFunc alloc, GrowingArrayFreeFunc free) {
-    growing_array_free(&array);
-    array = calloc(1, sizeof(struct GrowingArray));
-    array->buffer = calloc(capacity, sizeof(void *));
+    growing_array_free_elements(array);
+
+    // reuse buffer if array was already allocated
+    if (array) {
+        if (!array->buffer || array->capacity != capacity) {
+            void **buffer = realloc(array->buffer, sizeof(void *) * capacity);
+
+            // if realloc fails, destroy the array and create a new one
+            if (!buffer) {
+                growing_array_free(&array);
+                return growing_array_init(NULL, capacity, alloc, free);
+            }
+
+            array->buffer = buffer;
+            array->capacity = capacity;
+            memset(array->buffer, 0, sizeof(void *) * array->capacity);
+        }
+    } else {
+        array = calloc(1, sizeof(struct GrowingArray));
+        array->buffer = calloc(capacity, sizeof(void *));
+    }
+
     array->capacity = capacity;
     array->count = 0;
     array->alloc = alloc;
@@ -248,11 +279,7 @@ void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count)
 
 void growing_array_free(struct GrowingArray **array) {
     if (*array) {
-        for (u32 i = 0; i != (*array)->capacity; ++i) {
-            if ((*array)->buffer[i]) {
-                (*array)->free((*array)->buffer[i]);
-            }
-        }
+        growing_array_free_elements(*array);
         free((*array)->buffer);
         free(*array);
         *array = NULL;
