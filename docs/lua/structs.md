@@ -66,9 +66,11 @@
 - [ModFsFile](#ModFsFile)
 - [NametagsSettings](#NametagsSettings)
 - [NetworkPlayer](#NetworkPlayer)
+- [NumTimesCalled](#NumTimesCalled)
 - [Object](#Object)
 - [ObjectHitbox](#ObjectHitbox)
 - [ObjectNode](#ObjectNode)
+- [ObjectPoolNode](#ObjectPoolNode)
 - [ObjectWarpNode](#ObjectWarpNode)
 - [Painting](#Painting)
 - [PaintingValues](#PaintingValues)
@@ -1869,6 +1871,18 @@
 
 <br />
 
+## [NumTimesCalled](#NumTimesCalled)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| floor | `integer` |  |
+| ceil | `integer` |  |
+| wall | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [Object](#Object)
 
 | Field | Type | Access |
@@ -2674,6 +2688,18 @@
 | gfx | [GraphNodeObject](structs.md#GraphNodeObject) | read-only |
 | next | [ObjectNode](structs.md#ObjectNode) | read-only |
 | prev | [ObjectNode](structs.md#ObjectNode) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ObjectPoolNode](#ObjectPoolNode)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| pool | `Array` <`Object`> | read-only |
+| freeList | [ObjectNode](structs.md#ObjectNode) | read-only |
+| next | [ObjectPoolNode](structs.md#ObjectPoolNode) |  |
 
 [:arrow_up_small:](#)
 

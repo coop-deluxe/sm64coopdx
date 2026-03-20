@@ -29,6 +29,7 @@
 #include "src/game/player_palette.h"
 #include "src/engine/graph_node.h"
 #include "include/PR/gbi.h"
+#include "src/game/object_list_processor.h"
 
 #include "include/object_fields.h"
 
@@ -1580,6 +1581,13 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
+#define LUA_NUM_TIMES_CALLED_FIELD_COUNT 3
+static struct LuaObjectField sNumTimesCalledFields[LUA_NUM_TIMES_CALLED_FIELD_COUNT] = {
+    { "ceil",  LVT_S16, offsetof(struct NumTimesCalled, ceil),  false, LOT_NONE, 1, sizeof(s16) },
+    { "floor", LVT_S16, offsetof(struct NumTimesCalled, floor), false, LOT_NONE, 1, sizeof(s16) },
+    { "wall",  LVT_S16, offsetof(struct NumTimesCalled, wall),  false, LOT_NONE, 1, sizeof(s16) },
+};
+
 #define LUA_OBJECT_FIELD_COUNT 763
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1,                    sizeof(s16)                   },
@@ -2381,6 +2389,13 @@ static struct LuaObjectField sObjectNodeFields[LUA_OBJECT_NODE_FIELD_COUNT] = {
     { "prev", LVT_COBJECT_P, offsetof(struct ObjectNode, prev), true, LOT_OBJECTNODE,      1, sizeof(struct ObjectNode*)     },
 };
 
+#define LUA_OBJECT_POOL_NODE_FIELD_COUNT 3
+static struct LuaObjectField sObjectPoolNodeFields[LUA_OBJECT_POOL_NODE_FIELD_COUNT] = {
+    { "freeList", LVT_COBJECT,   offsetof(struct ObjectPoolNode, freeList), true,  LOT_OBJECTNODE,     1,                         sizeof(struct ObjectNode)      },
+    { "next",     LVT_COBJECT_P, offsetof(struct ObjectPoolNode, next),     false, LOT_OBJECTPOOLNODE, 1,                         sizeof(struct ObjectPoolNode*) },
+    { "pool",     LVT_COBJECT,   offsetof(struct ObjectPoolNode, pool),     true,  LOT_OBJECT,         OBJECT_POOL_NODE_CAPACITY, sizeof(struct Object)          },
+};
+
 #define LUA_OBJECT_WARP_NODE_FIELD_COUNT 3
 static struct LuaObjectField sObjectWarpNodeFields[LUA_OBJECT_WARP_NODE_FIELD_COUNT] = {
     { "next",   LVT_COBJECT_P, offsetof(struct ObjectWarpNode, next),   true,  LOT_OBJECTWARPNODE, 1, sizeof(struct ObjectWarpNode*) },
@@ -2736,9 +2751,11 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MODFSFILE,                    sModFsFileFields,                    LUA_MOD_FS_FILE_FIELD_COUNT                     },
     { LOT_NAMETAGSSETTINGS,             sNametagsSettingsFields,             LUA_NAMETAGS_SETTINGS_FIELD_COUNT               },
     { LOT_NETWORKPLAYER,                sNetworkPlayerFields,                LUA_NETWORK_PLAYER_FIELD_COUNT                  },
+    { LOT_NUMTIMESCALLED,               sNumTimesCalledFields,               LUA_NUM_TIMES_CALLED_FIELD_COUNT                },
     { LOT_OBJECT,                       sObjectFields,                       LUA_OBJECT_FIELD_COUNT                          },
     { LOT_OBJECTHITBOX,                 sObjectHitboxFields,                 LUA_OBJECT_HITBOX_FIELD_COUNT                   },
     { LOT_OBJECTNODE,                   sObjectNodeFields,                   LUA_OBJECT_NODE_FIELD_COUNT                     },
+    { LOT_OBJECTPOOLNODE,               sObjectPoolNodeFields,               LUA_OBJECT_POOL_NODE_FIELD_COUNT                },
     { LOT_OBJECTWARPNODE,               sObjectWarpNodeFields,               LUA_OBJECT_WARP_NODE_FIELD_COUNT                },
     { LOT_PAINTING,                     sPaintingFields,                     LUA_PAINTING_FIELD_COUNT                        },
     { LOT_PAINTINGVALUES,               sPaintingValuesFields,               LUA_PAINTING_VALUES_FIELD_COUNT                 },
@@ -2841,9 +2858,11 @@ const char *sLuaLotNames[] = {
 	[LOT_MODFSFILE] = "ModFsFile",
 	[LOT_NAMETAGSSETTINGS] = "NametagsSettings",
 	[LOT_NETWORKPLAYER] = "NetworkPlayer",
+	[LOT_NUMTIMESCALLED] = "NumTimesCalled",
 	[LOT_OBJECT] = "Object",
 	[LOT_OBJECTHITBOX] = "ObjectHitbox",
 	[LOT_OBJECTNODE] = "ObjectNode",
+	[LOT_OBJECTPOOLNODE] = "ObjectPoolNode",
 	[LOT_OBJECTWARPNODE] = "ObjectWarpNode",
 	[LOT_PAINTING] = "Painting",
 	[LOT_PAINTINGVALUES] = "PaintingValues",

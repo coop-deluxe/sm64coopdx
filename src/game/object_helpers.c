@@ -716,15 +716,17 @@ struct Object *try_to_spawn_object(s16 offsetY, f32 scale, struct Object *parent
                                    const BehaviorScript *behavior) {
     struct Object *obj;
 
-    if (gFreeObjectList.next != NULL) {
+    traverse_object_pools(
+        if (node == NULL || node->freeList.next == NULL) { return NULL; }
+
         obj = spawn_object(parent, model, behavior);
         if (obj == NULL) { return NULL; }
         obj->oPosY += offsetY;
         obj_scale(obj, scale);
         return obj;
-    } else {
-        return NULL;
-    }
+    )
+
+    return NULL;
 }
 
 struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const BehaviorScript *behavior, f32 scale) {
@@ -2547,16 +2549,16 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     s32 numParticles = info->count;
 
     // If there are a lot of objects already, limit the number of particles
-    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
+    /*if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
         numParticles = 10;
-    }
+    }*/
 
 
     // We're close to running out of object slots, so don't spawn particles at
     // all
-    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 210 / 240)) {
+    /*if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 210 / 240)) {
         numParticles = 0;
-    }
+    }*/
 
     for (i = 0; i < numParticles; i++) {
         scale = random_float() * (info->sizeRange * 0.1f) + info->sizeBase * 0.1f;

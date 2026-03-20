@@ -23,7 +23,13 @@
 /**
  * The maximum number of objects that can be loaded at once.
  */
-#define OBJECT_POOL_CAPACITY 1200
+#define OBJECT_POOL_CAPACITY 4096
+/**
+ * The maximum number of objects that can be in a single pool node.
+ * A higher number might be better for less fragmentation.
+ * ! Can't seem to go above 256 without crashing in geo_reset_object_node()...
+ */
+#define OBJECT_POOL_NODE_CAPACITY 256
 
 /**
  * Every object is categorized into an object list, which controls the order
@@ -58,6 +64,18 @@ enum ObjectList
     NUM_OBJ_LISTS
 };
 
+struct ObjectPoolNode {
+    struct Object pool[OBJECT_POOL_NODE_CAPACITY];
+    struct ObjectNode freeList;
+    struct ObjectPoolNode* next;
+};
+
+#define traverse_object_pools(statements) \
+for (struct ObjectPoolNode* node = &gObjectPool; node != NULL; node = node->next) { \
+    for (u32 i = 0; i < OBJECT_POOL_NODE_CAPACITY; i++) { \
+        statements \
+    } \
+} \
 
 extern struct ObjectNode gObjectListArray[];
 
@@ -79,10 +97,10 @@ extern s16 gDebugInfo[][8];
 extern s16 gDebugInfoOverwrite[][8];
 
 extern u32 gTimeStopState;
-extern struct Object gObjectPool[];
+extern struct ObjectPoolNode gObjectPool;
 extern struct Object gMacroObjectDefaultParent;
 extern struct ObjectNode *gObjectLists;
-extern struct ObjectNode gFreeObjectList;
+//extern struct ObjectNode gFreeObjectList;
 
 extern struct Object *gMarioObject;
 extern struct Object *gMarioObjects[];
@@ -118,6 +136,7 @@ void set_object_respawn_info_bits(struct Object *obj, u8 bits);
 void unload_objects_from_area(UNUSED s32 unused, s32 areaIndex);
 void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo);
 void clear_objects(void);
+void reinit_objects(struct ObjectPoolNode* node);
 void update_objects(UNUSED s32 unused);
 
 

@@ -1282,6 +1282,11 @@
 --- @field public overridePaletteIndex integer
 --- @field public overridePaletteIndexLp integer
 
+--- @class NumTimesCalled
+--- @field public floor integer
+--- @field public ceil integer
+--- @field public wall integer
+
 --- @class Object
 --- @field public header ObjectNode
 --- @field public prevObj Object
@@ -2062,6 +2067,11 @@
 --- @field public gfx GraphNodeObject
 --- @field public next ObjectNode
 --- @field public prev ObjectNode
+
+--- @class ObjectPoolNode
+--- @field public pool Object[]
+--- @field public freeList ObjectNode
+--- @field public next ObjectPoolNode
 
 --- @class ObjectWarpNode
 --- @field public node WarpNode
