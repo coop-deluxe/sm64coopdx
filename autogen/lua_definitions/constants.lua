@@ -4777,6 +4777,15 @@ NPT_CLIENT  = 3 --- @type NetworkPlayerType
 --- | `NPT_SERVER`
 --- | `NPT_CLIENT`
 
+DC_LEAVE = 0 --- @type DisconnectType
+DC_KICK  = 1 --- @type DisconnectType
+DC_BAN   = 2 --- @type DisconnectType
+
+--- @alias DisconnectType
+--- | `DC_LEAVE`
+--- | `DC_KICK`
+--- | `DC_BAN`
+
 --- @type integer
 OBJ_COL_FLAG_GROUNDED = (1 << 0)
 

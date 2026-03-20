@@ -42,6 +42,7 @@
 #include "pc/network/version.h"
 #include "pc/network/socket/socket.h"
 #include "pc/network/network_player.h"
+#include "pc/network/moderation.h"
 #include "pc/update_checker.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_unicode.h"
@@ -510,6 +511,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     configfile_load();
+    moderation_list_load();
 
     legacy_folder_handler();
 

@@ -64,6 +64,8 @@
     - [enum PvpType](#enum-PvpType)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
+- [network_utils.h](#network_utilsh)
+    - [enum DisconnectType](#enum-DisconnectType)
 - [obj_behaviors.c](#obj_behaviorsc)
 - [obj_behaviors_2.h](#obj_behaviors_2h)
 - [object_constants.h](#object_constantsh)
@@ -2252,6 +2254,19 @@
 | NPT_LOCAL | 1 |
 | NPT_SERVER | 2 |
 | NPT_CLIENT | 3 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_utils.h](#network_utils.h)
+
+### [enum DisconnectType](#DisconnectType)
+| Identifier | Value |
+| :--------- | :---- |
+| DC_LEAVE | 0 |
+| DC_KICK | 1 |
+| DC_BAN | 2 |
 
 [:arrow_up_small:](#)
 

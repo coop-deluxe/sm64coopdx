@@ -252,8 +252,8 @@ void network_receive_player(struct Packet* p) {
             construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);
         }
 #else
-        network_send_kick(np->localIndex, EKT_KICKED);
-        network_player_disconnected(np->localIndex);
+        network_send_kick(np->localIndex, EKT_KICKED, NULL);
+        network_player_disconnected(np->globalIndex);
         return;
 #endif
     }

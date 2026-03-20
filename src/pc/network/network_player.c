@@ -17,6 +17,7 @@
 #endif
 #include "game/mario.h"
 #include "pc/djui/djui_unicode.h"
+#include "moderation.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -292,6 +293,8 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         np->palette = *palette;
         network_player_update_model(localIndex);
 
+        djui_reload_moderation_panels();
+
         snprintf(np->name, MAX_CONFIG_STRING, "%s", name);
         return localIndex;
     }
@@ -326,6 +329,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
     network_player_update_model(localIndex);
 
     snprintf(np->discordId, 64, "%s", discordId);
+
+    // update moderation panels
+    djui_reload_moderation_panels();
 
     // clear networking fields
     np->lastReceived = clock_elapsed();
@@ -420,6 +426,9 @@ u8 network_player_disconnected(u8 globalIndex) {
 
         // reset mario state
         init_mario_single_from_save_file(&gMarioStates[i], i);
+
+        // reload moderation panels
+        djui_reload_moderation_panels();
 
         return i;
     }

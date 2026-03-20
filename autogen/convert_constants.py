@@ -20,6 +20,7 @@ in_files = [
     "src/game/characters.h",
     "src/pc/network/network.h",
     "src/pc/network/network_player.h",
+    "src/pc/network/network_utils.h",
     "include/PR/os_cont.h",
     "src/game/interaction.c",
     "src/game/interaction.h",

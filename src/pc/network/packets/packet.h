@@ -74,9 +74,10 @@ enum PacketType {
 
     PACKET_LUA_CUSTOM,
     PACKET_LUA_CUSTOM_BYTESTRING,
-    
+
     PACKET_COMMAND,
     PACKET_MODERATOR,
+    PACKET_MODERATION_ACTION,
 
     ///
     PACKET_CUSTOM = 255,
@@ -237,16 +238,21 @@ void network_send_chat(char* message, u8 globalIndex);
 void network_receive_chat(struct Packet* p);
 
 // packet_kick.c
-void network_send_kick(u8 localIndex, enum KickReasonType kickReason);
+void network_create_kick_popup(enum KickReasonType kickReason, char* reason);
+void network_send_kick(u8 localIndex, enum KickReasonType kickReason, char* reason);
 void network_receive_kick(struct Packet* p);
 
 // packet_command_mod.c
-void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC);
+void network_send_chat_command(u8 localIndex, enum ChatConfirmCommand CCC, char* reason);
 void network_receive_chat_command(struct Packet* p);
 
 // packet_moderator.c
 void network_send_moderator(u8 localIndex);
 void network_receive_moderator(struct Packet* p);
+
+// packet_moderation.c
+void network_send_moderation_action(u8 action, u8 localIndex, char* reason, bool permanent);
+void network_receive_moderation_action(struct Packet* p);
 
 // packet_keep_alive.c
 void network_send_keep_alive(u8 localIndex);

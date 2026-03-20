@@ -51,7 +51,6 @@ struct DateTime {
     s32 second;
 };
 
-
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
 /* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */

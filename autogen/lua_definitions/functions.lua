@@ -4175,6 +4175,13 @@ function djui_menu_get_rainbow_string_color(color)
 end
 
 --- @param message string
+--- @param paddingLines integer
+--- Creates an auto-scaling popup that says `message` which will always show the entire message with padding lines of 'paddingLines'
+function djui_popup_create_auto_scaling(message, paddingLines)
+    -- ...
+end
+
+--- @param message string
 --- @param lines integer
 --- Creates a popup that says `message` and has `lines`
 function djui_popup_create(message, lines)
@@ -7935,6 +7942,13 @@ function network_get_player_text_color_string(localIndex)
     -- ...
 end
 
+--- @param localIndex integer
+--- @return string
+--- Gets the complete player name, including the player's starting hex code.
+function network_get_complete_player_name(localIndex)
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the game can currently be paused in singleplayer
 function network_check_singleplayer_pause()
@@ -7945,6 +7959,13 @@ end
 --- @return string
 --- Gets a Discord ID corresponding to the network player with `localIndex`
 function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param dcType? DisconnectType
+--- @param reason? string
+--- Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
+function network_disconnect(dcType, reason)
     -- ...
 end
 
