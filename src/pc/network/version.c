@@ -4,22 +4,34 @@
 
 static char sVersionString[MAX_VERSION_LENGTH] = { 0 };
 
-const char* get_version(void) {
+const char* get_version_online(void) {
+    snprintf(
+        sVersionString, MAX_VERSION_LENGTH,
 #if defined(VERSION_US)
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s", SM64COOPDX_VERSION);
+        "%s", SM64COOPDX_VERSION
 #else
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s %s", SM64COOPDX_VERSION, VERSION_REGION);
+        "%s %s", SM64COOPDX_VERSION, VERSION_REGION
 #endif // VERSION_US
+    );
     return sVersionString;
 }
 
+const char* get_version(void) {
+    get_version_online();
+    extern void exify_version_str(char* str);
+    if (configExCoopTheme) { exify_version_str(sVersionString); }
+    return sVersionString; }
+
 #ifdef COMPILE_TIME
 const char* get_version_with_build_date(void) {
+    snprintf(
+        sVersionString, MAX_VERSION_LENGTH,
 #if defined(VERSION_US)
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s, %s", SM64COOPDX_VERSION, COMPILE_TIME);
+        "%s, %s", SM64COOPDX_VERSION, COMPILE_TIME
 #else
-    snprintf(sVersionString, MAX_VERSION_LENGTH, "%s %s, %s", SM64COOPDX_VERSION, VERSION_REGION, COMPILE_TIME);
+        "%s %s, %s", SM64COOPDX_VERSION, VERSION_REGION, COMPILE_TIME
 #endif // VERSION_US
+    );
     return sVersionString;
 }
 #endif

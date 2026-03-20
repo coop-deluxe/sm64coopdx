@@ -23,7 +23,20 @@ downloading and parsing a source file.
 */
 
 static char sVersionUpdateTextBuffer[256] = { 0 };
-static char sRemoteVersion[8] = { 0 };
+static char sRemoteVersionStr[8] = { 0 };
+
+struct Version {
+    int maj, min, fix;
+};
+
+bool is_version_newer(struct Version client, struct Version remote) {
+    if (remote.maj != client.maj) return remote.maj > client.maj;
+    if (remote.min != client.min) return remote.min > client.min;
+    return remote.fix > client.fix;
+}
+
+static struct Version sClientVersion = { 0 };
+static struct Version sRemoteVersion = { 0 };
 
 bool gUpdateMessage = false;
 
@@ -51,6 +64,39 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 }
 #endif
 
+void strtov(const char *str, struct Version *ver) {
+    char* end;
+    ver->maj = strtol(str+1, &end, 10);
+    if (end) ver->min = strtol(end+1, &end, 10);
+    if (end) ver->fix = strtol(end+1, &end, 10);
+}
+
+void vtostr(struct Version ver, char* str) {
+    int len;
+    snprintf(str, 8, "v%i", ver.maj);
+    if (ver.min || ver.fix) {
+        len = strlen(str);
+        snprintf(str + len, 8 - len, ".%i", ver.min);
+        if (ver.fix) {
+            len = strlen(str);
+            snprintf(str + len, 8 - len, ".%i", ver.fix);
+        }
+    }
+}
+
+void exify_version(struct Version *ver) {
+    ver->maj = ver->min + VERSION_OFFSET;
+    ver->min = ver->fix;
+    ver->fix = 0;
+}
+
+void exify_version_str(char* str) {
+    struct Version ver;
+    strtov(str, &ver);
+    exify_version(&ver);
+    vtostr(ver, str);
+}
+
 void parse_version(const char *data) {
     const char *version = strstr(data, VERSION_IDENTIFIER);
     if (version == NULL) { return; }
@@ -58,14 +104,17 @@ void parse_version(const char *data) {
     version += len;
     const char *end = strchr(version, '"');
     size_t versionLength = (size_t)(end - version);
-    if (versionLength > sizeof(sRemoteVersion) - 1) { return; }
-    memcpy(sRemoteVersion, version, versionLength);
-    sRemoteVersion[versionLength] = '\0';
+    if (versionLength > sizeof(sRemoteVersionStr) - 1) { return; }
+    memcpy(sRemoteVersionStr, version, versionLength);
+    sRemoteVersionStr[versionLength] = '\0';
+
+    strtov(sRemoteVersionStr, &sRemoteVersion);
+    strtov(get_version_online(), &sClientVersion);
 }
 
 // function to download a text file from the internet
 void get_version_remote(void) {
-    sRemoteVersion[0] = '\0';
+    sRemoteVersionStr[0] = '\0';
 
 #if defined(_WIN32) || defined(_WIN64)
     char buffer[0xFF] = { 0 };
@@ -145,13 +194,14 @@ void check_for_updates(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
 
     get_version_remote();
-    if (sRemoteVersion[0] == 'v' && strcmp(sRemoteVersion, get_version())) {
+    if (sRemoteVersionStr[0] == 'v' && is_version_newer(sClientVersion, sRemoteVersion)) {
+        if (configExCoopTheme) { exify_version_str(sRemoteVersionStr); }
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
             DLANG(NOTIF, UPDATE_AVAILABLE),
             DLANG(NOTIF, LATEST_VERSION),
-            sRemoteVersion,
+            sRemoteVersionStr,
             DLANG(NOTIF, YOUR_VERSION),
             get_version()
         );
