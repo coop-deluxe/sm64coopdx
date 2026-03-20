@@ -29798,25 +29798,6 @@ int smlua_func_get_level_course_num(lua_State* L) {
     return 1;
 }
 
-int smlua_func_touch_coin_score_age(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "touch_coin_score_age", 2, top);
-        return 0;
-    }
-
-    s32 fileIndex = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "touch_coin_score_age"); return 0; }
-    s32 courseIndex = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "touch_coin_score_age"); return 0; }
-
-    touch_coin_score_age(fileIndex, courseIndex);
-
-    return 1;
-}
-
 int smlua_func_save_file_do_save(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38445,7 +38426,6 @@ void smlua_bind_functions_autogen(void) {
     // save_file.h
     smlua_bind_function(L, "get_level_num_from_course_num", smlua_func_get_level_num_from_course_num);
     smlua_bind_function(L, "get_level_course_num", smlua_func_get_level_course_num);
-    smlua_bind_function(L, "touch_coin_score_age", smlua_func_touch_coin_score_age);
     smlua_bind_function(L, "save_file_do_save", smlua_func_save_file_do_save);
     smlua_bind_function(L, "save_file_erase", smlua_func_save_file_erase);
     smlua_bind_function(L, "save_file_erase_current_backup_save", smlua_func_save_file_erase_current_backup_save);

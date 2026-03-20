@@ -19,7 +19,6 @@
 #include "network/moderator_list.h"
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
-#include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
 
@@ -58,6 +57,8 @@ struct FunctionConfigOption {
 /*
  *Config options and default values
  */
+
+// still exists for compatibility reasons
 char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
     "SM64",
     "SM64",
@@ -547,9 +548,10 @@ static void save_name_read(char** tokens, int numTokens) {
 }
 
 static void save_name_write(FILE* file) {
-    for (int i = 0; i < NUM_SAVE_FILES; i++) {
+    // don't write save name data anymore, this only exists for compat
+    /*for (int i = 0; i < 4; i++) {
         fprintf(file, "%s %d %s\n", "save-name:", i, configSaveNames[i]);
-    }
+    }*/
 }
 
 static const struct FunctionConfigOption functionOptions[] = {
@@ -788,6 +790,15 @@ NEXT_OPTION:
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
+
+    if (configHostSaveSlot >= NUM_SAVE_FILES) {
+        configHostSaveSlot = save_file_get_first_active_index() + 1;
+    } else {
+        char filePath[256];
+        save_file_get_dir(configHostSaveSlot - 1, filePath, 256, NULL);
+        if (!fs_sys_file_exists(fs_get_write_path(filePath)))
+            configHostSaveSlot = save_file_get_first_active_index() + 1;
+    }
 
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
