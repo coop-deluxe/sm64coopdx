@@ -284,7 +284,6 @@ static void controller_sdl_read(OSContPad *pad) {
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
 
-    buttons_down = 0;
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
             buttons_down |= joy_binds[i][1];
