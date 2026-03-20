@@ -5443,9 +5443,10 @@ function mario_is_ground_pound_landing(m)
 end
 
 --- @param m MarioState
+--- @param unallow? integer
 --- @return boolean
 --- Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
-function mario_can_bubble(m)
+function mario_can_bubble(m, unallow)
     -- ...
 end
 
@@ -6004,6 +6005,11 @@ end
 --- @return integer
 --- Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
 function launch_mario_until_land(m, endAction, animation, forwardVel)
+    -- ...
+end
+
+--- @param m MarioState
+function lose_life_after_death_exit(m)
     -- ...
 end
 

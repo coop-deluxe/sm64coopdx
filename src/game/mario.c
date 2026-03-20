@@ -419,12 +419,13 @@ bool mario_is_ground_pound_landing(struct MarioState *m) {
         (!(m->action & ACT_FLAG_AIR) && (determine_interaction(m, m->marioObj) & INT_GROUND_POUND));
 }
 
-bool mario_can_bubble(struct MarioState* m) {
+bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow) {
     if (!m) { return false; }
     if (!gServerSettings.bubbleDeath) { return false; }
     if (m->playerIndex != 0) { return false; }
     if (m->action == ACT_BUBBLED) { return false; }
     if (!m->visibleToEnemies) { return false; }
+    if (unallow) { return false; }
 
     u8 allInBubble = TRUE;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
@@ -444,12 +445,12 @@ void mario_set_bubbled(struct MarioState* m) {
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
 
+    m->numLives--;
+
     gLocalBubbleCounter = 20;
 
     drop_and_set_mario_action(m, ACT_BUBBLED, 0);
-    if (m->numLives > -1) {
-        m->numLives--;
-    }
+
     m->healCounter = 0;
     m->hurtCounter = 31;
     gCamera->cutscene = 0;

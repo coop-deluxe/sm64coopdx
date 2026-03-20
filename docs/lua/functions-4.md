@@ -1175,18 +1175,19 @@ Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 
 ### Lua Example
-`local booleanValue = mario_can_bubble(m)`
+`local booleanValue = mario_can_bubble(m, unallow)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
+| unallow | `integer` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool mario_can_bubble(struct MarioState* m);`
+`bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow);`
 
 [:arrow_up_small:](#)
 
@@ -3024,6 +3025,26 @@ Launches Mario forward with a given velocity (`forwardVel`) and sets his animati
 
 ### C Prototype
 `s32 launch_mario_until_land(struct MarioState *m, s32 endAction, s32 animation, f32 forwardVel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lose_life_after_death_exit](#lose_life_after_death_exit)
+
+### Lua Example
+`lose_life_after_death_exit(m)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+
+### Returns
+- None
+
+### C Prototype
+`void lose_life_after_death_exit(struct MarioState *m);`
 
 [:arrow_up_small:](#)
 
