@@ -215,7 +215,7 @@ fail:
  * Deletes ini_t struct from memory.
  */
 void ini_free(ini_t *ini) {
-  free(ini->data);
+  if (ini) free(ini->data);
   free(ini);
 }
 
@@ -256,6 +256,7 @@ const char* ini_find_key(ini_t *ini, const char* section, const char* value) {
  * @return string with the key.
  */
 const char* ini_get(ini_t *ini, const char *section, const char *key) {
+  if (!ini) return NULL;
   char *current_section = "";
   char *val;
   char *p = ini->data;
