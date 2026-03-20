@@ -25,6 +25,7 @@ static struct DjuiText* sTooltip = NULL;
 static struct DjuiPaginated* sModPaginated = NULL;
 static struct DjuiButton* sBackButton = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
+static struct DjuiInputbox* sSearchInputbox = NULL;
 static unsigned int sSelectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
 
@@ -157,6 +158,13 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
                 break;
             }
         }
+        // filter results
+        if (sSearchInputbox != NULL &&
+            sSearchInputbox->buffer != NULL &&
+            !strcasestr(djui_text_get_uncolored_string(NULL, strlen(mod->name) + 1, mod->name), sSearchInputbox->buffer)
+        ) {
+            continue;
+        }
         struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
         checkbox->base.tag = i;
         djui_base_set_enabled(&checkbox->base, mod->selectable);
@@ -172,7 +180,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     }
 }
 
-static void djui_panel_on_categories_change(UNUSED struct DjuiBase* caller) {
+static void djui_panel_rebuild_mods_list(UNUSED struct DjuiBase* caller) {
     if (gModRefreshThread.state == RUNNING) { return; }
     djui_base_destroy_children(&sModLayout->base);
     djui_panel_host_mods_add_mods(&sModLayout->base);
@@ -217,14 +225,15 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        // copy category choices from sCategories
-        char* categoryChoices[sizeof(sCategories)];
+        struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_rebuild_mods_list);
+        sSearchInputbox = searchbox->inputbox;
 
-        // loop thru all categories names, and add those to the categoryChoices string array
+        char* categoryChoices[sizeof(sCategories)];
         for (int i = 0; i < numCategories; i++) {
             categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
         }
-        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &sSelectedCategory, djui_panel_on_categories_change);
+        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, numCategories, &sSelectedCategory, djui_panel_rebuild_mods_list);
+
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         paginated->showMaxCount = true;
         sModLayout = paginated->layout;
@@ -242,7 +251,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + 64 + 64;
+        panel->bodySize.value = paginated->base.height.value + 64 + 64 + 64;
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;
