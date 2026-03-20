@@ -1963,7 +1963,7 @@ Marks an object to be unloaded at the end of the frame
 | dragStrength | `number` |
 
 ### Returns
-- None
+- `number`
 
 ### C Prototype
 `void apply_drag_to_value(INOUT f32 *value, f32 dragStrength);`
@@ -5611,6 +5611,27 @@ Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m6
 
 ### C Prototype
 `void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils_allocate_sequence](#smlua_audio_utils_allocate_sequence)
+
+### Description
+Allocates a new sequence ID
+
+### Lua Example
+`local integerValue = smlua_audio_utils_allocate_sequence()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 smlua_audio_utils_allocate_sequence(void);`
 
 [:arrow_up_small:](#)
 

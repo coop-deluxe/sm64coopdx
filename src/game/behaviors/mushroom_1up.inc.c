@@ -231,18 +231,18 @@ void bhv_1up_jump_on_approach_loop(void) {
 void bhv_1up_hidden_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oPosX);
-        sync_object_init_field(o, &o->oPosY);
-        sync_object_init_field(o, &o->oPosZ);
-        sync_object_init_field(o, &o->oVelX);
-        sync_object_init_field(o, &o->oVelY);
-        sync_object_init_field(o, &o->oVelZ);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oForwardVel);
-        sync_object_init_field(o, &o->o1UpHiddenUnkF4);
-        sync_object_init_field(o, &o->oIntangibleTimer);
-        sync_object_init_field_with_size(o, &o->activeFlags, 16);
-        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
+        sync_object_init_field(o, o->oPosX);
+        sync_object_init_field(o, o->oPosY);
+        sync_object_init_field(o, o->oPosZ);
+        sync_object_init_field(o, o->oVelX);
+        sync_object_init_field(o, o->oVelY);
+        sync_object_init_field(o, o->oVelZ);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oForwardVel);
+        sync_object_init_field(o, o->o1UpHiddenUnkF4);
+        sync_object_init_field(o, o->oIntangibleTimer);
+        sync_object_init_field(o, o->activeFlags);
+        sync_object_init_field(o, o->header.gfx.node.flags);
     }
 
     s16 sp26;
@@ -294,7 +294,7 @@ void bhv_1up_hidden_loop(void) {
 void bhv_1up_hidden_trigger_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field(o, o->activeFlags);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -312,15 +312,15 @@ void bhv_1up_hidden_trigger_loop(void) {
 void bhv_1up_hidden_in_pole_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oVelX);
-        sync_object_init_field(o, &o->oVelY);
-        sync_object_init_field(o, &o->oVelZ);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oForwardVel);
-        sync_object_init_field(o, &o->o1UpHiddenUnkF4);
-        sync_object_init_field(o, &o->oIntangibleTimer);
-        sync_object_init_field_with_size(o, &o->activeFlags, 16);
-        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
+        sync_object_init_field(o, o->oVelX);
+        sync_object_init_field(o, o->oVelY);
+        sync_object_init_field(o, o->oVelZ);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oForwardVel);
+        sync_object_init_field(o, o->o1UpHiddenUnkF4);
+        sync_object_init_field(o, o->oIntangibleTimer);
+        sync_object_init_field(o, o->activeFlags);
+        sync_object_init_field(o, o->header.gfx.node.flags);
     }
 
     UNUSED s16 sp26;
@@ -365,7 +365,7 @@ void bhv_1up_hidden_in_pole_loop(void) {
 void bhv_1up_hidden_in_pole_trigger_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field(o, o->activeFlags);
     }
 
     struct Object* player = nearest_player_to_object(o);
@@ -383,7 +383,7 @@ void bhv_1up_hidden_in_pole_trigger_loop(void) {
 void bhv_1up_hidden_in_pole_spawner_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field_with_size(o, &o->activeFlags, 16);
+        sync_object_init_field(o, o->activeFlags);
     }
 
     if (gNetworkAreaSyncing || !gNetworkAreaLoaded) {

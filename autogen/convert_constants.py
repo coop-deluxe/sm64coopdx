@@ -536,6 +536,8 @@ def def_constant(fname, processed_constant, skip_constant):
             continue
         if '"' in c[1]:
             s += '\n--- @type string\n'
+        elif "." in c[1]:
+            s += '\n--- @type number\n'
         else:
             s += '\n--- @type integer\n'
         s += '%s = %s\n' % (c[0], c[1])

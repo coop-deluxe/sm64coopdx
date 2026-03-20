@@ -197,12 +197,12 @@ static void pokey_act_uninitialized(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
-            sync_object_init_field(o, &o->oPokeyAliveBodyPartFlags);
-            sync_object_init_field(o, &o->oPokeyNumAliveBodyParts);
-            sync_object_init_field(o, &o->oPokeyHeadWasKilled);
-            sync_object_init_field(o, &o->oPokeyTargetYaw);
-            sync_object_init_field(o, &o->oPokeyChangeTargetTimer);
-            sync_object_init_field(o, &o->oPokeyTurningAwayFromWall);
+            sync_object_init_field(o, o->oPokeyAliveBodyPartFlags);
+            sync_object_init_field(o, o->oPokeyNumAliveBodyParts);
+            sync_object_init_field(o, o->oPokeyHeadWasKilled);
+            sync_object_init_field(o, o->oPokeyTargetYaw);
+            sync_object_init_field(o, o->oPokeyChangeTargetTimer);
+            sync_object_init_field(o, o->oPokeyTurningAwayFromWall);
             so->on_received_pre = pokey_on_received_pre;
             so->on_received_post = pokey_on_received_post;
         }

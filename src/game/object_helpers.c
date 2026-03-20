@@ -2942,19 +2942,27 @@ void bhv_init_room(void) {
 void cur_obj_enable_rendering_if_mario_in_room(void) {
     if (!o) { return; }
     if (o->oRoom == -1) { return; }
-    if (gMarioCurrentRoom == 0) { return; }
 
+    // COOP: if any active player character's room is 0, then either:
+    // 1) There are no rooms in the area
+    // 2) They are on an object surface with no explicit room
+    // In vanilla, a room of 0 stops the game from checking if the object shouldn't be rendered
+    // In coop, this needs to be respected to ensure the object remains active in areas with rooms
     u8 marioInRoom = FALSE;
 
+    // check if any player character can "see" the object's room
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if (gMarioStates[i].currentRoom != 0) {
+        if (is_player_active(&gMarioStates[i])) {
+            // TODO: separate rendering and activation
+            if (gMarioStates[i].currentRoom == 0) { return; }
             s16 currentRoom = gMarioStates[i].currentRoom;
-            if (currentRoom == o->oRoom) {
+            if (
+                currentRoom == o->oRoom
+                || gDoorAdjacentRooms[currentRoom][0] == o->oRoom
+                || gDoorAdjacentRooms[currentRoom][1] == o->oRoom
+            ) {
                 marioInRoom = TRUE;
-            } else if (gDoorAdjacentRooms[currentRoom][0] == o->oRoom) {
-                marioInRoom = TRUE;
-            } else if (gDoorAdjacentRooms[currentRoom][1] == o->oRoom) {
-                marioInRoom = TRUE;
+                break;
             }
         }
     }

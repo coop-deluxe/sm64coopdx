@@ -308,6 +308,49 @@ IN_OUT_BOUNCE  = function (x) return x < 0.5 and (1 - OUT_BOUNCE(1 - 2 * x)) / 2
 ---@return number
 OUT_IN_BOUNCE  = function (x) return x < 0.5 and 0.5 * OUT_BOUNCE(x * 2) or 0.5 + 0.5 * IN_BOUNCE(2 * x - 1) end
 
+--- @alias EasingFunction
+--- | `IN_SINE`
+--- | `OUT_SINE`
+--- | `IN_OUT_SINE`
+--- | `OUT_IN_SINE`
+--- | `IN_QUAD`
+--- | `OUT_QUAD`
+--- | `IN_OUT_QUAD`
+--- | `OUT_IN_QUAD`
+--- | `IN_CUBIC`
+--- | `OUT_CUBIC`
+--- | `IN_OUT_CUBIC`
+--- | `OUT_IN_CUBIC`
+--- | `IN_QUART`
+--- | `OUT_QUART`
+--- | `IN_OUT_QUART`
+--- | `OUT_IN_QUART`
+--- | `IN_QUINT`
+--- | `OUT_QUINT`
+--- | `IN_OUT_QUINT`
+--- | `OUT_IN_QUINT`
+--- | `IN_EXPO`
+--- | `OUT_EXPO`
+--- | `IN_OUT_EXPO`
+--- | `OUT_IN_EXPO`
+--- | `IN_CIRC`
+--- | `OUT_CIRC`
+--- | `IN_OUT_CIRC`
+--- | `OUT_IN_CIRC`
+--- | `IN_BACK`
+--- | `OUT_BACK`
+--- | `IN_OUT_BACK`
+--- | `OUT_IN_BACK`
+--- | `IN_ELASTIC`
+--- | `OUT_ELASTIC`
+--- | `IN_OUT_ELASTIC`
+--- | `OUT_IN_ELASTIC`
+--- | `IN_BOUNCE`
+--- | `OUT_BOUNCE`
+--- | `IN_OUT_BOUNCE`
+--- | `OUT_IN_BOUNCE`
+--- | fun(x: number): number
+
 --------------------
 -- math functions --
 --------------------
@@ -387,7 +430,7 @@ function math.round(x)
     return x > 0 and __math_floor(x + 0.5) or __math_ceil(x - 0.5)
 end
 
---- @param t function | number
+--- @param t EasingFunction | number
 --- @param a number
 --- @param b number
 --- @param x number
@@ -2717,6 +2760,42 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
+--- @type number
+ROTATION_PIVOT_X_LEFT = 0.0
+
+--- @type number
+ROTATION_PIVOT_X_CENTER = 0.5
+
+--- @type number
+ROTATION_PIVOT_X_RIGHT = 1.0
+
+--- @type number
+ROTATION_PIVOT_Y_TOP = 0.0
+
+--- @type number
+ROTATION_PIVOT_Y_CENTER = 0.5
+
+--- @type number
+ROTATION_PIVOT_Y_BOTTOM = 1.0
+
+--- @type number
+TEXT_HALIGN_LEFT = 0.0
+
+--- @type number
+TEXT_HALIGN_CENTER = 0.5
+
+--- @type number
+TEXT_HALIGN_RIGHT = 1.0
+
+--- @type number
+TEXT_VALIGN_TOP = 0.0
+
+--- @type number
+TEXT_VALIGN_CENTER = 0.5
+
+--- @type number
+TEXT_VALIGN_BOTTOM = 1.0
+
 RESOLUTION_DJUI  = 0 --- @type HudUtilsResolution
 RESOLUTION_N64   = 1 --- @type HudUtilsResolution
 RESOLUTION_COUNT = 2 --- @type HudUtilsResolution
@@ -2735,16 +2814,18 @@ FILTER_COUNT   = 2 --- @type HudUtilsFilter
 --- | `FILTER_LINEAR`
 --- | `FILTER_COUNT`
 
-FONT_NORMAL      = 0 --- @type DjuiFontType
-FONT_MENU        = 1 --- @type DjuiFontType
-FONT_HUD         = 2 --- @type DjuiFontType
-FONT_ALIASED     = 3 --- @type DjuiFontType
-FONT_CUSTOM_HUD  = 4 --- @type DjuiFontType
-FONT_RECOLOR_HUD = 5 --- @type DjuiFontType
-FONT_SPECIAL     = 6 --- @type DjuiFontType
-FONT_COUNT       = 7 --- @type DjuiFontType
+FONT_LEGACY      = -1 --- @type DjuiFontType
+FONT_NORMAL      =  0 --- @type DjuiFontType
+FONT_MENU        =  1 --- @type DjuiFontType
+FONT_HUD         =  2 --- @type DjuiFontType
+FONT_ALIASED     =  3 --- @type DjuiFontType
+FONT_CUSTOM_HUD  =  4 --- @type DjuiFontType
+FONT_RECOLOR_HUD =  5 --- @type DjuiFontType
+FONT_SPECIAL     =  6 --- @type DjuiFontType
+FONT_COUNT       =  7 --- @type DjuiFontType
 
 --- @alias DjuiFontType
+--- | `FONT_LEGACY`
 --- | `FONT_NORMAL`
 --- | `FONT_MENU`
 --- | `FONT_HUD`
@@ -8147,7 +8228,13 @@ HOOK_MARIO_OVERRIDE_FLOOR_CLASS             = 56 --- @type LuaHookedEventType
 HOOK_ON_ADD_SURFACE                         = 57 --- @type LuaHookedEventType
 HOOK_ON_CLEAR_AREAS                         = 58 --- @type LuaHookedEventType
 HOOK_ON_PACKET_BYTESTRING_RECEIVE           = 59 --- @type LuaHookedEventType
-HOOK_MAX                                    = 60 --- @type LuaHookedEventType
+HOOK_ON_FIND_WALL_COLLISION                 = 60 --- @type LuaHookedEventType
+HOOK_ON_FIND_CEIL                           = 61 --- @type LuaHookedEventType
+HOOK_ON_FIND_FLOOR                          = 62 --- @type LuaHookedEventType
+HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
+HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
+HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
+HOOK_MAX                                    = 66 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8210,6 +8297,12 @@ HOOK_MAX                                    = 60 --- @type LuaHookedEventType
 --- | `HOOK_ON_ADD_SURFACE`
 --- | `HOOK_ON_CLEAR_AREAS`
 --- | `HOOK_ON_PACKET_BYTESTRING_RECEIVE`
+--- | `HOOK_ON_FIND_WALL_COLLISION`
+--- | `HOOK_ON_FIND_CEIL`
+--- | `HOOK_ON_FIND_FLOOR`
+--- | `HOOK_ON_FIND_WATER_LEVEL`
+--- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
+--- | `HOOK_ON_FIND_SURFACE_ON_RAY`
 --- | `HOOK_MAX`
 
 --- @type integer
@@ -11194,7 +11287,7 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.4.1"
+SM64COOPDX_VERSION = "v1.4.2"
 
 --- @type string
 VERSION_TEXT = "v"

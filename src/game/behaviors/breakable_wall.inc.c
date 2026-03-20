@@ -3,7 +3,7 @@
 void bhv_wf_breakable_wall_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oBreakableWallForce);
+        sync_object_init_field(o, o->oBreakableWallForce);
     }
 
     if (o->oBreakableWallForce || gMarioStates[0].action == ACT_SHOT_FROM_CANNON) {

@@ -32,13 +32,13 @@ void bhv_boo_cage_init(void) {
     struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so == NULL) { return; }
     so->on_received_post = bhv_boo_cage_on_received_post;
-    sync_object_init_field(o, &o->oAction);
-    sync_object_init_field(o, &o->oPosX);
-    sync_object_init_field(o, &o->oPosY);
-    sync_object_init_field(o, &o->oPosZ);
-    sync_object_init_field(o, &o->oVelX);
-    sync_object_init_field(o, &o->oVelY);
-    sync_object_init_field(o, &o->oVelZ);
+    sync_object_init_field(o, o->oAction);
+    sync_object_init_field(o, o->oPosX);
+    sync_object_init_field(o, o->oPosY);
+    sync_object_init_field(o, o->oPosZ);
+    sync_object_init_field(o, o->oVelX);
+    sync_object_init_field(o, o->oVelY);
+    sync_object_init_field(o, o->oVelZ);
 }
 
 /**

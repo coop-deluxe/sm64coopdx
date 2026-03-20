@@ -3856,7 +3856,9 @@ function djui_hud_reset_color()
     -- ...
 end
 
---- @return HudUtilsRotation
+--- @return integer rotation
+--- @return number pivotX
+--- @return number pivotY
 --- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
@@ -3878,6 +3880,29 @@ end
 --- @param pivotY number
 --- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
+--- @return number textHAlign
+--- @return number textVAlign
+--- Gets the current DJUI HUD text alignment
+function djui_hud_get_text_alignment()
+    -- ...
+end
+
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment
+function djui_hud_set_text_alignment(textHAlign, textVAlign)
+    -- ...
+end
+
+--- @param prevTextHAlign number
+--- @param prevTextVAlign number
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment interpolated
+function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
 end
 
@@ -10183,6 +10208,12 @@ function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m
     -- ...
 end
 
+--- @return integer
+--- Allocates a new sequence ID
+function smlua_audio_utils_allocate_sequence()
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` stream by `filename` (with extension)
@@ -11644,6 +11675,14 @@ end
 --- @return Mod
 --- Gets the mod currently being processed
 function get_active_mod()
+    -- ...
+end
+
+--- @param mod Mod
+--- @param subDirectory? string
+--- @return table
+--- Gets all files a mod contains
+function get_mod_files(mod, subDirectory)
     -- ...
 end
 
