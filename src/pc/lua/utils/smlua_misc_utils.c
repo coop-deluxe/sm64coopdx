@@ -117,11 +117,11 @@ bool djui_is_chatbox_open(void) {
 }
 
 enum DjuiFontType djui_menu_get_font(void) {
-    return configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED;
+    return configDjuiThemeFont;
 }
 
 struct DjuiTheme* djui_menu_get_theme(void) {
-    return gDjuiThemes[configDjuiTheme];
+    return &configDjuiTheme;
 }
 
 bool djui_is_playerlist_ping_visible(void) {

@@ -754,35 +754,13 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE, 1, sizeof(u8) },
 };
 
-#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 7
-static struct LuaObjectField sDjuiInteractableThemeFields[LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT] = {
-    { "cursorDownBorderColor", LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownBorderColor), true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "cursorDownRectColor",   LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownRectColor),   true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "defaultBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultBorderColor),    true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "defaultRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultRectColor),      true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "hoveredBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredBorderColor),    true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "hoveredRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredRectColor),      true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "textColor",             LVT_COBJECT, offsetof(struct DjuiInteractableTheme, textColor),             true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-};
-
-#define LUA_DJUI_PANEL_THEME_FIELD_COUNT 1
-static struct LuaObjectField sDjuiPanelThemeFields[LUA_DJUI_PANEL_THEME_FIELD_COUNT] = {
-    { "hudFontHeader", LVT_BOOL, offsetof(struct DjuiPanelTheme, hudFontHeader), false, LOT_NONE, 1, sizeof(bool) },
-};
-
 #define LUA_DJUI_THEME_FIELD_COUNT 5
 static struct LuaObjectField sDjuiThemeFields[LUA_DJUI_THEME_FIELD_COUNT] = {
-    { "id",            LVT_STRING_P, offsetof(struct DjuiTheme, id),            true, LOT_NONE,                  1, sizeof(const char*)                  },
-    { "interactables", LVT_COBJECT,  offsetof(struct DjuiTheme, interactables), true, LOT_DJUIINTERACTABLETHEME, 1, sizeof(struct DjuiInteractableTheme) },
-    { "name",          LVT_STRING_P, offsetof(struct DjuiTheme, name),          true, LOT_NONE,                  1, sizeof(const char*)                  },
-    { "panels",        LVT_COBJECT,  offsetof(struct DjuiTheme, panels),        true, LOT_DJUIPANELTHEME,        1, sizeof(struct DjuiPanelTheme)        },
-    { "threePanels",   LVT_COBJECT,  offsetof(struct DjuiTheme, threePanels),   true, LOT_DJUITHREEPANELTHEME,   1, sizeof(struct DjuiThreePanelTheme)   },
-};
-
-#define LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT 2
-static struct LuaObjectField sDjuiThreePanelThemeFields[LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT] = {
-    { "borderColor", LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, borderColor), true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
-    { "rectColor",   LVT_COBJECT, offsetof(struct DjuiThreePanelTheme, rectColor),   true, LOT_DJUICOLOR, 1, sizeof(struct DjuiColor) },
+    { "elements",        LVT_COBJECT, offsetof(struct DjuiTheme, elements),        true,  LOT_DJUICOLOR, DJUI_THEME_ELEMENT_COUNT, sizeof(struct DjuiColor) },
+    { "gradients",       LVT_BOOL,    offsetof(struct DjuiTheme, gradients),       false, LOT_NONE,      1,                        sizeof(bool)             },
+    { "headerFont",      LVT_U32,     offsetof(struct DjuiTheme, headerFont),      false, LOT_NONE,      1,                        sizeof(unsigned int)     },
+    { "name",            LVT_STRING,  offsetof(struct DjuiTheme, name),            false, LOT_NONE,      1,                        sizeof(char)             },
+    { "useRainbowColor", LVT_BOOL,    offsetof(struct DjuiTheme, useRainbowColor), false, LOT_NONE,      1,                        sizeof(bool)             },
 };
 
 #define LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT 5
@@ -2688,10 +2666,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
     { LOT_DISPLAYLISTNODE,              sDisplayListNodeFields,              LUA_DISPLAY_LIST_NODE_FIELD_COUNT               },
     { LOT_DJUICOLOR,                    sDjuiColorFields,                    LUA_DJUI_COLOR_FIELD_COUNT                      },
-    { LOT_DJUIINTERACTABLETHEME,        sDjuiInteractableThemeFields,        LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT         },
-    { LOT_DJUIPANELTHEME,               sDjuiPanelThemeFields,               LUA_DJUI_PANEL_THEME_FIELD_COUNT                },
     { LOT_DJUITHEME,                    sDjuiThemeFields,                    LUA_DJUI_THEME_FIELD_COUNT                      },
-    { LOT_DJUITHREEPANELTHEME,          sDjuiThreePanelThemeFields,          LUA_DJUI_THREE_PANEL_THEME_FIELD_COUNT          },
     { LOT_EXCLAMATIONBOXCONTENT,        sExclamationBoxContentFields,        LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT         },
     { LOT_FIRSTPERSONCAMERA,            sFirstPersonCameraFields,            LUA_FIRST_PERSON_CAMERA_FIELD_COUNT             },
     { LOT_FNGRAPHNODE,                  sFnGraphNodeFields,                  LUA_FN_GRAPH_NODE_FIELD_COUNT                   },
@@ -2793,10 +2768,7 @@ const char *sLuaLotNames[] = {
 	[LOT_DIALOGENTRY] = "DialogEntry",
 	[LOT_DISPLAYLISTNODE] = "DisplayListNode",
 	[LOT_DJUICOLOR] = "DjuiColor",
-	[LOT_DJUIINTERACTABLETHEME] = "DjuiInteractableTheme",
-	[LOT_DJUIPANELTHEME] = "DjuiPanelTheme",
 	[LOT_DJUITHEME] = "DjuiTheme",
-	[LOT_DJUITHREEPANELTHEME] = "DjuiThreePanelTheme",
 	[LOT_EXCLAMATIONBOXCONTENT] = "ExclamationBoxContent",
 	[LOT_FIRSTPERSONCAMERA] = "FirstPersonCamera",
 	[LOT_FNGRAPHNODE] = "FnGraphNode",

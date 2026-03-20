@@ -5,58 +5,47 @@
 extern ALIGNED8 u8 texture_selectionbox_back_icon[];
 extern ALIGNED8 u8 texture_selectionbox_forward_icon[];
 
-static void djui_selectionbox_update_style(struct DjuiBase* base) {
+void djui_selectionbox_update_style(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
     f32 x = selectionbox->rect->base.elem.x;
     bool activeRegion = (gCursorX >= x);
 
     if (!selectionbox->base.enabled) {
-        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-        struct DjuiColor bc = djui_theme_shade_color(theme->interactables.defaultBorderColor, 0.6f);
-        struct DjuiColor rc = djui_theme_shade_color(theme->interactables.defaultRectColor, 0.6f);
-        struct DjuiColor tc = theme->interactables.textColor;
-
-        djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&selectionbox->rect->base, rc.r, rc.g, rc.b, rc.a);
-        djui_base_set_color(&selectionbox->rectText->base, tc.r, tc.g, tc.b, tc.a);
+        djui_base_set_border_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED]);
+        djui_base_set_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_DISABLED]);
+        djui_base_set_color_with_color(&selectionbox->rectText->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED]);
 
         djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
-        djui_base_set_color(&selectionbox->rectImage->base, tc.r, tc.g, tc.b, tc.a);
-        djui_base_set_color(&selectionbox->rectImage2->base, tc.r, tc.g, tc.b, tc.a);
-        djui_base_set_color(&selectionbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color_with_color(&selectionbox->rectImage->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED]);
+        djui_base_set_color_with_color(&selectionbox->rectImage2->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED]);
+        djui_base_set_color_with_color(&selectionbox->text->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
     } else if (gDjuiCursorDownOn == base && activeRegion) {
-        struct DjuiColor bc = theme->interactables.cursorDownBorderColor;
-        struct DjuiColor rc = theme->interactables.cursorDownRectColor;
-
-        djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&selectionbox->rect->base, rc.r, rc.g, rc.b, rc.a);
+        djui_base_set_border_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN]);
+        djui_base_set_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_DOWN]);
+        djui_base_set_color_with_color(&selectionbox->rectText->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT]);
 
         djui_base_set_location(&selectionbox->rectText->base, 0.5f, 3.5f);
-        djui_base_set_color(&selectionbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color_with_color(&selectionbox->rectImage->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->rectImage2->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->text->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
     } else if (gDjuiHovered == base && activeRegion) {
-        struct DjuiColor bc = theme->interactables.hoveredBorderColor;
-        struct DjuiColor rc = theme->interactables.hoveredRectColor;
-
-        djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&selectionbox->rect->base, rc.r, rc.g, rc.b, rc.a);
+        djui_base_set_border_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER]);
+        djui_base_set_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_HOVER]);
+        djui_base_set_color_with_color(&selectionbox->rectText->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT]);
 
         djui_base_set_location(&selectionbox->rectText->base, -1.0f, 2.0f);
-        djui_base_set_color(&selectionbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color_with_color(&selectionbox->rectImage->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->rectImage2->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->text->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
     } else {
-        struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-        struct DjuiColor bc = theme->interactables.defaultBorderColor;
-        struct DjuiColor rc = theme->interactables.defaultRectColor;
-        struct DjuiColor tc = theme->interactables.textColor;
-
-        djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);
-        djui_base_set_color(&selectionbox->rect->base, rc.r, rc.g, rc.b, rc.a);
-        djui_base_set_color(&selectionbox->rectText->base, tc.r, tc.g, tc.b, tc.a);
+        djui_base_set_border_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER]);
+        djui_base_set_color_with_color(&selectionbox->rect->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY]);
+        djui_base_set_color_with_color(&selectionbox->rectText->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT]);
 
         djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
-        djui_base_set_color(&selectionbox->rectImage->base, tc.r, tc.g, tc.b, tc.a);
-        djui_base_set_color(&selectionbox->rectImage2->base, tc.r, tc.g, tc.b, tc.a);
-        djui_base_set_color(&selectionbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color_with_color(&selectionbox->rectImage->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->rectImage2->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE]);
+        djui_base_set_color_with_color(&selectionbox->text->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
     }
 }
 
@@ -112,7 +101,7 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
     for (int i = 0; i < choiceCount; i++) {
         u32 length = strlen(choices[i]);
         selectionbox->choices[i] = calloc((length + 1), sizeof(char));
-        sprintf(selectionbox->choices[i], "%s", choices[i]);
+        snprintf(selectionbox->choices[i], length + 1, "%s", choices[i]);
     }
     selectionbox->choiceCount = choiceCount;
 

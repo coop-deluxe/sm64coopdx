@@ -66,11 +66,11 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
             {
-                djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-                djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_refresh);
+                djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
+                djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_dynos_refresh);
             }
         } else {
-            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
         }
     }
 

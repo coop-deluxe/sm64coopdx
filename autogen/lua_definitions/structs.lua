@@ -556,28 +556,12 @@
 --- @field public b integer
 --- @field public a integer
 
---- @class DjuiInteractableTheme
---- @field public textColor DjuiColor
---- @field public defaultRectColor DjuiColor
---- @field public cursorDownRectColor DjuiColor
---- @field public hoveredRectColor DjuiColor
---- @field public defaultBorderColor DjuiColor
---- @field public cursorDownBorderColor DjuiColor
---- @field public hoveredBorderColor DjuiColor
-
---- @class DjuiPanelTheme
---- @field public hudFontHeader boolean
-
 --- @class DjuiTheme
---- @field public id string
 --- @field public name string
---- @field public interactables DjuiInteractableTheme
---- @field public threePanels DjuiThreePanelTheme
---- @field public panels DjuiPanelTheme
-
---- @class DjuiThreePanelTheme
---- @field public rectColor DjuiColor
---- @field public borderColor DjuiColor
+--- @field public elements DjuiColor[]
+--- @field public headerFont integer
+--- @field public useRainbowColor boolean
+--- @field public gradients boolean
 
 --- @class ExclamationBoxContent
 --- @field public id integer

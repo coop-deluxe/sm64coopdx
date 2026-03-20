@@ -64,7 +64,7 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
             break;
         }
         case MOD_MENU_ELEMENT_BUTTON: {
-            struct DjuiButton* button = djui_button_create(parent, hooked->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_button);
+            struct DjuiButton* button = djui_button_create(parent, hooked->name, DJUI_BUTTON_STYLE_PRIMARY, djui_panel_mod_menu_mod_button);
             button->base.tag = i;
             break;
         }
@@ -83,7 +83,7 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase* parent, int 
             {
                 struct DjuiText* text1 = djui_text_create(&rect->base, hooked->name);
                 djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_color(&text1->base, 220, 220, 220, 255);
+                djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
                 djui_base_set_size(&text1->base, 0.585f, 64);
                 djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
                 djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -127,7 +127,7 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase* caller) {
         djui_paginated_calculate_height(paginated);
         djui_base_set_size(layoutBase, layoutBase->width.value, 700);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
@@ -154,13 +154,13 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
             }
             if (shouldContinue) { continue; }
 
-            struct DjuiButton* button = djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_NORMAL, djui_panel_mod_menu_mod_create);
+            struct DjuiButton* button = djui_button_create(layoutBase, hooked->mod->name, DJUI_BUTTON_STYLE_PRIMARY, djui_panel_mod_menu_mod_create);
             button->base.tag = hooked->mod->index;
             addedMods[modCount++] = hooked->mod;
         }
         djui_paginated_calculate_height(paginated);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

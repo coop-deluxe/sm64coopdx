@@ -17,10 +17,7 @@
 - [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
 - [DjuiColor](#DjuiColor)
-- [DjuiInteractableTheme](#DjuiInteractableTheme)
-- [DjuiPanelTheme](#DjuiPanelTheme)
 - [DjuiTheme](#DjuiTheme)
-- [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FnGraphNode](#FnGraphNode)
@@ -775,52 +772,15 @@
 
 <br />
 
-## [DjuiInteractableTheme](#DjuiInteractableTheme)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| textColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| cursorDownBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [DjuiPanelTheme](#DjuiPanelTheme)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| hudFontHeader | `boolean` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [DjuiTheme](#DjuiTheme)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| id | `string` | read-only |
-| name | `string` | read-only |
-| interactables | [DjuiInteractableTheme](structs.md#DjuiInteractableTheme) | read-only |
-| threePanels | [DjuiThreePanelTheme](structs.md#DjuiThreePanelTheme) | read-only |
-| panels | [DjuiPanelTheme](structs.md#DjuiPanelTheme) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [DjuiThreePanelTheme](#DjuiThreePanelTheme)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| name | `string` |  |
+| elements | `Array` <`DjuiColor`> | read-only |
+| headerFont | `integer` |  |
+| useRainbowColor | `boolean` |  |
+| gradients | `boolean` |  |
 
 [:arrow_up_small:](#)
 

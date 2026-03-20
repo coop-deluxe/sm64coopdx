@@ -1187,7 +1187,8 @@
 | FONT_CUSTOM_HUD | 4 |
 | FONT_RECOLOR_HUD | 5 |
 | FONT_SPECIAL | 6 |
-| FONT_COUNT | 7 |
+| FONT_CLASSIC | 7 |
+| FONT_COUNT | 8 |
 
 [:arrow_up_small:](#)
 

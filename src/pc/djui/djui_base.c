@@ -48,6 +48,13 @@ void djui_base_set_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a) {
     base->color.a = a;
 }
 
+void djui_base_set_color_with_color(struct DjuiBase* base, struct DjuiColor color) {
+    base->color.r = color.r;
+    base->color.g = color.g;
+    base->color.b = color.b;
+    base->color.a = color.a;
+}
+
 void djui_base_set_border_width(struct DjuiBase* base, f32 width) {
     base->borderWidth.value = width;
 }
@@ -61,6 +68,13 @@ void djui_base_set_border_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a) {
     base->borderColor.g = g;
     base->borderColor.b = b;
     base->borderColor.a = a;
+}
+
+void djui_base_set_border_color_with_color(struct DjuiBase* base, struct DjuiColor color) {
+    base->borderColor.r = color.r;
+    base->borderColor.g = color.g;
+    base->borderColor.b = color.b;
+    base->borderColor.a = color.a;
 }
 
 void djui_base_set_padding(struct DjuiBase* base, f32 top, f32 right, f32 bottom, f32 left) {
@@ -353,6 +367,11 @@ void djui_base_destroy(struct DjuiBase* base) {
         gInteractableBinding = NULL;
     }
 
+    // remove input controlled base
+    if (gInputControlledBase == base) {
+        gInputControlledBase = NULL;
+    }
+
     // remove myself from parent's linked list
     if (base->parent != NULL) {
         struct DjuiBaseChild* child     = base->parent->child;
@@ -445,7 +464,7 @@ void djui_base_init(struct DjuiBase* parent, struct DjuiBase* base, bool (*rende
     djui_base_set_enabled(base, true);
     djui_base_set_size(base, 64, 64);
     djui_base_set_color(base, 255, 255, 255, 255);
-    djui_base_set_gradient(base, configDjuiThemeGradients);
+    djui_base_set_gradient(base, configDjuiTheme.gradients);
     base->get_cursor_hover_location = djui_base_get_cursor_hover_location;
     base->render = render;
     base->destroy = destroy;

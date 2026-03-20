@@ -38,6 +38,7 @@ enum DjuiFontType {
     FONT_CUSTOM_HUD,
     FONT_RECOLOR_HUD,
     FONT_SPECIAL,
+    FONT_CLASSIC,
     FONT_COUNT,
 };
 

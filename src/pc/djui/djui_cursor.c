@@ -12,7 +12,7 @@ extern ALIGNED8 u8 gd_texture_hand_closed[];
 struct DjuiImage* sMouseCursor = NULL;
 
 static bool sCursorMouseControlled = false;
-static struct DjuiBase* sInputControlledBase = NULL;
+struct DjuiBase* gInputControlledBase = NULL;
 
 static f32 sSavedMouseX = 0;
 static f32 sSavedMouseY = 0;
@@ -55,7 +55,7 @@ static void djui_cursor_base_hover_location(struct DjuiBase* base, f32* x, f32* 
 
 void djui_cursor_input_controlled_center(struct DjuiBase* base) {
     if (!sCursorMouseControlled && (!base || (base && base->interactable && base->interactable->enabled))) {
-        sInputControlledBase = base;
+        gInputControlledBase = base;
         djui_cursor_set_visible(base != NULL);
     }
 }
@@ -147,8 +147,8 @@ static void djui_cursor_update_position(void) {
     if (sCursorMouseControlled) {
         gCursorX = mouse_window_x / djui_gfx_get_scale();
         gCursorY = mouse_window_y / djui_gfx_get_scale();
-    } else if (sInputControlledBase != NULL) {
-        djui_cursor_base_hover_location(sInputControlledBase, &gCursorX, &gCursorY);
+    } else if (gInputControlledBase != NULL) {
+        djui_cursor_base_hover_location(gInputControlledBase, &gCursorX, &gCursorY);
     }
 
     // set cursor position

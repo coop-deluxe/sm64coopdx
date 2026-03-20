@@ -1,5 +1,6 @@
 #include "PR/ultratypes.h"
 #include "types.h"
+#include "pc/ini.h"
 #include "pc/platform.h"
 #include "pc/utils/miniz/miniz.h"
 #include "pc/debuglog.h"
@@ -100,6 +101,86 @@ static bool mod_import_palette(char* src) {
     LOG_INFO("Imported palette ini: '%s' -> '%s'", src, dst);
 
     return true;
+}
+
+static bool mod_import_theme(char* src) {
+    const char* themesDirectory = fs_get_write_path(THEMES_DIRECTORY);
+    fs_sys_mkdir(themesDirectory);
+
+    char dst[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(dst, (char*)themesDirectory, path_basename(src))) {
+        LOG_ERROR("Failed to concat path for theme ini import");
+        return false;
+    }
+
+    FILE* fin = fopen(src, "rb");
+    if (fin == NULL) {
+        LOG_ERROR("Failed to open src path for theme ini import");
+        return false;
+    }
+
+    FILE* fout = fopen(dst, "wb");
+    if (fout == NULL) {
+        LOG_ERROR("Failed to open dst path for theme ini import");
+        fclose(fin);
+        return false;
+    }
+
+    size_t rbytes;
+    size_t wbytes;
+    unsigned char buff[8192];
+    do {
+        rbytes = fread(buff, 1, sizeof(buff), fin);
+        if (rbytes > 0) {
+            wbytes = fwrite(buff, 1, rbytes, fout);
+        } else {
+            wbytes = 0;
+        }
+    } while ((rbytes > 0) && (rbytes == wbytes));
+
+    fclose(fout);
+    fclose(fin);
+
+    if (wbytes) {
+        LOG_ERROR("Write error on theme ini import");
+        return false;
+    }
+
+    LOG_INFO("Imported theme ini: '%s' -> '%s'", src, dst);
+    // nuke current themes and load them back
+    for (int i = DJUI_THEME_COUNT; i < MAX_DJUI_THEMES; i++) {
+        free(gDjuiThemes[i]);
+        gDjuiThemes[i] = NULL;
+    }
+    djui_themes_load();
+
+    return true;
+}
+
+static bool mod_import_ini(char* src) {
+    struct ini_t* importIni = ini_load(src);
+    bool ret = false;
+
+    char msg[SYS_MAX_PATH] = { 0 };
+    char* basename = path_basename(src);
+
+    // bit hacky, but works
+    if (ini_get(importIni, "PALETTE", "PANTS_R") != NULL) {
+        ret = mod_import_palette(src);
+        if (ret) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        }
+    } else if (ini_get(importIni, "THEME", "theme_header_font") != NULL) {
+        ret = mod_import_theme(src);
+        if (ret) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_THEME_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        }
+    }
+
+    ini_free(importIni);
+    return ret;
 }
 
 static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
@@ -255,7 +336,6 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
 bool mod_import_file(char* path) {
     bool isLua = false;
     bool isDynos = false;
-    bool isPalette = false;
     bool ret = false;
 
     if (gNetworkType != NT_NONE && !path_ends_with(path, ".ini")) {
@@ -267,8 +347,7 @@ bool mod_import_file(char* path) {
         isLua = true;
         ret = mod_import_lua(path);
     } else if (path_ends_with(path, ".ini")) {
-        isPalette = true;
-        ret = mod_import_palette(path);
+        ret = mod_import_ini(path);
     } else if (path_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
     }
@@ -284,9 +363,6 @@ bool mod_import_file(char* path) {
         } else if (isDynos) {
             dynos_gfx_init();
             djui_language_replace(DLANG(NOTIF, IMPORT_DYNOS_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
-            djui_popup_create(msg, 2);
-        } else if (isPalette) {
-            djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }
     } else {
