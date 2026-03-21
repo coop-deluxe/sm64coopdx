@@ -12,7 +12,6 @@
 - [Character](#Character)
 - [Color](#Color)
 - [Controller](#Controller)
-- [CreditsEntry](#CreditsEntry)
 - [CustomLevelInfo](#CustomLevelInfo)
 - [DateTime](#DateTime)
 - [DialogEntry](#DialogEntry)
@@ -78,7 +77,6 @@
 - [PlayerPalette](#PlayerPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
-- [SavedWarpValues](#SavedWarpValues)
 - [ServerSettings](#ServerSettings)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
@@ -98,7 +96,6 @@
 - [Vec4s](#Vec4s)
 - [Vtx](#Vtx)
 - [WallCollisionData](#WallCollisionData)
-- [WarpDest](#WarpDest)
 - [WarpNode](#WarpNode)
 - [WaterDropletParams](#WaterDropletParams)
 - [Waypoint](#Waypoint)
@@ -698,20 +695,6 @@
 | buttonDown | `integer` |  |
 | buttonPressed | `integer` |  |
 | buttonReleased | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [CreditsEntry](#CreditsEntry)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| levelNum | `integer` |  |
-| areaIndex | `integer` |  |
-| unk02 | `integer` |  |
-| marioAngle | `integer` |  |
-| marioPos | [Vec3s](structs.md#Vec3s) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -2851,21 +2834,6 @@
 
 <br />
 
-## [SavedWarpValues](#SavedWarpValues)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| received | `integer` |  |
-| warpDest | [WarpDest](structs.md#WarpDest) | read-only |
-| inWarpCheckpoint | `integer` |  |
-| ttcSpeedSetting | `integer` |  |
-| D_80339EE0 | `integer` |  |
-| paintingMarioYEntry | `number` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [ServerSettings](#ServerSettings)
 
 | Field | Type | Access |
@@ -3171,20 +3139,6 @@
 | walls | `Array` <`Surface`> |  |
 | normalAddition | [Vec3f](structs.md#Vec3f) | read-only |
 | normalCount | `integer` |  |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [WarpDest](#WarpDest)
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| type | `integer` |  |
-| levelNum | `integer` |  |
-| areaIdx | `integer` |  |
-| nodeId | `integer` |  |
-| arg | `integer` |  |
 
 [:arrow_up_small:](#)
 

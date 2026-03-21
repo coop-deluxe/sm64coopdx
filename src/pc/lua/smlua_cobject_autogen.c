@@ -702,16 +702,6 @@ static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "stickY",         LVT_F32, offsetof(struct Controller, stickY),         false, LOT_NONE, 1, sizeof(f32)           },
 };
 
-#define LUA_CREDITS_ENTRY_FIELD_COUNT 5
-static struct LuaObjectField sCreditsEntryFields[LUA_CREDITS_ENTRY_FIELD_COUNT] = {
-    { "areaIndex",  LVT_U8,      offsetof(struct CreditsEntry, areaIndex),  false, LOT_NONE,  1, sizeof(u8)            },
-    { "levelNum",   LVT_U8,      offsetof(struct CreditsEntry, levelNum),   false, LOT_NONE,  1, sizeof(u8)            },
-    { "marioAngle", LVT_S8,      offsetof(struct CreditsEntry, marioAngle), false, LOT_NONE,  1, sizeof(s8)            },
-    { "marioPos",   LVT_COBJECT, offsetof(struct CreditsEntry, marioPos),   true,  LOT_VEC3S, 1, sizeof(Vec3s)         },
-    { "unk02",      LVT_U8,      offsetof(struct CreditsEntry, unk02),      false, LOT_NONE,  1, sizeof(u8)            },
-//  { "unk0C",      LVT_???,     offsetof(struct CreditsEntry, unk0C),      true,  LOT_???,   1, sizeof(const char **) }, <--- UNIMPLEMENTED
-};
-
 #define LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT 12
 static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT] = {
     { "acousticReach",   LVT_U32,           offsetof(struct CustomLevelInfo, acousticReach),   false, LOT_NONE,            1, sizeof(u32)                     },
@@ -2506,16 +2496,6 @@ static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SET
     { "zoomedOutHeight", LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutHeight), false, LOT_NONE, 1, sizeof(u32)                        },
 };
 
-#define LUA_SAVED_WARP_VALUES_FIELD_COUNT 6
-static struct LuaObjectField sSavedWarpValuesFields[LUA_SAVED_WARP_VALUES_FIELD_COUNT] = {
-    { "D_80339EE0",          LVT_S16,     offsetof(struct SavedWarpValues, D_80339EE0),          false, LOT_NONE,     1, sizeof(s16)             },
-    { "inWarpCheckpoint",    LVT_S8,      offsetof(struct SavedWarpValues, inWarpCheckpoint),    false, LOT_NONE,     1, sizeof(s8)              },
-    { "paintingMarioYEntry", LVT_F32,     offsetof(struct SavedWarpValues, paintingMarioYEntry), false, LOT_NONE,     1, sizeof(f32)             },
-    { "received",            LVT_U8,      offsetof(struct SavedWarpValues, received),            false, LOT_NONE,     1, sizeof(u8)              },
-    { "ttcSpeedSetting",     LVT_S16,     offsetof(struct SavedWarpValues, ttcSpeedSetting),     false, LOT_NONE,     1, sizeof(s16)             },
-    { "warpDest",            LVT_COBJECT, offsetof(struct SavedWarpValues, warpDest),            true,  LOT_WARPDEST, 1, sizeof(struct WarpDest) },
-};
-
 #define LUA_SERVER_SETTINGS_FIELD_COUNT 13
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE, 1, sizeof(enum BouncyLevelBounds)  },
@@ -2669,15 +2649,6 @@ static struct LuaObjectField sWallCollisionDataFields[LUA_WALL_COLLISION_DATA_FI
     { "z",              LVT_F32,       offsetof(struct WallCollisionData, z),              false, LOT_NONE,    1, sizeof(f32)             },
 };
 
-#define LUA_WARP_DEST_FIELD_COUNT 5
-static struct LuaObjectField sWarpDestFields[LUA_WARP_DEST_FIELD_COUNT] = {
-    { "areaIdx",  LVT_U8,  offsetof(struct WarpDest, areaIdx),  false, LOT_NONE, 1, sizeof(u8)  },
-    { "arg",      LVT_U32, offsetof(struct WarpDest, arg),      false, LOT_NONE, 1, sizeof(u32) },
-    { "levelNum", LVT_S16, offsetof(struct WarpDest, levelNum), false, LOT_NONE, 1, sizeof(s16) },
-    { "nodeId",   LVT_U8,  offsetof(struct WarpDest, nodeId),   false, LOT_NONE, 1, sizeof(u8)  },
-    { "type",     LVT_U8,  offsetof(struct WarpDest, type),     false, LOT_NONE, 1, sizeof(u8)  },
-};
-
 #define LUA_WARP_NODE_FIELD_COUNT 4
 static struct LuaObjectField sWarpNodeFields[LUA_WARP_NODE_FIELD_COUNT] = {
     { "destArea",  LVT_U8, offsetof(struct WarpNode, destArea),  false, LOT_NONE, 1, sizeof(u8) },
@@ -2724,7 +2695,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
-    { LOT_CREDITSENTRY,                 sCreditsEntryFields,                 LUA_CREDITS_ENTRY_FIELD_COUNT                   },
     { LOT_CUSTOMLEVELINFO,              sCustomLevelInfoFields,              LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT               },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
     { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
@@ -2789,7 +2759,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_PLAYERPALETTE,                sPlayerPaletteFields,                LUA_PLAYER_PALETTE_FIELD_COUNT                  },
     { LOT_RAYINTERSECTIONINFO,          sRayIntersectionInfoFields,          LUA_RAY_INTERSECTION_INFO_FIELD_COUNT           },
     { LOT_ROMHACKCAMERASETTINGS,        sRomhackCameraSettingsFields,        LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT         },
-    { LOT_SAVEDWARPVALUES,              sSavedWarpValuesFields,              LUA_SAVED_WARP_VALUES_FIELD_COUNT               },
     { LOT_SERVERSETTINGS,               sServerSettingsFields,               LUA_SERVER_SETTINGS_FIELD_COUNT                 },
     { LOT_SPAWNINFO,                    sSpawnInfoFields,                    LUA_SPAWN_INFO_FIELD_COUNT                      },
     { LOT_SPAWNPARTICLESINFO,           sSpawnParticlesInfoFields,           LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT            },
@@ -2800,7 +2769,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_VTX,                          sVtxFields,                          LUA_VTX_FIELD_COUNT                             },
     { LOT_WALLCOLLISIONDATA,            sWallCollisionDataFields,            LUA_WALL_COLLISION_DATA_FIELD_COUNT             },
-    { LOT_WARPDEST,                     sWarpDestFields,                     LUA_WARP_DEST_FIELD_COUNT                       },
     { LOT_WARPNODE,                     sWarpNodeFields,                     LUA_WARP_NODE_FIELD_COUNT                       },
     { LOT_WATERDROPLETPARAMS,           sWaterDropletParamsFields,           LUA_WATER_DROPLET_PARAMS_FIELD_COUNT            },
     { LOT_WAYPOINT,                     sWaypointFields,                     LUA_WAYPOINT_FIELD_COUNT                        },
@@ -2833,7 +2801,6 @@ const char *sLuaLotNames[] = {
 	[LOT_CHAINSEGMENT] = "ChainSegment",
 	[LOT_CHARACTER] = "Character",
 	[LOT_CONTROLLER] = "Controller",
-	[LOT_CREDITSENTRY] = "CreditsEntry",
 	[LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
 	[LOT_DATETIME] = "DateTime",
 	[LOT_DIALOGENTRY] = "DialogEntry",
@@ -2898,7 +2865,6 @@ const char *sLuaLotNames[] = {
 	[LOT_PLAYERPALETTE] = "PlayerPalette",
 	[LOT_RAYINTERSECTIONINFO] = "RayIntersectionInfo",
 	[LOT_ROMHACKCAMERASETTINGS] = "RomhackCameraSettings",
-	[LOT_SAVEDWARPVALUES] = "SavedWarpValues",
 	[LOT_SERVERSETTINGS] = "ServerSettings",
 	[LOT_SPAWNINFO] = "SpawnInfo",
 	[LOT_SPAWNPARTICLESINFO] = "SpawnParticlesInfo",
@@ -2909,7 +2875,6 @@ const char *sLuaLotNames[] = {
 	[LOT_TEXTUREINFO] = "TextureInfo",
 	[LOT_VTX] = "Vtx",
 	[LOT_WALLCOLLISIONDATA] = "WallCollisionData",
-	[LOT_WARPDEST] = "WarpDest",
 	[LOT_WARPNODE] = "WarpNode",
 	[LOT_WATERDROPLETPARAMS] = "WaterDropletParams",
 	[LOT_WAYPOINT] = "Waypoint",

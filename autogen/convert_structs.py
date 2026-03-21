@@ -156,6 +156,7 @@ override_field_version_excludes = {
 override_allowed_structs = {
     "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
     "src/pc/djui/djui_types.h": [ "DjuiColor" ],
+    "src/game/level_update.h": [ "HudDisplay" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ],
