@@ -1504,6 +1504,41 @@ UNUSED static s32 play_mode_unused(void) {
     return 0;
 }
 
+s32 run_current_play_mode() {
+    s32 changeLevel = 0;
+
+    s16 hookPlaymode = sCurrPlayMode;
+    if (smlua_call_event_hooks(HOOK_BEFORE_PLAY_MODE_RUN, sCurrPlayMode, &hookPlaymode)) {
+        sCurrPlayMode = hookPlaymode;
+    }
+
+    switch (sCurrPlayMode) {
+        case PLAY_MODE_NORMAL:
+            changeLevel = play_mode_normal();
+            break;
+        case PLAY_MODE_PAUSED:
+            if (!network_check_singleplayer_pause()) {
+                changeLevel = play_mode_normal();
+            }
+
+            if (sCurrPlayMode == PLAY_MODE_PAUSED) {
+                changeLevel = play_mode_paused();
+            }
+            break;
+        case PLAY_MODE_CHANGE_AREA:
+            changeLevel = play_mode_change_area();
+            break;
+        case PLAY_MODE_CHANGE_LEVEL:
+            changeLevel = play_mode_change_level();
+            break;
+        case PLAY_MODE_FRAME_ADVANCE:
+            changeLevel = play_mode_frame_advance();
+            break;
+    }
+    smlua_call_event_hooks(HOOK_ON_PLAY_MODE_RUN, sCurrPlayMode);
+    return changeLevel;
+}
+
 void update_menu_level(void) {
     // figure out level
     s32 curLevel = 0;
@@ -1731,29 +1766,7 @@ s32 update_level(void) {
         gCurrentArea->localAreaTimer++;
     }
 
-    switch (sCurrPlayMode) {
-        case PLAY_MODE_NORMAL:
-            changeLevel = play_mode_normal();
-            break;
-        case PLAY_MODE_PAUSED:
-            if (!network_check_singleplayer_pause()) {
-                changeLevel = play_mode_normal();
-            }
-
-            if (sCurrPlayMode == PLAY_MODE_PAUSED) {
-                changeLevel = play_mode_paused();
-            }
-            break;
-        case PLAY_MODE_CHANGE_AREA:
-            changeLevel = play_mode_change_area();
-            break;
-        case PLAY_MODE_CHANGE_LEVEL:
-            changeLevel = play_mode_change_level();
-            break;
-        case PLAY_MODE_FRAME_ADVANCE:
-            changeLevel = play_mode_frame_advance();
-            break;
-    }
+    changeLevel = run_current_play_mode();
 
     if (changeLevel) {
         reset_volume();
