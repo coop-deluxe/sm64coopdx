@@ -102,6 +102,13 @@ __**NOTE**__: The fields in this struct are not synced and are meant to be chang
 
 <br />
 
+## [gHudDisplay](#gHudDisplay)
+`gHudDisplay`'s fields are listed in [HudDisplay](structs.md#HudDisplay).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gLevelValues](#gLevelValues)
 `gLevelValues`'s fields are listed in [LevelValues](structs.md#LevelValues).
 

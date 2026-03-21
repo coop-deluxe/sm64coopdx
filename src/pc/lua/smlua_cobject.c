@@ -785,6 +785,8 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL(LOT_SERVERSETTINGS, gServerSettings);
 
     EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
+
+    EXPOSE_GLOBAL(LOT_HUDDISPLAY, gHudDisplay);
 }
 
 void smlua_cobject_init_per_file_globals(const char* path) {

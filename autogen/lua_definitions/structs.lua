@@ -515,6 +515,13 @@
 --- @field public buttonPressed integer
 --- @field public buttonReleased integer
 
+--- @class CreditsEntry
+--- @field public levelNum integer
+--- @field public areaIndex integer
+--- @field public unk02 integer
+--- @field public marioAngle integer
+--- @field public marioPos Vec3s
+
 --- @class CustomLevelInfo
 --- @field public script Pointer_LevelScript
 --- @field public scriptEntryName string
@@ -954,6 +961,15 @@
 --- @field public displayList Pointer_Gfx
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
+
+--- @class HudDisplay
+--- @field public lives integer
+--- @field public coins integer
+--- @field public stars integer
+--- @field public wedges integer
+--- @field public keys integer
+--- @field public flags integer
+--- @field public timer integer
 
 --- @class InstantWarp
 --- @field public id integer
@@ -2152,6 +2168,14 @@
 --- @field public zoomedOutHeight integer
 --- @field public modsOnly integer
 
+--- @class SavedWarpValues
+--- @field public received integer
+--- @field public warpDest WarpDest
+--- @field public inWarpCheckpoint integer
+--- @field public ttcSpeedSetting integer
+--- @field public D_80339EE0 integer
+--- @field public paintingMarioYEntry number
+
 --- @class ServerSettings
 --- @field public playerInteractions PlayerInteractions
 --- @field public bouncyLevelBounds BouncyLevelBounds
@@ -2283,6 +2307,13 @@
 --- @field public walls Surface[]
 --- @field public normalAddition Vec3f
 --- @field public normalCount integer
+
+--- @class WarpDest
+--- @field public type integer
+--- @field public levelNum integer
+--- @field public areaIdx integer
+--- @field public nodeId integer
+--- @field public arg integer
 
 --- @class WarpNode
 --- @field public id integer
