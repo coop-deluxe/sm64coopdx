@@ -1864,12 +1864,12 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_BYTESTRING_RECEIVE(s32 modIndex, s32 
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_BEFORE_PLAY_MODE_RUN(s16 playmode, s16 *overridePlaymode) {
+bool smlua_call_event_hooks_HOOK_BEFORE_PLAY_MODE_UPDATE(s16 playmode, s16 *overridePlaymode) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
     bool hookResult = false;
 
-    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_BEFORE_PLAY_MODE_RUN];
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_BEFORE_PLAY_MODE_UPDATE];
     for (int i = 0; i < hook->count; i++) {
         s32 prevTop = lua_gettop(L);
 
@@ -1881,7 +1881,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PLAY_MODE_RUN(s16 playmode, s16 *overrid
 
         // call the callback
         if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_PLAY_MODE_RUN], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_PLAY_MODE_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
@@ -1896,12 +1896,12 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PLAY_MODE_RUN(s16 playmode, s16 *overrid
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_RUN(s16 playmode) {
+bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_UPDATE(s16 playmode, s32 *changeLevel) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
     bool hookResult = false;
 
-    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_PLAY_MODE_RUN];
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_PLAY_MODE_UPDATE];
     for (int i = 0; i < hook->count; i++) {
         s32 prevTop = lua_gettop(L);
 
@@ -1912,11 +1912,16 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_RUN(s16 playmode) {
         lua_pushinteger(L, playmode);
 
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
-            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAY_MODE_RUN], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAY_MODE_UPDATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
         hookResult = true;
+
+        // return changeLevel
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *changeLevel = smlua_to_integer(L, -1);
+        }
 
         lua_settop(L, prevTop);
     }

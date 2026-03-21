@@ -87,6 +87,7 @@ void bhv_tilting_inverted_pyramid_loop(void) {
     u8 playersTouched = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj == NULL) { continue; }
         if (gMarioStates[i].marioObj->platform != o) { continue; }
         x += gMarioStates[i].marioObj->oPosX;
         y += gMarioStates[i].marioObj->oPosY;
@@ -135,7 +136,7 @@ void bhv_tilting_inverted_pyramid_loop(void) {
         o->oTiltingPyramidMarioOnPlatform = FALSE;
     }
 
-    // Approach the normals by 0.01f towards the new goal, then create a transform matrix and orient the object. 
+    // Approach the normals by 0.01f towards the new goal, then create a transform matrix and orient the object.
     // Outside of the other conditionals since it needs to tilt regardless of whether Mario is on.
     o->oTiltingPyramidNormalX = approach_by_increment(dx, o->oTiltingPyramidNormalX, 0.01f);
     o->oTiltingPyramidNormalY = approach_by_increment(dy, o->oTiltingPyramidNormalY, 0.01f);

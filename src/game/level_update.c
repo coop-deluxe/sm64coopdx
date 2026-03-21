@@ -1508,7 +1508,7 @@ s32 run_current_play_mode() {
     s32 changeLevel = 0;
 
     s16 hookPlaymode = sCurrPlayMode;
-    if (smlua_call_event_hooks(HOOK_BEFORE_PLAY_MODE_RUN, sCurrPlayMode, &hookPlaymode)) {
+    if (smlua_call_event_hooks(HOOK_BEFORE_PLAY_MODE_UPDATE, sCurrPlayMode, &hookPlaymode)) {
         sCurrPlayMode = hookPlaymode;
     }
 
@@ -1535,7 +1535,10 @@ s32 run_current_play_mode() {
             changeLevel = play_mode_frame_advance();
             break;
     }
-    smlua_call_event_hooks(HOOK_ON_PLAY_MODE_RUN, sCurrPlayMode);
+    s32 hookChangeLevel = changeLevel;
+    if (smlua_call_event_hooks(HOOK_ON_PLAY_MODE_UPDATE, sCurrPlayMode, &hookChangeLevel)) {
+        changeLevel = hookChangeLevel;
+    }
     return changeLevel;
 }
 
