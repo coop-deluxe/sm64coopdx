@@ -1504,7 +1504,7 @@ UNUSED static s32 play_mode_unused(void) {
     return 0;
 }
 
-s32 run_current_play_mode() {
+s32 update_current_play_mode() {
     s32 changeLevel = 0;
 
     s16 hookPlaymode = sCurrPlayMode;
@@ -1769,7 +1769,7 @@ s32 update_level(void) {
         gCurrentArea->localAreaTimer++;
     }
 
-    changeLevel = run_current_play_mode();
+    changeLevel = update_current_play_mode();
 
     if (changeLevel) {
         reset_volume();
