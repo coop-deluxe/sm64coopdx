@@ -233,52 +233,30 @@ void *growing_array_alloc(struct GrowingArray *array, u32 size) {
     return NULL;
 }
 
-// This function can move elements to an overlapping region
-// `to` is the destination index in the array before any operations
-// Does not expand the array if `to + count` exceeds capacity
-bool growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count) {
-    if (!array || !array->buffer) { return false; }
-    if (count == 0) { return true; }
-    if (from >= array->count) { return false; }
-    if (from + count > array->count) { return false; }
-    if (to > array->count) { return false; }
-    if (to + count > array->count) { return false; }
-    if (from == to) { return true; }
+void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count) {
+    if (array && array->buffer && count > 0 &&
+        (to < from || to > from + count) &&
+        (from + count) <= array->count && to <= array->count) {
 
-    // Use stack memory for small moves (faster)
-    // Use heap memory for large moves (dynamic size)
-    void **temp;
-    void *stackTemp[64];
-    if (count <= 64) {
-        temp = stackTemp;
-    } else {
-        temp = (void **) malloc(sizeof(void *) * count);
-        if (!temp) { return false; }
-    }
+        void **temp = malloc(sizeof(void *) * count);
+        if (!temp) { return; }
 
-    // Copy elements to move to temporary buffer
-    memcpy(temp, array->buffer + from, sizeof(void *) * count);
+        // Copy elements to move to temporary buffer
+        memcpy(temp, array->buffer + from, sizeof(void *) * count);
 
-    // Remove copied elements from the array
-    u32 tailCount = array->count - (from + count);
-    if (tailCount > 0) {
-        memmove(array->buffer + from, array->buffer + from + count, sizeof(void *) * tailCount);
-    }
+        // Remove copied elements from the array
+        memmove(array->buffer + from, array->buffer + (from + count), sizeof(void *) * (array->count - (from + count)));
 
-    // Make place for the copied elements
-    u32 numToShift = (array->count - count) - to;
-    if (numToShift > 0) {
-        memmove(array->buffer + to + count, array->buffer + to, sizeof(void *) * numToShift);
-    }
+        // Make place for the copied elements
+        // If moving left to right, account for the removed elements
+        if (to > from) { to -= count; }
+        memmove(array->buffer + (to + count), array->buffer + to, sizeof(void *) * (array->count - (to + count)));
 
-    // Insert copied elements
-    memcpy(array->buffer + to, temp, sizeof(void *) * count);
+        // Insert copied elements
+        memcpy(array->buffer + to, temp, sizeof(void *) * count);
 
-    if (count > 64) {
         free(temp);
     }
-
-    return true;
 }
 
 void growing_array_free(struct GrowingArray **array) {
