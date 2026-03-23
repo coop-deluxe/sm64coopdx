@@ -113,7 +113,7 @@ static s16 mario_set_animation_internal(struct MarioState *m, s32 targetAnimID, 
 }
 
 static s16 mario_set_modded_animation_internal(struct MarioState *m, const char* moddedCharAnim, s32 accel) {
-if (!m) { return 0; }
+    if (!m) { return 0; }
     struct Object *o = m->marioObj;
     if (!o || !m->animation) { return 0; }
 
