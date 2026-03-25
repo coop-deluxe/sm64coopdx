@@ -39,12 +39,16 @@ static int _debuglog_print_short_filename(const char* filename, char* buffer, si
     }
 }
 
-static inline void _debuglog_print_log(const char* logType, const char* filename, const char* fmt, ...) {
+static inline void _debuglog_print_log(const char* color, const char* logType, const char* filename, const char* fmt, ...) {
     char log[MAX_LOG_SIZE];
     size_t capacity = MAX_LOG_SIZE;
     char* buffer = log;
 
-    int len;
+    int len = 0;
+
+    len = snprintf(buffer, capacity, "%s", color);
+    if (len < 0 || (size_t)len >= capacity) return;
+    buffer += len; capacity -= len;
 
     len = _debuglog_print_timestamp(buffer, capacity);
     if (len < 0 || (size_t)len >= capacity) return;
@@ -71,7 +75,7 @@ static inline void _debuglog_print_log(const char* logType, const char* filename
 
     if (len < 0) return;
 
-    log_to_terminal("%s\n", log);
+    log_to_terminal("%s\x1b[0m\n", log);
 }
 
 #if defined(DISABLE_MODULE_LOG)
@@ -79,9 +83,9 @@ static inline void _debuglog_print_log(const char* logType, const char* filename
 #define LOG_INFO(...)
 #define LOG_ERROR(...)
 #else
-#define LOG_DEBUG(...) (configDebugPrint ? ( _debuglog_print_log("DEBUG", __FILE__, __VA_ARGS__) ) : 0)
-#define LOG_INFO(...)  ((configDebugInfo || gCLIOpts.headless) ? ( _debuglog_print_log("INFO",  __FILE__, __VA_ARGS__) ) : 0)
-#define LOG_ERROR(...) (configDebugError ? ( _debuglog_print_log("ERROR", __FILE__, __VA_ARGS__) ) : 0)
+#define LOG_DEBUG(...) (configDebugPrint ? ( _debuglog_print_log("", "DEBUG", __FILE__, __VA_ARGS__) ) : 0)
+#define LOG_INFO(...)  ((configDebugInfo || gCLIOpts.headless) ? ( _debuglog_print_log("", "INFO",  __FILE__, __VA_ARGS__) ) : 0)
+#define LOG_ERROR(...) (configDebugError ? ( _debuglog_print_log("\x1b[31m", "ERROR", __FILE__, __VA_ARGS__) ) : 0)
 #endif
 #define LOG_CONSOLE(...)  { snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO); }
 
