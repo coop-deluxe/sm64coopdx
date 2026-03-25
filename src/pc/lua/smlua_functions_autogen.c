@@ -12,6 +12,7 @@
 #include "src/game/mario_step.h"
 #include "src/game/mario.h"
 #include "src/game/rumble_init.h"
+#include "src/pc/commands.h"
 #include "src/pc/djui/djui_popup.h"
 #include "src/pc/network/network_utils.h"
 #include "src/pc/djui/djui_console.h"
@@ -12121,6 +12122,32 @@ int smlua_func_update_character_anim_offset(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "update_character_anim_offset"); return 0; }
 
     update_character_anim_offset(m);
+
+    return 1;
+}
+
+  ////////////////
+ // commands.h //
+////////////////
+
+int smlua_func_command_message_create(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "command_message_create", 1, 2, top);
+        return 0;
+    }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "command_message_create"); return 0; }
+    int level = (int) 0;
+    if (top >= 2) {
+        level = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "command_message_create"); return 0; }
+    }
+
+    command_message_create(message, level);
 
     return 1;
 }
@@ -37477,6 +37504,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_character_anim_offset", smlua_func_get_character_anim_offset);
     smlua_bind_function(L, "get_character_anim", smlua_func_get_character_anim);
     smlua_bind_function(L, "update_character_anim_offset", smlua_func_update_character_anim_offset);
+
+    // commands.h
+    smlua_bind_function(L, "command_message_create", smlua_func_command_message_create);
 
     // djui_chat_message.h
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);

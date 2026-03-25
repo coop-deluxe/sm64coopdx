@@ -3790,6 +3790,12 @@ function update_character_anim_offset(m)
 end
 
 --- @param message string
+--- @param level? ConsoleMessageLevel
+function command_message_create(message, level)
+    -- ...
+end
+
+--- @param message string
 --- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
     -- ...

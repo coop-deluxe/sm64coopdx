@@ -2662,6 +2662,33 @@ Updates Mario's current animation offset. This adjusts Mario's position based on
 <br />
 
 ---
+# functions from commands.h
+
+<br />
+
+
+## [command_message_create](#command_message_create)
+
+### Lua Example
+`command_message_create(message, level)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| level | [enum ConsoleMessageLevel](constants.md#enum-ConsoleMessageLevel) |
+
+### Returns
+- None
+
+### C Prototype
+`void command_message_create(const char* message, OPTIONAL enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_chat_message.h
 
 <br />

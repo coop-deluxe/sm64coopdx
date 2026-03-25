@@ -3,6 +3,7 @@
 #include "pc_main.h"
 #include "platform.h"
 #include "macros.h"
+#include "debuglog.h"
 
 #include <strings.h>
 #include <stdlib.h>
@@ -13,28 +14,28 @@
 struct CLIOptions gCLIOpts;
 
 static void print_help(void) {
-    printf("sm64coopdx\n");
+    log_to_terminal("sm64coopdx\n");
 #if defined(_WIN32) || defined(_WIN64)
-    printf("--console                 Enables the Windows console.\n");
+    log_to_terminal("--console                 Enables the Windows console.\n");
 #endif
-    printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
-    printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
-    printf("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
-    printf("--fullscreen              Starts the game in full screen mode.\n");
-    printf("--windowed                Starts the game in windowed mode.\n");
-    printf("--width WIDTH             Sets the window width.\n");
-    printf("--height HEIGHT           Sets the window height.\n");
-    printf("--skip-intro              Skips the Peach and Lakitu intros when on a zero star save.\n");
-    printf("--server PORT             Starts the game and creates a new server on PORT.\n");
-    printf("--client IP PORT          Starts the game and joins an existing server.\n");
-    printf("--coopnet PASSWORD        Starts the game and creates a new CoopNet server.\n");
-    printf("--playername PLAYERNAME   Starts the game with a specific playername.\n");
-    printf("--playercount PLAYERCOUNT Starts the game with a specific player count limit.\n");
-    printf("--skip-update-check       Skips the update check when loading the game.\n");
-    printf("--no-discord              Disables discord integration.\n");
-    printf("--disable-mods            Disables all mods that are already enabled.\n");
-    printf("--enable-mod MODNAME      Enables a mod.\n");
-    printf("--headless                Enable Headless mode.");
+    log_to_terminal("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
+    log_to_terminal("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
+    log_to_terminal("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
+    log_to_terminal("--fullscreen              Starts the game in full screen mode.\n");
+    log_to_terminal("--windowed                Starts the game in windowed mode.\n");
+    log_to_terminal("--width WIDTH             Sets the window width.\n");
+    log_to_terminal("--height HEIGHT           Sets the window height.\n");
+    log_to_terminal("--skip-intro              Skips the Peach and Lakitu intros when on a zero star save.\n");
+    log_to_terminal("--server PORT             Starts the game and creates a new server on PORT.\n");
+    log_to_terminal("--client IP PORT          Starts the game and joins an existing server.\n");
+    log_to_terminal("--coopnet PASSWORD        Starts the game and creates a new CoopNet server.\n");
+    log_to_terminal("--playername PLAYERNAME   Starts the game with a specific playername.\n");
+    log_to_terminal("--playercount PLAYERCOUNT Starts the game with a specific player count limit.\n");
+    log_to_terminal("--skip-update-check       Skips the update check when loading the game.\n");
+    log_to_terminal("--no-discord              Disables discord integration.\n");
+    log_to_terminal("--disable-mods            Disables all mods that are already enabled.\n");
+    log_to_terminal("--enable-mod MODNAME      Enables a mod.\n");
+    log_to_terminal("--headless                Enable Headless mode.");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {

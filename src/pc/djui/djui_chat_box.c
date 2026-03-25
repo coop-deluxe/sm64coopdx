@@ -3,7 +3,7 @@
 #include <string.h>
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/chat_commands.h"
+#include "pc/commands.h"
 #include "pc/configfile.h"
 #include "djui.h"
 #include "engine/math_util.h"
@@ -139,13 +139,7 @@ static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
     if (strlen(chatInput->buffer) != 0) {
         sent_history_add_message(&sentHistory, chatInput->buffer);
         if (chatInput->buffer[0] == '/') {
-            if (strcmp(chatInput->buffer, "/help") == 0 || strcmp(chatInput->buffer, "/?") == 0 || strcmp(chatInput->buffer, "/") == 0) {
-                display_chat_commands();
-            } else if (!exec_chat_command(chatInput->buffer)) {
-                char extendedUnknownCommandMessage[MAX_CHAT_MSG_LENGTH];
-                snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "%s (/help)", DLANG(CHAT, UNRECOGNIZED));
-                djui_chat_message_create(extendedUnknownCommandMessage);
-            }
+            run_command(chatInput->buffer + 1);
         } else {
             djui_chat_message_create_from(gNetworkPlayerLocal->globalIndex, chatInput->buffer);
             network_send_chat(chatInput->buffer, gNetworkPlayerLocal->globalIndex);
@@ -417,7 +411,7 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
     sent_history_init(&sentHistory);
 
     if (gDjuiChatBox == NULL) { return false; }
-    
+
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
     char previousText[MAX_CHAT_MSG_LENGTH];

@@ -3,7 +3,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_chat_message.h"
-#include "pc/chat_commands.h"
+#include "pc/commands.h"
 #include "pc/network/ban_list.h"
 #include "pc/network/moderator_list.h"
 #include "pc/debuglog.h"
@@ -66,12 +66,12 @@ static s32 get_level_abbreviation_alt(const char *str) {
 }
 
 bool exec_dev_chat_command(char* command) {
-    if (strcmp("/warp", command) == 0) {
+    if (strcmp("warp", command) == 0) {
         djui_chat_message_create("Missing parameters: [LEVEL] [AREA] [ACT]");
         return true;
     }
 
-    if (str_starts_with(command, "/warp ")) {
+    if (str_starts_with(command, "warp ")) {
         static const struct { const char *name; s32 num; } sLevelNumByName[] = {
 #undef STUB_LEVEL
 #undef DEFINE_LEVEL
@@ -85,7 +85,7 @@ bool exec_dev_chat_command(char* command) {
         s32 act = 0;
 
         // Params
-        char *paramLevel = command + 6;
+        char *paramLevel = command + 5;
         if (*paramLevel == 0 || *paramLevel == ' ') {
             djui_chat_message_create("Missing parameters: [LEVEL]");
             return true;
@@ -161,23 +161,23 @@ bool exec_dev_chat_command(char* command) {
         return true;
     }
 
-    if (strcmp("/lua", command) == 0) {
+    if (strcmp("lua", command) == 0) {
         djui_chat_message_create("Missing parameter: [LUA]");
         return true;
     }
 
-    if (str_starts_with(command, "/lua ")) {
-        smlua_exec_str(&command[5]);
+    if (str_starts_with(command, "lua ")) {
+        smlua_exec_str(&command[4]);
         return true;
     }
 
-    if (strcmp("/luaf", command) == 0) {
+    if (strcmp("luaf", command) == 0) {
         djui_chat_message_create("Missing parameter: [FILENAME]");
         return true;
     }
 
-    if (str_starts_with(command, "/luaf ")) {
-        smlua_exec_file(&command[6]);
+    if (str_starts_with(command, "luaf ")) {
+        smlua_exec_file(&command[5]);
         return true;
     }
 
@@ -185,8 +185,8 @@ bool exec_dev_chat_command(char* command) {
 }
 
 void dev_display_chat_commands(void) {
-    djui_chat_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
-    djui_chat_message_create("/lua [LUA] - Execute Lua code from a string");
-    djui_chat_message_create("/luaf [FILENAME] - Execute Lua code from a file");
+    command_message_create("/warp [LEVEL] [AREA] [ACT] - Level can be either a numeric value or a shorthand name");
+    command_message_create("/lua [LUA] - Execute Lua code from a string");
+    command_message_create("/luaf [FILENAME] - Execute Lua code from a file");
 }
 #endif

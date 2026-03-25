@@ -66,6 +66,8 @@
 #include "pc/discord/discord.h"
 #endif
 
+#include "pc/terminal.h"
+
 #include "pc/mumble/mumble.h"
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -529,7 +531,7 @@ int main(int argc, char *argv[]) {
         } else
 #endif
         {
-            printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
+            LOG_ERROR("Could not find valid vanilla us sm64 rom in game's user folder\n");
             return 0;
         }
     }
@@ -602,6 +604,10 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    // initialize terminal
+    terminal_init();
+    //init_thread_handle(&gTerminalThread, terminal_update, NULL, NULL, 0);
+
     // main loop
     while (true) {
         debug_context_reset();
@@ -611,6 +617,7 @@ int main(int argc, char *argv[]) {
         discord_update();
 #endif
         mumble_update();
+        terminal_update();
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);
