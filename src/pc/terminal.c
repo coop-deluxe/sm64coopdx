@@ -1,8 +1,8 @@
 #include <stdio.h>
+#if !defined(_WIN32) && !defined(_WIN64)
 #include <sys/select.h>
 #include <unistd.h>
 #include <termios.h>
-#if !defined(_WIN32) && !defined(_WIN64)
 #include "linenoise/linenoise.h"
 #endif
 #include "djui/djui_console.h"
@@ -12,7 +12,9 @@
 
 #define TERMINAL_BUFFER_SIZE 1024
 
+#if !defined(_WIN32) && !defined(_WIN64)
 static struct linenoiseState sLinenoiseState;
+#endif
 static char sTerminalInput[TERMINAL_BUFFER_SIZE] = { 0 };
 static bool sTerminalInitialized = false;
 static bool sTerminalActive = false;
