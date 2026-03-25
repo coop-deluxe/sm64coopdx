@@ -6,6 +6,7 @@ Hooks are a way for SM64 to trigger Lua code, whereas the functions listed in [f
 # Supported Hooks
 - [hook_behavior](#hook_behavior)
 - [hook_chat_command](#hook_chat_command)
+- [hook_console_command](#hook_console_command)
 - [hook_event](#hook_event)
 - [hook_mario_action](#hook_mario_action)
 - [hook_on_sync_table_change](#hook_on_sync_table_change)
@@ -54,7 +55,7 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 <br />
 
 ## [hook_chat_command](#hook_chat_command)
-`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise.
+`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. Use `command_message_create` to show any message to the user. Chat commands appear in the chat, console, and terminal.
 
 ### Parameters
 
@@ -69,16 +70,48 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 ```lua
 function on_test_command(msg)
     if msg == "on" then
-        djui_chat_message_create("Test: enabled")
+        command_message_create("Test: enabled")
         return true
     elseif msg == "off" then
-        djui_chat_message_create("Test: disabled")
+        command_message_create("Test: disabled")
         return true
     end
     return false
 end
 
 hook_chat_command("test", "[on|off] turn test on or off", on_hide_and_seek_command)
+```
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_console_command](#hook_console_command)
+`hook_console_command()` allows Lua mods to react and respond to console commands. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. You should use `command_message_create` to show any messages to the user. Console messages only appear in the console and terminal.
+
+### Parameters
+
+| Field | Type |
+| ----- | ---- |
+| command | `string` |
+| description | `string` |
+| func | `Lua Function` (`string` message) -> `bool` |
+
+### Lua Example
+
+```lua
+function on_test_command(msg)
+    if msg == "on" then
+        command_message_create("Test: enabled")
+        return true
+    elseif msg == "off" then
+        command_message_create("Test: disabled")
+        return true
+    end
+    return false
+end
+
+hook_console_command("test", "[on|off] turn test on or off", on_test_command)
 ```
 
 [:arrow_up_small:](#)
@@ -143,7 +176,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_GEO_PROCESS | Called when a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_BEFORE_GEO_PROCESS | Called before a GeoLayout is processed **Note:** You must set the `hookProcess` field of the graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
 | HOOK_ON_GEO_PROCESS_CHILDREN | Called when the children of a GeoLayout node is processed **Note:** You must set the `hookProcess` field of the parent graph node to a non-zero value | [GraphNode](../structs.md#GraphNode) graphNode, `integer` matStackIndex |
-| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m | 
+| HOOK_MARIO_OVERRIDE_GEOMETRY_INPUTS | Called before running Mario's geometry input logic, return `false` to not run it. | [MarioState](../structs.md) m |
 | HOOK_ON_INTERACTIONS | Called when the Mario interactions are processed | [MarioState](../structs.md#MarioState) mario |
 | HOOK_ALLOW_FORCE_WATER_ACTION | Called when executing a non-water action while under the water's surface, or vice versa. Return `false` to prevent the player from being forced out of the action at the water's surface | [MarioState](../structs.md#MarioState) mario, `boolean` isInWaterAction |
 | HOOK_BEFORE_WARP | Called before the local player warps. Return a table with `destLevel`, `destArea`, `destWarpNode`, to override the warp | `integer` destLevel, `integer` destArea, `integer` destWarpNode, `integer` arg |

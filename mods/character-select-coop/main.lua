@@ -528,7 +528,7 @@ local function update_character_render_table()
             end
         end
     end
-    
+
     if #characterTableRender > 0 then
         -- Get icons for category based on name similarity
         if category.icon1 == nil or category.icon2 == nil then
@@ -902,7 +902,7 @@ local worldColor = {
     ambient = {r = 255, g = 255, b = 255}
 }
 local menuOffsetX = 0
-local menuOffsetY = 0 
+local menuOffsetY = 0
 local camScale = 1
 local prevMusicToggle = 1
 local prevVisualToggle = 1
@@ -919,7 +919,7 @@ local function mario_update(m)
         set_all_models()
         queueStorageFailsafe = false
     end
-    
+
     local np = gNetworkPlayers[m.playerIndex]
     local p = gCSPlayers[m.playerIndex]
 
@@ -952,7 +952,7 @@ local function mario_update(m)
             end
         end
 
-        if djui_hud_is_pause_menu_created() then     
+        if djui_hud_is_pause_menu_created() then
             if prevBaseCharFrame ~= np.modelIndex then
                 force_set_character(np.modelIndex)
                 p.presetPalette = 0
@@ -978,7 +978,7 @@ local function mario_update(m)
         local charTable = characterTable[currChar]
         p.saveName = charTable.saveName
         p.currAlt = charTable.currAlt
-    
+
         p.modelId = charTable[charTable.currAlt].model
         if charTable[charTable.currAlt].baseChar ~= nil then
             p.baseChar = charTable[charTable.currAlt].baseChar
@@ -1316,9 +1316,9 @@ function set_model(o, model)
         if o.oOriginalModel == 0 then
             o.oOriginalModel = obj_get_model_id_extended(o)
         end
-        
+
         local model = run_func_or_get_var(currReplace, o, o.oOriginalModel)
-        
+
         if model ~= nil and visualToggle then
             o.oModelHasBeenReplaced = 1
             if obj_has_model_extended(o, model) == 0 then
@@ -1601,7 +1601,7 @@ local function on_hud_render()
             djui_hud_set_color(charColor.r*0.5 + 127, charColor.g*0.5 + 127, charColor.b*0.5 + 127, math.min(paletteTrans, 255))
             djui_hud_print_text(paletteName, x, y, 0.5)
         end
-    
+
         -- Render Background Wall
         local wallWidth = TEX_WALL_LEFT.width
         local wallHeight = TEX_WALL_LEFT.height
@@ -1615,11 +1615,11 @@ local function on_hud_render()
         djui_hud_render_texture_auto_interpolated("wall-l", TEX_WALL_LEFT, x, y, wallScale, wallScale)
         djui_hud_set_color(playerPants.r, playerPants.g, playerPants.b, 255)
         djui_hud_render_texture_auto_interpolated("wall-r", TEX_WALL_RIGHT, x, y, wallScale, wallScale)
-        
+
         -- Render Graffiti
         local graffiti = characterGraffiti[currChar] or TEX_GRAFFITI_DEFAULT
-        local graffitiWidthScale = 120/graffiti.width 
-        local graffitiHeightScale = 120/graffiti.width 
+        local graffitiWidthScale = 120/graffiti.width
+        local graffitiHeightScale = 120/graffiti.width
         djui_hud_set_color(255, 255, 255, 150)
         djui_hud_render_texture_auto_interpolated("graffiti", graffiti, wallMiddle - graffiti.width*0.5*graffitiWidthScale - menuOffsetX, height*0.5 - graffiti.height*0.5*graffitiHeightScale - menuOffsetY, graffitiWidthScale, graffitiHeightScale)
 
@@ -1638,7 +1638,7 @@ local function on_hud_render()
         local scale = 0.35
         local textScale = scale*1.5
         local buttonSpacing = 32
-        
+
         if not gridMenu then
             -- Render Character List
             gridYOffset = lerp(gridYOffset, currCharRender*buttonSpacing, 0.1)
@@ -1666,7 +1666,7 @@ local function on_hud_render()
                     -- Name Screen
                     djui_hud_set_color(charColor.r*0.5, charColor.g*0.5, charColor.b*0.5, 255)
                     djui_hud_print_text(charName, x + 112*scale + segments*16*scale*0.5 - charNameLength*textScale*0.5, y + 32*scale, textScale)
-                    
+
                     -- Bottom Info
                     djui_hud_render_rect(x + 112*scale, y + 84*scale, segments*16*scale, scale)
                     djui_hud_print_text(channel, x + 112*scale, y + 85*scale, 0.3*scale)
@@ -1907,7 +1907,7 @@ local function on_hud_render()
         djui_hud_print_text(TEXT_VERSION, 2, height - 7, 0.4)
         local currMenu = gridMenu and MENU_BINDS_GRID or MENU_BINDS_DEFAULT
         if options == OPTIONS_MAIN then
-            currMenu = MENU_BINDS_OPTIONS 
+            currMenu = MENU_BINDS_OPTIONS
         elseif options == OPTIONS_CREDITS then
             currMenu = MENU_BINDS_GRID
         end
@@ -2091,7 +2091,7 @@ local function before_mario_update(m)
                     until update_character_render_table()
                     gearRotationTarget = gearRotationTarget + 0x10000/#characterCategories
                     categoryOpenTimer = 150
-                    
+
                     play_sound(SOUND_MENU_CAMERA_TURN, cameraToObject)
                 end
             )
@@ -2108,7 +2108,7 @@ local function before_mario_update(m)
                     play_sound(SOUND_MENU_CAMERA_TURN, cameraToObject)
                 end
             )
-            
+
             if not gridMenu then
                 -- List Controls
                 run_func_with_condition_and_cooldown(FUNC_INDEX_VERTICAL,
@@ -2150,7 +2150,7 @@ local function before_mario_update(m)
                         end
                     )
                 end
-            
+
             else
                 -- Grid Controls
                 run_func_with_condition_and_cooldown(FUNC_INDEX_VERTICAL,
@@ -2186,7 +2186,7 @@ local function before_mario_update(m)
                         play_sound(SOUND_MENU_MESSAGE_NEXT_PAGE, cameraToObject)
                     end
                 )
-                
+
                 -- Alt switcher
                 if #characterTable[currChar] > 1 then
                     run_func_with_condition_and_cooldown(FUNC_INDEX_ALT,
@@ -2392,14 +2392,14 @@ local function chat_command(msg)
             menu = not menu
             return true
         else
-            djui_chat_message_create(TEXT_PAUSE_UNAVAILABLE)
+            command_message_create(TEXT_PAUSE_UNAVAILABLE)
             return true
         end
     end
 
     -- Help Prompt Check
     if msg == "?" or msg == "help" then
-        djui_chat_message_create("Character Select's Avalible Commands:" ..
+        command_message_create("Character Select's Avalible Commands:" ..
         "\n\\#ffff33\\/char-select help\\#ffffff\\ - Returns Avalible Commands" ..
         "\n\\#ffff33\\/char-select menu\\#ffffff\\ - Opens the Menu" ..
         "\n\\#ffff33\\/char-select [name/num]\\#ffffff\\ - Switches to Character" ..
@@ -2413,9 +2413,9 @@ local function chat_command(msg)
         return true
     end
 
-    -- Stop Character checks if API disallows it 
+    -- Stop Character checks if API disallows it
     if not menu_is_allowed() or charBeingSet then
-        djui_chat_message_create("Character Cannot be Changed")
+        command_message_create("Character Cannot be Changed")
         return true
     end
 
@@ -2426,7 +2426,7 @@ local function chat_command(msg)
             for a = 1, #characterTable[i] do
                 if msg == string.lower(characterTable[i][a].name) or msg == saveName then
                     force_set_character(i, msg ~= saveName and a or 1)
-                    djui_chat_message_create('Character set to "' .. characterTable[i][characterTable[i].currAlt].name .. '" Successfully!')
+                    command_message_create('Character set to "' .. characterTable[i][characterTable[i].currAlt].name .. '" Successfully!')
                     return true
                 end
             end
@@ -2441,12 +2441,12 @@ local function chat_command(msg)
         altNum = altNum and altNum or 1
         if charNum > 0 and charNum <= #characterTable and characterTable[charNum].locked ~= LOCKED_TRUE then
             force_set_character(charNum, altNum)
-            djui_chat_message_create('Character set to "' .. characterTable[charNum][altNum].name .. '" Successfully!')
+            command_message_create('Character set to "' .. characterTable[charNum][altNum].name .. '" Successfully!')
             return true
         end
     end
 
-    djui_chat_message_create("Character Not Found")
+    command_message_create("Character Not Found")
     return true
 end
 
