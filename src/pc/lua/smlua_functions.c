@@ -79,7 +79,7 @@ int smlua_func_print(lua_State *L) {
     completeString[pos] = '\0';
 
     // print to terminal and console
-    log_to_terminal("%s", completeString);
+    log_to_terminal("%s\n", completeString);
     djui_console_message_create(completeString, CONSOLE_MESSAGE_INFO);
 
     free(completeString);
