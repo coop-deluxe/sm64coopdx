@@ -606,7 +606,6 @@ int main(int argc, char *argv[]) {
 
     // initialize terminal
     terminal_init();
-    //init_thread_handle(&gTerminalThread, terminal_update, NULL, NULL, 0);
 
     // main loop
     while (true) {
