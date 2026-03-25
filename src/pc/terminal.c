@@ -2,7 +2,9 @@
 #include <sys/select.h>
 #include <unistd.h>
 #include <termios.h>
+#if !defined(_WIN32) && !defined(_WIN64)
 #include "linenoise/linenoise.h"
+#endif
 #include "djui/djui_console.h"
 #include "commands.h"
 #include "pc_main.h"
@@ -19,22 +21,29 @@ void log_to_terminal(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
 
+#if !defined(_WIN32) && !defined(_WIN64)
     if (sTerminalActive) linenoiseHide(&sLinenoiseState);
+#endif
 
     vprintf(fmt, args);
 
+#if !defined(_WIN32) && !defined(_WIN64)
     if (sTerminalActive) linenoiseShow(&sLinenoiseState);
+#endif
 
     va_end(args);
 }
 
 static void terminal_stop() {
+#if !defined(_WIN32) && !defined(_WIN64)
     if (!sTerminalInitialized) return;
     linenoiseEditStop(&sLinenoiseState);
     sTerminalActive = false;
+#endif
 }
 
 void terminal_init() {
+#if !defined(_WIN32) && !defined(_WIN64)
     if (!isatty(STDIN_FILENO)) {
         sTerminalActive = false;
         sTerminalInitialized = false;
@@ -50,9 +59,11 @@ void terminal_init() {
     linenoiseEditStart(&sLinenoiseState, -1, -1, sTerminalInput, sizeof(sTerminalInput), "> ");
     sTerminalInitialized = true;
     sTerminalActive = true;
+#endif
 }
 
 void terminal_update() {
+#if !defined(_WIN32) && !defined(_WIN64)
     if (!sTerminalInitialized) return;
     struct timeval tv = {0L, 0L};
     fd_set fds;
@@ -78,9 +89,12 @@ void terminal_update() {
 
         terminal_init();
     }
+    #endif
 }
 
 void terminal_clear() {
+#if !defined(_WIN32) && !defined(_WIN64)
     if (!sTerminalInitialized) return;
     linenoiseClearScreen();
+#endif
 }
