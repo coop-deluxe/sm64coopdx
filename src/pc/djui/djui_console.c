@@ -13,7 +13,7 @@ bool gDjuiConsoleFocus = false;
 char gDjuiConsoleTmpBuffer[CONSOLE_MAX_TMP_BUFFER] = "";
 u32 sDjuiConsoleMessages = 0;
 bool sDjuiConsoleQueueMessages = true;
-bool sIgnoreNextTextInput = false;
+bool sClearConsoleInput = false;
 
 struct ConsoleQueuedMessage {
     char* message;
@@ -67,6 +67,12 @@ bool djui_console_render(struct DjuiBase* base) {
         }
     } else { console->scrollY = console->flow->base.y.value; }
 
+    if (sClearConsoleInput) {
+        djui_inputbox_set_text(gDjuiConsole->inputbox, "");
+        djui_inputbox_select_all(gDjuiConsole->inputbox);
+        sClearConsoleInput = false;
+    }
+
     djui_rect_render(base);
     return true;
 }
@@ -78,7 +84,7 @@ static void djui_console_destroy(struct DjuiBase* base) {
 
 void djui_console_toggle(void) {
     if (gDjuiConsole == NULL) { return; }
-    sIgnoreNextTextInput = true;
+    sClearConsoleInput = true;
     gDjuiConsoleFocus = !gDjuiConsoleFocus;
     djui_base_set_visible(&gDjuiConsole->base, gDjuiConsoleFocus);
 
@@ -111,8 +117,7 @@ static void djui_console_enter() {
     if (strcmp(buffer, "") == 0) return;
     if (buffer[0] == '/') buffer++;
     run_command(buffer);
-    djui_inputbox_set_text(gDjuiConsole->inputbox, "");
-    djui_inputbox_select_all(gDjuiConsole->inputbox);
+    sClearConsoleInput = true;
 }
 
 static bool djui_console_on_key_down(struct DjuiBase* base, int scancode) {
@@ -158,10 +163,6 @@ static bool djui_console_on_key_down(struct DjuiBase* base, int scancode) {
 }
 
 static void djui_console_on_text_input(struct DjuiBase* base, char* text) {
-    if (sIgnoreNextTextInput) {
-        sIgnoreNextTextInput = false;
-        return;
-    }
     djui_inputbox_on_text_input(base, text);
 }
 
