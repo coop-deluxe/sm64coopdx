@@ -2445,7 +2445,7 @@ void check_death_barrier(struct MarioState *m) {
         smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
         if (!allowDeath) { return; }
 
-        if (mario_can_bubble(m, m->numLives <= 0)) {
+        if ((mario_can_bubble(m) && m->numLives > 0)) {
             switch (gCurrCourseNum) {
                 case COURSE_COTMC:    // (20) Cavern of the Metal Cap
                 case COURSE_TOTWC:    // (21) Tower of the Wing Cap

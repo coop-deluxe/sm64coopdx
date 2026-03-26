@@ -419,13 +419,12 @@ bool mario_is_ground_pound_landing(struct MarioState *m) {
         (!(m->action & ACT_FLAG_AIR) && (determine_interaction(m, m->marioObj) & INT_GROUND_POUND));
 }
 
-bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow) {
+bool mario_can_bubble(struct MarioState* m) {
     if (!m) { return false; }
     if (!gServerSettings.bubbleDeath) { return false; }
     if (m->playerIndex != 0) { return false; }
     if (m->action == ACT_BUBBLED) { return false; }
     if (!m->visibleToEnemies) { return false; }
-    if (unallow) { return false; }
 
     u8 allInBubble = TRUE;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {

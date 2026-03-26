@@ -5443,10 +5443,9 @@ function mario_is_ground_pound_landing(m)
 end
 
 --- @param m MarioState
---- @param unallow? integer
 --- @return boolean
 --- Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
-function mario_can_bubble(m, unallow)
+function mario_can_bubble(m)
     -- ...
 end
 

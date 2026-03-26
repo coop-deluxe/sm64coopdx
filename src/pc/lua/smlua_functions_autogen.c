@@ -16429,20 +16429,15 @@ int smlua_func_mario_can_bubble(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top < 1 || top > 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mario_can_bubble", 1, 2, top);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mario_can_bubble", 1, top);
         return 0;
     }
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mario_can_bubble"); return 0; }
-    u8 unallow = (u8) 0;
-    if (top >= 2) {
-        unallow = smlua_to_integer(L, 2);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mario_can_bubble"); return 0; }
-    }
 
-    lua_pushboolean(L, mario_can_bubble(m, unallow));
+    lua_pushboolean(L, mario_can_bubble(m));
 
     return 1;
 }

@@ -1175,19 +1175,18 @@ Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
 
 ### Lua Example
-`local booleanValue = mario_can_bubble(m, unallow)`
+`local booleanValue = mario_can_bubble(m)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| unallow | `integer` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool mario_can_bubble(struct MarioState* m, OPTIONAL u8 unallow);`
+`bool mario_can_bubble(struct MarioState* m);`
 
 [:arrow_up_small:](#)
 
