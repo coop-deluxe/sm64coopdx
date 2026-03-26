@@ -213,7 +213,7 @@ void *growing_array_alloc(struct GrowingArray *array, u32 size) {
     if (array && array->buffer) {
 
         // Increase capacity if needed
-        if (array->count >= array->capacity) {
+        while (array->count >= array->capacity) {
             u32 newCapacity = array->capacity * 2;
             void **newBuffer = realloc(array->buffer, newCapacity * sizeof(void *));
             if (!newBuffer) { return NULL; }
