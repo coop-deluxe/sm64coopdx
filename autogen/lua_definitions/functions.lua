@@ -6008,11 +6008,6 @@ function launch_mario_until_land(m, endAction, animation, forwardVel)
 end
 
 --- @param m MarioState
-function lose_life_after_death_exit(m)
-    -- ...
-end
-
---- @param m MarioState
 --- @param animation integer
 --- @param unstuckFrame integer
 --- @param target2 integer

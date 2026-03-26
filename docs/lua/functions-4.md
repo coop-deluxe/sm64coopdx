@@ -3029,26 +3029,6 @@ Launches Mario forward with a given velocity (`forwardVel`) and sets his animati
 
 <br />
 
-## [lose_life_after_death_exit](#lose_life_after_death_exit)
-
-### Lua Example
-`lose_life_after_death_exit(m)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-
-### Returns
-- None
-
-### C Prototype
-`void lose_life_after_death_exit(struct MarioState *m);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [stuck_in_ground_handler](#stuck_in_ground_handler)
 
 ### Description

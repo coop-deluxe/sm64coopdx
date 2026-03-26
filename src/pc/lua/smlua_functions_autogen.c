@@ -17930,24 +17930,6 @@ int smlua_func_launch_mario_until_land(lua_State* L) {
     return 1;
 }
 
-int smlua_func_lose_life_after_death_exit(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "lose_life_after_death_exit", 1, top);
-        return 0;
-    }
-
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "lose_life_after_death_exit"); return 0; }
-
-    extern void lose_life_after_death_exit(struct MarioState *m);
-    lose_life_after_death_exit(m);
-
-    return 1;
-}
-
 int smlua_func_stuck_in_ground_handler(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37802,7 +37784,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "general_star_dance_handler", smlua_func_general_star_dance_handler);
     smlua_bind_function(L, "common_death_handler", smlua_func_common_death_handler);
     smlua_bind_function(L, "launch_mario_until_land", smlua_func_launch_mario_until_land);
-    smlua_bind_function(L, "lose_life_after_death_exit", smlua_func_lose_life_after_death_exit);
     smlua_bind_function(L, "stuck_in_ground_handler", smlua_func_stuck_in_ground_handler);
     smlua_bind_function(L, "generate_yellow_sparkles", smlua_func_generate_yellow_sparkles);
     smlua_bind_function(L, "mario_execute_cutscene_action", smlua_func_mario_execute_cutscene_action);

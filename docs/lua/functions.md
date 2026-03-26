@@ -1119,7 +1119,6 @@
    - [general_star_dance_handler](functions-4.md#general_star_dance_handler)
    - [common_death_handler](functions-4.md#common_death_handler)
    - [launch_mario_until_land](functions-4.md#launch_mario_until_land)
-   - [lose_life_after_death_exit](functions-4.md#lose_life_after_death_exit)
    - [stuck_in_ground_handler](functions-4.md#stuck_in_ground_handler)
    - [generate_yellow_sparkles](functions-4.md#generate_yellow_sparkles)
    - [mario_execute_cutscene_action](functions-4.md#mario_execute_cutscene_action)
