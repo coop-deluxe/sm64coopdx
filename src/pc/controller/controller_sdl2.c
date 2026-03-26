@@ -196,6 +196,7 @@ static void controller_sdl_read(OSContPad *pad) {
             if (mouse & SDL_BUTTON(mouse_binds[i][0]))
                 buttons_down |= mouse_binds[i][1];
     }
+    pad->button |= buttons_down;
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_prev ^ mouse) & mouse;
 
