@@ -43,6 +43,20 @@ enum DjuiFontType {
     FONT_COUNT,
 };
 
+enum CombinerSource {
+    CS_0,
+    CS_1,
+    CS_SOURCE,         // ENVIRONMENT, TEXEL0; situational
+    CS_COLOR,          // ENVIRONMENT
+    CS_TEXT_COLOR,     // PRIMITIVE
+    CS_COMBINED,       // COMBINED
+    CS_NOISE,          // NOISE
+    CS_SOURCE_ALPHA,   // ENV_ALPHA, TEXEL0_ALPHA; situational
+    CS_COLOR_ALPHA,    // ENV_ALPHA
+    CS_TEXT_ALPHA,     // PRIMITIVE_ALPHA
+    CS_COMBINED_ALPHA, // COMBINED_ALPHA
+};
+
 struct GlobalTextures {
     struct TextureInfo camera;
     struct TextureInfo lakitu;

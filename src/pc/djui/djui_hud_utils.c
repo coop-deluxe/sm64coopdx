@@ -405,6 +405,30 @@ void djui_hud_reset_text_color(void) {
     sHudUtilsState.textColor.a = 255;
 }
 
+static struct {
+    enum CombinerSource
+        a, b, c, d,
+        aA,bA,cA,dA;
+} sCombinerState;
+
+static Gfx sCombinerMode = { 0 };
+static bool sCombinerAltered = false;
+static bool sCombinerIsTexture;
+static void djui_hud_update_combine_mode(bool texture) {
+    if (!sCombinerAltered || sCombinerIsTexture != texture) {
+        // gDPSetCombineLERP(gDisplayListHead++, );
+        sCombinerAltered = true;
+    }
+}
+
+void djui_hud_reset_combiner(bool texture) {
+    if (sCombinerAltered) {
+        gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_MODULATERGBA_PRIM2);
+        sCombinerIsTexture = false;
+        sCombinerAltered = false;
+    }
+}
+
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
     *rotation = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
     *pivotX = sHudUtilsState.rotation.pivotX.curr;
