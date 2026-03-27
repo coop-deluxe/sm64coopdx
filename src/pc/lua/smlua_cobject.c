@@ -344,8 +344,7 @@ struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyInde
     lua_rawget(L, -2);
     u32 lvt = smlua_to_integer(L, -1);
     lua_pop(L, 1);
-    bool validLvt = (lvt == LVT_U32 || lvt == LVT_S32 || lvt == LVT_F32);
-    if (!gSmLuaConvertSuccess || !validLvt) {
+    if (!gSmLuaConvertSuccess || smlua_get_custom_field_type_name(lvt) == NULL) {
         lua_pop(L, 1); // pop value table
         lua_pop(L, 1); // pop _custom_fields
         LUA_STACK_CHECK_END(L);

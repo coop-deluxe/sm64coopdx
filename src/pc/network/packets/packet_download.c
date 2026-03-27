@@ -318,13 +318,13 @@ after_filled:;
 
 // Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)
 static bool should_cache_mod(struct Mod *mod) {
-    char *modName = sys_strdup(mod->name);
-    sys_strlwr(modName);
+    char modNameLowercase[MOD_NAME_SIZE];
+    memcpy(modNameLowercase, mod->name, MOD_NAME_SIZE * sizeof(char));
+    sys_strlwr(modNameLowercase);
     bool shouldCache = (
-        !strstr(modName, "(wip)") &&
-        !strstr(modName, "[wip]")
+        !strstr(modNameLowercase, "(wip)") &&
+        !strstr(modNameLowercase, "[wip]")
     );
-    free(modName);
     return shouldCache;
 }
 

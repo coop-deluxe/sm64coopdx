@@ -34,8 +34,8 @@ void bhv_snowmans_bottom_init(void) {
     spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvSnowmansBodyCheckpoint, -402, 461, -2898, 0, 0, 0);
 
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-    sync_object_init_field(o, &o->oAction);
-    sync_object_init_field(o, &o->oForwardVel);
+    sync_object_init_field(o, o->oAction);
+    sync_object_init_field(o, o->oForwardVel);
 }
 
 void set_rolling_sphere_hitbox(void) {
@@ -198,7 +198,7 @@ void bhv_snowmans_head_init(void) {
     }
 
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-    sync_object_init_field(o, &o->oAction);
+    sync_object_init_field(o, o->oAction);
 }
 
 static u8 bhv_snowmans_head_action_0_continue_dialog(void) {

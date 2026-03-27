@@ -76,14 +76,14 @@ void bhv_platform_on_track_init(void) {
             so->on_sent_pre = bhv_platform_track_on_sent_pre;
             so->on_received_post = bhv_platform_track_on_received_post;
             so->maxUpdateRate = 5.0f;
-            sync_object_init_field(o, &platformTrackPathedPrevWaypoint);
-            sync_object_init_field(o, &o->oPlatformOnTrackBaseBallIndex);
-            sync_object_init_field(o, &o->oPlatformOnTrackDistMovedSinceLastBall);
-            sync_object_init_field(o, &o->oPlatformOnTrackSkiLiftRollVel);
-            sync_object_init_field(o, &o->oPlatformOnTrackPrevWaypointFlags);
-            sync_object_init_field(o, &o->oPlatformOnTrackPitch);
-            sync_object_init_field(o, &o->oPlatformOnTrackYaw);
-            sync_object_init_field(o, &o->oPlatformOnTrackOffsetY);
+            sync_object_init_field(o, platformTrackPathedPrevWaypoint);
+            sync_object_init_field(o, o->oPlatformOnTrackBaseBallIndex);
+            sync_object_init_field(o, o->oPlatformOnTrackDistMovedSinceLastBall);
+            sync_object_init_field(o, o->oPlatformOnTrackSkiLiftRollVel);
+            sync_object_init_field(o, o->oPlatformOnTrackPrevWaypointFlags);
+            sync_object_init_field(o, o->oPlatformOnTrackPitch);
+            sync_object_init_field(o, o->oPlatformOnTrackYaw);
+            sync_object_init_field(o, o->oPlatformOnTrackOffsetY);
         }
     }
 

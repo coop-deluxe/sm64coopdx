@@ -411,4 +411,12 @@ static void sys_fatal_impl(const char *msg) {
     exit(1);
 }
 
+const char *sys_resource_path(void) {
+    return ".";
+}
+
+const char *sys_exe_path_dir(void) {
+    return ".";
+}
+
 #endif // platform switch

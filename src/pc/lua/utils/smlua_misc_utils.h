@@ -37,7 +37,7 @@ enum ActSelectHudPart {
     ACT_SELECT_HUD_ACT_NAME = 1 << 3,
     ACT_SELECT_HUD_STAR_NUM = 1 << 4,
     ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
-	
+
 	ACT_SELECT_HUD_NONE = 0,
 	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
@@ -212,6 +212,9 @@ u32 get_global_timer(void);
 /* |description|Gets the choice selected inside of a dialog box (0-1)|descriptionEnd| */
 s32 get_dialog_response(void);
 
+/* |description|Gets the active time stop flags, used to freeze specific objects during cutscenes|descriptionEnd| */
+u32 get_time_stop_flags(void);
+
 /* |description|Gets the local discord ID if it isn't disabled, otherwise "0" is returned|descriptionEnd| */
 const char* get_local_discord_id(void);
 /* |description|Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned|descriptionEnd| */
@@ -243,6 +246,8 @@ void set_environment_region(u8 index, s16 value);
 bool mod_file_exists(const char* filename);
 /* |description|Gets the mod currently being processed|descriptionEnd| */
 struct Mod* get_active_mod(void);
+/* |description|Gets all files a mod contains|descriptionEnd| */
+LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory);
 
 /* |description|Sets the window title to a custom title|descriptionEnd| */
 void set_window_title(const char* title);
@@ -252,24 +257,21 @@ void reset_window_title(void);
 /* |description|Gets the name of the operating system the game is running on|descriptionEnd| */
 const char* get_os_name(void);
 
-/* |description|Gets the current GraphNodeRoot|descriptionEnd|*/
+/* |description|Gets the current root node being processed|descriptionEnd|*/
 struct GraphNodeRoot* geo_get_current_root(void);
-
-/* |description|Gets the current GraphNodeMasterList|descriptionEnd|*/
+/* |description|Gets the current master list node being processed|descriptionEnd|*/
 struct GraphNodeMasterList* geo_get_current_master_list(void);
-
-/* |description|Gets the current GraphNodePerspective|descriptionEnd|*/
+/* |description|Gets the current perspective node being processed|descriptionEnd|*/
 struct GraphNodePerspective* geo_get_current_perspective(void);
-
-/* |description|Gets the current GraphNodeCamera|descriptionEnd|*/
+/* |description|Gets the current camera node being processed|descriptionEnd|*/
 struct GraphNodeCamera* geo_get_current_camera(void);
-
-/* |description|Gets the current GraphNodeHeldObject|descriptionEnd|*/
+/* |description|Gets the current held object node being processed|descriptionEnd|*/
 struct GraphNodeHeldObject* geo_get_current_held_object(void);
+/* |description|Skips graph node interpolation for a frame|descriptionEnd|*/
+void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj);
 
 /* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels|descriptionEnd|*/
 LuaTable texture_to_lua_table(const Texture *tex);
-
 /* |description|Gets the name of the provided texture pointer `tex`|descriptionEnd|*/
 const char *get_texture_name(const Texture *tex);
 

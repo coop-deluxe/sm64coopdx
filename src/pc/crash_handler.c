@@ -235,6 +235,8 @@ static void crash_handler_produce_one_frame_callback(void) {
         // render the line
         f32 addX = 0;
         char* c = text->s;
+
+        font->render_begin();
         while (*c != '\0') {
             f32 charWidth = 0.4f;
 
@@ -253,6 +255,7 @@ static void crash_handler_produce_one_frame_callback(void) {
             create_dl_translation_matrix(DJUI_MTX_NOPUSH, charWidth, 0, 0);
             c = djui_unicode_next_char(c);
         }
+        font->render_end();
 
         // pop
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

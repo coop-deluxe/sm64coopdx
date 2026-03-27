@@ -147,6 +147,29 @@ Sets the lighting engine ambient color
 
 <br />
 
+## [le_set_max_lights_per_vertex](#le_set_max_lights_per_vertex)
+
+### Description
+Sets the max amount of lights that can affect a vertex
+
+### Lua Example
+`le_set_max_lights_per_vertex(count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| count | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_max_lights_per_vertex(u8 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description
@@ -555,6 +578,35 @@ Sets whether a lighting engine point light will use a surface's normals to deter
 
 ### C Prototype
 `void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from load.h
+
+<br />
+
+
+## [set_sound_bank_override](#set_sound_bank_override)
+
+### Description
+Overrides the soundbank, set to -1 to reset
+
+### Lua Example
+`set_sound_bank_override(bank)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| bank | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_sound_bank_override(s32 bank);`
 
 [:arrow_up_small:](#)
 
@@ -5082,7 +5134,9 @@ Calculates the distance between two points in 3D space (`from` and `to`), as wel
 | to | [Vec3f](structs.md#Vec3f) |
 
 ### Returns
-- None
+- `number`
+- `integer`
+- `integer`
 
 ### C Prototype
 `void vec3f_get_dist_and_angle(Vec3f from, Vec3f to, RET f32 *dist, RET s16 *pitch, RET s16 *yaw);`

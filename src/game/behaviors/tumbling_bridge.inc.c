@@ -17,17 +17,17 @@ void bhv_tumbling_bridge_platform_loop(void) {
     if (isLLL && !sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field_with_size(o, &o->activeFlags, 16);
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPosX);
-            sync_object_init_field(o, &o->oPosY);
-            sync_object_init_field(o, &o->oPosZ);
-            sync_object_init_field(o, &o->oVelX);
-            sync_object_init_field(o, &o->oVelY);
-            sync_object_init_field(o, &o->oVelZ);
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oFaceAngleYaw);
-            sync_object_init_field(o, &o->oFaceAngleRoll);
+            sync_object_init_field(o, o->activeFlags);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPosX);
+            sync_object_init_field(o, o->oPosY);
+            sync_object_init_field(o, o->oPosZ);
+            sync_object_init_field(o, o->oVelX);
+            sync_object_init_field(o, o->oVelY);
+            sync_object_init_field(o, o->oVelZ);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oFaceAngleYaw);
+            sync_object_init_field(o, o->oFaceAngleRoll);
         }
     }
 
@@ -161,7 +161,7 @@ void bhv_tumbling_bridge_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oIntangibleTimer);
+            sync_object_init_field(o, o->oIntangibleTimer);
         }
     }
 

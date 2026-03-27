@@ -49,13 +49,13 @@ void bhv_fire_spitter_update(void) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->on_received_post = bhv_fire_spitter_on_received_post;
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oFireSpitterScaleVel);
-            sync_object_init_field(o, &o->header.gfx.scale[0]);
-            sync_object_init_field(o, &o->header.gfx.scale[1]);
-            sync_object_init_field(o, &o->header.gfx.scale[2]);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oFireSpitterScaleVel);
+            sync_object_init_field(o, o->header.gfx.scale[0]);
+            sync_object_init_field(o, o->header.gfx.scale[1]);
+            sync_object_init_field(o, o->header.gfx.scale[2]);
         }
     }
 
