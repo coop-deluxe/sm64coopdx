@@ -17,7 +17,7 @@ DEF_LANG = open_lang(DEF_NAME)
 verified_entries = {
     "Spanish.ini": {
         "MENU": ("NO"),
-        "CONTROLS": ("A", "B", "X", "Y", "Z", "L", "R", "CHAT", "START"),
+        "CONTROLS": ("CHAT", "X", "Y", "A", "B", "START", "L", "R", "Z"),
         "DISPLAY": ("MANUAL", "D0P5X", "D1X", "D1P5X", "D3X", "D10X", "D100X"),
         "DJUI_THEMES": ("FONT_NORMAL", "MARIO_THEME", "ODYSSEY_THEME"),
         "DYNOS": ("DYNOS"),
