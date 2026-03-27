@@ -64,22 +64,23 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 }
 #endif
 
-void strtov(const char *str, struct Version *ver) {
+void string_to_version(const char *str, struct Version *ver) {
     char* end;
     ver->maj = strtol(str+1, &end, 10);
+    ver->min = 0; ver->fix = 0;
     if (end) ver->min = strtol(end+1, &end, 10);
     if (end) ver->fix = strtol(end+1, &end, 10);
 }
 
-void vtostr(struct Version ver, char* str) {
+void version_to_string(struct Version ver, char* str, size_t size) {
     int len;
-    snprintf(str, 8, "v%i", ver.maj);
+    snprintf(str, size, "v%i", ver.maj);
     if (ver.min || ver.fix) {
         len = strlen(str);
-        snprintf(str + len, 8 - len, ".%i", ver.min);
+        snprintf(str + len, size - len, ".%i", ver.min);
         if (ver.fix) {
             len = strlen(str);
-            snprintf(str + len, 8 - len, ".%i", ver.fix);
+            snprintf(str + len, size - len, ".%i", ver.fix);
         }
     }
 }
@@ -92,9 +93,9 @@ void exify_version(struct Version *ver) {
 
 void exify_version_str(char* str) {
     struct Version ver;
-    strtov(str, &ver);
+    string_to_version(str, &ver);
     exify_version(&ver);
-    vtostr(ver, str);
+    version_to_string(ver, str, 8);
 }
 
 void parse_version(const char *data) {
@@ -108,8 +109,8 @@ void parse_version(const char *data) {
     memcpy(sRemoteVersionStr, version, versionLength);
     sRemoteVersionStr[versionLength] = '\0';
 
-    strtov(sRemoteVersionStr, &sRemoteVersion);
-    strtov(get_version_online(), &sClientVersion);
+    string_to_version(sRemoteVersionStr, &sRemoteVersion);
+    string_to_version(get_version_online(), &sClientVersion);
 }
 
 // function to download a text file from the internet

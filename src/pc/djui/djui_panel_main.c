@@ -16,7 +16,7 @@
 extern ALIGNED8 u8 texture_coopdx_logo[];
 
 bool gDjuiPanelMainCreated = false;
-struct DjuiThreePanel* panel = NULL;
+static struct DjuiThreePanel* sPanelMain = NULL;
 
 static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
     game_exit();
@@ -36,15 +36,18 @@ static bool sEggHovered = false;
 static bool sEggClicked = false;
 
 static void djui_panel_main_egg_end(struct DjuiBase *base, UNUSED bool *noRender) {
-    panel->base.x.value -= gGlobalTimer - sEggLastFired + 60;
+    sPanelMain->base.x.value -= gGlobalTimer - sEggLastFired + 60;
     base->color.a = MAX(255.f - ((gGlobalTimer - sEggLastFired + 60) << 3), 0);
-    if (gGlobalTimer == sEggLastFired) { game_exit(); }
+    if (gGlobalTimer == sEggLastFired) {
+        configExCoopTheme = !configExCoopTheme;
+        game_exit();
+    }
 }
 
 static void djui_panel_main_egg(struct DjuiBase *base, UNUSED bool *noRender) {
     if (sEggCounter && sEggLastY == base->clip.y) {
         bool hovering = djui_cursor_inside_base(base);
-        bool clicking = (gInteractablePad.button & PAD_BUTTON_A || mouse_buttons & L_MOUSE_BUTTON);
+        bool clicking = ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_buttons & L_MOUSE_BUTTON));
     
         if (hovering) {
             if (!sEggHovered && sEggLastFired + 20 < gGlobalTimer) {
@@ -56,7 +59,6 @@ static void djui_panel_main_egg(struct DjuiBase *base, UNUSED bool *noRender) {
                 play_sound(SOUND_MENU_COLLECT_SECRET + ((5 - sEggCounter) << 16), gGlobalSoundSource);
         
                 if (!--sEggCounter) {
-                    configExCoopTheme = !configExCoopTheme;
                     play_transition(WARP_TRANSITION_FADE_INTO_COLOR, 0x1E, 0xFF, 0xFF, 0xFF);
                     fade_volume_scale(SEQ_PLAYER_LEVEL, 0, 40);
                     sound_banks_disable(SEQ_PLAYER_SFX, SOUND_BANKS_ALL & ~(1 << SOUND_BANK_MENU));
@@ -76,11 +78,11 @@ static void djui_panel_main_egg(struct DjuiBase *base, UNUSED bool *noRender) {
 }
 
 void djui_panel_main_create(struct DjuiBase* caller) {
-    panel = djui_panel_menu_create(configExCoopTheme ? "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP" : "", false);
-    if (configExCoopTheme) { djui_three_panel_get_header(panel)->on_render_pre = djui_panel_main_egg; }
+    sPanelMain = djui_panel_menu_create(configExCoopTheme ? "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP" : "", false);
+    if (configExCoopTheme) { djui_three_panel_get_header(sPanelMain)->on_render_pre = djui_panel_main_egg; }
     
     {
-        struct DjuiBase* body = djui_three_panel_get_body(panel);
+        struct DjuiBase* body = djui_three_panel_get_body(sPanelMain);
         {
             if (!configExCoopTheme) {
                 struct DjuiImage* logo = djui_image_create(body, texture_coopdx_logo, 2048, 1024, G_IM_FMT_RGBA, G_IM_SIZ_32b);
@@ -109,14 +111,14 @@ void djui_panel_main_create(struct DjuiBase* caller) {
 
         // these two cannot co-exist for some reason
         if (gUpdateMessage) {
-            struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
+            struct DjuiText* message = djui_text_create(&sPanelMain->base, DLANG(NOTIF, UPDATE_AVAILABLE));
             djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&message->base, 1.0f, 1.0f);
             djui_base_set_color(&message->base, 255, 255, 160, 255);
             djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         } else {
             struct DjuiText* version = djui_text_create(
-                &panel->base,
+                &sPanelMain->base,
                 #ifdef COMPILE_TIME
                     get_version_with_build_date()
                 #else
@@ -130,7 +132,7 @@ void djui_panel_main_create(struct DjuiBase* caller) {
         }
     }
 
-    djui_panel_add(caller, panel, NULL);
+    djui_panel_add(caller, sPanelMain, NULL);
     gInteractableOverridePad = true;
     gDjuiPanelMainCreated = true;
     sEggCounter = 5;
