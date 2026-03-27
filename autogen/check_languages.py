@@ -37,12 +37,14 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
 
     lang = open_lang(filename)
     warned = False
+    sections = []
 
     for section in DEF_LANG.sections():
         warnings = {
-            "UNTRANSLATED": [],
-            "MISSING": [],
-            "EXTRA": [],
+            "Name": section,
+            "Untranslated": [],
+            "Missing": [],
+            "Extra": [],
         }
 
         if lang.has_section(section):
@@ -50,10 +52,10 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
             for entry in entries:
                 if lang.has_option(section, entry):
                     if not DEF_LANG.has_option(section, entry):
-                        warnings["EXTRA"].append(entry)
+                        warnings["Extra"].append(entry)
                         continue
                 else:
-                    warnings["MISSING"].append(entry)
+                    warnings["Missing"].append(entry)
                     continue
 
                 verified = verified_entries.get(filename)
@@ -64,15 +66,20 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
 
                 if lang.get(section, entry) == DEF_LANG.get(section, entry) \
                     and not verified:
-                    warnings["UNTRANSLATED"].append(entry)
-        else: warnings["MISSING"].append("SECTION")
+                    warnings["Untranslated"].append(entry)
+        else: warnings["Missing"].append("Section")
 
-        if len(warnings["EXTRA"] + warnings["MISSING"] + warnings["UNTRANSLATED"]) > 0:
-            if not warned: warned = True; print(filename+":")
+        if len(warnings["Extra"] + warnings["Missing"] + warnings["Untranslated"]) > 0:
+            sections.append(warnings)
 
-            print(f"[{section}]")
+    if len(sections) > 0:
+        print(filename)
+        for warnings in sections:
+            print(f"  [{warnings.pop("Name")}]")
+
             for level, entries in warnings.items():
                 if len(entries) > 0:
-                    print(level + ": " + ", ".join(entries))
-            print()
+                    print(f"    {level}: " + ", ".join(entries))
+        print()
+
     
