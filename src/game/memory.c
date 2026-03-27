@@ -187,11 +187,13 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
 
 static void growing_array_free_elements(struct GrowingArray *array) {
     if (array) {
-        for (u32 i = 0; i != array->capacity; ++i) {
-            if (array->buffer[i]) {
-                array->free(array->buffer[i]);
-                array->buffer[i] = NULL;
+        if (array->buffer) {
+            for (u32 i = 0; i != array->capacity; ++i) {
+                if (array->buffer[i]) {
+                    array->free(array->buffer[i]);
+                }
             }
+            memset(array->buffer, 0, sizeof(void *) * array->capacity);
         }
         array->count = 0;
     }
@@ -211,12 +213,11 @@ struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity
                 return growing_array_init(NULL, capacity, alloc, free);
             }
 
+            memset(buffer, 0, sizeof(void *) * capacity);
             array->buffer = buffer;
-            array->capacity = capacity;
-            memset(array->buffer, 0, sizeof(void *) * array->capacity);
         }
     } else {
-        array = calloc(1, sizeof(struct GrowingArray));
+        array = malloc(sizeof(struct GrowingArray));
         array->buffer = calloc(capacity, sizeof(void *));
     }
 
