@@ -1436,7 +1436,7 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
     return FALSE;
 }
 
-void lose_life_after_death_exit(struct MarioState *m) {
+static void lose_life_after_death_exit(struct MarioState *m) {
     if (sDelayedWarpArg != WARP_ARG_EXIT_COURSE) {
         m->numLives--;
     }
