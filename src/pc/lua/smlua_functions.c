@@ -22,6 +22,10 @@
 #include "game/hardcoded.h"
 #include "include/macros.h"
 
+#include <curl/curl.h>
+#include <stdlib.h>
+#include <string.h>
+
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
     if (top != expected) {
@@ -128,6 +132,28 @@ static void table_deepcopy_table(lua_State *L, int idxTable, int idxCache) {
     }
 }
 
+struct MemoryStruct {
+    char *memory;
+    size_t size;
+};
+
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    size_t realsize = size * nmemb;
+     struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+
+     char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+     if(ptr == NULL)
+         
+     return 0;
+
+    mem->memory = ptr;
+    memcpy(&(mem->memory[mem->size]), contents, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
+
+    return realsize;
+}
+
 int smlua_func_table_deepcopy(lua_State *L) {
     LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
@@ -153,6 +179,70 @@ int smlua_func_table_deepcopy(lua_State *L) {
   //////////
  // misc //
 //////////
+
+int smlua_func_http_get(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) {
+        return 0;
+    }
+    
+    if (lua_type(L, 1) != LUA_TSTRING) {
+        LOG_LUA_LINE("http_get() requires a string URL");
+        return 0;
+    }
+    
+    const char* url = smlua_to_string(L, 1);
+    CURL *curl_handle;
+    CURLcode res;
+    
+    struct MemoryStruct chunk;
+    chunk.memory = malloc(1);
+    chunk.size = 0;
+    
+    if (curl_global_init(CURL_GLOBAL_DEFAULT) != 0) {
+        free(chunk.memory);
+        lua_pushnil(L);
+        
+        return 1;
+    }
+
+    curl_handle = curl_easy_init();
+    if (!curl_handle) {
+        free(chunk.memory);
+        curl_global_cleanup();
+        lua_pushnil(L);
+        
+        return 1;
+    }
+    
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
+    curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+    
+    res = curl_easy_perform(curl_handle);
+    
+    if (res != CURLE_OK) {
+     if (res != CURLE_COULDNT_RESOLVE_HOST) {
+      LOG_LUA_LINE("http_get() failed: %s", curl_easy_strerror(res));
+    }
+        
+    free(chunk.memory);
+     curl_easy_cleanup(curl_handle);
+     curl_global_cleanup();
+     lua_pushnil(L);
+        
+    return 1;
+    }
+    
+    lua_pushstring(L, chunk.memory);
+    free(chunk.memory);
+     curl_easy_cleanup(curl_handle);
+     curl_global_cleanup();
+    
+    return 1;
+}
 
 int smlua_func_init_mario_after_warp(lua_State* L) {
     if (network_player_connected_count() >= 2) {
@@ -1036,4 +1126,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
+    smlua_bind_function(L, "http_get", smlua_func_http_get);
 }
