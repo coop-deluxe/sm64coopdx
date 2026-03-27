@@ -166,7 +166,8 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
 void djui_gfx_render_texture_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
+    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, djui_hud_get_filter() ? G_TF_BILERP : G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -193,12 +194,14 @@ void djui_gfx_render_texture_font(const Texture* texture, u32 w, u32 h, u8 fmt, 
 void djui_gfx_render_texture_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
 void djui_gfx_render_texture_tile_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
+    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -243,6 +246,7 @@ void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 
 void djui_gfx_render_texture_tile_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 

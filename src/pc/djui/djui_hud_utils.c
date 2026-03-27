@@ -173,7 +173,6 @@ struct InterpHud {
 
 static struct GrowingArray *sInterpHuds = NULL;
 static u32 sInterpHudCount = 0;
-static bool sColorAltered = false;
 
 static void interp_hud_free(void *ptr) {
     struct InterpHud *interp = ptr;
@@ -348,19 +347,15 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     sHudUtilsState.color.g = g;
     sHudUtilsState.color.b = b;
     sHudUtilsState.color.a = a;
-    sColorAltered = true;
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
 
 void djui_hud_reset_color(void) {
-    if (sColorAltered) {
-        sHudUtilsState.color.r = 255;
-        sHudUtilsState.color.g = 255;
-        sHudUtilsState.color.b = 255;
-        sHudUtilsState.color.a = 255;
-        sColorAltered = false;
-        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-    }
+    sHudUtilsState.color.r = 255;
+    sHudUtilsState.color.g = 255;
+    sHudUtilsState.color.b = 255;
+    sHudUtilsState.color.a = 255;
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
 }
 
 struct DjuiColor* djui_hud_get_text_color(void) {
@@ -625,11 +620,11 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     f32 textHeight = font->lineHeight;
 
     // apply text color
-    gDPSetEnvColor(gDisplayListHead++, 
-        (sHudUtilsState.color.r * sHudUtilsState.textColor.r) / 255,
-        (sHudUtilsState.color.g * sHudUtilsState.textColor.g) / 255,
-        (sHudUtilsState.color.b * sHudUtilsState.textColor.b) / 255,
-        (sHudUtilsState.color.a * sHudUtilsState.textColor.a) / 255
+    gDPSetPrimColor(gDisplayListHead++, 0, 0,
+        sHudUtilsState.textColor.r,
+        sHudUtilsState.textColor.g,
+        sHudUtilsState.textColor.b,
+        sHudUtilsState.textColor.a
     );
 
     font->render_begin();
@@ -638,11 +633,11 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
         // check color code
         struct DjuiColor parsedColor;
         if (djui_text_parse_color(c, end, false, &sHudUtilsState.textColor, &c, &parsedColor)) {
-            gDPSetEnvColor(gDisplayListHead++, 
-                (sHudUtilsState.color.r * parsedColor.r) / 255,
-                (sHudUtilsState.color.g * parsedColor.g) / 255,
-                (sHudUtilsState.color.b * parsedColor.b) / 255,
-                (sHudUtilsState.color.a * parsedColor.a) / 255
+            gDPSetPrimColor(gDisplayListHead++, 0, 0,
+                parsedColor.r,
+                parsedColor.g,
+                parsedColor.b,
+                parsedColor.a
             );
             continue;
         }
@@ -706,9 +701,6 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
 
     // pop
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
-
-    // reset color
-    gDPSetEnvColor(gDisplayListHead++, sHudUtilsState.color.r, sHudUtilsState.color.g, sHudUtilsState.color.b, sHudUtilsState.color.a);
 }
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {

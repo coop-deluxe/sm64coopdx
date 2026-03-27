@@ -452,6 +452,7 @@ static bool djui_text_render(struct DjuiBase* base) {
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
 
     // set color
+    gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
     sDjuiTextCurrentColor = base->color;
 
