@@ -69,8 +69,6 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
         djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
         struct DjuiCheckbox* chkHide = djui_checkbox_create(body, DLANG(HOST_MESSAGE, WARN_SOCKET_HIDE), &hideMessage, NULL);
-        djui_base_set_size(&chkHide->base, 1.0f, 32);
-        djui_base_set_alignment(&chkHide->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
