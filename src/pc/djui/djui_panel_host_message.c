@@ -14,6 +14,8 @@
 #include "audio/external.h"
 #include "sounds.h"
 
+static bool hideMessage = false;
+
 void djui_panel_do_host(bool reconnecting, bool playSound) {
     stop_demo(NULL);
     djui_panel_shutdown();
@@ -42,6 +44,7 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
 }
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
+    if (hideMessage) { configHideSocketWarning = true; }
     network_reset_reconnect_and_rehost();
     djui_panel_do_host(false, true);
 }
@@ -65,6 +68,10 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
         djui_base_set_color(&text1->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
+        struct DjuiCheckbox* chkHide = djui_checkbox_create(body, DLANG(HOST_MESSAGE, WARN_SOCKET_HIDE), &hideMessage, NULL);
+        djui_base_set_size(&chkHide->base, 1.0f, 32);
+        djui_base_set_alignment(&chkHide->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* btnHost = djui_button_right_create(&rect1->base, DLANG(HOST_MESSAGE, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_message_do_host);
@@ -74,6 +81,8 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
                 djui_base_set_size(&btnBack->base, 1.0f, 64);
                 djui_base_set_visible(&btnHost->base, false);
                 djui_base_set_enabled(&btnHost->base, false);
+                djui_base_set_visible(&chkHide->base, false);
+                djui_base_set_enabled(&chkHide->base, false);
             }
         }
     }

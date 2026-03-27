@@ -78,7 +78,7 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
 
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
-    } else if (configNetworkSystem == NS_COOPNET || configAmountOfPlayers == 1) {
+    } else if (configNetworkSystem == NS_COOPNET || configAmountOfPlayers == 1 || configHideSocketWarning) {
         network_reset_reconnect_and_rehost();
         djui_panel_do_host(false, true);
     } else {
