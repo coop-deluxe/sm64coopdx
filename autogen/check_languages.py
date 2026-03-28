@@ -29,10 +29,8 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
                 if lang.has_option(section, entry):
                     if not DEF_LANG.has_option(section, entry):
                         warnings["Extra"].append(entry)
-                        continue
                 else:
                     warnings["Missing"].append(entry)
-                    continue
 
         else: warnings["Missing"].append("Section")
 
