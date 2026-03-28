@@ -21,20 +21,20 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
     sections = {}
 
     for section in DEF_LANG.sections():
-        warnings = { "Missing": [], "Extra": [] }
+        warnings = { "Missing": [], "Extra:": [] }
 
         if lang.has_section(section):
             entries = list(dict.fromkeys(lang.options(section) + DEF_LANG.options(section)))
             for entry in entries:
                 if lang.has_option(section, entry):
                     if not DEF_LANG.has_option(section, entry):
-                        warnings["Extra"].append(entry)
+                        warnings["Extra:"].append(entry)
                 else:
                     warnings["Missing"].append(entry)
 
         else: warnings["Missing"].append("Section")
 
-        if len(warnings["Extra"] + warnings["Missing"]) > 0:
+        if len(warnings["Extra:"] + warnings["Missing"]) > 0:
             sections[section] = warnings
 
     if len(sections) > 0:
@@ -45,7 +45,7 @@ for file in os.listdir(os.fsencode(LANG_DIR)):
             s = " "
             for level, entries in warnings.items():
                 if len(entries) > 0:
-                    print(f"{s}{level}: " + ", ".join(entries))
+                    print(f"{s}{level} " + ", ".join(entries))
                     s = "    "
         print()
 
