@@ -5862,7 +5862,8 @@ Gets an `audio` stream's loop points in samples
 | audio | [ModAudio](structs.md#ModAudio) |
 
 ### Returns
-- None
+- `integer`
+- `integer`
 
 ### C Prototype
 `void audio_stream_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`

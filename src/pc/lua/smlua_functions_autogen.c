@@ -30636,7 +30636,7 @@ int smlua_func_audio_stream_set_loop_points(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_set_loop_points"); return 0; }
     s64 loopStart = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "audio_stream_set_loop_points"); return 0; }
-    s64 loopEnd = (s64) NULL;
+    s64 loopEnd = (s64) 0;
     if (top >= 3) {
         loopEnd = smlua_to_integer(L, 3);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "audio_stream_set_loop_points"); return 0; }
