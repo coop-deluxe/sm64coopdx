@@ -7406,7 +7406,7 @@ Gets the `level` terrain collision from `area`
 Gets a table of the surface types from `data`
 
 ### Lua Example
-`local tableValue = smlua_collision_util_find_surface_types(data)`
+`smlua_collision_util_find_surface_types(data)`
 
 ### Parameters
 | Field | Type |
@@ -7414,10 +7414,10 @@ Gets a table of the surface types from `data`
 | data | `Pointer` <`Collision`> |
 
 ### Returns
-- `table`
+- None
 
 ### C Prototype
-`LuaTable smlua_collision_util_find_surface_types(Collision* data);`
+`void smlua_collision_util_find_surface_types(Collision* data);`
 
 [:arrow_up_small:](#)
 

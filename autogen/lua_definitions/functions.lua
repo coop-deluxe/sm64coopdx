@@ -10709,7 +10709,6 @@ function smlua_collision_util_get_level_collision(level, area)
 end
 
 --- @param data Pointer_Collision
---- @return table
 --- Gets a table of the surface types from `data`
 function smlua_collision_util_find_surface_types(data)
     -- ...

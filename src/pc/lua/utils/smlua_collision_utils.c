@@ -209,9 +209,8 @@ Collision *smlua_collision_util_get_level_collision(u32 level, u16 area) {
     return dynos_level_get_collision(level, area);
 }
 
-LuaTable smlua_collision_util_find_surface_types(Collision* data) {
+void smlua_collision_util_find_surface_types(Collision* data) {
     lua_State* L = gLuaState;
-    if (!L) { return 0; }
 
     if (data && *data++ == COL_INIT()) {
         lua_newtable(L);
@@ -232,12 +231,11 @@ LuaTable smlua_collision_util_find_surface_types(Collision* data) {
             lua_pushinteger(L, surfaceType);
             lua_settable(L, t);
         }
-        return smlua_to_lua_table(L, -1);
+        return;
     }
 
     // Couldn't find anything
     lua_pushnil(L);
-    return 0;
 }
 
 bool surface_is_quicksand(struct Surface* surf) {

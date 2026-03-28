@@ -31768,7 +31768,7 @@ int smlua_func_smlua_collision_util_find_surface_types(lua_State* L) {
     Collision* data = (Collision*)smlua_to_cpointer(L, 1, LVT_COLLISION_P);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_collision_util_find_surface_types"); return 0; }
 
-    smlua_push_lua_table(L, smlua_collision_util_find_surface_types(data));
+    smlua_collision_util_find_surface_types(data);
 
     return 1;
 }
