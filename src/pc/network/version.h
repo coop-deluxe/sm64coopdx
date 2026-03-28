@@ -6,7 +6,7 @@
 // internal version
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 41
-#define MINOR_VERSION_NUMBER 1
+#define MINOR_VERSION_NUMBER 2
 
 #define VERSION_OFFSET 37 // difference from old versioning system
 
@@ -30,11 +30,9 @@
 #define GAME_NAME "sm64coopdx"
 #define WINDOW_NAME "Super Mario 64 Coop Deluxe"
 #endif
-#define EX_WINDOW_NAME "sm64ex-coop:"
 
 #define MAX_VERSION_LENGTH 128
 
-const char* get_version_online(void);
 const char* get_version(void);
 #ifdef COMPILE_TIME
 const char* get_version_with_build_date(void);

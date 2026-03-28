@@ -85,19 +85,6 @@ void version_to_string(struct Version ver, char* str, size_t size) {
     }
 }
 
-void exify_version(struct Version *ver) {
-    ver->maj = ver->min + VERSION_OFFSET;
-    ver->min = ver->fix;
-    ver->fix = 0;
-}
-
-void exify_version_str(char* str) {
-    struct Version ver;
-    string_to_version(str, &ver);
-    exify_version(&ver);
-    version_to_string(ver, str, 8);
-}
-
 void parse_version(const char *data) {
     const char *version = strstr(data, VERSION_IDENTIFIER);
     if (version == NULL) { return; }
@@ -110,7 +97,7 @@ void parse_version(const char *data) {
     sRemoteVersionStr[versionLength] = '\0';
 
     string_to_version(sRemoteVersionStr, &sRemoteVersion);
-    string_to_version(get_version_online(), &sClientVersion);
+    string_to_version(get_version(), &sClientVersion);
 }
 
 // function to download a text file from the internet
@@ -196,7 +183,6 @@ void check_for_updates(void) {
 
     get_version_remote();
     if (sRemoteVersionStr[0] == 'v' && is_version_newer(sClientVersion, sRemoteVersion)) {
-        if (configExCoopTheme) { exify_version_str(sRemoteVersionStr); }
         snprintf(
             sVersionUpdateTextBuffer, 256,
             "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
