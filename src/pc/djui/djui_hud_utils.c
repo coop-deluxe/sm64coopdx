@@ -533,8 +533,6 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     if (message == NULL) { return; }
     gDjuiHudUtilsZ += 0.001f;
 
-    if (djui_hud_text_font_is_legacy()) { scale *= 0.5f; }
-
     const struct DjuiFont* font = djui_hud_get_text_font();
     f32 fontScale = font->defaultFontScale * scale;
 
@@ -654,13 +652,22 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
 }
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
+    if (message == NULL) { return; }
+
+    if (djui_hud_text_font_is_legacy()) {
+        scale *= 0.5f;
+    }
+
     djui_hud_print_text_internal(message, x, y, scale, NULL);
 }
 
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
 
-    if (djui_hud_text_font_is_legacy()) { prevScale *= 0.5f; }
+    if (djui_hud_text_font_is_legacy()) {
+        scale *= 0.5f;
+        prevScale *= 0.5f;
+    }
 
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
