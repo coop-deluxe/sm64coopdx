@@ -40,7 +40,12 @@ struct CombinerCycle {
     struct CombinerPart channel[2];
 };
 
-extern struct CombinerCycle gCombinerState[2];
+struct CombinerState {
+    struct CombinerCycle cycle[2];
+    u8 cycles;
+};
+
+extern struct CombinerState gCombinerState;
 extern bool gCombinerUpdated;
 extern bool gCombinerOverride;
 void djui_gfx_update_combine_mode(enum CombinerSource mode);

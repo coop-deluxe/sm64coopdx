@@ -31,10 +31,11 @@ void djui_gfx_displaylist_end(void) {
 
 static Gfx sDjuiCombineMode = { 0 };
 
-struct CombinerCycle gCombinerState[2] = { 0 };
+struct CombinerState gCombinerState = { 0 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
 void djui_gfx_update_combine_mode(enum CombinerSource mode) {
+    u8 cycles = 1;
     if (gCombinerOverride) {
         if (gCombinerUpdated) {
 
@@ -46,7 +47,7 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
     } else switch (mode) {
         case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
         case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
-        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); break;
+        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycles = 2; break;
     }
 }
 
@@ -122,7 +123,7 @@ const Gfx dl_djui_image[] = {
     // gsSPExecuteDjui(G_TEXCLIP_DJUI),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
-    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_PASS2),
     gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
@@ -179,7 +180,7 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
     gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
 
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
@@ -211,8 +212,7 @@ void djui_gfx_render_texture_font(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
 void djui_gfx_render_texture_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
@@ -262,8 +262,7 @@ void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 
 
 void djui_gfx_render_texture_tile_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 

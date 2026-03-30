@@ -405,11 +405,16 @@ void djui_hud_reset_text_color(void) {
     sHudUtilsState.textColor.a = 255;
 }
 
+void djui_hud_set_combiner_cycles(u8 cycles) {
+    if (cycles != 2) { cycles = 1; }
+    gCombinerState.cycles = cycles;
+}
+
 void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
     if (--cycle > 1) { return; }
     if (channel < CC_COLOR || channel > CC_ALPHA) { return; }
 
-    struct CombinerPart *part = &gCombinerState[cycle].channel[channel];
+    struct CombinerPart *part = &gCombinerState.cycle[cycle].channel[channel];
     part->a = a; part->b = b; part->c = c; part->d = d;
 
     gCombinerUpdated = true;
