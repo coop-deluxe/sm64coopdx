@@ -29,17 +29,22 @@ void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
-static Gfx sDjuiCombineMode = { 0 };
-
 struct CombinerState gCombinerState = { 0 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
+static Gfx sDjuiCombineMode = { 0 };
+static u32 sCombinerCycleType = G_CYC_1CYCLE;
+
 void djui_gfx_update_combine_mode(enum CombinerSource mode) {
-    u8 cycles = 1;
+    u32 cycleType = G_CYC_1CYCLE;
+
     if (gCombinerOverride) {
+        cycleType = (gCombinerState.cycles - 1) << G_MDSFT_CYCLETYPE;
+
         if (gCombinerUpdated) {
 
 
+            sDjuiCombineMode = gDPSetCombineLERPNoString();
             gCombinerUpdated = false;
         }
         
@@ -47,7 +52,12 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
     } else switch (mode) {
         case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
         case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
-        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycles = 2; break;
+        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycleType = G_CYC_2CYCLE; break;
+    }
+
+    if (sCombinerCycleType != cycleType) {
+        gDPSetCycleType(gDisplayListHead++, cycleType);
+        sCombinerCycleType = cycleType;
     }
 }
 
