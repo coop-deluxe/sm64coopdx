@@ -2760,6 +2760,38 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
+CS_0              =  0 --- @type CombinerSource
+CS_1              =  1 --- @type CombinerSource
+CS_TEXTURE        =  2 --- @type CombinerSource
+CS_COLOR          =  3 --- @type CombinerSource
+CS_TEXT           =  4 --- @type CombinerSource
+CS_COMBINED       =  5 --- @type CombinerSource
+CS_NOISE          =  6 --- @type CombinerSource
+CS_TEXTURE_ALPHA  =  7 --- @type CombinerSource
+CS_COLOR_ALPHA    =  8 --- @type CombinerSource
+CS_TEXT_ALPHA     =  9 --- @type CombinerSource
+CS_COMBINED_ALPHA = 10 --- @type CombinerSource
+
+--- @alias CombinerSource
+--- | `CS_0`
+--- | `CS_1`
+--- | `CS_TEXTURE`
+--- | `CS_COLOR`
+--- | `CS_TEXT`
+--- | `CS_COMBINED`
+--- | `CS_NOISE`
+--- | `CS_TEXTURE_ALPHA`
+--- | `CS_COLOR_ALPHA`
+--- | `CS_TEXT_ALPHA`
+--- | `CS_COMBINED_ALPHA`
+
+CC_COLOR = 0 --- @type CombinerChannel
+CC_ALPHA = 1 --- @type CombinerChannel
+
+--- @alias CombinerChannel
+--- | `CC_COLOR`
+--- | `CC_ALPHA`
+
 --- @type number
 ROTATION_PIVOT_X_LEFT = 0.0
 

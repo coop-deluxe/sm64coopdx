@@ -15,6 +15,9 @@
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
     - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
+- [djui_gfx.h](#djui_gfxh)
+    - [enum CombinerSource](#enum-CombinerSource)
+    - [enum CombinerChannel](#enum-CombinerChannel)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
@@ -1143,6 +1146,33 @@
 | CONSOLE_MESSAGE_INFO | 0 |
 | CONSOLE_MESSAGE_WARNING | 1 |
 | CONSOLE_MESSAGE_ERROR | 2 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_gfx.h](#djui_gfx.h)
+
+### [enum CombinerSource](#CombinerSource)
+| Identifier | Value |
+| :--------- | :---- |
+| CS_0 | 0 |
+| CS_1 | 1 |
+| CS_TEXTURE | 2 |
+| CS_COLOR | 3 |
+| CS_TEXT | 4 |
+| CS_COMBINED | 5 |
+| CS_NOISE | 6 |
+| CS_TEXTURE_ALPHA | 7 |
+| CS_COLOR_ALPHA | 8 |
+| CS_TEXT_ALPHA | 9 |
+| CS_COMBINED_ALPHA | 10 |
+
+### [enum CombinerChannel](#CombinerChannel)
+| Identifier | Value |
+| :--------- | :---- |
+| CC_COLOR | 0 |
+| CC_ALPHA | 1 |
 
 [:arrow_up_small:](#)
 

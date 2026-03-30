@@ -405,28 +405,19 @@ void djui_hud_reset_text_color(void) {
     sHudUtilsState.textColor.a = 255;
 }
 
-static struct {
-    enum CombinerSource
-        a, b, c, d,
-        aA,bA,cA,dA;
-} sCombinerState;
+void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
+    if (--cycle > 1) { return; }
+    if (channel < CC_COLOR || channel > CC_ALPHA) { return; }
 
-static Gfx sCombinerMode = { 0 };
-static bool sCombinerAltered = false;
-static bool sCombinerIsTexture;
-static void djui_hud_update_combine_mode(bool texture) {
-    if (!sCombinerAltered || sCombinerIsTexture != texture) {
-        // gDPSetCombineLERP(gDisplayListHead++, );
-        sCombinerAltered = true;
-    }
+    struct CombinerPart *part = &gCombinerState[cycle].channel[channel];
+    part->a = a; part->b = b; part->c = c; part->d = d;
+
+    gCombinerUpdated = true;
+    gCombinerOverride = true;
 }
 
-void djui_hud_reset_combiner(bool texture) {
-    if (sCombinerAltered) {
-        gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_MODULATERGBA_PRIM2);
-        sCombinerIsTexture = false;
-        sCombinerAltered = false;
-    }
+void djui_hud_reset_combiner() {
+    gCombinerOverride = false;
 }
 
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
@@ -936,6 +927,7 @@ static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, s
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width, height, 1.0f);
 
     // render
+    djui_gfx_update_combine_mode(CS_COLOR);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // pop

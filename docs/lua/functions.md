@@ -764,6 +764,8 @@
    - [djui_hud_get_text_color](functions-3.md#djui_hud_get_text_color)
    - [djui_hud_set_text_color](functions-3.md#djui_hud_set_text_color)
    - [djui_hud_reset_text_color](functions-3.md#djui_hud_reset_text_color)
+   - [djui_hud_set_combiner](functions-3.md#djui_hud_set_combiner)
+   - [djui_hud_reset_combiner](functions-3.md#djui_hud_reset_combiner)
    - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)

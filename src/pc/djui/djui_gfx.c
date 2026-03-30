@@ -29,6 +29,27 @@ void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
+static Gfx sDjuiCombineMode = { 0 };
+
+struct CombinerCycle gCombinerState[2] = { 0 };
+bool gCombinerUpdated = false;
+bool gCombinerOverride = false;
+void djui_gfx_update_combine_mode(enum CombinerSource mode) {
+    if (gCombinerOverride) {
+        if (gCombinerUpdated) {
+
+
+            gCombinerUpdated = false;
+        }
+        
+        *(gDisplayListHead++) = sDjuiCombineMode;
+    } else switch (mode) {
+        case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
+        case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
+        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); break;
+    }
+}
+
 static const Vtx vertex_djui_menu_rect[] = {
     {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
     {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
@@ -46,7 +67,6 @@ static const Vtx vertex_djui_simple_rect[] = {
 const Gfx dl_djui_menu_rect[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_menu_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
@@ -56,7 +76,6 @@ const Gfx dl_djui_menu_rect[] = {
 const Gfx dl_djui_simple_rect[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_simple_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
@@ -95,7 +114,6 @@ static const Vtx vertex_djui_image[] = {
 const Gfx dl_djui_image[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
-    gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0),
@@ -114,6 +132,7 @@ inline static u8 djui_gfx_power_of_two(u32 value) {
 }
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter) {
+    djui_gfx_update_combine_mode(CS_TEXTURE);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
@@ -144,7 +163,7 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
     vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
+    djui_gfx_update_combine_mode(CS_TEXTURE);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
 
@@ -166,8 +185,7 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
 void djui_gfx_render_texture_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
+    djui_gfx_update_combine_mode(CS_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, djui_hud_get_filter() ? G_TF_BILERP : G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -200,8 +218,7 @@ void djui_gfx_render_texture_font_end() {
 
 void djui_gfx_render_texture_tile_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
+    djui_gfx_update_combine_mode(CS_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);

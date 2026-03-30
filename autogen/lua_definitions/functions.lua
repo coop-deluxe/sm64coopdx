@@ -3889,6 +3889,22 @@ function djui_hud_reset_text_color()
     -- ...
 end
 
+--- @param cycle integer
+--- @param channel CombinerChannel
+--- @param a? CombinerSource
+--- @param b? CombinerSource
+--- @param c? CombinerSource
+--- @param d? CombinerSource
+--- Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+function djui_hud_set_combiner(cycle, channel, a, b, c, d)
+    -- ...
+end
+
+--- Resets the current DJUI HUD combiner
+function djui_hud_reset_combiner()
+    -- ...
+end
+
 --- @return integer rotation
 --- @return number pivotX
 --- @return number pivotY

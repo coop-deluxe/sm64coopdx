@@ -3021,6 +3021,55 @@ Resets the current DJUI HUD text default color. This color is overridden by colo
 
 <br />
 
+## [djui_hud_set_combiner](#djui_hud_set_combiner)
+
+### Description
+Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+
+### Lua Example
+`djui_hud_set_combiner(cycle, channel, a, b, c, d)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cycle | `integer` |
+| channel | [enum CombinerChannel](constants.md#enum-CombinerChannel) |
+| a | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| b | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| c | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| d | [enum CombinerSource](constants.md#enum-CombinerSource) |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_combiner](#djui_hud_reset_combiner)
+
+### Description
+Resets the current DJUI HUD combiner
+
+### Lua Example
+`djui_hud_reset_combiner()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_combiner();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_rotation](#djui_hud_get_rotation)
 
 ### Description

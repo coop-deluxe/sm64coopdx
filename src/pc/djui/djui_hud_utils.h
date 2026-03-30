@@ -43,20 +43,6 @@ enum DjuiFontType {
     FONT_COUNT,
 };
 
-enum CombinerSource {
-    CS_0,
-    CS_1,
-    CS_SOURCE,         // ENVIRONMENT, TEXEL0; situational
-    CS_COLOR,          // ENVIRONMENT
-    CS_TEXT_COLOR,     // PRIMITIVE
-    CS_COMBINED,       // COMBINED
-    CS_NOISE,          // NOISE
-    CS_SOURCE_ALPHA,   // ENV_ALPHA, TEXEL0_ALPHA; situational
-    CS_COLOR_ALPHA,    // ENV_ALPHA
-    CS_TEXT_ALPHA,     // PRIMITIVE_ALPHA
-    CS_COMBINED_ALPHA, // COMBINED_ALPHA
-};
-
 struct GlobalTextures {
     struct TextureInfo camera;
     struct TextureInfo lakitu;
@@ -106,6 +92,14 @@ struct DjuiColor* djui_hud_get_text_color(void);
 void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */
 void djui_hud_reset_text_color(void);
+/* |description|
+Sets the current DJUI HUD combiner.
+Each part uses the following equation: `P = (A - B) * C + D`.
+Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+|descriptionEnd| */
+void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d);
+/* |description|Resets the current DJUI HUD combiner|descriptionEnd| */
+void djui_hud_reset_combiner();
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */
