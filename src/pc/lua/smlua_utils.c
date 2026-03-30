@@ -102,7 +102,7 @@ lua_Integer smlua_to_integer(lua_State* L, int index) {
     }
     gSmLuaConvertSuccess = true;
     lua_Integer val = lua_tointeger(L, index);
-    return (val == 0) ? lua_tonumber(L, index) : val;
+    return (val == 0) ? (lua_Integer) lua_tonumber(L, index) : val;
 }
 
 lua_Number smlua_to_number(lua_State* L, int index) {
