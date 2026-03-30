@@ -10208,6 +10208,12 @@ function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m
     -- ...
 end
 
+--- @return integer
+--- Allocates a new sequence ID
+function smlua_audio_utils_allocate_sequence()
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` stream by `filename` (with extension)
@@ -11644,6 +11650,14 @@ end
 --- @return Mod
 --- Gets the mod currently being processed
 function get_active_mod()
+    -- ...
+end
+
+--- @param mod Mod
+--- @param subDirectory? string
+--- @return table
+--- Gets all files a mod contains
+function get_mod_files(mod, subDirectory)
     -- ...
 end
 

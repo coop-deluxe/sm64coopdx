@@ -1734,7 +1734,7 @@ s32 act_lava_boost(struct MarioState *m) {
                 return FALSE;
             }
 
-            if (mario_can_bubble(m)) {
+            if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
                 mario_set_bubbled(m);
             } else {

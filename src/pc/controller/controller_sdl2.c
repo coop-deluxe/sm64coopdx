@@ -40,6 +40,7 @@ static SDL_GameController *sdl_cntrl = NULL;
 static SDL_Joystick *sdl_joystick = NULL;
 static SDL_Haptic *sdl_haptic = NULL;
 
+static bool sExtendedReports = false;
 static bool sBackgroundGamepad = false;
 
 static u32 num_joy_binds = 0;
@@ -60,11 +61,11 @@ static s16 invert_s16(s16 val) {
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
         if (btns[i] >= VK_BASE_SDL_GAMEPAD && btns[i] <= VK_BASE_SDL_GAMEPAD + VK_SIZE) {
-            if (btns[i] >= VK_BASE_SDL_MOUSE && num_joy_binds < MAX_JOYBINDS) {
+            if (btns[i] >= VK_BASE_SDL_MOUSE && num_mouse_binds < MAX_JOYBINDS) {
                 mouse_binds[num_mouse_binds][0] = btns[i] - VK_BASE_SDL_MOUSE;
                 mouse_binds[num_mouse_binds][1] = mask;
                 ++num_mouse_binds;
-            } else if (num_mouse_binds < MAX_JOYBINDS) {
+            } else if (num_joy_binds < MAX_JOYBINDS) {
                 joy_binds[num_joy_binds][0] = btns[i] - VK_BASE_SDL_GAMEPAD;
                 joy_binds[num_joy_binds][1] = mask;
                 ++num_joy_binds;
@@ -102,6 +103,13 @@ static void controller_sdl_bind(void) {
 }
 
 static void controller_sdl_init(void) {
+    // Allows extended reports on PS4 and PS5 controllers
+    if (configExtendedReports) {
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+    }
+    sExtendedReports = configExtendedReports;
+
     // Allows game to be controlled by gamepad when not in focus
     if (configBackgroundGamepad) {
         SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
@@ -212,13 +220,22 @@ static void controller_sdl_read(OSContPad *pad) {
     controller_mouse_read_relative();
     u32 mouse = mouse_buttons;
 
+    u32 buttons_down = 0;
     if (!gInteractableOverridePad) {
         for (u32 i = 0; i < num_mouse_binds; ++i)
             if (mouse & SDL_BUTTON(mouse_binds[i][0]))
-                pad->button |= mouse_binds[i][1];
+                buttons_down |= mouse_binds[i][1];
     }
+    pad->button |= buttons_down;
     // remember buttons that changed from 0 to 1
     last_mouse = (mouse_prev ^ mouse) & mouse;
+
+    if (configExtendedReports != sExtendedReports) {
+        sExtendedReports = configExtendedReports;
+        char* hint = sExtendedReports ? "1" : "0";
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, hint);
+        SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, hint);
+    }
 
     if (configBackgroundGamepad != sBackgroundGamepad) {
         sBackgroundGamepad = configBackgroundGamepad;
@@ -304,7 +321,6 @@ static void controller_sdl_read(OSContPad *pad) {
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
 
-    u32 buttons_down = 0;
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
             buttons_down |= joy_binds[i][1];

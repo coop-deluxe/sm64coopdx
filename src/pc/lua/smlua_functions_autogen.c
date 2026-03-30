@@ -30424,6 +30424,21 @@ int smlua_func_smlua_audio_utils_replace_sequence(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_audio_utils_allocate_sequence(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_audio_utils_allocate_sequence", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, smlua_audio_utils_allocate_sequence());
+
+    return 1;
+}
+
 int smlua_func_audio_stream_load(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -34297,6 +34312,28 @@ int smlua_func_get_active_mod(UNUSED lua_State* L) {
 
 
     smlua_push_object(L, LOT_MOD, get_active_mod(), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_mod_files(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "get_mod_files", 1, 2, top);
+        return 0;
+    }
+
+    struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mod_files"); return 0; }
+    const char* subDirectory = (const char*) NULL;
+    if (top >= 2) {
+        subDirectory = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mod_files"); return 0; }
+    }
+
+    smlua_push_lua_table(L, get_mod_files(mod, subDirectory));
 
     return 1;
 }
@@ -38448,6 +38485,7 @@ void smlua_bind_functions_autogen(void) {
     // smlua_audio_utils.h
     smlua_bind_function(L, "smlua_audio_utils_reset_all", smlua_func_smlua_audio_utils_reset_all);
     smlua_bind_function(L, "smlua_audio_utils_replace_sequence", smlua_func_smlua_audio_utils_replace_sequence);
+    smlua_bind_function(L, "smlua_audio_utils_allocate_sequence", smlua_func_smlua_audio_utils_allocate_sequence);
     smlua_bind_function(L, "audio_stream_load", smlua_func_audio_stream_load);
     smlua_bind_function(L, "audio_stream_destroy", smlua_func_audio_stream_destroy);
     smlua_bind_function(L, "audio_stream_play", smlua_func_audio_stream_play);
@@ -38685,6 +38723,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
     smlua_bind_function(L, "mod_file_exists", smlua_func_mod_file_exists);
     smlua_bind_function(L, "get_active_mod", smlua_func_get_active_mod);
+    smlua_bind_function(L, "get_mod_files", smlua_func_get_mod_files);
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);

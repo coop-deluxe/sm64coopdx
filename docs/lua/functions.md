@@ -1828,6 +1828,7 @@
 - smlua_audio_utils.h
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
    - [audio_stream_load](functions-6.md#audio_stream_load)
    - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
    - [audio_stream_play](functions-6.md#audio_stream_play)
@@ -2071,6 +2072,7 @@
    - [set_environment_region](functions-7.md#set_environment_region)
    - [mod_file_exists](functions-7.md#mod_file_exists)
    - [get_active_mod](functions-7.md#get_active_mod)
+   - [get_mod_files](functions-7.md#get_mod_files)
    - [set_window_title](functions-7.md#set_window_title)
    - [reset_window_title](functions-7.md#reset_window_title)
    - [get_os_name](functions-7.md#get_os_name)
