@@ -3837,7 +3837,7 @@ function djui_hud_set_font(fontType)
 end
 
 --- @return DjuiColor
---- Gets the current DJUI HUD color
+--- Gets the current DJUI HUD global color
 function djui_hud_get_color()
     -- ...
 end
@@ -3846,18 +3846,18 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the current DJUI HUD color
+--- Sets the current DJUI HUD global color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
---- Resets the current DJUI HUD color
+--- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
     -- ...
 end
 
 --- @return DjuiColor
---- Gets the current DJUI HUD text default color
+--- Gets the current DJUI HUD text default color. This color is overridden by color codes
 function djui_hud_get_text_color()
     -- ...
 end
@@ -3866,12 +3866,12 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the current DJUI HUD text default color
+--- Sets the current DJUI HUD text default color. This color is overridden by color codes
 function djui_hud_set_text_color(r, g, b, a)
     -- ...
 end
 
---- Resets the current DJUI HUD text default color
+--- Resets the current DJUI HUD text default color. This color is overridden by color codes
 function djui_hud_reset_text_color()
     -- ...
 end
