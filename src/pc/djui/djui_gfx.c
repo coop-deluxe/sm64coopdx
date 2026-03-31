@@ -29,11 +29,43 @@ void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
-struct CombinerState gCombinerState = { 0 };
+struct CombinerState gCombinerState = { .cycles = 1 };
 bool gCombinerUpdated = false;
 bool gCombinerOverride = false;
 static Gfx sDjuiCombineMode = { 0 };
 static u32 sCombinerCycleType = G_CYC_1CYCLE;
+
+static u8 djui_gfx_translate_combiner_source(u8 cycle, enum CombinerChannel channel, enum CombinerSource source) {
+    if (channel == CC_COLOR) {
+        switch (source) {
+            default:                return G_CCMUX_0;
+            case CS_1:              return G_CCMUX_1;
+            case CS_TEXTURE:        return cycle ? G_CCMUX_TEXEL1 : G_CCMUX_TEXEL0;
+            case CS_COLOR:          return G_CCMUX_ENVIRONMENT;
+            case CS_TEXT:           return G_CCMUX_PRIMITIVE;
+            case CS_COMBINED:       return G_CCMUX_COMBINED;
+            case CS_NOISE:          return G_CCMUX_NOISE;
+            case CS_TEXTURE_ALPHA:  return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
+            case CS_COLOR_ALPHA:    return G_CCMUX_ENV_ALPHA;
+            case CS_TEXT_ALPHA:     return G_CCMUX_PRIMITIVE_ALPHA;
+            case CS_COMBINED_ALPHA: return G_CCMUX_COMBINED_ALPHA;
+        }
+    } else {
+        switch (source) {
+            default:                return G_ACMUX_0;
+            case CS_1:              return G_ACMUX_1;
+            case CS_TEXTURE:
+            case CS_TEXTURE_ALPHA:  return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
+            case CS_COLOR:
+            case CS_COLOR_ALPHA:    return G_ACMUX_ENVIRONMENT;
+            case CS_TEXT:
+            case CS_TEXT_ALPHA:     return G_ACMUX_PRIMITIVE;
+            case CS_COMBINED:
+            case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
+        }
+
+    }
+}
 
 void djui_gfx_update_combine_mode(enum CombinerSource mode) {
     u32 cycleType = G_CYC_1CYCLE;
@@ -42,9 +74,18 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
         cycleType = (gCombinerState.cycles - 1) << G_MDSFT_CYCLETYPE;
 
         if (gCombinerUpdated) {
+            u8 p[16];
+            for (u8 i = 0; i < 8 * gCombinerState.cycles; i++) {
+                p[i] = djui_gfx_translate_combiner_source(i >> 3, i >> 2,
+                    gCombinerState.cycle[i >> 3 & 1][i >> 2 & 1][i & 3]);
+            }
 
-
-            sDjuiCombineMode = gDPSetCombineLERPNoString();
+            gDPSetCombineLERPNoString(&sDjuiCombineMode,
+                p[ 0], p[ 1], p[ 2], p[ 3],
+                p[ 4], p[ 5], p[ 6], p[ 7],
+                p[ 8], p[ 9], p[10], p[11],
+                p[12], p[13], p[14], p[15]
+            );
             gCombinerUpdated = false;
         }
         
@@ -53,6 +94,7 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
         case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
         case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
         case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycleType = G_CYC_2CYCLE; break;
+        default: break;
     }
 
     if (sCombinerCycleType != cycleType) {

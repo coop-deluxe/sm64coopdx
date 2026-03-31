@@ -406,22 +406,30 @@ void djui_hud_reset_text_color(void) {
 }
 
 void djui_hud_set_combiner_cycles(u8 cycles) {
-    if (cycles != 2) { cycles = 1; }
-    gCombinerState.cycles = cycles;
-}
-
-void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
-    if (--cycle > 1) { return; }
-    if (channel < CC_COLOR || channel > CC_ALPHA) { return; }
-
-    struct CombinerPart *part = &gCombinerState.cycle[cycle].channel[channel];
-    part->a = a; part->b = b; part->c = c; part->d = d;
-
-    gCombinerUpdated = true;
+    gCombinerState.cycles = cycles != 2 ? 1 : 2;
     gCombinerOverride = true;
 }
 
+void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel,
+    OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
+    if (--cycle > 1) { return; }
+    if (channel < CC_COLOR || channel > CC_ALPHA) { return; }
+
+    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][channel];
+    if (a > CS_KEEP) { part->a = a; }
+    if (b > CS_KEEP) { part->b = b; }
+    if (c > CS_KEEP) { part->c = c; }
+    if (d > CS_KEEP) { part->d = d; }
+
+    gCombinerUpdated = true;
+    if (!gCombinerOverride) {
+        gCombinerState.cycles = 1;
+        gCombinerOverride = true;
+    }
+}
+
 void djui_hud_reset_combiner() {
+    gCombinerState.cycles = 1;
     gCombinerOverride = false;
 }
 

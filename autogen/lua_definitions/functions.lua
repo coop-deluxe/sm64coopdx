@@ -3889,6 +3889,12 @@ function djui_hud_reset_text_color()
     -- ...
 end
 
+--- @param cycles integer
+--- Sets the number of cycles used by the combiner
+function djui_hud_set_combiner_cycles(cycles)
+    -- ...
+end
+
 --- @param cycle integer
 --- @param channel CombinerChannel
 --- @param a? CombinerSource

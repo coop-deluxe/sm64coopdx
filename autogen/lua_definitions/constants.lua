@@ -2760,6 +2760,7 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
+CS_KEEP           = -1 --- @type CombinerSource
 CS_0              =  0 --- @type CombinerSource
 CS_1              =  1 --- @type CombinerSource
 CS_TEXTURE        =  2 --- @type CombinerSource
@@ -2773,6 +2774,7 @@ CS_TEXT_ALPHA     =  9 --- @type CombinerSource
 CS_COMBINED_ALPHA = 10 --- @type CombinerSource
 
 --- @alias CombinerSource
+--- | `CS_KEEP`
 --- | `CS_0`
 --- | `CS_1`
 --- | `CS_TEXTURE`

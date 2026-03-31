@@ -14,6 +14,7 @@ void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
 
 enum CombinerSource {
+    CS_KEEP = -1,
     CS_0,
     CS_1,
     CS_TEXTURE,        // TEXEL0
@@ -36,12 +37,10 @@ enum CombinerChannel {
     CC_ALPHA,
 };
 
-struct CombinerCycle {
-    struct CombinerPart channel[2];
-};
+typedef enum CombinerSource CombinerCycle[2][4];
 
 struct CombinerState {
-    struct CombinerCycle cycle[2];
+    CombinerCycle cycle[2];
     u8 cycles;
 };
 

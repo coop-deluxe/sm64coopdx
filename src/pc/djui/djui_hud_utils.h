@@ -92,6 +92,8 @@ struct DjuiColor* djui_hud_get_text_color(void);
 void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);
 /* |description|Resets the current DJUI HUD text default color. This color is overridden by color codes|descriptionEnd| */
 void djui_hud_reset_text_color(void);
+/* |description|Sets the number of cycles used by the combiner|descriptionEnd| */
+void djui_hud_set_combiner_cycles(u8 cycles);
 /* |description|
 Sets the current DJUI HUD combiner.
 Each part uses the following equation: `P = (A - B) * C + D`.

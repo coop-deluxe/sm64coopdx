@@ -1156,6 +1156,7 @@
 ### [enum CombinerSource](#CombinerSource)
 | Identifier | Value |
 | :--------- | :---- |
+| CS_KEEP | -1 |
 | CS_0 | 0 |
 | CS_1 | 1 |
 | CS_TEXTURE | 2 |

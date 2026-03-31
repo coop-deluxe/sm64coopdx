@@ -12402,6 +12402,23 @@ int smlua_func_djui_hud_reset_text_color(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_set_combiner_cycles(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_combiner_cycles", 1, top);
+        return 0;
+    }
+
+    u8 cycles = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_combiner_cycles"); return 0; }
+
+    djui_hud_set_combiner_cycles(cycles);
+
+    return 1;
+}
+
 int smlua_func_djui_hud_set_combiner(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37666,6 +37683,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_text_color", smlua_func_djui_hud_get_text_color);
     smlua_bind_function(L, "djui_hud_set_text_color", smlua_func_djui_hud_set_text_color);
     smlua_bind_function(L, "djui_hud_reset_text_color", smlua_func_djui_hud_reset_text_color);
+    smlua_bind_function(L, "djui_hud_set_combiner_cycles", smlua_func_djui_hud_set_combiner_cycles);
     smlua_bind_function(L, "djui_hud_set_combiner", smlua_func_djui_hud_set_combiner);
     smlua_bind_function(L, "djui_hud_reset_combiner", smlua_func_djui_hud_reset_combiner);
     smlua_bind_function(L, "djui_hud_get_rotation", smlua_func_djui_hud_get_rotation);

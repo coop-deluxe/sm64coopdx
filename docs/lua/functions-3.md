@@ -3021,6 +3021,29 @@ Resets the current DJUI HUD text default color. This color is overridden by colo
 
 <br />
 
+## [djui_hud_set_combiner_cycles](#djui_hud_set_combiner_cycles)
+
+### Description
+Sets the number of cycles used by the combiner
+
+### Lua Example
+`djui_hud_set_combiner_cycles(cycles)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cycles | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_combiner_cycles(u8 cycles);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_set_combiner](#djui_hud_set_combiner)
 
 ### Description
