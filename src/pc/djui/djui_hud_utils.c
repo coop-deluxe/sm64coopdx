@@ -410,12 +410,11 @@ void djui_hud_set_combiner_cycles(u8 cycles) {
     gCombinerOverride = true;
 }
 
-void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel,
+void djui_hud_set_combiner(u8 cycle, bool alpha,
     OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
     if (--cycle > 1) { return; }
-    if (channel < CC_COLOR || channel > CC_ALPHA) { return; }
 
-    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][channel];
+    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][alpha];
     if (a > CS_KEEP) { part->a = a; }
     if (b > CS_KEEP) { part->b = b; }
     if (c > CS_KEEP) { part->c = c; }

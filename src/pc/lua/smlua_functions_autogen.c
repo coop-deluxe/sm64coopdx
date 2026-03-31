@@ -12430,7 +12430,7 @@ int smlua_func_djui_hud_set_combiner(lua_State* L) {
 
     u8 cycle = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_combiner"); return 0; }
-    int channel = smlua_to_integer(L, 2);
+    bool alpha = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_combiner"); return 0; }
     int a = (int) 0;
     if (top >= 3) {
@@ -12453,7 +12453,7 @@ int smlua_func_djui_hud_set_combiner(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_combiner"); return 0; }
     }
 
-    djui_hud_set_combiner(cycle, channel, a, b, c, d);
+    djui_hud_set_combiner(cycle, alpha, a, b, c, d);
 
     return 1;
 }

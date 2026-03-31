@@ -2787,13 +2787,6 @@ CS_COMBINED_ALPHA = 10 --- @type CombinerSource
 --- | `CS_TEXT_ALPHA`
 --- | `CS_COMBINED_ALPHA`
 
-CC_COLOR = 0 --- @type CombinerChannel
-CC_ALPHA = 1 --- @type CombinerChannel
-
---- @alias CombinerChannel
---- | `CC_COLOR`
---- | `CC_ALPHA`
-
 --- @type number
 ROTATION_PIVOT_X_LEFT = 0.0
 

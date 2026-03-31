@@ -17,7 +17,6 @@
     - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
 - [djui_gfx.h](#djui_gfxh)
     - [enum CombinerSource](#enum-CombinerSource)
-    - [enum CombinerChannel](#enum-CombinerChannel)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
@@ -1168,12 +1167,6 @@
 | CS_COLOR_ALPHA | 8 |
 | CS_TEXT_ALPHA | 9 |
 | CS_COMBINED_ALPHA | 10 |
-
-### [enum CombinerChannel](#CombinerChannel)
-| Identifier | Value |
-| :--------- | :---- |
-| CC_COLOR | 0 |
-| CC_ALPHA | 1 |
 
 [:arrow_up_small:](#)
 

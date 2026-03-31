@@ -35,8 +35,8 @@ bool gCombinerOverride = false;
 static Gfx sDjuiCombineMode = { 0 };
 static u32 sCombinerCycleType = G_CYC_1CYCLE;
 
-static u8 djui_gfx_translate_combiner_source(u8 cycle, enum CombinerChannel channel, enum CombinerSource source) {
-    if (channel == CC_COLOR) {
+static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
+    if (!alpha) {
         switch (source) {
             default:                return G_CCMUX_0;
             case CS_1:              return G_CCMUX_1;

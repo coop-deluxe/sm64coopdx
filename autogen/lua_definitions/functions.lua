@@ -3896,13 +3896,13 @@ function djui_hud_set_combiner_cycles(cycles)
 end
 
 --- @param cycle integer
---- @param channel CombinerChannel
+--- @param alpha boolean
 --- @param a? CombinerSource
 --- @param b? CombinerSource
 --- @param c? CombinerSource
 --- @param d? CombinerSource
 --- Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
-function djui_hud_set_combiner(cycle, channel, a, b, c, d)
+function djui_hud_set_combiner(cycle, alpha, a, b, c, d)
     -- ...
 end
 

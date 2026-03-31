@@ -3050,13 +3050,13 @@ Sets the number of cycles used by the combiner
 Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
 
 ### Lua Example
-`djui_hud_set_combiner(cycle, channel, a, b, c, d)`
+`djui_hud_set_combiner(cycle, alpha, a, b, c, d)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | cycle | `integer` |
-| channel | [enum CombinerChannel](constants.md#enum-CombinerChannel) |
+| alpha | `boolean` |
 | a | [enum CombinerSource](constants.md#enum-CombinerSource) |
 | b | [enum CombinerSource](constants.md#enum-CombinerSource) |
 | c | [enum CombinerSource](constants.md#enum-CombinerSource) |
@@ -3066,7 +3066,7 @@ Sets the current DJUI HUD combiner. Each part uses the following equation: `P = 
 - None
 
 ### C Prototype
-`void djui_hud_set_combiner(u8 cycle, enum CombinerChannel channel, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d);`
+`void djui_hud_set_combiner(u8 cycle, bool alpha, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d);`
 
 [:arrow_up_small:](#)
 

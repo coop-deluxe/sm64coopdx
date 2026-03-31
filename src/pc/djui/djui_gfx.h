@@ -32,11 +32,6 @@ struct CombinerPart {
     enum CombinerSource a, b, c, d;
 };
 
-enum CombinerChannel {
-    CC_COLOR,
-    CC_ALPHA,
-};
-
 typedef enum CombinerSource CombinerCycle[2][4];
 
 struct CombinerState {
