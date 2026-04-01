@@ -52,6 +52,7 @@ in_files = [
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
     "src/pc/djui/djui_panel_menu.h",
+    "src/pc/gfx/gfx_cc.h",
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",

@@ -92,6 +92,28 @@ void gfx_resize(Gfx *gfx, u32 newLength);
 void gfx_delete(Gfx *gfx);
 /* |description|Deletes all display lists created by `gfx_create`|descriptionEnd| */
 void gfx_delete_all();
+/* |description|Reloads all shaders|descriptionEnd| */
+void gfx_reload_shaders();
+/* |description|Gets features from a color combiner.|descriptionEnd| */
+struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc);
+/* |description|Gets a program id from the shader index.|descriptionEnd| */
+u32 gfx_get_program_id_from_shader_index(u8 shaderIndex);
+/* |description|Uses a specific program. Required for setting uniforms.|descriptionEnd| */
+void gfx_use_program(u32 program);
+/* |description|Gets the location of a shader uniform in a program for modification.|descriptionEnd| */
+int gfx_shader_get_uniform_location(u32 program, const char* name);
+/* |description|Sets the value of a shader uniform of type int.|descriptionEnd| */
+void gfx_shader_set_int(int loc, int value);
+/* |description|Sets the value of a shader uniform of type float.|descriptionEnd| */
+void gfx_shader_set_float(int loc, float value);
+/* |description|Sets the value of a shader uniform of type vec2.|descriptionEnd| */
+void gfx_shader_set_vec2(int loc, float x, float y);
+/* |description|Sets the value of a shader uniform of type vec3.|descriptionEnd| */
+void gfx_shader_set_vec3(int loc, float x, float y, float z);
+/* |description|Sets the value of a shader uniform of type vec4.|descriptionEnd| */
+void gfx_shader_set_vec4(int loc, float w, float x, float y, float z);
+/* |description|Sets the value of a shader uniform of type mat4.|descriptionEnd| */
+void gfx_shader_set_mat4(int loc, const Mat4 mat);
 
 
 /* |description|

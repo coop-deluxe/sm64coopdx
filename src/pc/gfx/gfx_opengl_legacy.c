@@ -246,6 +246,9 @@ static void gfx_opengl_load_shader(struct ShaderProgram *new_prg) {
         cur_shader->enabled = false;
 }
 
+static void gfx_opengl_remove_shaders(void) {
+}
+
 static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorCombiner* cc) {
     struct ShaderProgram *prg = &shader_program_pool[shader_program_pool_size++];
 
@@ -290,6 +293,11 @@ static struct ShaderProgram *gfx_opengl_lookup_shader(struct ColorCombiner* cc) 
         if (shader_program_pool[i].hash == cc->hash)
             return &shader_program_pool[i];
     return NULL;
+}
+
+static struct ShaderProgram *gfx_opengl_lookup_shader_using_index(u8 shaderIndex) {
+    if (shaderIndex >= shader_program_pool_size) return NULL;
+    return &shader_program_pool[shaderIndex];
 }
 
 static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
@@ -568,8 +576,10 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_z_is_from_0_to_1,
     gfx_opengl_unload_shader,
     gfx_opengl_load_shader,
+    gfx_opengl_remove_shaders,
     gfx_opengl_create_and_load_new_shader,
     gfx_opengl_lookup_shader,
+    gfx_opengl_lookup_shader_using_index,
     gfx_opengl_shader_get_info,
     gfx_opengl_new_texture,
     gfx_opengl_select_texture,

@@ -31,6 +31,8 @@ in_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
+    "src/pc/gfx/gfx_cc.h",
+    "src/pc/gfx/gfx_opengl.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
     "src/engine/graph_node.h",

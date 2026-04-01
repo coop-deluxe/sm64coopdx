@@ -29,6 +29,10 @@
 - [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
+- [gfx_cc.h](#gfx_cch)
+    - [enum ColorCombinerSource](#enum-ColorCombinerSource)
+    - [enum ShaderInput](#enum-ShaderInput)
+    - [enum CombineModeFlags](#enum-CombineModeFlags)
 - [graph_node.h](#graph_nodeh)
 - [interaction.c](#interactionc)
 - [interaction.h](#interactionh)
@@ -1334,6 +1338,71 @@
 | BACKGROUND_ABOVE_CLOUDS | 8 |
 | BACKGROUND_PURPLE_SKY | 9 |
 | BACKGROUND_CUSTOM | 10 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gfx_cc.h](#gfx_cc.h)
+
+### [enum ColorCombinerSource](#ColorCombinerSource)
+| Identifier | Value |
+| :--------- | :---- |
+| CC_0 | 0 |
+| CC_TEXEL0 | 1 |
+| CC_TEXEL1 | 2 |
+| CC_PRIM | 3 |
+| CC_SHADE | 4 |
+| CC_ENV | 5 |
+| CC_TEXEL0A | 6 |
+| CC_LOD | 7 |
+| CC_1 | 8 |
+| CC_TEXEL1A | 9 |
+| CC_COMBINED | 10 |
+| CC_COMBINEDA | 11 |
+| CC_PRIMA | 12 |
+| CC_SHADEA | 13 |
+| CC_ENVA | 14 |
+| CC_NOISE | 15 |
+| CC_ENUM_MAX | 16 |
+
+### [enum ShaderInput](#ShaderInput)
+| Identifier | Value |
+| :--------- | :---- |
+| SHADER_0 | 0 |
+| SHADER_INPUT_1 | 1 |
+| SHADER_INPUT_2 | 2 |
+| SHADER_INPUT_3 | 3 |
+| SHADER_INPUT_4 | 4 |
+| SHADER_INPUT_5 | 5 |
+| SHADER_INPUT_6 | 6 |
+| SHADER_INPUT_7 | 7 |
+| SHADER_INPUT_8 | 8 |
+| SHADER_TEXEL0 | 9 |
+| SHADER_TEXEL0A | 10 |
+| SHADER_TEXEL1 | 11 |
+| SHADER_TEXEL1A | 12 |
+| SHADER_1 | 13 |
+| SHADER_COMBINED | 14 |
+| SHADER_COMBINEDA | 15 |
+| SHADER_NOISE | 16 |
+- SHADER_OPT_ALPHA
+- SHADER_OPT_FOG
+- SHADER_OPT_TEXTURE_EDGE
+- SHADER_OPT_NOISE
+
+### [enum CombineModeFlags](#CombineModeFlags)
+| Identifier | Value |
+| :--------- | :---- |
+| USE_ALPHA | 1 << 0 |
+| USE_FOG | 1 << 1 |
+| TEXTURE_EDGE | 1 << 2 |
+| USE_DITHER | 1 << 3 |
+| USE_2CYCLE | 1 << 4 |
+| LIGHT_MAP | 1 << 5 |
+- SHADER_CMD_LENGTH
+- CC_MAX_SHADERS
+- CC_MAX_INPUTS
 
 [:arrow_up_small:](#)
 
@@ -3543,7 +3612,10 @@
 | HOOK_ON_FIND_WATER_LEVEL | 63 |
 | HOOK_ON_FIND_POISON_GAS_LEVEL | 64 |
 | HOOK_ON_FIND_SURFACE_ON_RAY | 65 |
-| HOOK_MAX | 66 |
+| HOOK_ON_REFRESH_SHADERS | 66 |
+| HOOK_ON_VERTEX_SHADER_CREATE | 67 |
+| HOOK_ON_FRAGMENT_SHADER_CREATE | 68 |
+| HOOK_MAX | 69 |
 - MAX_HOOKED_BEHAVIORS
 
 [:arrow_up_small:](#)

@@ -184,7 +184,7 @@ LookAt lookAt;
 
 static struct GraphNodePerspective *sPerspectiveNode = NULL;
 static Gfx* sPerspectivePos   = NULL;
-static Mtx* sPerspectiveMtx   = NULL;
+static Mtx* sPerspectiveMtx = NULL;
 static f32 sPerspectiveAspect = 0;
 
 static Vp*  sViewport        = NULL;
@@ -199,6 +199,8 @@ Mtx* gBackgroundSkyboxMtx = NULL;
 static struct GraphNodeBackground* sBackgroundNode = NULL;
 static struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
 static struct GraphNodeCamera* sCameraNode = NULL;
+
+Mtx gInverseCameraMatrix = { 0 };
 
 static struct GrowingArray* sShadowInterp = NULL;
 struct ShadowInterp* gShadowInterpCurrent = NULL;
@@ -350,6 +352,7 @@ void patch_mtx_interpolated(f32 delta) {
         delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
         mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
         mtxf_to_mtx(&camInterp, camInterp.m);
+        mtxf_inverse(gInverseCameraMatrix.m, camInterp.m);
     }
 
     for (u32 i = 0; i < sMtxTbl->count; i++) {

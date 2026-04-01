@@ -201,6 +201,15 @@
 --- @field public dialogs BehaviorDialogs
 --- @field public trajectories BehaviorTrajectories
 
+--- @class CCFeatures
+--- @field public used_textures boolean[]
+--- @field public num_inputs integer
+--- @field public do_single boolean[]
+--- @field public do_multiply boolean[]
+--- @field public do_mix boolean[]
+--- @field public color_alpha_same boolean[]
+--- @field public do_noise boolean
+
 --- @class Camera
 --- @field public mode integer
 --- @field public defMode integer
@@ -501,6 +510,24 @@
 --- @field public soundLetsAGo integer
 --- @field public soundOkeyDokey integer
 --- @field public sounds integer[]
+
+--- @class ColorCombiner
+--- @field public cm CombineMode
+--- @field public prg ShaderProgram
+--- @field public shader_input_mapping integer[]
+--- @field public shader_input_mapping_as_u64 integer[]
+--- @field public shader_commands integer[]
+--- @field public shader_commands_as_u64 integer[]
+--- @field public hash integer
+
+--- @class CombineMode
+--- @field public rgb1 integer
+--- @field public alpha1 integer
+--- @field public rgb2 integer
+--- @field public alpha2 integer
+--- @field public all_values integer[]
+--- @field public flags integer
+--- @field public hash integer
 
 --- @class Controller
 --- @field public port integer
@@ -2166,6 +2193,19 @@
 --- @field public nametags integer
 --- @field public maxPlayers integer
 --- @field public pauseAnywhere integer
+
+--- @class ShaderProgram
+--- @field public hash integer
+--- @field public opengl_program_id integer
+--- @field public num_inputs integer
+--- @field public used_textures boolean[]
+--- @field public num_floats integer
+--- @field public attrib_locations integer[]
+--- @field public uniform_locations integer[]
+--- @field public attrib_sizes integer[]
+--- @field public num_attribs integer
+--- @field public used_noise boolean
+--- @field public used_lightmap boolean
 
 --- @class SpawnInfo
 --- @field public startPos Vec3s

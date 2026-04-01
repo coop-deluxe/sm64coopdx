@@ -1,4 +1,26 @@
+#if defined(__MINGW32__) || defined(OSX_BUILD)
+# define GLEW_STATIC
+# include <GL/glew.h>
+#endif
+
+#define GL_GLEXT_PROTOTYPES 1
+
+#ifdef WAPI_SDL2
+# include <SDL2/SDL.h>
+# ifdef USE_GLES
+#  include <SDL2/SDL_opengles2.h>
+# else
+#  include <SDL2/SDL_opengl.h>
+# endif
+#elif defined(WAPI_SDL1)
+# include <SDL/SDL.h>
+# ifndef GLEW_STATIC
+#  include <SDL/SDL_opengl.h>
+# endif
+#endif
+
 #include "smlua_gfx_utils.h"
+#include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
@@ -358,6 +380,69 @@ void gfx_delete(Gfx *gfx) {
 
 void gfx_delete_all() {
     dynos_gfx_delete_all();
+}
+
+void gfx_reload_shaders() {
+    gfx_remove_all_color_combiners();
+    RAPI.remove_shaders();
+    smlua_call_event_hooks(HOOK_ON_REFRESH_SHADERS);
+}
+
+struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc) {
+    static struct CCFeatures sCcf = { 0 };
+    gfx_cc_get_features(cc, &sCcf);
+    return &sCcf;
+}
+
+
+u32 gfx_get_program_id_from_shader_index(u8 shaderIndex) {
+    struct ShaderProgram* program = RAPI.lookup_shader_using_index(shaderIndex);
+    if (!program) return 0;
+    return program->opengl_program_id;
+}
+
+void gfx_use_program(u32 program) {
+    glUseProgram(program);
+}
+
+int gfx_shader_get_uniform_location(u32 program, const char* name) {
+    return glGetUniformLocation(program, name);
+}
+
+void gfx_shader_set_int(int loc, int value) {
+    if (loc != -1) {
+        glUniform1i(loc, value);
+    }
+}
+
+void gfx_shader_set_float(int loc, float value) {
+    if (loc != -1) {
+        glUniform1f(loc, value);
+    }
+}
+
+void gfx_shader_set_vec2(int loc, float x, float y) {
+    if (loc != -1) {
+        glUniform2f(loc, x, y);
+    }
+}
+
+void gfx_shader_set_vec3(int loc, float x, float y, float z) {
+    if (loc != -1) {
+        glUniform3f(loc, x, y, z);
+    }
+}
+
+void gfx_shader_set_vec4(int loc, float x, float y, float z, float w) {
+    if (loc != -1) {
+        glUniform4f(loc, x, y, z, w);
+    }
+}
+
+void gfx_shader_set_mat4(int loc, const Mat4 mat) {
+    if (loc != -1) {
+        glUniformMatrix4fv(loc, 1, GL_FALSE, (const GLfloat*)mat);
+    }
 }
 
 Vtx *vtx_get_from_name(const char *name, RET u32 *count) {

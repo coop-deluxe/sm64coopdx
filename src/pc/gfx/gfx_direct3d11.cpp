@@ -77,12 +77,12 @@ struct ShaderProgramD3D11 {
 static struct {
     HMODULE d3d11_module;
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice;
-    
+
     HMODULE d3dcompiler_module;
     pD3DCompile D3DCompile;
-    
+
     D3D_FEATURE_LEVEL feature_level;
-    
+
     ComPtr<ID3D11Device> device;
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D11DeviceContext> context;
@@ -324,6 +324,9 @@ static void gfx_d3d11_load_shader(struct ShaderProgram *new_prg) {
     d3d.shader_program = (struct ShaderProgramD3D11 *)new_prg;
 }
 
+static void gfx_d3d11_remove_shaders(void) {
+}
+
 static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCombiner* cc) {
     CCFeatures cc_features = { 0 };
     gfx_cc_get_features(cc, &cc_features);
@@ -423,6 +426,11 @@ static struct ShaderProgram *gfx_d3d11_lookup_shader(struct ColorCombiner* cc) {
         }
     }
     return nullptr;
+}
+
+static struct ShaderProgram *gfx_d3d11_lookup_shader_using_index(u8 shaderIndex) {
+    if (shaderIndex >= d3d.shader_program_pool_size) return nullptr;
+    return (struct ShaderProgram *)&d3d.shader_program_pool[i];
 }
 
 static void gfx_d3d11_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
@@ -719,8 +727,10 @@ struct GfxRenderingAPI gfx_direct3d11_api = {
     gfx_d3d11_z_is_from_0_to_1,
     gfx_d3d11_unload_shader,
     gfx_d3d11_load_shader,
+    gfx_d3d11_remove_shaders,
     gfx_d3d11_create_and_load_new_shader,
     gfx_d3d11_lookup_shader,
+    gfx_d3d11_lookup_shader_using_index,
     gfx_d3d11_shader_get_info,
     gfx_d3d11_new_texture,
     gfx_d3d11_select_texture,

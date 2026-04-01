@@ -53,29 +53,7 @@ static struct ColorCombiner color_combiner_pool[CC_MAX_SHADERS] = { 0 };
 static uint8_t color_combiner_pool_size = 0;
 static uint8_t color_combiner_pool_index = 0;
 
-static struct RSP {
-    ALIGNED16 Mat4 MP_matrix;
-    ALIGNED16 Mat4 P_matrix;
-    ALIGNED16 Mat4 modelview_matrix_stack[MAX_MATRIX_STACK_SIZE];
-    uint32_t modelview_matrix_stack_size;
-
-    uint32_t geometry_mode;
-    int16_t fog_mul, fog_offset;
-    int16_t fresnel_scale, fresnel_offset;
-
-    struct {
-        // U0.16
-        uint16_t s, t;
-    } texture_scaling_factor;
-
-    bool lights_changed;
-    uint8_t current_num_lights; // includes ambient light
-    Vec3f current_lights_coeffs[MAX_LIGHTS];
-    Vec3f current_lookat_coeffs[2]; // lookat_x, lookat_y
-    Light_t current_lights[MAX_LIGHTS + 1];
-
-    struct GfxVertex loaded_vertices[MAX_VERTICES + 4];
-} rsp;
+struct RSP rsp = { 0 };
 
 static struct RDP {
     const uint8_t *palette;
@@ -108,7 +86,7 @@ struct GfxDimensions gfx_current_dimensions = { 0 };
 
 static bool dropped_frame = false;
 
-static float buf_vbo[MAX_BUFFERED * (26 * 3)] = { 0.0f }; // 3 vertices in a triangle and 26 floats per vtx
+static float buf_vbo[MAX_BUFFERED * ((18 + (CC_MAX_INPUTS * 4)) * 3)] = { 0.0f }; // 3 vertices in a triangle and 18 floats per verticies plus the 4 floats per input for verticies
 static size_t buf_vbo_len = 0;
 static size_t buf_vbo_num_tris = 0;
 
@@ -126,8 +104,8 @@ Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
 // need inverse camera matrix to compute world space for lighting engine
-static Mat4 sInverseCameraMatrix;
-static bool sHasInverseCameraMatrix = false;
+Mat4 sInverseCameraMatrix;
+bool sHasInverseCameraMatrix = false;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
@@ -1156,6 +1134,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     bool z_is_from_0_to_1 = gfx_rapi->z_is_from_0_to_1();
 
     for (int32_t i = 0; i < 3; i++) {
+        // send triangle data
         float z = v_arr[i]->z, w = v_arr[i]->w;
         if (z_is_from_0_to_1) {
             z = (z + w) / 2.0f;
@@ -1165,95 +1144,112 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         buf_vbo[buf_vbo_len++] = z;
         buf_vbo[buf_vbo_len++] = w;
 
-        if (use_texture) {
-            float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
-            float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
-            if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
-                // Linear filter adds 0.5f to the coordinates (why?)
-                u += 0.5f;
-                v += 0.5f;
-            }
-            buf_vbo[buf_vbo_len++] = u / tex_width;
-            buf_vbo[buf_vbo_len++] = v / tex_height;
+        // send texture info
+        float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
+        float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
+        if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
+            // Linear filter adds 0.5f to the coordinates (why?)
+            u += 0.5f;
+            v += 0.5f;
         }
+        buf_vbo[buf_vbo_len++] = u / tex_width;
+        buf_vbo[buf_vbo_len++] = v / tex_height;
 
-        if (cm->use_fog) {
-            f32 r = gFogColor[0] / 255.0f;
-            f32 g = gFogColor[1] / 255.0f;
-            f32 b = gFogColor[2] / 255.0f;
-            buf_vbo[buf_vbo_len++] = (rdp.fog_color.r / 255.0f) * r;
-            buf_vbo[buf_vbo_len++] = (rdp.fog_color.g / 255.0f) * g;
-            buf_vbo[buf_vbo_len++] = (rdp.fog_color.b / 255.0f) * b;
-            buf_vbo[buf_vbo_len++] = v_arr[i]->fog_z / 255.0f; // fog factor (not alpha)
-        }
+        // send fog data
+        f32 r = gFogColor[0] / 255.0f;
+        f32 g = gFogColor[1] / 255.0f;
+        f32 b = gFogColor[2] / 255.0f;
+        buf_vbo[buf_vbo_len++] = (rdp.fog_color.r / 255.0f) * r;
+        buf_vbo[buf_vbo_len++] = (rdp.fog_color.g / 255.0f) * g;
+        buf_vbo[buf_vbo_len++] = (rdp.fog_color.b / 255.0f) * b;
+        buf_vbo[buf_vbo_len++] = v_arr[i]->fog_z / 255.0f; // fog factor (not alpha)
 
-        if (cm->light_map) {
-            struct RGBA* col = &v_arr[i]->color;
-            buf_vbo[buf_vbo_len++] = ( (((uint16_t)col->g) << 8) | ((uint16_t)col->r) ) / 65535.0f;
-            buf_vbo[buf_vbo_len++] = 1.0f - (( (((uint16_t)col->a) << 8) | ((uint16_t)col->b) ) / 65535.0f);
-        }
+        // send lightmap info
+        struct RGBA* col = &v_arr[i]->color;
+        buf_vbo[buf_vbo_len++] = ( (((uint16_t)col->g) << 8) | ((uint16_t)col->r) ) / 65535.0f;
+        buf_vbo[buf_vbo_len++] = 1.0f - (( (((uint16_t)col->a) << 8) | ((uint16_t)col->b) ) / 65535.0f);
 
-        for (int j = 0; j < num_inputs; j++) {
+        for (int j = 0; j < CC_MAX_INPUTS; j++) {
             struct RGBA *color = NULL;
             struct RGBA tmp = { 0 };
-            for (int a = 0; a < (cm->use_alpha ? 2 : 1 ); a++) {
-                u8 mapping = comb->shader_input_mapping[j];
 
-                switch (mapping) {
-                    case CC_PRIM:
-                        color = &rdp.prim_color;
-                        break;
-                    case CC_SHADE:
-                        color = &v_arr[i]->color;
-                        break;
-                    case CC_ENV:
-                        color = &rdp.env_color;
-                        break;
-                    case CC_PRIMA:
-                        memset(&tmp, rdp.prim_color.a, sizeof(tmp));
-                        color = &tmp;
-                        break;
-                    case CC_SHADEA:
-                        memset(&tmp, v_arr[i]->color.a, sizeof(tmp));
-                        color = &tmp;
-                        break;
-                    case CC_ENVA:
-                        memset(&tmp, rdp.env_color.a, sizeof(tmp));
-                        color = &tmp;
-                        break;
-                    case CC_LOD:
-                    {
-                        float distance_frac = (v1->w - 3000.0f) / 3000.0f;
-                        if (distance_frac < 0.0f) distance_frac = 0.0f;
-                        if (distance_frac > 1.0f) distance_frac = 1.0f;
-                        tmp.r = tmp.g = tmp.b = tmp.a = distance_frac * 255.0f;
-                        color = &tmp;
-                        break;
-                    }
-                    default:
-                        memset(&tmp, 0, sizeof(tmp));
-                        color = &tmp;
-                        break;
+            u8 mapping = (j < num_inputs) ? comb->shader_input_mapping[j] : 255;
+
+            switch (mapping) {
+                case CC_PRIM:   color = &rdp.prim_color; break;
+                case CC_SHADE:  color = &v_arr[i]->color; break;
+                case CC_ENV:    color = &rdp.env_color; break;
+                case CC_PRIMA:
+                    memset(&tmp, rdp.prim_color.a, sizeof(tmp));
+                    color = &tmp;
+                    break;
+                case CC_SHADEA:
+                    memset(&tmp, v_arr[i]->color.a, sizeof(tmp));
+                    color = &tmp;
+                    break;
+                case CC_ENVA:
+                    memset(&tmp, rdp.env_color.a, sizeof(tmp));
+                    color = &tmp;
+                    break;
+                case CC_LOD: {
+                    float distance_frac = (v_arr[i]->w - 3000.0f) / 3000.0f;
+                    if (distance_frac < 0.0f) distance_frac = 0.0f;
+                    if (distance_frac > 1.0f) distance_frac = 1.0f;
+                    tmp.r = tmp.g = tmp.b = tmp.a = distance_frac * 255.0f;
+                    color = &tmp;
+                    break;
                 }
-                if (a == 0) {
-                    buf_vbo[buf_vbo_len++] = color->r / 255.0f;
-                    buf_vbo[buf_vbo_len++] = color->g / 255.0f;
-                    buf_vbo[buf_vbo_len++] = color->b / 255.0f;
+                default:
+                    memset(&tmp, 0, sizeof(tmp));
+                    color = &tmp;
+                    break;
+            }
+
+            // send over input colors
+            buf_vbo[buf_vbo_len++] = color->r / 255.0f;
+            buf_vbo[buf_vbo_len++] = color->g / 255.0f;
+            buf_vbo[buf_vbo_len++] = color->b / 255.0f;
+
+            if (cm->use_alpha) {
+                if (cm->use_fog && (color == &v_arr[i]->color || cm->light_map)) {
+                    buf_vbo[buf_vbo_len++] = 1.0f;
                 } else {
-                    if (cm->use_fog && (color == &v_arr[i]->color || cm->light_map)) {
-                        // Shade alpha is 100% for fog
-                        buf_vbo[buf_vbo_len++] = 1.0f;
-                    } else {
-                        buf_vbo[buf_vbo_len++] = color->a / 255.0f;
-                    }
+                    buf_vbo[buf_vbo_len++] = color->a / 255.0f;
                 }
+            } else {
+                buf_vbo[buf_vbo_len++] = 1.0f;
             }
         }
-        /*struct RGBA *color = &v_arr[i]->color;
-        buf_vbo[buf_vbo_len++] = color->r / 255.0f;
-        buf_vbo[buf_vbo_len++] = color->g / 255.0f;
-        buf_vbo[buf_vbo_len++] = color->b / 255.0f;
-        buf_vbo[buf_vbo_len++] = color->a / 255.0f;*/
+
+        // calculate normal
+        f32 ux = v2->x - v1->x;
+        f32 uy = v2->y - v1->y;
+        f32 uz = v2->z - v1->z;
+
+        f32 vx = v3->x - v1->x;
+        f32 vy = v3->y - v1->y;
+        f32 vz = v3->z - v1->z;
+
+        f32 nx = uy * vz - uz * vy;
+        f32 ny = uz * vx - ux * vz;
+        f32 nz = ux * vy - uy * vx;
+
+        float len = sqrtf(nx*nx + ny*ny + nz*nz);
+        if (len > 0.0f) {
+            nx /= len;
+            ny /= len;
+            nz /= len;
+        }
+
+        // send normal
+        buf_vbo[buf_vbo_len++] = nx;
+        buf_vbo[buf_vbo_len++] = ny;
+        buf_vbo[buf_vbo_len++] = nz;
+
+        // send barycentric coords
+        buf_vbo[buf_vbo_len++] = i == 0 ? 1.0f : 0.0f;
+        buf_vbo[buf_vbo_len++] = i == 1 ? 1.0f : 0.0f;
+        buf_vbo[buf_vbo_len++] = i == 2 ? 1.0f : 0.0f;
     }
     if (++buf_vbo_num_tris == MAX_BUFFERED) {
         gfx_flush();
@@ -2062,6 +2058,15 @@ void gfx_shutdown(void) {
         gfx_wapi = NULL;
     }
     gGfxInited = false;
+}
+
+void gfx_remove_all_color_combiners() {
+    for (int i = 0; i < CC_MAX_SHADERS; i++) {
+        memset(&color_combiner_pool[i], 0, sizeof(color_combiner_pool[i]));
+    }
+
+    color_combiner_pool_index = 0;
+    color_combiner_pool_size = 0;
 }
 
   /////////////////////////

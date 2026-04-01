@@ -773,6 +773,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     first_person_reset();
 
     le_shutdown();
+    gfx_remove_all_color_combiners();
+    RAPI.remove_shaders();
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

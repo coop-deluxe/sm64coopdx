@@ -129,11 +129,18 @@ static void gfx_dummy_renderer_unload_shader(UNUSED struct ShaderProgram *old_pr
 static void gfx_dummy_renderer_load_shader(UNUSED struct ShaderProgram *new_prg) {
 }
 
+static void gfx_dummy_renderer_remove_shaders(void) {
+}
+
 static struct ShaderProgram *gfx_dummy_renderer_create_and_load_new_shader(UNUSED struct ColorCombiner* cc) {
     return NULL;
 }
 
 static struct ShaderProgram *gfx_dummy_renderer_lookup_shader(UNUSED struct ColorCombiner* cc) {
+    return NULL;
+}
+
+static struct ShaderProgram *gfx_dummy_renderer_lookup_shader_using_index(u8 shaderIndex) {
     return NULL;
 }
 
@@ -223,8 +230,10 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_z_is_from_0_to_1,
     gfx_dummy_renderer_unload_shader,
     gfx_dummy_renderer_load_shader,
+    gfx_dummy_renderer_remove_shaders,
     gfx_dummy_renderer_create_and_load_new_shader,
     gfx_dummy_renderer_lookup_shader,
+    gfx_dummy_renderer_lookup_shader_using_index,
     gfx_dummy_renderer_shader_get_info,
     gfx_dummy_renderer_new_texture,
     gfx_dummy_renderer_select_texture,

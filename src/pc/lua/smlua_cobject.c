@@ -83,6 +83,8 @@ static const char *sLuaLvtNames[] = {
     [LVT_S16_P] = "s16 pointer",
     [LVT_S32] = "s32",
     [LVT_S32_P] = "s32 pointer",
+    [LVT_S64] = "s64",
+    [LVT_S64_P] = "s64 pointer",
     [LVT_F32] = "f32",
     [LVT_F32_P] = "f32 pointer",
     [LVT_U64] = "u64",
@@ -377,6 +379,7 @@ static bool smlua_push_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_S8:        lua_pushinteger(L, *(s8* )p);                    break;
         case LVT_S16:       lua_pushinteger(L, *(s16*)p);                    break;
         case LVT_S32:       lua_pushinteger(L, *(s32*)p);                    break;
+        case LVT_S64:       lua_pushinteger(L, *(s64*)p);                    break;
         case LVT_F32:       lua_pushnumber( L, *(f32*)p);                    break;
         case LVT_U64:       lua_pushinteger(L, *(u64*)p);                    break;
         case LVT_COBJECT:   smlua_push_object(L, data->lot, p, NULL);        break;
@@ -392,6 +395,7 @@ static bool smlua_push_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_S8_P:
         case LVT_S16_P:
         case LVT_S32_P:
+        case LVT_S64_P:
         case LVT_F32_P:
         case LVT_U64_P:
         case LVT_BEHAVIORSCRIPT_P:
@@ -419,6 +423,7 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_S8:  *(s8*) p = smlua_to_integer(L, 3); break;
         case LVT_S16: *(s16*)p = smlua_to_integer(L, 3); break;
         case LVT_S32: *(s32*)p = smlua_to_integer(L, 3); break;
+        case LVT_S64: *(s64*)p = smlua_to_integer(L, 3); break;
         case LVT_F32: *(f32*)p = smlua_to_number(L, 3);  break;
         case LVT_U64: *(s64*)p = smlua_to_integer(L, 3); break;
 
@@ -441,6 +446,7 @@ static bool smlua_set_field(lua_State* L, u8* p, struct LuaObjectField *data) {
         case LVT_S8_P:
         case LVT_S16_P:
         case LVT_S32_P:
+        case LVT_S64_P:
         case LVT_F32_P:
         case LVT_U64_P:
         case LVT_BEHAVIORSCRIPT_P:

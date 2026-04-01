@@ -3056,6 +3056,116 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
 
+CC_0         =  0 --- @type ColorCombinerSource
+CC_TEXEL0    =  1 --- @type ColorCombinerSource
+CC_TEXEL1    =  2 --- @type ColorCombinerSource
+CC_PRIM      =  3 --- @type ColorCombinerSource
+CC_SHADE     =  4 --- @type ColorCombinerSource
+CC_ENV       =  5 --- @type ColorCombinerSource
+CC_TEXEL0A   =  6 --- @type ColorCombinerSource
+CC_LOD       =  7 --- @type ColorCombinerSource
+CC_1         =  8 --- @type ColorCombinerSource
+CC_TEXEL1A   =  9 --- @type ColorCombinerSource
+CC_COMBINED  = 10 --- @type ColorCombinerSource
+CC_COMBINEDA = 11 --- @type ColorCombinerSource
+CC_PRIMA     = 12 --- @type ColorCombinerSource
+CC_SHADEA    = 13 --- @type ColorCombinerSource
+CC_ENVA      = 14 --- @type ColorCombinerSource
+CC_NOISE     = 15 --- @type ColorCombinerSource
+CC_ENUM_MAX  = 16 --- @type ColorCombinerSource
+
+--- @alias ColorCombinerSource
+--- | `CC_0`
+--- | `CC_TEXEL0`
+--- | `CC_TEXEL1`
+--- | `CC_PRIM`
+--- | `CC_SHADE`
+--- | `CC_ENV`
+--- | `CC_TEXEL0A`
+--- | `CC_LOD`
+--- | `CC_1`
+--- | `CC_TEXEL1A`
+--- | `CC_COMBINED`
+--- | `CC_COMBINEDA`
+--- | `CC_PRIMA`
+--- | `CC_SHADEA`
+--- | `CC_ENVA`
+--- | `CC_NOISE`
+--- | `CC_ENUM_MAX`
+
+SHADER_0         =  0 --- @type ShaderInput
+SHADER_INPUT_1   =  1 --- @type ShaderInput
+SHADER_INPUT_2   =  2 --- @type ShaderInput
+SHADER_INPUT_3   =  3 --- @type ShaderInput
+SHADER_INPUT_4   =  4 --- @type ShaderInput
+SHADER_INPUT_5   =  5 --- @type ShaderInput
+SHADER_INPUT_6   =  6 --- @type ShaderInput
+SHADER_INPUT_7   =  7 --- @type ShaderInput
+SHADER_INPUT_8   =  8 --- @type ShaderInput
+SHADER_TEXEL0    =  9 --- @type ShaderInput
+SHADER_TEXEL0A   = 10 --- @type ShaderInput
+SHADER_TEXEL1    = 11 --- @type ShaderInput
+SHADER_TEXEL1A   = 12 --- @type ShaderInput
+SHADER_1         = 13 --- @type ShaderInput
+SHADER_COMBINED  = 14 --- @type ShaderInput
+SHADER_COMBINEDA = 15 --- @type ShaderInput
+SHADER_NOISE     = 16 --- @type ShaderInput
+
+--- @alias ShaderInput
+--- | `SHADER_0`
+--- | `SHADER_INPUT_1`
+--- | `SHADER_INPUT_2`
+--- | `SHADER_INPUT_3`
+--- | `SHADER_INPUT_4`
+--- | `SHADER_INPUT_5`
+--- | `SHADER_INPUT_6`
+--- | `SHADER_INPUT_7`
+--- | `SHADER_INPUT_8`
+--- | `SHADER_TEXEL0`
+--- | `SHADER_TEXEL0A`
+--- | `SHADER_TEXEL1`
+--- | `SHADER_TEXEL1A`
+--- | `SHADER_1`
+--- | `SHADER_COMBINED`
+--- | `SHADER_COMBINEDA`
+--- | `SHADER_NOISE`
+
+--- @type integer
+SHADER_OPT_ALPHA = (1 << 24)
+
+--- @type integer
+SHADER_OPT_FOG = (1 << 25)
+
+--- @type integer
+SHADER_OPT_TEXTURE_EDGE = (1 << 26)
+
+--- @type integer
+SHADER_OPT_NOISE = (1 << 27)
+
+USE_ALPHA    = 1 << 0 --- @type CombineModeFlags
+USE_FOG      = 1 << 1 --- @type CombineModeFlags
+TEXTURE_EDGE = 1 << 2 --- @type CombineModeFlags
+USE_DITHER   = 1 << 3 --- @type CombineModeFlags
+USE_2CYCLE   = 1 << 4 --- @type CombineModeFlags
+LIGHT_MAP    = 1 << 5 --- @type CombineModeFlags
+
+--- @alias CombineModeFlags
+--- | `USE_ALPHA`
+--- | `USE_FOG`
+--- | `TEXTURE_EDGE`
+--- | `USE_DITHER`
+--- | `USE_2CYCLE`
+--- | `LIGHT_MAP`
+
+--- @type integer
+SHADER_CMD_LENGTH = 16
+
+--- @type integer
+CC_MAX_SHADERS = 64
+
+--- @type integer
+CC_MAX_INPUTS = 8
+
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)
 
@@ -8213,7 +8323,10 @@ HOOK_ON_FIND_FLOOR                          = 62 --- @type LuaHookedEventType
 HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
 HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
 HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
-HOOK_MAX                                    = 66 --- @type LuaHookedEventType
+HOOK_ON_REFRESH_SHADERS                     = 66 --- @type LuaHookedEventType
+HOOK_ON_VERTEX_SHADER_CREATE                = 67 --- @type LuaHookedEventType
+HOOK_ON_FRAGMENT_SHADER_CREATE              = 68 --- @type LuaHookedEventType
+HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8282,6 +8395,9 @@ HOOK_MAX                                    = 66 --- @type LuaHookedEventType
 --- | `HOOK_ON_FIND_WATER_LEVEL`
 --- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
 --- | `HOOK_ON_FIND_SURFACE_ON_RAY`
+--- | `HOOK_ON_REFRESH_SHADERS`
+--- | `HOOK_ON_VERTEX_SHADER_CREATE`
+--- | `HOOK_ON_FRAGMENT_SHADER_CREATE`
 --- | `HOOK_MAX`
 
 --- @type integer
