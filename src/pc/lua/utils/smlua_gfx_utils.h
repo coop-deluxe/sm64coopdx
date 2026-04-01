@@ -104,6 +104,8 @@ void gfx_use_program(u32 program);
 int gfx_shader_get_uniform_location(u32 program, const char* name);
 /* |description|Sets the value of a shader uniform of type int.|descriptionEnd| */
 void gfx_shader_set_int(int loc, int value);
+/* |description|Sets the value of a shader uniform of type bool.|descriptionEnd| */
+void gfx_shader_set_bool(int loc, bool value);
 /* |description|Sets the value of a shader uniform of type float.|descriptionEnd| */
 void gfx_shader_set_float(int loc, float value);
 /* |description|Sets the value of a shader uniform of type vec2.|descriptionEnd| */

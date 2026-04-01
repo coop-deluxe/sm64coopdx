@@ -961,6 +961,30 @@ Sets the value of a shader uniform of type int.
 
 <br />
 
+## [gfx_shader_set_bool](#gfx_shader_set_bool)
+
+### Description
+Sets the value of a shader uniform of type bool.
+
+### Lua Example
+`gfx_shader_set_bool(loc, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| loc | `integer` |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_bool(int loc, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gfx_shader_set_float](#gfx_shader_set_float)
 
 ### Description

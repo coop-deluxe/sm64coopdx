@@ -11007,6 +11007,13 @@ function gfx_shader_set_int(loc, value)
 end
 
 --- @param loc integer
+--- @param value boolean
+--- Sets the value of a shader uniform of type bool.
+function gfx_shader_set_bool(loc, value)
+    -- ...
+end
+
+--- @param loc integer
 --- @param value number
 --- Sets the value of a shader uniform of type float.
 function gfx_shader_set_float(loc, value)

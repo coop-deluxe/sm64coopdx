@@ -415,6 +415,12 @@ void gfx_shader_set_int(int loc, int value) {
     }
 }
 
+void gfx_shader_set_bool(int loc, bool value) {
+    if (loc != -1) {
+        glUniform1i(loc, (int)value);
+    }
+}
+
 void gfx_shader_set_float(int loc, float value) {
     if (loc != -1) {
         glUniform1f(loc, value);

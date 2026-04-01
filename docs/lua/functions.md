@@ -1967,6 +1967,7 @@
    - [gfx_use_program](functions-7.md#gfx_use_program)
    - [gfx_shader_get_uniform_location](functions-7.md#gfx_shader_get_uniform_location)
    - [gfx_shader_set_int](functions-7.md#gfx_shader_set_int)
+   - [gfx_shader_set_bool](functions-7.md#gfx_shader_set_bool)
    - [gfx_shader_set_float](functions-7.md#gfx_shader_set_float)
    - [gfx_shader_set_vec2](functions-7.md#gfx_shader_set_vec2)
    - [gfx_shader_set_vec3](functions-7.md#gfx_shader_set_vec3)

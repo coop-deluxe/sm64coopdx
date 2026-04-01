@@ -32651,6 +32651,25 @@ int smlua_func_gfx_shader_set_int(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_shader_set_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_bool", 2, top);
+        return 0;
+    }
+
+    int loc = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_bool"); return 0; }
+    bool value = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_bool"); return 0; }
+
+    gfx_shader_set_bool(loc, value);
+
+    return 1;
+}
+
 int smlua_func_gfx_shader_set_float(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38835,6 +38854,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_use_program", smlua_func_gfx_use_program);
     smlua_bind_function(L, "gfx_shader_get_uniform_location", smlua_func_gfx_shader_get_uniform_location);
     smlua_bind_function(L, "gfx_shader_set_int", smlua_func_gfx_shader_set_int);
+    smlua_bind_function(L, "gfx_shader_set_bool", smlua_func_gfx_shader_set_bool);
     smlua_bind_function(L, "gfx_shader_set_float", smlua_func_gfx_shader_set_float);
     smlua_bind_function(L, "gfx_shader_set_vec2", smlua_func_gfx_shader_set_vec2);
     smlua_bind_function(L, "gfx_shader_set_vec3", smlua_func_gfx_shader_set_vec3);
