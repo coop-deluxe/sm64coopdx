@@ -104,8 +104,8 @@ Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
 // need inverse camera matrix to compute world space for lighting engine
-Mat4 sInverseCameraMatrix;
-bool sHasInverseCameraMatrix = false;
+static Mat4 sInverseCameraMatrix;
+static bool sHasInverseCameraMatrix = false;
 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4

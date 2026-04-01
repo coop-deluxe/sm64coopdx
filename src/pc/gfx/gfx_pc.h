@@ -39,9 +39,6 @@ extern Color gVertexColor;
 extern Color gFogColor;
 extern f32 gFogIntensity;
 
-extern Mat4 sInverseCameraMatrix;
-extern bool sHasInverseCameraMatrix;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
