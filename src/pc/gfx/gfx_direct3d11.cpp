@@ -430,7 +430,7 @@ static struct ShaderProgram *gfx_d3d11_lookup_shader(struct ColorCombiner* cc) {
 
 static struct ShaderProgram *gfx_d3d11_lookup_shader_using_index(u8 shaderIndex) {
     if (shaderIndex >= d3d.shader_program_pool_size) return nullptr;
-    return (struct ShaderProgram *)&d3d.shader_program_pool[i];
+    return (struct ShaderProgram *)&d3d.shader_program_pool[shaderIndex];
 }
 
 static void gfx_d3d11_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
