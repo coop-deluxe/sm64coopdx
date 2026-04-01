@@ -383,9 +383,11 @@ void gfx_delete_all() {
 }
 
 void gfx_reload_shaders() {
+#ifdef RAPI_GL
     gfx_remove_all_color_combiners();
     RAPI.remove_shaders();
     smlua_call_event_hooks(HOOK_ON_REFRESH_SHADERS);
+#endif
 }
 
 struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc) {
