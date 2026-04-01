@@ -334,13 +334,13 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
 }
 
 // Calculates if the processing geo is a mirror mario
-static s8 geo_get_processing_mirror_mario_index() {
-    ptrdiff_t ptrDiff = (struct GraphNodeObject *) gCurGraphNodeProcessingObject - gMirrorMario;
+static s8 geo_get_processing_mirror_mario_index(struct Object *obj) {
+    ptrdiff_t ptrDiff = (struct GraphNodeObject *) obj - gMirrorMario;
     return (ptrDiff >= 0 && ptrDiff < MAX_PLAYERS) ? ptrDiff : -1;
 }
 
 static u8 geo_get_processing_object_index(void) {
-    s8 index = geo_get_processing_mirror_mario_index();
+    s8 index = geo_get_processing_mirror_mario_index(gCurGraphNodeProcessingObject);
     if (index != -1) {
         return index;
     }
@@ -351,19 +351,19 @@ static u8 geo_get_processing_object_index(void) {
     return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
-s8 geo_get_processing_mario_index(void) {
-    if (gCurGraphNodeProcessingObject == NULL) { return -1; }
+s8 geo_get_processing_mario_index(struct Object *obj) {
+    if (obj == NULL) { return -1; }
 
-    s8 index = geo_get_processing_mirror_mario_index();
+    s8 index = geo_get_processing_mirror_mario_index(obj);
     if (index != -1) {
         return index;
     }
 
-    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
+    if (obj->behavior != bhvMario) {
         return -1;
     }
 
-    index = gCurGraphNodeProcessingObject->oBehParams - 1;
+    index = obj->oBehParams - 1;
     return (index >= MAX_PLAYERS) ? -1 : index;
 }
 

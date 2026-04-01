@@ -143,14 +143,14 @@ static void skeeter_act_walk(void) {
 void bhv_skeeter_update(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oSkeeterTargetAngle);
-        sync_object_init_field(o, &o->oSkeeterUnkF8);
-        sync_object_init_field(o, &o->oSkeeterUnkFC);
-        sync_object_init_field(o, &o->oSkeeterWaitTime);
-        sync_object_init_field(o, &o->oSkeeterUnk1AC);
-        sync_object_init_field(o, &o->oMoveAngleYaw);
-        sync_object_init_field(o, &o->oFaceAngleYaw);
-        sync_object_init_field(o, &o->oFlags);
+        sync_object_init_field(o, o->oSkeeterTargetAngle);
+        sync_object_init_field(o, o->oSkeeterUnkF8);
+        sync_object_init_field(o, o->oSkeeterUnkFC);
+        sync_object_init_field(o, o->oSkeeterWaitTime);
+        sync_object_init_field(o, o->oSkeeterUnk1AC);
+        sync_object_init_field(o, o->oMoveAngleYaw);
+        sync_object_init_field(o, o->oFaceAngleYaw);
+        sync_object_init_field(o, o->oFlags);
     }
 
     o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;

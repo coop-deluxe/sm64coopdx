@@ -490,6 +490,12 @@ s32 get_dialog_response(void) {
 
 ///
 
+u32 get_time_stop_flags(void) {
+    return gTimeStopState;
+}
+
+///
+
 const char* get_local_discord_id(void) {
 #ifdef DISCORD_SDK
     if (gDiscordInitialized) {
@@ -704,6 +710,13 @@ struct GraphNodeCamera* geo_get_current_camera(void) {
 struct GraphNodeHeldObject* geo_get_current_held_object(void) {
     return gCurGraphNodeHeldObject;
 }
+
+void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj) {
+    struct GraphNodeInterpData *interp = geo_get_interp_data(node, obj);
+    if (interp) { interp->timestamp = 0; }
+}
+
+///
 
 LuaTable texture_to_lua_table(const Texture *tex) {
     lua_State *L = gLuaState;

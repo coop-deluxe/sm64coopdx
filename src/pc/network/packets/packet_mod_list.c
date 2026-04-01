@@ -197,9 +197,8 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // get name
-    char name[MOD_NAME_MAX_LENGTH + 1] = { 0 };
-    packet_read(p, name, nameLength * sizeof(u8));
-    mod->name = strdup(name);
+    packet_read(p, mod->name, nameLength * sizeof(u8));
+    mod->name[nameLength] = 0;
 
     // get incompatible length
     u16 incompatibleLength = 0;
@@ -211,7 +210,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
 
     // get incompatible
     if (incompatibleLength > 0) {
-        char incompatible[MOD_INCOMPATIBLE_MAX_LENGTH + 1] = { 0 };
+        char incompatible[MOD_INCOMPATIBLE_SIZE] = { 0 };
         packet_read(p, incompatible, incompatibleLength * sizeof(u8));
         mod->incompatible = strdup(incompatible);
     } else {

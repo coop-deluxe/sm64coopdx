@@ -1775,12 +1775,13 @@ Handles knockback on the ground (getting hit while on the ground) with shared lo
 s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2, s32 arg3, s32 arg4) {
     if (!m) { return 0; }
     s32 animFrame;
+    s32 damage = arg4 & ~PVP_ATTACK_KNOCKBACK_ACTION_ARG;
 
     if (arg3) {
         play_mario_heavy_landing_sound_once(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
     }
 
-    if (arg4 > 0) {
+    if (damage > 0) {
         play_character_sound_if_no_flag(m, CHAR_SOUND_ATTACKED, MARIO_MARIO_SOUND_PLAYED);
     } else {
 #ifdef VERSION_JP
@@ -1790,18 +1791,18 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
 #endif
     }
 
-    if (m->knockbackTimer == 0) {
-        if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
-            if (m->forwardVel > 32.0f) {
-                m->forwardVel = 32.0f;
-            }
-            if (m->forwardVel < -32.0f) {
-                m->forwardVel = -32.0f;
-            }
+    // Cap speed if it's not a PVP attack
+    if (!(arg4 & PVP_ATTACK_KNOCKBACK_ACTION_ARG)) {
+        if (m->forwardVel > 32.0f) {
+            m->forwardVel = 32.0f;
         }
-    } else if (m->knockbackTimer < 0) {
-        // do nothing
-    } else {
+        if (m->forwardVel < -32.0f) {
+            m->forwardVel = -32.0f;
+        }
+    }
+
+    // Refresh knockbackTimer
+    if (m->knockbackTimer > 0) {
         m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
     }
 
@@ -1824,7 +1825,7 @@ s32 common_ground_knockback_action(struct MarioState *m, s32 animation, s32 arg2
         if (m->health < 0x100) {
             set_mario_action(m, ACT_STANDING_DEATH, 0);
         } else {
-            if (arg4 > 0) {
+            if (damage > 0) {
                 m->invincTimer = 30;
             }
             set_mario_action(m, ACT_IDLE, 0);

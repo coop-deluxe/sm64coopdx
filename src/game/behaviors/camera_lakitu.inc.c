@@ -45,15 +45,15 @@ void bhv_camera_lakitu_init(void) {
             so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
             so->override_ownership = bhv_camera_lakitu_override_ownership;
             so->on_received_post = bhv_camera_lakitu_on_received_post;
-            sync_object_init_field(o, &o->oAngleVelPitch);
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oCameraLakituBlinkTimer);
-            sync_object_init_field(o, &o->oCameraLakituSpeed);
-            sync_object_init_field(o, &o->oCameraLakituCircleRadius);
-            sync_object_init_field(o, &o->oCameraLakituFinishedDialog);
-            sync_object_init_field(o, &o->oCameraLakituPitchVel);
+            sync_object_init_field(o, o->oAngleVelPitch);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oCameraLakituBlinkTimer);
+            sync_object_init_field(o, o->oCameraLakituSpeed);
+            sync_object_init_field(o, o->oCameraLakituCircleRadius);
+            sync_object_init_field(o, o->oCameraLakituFinishedDialog);
+            sync_object_init_field(o, o->oCameraLakituPitchVel);
 #ifndef VERSION_JP
-            sync_object_init_field(o, &o->oCameraLakituUnk104);
+            sync_object_init_field(o, o->oCameraLakituUnk104);
 #endif
         }
     }

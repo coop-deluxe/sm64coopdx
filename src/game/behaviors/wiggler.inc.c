@@ -468,18 +468,18 @@ void bhv_wiggler_update(void) {
             so->ignore_if_true = bhv_wiggler_ignore_if_true;
             so->on_received_pre = bhv_wiggler_on_received_pre;
             so->on_received_post = bhv_wiggler_on_received_post;
-            sync_object_init_field(o, &o->oFaceAnglePitch);
-            sync_object_init_field(o, &o->oWigglerFallThroughFloorsHeight);
-            sync_object_init_field(o, &o->oWigglerWalkAnimSpeed);
-            sync_object_init_field(o, &o->oWigglerSquishSpeed);
-            sync_object_init_field(o, &o->oWigglerTimeUntilRandomTurn);
-            sync_object_init_field(o, &o->oWigglerTargetYaw);
-            sync_object_init_field(o, &o->oWigglerWalkAwayFromWallTimer);
-            sync_object_init_field(o, &o->oHealth);
-            sync_object_init_field(o, &o->header.gfx.scale[0]);
-            sync_object_init_field(o, &o->header.gfx.scale[1]);
-            sync_object_init_field(o, &o->header.gfx.scale[2]);
-            sync_object_init_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oWigglerFallThroughFloorsHeight);
+            sync_object_init_field(o, o->oWigglerWalkAnimSpeed);
+            sync_object_init_field(o, o->oWigglerSquishSpeed);
+            sync_object_init_field(o, o->oWigglerTimeUntilRandomTurn);
+            sync_object_init_field(o, o->oWigglerTargetYaw);
+            sync_object_init_field(o, o->oWigglerWalkAwayFromWallTimer);
+            sync_object_init_field(o, o->oHealth);
+            sync_object_init_field(o, o->header.gfx.scale[0]);
+            sync_object_init_field(o, o->header.gfx.scale[1]);
+            sync_object_init_field(o, o->header.gfx.scale[2]);
+            sync_object_init_field(o, o->oFaceAngleYaw);
         }
     }
 

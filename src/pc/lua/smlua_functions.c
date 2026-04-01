@@ -221,21 +221,32 @@ int smlua_func_network_init_object(lua_State* L) {
             struct LuaObjectField* data = smlua_get_object_field(LOT_OBJECT, fieldIdentifier);
             if (data == NULL) {
                 data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
+                if (data == NULL) {
+                    LOG_LUA_LINE("Unknown field passed to network_init_object(): %s", fieldIdentifier);
+                    lua_pop(L, 1); // pop value
+                    continue;
+                }
             }
 
-            u8 lvtSize = 0;
-            if ((data->valueType == LVT_U32) || (data->valueType == LVT_S32) || (data->valueType == LVT_F32)) { lvtSize = 32; }
-            if ((data->valueType == LVT_U16) || (data->valueType == LVT_S16)) { lvtSize = 16; }
-            if ((data->valueType == LVT_U8) || (data->valueType == LVT_S8)) { lvtSize = 8; }
-
-            if (data == NULL || lvtSize == 0) {
-                LOG_LUA_LINE("Invalid field passed to network_init_object(): %s", fieldIdentifier);
-                lua_pop(L, 1); // pop value
-                continue;
+            // These types are the only ones allowed for `network_init_object`
+            u8 lvtSizeBytes = 0;
+            switch (data->valueType) {
+                case LVT_U8: lvtSizeBytes = sizeof(u8); break;
+                case LVT_U16: lvtSizeBytes = sizeof(u16); break;
+                case LVT_U32: lvtSizeBytes = sizeof(u32); break;
+                case LVT_S8: lvtSizeBytes = sizeof(s8); break;
+                case LVT_S16: lvtSizeBytes = sizeof(s16); break;
+                case LVT_S32: lvtSizeBytes = sizeof(s32); break;
+                case LVT_F32: lvtSizeBytes = sizeof(f32); break;
+                default: {
+                    LOG_LUA_LINE("Invalid field passed to network_init_object(): %s", fieldIdentifier);
+                    lua_pop(L, 1); // pop value
+                    continue;
+                }
             }
 
             u8* field = ((u8*)(intptr_t)obj) + data->valueOffset;
-            sync_object_init_field_with_size(obj, field, lvtSize);
+            sync_object_init_field_with_size(obj, field, lvtSizeBytes);
 
             lua_pop(L, 1); // pop value
         }
@@ -804,6 +815,11 @@ int smlua_func_log_to_console(lua_State* L) {
 ////////////////////
 
 int smlua_func_add_scroll_target(lua_State* L) {
+    if (gLuaLoadingMod == NULL) {
+        LOG_LUA_LINE("add_scroll_target() can only be called on load.");
+        return 0;
+    }
+
     // add_scroll_target used to require offset and size of the vertex buffer to be used
     if (!smlua_functions_valid_param_range(L, 2, 4)) { return 0; }
     int paramCount = lua_gettop(L);
@@ -934,7 +950,7 @@ int smlua_func_get_uncolored_string(lua_State* L) {
     const char *str = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("get_uncolored_string: Failed to convert parameter 1"); return 0; }
 
-    char *strNoColor = str_remove_color_codes(str);
+    char *strNoColor = djui_text_get_uncolored_string(NULL, strlen(str) + 1, str);
     lua_pushstring(L, strNoColor);
     free(strNoColor);
 

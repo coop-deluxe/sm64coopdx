@@ -33,7 +33,7 @@ void bhv_bowser_bomb_loop(void) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->syncDeathEvent = FALSE;
-            sync_object_init_field(o, &networkBowserBombHit);
+            sync_object_init_field(o, networkBowserBombHit);
         }
     }
 

@@ -69,12 +69,12 @@ void bhv_mips_init(void) {
 
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
-        sync_object_init_field(o, &o->oMipsStartWaypointIndex);
-        sync_object_init_field(o, &o->oForwardVel);
-        sync_object_init_field(o, &o->oMipsStarStatus);
-        sync_object_init_field(o, &o->oBehParams2ndByte);
-        sync_object_init_field(o, &o->oHeldState);
-        sync_object_init_field(o, &o->oFlags);
+        sync_object_init_field(o, o->oMipsStartWaypointIndex);
+        sync_object_init_field(o, o->oForwardVel);
+        sync_object_init_field(o, o->oMipsStarStatus);
+        sync_object_init_field(o, o->oBehParams2ndByte);
+        sync_object_init_field(o, o->oHeldState);
+        sync_object_init_field(o, o->oFlags);
         so->on_received_pre = bhv_mips_on_received_pre;
         so->on_received_post = bhv_mips_on_received_post;
     }

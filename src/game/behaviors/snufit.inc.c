@@ -134,16 +134,16 @@ void snufit_act_shoot(void) {
 void bhv_snufit_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oSnufitBullets);
-        sync_object_init_field(o, &o->oSnufitRecoil);
-        sync_object_init_field(o, &o->oSnufitYOffset);
-        sync_object_init_field(o, &o->oSnufitZOffset);
-        sync_object_init_field(o, &o->oSnufitScale);
-        sync_object_init_field(o, &o->oSnufitBodyScale);
-        sync_object_init_field(o, &o->oMoveAnglePitch);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
-        sync_object_init_field(o, &o->oGravity);
-        sync_object_init_field(o, &o->oDeathSound);
+        sync_object_init_field(o, o->oSnufitBullets);
+        sync_object_init_field(o, o->oSnufitRecoil);
+        sync_object_init_field(o, o->oSnufitYOffset);
+        sync_object_init_field(o, o->oSnufitZOffset);
+        sync_object_init_field(o, o->oSnufitScale);
+        sync_object_init_field(o, o->oSnufitBodyScale);
+        sync_object_init_field(o, o->oMoveAnglePitch);
+        sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oGravity);
+        sync_object_init_field(o, o->oDeathSound);
     }
 
     struct MarioState* marioState = nearest_mario_state_to_object(o);
