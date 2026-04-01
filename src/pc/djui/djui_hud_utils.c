@@ -407,7 +407,6 @@ void djui_hud_reset_text_color(void) {
 
 void djui_hud_set_combiner_cycles(u8 cycles) {
     gCombinerState.cycles = cycles != 2 ? 1 : 2;
-    gCombinerOverride = true;
 }
 
 void djui_hud_set_combiner(u8 cycle, bool alpha,
@@ -421,10 +420,7 @@ void djui_hud_set_combiner(u8 cycle, bool alpha,
     if (d > CS_KEEP) { part->d = d; }
 
     gCombinerUpdated = true;
-    if (!gCombinerOverride) {
-        gCombinerState.cycles = 1;
-        gCombinerOverride = true;
-    }
+    gCombinerOverride = true;
 }
 
 void djui_hud_reset_combiner() {
