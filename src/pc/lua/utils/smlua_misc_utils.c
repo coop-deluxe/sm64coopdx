@@ -622,8 +622,8 @@ LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
     normalize_path(normalizedSubDir);
 
     size_t subDirLen = strlen(normalizedSubDir);
-    if (subDirLen > 0 && subDirLen + 1 < SYS_MAX_PATH && normalizedSubDir[subDirLen - 1] != '/') {
-        strcat(normalizedSubDir, "/");
+    if (subDirLen > 0 && subDirLen + 1 < SYS_MAX_PATH && normalizedSubDir[subDirLen - 1] != *PATH_SEPARATOR) {
+        strcat(normalizedSubDir, PATH_SEPARATOR);
         subDirLen = strlen(normalizedSubDir);
     }
 
