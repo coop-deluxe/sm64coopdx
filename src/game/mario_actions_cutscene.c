@@ -693,12 +693,10 @@ s32 act_debug_free_move(struct MarioState *m) {
 
     struct Surface *surf = NULL;
     f32 floorHeight = find_floor(pos[0], pos[1], pos[2], &surf);
-    if (surf != NULL) {
-        if (pos[1] < floorHeight) {
-            pos[1] = floorHeight;
-        }
-        vec3f_copy(m->pos, pos);
+    if (pos[1] < floorHeight) {
+        pos[1] = floorHeight;
     }
+    vec3f_copy(m->pos, pos);
 
     m->faceAngle[1] = m->intendedYaw;
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
@@ -3190,9 +3188,9 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
             case ACT_FEET_STUCK_IN_GROUND:       cancel = act_feet_stuck_in_ground(m);       break;
             case ACT_PUTTING_ON_CAP:             cancel = act_putting_on_cap(m);             break;
             default:
-                LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
+                LOG_ERROR("Attempted to execute unimplemented action '%08X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

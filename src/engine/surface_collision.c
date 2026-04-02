@@ -25,7 +25,7 @@ void set_find_wall_direction(Vec3f dir, bool active, bool airborne) {
     gFindWallDirectionAirborne = airborne;
 }
 
-void closest_point_to_triangle(struct Surface* surf, Vec3f src, OUT Vec3f out) {
+void closest_point_to_triangle(struct Surface* surf, Vec3f src, VEC_OUT Vec3f out) {
     Vec3f v1; vec3s_to_vec3f(v1, surf->vertex1);
     Vec3f v2; vec3s_to_vec3f(v2, surf->vertex2);
     Vec3f v3; vec3s_to_vec3f(v3, surf->vertex3);
@@ -497,7 +497,7 @@ static struct Surface *find_ceil_from_list(struct SurfaceNode *surfaceNode, s32 
 /**
  * Find the lowest ceiling above a given position and return the height.
  */
-f32 find_ceil(f32 posX, f32 posY, f32 posZ, struct Surface **pceil) {
+f32 find_ceil(f32 posX, f32 posY, f32 posZ, RET struct Surface **pceil) {
     s16 cellZ, cellX;
     struct Surface *ceil, *dynamicCeil;
     struct SurfaceNode *surfaceList;
@@ -812,7 +812,7 @@ f32 unused_find_dynamic_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfl
 /**
  * Find the highest floor under a given position and return the height.
  */
-f32 find_floor(f32 xPos, f32 yPos, f32 zPos, struct Surface **pfloor) {
+f32 find_floor(f32 xPos, f32 yPos, f32 zPos, RET struct Surface **pfloor) {
     s16 cellZ, cellX;
 
     struct Surface *floor, *dynamicFloor;

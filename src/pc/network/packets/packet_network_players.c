@@ -82,6 +82,10 @@ void network_receive_network_players(struct Packet *p) {
         LOG_ERROR("received list of clients as a non-client");
         return;
     }
+    if (network_player_any_connected() && gNetworkPlayers[p->localIndex].type != NPT_SERVER) {
+        LOG_ERROR("list of clients came from non-server... refuse!");
+        return;
+    }
     u8 connectedCount = 0;
     packet_read(p, &connectedCount, sizeof(u8));
     for (s16 i = 0; i < connectedCount; i++) {

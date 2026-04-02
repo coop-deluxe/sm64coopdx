@@ -324,7 +324,7 @@ int smlua_hook_mario_action(lua_State* L) {
     return 1;
 }
 
-bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue) {
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -343,18 +343,39 @@ bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* 
 
             // call the callback
             if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod, hook->modFile)) {
-                LOG_LUA("Failed to call the action callback: %u", m->action);
+                LOG_LUA("Failed to call the action callback: '%08X'", m->action);
                 continue;
             }
 
             // output the return value
-            *returnValue = false;
-            if (lua_type(L, -1) == LUA_TBOOLEAN || lua_type(L, -1) == LUA_TNUMBER) {
-                *returnValue = smlua_to_integer(L, -1);
+            // special return values:
+            // - returning -1 allows to continue the execution, useful when overriding vanilla actions
+            bool stopActionHook = true;
+            *cancel = FALSE;
+
+            switch (lua_type(L, -1)) {
+                case LUA_TBOOLEAN: {
+                    *cancel = smlua_to_boolean(L, -1) ? TRUE : FALSE;
+                } break;
+
+                case LUA_TNUMBER: {
+                    s32 returnValue = (s32) smlua_to_integer(L, -1);
+                    if (returnValue > 0) {
+                        *cancel = TRUE;
+                    } else if (returnValue == 0) {
+                        *cancel = FALSE;
+                    } else if (returnValue == ACTION_HOOK_CONTINUE_EXECUTION) {
+                        stopActionHook = false;
+                    } else {
+                        LOG_LUA("Invalid return value when calling the action callback: '%08X' returned %d", m->action, returnValue);
+                    }
+                } break;
             }
             lua_pop(L, 1);
 
-            return true;
+            if (stopActionHook) {
+                return true;
+            }
         }
     }
 

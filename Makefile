@@ -1603,7 +1603,7 @@ all:
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
-    cp build/us_pc/libjuice.1.2.2.dylib $(APP_MACOS_DIR); \
+    cp build/us_pc/libjuice.1.6.2.dylib $(APP_MACOS_DIR); \
     cp $(SDL2_LIB) $(APP_MACOS_DIR)/libSDL2.dylib; \
     install_name_tool -change $(BREW_PREFIX)/opt/sdl2/lib/libSDL2-2.0.0.dylib @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/sm64coopdx; > /dev/null 2>&1 \
 		install_name_tool -id @executable_path/libSDL2.dylib $(APP_MACOS_DIR)/libSDL2.dylib; > /dev/null 2>&1 \

@@ -54,7 +54,9 @@ static s32 sDynosCustomLevelSlot[LEVEL_UNKNOWN_2 + 1] = { 0 };
 
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
     u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
-    return *((u64 *) (u64(aCmd) + _Offset));
+    u64 value = 0;
+    memcpy(&value, (void *) ((uintptr_t) aCmd + _Offset), sizeof(value));
+    return value;
 }
 
 LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {

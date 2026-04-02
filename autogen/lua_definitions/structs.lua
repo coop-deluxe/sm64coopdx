@@ -195,6 +195,7 @@
 --- @field public RespawnShellBoxes integer
 --- @field public MultipleCapCollection integer
 --- @field public InfiniteRenderDistance integer
+--- @field public ProcessLODs integer
 --- @field public CourtyardBoosRequirement integer
 --- @field public starsNeededForDialog StarsNeededForDialog
 --- @field public dialogs BehaviorDialogs
@@ -1085,6 +1086,7 @@
 --- @field public torsoPos Vec3f
 --- @field public heldObjLastPosition Vec3f
 --- @field public animPartsPos Vec3f[]
+--- @field public animPartsRot Vec3s[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer

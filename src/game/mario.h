@@ -58,7 +58,7 @@ s32 is_anim_past_frame(struct MarioState *m, s16 animFrame);
 Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`.
 Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 |descriptionEnd| */
-s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, OUT Vec3s translation);
+s16 find_mario_anim_flags_and_translation(struct Object *o, s32 yaw, VEC_OUT Vec3s translation);
 
 /* |description|
 Applies the translation from Mario's current animation to his world position. Considers animation flags (horizontal/vertical translation)
@@ -166,15 +166,25 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m);
 Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls.
 Useful for collision detection when updating Mario's movement or adjusting his position
 |descriptionEnd| */
-struct Surface *resolve_and_return_wall_collisions(OUT Vec3f pos, f32 offset, f32 radius);
+struct Surface *resolve_and_return_wall_collisions(VEC_OUT Vec3f pos, f32 offset, f32 radius);
 
 /* |description|
 Similar to `resolve_and_return_wall_collisions` but also returns detailed collision data (`WallCollisionData`). This can handle multiple walls and store them for further checks
 |descriptionEnd| */
-void resolve_and_return_wall_collisions_data(OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);
+void resolve_and_return_wall_collisions_data(VEC_OUT Vec3f pos, f32 offset, f32 radius, struct WallCollisionData* collisionData);
 
-f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil);
-f32 vec3f_mario_ceil(Vec3f pos, f32 height, struct Surface **ceil);
+/* |description|
+Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
+Returns the ceiling height and surface
+|descriptionEnd| */
+f32 vec3f_find_ceil(Vec3f pos, f32 height, RET struct Surface **ceil);
+
+/* |description|
+Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
+Prevents exposed ceiling bug.
+Returns the ceiling height and surface
+|descriptionEnd| */
+f32 vec3f_mario_ceil(Vec3f pos, f32 height, RET struct Surface **ceil);
 
 /* |description|
 Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope.

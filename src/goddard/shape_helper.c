@@ -161,7 +161,7 @@ void calc_face_normal(struct ObjFace *face) {
         p3.z = vtx3->pos.z;
 
         // calculate the cross product of edges (p2 - p1) and (p3 - p2)
-        // not sure why each component is multiplied by 1000. maybe to avoid loss of precision when normalizing? 
+        // not sure why each component is multiplied by 1000. maybe to avoid loss of precision when normalizing?
         normal.x = (((p2.y - p1.y) * (p3.z - p2.z)) - ((p2.z - p1.z) * (p3.y - p2.y))) * mul;
         normal.y = (((p2.z - p1.z) * (p3.x - p2.x)) - ((p2.x - p1.x) * (p3.z - p2.z))) * mul;
         normal.z = (((p2.x - p1.x) * (p3.y - p2.y)) - ((p2.y - p1.y) * (p3.x - p2.x))) * mul;
@@ -1365,6 +1365,37 @@ s32 load_mario_head(void (*aniFn)(struct ObjAnimator *)) {
     particle->attachedToObj = d_use_obj("N231l"); // DYNOBJ_RED_STAR_LIGHT
     particle->shapePtr = gShapeRedSpark;
     addto_group(gGdLightGroup, &particle->header);
+
+    f32 color[3];
+    void get_player_color(u8 index, u8 part, f32 *out);
+
+    struct ObjGroup *mtls = (struct ObjGroup *) d_use_obj("N224l"); // DYNOBJ_MARIO_FACE_MTL_GROUP
+    for (struct ListNode *n = mtls->firstMember; n; n = n->next) {
+        struct ObjMaterial *m = (struct ObjMaterial *)n->obj;
+
+        switch (m->id) {
+            // skin color
+            case 1:
+                get_player_color(0, 5, color);
+                break;
+
+            // hair color
+            case 5:
+                get_player_color(0, 4, color);
+                break;
+
+            // cap color
+            case 7:
+                get_player_color(0, 6, color);
+                break;
+
+            // skip this part
+            default:
+                continue;
+        }
+        m->Ka = (struct GdColour) { color[0], color[1], color[2] };
+        m->Kd = (struct GdColour) { color[0], color[1], color[2] };
+    }
 
     mainShapesGrp = (struct ObjGroup *) d_use_obj("N1000l");  // DYNOBJ_MARIO_MAIN_SHAPES_GROUP
     create_gddl_for_shapes(mainShapesGrp);

@@ -221,7 +221,7 @@ void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
     CPointer *cpointer = luaL_checkudata(L, index, "CPointer");
 
     if (lvt != cpointer->lvt) {
-        LOG_LUA_LINE("smlua_to_cpointer received improper LOT. Expected '%s', received '%s'", smlua_get_lvt_name(lvt), smlua_get_lvt_name(cpointer->lvt));
+        LOG_LUA_LINE("smlua_to_cpointer received improper LVT. Expected '%s', received '%s'", smlua_get_lvt_name(lvt), smlua_get_lvt_name(cpointer->lvt));
         gSmLuaConvertSuccess = false;
         return NULL;
     }

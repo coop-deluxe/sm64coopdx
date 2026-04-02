@@ -180,7 +180,7 @@ Gets a behavior ID from a behavior script
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior(const BehaviorScript* behavior);`
@@ -203,7 +203,7 @@ Gets a behavior ID from only vanilla behavior scripts
 | behavior | `Pointer` <`BehaviorScript`> |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior);`
@@ -218,7 +218,7 @@ Gets a behavior ID from only vanilla behavior scripts
 Gets a behavior script from a behavior ID
 
 ### Lua Example
-`local PointerValue = get_behavior_from_id(id)`
+`local pointerValue = get_behavior_from_id(id)`
 
 ### Parameters
 | Field | Type |
@@ -272,7 +272,7 @@ gets a behavior ID from a behavior name
 | name | `string` |
 
 ### Returns
-[enum BehaviorId](constants.md#enum-BehaviorId)
+- [enum BehaviorId](constants.md#enum-BehaviorId)
 
 ### C Prototype
 `enum BehaviorId get_id_from_behavior_name(const char* name);`
@@ -537,7 +537,7 @@ Converts an object's position to a `Vec3f` format. Useful for aligning object be
 - None
 
 ### C Prototype
-`void object_pos_to_vec3f(OUT Vec3f dst, struct Object *o);`
+`void object_pos_to_vec3f(VEC_OUT Vec3f dst, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -585,7 +585,7 @@ Converts an object's face angle to a `Vec3s` format
 - None
 
 ### C Prototype
-`void object_face_angle_to_vec3s(OUT Vec3s dst, struct Object *o);`
+`void object_face_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -633,7 +633,7 @@ Converts an object's move angle to a `Vec3s` format
 - None
 
 ### C Prototype
-`void object_move_angle_to_vec3s(OUT Vec3s dst, struct Object *o);`
+`void object_move_angle_to_vec3s(VEC_OUT Vec3s dst, struct Object *o);`
 
 [:arrow_up_small:](#)
 
@@ -750,7 +750,7 @@ Activates a handheld camera shake effect. Calculates positional and focus adjust
 - None
 
 ### C Prototype
-`void shake_camera_handheld(Vec3f pos, OUT Vec3f focus);`
+`void shake_camera_handheld(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -800,7 +800,7 @@ Checks for collisions between the camera and level geometry. Adjusts the camera'
 - `integer`
 
 ### C Prototype
-`s32 collide_with_walls(OUT Vec3f pos, f32 offsetY, f32 radius);`
+`s32 collide_with_walls(VEC_OUT Vec3f pos, f32 offsetY, f32 radius);`
 
 [:arrow_up_small:](#)
 
@@ -826,7 +826,7 @@ Clamps the camera's pitch angle between a maximum and minimum value. Prevents ov
 - `integer`
 
 ### C Prototype
-`s32 clamp_pitch(Vec3f from, OUT Vec3f to, s16 maxPitch, s16 minPitch);`
+`s32 clamp_pitch(Vec3f from, VEC_OUT Vec3f to, s16 maxPitch, s16 minPitch);`
 
 [:arrow_up_small:](#)
 
@@ -860,23 +860,24 @@ Checks if a position is within 100 units of Mario's current position. Returns tr
 ## [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
 
 ### Description
-Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment
+Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment. Returns FALSE if `dst` reaches `goal`
 
 ### Lua Example
-`local integerValue = set_or_approach_f32_asymptotic(dst, goal, scale)`
+`local integerValue, dst = set_or_approach_f32_asymptotic(dst, goal, scale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| dst | `Pointer` <`number`> |
+| dst | `number` |
 | goal | `number` |
 | scale | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 set_or_approach_f32_asymptotic(f32 *dst, f32 goal, f32 scale);`
+`s32 set_or_approach_f32_asymptotic(INOUT f32 *dst, f32 goal, f32 scale);`
 
 [:arrow_up_small:](#)
 
@@ -885,23 +886,24 @@ Smoothly transitions or directly sets a floating-point value (`dst`) to approach
 ## [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
 
 ### Description
-Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches the `target` and false otherwise
+Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = approach_f32_asymptotic_bool(current, target, multiplier)`
+`local integerValue, current = approach_f32_asymptotic_bool(current, target, multiplier)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`number`> |
+| current | `number` |
 | target | `number` |
 | multiplier | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 approach_f32_asymptotic_bool(f32 *current, f32 target, f32 multiplier);`
+`s32 approach_f32_asymptotic_bool(INOUT f32 *current, f32 target, f32 multiplier);`
 
 [:arrow_up_small:](#)
 
@@ -935,23 +937,24 @@ Gradually approaches a floating-point value (`target`) using asymptotic smoothin
 ## [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
 
 ### Description
-Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns true if `current` reaches `target` and false otherwise
+Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches `target`
 
 ### Lua Example
-`local integerValue = approach_s16_asymptotic_bool(current, target, divisor)`
+`local integerValue, current = approach_s16_asymptotic_bool(current, target, divisor)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | divisor | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 approach_s16_asymptotic_bool(s16 *current, s16 target, s16 divisor);`
+`s32 approach_s16_asymptotic_bool(INOUT s16 *current, s16 target, s16 divisor);`
 
 [:arrow_up_small:](#)
 
@@ -1003,7 +1006,7 @@ Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) 
 - None
 
 ### C Prototype
-`void approach_vec3f_asymptotic(OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
+`void approach_vec3f_asymptotic(VEC_OUT Vec3f current, Vec3f target, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -1030,7 +1033,7 @@ Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) usi
 - None
 
 ### C Prototype
-`void set_or_approach_vec3f_asymptotic(OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
+`void set_or_approach_vec3f_asymptotic(VEC_OUT Vec3f dst, Vec3f goal, f32 xMul, f32 yMul, f32 zMul);`
 
 [:arrow_up_small:](#)
 
@@ -1039,23 +1042,24 @@ Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) usi
 ## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
 
 ### Description
-Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = camera_approach_s16_symmetric_bool(current, target, increment)`
+`local integerValue, current = camera_approach_s16_symmetric_bool(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | increment | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 camera_approach_s16_symmetric_bool(s16 *current, s16 target, s16 increment);`
+`s32 camera_approach_s16_symmetric_bool(INOUT s16 *current, s16 target, s16 increment);`
 
 [:arrow_up_small:](#)
 
@@ -1064,23 +1068,24 @@ Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetri
 ## [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
 
 ### Description
-Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments
+Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments. Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = set_or_approach_s16_symmetric(current, target, increment)`
+`local integerValue, current = set_or_approach_s16_symmetric(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`integer`> |
+| current | `integer` |
 | target | `integer` |
 | increment | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 set_or_approach_s16_symmetric(s16 *current, s16 target, s16 increment);`
+`s32 set_or_approach_s16_symmetric(INOUT s16 *current, s16 target, s16 increment);`
 
 [:arrow_up_small:](#)
 
@@ -1089,23 +1094,24 @@ Smoothly transitions or directly sets a signed 16-bit value (`current`) to appro
 ## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
 
 ### Description
-Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns true if the value reaches the target and false otherwise
+Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
 
 ### Lua Example
-`local integerValue = camera_approach_f32_symmetric_bool(current, target, increment)`
+`local integerValue, current = camera_approach_f32_symmetric_bool(current, target, increment)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| current | `Pointer` <`number`> |
+| current | `number` |
 | target | `number` |
 | increment | `number` |
 
 ### Returns
 - `integer`
+- `number`
 
 ### C Prototype
-`s32 camera_approach_f32_symmetric_bool(f32 *current, f32 target, f32 increment);`
+`s32 camera_approach_f32_symmetric_bool(INOUT f32 *current, f32 target, f32 increment);`
 
 [:arrow_up_small:](#)
 
@@ -1156,7 +1162,7 @@ Generates a random 3D vector with short integer components. Useful for randomize
 - None
 
 ### C Prototype
-`void random_vec3s(OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
+`void random_vec3s(VEC_OUT Vec3s dst, s16 xRange, s16 yRange, s16 zRange);`
 
 [:arrow_up_small:](#)
 
@@ -1184,7 +1190,7 @@ Clamps a position within specified X and Z bounds and calculates the yaw angle f
 - `integer`
 
 ### C Prototype
-`s32 clamp_positions_and_find_yaw(OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
+`s32 clamp_positions_and_find_yaw(VEC_OUT Vec3f pos, Vec3f origin, f32 xMax, f32 xMin, f32 zMax, f32 zMin);`
 
 [:arrow_up_small:](#)
 
@@ -1237,7 +1243,7 @@ Scales a point along a line between two 3D points (`from` and `to`). The scaling
 - None
 
 ### C Prototype
-`void scale_along_line(OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
+`void scale_along_line(VEC_OUT Vec3f dest, Vec3f from, Vec3f to, f32 scale);`
 
 [:arrow_up_small:](#)
 
@@ -1294,24 +1300,22 @@ Determines the yaw angle (rotation around the Y-axis) from one 3D position (`fro
 ## [calculate_angles](#calculate_angles)
 
 ### Description
-Calculates the pitch and yaw angles from one 3D position (`from`) to another (`to`). Updates the provided pointers with the computed pitch and yaw values
+Calculates and returns the pitch and yaw angles from one 3D position (`from`) to another (`to`)
 
 ### Lua Example
-`calculate_angles(from, to, pitch, yaw)`
+`local pitch, yaw = calculate_angles(from, to)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | from | [Vec3f](structs.md#Vec3f) |
 | to | [Vec3f](structs.md#Vec3f) |
-| pitch | `Pointer` <`integer`> |
-| yaw | `Pointer` <`integer`> |
 
 ### Returns
 - None
 
 ### C Prototype
-`void calculate_angles(Vec3f from, Vec3f to, s16 *pitch, s16 *yaw);`
+`void calculate_angles(Vec3f from, Vec3f to, RET s16 *pitch, RET s16 *yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1384,7 +1388,7 @@ Rotates a vector around the XZ-plane by a specified yaw angle. The result is sto
 - None
 
 ### C Prototype
-`void rotate_in_xz(OUT Vec3f dst, Vec3f src, s16 yaw);`
+`void rotate_in_xz(VEC_OUT Vec3f dst, Vec3f src, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -1409,7 +1413,7 @@ Rotates a vector around the YZ-plane by a specified pitch angle. The result is s
 - None
 
 ### C Prototype
-`void rotate_in_yz(OUT Vec3f dst, Vec3f src, s16 pitch);`
+`void rotate_in_yz(VEC_OUT Vec3f dst, Vec3f src, s16 pitch);`
 
 [:arrow_up_small:](#)
 
@@ -1537,7 +1541,7 @@ Activates a pitch-based shake effect. Adds vertical vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_pitch(Vec3f pos, OUT Vec3f focus);`
+`void shake_camera_pitch(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1561,7 +1565,7 @@ Activates a yaw-based shake effect. Adds horizontal vibrational movement to the 
 - None
 
 ### C Prototype
-`void shake_camera_yaw(Vec3f pos, OUT Vec3f focus);`
+`void shake_camera_yaw(Vec3f pos, VEC_OUT Vec3f focus);`
 
 [:arrow_up_small:](#)
 
@@ -1573,18 +1577,18 @@ Activates a yaw-based shake effect. Adds horizontal vibrational movement to the 
 Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
 
 ### Lua Example
-`shake_camera_roll(roll)`
+`local roll = shake_camera_roll(roll)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| roll | `Pointer` <`integer`> |
+| roll | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void shake_camera_roll(s16 *roll);`
+`void shake_camera_roll(INOUT s16 *roll);`
 
 [:arrow_up_small:](#)
 
@@ -1990,7 +1994,7 @@ Offsets a vector by rotating it in 3D space relative to a reference position. Th
 - None
 
 ### C Prototype
-`void offset_rotated(OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
+`void offset_rotated(VEC_OUT Vec3f dst, Vec3f from, Vec3f to, Vec3s rotation);`
 
 [:arrow_up_small:](#)
 
@@ -2019,7 +2023,7 @@ Transitions the camera to the next Lakitu state, updating position and focus. Th
 - `integer`
 
 ### C Prototype
-`s16 next_lakitu_state(OUT Vec3f newPos, OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
+`s16 next_lakitu_state(VEC_OUT Vec3f newPos, VEC_OUT Vec3f newFoc, Vec3f curPos, Vec3f curFoc, Vec3f oldPos, Vec3f oldFoc, s16 yaw);`
 
 [:arrow_up_small:](#)
 
@@ -2089,7 +2093,7 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 - None
 
 ### C Prototype
-`void resolve_geometry_collisions(OUT Vec3f pos, UNUSED Vec3f lastGood);`
+`void resolve_geometry_collisions(VEC_OUT Vec3f pos, UNUSED Vec3f lastGood);`
 
 [:arrow_up_small:](#)
 
@@ -2101,21 +2105,22 @@ Resolves collisions between the camera and level geometry. Adjusts the camera's 
 Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
 
 ### Lua Example
-`local integerValue = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
+`local integerValue, avoidYaw = rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | c | [Camera](structs.md#Camera) |
 | cPos | [Vec3f](structs.md#Vec3f) |
-| avoidYaw | `Pointer` <`integer`> |
+| avoidYaw | `integer` |
 | yawRange | `integer` |
 
 ### Returns
 - `integer`
+- `integer`
 
 ### C Prototype
-`s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, s16 *avoidYaw, s16 yawRange);`
+`s32 rotate_camera_around_walls(struct Camera *c, Vec3f cPos, INOUT s16 *avoidYaw, s16 yawRange);`
 
 [:arrow_up_small:](#)
 
@@ -2494,7 +2499,7 @@ Centers the ROM hack camera. This function is designed for non-standard level la
 Gets a Character struct from `m`
 
 ### Lua Example
-`local CharacterValue = get_character(m)`
+`local characterValue = get_character(m)`
 
 ### Parameters
 | Field | Type |
@@ -2502,7 +2507,7 @@ Gets a Character struct from `m`
 | m | [MarioState](structs.md#MarioState) |
 
 ### Returns
-[Character](structs.md#Character)
+- [Character](structs.md#Character)
 
 ### C Prototype
 `struct Character* get_character(struct MarioState* m);`
@@ -2855,13 +2860,13 @@ Sets the current DJUI HUD font
 Gets the current DJUI HUD color
 
 ### Lua Example
-`local DjuiColorValue = djui_hud_get_color()`
+`local djuiColorValue = djui_hud_get_color()`
 
 ### Parameters
 - None
 
 ### Returns
-[DjuiColor](structs.md#DjuiColor)
+- [DjuiColor](structs.md#DjuiColor)
 
 ### C Prototype
 `struct DjuiColor* djui_hud_get_color(void);`
@@ -2923,13 +2928,13 @@ Resets the current DJUI HUD color
 Gets the current DJUI HUD rotation
 
 ### Lua Example
-`local HudUtilsRotationValue = djui_hud_get_rotation()`
+`local hudUtilsRotationValue = djui_hud_get_rotation()`
 
 ### Parameters
 - None
 
 ### Returns
-[HudUtilsRotation](structs.md#HudUtilsRotation)
+- [HudUtilsRotation](structs.md#HudUtilsRotation)
 
 ### C Prototype
 `struct HudUtilsRotation* djui_hud_get_rotation(void);`
@@ -3705,7 +3710,7 @@ Converts a world position to screen position
 - `boolean`
 
 ### C Prototype
-`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, OUT Vec3f out);`
+`bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out);`
 
 [:arrow_up_small:](#)
 
@@ -6114,7 +6119,7 @@ Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mar
 Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
 
 ### Lua Example
-`local ObjectValue = mario_get_collided_object(m, interactType)`
+`local objectValue = mario_get_collided_object(m, interactType)`
 
 ### Parameters
 | Field | Type |
@@ -6123,7 +6128,7 @@ Returns a collided object that matches a given interaction type from Mario's cur
 | interactType | `integer` |
 
 ### Returns
-[Object](structs.md#Object)
+- [Object](structs.md#Object)
 
 ### C Prototype
 `struct Object *mario_get_collided_object(struct MarioState *m, u32 interactType);`
@@ -6330,7 +6335,7 @@ Stores the local Mario's current state in lag compensation history
 Gets the local Mario's state stored in lag compensation history
 
 ### Lua Example
-`local MarioStateValue = lag_compensation_get_local_state(otherNp)`
+`local marioStateValue = lag_compensation_get_local_state(otherNp)`
 
 ### Parameters
 | Field | Type |
@@ -6338,7 +6343,7 @@ Gets the local Mario's state stored in lag compensation history
 | otherNp | [NetworkPlayer](structs.md#NetworkPlayer) |
 
 ### Returns
-[MarioState](structs.md#MarioState)
+- [MarioState](structs.md#MarioState)
 
 ### C Prototype
 `struct MarioState* lag_compensation_get_local_state(struct NetworkPlayer* otherNp);`
@@ -6427,7 +6432,7 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
-`local PointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
+`local pointerValue = get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)`
 
 ### Parameters
 | Field | Type |
@@ -6503,7 +6508,7 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as an AS
 Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 ### Lua Example
-`local PointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
+`local pointerValue = get_star_name_sm64(courseNum, starNum, charCase)`
 
 ### Parameters
 | Field | Type |
@@ -6558,7 +6563,7 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as a dec
 Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 
 ### Lua Example
-`local ObjectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
+`local objectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
 
 ### Parameters
 | Field | Type |
@@ -6571,7 +6576,7 @@ Creates a warp node in the current level and area with id `id` that goes to the 
 | o | [Object](structs.md#Object) |
 
 ### Returns
-[ObjectWarpNode](structs.md#ObjectWarpNode)
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
 
 ### C Prototype
 `struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
@@ -6658,7 +6663,7 @@ Fades into a special warp with `arg` and using `color`
 Gets an instant warp from the current area's instant warp array (0-3)
 
 ### Lua Example
-`local InstantWarpValue = get_instant_warp(index)`
+`local instantWarpValue = get_instant_warp(index)`
 
 ### Parameters
 | Field | Type |
@@ -6666,7 +6671,7 @@ Gets an instant warp from the current area's instant warp array (0-3)
 | index | `integer` |
 
 ### Returns
-[InstantWarp](structs.md#InstantWarp)
+- [InstantWarp](structs.md#InstantWarp)
 
 ### C Prototype
 `struct InstantWarp *get_instant_warp(u8 index);`
@@ -6681,13 +6686,13 @@ Gets an instant warp from the current area's instant warp array (0-3)
 Gets a painting warp node from the local mario's floor type
 
 ### Lua Example
-`local WarpNodeValue = get_painting_warp_node()`
+`local warpNodeValue = get_painting_warp_node()`
 
 ### Parameters
 - None
 
 ### Returns
-[WarpNode](structs.md#WarpNode)
+- [WarpNode](structs.md#WarpNode)
 
 ### C Prototype
 `struct WarpNode *get_painting_warp_node(void);`
@@ -6761,6 +6766,32 @@ Special warps to arg (`SPECIAL_WARP_*`)
 
 ### C Prototype
 `void warp_special(s32 arg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [initiate_warp](#initiate_warp)
+
+### Description
+Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+
+### Lua Example
+`initiate_warp(destLevel, destArea, destWarpNode, arg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destWarpNode | `integer` |
+| arg | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);`
 
 [:arrow_up_small:](#)
 
