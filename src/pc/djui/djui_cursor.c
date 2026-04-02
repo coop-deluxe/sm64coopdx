@@ -1,5 +1,6 @@
 #include "djui.h"
 #include "djui_panel.h"
+#include "djui_flow_layout.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_window_manager_api.h"
 #include "pc/pc_main.h"
@@ -115,6 +116,24 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
     if (pick != NULL) {
         sCursorMouseControlled = false;
         djui_cursor_input_controlled_center(pick);
+
+        // auto-scroll scrollable flow layout to show the picked element
+        if (gDjuiFlowLayoutScrollRender) {
+            struct DjuiBase* parent = pick->parent;
+            while (parent) {
+                if (parent->render == gDjuiFlowLayoutScrollRender) {
+                    struct DjuiFlowLayout* layout = (struct DjuiFlowLayout*)parent;
+                    f32 targetTop = pick->elem.y;
+                    f32 targetBot = pick->elem.y + pick->elem.height;
+                    f32 visTop = parent->clip.y;
+                    f32 visBot = parent->clip.y + parent->clip.height;
+                    if (targetTop < visTop) { layout->scrollY -= (visTop - targetTop); }
+                    else if (targetBot > visBot) { layout->scrollY += (targetBot - visBot); }
+                    break;
+                }
+                parent = parent->parent;
+            }
+        }
     }
 }
 
