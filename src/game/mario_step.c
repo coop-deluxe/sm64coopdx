@@ -675,13 +675,11 @@ u32 should_strengthen_gravity_for_jump_ascent(struct MarioState *m) {
 
 void apply_gravity(struct MarioState *m) {
     if (!m) { return; }
+    s32 result;
 
-    UNUSED s32 cancel;
-    if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &cancel)) {
-        return;
-    }
-
-    if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
+    if (smlua_call_action_hook(ACTION_HOOK_GRAVITY, m, &result)) {
+        
+    } else if (m->action == ACT_TWIRLING && m->vel[1] < 0.0f) {
         apply_twirl_gravity(m);
     } else if (m->action == ACT_SHOT_FROM_CANNON) {
         m->vel[1] -= 1.0f;

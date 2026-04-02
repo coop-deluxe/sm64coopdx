@@ -6,26 +6,26 @@ extern "C" {
 }
 
 struct OverrideLevelScript {
-    const void *originalScript;
-    const void *newScript;
-    GfxData *gfxData;
+    const void* originalScript;
+    const void* newScript;
+    GfxData* gfxData;
 };
 
-static std::vector<OverrideLevelScript> &DynosOverrideLevelScripts() {
-    static std::vector<OverrideLevelScript> sDynosOverrideLevelScripts;
+static Array<struct OverrideLevelScript>& DynosOverrideLevelScripts() {
+    static Array<struct OverrideLevelScript> sDynosOverrideLevelScripts;
     return sDynosOverrideLevelScripts;
 }
 
-std::vector<std::pair<std::string, GfxData *>> &DynOS_Lvl_GetArray() {
-    static std::vector<std::pair<std::string, GfxData *>> sDynosCustomLevelScripts;
+Array<Pair<const char*, GfxData*>> &DynOS_Lvl_GetArray() {
+    static Array<Pair<const char*, GfxData*>> sDynosCustomLevelScripts;
     return sDynosCustomLevelScripts;
 }
 
 LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
-    for (size_t i = 0; i < _CustomLevelScripts.size(); ++i) {
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
         auto& pair = _CustomLevelScripts[i];
-        if (pair.first == aScriptEntryName) {
+        if (!strcmp(pair.first, aScriptEntryName)) {
             auto& newScripts = pair.second->mLevelScripts;
             auto& newScriptNode = newScripts[newScripts.Count() - 1];
             return newScriptNode->mData;
@@ -38,16 +38,17 @@ void DynOS_Lvl_ModShutdown() {
     DynOS_Level_Unoverride();
 
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
-    if (!_CustomLevelScripts.empty()) {
+    while (_CustomLevelScripts.Count() > 0) {
         for (auto& pair : _CustomLevelScripts) {
             DynOS_Tex_Invalid(pair.second);
             Delete(pair.second);
+            free((void*)pair.first);
         }
-        _CustomLevelScripts.clear();
+        _CustomLevelScripts.Clear();
     }
 
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
-    _OverrideLevelScripts.clear();
+    _OverrideLevelScripts.Clear();
 }
 
 void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLevelName) {
@@ -58,16 +59,19 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     DynOS_Level_Init();
 
     // check for duplicates
-    for (auto &customLevel : _CustomLevelScripts) {
-        if (customLevel.first == aLevelName) {
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
+        if (!strcmp(_CustomLevelScripts[i].first, aLevelName)) {
             return;
         }
     }
 
-    std::string levelName = aLevelName;
+    u16 levelLen = strlen(aLevelName);
+    char* levelName = (char*)calloc(1, sizeof(char) * (levelLen + 1));
+    strcpy(levelName, aLevelName);
 
-    GfxData* _Node = DynOS_Lvl_LoadFromBinary(aFilename, levelName.c_str());
+    GfxData* _Node = DynOS_Lvl_LoadFromBinary(aFilename, levelName);
     if (!_Node) {
+        free(levelName);
         return;
     }
 
@@ -75,7 +79,7 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     _Node->mModIndex = modIndex;
 
     // Add to levels
-    _CustomLevelScripts.emplace_back(levelName, _Node);
+    _CustomLevelScripts.Add({ levelName, _Node });
     DynOS_Tex_Valid(_Node);
 
     // Override vanilla script
@@ -92,13 +96,13 @@ void DynOS_Lvl_Activate(s32 modIndex, const SysPath &aFilename, const char *aLev
     }
 
     DynOS_Level_Override((void*)originalScript, newScriptNode->mData, modIndex);
-    _OverrideLevelScripts.push_back({ originalScript, newScriptNode->mData, _Node});
+    _OverrideLevelScripts.Add({ originalScript, newScriptNode->mData, _Node});
 }
 
 GfxData* DynOS_Lvl_GetActiveGfx(void) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
-    for (auto &lvlEntry : _CustomLevelScripts) {
-        auto& gfxData = lvlEntry.second;
+    for (s32 i = 0; i < _CustomLevelScripts.Count(); ++i) {
+        auto& gfxData = _CustomLevelScripts[i].second;
         auto& scripts = gfxData->mLevelScripts;
         for (auto& s : scripts) {
             if (gLevelScriptActive == s->mData) {
@@ -196,3 +200,4 @@ void *DynOS_Lvl_Override(void *aCmd) {
 
     return aCmd;
 }
+

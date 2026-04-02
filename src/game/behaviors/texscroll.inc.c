@@ -121,10 +121,7 @@ void uv_update_scroll(void) {
     if (bhv == 3 || bhv > SCROLL_UV_Y) { return; }
 
     struct ScrollTarget *scroll = get_scroll_targets(vtxIndex, vertCount, offset);
-    if (!scroll || !scroll->vertices || scroll->size == 0) { return; }
-
-    vertCount = MIN(vertCount, (u16) scroll->size);
-    if (vertCount == 0) { return; }
+    if (!scroll || !scroll->vertices) { return; }
 
     Vtx* *verts = scroll->vertices;
 

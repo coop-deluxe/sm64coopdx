@@ -10,8 +10,8 @@ struct RegisteredMovtexQC {
     s16 type;
 };
 
-static std::vector<RegisteredMovtexQC> &DynosRegisteredMovtexQCs() {
-    static std::vector<RegisteredMovtexQC> sDynosRegisteredMovtexQCs;
+static Array<RegisteredMovtexQC>& DynosRegisteredMovtexQCs() {
+    static Array<RegisteredMovtexQC> sDynosRegisteredMovtexQCs;
     return sDynosRegisteredMovtexQCs;
 }
 
@@ -28,7 +28,7 @@ void DynOS_MovtexQC_Register(const char* name, s16 level, s16 area, s16 type) {
         for (auto& node : lvlPair.second->mMovtexQCs) {
             if (node->mName == name) {
                 // add it
-                _DynosRegisteredMovtexQCs.push_back({
+                _DynosRegisteredMovtexQCs.Add({
                     .dataNode = node,
                     .level    = level,
                     .area     = area,
@@ -70,8 +70,9 @@ DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index) {
 
 void DynOS_MovtexQC_ModShutdown() {
     auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
-    for (auto &registered : _DynosRegisteredMovtexQCs) {
+    while (_DynosRegisteredMovtexQCs.Count() > 0) {
+        auto& registered = _DynosRegisteredMovtexQCs[0];
         Delete(registered.dataNode);
+        _DynosRegisteredMovtexQCs.Remove(0);
     }
-    _DynosRegisteredMovtexQCs.clear();
 }

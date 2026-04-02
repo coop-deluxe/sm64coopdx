@@ -265,7 +265,6 @@ struct BehaviorValues {
     u8  RespawnShellBoxes;
     u8  MultipleCapCollection;
     u8  InfiniteRenderDistance;
-    u8  ProcessLODs;
     s16 CourtyardBoosRequirement;
     struct StarsNeededForDialog starsNeededForDialog;
     struct BehaviorDialogs dialogs;

@@ -168,7 +168,6 @@ struct BehaviorValues gDefaultBehaviorValues = {
     .RespawnShellBoxes        = TRUE,
     .MultipleCapCollection    = FALSE,
     .InfiniteRenderDistance   = TRUE,
-    .ProcessLODs              = FALSE,
     .CourtyardBoosRequirement = 12,
     .starsNeededForDialog     = { 1, 3, 8, 30, 50, 70 },
     .dialogs = {

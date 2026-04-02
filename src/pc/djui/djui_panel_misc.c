@@ -59,7 +59,6 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MISC, MISC_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_checkbox_create(body, DLANG(DISPLAY, SHOW_PING), &configShowPing, NULL);
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);

@@ -257,22 +257,21 @@ Plays the penguin walking sound
 ## [update_angle_from_move_flags](#update_angle_from_move_flags)
 
 ### Description
-Computes and returns an angle depending on the current object's angle and move flags
+Updates the current object's angle from its move flags
 
 ### Lua Example
-`local integerValue, angle = update_angle_from_move_flags(angle)`
+`local integerValue = update_angle_from_move_flags(angle)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| angle | `integer` |
+| angle | `Pointer` <`integer`> |
 
 ### Returns
 - `integer`
-- `integer`
 
 ### C Prototype
-`s32 update_angle_from_move_flags(INOUT s32 *angle);`
+`s32 update_angle_from_move_flags(s32 *angle);`
 
 [:arrow_up_small:](#)
 
@@ -12012,7 +12011,7 @@ Behavior loop function for the lighting engine point light
 Spawns a Star with an ID corresponding to the current object's first behavior parameter byte
 
 ### Lua Example
-`local objectValue = spawn_default_star(x, y, z)`
+`local ObjectValue = spawn_default_star(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -12022,7 +12021,7 @@ Spawns a Star with an ID corresponding to the current object's first behavior pa
 | z | `number` |
 
 ### Returns
-- [Object](structs.md#Object)
+[Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_default_star(f32 x, f32 y, f32 z);`
@@ -12037,7 +12036,7 @@ Spawns a Star with an ID corresponding to the current object's first behavior pa
 Spawns a Red Coin cutscene star with an ID corresponding to the current object's first behavior parameter byte
 
 ### Lua Example
-`local objectValue = spawn_red_coin_cutscene_star(x, y, z)`
+`local ObjectValue = spawn_red_coin_cutscene_star(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -12047,7 +12046,7 @@ Spawns a Red Coin cutscene star with an ID corresponding to the current object's
 | z | `number` |
 
 ### Returns
-- [Object](structs.md#Object)
+[Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z);`
@@ -12062,7 +12061,7 @@ Spawns a Red Coin cutscene star with an ID corresponding to the current object's
 Spawns a Star that won't make Mario exit the level with an ID corresponding to the current object's first behavior parameter byte
 
 ### Lua Example
-`local objectValue = spawn_no_exit_star(x, y, z)`
+`local ObjectValue = spawn_no_exit_star(x, y, z)`
 
 ### Parameters
 | Field | Type |
@@ -12072,7 +12071,7 @@ Spawns a Star that won't make Mario exit the level with an ID corresponding to t
 | z | `number` |
 
 ### Returns
-- [Object](structs.md#Object)
+[Object](structs.md#Object)
 
 ### C Prototype
 `struct Object* spawn_no_exit_star(f32 x, f32 y, f32 z);`
