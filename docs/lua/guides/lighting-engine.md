@@ -8,17 +8,21 @@ The Lighting Engine is a vertex point lighting system built directly into sm64co
 
 To use the Lighting Engine, you need to figure out how you want to approach using it given the different modes it has. There are also 2 methods to enable the lighting engine, either by setting the ambient color, or spawning a point light in.
 
+If you want to make a vertex buffer not be affected by the lighting engine even when it's enabled, you can use `gsSPVertexNonGlobal` in the displaylist instead of `gsSPVertex`. This tells the renderer to not apply any of the effects Lua can do.
+
 ## Section 2: Modes
 
 The lighting engine has 3 modes you can switch between using `le_set_mode(mode)`.
 
-1. `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED`: (Default) Applies lighting to every shaded and vertex colored surface minus some geometry and menus.
+1. `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED`: Applies lighting to every shaded and vertex colored surface minus some geometry and menus.
 
 2. `LE_MODE_AFFECT_ALL_SHADED`: Applies lighting to every shaded surface minus some geometry and menus.
 
-3. `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE`: Only applies lighting to geometry that has the `G_LIGHTING_ENGINE_EXT` geometry mode.
+3. `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE`: **(Default)** Only applies lighting to geometry that has the `G_LIGHTING_ENGINE_EXT` geometry mode.
 
 `LE_MODE_AFFECT_ONLY_GEOMETRY_MODE` was the only "mode" until djoslin0 improved the lighting engine and came up with a system for affecting shaded surfaces without needing to apply the lighting engine geometry mode to every actor and level manually.
+
+I recommend you use `LE_MODE_AFFECT_ALL_SHADED_AND_COLORED` since that generally covers everything and doesn't require any additional effort like manually adding the lighting engine flag to everything.
 
 ## Section 3: Tonemapping
 
@@ -26,7 +30,7 @@ The lighting engine has 4 tonemapping modes you can switch between using `le_set
 
 1. `LE_TONE_MAPPING_TOTAL_WEIGHTED`: Weighs the combined ambient color and lights together, can look slightly dim.
 
-2. `LE_TONE_MAPPING_WEIGHTED`: (Default) Weights the lights on top of the ambient color instead of with it, generally looks the best with good color balance.
+2. `LE_TONE_MAPPING_WEIGHTED`: **(Default)** Weights the lights on top of the ambient color instead of with it, generally looks the best with good color balance.
 
 3. `LE_TONE_MAPPING_CLAMP`: The sum of the lights and ambient color clamped between 0 and 255. Colors can look overexposed if lights are too bright.
 

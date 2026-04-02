@@ -130,7 +130,6 @@ bool djui_is_playerlist_ping_visible(void) {
 
 ///
 
-extern s8 gDialogBoxState;
 s8 get_dialog_box_state(void) {
     return gDialogBoxState;
 }
@@ -295,12 +294,10 @@ void hud_set_flash(s8 value) {
 
 ///
 
-extern s16 gMenuMode;
 bool is_game_paused(void) {
     return gMenuMode != -1;
 }
 
-extern bool gPauseMenuHidden;
 bool is_pause_menu_hidden(void) {
     return gPauseMenuHidden;
 }
@@ -309,7 +306,6 @@ void set_pause_menu_hidden(bool hidden) {
     gPauseMenuHidden = hidden;
 }
 
-extern void set_play_mode(s16);
 void game_pause(void) {
     if (gMenuMode != -1) { return; }
 
@@ -319,8 +315,6 @@ void game_pause(void) {
     set_play_mode(PLAY_MODE_PAUSED);
 }
 
-extern s8 gDialogBoxState;
-extern s16 gPauseScreenMode;
 void game_unpause(void) {
     if (gMenuMode == -1) { return; }
 
@@ -375,10 +369,17 @@ f32 get_hand_foot_pos_z(struct MarioState* m, u8 index) {
     return m->marioBodyState->animPartsPos[sHandFootToAnimParts[index]][2];
 }
 
-bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, OUT Vec3f pos) {
+bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f pos) {
     if (!m) { return false; }
     if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
     vec3f_copy(pos, m->marioBodyState->animPartsPos[animPart]);
+    return true;
+}
+
+bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot) {
+    if (!m) { return false; }
+    if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
+    vec3s_copy(rot, m->marioBodyState->animPartsRot[animPart]);
     return true;
 }
 
@@ -576,6 +577,7 @@ bool mod_file_exists(const char* filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
     char normPath[SYS_MAX_PATH] = { 0 };
+    char normRelative[SYS_MAX_PATH] = { 0 };
 
     if (snprintf(normPath, sizeof(normPath), "%s", filename) < 0) {
         LOG_ERROR("Failed to copy filename for normalization: %s", filename);
@@ -585,7 +587,9 @@ bool mod_file_exists(const char* filename) {
 
     for (s32 i = 0; i < gLuaActiveMod->fileCount; i++) {
         struct ModFile* file = &gLuaActiveMod->files[i];
-        if (!strcmp(file->relativePath, normPath)) {
+        strcpy(normRelative, file->relativePath);
+        normalize_path(normRelative);
+        if (!strcmp(normRelative, normPath)) {
             return true;
         }
     }

@@ -4,7 +4,7 @@ VECX_TO_VECY = """
 /* |description|
 Converts a {{size}}D {{desc}} vector `a` into a {{size}}D {{desc_2}} vector and stores the result in `dest`
 |descriptionEnd| */
-INLINE OPTIMIZE_O3 Vec{{size}}{{suffix_2}}p vec{{size}}{{suffix}}_to_vec{{size}}{{suffix_2}}(OUT Vec{{size}}{{suffix_2}} dest, Vec{{size}}{{suffix}} a) {
+INLINE OPTIMIZE_O3 Vec{{size}}{{suffix_2}}p vec{{size}}{{suffix}}_to_vec{{size}}{{suffix_2}}(VEC_OUT Vec{{size}}{{suffix_2}} dest, Vec{{size}}{{suffix}} a) {
     {{body}}
     return dest;
 }

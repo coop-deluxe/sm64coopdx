@@ -1,10 +1,11 @@
+#include <deque>
 #include "dynos.cpp.h"
 extern "C" {
 #include "engine/graph_node.h"
 }
 
-static Array<PackData>& DynosPacks() {
-    static Array<PackData> sDynosPacks;
+static std::deque<PackData>& DynosPacks() {
+    static std::deque<PackData> sDynosPacks;
     return sDynosPacks;
 }
 
@@ -37,8 +38,8 @@ static void ScanPackBins(struct PackData* aPack) {
     }
 }
 
-static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData *>& pair) {
-    const char* aActorName = pair.first;
+static void DynOS_Pack_ActivateActor(s32 aPackIndex, std::pair<std::string, GfxData *> &pair) {
+    const char* aActorName = pair.first.c_str();
     GfxData* aGfxData = pair.second;
 
     auto& geoNode = *(aGfxData->mGeoLayouts.end() - 1);
@@ -64,13 +65,13 @@ static void DynOS_Pack_ActivateActor(s32 aPackIndex, Pair<const char *, GfxData 
     DynOS_Actor_Valid(georef, actorGfx);
 }
 
-static void DynOS_Pack_DeactivateActor(s32 aPackIndex, Pair<const char *, GfxData *>& pair) {
-    const char* aActorName = pair.first;
+static void DynOS_Pack_DeactivateActor(s32 aPackIndex, std::pair<std::string, GfxData *> &pair) {
+    const char* aActorName = pair.first.c_str();
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
     DynOS_Actor_Invalid(georef, aPackIndex);
 
     // figure out which actor to replace it with
-    Pair<const char *, GfxData *>* _Replacement = NULL;
+    std::pair<std::string, GfxData *> *_Replacement = NULL;
     s32 _ReplacementPackIndex = 0;
     for (auto& _Pack : DynosPacks()) {
         if (!_Pack.mEnabled) { continue; }
@@ -86,7 +87,7 @@ static void DynOS_Pack_DeactivateActor(s32 aPackIndex, Pair<const char *, GfxDat
 }
 
 s32 DynOS_Pack_GetCount() {
-    return DynosPacks().Count();
+    return DynosPacks().size();
 }
 
 void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
@@ -118,7 +119,7 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
 
 PackData* DynOS_Pack_GetFromIndex(s32 aIndex) {
     auto& _DynosPacks = DynosPacks();
-    if (aIndex < 0 || aIndex >= _DynosPacks.Count()) {
+    if (aIndex < 0 || aIndex >= _DynosPacks.size()) {
         return NULL;
     }
     return &_DynosPacks[aIndex];
@@ -163,7 +164,7 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
 
 
     auto& _DynosPacks = DynosPacks();
-    s32 index = _DynosPacks.Count();
+    s32 index = _DynosPacks.size();
     const PackData packData = {
         .mIndex = index,
         .mEnabled = false,
@@ -173,21 +174,21 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
         .mTextures = {},
         .mLoaded = false,
     };
-    _DynosPacks.Add(packData);
+    _DynosPacks.push_back(packData);
 
-    PackData* _Pack = &_DynosPacks[index];
+    PackData* _Pack = &_DynosPacks.back();
 
     _Pack->mDisplayName = displayName;
 
     return _Pack;
 }
 
-Pair<const char *, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName) {
+std::pair<std::string, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, const char* aActorName) {
     if (aPackData == NULL || aActorName == NULL) {
         return NULL;
     }
     for (auto& pair : aPackData->mGfxData) {
-        if (!strcmp(pair.first, aActorName)) {
+        if (pair.first == aActorName) {
             return &pair;
         }
     }
@@ -199,8 +200,8 @@ void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* a
         return;
     }
 
-    s32 index = aPackData->mGfxData.Count();
-    aPackData->mGfxData.Add({ strdup(aActorName), aGfxData });
+    s32 index = aPackData->mGfxData.size();
+    aPackData->mGfxData.emplace_back(aActorName, aGfxData);
 
     if (aPackData->mEnabled) {
         DynOS_Pack_ActivateActor(aPackData->mIndex, aPackData->mGfxData[index]);
@@ -225,7 +226,7 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData) {
         return;
     }
 
-    aPackData->mTextures.Add(aTexData);
+    aPackData->mTextures.push_back(aTexData);
 
     if (aPackData->mEnabled) {
         DynOS_Tex_Activate(aTexData, false);

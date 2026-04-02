@@ -140,6 +140,8 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNametagsSettings.showHealth = false;
     gNametagsSettings.showSelfTag = false;
 
+    gPauseMenuHidden = false;
+
     // initialize the network system
     gNetworkSentJoin = false;
     int rc = gNetworkSystem->initialize(inNetworkType, reconnecting);

@@ -93,7 +93,7 @@ override_allowed_functions = {
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
     "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
-    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "pressed_pause", "fade_into_special_warp", "get_instant_warp" ],
+    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_warp", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "pressed_pause", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", "handle_special_dialog_text" ],
@@ -159,7 +159,9 @@ lua_function_params = {
 }
 
 parameter_keywords = [
-    "OUT",
+    "VEC_OUT",
+    "RET",
+    "INOUT",
     "OPTIONAL"
 ]
 
@@ -833,18 +835,45 @@ def build_param(fid, param, i):
 def build_param_after(param, i):
     ptype = param['type']
     pid = param['identifier']
-    is_output = 'OUT' in param
+    is_output = 'VEC_OUT' in param
 
     if ptype in VEC_TYPES and is_output:
         return (vec_type_after % (ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     else:
         return ''
 
+def build_return_value(id, rtype):
+    rtype = alter_type(rtype)
+    lot = translate_type_to_lot(rtype)
+
+    lfunc = 'UNIMPLEMENTED -->'
+    if rtype in integer_types:
+        lfunc = 'lua_pushinteger'
+    elif rtype in number_types:
+        lfunc = 'lua_pushnumber'
+    elif rtype == 'bool':
+        lfunc = 'lua_pushboolean'
+    elif rtype == 'char*':
+        lfunc = 'lua_pushstring'
+    elif rtype == 'const char*':
+        lfunc = 'lua_pushstring'
+    elif rtype == 'ByteString':
+        lfunc = 'smlua_push_bytestring'
+    elif rtype == 'LuaTable':
+        lfunc = 'smlua_push_lua_table'
+    elif lot == 'LOT_POINTER':
+        lvt = translate_type_to_lvt(rtype)
+        return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, id)
+    elif '???' not in lot and lot != 'LOT_NONE':
+        return '    smlua_push_object(L, %s, %s, NULL);\n' % (lot, id)
+
+    return '    %s(L, %s);\n' % (lfunc, id)
+
 def build_call(function):
     ftype = alter_type(function['type'])
     fid = function['identifier']
 
-    ccall = '%s(%s)' % (fid, ', '.join([x['identifier'] for x in function['params']]))
+    ccall = '%s(%s)' % (fid, ', '.join([('&' if ('RET' in x or 'INOUT' in x) else '') + x['identifier'] for x in function['params']]))
 
     if ftype == 'void':
         return '    %s;\n' % ccall
@@ -856,30 +885,21 @@ def build_call(function):
     if ftype in VECP_TYPES:
         return '    %s;\n' % ccall
 
-    flot = translate_type_to_lot(ftype)
+    return build_return_value(ccall, ftype)
 
-    lfunc = 'UNIMPLEMENTED -->'
-    if ftype in integer_types:
-        lfunc = 'lua_pushinteger'
-    elif ftype in number_types:
-        lfunc = 'lua_pushnumber'
-    elif ftype == 'bool':
-        lfunc = 'lua_pushboolean'
-    elif ftype == 'char*':
-        lfunc = 'lua_pushstring'
-    elif ftype == 'const char*':
-        lfunc = 'lua_pushstring'
-    elif ftype == 'ByteString':
-        lfunc = 'smlua_push_bytestring'
-    elif ftype == 'LuaTable':
-        lfunc = 'smlua_push_lua_table'
-    elif translate_type_to_lot(ftype) == 'LOT_POINTER':
-        lvt = translate_type_to_lvt(ftype)
-        return '    smlua_push_pointer(L, %s, (void*)%s, NULL);\n' % (lvt, ccall)
-    elif '???' not in flot and flot != 'LOT_NONE':
-        return '    smlua_push_object(L, %s, %s, NULL);\n' % (flot, ccall)
-
-    return '    %s(L, %s);\n' % (lfunc, ccall)
+def split_function_parameters_and_returns(function):
+    fparams = []
+    freturns = []
+    for param in function['params']:
+        deref_type = param['type'][:param['type'].rfind('*')].strip() # Remove pointer
+        if 'INOUT' in param:
+            fparams.append({ **{ k: v for k, v in param.items() if k != "type" }, "type": deref_type})
+            freturns.append({ **param, "rtype": deref_type })
+        elif 'RET' in param:
+            freturns.append({ **param, "rtype": deref_type })
+        else:
+            fparams.append(param)
+    return fparams, freturns
 
 def build_function(function, do_extern):
     s = ''
@@ -887,6 +907,8 @@ def build_function(function, do_extern):
 
     if fid in override_function_version_excludes:
         s += '#ifndef ' + override_function_version_excludes[fid] + '\n'
+
+    fparams, freturns = split_function_parameters_and_returns(function)
 
     if len(function['params']) <= 0:
         s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
@@ -899,8 +921,8 @@ def build_function(function, do_extern):
         if 'bhv_' in fid:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    params_max = len(function['params'])
-    params_min = len([param for param in function['params'] if 'OPTIONAL' not in param])
+    params_max = len(fparams)
+    params_min = len([param for param in fparams if 'OPTIONAL' not in param])
     if params_min == params_max:
         s += """    if (L == NULL) { return 0; }\n
     int top = lua_gettop(L);
@@ -919,7 +941,7 @@ def build_function(function, do_extern):
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
     i = 1
-    for param in function['params']:
+    for param in fparams:
         pid = param['identifier']
         if is_interact_func and pid == 'interactType':
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
@@ -938,14 +960,25 @@ def build_function(function, do_extern):
         i += 1
     s += '\n'
 
+    if freturns:
+        for param in freturns:
+            if 'INOUT' not in param:
+                pid = param['identifier']
+                ptype = alter_type(param['rtype'])
+                s += '    %s %s;\n' % (ptype, pid)
+        s += '\n'
+
     if do_extern:
         s += '    extern %s\n' % function['line']
 
+    push_value = True
     if is_interact_func:
         # special case for interaction functions to call the hooks associated with interactions
         s += "    lua_pushinteger(L, process_interaction(m, " + fid.upper() + ", o, " + fid + "));\n"
     else:
-        s += build_call(function)
+        call_str = build_call(function)
+        push_value = "lua_push" in call_str
+        s += call_str
 
     i = 1
     for param in function['params']:
@@ -953,14 +986,23 @@ def build_function(function, do_extern):
         i += 1
     s += '\n'
 
-    # To allow chaining vector functions calls, return the table corresponding to the `OUT` parameter
+    # To allow chaining vector functions calls, return the table corresponding to the `VEC_OUT` parameter
     if function['type'] in VECP_TYPES:
         for i, param in enumerate(function['params']):
-            if 'OUT' in param:
+            if 'VEC_OUT' in param:
                 s += '    lua_settop(L, %d);\n' % (i + 1)
                 break
 
-    s += '    return 1;\n}\n'
+    # Push extra return values
+    if freturns:
+        for param in freturns:
+            pid = param['identifier']
+            ptype = alter_type(param['rtype'])
+            s += build_return_value(pid, ptype)
+        s += '\n'
+
+    num_returns = max(1, push_value + len(freturns))
+    s += '    return %d;\n}\n' % num_returns
 
     if fid in override_function_version_excludes:
         s += '#endif\n'
@@ -1252,23 +1294,34 @@ def doc_function(fname, function):
     description = function.get('description', "")
 
     rtype, rlink = translate_type_to_lua(function['type'])
-    param_str = ', '.join([x['identifier'] for x in function['params']])
+    param_str = ', '.join([x['identifier'] for x in function['params'] if 'RET' not in x])
 
     if description != "":
         s += '\n### Description\n'
         s +=  f'{description}\n'
 
     s += "\n### Lua Example\n"
-    if rtype != None:
-        s += "`local %sValue = %s(%s)`\n" % (rtype.replace('`', '').split(' ')[0], fid, param_str)
+    rvalues = []
+    if rtype is not None:
+        rid = rtype.replace('`', '').split(' ')[0]
+        rid = rid[0].lower() + rid[1:]
+        rvalues.append((rid + 'Value', rtype, rlink))
+
+    fparams, freturns = split_function_parameters_and_returns(function)
+    for param in freturns:
+        ptype, plink = translate_type_to_lua(param['rtype'])
+        rvalues.append((param['identifier'], ptype, plink))
+
+    if rvalues:
+        s += "`local %s = %s(%s)`\n" % (", ".join([id for id, _, _ in rvalues]), fid, param_str)
     else:
         s += "`%s(%s)`\n" % (fid, param_str)
 
     s += '\n### Parameters\n'
-    if len(function['params']) > 0:
+    if len(fparams) > 0:
         s += '| Field | Type |\n'
         s += '| ----- | ---- |\n'
-        for param in function['params']:
+        for param in fparams:
             pid = param['identifier']
             ptype = param['type']
             ptype, plink = translate_type_to_lua(ptype)
@@ -1288,10 +1341,11 @@ def doc_function(fname, function):
 
     s += '\n### Returns\n'
     if rtype != None:
-        if rlink:
-            s += '[%s](%s)\n' % (rtype, rlink)
-        else:
-            s += '- %s\n' % rtype
+        for _, ptype, plink in rvalues:
+            if plink:
+                s += '- [%s](%s)\n' % (ptype, plink)
+            else:
+                s += '- %s\n' % ptype
     else:
         s += '- None\n'
 
@@ -1380,19 +1434,26 @@ def def_function(fname, function):
     if not doc_should_document(fname, fid):
         return ''
 
-    rtype, rlink = translate_type_to_lua(function['type'])
-    param_str = ', '.join([x['identifier'] for x in function['params']])
+    rtype, _ = translate_type_to_lua(function['type'])
+    param_str = ', '.join([x['identifier'] for x in function['params'] if 'RET' not in x])
 
-    if rtype == None:
-        rtype = 'nil'
+    rtypes = []
+    if rtype is not None:
+        rtypes.append((rtype, None))
+
+    fparams, freturns = split_function_parameters_and_returns(function)
+    for param in freturns:
+        rtype, _ = translate_type_to_lua(param['rtype'])
+        rid = param['identifier']
+        rtypes.append((rtype, rid))
 
     if function['description'].startswith("[DEPRECATED"):
         s += "--- @deprecated\n"
 
-    for param in function['params']:
+    for param in fparams:
         pid = param['identifier']
         ptype = param['type']
-        ptype, plink = translate_type_to_lua(ptype)
+        ptype, _ = translate_type_to_lua(ptype)
 
         ptype = translate_to_def(ptype)
         if ptype.startswith('Pointer_') and ptype not in def_pointers:
@@ -1400,12 +1461,14 @@ def def_function(fname, function):
 
         s += '--- @param %s%s %s\n' % (pid, ('?' if 'OPTIONAL' in param else ''), ptype)
 
-    rtype = translate_to_def(rtype)
-    if rtype.startswith('Pointer_') and rtype not in def_pointers:
-        def_pointers.append(rtype)
+    for rtype, rid in rtypes:
+        rtype = translate_to_def(rtype)
+        if rtype.startswith('Pointer_') and rtype not in def_pointers:
+            def_pointers.append(rtype)
 
-    if rtype != "nil":
-        s += '--- @return %s\n' % rtype
+        if rtype != "nil":
+            s += ('--- @return %s' % rtype) + (' %s' % rid if rid else '') + '\n'
+
     if function['description'] != "":
         s += "--- %s\n" % (function['description'])
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)

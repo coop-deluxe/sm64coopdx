@@ -1300,9 +1300,9 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
             case ACT_HOLD_BUTT_SLIDE_STOP:    cancel = act_hold_butt_slide_stop(m);             break;
             case ACT_PALETTE_EDITOR_CAP:      cancel = act_palette_editor_cap(m);               break;
             default:
-                LOG_ERROR("Attempted to execute unimplemented action '%04X'", m->action);
+                LOG_ERROR("Attempted to execute unimplemented action '%08X'", m->action);
                 set_mario_action(m, ACT_IDLE, 0);
-                return false;
+                return FALSE;
         }
         /* clang-format on */
     }

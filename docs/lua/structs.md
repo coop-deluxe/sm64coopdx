@@ -336,6 +336,7 @@
 | RespawnShellBoxes | `integer` |  |
 | MultipleCapCollection | `integer` |  |
 | InfiniteRenderDistance | `integer` |  |
+| ProcessLODs | `integer` |  |
 | CourtyardBoosRequirement | `integer` |  |
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
@@ -1595,6 +1596,7 @@
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
 | animPartsPos | `Array` <`Vec3f`> | read-only |
+| animPartsRot | `Array` <`Vec3s`> | read-only |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |

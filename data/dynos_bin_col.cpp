@@ -64,9 +64,6 @@ static void ValidateColSectionChange(GfxData* aGfxData, struct CollisionValidati
 }
 
 static void ValidateColInit(GfxData* aGfxData, struct CollisionValidationData& aColValData) {
-    if (aColValData.tokenIndex != 0) {
-        PrintDataError("COL_INIT found after the first token");
-    }
     ValidateColSectionChange(aGfxData, aColValData, COL_SECTION_VTX);
 }
 

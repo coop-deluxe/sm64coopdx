@@ -95,6 +95,8 @@ static const char* LuaActionHookTypeArgName[] = {
     "max (dummy)",
 };
 
+#define ACTION_HOOK_CONTINUE_EXECUTION -1
+
 #define MAX_HOOKED_MOD_MENU_ELEMENTS 256
 
 enum LuaModMenuElementType {
@@ -143,7 +145,7 @@ const char* smlua_get_name_from_hooked_behavior_id(enum BehaviorId id);
 bool smlua_call_behavior_hook(const BehaviorScript** behavior, struct Object* object, bool before);
 
 int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct Mod* activeMod, struct ModFile* activeModFile);
-bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* returnValue);
+bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 
 bool smlua_call_chat_command_hook(char* command);

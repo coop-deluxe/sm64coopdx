@@ -25,8 +25,8 @@ s32 arc_to_goal_pos(Vec3f goal, Vec3f pos, f32 yVel, f32 gravity);
 void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll);
 /* |description|Plays the penguin walking sound|descriptionEnd| */
 void play_penguin_walking_sound(s32 walk);
-/* |description|Updates the current object's angle from its move flags|descriptionEnd| */
-s32 update_angle_from_move_flags(s32 *angle);
+/* |description|Computes and returns an angle depending on the current object's angle and move flags|descriptionEnd| */
+s32 update_angle_from_move_flags(INOUT s32 *angle);
 /* |description|Spawns strong wind particles relative to the current object|descriptionEnd| */
 void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX, f32 relPosY, f32 relPosZ);
 

@@ -16,11 +16,12 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
-#include "game/skybox.h"
-#include "game/first_person_cam.h"
+#include "skybox.h"
+#include "first_person_cam.h"
 #include "course_table.h"
 #include "skybox.h"
 #include "mario.h"
+#include "hardcoded.h"
 
 /**
  * This file contains the code that processes the scene graph for rendering.
@@ -73,11 +74,19 @@ Mtx sPrevCamTranf, sCurrCamTranf = {
 };
 
 static Gfx obj_sanitize_gfx[] = {
-    gsSPClearGeometryMode(G_TEXTURE_GEN | G_PACKED_NORMALS_EXT),
-    gsSPSetGeometryMode(G_LIGHTING),
+    gsSPClearGeometryMode(G_CULL_BOTH | G_FOG | G_TEXTURE_GEN
+                        | G_TEXTURE_GEN_LINEAR | G_LOD | G_PACKED_NORMALS_EXT
+                        | G_LIGHT_MAP_EXT | G_LIGHTING_ENGINE_EXT | G_CULL_INVERT_EXT
+                        | G_FRESNEL_COLOR_EXT | G_FRESNEL_ALPHA_EXT),
+    gsSPSetGeometryMode(G_SHADE | G_SHADING_SMOOTH | G_CULL_BACK | G_LIGHTING),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, 0, G_OFF),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsDPSetEnvColor(0xFF, 0xFF, 0xFF, 0xFF),
+    gsDPSetPrimColor(0, 0, 0xFF, 0xFF, 0xFF, 0xFF),
+    gsDPSetFogColor(0x00, 0x00, 0x00, 0x00),
     gsDPSetAlphaCompare(G_AC_NONE),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPNumLights(NUMLIGHTS_1),
     gsSPEndDisplayList(),
 };
 
@@ -633,10 +642,10 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
  * range of this node.
  */
 static void geo_process_level_of_detail(struct GraphNodeLevelOfDetail *node) {
-    // We assume modern hardware is powerful enough to draw the most detailed variant
-    s16 distanceFromCam = 0;
+    Mtx *mtx = gMatStackFixed[gMatStackIndex];
+    f32 distanceFromCam = gBehaviorValues.ProcessLODs ? (s32) -mtx->m[3][2] : 0; // z-component of the translation column
 
-    if (node->minDistance <= distanceFromCam && distanceFromCam < node->maxDistance) {
+    if ((f32)node->minDistance <= distanceFromCam && distanceFromCam < (f32)node->maxDistance) {
         if (node->node.children != 0) {
             geo_process_node_and_siblings(node->node.children);
         }
@@ -1136,13 +1145,16 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
 
-    // Mario anim part pos
+    // Mario anim part pos and rot
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
         get_pos_from_transform_mtx(
             gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
             gMatStack[gMatStackIndex],
             *gCurGraphNodeCamera->matrixPtr
         );
+
+        Vec3s rot = { rotation[2], rotation[0], rotation[1] };
+        vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
     }
 
     if (gCurGraphNodeMarioState != NULL) {
@@ -1768,13 +1780,16 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
 
-    // Mario anim part pos
+    // Mario anim part pos and rot
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
         get_pos_from_transform_mtx(
             gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
             gMatStack[gMatStackIndex],
             *gCurGraphNodeCamera->matrixPtr
         );
+
+        Vec3s rot = { rotation[2], rotation[0], rotation[1] };
+        vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
     }
 
     if (gCurGraphNodeMarioState != NULL) {
