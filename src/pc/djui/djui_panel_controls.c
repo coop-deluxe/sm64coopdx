@@ -42,6 +42,8 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #endif
 
 #ifdef HAVE_SDL2
+        djui_checkbox_create(body, DLANG(CONTROLS, EXTENDED_REPORTS), &configExtendedReports, NULL);
+
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
 

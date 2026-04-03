@@ -8,7 +8,7 @@ extern "C" {
 #include "behavior_data.h"
 #include "pc/lua/smlua_hooks.h"
 
-s8 geo_get_processing_mario_index(void);
+s8 geo_get_processing_mario_index(struct Object *obj);
 }
 
 //
@@ -77,7 +77,7 @@ void DynOS_Anim_Swap(void *aPtr) {
 
         // Animation index
         s32 _AnimIndex = -1;
-        s8 index = geo_get_processing_mario_index();
+        s8 index = geo_get_processing_mario_index(_Object);
         if (index != -1) {
             _AnimIndex = RetrieveCurrentMarioAnimationIndex(index);
 

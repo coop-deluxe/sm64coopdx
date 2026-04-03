@@ -20,9 +20,9 @@ void bhv_hoot_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->ignore_if_true = bhv_hoot_ignore_if_true;
-        sync_object_init_field(o, &o->oHootAvailability);
-        sync_object_init_field(o, &o->oMoveAnglePitch);
-        sync_object_init_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
+        sync_object_init_field(o, o->oHootAvailability);
+        sync_object_init_field(o, o->oMoveAnglePitch);
+        sync_object_init_field(o, o->header.gfx.animInfo.animFrame);
     }
 }
 

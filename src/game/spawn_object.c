@@ -331,6 +331,9 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     vec3s_zero(obj->header.gfx.angle);
     obj->header.gfx.throwMatrix = NULL;
     obj->header.gfx.inited = false;
+    obj->header.gfx.disableAutomaticShadowPos = false;
+    obj->header.gfx.shadowInvisible = false;
+    obj->header.gfx.skipInViewCheck = false;
 
     obj->coopFlags = 0;
     obj->hookRender = 0;

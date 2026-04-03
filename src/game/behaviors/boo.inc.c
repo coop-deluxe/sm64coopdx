@@ -27,20 +27,20 @@ struct SyncObject* boo_sync_object_init(void) {
     struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
-    sync_object_init_field(o, &o->oBooBaseScale);
-    sync_object_init_field(o, &o->oBooNegatedAggressiveness);
-    sync_object_init_field(o, &o->oBooOscillationTimer);
-    sync_object_init_field(o, &o->oBooTargetOpacity);
-    sync_object_init_field(o, &o->oBooTurningSpeed);
-    sync_object_init_field(o, &o->oFaceAngleRoll);
-    sync_object_init_field(o, &o->oFaceAngleYaw);
-    sync_object_init_field(o, &o->oFlags);
-    sync_object_init_field(o, &o->oForwardVel);
-    sync_object_init_field(o, &o->oHealth);
-    sync_object_init_field(o, &o->oInteractStatus);
-    sync_object_init_field(o, &o->oInteractType);
-    sync_object_init_field(o, &o->oOpacity);
-    sync_object_init_field(o, &o->oRoom);
+    sync_object_init_field(o, o->oBooBaseScale);
+    sync_object_init_field(o, o->oBooNegatedAggressiveness);
+    sync_object_init_field(o, o->oBooOscillationTimer);
+    sync_object_init_field(o, o->oBooTargetOpacity);
+    sync_object_init_field(o, o->oBooTurningSpeed);
+    sync_object_init_field(o, o->oFaceAngleRoll);
+    sync_object_init_field(o, o->oFaceAngleYaw);
+    sync_object_init_field(o, o->oFlags);
+    sync_object_init_field(o, o->oForwardVel);
+    sync_object_init_field(o, o->oHealth);
+    sync_object_init_field(o, o->oInteractStatus);
+    sync_object_init_field(o, o->oInteractType);
+    sync_object_init_field(o, o->oOpacity);
+    sync_object_init_field(o, o->oRoom);
     return so;
 }
 
@@ -56,16 +56,11 @@ void bhv_boo_init(void) {
 
 static s32 boo_should_be_stopped(void) {
     if (cur_obj_has_behavior(bhvMerryGoRoundBigBoo) || cur_obj_has_behavior(bhvMerryGoRoundBoo)) {
-        for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (!is_player_active(&gMarioStates[i])) { continue; }
-            if (gMarioStates[i].currentRoom != BBH_DYNAMIC_SURFACE_ROOM && gMarioStates[i].currentRoom != BBH_NEAR_MERRY_GO_ROUND_ROOM) { return TRUE; }
-        }
-        return FALSE;
-        /*if (!gMarioOnMerryGoRound) {
+        if (!gMarioOnMerryGoRound) {
             return TRUE;
         } else {
             return FALSE;
-        }*/
+        }
     } else {
         if (o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM) {
             return TRUE;
@@ -384,9 +379,7 @@ static void boo_chase_mario(f32 a0, s16 a1, f32 a2) {
     if (boo_vanish_or_appear()) {
         o->oInteractType = 0x8000;
 
-
-        u8 isMerryGoRoundBoo = (cur_obj_has_behavior(bhvMerryGoRoundBigBoo) || cur_obj_has_behavior(bhvMerryGoRoundBoo));
-        if (!isMerryGoRoundBoo && cur_obj_lateral_dist_from_obj_to_home(player) > 1500.0f) {
+        if (cur_obj_lateral_dist_from_obj_to_home(player) > 1500.0f) {
             sp1A = cur_obj_angle_to_home();
         } else {
             sp1A = angleToPlayer;
@@ -535,7 +528,8 @@ static void (*sBooActions[])(void) = {
 };
 
 void bhv_boo_loop(void) {
-    if (o->oAction < 3) {
+    // COOP: only sync when Boo isn't in a death state
+    if (o->oAction < 3 || o->oAction == 5) {
         if (!sync_object_is_initialized(o->oSyncID)) {
             struct SyncObject* so = boo_sync_object_init();
             if (so) { so->syncDeathEvent = FALSE; }
@@ -862,8 +856,8 @@ void bhv_boo_with_cage_loop(void) {
 void bhv_merry_go_round_boo_manager_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oMerryGoRoundBooManagerNumBoosSpawned);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oMerryGoRoundBooManagerNumBoosSpawned);
     }
 
     struct Object* player = nearest_player_to_object(o);

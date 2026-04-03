@@ -597,5 +597,11 @@ enum BehaviorId get_id_from_behavior_name(const char* name) {
             return i;
         }
     }
+    for (int i = 0; i < gHookedBehaviorsCount; i++) {
+        struct LuaHookedBehavior *hooked = &gHookedBehaviors[i];
+        if (hooked->bhvName && !strcmp(name, hooked->bhvName)) {
+            return hooked->overrideId;
+        }
+    }
     return id_bhv_max_count;
 }

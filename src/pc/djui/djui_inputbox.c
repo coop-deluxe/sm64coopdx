@@ -676,6 +676,8 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     f32 drawX = inputbox->viewX;
     f32 additionalShift = 0;
     bool wasInsideSelection = false;
+
+    font->render_begin();
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
         
         //render composition text
@@ -733,6 +735,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
             gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
         }
     }
+    font->render_end();
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);

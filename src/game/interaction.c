@@ -643,7 +643,9 @@ static u32 unused_determine_knockback_action(struct MarioState *m) {
     return bonkAction;
 }
 
-u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
+u32 determine_knockback_action(struct MarioState *m, RET bool *isPlayerAttack) {
+    *isPlayerAttack = false;
+
     if (!m) { return 0; }
     if (m->interactObj == NULL) {
         return sForwardKnockbackActions[0][0];
@@ -739,6 +741,7 @@ u32 determine_knockback_action(struct MarioState *m, UNUSED s32 arg) {
         m->knockbackTimer = hasBeenPunched ? PVP_ATTACK_KNOCKBACK_TIMER_OVERRIDE : PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
 #undef IF_REVAMPED_PVP
         m->faceAngle[1] = m->interactObj->oFaceAngleYaw + (sign == 1.0f ? 0 : 0x8000);
+        *isPlayerAttack = true;
     }
 
     return bonkAction;
@@ -870,7 +873,10 @@ u32 take_damage_and_knock_back(struct MarioState *m, struct Object *o) {
         }
 
         update_mario_sound_and_camera(m);
-        return drop_and_set_mario_action(m, determine_knockback_action(m, o->oDamageOrCoinValue), damage);
+
+        bool isPlayerAttack = false;
+        u32 knockbackAction = determine_knockback_action(m, &isPlayerAttack);
+        return drop_and_set_mario_action(m, knockbackAction, damage | (isPlayerAttack ? PVP_ATTACK_KNOCKBACK_ACTION_ARG : 0));
     }
 
     return FALSE;
@@ -1724,8 +1730,9 @@ u32 interact_snufit_bullet(struct MarioState *m, UNUSED u32 interactType, struct
             play_character_sound(m, CHAR_SOUND_ATTACKED);
             update_mario_sound_and_camera(m);
 
-            return drop_and_set_mario_action(m, determine_knockback_action(m, o->oDamageOrCoinValue),
-                                             o->oDamageOrCoinValue);
+            bool isPlayerAttack = false;
+            u32 knockbackAction = determine_knockback_action(m, &isPlayerAttack);
+            return drop_and_set_mario_action(m, knockbackAction, o->oDamageOrCoinValue | (isPlayerAttack ? PVP_ATTACK_KNOCKBACK_ACTION_ARG : 0));
         }
     }
 
@@ -2438,7 +2445,7 @@ void check_death_barrier(struct MarioState *m) {
         smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
         if (!allowDeath) { return; }
 
-        if (mario_can_bubble(m)) {
+        if ((mario_can_bubble(m) && m->numLives > 0)) {
             switch (gCurrCourseNum) {
                 case COURSE_COTMC:    // (20) Cavern of the Metal Cap
                 case COURSE_TOTWC:    // (21) Tower of the Wing Cap

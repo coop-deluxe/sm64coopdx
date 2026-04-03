@@ -52,6 +52,9 @@ function check_mario_attacking(obj, mario)
             if mario.action == ACT_WALL_KICK_AIR then
                 return 2
             end
+            if  (mario.action & ACT_FLAG_CUSTOM_ACTION ~= 0) and (mario.action & ACT_FLAG_ATTACKING ~= 0) then
+                return 2
+            end
         end
     end
 

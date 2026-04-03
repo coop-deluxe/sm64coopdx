@@ -18,7 +18,7 @@ void bhv_init_changing_water_level_loop(void) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so != NULL) {
             so->on_received_post = bhv_init_changing_water_level_on_received_post;
-            sync_object_init_field(o, &sWaterDiamondPicked);
+            sync_object_init_field(o, sWaterDiamondPicked);
         }
     }
 

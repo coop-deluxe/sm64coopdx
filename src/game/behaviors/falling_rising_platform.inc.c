@@ -5,8 +5,8 @@ void bhv_squishable_platform_loop(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->minUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oPlatformTimer);
-            sync_object_init_field(o, &o->header.gfx.scale[1]);
+            sync_object_init_field(o, o->oPlatformTimer);
+            sync_object_init_field(o, o->header.gfx.scale[1]);
         }
     }
 
@@ -23,7 +23,7 @@ void bhv_bitfs_sinking_platform_loop(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->minUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oPlatformTimer);
+            sync_object_init_field(o, o->oPlatformTimer);
         }
     }
 
@@ -43,7 +43,7 @@ void bhv_bitfs_sinking_cage_platform_loop(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->minUpdateRate = 5.0f;
-            sync_object_init_field(o, &o->oPlatformTimer);
+            sync_object_init_field(o, o->oPlatformTimer);
         }
     }
 

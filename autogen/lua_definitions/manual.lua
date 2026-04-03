@@ -97,11 +97,6 @@ gServerSettings = {}
 --- Struct containing the settings for Nametags
 gNametagsSettings = {}
 
---- @type Camera
---- Struct contaning camera fields
---- - This camera is the same as `gMarioStates[i].area.camera` or `gCurrentArea.camera`
-gCamera = {}
-
 -----------
 -- hooks --
 -----------
@@ -132,7 +127,7 @@ function update_chat_command_description(command, description)
 end
 
 --- @param hookEventType LuaHookedEventType When a function should run
---- @param func fun(...: any): any The function to run
+--- @param func fun(...: any): any?, any? The function to run
 --- Different hooks can pass in different parameters and have different return values. Be sure to read the hooks guide for more information.
 function hook_event(hookEventType, func)
     -- ...

@@ -155,4 +155,9 @@ void obj_move_xyz(struct Object *o, f32 dx, f32 dy, f32 dz);
 /* |description|Sets the parameters of one of the two whirlpools (0-indexed) in an area|descriptionEnd| */
 void set_whirlpools(f32 x, f32 y, f32 z, s16 strength, s16 area, s32 index);
 
+/* |description|Skips object interpolation for a frame|descriptionEnd|*/
+void obj_skip_interpolation(struct Object *o);
+/* |description|Skips animation interpolation for a frame|descriptionEnd| */
+void obj_anim_skip_interpolation(struct Object *o);
+
 #endif
