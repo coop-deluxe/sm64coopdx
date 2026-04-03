@@ -3837,7 +3837,7 @@ function djui_hud_set_font(fontType)
 end
 
 --- @return DjuiColor
---- Gets the current DJUI HUD color
+--- Gets the current DJUI HUD global color
 function djui_hud_get_color()
     -- ...
 end
@@ -3846,13 +3846,33 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the current DJUI HUD color
+--- Sets the current DJUI HUD global color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
---- Resets the current DJUI HUD color
+--- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
+    -- ...
+end
+
+--- @return DjuiColor
+--- Gets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_get_text_color()
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Sets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_set_text_color(r, g, b, a)
+    -- ...
+end
+
+--- Resets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_reset_text_color()
     -- ...
 end
 
@@ -9074,12 +9094,6 @@ end
 --- @param rangeLength integer
 --- @return integer
 function cur_obj_check_anim_frame_in_range(startFrame, rangeLength)
-    -- ...
-end
-
---- @param a0 Pointer_integer
---- @return integer
-function cur_obj_check_frame_prior_current_frame(a0)
     -- ...
 end
 
