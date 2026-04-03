@@ -52,12 +52,12 @@ void nametags_render(void) {
     djui_hud_set_font(FONT_SPECIAL);
 
     struct NametagInfo {
-        s32 playerIndex;
         Vec3f pos;
         f32 scale;
         char name[MAX_CONFIG_STRING];
     };
     struct NametagInfo nametags[MAX_PLAYERS] = {0};
+    s32 sortedNametagIndices[MAX_PLAYERS] = {0};
     s32 numNametags = 0;
 
     extern bool gDjuiHudToWorldCalcViewport;
@@ -109,16 +109,19 @@ void nametags_render(void) {
 
             s32 j = 0;
             for (; j < numNametags; ++j) {
-                if (scale < nametags[j].scale) {
-                    memmove(nametags + j + 1, nametags + j, sizeof(struct NametagInfo) * (numNametags - j));
+                const struct NametagInfo *nametag = &nametags[sortedNametagIndices[j]];
+                if (scale < nametag->scale) {
+                    memmove(sortedNametagIndices + j + 1, sortedNametagIndices + j, sizeof(s32) * (numNametags - j));
                     break;
                 }
             }
+            sortedNametagIndices[j] = i;
 
-            nametags[j].playerIndex = i;
-            vec3f_copy(nametags[j].pos, out);
-            nametags[j].scale = scale;
-            memcpy(nametags[j].name, name, sizeof(name));
+            struct NametagInfo *nametag = &nametags[i];
+            vec3f_copy(nametag->pos, out);
+            nametag->scale = scale;
+            memcpy(nametag->name, name, sizeof(name));
+
             numNametags++;
         }
     }
@@ -127,17 +130,18 @@ void nametags_render(void) {
 
     // render nametags
     for (s32 k = 0; k < numNametags; ++k) {
-        struct NametagInfo *nametag = &nametags[k];
-        struct MarioState *m = &gMarioStates[nametag->playerIndex];
-        struct NetworkPlayer *np = &gNetworkPlayers[nametag->playerIndex];
+        s32 playerIndex = sortedNametagIndices[k];
+        struct NametagInfo *nametag = &nametags[playerIndex];
+        struct MarioState *m = &gMarioStates[playerIndex];
+        struct NetworkPlayer *np = &gNetworkPlayers[playerIndex];
 
         u8* color = network_get_player_text_color(m->playerIndex);
         f32 measure = djui_hud_measure_text(nametag->name) * nametag->scale * 0.5f;
         nametag->pos[1] -= 16 * nametag->scale;
 
-        u8 alpha = (nametag->playerIndex == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - nametag->scale, 0.f, 1.f);
+        u8 alpha = (playerIndex == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - nametag->scale, 0.f, 1.f);
 
-        struct StateExtras* e = &sStateExtras[nametag->playerIndex];
+        struct StateExtras* e = &sStateExtras[playerIndex];
         if (!e->inited) {
             vec3f_copy(e->prevPos, nametag->pos);
             e->prevScale = nametag->scale;
@@ -161,7 +165,7 @@ void nametags_render(void) {
             color[0], color[1], color[2], alpha, 0.25);
 
         // render power meter
-        if (nametag->playerIndex != 0 && gNametagsSettings.showHealth) {
+        if (playerIndex != 0 && gNametagsSettings.showHealth) {
             djui_hud_set_color(255, 255, 255, alpha);
             f32 healthScale = 90 * nametag->scale;
             f32 prevHealthScale = 90 * e->prevScale;
