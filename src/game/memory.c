@@ -193,15 +193,47 @@ void growing_pool_free_pool(struct GrowingPool *pool) {
  // growing array //
 ///////////////////
 
-struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity, GrowingArrayAllocFunc alloc, GrowingArrayFreeFunc free) {
-    growing_array_free(&array);
-    array = malloc(sizeof(struct GrowingArray));
-    if (!array) { return NULL; }
-    array->buffer = calloc(capacity, sizeof(void *));
-    if (!array->buffer) {
-        free(array);
-        return NULL;
+static void growing_array_free_elements(struct GrowingArray *array) {
+    if (array) {
+        if (array->buffer) {
+            for (u32 i = 0; i != array->capacity; ++i) {
+                if (array->buffer[i]) {
+                    array->free(array->buffer[i]);
+                }
+            }
+            memset(array->buffer, 0, sizeof(void *) * array->capacity);
+        }
+        array->count = 0;
     }
+}
+
+struct GrowingArray *growing_array_init(struct GrowingArray *array, u32 capacity, GrowingArrayAllocFunc alloc, GrowingArrayFreeFunc free) {
+    growing_array_free_elements(array);
+
+    // reuse buffer if array was already allocated
+    if (array) {
+        if (!array->buffer || array->capacity != capacity) {
+            void **buffer = realloc(array->buffer, sizeof(void *) * capacity);
+
+            // if realloc fails, destroy the array and create a new one
+            if (!buffer) {
+                growing_array_free(&array);
+                return growing_array_init(NULL, capacity, alloc, free);
+            }
+
+            memset(buffer, 0, sizeof(void *) * capacity);
+            array->buffer = buffer;
+        }
+    } else {
+        array = malloc(sizeof(struct GrowingArray));
+        if (!array) { return NULL; }
+        array->buffer = calloc(capacity, sizeof(void *));
+        if (!array->buffer) {
+            free(array);
+            return NULL;
+        }
+    }
+
     array->capacity = capacity;
     array->count = 0;
     array->alloc = alloc;
@@ -261,11 +293,7 @@ void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count)
 
 void growing_array_free(struct GrowingArray **array) {
     if (*array) {
-        for (u32 i = 0; i != (*array)->capacity; ++i) {
-            if ((*array)->buffer[i]) {
-                (*array)->free((*array)->buffer[i]);
-            }
-        }
+        growing_array_free_elements(*array);
         free((*array)->buffer);
         free(*array);
         *array = NULL;

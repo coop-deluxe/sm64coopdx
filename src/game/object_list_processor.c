@@ -25,6 +25,7 @@
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/djui/djui_hud_utils.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -605,6 +606,7 @@ void clear_objects(void) {
 
     clear_dynamic_surfaces();
     geo_clear_interp_data();
+    djui_hud_clear_interp_data();
 }
 
 /**
