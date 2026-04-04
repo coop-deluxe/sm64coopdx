@@ -849,7 +849,7 @@ void smlua_logline(void) {
         if (strlen(src) < SYS_MAX_PATH) {
             int slashCount = 0;
             for (const char* p = src + strlen(src); p > src; --p) {
-                if (*p == '/' || *p == '\\') {
+                if (*p == *PATH_SEPARATOR || *p == *PATH_SEPARATOR_ALT) {
                     if (++slashCount == 2) {
                         folderStart = p + 1;
                         break;

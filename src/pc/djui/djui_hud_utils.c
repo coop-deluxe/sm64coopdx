@@ -35,6 +35,7 @@ struct HudUtilsState {
     enum HudUtilsFilter filter;
     enum DjuiFontType font;
     struct DjuiColor color;
+    struct DjuiColor textColor;
     struct {
         InterpFieldF32 degrees;
         InterpFieldF32 pivotX;
@@ -51,6 +52,7 @@ static struct HudUtilsState sHudUtilsState = {
     .filter = FILTER_NEAREST,
     .font = FONT_NORMAL,
     .color = { 255, 255, 255, 255 },
+    .textColor = { 255, 255, 255, 255 },
     .rotation = {
         .degrees = INTERP_INIT(0),
         .pivotX = INTERP_INIT(ROTATION_PIVOT_X_LEFT),
@@ -63,6 +65,7 @@ static struct HudUtilsState sHudUtilsState = {
 };
 
 static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
+static struct DjuiColor sRefTextColor = { 255, 255, 255, 255 };
 
 f32 gDjuiHudUtilsZ = 0;
 bool gDjuiHudLockMouse = false;
@@ -144,8 +147,6 @@ static void djui_hud_translate_positions(f32 *outX, f32 *outY, f32 *outW, f32 *o
  // interp //
 ////////////
 
-#define MAX_INTERP_HUD 512
-
 enum InterpHudType {
     INTERP_HUD_TRANSLATION,
     INTERP_HUD_ROTATION,
@@ -170,9 +171,16 @@ struct InterpHud {
     struct GrowingArray *gfx;
 };
 
-static struct InterpHud sInterpHuds[MAX_INTERP_HUD] = { 0 };
-static u16 sInterpHudCount = 0;
-static u8 sColorAltered = FALSE;
+static struct GrowingArray *sInterpHuds = NULL;
+static u32 sInterpHudCount = 0;
+
+static void interp_hud_free(void *ptr) {
+    struct InterpHud *interp = ptr;
+    if (interp) {
+        growing_array_free(&interp->gfx);
+        free(interp);
+    }
+}
 
 void patch_djui_hud_before(void) {
     sInterpHudCount = 0;
@@ -183,8 +191,8 @@ void patch_djui_hud(f32 delta) {
     Gfx* savedHeadPos = gDisplayListHead;
     struct HudUtilsState savedState = sHudUtilsState;
 
-    for (u16 i = 0; i < sInterpHudCount; i++) {
-        struct InterpHud* interp = &sInterpHuds[i];
+    for (u32 i = 0; i < sInterpHudCount; i++) {
+        struct InterpHud *interp = sInterpHuds->buffer[i];
 
         f32 x = delta_interpolate_f32(interp->posX.prev, interp->posX.curr, delta);
         f32 y = delta_interpolate_f32(interp->posY.prev, interp->posY.curr, delta);
@@ -260,28 +268,39 @@ void patch_djui_hud(f32 delta) {
     gDjuiHudUtilsZ = savedZ;
 }
 
-struct InterpHud *djui_hud_create_interp() {
-    if (sInterpHudCount >= MAX_INTERP_HUD) { return NULL; }
+static struct InterpHud *djui_hud_create_interp() {
+    struct InterpHud *interp = (
+        sInterpHudCount < sInterpHuds->count ?
+        sInterpHuds->buffer[sInterpHudCount] :
+        growing_array_alloc(sInterpHuds, sizeof(struct InterpHud))
+    );
 
-    struct InterpHud *interp = &sInterpHuds[sInterpHudCount++];
-    interp->z = gDjuiHudUtilsZ;
-    interp->state = sHudUtilsState;
-    if (!interp->gfx) {
-        interp->gfx = growing_array_init(NULL, 8, malloc, free);
-    } else {
-        interp->gfx->count = 0;
+    if (interp) {
+        interp->z = gDjuiHudUtilsZ;
+        interp->state = sHudUtilsState;
+        if (!interp->gfx) {
+            interp->gfx = growing_array_init(NULL, 8, malloc, free);
+        } else {
+            interp->gfx->count = 0;
+        }
+        sInterpHudCount++;
     }
 
     return interp;
 }
 
-InterpHudGfx *djui_hud_create_interp_gfx(struct InterpHud *interp, enum InterpHudType type) {
+static InterpHudGfx *djui_hud_create_interp_gfx(struct InterpHud *interp, enum InterpHudType type) {
     if (!interp) { return NULL; }
 
     InterpHudGfx *gfx = growing_array_alloc(interp->gfx, sizeof(InterpHudGfx));
     gfx->type = type;
     gfx->pos = gDisplayListHead;
     return gfx;
+}
+
+void djui_hud_clear_interp_data() {
+    sInterpHuds = growing_array_init(sInterpHuds, 16, malloc, interp_hud_free);
+    sInterpHudCount = 0;
 }
 
   ////////////
@@ -328,19 +347,37 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     sHudUtilsState.color.g = g;
     sHudUtilsState.color.b = b;
     sHudUtilsState.color.a = a;
-    sColorAltered = TRUE;
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
 
 void djui_hud_reset_color(void) {
-    if (sColorAltered) {
-        sHudUtilsState.color.r = 255;
-        sHudUtilsState.color.g = 255;
-        sHudUtilsState.color.b = 255;
-        sHudUtilsState.color.a = 255;
-        sColorAltered = FALSE;
-        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-    }
+    sHudUtilsState.color.r = 255;
+    sHudUtilsState.color.g = 255;
+    sHudUtilsState.color.b = 255;
+    sHudUtilsState.color.a = 255;
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+}
+
+struct DjuiColor* djui_hud_get_text_color(void) {
+    sRefTextColor.r = sHudUtilsState.textColor.r;
+    sRefTextColor.g = sHudUtilsState.textColor.g;
+    sRefTextColor.b = sHudUtilsState.textColor.b;
+    sRefTextColor.a = sHudUtilsState.textColor.a;
+    return &sRefTextColor;
+}
+
+void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a) {
+    sHudUtilsState.textColor.r = r;
+    sHudUtilsState.textColor.g = g;
+    sHudUtilsState.textColor.b = b;
+    sHudUtilsState.textColor.a = a;
+}
+
+void djui_hud_reset_text_color(void) {
+    sHudUtilsState.textColor.r = 255;
+    sHudUtilsState.textColor.g = 255;
+    sHudUtilsState.textColor.b = 255;
+    sHudUtilsState.textColor.a = 255;
 }
 
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
@@ -533,8 +570,6 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     if (message == NULL) { return; }
     gDjuiHudUtilsZ += 0.001f;
 
-    if (djui_hud_text_font_is_legacy()) { scale *= 0.5f; }
-
     const struct DjuiFont* font = djui_hud_get_text_font();
     f32 fontScale = font->defaultFontScale * scale;
 
@@ -582,13 +617,26 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     f32 lineWidth = 0;
     f32 textHeight = font->lineHeight;
 
+    // apply text color
+    gDPSetPrimColor(gDisplayListHead++, 0, 0,
+        sHudUtilsState.textColor.r,
+        sHudUtilsState.textColor.g,
+        sHudUtilsState.textColor.b,
+        sHudUtilsState.textColor.a
+    );
+
     font->render_begin();
     while (*c != '\0') {
 
         // check color code
         struct DjuiColor parsedColor;
-        if (djui_text_parse_color(c, end, false, &sHudUtilsState.color, &c, &parsedColor)) {
-            gDPSetEnvColor(gDisplayListHead++, parsedColor.r, parsedColor.g, parsedColor.b, parsedColor.a);
+        if (djui_text_parse_color(c, end, false, &sHudUtilsState.textColor, &c, &parsedColor)) {
+            gDPSetPrimColor(gDisplayListHead++, 0, 0,
+                parsedColor.r,
+                parsedColor.g,
+                parsedColor.b,
+                parsedColor.a
+            );
             continue;
         }
 
@@ -654,13 +702,22 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
 }
 
 void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale) {
+    if (message == NULL) { return; }
+
+    if (djui_hud_text_font_is_legacy()) {
+        scale *= 0.5f;
+    }
+
     djui_hud_print_text_internal(message, x, y, scale, NULL);
 }
 
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
     if (message == NULL) { return; }
 
-    if (djui_hud_text_font_is_legacy()) { prevScale *= 0.5f; }
+    if (djui_hud_text_font_is_legacy()) {
+        scale *= 0.5f;
+        prevScale *= 0.5f;
+    }
 
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {

@@ -12345,6 +12345,59 @@ int smlua_func_djui_hud_reset_color(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_hud_get_text_color(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_get_text_color", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_hud_get_text_color(), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_text_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_text_color", 4, top);
+        return 0;
+    }
+
+    u8 r = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_text_color"); return 0; }
+    u8 g = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_text_color"); return 0; }
+    u8 b = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_text_color"); return 0; }
+    u8 a = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_text_color"); return 0; }
+
+    djui_hud_set_text_color(r, g, b, a);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_reset_text_color(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_reset_text_color", 0, top);
+        return 0;
+    }
+
+
+    djui_hud_reset_text_color();
+
+    return 1;
+}
+
 int smlua_func_djui_hud_get_rotation(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -26885,24 +26938,6 @@ int smlua_func_cur_obj_check_anim_frame_in_range(lua_State* L) {
     return 1;
 }
 
-int smlua_func_cur_obj_check_frame_prior_current_frame(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "cur_obj_check_frame_prior_current_frame", 1, top);
-        return 0;
-    }
-
-    s16 * a0 = (s16 *)smlua_to_cpointer(L, 1, LVT_S16_P);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "cur_obj_check_frame_prior_current_frame"); return 0; }
-
-    extern s32 cur_obj_check_frame_prior_current_frame(s16 *a0);
-    lua_pushinteger(L, cur_obj_check_frame_prior_current_frame(a0));
-
-    return 1;
-}
-
 int smlua_func_mario_is_in_air_action(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37524,6 +37559,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_color", smlua_func_djui_hud_get_color);
     smlua_bind_function(L, "djui_hud_set_color", smlua_func_djui_hud_set_color);
     smlua_bind_function(L, "djui_hud_reset_color", smlua_func_djui_hud_reset_color);
+    smlua_bind_function(L, "djui_hud_get_text_color", smlua_func_djui_hud_get_text_color);
+    smlua_bind_function(L, "djui_hud_set_text_color", smlua_func_djui_hud_set_text_color);
+    smlua_bind_function(L, "djui_hud_reset_text_color", smlua_func_djui_hud_reset_text_color);
     smlua_bind_function(L, "djui_hud_get_rotation", smlua_func_djui_hud_get_rotation);
     smlua_bind_function(L, "djui_hud_set_rotation", smlua_func_djui_hud_set_rotation);
     smlua_bind_function(L, "djui_hud_set_rotation_interpolated", smlua_func_djui_hud_set_rotation_interpolated);
@@ -38307,7 +38345,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_check_if_at_animation_end", smlua_func_cur_obj_check_if_at_animation_end);
     smlua_bind_function(L, "cur_obj_check_anim_frame", smlua_func_cur_obj_check_anim_frame);
     smlua_bind_function(L, "cur_obj_check_anim_frame_in_range", smlua_func_cur_obj_check_anim_frame_in_range);
-    smlua_bind_function(L, "cur_obj_check_frame_prior_current_frame", smlua_func_cur_obj_check_frame_prior_current_frame);
     smlua_bind_function(L, "mario_is_in_air_action", smlua_func_mario_is_in_air_action);
     smlua_bind_function(L, "mario_is_dive_sliding", smlua_func_mario_is_dive_sliding);
     smlua_bind_function(L, "cur_obj_set_y_vel_and_animation", smlua_func_cur_obj_set_y_vel_and_animation);
