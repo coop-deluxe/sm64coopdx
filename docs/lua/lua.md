@@ -1,7 +1,5 @@
 # Lua Reference
 
-<br />
-
 ## How to install Lua mods
 Lua scripts you make can be placed either the `mods` folder in the base directory, or in `<SAVE FILE LOCATION>/mods`. You can also drag and drop mods into the window to install them.
 
