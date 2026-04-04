@@ -12790,9 +12790,15 @@ int smlua_func_djui_hud_measure_text(lua_State* L) {
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_measure_text"); return 0; }
 
-    lua_pushnumber(L, djui_hud_measure_text(message));
+    f32 width;
+    f32 height;
 
-    return 1;
+    djui_hud_measure_text(message, &width, &height);
+
+    lua_pushnumber(L, width);
+    lua_pushnumber(L, height);
+
+    return 2;
 }
 
 int smlua_func_djui_hud_print_text(lua_State* L) {

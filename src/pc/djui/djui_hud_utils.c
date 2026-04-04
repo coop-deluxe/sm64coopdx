@@ -519,10 +519,14 @@ void djui_hud_reset_scissor(void) {
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 }
 
-f32 djui_hud_measure_text(const char* message) {
-    if (message == NULL) { return 0; }
+void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height) {
+    if (message == NULL) { return; }
     const struct DjuiFont* font = djui_hud_get_text_font();
-    f32 width = 0, maxWidth = 0;
+
+    f32 maxWidth = 0.f;
+    *width = 0.f;
+    *height = font->charHeight;
+
     char *c = (char *) message;
     const char *end = message + strlen(message);
     while (*c != '\0') {
@@ -534,14 +538,15 @@ f32 djui_hud_measure_text(const char* message) {
 
         // new line
         if (*c == '\n') {
-            maxWidth = max(width, maxWidth);
-            width = 0;
+            maxWidth = max(*width, maxWidth);
+            *width = 0;
+            *height += font->lineHeight;
         }
 
         // tab: align to the next (4 x space width)
         else if (*c == '\t') {
             f32 tabWidth = 4 * font->char_width(" ") * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
-            width += tabWidth - fmodf(width, tabWidth);
+            *width += tabWidth - fmodf(*width, tabWidth);
         }
 
         // unprintable chars
@@ -551,12 +556,14 @@ f32 djui_hud_measure_text(const char* message) {
 
         // regular chars
         else {
-            width += font->char_width(c) * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
+            *width += font->char_width(c) * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
         }
 
         c = djui_unicode_next_char(c);
     }
-    return max(width, maxWidth) * font->defaultFontScale;
+
+    *width = max(*width, maxWidth) * font->defaultFontScale;
+    *height *= font->defaultFontScale * (djui_hud_text_font_is_legacy() ? 0.5f : 1.0f);
 }
 
 static Mtx *allocate_dl_translation_matrix() {

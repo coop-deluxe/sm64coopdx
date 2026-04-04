@@ -135,12 +135,7 @@ void nametags_render(void) {
         struct MarioState *m = &gMarioStates[playerIndex];
         struct NetworkPlayer *np = &gNetworkPlayers[playerIndex];
 
-        u8* color = network_get_player_text_color(m->playerIndex);
-        f32 measure = djui_hud_measure_text(nametag->name) * nametag->scale * 0.5f;
-        nametag->pos[1] -= 16 * nametag->scale;
-
-        u8 alpha = (playerIndex == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - nametag->scale, 0.f, 1.f);
-
+        // init interpolation
         struct StateExtras* e = &sStateExtras[playerIndex];
         if (!e->inited) {
             vec3f_copy(e->prevPos, nametag->pos);
@@ -158,20 +153,31 @@ void nametags_render(void) {
             gSPViewport(gDisplayListHead++, viewport);
         }
 
+        f32 width, height;
+        djui_hud_measure_text(nametag->name, &width, &height);
+        f32 currHalfWidth = width * nametag->scale * 0.5f;
+        f32 currHalfHeight = height * nametag->scale * 0.5f;
+        f32 currNametagPosY = nametag->pos[1] - currHalfHeight;
+        f32 prevHalfWidth = width * e->prevScale * 0.5f;
+        f32 prevHalfHeight = height * e->prevScale * 0.5f;
+        f32 prevNametagPosY = e->prevPos[1] - prevHalfHeight;
+        const u8 *color = network_get_player_text_color(m->playerIndex);
+        u8 alpha = (playerIndex == 0 ? 255 : MIN(np->fadeOpacity << 3, 255)) * clamp(FADE_SCALE - nametag->scale, 0.f, 1.f);
+
         // render name
         djui_hud_print_outlined_text_interpolated(nametag->name,
-              e->prevPos[0] - measure,   e->prevPos[1],   e->prevScale,
-            nametag->pos[0] - measure, nametag->pos[1], nametag->scale,
+              e->prevPos[0] - prevHalfWidth, prevNametagPosY,   e->prevScale,
+            nametag->pos[0] - currHalfWidth, currNametagPosY, nametag->scale,
             color[0], color[1], color[2], alpha, 0.25);
 
         // render power meter
         if (playerIndex != 0 && gNametagsSettings.showHealth) {
             djui_hud_set_color(255, 255, 255, alpha);
-            f32 healthScale = 90 * nametag->scale;
-            f32 prevHealthScale = 90 * e->prevScale;
+            f32 currHealthSize = 90 * nametag->scale;
+            f32 prevHealthSize = 90 * e->prevScale;
             hud_render_power_meter_interpolated(m->health,
-                  e->prevPos[0] - (prevHealthScale * 0.5f),   e->prevPos[1] - 72 * nametag->scale, prevHealthScale, prevHealthScale,
-                nametag->pos[0] - (    healthScale * 0.5f), nametag->pos[1] - 72 * nametag->scale,     healthScale,     healthScale
+                  e->prevPos[0] - (prevHealthSize * 0.5f), prevNametagPosY - 72 *   e->prevScale, prevHealthSize, prevHealthSize,
+                nametag->pos[0] - (currHealthSize * 0.5f), currNametagPosY - 72 * nametag->scale, currHealthSize, currHealthSize
             );
         }
 
