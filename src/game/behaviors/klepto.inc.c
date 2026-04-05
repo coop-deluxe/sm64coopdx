@@ -108,22 +108,22 @@ void bhv_klepto_init(void) {
     if (so) {
         so->on_received_pre = bhv_klepto_on_received_pre;
         so->on_received_post = bhv_klepto_on_received_post;
-        sync_object_init_field(o, &o->oAnimState);
-        sync_object_init_field(o, &o->oFlags);
-        sync_object_init_field(o, &o->oKleptoDistanceToTarget);
-        sync_object_init_field(o, &o->oKleptoUnkF8);
-        sync_object_init_field(o, &o->oKleptoUnkFC);
-        sync_object_init_field(o, &o->oKleptoSpeed);
-        sync_object_init_field(o, &o->oKleptoTimeUntilTargetChange);
-        sync_object_init_field(o, &o->oKleptoTargetNumber);
-        sync_object_init_field(o, &o->oKleptoUnk1B0);
-        sync_object_init_field(o, &o->oSoundStateID);
-        sync_object_init_field(o, &o->oHomeX);
-        sync_object_init_field(o, &o->oHomeY);
-        sync_object_init_field(o, &o->oHomeZ);
-        sync_object_init_field(o, &o->oMoveAnglePitch);
-        sync_object_init_field(o, &o->oGravity);
-        sync_object_init_field_with_size(o, &o->globalPlayerIndex, 8);
+        sync_object_init_field(o, o->oAnimState);
+        sync_object_init_field(o, o->oFlags);
+        sync_object_init_field(o, o->oKleptoDistanceToTarget);
+        sync_object_init_field(o, o->oKleptoUnkF8);
+        sync_object_init_field(o, o->oKleptoUnkFC);
+        sync_object_init_field(o, o->oKleptoSpeed);
+        sync_object_init_field(o, o->oKleptoTimeUntilTargetChange);
+        sync_object_init_field(o, o->oKleptoTargetNumber);
+        sync_object_init_field(o, o->oKleptoUnk1B0);
+        sync_object_init_field(o, o->oSoundStateID);
+        sync_object_init_field(o, o->oHomeX);
+        sync_object_init_field(o, o->oHomeY);
+        sync_object_init_field(o, o->oHomeZ);
+        sync_object_init_field(o, o->oMoveAnglePitch);
+        sync_object_init_field(o, o->oGravity);
+        sync_object_init_field(o, o->globalPlayerIndex);
     }
 }
 

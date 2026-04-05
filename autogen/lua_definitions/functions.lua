@@ -3948,7 +3948,7 @@ function djui_hud_set_font(fontType)
 end
 
 --- @return DjuiColor
---- Gets the current DJUI HUD color
+--- Gets the current DJUI HUD global color
 function djui_hud_get_color()
     -- ...
 end
@@ -3957,17 +3957,39 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the current DJUI HUD color
+--- Sets the current DJUI HUD global color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
---- Resets the current DJUI HUD color
+--- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
     -- ...
 end
 
---- @return HudUtilsRotation
+--- @return DjuiColor
+--- Gets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_get_text_color()
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Sets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_set_text_color(r, g, b, a)
+    -- ...
+end
+
+--- Resets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_reset_text_color()
+    -- ...
+end
+
+--- @return integer rotation
+--- @return number pivotX
+--- @return number pivotY
 --- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
@@ -3989,6 +4011,29 @@ end
 --- @param pivotY number
 --- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
+    -- ...
+end
+
+--- @return number textHAlign
+--- @return number textVAlign
+--- Gets the current DJUI HUD text alignment
+function djui_hud_get_text_alignment()
+    -- ...
+end
+
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment
+function djui_hud_set_text_alignment(textHAlign, textVAlign)
+    -- ...
+end
+
+--- @param prevTextHAlign number
+--- @param prevTextVAlign number
+--- @param textHAlign number
+--- @param textVAlign number
+--- Sets the current DJUI HUD text alignment interpolated
+function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
 end
 
@@ -4099,8 +4144,9 @@ function djui_hud_reset_scissor()
 end
 
 --- @param message string
---- @return number
---- Measures the length of `message` in the current font
+--- @return number width
+--- @return number height
+--- Measures the width and height of `message` in the current font
 function djui_hud_measure_text(message)
     -- ...
 end
@@ -5214,6 +5260,12 @@ function le_set_ambient_color(r, g, b)
     -- ...
 end
 
+--- @param count integer
+--- Sets the max amount of lights that can affect a vertex
+function le_set_max_lights_per_vertex(count)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number
@@ -5342,6 +5394,12 @@ end
 --- @param useSurfaceNormals boolean
 --- Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
 function le_set_light_use_surface_normals(id, useSurfaceNormals)
+    -- ...
+end
+
+--- @param bank integer
+--- Overrides the soundbank, set to -1 to reset
+function set_sound_bank_override(bank)
     -- ...
 end
 
@@ -7837,9 +7895,17 @@ function mod_storage_save(key, value)
 end
 
 --- @param key string
+--- @param value integer
+--- @return boolean
+--- Saves a `key` corresponding to an integer `value` to mod storage
+function mod_storage_save_integer(key, value)
+    -- ...
+end
+
+--- @param key string
 --- @param value number
 --- @return boolean
---- Saves a `key` corresponding to a float `value` to mod storage
+--- Saves a `key` corresponding to a number `value` to mod storage
 function mod_storage_save_number(key, value)
     -- ...
 end
@@ -7860,8 +7926,15 @@ function mod_storage_load(key)
 end
 
 --- @param key string
+--- @return integer
+--- Loads an integer `value` from a `key` in mod storage
+function mod_storage_load_integer(key)
+    -- ...
+end
+
+--- @param key string
 --- @return number
---- Loads a float `value` from a `key` in mod storage
+--- Loads a number `value` from a `key` in mod storage
 function mod_storage_load_number(key)
     -- ...
 end
@@ -9151,12 +9224,6 @@ function cur_obj_check_anim_frame_in_range(startFrame, rangeLength)
     -- ...
 end
 
---- @param a0 Pointer_integer
---- @return integer
-function cur_obj_check_frame_prior_current_frame(a0)
-    -- ...
-end
-
 --- @param m MarioState
 --- @return integer
 function mario_is_in_air_action(m)
@@ -10331,6 +10398,12 @@ end
 --- @param m64Name string
 --- Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
 function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)
+    -- ...
+end
+
+--- @return integer
+--- Allocates a new sequence ID
+function smlua_audio_utils_allocate_sequence()
     -- ...
 end
 
@@ -11695,6 +11768,12 @@ function get_dialog_response()
     -- ...
 end
 
+--- @return integer
+--- Gets the active time stop flags, used to freeze specific objects during cutscenes
+function get_time_stop_flags()
+    -- ...
+end
+
 --- @return string
 --- Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 function get_local_discord_id()
@@ -11783,6 +11862,14 @@ function get_active_mod()
     -- ...
 end
 
+--- @param mod Mod
+--- @param subDirectory? string
+--- @return table
+--- Gets all files a mod contains
+function get_mod_files(mod, subDirectory)
+    -- ...
+end
+
 --- @param title string
 --- Sets the window title to a custom title
 function set_window_title(title)
@@ -11801,32 +11888,39 @@ function get_os_name()
 end
 
 --- @return GraphNodeRoot
---- Gets the current GraphNodeRoot
+--- Gets the current root node being processed
 function geo_get_current_root()
     -- ...
 end
 
 --- @return GraphNodeMasterList
---- Gets the current GraphNodeMasterList
+--- Gets the current master list node being processed
 function geo_get_current_master_list()
     -- ...
 end
 
 --- @return GraphNodePerspective
---- Gets the current GraphNodePerspective
+--- Gets the current perspective node being processed
 function geo_get_current_perspective()
     -- ...
 end
 
 --- @return GraphNodeCamera
---- Gets the current GraphNodeCamera
+--- Gets the current camera node being processed
 function geo_get_current_camera()
     -- ...
 end
 
 --- @return GraphNodeHeldObject
---- Gets the current GraphNodeHeldObject
+--- Gets the current held object node being processed
 function geo_get_current_held_object()
+    -- ...
+end
+
+--- @param node GraphNode
+--- @param obj GraphNodeObject
+--- Skips graph node interpolation for a frame
+function geo_skip_interpolation(node, obj)
     -- ...
 end
 
@@ -12238,6 +12332,18 @@ end
 --- @param index integer
 --- Sets the parameters of one of the two whirlpools (0-indexed) in an area
 function set_whirlpools(x, y, z, strength, area, index)
+    -- ...
+end
+
+--- @param o Object
+--- Skips object interpolation for a frame
+function obj_skip_interpolation(o)
+    -- ...
+end
+
+--- @param o Object
+--- Skips animation interpolation for a frame
+function obj_anim_skip_interpolation(o)
     -- ...
 end
 

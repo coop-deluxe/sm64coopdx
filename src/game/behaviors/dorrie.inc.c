@@ -167,12 +167,12 @@ void bhv_dorrie_update(void) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
             so->ignore_if_true = bhv_dorrie_ignore_if_true;
-            sync_object_init_field(o, &o->oDorrieOffsetY);
-            sync_object_init_field(o, &o->oDorrieVelY);
-            sync_object_init_field(o, &o->oDorrieYawVel);
-            sync_object_init_field(o, &o->oDorrieLiftingMario);
-            sync_object_init_field(o, &o->oDorrieNeckAngle);
-            sync_object_init_field(o, &o->oAngleVelYaw);
+            sync_object_init_field(o, o->oDorrieOffsetY);
+            sync_object_init_field(o, o->oDorrieVelY);
+            sync_object_init_field(o, o->oDorrieYawVel);
+            sync_object_init_field(o, o->oDorrieLiftingMario);
+            sync_object_init_field(o, o->oDorrieNeckAngle);
+            sync_object_init_field(o, o->oAngleVelYaw);
         }
     }
 

@@ -184,19 +184,20 @@ static void mods_sort(struct Mods* mods) {
     }
 
     // By default, this is the alphabetical order on name
+    char modNameNoColor_i[MOD_NAME_SIZE];
+    char modNameNoColor_j[MOD_NAME_SIZE];
     for (s32 i = 1; i < mods->entryCount; ++i) {
-        struct Mod* mod = mods->entries[i];
+        struct Mod* mod_i = mods->entries[i];
+        djui_text_get_uncolored_string(modNameNoColor_i, MOD_NAME_SIZE, mod_i->name);
         for (s32 j = 0; j < i; ++j) {
-            struct Mod* mod2 = mods->entries[j];
-            char* name = str_remove_color_codes(mod->name);
-            char* name2 = str_remove_color_codes(mod2->name);
-            if (strcmp(name, name2) < 0) {
-                mods->entries[i] = mod2;
-                mods->entries[j] = mod;
-                mod = mods->entries[i];
+            struct Mod* mod_j = mods->entries[j];
+            djui_text_get_uncolored_string(modNameNoColor_j, MOD_NAME_SIZE, mod_j->name);
+            if (strcmp(modNameNoColor_i, modNameNoColor_j) < 0) {
+                mods->entries[i] = mod_j;
+                mods->entries[j] = mod_i;
+                mod_i = mod_j;
+                memcpy(modNameNoColor_i, modNameNoColor_j, MOD_NAME_SIZE * sizeof(char));
             }
-            free(name);
-            free(name2);
         }
     }
 }

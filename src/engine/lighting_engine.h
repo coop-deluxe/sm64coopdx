@@ -1,9 +1,12 @@
 #ifndef LIGHTING_ENGINE_H
 #define LIGHTING_ENGINE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "types.h"
 
-#define LE_MAX_LIGHTS 512
+#define LE_MAX_LIGHTS 1024
 
 enum LEMode {
     LE_MODE_AFFECT_ALL_SHADED_AND_COLORED,
@@ -32,8 +35,10 @@ void le_set_tone_mapping(enum LEToneMapping toneMapping);
 void le_get_ambient_color(VEC_OUT Color out);
 /* |description|Sets the lighting engine ambient color|descriptionEnd| */
 void le_set_ambient_color(u8 r, u8 g, u8 b);
+/* |description|Sets the max amount of lights that can affect a vertex|descriptionEnd| */
+void le_set_max_lights_per_vertex(u8 count);
 
-void le_calculate_vertex_lighting(Vtx_t* v, Vec3f pos, VEC_OUT Color out);
+void le_calculate_vertex_lighting(const Vtx_t* v, Vec3f pos, VEC_OUT Color out);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`|descriptionEnd|*/
 void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`|descriptionEnd|*/
@@ -70,5 +75,9 @@ bool le_get_light_use_surface_normals(s16 id);
 void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);
 void le_clear(void);
 void le_shutdown(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LIGHTING_ENGINE_H

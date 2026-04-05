@@ -26,6 +26,9 @@
 #include "game/print.h"
 #include "gfx_dimensions.h"
 
+extern void smlua_new_vec3f(Vec3f src);
+extern void smlua_get_vec3f(Vec3f dest, int index);
+
 #define MAX_HOOKED_REFERENCES 64
 #define LUA_BEHAVIOR_FLAG (1 << 15)
 
@@ -172,7 +175,6 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
         lua_pushinteger(L, playerIndex);
 
         // push pos
-        extern void smlua_new_vec3f(Vec3f src);
         smlua_new_vec3f(pos);
 
         // call the callback
@@ -203,7 +205,6 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
             // pos
             lua_getfield(L, -1, "pos");
             if (lua_type(L, -1) == LUA_TTABLE) {
-                extern void smlua_get_vec3f(Vec3f dest, int index);
                 smlua_get_vec3f(pos, -1);
                 override = true;
             }
@@ -217,6 +218,306 @@ bool smlua_call_event_hooks_HOOK_ON_NAMETAGS_RENDER(s32 playerIndex, Vec3f pos, 
 
         lua_settop(L, prevTop);
     }
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_WALL_COLLISION(f32 posX, f32 posY, f32 posZ, struct WallCollisionData *colData, s32 *numCollisions) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_WALL_COLLISION];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push posX, posY, posZ
+        lua_pushnumber(L, posX);
+        lua_pushnumber(L, posY);
+        lua_pushnumber(L, posZ);
+
+        // push colData
+        smlua_push_object(L, LOT_WALLCOLLISIONDATA, colData, NULL);
+
+        // call the callback (4 args, 1 result)
+        if (0 != smlua_call_hook(L, 4, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_WALL_COLLISION]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        // return number overrides numCollisions
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *numCollisions = smlua_to_integer(L, -1);
+            lua_settop(L, prevTop);
+            sInHook = false;
+            return true;
+        }
+
+        lua_settop(L, prevTop);
+    }
+    sInHook = false;
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_CEIL(f32 posX, f32 posY, f32 posZ, struct Surface **pceil, f32 *height) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_CEIL];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push posX, posY, posZ
+        lua_pushnumber(L, posX);
+        lua_pushnumber(L, posY);
+        lua_pushnumber(L, posZ);
+
+        // push current ceil surface (or nil)
+        if (pceil && *pceil) {
+            smlua_push_object(L, LOT_SURFACE, *pceil, NULL);
+        } else {
+            lua_pushnil(L);
+        }
+
+        // push current height
+        lua_pushnumber(L, *height);
+
+        // call the callback (5 args, 2 results)
+        if (0 != smlua_call_hook(L, 5, 2, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_CEIL]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        bool override = false;
+
+        // first return value: height (number)
+        if (lua_type(L, -2) == LUA_TNUMBER) {
+            *height = smlua_to_number(L, -2);
+            override = true;
+        }
+
+        // second return value: surface (userdata)
+        if (lua_type(L, -1) == LUA_TUSERDATA) {
+            struct Surface *surface = (struct Surface *)smlua_to_cobject(L, -1, LOT_SURFACE);
+            if (surface && pceil) {
+                *pceil = surface;
+                override = true;
+            }
+        }
+
+        lua_settop(L, prevTop);
+        if (override) { sInHook = false; return true; }
+    }
+    sInHook = false;
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_FLOOR(f32 posX, f32 posY, f32 posZ, struct Surface **pfloor, f32 *height) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_FLOOR];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push posX, posY, posZ
+        lua_pushnumber(L, posX);
+        lua_pushnumber(L, posY);
+        lua_pushnumber(L, posZ);
+
+        // push current floor surface (or nil)
+        if (pfloor && *pfloor) {
+            smlua_push_object(L, LOT_SURFACE, *pfloor, NULL);
+        } else {
+            lua_pushnil(L);
+        }
+
+        // push current height
+        lua_pushnumber(L, *height);
+
+        // call the callback (5 args, 2 results)
+        if (0 != smlua_call_hook(L, 5, 2, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_FLOOR]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        bool override = false;
+
+        // first return value: height (number)
+        if (lua_type(L, -2) == LUA_TNUMBER) {
+            *height = smlua_to_number(L, -2);
+            override = true;
+        }
+
+        // second return value: surface (userdata)
+        if (lua_type(L, -1) == LUA_TUSERDATA) {
+            struct Surface *surface = (struct Surface *)smlua_to_cobject(L, -1, LOT_SURFACE);
+            if (surface && pfloor) {
+                *pfloor = surface;
+                override = true;
+            }
+        }
+
+        lua_settop(L, prevTop);
+        if (override) { sInHook = false; return true; }
+    }
+    sInHook = false;
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_SURFACE_ON_RAY(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_SURFACE_ON_RAY];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push orig, dir
+        smlua_new_vec3f(orig);
+        smlua_new_vec3f(dir);
+
+        // push hit_surface (or nil)
+        if (hit_surface && *hit_surface) {
+            smlua_push_object(L, LOT_SURFACE, *hit_surface, NULL);
+        } else {
+            lua_pushnil(L);
+        }
+
+        // push hit_pos
+        smlua_new_vec3f(hit_pos);
+
+        // call the callback (4 args, 2 results)
+        if (0 != smlua_call_hook(L, 4, 2, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_SURFACE_ON_RAY]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        bool override = false;
+
+        // first return value: surface (userdata)
+        if (lua_type(L, -2) == LUA_TUSERDATA) {
+            struct Surface *surface = (struct Surface *)smlua_to_cobject(L, -2, LOT_SURFACE);
+            if (surface && hit_surface) {
+                *hit_surface = surface;
+                override = true;
+            }
+        }
+
+        // second return value: hitPos (table {x, y, z})
+        if (lua_type(L, -1) == LUA_TTABLE) {
+            smlua_get_vec3f(hit_pos, -1);
+            override = true;
+        }
+
+        lua_settop(L, prevTop);
+        if (override) { sInHook = false; return true; }
+    }
+    sInHook = false;
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_WATER_LEVEL(f32 x, f32 z, f32 *waterLevel) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_WATER_LEVEL];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push x, z
+        lua_pushnumber(L, x);
+        lua_pushnumber(L, z);
+
+        // push current water level
+        lua_pushnumber(L, *waterLevel);
+
+        // call the callback (3 args, 1 result)
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_WATER_LEVEL]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        // return number overrides waterLevel
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *waterLevel = smlua_to_number(L, -1);
+            lua_settop(L, prevTop);
+            sInHook = false;
+            return true;
+        }
+
+        lua_settop(L, prevTop);
+    }
+    sInHook = false;
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FIND_POISON_GAS_LEVEL(f32 x, f32 z, f32 *gasLevel) {
+    static bool sInHook = false;
+    lua_State *L = gLuaState;
+    if (L == NULL || sInHook) { return false; }
+    sInHook = true;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FIND_POISON_GAS_LEVEL];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push x, z
+        lua_pushnumber(L, x);
+        lua_pushnumber(L, z);
+
+        // push current gas level
+        lua_pushnumber(L, *gasLevel);
+
+        // call the callback (3 args, 1 result)
+        if (0 != smlua_call_hook(L, 3, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s", sLuaHookedEventTypeName[HOOK_ON_FIND_POISON_GAS_LEVEL]);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        // return number overrides gasLevel
+        if (lua_type(L, -1) == LUA_TNUMBER) {
+            *gasLevel = smlua_to_number(L, -1);
+            lua_settop(L, prevTop);
+            sInHook = false;
+            return true;
+        }
+
+        lua_settop(L, prevTop);
+    }
+    sInHook = false;
     return false;
 }
 
@@ -952,7 +1253,7 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
-            char* noColorsDesc = str_remove_color_codes(hook->description);
+            char* noColorsDesc = djui_text_get_uncolored_string(NULL, strlen(hook->description) + 1, hook->description);
             char* startSubcommands = strstr(noColorsDesc, "[");
             char* endSubcommands = strstr(noColorsDesc, "]");
 

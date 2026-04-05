@@ -187,8 +187,8 @@ void bhv_exclamation_box_init(void) {
     struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
         so->syncDeathEvent = FALSE;
-        sync_object_init_field(o, &o->oExclamationBoxForce);
-        sync_object_init_field(o, &o->areaTimer);
+        sync_object_init_field(o, o->oExclamationBoxForce);
+        sync_object_init_field(o, o->areaTimer);
     }
 
     o->areaTimerType = AREA_TIMER_TYPE_MAXIMUM;

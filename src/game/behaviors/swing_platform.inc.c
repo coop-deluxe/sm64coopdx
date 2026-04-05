@@ -5,10 +5,10 @@ void bhv_swing_platform_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oSwingPlatformAngle);
-        sync_object_init_field(o, &o->oFaceAngleRoll);
-        sync_object_init_field(o, &o->oSwingPlatformSpeed);
-        sync_object_init_field(o, &o->oAngleVelRoll);
+        sync_object_init_field(o, o->oSwingPlatformAngle);
+        sync_object_init_field(o, o->oFaceAngleRoll);
+        sync_object_init_field(o, o->oSwingPlatformSpeed);
+        sync_object_init_field(o, o->oAngleVelRoll);
     }
 }
 
