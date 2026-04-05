@@ -4033,8 +4033,9 @@ function djui_hud_reset_scissor()
 end
 
 --- @param message string
---- @return number
---- Measures the length of `message` in the current font
+--- @return number width
+--- @return number height
+--- Measures the width and height of `message` in the current font
 function djui_hud_measure_text(message)
     -- ...
 end

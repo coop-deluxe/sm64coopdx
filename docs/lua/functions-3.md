@@ -3511,10 +3511,10 @@ Resets the scissor rectangle to a fullscreen state
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description
-Measures the length of `message` in the current font
+Measures the width and height of `message` in the current font
 
 ### Lua Example
-`local numberValue = djui_hud_measure_text(message)`
+`local width, height = djui_hud_measure_text(message)`
 
 ### Parameters
 | Field | Type |
@@ -3523,9 +3523,10 @@ Measures the length of `message` in the current font
 
 ### Returns
 - `number`
+- `number`
 
 ### C Prototype
-`f32 djui_hud_measure_text(const char* message);`
+`void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);`
 
 [:arrow_up_small:](#)
 
