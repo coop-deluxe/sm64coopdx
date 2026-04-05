@@ -182,8 +182,8 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
         so->extendedModelId = 0xFFFF;
     }
     so->randomSeed = (u16)(o->oSyncID * 7951);
-    memset(so->extraFields, 0, sizeof(void*) * MAX_SYNC_OBJECT_FIELDS);
-    memset(so->extraFieldsSize, 0, sizeof(u8) * MAX_SYNC_OBJECT_FIELDS);
+    memset(so->extraFields, 0, sizeof(so->extraFields));
+    memset(so->extraFieldsSizeBytes, 0, sizeof(so->extraFieldsSizeBytes));
 
     so->lastReliablePacket.error = true;
     o->coopFlags |= COOP_OBJ_FLAG_INITIALIZED;
@@ -191,9 +191,11 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     return so;
 }
 
-void sync_object_init_field(struct Object *o, void* field) {
+void sync_object_init_field_with_size(struct Object *o, void *field, u8 sizeBytes) {
     if (o->coopFlags & COOP_OBJ_FLAG_NON_SYNC) { return; }
     if (o->oSyncID == 0) { return; }
+
+    SOFT_ASSERT(sizeBytes > 0);
 
     // remember to synchronize this extra field
     struct SyncObject* so = sync_object_get(o->oSyncID);
@@ -205,26 +207,7 @@ void sync_object_init_field(struct Object *o, void* field) {
         return;
     }
     so->extraFields[index] = field;
-    so->extraFieldsSize[index] = 32;
-}
-
-void sync_object_init_field_with_size(struct Object *o, void* field, u8 size) {
-    if (o->coopFlags & COOP_OBJ_FLAG_NON_SYNC) { return; }
-    if (o->oSyncID == 0) { return; }
-
-    SOFT_ASSERT(size == 8 || size == 16 || size == 32 || size == 64);
-
-    // remember to synchronize this extra field
-    struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (!so) { return; }
-    u32 index = so->extraFieldCount++;
-    if (so->extraFieldCount >= MAX_SYNC_OBJECT_FIELDS) {
-        so->extraFieldCount = MAX_SYNC_OBJECT_FIELDS - 1;
-        LOG_ERROR("Sync Object %u tried to set too many extra fields!", o->oSyncID);
-        return;
-    }
-    so->extraFields[index] = field;
-    so->extraFieldsSize[index] = size;
+    so->extraFieldsSizeBytes[index] = sizeBytes;
 }
 
   /////////////

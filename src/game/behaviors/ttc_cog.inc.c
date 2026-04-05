@@ -33,10 +33,10 @@ void bhv_ttc_cog_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oTTCCogSpeed);
-        sync_object_init_field(o, &o->oTTCCogTargetVel);
-        sync_object_init_field(o, &o->oAngleVelYaw);
-        sync_object_init_field(o, &o->oFaceAngleYaw);
+        sync_object_init_field(o, o->oTTCCogSpeed);
+        sync_object_init_field(o, o->oTTCCogTargetVel);
+        sync_object_init_field(o, o->oAngleVelYaw);
+        sync_object_init_field(o, o->oFaceAngleYaw);
     }
 }
 

@@ -28,13 +28,13 @@ void bhv_scuttlebug_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
-            sync_object_init_field(o, &o->oFlags);
-            sync_object_init_field(o, &o->oForwardVel);
-            sync_object_init_field(o, &o->oHomeX);
-            sync_object_init_field(o, &o->oHomeY);
-            sync_object_init_field(o, &o->oHomeZ);
-            sync_object_init_field(o, &o->oInteractStatus);
-            sync_object_init_field(o, &o->oScuttlebugUnkF4);
+            sync_object_init_field(o, o->oFlags);
+            sync_object_init_field(o, o->oForwardVel);
+            sync_object_init_field(o, o->oHomeX);
+            sync_object_init_field(o, o->oHomeY);
+            sync_object_init_field(o, o->oHomeZ);
+            sync_object_init_field(o, o->oInteractStatus);
+            sync_object_init_field(o, o->oScuttlebugUnkF4);
         }
     }
 
@@ -141,10 +141,10 @@ void bhv_scuttlebug_spawn_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oScuttlebugSpawnerUnkF4);
-            sync_object_init_field(o, &o->oScuttlebugSpawnerUnk88);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oScuttlebugSpawnerUnkF4);
+            sync_object_init_field(o, o->oScuttlebugSpawnerUnk88);
         }
     }
 

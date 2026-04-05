@@ -38,14 +38,14 @@ void bhv_yoshi_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so != NULL) {
         so->override_ownership = bhv_yoshi_override_ownership;
-        sync_object_init_field(o, &o->oYoshiBlinkTimer);
-        sync_object_init_field(o, &o->oYoshiChosenHome);
-        sync_object_init_field(o, &o->oYoshiTargetYaw);
-        sync_object_init_field(o, &o->oHomeX);
-        sync_object_init_field(o, &o->oHomeY);
-        sync_object_init_field(o, &o->oHomeZ);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field_with_size(o, &o->globalPlayerIndex, 8);
+        sync_object_init_field(o, o->oYoshiBlinkTimer);
+        sync_object_init_field(o, o->oYoshiChosenHome);
+        sync_object_init_field(o, o->oYoshiTargetYaw);
+        sync_object_init_field(o, o->oHomeX);
+        sync_object_init_field(o, o->oHomeY);
+        sync_object_init_field(o, o->oHomeZ);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field_with_size(o, o->globalPlayerIndex, 8);
     }
 }
 

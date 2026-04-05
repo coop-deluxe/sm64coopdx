@@ -659,11 +659,11 @@ void bhv_ukiki_init(void) {
     }
 
     sync_object_init(o, 4000.0f);
-    sync_object_init_field(o, &o->oUkikiTauntCounter);
-    sync_object_init_field(o, &o->oUkikiChaseFleeRange);
-    sync_object_init_field(o, &o->oUkikiCageSpinTimer);
-    sync_object_init_field(o, &o->oIntangibleTimer);
-    sync_object_init_field_with_size(o, &o->globalPlayerIndex, 8);
+    sync_object_init_field(o, o->oUkikiTauntCounter);
+    sync_object_init_field(o, o->oUkikiChaseFleeRange);
+    sync_object_init_field(o, o->oUkikiCageSpinTimer);
+    sync_object_init_field(o, o->oIntangibleTimer);
+    sync_object_init_field(o, o->globalPlayerIndex);
 }
 
 /**

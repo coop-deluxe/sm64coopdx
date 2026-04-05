@@ -31,21 +31,21 @@ void bhv_unagi_init(void) {
     o->oPathedPrevWaypoint = o->oPathedStartWaypoint;
 
     sync_object_init(o, 4000.0f);
-    sync_object_init_field(o, &o->oFaceAnglePitch);
-    sync_object_init_field(o, &o->oFaceAngleRoll);
-    sync_object_init_field(o, &o->oFaceAngleYaw);
-    sync_object_init_field(o, &o->oForwardVel);
-    sync_object_init_field(o, &o->oMoveAnglePitch);
-    sync_object_init_field(o, &o->oPathedPrevWaypointFlags);
-    sync_object_init_field(o, &o->oPathedTargetPitch);
-    sync_object_init_field(o, &o->oPathedTargetYaw);
-    sync_object_init_field(o, &o->oSoundStateID);
-    sync_object_init_field(o, &o->oUnagiUnk110);
-    sync_object_init_field(o, &o->oUnagiUnk1AC);
-    sync_object_init_field(o, &o->oUnagiUnkF4);
-    sync_object_init_field(o, &o->oUnagiUnkF8);
-    sync_object_init_field(o, &o->oVelX);
-    sync_object_init_field(o, &o->oVelZ);
+    sync_object_init_field(o, o->oFaceAnglePitch);
+    sync_object_init_field(o, o->oFaceAngleRoll);
+    sync_object_init_field(o, o->oFaceAngleYaw);
+    sync_object_init_field(o, o->oForwardVel);
+    sync_object_init_field(o, o->oMoveAnglePitch);
+    sync_object_init_field(o, o->oPathedPrevWaypointFlags);
+    sync_object_init_field(o, o->oPathedTargetPitch);
+    sync_object_init_field(o, o->oPathedTargetYaw);
+    sync_object_init_field(o, o->oSoundStateID);
+    sync_object_init_field(o, o->oUnagiUnk110);
+    sync_object_init_field(o, o->oUnagiUnk1AC);
+    sync_object_init_field(o, o->oUnagiUnkF4);
+    sync_object_init_field(o, o->oUnagiUnkF8);
+    sync_object_init_field(o, o->oVelX);
+    sync_object_init_field(o, o->oVelZ);
 }
 
 void unagi_act_0(void) {

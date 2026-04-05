@@ -1,11 +1,11 @@
 #ifndef MOD_STORAGE_H
 #define MOD_STORAGE_H
 
-#include <PR/ultratypes.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <PR/ultratypes.h>
+
 #include "pc/lua/smlua_utils.h"
 
 #define MAX_KEYS 4096
@@ -15,15 +15,19 @@ extern "C" {
 
 /* |description|Saves a `key` corresponding to a string `value` to mod storage|descriptionEnd| */
 bool mod_storage_save(const char* key, const char* value);
-/* |description|Saves a `key` corresponding to a float `value` to mod storage|descriptionEnd| */
-bool mod_storage_save_number(const char* key, f32 value);
+/* |description|Saves a `key` corresponding to an integer `value` to mod storage|descriptionEnd| */
+bool mod_storage_save_integer(const char* key, lua_Integer value);
+/* |description|Saves a `key` corresponding to a number `value` to mod storage|descriptionEnd| */
+bool mod_storage_save_number(const char* key, lua_Number value);
 /* |description|Saves a `key` corresponding to a bool `value` to mod storage|descriptionEnd| */
 bool mod_storage_save_bool(const char* key, bool value);
 
 /* |description|Loads a string `value` from a `key` in mod storage|descriptionEnd| */
 const char *mod_storage_load(const char* key);
-/* |description|Loads a float `value` from a `key` in mod storage|descriptionEnd| */
-f32 mod_storage_load_number(const char* key);
+/* |description|Loads an integer `value` from a `key` in mod storage|descriptionEnd| */
+lua_Integer mod_storage_load_integer(const char* key);
+/* |description|Loads a number `value` from a `key` in mod storage|descriptionEnd| */
+lua_Number mod_storage_load_number(const char* key);
 /* |description|Loads a bool `value` from a `key` in mod storage|descriptionEnd| */
 bool mod_storage_load_bool(const char* key);
 /* |description|Loads all keys and values in mod storage as strings and returns them as a table|descriptionEnd| */

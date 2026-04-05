@@ -153,20 +153,20 @@ void bhv_treasure_chest_ship_init(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
-            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
-            sync_object_init_field(o, &o->oTreasureChestSound);
-            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, o->oTreasureChestSound);
+            sync_object_init_field(o, o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                sync_object_init_field(o, &chest->oAction);
-                sync_object_init_field(o, &chest->oPrevAction);
-                sync_object_init_field(o, &chest->oTimer);
-                sync_object_init_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, chest->oAction);
+                sync_object_init_field(o, chest->oPrevAction);
+                sync_object_init_field(o, chest->oTimer);
+                sync_object_init_field(o, chest->oIntangibleTimer);
             }
         }
     }
@@ -223,20 +223,20 @@ void bhv_treasure_chest_jrb_init(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
-            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
-            sync_object_init_field(o, &o->oTreasureChestSound);
-            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, o->oTreasureChestSound);
+            sync_object_init_field(o, o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                sync_object_init_field(o, &chest->oAction);
-                sync_object_init_field(o, &chest->oPrevAction);
-                sync_object_init_field(o, &chest->oTimer);
-                sync_object_init_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, chest->oAction);
+                sync_object_init_field(o, chest->oPrevAction);
+                sync_object_init_field(o, chest->oTimer);
+                sync_object_init_field(o, chest->oIntangibleTimer);
             }
         }
     }
@@ -291,20 +291,20 @@ void bhv_treasure_chest_init(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
-            sync_object_init_field(o, &o->oTreasureChestCurrentAnswer);
-            sync_object_init_field(o, &o->oTreasureChestIsLastInteractionIncorrect);
-            sync_object_init_field(o, &o->oTreasureChestIsAboveWater);
-            sync_object_init_field(o, &o->oTreasureChestSound);
-            sync_object_init_field(o, &o->oTreasureChestLastNetworkPlayerIndex);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
+            sync_object_init_field(o, o->oTreasureChestCurrentAnswer);
+            sync_object_init_field(o, o->oTreasureChestIsLastInteractionIncorrect);
+            sync_object_init_field(o, o->oTreasureChestIsAboveWater);
+            sync_object_init_field(o, o->oTreasureChestSound);
+            sync_object_init_field(o, o->oTreasureChestLastNetworkPlayerIndex);
             for (s32 i = 0; i < 4; i++) {
                 struct Object *chest = chests[i];
-                sync_object_init_field(o, &chest->oAction);
-                sync_object_init_field(o, &chest->oPrevAction);
-                sync_object_init_field(o, &chest->oTimer);
-                sync_object_init_field(o, &chest->oIntangibleTimer);
+                sync_object_init_field(o, chest->oAction);
+                sync_object_init_field(o, chest->oPrevAction);
+                sync_object_init_field(o, chest->oTimer);
+                sync_object_init_field(o, chest->oIntangibleTimer);
             }
         }
     }

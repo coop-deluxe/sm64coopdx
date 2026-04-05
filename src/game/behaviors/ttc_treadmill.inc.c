@@ -37,9 +37,9 @@ void bhv_ttc_treadmill_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oTTCTreadmillSpeed);
-        sync_object_init_field(o, &o->oTTCTreadmillTargetSpeed);
-        sync_object_init_field(o, &o->oTTCTreadmillTimeUntilSwitch);
+        sync_object_init_field(o, o->oTTCTreadmillSpeed);
+        sync_object_init_field(o, o->oTTCTreadmillTargetSpeed);
+        sync_object_init_field(o, o->oTTCTreadmillTimeUntilSwitch);
     }
 }
 

@@ -1781,7 +1781,7 @@ s32 unused_update_mode_5_camera(UNUSED struct Camera *c, UNUSED Vec3f focus, UNU
     return 0;
 }
 
-static void stub_camera_1(UNUSED s32 unused) {
+UNUSED static void stub_camera_1(UNUSED s32 unused) {
 }
 
 void mode_boss_fight_camera(struct Camera *c) {
@@ -5614,7 +5614,7 @@ void set_focus_rel_mario(struct Camera *c, f32 leftRight, f32 yOff, f32 forwBack
  * @param forwBack offset to Mario's front/back, relative to his faceAngle
  * @param yawOff offset to Mario's faceAngle, changes the direction of `leftRight` and `forwBack`
  */
-static void unused_set_pos_rel_mario(struct Camera *c, f32 leftRight, f32 yOff, f32 forwBack, s16 yawOff) {
+UNUSED static void unused_set_pos_rel_mario(struct Camera *c, f32 leftRight, f32 yOff, f32 forwBack, s16 yawOff) {
     if (!c) { return; }
     u16 yaw = sMarioCamState->faceAngle[1] + yawOff;
 
@@ -7606,7 +7606,7 @@ void cutscene_unsoften_music(UNUSED struct Camera *c) {
     seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
 }
 
-static void stub_camera_5(UNUSED struct Camera *c) {
+UNUSED static void stub_camera_5(UNUSED struct Camera *c) {
 }
 
 BAD_RETURN(s32) cutscene_unused_start(UNUSED struct Camera *c) {
@@ -8133,7 +8133,7 @@ BAD_RETURN(s32) cutscene_dance_rotate_move_towards_mario(struct Camera *c) {
 /**
  * Speculated to be dance-related due to its proximity to the other dance functions
  */
-static BAD_RETURN(s32) cutscene_dance_unused(UNUSED struct Camera *c) {
+UNUSED static BAD_RETURN(s32) cutscene_dance_unused(UNUSED struct Camera *c) {
 }
 
 /**
@@ -9089,7 +9089,7 @@ BAD_RETURN(s32) cutscene_death_stomach_goto_mario(struct Camera *c) {
 /**
  * Ah, yes
  */
-static void unused_water_death_move_to_side_of_mario(struct Camera *c) {
+UNUSED static void unused_water_death_move_to_side_of_mario(struct Camera *c) {
     water_death_move_to_mario_side(c);
 }
 
@@ -9377,7 +9377,7 @@ BAD_RETURN(s32) cutscene_enter_pyramid_top(struct Camera *c) {
     }
 }
 
-static void unused_cutscene_goto_cvar(struct Camera *c) {
+UNUSED static void unused_cutscene_goto_cvar(struct Camera *c) {
     if (!c) { return; }
     f32 dist;
 
@@ -9543,7 +9543,7 @@ BAD_RETURN(s32) cutscene_read_message_start(struct Camera *c) {
     sCutsceneVars[0].angle[0] = 0;
 }
 
-static void unused_cam_to_mario(struct Camera *c) {
+UNUSED static void unused_cam_to_mario(struct Camera *c) {
     if (!c) { return; }
     Vec3s dir;
 
@@ -10972,7 +10972,7 @@ void cutscene_palette_editor(struct Camera *c) {
             &gDjuiPaletteToggle->base,
             (
                 m->action == ACT_IDLE ||
-                m->action == ACT_PALETTE_EDITOR_CAP 
+                m->action == ACT_PALETTE_EDITOR_CAP
             ) && !capMissing
         );
     }

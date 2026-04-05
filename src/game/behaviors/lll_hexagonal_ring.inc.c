@@ -19,7 +19,7 @@ void hexagonal_ring_spawn_flames(void) {
 void bhv_lll_rotating_hexagonal_ring_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, &o->oAngleVelYaw);
+        sync_object_init_field(o, o->oAngleVelYaw);
     }
     UNUSED s32 unused;
     o->oCollisionDistance = 4000.0f;
