@@ -319,10 +319,8 @@ void bhv_yoshi_loop(void) {
     }
 
     if (sOverrideYoshiAlive) {
-        LOG_CONSOLE("Overidden")
         sYoshiNeeded = true;
     } else if (save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) < 120) {
-        LOG_CONSOLE("Not sufficent star count")
         sYoshiNeeded = false;
     } else {
         sYoshiNeeded = false;
