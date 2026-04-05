@@ -27,8 +27,8 @@ void bhv_ttc_elevator_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oTTCElevatorDir);
-        sync_object_init_field(o, &o->oTTCElevatorMoveTime);
+        sync_object_init_field(o, o->oTTCElevatorDir);
+        sync_object_init_field(o, o->oTTCElevatorMoveTime);
     }
 }
 

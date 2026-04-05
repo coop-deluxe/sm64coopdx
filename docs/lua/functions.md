@@ -760,9 +760,15 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_reset_color](functions-3.md#djui_hud_reset_color)
+   - [djui_hud_get_text_color](functions-3.md#djui_hud_get_text_color)
+   - [djui_hud_set_text_color](functions-3.md#djui_hud_set_text_color)
+   - [djui_hud_reset_text_color](functions-3.md#djui_hud_reset_text_color)
    - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
+   - [djui_hud_get_text_alignment](functions-3.md#djui_hud_get_text_alignment)
+   - [djui_hud_set_text_alignment](functions-3.md#djui_hud_set_text_alignment)
+   - [djui_hud_set_text_alignment_interpolated](functions-3.md#djui_hud_set_text_alignment_interpolated)
    - [djui_hud_get_screen_width](functions-3.md#djui_hud_get_screen_width)
    - [djui_hud_get_screen_height](functions-3.md#djui_hud_get_screen_height)
    - [djui_hud_get_mouse_x](functions-3.md#djui_hud_get_mouse_x)
@@ -976,6 +982,7 @@
    - [le_set_tone_mapping](functions-4.md#le_set_tone_mapping)
    - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
+   - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
    - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
@@ -993,6 +1000,11 @@
    - [le_set_light_intensity](functions-4.md#le_set_light_intensity)
    - [le_get_light_use_surface_normals](functions-4.md#le_get_light_use_surface_normals)
    - [le_set_light_use_surface_normals](functions-4.md#le_set_light_use_surface_normals)
+
+<br />
+
+- load.h
+   - [set_sound_bank_override](functions-4.md#set_sound_bank_override)
 
 <br />
 
@@ -1394,9 +1406,11 @@
 
 - mod_storage.h
    - [mod_storage_save](functions-5.md#mod_storage_save)
+   - [mod_storage_save_integer](functions-5.md#mod_storage_save_integer)
    - [mod_storage_save_number](functions-5.md#mod_storage_save_number)
    - [mod_storage_save_bool](functions-5.md#mod_storage_save_bool)
    - [mod_storage_load](functions-5.md#mod_storage_load)
+   - [mod_storage_load_integer](functions-5.md#mod_storage_load_integer)
    - [mod_storage_load_number](functions-5.md#mod_storage_load_number)
    - [mod_storage_load_bool](functions-5.md#mod_storage_load_bool)
    - [mod_storage_load_all](functions-5.md#mod_storage_load_all)
@@ -1600,7 +1614,6 @@
    - [cur_obj_check_if_at_animation_end](functions-6.md#cur_obj_check_if_at_animation_end)
    - [cur_obj_check_anim_frame](functions-6.md#cur_obj_check_anim_frame)
    - [cur_obj_check_anim_frame_in_range](functions-6.md#cur_obj_check_anim_frame_in_range)
-   - [cur_obj_check_frame_prior_current_frame](functions-6.md#cur_obj_check_frame_prior_current_frame)
    - [mario_is_in_air_action](functions-6.md#mario_is_in_air_action)
    - [mario_is_dive_sliding](functions-6.md#mario_is_dive_sliding)
    - [cur_obj_set_y_vel_and_animation](functions-6.md#cur_obj_set_y_vel_and_animation)
@@ -1819,6 +1832,7 @@
 - smlua_audio_utils.h
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
    - [audio_stream_load](functions-6.md#audio_stream_load)
    - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
    - [audio_stream_play](functions-6.md#audio_stream_play)
@@ -2047,6 +2061,7 @@
    - [set_override_envfx](functions-7.md#set_override_envfx)
    - [get_global_timer](functions-7.md#get_global_timer)
    - [get_dialog_response](functions-7.md#get_dialog_response)
+   - [get_time_stop_flags](functions-7.md#get_time_stop_flags)
    - [get_local_discord_id](functions-7.md#get_local_discord_id)
    - [get_coopnet_id](functions-7.md#get_coopnet_id)
    - [get_volume_master](functions-7.md#get_volume_master)
@@ -2061,6 +2076,7 @@
    - [set_environment_region](functions-7.md#set_environment_region)
    - [mod_file_exists](functions-7.md#mod_file_exists)
    - [get_active_mod](functions-7.md#get_active_mod)
+   - [get_mod_files](functions-7.md#get_mod_files)
    - [set_window_title](functions-7.md#set_window_title)
    - [reset_window_title](functions-7.md#reset_window_title)
    - [get_os_name](functions-7.md#get_os_name)
@@ -2069,6 +2085,7 @@
    - [geo_get_current_perspective](functions-7.md#geo_get_current_perspective)
    - [geo_get_current_camera](functions-7.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-7.md#geo_get_current_held_object)
+   - [geo_skip_interpolation](functions-7.md#geo_skip_interpolation)
    - [texture_to_lua_table](functions-7.md#texture_to_lua_table)
    - [get_texture_name](functions-7.md#get_texture_name)
 
@@ -2130,6 +2147,8 @@
    - [obj_set_vel](functions-7.md#obj_set_vel)
    - [obj_move_xyz](functions-7.md#obj_move_xyz)
    - [set_whirlpools](functions-7.md#set_whirlpools)
+   - [obj_skip_interpolation](functions-7.md#obj_skip_interpolation)
+   - [obj_anim_skip_interpolation](functions-7.md#obj_anim_skip_interpolation)
 
 <br />
 

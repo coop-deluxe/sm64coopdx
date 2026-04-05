@@ -300,9 +300,9 @@ void bhv_bobomb_buddy_init(void) {
 
     if (o->oBobombBuddyRole == BOBOMB_BUDDY_ROLE_CANNON) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oBobombBuddyHasTalkedToMario);
-        sync_object_init_field(o, &o->oBobombBuddyCannonStatus);
-        sync_object_init_field(o, &forceCannonOpen);
+        sync_object_init_field(o, o->oBobombBuddyHasTalkedToMario);
+        sync_object_init_field(o, o->oBobombBuddyCannonStatus);
+        sync_object_init_field(o, forceCannonOpen);
     }
 }
 

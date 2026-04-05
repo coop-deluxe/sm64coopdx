@@ -45,12 +45,12 @@ void bhv_ttc_2d_rotator_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
-        sync_object_init_field(o, &o->oTTC2DRotatorMinTimeUntilNextTurn);
-        sync_object_init_field(o, &o->oTTC2DRotatorTargetYaw);
-        sync_object_init_field(o, &o->oTTC2DRotatorIncrement);
-        sync_object_init_field(o, &o->oTTC2DRotatorRandomDirTimer);
-        sync_object_init_field(o, &o->oFaceAngleYaw);
-        sync_object_init_field(o, &o->oAngleVelYaw);
+        sync_object_init_field(o, o->oTTC2DRotatorMinTimeUntilNextTurn);
+        sync_object_init_field(o, o->oTTC2DRotatorTargetYaw);
+        sync_object_init_field(o, o->oTTC2DRotatorIncrement);
+        sync_object_init_field(o, o->oTTC2DRotatorRandomDirTimer);
+        sync_object_init_field(o, o->oFaceAngleYaw);
+        sync_object_init_field(o, o->oAngleVelYaw);
     }
 }
 

@@ -359,7 +359,7 @@ void smlua_init(void) {
             }
 
             // skip loading scripts in subdirectories
-            if (strchr(file->relativePath, '/') != NULL || strchr(file->relativePath, '\\') != NULL) {
+            if (strchr(file->relativePath, *PATH_SEPARATOR) != NULL || strchr(file->relativePath, *PATH_SEPARATOR_ALT) != NULL) {
                 continue;
             }
 

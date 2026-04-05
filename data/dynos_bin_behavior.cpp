@@ -2449,6 +2449,48 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     PrintDataError("  ERROR: Unknown behavior symbol: %s", _Symbol.begin());
 }
 
+static bool DynOS_Bhv_CheckCommands(const BehaviorScript *aBhv, const Array<BehaviorScript> &aCommands) {
+    u8 bhvCommand = (*aBhv >> 24) & 0xFF;
+    for (const auto &commandToCheck : aCommands) {
+        if (bhvCommand == ((commandToCheck >> 24) & 0xFF)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool DynOS_Bhv_Validate(GfxData *aGfxData, const DataNode<BehaviorScript> *aNode) {
+
+    // 1st command must be BEGIN
+    if (!DynOS_Bhv_CheckCommands(aNode->mData + 0, { BEGIN(0) })) {
+        PrintDataError("  ERROR: Validation failed for behavior %s: First command of the script must be BEGIN.", aNode->mName.begin());
+        return false;
+    }
+
+    // 2nd command must be ID
+    if (!DynOS_Bhv_CheckCommands(aNode->mData + 1, { ID(0) })) {
+        PrintDataError("  ERROR: Validation failed for behavior %s: Second command of the script must be ID.", aNode->mName.begin());
+        return false;
+    }
+
+    // Last command must be a terminating command
+    if (!DynOS_Bhv_CheckCommands(aNode->mData + aNode->mSize - 1, {
+        CALL(0),
+        RETURN(),
+        GOTO(0),
+        END_LOOP(),
+        BREAK(),
+        DEACTIVATE(),
+        CALL_EXT(0),
+        GOTO_EXT(0),
+    })) {
+        PrintDataError("  ERROR: Validation failed for behavior %s: Last command of the script must be one of:\n    CALL, RETURN, GOTO, END_LOOP, BREAK, DEACTIVATE", aNode->mName.begin());
+        return false;
+    }
+
+    return true;
+}
+
 DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, bool aDisplayPercent) {
     if (aNode->mData) return aNode;
 
@@ -2460,9 +2502,13 @@ DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorSc
         ParseBehaviorScriptSymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes);
         if (aDisplayPercent && aGfxData->mErrorCount == 0) { PrintNoNewLine("%3d%%\b\b\b\b", (s32) (_TokenIndex * 100) / aNode->mTokens.Count()); }
     }
-    if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     aNode->mSize = (u32)(_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+
+    // Validate behavior script
+    DynOS_Bhv_Validate(aGfxData, aNode);
+
+    if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     return aNode;
 }
 
@@ -2590,6 +2636,12 @@ static DataNode<BehaviorScript> *DynOS_Bhv_Load(BinFile *aFile, GfxData *aGfxDat
         } else {
             _Node->mData[i] = (uintptr_t) _Value;
         }
+    }
+
+    // Validate it
+    if (!DynOS_Bhv_Validate(aGfxData, _Node)) {
+        Delete(_Node);
+        return NULL;
     }
 
     // Add it

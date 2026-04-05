@@ -50,14 +50,14 @@ s16 D_8032F520[][3] = { { 1, 10, 40 },   { 0, 0, 74 },    { -1, -10, 114 },  { 1
 
 void bhv_bowser_tail_anchor_init(void) {
     if (!o->parentObj) { mark_obj_for_deletion(o); return; }
-    sync_object_init_field(o->parentObj, &o->oAction);
-    sync_object_init_field(o->parentObj, &o->oPrevAction);
-    sync_object_init_field(o->parentObj, &o->oTimer);
-    sync_object_init_field(o->parentObj, &o->oIntangibleTimer);
-    sync_object_init_field(o->parentObj, &o->oInteractStatus);
-    sync_object_init_field(o->parentObj, &o->header.gfx.scale[0]);
-    sync_object_init_field(o->parentObj, &o->header.gfx.scale[1]);
-    sync_object_init_field(o->parentObj, &o->header.gfx.scale[2]);
+    sync_object_init_field(o->parentObj, o->oAction);
+    sync_object_init_field(o->parentObj, o->oPrevAction);
+    sync_object_init_field(o->parentObj, o->oTimer);
+    sync_object_init_field(o->parentObj, o->oIntangibleTimer);
+    sync_object_init_field(o->parentObj, o->oInteractStatus);
+    sync_object_init_field(o->parentObj, o->header.gfx.scale[0]);
+    sync_object_init_field(o->parentObj, o->header.gfx.scale[1]);
+    sync_object_init_field(o->parentObj, o->header.gfx.scale[2]);
 }
 
 void bhv_bowser_tail_anchor_loop(void) {
@@ -112,10 +112,10 @@ void bhv_bowser_flame_spawn_loop(void) {
 
 void bhv_bowser_body_anchor_init(void) {
     if (!o->parentObj) { mark_obj_for_deletion(o); return; }
-    sync_object_init_field(o->parentObj, &o->oInteractType);
-    sync_object_init_field(o->parentObj, &o->oInteractStatus);
-    sync_object_init_field(o->parentObj, &o->oIntangibleTimer);
-    sync_object_init_field(o->parentObj, &o->oDamageOrCoinValue);
+    sync_object_init_field(o->parentObj, o->oInteractType);
+    sync_object_init_field(o->parentObj, o->oInteractStatus);
+    sync_object_init_field(o->parentObj, o->oIntangibleTimer);
+    sync_object_init_field(o->parentObj, o->oDamageOrCoinValue);
 }
 
 void bhv_bowser_body_anchor_loop(void) {
@@ -1077,12 +1077,12 @@ void bowser_act_dead(void) {
 
 void bhv_tilting_bowser_lava_platform_init(void) {
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-    sync_object_init_field(o, &o->oAngleVelPitch);
-    sync_object_init_field(o, &o->oAngleVelRoll);
-    sync_object_init_field(o, &o->oFaceAnglePitch);
-    sync_object_init_field(o, &o->oFaceAngleRoll);
-    sync_object_init_field(o, &o->oMoveAnglePitch);
-    sync_object_init_field(o, &o->oMoveAngleRoll);
+    sync_object_init_field(o, o->oAngleVelPitch);
+    sync_object_init_field(o, o->oAngleVelRoll);
+    sync_object_init_field(o, o->oFaceAnglePitch);
+    sync_object_init_field(o, o->oFaceAngleRoll);
+    sync_object_init_field(o, o->oMoveAnglePitch);
+    sync_object_init_field(o, o->oMoveAngleRoll);
 }
 
 void bowser_tilt_platform(struct Object* platform, s16 a1) {
@@ -1445,13 +1445,13 @@ void bhv_bowser_init(void) {
             so->ignore_if_true = bhv_bowser_ignore_if_true;
             so->on_received_post = bhv_bowser_on_received_post;
             so->fullObjectSync = TRUE;
-            sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
-            sync_object_init_field_with_size(o, &o->header.gfx.animInfo.animFrame, 16);
-            sync_object_init_field_with_size(o, &bowserCutsceneGlobalIndex, 8);
-            sync_object_init_field(o, &networkBowserAnimationIndex);
-            sync_object_init_field(o, &o->header.gfx.scale[0]);
-            sync_object_init_field(o, &o->header.gfx.scale[1]);
-            sync_object_init_field(o, &o->header.gfx.scale[2]);
+            sync_object_init_field(o, o->header.gfx.node.flags);
+            sync_object_init_field(o, o->header.gfx.animInfo.animFrame);
+            sync_object_init_field(o, bowserCutsceneGlobalIndex);
+            sync_object_init_field(o, networkBowserAnimationIndex);
+            sync_object_init_field(o, o->header.gfx.scale[0]);
+            sync_object_init_field(o, o->header.gfx.scale[1]);
+            sync_object_init_field(o, o->header.gfx.scale[2]);
         }
     }
 }
@@ -1692,9 +1692,9 @@ void bhv_falling_bowser_platform_loop(void) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
-            sync_object_init_field(o, &o->oAction);
-            sync_object_init_field(o, &o->oPrevAction);
-            sync_object_init_field(o, &o->oTimer);
+            sync_object_init_field(o, o->oAction);
+            sync_object_init_field(o, o->oPrevAction);
+            sync_object_init_field(o, o->oTimer);
         }
     }
 
