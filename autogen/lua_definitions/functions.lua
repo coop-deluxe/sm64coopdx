@@ -4040,27 +4040,6 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
---- @param message string
---- @param x number
---- @param y number
---- @param scale number
---- Prints DJUI HUD text onto the screen
-function djui_hud_print_text(message, x, y, scale)
-    -- ...
-end
-
---- @param message string
---- @param prevX number
---- @param prevY number
---- @param prevScale number
---- @param x number
---- @param y number
---- @param scale number
---- Prints interpolated DJUI HUD text onto the screen
-function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
-    -- ...
-end
-
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
