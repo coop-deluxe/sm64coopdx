@@ -5,7 +5,7 @@ LANG_DIR = "./lang/"
 def pass_string(optionstr): return optionstr
 
 def open_lang(name):
-    parser = configparser.ConfigParser(interpolation=None)
+    parser = configparser.ConfigParser()
     parser.optionxform = pass_string
     parser.read(LANG_DIR + name, "utf-8")
     return parser
