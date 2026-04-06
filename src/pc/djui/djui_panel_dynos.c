@@ -13,6 +13,7 @@ void djui_panel_dynos_create(struct DjuiBase* caller);
 
 static void djui_panel_dynos_apply(struct DjuiBase* caller) {
     dynos_pack_set_enabled(caller->tag, caller->bTag);
+    smlua_call_event_hooks(HOOK_ON_DYNOS_CHANGED);
 }
 
 static void djui_panel_dynos_local_player_model_only(UNUSED struct DjuiBase* caller) {
