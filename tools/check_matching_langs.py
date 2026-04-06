@@ -39,14 +39,15 @@ for filename in os.listdir("lang"):
         if filename != "English.ini":
             missing_sections, extra_sections, missing_keys = compare_ini_file(ini_file_path)
 
-            print(f"\nComparing {filename}:")
+            print(f"\n{filename}: ", end="")
             if not missing_sections and not extra_sections and not any(missing_keys.values()):
-                print(f"{filename}: matching!")
+                print(f"matching!")
             else:
+                print()
                 if missing_sections:
                     print(f"Missing sections: {', '.join(missing_sections)}")
                 if extra_sections:
                     print(f"Extra sections: {', '.join(extra_sections)}")
                 for section, keys in missing_keys.items():
                     if keys:
-                        print(f"[{section}]: Missing{', '.join(keys)}")
+                        print(f"[{section}]: Missing {', '.join(keys)}")
