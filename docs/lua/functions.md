@@ -25,6 +25,8 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -787,8 +789,6 @@
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
-   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -2725,6 +2725,64 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

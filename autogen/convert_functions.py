@@ -118,7 +118,7 @@ override_disallowed_functions = {
     "src/game/mario.h":                         [ " init_mario" ],
     "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data", "djui_hud_print_text", "djui_hud_print_text_interpolated" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
@@ -144,7 +144,6 @@ override_disallowed_functions = {
     "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64" ],
     "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_print_text", "djui_hud_print_text_interpolated" ],
 }
 
 override_hide_functions = {
