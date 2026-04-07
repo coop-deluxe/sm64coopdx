@@ -76,8 +76,8 @@ void djui_gfx_update_combine_mode(enum CombinerSource mode) {
         if (gCombinerUpdated) {
             u8 p[16];
             for (u8 i = 0; i < 8 * gCombinerState.cycles; i++) {
-                p[i] = djui_gfx_translate_combiner_source(i >> 3, i >> 2,
-                    gCombinerState.cycle[i >> 3 & 1][i >> 2 & 1][i & 3]);
+                p[i] = djui_gfx_translate_combiner_source(i >> 3, i >> 2 & 1,
+                    gCombinerState.cycle[i >> 3][i >> 2 & 1][i & 3]);
             }
 
             gDPSetCombineLERPNoString(&sDjuiCombineMode,
