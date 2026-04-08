@@ -644,7 +644,7 @@ void clear_dynamic_surfaces(void) {
 
         clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
 
-        for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+        for (u16 i = 0; i < gObjectPoolSoftCap; i++) {
             struct Object *obj = &gObjectPool[i];
             obj->firstSurface = 0;
             obj->numSurfaces = 0;
@@ -733,7 +733,7 @@ void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
                 if (gCurrentObject->firstSurface == 0) {
                     gCurrentObject->firstSurface = gSurfacesAllocated - 1;
                 }
-    
+
                 // Increase surface count
                 gCurrentObject->numSurfaces++;
             }

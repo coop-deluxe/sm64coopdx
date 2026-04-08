@@ -26,6 +26,7 @@
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
 #include "pc/djui/djui_hud_utils.h"
+#include "types.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -73,6 +74,7 @@ u32 gTimeStopState;
  * The pool that objects are allocated from.
  */
 struct Object gObjectPool[OBJECT_POOL_CAPACITY];
+s32 gObjectPoolSoftCap = OBJECT_POOL_INIT_CAPACITY;
 
 /**
  * A special object whose purpose is to act as a parent for macro objects.
@@ -573,7 +575,6 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
  * Clear objects, dynamic surfaces, and some miscellaneous level data used by objects.
  */
 void clear_objects(void) {
-    s32 i;
     sync_objects_clear();
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
@@ -587,17 +588,19 @@ void clear_objects(void) {
         gMarioStates[i].currentRoom = 0;
     }
 
-    for (i = 0; i < 60; i++) {
+    for (s32 i = 0; i < 60; i++) {
         gDoorAdjacentRooms[i][0] = 0;
         gDoorAdjacentRooms[i][1] = 0;
     }
 
     debug_unknown_level_select_check();
 
-    init_free_object_list();
+    gObjectPoolSoftCap = OBJECT_POOL_INIT_CAPACITY;
+
+    init_free_object_list(0);
     clear_object_lists(gObjectListArray);
 
-    for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+    for (s32 i = 0; i < gObjectPoolSoftCap; i++) {
         gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
         geo_reset_object_node(&gObjectPool[i].header.gfx);
     }
@@ -615,7 +618,8 @@ void clear_objects(void) {
 void update_terrain_objects(void) {
     gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SPAWNER]);
     //! This was meant to be +=
-    gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
+    // Fix bug, since this doesn't affect gameplay
+    gObjectCounter += update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
 }
 
 /**

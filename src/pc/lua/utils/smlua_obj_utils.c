@@ -1,3 +1,4 @@
+#include "game/object_list_processor.h"
 #include "types.h"
 #include "object_constants.h"
 #include "object_fields.h"
@@ -528,6 +529,14 @@ void obj_skip_interpolation(struct Object *o) {
 
 void obj_anim_skip_interpolation(struct Object *o) {
     if (o) { o->header.gfx.animInfo.prevAnimFrameTimestamp = 0; }
+}
+
+s32 obj_get_count(void) {
+    return gObjectCounter;
+}
+
+s32 obj_get_current_capacity(void) {
+    return gObjectPoolSoftCap;
 }
 
 #ifdef DEVELOPMENT

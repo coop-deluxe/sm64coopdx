@@ -103,7 +103,20 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
         }
         destList->prev = nextObj;
     } else {
-        return NULL;
+        s32 new_count = gObjectPoolSoftCap + OBJECT_POOL_INIT_CAPACITY;
+        if (new_count > OBJECT_POOL_CAPACITY) {
+            return NULL;
+        }
+
+        s32 old_count = gObjectPoolSoftCap;
+        gObjectPoolSoftCap = new_count;
+        init_free_object_list(old_count);
+        for (s32 i = old_count; i < gObjectPoolSoftCap; i++) {
+            gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            geo_reset_object_node(&gObjectPool[i].header.gfx);
+        }
+
+        return try_allocate_object(destList, freeList);
     }
 
     geo_remove_child(&nextObj->gfx.node);
@@ -152,15 +165,19 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
 /**
  * Add every object in the pool to the free object list.
  */
-void init_free_object_list(void) {
-    s32 poolLength = OBJECT_POOL_CAPACITY;
-
+void init_free_object_list(u32 begin) {
     // Add the first object in the pool to the free list
-    struct Object *obj = &gObjectPool[0];
-    gFreeObjectList.next = (struct ObjectNode *) obj;
+    struct Object* obj = &gObjectPool[begin];
+    if (begin == 0) {
+        gFreeObjectList.next = (struct ObjectNode*)obj;
+    } else {
+        gFreeObjectList.next = (struct ObjectNode*)&gObjectPool[begin];
+        gObjectPool[begin - 1].header.next = &obj->header;
+        obj->header.prev = &gObjectPool[begin - 1].header;
+    }
 
     // Link each object in the pool to the following object
-    for (s32 i = 0; i < poolLength - 1; i++) {
+    for (s32 i = begin; i < gObjectPoolSoftCap - 1; i++) {
         obj->header.next = &(obj + 1)->header;
         obj++;
     }
@@ -281,6 +298,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
                 //  other objects.
             }
         }
+        return NULL;
     }
 
     // Initialize object fields
