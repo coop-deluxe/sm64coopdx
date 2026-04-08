@@ -5,6 +5,7 @@ from extract_structs import *
 from extract_object_fields import *
 from common import *
 from vec_types import *
+from convert_functions import main as get_extracted_functions
 
 in_files = [
     "include/types.h",
@@ -179,6 +180,67 @@ override_types = {
 }
 reversed_override_types = {v: k for k, v in override_types.items()}
 
+extracted_functions = get_extracted_functions(True)
+
+remove_from_struct_methods = {
+    "MarioState": ["mario"],
+    "Object": ["object", "obj"],
+    "Surface": ["surface"],
+    "Camera": ["camera"],
+    "ModAudio": ["audio"],
+    "NetworkPlayer": ["network_player"],
+}
+
+override_struct_method_name = {
+    # Prevent renaming altogether
+    "is_nearest_player_to_object": "is_nearest_player_to_object",
+
+    # Minimally rename, referring to self once necessary
+    "obj_is_near_to_and_facing_mario": "obj_is_near_to_and_facing_self",
+    "obj_turn_pitch_toward_mario": "obj_turn_pitch_toward_self",
+    "cur_obj_lateral_dist_from_obj_to_home": "cur_obj_lateral_dist_from_self_to_home",
+
+    # Reordered names to make sense for methods
+    "cur_obj_can_mario_activate_textbox": "can_activate_textbox_with_cur_obj",
+    "cur_obj_can_mario_activate_textbox_2": "can_activate_textbox_with_cur_obj_2",
+    "cur_obj_end_dialog": "end_dialog_with_cur_obj",
+    "cur_obj_set_vel_from_mario_vel": "set_vel_to_cur_obj_vel",
+    "cur_obj_spawn_loot_coin_at_mario_pos": "spawn_loot_coin_at_pos_from_cur_obj",
+    "cur_obj_set_pos_relative": "set_pos_relative_to_cur_obj",
+
+    # Makes more grammatical sense once converted to a method
+    "does_mario_have_blown_cap": "has_blown_cap",
+    "does_mario_have_normal_cap_on_head": "has_normal_cap_on_head",
+    "dist_between_object_and_point": "dist_to_point",
+    "dist_between_objects": "dist_to_object",
+    "obj_is_mario_ground_pounding_platform": "is_ground_pounding_platform",
+    "lateral_dist_between_objects": "lateral_dist_to_object",
+
+    # Contains unnecessary words after being converted
+    "init_single_mario": "init",
+    "is_nearest_mario_state_to_object": "is_nearest_to_object",
+    "is_player_active": "is_active",
+    "is_player_in_local_area": "is_in_local_area",
+    "mario_obj_angle_to_object": "angle_to_object",
+    "cur_obj_disable_rendering_and_become_intangible": "disable_rendering_and_become_intangible",
+    "cur_obj_enable_rendering_and_become_tangible": "enable_rendering_and_become_tangible",
+    "get_mario_state_from_object": "get_mario_state",
+    "is_point_close_to_object": "is_point_close",
+    "nearest_interacting_mario_state_to_object": "nearest_interacting_mario_state",
+    "nearest_interacting_player_to_object": "nearest_interacting_player",
+    "nearest_mario_state_to_object": "nearest_mario_state",
+    "nearest_player_to_object": "nearest_player",
+    "nearest_possible_mario_state_to_object": "nearest_possible_mario_state",
+
+    # Removed necessary words after being converted, so add back in
+    "obj_angle_to_object": "angle_to_object",
+    "obj_attack_collided_from_other_object": "attack_collided_from_other_object",
+    "obj_check_if_collided_with_object": "check_if_collided_with_object",
+    "obj_get_collided_object": "get_collided_object",
+    "obj_pitch_to_object": "pitch_to_object",
+    "obj_turn_toward_object": "turn_toward_object",
+}
+
 total_structs = 0
 total_fields = 0
 
@@ -255,6 +317,7 @@ def identifier_to_caps(identifier):
     return caps
 
 def table_to_string(table):
+    table.sort()
     count = 0
     columns = 0
     column_width = []
@@ -280,6 +343,44 @@ def table_to_string(table):
             count += 1
         s += line + '\n'
     return s, count
+
+def extracted_functions_info(sid, processed_files):
+    for struct_with_methods, remove_texts in remove_from_struct_methods.items():
+        if sid != struct_with_methods:
+            continue
+
+        for file in processed_files:
+            for func in file["functions"]:
+                if len(func["params"]) == 0:
+                    continue
+
+                first_param_type = func["params"][0]["type"]
+                if first_param_type != f"struct {struct_with_methods}*":
+                    continue
+
+                real_name = func["identifier"]
+                trimmed_name = func["identifier"]
+                description = func["description"]
+
+                if real_name in struct_functions_disallow:
+                    continue
+
+                for text in remove_texts:
+                    text_pos = trimmed_name.find(text)
+                    if text_pos == -1:
+                        continue
+
+                    remove_text_length = len(text)
+                    if trimmed_name[text_pos - 1] == "_":
+                        trimmed_name = trimmed_name[:text_pos - 1] + trimmed_name[text_pos + remove_text_length:]
+                    elif trimmed_name[text_pos + remove_text_length] == "_":
+                        trimmed_name = trimmed_name[:text_pos] + trimmed_name[text_pos + remove_text_length + 1:]
+
+                for name, override in override_struct_method_name.items():
+                    if real_name == name:
+                        trimmed_name = override
+
+                yield trimmed_name, real_name, description
 
 ############################################################################
 
@@ -572,6 +673,25 @@ def build_struct(struct):
             row.append(endStr                                                          )
         field_table.append(row)
 
+    for name, real_name, _ in extracted_functions_info(sid, extracted_functions):
+        for func in spoof_function_returns:
+            if re.match(func, real_name):
+                real_name = real_name + "_SPOOFED"
+                break
+
+        row = [
+            '    { ',
+            '"%s", ' % name,
+            'LVT_FUNCTION, ',
+            '(size_t) "%s", ' % real_name,
+            'true, ',
+            'LOT_NONE, ',
+            '1, ',
+            'sizeof(const char *)',
+            ' },',
+        ]
+        field_table.append(row)
+
     field_table_str, field_count = table_to_string(field_table)
     field_count_define = 'LUA_%s_FIELD_COUNT' % identifier_to_caps(sid)
     struct_lot = 'LOT_%s' % sid.upper()
@@ -822,9 +942,12 @@ def get_function_signature(function):
                 sig = 'fun('
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
+                function_name = line.replace('(', ' ').split()[1]
+                for func in spoof_function_returns:
+                    if re.match(func, function_name):
+                        function_return = "boolean"
                 if function_return:
                     sig += ': %s' % (function_return)
-                function_name = line.replace('(', ' ').split()[1]
                 function_signatures[function_name] = sig
                 function_params.clear()
                 function_return = None
@@ -861,6 +984,10 @@ def def_struct(struct):
             def_pointers.append(ftype)
 
         s += '--- @field public %s %s\n' % (fid, ftype)
+
+    for name, real_name, description in extracted_functions_info(sid, extracted_functions):
+        signurate = get_function_signature(real_name)
+        s += '--- @field public %s %s %s\n' % (name, signurate, description)
 
     return s
 
