@@ -1703,11 +1703,6 @@ C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
         return false;
     }
 
-    // cannot change text mode flag to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
-        return false;
-    }
-
     file->isText = text;
     return true;
 }
