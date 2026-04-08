@@ -75,6 +75,7 @@ u32 gTimeStopState;
  */
 struct Object gObjectPool[OBJECT_POOL_CAPACITY];
 s32 gObjectPoolSoftCap = OBJECT_POOL_INIT_CAPACITY;
+// Might be worthwhile to allow the pool to shrink?
 
 /**
  * A special object whose purpose is to act as a parent for macro objects.
