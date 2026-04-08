@@ -276,7 +276,7 @@ modFs:save()
 
 ## Compression
 
-ModFS files can each have their compression level explicitly set. By default this is set to the highest level.<br>
+ModFS files can each have their compression level explicitly set. By default this is set to 1 for minimal compression.<br>
 Although it makes no difference to the total size limit, changing the compression level can be useful if you are trying to optimize for CPU time.<br>
 The compression level can be any integer between 0-9.<br>
 ```lua
