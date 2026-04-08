@@ -175,15 +175,15 @@ void bhv_monty_mole_init(void) {
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->on_received_post = bhv_monty_mole_on_received_post;
-        sync_object_init_field(o, &o->oMontyMoleHeightRelativeToFloor);
-        sync_object_init_field(o, &o->oMontyMoleHoleX);
-        sync_object_init_field(o, &o->oMontyMoleHoleY);
-        sync_object_init_field(o, &o->oMontyMoleHoleZ);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
-        sync_object_init_field(o, &o->oGravity);
-        sync_object_init_field(o, &o->oIntangibleTimer);
-        sync_object_init_field(o, &o->oFaceAnglePitch);
-        sync_object_init_field_with_size(o, &o->header.gfx.node.flags, 16);
+        sync_object_init_field(o, o->oMontyMoleHeightRelativeToFloor);
+        sync_object_init_field(o, o->oMontyMoleHoleX);
+        sync_object_init_field(o, o->oMontyMoleHoleY);
+        sync_object_init_field(o, o->oMontyMoleHoleZ);
+        sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->oGravity);
+        sync_object_init_field(o, o->oIntangibleTimer);
+        sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->header.gfx.node.flags);
     }
 }
 

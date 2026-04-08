@@ -57,7 +57,7 @@ depending on whether Mario's forward velocity is high enough to be considered a 
 |descriptionEnd| */
 void play_knockback_sound(struct MarioState *m) {
     if (!m) { return; }
-    if (m->actionArg == 0 && (m->forwardVel <= -28.0f || m->forwardVel >= 28.0f)) {
+    if ((m->actionArg & ~PVP_ATTACK_KNOCKBACK_ACTION_ARG) == 0 && (m->forwardVel <= -28.0f || m->forwardVel >= 28.0f)) {
         play_character_sound_if_no_flag(m, CHAR_SOUND_DOH, MARIO_MARIO_SOUND_PLAYED);
     } else {
         play_character_sound_if_no_flag(m, CHAR_SOUND_UH, MARIO_MARIO_SOUND_PLAYED);
@@ -1236,13 +1236,8 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
     if (!m) { return 0; }
     u32 stepResult;
 
-    if (m->knockbackTimer == 0) {
-        if (m->interactObj == NULL || !(m->interactObj->oInteractType & INTERACT_PLAYER)) {
-            mario_set_forward_vel(m, speed);
-        }
-    } else if (m->knockbackTimer < 0) {
-        // do nothing
-    } else {
+    // Refresh knockbackTimer
+    if (m->knockbackTimer > 0) {
         m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
     }
 
@@ -1356,7 +1351,7 @@ s32 act_hard_forward_air_kb(struct MarioState *m) {
 s32 act_thrown_backward(struct MarioState *m) {
     if (!m) { return 0; }
     u32 landAction;
-    if (m->actionArg != 0) {
+    if ((m->actionArg & ~PVP_ATTACK_KNOCKBACK_ACTION_ARG) != 0) {
         landAction = ACT_HARD_BACKWARD_GROUND_KB;
     } else {
         landAction = ACT_BACKWARD_GROUND_KB;
@@ -1375,7 +1370,7 @@ s32 act_thrown_forward(struct MarioState *m) {
     s16 pitch;
 
     u32 landAction;
-    if (m->actionArg != 0) {
+    if ((m->actionArg & ~PVP_ATTACK_KNOCKBACK_ACTION_ARG) != 0) {
         landAction = ACT_HARD_FORWARD_GROUND_KB;
     } else {
         landAction = ACT_FORWARD_GROUND_KB;
@@ -1739,7 +1734,7 @@ s32 act_lava_boost(struct MarioState *m) {
                 return FALSE;
             }
 
-            if (mario_can_bubble(m)) {
+            if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
                 mario_set_bubbled(m);
             } else {

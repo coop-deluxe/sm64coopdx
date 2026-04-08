@@ -136,11 +136,11 @@ void bhv_heave_ho_loop(void) {
         if (so != NULL) {
             so->override_ownership = bhv_heave_ho_override_ownership;
             so->ignore_if_true = bhv_heave_ho_ignore_if_true;
-            sync_object_init_field(o, &o->oHeaveHoUnk88);
-            sync_object_init_field(o, &o->oHeaveHoUnkF4);
-            sync_object_init_field(o, &o->oInteractStatus);
-            sync_object_init_field(o, &o->oGraphYOffset);
-            sync_object_init_field(o, &o->oFaceAngleYaw);
+            sync_object_init_field(o, o->oHeaveHoUnk88);
+            sync_object_init_field(o, o->oHeaveHoUnkF4);
+            sync_object_init_field(o, o->oInteractStatus);
+            sync_object_init_field(o, o->oGraphYOffset);
+            sync_object_init_field(o, o->oFaceAngleYaw);
         }
     }
 

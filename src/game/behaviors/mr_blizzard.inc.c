@@ -49,14 +49,14 @@ void bhv_mr_blizzard_init(void) {
         o->oMrBlizzardTargetMoveYaw = o->oMoveAngleYaw;
 
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oMrBlizzardTargetMoveYaw);
-        sync_object_init_field(o, &o->oMrBlizzardTimer);
-        sync_object_init_field(o, &o->oMrBlizzardDistFromHome);
-        sync_object_init_field(o, &o->oForwardVel);
-        sync_object_init_field(o, &o->oVelY);
-        sync_object_init_field(o, &o->oPosX);
-        sync_object_init_field(o, &o->oPosY);
-        sync_object_init_field(o, &o->oPosZ);
+        sync_object_init_field(o, o->oMrBlizzardTargetMoveYaw);
+        sync_object_init_field(o, o->oMrBlizzardTimer);
+        sync_object_init_field(o, o->oMrBlizzardDistFromHome);
+        sync_object_init_field(o, o->oForwardVel);
+        sync_object_init_field(o, o->oVelY);
+        sync_object_init_field(o, o->oPosX);
+        sync_object_init_field(o, o->oPosY);
+        sync_object_init_field(o, o->oPosZ);
     } else {
         if (o->oBehParams2ndByte != MR_BLIZZARD_STYPE_NO_CAP) {
             // Cap wearing Mr. Blizzard from SL.
@@ -70,10 +70,10 @@ void bhv_mr_blizzard_init(void) {
         o->oMrBlizzardHeldObj = NULL;
 
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-        sync_object_init_field(o, &o->oMrBlizzardTargetMoveYaw);
-        sync_object_init_field(o, &o->oAction);
-        sync_object_init_field(o, &o->oMrBlizzardGraphYOffset);
-        sync_object_init_field(o, &o->oMoveAngleYaw);
+        sync_object_init_field(o, o->oMrBlizzardTargetMoveYaw);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oMrBlizzardGraphYOffset);
+        sync_object_init_field(o, o->oMoveAngleYaw);
     }
 }
 

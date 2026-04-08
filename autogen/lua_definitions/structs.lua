@@ -970,14 +970,6 @@
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
 
---- @class HudUtilsRotation
---- @field public rotation number
---- @field public rotationDiff number
---- @field public prevPivotX number
---- @field public prevPivotY number
---- @field public pivotX number
---- @field public pivotY number
-
 --- @class InstantWarp
 --- @field public id integer
 --- @field public area integer

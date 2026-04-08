@@ -58,3 +58,9 @@ SMLUA_EVENT_HOOK(HOOK_MARIO_OVERRIDE_FLOOR_CLASS, HOOK_RETURN_ON_OUTPUT_SET, str
 SMLUA_EVENT_HOOK(HOOK_ON_ADD_SURFACE, HOOK_RETURN_NEVER, struct Surface *surface, bool dynamic)
 SMLUA_EVENT_HOOK(HOOK_ON_CLEAR_AREAS, HOOK_RETURN_NEVER)
 SMLUA_EVENT_HOOK(HOOK_ON_PACKET_BYTESTRING_RECEIVE, HOOK_RETURN_NEVER, s32 modIndex, s32 valueIndex)
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_WALL_COLLISION, _, f32 posX, f32 posY, f32 posZ, struct WallCollisionData *colData, s32 *numCollisions) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_CEIL, _, f32 posX, f32 posY, f32 posZ, struct Surface **pceil, f32 *height) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_FLOOR, _, f32 posX, f32 posY, f32 posZ, struct Surface **pfloor, f32 *height) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_WATER_LEVEL, _, f32 x, f32 z, f32 *waterLevel) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_POISON_GAS_LEVEL, _, f32 x, f32 z, f32 *gasLevel) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_FIND_SURFACE_ON_RAY, _, Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos) // Manually defined hook

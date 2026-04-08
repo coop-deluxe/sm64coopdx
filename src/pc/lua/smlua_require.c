@@ -121,7 +121,7 @@ static int smlua_custom_require(lua_State* L) {
         return 0;
     }
 
-    if (path_ends_with(moduleName, "/") || path_ends_with(moduleName, "\\")) {
+    if (path_ends_with(moduleName, PATH_SEPARATOR) || path_ends_with(moduleName, PATH_SEPARATOR_ALT)) {
         LOG_LUA_LINE("cannot require a directory");
         return 0;
     }
