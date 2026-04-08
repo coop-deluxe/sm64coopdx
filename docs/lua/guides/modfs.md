@@ -126,6 +126,7 @@ print("The ModFS file " .. file.filepath .. " is " .. file.size .. " bytes long.
 | erase | [`mod_fs_file_erase`](../functions-5.md#mod_fs_file_erase) |
 | set_text_mode | [`mod_fs_file_set_text_mode`](../functions-5.md#mod_fs_file_set_text_mode) |
 | set_public | [`mod_fs_file_set_public`](../functions-5.md#mod_fs_file_set_public) |
+| set_compression | [`mod_fs_file_set_compression`](../functions-5.md#mod_fs_file_set_compression) |
 
 Methods can be called in Lua with the colon `:` character:
 ```lua
@@ -269,4 +270,17 @@ ModFS are not saved automatically when writing to files.<br>
 The mod has to explicitly call the method `save` to save its ModFS on the disk.
 ```lua
 modFs:save()
+```
+
+<br>
+
+## Compression
+
+ModFS files can each have their compression level explicitly set. By default this is set to the highest level.<br>
+Although it makes no difference to the total size limit, changing the compression level can be useful if you are trying to optimize for CPU time.<br>
+The compression level can be any integer between 0-9.<br>
+```lua
+file:set_compression(MOD_FS_COMPRESSION_MIN) -- no compression, good for small data that changes frequently
+
+file:set_compression(MOD_FS_COMPRESSION_MAX) -- max compression, good for large data that is read infrequently
 ```
