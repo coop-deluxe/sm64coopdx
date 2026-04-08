@@ -6,7 +6,9 @@
 // internal version
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 41
-#define MINOR_VERSION_NUMBER 1
+#define MINOR_VERSION_NUMBER 2
+
+#define VERSION_OFFSET 37 // difference from old versioning system
 
 #if defined(VERSION_JP)
 #define VERSION_REGION "JP"

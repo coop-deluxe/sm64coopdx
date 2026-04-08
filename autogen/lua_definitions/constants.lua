@@ -11275,7 +11275,7 @@ VERSION_TEXT = "v"
 VERSION_NUMBER = 41
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 2
 
 --- @type string
 GAME_NAME = "sm64coopdx"
