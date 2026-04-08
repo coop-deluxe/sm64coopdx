@@ -374,7 +374,6 @@ void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 
     djui_hud_set_color(r, g, b, a);
 }
 
-
 void djui_hud_reset_color(void) {
     sHudUtilsState.color.r = 255;
     sHudUtilsState.color.g = 255;
