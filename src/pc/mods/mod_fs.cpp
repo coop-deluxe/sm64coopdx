@@ -309,6 +309,14 @@ bool mod_fs_get_property_value(const json &property, const bool &defaultValue) {
     return defaultValue;
 }
 
+template<>
+int mod_fs_get_property_value(const json &property, const int &defaultValue) {
+    if (property.is_number_integer()) {
+        return (int) property;
+    }
+    return defaultValue;
+}
+
 const json &mod_fs_get_properties_at(const json &properties, const std::vector<const char *> &propertyPath) {
     const json *current = &properties;
     for (const auto &key : propertyPath) {
@@ -380,7 +388,8 @@ static json mod_fs_get_properties_json(struct ModFs *modFs) {
         struct ModFsFile *file = modFs->files[i];
         properties["files"][file->filepath] = {
             { "isText", file->isText },
-            { "isPublic", file->isPublic }
+            { "isPublic", file->isPublic },
+            { "compressionLevel", file->compressionLevel }
         };
     }
     return properties;
@@ -625,6 +634,9 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                     "modPath: %s, filepath: %s - Invalid file data", modFs->modPath, file->filepath
                 );
             }
+
+            // read compressionLevel property
+            file->compressionLevel = mod_fs_read_property<int>(fileProperties, { "compressionLevel" }, MOD_FS_COMPRESSION_DEFAULT);
         }
 
         if (modFs->files) {
@@ -673,14 +685,14 @@ static bool mod_fs_write(struct ModFs *modFs) {
                 );
             }
 
-            if (!mz_zip_writer_add_mem(zip, file->filepath, file->data.bin, file->size, MZ_BEST_COMPRESSION)) {
+            if (!mz_zip_writer_add_mem(zip, file->filepath, file->data.bin, file->size, file->compressionLevel)) {
                 mod_fs_write_raise_error_zip();
             }
         }
 
         // write properties file
         std::string properties = mod_fs_get_properties_json(modFs).dump(4, ' ', true);
-        if (!mz_zip_writer_add_mem(zip, MOD_FS_PROPERTIES, properties.c_str(), properties.length(), MZ_BEST_COMPRESSION)) {
+        if (!mz_zip_writer_add_mem(zip, MOD_FS_PROPERTIES, properties.c_str(), properties.length(), MZ_BEST_SPEED)) {
             mod_fs_write_raise_error_zip();
         }
 
@@ -947,6 +959,7 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     file->offset = 0;
     file->isText = text;
     file->isPublic = MOD_FS_FILE_IS_PUBLIC_DEFAULT;
+    file->compressionLevel = MOD_FS_COMPRESSION_DEFAULT;
     file->modFs = modFs;
 
     // add file and sort by filename
@@ -1690,6 +1703,11 @@ C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
         return false;
     }
 
+    // cannot change text mode flag to files in other mods modfs
+    if (!mod_fs_file_check_write(file)) {
+        return false;
+    }
+
     file->isText = text;
     return true;
 }
@@ -1709,6 +1727,29 @@ C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
     file->isPublic = pub;
     return true;
 }
+
+C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, int level) {
+    mod_fs_reset_last_error();
+
+    if (!mod_fs_check_pointer(file, "modfs file")) {
+        return false;
+    }
+
+    // cannot change compress level to files in other mods modfs
+    if (!mod_fs_file_check_write(file)) {
+        return false;
+    }
+
+    if (level < MOD_FS_COMPRESSION_MIN || level > MOD_FS_COMPRESSION_MAX) {
+        mod_fs_raise_error(
+            "compress level must be between %d and %d inclusive", MOD_FS_COMPRESSION_MIN, MOD_FS_COMPRESSION_MAX
+        );
+        return false;
+    }
+
+    file->compressionLevel = level;
+    return true;
+} 
 
 //
 // Errors

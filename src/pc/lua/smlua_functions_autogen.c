@@ -23049,6 +23049,25 @@ int smlua_func_mod_fs_file_set_public(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mod_fs_file_set_compression(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_set_compression", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_set_compression"); return 0; }
+    int level = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_compression"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_set_compression(file, level));
+
+    return 1;
+}
+
 int smlua_func_mod_fs_hide_errors(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38153,6 +38172,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);
     smlua_bind_function(L, "mod_fs_file_set_text_mode", smlua_func_mod_fs_file_set_text_mode);
     smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
+    smlua_bind_function(L, "mod_fs_file_set_compression", smlua_func_mod_fs_file_set_compression);
     smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
     smlua_bind_function(L, "mod_fs_get_last_error", smlua_func_mod_fs_get_last_error);
 
