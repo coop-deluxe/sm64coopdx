@@ -121,7 +121,7 @@ void djui_cursor_move(s8 xDir, s8 yDir) {
 static void djui_cursor_update_position(void) {
     sPrevCursorX = gCursorX;
     sPrevCursorY = gCursorY;
-#if defined(CAPI_SDL2) || defined(CAPI_SDL1)
+#if defined(CAPI_SDL2)
     if (djui_interactable_is_binding()) { return; }
     if (sMouseCursor == NULL) { return; }
     if (!djui_panel_is_active()) { return; }

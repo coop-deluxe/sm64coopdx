@@ -14,7 +14,7 @@ extern "C" {
 #include "gfx/gfx_sdl.h"
 #include "gfx/gfx_dummy.h"
 
-#if defined(WAPI_SDL1) || defined(WAPI_SDL2)
+#if defined(WAPI_SDL2)
 # define WAPI gfx_sdl
 #elif defined(WAPI_DXGI)
 # define WAPI gfx_dxgi
@@ -27,7 +27,7 @@ extern "C" {
 #if defined(RAPI_D3D11)
 # define RAPI gfx_direct3d11_api
 # define RAPI_NAME "DirectX 11"
-#elif defined(RAPI_GL) || defined(RAPI_GL_LEGACY)
+#elif defined(RAPI_GL)
 # define RAPI gfx_opengl_api
 # ifdef USE_GLES
 #  define RAPI_NAME "OpenGL ES"

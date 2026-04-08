@@ -28,11 +28,6 @@
 # else
 #  include <SDL2/SDL_opengl.h>
 # endif
-#elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
 #endif
 
 #include "../platform.h"
