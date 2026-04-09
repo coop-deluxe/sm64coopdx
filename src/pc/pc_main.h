@@ -5,6 +5,11 @@
 extern "C" {
 #endif
 
+#include "audio/audio_api.h"
+
+#include "audio/audio_sdl.h"
+#include "audio/audio_null.h"
+
 #include "gfx/gfx_pc.h"
 
 #include "gfx/gfx_opengl.h"

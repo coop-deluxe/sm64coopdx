@@ -16,10 +16,6 @@
 #include "network/network.h"
 #include "lua/smlua.h"
 
-#include "audio/audio_api.h"
-#include "audio/audio_sdl.h"
-#include "audio/audio_null.h"
-
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
