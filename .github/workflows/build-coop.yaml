@@ -70,7 +70,7 @@ jobs:
                 name: sm64coopdx-steamos
                 path: ./build/us_pc/sm64coopdx_SteamOS.zip
 
-    build-windows-opengl:
+    build-windows:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: windows-latest
         defaults:
@@ -94,9 +94,7 @@ jobs:
                     mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
                     mingw-w64-i686-SDL2
-                    mingw-w64-i686-SDL
                     mingw-w64-x86_64-SDL2
-                    mingw-w64-x86_64-SDL
                     python3
                     zip
 
@@ -112,63 +110,13 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                name: sm64coopdx-windows-opengl
-                path: ./build/us_pc/sm64coopdx_Windows_OpenGL.zip
-
-    build-windows-directx:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: windows-latest
-        defaults:
-            run:
-                shell: msys2 {0}
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              uses: msys2/setup-msys2@v2
-              with:
-                msystem: mingw64
-                update: true
-                install: >
-                    unzip
-                    make
-                    git
-                    mingw-w64-i686-gcc
-                    mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
-                    mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
-                    mingw-w64-i686-SDL
-                    mingw-w64-x86_64-SDL2
-                    mingw-w64-x86_64-SDL
-                    python3
-                    zip
-
-            - name: Build the game
-              run: make -j$(nproc) RENDER_API=D3D11 WINDOW_API=DXGI
-
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file.exe hash_file.cpp
-                echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
-
-            - name: Zip the game
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_Windows_DirectX.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-windows-directx
-                path: ./build/us_pc/sm64coopdx_Windows_DirectX.zip
+                name: sm64coopdx-windows
+                path: ./build/us_pc/sm64coopdx_Windows.zip
 
     build-macos-arm:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
