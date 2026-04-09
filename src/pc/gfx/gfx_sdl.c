@@ -1,5 +1,3 @@
-#ifdef WAPI_SDL2
-
 #ifdef __MINGW32__
 #define FOR_WINDOWS 1
 #else
@@ -10,14 +8,16 @@
 #include <windows.h>
 #endif
 
+#include <SDL2/SDL.h>
+
 #if FOR_WINDOWS
+
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
+
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL2/SDL_opengl.h>
 #else
-#include <SDL2/SDL.h>
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef OSX_BUILD
@@ -360,5 +360,3 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_reset_window_title,
     gfx_sdl_has_focus
 };
-
-#endif // BACKEND_WM

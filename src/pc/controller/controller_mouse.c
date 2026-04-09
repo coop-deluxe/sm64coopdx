@@ -2,13 +2,13 @@
 #include "pc/gfx/gfx_pc.h"
 #include "pc/djui/djui.h"
 
-#ifdef WAPI_DXGI
+#include <SDL2/SDL.h>
+
+#ifdef ENABLE_D3D11
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 extern HWND gfx_dxgi_get_h_wnd(void);
 static bool mouse_relative_prev_cursor_state;
-#elif defined(CAPI_SDL2)
-#include <SDL2/SDL.h>
 #endif
 
 bool mouse_init_ok;
@@ -29,7 +29,7 @@ f32 mouse_scroll_y;
 
 bool mouse_relative_enabled;
 
-#ifdef WAPI_DXGI
+#ifdef ENABLE_D3D11
 u32 mouse_relative_buttons_held_on_focus;
 u32 mouse_window_buttons_held_on_focus;
 bool mouse_dxgi_prev_focus;
@@ -60,60 +60,66 @@ static u32 controller_mouse_dxgi_button_state(u32* mouse_held, bool has_focus) {
     *mouse_held = (*mouse_held) & mouse;
     return ~(*mouse_held) & mouse;
 }
-#endif // WAPI_DXGI
+#endif // ENABLE_D3D11
 
 void controller_mouse_read_window(void) {
     if (!mouse_init_ok) { return; }
 
-#if defined(WAPI_DXGI)
-    HWND game_window = gfx_dxgi_get_h_wnd();
+#if defined(ENABLE_D3D11)
+    if (gWindowApi == &gfx_dxgi) {
+        HWND game_window = gfx_dxgi_get_h_wnd();
 
-    mouse_window_buttons = controller_mouse_dxgi_button_state(
-        &mouse_window_buttons_held_on_focus,
-        GetFocus() == game_window);
+        mouse_window_buttons = controller_mouse_dxgi_button_state(
+            &mouse_window_buttons_held_on_focus,
+            GetFocus() == game_window);
 
-    POINT p;
-    if (GetCursorPos(&p) && ScreenToClient(game_window, &p)) {
-        mouse_window_x = p.x - gfx_current_dimensions.x_adjust_4by3;
-        mouse_window_y = p.y;
-    }
-#elif defined(CAPI_SDL2)
-    mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
-    mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
+        POINT p;
+        if (GetCursorPos(&p) && ScreenToClient(game_window, &p)) {
+            mouse_window_x = p.x - gfx_current_dimensions.x_adjust_4by3;
+            mouse_window_y = p.y;
+        }
+    } else
 #endif
+    {
+        mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
+        mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
+    }
 }
 
 void controller_mouse_read_relative(void) {
     if (!mouse_init_ok) { return; }
 
-#if defined(WAPI_DXGI)
-    HWND game_window = gfx_dxgi_get_h_wnd();
+#if defined(ENABLE_D3D11)
+    if (gWindowApi == &gfx_dxgi) {
+        HWND game_window = gfx_dxgi_get_h_wnd();
 
-    // Always get the buttons state, regardless if the relative mode is enabled.
-    mouse_buttons = controller_mouse_dxgi_button_state(
-        &mouse_relative_buttons_held_on_focus,
-        GetFocus() == game_window);
+        // Always get the buttons state, regardless if the relative mode is enabled.
+        mouse_buttons = controller_mouse_dxgi_button_state(
+            &mouse_relative_buttons_held_on_focus,
+            GetFocus() == game_window);
 
-    if (mouse_relative_enabled) {
-        static POINT p0;
-        POINT p1;
-        RECT rect;
-        if (GetWindowRect(game_window, &rect) && GetCursorPos(&p1)) {
-            mouse_x = p1.x - p0.x;
-            mouse_y = p1.y - p0.y;
+        if (mouse_relative_enabled) {
+            static POINT p0;
+            POINT p1;
+            RECT rect;
+            if (GetWindowRect(game_window, &rect) && GetCursorPos(&p1)) {
+                mouse_x = p1.x - p0.x;
+                mouse_y = p1.y - p0.y;
 
-            p0.x = rect.left + (rect.right - rect.left) / 2;
-            p0.y = rect.top + (rect.bottom - rect.top) / 2;
-            SetCursorPos(p0.x, p0.y);
+                p0.x = rect.left + (rect.right - rect.left) / 2;
+                p0.y = rect.top + (rect.bottom - rect.top) / 2;
+                SetCursorPos(p0.x, p0.y);
+            }
+        } else {
+            mouse_x = 0;
+            mouse_y = 0;
         }
-    } else {
-        mouse_x = 0;
-        mouse_y = 0;
+    } else
+#endif
+    {
+        mouse_buttons = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
     }
 
-#elif defined(CAPI_SDL2)
-    mouse_buttons = SDL_GetRelativeMouseState(&mouse_x, &mouse_y);
-#endif
     if (mouse_scroll_y > 0) {
         mouse_buttons |= MWHEELUP;
     } else if (mouse_scroll_y < 0) {
@@ -125,19 +131,22 @@ void controller_mouse_enter_relative(void) {
     if (!mouse_relative_enabled) {
         mouse_relative_enabled = true;
 
-#if defined(WAPI_DXGI)
-        CURSORINFO ci;
-        ci.cbSize = sizeof(CURSORINFO);
-        if (GetCursorInfo(&ci)) {
-            mouse_relative_prev_cursor_state = (0 != ci.flags);
-        } else {
-            mouse_relative_prev_cursor_state = false;
-        }
+#if defined(ENABLE_D3D11)
+        if (gWindowApi == &gfx_dxgi) {
+            CURSORINFO ci;
+            ci.cbSize = sizeof(CURSORINFO);
+            if (GetCursorInfo(&ci)) {
+                mouse_relative_prev_cursor_state = (0 != ci.flags);
+            } else {
+                mouse_relative_prev_cursor_state = false;
+            }
 
-        ShowCursor(FALSE);
-#elif defined(CAPI_SDL2)
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+            ShowCursor(FALSE);
+        } else
 #endif
+        {
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+        }
     }
 }
 
@@ -145,11 +154,14 @@ void controller_mouse_leave_relative(void) {
     if (mouse_relative_enabled) {
         mouse_relative_enabled = false;
 
-#if defined(WAPI_DXGI)
-        ShowCursor(mouse_relative_prev_cursor_state);
-#elif defined(CAPI_SDL2)
-        SDL_SetRelativeMouseMode(SDL_FALSE);
+#if defined(ENABLE_D3D11)
+        if (gWindowApi == &gfx_dxgi) {
+            ShowCursor(mouse_relative_prev_cursor_state);
+        } else
 #endif
+        {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+        }
     }
 }
 

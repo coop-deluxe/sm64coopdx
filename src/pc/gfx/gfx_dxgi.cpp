@@ -1,4 +1,4 @@
-#ifdef WAPI_DXGI
+#ifdef ENABLE_D3D11
 
 #include <stdint.h>
 #include <math.h>

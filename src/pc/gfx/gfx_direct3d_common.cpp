@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#ifdef ENABLE_D3D11
 
 #include <cstdio>
 

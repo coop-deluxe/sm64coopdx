@@ -57,8 +57,6 @@ DEBUG_INFO_LEVEL ?= 2
 PROFILE ?= 0
 # Enable address sanitizer
 ASAN ?= 0
-# Compile headless
-HEADLESS ?= 0
 # Enable Game ICON
 ICON ?= 1
 # Use .app (for macOS)
@@ -73,15 +71,8 @@ NO_BZERO_BCOPY ?= 0
 NO_LDIV ?= 0
 
 # Backend selection
-
-# Renderers: GL, D3D11, DUMMY
-RENDER_API ?= GL
-# Window managers: SDL2, DXGI (forced if RENDER_API is D3D11), DUMMY (forced if RENDER_API is DUMMY)
-WINDOW_API ?= SDL2
-# Audio backends: SDL2, DUMMY
-AUDIO_API ?= SDL2
-# Controller backends (can have multiple, space separated): SDL2
-CONTROLLER_API ?= SDL2
+# GL, SDL2 and DUMMY are always included
+ENABLE_D3D11 := 1
 
 # Automatic settings for PC port(s)
 
@@ -356,7 +347,7 @@ endif
 # Check for certain target types.
 
 ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
-     DEFINES += USE_GLES=1
+  DEFINES += USE_GLES=1
 endif
 
 ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
@@ -364,42 +355,13 @@ ifeq ($(TARGET_RK3588),1) # Define RK3588 to change SDL2 title & GLES2 hints
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
-     DEFINES += OSX_BUILD=1
+  DEFINES += OSX_BUILD=1
 endif
 
 # Check backends
 
-ifneq (,$(filter $(RENDER_API),D3D11))
-  ifneq ($(WINDOWS_BUILD),1)
-    $(error DirectX is only supported on Windows)
-  endif
-  ifneq ($(WINDOW_API),DXGI)
-    $(warning DirectX renderers require DXGI, forcing WINDOW_API value)
-    WINDOW_API := DXGI
-  endif
-else
-  ifeq ($(WINDOW_API),DXGI)
-    $(error DXGI can only be used with DirectX renderers)
-  endif
-  ifneq ($(WINDOW_API),DUMMY)
-    ifeq ($(RENDER_API),DUMMY)
-      $(warning Dummy renderer requires dummy window API, forcing WINDOW_API value)
-      WINDOW_API := DUMMY
-    endif
-  else
-    ifneq ($(RENDER_API),DUMMY)
-      $(warning Dummy window API requires dummy renderer, forcing RENDER_API value)
-      RENDER_API := DUMMY
-    endif
-  endif
-endif
-
-ifeq ($(HEADLESS),1)
-  $(info Compiling headless)
-  RENDER_API := DUMMY
-  WINDOW_API := DUMMY
-  AUDIO_API := DUMMY
-  CONTROLLER_API :=
+ifneq ($(WINDOWS_BUILD),1)
+  ENABLE_D3D11 := 0
 endif
 
 # NON_MATCHING - whether to build a matching, identical copy of the ROM
@@ -734,7 +696,7 @@ else
   LD := $(CXX)
 endif
 
-AR        := $(CROSS)ar
+AR := $(CROSS)ar
 
 ifeq ($(TARGET_N64),1)
   TARGET_CFLAGS := -nostdinc -DTARGET_N64 -D_LANGUAGE_C
@@ -754,64 +716,46 @@ endif
 
 # Connfigure backend flags
 
-SDLCONFIG := $(CROSS)sdl2-config
-
-BACKEND_CFLAGS := -DRAPI_$(RENDER_API)=1 -DWAPI_$(WINDOW_API)=1 -DAAPI_$(AUDIO_API)=1
-# can have multiple controller APIs
-BACKEND_CFLAGS += $(foreach capi,$(CONTROLLER_API),-DCAPI_$(capi)=1)
 BACKEND_LDFLAGS :=
 
-SDL2_USED := 0
-
-# for now, it's either SDL+GL or DXGI+DirectX, so choose based on WAPI
-ifeq ($(WINDOW_API),DXGI)
+# D3D11 Flags
+ifeq ($(ENABLE_D3D11),1)
   DXBITS := `cat $(ENDIAN_BITWIDTH) | tr ' ' '\n' | tail -1`
   BACKEND_LDFLAGS += -ld3dcompiler -ldxgi -ldxguid
   BACKEND_LDFLAGS += -lsetupapi -ldinput8 -luser32 -lgdi32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion -luuid -static
-else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
-  else ifeq ($(TARGET_RPI),1)
-    BACKEND_LDFLAGS += -lGLESv2
-  else ifeq ($(TARGET_RK3588),1)
-    BACKEND_LDFLAGS += -lGLESv2
-  else ifeq ($(OSX_BUILD),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
-    EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
-  else
-    BACKEND_LDFLAGS += -lGL
-   endif
 endif
 
-ifeq ($(WINDOW_API),DUMMY)
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += -lole32 -luuid -lshlwapi
-  endif
-endif
-
-ifneq (,$(findstring SDL2,$(AUDIO_API)$(WINDOW_API)$(CONTROLLER_API)))
-  SDL2_USED := 1
+# SDL2 Flags
+ifeq ($(WINDOWS_BUILD),1)
+  BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
+else ifeq ($(TARGET_RPI),1)
+  BACKEND_LDFLAGS += -lGLESv2
+else ifeq ($(TARGET_RK3588),1)
+  BACKEND_LDFLAGS += -lGLESv2
+else ifeq ($(OSX_BUILD),1)
+  BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
+  EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
+else
+  BACKEND_LDFLAGS += -lGL
 endif
 
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
-ifeq ($(SDL2_USED),1)
-  SDLCONFIG := $(CROSS)sdl2-config
-  BACKEND_CFLAGS += -DHAVE_SDL2=1
+SDLCONFIG := $(CROSS)sdl2-config
+BACKEND_CFLAGS += -DHAVE_SDL2=1
 
-  ifeq ($(OSX_BUILD),1)
-    # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
-    OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
-    BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
-  else
-    BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
-  endif
+ifeq ($(OSX_BUILD),1)
+  # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
+  OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
+  BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
+else
+  BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
+endif
 
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
-  else
-    BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
-  endif
+ifeq ($(WINDOWS_BUILD),1)
+  BACKEND_LDFLAGS += `$(SDLCONFIG) --static-libs` -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lshlwapi -lwinmm -lversion
+else
+  BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
 endif
 
 C_DEFINES += $(foreach d,$(DEFINES),-D$(d))
@@ -1098,10 +1042,10 @@ ifeq ($(NO_LDIV),1)
   CFLAGS += -DNO_LDIV
 endif
 
-# Use OpenGL 1.3
-ifeq ($(LEGACY_GL),1)
-  CC_CHECK_CFLAGS += -DLEGACY_GL
-  CFLAGS += -DLEGACY_GL
+# Enable DirectX 11 Renderer
+ifeq ($(ENABLE_D3D11),1)
+  CC_CHECK_CFLAGS += -DENABLE_D3D11
+  CFLAGS += -DENABLE_D3D11
 endif
 
 #==============================================================================#

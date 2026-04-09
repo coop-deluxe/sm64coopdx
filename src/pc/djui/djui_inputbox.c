@@ -263,7 +263,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     if (!gDjuiInputHeldAlt &&
         ((!gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_V) ||
         (!gDjuiInputHeldControl && gDjuiInputHeldShift && scancode == SCANCODE_INSERT))) {
-        djui_interactable_on_text_input(wm_api->get_clipboard_text());
+        djui_interactable_on_text_input(gWindowApi->get_clipboard_text());
         sCursorBlink = 0;
         return true;
     }
@@ -276,7 +276,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
             char* cs1 = djui_unicode_at_index(msg, s1);
             char* cs2 = djui_unicode_at_index(msg, s2);
             snprintf(clipboardText, fmin(256, 1 + cs2 - cs1), "%s", cs1);
-            wm_api->set_clipboard_text(clipboardText);
+            gWindowApi->set_clipboard_text(clipboardText);
             if (scancode == SCANCODE_X) {
                 djui_inputbox_delete_selection(inputbox);
                 sCursorBlink = 0;
@@ -329,11 +329,11 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     gDjuiInputHeldShift   = 0;
     gDjuiInputHeldControl = 0;
     gDjuiInputHeldAlt     = 0;
-    wm_api->start_text_input();
+    gWindowApi->start_text_input();
 }
 
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
-    wm_api->stop_text_input();
+    gWindowApi->stop_text_input();
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
