@@ -110,7 +110,7 @@ u8 gLuaVolumeLevel = 127;
 u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
-static struct AudioAPI* gAudioApi = NULL;
+struct AudioAPI* gAudioApi = NULL;
 struct GfxWindowManagerAPI* gWindowApi = NULL;
 struct GfxRenderingAPI* gRenderApi = NULL;
 
@@ -318,7 +318,7 @@ static void select_graphics_backend(void) {
     }
 }
 
-static void select_audio_backend(void) {
+void select_audio_backend(void) {
     if (gCLIOpts.headless) {
         gAudioApi = &audio_null;
         return;
