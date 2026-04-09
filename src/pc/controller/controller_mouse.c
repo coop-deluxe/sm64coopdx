@@ -1,6 +1,7 @@
 #include "controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/djui/djui.h"
+#include "pc/pc_main.h"
 
 #include <SDL2/SDL.h>
 
