@@ -151,7 +151,7 @@ PackData* DynOS_Pack_Add(const SysPath& aPath) {
     const char* displayName = aPath.c_str();
     const char* ctoken = displayName;
     while (*ctoken != '\0') {
-        if (*ctoken == '/' || *ctoken == '\\') {
+        if (*ctoken == *PATH_SEPARATOR || *ctoken == *PATH_SEPARATOR_ALT) {
             if (*(ctoken + 1) != '\0') {
                 displayName = (ctoken + 1);
             }

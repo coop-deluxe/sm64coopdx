@@ -71,6 +71,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node, UNUSED void *conte
 Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
 Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
 #endif
+Gfx *geo_switch_character_type_ext(s32 callContext, struct GraphNode *node, UNUSED void *context);
 Gfx *geo_choose_area_ext(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
 void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);
 void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src);
@@ -158,7 +159,6 @@ s32 cur_obj_check_if_near_animation_end(void);
 s32 cur_obj_check_if_at_animation_end(void);
 s32 cur_obj_check_anim_frame(s32 frame);
 s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength);
-s32 cur_obj_check_frame_prior_current_frame(s16 *a0);
 s32 mario_is_in_air_action(struct MarioState* m);
 s32 mario_is_dive_sliding(struct MarioState* m);
 void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C);

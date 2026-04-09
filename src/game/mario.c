@@ -447,7 +447,7 @@ void mario_set_bubbled(struct MarioState* m) {
     gLocalBubbleCounter = 20;
 
     drop_and_set_mario_action(m, ACT_BUBBLED, 0);
-    if (m->numLives > -1) {
+    if (m->numLives > 0) {
         m->numLives--;
     }
     m->healCounter = 0;

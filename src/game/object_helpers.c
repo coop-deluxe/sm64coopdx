@@ -187,6 +187,21 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
     return NULL;
 }
 
+Gfx *geo_switch_character_type_ext(s32 callContext, struct GraphNode *node, UNUSED void *context) {
+    struct GraphNodeSwitchCase *switchCase;
+
+    if (callContext == GEO_CONTEXT_RENDER) {
+        // move to a local var because GraphNodes are passed in all geo functions.
+        // cast the pointer.
+        switchCase = (struct GraphNodeSwitchCase *) node;
+
+        // assign the case number for execution.
+        switchCase->selectedCase = gMarioState->character->type;
+    }
+
+    return NULL;
+}
+
 s16 gRoomOverride = -1;
 
 /* |description|Overrides the current room Mario is in. Set to -1 to reset override|descriptionEnd| */
@@ -1331,21 +1346,6 @@ s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
     } else {
         return FALSE;
     }
-}
-
-s32 cur_obj_check_frame_prior_current_frame(s16 *a0) {
-    if (!o) { return 0; }
-    s16 sp6 = o->header.gfx.animInfo.animFrame;
-
-    while (*a0 != -1) {
-        if (*a0 == sp6) {
-            return TRUE;
-        }
-
-        a0++;
-    }
-
-    return FALSE;
 }
 
 s32 mario_is_in_air_action(struct MarioState* m) {
