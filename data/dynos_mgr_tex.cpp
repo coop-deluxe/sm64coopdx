@@ -505,8 +505,9 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
         // check override
         auto &_DynosOverrideTextures = DynosOverrideTextures();
         const Texture *_BuiltinTex = info->texture;
-        if (_DynosOverrideTextures[_BuiltinTex]) {
-            auto *_Node = _DynosOverrideTextures[_BuiltinTex]->node;
+        auto it = _DynosOverrideTextures.find(_BuiltinTex);
+        if (it != _DynosOverrideTextures.end() && it->second) {
+            auto *_Node = it->second->node;
             auto &_Data = _Node->mData;
             CONVERT_TEXINFO(aTexName);
             // rendering errors if we dont link back to the original because it cant find the node
