@@ -264,10 +264,17 @@ def table_to_string(table):
 
     for row in table:
         for i in range(columns):
-            if '#' in row[i]:
+            if '#' in row[i] or row[i][-1] == '\\':
                 continue
             if len(row[i]) > column_width[i]:
                 column_width[i] = len(row[i])
+    
+    for row in table:
+        for i in range(columns):
+            if row[i][-1] == '\\':
+                row[i] = row[i][:-1]
+                row[i+1] = row[i][column_width[i]:] + row[i+1]
+                row[i] = row[i][:column_width[i]]
 
     s = ''
     for row in table:
@@ -327,11 +334,20 @@ def parse_struct(struct_str, sortFields = False):
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
-            field_function = field['identifier']
             field_type, field_id = field['type'].split()
+            field_function = field['identifier']
             field['type'] = field_type.strip()
-            field['identifier'] = field_id.strip('"').strip()
+            field['identifier'] = field_id.strip()
             field['function'] = field_function.strip()
+
+        # handle property members
+        if field['type'].startswith(cobject_property_identifier):
+            field_type, field_id, field_get = field['type'].split()
+            field_set = field['identifier']
+            field['type'] = field_type.strip()
+            field['identifier'] = field_id.strip()
+            field['get'] = field_get.strip()
+            field['set'] = field_set.strip()
 
         struct['fields'].append(field)
 
@@ -496,9 +512,6 @@ def get_struct_field_info(struct, field):
         if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
             fimmutable = 'false'
 
-    if ftype == cobject_function_identifier:
-        fimmutable = 'true'
-
     if not ('char' in ftype and '[' in ftype and 'unsigned' not in ftype):
         array_match = re.search(r'\[([^\]]+)\]', ftype)
         if array_match:
@@ -549,27 +562,26 @@ def build_struct(struct):
             startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
             endStr += '\n#endif'
         startStr += '    { '
-        if ftype == cobject_function_identifier:
-            row.append(startStr                             )
-            row.append('"%s", '          % fid              )
-            row.append('%s, '            % lvt              )
-            row.append('(size_t) "%s", ' % field['function'])
-            row.append('%s, '            % fimmutable       )
-            row.append('%s, '            % lot              )
-            row.append('%s, '            % size             )
-            row.append('sizeof(const char *)'               )
-            row.append(endStr                               )
-            field_functions.append(field['function'])
+        row.append(startStr)
+        row.append('"%s", ' % fid)
+        row.append('%s, '   % lvt)
+        if field.get('function'):
+            row.append('.function = "%s"\\' % field['function'])
+        elif field.get('get'):
+            row.append('.get = "%s", ' % field['get'])
+            row.append('.set = "%s"\\' % field['set'])
         else:
-            row.append(startStr                                                        )
-            row.append('"%s", '               % fid                                    )
-            row.append('%s, '                 % lvt                                    )
             row.append('offsetof(%s%s, %s), ' % (struct_str, name, field['identifier']))
-            row.append('%s, '                 % fimmutable                             )
-            row.append('%s, '                 % lot                                    )
-            row.append('%s, '                 % size                                   )
-            row.append('sizeof(%s)'           % ftype                                  )
-            row.append(endStr                                                          )
+            row.append('%s, '       % fimmutable)
+            row.append('%s, '       % lot       )
+            if size != 1:
+                row.append('%s, '       % size      )
+                row.append('sizeof(%s)' % ftype     )
+            else: row[-1] = row[-1][:-2]
+        row.extend(['\\'] * (8 - len(row)))
+        row.append(endStr)
+        if field.get('function'):
+            field_functions.append(field['function'])
         field_table.append(row)
 
     field_table_str, field_count = table_to_string(field_table)
@@ -726,6 +738,10 @@ def doc_struct_field(struct, field):
         flink = doc_find_function_link(field['function'])
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
+    if ftype == cobject_property_identifier:
+        ftype = get_function_signature(field['get'])
+        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
+
     restrictions = ('', 'read-only')[fimmutable == 'true']
 
     global total_fields
@@ -854,6 +870,9 @@ def def_struct(struct):
         # try to get the function signature
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
+        elif ftype == cobject_property_identifier:
+            ftype = get_function_signature(field['get'])
+            ftype = f"{ftype[ftype.rfind(':')+2:]}"
         else:
             ftype = translate_to_def(ftype)
 
