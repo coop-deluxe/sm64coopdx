@@ -926,3 +926,22 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
 
     return NULL;
 }
+
+Gfx *geo_switch_character_type(s32 callContext, struct GraphNode *node, UNUSED void *context) {
+    struct GraphNodeSwitchCase *switchCase;
+    
+    if (callContext == GEO_CONTEXT_RENDER) {
+        // move to a local var because GraphNodes are passed in all geo functions.
+        // cast the pointer.
+        switchCase = (struct GraphNodeSwitchCase *) node;
+
+        // pass in -1 to always use local mario
+        // otherwise use the mariostate asssociated with the object
+        struct MarioState* marioState = switchCase->parameter == -1 ? gMarioState : geo_get_mario_state();
+
+        // assign the case number for execution.
+        switchCase->selectedCase = marioState->character->type;
+    }
+
+    return NULL;
+}

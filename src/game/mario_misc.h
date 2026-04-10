@@ -38,5 +38,6 @@ Gfx *geo_mirror_mario_backface_culling(s32 callContext, struct GraphNode *node, 
 Gfx* geo_mario_set_player_colors(s32 callContext, struct GraphNode* node, UNUSED Mat4* c);
 Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED Mat4* c);
 Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
+Gfx *geo_switch_character_type(s32 callContext, struct GraphNode *node, UNUSED void *context);
 
 #endif // MARIO_MISC_H
