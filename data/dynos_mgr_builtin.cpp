@@ -2037,6 +2037,7 @@ static const DynosBuiltinFunction sDynosBuiltinFuncs[] = {
     define_builtin_function(bhv_ambient_light_update, FUNCTION_BHV),
     define_builtin_function(bhv_point_light_init, FUNCTION_BHV),
     define_builtin_function(bhv_point_light_loop, FUNCTION_BHV),
+    define_builtin_function(geo_switch_character_type_ext, FUNCTION_GEO),
 };
 
 static const char *sDynosBuiltinFuncTypeNames[] = {

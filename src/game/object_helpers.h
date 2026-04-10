@@ -71,6 +71,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node, UNUSED void *conte
 Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
 Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
 #endif
+Gfx *geo_switch_character_type_ext(s32 callContext, struct GraphNode *node, UNUSED void *context);
 Gfx *geo_choose_area_ext(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
 void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);
 void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src);

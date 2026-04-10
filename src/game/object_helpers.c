@@ -187,6 +187,21 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node) {
     return NULL;
 }
 
+Gfx *geo_switch_character_type_ext(s32 callContext, struct GraphNode *node, UNUSED void *context) {
+    struct GraphNodeSwitchCase *switchCase;
+
+    if (callContext == GEO_CONTEXT_RENDER) {
+        // move to a local var because GraphNodes are passed in all geo functions.
+        // cast the pointer.
+        switchCase = (struct GraphNodeSwitchCase *) node;
+
+        // assign the case number for execution.
+        switchCase->selectedCase = gMarioState->character->type;
+    }
+
+    return NULL;
+}
+
 s16 gRoomOverride = -1;
 
 /* |description|Overrides the current room Mario is in. Set to -1 to reset override|descriptionEnd| */
