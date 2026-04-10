@@ -23060,7 +23060,7 @@ int smlua_func_mod_fs_file_set_compression(lua_State* L) {
 
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_set_compression"); return 0; }
-    int level = smlua_to_integer(L, 2);
+    s32 level = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_compression"); return 0; }
 
     lua_pushboolean(L, mod_fs_file_set_compression(file, level));

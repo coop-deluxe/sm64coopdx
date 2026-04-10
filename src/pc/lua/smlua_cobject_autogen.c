@@ -1511,7 +1511,7 @@ static struct LuaObjectField sModFsFields[LUA_MOD_FS_FIELD_COUNT] = {
 
 #define LUA_MOD_FS_FILE_FIELD_COUNT 27
 static struct LuaObjectField sModFsFileFields[LUA_MOD_FS_FILE_FIELD_COUNT] = {
-    { "compressionLevel", LVT_S32,       offsetof(struct ModFsFile, compressionLevel), true, LOT_NONE,  1, sizeof(int)           },
+    { "compressionLevel", LVT_S32,       offsetof(struct ModFsFile, compressionLevel), true, LOT_NONE,  1, sizeof(s32)           },
     { "erase",            LVT_FUNCTION,  (size_t) "mod_fs_file_erase",                 true, LOT_NONE,  1, sizeof(const char *)  },
     { "filepath",         LVT_STRING,    offsetof(struct ModFsFile, filepath),         true, LOT_NONE,  1, sizeof(char)          },
     { "fill",             LVT_FUNCTION,  (size_t) "mod_fs_file_fill",                  true, LOT_NONE,  1, sizeof(const char *)  },

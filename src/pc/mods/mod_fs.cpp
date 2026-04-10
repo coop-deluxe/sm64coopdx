@@ -310,9 +310,9 @@ bool mod_fs_get_property_value(const json &property, const bool &defaultValue) {
 }
 
 template<>
-int mod_fs_get_property_value(const json &property, const int &defaultValue) {
+int mod_fs_get_property_value(const json &property, const s32 &defaultValue) {
     if (property.is_number_integer()) {
-        return (int) property;
+        return (s32) property;
     }
     return defaultValue;
 }
@@ -636,7 +636,7 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             }
 
             // read compressionLevel property
-            file->compressionLevel = mod_fs_read_property<int>(fileProperties, { "compressionLevel" }, MOD_FS_COMPRESSION_DEFAULT);
+            file->compressionLevel = mod_fs_read_property<s32>(fileProperties, { "compressionLevel" }, MOD_FS_COMPRESSION_DEFAULT);
         }
 
         if (modFs->files) {
@@ -1723,7 +1723,7 @@ C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
     return true;
 }
 
-C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, int level) {
+C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level) {
     mod_fs_reset_last_error();
 
     if (!mod_fs_check_pointer(file, "modfs file")) {

@@ -55,7 +55,7 @@ struct ModFsFile {
     u32 size;
     u32 capacity;
     u32 offset;
-    int compressionLevel;
+    s32 compressionLevel;
     bool isText;
     bool isPublic;
 
@@ -274,7 +274,7 @@ bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);
 /* |description|
 Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
 |descriptionEnd| */
-bool mod_fs_file_set_compression(struct ModFsFile *file, int level);
+bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);
 
 /* |description|
 Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`

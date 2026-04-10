@@ -2135,7 +2135,7 @@ Sets the compression level of the provided modfs `file`. Must be between 0 (no c
 - `boolean`
 
 ### C Prototype
-`bool mod_fs_file_set_compression(struct ModFsFile *file, int level);`
+`bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);`
 
 [:arrow_up_small:](#)
 
