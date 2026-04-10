@@ -105,6 +105,7 @@ override_field_invisible = {
 
 override_field_deprecated = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
+    "StaticObjectCollision": [ "index" ],
 }
 
 override_field_immutable = {
@@ -115,6 +116,7 @@ override_field_immutable = {
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
+    "Surface": [ "poolType", "socId" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "WaterDropletParams": [ "model" ],

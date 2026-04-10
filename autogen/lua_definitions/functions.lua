@@ -10736,6 +10736,32 @@ function smlua_collision_util_find_surface_types(data)
     -- ...
 end
 
+--- @param dynamic boolean
+--- @param surfaceType integer
+--- @param vertex1 Vec3s
+--- @param vertex2 Vec3s
+--- @param vertex3 Vec3s
+--- @return Surface
+--- Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition. Returns the new surface, or `nil` if the triangle is degenerate (zero area). Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+function smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)
+    -- ...
+end
+
+--- @param surface Surface
+--- @param vertex1 Vec3s
+--- @param vertex2 Vec3s
+--- @param vertex3 Vec3s
+--- Moves an existing collision surface to new vertex positions. Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells. The previous vertices are preserved for interpolation
+function smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)
+    -- ...
+end
+
+--- @param surface Surface
+--- Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
+function smlua_collision_delete_surface(surface)
+    -- ...
+end
+
 --- @param surf Surface
 --- @return boolean
 --- Checks if the surface is quicksand
@@ -12571,6 +12597,12 @@ end
 --- @return Surface
 --- Gets a surface corresponding to `index` from the static object collision
 function get_static_object_surface(col, index)
+    -- ...
+end
+
+--- @param col StaticObjectCollision
+--- Removes all surfaces belonging to a static object collision and reclaims the SOC metadata
+function remove_static_object_collision(col)
     -- ...
 end
 

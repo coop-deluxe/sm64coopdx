@@ -67,9 +67,15 @@ void smlua_dump_stack(void);
 void smlua_dump_globals(void);
 void smlua_dump_table(int index);
 void smlua_free(void *ptr, u16 lot);
+void smlua_cobject_invalidate(void *ptr, u16 lot);
 
 #define smlua_free_lot(name, lot) \
 static inline void smlua_free_##name(void *ptr) { smlua_free(ptr, lot); }
+
+#define smlua_invalidate_lot(name, lot) \
+static inline void smlua_invalidate_##name(void *ptr) { smlua_cobject_invalidate(ptr, lot); }
+
+smlua_invalidate_lot(surface, LOT_SURFACE);
 
 smlua_free_lot(surface, LOT_SURFACE);
 smlua_free_lot(soc, LOT_STATICOBJECTCOLLISION);
