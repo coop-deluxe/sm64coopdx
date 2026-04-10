@@ -1,8 +1,15 @@
 // whomp.c.inc
 
-// o->oBehParams2ndByte is a flag
-// indicating whether this is a normal or king whomp
+/*
+o->oBehParams2ndByte is a flag
+indicating whether this is a normal or king whomp
+*/
 
+/*
+Responsible for both the step sound and the landing sound
+for the pound action, in theory, however this is never used for the pound action
+as the finish pound action plays the sound directly.
+*/
 void whomp_play_sfx_from_pound_animation(void) {
     UNUSED s32 animFrame = o->header.gfx.animInfo.animFrame;
     s32 isPoundAnimComplete = 0;
@@ -72,12 +79,14 @@ void whomp_act_1_patrol(void) {
     f32 maxDistanceFromHome;
     angleFromPlayer = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
     distanceFromHome = cur_obj_lateral_dist_to_home();
+    //how far the whomp can travel before forcing the uturn action, greatly decreased in BITS
     if (gCurrLevelNum == LEVEL_BITS)
         maxDistanceFromHome = 200.0f;
     else
         maxDistanceFromHome = 700.0f;
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
     o->oForwardVel = 3.0f;
+    //force the uturn action if too far from home
     if (distanceFromHome > maxDistanceFromHome)
         o->oAction = 7;
     else if (angleFromPlayer < 0x2000) {

@@ -1866,9 +1866,9 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oWhirlpoolTimeout);
 
     /* WhitePuffExplode */
-    bhv_constant(oWhitePuffUnkF4);
-    bhv_constant(oWhitePuffUnkF8);
-    bhv_constant(oWhitePuffUnkFC);
+    bhv_constant(oWhitePuffScale);
+    bhv_constant(oWhitePuffSetOpacity);
+    bhv_constant(oWhitePuffSetLarger);
 
     /* WhiteWindParticle */
     bhv_constant(oStrongWindParticlePenguinObj);

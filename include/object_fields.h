@@ -1136,9 +1136,9 @@
 #define /*0x0FC*/ oWhirlpoolTimeout       OBJECT_FIELD_S32(0x1D)
 
 /* White Puff Explode */
-#define /*0x0F4*/ oWhitePuffUnkF4 OBJECT_FIELD_F32(0x1B)
-#define /*0x0F8*/ oWhitePuffUnkF8 OBJECT_FIELD_S32(0x1C)
-#define /*0x0FC*/ oWhitePuffUnkFC OBJECT_FIELD_S32(0x1D)
+#define /*0x0F4*/ oWhitePuffScale OBJECT_FIELD_F32(0x1B)
+#define /*0x0F8*/ oWhitePuffSetOpacity OBJECT_FIELD_S32(0x1C)
+#define /*0x0FC*/ oWhitePuffSetLarger OBJECT_FIELD_S32(0x1D)
 
 /* White Wind Particle */
 #define /*0x0F4*/ oStrongWindParticlePenguinObj OBJECT_FIELD_OBJ(0x1B)

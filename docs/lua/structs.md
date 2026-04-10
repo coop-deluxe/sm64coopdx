@@ -1,108 +1,109 @@
 ## [:rewind: Lua Reference](lua.md)
 
 # Supported Structs
-- [AnimInfo](#AnimInfo)
-- [Animation](#Animation)
-- [Area](#Area)
-- [BehaviorDialogs](#BehaviorDialogs)
-- [BehaviorTrajectories](#BehaviorTrajectories)
-- [BehaviorValues](#BehaviorValues)
-- [Camera](#Camera)
-- [ChainSegment](#ChainSegment)
-- [Character](#Character)
-- [Color](#Color)
-- [Controller](#Controller)
-- [CustomLevelInfo](#CustomLevelInfo)
-- [DateTime](#DateTime)
-- [DialogEntry](#DialogEntry)
-- [DisplayListNode](#DisplayListNode)
-- [DjuiColor](#DjuiColor)
-- [DjuiInteractableTheme](#DjuiInteractableTheme)
-- [DjuiPanelTheme](#DjuiPanelTheme)
-- [DjuiTheme](#DjuiTheme)
-- [DjuiThreePanelTheme](#DjuiThreePanelTheme)
-- [ExclamationBoxContent](#ExclamationBoxContent)
-- [FirstPersonCamera](#FirstPersonCamera)
-- [FnGraphNode](#FnGraphNode)
-- [Gfx](#Gfx)
-- [GlobalObjectAnimations](#GlobalObjectAnimations)
-- [GlobalObjectCollisionData](#GlobalObjectCollisionData)
-- [GlobalTextures](#GlobalTextures)
-- [GraphNode](#GraphNode)
-- [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
-- [GraphNodeBackground](#GraphNodeBackground)
-- [GraphNodeBillboard](#GraphNodeBillboard)
-- [GraphNodeBone](#GraphNodeBone)
-- [GraphNodeCamera](#GraphNodeCamera)
-- [GraphNodeCullingRadius](#GraphNodeCullingRadius)
-- [GraphNodeDisplayList](#GraphNodeDisplayList)
-- [GraphNodeGenerated](#GraphNodeGenerated)
-- [GraphNodeHeldObject](#GraphNodeHeldObject)
-- [GraphNodeLevelOfDetail](#GraphNodeLevelOfDetail)
-- [GraphNodeMasterList](#GraphNodeMasterList)
-- [GraphNodeObject](#GraphNodeObject)
-- [GraphNodeObjectParent](#GraphNodeObjectParent)
-- [GraphNodeOrthoProjection](#GraphNodeOrthoProjection)
-- [GraphNodePerspective](#GraphNodePerspective)
-- [GraphNodeRoot](#GraphNodeRoot)
-- [GraphNodeRotation](#GraphNodeRotation)
-- [GraphNodeScale](#GraphNodeScale)
-- [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
-- [GraphNodeShadow](#GraphNodeShadow)
-- [GraphNodeStart](#GraphNodeStart)
-- [GraphNodeSwitchCase](#GraphNodeSwitchCase)
-- [GraphNodeTranslation](#GraphNodeTranslation)
-- [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
-- [InstantWarp](#InstantWarp)
-- [LakituState](#LakituState)
-- [LevelValues](#LevelValues)
-- [MarioAnimation](#MarioAnimation)
-- [MarioBodyState](#MarioBodyState)
-- [MarioState](#MarioState)
-- [Mat4](#Mat4)
-- [Mod](#Mod)
-- [ModAudio](#ModAudio)
-- [ModFs](#ModFs)
-- [ModFsFile](#ModFsFile)
-- [NametagsSettings](#NametagsSettings)
-- [NetworkPlayer](#NetworkPlayer)
-- [Object](#Object)
-- [ObjectHitbox](#ObjectHitbox)
-- [ObjectNode](#ObjectNode)
-- [ObjectWarpNode](#ObjectWarpNode)
-- [Painting](#Painting)
-- [PaintingValues](#PaintingValues)
-- [PlayerCameraState](#PlayerCameraState)
-- [PlayerPalette](#PlayerPalette)
-- [RayIntersectionInfo](#RayIntersectionInfo)
-- [RomhackCameraSettings](#RomhackCameraSettings)
-- [ServerSettings](#ServerSettings)
-- [SpawnInfo](#SpawnInfo)
-- [SpawnParticlesInfo](#SpawnParticlesInfo)
-- [StarPositions](#StarPositions)
-- [StarsNeededForDialog](#StarsNeededForDialog)
-- [StaticObjectCollision](#StaticObjectCollision)
-- [Surface](#Surface)
-- [TextureInfo](#TextureInfo)
-- [Vec2f](#Vec2f)
-- [Vec2i](#Vec2i)
-- [Vec2s](#Vec2s)
-- [Vec3f](#Vec3f)
-- [Vec3i](#Vec3i)
-- [Vec3s](#Vec3s)
-- [Vec4f](#Vec4f)
-- [Vec4i](#Vec4i)
-- [Vec4s](#Vec4s)
-- [Vtx](#Vtx)
-- [WallCollisionData](#WallCollisionData)
-- [WarpNode](#WarpNode)
-- [WaterDropletParams](#WaterDropletParams)
-- [Waypoint](#Waypoint)
-- [Whirlpool](#Whirlpool)
+
+- [AnimInfo](#animinfo)
+- [Animation](#animation)
+- [Area](#area)
+- [BehaviorDialogs](#behaviordialogs)
+- [BehaviorTrajectories](#behaviortrajectories)
+- [BehaviorValues](#behaviorvalues)
+- [Camera](#camera)
+- [ChainSegment](#chainsegment)
+- [Character](#character)
+- [Color](#color)
+- [Controller](#controller)
+- [CustomLevelInfo](#customlevelinfo)
+- [DateTime](#datetime)
+- [DialogEntry](#dialogentry)
+- [DisplayListNode](#displaylistnode)
+- [DjuiColor](#djuicolor)
+- [DjuiInteractableTheme](#djuiinteractabletheme)
+- [DjuiPanelTheme](#djuipaneltheme)
+- [DjuiTheme](#djuitheme)
+- [DjuiThreePanelTheme](#djuithreepaneltheme)
+- [ExclamationBoxContent](#exclamationboxcontent)
+- [FirstPersonCamera](#firstpersoncamera)
+- [FnGraphNode](#fngraphnode)
+- [Gfx](#gfx)
+- [GlobalObjectAnimations](#globalobjectanimations)
+- [GlobalObjectCollisionData](#globalobjectcollisiondata)
+- [GlobalTextures](#globaltextures)
+- [GraphNode](#graphnode)
+- [GraphNodeAnimatedPart](#graphnodeanimatedpart)
+- [GraphNodeBackground](#graphnodebackground)
+- [GraphNodeBillboard](#graphnodebillboard)
+- [GraphNodeBone](#graphnodebone)
+- [GraphNodeCamera](#graphnodecamera)
+- [GraphNodeCullingRadius](#graphnodecullingradius)
+- [GraphNodeDisplayList](#graphnodedisplaylist)
+- [GraphNodeGenerated](#graphnodegenerated)
+- [GraphNodeHeldObject](#graphnodeheldobject)
+- [GraphNodeLevelOfDetail](#graphnodelevelofdetail)
+- [GraphNodeMasterList](#graphnodemasterlist)
+- [GraphNodeObject](#graphnodeobject)
+- [GraphNodeObjectParent](#graphnodeobjectparent)
+- [GraphNodeOrthoProjection](#graphnodeorthoprojection)
+- [GraphNodePerspective](#graphnodeperspective)
+- [GraphNodeRoot](#graphnoderoot)
+- [GraphNodeRotation](#graphnoderotation)
+- [GraphNodeScale](#graphnodescale)
+- [GraphNodeScaleXYZ](#graphnodescalexyz)
+- [GraphNodeShadow](#graphnodeshadow)
+- [GraphNodeStart](#graphnodestart)
+- [GraphNodeSwitchCase](#graphnodeswitchcase)
+- [GraphNodeTranslation](#graphnodetranslation)
+- [GraphNodeTranslationRotation](#graphnodetranslationrotation)
+- [InstantWarp](#instantwarp)
+- [LakituState](#lakitustate)
+- [LevelValues](#levelvalues)
+- [MarioAnimation](#marioanimation)
+- [MarioBodyState](#mariobodystate)
+- [MarioState](#mariostate)
+- [Mat4](#mat4)
+- [Mod](#mod)
+- [ModAudio](#modaudio)
+- [ModFs](#modfs)
+- [ModFsFile](#modfsfile)
+- [NametagsSettings](#nametagssettings)
+- [NetworkPlayer](#networkplayer)
+- [Object](#object)
+- [ObjectHitbox](#objecthitbox)
+- [ObjectNode](#objectnode)
+- [ObjectWarpNode](#objectwarpnode)
+- [Painting](#painting)
+- [PaintingValues](#paintingvalues)
+- [PlayerCameraState](#playercamerastate)
+- [PlayerPalette](#playerpalette)
+- [RayIntersectionInfo](#rayintersectioninfo)
+- [RomhackCameraSettings](#romhackcamerasettings)
+- [ServerSettings](#serversettings)
+- [SpawnInfo](#spawninfo)
+- [SpawnParticlesInfo](#spawnparticlesinfo)
+- [StarPositions](#starpositions)
+- [StarsNeededForDialog](#starsneededfordialog)
+- [StaticObjectCollision](#staticobjectcollision)
+- [Surface](#surface)
+- [TextureInfo](#textureinfo)
+- [Vec2f](#vec2f)
+- [Vec2i](#vec2i)
+- [Vec2s](#vec2s)
+- [Vec3f](#vec3f)
+- [Vec3i](#vec3i)
+- [Vec3s](#vec3s)
+- [Vec4f](#vec4f)
+- [Vec4i](#vec4i)
+- [Vec4s](#vec4s)
+- [Vtx](#vtx)
+- [WallCollisionData](#wallcollisiondata)
+- [WarpNode](#warpnode)
+- [WaterDropletParams](#waterdropletparams)
+- [Waypoint](#waypoint)
+- [Whirlpool](#whirlpool)
 
 <br />
 
-## [AnimInfo](#AnimInfo)
+## [AnimInfo](#animinfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -122,7 +123,7 @@
 
 <br />
 
-## [Animation](#Animation)
+## [Animation](#animation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -141,7 +142,7 @@
 
 <br />
 
-## [Area](#Area)
+## [Area](#area)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -171,7 +172,7 @@
 
 <br />
 
-## [BehaviorDialogs](#BehaviorDialogs)
+## [BehaviorDialogs](#behaviordialogs)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -264,7 +265,7 @@
 
 <br />
 
-## [BehaviorTrajectories](#BehaviorTrajectories)
+## [BehaviorTrajectories](#behaviortrajectories)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -303,7 +304,7 @@
 
 <br />
 
-## [BehaviorValues](#BehaviorValues)
+## [BehaviorValues](#behaviorvalues)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -345,7 +346,7 @@
 
 <br />
 
-## [Camera](#Camera)
+## [Camera](#camera)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -369,7 +370,7 @@
 
 <br />
 
-## [ChainSegment](#ChainSegment)
+## [ChainSegment](#chainsegment)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -384,7 +385,7 @@
 
 <br />
 
-## [Character](#Character)
+## [Character](#character)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -667,7 +668,7 @@
 
 <br />
 
-## [Color](#Color)
+## [Color](#color)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -679,7 +680,7 @@
 
 <br />
 
-## [Controller](#Controller)
+## [Controller](#controller)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -699,7 +700,7 @@
 
 <br />
 
-## [CustomLevelInfo](#CustomLevelInfo)
+## [CustomLevelInfo](#customlevelinfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -720,7 +721,7 @@
 
 <br />
 
-## [DateTime](#DateTime)
+## [DateTime](#datetime)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -735,7 +736,7 @@
 
 <br />
 
-## [DialogEntry](#DialogEntry)
+## [DialogEntry](#dialogentry)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -750,7 +751,7 @@
 
 <br />
 
-## [DisplayListNode](#DisplayListNode)
+## [DisplayListNode](#displaylistnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -762,7 +763,7 @@
 
 <br />
 
-## [DjuiColor](#DjuiColor)
+## [DjuiColor](#djuicolor)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -775,7 +776,7 @@
 
 <br />
 
-## [DjuiInteractableTheme](#DjuiInteractableTheme)
+## [DjuiInteractableTheme](#djuiinteractabletheme)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -791,7 +792,7 @@
 
 <br />
 
-## [DjuiPanelTheme](#DjuiPanelTheme)
+## [DjuiPanelTheme](#djuipaneltheme)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -801,7 +802,7 @@
 
 <br />
 
-## [DjuiTheme](#DjuiTheme)
+## [DjuiTheme](#djuitheme)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -815,7 +816,7 @@
 
 <br />
 
-## [DjuiThreePanelTheme](#DjuiThreePanelTheme)
+## [DjuiThreePanelTheme](#djuithreepaneltheme)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -826,7 +827,7 @@
 
 <br />
 
-## [ExclamationBoxContent](#ExclamationBoxContent)
+## [ExclamationBoxContent](#exclamationboxcontent)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -840,7 +841,7 @@
 
 <br />
 
-## [FirstPersonCamera](#FirstPersonCamera)
+## [FirstPersonCamera](#firstpersoncamera)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -859,7 +860,7 @@
 
 <br />
 
-## [FnGraphNode](#FnGraphNode)
+## [FnGraphNode](#fngraphnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -869,7 +870,7 @@
 
 <br />
 
-## [Gfx](#Gfx)
+## [Gfx](#gfx)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -880,7 +881,7 @@
 
 <br />
 
-## [GlobalObjectAnimations](#GlobalObjectAnimations)
+## [GlobalObjectAnimations](#globalobjectanimations)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -945,7 +946,7 @@
 
 <br />
 
-## [GlobalObjectCollisionData](#GlobalObjectCollisionData)
+## [GlobalObjectCollisionData](#globalobjectcollisiondata)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1055,7 +1056,7 @@
 
 <br />
 
-## [GlobalTextures](#GlobalTextures)
+## [GlobalTextures](#globaltextures)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1078,7 +1079,7 @@
 
 <br />
 
-## [GraphNode](#GraphNode)
+## [GraphNode](#graphnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1095,7 +1096,7 @@
 
 <br />
 
-## [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
+## [GraphNodeAnimatedPart](#graphnodeanimatedpart)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1107,7 +1108,7 @@
 
 <br />
 
-## [GraphNodeBackground](#GraphNodeBackground)
+## [GraphNodeBackground](#graphnodebackground)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1122,7 +1123,7 @@
 
 <br />
 
-## [GraphNodeBillboard](#GraphNodeBillboard)
+## [GraphNodeBillboard](#graphnodebillboard)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1134,7 +1135,7 @@
 
 <br />
 
-## [GraphNodeBone](#GraphNodeBone)
+## [GraphNodeBone](#graphnodebone)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1148,7 +1149,7 @@
 
 <br />
 
-## [GraphNodeCamera](#GraphNodeCamera)
+## [GraphNodeCamera](#graphnodecamera)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1167,7 +1168,7 @@
 
 <br />
 
-## [GraphNodeCullingRadius](#GraphNodeCullingRadius)
+## [GraphNodeCullingRadius](#graphnodecullingradius)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1179,7 +1180,7 @@
 
 <br />
 
-## [GraphNodeDisplayList](#GraphNodeDisplayList)
+## [GraphNodeDisplayList](#graphnodedisplaylist)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1190,7 +1191,7 @@
 
 <br />
 
-## [GraphNodeGenerated](#GraphNodeGenerated)
+## [GraphNodeGenerated](#graphnodegenerated)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1201,7 +1202,7 @@
 
 <br />
 
-## [GraphNodeHeldObject](#GraphNodeHeldObject)
+## [GraphNodeHeldObject](#graphnodeheldobject)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1216,7 +1217,7 @@
 
 <br />
 
-## [GraphNodeLevelOfDetail](#GraphNodeLevelOfDetail)
+## [GraphNodeLevelOfDetail](#graphnodelevelofdetail)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1228,7 +1229,7 @@
 
 <br />
 
-## [GraphNodeMasterList](#GraphNodeMasterList)
+## [GraphNodeMasterList](#graphnodemasterlist)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1238,7 +1239,7 @@
 
 <br />
 
-## [GraphNodeObject](#GraphNodeObject)
+## [GraphNodeObject](#graphnodeobject)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1274,7 +1275,7 @@
 
 <br />
 
-## [GraphNodeObjectParent](#GraphNodeObjectParent)
+## [GraphNodeObjectParent](#graphnodeobjectparent)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1285,7 +1286,7 @@
 
 <br />
 
-## [GraphNodeOrthoProjection](#GraphNodeOrthoProjection)
+## [GraphNodeOrthoProjection](#graphnodeorthoprojection)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1296,7 +1297,7 @@
 
 <br />
 
-## [GraphNodePerspective](#GraphNodePerspective)
+## [GraphNodePerspective](#graphnodeperspective)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1312,7 +1313,7 @@
 
 <br />
 
-## [GraphNodeRoot](#GraphNodeRoot)
+## [GraphNodeRoot](#graphnoderoot)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1328,7 +1329,7 @@
 
 <br />
 
-## [GraphNodeRotation](#GraphNodeRotation)
+## [GraphNodeRotation](#graphnoderotation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1340,7 +1341,7 @@
 
 <br />
 
-## [GraphNodeScale](#GraphNodeScale)
+## [GraphNodeScale](#graphnodescale)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1352,7 +1353,7 @@
 
 <br />
 
-## [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
+## [GraphNodeScaleXYZ](#graphnodescalexyz)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1364,7 +1365,7 @@
 
 <br />
 
-## [GraphNodeShadow](#GraphNodeShadow)
+## [GraphNodeShadow](#graphnodeshadow)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1377,7 +1378,7 @@
 
 <br />
 
-## [GraphNodeStart](#GraphNodeStart)
+## [GraphNodeStart](#graphnodestart)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1387,7 +1388,7 @@
 
 <br />
 
-## [GraphNodeSwitchCase](#GraphNodeSwitchCase)
+## [GraphNodeSwitchCase](#graphnodeswitchcase)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1400,7 +1401,7 @@
 
 <br />
 
-## [GraphNodeTranslation](#GraphNodeTranslation)
+## [GraphNodeTranslation](#graphnodetranslation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1413,7 +1414,7 @@
 
 <br />
 
-## [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
+## [GraphNodeTranslationRotation](#graphnodetranslationrotation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1426,7 +1427,7 @@
 
 <br />
 
-## [InstantWarp](#InstantWarp)
+## [InstantWarp](#instantwarp)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1438,7 +1439,7 @@
 
 <br />
 
-## [LakituState](#LakituState)
+## [LakituState](#lakitustate)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1485,7 +1486,7 @@
 
 <br />
 
-## [LevelValues](#LevelValues)
+## [LevelValues](#levelvalues)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1550,7 +1551,7 @@
 
 <br />
 
-## [MarioAnimation](#MarioAnimation)
+## [MarioAnimation](#marioanimation)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1561,7 +1562,7 @@
 
 <br />
 
-## [MarioBodyState](#MarioBodyState)
+## [MarioBodyState](#mariobodystate)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1599,7 +1600,7 @@
 
 <br />
 
-## [MarioState](#MarioState)
+## [MarioState](#mariostate)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1688,7 +1689,7 @@
 
 <br />
 
-## [Mat4](#Mat4)
+## [Mat4](#mat4)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1713,7 +1714,7 @@
 
 <br />
 
-## [Mod](#Mod)
+## [Mod](#mod)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1739,7 +1740,7 @@
 
 <br />
 
-## [ModAudio](#ModAudio)
+## [ModAudio](#modaudio)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1752,7 +1753,7 @@
 
 <br />
 
-## [ModFs](#ModFs)
+## [ModFs](#modfs)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1781,7 +1782,7 @@
 
 <br />
 
-## [ModFsFile](#ModFsFile)
+## [ModFsFile](#modfsfile)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1820,7 +1821,7 @@
 
 <br />
 
-## [NametagsSettings](#NametagsSettings)
+## [NametagsSettings](#nametagssettings)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1831,7 +1832,7 @@
 
 <br />
 
-## [NetworkPlayer](#NetworkPlayer)
+## [NetworkPlayer](#networkplayer)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1869,7 +1870,7 @@
 
 <br />
 
-## [Object](#Object)
+## [Object](#object)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1909,6 +1910,7 @@
 | hookRender | `integer` |  |
 
 ### Object-Independent Data Fields
+
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | oFlags | `integer` |  |
@@ -1984,6 +1986,7 @@
 | oDeathSound | `integer` |  |
 
 ### Object-Dependent Data Fields
+
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | oPathedStartWaypoint | [Waypoint](structs.md#Waypoint) |  |
@@ -2619,9 +2622,9 @@
 | oWhirlpoolInitFacePitch | `integer` |  |
 | oWhirlpoolInitFaceRoll | `integer` |  |
 | oWhirlpoolTimeout | `integer` |  |
-| oWhitePuffUnkF4 | `number` |  |
-| oWhitePuffUnkF8 | `integer` |  |
-| oWhitePuffUnkFC | `integer` |  |
+| oWhitePuffScale | `number` |  |
+| oWhitePuffSetOpacity | `integer` |  |
+| oWhitePuffSetLarger | `integer` |  |
 | oStrongWindParticlePenguinObj | [Object](structs.md#Object) |  |
 | oWhompShakeVal | `integer` |  |
 | oWigglerFallThroughFloorsHeight | `number` |  |
@@ -2649,7 +2652,7 @@
 
 <br />
 
-## [ObjectHitbox](#ObjectHitbox)
+## [ObjectHitbox](#objecthitbox)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2667,7 +2670,7 @@
 
 <br />
 
-## [ObjectNode](#ObjectNode)
+## [ObjectNode](#objectnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2679,7 +2682,7 @@
 
 <br />
 
-## [ObjectWarpNode](#ObjectWarpNode)
+## [ObjectWarpNode](#objectwarpnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2691,7 +2694,7 @@
 
 <br />
 
-## [Painting](#Painting)
+## [Painting](#painting)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2736,7 +2739,7 @@
 
 <br />
 
-## [PaintingValues](#PaintingValues)
+## [PaintingValues](#paintingvalues)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2761,7 +2764,7 @@
 
 <br />
 
-## [PlayerCameraState](#PlayerCameraState)
+## [PlayerCameraState](#playercamerastate)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2777,7 +2780,7 @@
 
 <br />
 
-## [PlayerPalette](#PlayerPalette)
+## [PlayerPalette](#playerpalette)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2787,7 +2790,7 @@
 
 <br />
 
-## [RayIntersectionInfo](#RayIntersectionInfo)
+## [RayIntersectionInfo](#rayintersectioninfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2798,7 +2801,7 @@
 
 <br />
 
-## [RomhackCameraSettings](#RomhackCameraSettings)
+## [RomhackCameraSettings](#romhackcamerasettings)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2817,7 +2820,7 @@
 
 <br />
 
-## [ServerSettings](#ServerSettings)
+## [ServerSettings](#serversettings)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2839,7 +2842,7 @@
 
 <br />
 
-## [SpawnInfo](#SpawnInfo)
+## [SpawnInfo](#spawninfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2856,7 +2859,7 @@
 
 <br />
 
-## [SpawnParticlesInfo](#SpawnParticlesInfo)
+## [SpawnParticlesInfo](#spawnparticlesinfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2877,7 +2880,7 @@
 
 <br />
 
-## [StarPositions](#StarPositions)
+## [StarPositions](#starpositions)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2912,7 +2915,7 @@
 
 <br />
 
-## [StarsNeededForDialog](#StarsNeededForDialog)
+## [StarsNeededForDialog](#starsneededfordialog)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2927,7 +2930,7 @@
 
 <br />
 
-## [StaticObjectCollision](#StaticObjectCollision)
+## [StaticObjectCollision](#staticobjectcollision)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2938,7 +2941,7 @@
 
 <br />
 
-## [Surface](#Surface)
+## [Surface](#surface)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2963,7 +2966,7 @@
 
 <br />
 
-## [TextureInfo](#TextureInfo)
+## [TextureInfo](#textureinfo)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2978,7 +2981,7 @@
 
 <br />
 
-## [Vec2f](#Vec2f)
+## [Vec2f](#vec2f)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2989,7 +2992,7 @@
 
 <br />
 
-## [Vec2i](#Vec2i)
+## [Vec2i](#vec2i)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3000,7 +3003,7 @@
 
 <br />
 
-## [Vec2s](#Vec2s)
+## [Vec2s](#vec2s)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3011,7 +3014,7 @@
 
 <br />
 
-## [Vec3f](#Vec3f)
+## [Vec3f](#vec3f)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3023,7 +3026,7 @@
 
 <br />
 
-## [Vec3i](#Vec3i)
+## [Vec3i](#vec3i)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3035,7 +3038,7 @@
 
 <br />
 
-## [Vec3s](#Vec3s)
+## [Vec3s](#vec3s)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3047,7 +3050,7 @@
 
 <br />
 
-## [Vec4f](#Vec4f)
+## [Vec4f](#vec4f)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3060,7 +3063,7 @@
 
 <br />
 
-## [Vec4i](#Vec4i)
+## [Vec4i](#vec4i)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3073,7 +3076,7 @@
 
 <br />
 
-## [Vec4s](#Vec4s)
+## [Vec4s](#vec4s)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3086,7 +3089,7 @@
 
 <br />
 
-## [Vtx](#Vtx)
+## [Vtx](#vtx)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3108,7 +3111,7 @@
 
 <br />
 
-## [WallCollisionData](#WallCollisionData)
+## [WallCollisionData](#wallcollisiondata)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3127,7 +3130,7 @@
 
 <br />
 
-## [WarpNode](#WarpNode)
+## [WarpNode](#warpnode)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3140,7 +3143,7 @@
 
 <br />
 
-## [WaterDropletParams](#WaterDropletParams)
+## [WaterDropletParams](#waterdropletparams)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3160,7 +3163,7 @@
 
 <br />
 
-## [Waypoint](#Waypoint)
+## [Waypoint](#waypoint)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3171,7 +3174,7 @@
 
 <br />
 
-## [Whirlpool](#Whirlpool)
+## [Whirlpool](#whirlpool)
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3181,4 +3184,3 @@
 [:arrow_up_small:](#)
 
 <br />
-
