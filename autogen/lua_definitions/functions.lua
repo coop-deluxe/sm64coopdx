@@ -5155,6 +5155,16 @@ function le_set_max_lights_per_vertex(count)
     -- ...
 end
 
+--- Tells the system to disable the lightning engine when it's currently enabled.
+function le_disable()
+    -- ...
+end
+
+--- Tells the system to enable the lightning engine when it's currently disabled.
+function le_enable()
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number
