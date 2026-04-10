@@ -310,7 +310,7 @@ bool mod_fs_get_property_value(const json &property, const bool &defaultValue) {
 }
 
 template<>
-int mod_fs_get_property_value(const json &property, const s32 &defaultValue) {
+s32 mod_fs_get_property_value(const json &property, const s32 &defaultValue) {
     if (property.is_number_integer()) {
         return (s32) property;
     }
