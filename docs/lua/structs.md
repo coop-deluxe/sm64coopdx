@@ -1789,6 +1789,7 @@
 | filepath | `string` | read-only |
 | size | `integer` | read-only |
 | offset | `integer` | read-only |
+| compressionLevel | `integer` | read-only |
 | isText | `boolean` | read-only |
 | isPublic | `boolean` | read-only |
 
@@ -1815,6 +1816,7 @@
 | erase | [`mod_fs_file_erase`](functions-5.md#mod_fs_file_erase) |
 | set_text_mode | [`mod_fs_file_set_text_mode`](functions-5.md#mod_fs_file_set_text_mode) |
 | set_public | [`mod_fs_file_set_public`](functions-5.md#mod_fs_file_set_public) |
+| set_compression | [`mod_fs_file_set_compression`](functions-5.md#mod_fs_file_set_compression) |
 
 [:arrow_up_small:](#)
 

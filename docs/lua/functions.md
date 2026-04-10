@@ -1399,6 +1399,7 @@
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_text_mode](functions-5.md#mod_fs_file_set_text_mode)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 

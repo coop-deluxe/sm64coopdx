@@ -4,6 +4,9 @@
 #include "types.h"
 #include "src/pc/lua/smlua.h"
 
+#define MOD_FS_COMPRESSION_MIN 0
+#define MOD_FS_COMPRESSION_MAX 9
+#define MOD_FS_COMPRESSION_DEFAULT 1
 #define MOD_FS_MAX_SIZE     0x2000000 // 32 MB
 #define MOD_FS_MAX_FILES    0x200
 #define MOD_FS_MAX_PATH     0x100
@@ -52,6 +55,7 @@ struct ModFsFile {
     u32 size;
     u32 capacity;
     u32 offset;
+    s32 compressionLevel;
     bool isText;
     bool isPublic;
 
@@ -74,6 +78,7 @@ struct ModFsFile {
     FUNCTION(erase, mod_fs_file_erase);
     FUNCTION(set_text_mode, mod_fs_file_set_text_mode);
     FUNCTION(set_public, mod_fs_file_set_public);
+    FUNCTION(set_compression, mod_fs_file_set_compression);
 };
 
 struct ModFs {
@@ -265,6 +270,11 @@ bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text);
 Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 |descriptionEnd| */
 bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);
+
+/* |description|
+Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+|descriptionEnd| */
+bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);
 
 /* |description|
 Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`

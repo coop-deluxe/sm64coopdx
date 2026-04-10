@@ -4641,6 +4641,15 @@ GRAB_POS_BOWSER    = 3 --- @type MarioGrabPosGSCId
 --- | `GRAB_POS_BOWSER`
 
 --- @type integer
+MOD_FS_COMPRESSION_MIN = 0
+
+--- @type integer
+MOD_FS_COMPRESSION_MAX = 9
+
+--- @type integer
+MOD_FS_COMPRESSION_DEFAULT = 1
+
+--- @type integer
 MOD_FS_MAX_SIZE = 0x2000000
 
 --- @type integer
