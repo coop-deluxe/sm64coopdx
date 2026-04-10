@@ -170,6 +170,29 @@ Sets the max amount of lights that can affect a vertex
 
 <br />
 
+## [le_set_active](#le_set_active)
+
+### Description
+This will let the user control the lighting engine in real time to disable or enable it.
+
+### Lua Example
+`le_set_active(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_active(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [le_calculate_lighting_color](#le_calculate_lighting_color)
 
 ### Description

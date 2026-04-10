@@ -5155,13 +5155,9 @@ function le_set_max_lights_per_vertex(count)
     -- ...
 end
 
---- Tells the system to disable the lighting engine when it's currently enabled.
-function le_disable()
-    -- ...
-end
-
---- Tells the system to enable the lighting engine when it's currently disabled.
-function le_enable()
+--- @param value boolean
+--- This will let the user control the lighting engine in real time to disable or enable it.
+function le_set_active(value)
     -- ...
 end
 

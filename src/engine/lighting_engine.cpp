@@ -92,14 +92,8 @@ C_FIELD void le_set_max_lights_per_vertex(u8 count) {
     sMaxLightsPerVertex = count;
 }
 
-C_FIELD void le_disable(void) {
-    // Use this if you don't need the lighting engine at all
-    sEnabled = false;
-}
-
-C_FIELD void le_enable(void) {
-    // Use this to re-enable the engine
-    sEnabled = true;
+C_FIELD void le_set_active(bool value) {
+    sEnabled = value;
 }
 
 static inline void le_tone_map_total_weighted(Color out, Color inAmbient, Vec3f inColor, f32 weight) {
