@@ -92,7 +92,7 @@ C_FIELD void le_set_max_lights_per_vertex(u8 count) {
     sMaxLightsPerVertex = count;
 }
 
-C_FIELD void le_set_active(bool value) {
+C_FIELD void le_set_enabled(bool value) {
     sEnabled = value;
 }
 

@@ -5157,7 +5157,7 @@ end
 
 --- @param value boolean
 --- This will let the user control the lighting engine in real time to disable or enable it.
-function le_set_active(value)
+function le_set_enabled(value)
     -- ...
 end
 

@@ -38,7 +38,7 @@ void le_set_ambient_color(u8 r, u8 g, u8 b);
 /* |description|Sets the max amount of lights that can affect a vertex|descriptionEnd| */
 void le_set_max_lights_per_vertex(u8 count);
 /* |description|This will let the user control the lighting engine in real time to disable or enable it. |descriptionEnd|*/
-void le_set_active(bool value);
+void le_set_enabled(bool value);
 
 void le_calculate_vertex_lighting(const Vtx_t* v, Vec3f pos, VEC_OUT Color out);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`|descriptionEnd|*/

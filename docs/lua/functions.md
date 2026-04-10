@@ -983,7 +983,7 @@
    - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
    - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
-   - [le_set_active](functions-4.md#le_set_active)
+   - [le_set_enabled](functions-4.md#le_set_enabled)
    - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
