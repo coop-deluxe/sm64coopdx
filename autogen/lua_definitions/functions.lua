@@ -5155,6 +5155,12 @@ function le_set_max_lights_per_vertex(count)
     -- ...
 end
 
+--- @param value boolean
+--- This will let the user control the lighting engine in real time to disable or enable it.
+function le_set_enabled(value)
+    -- ...
+end
+
 --- @param pos Vec3f
 --- @param out Color
 --- @param lightIntensityScalar number
