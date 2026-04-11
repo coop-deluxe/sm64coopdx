@@ -8,6 +8,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_options.h"
 #include "game/level_update.h"
+#include "pc/lua/smlua_hooks.h"
 
 void djui_panel_dynos_create(struct DjuiBase* caller);
 
