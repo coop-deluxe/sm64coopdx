@@ -94,6 +94,9 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
         _GfxData = New<GfxData>();
+        if (aAddToPack) {
+            _GfxData->mModIndex = PACK_MOD_INDEX;
+        }
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load    (_File, _GfxData); break;
