@@ -1864,7 +1864,7 @@ bool smlua_call_event_hooks_HOOK_ON_PACKET_BYTESTRING_RECEIVE(s32 modIndex, s32 
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_ON_DYNOS_PACK_TOGGLED() {
+bool smlua_call_event_hooks_HOOK_ON_DYNOS_PACK_TOGGLED(const char *dynosPackName, bool enabled) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
     bool hookResult = false;
@@ -1876,8 +1876,14 @@ bool smlua_call_event_hooks_HOOK_ON_DYNOS_PACK_TOGGLED() {
         // push the callback onto the stack
         lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
 
+        // push dynosPackName
+        lua_pushstring(L, dynosPackName);
+
+        // push enabled
+        lua_pushboolean(L, enabled);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 0, 0, 0, hook->mod[i], hook->modFile[i])) {
+        if (0 != smlua_call_hook(L, 2, 0, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_DYNOS_PACK_TOGGLED], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
