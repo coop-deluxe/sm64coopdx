@@ -22,7 +22,8 @@ extern "C" {
 #define FUNCTION_BHV    2
 #define FUNCTION_LVL    3
 
-#define MOD_PACK_INDEX 99
+#define MOD_PACK_INDEX 99 // the pack index for actors loaded from mods
+#define PACK_MOD_INDEX -1 // the mod index for actors loaded from packs
 
 //
 // Enums

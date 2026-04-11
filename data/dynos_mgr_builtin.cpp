@@ -2087,7 +2087,7 @@ static String DynOS_Builtin_Func_CheckMisuse_Internal(s32 aIndex, const char* aD
         if (aFuncType != builtinFunc.type && (
             aIndex == i || (aDataName && strcmp(aDataName, builtinFunc.name) == 0) || aData == builtinFunc.func)) {
             return String(
-                "Invalid use of function %s: trying to assign %s function to %s",
+                "Invalid use of %s function in %s: %s",
                 builtinFunc.name,
                 sDynosBuiltinFuncTypeNames[builtinFunc.type],
                 sDynosBuiltinFuncTypeNames[aFuncType]
