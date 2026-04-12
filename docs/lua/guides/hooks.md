@@ -157,6 +157,7 @@ The lua functions sent to `hook_event()` will be automatically called by SM64 wh
 | HOOK_ON_FIND_WATER_LEVEL | Called after water level detection completes. Return a number to override the water level | `number` x, `number` z, `number` waterLevel |
 | HOOK_ON_FIND_POISON_GAS_LEVEL | Called after poison gas level detection completes. Return a number to override the gas level | `number` x, `number` z, `number` gasLevel |
 | HOOK_ON_FIND_SURFACE_ON_RAY | Called after ray-surface intersection completes. Return `surface` to override the hit surface, or `surface, hitPos` to override both | `Vec3f` orig, `Vec3f` dir, [Surface](../structs.md#Surface) hitSurface, `Vec3f` hitPos |
+| HOOK_ON_DYNOS_PACK_TOGGLED | Called after a DynOS pack is toggled | `string` dynosPackName, `boolean` enabled |
 
 ### Parameters
 

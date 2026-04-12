@@ -64,3 +64,4 @@ SMLUA_EVENT_HOOK(HOOK_ON_FIND_FLOOR, _, f32 posX, f32 posY, f32 posZ, struct Sur
 SMLUA_EVENT_HOOK(HOOK_ON_FIND_WATER_LEVEL, _, f32 x, f32 z, f32 *waterLevel) // Manually defined hook
 SMLUA_EVENT_HOOK(HOOK_ON_FIND_POISON_GAS_LEVEL, _, f32 x, f32 z, f32 *gasLevel) // Manually defined hook
 SMLUA_EVENT_HOOK(HOOK_ON_FIND_SURFACE_ON_RAY, _, Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos) // Manually defined hook
+SMLUA_EVENT_HOOK(HOOK_ON_DYNOS_PACK_TOGGLED, HOOK_RETURN_NEVER, const char *dynosPackName, bool enabled)

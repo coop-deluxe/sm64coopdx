@@ -502,6 +502,22 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
         }
         return false;
     }
+
+    // check override
+    auto &_DynosOverrideTextures = DynosOverrideTextures();
+    auto it = _DynosOverrideTextures.find(info->texture);
+    if (it != _DynosOverrideTextures.end() && it->second) {
+        auto *_Node = it->second->node;
+        auto &_Data = _Node->mData;
+        CONVERT_TEXINFO(aTexName);
+
+        // must link to the vanilla built in texture
+        // so that the texture is correctly overridden
+        // when DynOS_Tex_RetrieveNode is called.
+        aOutTexInfo->texture = info->texture;
+        return true;
+    }
+
     *aOutTexInfo = *info;
     return true;
 }
