@@ -66,7 +66,7 @@ char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
 };
 
 // Video/audio stuff
-ConfigWindow configWindow       = {
+ConfigWindow configWindow = {
     .x = WAPI_WIN_CENTERPOS,
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
@@ -82,6 +82,7 @@ ConfigWindow configWindow       = {
 ConfigStick configStick = { 0 };
 
 // display settings
+enum GraphicsBackend configGraphicsBackend        = 0;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -90,6 +91,7 @@ unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 4;
 // sound settings
+enum AudioBackend configAudioBackend              = 0;
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
@@ -226,6 +228,7 @@ static const struct ConfigOption options[] = {
     {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
     {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
     // display settings
+    {.name = "graphics_backend",               .type = CONFIG_TYPE_UINT, .uintValue = &configGraphicsBackend},
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "show_ping",                      .type = CONFIG_TYPE_BOOL, .boolValue = &configShowPing},
@@ -234,6 +237,7 @@ static const struct ConfigOption options[] = {
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     // sound settings
+    {.name = "audio_backend",                  .type = CONFIG_TYPE_UINT, .uintValue = &configAudioBackend},
     {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
@@ -780,9 +784,13 @@ NEXT_OPTION:
 
     fs_close(file);
 
+    if (configGraphicsBackend < 0 || configGraphicsBackend > GAPI_MAX) { configGraphicsBackend = 0; }
+
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
     if (configFrameLimit > 3000) { configFrameLimit = 3000; }
+
+    if (configAudioBackend < 0 || configAudioBackend > AAPI_MAX) { configAudioBackend = 0; }
 
     gMasterVolume = (f32)configMasterVolume / 127.0f;
 

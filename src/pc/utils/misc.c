@@ -103,7 +103,7 @@ void precise_delay_f64(f64 delaySec) {
     for (f64 remaining = end - clock_elapsed_f64(); remaining > sleepMargin; remaining = end - clock_elapsed_f64()) {
         u32 sleepMs = (u32) ((remaining - sleepMargin) * 1000.0);
         if (sleepMs < 1) { break; } // not enough time to sleep
-        WAPI.delay(sleepMs);
+        gWindowApi->delay(sleepMs);
     }
 
     // busy-wait until the target time is hit

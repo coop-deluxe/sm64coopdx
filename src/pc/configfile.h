@@ -43,11 +43,25 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
+enum GraphicsBackend {
+#ifdef ENABLE_D3D11
+    GAPI_D3D11,
+#endif
+    GAPI_GL,
+    GAPI_MAX
+};
+
+enum AudioBackend {
+    AAPI_SDL,
+    AAPI_MAX
+};
+
 extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
+extern enum GraphicsBackend configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -56,6 +70,7 @@ extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
 // sound settings
+extern enum AudioBackend configAudioBackend;
 extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;

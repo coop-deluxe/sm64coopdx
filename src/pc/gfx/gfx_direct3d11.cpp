@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#ifdef ENABLE_D3D11
 
 #include <cstdio>
 #include <vector>
@@ -312,6 +312,9 @@ static void gfx_d3d11_init(void) {
     controller_bind_init();
 }
 
+static const char* gfx_d3d11_get_name(void) {
+    return "DirectX 11";
+}
 
 static bool gfx_d3d11_z_is_from_0_to_1(void) {
     return true;
@@ -716,6 +719,7 @@ static void gfx_d3d11_finish_render(void) {
 } // namespace
 
 struct GfxRenderingAPI gfx_direct3d11_api = {
+    gfx_d3d11_get_name,
     gfx_d3d11_z_is_from_0_to_1,
     gfx_d3d11_unload_shader,
     gfx_d3d11_load_shader,

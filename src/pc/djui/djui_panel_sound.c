@@ -4,6 +4,15 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/pc_main.h"
+
+static void djui_panel_sound_backend_change(UNUSED struct DjuiBase* caller) {
+    if (gAudioApi) {
+        if (gAudioApi->shutdown) gAudioApi->shutdown();
+        gAudioApi = NULL;
+    }
+    select_audio_backend();
+}
 
 static void djui_panel_sound_value_change(UNUSED struct DjuiBase* caller) {
     audio_custom_update_volume();
@@ -13,6 +22,12 @@ void djui_panel_sound_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(SOUND, SOUND), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+        if (AAPI_MAX > 1) {
+            // there's absolutely a better way to do this
+            char* audioBackendChoices[AAPI_MAX] = { "SDL2" };
+            djui_selectionbox_create(body, DLANG(SOUND, AUDIO_BACKEND), audioBackendChoices, AAPI_MAX, &configAudioBackend, djui_panel_sound_backend_change);
+        }
+
         djui_slider_create(body, DLANG(SOUND, MASTER_VOLUME), &configMasterVolume, 0, 127, djui_panel_sound_value_change);
         djui_slider_create(body, DLANG(SOUND, MUSIC_VOLUME), &configMusicVolume, 0, 127, djui_panel_sound_value_change);
         djui_slider_create(body, DLANG(SOUND, SFX_VOLUME), &configSfxVolume, 0, 127, djui_panel_sound_value_change);

@@ -6,13 +6,14 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
-#define MSAA_ORIGINAL_UNSET ((u32)-1)
+#define OPTION_ORIGINAL_UNSET ((u32)-1)
 
 static struct DjuiInputbox* sFrameLimitInput = NULL;
 static struct DjuiSelectionbox* sInterpolationSelectionBox = NULL;
 static struct DjuiText* sRestartText = NULL;
 static u32 sMsaaSelection = 0;
-static u32 sMsaaOriginal = MSAA_ORIGINAL_UNSET;
+static u32 sMsaaOriginal = OPTION_ORIGINAL_UNSET;
+static u32 sGfxBackendOriginal = OPTION_ORIGINAL_UNSET;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
@@ -35,7 +36,15 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
-static void djui_panel_display_msaa_change(UNUSED struct DjuiBase* caller) {
+static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
+    if (sMsaaOriginal != configWindow.msaa || sGfxBackendOriginal != configGraphicsBackend) {
+        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
+    } else {
+        djui_text_set_text(sRestartText, "");
+    }
+}
+
+static void djui_panel_display_msaa_change(struct DjuiBase* caller) {
     switch (sMsaaSelection) {
         case 1:  configWindow.msaa = 2;  break;
         case 2:  configWindow.msaa = 4;  break;
@@ -44,22 +53,29 @@ static void djui_panel_display_msaa_change(UNUSED struct DjuiBase* caller) {
         default: configWindow.msaa = 0;  break;
     }
 
-    if (sMsaaOriginal != configWindow.msaa) {
-        djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
-    } else {
-        djui_text_set_text(sRestartText, "");
-    }
+    djui_panel_display_update_restart_text(caller);
 }
 
 void djui_panel_display_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DISPLAY, DISPLAY), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
-    struct DjuiSelectionbox* msaa = NULL;
 
-    // save original msaa value
-    if (sMsaaOriginal == MSAA_ORIGINAL_UNSET) { sMsaaOriginal = configWindow.msaa; }
+    // save original option values
+    if (sMsaaOriginal == OPTION_ORIGINAL_UNSET) { sMsaaOriginal = configWindow.msaa; }
+    if (sGfxBackendOriginal == OPTION_ORIGINAL_UNSET) { sGfxBackendOriginal = configGraphicsBackend; }
 
     {
+        if (GAPI_MAX > 1) {
+            // there's absolutely a better way to do this
+            char* gfxBackendChoices[GAPI_MAX] = {
+#ifdef ENABLE_D3D11
+                "DirectX 11",
+#endif
+                "OpenGL"
+            };
+            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GAPI_MAX, &configGraphicsBackend, djui_panel_display_update_restart_text);
+        }
+
         djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
@@ -99,7 +115,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FILTERING), filterChoices, 3, &configFiltering, NULL);
 
-        int maxMsaa = wm_api->get_max_msaa();
+        int maxMsaa = gWindowApi->get_max_msaa();
         if (maxMsaa >= 2) {
             if      (configWindow.msaa >= 16) { sMsaaSelection = 4; }
             else if (configWindow.msaa >=  8) { sMsaaSelection = 3; }
@@ -113,7 +129,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             else if (maxMsaa >= 4)  { choiceCount = 3; }
 
             char* msaaChoices[5] = { DLANG(DISPLAY, OFF), "2x", "4x", "8x", "16x" };
-            msaa = djui_selectionbox_create(body, DLANG(DISPLAY, ANTIALIASING), msaaChoices, choiceCount, &sMsaaSelection, djui_panel_display_msaa_change);
+            djui_selectionbox_create(body, DLANG(DISPLAY, ANTIALIASING), msaaChoices, choiceCount, &sMsaaSelection, djui_panel_display_msaa_change);
         }
 
         char* drawDistanceChoices[6] = { DLANG(DISPLAY, D0P5X), DLANG(DISPLAY, D1X), DLANG(DISPLAY, D1P5X), DLANG(DISPLAY, D3X), DLANG(DISPLAY, D10X), DLANG(DISPLAY, D100X) };
@@ -129,9 +145,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
     }
 
     // force the restart text to update
-    if (msaa) {
-        djui_panel_display_msaa_change(&msaa->base);
-    }
+    djui_panel_display_update_restart_text(body);
 
     djui_panel_add(caller, panel, NULL);
 }

@@ -16,10 +16,6 @@
 #include "network/network.h"
 #include "lua/smlua.h"
 
-#include "audio/audio_api.h"
-#include "audio/audio_sdl.h"
-#include "audio/audio_null.h"
-
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
@@ -110,8 +106,9 @@ u8 gLuaVolumeLevel = 127;
 u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
-static struct AudioAPI *audio_api;
-struct GfxWindowManagerAPI *wm_api = &WAPI;
+struct AudioAPI* gAudioApi = NULL;
+struct GfxWindowManagerAPI* gWindowApi = NULL;
+struct GfxRenderingAPI* gRenderApi = NULL;
 
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
@@ -295,20 +292,58 @@ void produce_interpolation_frames_and_delay(void) {
     gRenderingInterpolated = false;
 }
 
+static void select_graphics_backend(void) {
+    if (gCLIOpts.headless) {
+        gWindowApi = &gfx_dummy_wm_api;
+        gRenderApi = &gfx_dummy_renderer_api;
+        return;
+    }
+
+    switch (configGraphicsBackend) {
+#ifdef ENABLE_D3D11
+        case GAPI_D3D11:
+            gWindowApi = &gfx_dxgi;
+            gRenderApi = &gfx_direct3d11_api;
+#endif
+        case GAPI_GL:
+            gWindowApi = &gfx_sdl;
+            gRenderApi = &gfx_opengl_api;
+        default:
+            gWindowApi = &gfx_sdl;
+            gRenderApi = &gfx_opengl_api;
+    }
+}
+
+void select_audio_backend(void) {
+    if (gCLIOpts.headless) {
+        gAudioApi = &audio_null;
+        return;
+    }
+
+    switch (configAudioBackend) {
+        case AAPI_SDL: gAudioApi = &audio_sdl;
+        default: gAudioApi = &audio_sdl;
+    }
+
+    if (!gAudioApi->init()) {
+        gAudioApi = &audio_null;
+    }
+}
+
 // It's just better to have this off the stack, Because the size isn't small.
 // It also may help static analysis and bug catching.
 static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
 
 inline static void buffer_audio(void) {
-    bool shouldMute = (configMuteFocusLoss && !WAPI.has_focus()) || (gMasterVolume == 0);
+    bool shouldMute = (configMuteFocusLoss && !gWindowApi->has_focus()) || (gMasterVolume == 0);
     if (!shouldMute) {
         set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f);
         set_sequence_player_volume(SEQ_PLAYER_SFX,   (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
         set_sequence_player_volume(SEQ_PLAYER_ENV,   (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f);
     }
 
-    int samplesLeft = audio_api->buffered();
-    u32 numAudioSamples = samplesLeft < audio_api->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
+    int samplesLeft = gAudioApi->buffered();
+    u32 numAudioSamples = samplesLeft < gAudioApi->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     for (s32 i = 0; i < 2; i++) {
         create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
     }
@@ -317,13 +352,13 @@ inline static void buffer_audio(void) {
         for (u16 i=0; i < ARRAY_COUNT(sAudioBuffer); i++) {
             sAudioBuffer[i] *= gMasterVolume;
         }
-        audio_api->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
+        gAudioApi->play((u8 *)sAudioBuffer, 2 * numAudioSamples * 4);
     }
 }
 
 void *audio_thread(UNUSED void *arg) {
     // As long as we have an audio api and that we're threaded, Loop.
-    while (audio_api) {
+    while (gAudioApi) {
         f64 curTime = clock_elapsed_f64();
 
         // Buffer the audio.
@@ -338,7 +373,7 @@ void *audio_thread(UNUSED void *arg) {
         f64 actualDelta = now - curTime;
         if (actualDelta < targetDelta) {
             f64 delay = ((targetDelta - actualDelta) * 1000.0);
-            WAPI.delay((u32)delay);
+            gWindowApi->delay((u32)delay);
         }
     }
 
@@ -404,7 +439,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     f64 elapsed = frameEnd - frameStart;
     f64 remaining = targetFrameTime - elapsed;
     if (remaining > 0) {
-        WAPI.delay((u32)(remaining * 1000.0));
+        gWindowApi->delay((u32)(remaining * 1000.0));
     }
 
     gfx_end_frame();
@@ -412,9 +447,9 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
 
 void audio_shutdown(void) {
     audio_custom_shutdown();
-    if (audio_api) {
-        if (audio_api->shutdown) audio_api->shutdown();
-        audio_api = NULL;
+    if (gAudioApi) {
+        if (gAudioApi->shutdown) gAudioApi->shutdown();
+        gAudioApi = NULL;
     }
 }
 
@@ -476,10 +511,6 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
-#if defined(RAPI_DUMMY) || defined(WAPI_DUMMY)
-    gCLIOpts.headless = true;
-#endif
-
 #ifdef _WIN32
     // handle Windows console
     if (gCLIOpts.console || gCLIOpts.headless) {
@@ -502,23 +533,18 @@ int main(int argc, char *argv[]) {
     fs_init(gCLIOpts.savePath[0] ? gCLIOpts.savePath : sys_user_path());
 #endif
 
-#if !defined(RAPI_DUMMY) && !defined(WAPI_DUMMY)
-    if (gCLIOpts.headless) {
-        memcpy(&WAPI, &gfx_dummy_wm_api, sizeof(struct GfxWindowManagerAPI));
-        memcpy(&RAPI, &gfx_dummy_renderer_api, sizeof(struct GfxRenderingAPI));
-    }
-#endif
-
     configfile_load();
 
     legacy_folder_handler();
 
+    select_graphics_backend();
+
     // create the window almost straight away
     if (!gGfxInited) {
-        gfx_init(&WAPI, &RAPI, TITLE);
-        WAPI.set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(gWindowApi, gRenderApi, TITLE);
+        gWindowApi->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        WAPI.set_scroll_callback(mouse_on_scroll);
+        gWindowApi->set_scroll_callback(mouse_on_scroll);
     }
 
     // render the rom setup screen
@@ -554,11 +580,7 @@ int main(int argc, char *argv[]) {
     thread5_game_loop(NULL);
 
     // initialize sound outside threads
-    if (gCLIOpts.headless) audio_api = &audio_null;
-#if defined(AAPI_SDL1) || defined(AAPI_SDL2)
-    if (!audio_api && audio_sdl.init()) audio_api = &audio_sdl;
-#endif
-    if (!audio_api) audio_api = &audio_null;
+    select_audio_backend();
 
     // Initialize the audio thread if possible.
     // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
@@ -606,7 +628,7 @@ int main(int argc, char *argv[]) {
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
-        WAPI.main_loop(produce_one_frame);
+        gWindowApi->main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
 #endif

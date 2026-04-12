@@ -1,5 +1,3 @@
-#ifdef CAPI_SDL2
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -121,7 +119,7 @@ static void controller_sdl_init(void) {
         return;
     }
 
-#ifdef WAPI_DXGI
+#ifdef ENABLE_D3D11
     extern void WIN_UpdateKeymap(void);
     WIN_UpdateKeymap();
 #endif
@@ -188,7 +186,7 @@ extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
 
-    if ((gNewCamera.isMouse || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && WAPI.has_focus()) {
+    if ((gNewCamera.isMouse || get_first_person_enabled() || gDjuiHudLockMouse) && !is_game_paused() && !gDjuiPanelPauseCreated && !gDjuiInMainMenu && !gDjuiChatBoxFocus && !gDjuiConsoleFocus && gWindowApi->has_focus()) {
         controller_mouse_enter_relative();
     } else {
         controller_mouse_leave_relative();
@@ -412,5 +410,3 @@ struct ControllerAPI controller_sdl = {
     controller_sdl_bind,
     controller_sdl_shutdown
 };
-
-#endif // CAPI_SDL2

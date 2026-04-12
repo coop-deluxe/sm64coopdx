@@ -119,6 +119,10 @@ static bool gfx_dummy_wm_has_focus(void) {
     return true;
 }
 
+static const char* gfx_dummy_renderer_get_name(void) {
+    return "Dummy";
+}
+
 static bool gfx_dummy_renderer_z_is_from_0_to_1(void) {
     return false;
 }
@@ -220,6 +224,7 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {
+    gfx_dummy_renderer_get_name,
     gfx_dummy_renderer_z_is_from_0_to_1,
     gfx_dummy_renderer_unload_shader,
     gfx_dummy_renderer_load_shader,

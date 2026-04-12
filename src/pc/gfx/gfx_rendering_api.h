@@ -9,6 +9,7 @@ struct ShaderProgram;
 struct ColorCombiner;
 
 struct GfxRenderingAPI {
+    const char* (*get_name)(void);
     bool (*z_is_from_0_to_1)(void);
     void (*unload_shader)(struct ShaderProgram *old_prg);
     void (*load_shader)(struct ShaderProgram *new_prg);

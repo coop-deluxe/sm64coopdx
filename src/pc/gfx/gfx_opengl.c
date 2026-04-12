@@ -1,5 +1,3 @@
-#ifdef RAPI_GL
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,18 +19,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#ifdef WAPI_SDL2
-# include <SDL2/SDL.h>
-# ifdef USE_GLES
-#  include <SDL2/SDL_opengles2.h>
-# else
-#  include <SDL2/SDL_opengl.h>
-# endif
-#elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
+#include <SDL2/SDL.h>
+#ifdef USE_GLES
+# include <SDL2/SDL_opengles2.h>
+#else
+# include <SDL2/SDL_opengl.h>
 #endif
 
 #include "../platform.h"
@@ -78,6 +69,14 @@ static struct GLTexture *opengl_tex[2];
 static int opengl_curtex = 0;
 
 static uint32_t frame_count;
+
+static const char* gfx_opengl_get_name(void) {
+#ifdef USE_GLES
+    return "OpenGL ES";
+#else
+    return "OpenGL";
+#endif
+}
 
 static bool gfx_opengl_z_is_from_0_to_1(void) {
     return false;
@@ -741,6 +740,7 @@ static void gfx_opengl_shutdown(void) {
 }
 
 struct GfxRenderingAPI gfx_opengl_api = {
+    gfx_opengl_get_name,
     gfx_opengl_z_is_from_0_to_1,
     gfx_opengl_unload_shader,
     gfx_opengl_load_shader,
@@ -765,5 +765,3 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_finish_render,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL
