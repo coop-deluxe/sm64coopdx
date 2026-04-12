@@ -3532,61 +3532,6 @@ Measures the width and height of `message` in the current font
 
 <br />
 
-## [djui_hud_print_text](#djui_hud_print_text)
-
-### Description
-Prints DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text(message, x, y, scale)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| x | `number` |
-| y | `number` |
-| scale | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-### Description
-Prints interpolated DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| prevX | `number` |
-| prevY | `number` |
-| prevScale | `number` |
-| x | `number` |
-| y | `number` |
-| scale | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [djui_hud_render_texture](#djui_hud_render_texture)
 
 ### Description
