@@ -25,9 +25,6 @@ static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLev
 
 void discord_fatal_message(int rc) { // Discord usually does this because of loss of connection to Discord
     LOG_ERROR("Discord fatal: %d", rc);
-    /*char errorMessage[132] = { 0 };
-    snprintf(errorMessage, 132, "%s\nRC: %d", DLANG(NOTIF, DISCORD_ERROR), rc);
-    djui_popup_create(errorMessage, 6);*/
 }
 
 void discord_fatal(int rc) {
@@ -130,7 +127,6 @@ static void discord_initialize(void) {
 
     if (rc) {
         LOG_ERROR("DiscordCreate failed: %d", rc);
-        //djui_popup_create(DLANG(NOTIF, DISCORD_DETECT), 3);
         sDiscordFailed = true;
         return;
     }
