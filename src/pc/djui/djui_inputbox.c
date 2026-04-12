@@ -481,6 +481,8 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         }
     }
     
+    djui_gfx_update_combine_mode(CS_COLOR);
+
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {

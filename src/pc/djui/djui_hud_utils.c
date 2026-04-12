@@ -25,6 +25,8 @@
 #include "engine/math_util.h"
 
 #define INTERP_INIT(v) {v, v}
+#define INTERP_SET(field, p, c) field.prev = p; field.curr = c;
+#define INTERP_RESET(field, c) field.prev = field.curr = c;
 
 typedef struct {
     f32 prev, curr;
@@ -154,6 +156,7 @@ enum InterpHudType {
     INTERP_HUD_HALIGN,
     INTERP_HUD_VALIGN,
     INTERP_HUD_NEW_LINE,
+    INTERP_HUD_COLOR,
 };
 
 typedef struct {
@@ -164,8 +167,15 @@ typedef struct {
 
 struct InterpHud {
     f32 z;
-    InterpFieldF32 posX, posY;
-    InterpFieldF32 scaleX, scaleY;
+    union {
+        struct {
+            InterpFieldF32 posX, posY;
+            InterpFieldF32 scaleX, scaleY;
+        };
+        struct {
+            InterpFieldF32 r, g, b, a;
+        };
+    };
     f32 width, height;
     struct HudUtilsState state;
     struct GrowingArray *gfx;
@@ -207,30 +217,26 @@ void patch_djui_hud(f32 delta) {
 
             switch (gfx->type) {
                 case INTERP_HUD_TRANSLATION: {
-                    f32 translatedX = x;
-                    f32 translatedY = y;
-                    djui_hud_position_translate(&translatedX, &translatedY);
-                    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+                    djui_hud_position_translate(&x, &y);
+                    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, gDjuiHudUtilsZ);
                 } break;
 
                 case INTERP_HUD_ROTATION: {
-                    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
-                        f32 translatedW = scaleW;
-                        f32 translatedH = scaleH;
-                        djui_hud_size_translate(&translatedW);
-                        djui_hud_size_translate(&translatedH);
-                        s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
-                        s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
-                        s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
-                        s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
-                        f32 pivotX = delta_interpolate_f32(sHudUtilsState.rotation.pivotX.prev, sHudUtilsState.rotation.pivotX.curr, delta);
-                        f32 pivotY = delta_interpolate_f32(sHudUtilsState.rotation.pivotY.prev, sHudUtilsState.rotation.pivotY.curr, delta);
-                        f32 pivotTranslationX = interp->width * translatedW * pivotX;
-                        f32 pivotTranslationY = interp->height * translatedH * pivotY;
-                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
-                        create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
-                        create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
-                    }
+                    f32 translatedW = scaleW;
+                    f32 translatedH = scaleH;
+                    djui_hud_size_translate(&translatedW);
+                    djui_hud_size_translate(&translatedH);
+                    s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
+                    s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
+                    s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
+                    s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
+                    f32 pivotX = delta_interpolate_f32(sHudUtilsState.rotation.pivotX.prev, sHudUtilsState.rotation.pivotX.curr, delta);
+                    f32 pivotY = delta_interpolate_f32(sHudUtilsState.rotation.pivotY.prev, sHudUtilsState.rotation.pivotY.curr, delta);
+                    f32 pivotTranslationX = interp->width * translatedW * pivotX;
+                    f32 pivotTranslationY = interp->height * translatedH * pivotY;
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
+                    create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sm64_to_degrees(rotation), 0, 0, 1);
+                    create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
                 } break;
 
                 case INTERP_HUD_SCALE: {
@@ -258,6 +264,10 @@ void patch_djui_hud(f32 delta) {
                     f32 textHAlign = delta_interpolate_f32(sHudUtilsState.textAlignment.h.prev, sHudUtilsState.textAlignment.h.curr, delta);
                     f32 lineWidth = gfx->params[0];
                     create_dl_translation_matrix(DJUI_MTX_NOPUSH, -lineWidth * (1.f - textHAlign), -font->lineHeight, 0);
+                } break;
+
+                case INTERP_HUD_COLOR: {
+                    gDPSetEnvColor(gDisplayListHead++, x, y, scaleW, scaleH);
                 } break;
             }
         }
@@ -350,6 +360,20 @@ void djui_hud_set_color(u8 r, u8 g, u8 b, u8 a) {
     gDPSetEnvColor(gDisplayListHead++, r, g, b, a);
 }
 
+void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a) {
+    struct InterpHud *interp = djui_hud_create_interp();
+    if (interp) {
+        INTERP_SET(interp->r, prevR, r);
+        INTERP_SET(interp->g, prevG, g);
+        INTERP_SET(interp->b, prevB, b);
+        INTERP_SET(interp->a, prevA, a);
+
+        djui_hud_create_interp_gfx(interp, INTERP_HUD_COLOR);
+    }
+
+    djui_hud_set_color(r, g, b, a);
+}
+
 void djui_hud_reset_color(void) {
     sHudUtilsState.color.r = 255;
     sHudUtilsState.color.g = 255;
@@ -380,25 +404,45 @@ void djui_hud_reset_text_color(void) {
     sHudUtilsState.textColor.a = 255;
 }
 
+void djui_hud_set_combiner_cycles(u8 cycles) {
+    gCombinerState.cycles = cycles != 2 ? 1 : 2;
+}
+
+void djui_hud_set_combiner(u8 cycle, bool alpha,
+    OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d) {
+    if (--cycle > 1) { return; }
+
+    struct CombinerPart *part = (struct CombinerPart*) gCombinerState.cycle[cycle][alpha];
+    if (a > CS_KEEP) { part->a = a; }
+    if (b > CS_KEEP) { part->b = b; }
+    if (c > CS_KEEP) { part->c = c; }
+    if (d > CS_KEEP) { part->d = d; }
+
+    gCombinerUpdated = true;
+    gCombinerOverride = true;
+}
+
+void djui_hud_reset_combiner() {
+    gCombinerState.cycles = 1;
+    gCombinerOverride = false;
+}
+
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY) {
     *rotation = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
     *pivotX = sHudUtilsState.rotation.pivotX.curr;
     *pivotY = sHudUtilsState.rotation.pivotY.curr;
 }
 
-void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY) {
-    sHudUtilsState.rotation.degrees.prev = sHudUtilsState.rotation.degrees.curr = sm64_to_degrees(rotation);
-    sHudUtilsState.rotation.pivotX.prev = sHudUtilsState.rotation.pivotX.curr = pivotX;
-    sHudUtilsState.rotation.pivotY.prev = sHudUtilsState.rotation.pivotY.curr = pivotY;
+void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivotY) {
+    INTERP_RESET(sHudUtilsState.rotation.degrees, sm64_to_degrees(rotation));
+    INTERP_RESET(sHudUtilsState.rotation.pivotX, pivotX);
+    INTERP_RESET(sHudUtilsState.rotation.pivotY, pivotY);
 }
 
 void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY) {
-    sHudUtilsState.rotation.degrees.prev = sm64_to_degrees(prevRotation);
-    sHudUtilsState.rotation.degrees.curr = sm64_to_degrees(rotation);
-    sHudUtilsState.rotation.pivotX.prev = prevPivotX;
-    sHudUtilsState.rotation.pivotX.curr = pivotX;
-    sHudUtilsState.rotation.pivotY.prev = prevPivotY;
-    sHudUtilsState.rotation.pivotY.curr = pivotY;
+    INTERP_SET(sHudUtilsState.rotation.degrees, sm64_to_degrees(prevRotation), sm64_to_degrees(rotation));
+    INTERP_SET(sHudUtilsState.rotation.pivotX, prevPivotX, pivotX);
+    INTERP_SET(sHudUtilsState.rotation.pivotY, prevPivotY, pivotY);
 }
 
 void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign) {
@@ -407,15 +451,13 @@ void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign) {
 }
 
 void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign) {
-    sHudUtilsState.textAlignment.h.prev = sHudUtilsState.textAlignment.h.curr = textHAlign;
-    sHudUtilsState.textAlignment.v.prev = sHudUtilsState.textAlignment.v.curr = textVAlign;
+    INTERP_RESET(sHudUtilsState.textAlignment.h, textHAlign);
+    INTERP_RESET(sHudUtilsState.textAlignment.v, textVAlign);
 }
 
 void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign) {
-    sHudUtilsState.textAlignment.h.prev = prevTextHAlign;
-    sHudUtilsState.textAlignment.h.curr = textHAlign;
-    sHudUtilsState.textAlignment.v.prev = prevTextVAlign;
-    sHudUtilsState.textAlignment.v.curr = textVAlign;
+    INTERP_SET(sHudUtilsState.textAlignment.h, prevTextHAlign, textHAlign);
+    INTERP_SET(sHudUtilsState.textAlignment.v, prevTextVAlign, textVAlign);
 }
 
 u32 djui_hud_get_screen_width(void) {
@@ -484,8 +526,7 @@ f32 djui_hud_get_mouse_scroll_y(void) {
 
 void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height) {
     // translate position and scale
-    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
-    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+    djui_hud_translate_positions(&x, &y, &width, &height);
 
     // convert to viewport structure
     static Vp vp = {{
@@ -493,10 +534,10 @@ void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height) {
         { 640, 480, 511, 0 },
     }};
     Vp_t *viewport = &vp.vp;
-    viewport->vscale[0] = translatedW * 2.0f;
-    viewport->vscale[1] = translatedH * 2.0f;
-    viewport->vtrans[0] = (translatedW + translatedX) * 2.0f;
-    viewport->vtrans[1] = (translatedH + translatedY) * 2.0f;
+    viewport->vscale[0] = width * 2.0f;
+    viewport->vscale[1] = height * 2.0f;
+    viewport->vtrans[0] = (width + x) * 2.0f;
+    viewport->vtrans[1] = (height + y) * 2.0f;
 
     gSPViewport(gDisplayListHead++, &vp);
 }
@@ -508,11 +549,10 @@ void djui_hud_reset_viewport(void) {
 
 void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height) {
     // translate position and scale
-    f32 translatedX = x, translatedY = y, translatedW = width, translatedH = height;
-    djui_hud_translate_positions(&translatedX, &translatedY, &translatedW, &translatedH);
+    djui_hud_translate_positions(&x, &y, &width, &height);
 
     // apply the scissor
-    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, translatedX, translatedY, translatedW, translatedH);
+    gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, x, y, width, height);
 }
 
 void djui_hud_reset_scissor(void) {
@@ -585,17 +625,16 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
         gSPDisplayList(gDisplayListHead++, font->textBeginDisplayList);
     }
 
-    // translate position
+    // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
-    f32 translatedX = x + (font->xOffset * scale);
-    f32 translatedY = y + (font->yOffset * scale);
-    djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    x += (font->xOffset * scale); y += (font->yOffset * scale);
+    djui_hud_position_translate(&x, &y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, gDjuiHudUtilsZ);
 
     // rotate
     f32 translatedFontSize = fontScale;
     djui_hud_size_translate(&translatedFontSize);
-    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
+    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 pivotTranslationX = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotX.curr;
         f32 pivotTranslationY = font->defaultFontScale * translatedFontSize * sHudUtilsState.rotation.pivotY.curr;
@@ -729,14 +768,10 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
         const struct DjuiFont* font = djui_hud_get_text_font();
-        interp->posX.prev = prevX;
-        interp->posY.prev = prevY;
-        interp->posX.curr = x;
-        interp->posY.curr = y;
-        interp->scaleX.prev = prevScale;
-        interp->scaleY.prev = prevScale;
-        interp->scaleX.curr = scale;
-        interp->scaleY.curr = scale;
+        INTERP_SET(interp->posX, prevX, x);
+        INTERP_SET(interp->posY, prevY, y);
+        INTERP_SET(interp->scaleX, prevScale, scale);
+        INTERP_SET(interp->scaleY, prevScale, scale);
         interp->width = font->defaultFontScale;
         interp->height = font->defaultFontScale;
     }
@@ -758,30 +793,26 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 
     gDjuiHudUtilsZ += 0.001f;
 
-    // translate position
+    // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
-    f32 translatedX = x;
-    f32 translatedY = y;
-    djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    djui_hud_position_translate(&x, &y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, gDjuiHudUtilsZ);
 
     // rotate
-    f32 translatedW = scaleW;
-    f32 translatedH = scaleH;
-    djui_hud_size_translate(&translatedW);
-    djui_hud_size_translate(&translatedH);
-    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
+    djui_hud_size_translate(&scaleW);
+    djui_hud_size_translate(&scaleH);
+    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
-        f32 pivotTranslationX = width * translatedW * sHudUtilsState.rotation.pivotX.curr;
-        f32 pivotTranslationY = height * translatedH * sHudUtilsState.rotation.pivotY.curr;
+        f32 pivotTranslationX = width * scaleW * sHudUtilsState.rotation.pivotX.curr;
+        f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
     }
 
-    // translate scale
+    // scale
     djui_hud_create_interp_gfx(interp, INTERP_HUD_SCALE);
-    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * scaleW, height * scaleH, 1.0f);
 
     // render
     djui_gfx_render_texture(texture, width, height, fmt, siz, sHudUtilsState.filter);
@@ -797,31 +828,27 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
     if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
 
-    // translate position
+    // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
-    f32 translatedX = x;
-    f32 translatedY = y;
-    djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    djui_hud_position_translate(&x, &y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, gDjuiHudUtilsZ);
 
     // rotate
-    f32 translatedW = scaleW;
-    f32 translatedH = scaleH;
-    djui_hud_size_translate(&translatedW);
-    djui_hud_size_translate(&translatedH);
-    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
+    djui_hud_size_translate(&scaleW);
+    djui_hud_size_translate(&scaleH);
+    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
         f32 aspect = tileH ? ((f32) tileW / (f32) tileH) : 1.f;
-        f32 pivotTranslationX = width * translatedW * aspect * sHudUtilsState.rotation.pivotX.curr;
-        f32 pivotTranslationY = height * translatedH * sHudUtilsState.rotation.pivotY.curr;
+        f32 pivotTranslationX = width * scaleW * aspect * sHudUtilsState.rotation.pivotX.curr;
+        f32 pivotTranslationY = height * scaleH * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
     }
 
-    // translate scale
+    // scale
     djui_hud_create_interp_gfx(interp, INTERP_HUD_SCALE);
-    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * translatedW, height * translatedH, 1.0f);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width * scaleW, height * scaleH, 1.0f);
 
     // render
     djui_gfx_render_texture_tile(texture, width, height, fmt, siz, tileX, tileY, tileW, tileH, sHudUtilsState.filter);
@@ -845,14 +872,10 @@ void djui_hud_render_texture_interpolated(struct TextureInfo* texInfo, f32 prevX
 
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
-        interp->posX.prev = prevX;
-        interp->posY.prev = prevY;
-        interp->posX.curr = x;
-        interp->posY.curr = y;
-        interp->scaleX.prev = prevScaleW;
-        interp->scaleY.prev = prevScaleH;
-        interp->scaleX.curr = scaleW;
-        interp->scaleY.curr = scaleH;
+        INTERP_SET(interp->posX, prevX, x);
+        INTERP_SET(interp->posY, prevY, y);
+        INTERP_SET(interp->scaleX, prevScaleW, scaleW);
+        INTERP_SET(interp->scaleY, prevScaleH, scaleH);
         interp->width = texInfo->width;
         interp->height = texInfo->height;
     }
@@ -875,14 +898,10 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
-        interp->posX.prev = prevX;
-        interp->posY.prev = prevY;
-        interp->posX.curr = x;
-        interp->posY.curr = y;
-        interp->scaleX.prev = prevScaleW;
-        interp->scaleY.prev = prevScaleH;
-        interp->scaleX.curr = scaleW;
-        interp->scaleY.curr = scaleH;
+        INTERP_SET(interp->posX, prevX, x);
+        INTERP_SET(interp->posY, prevY, y);
+        INTERP_SET(interp->scaleX, prevScaleW, scaleW);
+        INTERP_SET(interp->scaleY, prevScaleH, scaleH);
         interp->width = texInfo->width;
         interp->height = texInfo->height;
     }
@@ -893,32 +912,29 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, struct InterpHud *interp) {
     gDjuiHudUtilsZ += 0.001f;
 
-    // translate position
+    // translate
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
-    f32 translatedX = x;
-    f32 translatedY = y;
-    djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    djui_hud_position_translate(&x, &y);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, gDjuiHudUtilsZ);
 
     // rotate
-    f32 translatedW = width;
-    f32 translatedH = height;
-    djui_hud_size_translate(&translatedW);
-    djui_hud_size_translate(&translatedH);
-    if (sHudUtilsState.rotation.degrees.prev != 0 || sHudUtilsState.rotation.degrees.curr != 0) {
+    djui_hud_size_translate(&width);
+    djui_hud_size_translate(&height);
+    if ((interp && sHudUtilsState.rotation.degrees.prev != 0) || sHudUtilsState.rotation.degrees.curr != 0) {
         djui_hud_create_interp_gfx(interp, INTERP_HUD_ROTATION);
-        f32 pivotTranslationX = translatedW * sHudUtilsState.rotation.pivotX.curr;
-        f32 pivotTranslationY = translatedH * sHudUtilsState.rotation.pivotY.curr;
+        f32 pivotTranslationX = width * sHudUtilsState.rotation.pivotX.curr;
+        f32 pivotTranslationY = height * sHudUtilsState.rotation.pivotY.curr;
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, +pivotTranslationX, -pivotTranslationY, 0);
         create_dl_rotation_matrix(DJUI_MTX_NOPUSH, sHudUtilsState.rotation.degrees.curr, 0, 0, 1);
         create_dl_translation_matrix(DJUI_MTX_NOPUSH, -pivotTranslationX, +pivotTranslationY, 0);
     }
 
-    // translate scale
+    // scale
     djui_hud_create_interp_gfx(interp, INTERP_HUD_SCALE);
-    create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedW, translatedH, 1.0f);
+    create_dl_scale_matrix(DJUI_MTX_NOPUSH, width, height, 1.0f);
 
     // render
+    djui_gfx_update_combine_mode(CS_COLOR);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // pop
@@ -932,14 +948,10 @@ void djui_hud_render_rect(f32 x, f32 y, f32 width, f32 height) {
 void djui_hud_render_rect_interpolated(f32 prevX, f32 prevY, f32 prevWidth, f32 prevHeight, f32 x, f32 y, f32 width, f32 height) {
     struct InterpHud *interp = djui_hud_create_interp();
     if (interp) {
-        interp->posX.prev = prevX;
-        interp->posY.prev = prevY;
-        interp->posX.curr = x;
-        interp->posY.curr = y;
-        interp->scaleX.prev = prevWidth;
-        interp->scaleY.prev = prevHeight;
-        interp->scaleX.curr = width;
-        interp->scaleY.curr = height;
+        INTERP_SET(interp->posX, prevX, x);
+        INTERP_SET(interp->posY, prevY, y);
+        INTERP_SET(interp->scaleX, prevWidth, width);
+        INTERP_SET(interp->scaleY, prevHeight, height);
         interp->width = 1;
         interp->height = 1;
     }

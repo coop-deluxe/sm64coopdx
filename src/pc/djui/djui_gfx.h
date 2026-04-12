@@ -13,6 +13,37 @@ extern const Gfx dl_djui_img_end[];
 void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
 
+enum CombinerSource {
+    CS_KEEP = -1,
+    CS_0,
+    CS_1,
+    CS_TEXTURE,        // TEXEL0
+    CS_COLOR,          // ENVIRONMENT
+    CS_TEXT,           // PRIMITIVE
+    CS_COMBINED,       // COMBINED
+    CS_NOISE,          // NOISE
+    CS_TEXTURE_ALPHA,  // TEXEL0_ALPHA
+    CS_COLOR_ALPHA,    // ENV_ALPHA
+    CS_TEXT_ALPHA,     // PRIMITIVE_ALPHA
+    CS_COMBINED_ALPHA, // COMBINED_ALPHA
+};
+
+struct CombinerPart {
+    enum CombinerSource a, b, c, d;
+};
+
+typedef enum CombinerSource CombinerCycle[2][4];
+
+struct CombinerState {
+    CombinerCycle cycle[2];
+    u8 cycles;
+};
+
+extern struct CombinerState gCombinerState;
+extern bool gCombinerUpdated;
+extern bool gCombinerOverride;
+void djui_gfx_update_combine_mode(enum CombinerSource mode);
+
 f32 djui_gfx_get_scale(void);
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter);

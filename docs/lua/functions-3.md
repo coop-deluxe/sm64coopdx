@@ -2902,6 +2902,36 @@ Sets the current DJUI HUD global color
 
 <br />
 
+## [djui_hud_set_color_interpolated](#djui_hud_set_color_interpolated)
+
+### Description
+Sets the current DJUI HUD global color interpolated
+
+### Lua Example
+`djui_hud_set_color_interpolated(prevR, prevG, prevB, prevA, r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| prevR | `integer` |
+| prevG | `integer` |
+| prevB | `integer` |
+| prevA | `integer` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_color_interpolated(u8 prevR, u8 prevG, u8 prevB, u8 prevA, u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_reset_color](#djui_hud_reset_color)
 
 ### Description
@@ -2991,6 +3021,78 @@ Resets the current DJUI HUD text default color. This color is overridden by colo
 
 <br />
 
+## [djui_hud_set_combiner_cycles](#djui_hud_set_combiner_cycles)
+
+### Description
+Sets the number of cycles used by the combiner
+
+### Lua Example
+`djui_hud_set_combiner_cycles(cycles)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cycles | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_combiner_cycles(u8 cycles);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_combiner](#djui_hud_set_combiner)
+
+### Description
+Sets the current DJUI HUD combiner. Each part uses the following equation: `P = (A - B) * C + D`. Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+
+### Lua Example
+`djui_hud_set_combiner(cycle, alpha, a, b, c, d)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cycle | `integer` |
+| alpha | `boolean` |
+| a | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| b | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| c | [enum CombinerSource](constants.md#enum-CombinerSource) |
+| d | [enum CombinerSource](constants.md#enum-CombinerSource) |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_combiner(u8 cycle, bool alpha, OPTIONAL enum CombinerSource a, OPTIONAL enum CombinerSource b, OPTIONAL enum CombinerSource c, OPTIONAL enum CombinerSource d);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_combiner](#djui_hud_reset_combiner)
+
+### Description
+Resets the current DJUI HUD combiner
+
+### Lua Example
+`djui_hud_reset_combiner()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_combiner();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [djui_hud_get_rotation](#djui_hud_get_rotation)
 
 ### Description
@@ -3033,7 +3135,7 @@ Sets the current DJUI HUD rotation
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation(s16 rotation, OPTIONAL f32 pivotX, OPTIONAL f32 pivotY);`
 
 [:arrow_up_small:](#)
 
