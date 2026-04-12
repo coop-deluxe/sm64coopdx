@@ -3738,6 +3738,37 @@ function center_rom_hack_camera()
     -- ...
 end
 
+--- @return integer
+--- Gets the first allocated index.
+function character_get_first_allocated_index()
+    -- ...
+end
+
+--- @return integer
+--- Gets the first unallocated index.
+function character_get_first_unallocated_index()
+    -- ...
+end
+
+--- @return Character
+--- Gets the first allocated character.
+function character_get_first_allocated()
+    -- ...
+end
+
+--- @return Character
+--- Gets the first unallocated character.
+function character_get_first_unallocated()
+    -- ...
+end
+
+--- @param i integer
+--- @return Character
+--- Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.
+function get_allocated_character_from_index(i)
+    -- ...
+end
+
 --- @param m MarioState
 --- @return Character
 --- Gets a Character struct from `m`
@@ -3784,8 +3815,88 @@ function get_character_anim(m, characterAnim)
 end
 
 --- @param m MarioState
+--- @param characterAnim CharacterAnimID
+--- @return string
+--- Gets the current name of the animation used if the animation is modded.
+function get_modded_character_anim_string(m, characterAnim)
+    -- ...
+end
+
+--- @param m MarioState
 --- Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 function update_character_anim_offset(m)
+    -- ...
+end
+
+--- @param name string
+--- @return Character
+--- @return integer characterIndex
+--- Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
+function character_allocate(name)
+    -- ...
+end
+
+--- @param character Character
+--- Deallocates your `character` from the `gCharacters` struct.
+function character_deallocate(character)
+    -- ...
+end
+
+--- @param character Character
+--- @param name string
+--- Set Character name for `character`
+function character_set_name(character, name)
+    -- ...
+end
+
+--- @param character Character
+--- @param gfxName string
+--- Set Character's cap enemy gfx for `character`. This is rendered on enemies that steal your caps
+function character_set_cap_enemy_gfx_name(character, gfxName)
+    -- ...
+end
+
+--- @param character Character
+--- @param gfxName string
+--- Set Character's cap enemy decal gfx for `character`. This is rendered on enemies that steal your caps
+function character_set_cap_enemy_decal_gfx_name(character, gfxName)
+    -- ...
+end
+
+--- @param character Character
+--- @param texInfo TextureInfo
+--- Set hud head texture for `character`. This is the texture that appears for the playerlist, life, and mario cam icon
+function character_set_hud_head_texture(character, texInfo)
+    -- ...
+end
+
+--- @param character Character
+--- @param characterSound CharacterSound
+--- @param audioName string
+--- Adds a `audioName` for `characterSound` on `character`. You can add multiple sound files to the same `characterSound` When you have multiple sounds, it picks between them at random.
+function character_add_sound(character, characterSound, audioName)
+    -- ...
+end
+
+--- @param character Character
+--- @param characterSound CharacterSound
+--- Removes all sounds for `characterSound` on `character`. Every sound file will get removed from the character.
+function character_remove_sounds(character, characterSound)
+    -- ...
+end
+
+--- @param character Character
+--- @param animID CharacterAnimID
+--- @param animString string
+--- Sets animation for `animID` using a registered smlua animation. You can regjster an smlua animation by using `smlua_util_register_animation`. The animation string you used to register the animation is the `animString` to be passed.
+function character_set_animation(character, animID, animString)
+    -- ...
+end
+
+--- @param character Character
+--- @param animID CharacterAnimID
+--- Removes the animation for `animId` on `character`
+function character_remove_animation(character, animID)
     -- ...
 end
 
@@ -9959,6 +10070,30 @@ function apply_platform_displacement(o, platform)
     -- ...
 end
 
+--- @param name string
+--- @return PresetPalette
+--- Allocates a preset palette that can be shown in the player customization screen. This returns a `PresetPalette` that can be used to customize the palette. Customization functions include `preset_palette_set_name` and `preset_palette_set_color_of_part`.
+function preset_palette_allocate(name)
+    -- ...
+end
+
+--- @param palette PresetPalette
+--- @param name string
+--- Set's the name of a `PresetPalette`.
+function preset_palette_set_name(palette, name)
+    -- ...
+end
+
+--- @param palette PresetPalette
+--- @param playerPart integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- Set's the color of a player part for a `PresetPalette`.
+function preset_palette_set_color_of_part(palette, playerPart, r, g, b)
+    -- ...
+end
+
 --- @param a0 integer
 --- @param a1 integer
 --- Queues rumble data
@@ -10218,6 +10353,34 @@ function get_mario_vanilla_animation(index)
     -- ...
 end
 
+--- @param name string
+--- @return boolean
+--- Check if an animation with a name exists
+function smlua_anim_util_animation_exists(name)
+    -- ...
+end
+
+--- @param index integer
+--- @return boolean
+--- Check if an animation with a index exists
+function smlua_anim_util_animation_exists_using_index(index)
+    -- ...
+end
+
+--- @param name string
+--- @return integer
+--- Gets the animation index from the animation name
+function smlua_anim_util_get_index_from_name(name)
+    -- ...
+end
+
+--- @param index integer
+--- @return string
+--- Gets the animation name from the animation index
+function smlua_anim_util_get_name_from_index(index)
+    -- ...
+end
+
 --- @param obj Object
 --- @param name string
 --- Sets the animation of `obj` to the animation `name` corresponds to
@@ -10256,6 +10419,14 @@ end
 --- @return ModAudio
 --- Loads an `audio` stream by `filename` (with extension)
 function audio_stream_load(filename)
+    -- ...
+end
+
+--- @param mod Mod
+--- @param filename string
+--- @return ModAudio
+--- Loads an `audio` stream by `filename` in `mod` (with extension)
+function audio_stream_load_from_mod(mod, filename)
     -- ...
 end
 
@@ -10353,6 +10524,14 @@ end
 --- @return ModAudio
 --- Loads an `audio` sample
 function audio_sample_load(filename)
+    -- ...
+end
+
+--- @param mod Mod
+--- @param filename string
+--- @return ModAudio
+--- Loads an `audio` sample from `mod`
+function audio_sample_load_from_mod(mod, filename)
     -- ...
 end
 

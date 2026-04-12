@@ -308,7 +308,7 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 
 void mario_stop_riding_object(struct MarioState *m) {
     if (!m || m->riddenObj == NULL || m->playerIndex != 0) { return; }
-    
+
     m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
     if (m->riddenObj->oSyncID != 0) {
         network_send_object_reliability(m->riddenObj, TRUE);
@@ -411,12 +411,12 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
-    
+
     m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
     m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
-    u8 capModel = m->character->capModelId;
+    u8 capModel = smlua_model_util_load(m->character->capModelId);
     struct Object *capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
     if (capObject == NULL) { return; }
     capObject->globalPlayerIndex = gNetworkPlayers[m->playerIndex].globalIndex;
@@ -2164,7 +2164,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
                 capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
                 break;
-            
+
             case MARIO_NORMAL_CAP:
                 m->cap = 0;
                 break;

@@ -230,7 +230,7 @@ static bool audio_sanity_check(struct ModAudio* audio, bool isStream, const char
     return true;
 }
 
-struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
+struct ModAudio* audio_load_internal(struct Mod* mod, const char* filename, bool isStream) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
 
     // check file type
@@ -260,9 +260,9 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
         // find mod file in mod list
         bool foundModFile = false;
         struct ModFile* modFile = NULL;
-        u16 fileCount = gLuaActiveMod->fileCount;
+        u16 fileCount = mod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
-            struct ModFile* file = &gLuaActiveMod->files[i];
+            struct ModFile* file = &mod->files[i];
             if(path_ends_with(file->relativePath, normPath)) {
                 foundModFile = true;
                 modFile = file;
@@ -374,7 +374,11 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
 }
 
 struct ModAudio* audio_stream_load(const char* filename) {
-    return audio_load_internal(filename, true);
+    return audio_load_internal(gLuaActiveMod, filename, true);
+}
+
+struct ModAudio* audio_stream_load_from_mod(struct Mod* mod, const char* filename) {
+    return audio_load_internal(mod, filename, true);
 }
 
 void audio_stream_destroy(struct ModAudio* audio) {
@@ -386,7 +390,7 @@ void audio_stream_destroy(struct ModAudio* audio) {
 
 void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
     if (!audio_sanity_check(audio, true, "play")) { return; }
-    
+
     if (configMuteFocusLoss && !WAPI.has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
@@ -400,13 +404,13 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
 
 void audio_stream_pause(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "pause")) { return; }
-    
+
     ma_sound_stop(&audio->sound);
 }
 
 void audio_stream_stop(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "stop")) { return; }
-    
+
     ma_sound_stop(&audio->sound);
     ma_sound_seek_to_pcm_frame(&audio->sound, 0);
 }
@@ -420,7 +424,7 @@ f32 audio_stream_get_position(struct ModAudio* audio) {
 
 void audio_stream_set_position(struct ModAudio* audio, f32 pos) {
     if (!audio_sanity_check(audio, true, "set stream position for")) { return; }
-    
+
     ma_sound_seek_to_pcm_frame(&audio->sound, pos * ma_engine_get_sample_rate(&sModAudioEngine));
 }
 
@@ -432,13 +436,13 @@ bool audio_stream_get_looping(struct ModAudio* audio) {
 
 void audio_stream_set_looping(struct ModAudio* audio, bool looping) {
     if (!audio_sanity_check(audio, true, "set stream looping for")) { return; }
-    
+
     ma_sound_set_looping(&audio->sound, looping);
 }
 
 void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd) {
     if (!audio_sanity_check(audio, true, "set stream loop points for")) { return; }
-    
+
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart += length;
     if (loopEnd <= 0) loopEnd += length;
@@ -454,7 +458,7 @@ f32 audio_stream_get_frequency(struct ModAudio* audio) {
 
 void audio_stream_set_frequency(struct ModAudio* audio, f32 freq) {
     if (!audio_sanity_check(audio, true, "set stream frequency for")) { return; }
-    
+
     ma_sound_set_pitch(&audio->sound, freq);
 }
 
@@ -479,7 +483,7 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
-    
+
     if (configMuteFocusLoss && !WAPI.has_focus()) {
         ma_sound_set_volume(&audio->sound, 0);
     } else {
@@ -556,12 +560,16 @@ static void audio_sample_destroy_copies(struct ModAudio* audio) {
 }
 
 struct ModAudio* audio_sample_load(const char* filename) {
-    return audio_load_internal(filename, false);
+    return audio_load_internal(gLuaActiveMod, filename, false);
+}
+
+struct ModAudio* audio_sample_load_from_mod(struct Mod* mod, const char* filename) {
+    return audio_load_internal(mod, filename, false);
 }
 
 void audio_sample_destroy(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, false, "destroy")) { return; }
-    
+
     if (audio->sampleCopiesTail) {
         audio_sample_destroy_copies(audio);
     }
@@ -572,7 +580,7 @@ void audio_sample_destroy(struct ModAudio* audio) {
 
 void audio_sample_stop(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, false, "stop")) { return; }
-    
+
     if (audio->sampleCopiesTail) {
         audio_sample_destroy_copies(audio);
     }

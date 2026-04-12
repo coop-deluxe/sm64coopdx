@@ -446,9 +446,7 @@ Gfx* geo_mario_tilt_torso(s32 callContext, struct GraphNode* node, Mat4* mtx) {
     s32 action = bodyState->action;
     bodyState->mirrorMario = gCurGraphNodeObject == &gMirrorMario[plrIdx];
 
-    u8 charIndex = gNetworkPlayers[plrIdx].overrideModelIndex;
-    if (charIndex >= CT_MAX) { charIndex = 0; }
-    struct Character* character = &gCharacters[charIndex];
+    struct Character* character = gMarioStates[plrIdx].character;
 
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeRotation* rotNode = (struct GraphNodeRotation*) node->next;
@@ -847,11 +845,13 @@ Gfx* geo_mario_cap_display_list(s32 callContext, struct GraphNode* node, UNUSED 
     struct PlayerColor color = geo_mario_get_player_color(&gNetworkPlayers[globalIndex].overridePalette);
     gNetworkPlayerColors[globalIndex] = color;
 
-    u8 charIndex = gNetworkPlayers[globalIndex].overrideModelIndex;
-    if (charIndex >= CT_MAX) { charIndex = 0; }
-    struct Character* character = &gCharacters[charIndex];
+    struct Character* character = gMarioStates[gNetworkPlayers[globalIndex].localIndex].character;
+    u32 capEnemyOutLength;
+    Gfx* capEnemyGfx = dynos_gfx_get(character->capEnemyGfx, &capEnemyOutLength);
+    u32 capEnemyDecalOutLength;
+    Gfx* capEnemyDecalGfx = dynos_gfx_get(character->capEnemyDecalGfx, &capEnemyDecalOutLength);
 
-    Gfx *gfx = geo_mario_create_player_colors_dl(globalIndex, character->capEnemyGfx, character->capEnemyDecalGfx);
+    Gfx *gfx = geo_mario_create_player_colors_dl(globalIndex, capEnemyGfx, capEnemyDecalGfx);
     struct GraphNodeGenerated* asGenerated = (struct GraphNodeGenerated*)node;
     asGenerated->fnNode.node.flags = (asGenerated->fnNode.node.flags & 0xFF) | (character->capEnemyLayer << 8);
     return gfx;

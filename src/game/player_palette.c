@@ -4,6 +4,7 @@
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "player_palette.h"
+#include "pc/lua/smlua.h"
 
 const struct PlayerPalette DEFAULT_MARIO_PALETTE =
 //  Overalls              Shirt                 Gloves                Shoes                 Hair                  Skin                  Cap                   Emblem
@@ -13,6 +14,7 @@ static ini_t* sPalette = NULL;
 
 struct PresetPalette gPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
 u16 gPresetPaletteCount = 0;
+struct PresetPalette gModdedPresetPalettes[MAX_MODDED_PRESET_PALETTES] = { 0 };
 
 static bool player_palette_init(const char* palettesPath, char* palette, bool appendPalettes) {
     // free old ini
@@ -41,6 +43,10 @@ void player_palettes_reset(void) {
     gPresetPaletteCount = 0;
 }
 
+void player_modded_palettes_reset(void) {
+    memset(&gModdedPresetPalettes, 0, sizeof(gModdedPresetPalettes));
+}
+
 static u8 read_value(const char* data) {
     if (data == NULL) { return 0; }
     data = sys_strlwr((char*)data);
@@ -55,35 +61,51 @@ static u8 read_value(const char* data) {
 
 static void player_palettes_sort_characters(void) {
     struct PresetPalette charPresetPalettes[MAX_PRESET_PALETTES] = { 0 };
-    u8 charPresetPaletteCount = 0;
+    int charPresetPaletteCount = 0;
 
     // copy character palettes first
-    for (int c = 0; c < CT_MAX; c++) { // heh, c++
+    for (int c = 0; c < CT_COUNT; c++) { // heh, c++
         for (int i = 0; i < gPresetPaletteCount; i++) {
-            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+            if (!strcmp(gPresetPalettes[i].name, gOriginalCharacters[c].name)) {
                 charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
             }
+        }
+    }
+
+    // copy modded palettes
+    for (int i = 0; i < MAX_MODDED_PRESET_PALETTES; i++) {
+        bool isCharPalette = false;
+        for (int c = 0; c < CT_COUNT; c++) { // heh, c++
+            if (!strcmp(gModdedPresetPalettes[i].name, gOriginalCharacters[c].name)) {
+                isCharPalette = true;
+                break;
+            }
+        }
+        if (!isCharPalette && gModdedPresetPalettes[i].active) {
+            charPresetPalettes[charPresetPaletteCount++] = gModdedPresetPalettes[i];
         }
     }
 
     // copy remaining palettes
     for (int i = 0; i < gPresetPaletteCount; i++) {
         bool isCharPalette = false;
-        for (int c = 0; c < CT_MAX; c++) { // heh, c++
-            if (!strcmp(gPresetPalettes[i].name, gCharacters[c].name)) {
+        for (int c = 0; c < CT_COUNT; c++) { // heh, c++
+            if (!strcmp(gPresetPalettes[i].name, gOriginalCharacters[c].name)) {
                 isCharPalette = true;
                 break;
             }
         }
         if (!isCharPalette) {
+            if (charPresetPaletteCount >= MAX_PRESET_PALETTES) break;
             charPresetPalettes[charPresetPaletteCount++] = gPresetPalettes[i];
         }
     }
 
     // finally, write to gPresetPalettes
-    for (int i = 0; i < gPresetPaletteCount; i++) {
+    for (int i = 0; i < charPresetPaletteCount; i++) {
         gPresetPalettes[i] = charPresetPalettes[i];
     }
+    gPresetPaletteCount = charPresetPaletteCount;
 }
 
 void player_palettes_read(const char* palettesPath, bool appendPalettes) {
@@ -142,7 +164,7 @@ void player_palettes_read(const char* palettesPath, bool appendPalettes) {
 #ifdef DEVELOPMENT
         printf("Loaded palette '%s.ini'\n", path);
 #endif
-        if (gPresetPaletteCount >= MAX_PRESET_PALETTES) { break; }
+        if (gPresetPaletteCount >= MAX_NORMAL_PRESET_PALETTES) { break; }
     }
 
     closedir(d);
@@ -228,4 +250,47 @@ bool player_palette_delete(const char* palettesPath, char* name, bool appendPale
         return true;
     }
     return false;
+}
+
+static struct PresetPalette* modded_preset_palette_get_first_inactive() {
+    for (int i = 0; i < MAX_MODDED_PRESET_PALETTES; i++) {
+        if (!gModdedPresetPalettes[i].active) {
+            return &gModdedPresetPalettes[i];
+        }
+    }
+    return NULL;
+}
+
+struct PresetPalette* preset_palette_allocate(const char* name) {
+    // -6 to allow for (Mod) text appended to name
+    if (strlen(name) >= MAX_PALETTE_NAME - 6) {
+        LOG_LUA_LINE("preset_palette_allocate: Failed to allocate palette, name %s is too large! Name can only be %u characters", name, MAX_PALETTE_NAME - 7);
+        return NULL;
+    }
+    struct PresetPalette* palette = modded_preset_palette_get_first_inactive();
+    if (palette == NULL) {
+        LOG_LUA_LINE("preset_palette_allocate: Ran out of slots to get new palette!");
+        return NULL;
+    }
+    snprintf(palette->name, sizeof(palette->name), "%s (Mod)", name);
+    palette->active = true;
+    return palette;
+}
+
+void preset_palette_set_name(struct PresetPalette* palette, const char* name) {
+    // -6 to allow for (Mod) text appended to name
+    if (strlen(name) >= MAX_PALETTE_NAME - 6) {
+        LOG_LUA_LINE("preset_palette_set_name: Failed to set name, name %s is too large! Name can only be %u characters", name, MAX_PALETTE_NAME - 7);
+        return;
+    }
+    if (palette == NULL) { return; }
+    snprintf(palette->name, sizeof(palette->name), "%s (Mod)", name);;
+}
+
+void preset_palette_set_color_of_part(struct PresetPalette* palette, u8 playerPart, u8 r, u8 g, u8 b) {
+    if (palette == NULL) { return; }
+    if (playerPart < 0 || playerPart >= PLAYER_PART_MAX) { return; }
+    palette->palette.parts[playerPart][0] = r;
+    palette->palette.parts[playerPart][1] = g;
+    palette->palette.parts[playerPart][2] = b;
 }

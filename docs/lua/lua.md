@@ -30,12 +30,13 @@ Save file locations:
 - [Structs](structs.md)
 
 ### Guides
-- [Setting up Visual Studio Code](guides/vs-code-setup.md) 
+- [Setting up Visual Studio Code](guides/vs-code-setup.md)
 - [Hooks](guides/hooks.md)
 - [gMarioStates](guides/mario-state.md)
 - [Behavior Object Lists](guides/object-lists.md)
 - [Lighting Engine](guides/lighting-engine.md)
 - [ModFS](guides/modfs.md)
+- [Characters](guides/characters.md)
 
 ## Important notes on player indices
 

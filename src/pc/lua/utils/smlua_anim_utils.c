@@ -109,15 +109,17 @@ struct Animation *get_mario_vanilla_animation(u16 index) {
 ///////////////////////
 
 struct CustomAnimation {
-    const char *name;
-    struct Animation *anim;
-    struct CustomAnimation *next;
+    const char* name;
+    int index;
+    struct Animation* anim;
+    struct CustomAnimation* next;
 };
 
 struct CustomAnimation* sCustomAnimationHead = NULL;
+static int sCustomAnimationIndex = 0;
 
-static struct CustomAnimation *get_custom_animation_node(const char *name) {
-    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
+static struct CustomAnimation* get_custom_animation_node(const char* name) {
+    for (struct CustomAnimation* node = sCustomAnimationHead; node; node = node->next) {
         if (node->name && strcmp(node->name, name) == 0) {
             return node;
         }
@@ -125,9 +127,18 @@ static struct CustomAnimation *get_custom_animation_node(const char *name) {
     return NULL;
 }
 
+static struct CustomAnimation* get_custom_animation_node_from_index(int index) {
+    for (struct CustomAnimation* node = sCustomAnimationHead; node; node = node->next) {
+        if (node->index == index) {
+            return node;
+        }
+    }
+    return NULL;
+}
+
 void smlua_anim_util_reset(void) {
-    for (struct CustomAnimation *node = sCustomAnimationHead; node;) {
-        struct CustomAnimation *next = node->next;
+    for (struct CustomAnimation* node = sCustomAnimationHead; node;) {
+        struct CustomAnimation* next = node->next;
         if (node->name) {
             free((void *) node->name);
         }
@@ -144,9 +155,10 @@ void smlua_anim_util_reset(void) {
         node = next;
     }
     sCustomAnimationHead = NULL;
+    sCustomAnimationIndex = 0;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
+void smlua_anim_util_register_animation(const char* name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
 
     // NULL-checks
     if (!name) {
@@ -165,8 +177,9 @@ void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTr
     }
 
     // Create a new node
-    struct CustomAnimation *node = calloc(1, sizeof(struct CustomAnimation));
+    struct CustomAnimation* node = calloc(1, sizeof(struct CustomAnimation));
     node->name = strdup(name);
+    node->index = sCustomAnimationIndex++;
     node->anim = calloc(1, sizeof(struct Animation));
     node->anim->flags = flags;
     node->anim->animYTransDivisor = animYTransDivisor;
@@ -184,7 +197,45 @@ void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTr
     LOG_INFO("Registered custom animation: %s", name);
 }
 
-void smlua_anim_util_set_animation(struct Object *obj, const char *name) {
+bool smlua_anim_util_animation_exists(const char* name) {
+    if (!name) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'name' is NULL");
+        return false;
+    }
+
+    return get_custom_animation_node(name) != NULL;
+}
+
+bool smlua_anim_util_animation_exists_using_index(int index) {
+    if (index < 0) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'index' is less than 0");
+        return false;
+    }
+
+    return get_custom_animation_node_from_index(index) != NULL;
+}
+
+int smlua_anim_util_get_index_from_name(const char* name) {
+    struct CustomAnimation *node = get_custom_animation_node(name);
+    if (!node) {
+        LOG_LUA_LINE("smlua_anim_util_get_index_from_name: Animation '%s' doesn't exist", name);
+        return -1;
+    }
+
+    return node->index;
+}
+
+const char* smlua_anim_util_get_name_from_index(int index) {
+    struct CustomAnimation *node = get_custom_animation_node_from_index(index);
+    if (!node) {
+        LOG_LUA_LINE("smlua_anim_util_get_name_from_index: Animation at index '%d' doesn't exist", index);
+        return NULL;
+    }
+
+    return node->name;
+}
+
+void smlua_anim_util_set_animation(struct Object* obj, const char* name) {
 
     // NULL-checks
     if (!obj) {
@@ -207,7 +258,7 @@ void smlua_anim_util_set_animation(struct Object *obj, const char *name) {
     obj->header.gfx.animInfo.curAnim = node->anim;
 }
 
-const char *smlua_anim_util_get_current_animation_name(struct Object *obj) {
+const char* smlua_anim_util_get_current_animation_name(struct Object* obj) {
 
     // NULL-checks
     if (!obj) {
@@ -216,7 +267,7 @@ const char *smlua_anim_util_get_current_animation_name(struct Object *obj) {
     }
 
     // Check the animations
-    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
+    for (struct CustomAnimation* node = sCustomAnimationHead; node; node = node->next) {
         if (node->anim == obj->header.gfx.animInfo.curAnim) {
             return node->name;
         }

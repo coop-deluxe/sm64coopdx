@@ -78,6 +78,8 @@ void packet_process(struct Packet* p) {
     switch (p->packetType) {
         case PACKET_ACK:                     network_receive_ack(p);                     break;
         case PACKET_PLAYER:                  network_receive_player(p);                  break;
+        case PACKET_CHARACTER:               network_receive_character(p);               break;
+        case PACKET_CHARACTER_REQUEST:       network_receive_character_request(p);       break;
         case PACKET_OBJECT:                  network_receive_object(p);                  break;
         case PACKET_SPAWN_OBJECTS:           network_receive_spawn_objects(p);           break;
         case PACKET_SPAWN_STAR:              network_receive_spawn_star(p);              break;

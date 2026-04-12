@@ -366,8 +366,10 @@ void print_act_selector_strings(void) {
                 if (np->currCourseNum != gCurrCourseNum) { continue; }
                 if (np->currActNum != i) { continue; }
 
-                gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-                render_hud_icon(NULL, gMarioStates[j].character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x - 4, 223, 16, 16, 0, 0, 16, 16);
+                if (gMarioState->character->hudHeadTexture.texture != NULL) {
+                    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
+                    render_hud_icon(NULL, gMarioStates[j].character->hudHeadTexture.texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x - 4, 223, 16, 16, 0, 0, 16, 16);
+                }
                 break;
             }
         }
