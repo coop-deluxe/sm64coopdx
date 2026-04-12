@@ -65,6 +65,42 @@ void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* fi
     lua_pop(L, 1); // pop loaded table
 }
 
+static void smlua_push_file_contents(lua_State* L, struct ModFile* file) {
+    if (!file->cachedPath) {
+        LOG_LUA_LINE("File '%s' has no cachedPath", file->relativePath);
+        return;
+    }
+
+    FILE* f = fopen(file->cachedPath, "rb");
+    if (!f) {
+        LOG_LUA_LINE("Failed to open file '%s'", file->cachedPath);
+        return;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    if (size < 0) {
+        fclose(f);
+        LOG_LUA_LINE("Invalid size for file '%s'", file->cachedPath);
+        return;
+    }
+
+    char* buffer = malloc(size);
+    if (!buffer) {
+        fclose(f);
+        LOG_LUA_LINE("Ran out of memory reading file '%s'", file->cachedPath);
+        return;
+    }
+
+    fread(buffer, 1, size, f);
+    fclose(f);
+
+    lua_pushlstring(L, buffer, size);
+    free(buffer);
+}
+
 static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     char basePath[SYS_MAX_PATH] = "";
     char absolutePath[SYS_MAX_PATH] = "";
@@ -84,8 +120,13 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
 
     char luaName[SYS_MAX_PATH] = "";
     char luacName[SYS_MAX_PATH] = "";
-    snprintf(luaName, SYS_MAX_PATH, "%s.lua", absolutePath);
-    snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
+    if (!path_ends_with(absolutePath, ".lua") && !path_ends_with(absolutePath, ".luac")) {
+        snprintf(luaName, SYS_MAX_PATH, "%s.lua", absolutePath);
+        snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
+    } else {
+        snprintf(luaName, SYS_MAX_PATH, "%s", absolutePath);
+        snprintf(luacName, SYS_MAX_PATH, "%s", absolutePath);
+    }
 
     // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
@@ -112,6 +153,75 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     return NULL;
 }
 
+static const char *REQUIRE_FILE_ALLOWED_EXTENSIONS[] = {
+    ".txt", ".json", ".ini", ".sav",    // text
+    ".bin", ".col",                     // actors
+    ".bhv",                             // behaviors
+    ".tex", ".png",                     // textures
+    ".lvl",                             // levels
+    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    NULL
+};
+
+static const int REQUIRE_FILE_ALLOWED_EXTENSION_COUNT = sizeof(REQUIRE_FILE_ALLOWED_EXTENSIONS) / sizeof(REQUIRE_FILE_ALLOWED_EXTENSIONS[0]);
+
+static struct ModFile* smlua_find_file(const char* fileName) {
+    char filePath[SYS_MAX_PATH] = "";
+    char basePath[SYS_MAX_PATH] = "";
+    char absolutePath[SYS_MAX_PATH] = "";
+    char normalizedRelative[SYS_MAX_PATH] = "";
+    strcpy(filePath, fileName);
+    normalize_path(filePath);
+
+    if (!gLuaActiveMod) {
+        return NULL;
+    }
+
+    const char *lastSlash = strrchr(fileName, '/');
+    const char *lastDot = strrchr(fileName, '.');
+
+    // only consider files with an allowed extension
+    if (lastDot > lastSlash) {
+        bool allowedExtension = false;
+        for (int i = 0; i < REQUIRE_FILE_ALLOWED_EXTENSION_COUNT; i++) {
+            if (path_ends_with(fileName, REQUIRE_FILE_ALLOWED_EXTENSIONS[i])) {
+                allowedExtension = true;
+                break;
+            }
+        }
+        if (!allowedExtension) {
+            return NULL;
+        }
+    }
+    
+    // get the directory of the current file
+    if (gLuaActiveModFile) {
+        path_get_folder(gLuaActiveModFile->relativePath, basePath);
+    }
+    
+    // resolve fileName to a path relative to mod root
+    resolve_relative_path(basePath, fileName, absolutePath);
+    
+    // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
+    for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
+        struct ModFile* file = &gLuaActiveMod->files[i];
+        
+        // exclude lua files
+        if (path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac")) {
+            continue;
+        }
+
+        // check for match, normalizing to system separators
+        strcpy(normalizedRelative, file->relativePath);
+        normalize_path(normalizedRelative);
+        if (!strcmp(normalizedRelative, filePath)) {
+            return file;
+        }
+    }
+
+    return NULL;
+}
+
 static int smlua_custom_require(lua_State* L) {
     const char* moduleName = luaL_checkstring(L, 1);
 
@@ -127,17 +237,34 @@ static int smlua_custom_require(lua_State* L) {
     }
 
     // find the file in mod files
-    struct ModFile* file = smlua_find_mod_file(moduleName);
+    struct ModFile* file = smlua_find_file(moduleName);
+    if (!file) {
+        file = smlua_find_mod_file(moduleName);
+    }
     if (!file) {
         LOG_LUA_LINE("module '%s' not found in mod files", moduleName);
         return 0;
     }
 
+    bool isLuaFile = path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac");
+
     // tag it as a loaded lua module
-    file->isLoadedLuaModule = true;
+    if (isLuaFile) {
+        file->isLoadedLuaModule = true;
+    }
 
     // check cache first
     if (smlua_get_cached_module_result(L, activeMod, file)) {
+        return 1;
+    }
+
+    // return the file content as a string if not a lua file
+    if (!isLuaFile) {
+        s32 prevTop = lua_gettop(L);
+
+        smlua_push_file_contents(L, file);
+
+        smlua_cache_module_result(L, activeMod, file, prevTop);
         return 1;
     }
 

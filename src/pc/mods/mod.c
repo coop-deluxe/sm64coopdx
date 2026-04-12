@@ -356,41 +356,17 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
         return (mod_allocate_file(mod, mod->relativePath) != NULL);
     }
 
-    // deal with mod directory
-    {
-        const char* fileTypes[] = { ".lua", ".luac", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "", fileTypes, true)) { return false; }
-    }
-
-    // deal with actors directory
-    {
-        const char* fileTypes[] = { ".bin", ".col", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes, false)) { return false; }
-    }
-
-    // deal with behaviors directory
-    {
-        const char* fileTypes[] = { ".bhv", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "data", fileTypes, false)) { return false; }
-    }
-
-    // deal with textures directory
-    {
-        const char* fileTypes[] = { ".tex", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes, false)) { return false; }
-    }
-
-    // deal with levels directory
-    {
-        const char* fileTypes[] = { ".lvl", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes, false)) { return false; }
-    }
-
-    // deal with sound directory
-    {
-        const char* fileTypes[] = { ".m64", ".mp3", ".aiff", ".ogg", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes, false)) { return false; }
-    }
+    const char* fileTypes[] = {
+        ".lua", ".luac",                        // script
+        ".txt", ".json", ".ini", ".sav", "",    // text
+        ".bin", ".col",                         // actors
+        ".bhv",                                 // behaviors
+        ".tex", ".png",                         // textures
+        ".lvl",                                 // levels
+        ".m64", ".aiff", ".mp3", ".ogg",        // audio
+        NULL
+    };
+    if (!mod_load_files_dir(mod, fullPath, "", fileTypes, true)) { return false; }
 
     return true;
 }
