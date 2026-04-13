@@ -31,6 +31,7 @@
 #include "game/rumble_init.h"
 #include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/network/moderation.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"

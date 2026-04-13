@@ -2829,6 +2829,29 @@ Gets the DJUI hex color code string for the player corresponding to `localIndex`
 
 <br />
 
+## [network_get_complete_player_name](#network_get_complete_player_name)
+
+### Description
+Gets the complete player name, including the player's starting hex code.
+
+### Lua Example
+`local stringValue = network_get_complete_player_name(localIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| localIndex | `integer` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* network_get_complete_player_name(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
 
 ### Description
@@ -2868,6 +2891,30 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 
 ### C Prototype
 `const char* network_discord_id_from_local_index(u8 localIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_disconnect](#network_disconnect)
+
+### Description
+Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
+
+### Lua Example
+`network_disconnect(dcType, reason)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dcType | [enum DisconnectType](constants.md#enum-DisconnectType) |
+| reason | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason);`
 
 [:arrow_up_small:](#)
 

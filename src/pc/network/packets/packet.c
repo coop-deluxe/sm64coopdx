@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <zlib.h>
 #include "../network.h"
-#include "pc/network/ban_list.h"
+#include "pc/network/moderation.h"
 #include "pc/debuglog.h"
 
 static u32 sCompBufferLen = 0;
@@ -93,6 +93,7 @@ void packet_process(struct Packet* p) {
         case PACKET_KICK:                    network_receive_kick(p);                    break;
         case PACKET_COMMAND:                 network_receive_chat_command(p);            break;
         case PACKET_MODERATOR:               network_receive_moderator(p);               break;
+        case PACKET_MODERATION_ACTION:       network_receive_moderation_action(p);       break;
         case PACKET_KEEP_ALIVE:              network_receive_keep_alive(p);              break;
         case PACKET_LEAVING:                 network_receive_leaving(p);                 break;
         case PACKET_SAVE_FILE:               network_receive_save_file(p);               break;
@@ -153,9 +154,18 @@ void packet_receive(struct Packet* p) {
 
     // refuse packets from banned players
     if (gNetworkType == NT_SERVER) {
-        if (ban_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
+        if (moderation_list_contains(MODERATION_LIST_TYPE_BAN, gNetworkSystem->get_id_str(p->localIndex))) {
+            char* reason = NULL;
+            struct ModerationList* list = moderation_list_get_list_by_type(MODERATION_LIST_TYPE_BAN);
+            for (u16 i = 0; i < list->count; i++) {
+                struct ModerationEntry* entry = list->list[i];
+                if (strcmp(entry->address, gNetworkSystem->get_id_str(p->localIndex)) == 0) {
+                    reason = entry->reason;
+                    break;
+                }
+            }
             LOG_INFO("kicking banned player");
-            network_send_kick(0, EKT_BANNED);
+            network_send_kick(0, EKT_BANNED, reason);
             return;
         }
     }
@@ -178,7 +188,7 @@ void packet_receive(struct Packet* p) {
         }
         if (packetType != PACKET_PLAYER) {
             LOG_INFO("closing connection for packetType: %d", packetType);
-            network_send_kick(0, EKT_CLOSE_CONNECTION);
+            network_send_kick(0, EKT_CLOSE_CONNECTION, NULL);
         }
         LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
         return;

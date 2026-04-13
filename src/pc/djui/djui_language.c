@@ -45,7 +45,7 @@ void djui_language_replace(char* src, char* dst, int size, char key, char* value
     char* o = dst;
     while (*c != '\0') {
         if (*c == key) {
-            snprintf(o, size - (o - dst), "%s", value);
+            snprintf(o, size - (o - dst), "%s", value == NULL ? "" : value);
         } else {
             djui_unicode_get_char(c, tmpChar);
             snprintf(o, size - (o - dst), "%s", tmpChar);

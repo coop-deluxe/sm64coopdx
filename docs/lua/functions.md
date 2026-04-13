@@ -815,6 +815,7 @@
 <br />
 
 - djui_popup.h
+   - [djui_popup_create_auto_scaling](functions-3.md#djui_popup_create_auto_scaling)
    - [djui_popup_create](functions-3.md#djui_popup_create)
 
 <br />
@@ -1441,8 +1442,10 @@
    - [network_is_server](functions-5.md#network_is_server)
    - [network_is_moderator](functions-5.md#network_is_moderator)
    - [network_get_player_text_color_string](functions-5.md#network_get_player_text_color_string)
+   - [network_get_complete_player_name](functions-5.md#network_get_complete_player_name)
    - [network_check_singleplayer_pause](functions-5.md#network_check_singleplayer_pause)
    - [network_discord_id_from_local_index](functions-5.md#network_discord_id_from_local_index)
+   - [network_disconnect](functions-5.md#network_disconnect)
 
 <br />
 
