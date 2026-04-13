@@ -140,6 +140,8 @@ extern unsigned int configHostSaveSlot;
 extern char         configJoinIp[MAX_CONFIG_STRING];
 extern unsigned int configJoinPort;
 extern unsigned int configNetworkSystem;
+extern unsigned int configCoopNetSortSelected;
+extern bool         configCoopNetSortInverted;
 extern unsigned int configPlayerInteraction;
 extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;

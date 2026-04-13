@@ -6,6 +6,7 @@
 #include "pc/network/version.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
+#include "pc/djui/djui_panel_host_mods.h"
 #include "pc/mods/mods.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
@@ -15,11 +16,9 @@
 
 #ifdef COOPNET
 
-#define MAX_COOPNET_DESCRIPTION_LENGTH 1024
-
 uint64_t gCoopNetDesiredLobby = 0;
-char gCoopNetPassword[64] = "";
-char sCoopNetDescription[MAX_COOPNET_DESCRIPTION_LENGTH] = "";
+char gCoopNetPassword[COOPNET_MAX_PASSWORD_LEN] = "";
+char sCoopNetDescription[COOPNET_MAX_DESCRIPTION_LEN] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -173,32 +172,109 @@ bool ns_coopnet_is_connected(void) {
     return coopnet_is_connected();
 }
 
+static char* get_size_string(size_t size) {
+    static char buffer[32];
+    char* sizeUnits[3] = { "B", "KB", "MB" };
+    f64 convertedSize = (f64)size;
+    u8 sizeType = 0;
+    while (convertedSize >= 1024 && sizeType < 2) {
+        convertedSize /= 1024;
+        sizeType++;
+    }
+    snprintf(buffer, sizeof(buffer), "%.2f %s", convertedSize, sizeUnits[sizeType]);
+    return buffer;
+}
+
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = MAX_COOPNET_DESCRIPTION_LENGTH;
+    int bufferLength = COOPNET_MAX_DESCRIPTION_LEN;
     // get version
-    const char* version = get_version();
-    int versionLength = strlen(version);
-    snprintf(buffer, bufferLength, "%s", version);
+    int versionLength = snprintf(buffer, bufferLength, "%s\n", get_version());
     buffer += versionLength;
     bufferLength -= versionLength;
 
-    // get mod strings
-    if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount];
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        strings[i] = mod->name;
-    }
+    // get mod size
+    int modsSizeLength = snprintf(buffer, bufferLength, "\nTotal Mod Size: %s\n", get_size_string(gActiveMods.size));
+    buffer += modsSizeLength;
+    bufferLength -= modsSizeLength;
 
     // add seperator
-    char* sep = "\n\nMods:\n";
-    snprintf(buffer, bufferLength, "%s", sep);
-    buffer += strlen(sep);
-    bufferLength -= strlen(sep);
+    int sepLength = snprintf(buffer, bufferLength, "Mods:\n");
+    buffer += sepLength;
+    bufferLength -= sepLength;
 
-    // concat mod strings
-    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\\#dcdcdc\\\n");
+    struct ModCategory sCategories[] = {
+        { "GAMEMODES", "gamemode" },
+        { "ROMHACKS", "romhack" },
+        { "MOVESETS", "moveset" },
+        { "CHARACTER_SELECT", "cs" },
+    };
+
+    if (gActiveMods.entryCount <= 0) { return; }
+
+    // add mods that are in a category
+    for (size_t i = 0; i < sizeof(sCategories) / sizeof(sCategories[0]); i++) {
+        struct ModCategory category = sCategories[i];
+
+        char* strings[gActiveMods.entryCount];
+        int strIndex = 0;
+        for (int j = 0; j < gActiveMods.entryCount; j++) {
+            struct Mod* mod = gActiveMods.entries[j];
+            char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+            if (modCategory && strcasestr(modCategory, sCategories[i].category)) {
+                strings[strIndex++] = mod->name;
+            }
+        }
+
+        if (strIndex == 0) { continue; }
+        int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", category.langKey));
+        buffer += s;
+        bufferLength -= s;
+
+        for (int j = 0; j < strIndex; j++) {
+            int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+            if (s < 0 || s >= bufferLength) {
+                LOG_ERROR("CoopNet description too long, some mods were not listed");
+                break;
+            }
+            buffer += s;
+            bufferLength -= s;
+        }
+    }
+
+    // add mods that are not in a category
+    char* strings[gActiveMods.entryCount];
+    int strIndex = 0;
+    for (int j = 0; j < gActiveMods.entryCount; j++) {
+        struct Mod* mod = gActiveMods.entries[j];
+        char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+        bool doContinue = false;
+        if (modCategory) {
+            for (size_t i = 0; i < sizeof(sCategories) / sizeof(sCategories[0]); i++) {
+                if (strstr(modCategory, sCategories[i].category)) {
+                    doContinue = true;
+                    break;
+                }
+            }
+        }
+        if (doContinue) { continue; }
+        strings[strIndex++] = mod->name;
+    }
+
+    if (strIndex == 0) { return; }
+    int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", "MISC"));
+    buffer += s;
+    bufferLength -= s;
+
+    for (int j = 0; j < strIndex; j++) {
+        int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+        if (s < 0 || s >= bufferLength) {
+            LOG_ERROR("CoopNet description too long, some mods were not listed");
+            break;
+        }
+        buffer += s;
+        bufferLength -= s;
+    }
 }
 
 void ns_coopnet_update(void) {
@@ -207,17 +283,17 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
-            char mode[64] = "";
-            mods_get_main_mod_name(mode, 64);
+            char mode[MOD_NAME_SIZE] = "";
+            mods_get_main_mod_name(mode, MOD_NAME_SIZE);
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription, gActiveMods.size);
             } else {
                 LOG_INFO("Create lobby");
-                snprintf(gCoopNetPassword, 64, "%s", configPassword);
+                snprintf(gCoopNetPassword, COOPNET_MAX_PASSWORD_LEN, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription, gActiveMods.size);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
