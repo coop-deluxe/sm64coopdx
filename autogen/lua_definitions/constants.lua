@@ -6677,7 +6677,10 @@ TIME_STOP_MARIO_OPENED_DOOR = (1 << 5)
 TIME_STOP_ACTIVE = (1 << 6)
 
 --- @type integer
-OBJECT_POOL_CAPACITY = 1200
+OBJECT_POOL_CAPACITY = 4096
+
+--- @type integer
+OBJECT_POOL_INIT_CAPACITY = 512
 
 OBJ_LIST_PLAYER      =  0 --- @type ObjectList
 OBJ_LIST_EXT         =  1 --- @type ObjectList

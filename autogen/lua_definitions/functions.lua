@@ -12176,6 +12176,18 @@ function obj_anim_skip_interpolation(o)
     -- ...
 end
 
+--- @return integer
+--- Gets the object count
+function obj_get_count()
+    -- ...
+end
+
+--- @return integer
+--- Gets the current capacity of the object pool
+function obj_get_current_capacity()
+    -- ...
+end
+
 --- Resets every modified dialog back to vanilla
 function smlua_text_utils_reset_all()
     -- ...

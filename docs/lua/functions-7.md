@@ -3646,6 +3646,48 @@ Skips animation interpolation for a frame
 
 <br />
 
+## [obj_get_count](#obj_get_count)
+
+### Description
+Gets the object count
+
+### Lua Example
+`local integerValue = obj_get_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_get_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_current_capacity](#obj_get_current_capacity)
+
+### Description
+Gets the current capacity of the object pool
+
+### Lua Example
+`local integerValue = obj_get_current_capacity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 obj_get_current_capacity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_text_utils.h
 

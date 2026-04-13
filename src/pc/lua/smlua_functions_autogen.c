@@ -35618,6 +35618,36 @@ int smlua_func_obj_anim_skip_interpolation(lua_State* L) {
     return 1;
 }
 
+int smlua_func_obj_get_count(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_count", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, obj_get_count());
+
+    return 1;
+}
+
+int smlua_func_obj_get_current_capacity(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "obj_get_current_capacity", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, obj_get_current_capacity());
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_text_utils.h //
 ////////////////////////
@@ -38893,6 +38923,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_whirlpools", smlua_func_set_whirlpools);
     smlua_bind_function(L, "obj_skip_interpolation", smlua_func_obj_skip_interpolation);
     smlua_bind_function(L, "obj_anim_skip_interpolation", smlua_func_obj_anim_skip_interpolation);
+    smlua_bind_function(L, "obj_get_count", smlua_func_obj_get_count);
+    smlua_bind_function(L, "obj_get_current_capacity", smlua_func_obj_get_current_capacity);
 
     // smlua_text_utils.h
     smlua_bind_function(L, "smlua_text_utils_reset_all", smlua_func_smlua_text_utils_reset_all);

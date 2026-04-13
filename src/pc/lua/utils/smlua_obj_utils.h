@@ -160,4 +160,9 @@ void obj_skip_interpolation(struct Object *o);
 /* |description|Skips animation interpolation for a frame|descriptionEnd| */
 void obj_anim_skip_interpolation(struct Object *o);
 
+/* |description|Gets the object count|descriptionEnd| */
+s32 obj_get_count(void);
+/* |description|Gets the current capacity of the object pool|descriptionEnd| */
+s32 obj_get_current_capacity(void);
+
 #endif

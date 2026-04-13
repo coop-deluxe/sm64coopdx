@@ -2910,6 +2910,7 @@
 - TIME_STOP_MARIO_OPENED_DOOR
 - TIME_STOP_ACTIVE
 - OBJECT_POOL_CAPACITY
+- OBJECT_POOL_INIT_CAPACITY
 
 ### [enum ObjectList](#ObjectList)
 | Identifier | Value |
