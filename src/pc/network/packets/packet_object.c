@@ -117,6 +117,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     // make sure this is the newest event possible
     u16 eventId = 0;
     packet_read(p, &eventId, sizeof(u16));
+    LOG_INFO("Remote player event id is %d, the packet event id is %d", so->rxEventId[*fromLocalIndex], eventId);
     if (so->rxEventId[*fromLocalIndex] > eventId && (u16)abs(eventId - so->rxEventId[*fromLocalIndex]) < USHRT_MAX / 2) {
         LOG_INFO("ignored sync object due to eventId");
         return NULL;

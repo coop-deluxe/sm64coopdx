@@ -201,7 +201,9 @@ void bhv_cannon_base_loop(void) {
             sync_object_init_field(o, o->oPosX);
             sync_object_init_field(o, o->oPosY);
             sync_object_init_field(o, o->oPosZ);
+            // oCannonUnk10C is only set, not used
             sync_object_init_field(o, o->oCannonUnk10C);
+            // oCannonUnkF8 is only set, not used
             sync_object_init_field(o, o->oCannonUnkF8);
             sync_object_init_field(o, o->oCannonUnkF4);
             sync_object_init_field(o, o->oCannonPlayerIndex);
