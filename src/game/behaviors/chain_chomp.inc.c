@@ -28,6 +28,7 @@ static struct ObjectHitbox sChainChompHitbox = {
  * Update function for chain chomp part / pivot.
  */
 void bhv_chain_chomp_chain_part_update(void) {
+    // only sync if this object dies, nothing else needs to be synced
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_DEATH);
     }
@@ -222,17 +223,16 @@ static void chain_chomp_sub_act_lunge(void) {
         }
 
         // TODO: What is this
+        // n64, idk ¯\_(ツ)_/¯ - EmeraldLockdown
         if ((val04 = 900.0f - o->oChainChompDistToPivot) > 220.0f) {
             val04 = 220.0f;
         }
 
-        o->oChainChompMaxDistBetweenChainParts =
-            val04 / 220.0f * o->oChainChompMaxDistFromPivotPerChainPart;
+        o->oChainChompMaxDistBetweenChainParts = val04 / 220.0f * o->oChainChompMaxDistFromPivotPerChainPart;
         o->oTimer = 0;
     } else {
         // Turn toward pivot
-        cur_obj_rotate_yaw_toward(atan2s(o->oChainChompSegments[0].posZ, o->oChainChompSegments[0].posX),
-                              0x1000);
+        cur_obj_rotate_yaw_toward(atan2s(o->oChainChompSegments[0].posZ, o->oChainChompSegments[0].posX), 0x1000);
 
         if (o->oChainChompUnk104 != 0.0f) {
             approach_f32_ptr(&o->oChainChompUnk104, 0.0f, 0.8f);
@@ -265,8 +265,7 @@ static void chain_chomp_released_trigger_cutscene(void) {
     //! Can delay this if we get into a cutscene-unfriendly action after the
     //  last post ground pound and before this
     // hack: get the nearest wooden post, this will work properly 99% of the time
-    struct Object* woodenPost = cur_obj_nearest_object_with_behavior(bhvWoodenPost);
-    struct MarioState* marioState = nearest_mario_state_to_object(woodenPost);
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (&gMarioStates[0] == marioState && dynos_level_is_vanilla_level(gCurrLevelNum)) {
         if (set_mario_npc_dialog(&gMarioStates[0], 2, chain_chomp_released_trigger_cutscene_continue_dialog) == 2
             && (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) && cutscene_object(CUTSCENE_STAR_SPAWN, o) == 1) {
@@ -474,13 +473,23 @@ static void chain_chomp_act_unload_chain(void) {
     }
 }
 
+static void bhv_chain_chomp_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
+    if (o->oChainChompReleaseStatus != CHAIN_CHOMP_NOT_RELEASED) {
+        *shouldOverride = TRUE;
+        *shouldOwn = gNetworkPlayerLocal->globalIndex == o->globalPlayerIndex;
+    }
+}
+
 /**
  * Update function for chain chomp.
  */
 void bhv_chain_chomp_update(void) {
+    // uses standard distance-based sync and uses standard fields. do NOT sync death,
+    // instead the death cutscene will be synced
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 1000.0f);
         if (so) {
+            so->override_ownership = bhv_chain_chomp_override_ownership;
             so->syncDeathEvent = FALSE;
             sync_object_init_field(o, o->oChainChompUnk104);
             sync_object_init_field(o, o->header.gfx.animInfo.animFrame);
@@ -504,6 +513,8 @@ void bhv_chain_chomp_update(void) {
  * Update function for wooden post.
  */
 void bhv_wooden_post_update(void) {
+    // simple event based sync system here. Sync when mario ground pounds a pole or mario runs around it
+    // to spawn in the coins to not let it happen again
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oBehParams);
@@ -512,6 +523,7 @@ void bhv_wooden_post_update(void) {
         sync_object_init_field(o, o->oWoodenPostSpeedY);
         sync_object_init_field(o, o->oWoodenPostTotalMarioAngle);
         sync_object_init_field(o, o->oTimer);
+        sync_object_init_field(o, o->globalPlayerIndex);
     }
 
     // When ground pounded by mario, drop by -45 + -20
@@ -519,6 +531,15 @@ void bhv_wooden_post_update(void) {
         if ((o->oWoodenPostMarioPounding = cur_obj_is_mario_ground_pounding_platform())) {
             cur_obj_play_sound_2(SOUND_GENERAL_POUND_WOOD_POST);
             o->oWoodenPostSpeedY = -70.0f;
+
+            // get the mario that ground pounded the pole
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (!is_player_active(&gMarioStates[i])) continue;
+                if (!obj_is_mario_ground_pounding_platform(&gMarioStates[i], o)) continue;
+                o->globalPlayerIndex = i;
+                break;
+            }
+
             network_send_object(o);
         }
     } else if (approach_f32_ptr(&o->oWoodenPostSpeedY, 0.0f, 25.0f)) {
@@ -537,6 +558,7 @@ void bhv_wooden_post_update(void) {
             } else {
                 play_puzzle_jingle();
                 o->parentObj->oChainChompReleaseStatus = CHAIN_CHOMP_RELEASED_TRIGGER_CUTSCENE;
+                o->parentObj->globalPlayerIndex = o->globalPlayerIndex;
             }
             o->parentObj = o;
         }

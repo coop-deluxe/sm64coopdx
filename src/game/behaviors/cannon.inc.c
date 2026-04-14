@@ -180,7 +180,7 @@ static void bhv_cannon_base_sanity_check(void) {
     }
 }
 
-void bhv_cannon_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
+static void bhv_cannon_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->oCannonPlayerIndex)];
     if (o->oAction != 0 && is_player_active(marioState)) {
         *shouldOverride = TRUE;

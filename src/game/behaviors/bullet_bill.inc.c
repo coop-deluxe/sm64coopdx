@@ -20,7 +20,6 @@ void bhv_bullet_bill_init(void) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
             so->override_ownership = bhv_bullet_bill_override_ownership;
-            sync_object_init_field(o, o->oAction);
             sync_object_init_field(o, o->oFaceAnglePitch);
             sync_object_init_field(o, o->oFaceAngleRoll);
             sync_object_init_field(o, o->oForwardVel);
