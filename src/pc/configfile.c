@@ -210,6 +210,7 @@ unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
 unsigned int configRulesVersion                   = 0;
+bool         configHideSocketWarning              = false;
 bool         configCompressOnStartup              = false;
 bool         configSkipPackGeneration             = false;
 
@@ -366,6 +367,7 @@ static const struct ConfigOption options[] = {
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
+    {.name = "hide_socket_warning",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configHideSocketWarning},
     {.name = "compress_on_startup",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configCompressOnStartup},
     {.name = "skip_pack_generation",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipPackGeneration},
 };
