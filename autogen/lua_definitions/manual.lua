@@ -97,6 +97,10 @@ gServerSettings = {}
 --- Struct containing the settings for Nametags
 gNametagsSettings = {}
 
+--- @type HudDisplay
+--- Struct containing the flags for the hud display
+gHudDisplay = {}
+
 -----------
 -- hooks --
 -----------
@@ -407,13 +411,13 @@ end
 --- @param command string
 --- @vararg integer | string | Gfx | Texture | Vtx Parameters for the command
 --- Sets a display list command on the display list given.
---- 
+---
 --- If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments
 --- following `command` are converted and inserted in `command` replacing their respective specifiers.
---- 
+---
 --- The number of provided parameters must be equal to the number of specifiers in `command`,
 --- and the order of parameters must be the same as the specifiers.
---- 
+---
 --- The following specifiers are allowed:
 --- - `%i` for an `integer` parameter
 --- - `%s` for a `string` parameter

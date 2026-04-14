@@ -53,6 +53,7 @@
 - [GraphNodeSwitchCase](#GraphNodeSwitchCase)
 - [GraphNodeTranslation](#GraphNodeTranslation)
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
+- [HudDisplay](#HudDisplay)
 - [InstantWarp](#InstantWarp)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
@@ -1421,6 +1422,22 @@
 | displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
 | rotation | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [HudDisplay](#HudDisplay)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| lives | `integer` |  |
+| coins | `integer` |  |
+| stars | `integer` |  |
+| wedges | `integer` |  |
+| keys | `integer` |  |
+| flags | `integer` |  |
+| timer | `integer` |  |
 
 [:arrow_up_small:](#)
 

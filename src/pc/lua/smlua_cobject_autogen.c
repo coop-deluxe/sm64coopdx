@@ -25,6 +25,7 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
+#include "src/game/level_update.h"
 #include "src/game/first_person_cam.h"
 #include "src/game/player_palette.h"
 #include "src/engine/graph_node.h"
@@ -1226,6 +1227,17 @@ static struct LuaObjectField sGraphNodeTranslationRotationFields[LUA_GRAPH_NODE_
     { "node",        LVT_COBJECT,   offsetof(struct GraphNodeTranslationRotation, node),        true,  LOT_GRAPHNODE, 1, sizeof(struct GraphNode) },
     { "rotation",    LVT_COBJECT,   offsetof(struct GraphNodeTranslationRotation, rotation),    true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
     { "translation", LVT_COBJECT,   offsetof(struct GraphNodeTranslationRotation, translation), true,  LOT_VEC3S,     1, sizeof(Vec3s)            },
+};
+
+#define LUA_HUD_DISPLAY_FIELD_COUNT 7
+static struct LuaObjectField sHudDisplayFields[LUA_HUD_DISPLAY_FIELD_COUNT] = {
+    { "coins",  LVT_S16, offsetof(struct HudDisplay, coins),  false, LOT_NONE, 1, sizeof(s16) },
+    { "flags",  LVT_S16, offsetof(struct HudDisplay, flags),  false, LOT_NONE, 1, sizeof(s16) },
+    { "keys",   LVT_S16, offsetof(struct HudDisplay, keys),   false, LOT_NONE, 1, sizeof(s16) },
+    { "lives",  LVT_S16, offsetof(struct HudDisplay, lives),  false, LOT_NONE, 1, sizeof(s16) },
+    { "stars",  LVT_S16, offsetof(struct HudDisplay, stars),  false, LOT_NONE, 1, sizeof(s16) },
+    { "timer",  LVT_U16, offsetof(struct HudDisplay, timer),  false, LOT_NONE, 1, sizeof(u16) },
+    { "wedges", LVT_S16, offsetof(struct HudDisplay, wedges), false, LOT_NONE, 1, sizeof(s16) },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3
@@ -2726,6 +2738,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_GRAPHNODESWITCHCASE,          sGraphNodeSwitchCaseFields,          LUA_GRAPH_NODE_SWITCH_CASE_FIELD_COUNT          },
     { LOT_GRAPHNODETRANSLATION,         sGraphNodeTranslationFields,         LUA_GRAPH_NODE_TRANSLATION_FIELD_COUNT          },
     { LOT_GRAPHNODETRANSLATIONROTATION, sGraphNodeTranslationRotationFields, LUA_GRAPH_NODE_TRANSLATION_ROTATION_FIELD_COUNT },
+    { LOT_HUDDISPLAY,                   sHudDisplayFields,                   LUA_HUD_DISPLAY_FIELD_COUNT                     },
     { LOT_INSTANTWARP,                  sInstantWarpFields,                  LUA_INSTANT_WARP_FIELD_COUNT                    },
     { LOT_LAKITUSTATE,                  sLakituStateFields,                  LUA_LAKITU_STATE_FIELD_COUNT                    },
     { LOT_LEVELVALUES,                  sLevelValuesFields,                  LUA_LEVEL_VALUES_FIELD_COUNT                    },
@@ -2831,6 +2844,7 @@ const char *sLuaLotNames[] = {
 	[LOT_GRAPHNODESWITCHCASE] = "GraphNodeSwitchCase",
 	[LOT_GRAPHNODETRANSLATION] = "GraphNodeTranslation",
 	[LOT_GRAPHNODETRANSLATIONROTATION] = "GraphNodeTranslationRotation",
+	[LOT_HUDDISPLAY] = "HudDisplay",
 	[LOT_INSTANTWARP] = "InstantWarp",
 	[LOT_LAKITUSTATE] = "LakituState",
 	[LOT_LEVELVALUES] = "LevelValues",
