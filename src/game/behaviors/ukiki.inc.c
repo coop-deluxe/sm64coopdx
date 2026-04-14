@@ -134,7 +134,7 @@ void ukiki_act_idle(void) {
         if (distanceToPlayer > 700.0f && distanceToPlayer < 1000.0f) {
             o->oAction = UKIKI_ACT_RUN;
         } else if (distanceToPlayer <= 700.0f && 200.0f < distanceToPlayer) {
-            if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) > 0x1000)    {
+            if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) > 0x1000) {
                 o->oAction = UKIKI_ACT_TURN_TO_MARIO;
             }
         }

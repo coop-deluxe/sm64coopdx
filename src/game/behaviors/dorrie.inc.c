@@ -44,21 +44,24 @@ void dorrie_act_move(void) {
         o->oForwardVel = 0.0f;
         o->oDorrieYawVel = 0;
     } else {
+        f32 angleSumX = 0.0f;
+        f32 angleSumY = 0.0f;
+        u8 count = 0;
 
-        u8 anyPlayerOnPlatform = FALSE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             struct Object* player = gMarioStates[i].marioObj;
             if (player->platform != o) { continue; }
 
-            targetYaw = player->oFaceAngleYaw;
-            targetSpeed = 10;
-
-            anyPlayerOnPlatform = TRUE;
-            break;
+            angleSumX += coss(player->oFaceAngleYaw);
+            angleSumY += sins(player->oFaceAngleYaw);
+            count++;
         }
 
-        if (!anyPlayerOnPlatform) {
+        if (count > 0) {
+            targetYaw = 0x4000 - atan2s(angleSumY, angleSumX);
+            targetSpeed = 10;
+        } else {
             circularTurn = 0x4000 - atan2s(2000.0f, o->oDorrieDistToHome - 2000.0f);
             if ((s16)(o->oMoveAngleYaw - o->oDorrieAngleToHome) < 0) {
                 circularTurn = -circularTurn;
@@ -69,8 +72,7 @@ void dorrie_act_move(void) {
         }
 
         obj_forward_vel_approach(targetSpeed, 0.5f);
-        o->oDorrieYawVel =
-            approach_s16_symmetric(o->oDorrieYawVel, (s16)(targetYaw - o->oMoveAngleYaw) / 50, 5);
+        o->oDorrieYawVel = approach_s16_symmetric(o->oDorrieYawVel, (s16)(targetYaw - o->oMoveAngleYaw) / 50, 5);
         o->oMoveAngleYaw += o->oDorrieYawVel;
     }
 
@@ -177,8 +179,6 @@ void bhv_dorrie_update(void) {
     }
 
     f32 boundsShift;
-    UNUSED s32 unused1;
-    UNUSED s32 unused2;
     f32 maxOffsetY;
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {

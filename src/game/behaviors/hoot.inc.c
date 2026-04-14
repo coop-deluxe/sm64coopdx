@@ -249,7 +249,7 @@ void hoot_turn_to_home(void) {
 }
 
 void hoot_awake_loop(void) {
-    if (o->oInteractStatus == INT_STATUS_HOOT_GRABBED_BY_MARIO) {
+    if (o->oInteractStatus == INT_STATUS_MARIO_STUNNED) {
         hoot_action_loop();
         cur_obj_init_animation(1);
     } else {

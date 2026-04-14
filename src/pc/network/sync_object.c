@@ -135,7 +135,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     bool hadSyncId = (o->oSyncID != 0);
     // generate new sync ID
     if (!sync_object_set_id(o)) {
-        LOG_ERROR("failed to set sync id for object w/behavior %d (init_object)", get_id_from_behavior(o->behavior));
+        LOG_ERROR("failed to set sync id for object w/behavior %s (init_object)", get_behavior_name_from_id(get_id_from_behavior(o->behavior)));
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         return NULL;
     }
@@ -331,6 +331,7 @@ bool sync_object_should_own(u32 syncId) {
 }
 
 u32 sync_object_get_available_local_id(void) {
+    // get our start and end id for our local player
     u32 startId = (gNetworkPlayers[0].globalIndex + 1) * SYNC_ID_BLOCK_SIZE;
     u32 endId = startId + SYNC_ID_BLOCK_SIZE;
     for (u32 id = startId; id < endId; id++) {
@@ -377,7 +378,7 @@ bool sync_object_set_id(struct Object* o) {
 
     if (syncId == 0 || !ctx) {
         o->oSyncID = 0;
-        LOG_ERROR("failed to set sync id for object w/behavior %d (set_sync_id) %u", get_id_from_behavior(o->behavior), gNetworkAreaLoaded);
+        LOG_ERROR("failed to set sync id for object w/behavior %s (set_sync_id) %u %u %u", get_behavior_name_from_id(get_id_from_behavior(o->behavior)), gNetworkAreaLoaded, ctx, syncId);
         return !ctx;
     }
 

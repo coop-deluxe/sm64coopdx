@@ -91,7 +91,6 @@ static u32 sBackwardKnockbackActions[][3] = {
 
 static u8 sDisplayingDoorText = FALSE;
 static u8 sJustTeleported = FALSE;
-u8 gPssSlideStarted = FALSE;
 extern u8 gLastCollectedStarOrKey;
 
 /**
@@ -308,7 +307,7 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 
 void mario_stop_riding_object(struct MarioState *m) {
     if (!m || m->riddenObj == NULL || m->playerIndex != 0) { return; }
-    
+
     m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
     if (m->riddenObj->oSyncID != 0) {
         network_send_object_reliability(m->riddenObj, TRUE);
@@ -411,7 +410,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
-    
+
     m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
     m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
@@ -1294,7 +1293,6 @@ u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct O
     if (m->action != ACT_IN_CANNON) {
         mario_stop_riding_and_holding(m);
         o->oInteractStatus = INT_STATUS_INTERACTED;
-        o->oCannonPlayerIndex = 0;
         m->interactObj = o;
         m->usedObj = o;
         return set_mario_action(m, ACT_IN_CANNON, 0);
@@ -2115,7 +2113,7 @@ u32 interact_hoot(struct MarioState *m, UNUSED u32 interactType, struct Object *
     if (m->usedObj != NULL && actionId >= 0x080 && actionId < 0x098
         && (gGlobalTimer - m->usedObj->oHootMarioReleaseTime > 30)) {
         mario_stop_riding_and_holding(m);
-        o->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
+        o->oInteractStatus = INT_STATUS_MARIO_STUNNED;
         m->interactObj = o;
         m->usedObj = o;
         o->heldByPlayerIndex = 0;
@@ -2164,7 +2162,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
                 capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
                 break;
-            
+
             case MARIO_NORMAL_CAP:
                 m->cap = 0;
                 break;
@@ -2492,27 +2490,31 @@ void check_lava_boost(struct MarioState *m) {
 void pss_begin_slide(UNUSED struct MarioState *m) {
     if (!m) { return; }
     if (!m->visibleToEnemies) { return; }
+    if (m->playerIndex != 0) { return; }
     if (!(gHudDisplay.flags & HUD_DISPLAY_FLAG_TIMER)) {
         level_control_timer(TIMER_CONTROL_SHOW);
         level_control_timer(TIMER_CONTROL_START);
-        gPssSlideStarted = TRUE;
     }
 }
 
 void pss_end_slide(struct MarioState *m) {
     if (!m) { return; }
     //! This flag isn't set on death or level entry, allowing double star spawn
-    if (gPssSlideStarted) {
-        u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
-        if (slideTime < gLevelValues.pssSlideStarTime) {
+    u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
+    if (slideTime < gLevelValues.pssSlideStarTime) {
+        // only let local player spawn the star
+
+        // Syncing TODO: Something is wrong with the syncing here
+        // the sync object completely fails to initalize every frame for the player that
+        // did not spawn the star
+        if (m->playerIndex == 0) {
             // PSS secret star uses oBehParams to spawn
-            s32 tmp = m->marioObj->oBehParams;
+            s32 savedBehParams = m->marioObj->oBehParams;
             m->marioObj->oBehParams = (gLevelValues.pssSlideStarIndex << 24);
-            f32* starPos = gLevelValues.starPositions.PssSlideStarPos;
+            f32 *starPos = gLevelValues.starPositions.PssSlideStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
-            m->marioObj->oBehParams = tmp;
+            m->marioObj->oBehParams = savedBehParams;
         }
-        gPssSlideStarted = FALSE;
     }
 }
 

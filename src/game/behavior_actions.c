@@ -67,12 +67,11 @@ struct Struct8032F34C {
     const void *segAddr;
 };
 
-struct Struct8032F698 {
-    void *unk0;
-    s16 unk1;
-    s16 unk2;
-    s16 unk3;
-    s16 unk4;
+struct BowserFallingPlatformData {
+    void *collisionData;
+    s16 x;
+    s16 z;
+    s16 angle;
 };
 
 struct Struct8032F754 {

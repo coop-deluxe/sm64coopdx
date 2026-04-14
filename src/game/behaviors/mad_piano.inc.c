@@ -70,6 +70,7 @@ static void mad_piano_act_attack(void) {
 }
 
 void bhv_mad_piano_update(void) {
+    // syncing is done via distance for this object. This works well enough
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
     }

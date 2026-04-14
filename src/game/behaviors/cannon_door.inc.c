@@ -19,8 +19,9 @@ void bhv_cannon_closed_init(void) {
 }
 
 void cannon_door_act_opening(void) {
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         cur_obj_play_sound_2(SOUND_GENERAL_CANNON_UP);
+    }
 
     if (o->oTimer < 30) {
         o->oVelY = -0.5f;

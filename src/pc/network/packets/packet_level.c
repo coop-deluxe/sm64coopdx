@@ -28,7 +28,6 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
 
         // level variables
         packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
-        packet_write(&p, &gPssSlideStarted,         sizeof(u8));
         packet_write(&p, &gTTCSpeedSetting,         sizeof(s16));
 
         // send level packet
@@ -77,7 +76,6 @@ void network_receive_level(struct Packet* p) {
     // read level variables
     s16 oldTTCSpeedSetting = gTTCSpeedSetting;
     packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_read(p, &gPssSlideStarted,         sizeof(u8));
     packet_read(p, &gTTCSpeedSetting,         sizeof(s16));
     gHudDisplay.coins = gMarioStates[0].numCoins;
 

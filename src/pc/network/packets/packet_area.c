@@ -163,7 +163,7 @@ void network_receive_area(struct Packet* p) {
     packet_read(p, &levelControlTimerVisible, sizeof(u8));
     packet_read(p, &levelControlTimerRunning, sizeof(u8));
     if (levelControlTimerVisible) {
-        level_control_timer(TIMER_CONTROL_SHOW);
+        //level_control_timer(TIMER_CONTROL_SHOW);
     }
     if (levelControlTimerRunning) {
         level_control_timer(TIMER_CONTROL_START);

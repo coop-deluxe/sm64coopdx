@@ -425,6 +425,10 @@ s32 set_mario_npc_dialog(struct MarioState* m, s32 actionArg, u8 (*inContinueDia
             localDialogNPCBehavior = NULL;
             gContinueDialogFunction = NULL;
             gContinueDialogFunctionObject = NULL;
+            if (m->playerIndex == 0 && m->action == ACT_WAITING_FOR_DIALOG) {
+                // we aren't waiting for any dialog, so to prevent softlocks exit the waiting for dialog action
+                set_mario_action(m, ACT_IDLE, 0);
+            }
         } else {
             gContinueDialogFunction = inContinueDialogFunction;
             gContinueDialogFunctionObject = gCurrentObject;
