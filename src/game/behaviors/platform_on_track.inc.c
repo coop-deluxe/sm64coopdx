@@ -291,6 +291,7 @@ static void platform_on_track_rock_ski_lift(void) {
     struct Object* player = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
+        if (gMarioStates[i].marioObj == NULL) { continue; }
         if (gMarioStates[i].marioObj->platform != o) { continue; }
         player = gMarioStates[i].marioObj;
         break;

@@ -183,6 +183,7 @@ void controllable_platform_tilt_from_mario(void) {
     f32 z = 0;
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (gMarioStates[i].marioObj == NULL) { continue; }
         if (gMarioStates[i].marioObj->platform == o || gMarioStates[i].marioObj->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) {
             x += gMarioStates[i].pos[0];
             z += gMarioStates[i].pos[2];

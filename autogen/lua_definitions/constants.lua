@@ -8222,7 +8222,9 @@ HOOK_ON_FIND_FLOOR                          = 62 --- @type LuaHookedEventType
 HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
 HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
 HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
-HOOK_MAX                                    = 66 --- @type LuaHookedEventType
+HOOK_BEFORE_PLAY_MODE_UPDATE                = 66 --- @type LuaHookedEventType
+HOOK_ON_PLAY_MODE_UPDATE                    = 67 --- @type LuaHookedEventType
+HOOK_MAX                                    = 68 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8291,6 +8293,8 @@ HOOK_MAX                                    = 66 --- @type LuaHookedEventType
 --- | `HOOK_ON_FIND_WATER_LEVEL`
 --- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
 --- | `HOOK_ON_FIND_SURFACE_ON_RAY`
+--- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
+--- | `HOOK_ON_PLAY_MODE_UPDATE`
 --- | `HOOK_MAX`
 
 --- @type integer
