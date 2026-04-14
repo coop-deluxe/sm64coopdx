@@ -101,6 +101,7 @@ struct DjuiThreePanel* djui_panel_menu_create(char* headerText, bool forcedLeftS
         djui_base_set_color(&body->base, 0, 0, 0, 0);
         djui_flow_layout_set_margin(body, 16);
         djui_flow_layout_set_flow_direction(body, DJUI_FLOW_DIR_DOWN);
+        djui_flow_layout_enable_scroll(body);
     }
     return panel;
 }
