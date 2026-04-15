@@ -74,10 +74,10 @@ struct BowserFallingPlatformData {
     s16 angle;
 };
 
-struct Struct8032F754 {
-    s32 unk0;
-    Vec3f unk1;
-    f32 unk2;
+struct CheckerboardPlatformStartPos {
+    s32 relativePosZ;
+    Vec3f scale;
+    f32 radius;
 };
 
 struct OpenableGrill {
