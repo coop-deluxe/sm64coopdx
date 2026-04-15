@@ -33,7 +33,7 @@ static void enemy_lakitu_act_uninitialized(void) {
         cur_obj_unhide();
         o->oAction = ENEMY_LAKITU_ACT_MAIN;
     }
-}   
+}
 
 /**
  * Accelerate toward mario vertically.
@@ -52,8 +52,7 @@ static void enemy_lakitu_update_vel_y(f32 offsetY) {
     if (player != NULL) {
         if (o->oPosY < player->oPosY + offsetY + margin) {
             obj_y_vel_approach(4.0f, 0.4f);
-        }
-        else {
+        } else {
             obj_y_vel_approach(-4.0f, 0.4f);
         }
     }
@@ -64,8 +63,8 @@ static void enemy_lakitu_update_vel_y(f32 offsetY) {
  * angle toward mario.
  */
 static void enemy_lakitu_update_speed_and_angle(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -243,6 +242,8 @@ static void enemy_lakitu_act_main(void) {
  */
 void bhv_enemy_lakitu_update(void) {
     // PARTIAL_UPDATE
+
+    // uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oEnemyLakituBlinkTimer);
