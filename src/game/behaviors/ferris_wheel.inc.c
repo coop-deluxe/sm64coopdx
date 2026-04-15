@@ -29,7 +29,6 @@ static struct FerrisWheelProperties sFerrisWheelProperties[] = {
  */
 void bhv_ferris_wheel_axle_init(void) {
     struct Object *platform;
-    s32 i;
 
     if (!BHV_ARR_CHECK(sFerrisWheelProperties, o->oBehParams2ndByte, struct FerrisWheelProperties)) {
         return;
@@ -37,17 +36,16 @@ void bhv_ferris_wheel_axle_init(void) {
 
     o->collisionData = segmented_to_virtual(sFerrisWheelProperties[o->oBehParams2ndByte].axleCollision);
 
-    for (i = 0; i < 4; i++) {
-        platform = spawn_object_relative(i, 0, 0, 0, o,
-                                         sFerrisWheelProperties[o->oBehParams2ndByte].platformModel,
-                                         bhvFerrisWheelPlatform);
+    for (s32 i = 0; i < 4; i++) {
+        platform = spawn_object_relative(i, 0, 0, 0, o, sFerrisWheelProperties[o->oBehParams2ndByte].platformModel, bhvFerrisWheelPlatform);
 
         if (platform != NULL) {
-            platform->collisionData =
-                segmented_to_virtual(sFerrisWheelProperties[o->oBehParams2ndByte].platformCollision);
+            platform->collisionData = segmented_to_virtual(sFerrisWheelProperties[o->oBehParams2ndByte].platformCollision);
         }
     }
 
+    // does a distance-based sync method without standard fields, only syncs roll face angle
+    // Syncing TODO: Can't you use areaTimer here?
     struct SyncObject* so = sync_object_init(o, 2000.0f);
     if (so) {
         so->hasStandardFields = FALSE;
@@ -57,6 +55,8 @@ void bhv_ferris_wheel_axle_init(void) {
 }
 
 void bhv_ferris_wheel_platform_init(void) {
+    // does a distance-based sync method without standard fields, only syncs position
+    // Syncing TODO: Can't you use areaTimer here?
     struct SyncObject* so = sync_object_init(o, 2000.0f);
     if (so) {
         so->hasStandardFields = FALSE;
@@ -82,13 +82,11 @@ void bhv_ferris_wheel_platform_update(void) {
     offsetAngle = o->parentObj->oFaceAngleRoll + o->oBehParams2ndByte * 0x4000;
     offsetXZ = 400.0f * coss(offsetAngle);
 
-    o->oPosX = o->parentObj->oPosX + offsetXZ * sins(o->parentObj->oMoveAngleYaw)
-               + 300.0f * coss(o->parentObj->oMoveAngleYaw);
+    o->oPosX = o->parentObj->oPosX + offsetXZ * sins(o->parentObj->oMoveAngleYaw) + 300.0f * coss(o->parentObj->oMoveAngleYaw);
 
     o->oPosY = o->parentObj->oPosY + 400.0f * sins(offsetAngle);
 
-    o->oPosZ = o->parentObj->oPosZ + offsetXZ * coss(o->parentObj->oMoveAngleYaw)
-               + 300.0f * sins(o->parentObj->oMoveAngleYaw);
+    o->oPosZ = o->parentObj->oPosZ + offsetXZ * coss(o->parentObj->oMoveAngleYaw) + 300.0f * sins(o->parentObj->oMoveAngleYaw);
 
     obj_perform_position_op(POS_OP_COMPUTE_VELOCITY);
 }

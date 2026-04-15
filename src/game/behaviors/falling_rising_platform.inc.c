@@ -1,6 +1,7 @@
 // falling_rising_platform.c.inc
 
 void bhv_squishable_platform_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -19,6 +20,7 @@ void bhv_squishable_platform_loop(void) {
 }
 
 void bhv_bitfs_sinking_platform_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -27,9 +29,7 @@ void bhv_bitfs_sinking_platform_loop(void) {
         }
     }
 
-    o->oPosY -=
-        sins(o->oPlatformTimer)
-        * 0.58; //! f32 double conversion error accumulates on Wii VC causing the platform to rise up
+    o->oPosY -= sins(o->oPlatformTimer) * 0.58; //! f32 double conversion error accumulates on Wii VC causing the platform to rise up
     o->oPlatformTimer += 0x100;
 }
 
@@ -39,6 +39,7 @@ void bhv_ddd_moving_pole_loop(void) {
 }
 
 void bhv_bitfs_sinking_cage_platform_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -55,8 +56,8 @@ void bhv_bitfs_sinking_cage_platform_loop(void) {
         if (o->oTimer == 0)
             o->oPosY -= 300.0f;
         o->oPosY += sins(o->oPlatformTimer) * 7.0f;
-    } else
+    } else {
         o->oPosY -= sins(o->oPlatformTimer) * 3.0f;
+    }
     o->oPlatformTimer += 0x100;
-
 }
