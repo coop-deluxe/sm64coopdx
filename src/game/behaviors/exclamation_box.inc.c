@@ -187,7 +187,9 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
                                            exclamation_box_act_6 };
 
 void bhv_exclamation_box_init(void) {
-    // uses a event based sync system
+    // uses a event based sync system. The main thing synced is forcing the exclamation box to be
+    // destroyed on all clients. Spawning is done via a distance based calculation and syncing
+    // the spawned object(s) from there
     struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
         so->syncDeathEvent = FALSE;
