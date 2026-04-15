@@ -4,6 +4,7 @@ static u8 bowserIsDying = FALSE;
 static u8 bowserCutscenePlayed = FALSE;
 static u8 bowserIsCutscenePlayer = FALSE;
 static u8 bowserCutsceneGlobalIndex = UNKNOWN_GLOBAL_INDEX;
+static s32 bowserLavaTiltPlatformStartTime = 0;
 
 void bowser_tail_anchor_act_0(void) {
     struct Object *bowser = o->parentObj;
@@ -626,7 +627,10 @@ void bowser_act_jump(void) {
             o->oForwardVel = 0.0f;
             o->oSubAction++;
             bowser_spawn_shockwave();
-            if (BITFS) o->oAction = BOWSER_ACT_TILT_LAVA_PLATFORM;
+            if (BITFS) {
+                bowserLavaTiltPlatformStartTime = gNetworkAreaTimer;
+                o->oAction = BOWSER_ACT_TILT_LAVA_PLATFORM;
+            }
         }
     } else if (cur_obj_check_if_near_animation_end()) {
         o->oAction = BOWSER_ACT_DEFAULT;
@@ -884,7 +888,10 @@ void bowser_act_jump_onto_stage(void) {
                 } else if (BITS) {
                     o->oAction = BOWSER_ACT_BIG_JUMP;
                 }
-                if (BITFS) o->oAction = BOWSER_ACT_TILT_LAVA_PLATFORM;
+                if (BITFS) {
+                    bowserLavaTiltPlatformStartTime = gNetworkAreaTimer;
+                    o->oAction = BOWSER_ACT_TILT_LAVA_PLATFORM;
+                }
             }
 #ifndef VERSION_JP
             bowser_reset_fallen_off_stage();
@@ -1123,13 +1130,13 @@ void bowser_act_dead(void) {
 }
 
 void bhv_tilting_bowser_lava_platform_init(void) {
-    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    /*sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     sync_object_init_field(o, o->oAngleVelPitch);
     sync_object_init_field(o, o->oAngleVelRoll);
     sync_object_init_field(o, o->oFaceAnglePitch);
     sync_object_init_field(o, o->oFaceAngleRoll);
     sync_object_init_field(o, o->oMoveAnglePitch);
-    sync_object_init_field(o, o->oMoveAngleRoll);
+    sync_object_init_field(o, o->oMoveAngleRoll);*/
 }
 
 void bowser_tilt_platform(struct Object *platform, s16 platformSpeed) {
@@ -1146,12 +1153,13 @@ void bowser_act_ride_tilting_platform(void) {
         s32 i = 0;
         bool notTilting = true;
         while (sBowserTiltPlatformData[i][2] != 0) {
-            if (o->oTimer < sBowserTiltPlatformData[i][2]) {
+            s32 timer = gNetworkAreaTimer - bowserLavaTiltPlatformStartTime;
+            if (timer < sBowserTiltPlatformData[i][2]) {
                 s16 platformSpeed = sBowserTiltPlatformData[i][1];
                 if (sBowserTiltPlatformData[i][0] > 0) {
-                    platformSpeed = (sBowserTiltPlatformData[i][2] - o->oTimer - 1) * platformSpeed;
+                    platformSpeed = (sBowserTiltPlatformData[i][2] - timer - 1) * platformSpeed;
                 } else {
-                    platformSpeed = (o->oTimer - sBowserTiltPlatformData[i - 1][2]) * platformSpeed;
+                    platformSpeed = (timer - sBowserTiltPlatformData[i - 1][2]) * platformSpeed;
                 }
                 bowser_tilt_platform(platform, platformSpeed);
                 if (platformSpeed != 0) {
@@ -1186,8 +1194,7 @@ void bowser_act_nothing(void) { // start moving if cutscene player is inactive
     }
 }
 
-s32 bowser_check_fallen_off_stage(void) // bowser off stage?
-{
+s32 bowser_check_fallen_off_stage(void) { // bowser off stage?
     if (o->oAction != 2 && o->oAction != 19) {
         if (o->oPosY < o->oHomeY - 1000.0f) {
             return 1;
@@ -1538,10 +1545,22 @@ void bhv_bowser_init(void) {
             sync_object_init_field(o, o->header.gfx.animInfo.animFrame);
             sync_object_init_field(o, bowserCutsceneGlobalIndex);
             sync_object_init_field(o, networkBowserAnimationIndex);
+            sync_object_init_field(o, bowserLavaTiltPlatformStartTime);
             sync_object_init_field(o, o->header.gfx.scale[0]);
             sync_object_init_field(o, o->header.gfx.scale[1]);
             sync_object_init_field(o, o->header.gfx.scale[2]);
             sync_object_init_field(o, o->globalPlayerIndex);
+
+            // if we find the tilt platform add some of it's field to bowser as well to sync it
+            struct Object *platform = cur_obj_nearest_object_with_behavior(bhvTiltingBowserLavaPlatform);
+            if (platform) {
+                sync_object_init_field(o, platform->oAngleVelPitch);
+                sync_object_init_field(o, platform->oAngleVelRoll);
+                sync_object_init_field(o, platform->oFaceAnglePitch);
+                sync_object_init_field(o, platform->oFaceAngleRoll);
+                sync_object_init_field(o, platform->oMoveAnglePitch);
+                sync_object_init_field(o, platform->oMoveAngleRoll);
+            }
         }
     }
 }

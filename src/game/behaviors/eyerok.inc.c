@@ -24,9 +24,9 @@ static s32 eyerok_check_mario_relative_z(s32 zDist) {
     return TRUE;
 }
 
-static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
+static struct Object *eyerok_nearest_targetable_player_to_object(s32 zDist) {
     if (!o) { return NULL; }
-    struct Object* nearest = NULL;
+    struct Object *nearest = NULL;
     f32 nearestDist = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct MarioState *m = &gMarioStates[i];
@@ -47,7 +47,7 @@ static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
     return nearest;
 }
 
-static struct Object* eyerok_spawn_hand(s16 side, s32 model, const BehaviorScript *behavior) {
+static struct Object *eyerok_spawn_hand(s16 side, s32 model, const BehaviorScript *behavior) {
     struct Object *hand;
 
     hand = spawn_object_relative_with_scale(side, -500 * side, 0, 300, 1.5f, o, model, behavior);
@@ -58,7 +58,7 @@ static struct Object* eyerok_spawn_hand(s16 side, s32 model, const BehaviorScrip
     return hand;
 }
 
-void bhv_eyerok_boss_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_eyerok_boss_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     *shouldOverride = TRUE;
     *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
 }
@@ -68,10 +68,13 @@ u8 bhv_eyerok_boss_ignore_if_true(void) {
 }
 
 void bhv_eyerok_boss_init(void) {
-    struct Object* hands[2];
+    struct Object *hands[2];
     hands[0] = eyerok_spawn_hand(-1, MODEL_EYEROK_LEFT_HAND, bhvEyerokHand);
     hands[1] = eyerok_spawn_hand(1, MODEL_EYEROK_RIGHT_HAND, bhvEyerokHand);
 
+    // syncing is done via a distance based sync. The player with the lowest global index is considered
+    // the owner. Because of the way eyerok works, syncing it using a distance based system or anything
+    // like that would be heavily prone to desyncs. It's best for eyerok to target one player instead.
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (!so) { return; }
     so->override_ownership = bhv_eyerok_boss_override_ownership;
@@ -130,7 +133,7 @@ static void eyerok_boss_act_wake_up(void) {
 
             if (o->oEyerokBossUnk110 == 0.0f && mario_ready_to_speak(&gMarioStates[0]) != 0) {
                 o->oAction = EYEROK_BOSS_ACT_SHOW_INTRO_TEXT;
-                o->oSubAction = network_global_index_from_local(0);
+                o->globalPlayerIndex = network_global_index_from_local(0);
             } else if (o->oTimer > 150) {
                 if (approach_f32_ptr(&o->oEyerokBossUnk110, 0.0f, 10.0f)) {
                     o->oTimer = 0;
@@ -149,12 +152,11 @@ static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
 }
 
 static void eyerok_boss_act_show_intro_text(void) {
-    struct MarioState* marioState = &gMarioStates[network_local_index_from_global(o->oSubAction)];
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     // if the player isn't active then use the nearest player instead
-    if (!is_player_active(marioState)) {
-        marioState = nearest_mario_state_to_object(o);
-    }
-    if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.EyerokIntroDialog, eyerok_boss_act_show_intro_text_continue_dialog)) {
+    if (!is_player_active(marioState)) marioState = nearest_mario_state_to_object(o);
+    if (marioState->playerIndex != 0) return; // only let the local player enter a dialog
+    if (should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.EyerokIntroDialog, eyerok_boss_act_show_intro_text_continue_dialog)) {
         o->oAction = EYEROK_BOSS_ACT_FIGHT;
         network_send_object_reliability(o, TRUE);
     }
