@@ -1130,6 +1130,8 @@ void bowser_act_dead(void) {
 }
 
 void bhv_tilting_bowser_lava_platform_init(void) {
+    // this used to be how the tilting platform synced
+    // now it's added directly to bowser
     /*sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     sync_object_init_field(o, o->oAngleVelPitch);
     sync_object_init_field(o, o->oAngleVelRoll);
