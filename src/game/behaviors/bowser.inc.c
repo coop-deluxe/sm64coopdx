@@ -38,7 +38,7 @@ void (*sBowserTailAnchorActions[])(void) = { bowser_tail_anchor_act_0, bowser_ta
                                              bowser_tail_anchor_act_2 };
 s8 sDebugActions[] = { 7, 8, 9, 12, 13, 14, 15, 4, 3, 16, 17, 19, 3, 3, 3, 3 };
 s8 sDanceSoundTimerIntervals[] = { 24, 42, 60, -1 };
-enum DialogId* sBowserDefeatedDialogText[3] = {
+enum DialogId *sBowserDefeatedDialogText[3] = {
     &gBehaviorValues.dialogs.Bowser1DefeatedDialog,
     &gBehaviorValues.dialogs.Bowser2DefeatedDialog,
     &gBehaviorValues.dialogs.Bowser3DefeatedDialog
@@ -147,17 +147,14 @@ void bhv_bowser_body_anchor_loop(void) {
 
 s32 bowser_spawn_shockwave(void) {
     struct Object *wave;
-    if (o->oBehParams2ndByte == 2) {
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (marioState && marioState->playerIndex == 0) {
-            wave = spawn_object(o, MODEL_BOWSER_WAVE, bhvBowserShockWave);
-            if (wave != NULL) {
-                wave->oPosY = o->oFloorHeight;
+    if (o->oBehParams2ndByte == 2 && sync_object_is_owned_locally(o->oSyncID)) {
+        wave = spawn_object(o, MODEL_BOWSER_WAVE, bhvBowserShockWave);
+        if (wave != NULL) {
+            wave->oPosY = o->oFloorHeight;
 
-                struct Object* spawn_objects[] = { wave };
-                u32 models[] = { MODEL_BOWSER_WAVE };
-                network_send_spawn_objects(spawn_objects, models, 1);
-            }
+            struct Object *spawn_objects[] = { wave };
+            u32 models[] = { MODEL_BOWSER_WAVE };
+            network_send_spawn_objects(spawn_objects, models, 1);
         }
         return 1;
     }
@@ -258,9 +255,9 @@ UNUSED static void bowser_debug_actions(void) { // unused
 }
 
 void bowser_bitdw_act_controller(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
-    struct Object* player = marioState->marioObj;
+    struct Object *player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
@@ -300,9 +297,9 @@ void bowser_bitdw_act_controller(void) {
 }
 
 void bowser_bitfs_act_controller(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
-    struct Object* player = marioState->marioObj;
+    struct Object *player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
@@ -333,9 +330,9 @@ void bowser_bitfs_act_controller(void) {
 }
 
 void bowser_general_bits_act_controller(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
-    struct Object* player = marioState->marioObj;
+    struct Object *player = marioState->marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
     if (marioState->playerIndex != 0) { return; }
 
@@ -361,7 +358,7 @@ void bowser_general_bits_act_controller(void) {
 }
 
 void bowser_bits_act_controller(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
     if (marioState->playerIndex != 0) { return; }
     switch (o->oBowserUnk110) {
@@ -464,7 +461,7 @@ void bowser_act_walk_to_mario(void) { // turn towards Mario
 }
 
 void bowser_act_teleport(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
@@ -512,16 +509,16 @@ void bowser_act_spit_fire_into_sky(void) { // only in BITS
     s32 frame = o->header.gfx.animInfo.animFrame;
     if (frame > 24 && frame < 36) {
         cur_obj_play_sound_1(SOUND_AIR_BOWSER_SPIT_FIRE);
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
+        struct MarioState *marioState = nearest_mario_state_to_object(o);
         if (marioState && marioState->playerIndex == 0) {
-            struct Object* flame = NULL;
+            struct Object *flame = NULL;
             if (frame == 35) {
                 flame = spawn_object_relative(1, 0, 0x190, 0x64, o, MODEL_RED_FLAME, bhvBlueBowserFlame);
             } else {
                 flame = spawn_object_relative(0, 0, 0x190, 0x64, o, MODEL_RED_FLAME, bhvBlueBowserFlame);
             }
             if (flame != NULL) {
-                struct Object* spawn_objects[] = { flame };
+                struct Object *spawn_objects[] = { flame };
                 u32 models[] = { MODEL_RED_FLAME };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
@@ -577,7 +574,7 @@ bool bowser_set_anim_in_air(void) {
 }
 
 s32 bowser_land(void) {
-    struct Object* player = gMarioStates[0].marioObj;
+    struct Object *player = gMarioStates[0].marioObj;
     s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (o->oMoveFlags & OBJ_MOVE_LANDED) {
@@ -721,7 +718,7 @@ void bowser_act_turn_from_edge(void) {
 }
 
 void bowser_act_charge_mario(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     if (!player) { return; }
     s32 angleToPlayer = obj_angle_to_object(o, player);
 
@@ -921,9 +918,9 @@ void bowser_act_dance(void) {
 }
 
 void bowser_spawn_grand_star_key(void) {
-    struct Object* reward = NULL;
+    struct Object *reward = NULL;
     if (BITS) {
-        struct Object* prevReward = cur_obj_nearest_object_with_behavior(bhvGrandStar);
+        struct Object *prevReward = cur_obj_nearest_object_with_behavior(bhvGrandStar);
         reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_STAR, bhvGrandStar);
         gSecondCameraFocus = reward;
 
@@ -935,12 +932,12 @@ void bowser_spawn_grand_star_key(void) {
 
             sync_object_set_id(reward);
 
-            struct Object* spawn_objects[] = { reward };
+            struct Object *spawn_objects[] = { reward };
             u32 models[] = { MODEL_STAR };
             network_send_spawn_objects(spawn_objects, models, 1);
         }
     } else {
-        struct Object* prevReward = cur_obj_nearest_object_with_behavior(bhvBowserKey);
+        struct Object *prevReward = cur_obj_nearest_object_with_behavior(bhvBowserKey);
         reward = (prevReward != NULL) ? prevReward : spawn_object(o, MODEL_BOWSER_KEY, bhvBowserKey);
         gSecondCameraFocus = reward;
         cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_KEY);
@@ -950,7 +947,7 @@ void bowser_spawn_grand_star_key(void) {
             reward->oHomeX = reward->oPosX;
             reward->oHomeY = reward->oPosY;
             reward->oHomeZ = reward->oPosZ;
-            struct Object* spawn_objects[] = { reward };
+            struct Object *spawn_objects[] = { reward };
             u32 models[] = { MODEL_BOWSER_KEY };
             network_send_spawn_objects(spawn_objects, models, 1);
         }
@@ -987,7 +984,7 @@ void bowser_dead_bounce(void) {
 }
 
 s32 bowser_dead_wait_for_mario(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     if (!player) { return 0; }
     s32 distanceToPlayer = dist_between_objects(o, player);
     s32 angleToPlayer = obj_angle_to_object(o, player);
@@ -1035,7 +1032,7 @@ void bowser_dead_hide(void) {
 u8 bowser_dead_not_bits_end_continue_dialog(void) { return o->oAction == BOWSER_ACT_DEAD && o->oSubAction == 3; }
 
 s32 bowser_dead_not_bits_end(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
 
     if (o->oBowserUnkF8 < 2) {
         if (o->oBowserUnkF8 == 0) {
@@ -1135,7 +1132,7 @@ void bhv_tilting_bowser_lava_platform_init(void) {
     sync_object_init_field(o, o->oMoveAngleRoll);
 }
 
-void bowser_tilt_platform(struct Object* platform, s16 platformSpeed) {
+void bowser_tilt_platform(struct Object *platform, s16 platformSpeed) {
     s16 angle = o->oBowserAngleToCentre + 0x8000;
     platform->oAngleVelPitch = coss(angle) * platformSpeed;
     platform->oAngleVelRoll = -sins(angle) * platformSpeed;
@@ -1181,7 +1178,7 @@ void bowser_act_nothing(void) { // start moving if cutscene player is inactive
         return;
     }
 
-    struct NetworkPlayer* np = network_player_from_global_index(bowserCutsceneGlobalIndex);
+    struct NetworkPlayer *np = network_player_from_global_index(bowserCutsceneGlobalIndex);
     if (np == NULL || !is_player_active(&gMarioStates[np->localIndex])) {
         bowserCutscenePlayed = TRUE;
         bowser_initialize_action();
@@ -1351,13 +1348,13 @@ void bowser_thrown_dropped_update(void) {
 }
 
 void bhv_bowser_loop(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     // look for animation difference and override
     struct AnimationTable *animations = o->oAnimations;
-    struct Animation* anim = NULL;
+    struct Animation *anim = NULL;
     if (animations && networkBowserAnimationIndex < animations->count) {
         anim = (struct Animation*)animations->anims[networkBowserAnimationIndex];
         if (o->header.gfx.animInfo.curAnim != anim) {
@@ -1433,7 +1430,7 @@ void bhv_bowser_loop(void) {
     }
 }
 
-void bhv_bowser_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_bowser_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     // Nothing state sanity check.
     if (o->oAction == BOWSER_ACT_NOTHING) {
         *shouldOverride = TRUE;
@@ -1525,7 +1522,7 @@ void bhv_bowser_init(void) {
     // system. The only time we override such ownership is if the platform is being tilted or
     // bowser is being thrown (grabbed and thrown action)
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, 8000.0f);
+        struct SyncObject *so = sync_object_init(o, 8000.0f);
         if (so) {
             // ownership is only overriden if the platform is being tilted or bowser is being thrown
             so->override_ownership = bhv_bowser_override_ownership;
@@ -1567,7 +1564,7 @@ Gfx *geo_update_body_rot_from_parent(s32 run, UNUSED struct GraphNode *node, Mat
 }
 
 void bowser_open_eye_switch(struct Object *obj, struct GraphNodeSwitchCase *switchCase) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     s32 selectedCase = switchCase->selectedCase;
@@ -1786,7 +1783,7 @@ u8 bhv_falling_bowser_platform_ignore_if_true(void) {
 
 void bhv_falling_bowser_platform_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->ignore_if_true = bhv_falling_bowser_platform_ignore_if_true;
             sync_object_init_field(o, o->oAction);

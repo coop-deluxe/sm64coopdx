@@ -108,8 +108,8 @@ static void enemy_lakitu_update_speed_and_angle(void) {
  * hold it, then enter the hold spiny sub-action.
  */
 static void enemy_lakitu_sub_act_no_spiny(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -124,7 +124,7 @@ static void enemy_lakitu_sub_act_no_spiny(void) {
                && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x4000) {
 
         if (marioState && marioState->playerIndex == 0) {
-            struct Object* spiny = spawn_object(o, MODEL_SPINY_BALL, bhvSpiny);
+            struct Object *spiny = spawn_object(o, MODEL_SPINY_BALL, bhvSpiny);
             if (spiny != NULL) {
                 o->prevObj = spiny;
                 spiny->oAction = SPINY_ACT_HELD_BY_LAKITU;
@@ -136,7 +136,7 @@ static void enemy_lakitu_sub_act_no_spiny(void) {
                 network_send_object(o);
 
                 sync_object_set_id(spiny);
-                struct Object* spawn_objects[] = { spiny };
+                struct Object *spawn_objects[] = { spiny };
                 u32 models[] = { MODEL_SPINY_BALL };
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
@@ -155,7 +155,7 @@ static void enemy_lakitu_sub_act_hold_spiny(void) {
         return;
     }
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
