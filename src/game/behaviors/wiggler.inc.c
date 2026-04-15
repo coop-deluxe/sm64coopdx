@@ -206,7 +206,7 @@ void wiggler_update_segments(void) {
     }
 }
 
- u8 wiggler_act_walk_continue_dialog(void) { return o->oAction == WIGGLER_ACT_WALK && o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG; }
+u8 wiggler_act_walk_continue_dialog(void) { return o->oAction == WIGGLER_ACT_WALK && o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG; }
 
 /**
  * Show text if necessary. Then walk toward mario if not at full health, and
@@ -501,7 +501,7 @@ void bhv_wiggler_update(void) {
             cur_obj_init_animation_with_accel_and_sound(0, o->oWigglerWalkAnimSpeed);
             if (o->oWigglerWalkAnimSpeed != 0.0f) {
                 cur_obj_play_sound_at_anim_range(0, 13,
-                              o->oHealth >= 4 ? SOUND_OBJ_WIGGLER_LOW_PITCH : SOUND_OBJ_WIGGLER_HIGH_PITCH);
+                o->oHealth >= 4 ? SOUND_OBJ_WIGGLER_LOW_PITCH : SOUND_OBJ_WIGGLER_HIGH_PITCH);
             } else {
                 cur_obj_reverse_animation();
             }

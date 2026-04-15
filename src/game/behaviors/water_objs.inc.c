@@ -1,5 +1,4 @@
 // water_objs.c.inc
-// TODO: Better name, please
 
 void bhv_water_air_bubble_init(void) {
     cur_obj_scale(4.0f);

@@ -2023,9 +2023,9 @@
 --- @field public oWhirlpoolInitFacePitch integer
 --- @field public oWhirlpoolInitFaceRoll integer
 --- @field public oWhirlpoolTimeout integer
---- @field public oWhitePuffUnkF4 number
---- @field public oWhitePuffUnkF8 integer
---- @field public oWhitePuffUnkFC integer
+--- @field public oWhitePuffScale number
+--- @field public oWhitePuffSetOpacity integer
+--- @field public oWhitePuffSetLarger integer
 --- @field public oStrongWindParticlePenguinObj Object
 --- @field public oWhompShakeVal integer
 --- @field public oWigglerFallThroughFloorsHeight number
