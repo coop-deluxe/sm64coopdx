@@ -10010,13 +10010,6 @@ function get_level_course_num(levelNum)
 end
 
 --- @param fileIndex integer
---- @param courseIndex integer
---- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
-function touch_coin_score_age(fileIndex, courseIndex)
-    -- ...
-end
-
---- @param fileIndex integer
 --- @param forceSave integer
 --- Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
 function save_file_do_save(fileIndex, forceSave)

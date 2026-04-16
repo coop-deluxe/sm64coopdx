@@ -130,6 +130,8 @@ void network_remember_reliable(struct Packet* p) {
 
 static float adjust_max_elapsed(enum PacketType packetType, float maxElapsed) {
     switch (packetType) {
+        case PACKET_DOWNLOAD_SAVE_REQUEST:
+        case PACKET_DOWNLOAD_SAVE_FILE:
         case PACKET_DOWNLOAD_REQUEST:
         case PACKET_DOWNLOAD:
         case PACKET_MOD_LIST_REQUEST:

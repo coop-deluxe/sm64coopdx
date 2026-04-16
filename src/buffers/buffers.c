@@ -23,7 +23,7 @@ ALIGNED8 u8 gThread6Stack[0x2000];
 ALIGNED8 u8 gGfxSPTaskStack[SP_DRAM_STACK_SIZE8] = { 0 };
 // 0xc00 bytes for f3dex, 0x900 otherwise
 ALIGNED8 u8 gGfxSPTaskYieldBuffer[OS_YIELD_DATA_SIZE] = { 0 };
-// 0x200 bytes
+// 0x80 bytes
 ALIGNED8 struct SaveBuffer gSaveBuffer = { 0 };
 // 0x190a0 bytes
 struct GfxPool gGfxPools[GFX_NUM_POOLS] = { 0 };

@@ -31,6 +31,9 @@ enum PacketType {
     PACKET_KICK,
     PACKET_KEEP_ALIVE,
     PACKET_LEAVING,
+    PACKET_DOWNLOAD_SAVE_REQUEST,
+    PACKET_DOWNLOAD_SAVE_FILE,
+    PACKET_FINISHED_DOWNLOAD_SAVE_FILE,
     PACKET_SAVE_FILE,
     PACKET_SAVE_SET_FLAG,
     PACKET_SAVE_REMOVE_FLAG,
@@ -74,7 +77,7 @@ enum PacketType {
 
     PACKET_LUA_CUSTOM,
     PACKET_LUA_CUSTOM_BYTESTRING,
-    
+
     PACKET_COMMAND,
     PACKET_MODERATOR,
 
@@ -256,6 +259,12 @@ void network_receive_keep_alive(struct Packet* p);
 void network_send_leaving(u8 globalIndex);
 void network_receive_leaving(struct Packet* p);
 
+// packet_download_save_files.c
+void network_send_download_save_files_request(void);
+void network_receive_download_saves_request(UNUSED struct Packet* p);
+void network_send_download_save(int chunk);
+void network_receive_download_save(struct Packet* p);
+
 // packet_save_file.c
 void network_send_save_file(s32 fileIndex);
 void network_receive_save_file(struct Packet* p);
@@ -308,7 +317,6 @@ void network_send_area_request(struct NetworkPlayer* fromNp, struct NetworkPlaye
 void network_receive_area_request(struct Packet* p);
 
 // packet_area.c
-
 void area_remove_sync_ids_add(u32 syncId);
 void area_remove_sync_ids_clear(void);
 void network_send_area(struct NetworkPlayer* toNp);
