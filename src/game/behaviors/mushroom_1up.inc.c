@@ -220,8 +220,8 @@ void bhv_1up_jump_on_approach_loop(void) {
             spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
             break;
 
-        case collisionFlags:
-            sp26 = object_step();
+        case 2:
+            collisionFlags = object_step();
             bhv_1up_interact();
             obj_flicker_and_disappear(o, 30);
             break;
