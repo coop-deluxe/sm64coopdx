@@ -1475,6 +1475,7 @@ void bhv_bowser_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     if (o->oHeldState == HELD_THROWN || o->oHeldState == HELD_DROPPED || o->oAction == BOWSER_ACT_THROWN) {
         // use the previously set global player index here
         struct NetworkPlayer *np = network_player_from_global_index(o->globalPlayerIndex);
+        if (!np) return;
         struct MarioState *marioState = &gMarioStates[np->localIndex];
         if (is_player_active(marioState)) {
             *shouldOverride = TRUE;

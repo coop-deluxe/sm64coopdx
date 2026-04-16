@@ -264,7 +264,8 @@ static void chain_chomp_released_trigger_cutscene(void) {
 
     //! Can delay this if we get into a cutscene-unfriendly action after the
     //  last post ground pound and before this
-    // hack: get the nearest wooden post, this will work properly 99% of the time
+
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (&gMarioStates[0] == marioState && dynos_level_is_vanilla_level(gCurrLevelNum)) {
         if (set_mario_npc_dialog(&gMarioStates[0], 2, chain_chomp_released_trigger_cutscene_continue_dialog) == 2
@@ -536,7 +537,7 @@ void bhv_wooden_post_update(void) {
             for (int i = 0; i < MAX_PLAYERS; i++) {
                 if (!is_player_active(&gMarioStates[i])) continue;
                 if (!obj_is_mario_ground_pounding_platform(&gMarioStates[i], o)) continue;
-                o->globalPlayerIndex = i;
+                o->globalPlayerIndex = network_global_index_from_local(i);
                 break;
             }
 

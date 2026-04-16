@@ -257,10 +257,7 @@ void bhv_normal_cap_loop(void) {
         save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
     }
 
-    if (o->globalPlayerIndex >= MAX_PLAYERS) {
-        o->globalPlayerIndex = 0;
-    }
-
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     obj_set_model(o, gMarioStates[network_local_index_from_global(o->globalPlayerIndex)].character->capModelId);
 }
 

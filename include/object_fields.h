@@ -633,6 +633,8 @@
 #define /*0x100*/ oKoopaRaceEndpointUnk100        OBJECT_FIELD_S32(0x1E)
 #define /*0x104*/ oKoopaRaceEndpointRaceEnded     OBJECT_FIELD_S32(0x1F)
 #define /*0x108*/ oKoopaRaceEndpointRaceCheated   OBJECT_FIELD_S32(0x20)
+#define /*0x10C*/ oKoopaRaceEndpointRaceStartTime OBJECT_FIELD_S32(0x21)
+#define /*0x110*/ oKoopaRaceEndpointRaceWinner    OBJECT_FIELD_S32(0x22)
 
 /* Koopa Shell Flame */
 #define /*0x0F4*/ oKoopaShellFlameUnkF4 OBJECT_FIELD_F32(0x1B)

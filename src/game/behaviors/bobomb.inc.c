@@ -440,6 +440,7 @@ void bobomb_buddy_act_turn_to_talk(void) {
         cur_obj_play_sound_2(SOUND_OBJ_BOBOMB_WALK);
     }
 
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (is_player_active(marioState)) {
         struct Object *player = marioState->marioObj;

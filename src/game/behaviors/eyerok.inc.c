@@ -62,6 +62,7 @@ void bhv_eyerok_boss_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     if (o->oAction == EYEROK_BOSS_ACT_SLEEP) return; // this action is where the owner gets decided
     *shouldOverride = TRUE;
     // use the player who started the boss fight
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (!is_player_active(marioState)) {
         // if the player isn't active then use the player with the smallest global index
@@ -164,6 +165,7 @@ static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
 }
 
 static void eyerok_boss_act_show_intro_text(void) {
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (!is_player_active(marioState)) {
         // use player with the smallest global index instead
@@ -230,6 +232,7 @@ static void eyerok_boss_act_fight(void) {
 u8 eyerok_boss_act_die_continue_dialog(void) { return o->oAction == EYEROK_BOSS_ACT_DIE; }
 
 static void eyerok_boss_act_die(void) {
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
     if (!is_player_active(marioState)) {
         // use player with the smallest global index instead

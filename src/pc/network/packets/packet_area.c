@@ -166,7 +166,7 @@ void network_receive_area(struct Packet* p) {
         //level_control_timer(TIMER_CONTROL_SHOW);
     }
     if (levelControlTimerRunning) {
-        level_control_timer(TIMER_CONTROL_START);
+        //level_control_timer(TIMER_CONTROL_START);
     }
     packet_read(p, &gControlTimerStartNat, sizeof(u32));
     packet_read(p, &gControlTimerStopNat,  sizeof(u32));
