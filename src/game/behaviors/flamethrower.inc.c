@@ -31,7 +31,7 @@ void bhv_flamethrower_flame_loop(void) {
     else {
         cur_obj_move_using_fvel_and_gravity();
     }
-    if (o->oTimer > sp18) {
+    if (o->oTimer > remainingTime) {
         obj_mark_for_deletion(o);
     }
     o->oInteractStatus = 0;
