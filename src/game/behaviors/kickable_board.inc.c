@@ -3,18 +3,22 @@
 s32 check_mario_attacking(struct MarioState* marioState) {
     if (obj_check_if_collided_with_object(o, marioState->marioObj)) {
         if (abs_angle_diff(o->oMoveAngleYaw, marioState->marioObj->oMoveAngleYaw) > 0x6000) {
-            if (marioState->action == ACT_SLIDE_KICK)
-                return 1;
-            if (marioState->action == ACT_PUNCHING)
-                return 1;
-            if (marioState->action == ACT_MOVE_PUNCHING)
-                return 1;
-            if (marioState->action == ACT_SLIDE_KICK_SLIDE)
-                return 1;
-            if (marioState->action == ACT_JUMP_KICK)
-                return 2;
-            if (marioState->action == ACT_WALL_KICK_AIR)
-                return 2;
+            switch (marioState->action) {
+                case ACT_SLIDE_KICK:
+                    return 1;
+                case ACT_PUNCHING:
+                    return 1;
+                case ACT_MOVE_PUNCHING:
+                    return 1;
+                case ACT_SLIDE_KICK_SLIDE:
+                    return 1;
+                case ACT_JUMP_KICK:
+                    return 2;
+                case ACT_WALL_KICK_AIR:
+                    return 2;
+                default:
+                    break;
+            }
         }
     }
     return 0;
@@ -26,7 +30,8 @@ void init_kickable_board_rock(void) {
 }
 
 void bhv_kickable_board_loop(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    // uses event based sync system. Syncs when mario hits the board or it completely falls down
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -38,7 +43,7 @@ void bhv_kickable_board_loop(void) {
         sync_object_init_field(o, o->oPosY);
         sync_object_init_field(o, o->oTimer);
     }
-    s32 sp24;
+    s32 marioAttackStatus;
     switch (o->oAction) {
         case 0:
             o->oFaceAnglePitch = 0;
@@ -54,13 +59,14 @@ void bhv_kickable_board_loop(void) {
             load_object_collision_model();
             o->oFaceAnglePitch = -sins(o->oKickableBoardF4) * o->oKickableBoardF8;
             if (marioState) {
-                if (o->oTimer > 30 && (sp24 = check_mario_attacking(marioState))) {
-                    if (marioState->marioObj->oPosY > o->oPosY + 160.0f && sp24 == 2) {
+                if (o->oTimer > 30 && (marioAttackStatus = check_mario_attacking(marioState))) {
+                    if (marioState->marioObj->oPosY > o->oPosY + 160.0f && marioAttackStatus == 2) {
                         o->oAction++;
                         cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2);
                         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
-                    } else
+                    } else {
                         o->oTimer = 0;
+                    }
                 }
             }
             if (o->oTimer != 0) {
@@ -69,10 +75,12 @@ void bhv_kickable_board_loop(void) {
                     o->oAction = 0;
                     if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
                 }
-            } else
+            } else {
                 init_kickable_board_rock();
-            if (!(o->oKickableBoardF4 & 0x7FFF))
+            }
+            if (!(o->oKickableBoardF4 & 0x7FFF)) {
                 cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2);
+            }
             o->oKickableBoardF4 += 0x400;
             break;
         case 2:

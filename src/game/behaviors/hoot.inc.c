@@ -17,6 +17,7 @@ void bhv_hoot_init(void) {
     cur_obj_become_intangible();
     localTalkToHoot = 0;
 
+    // uses standard distance-based syncing
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->ignore_if_true = bhv_hoot_ignore_if_true;
@@ -26,45 +27,40 @@ void bhv_hoot_init(void) {
     }
 }
 
-// sp28 = arg0
-// sp2c = arg1
-
-f32 hoot_find_next_floor(struct FloorGeometry **arg0, f32 arg1) {
-    f32 sp24 = arg1 * sins(o->oMoveAngleYaw) + o->oPosX;
-    UNUSED f32 sp20 = o->oPosY;
-    f32 sp1c = arg1 * coss(o->oMoveAngleYaw) + o->oPosZ;
-    f32 floorY = find_floor_height_and_data(sp24, 10000.0f, sp1c, arg0);
+f32 hoot_find_next_floor(struct FloorGeometry **floor, f32 dist) {
+    f32 nextX = dist * sins(o->oMoveAngleYaw) + o->oPosX;
+    f32 nextZ = dist * coss(o->oMoveAngleYaw) + o->oPosZ;
+    f32 floorY = find_floor_height_and_data(nextX, 10000.0f, nextZ, floor);
 
     return floorY;
 }
 
 void hoot_floor_bounce(void) {
-    struct FloorGeometry *sp1c;
+    struct FloorGeometry *floor;
     f32 floorY;
 
-    floorY = hoot_find_next_floor(&sp1c, 375.0f);
+    floorY = hoot_find_next_floor(&floor, 375.0f);
     if (floorY + 75.0f > o->oPosY)
         o->oMoveAnglePitch -= 3640.8888;
 
-    floorY = hoot_find_next_floor(&sp1c, 200.0f);
+    floorY = hoot_find_next_floor(&floor, 200.0f);
     if (floorY + 125.0f > o->oPosY)
         o->oMoveAnglePitch -= 7281.7776;
 
-    floorY = hoot_find_next_floor(&sp1c, 0);
-    if (floorY + 125.0f > o->oPosY)
+    floorY = hoot_find_next_floor(&floor, 0);
+    if (floorY + 125.0f > o->oPosY) {
         o->oPosY = floorY + 125.0f;
-    if (o->oMoveAnglePitch < -21845.3328)
+    }
+    if (o->oMoveAnglePitch < -21845.3328) {
         o->oMoveAnglePitch = -21845;
+    }
 }
 
-// sp30 = fastOscY
-// sp34 = speed
-
 void hoot_free_step(s16 fastOscY, s32 speed) {
-    struct FloorGeometry *sp2c;
+    struct FloorGeometry *floor;
     s16 yaw = o->oMoveAngleYaw;
     s16 pitch = o->oMoveAnglePitch;
-    s16 sp26 = o->header.gfx.animInfo.animFrame;
+    s16 animFrame = o->header.gfx.animInfo.animFrame;
     f32 xPrev = o->oPosX;
     f32 zPrev = o->oPosZ;
     f32 hSpeed;
@@ -75,65 +71,60 @@ void hoot_free_step(s16 fastOscY, s32 speed) {
     o->oVelZ = coss(yaw) * hSpeed;
 
     o->oPosX += o->oVelX;
-    if (fastOscY == 0)
-        o->oPosY -= o->oVelY + coss((s32)(sp26 * 3276.8)) * 50.0f / 4;
-    else
-        o->oPosY -= o->oVelY + coss((s32)(sp26 * 6553.6)) * 50.0f / 4;
+    if (fastOscY == 0) {
+        o->oPosY -= o->oVelY + coss((s32)(animFrame * 3276.8)) * 50.0f / 4;
+    } else {
+        o->oPosY -= o->oVelY + coss((s32)(animFrame * 6553.6)) * 50.0f / 4;
+    }
     o->oPosZ += o->oVelZ;
 
-    find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp2c);
-    if (sp2c == NULL) {
+    find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &floor);
+    if (floor == NULL) {
         o->oPosX = xPrev;
         o->oPosZ = zPrev;
     }
 
-    if (sp26 == 0)
+    if (animFrame == 0) {
         cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+    }
 }
 
 void hoot_player_set_yaw(void) {
     if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
-    struct MarioState* marioState = &gMarioStates[o->heldByPlayerIndex];
+    struct MarioState *marioState = &gMarioStates[o->heldByPlayerIndex];
     s16 stickX = marioState->controller->rawStickX;
     s16 stickY = marioState->controller->rawStickY;
-    UNUSED s16 pitch = o->oMoveAnglePitch;
-    if (stickX < 10 && stickX >= -9)
+    if (stickX < 10 && stickX >= -9) {
         stickX = 0;
-    if (stickY < 10 && stickY >= -9)
+    }
+    if (stickY < 10 && stickY >= -9) {
         stickY = 0;
+    }
 
     o->oMoveAngleYaw -= 5 * stickX;
 }
 
-// sp28 = speed
-// sp2c = xPrev
-// sp30 = zPrev
-
 void hoot_carry_step(s32 speed, UNUSED f32 xPrev, UNUSED f32 zPrev) {
     s16 yaw = o->oMoveAngleYaw;
     s16 pitch = o->oMoveAnglePitch;
-    s16 sp22 = o->header.gfx.animInfo.animFrame;
-    f32 hSpeed;
+    s16 animFrame = o->header.gfx.animInfo.animFrame;
 
     o->oVelY = sins(pitch) * speed;
-    hSpeed = coss(pitch) * speed;
+    f32 hSpeed = coss(pitch) * speed;
     o->oVelX = sins(yaw) * hSpeed;
     o->oVelZ = coss(yaw) * hSpeed;
 
     o->oPosX += o->oVelX;
-    o->oPosY -= o->oVelY + coss((s32)(sp22 * 6553.6)) * 50.0f / 4;
+    o->oPosY -= o->oVelY + coss((s32)(animFrame * 6553.6)) * 50.0f / 4;
     o->oPosZ += o->oVelZ;
 
-    if (sp22 == 0)
+    if (animFrame == 0) {
         cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+    }
 }
 
-// sp48 = xPrev
-// sp4c = yPrev
-// sp50 = zPrev
-
 void hoot_surface_collision(f32 xPrev, UNUSED f32 yPrev, f32 zPrev) {
-    struct FloorGeometry *sp44;
+    struct FloorGeometry *floor;
     struct WallCollisionData hitbox;
     f32 floorY;
 
@@ -153,23 +144,24 @@ void hoot_surface_collision(f32 xPrev, UNUSED f32 yPrev, f32 zPrev) {
         }
     }
 
-    floorY = find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp44);
-    if (sp44 == NULL) {
+    floorY = find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &floor);
+    if (floor == NULL) {
         o->oPosX = xPrev;
         o->oPosZ = zPrev;
         return;
     }
 
-    if (absf_2(o->oPosX) > 8000.0f)
+    if (absf_2(o->oPosX) > 8000.0f) {
         o->oPosX = xPrev;
-    if (absf_2(o->oPosZ) > 8000.0f)
+    }
+    if (absf_2(o->oPosZ) > 8000.0f) {
         o->oPosZ = zPrev;
-    if (floorY + 125.0f > o->oPosY)
-        o->oPosY = floorY + 125.0f;
-}
+    }
 
-// sp28 = xPrev
-// sp2c = zPrev
+    if (floorY + 125.0f > o->oPosY) {
+        o->oPosY = floorY + 125.0f;
+    }
+}
 
 void hoot_act_ascent(f32 xPrev, f32 zPrev) {
     f32 negX = 0 - o->oPosX;
@@ -184,14 +176,15 @@ void hoot_act_ascent(f32 xPrev, f32 zPrev) {
         o->header.gfx.animInfo.animFrame = 1;
     }
 
-    if (o->oPosY > 6500.0f)
+    if (o->oPosY > 6500.0f) {
         o->oAction = HOOT_ACT_CARRY;
+    }
 
     hoot_carry_step(60, xPrev, zPrev);
 }
 
 void hoot_action_loop(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     f32 xPrev = o->oPosX;
     f32 yPrev = o->oPosY;
     f32 zPrev = o->oPosZ;
@@ -271,7 +264,7 @@ static u8 hoot_wants_to_talk_continue_dialog(void) {
 }
 
 void bhv_hoot_loop(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     static u8 forceFlySanity = TRUE;
 
     switch (o->oHootAvailability) {
