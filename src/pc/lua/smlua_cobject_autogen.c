@@ -25,6 +25,8 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
+#include "src/pc/gfx/gfx_cc.h"
+#include "src/pc/gfx/gfx_opengl.h"
 #include "src/game/first_person_cam.h"
 #include "src/game/player_palette.h"
 #include "src/engine/graph_node.h"
@@ -377,6 +379,17 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "trajectories",             LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),             true,  LOT_BEHAVIORTRAJECTORIES, 1, sizeof(struct BehaviorTrajectories) },
 };
 
+#define LUA_CCFEATURES_FIELD_COUNT 7
+static struct LuaObjectField sCCFeaturesFields[LUA_CCFEATURES_FIELD_COUNT] = {
+    { "color_alpha_same", LVT_BOOL, offsetof(struct CCFeatures, color_alpha_same), false, LOT_NONE, 2, sizeof(bool) },
+    { "do_mix",           LVT_BOOL, offsetof(struct CCFeatures, do_mix),           false, LOT_NONE, 4, sizeof(bool) },
+    { "do_multiply",      LVT_BOOL, offsetof(struct CCFeatures, do_multiply),      false, LOT_NONE, 4, sizeof(bool) },
+    { "do_noise",         LVT_BOOL, offsetof(struct CCFeatures, do_noise),         false, LOT_NONE, 1, sizeof(bool) },
+    { "do_single",        LVT_BOOL, offsetof(struct CCFeatures, do_single),        false, LOT_NONE, 4, sizeof(bool) },
+    { "num_inputs",       LVT_S32,  offsetof(struct CCFeatures, num_inputs),       false, LOT_NONE, 1, sizeof(int)  },
+    { "used_textures",    LVT_BOOL, offsetof(struct CCFeatures, used_textures),    false, LOT_NONE, 2, sizeof(bool) },
+};
+
 #define LUA_CAMERA_FIELD_COUNT 15
 static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "areaCenX",   LVT_F32,     offsetof(struct Camera, areaCenX),   false, LOT_NONE,  1,  sizeof(f32)   },
@@ -682,6 +695,34 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "sounds",                             LVT_S32,       offsetof(struct Character, sounds),                             true, LOT_NONE,        CHAR_SOUND_MAX, sizeof(s32)                },
     { "torsoRotMult",                       LVT_F32,       offsetof(struct Character, torsoRotMult),                       true, LOT_NONE,        1,              sizeof(f32)                },
     { "type",                               LVT_S32,       offsetof(struct Character, type),                               true, LOT_NONE,        1,              sizeof(enum CharacterType) },
+};
+
+#define LUA_COLOR_COMBINER_FIELD_COUNT 7
+static struct LuaObjectField sColorCombinerFields[LUA_COLOR_COMBINER_FIELD_COUNT] = {
+    { "cm",                          LVT_COBJECT,   offsetof(struct ColorCombiner, cm),                          true,  LOT_COMBINEMODE,   1,  sizeof(struct CombineMode)    },
+    { "hash",                        LVT_U64,       offsetof(struct ColorCombiner, hash),                        false, LOT_NONE,          1,  sizeof(u64)                   },
+    { "prg",                         LVT_COBJECT_P, offsetof(struct ColorCombiner, prg),                         false, LOT_SHADERPROGRAM, 1,  sizeof(struct ShaderProgram*) },
+    { "shader_commands",             LVT_U8,        offsetof(struct ColorCombiner, shader_commands),             false, LOT_NONE,          16, sizeof(u8)                    },
+    { "shader_commands_as_u64",      LVT_U64,       offsetof(struct ColorCombiner, shader_commands_as_u64),      false, LOT_NONE,          8,  sizeof(u64)                   },
+    { "shader_input_mapping",        LVT_U8,        offsetof(struct ColorCombiner, shader_input_mapping),        false, LOT_NONE,          16, sizeof(u8)                    },
+    { "shader_input_mapping_as_u64", LVT_U64,       offsetof(struct ColorCombiner, shader_input_mapping_as_u64), false, LOT_NONE,          8,  sizeof(u64)                   },
+};
+
+#define LUA_COMBINE_MODE_FIELD_COUNT 7
+static struct LuaObjectField sCombineModeFields[LUA_COMBINE_MODE_FIELD_COUNT] = {
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 use_alpha :)    }, <--- UNIMPLEMENTED
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 use_fog :)      }, <--- UNIMPLEMENTED
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 texture_edge :) }, <--- UNIMPLEMENTED
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 use_dither :)   }, <--- UNIMPLEMENTED
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 use_2cycle :)   }, <--- UNIMPLEMENTED
+//  { "1",          LVT_???, offsetof(struct CombineMode, 1),          false, LOT_???,  1,  sizeof(u8 light_map :)    }, <--- UNIMPLEMENTED
+    { "all_values", LVT_U8,  offsetof(struct CombineMode, all_values), false, LOT_NONE, 16, sizeof(u8)                },
+    { "alpha1",     LVT_U32, offsetof(struct CombineMode, alpha1),     false, LOT_NONE, 1,  sizeof(u32)               },
+    { "alpha2",     LVT_U32, offsetof(struct CombineMode, alpha2),     false, LOT_NONE, 1,  sizeof(u32)               },
+    { "flags",      LVT_U32, offsetof(struct CombineMode, flags),      false, LOT_NONE, 1,  sizeof(u32)               },
+    { "hash",       LVT_S64, offsetof(struct CombineMode, hash),       false, LOT_NONE, 1,  sizeof(s64)               },
+    { "rgb1",       LVT_U32, offsetof(struct CombineMode, rgb1),       false, LOT_NONE, 1,  sizeof(u32)               },
+    { "rgb2",       LVT_U32, offsetof(struct CombineMode, rgb2),       false, LOT_NONE, 1,  sizeof(u32)               },
 };
 
 #define LUA_CONTROLLER_FIELD_COUNT 11
@@ -2503,6 +2544,21 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "stayInLevelAfterStar",        LVT_U8,  offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE, 1, sizeof(u8)                      },
 };
 
+#define LUA_SHADER_PROGRAM_FIELD_COUNT 11
+static struct LuaObjectField sShaderProgramFields[LUA_SHADER_PROGRAM_FIELD_COUNT] = {
+    { "attrib_locations",  LVT_U32,  offsetof(struct ShaderProgram, attrib_locations),  false, LOT_NONE, MAX_SHADER_ATTRIBUTES, sizeof(u32)  },
+    { "attrib_sizes",      LVT_U8,   offsetof(struct ShaderProgram, attrib_sizes),      false, LOT_NONE, MAX_SHADER_ATTRIBUTES, sizeof(u8)   },
+    { "hash",              LVT_U64,  offsetof(struct ShaderProgram, hash),              false, LOT_NONE, 1,                     sizeof(u64)  },
+    { "num_attribs",       LVT_U8,   offsetof(struct ShaderProgram, num_attribs),       false, LOT_NONE, 1,                     sizeof(u8)   },
+    { "num_floats",        LVT_U8,   offsetof(struct ShaderProgram, num_floats),        false, LOT_NONE, 1,                     sizeof(u8)   },
+    { "num_inputs",        LVT_U8,   offsetof(struct ShaderProgram, num_inputs),        false, LOT_NONE, 1,                     sizeof(u8)   },
+    { "opengl_program_id", LVT_U32,  offsetof(struct ShaderProgram, opengl_program_id), false, LOT_NONE, 1,                     sizeof(u32)  },
+    { "uniform_locations", LVT_U32,  offsetof(struct ShaderProgram, uniform_locations), false, LOT_NONE, MAX_SHADER_UNIFORMS,   sizeof(u32)  },
+    { "used_lightmap",     LVT_BOOL, offsetof(struct ShaderProgram, used_lightmap),     false, LOT_NONE, 1,                     sizeof(bool) },
+    { "used_noise",        LVT_BOOL, offsetof(struct ShaderProgram, used_noise),        false, LOT_NONE, 1,                     sizeof(bool) },
+    { "used_textures",     LVT_BOOL, offsetof(struct ShaderProgram, used_textures),     false, LOT_NONE, MAX_SHADER_TEXTURES,   sizeof(bool) },
+};
+
 #define LUA_SPAWN_INFO_FIELD_COUNT 8
 static struct LuaObjectField sSpawnInfoFields[LUA_SPAWN_INFO_FIELD_COUNT] = {
     { "activeAreaIndex", LVT_S8,        offsetof(struct SpawnInfo, activeAreaIndex), false, LOT_NONE,      1, sizeof(s8)                },
@@ -2681,9 +2737,12 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BEHAVIORDIALOGS,              sBehaviorDialogsFields,              LUA_BEHAVIOR_DIALOGS_FIELD_COUNT                },
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
     { LOT_BEHAVIORVALUES,               sBehaviorValuesFields,               LUA_BEHAVIOR_VALUES_FIELD_COUNT                 },
+    { LOT_CCFEATURES,                   sCCFeaturesFields,                   LUA_CCFEATURES_FIELD_COUNT                      },
     { LOT_CAMERA,                       sCameraFields,                       LUA_CAMERA_FIELD_COUNT                          },
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
+    { LOT_COLORCOMBINER,                sColorCombinerFields,                LUA_COLOR_COMBINER_FIELD_COUNT                  },
+    { LOT_COMBINEMODE,                  sCombineModeFields,                  LUA_COMBINE_MODE_FIELD_COUNT                    },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
     { LOT_CUSTOMLEVELINFO,              sCustomLevelInfoFields,              LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT               },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
@@ -2749,6 +2808,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_RAYINTERSECTIONINFO,          sRayIntersectionInfoFields,          LUA_RAY_INTERSECTION_INFO_FIELD_COUNT           },
     { LOT_ROMHACKCAMERASETTINGS,        sRomhackCameraSettingsFields,        LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT         },
     { LOT_SERVERSETTINGS,               sServerSettingsFields,               LUA_SERVER_SETTINGS_FIELD_COUNT                 },
+    { LOT_SHADERPROGRAM,                sShaderProgramFields,                LUA_SHADER_PROGRAM_FIELD_COUNT                  },
     { LOT_SPAWNINFO,                    sSpawnInfoFields,                    LUA_SPAWN_INFO_FIELD_COUNT                      },
     { LOT_SPAWNPARTICLESINFO,           sSpawnParticlesInfoFields,           LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT            },
     { LOT_STARPOSITIONS,                sStarPositionsFields,                LUA_STAR_POSITIONS_FIELD_COUNT                  },
@@ -2786,9 +2846,12 @@ const char *sLuaLotNames[] = {
 	[LOT_BEHAVIORDIALOGS] = "BehaviorDialogs",
 	[LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
 	[LOT_BEHAVIORVALUES] = "BehaviorValues",
+	[LOT_CCFEATURES] = "CCFeatures",
 	[LOT_CAMERA] = "Camera",
 	[LOT_CHAINSEGMENT] = "ChainSegment",
 	[LOT_CHARACTER] = "Character",
+	[LOT_COLORCOMBINER] = "ColorCombiner",
+	[LOT_COMBINEMODE] = "CombineMode",
 	[LOT_CONTROLLER] = "Controller",
 	[LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
 	[LOT_DATETIME] = "DateTime",
@@ -2854,6 +2917,7 @@ const char *sLuaLotNames[] = {
 	[LOT_RAYINTERSECTIONINFO] = "RayIntersectionInfo",
 	[LOT_ROMHACKCAMERASETTINGS] = "RomhackCameraSettings",
 	[LOT_SERVERSETTINGS] = "ServerSettings",
+	[LOT_SHADERPROGRAM] = "ShaderProgram",
 	[LOT_SPAWNINFO] = "SpawnInfo",
 	[LOT_SPAWNPARTICLESINFO] = "SpawnParticlesInfo",
 	[LOT_STARPOSITIONS] = "StarPositions",

@@ -7,10 +7,13 @@
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
+- [CCFeatures](#CCFeatures)
 - [Camera](#Camera)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
+- [ColorCombiner](#ColorCombiner)
+- [CombineMode](#CombineMode)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
 - [DateTime](#DateTime)
@@ -77,6 +80,7 @@
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
 - [ServerSettings](#ServerSettings)
+- [ShaderProgram](#ShaderProgram)
 - [SpawnInfo](#SpawnInfo)
 - [SpawnParticlesInfo](#SpawnParticlesInfo)
 - [StarPositions](#StarPositions)
@@ -340,6 +344,22 @@
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [CCFeatures](#CCFeatures)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| used_textures | `Array` <`boolean`> |  |
+| num_inputs | `integer` |  |
+| do_single | `Array` <`boolean`> |  |
+| do_multiply | `Array` <`boolean`> |  |
+| do_mix | `Array` <`boolean`> |  |
+| color_alpha_same | `Array` <`boolean`> |  |
+| do_noise | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -674,6 +694,38 @@
 | r | `integer` |  |
 | g | `integer` |  |
 | b | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ColorCombiner](#ColorCombiner)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| cm | [CombineMode](structs.md#CombineMode) | read-only |
+| prg | [ShaderProgram](structs.md#ShaderProgram) |  |
+| shader_input_mapping | `Array` <`integer`> |  |
+| shader_input_mapping_as_u64 | `Array` <`integer`> |  |
+| shader_commands | `Array` <`integer`> |  |
+| shader_commands_as_u64 | `Array` <`integer`> |  |
+| hash | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [CombineMode](#CombineMode)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| rgb1 | `integer` |  |
+| alpha1 | `integer` |  |
+| rgb2 | `integer` |  |
+| alpha2 | `integer` |  |
+| all_values | `Array` <`integer`> |  |
+| flags | `integer` |  |
+| hash | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -2836,6 +2888,26 @@
 | nametags | `integer` |  |
 | maxPlayers | `integer` |  |
 | pauseAnywhere | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [ShaderProgram](#ShaderProgram)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| hash | `integer` |  |
+| opengl_program_id | `integer` |  |
+| num_inputs | `integer` |  |
+| used_textures | `Array` <`boolean`> |  |
+| num_floats | `integer` |  |
+| attrib_locations | `Array` <`integer`> |  |
+| uniform_locations | `Array` <`integer`> |  |
+| attrib_sizes | `Array` <`integer`> |  |
+| num_attribs | `integer` |  |
+| used_noise | `boolean` |  |
+| used_lightmap | `boolean` |  |
 
 [:arrow_up_small:](#)
 

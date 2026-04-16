@@ -7,6 +7,7 @@
 #include "smlua.h"
 #include "pc/mods/mod.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/gfx/gfx_cc.h"
 
 // forward declare
 struct Camera;
@@ -82,6 +83,9 @@ enum LuaHookedEventType {
     HOOK_ON_FIND_WATER_LEVEL,
     HOOK_ON_FIND_POISON_GAS_LEVEL,
     HOOK_ON_FIND_SURFACE_ON_RAY,
+    HOOK_ON_REFRESH_SHADERS,
+    HOOK_ON_VERTEX_SHADER_CREATE,
+    HOOK_ON_FRAGMENT_SHADER_CREATE,
     HOOK_MAX,
 };
 

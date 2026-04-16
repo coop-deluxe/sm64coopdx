@@ -18,6 +18,8 @@ enum LuaValueType {
     LVT_S16_P,
     LVT_S32,
     LVT_S32_P,
+    LVT_S64,
+    LVT_S64_P,
     LVT_F32,
     LVT_F32_P,
     LVT_U64,
