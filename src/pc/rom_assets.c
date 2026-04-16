@@ -5,8 +5,6 @@
 #include "apparition.inc.c"
 #include "utils/misc.h"
 
-#define ROM_ASSET_LOAD_DATA(bits) for (u##bits *data = asset->ptr; asset->cursor < asset->segmentedSize; data++) { *data = READ##bits(asset); }
-
 struct RomAsset {
     void* ptr;
     enum RomAssetType assetType;
@@ -25,6 +23,19 @@ static u32 sCurrentPhysicalAddress = 0;
 static u32 sCurrentPhysicalSize = 0;
 static u8* sCurrentSegmentMemory = NULL;
 static u32 sCurrentSegmentSize = 0;
+
+#if defined(__i386__) || (defined(_WIN32) && !defined(_WIN64))
+static s32 READ32(struct RomAsset* asset) {
+    s64 index = (asset->segmentedAddress + asset->cursor);
+    if (index < 0 || index >= sCurrentSegmentSize) { return 0; }
+    u8* ptr = &sCurrentSegmentMemory[index];
+    s32 value = BSWAP32(*((s32*)ptr));
+    asset->cursor += sizeof(s32);
+    return value;
+}
+#else
+#define ROM_ASSET_LOAD_DATA(bits) for (u##bits *data = asset->ptr; asset->cursor < asset->segmentedSize; data++) { *data = READ##bits(asset); }
+#endif
 
 static s16 READ16(struct RomAsset* asset) {
     s64 index = (asset->segmentedAddress + asset->cursor);
@@ -140,6 +151,56 @@ static void rom_asset_load_vtx(struct RomAsset* asset) {
     }
 }
 
+#if defined(__i386__) || (defined(_WIN32) && !defined(_WIN64))
+static void rom_asset_load_texture(struct RomAsset* asset) {
+    Texture* texture = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *texture = READ8(asset);
+        texture++;
+    }
+}
+
+static void rom_asset_load_sample(struct RomAsset* asset) {
+    u8* sample = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *sample = READ8(asset);
+        sample++;
+    }
+}
+
+static void rom_asset_load_collision(struct RomAsset* asset) {
+    Collision* col = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *col = READ16(asset);
+        col++;
+    }
+}
+
+static void rom_asset_load_anim(struct RomAsset* asset) {
+    u16* anim = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *anim = READ16(asset);
+        anim++;
+    }
+}
+
+static void rom_asset_load_dialog(struct RomAsset* asset) {
+    u8* dialog = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *dialog = READ8(asset);
+        dialog++;
+    }
+}
+
+static void rom_asset_load_demo(struct RomAsset* asset) {
+    u8* demo = asset->ptr;
+    while (asset->cursor < asset->segmentedSize) {
+        *demo = READ8(asset);
+        demo++;
+    }
+}
+#endif
+
 static void rom_asset_load(struct RomAsset* asset) {
     if (!rom_asset_load_segment(asset->physicalAddress, asset->physicalSize)) {
         return;
@@ -154,12 +215,21 @@ static void rom_asset_load(struct RomAsset* asset) {
     }
     switch (asset->assetType) {
         case ROM_ASSET_VTX:       rom_asset_load_vtx(asset); break;
-        case ROM_ASSET_TEXTURE:   ROM_ASSET_LOAD_DATA(8);    break;
-        case ROM_ASSET_SAMPLE:    ROM_ASSET_LOAD_DATA(8);    break;
-        case ROM_ASSET_COLLISION: ROM_ASSET_LOAD_DATA(16);   break;
-        case ROM_ASSET_ANIM:      ROM_ASSET_LOAD_DATA(16);   break;
-        case ROM_ASSET_DIALOG:    ROM_ASSET_LOAD_DATA(8);    break;
-        case ROM_ASSET_DEMO:      ROM_ASSET_LOAD_DATA(8);    break;
+        #if defined(__i386__) || (defined(_WIN32) && !defined(_WIN64))
+                case ROM_ASSET_TEXTURE:   rom_asset_load_texture(asset); break;
+                case ROM_ASSET_SAMPLE:    rom_asset_load_sample(asset); break;
+                case ROM_ASSET_COLLISION: rom_asset_load_collision(asset); break;
+                case ROM_ASSET_ANIM:      rom_asset_load_anim(asset); break;
+                case ROM_ASSET_DIALOG:    rom_asset_load_dialog(asset); break;
+                case ROM_ASSET_DEMO:      rom_asset_load_demo(asset); break;
+        #else
+                case ROM_ASSET_TEXTURE:   ROM_ASSET_LOAD_DATA(8);    break;
+                case ROM_ASSET_SAMPLE:    ROM_ASSET_LOAD_DATA(8);    break;
+                case ROM_ASSET_COLLISION: ROM_ASSET_LOAD_DATA(16);   break;
+                case ROM_ASSET_ANIM:      ROM_ASSET_LOAD_DATA(16);   break;
+                case ROM_ASSET_DIALOG:    ROM_ASSET_LOAD_DATA(8);    break;
+                case ROM_ASSET_DEMO:      ROM_ASSET_LOAD_DATA(8);    break;
+        #endif
         default:
             LOG_ERROR("Could not load unknown asset type %u!", asset->assetType);
     }

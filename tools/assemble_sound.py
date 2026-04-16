@@ -776,7 +776,7 @@ def serialize_seqfile(
             compress = True
 
         with open(out_filename, "wb") as f:
-            if compress:
+            if compress and WORD_BYTES != 4:
                 f.write(zlib.compress(data))
             else:
                 f.write(data)
@@ -928,7 +928,7 @@ def write_sequences(
                 ser.add(bytes([bank_names.index(bank)]))
         ser.align(16)
         data = ser.finish()
-        if compress:
+        if compress and WORD_BYTES != 4:
             f.write(zlib.compress(data))
         else:
             f.write(data)
