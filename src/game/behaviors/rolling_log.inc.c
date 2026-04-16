@@ -7,6 +7,7 @@
 // a rolling log of another variation.
 
 static void bhv_rolling_log_network_init(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -35,10 +36,7 @@ void bhv_ttm_rolling_log_init(void) {
 }
 
 void rolling_log_roll_log(void) {
-    f32 sp24;
-
     f32 x = 0;
-    UNUSED f32 y = 0;
     f32 z = 0;
 
     u8 playersTouched = 0;
@@ -47,47 +45,52 @@ void rolling_log_roll_log(void) {
         struct Object* player = gMarioStates[i].marioObj;
         if (player->platform != o) { continue; }
         x += player->header.gfx.pos[0];
-        y += player->header.gfx.pos[1];
         z += player->header.gfx.pos[2];
         playersTouched++;
     }
 
     if (playersTouched > 0) {
         x /= (f32)playersTouched;
-        y /= (f32)playersTouched;
         z /= (f32)playersTouched;
 
-        sp24 = (z - o->oPosZ) * coss(-1*o->oMoveAngleYaw) - (x - o->oPosX) * sins(-1*o->oMoveAngleYaw);
-        if (sp24 > 0)
+        f32 rollAmount = (z - o->oPosZ) * coss(-1*o->oMoveAngleYaw) - (x - o->oPosX) * sins(-1*o->oMoveAngleYaw);
+        if (rollAmount > 0) {
             o->oAngleVelPitch += 0x10;
-        else
+        } else {
             o->oAngleVelPitch -= 0x10;
+        }
 
-        if (o->oAngleVelPitch > 0x200)
+        if (o->oAngleVelPitch > 0x200) {
             o->oAngleVelPitch = 0x200;
+        }
 
-        if (o->oAngleVelPitch < -0x200)
+        if (o->oAngleVelPitch < -0x200) {
             o->oAngleVelPitch = -0x200;
+        }
     } else {
         if (is_point_close_to_object(o, o->oHomeX, o->oHomeY, o->oHomeZ, 100)) {
             if (o->oAngleVelPitch != 0) {
-                if (o->oAngleVelPitch > 0)
+                if (o->oAngleVelPitch > 0) {
                     o->oAngleVelPitch -= 0x10;
-                else
+                } else {
                     o->oAngleVelPitch += 0x10;
+                }
 
-                if (o->oAngleVelPitch < 0x10 && o->oAngleVelPitch > -0x10)
+                if (o->oAngleVelPitch < 0x10 && o->oAngleVelPitch > -0x10) {
                     o->oAngleVelPitch = 0;
+                }
             }
         } else {
             if (o->oAngleVelPitch != 0x100) {
-                if (o->oAngleVelPitch > 0x100)
+                if (o->oAngleVelPitch > 0x100) {
                     o->oAngleVelPitch -= 0x10;
-                else
+                } else {
                     o->oAngleVelPitch += 0x10;
+                }
 
-                if (o->oAngleVelPitch < 0x110 && o->oAngleVelPitch > 0xF0)
+                if (o->oAngleVelPitch < 0x110 && o->oAngleVelPitch > 0xF0) {
                     o->oAngleVelPitch = 0x100;
+                }
             }
         }
     }
@@ -138,14 +141,17 @@ void volcano_act_1(void) {
 void volcano_act_3(void) {
     o->oAngleVelPitch = 0x90;
     o->oFaceAnglePitch += o->oAngleVelPitch;
-    if (o->oFaceAnglePitch > 0)
+    if (o->oFaceAnglePitch > 0) {
         o->oFaceAnglePitch = 0;
+    }
 
-    if (o->oTimer == 200)
+    if (o->oTimer == 200) {
         o->oAction = 0;
+    }
 }
 
 void bhv_volcano_trap_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 2000.0f);
         if (so) {
