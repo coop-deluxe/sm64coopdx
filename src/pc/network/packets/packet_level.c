@@ -4,6 +4,7 @@
 #include "game/interaction.h"
 #include "game/level_update.h"
 #include "game/ingame_menu.h"
+#include "course_table.h"
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
@@ -79,7 +80,9 @@ void network_receive_level(struct Packet* p) {
     packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
     packet_read(p, &gPssSlideStarted,         sizeof(u8));
     packet_read(p, &gTTCSpeedSetting,         sizeof(s16));
-    gHudDisplay.coins = gMarioStates[0].numCoins;
+    if (gCurrCourseNum != COURSE_NONE) {
+        gHudDisplay.coins = gMarioStates[0].numCoins;
+    }
 
     // fix TTC objects by reinitializing values pertaining to speed
     if (levelNum == LEVEL_TTC) {
