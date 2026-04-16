@@ -397,7 +397,7 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     inputbox->selection[1] = inputbox->selection[0];
     sCursorBlink = 0;
     djui_inputbox_on_change(inputbox);
-    
+
     inputbox->imePos = 0;
     if (inputbox->imeBuffer != NULL) {
         free(inputbox->imeBuffer);
@@ -408,9 +408,9 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
 void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursorPos) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     inputbox->imePos = (u16)cursorPos;
-    
+
     if (inputbox->imeBuffer != NULL) free(inputbox->imeBuffer);
-    
+
     if (*text == '\0') {
         inputbox->imeBuffer = NULL;
     }
@@ -420,7 +420,7 @@ void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursor
         strcpy(copy,text);
         inputbox->imeBuffer = copy;
     }
-    
+
     djui_inputbox_on_change(inputbox);
 }
 
@@ -469,9 +469,9 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     }
 
     sCursorBlink = (sCursorBlink + 1) % DJUI_INPUTBOX_MAX_BLINK;
-    
+
     f32 renderX = x;
-    
+
     u16 imePos = inputbox->imePos;
     if (imePos != 0) {
         char* ime = inputbox->imeBuffer;
@@ -480,13 +480,13 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
             ime = djui_unicode_next_char(ime);
         }
     }
-    
+
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
-            gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 255);
+            gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
             gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
         }
@@ -559,7 +559,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
     // translate position
     f32 translatedX = comp->x + inputbox->viewX;
-    f32 translatedY = comp->y + DJUI_INPUTBOX_YOFF;
+    f32 translatedY = comp->y + inputbox->yOffset;
     djui_gfx_position_translate(&translatedX, &translatedY);
     create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
@@ -584,7 +584,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     u16 selection[2] = { 0 };
     selection[0] = fmin(inputbox->selection[0], inputbox->selection[1]);
     selection[1] = fmax(inputbox->selection[0], inputbox->selection[1]);
-    
+
     // render text
     char* c = inputbox->buffer;
     f32 drawX = inputbox->viewX;
@@ -593,7 +593,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
     font->render_begin();
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
-        
+
         //render composition text
         if (selection[0] == i && inputbox->imeBuffer != NULL) {
             char *ime = inputbox->imeBuffer;
@@ -602,7 +602,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
                 ime = djui_unicode_next_char(ime);
             }
         }
-        
+
         if (*c == '\0') { break; }
 
         // deal with seleciton color
@@ -638,6 +638,7 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     struct DjuiBase* base         = &inputbox->base;
     inputbox->bufferSize = bufferSize;
     inputbox->buffer = calloc(bufferSize, sizeof(char));
+    inputbox->yOffset = DJUI_INPUTBOX_YOFF;
 
     djui_base_init(parent, base, djui_inputbox_render, djui_inputbox_destroy);
     djui_base_set_size(base, 200, 32);

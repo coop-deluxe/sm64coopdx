@@ -2,18 +2,6 @@
 -- description: Run /matrix and a builtin texture name to replace with the digital rain
 -- deluxe: true
 
-if SM64COOPDX_VERSION == nil then
-    local first = false
-    hook_event(HOOK_ON_LEVEL_INIT, function()
-        if not first then
-            first = true
-            play_sound(SOUND_MENU_CAMERA_BUZZ, gMarioStates[0].marioObj.header.gfx.cameraToObject)
-            djui_chat_message_create("\\#ff7f7f\\Matrix Code is not supported with sm64ex-coop\nas it uses sm64coopdx exclusive Lua functionality.\n\\#dcdcdc\\To use this mod, try out sm64coopdx at\n\\#7f7fff\\https://sm64coopdx.com")
-        end
-    end)
-    return
-end
-
 local sMatrixFrames = {}
 for i = 0, 10 do
     sMatrixFrames[i] = get_texture_info("matrix_" .. i)

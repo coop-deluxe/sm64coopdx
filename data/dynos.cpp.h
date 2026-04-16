@@ -11,6 +11,7 @@ extern "C" {
 #include "game/moving_texture.h"
 #include "pc/djui/djui_console.h"
 #include "pc/fs/fmem.h"
+#include "pc/debuglog.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -731,13 +732,13 @@ T *CopyBytes(const T *aPtr, u64 aSize) {
 
 template <typename... Args>
 void PrintNoNewLine(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
+    log_to_terminal(aFmt, aArgs...);
     fflush(stdout);
 }
 
 template <typename... Args>
 void Print(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
+    log_to_terminal(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
 }
@@ -751,7 +752,7 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 
 template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
+    log_to_terminal(aFmt, aArgs...);
     printf("\r\n");
     fflush(stdout);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);

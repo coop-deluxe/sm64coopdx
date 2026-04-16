@@ -10,6 +10,7 @@
 #include "pc/djui/djui.h"
 #include "pc/network/version.h"
 #include "pc/loading.h"
+#include "pc/debuglog.h"
 
 #define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
 #define VERSION_IDENTIFIER "#define SM64COOPDX_VERSION \""
@@ -73,7 +74,7 @@ void get_version_remote(void) {
     // initialize WinINet
     HINTERNET hInternet = InternetOpenA("sm64coopdx", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
     if (!hInternet) {
-        printf("Failed to check for updates!\n");
+        LOG_ERROR("Failed to check for updates!");
         InternetCloseHandle(hInternet);
         return;
     }
@@ -81,7 +82,7 @@ void get_version_remote(void) {
     // open the URL
     HINTERNET hUrl = InternetOpenUrlA(hInternet, URL, NULL, 0, INTERNET_FLAG_RELOAD, 0);
     if (!hUrl) {
-        printf("Failed to check for updates!\n");
+        LOG_ERROR("Failed to check for updates!");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
         return;
@@ -95,7 +96,7 @@ void get_version_remote(void) {
     // read data from the URL, making room in the buffer for the null-terminator
     DWORD bytesRead;
     if (!InternetReadFile(hUrl, buffer, sizeof(buffer) - 1, &bytesRead)) {
-        printf("Failed to check for updates!\n");
+        LOG_ERROR("Failed to check for updates!");
         InternetCloseHandle(hInternet);
         InternetCloseHandle(hUrl);
         return;
@@ -112,7 +113,7 @@ void get_version_remote(void) {
     // initialize libcurl
     CURL *curl = curl_easy_init();
     if (!curl || curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
-        printf("Failed to check for updates!\n");
+        LOG_ERROR("Failed to check for updates!");
         return;
     }
 
@@ -126,7 +127,7 @@ void get_version_remote(void) {
     // perform the request
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
-        printf("Failed to check for updates!\n");
+        LOG_ERROR("Failed to check for updates!");
         curl_easy_cleanup(curl);
         return;
     }

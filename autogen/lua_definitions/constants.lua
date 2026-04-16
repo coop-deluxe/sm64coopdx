@@ -2751,6 +2751,9 @@ DIALOG_COUNT = 170 --- @type DialogId
 --- | `DIALOG_169`
 --- | `DIALOG_COUNT`
 
+--- @type integer
+MAX_CONSOLE_INPUT_LENGTH = 500
+
 CONSOLE_MESSAGE_INFO    = 0 --- @type ConsoleMessageLevel
 CONSOLE_MESSAGE_WARNING = 1 --- @type ConsoleMessageLevel
 CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel

@@ -3,6 +3,7 @@
 #include "djui.h"
 #include "djui_console.h"
 #include "pc/pc_main.h"
+#include "pc/commands.h"
 #include "engine/math_util.h"
 
 #define MAX_CONSOLE_MESSAGES 500
@@ -12,6 +13,7 @@ bool gDjuiConsoleFocus = false;
 char gDjuiConsoleTmpBuffer[CONSOLE_MAX_TMP_BUFFER] = "";
 u32 sDjuiConsoleMessages = 0;
 bool sDjuiConsoleQueueMessages = true;
+bool sClearConsoleInput = false;
 
 struct ConsoleQueuedMessage {
     char* message;
@@ -52,17 +54,24 @@ void djui_console_message_dequeue(void) {
 
 bool djui_console_render(struct DjuiBase* base) {
     struct DjuiConsole* console = (struct DjuiConsole*)base;
-    djui_base_set_size(base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
+    djui_base_set_size(&console->base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f);
+    djui_base_set_size(&console->rectContainer->base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f - 32);
     if (console->scrolling) {
-        f32 yMax = console->base.comp.height - console->flow->base.height.value;
+        f32 yMax = console->base.comp.height - console->flow->base.height.value - 32;
         f32 target = console->flow->base.y.value + (console->scrollY - console->flow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
 
-        console->flow->base.y.value = clamp(target, yMax, 0.f);
+        console->flow->base.y.value = clamp(target, yMax, 0.0f);
         if (target < yMax || 0.f < target) {
             console->scrollY = clamp(target, yMax, 0.f);
             if (target > 0.f) { gDjuiConsole->scrolling = false; }
         }
     } else { console->scrollY = console->flow->base.y.value; }
+
+    if (sClearConsoleInput) {
+        djui_inputbox_set_text(gDjuiConsole->inputbox, "");
+        djui_inputbox_select_all(gDjuiConsole->inputbox);
+        sClearConsoleInput = false;
+    }
 
     djui_rect_render(base);
     return true;
@@ -75,12 +84,13 @@ static void djui_console_destroy(struct DjuiBase* base) {
 
 void djui_console_toggle(void) {
     if (gDjuiConsole == NULL) { return; }
+    sClearConsoleInput = true;
     gDjuiConsoleFocus = !gDjuiConsoleFocus;
     djui_base_set_visible(&gDjuiConsole->base, gDjuiConsoleFocus);
 
     if (gDjuiConsoleFocus) {
         if (gDjuiChatBoxFocus) { djui_chat_box_toggle(); }
-        djui_interactable_set_input_focus(&gDjuiConsole->base);
+        djui_interactable_set_input_focus(&gDjuiConsole->inputbox->base);
     } else {
         djui_interactable_set_input_focus(NULL);
     }
@@ -96,17 +106,32 @@ static void djui_console_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x,
     if (gDjuiInputHeldShift) { y *= 3; }
 
     gDjuiConsole->scrollY -= y;
-    
+
     if (!gDjuiConsole->scrolling) {
         gDjuiConsole->scrolling = y > 0 && gDjuiConsole->scrollY > yMax;
     }
 }
 
-static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode) {
+static void djui_console_enter() {
+    char* buffer = gDjuiConsole->inputbox->buffer;
+    if (strcmp(buffer, "") == 0) return;
+    if (buffer[0] == '/') buffer++;
+    run_command(buffer);
+    sClearConsoleInput = true;
+}
+
+static bool djui_console_on_key_down(struct DjuiBase* base, int scancode) {
     if (gDjuiConsole == NULL) { return false; }
     f32 yMax = gDjuiConsole->base.comp.height - gDjuiConsole->flow->base.height.value;
 
     f32 pageAmount = gDjuiConsole->base.comp.height * 3.0f / 4.0f;
+
+    for (int i = 0; i < MAX_BINDS; i++) {
+        if (scancode == (int)configKeyConsole[i]) {
+            djui_console_toggle();
+            return true;
+        }
+    }
 
     switch (scancode) {
         case SCANCODE_UP:
@@ -121,14 +146,37 @@ static bool djui_console_on_key_down(UNUSED struct DjuiBase* base, int scancode)
         case SCANCODE_PAGE_DOWN:
             gDjuiConsole->scrollY += pageAmount;
             break;
-        case SCANCODE_ESCAPE: djui_console_toggle(); break;
-        default: break;
+        case SCANCODE_ENTER:
+            djui_console_enter();
+            break;
+        case SCANCODE_ESCAPE:
+            djui_console_toggle();
+            break;
+        default:
+            return djui_inputbox_on_key_down(base, scancode);
     }
 
     if (!gDjuiConsole->scrolling) {
         gDjuiConsole->scrolling = gDjuiConsole->scrollY < 0 && gDjuiConsole->scrollY > yMax;
     }
     return true;
+}
+
+static void djui_console_on_text_input(struct DjuiBase* base, char* text) {
+    djui_inputbox_on_text_input(base, text);
+}
+
+void djui_console_clear() {
+    if (gDjuiConsole == NULL) { return; }
+
+    struct DjuiBase* cfBase = &gDjuiConsole->flow->base;
+    djui_base_destroy_children(cfBase);
+
+    cfBase->height.value = 0;
+    cfBase->y.value = 0;
+    gDjuiConsole->scrollY = 0;
+    gDjuiConsole->scrolling = false;
+    sDjuiConsoleMessages = 0;
 }
 
 void djui_console_message_create(const char* message, enum ConsoleMessageLevel level) {
@@ -205,11 +253,13 @@ struct DjuiConsole* djui_console_create(void) {
     djui_base_set_padding(base, 0, 8, 8, 8);
     djui_base_set_visible(base, false);
 
-    djui_interactable_create(base, NULL);
-    djui_interactable_hook_key(base, djui_console_on_key_down, NULL);
-    djui_interactable_hook_scroll(base, djui_console_on_scroll);
+    struct DjuiRect* rectContainer = djui_rect_container_create(base, 0);
+    djui_base_set_alignment(&rectContainer->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+    djui_base_set_size_type(&rectContainer->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&rectContainer->base, 1.0f, gDjuiRoot->base.height.value * 0.5f);
+    console->rectContainer = rectContainer;
 
-    struct DjuiFlowLayout* flow = djui_flow_layout_create(base);
+    struct DjuiFlowLayout* flow = djui_flow_layout_create(&rectContainer->base);
     struct DjuiBase* cfBase = &flow->base;
     djui_base_set_alignment(cfBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_location(cfBase, 0, 0);
@@ -222,6 +272,21 @@ struct DjuiConsole* djui_console_create(void) {
     cfBase->addChildrenToHead = true;
     cfBase->abandonAfterChildRenderFail = true;
     console->flow = flow;
+
+    struct DjuiInputbox* inputbox = djui_inputbox_create(base, MAX_CONSOLE_INPUT_LENGTH);
+    inputbox->base.interactable->update_style = NULL;
+    djui_base_set_border_color(&inputbox->base, 0, 0, 0, 0);
+    djui_base_set_color(&inputbox->base, 0, 0, 0, 0);
+    djui_base_set_size_type(&inputbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&inputbox->base, 1.0f, 32);
+    djui_base_set_alignment(&inputbox->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+    djui_interactable_hook_key(&inputbox->base, djui_console_on_key_down, djui_inputbox_on_key_up);
+    djui_interactable_hook_text_input(&inputbox->base, djui_console_on_text_input);
+    djui_interactable_hook_text_editing(&inputbox->base, djui_inputbox_on_text_editing);
+    djui_interactable_hook_scroll(&inputbox->base, djui_console_on_scroll);
+    djui_inputbox_set_text_color(inputbox, 255, 255, 255, 255);
+    inputbox->yOffset = 6;
+    console->inputbox = inputbox;
 
     gDjuiConsole = console;
 
