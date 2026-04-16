@@ -481,7 +481,9 @@ void bhv_king_bobomb_loop(void) {
             king_bobomb_move();
             break;
         case HELD_HELD:
-            o->globalPlayerIndex = network_global_index_from_local(o->heldByPlayerIndex);
+            if (o->heldByPlayerIndex < MAX_PLAYERS) {
+                o->globalPlayerIndex = network_global_index_from_local(o->heldByPlayerIndex);
+            }
             cur_obj_unrender_and_reset_state(6, 1);
             break;
         case HELD_THROWN:
