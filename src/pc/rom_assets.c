@@ -5,19 +5,6 @@
 #include "apparition.inc.c"
 #include "utils/misc.h"
 
-#if defined(__i386__) || (defined(_WIN32) && !defined(_WIN64))
-static s32 READ32(struct RomAsset* asset) {
-    s64 index = (asset->segmentedAddress + asset->cursor);
-    if (index < 0 || index >= sCurrentSegmentSize) { return 0; }
-    u8* ptr = &sCurrentSegmentMemory[index];
-    s32 value = BSWAP32(*((s32*)ptr));
-    asset->cursor += sizeof(s32);
-    return value;
-}
-#else
-#define ROM_ASSET_LOAD_DATA(bits) for (u##bits *data = asset->ptr; asset->cursor < asset->segmentedSize; data++) { *data = READ##bits(asset); }
-#endif
-
 struct RomAsset {
     void* ptr;
     enum RomAssetType assetType;
@@ -36,6 +23,19 @@ static u32 sCurrentPhysicalAddress = 0;
 static u32 sCurrentPhysicalSize = 0;
 static u8* sCurrentSegmentMemory = NULL;
 static u32 sCurrentSegmentSize = 0;
+
+#if defined(__i386__) || (defined(_WIN32) && !defined(_WIN64))
+static s32 READ32(struct RomAsset* asset) {
+    s64 index = (asset->segmentedAddress + asset->cursor);
+    if (index < 0 || index >= sCurrentSegmentSize) { return 0; }
+    u8* ptr = &sCurrentSegmentMemory[index];
+    s32 value = BSWAP32(*((s32*)ptr));
+    asset->cursor += sizeof(s32);
+    return value;
+}
+#else
+#define ROM_ASSET_LOAD_DATA(bits) for (u##bits *data = asset->ptr; asset->cursor < asset->segmentedSize; data++) { *data = READ##bits(asset); }
+#endif
 
 static s16 READ16(struct RomAsset* asset) {
     s64 index = (asset->segmentedAddress + asset->cursor);

@@ -25,8 +25,8 @@ def parse_exe_sections(exe_path: str) -> list[dict]:
         raise ValueError(f'"{exe_path}": not a valid PE file')
 
     x = extract_int(b, pe_offset + 4, 2)
-    if x != 0x8664:
-        raise ValueError(f'"{exe_path}": not a x86_64 executable')
+    if x not in (0x8664, 0x014C):
+        raise ValueError(f'"{exe_path}": not a x86_64 or i386 executable')
 
     num_sections = extract_int(b, pe_offset + 6, 2)
     if (num_sections <= 0) or (num_sections > 64):
@@ -36,8 +36,8 @@ def parse_exe_sections(exe_path: str) -> list[dict]:
     if (x <= 0) or (x > 256):
         raise ValueError(f'"{exe_path}: bad SizeOfOptionalHeader.')
 
-    if extract_int(b, pe_offset + 24, 2) != 0x020B:
-        raise ValueError(f'"{exe_path}": invalid PE32+ signature')
+    if extract_int(b, pe_offset + 24, 2) not in (0x020B, 0x010B):
+        raise ValueError(f'"{exe_path}": invalid PE32/PE32+ signature')
 
     sections = []
     section_table = pe_offset + 24 + x
