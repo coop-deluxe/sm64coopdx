@@ -43,7 +43,7 @@ static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
             nearestDist = dist;
         }
     }
-    
+
     return nearest;
 }
 
@@ -143,7 +143,7 @@ static void eyerok_boss_act_wake_up(void) {
     }
 }
 
-static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
+UNUSED static u8 eyerok_boss_act_show_intro_text_continue_dialog(void) {
     return o->oAction == EYEROK_BOSS_ACT_SHOW_INTRO_TEXT;
 }
 

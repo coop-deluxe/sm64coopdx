@@ -488,7 +488,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         }
 
         DynOS_Tex_WriteBinary(aGfxData, _OutputPath, _BaseName, _TexData, (_OverrideName != NULL));
-        
+
         // Don't forgot to free the texture data we've read.
         Delete<TexData>(_TexData);
     }

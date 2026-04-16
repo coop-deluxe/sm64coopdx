@@ -79,7 +79,7 @@ bool expanded = false;
 bool writeTiles;
 bool storeNamesOnly = false;
 
-static void allocate_tiles() {
+static void allocate_tiles(void) {
     const ImageProps props = IMAGE_PROPERTIES[type][true];
     int tileWidth = props.tileWidth;
     int tileHeight = props.tileHeight;
@@ -97,7 +97,7 @@ static void allocate_tiles() {
     }
 }
 
-static void free_tiles() {
+static void free_tiles(void) {
     free(tiles->px);
     free(tiles);
 }
@@ -192,7 +192,7 @@ static void init_tiles(rgba *image, bool expanded) {
     }
 }
 
-static void assign_tile_positions() {
+static void assign_tile_positions(void) {
     const ImageProps props = IMAGE_PROPERTIES[type][true];
     const size_t TILE_SIZE = props.tileWidth * props.tileHeight * sizeof(rgba);
 
@@ -221,7 +221,7 @@ static void assign_tile_positions() {
 #endif
 
 /* write pngs to disc */
-void write_tiles() {
+void write_tiles(void) {
     const ImageProps props = IMAGE_PROPERTIES[type][true];
     char buffer[PATH_MAX];
 
@@ -273,7 +273,7 @@ static void print_raw_data(FILE *cFile, TextureTile *tile) {
     free(raw);
 }
 
-static void write_skybox_c() { /* write c data to disc */
+static void write_skybox_c(void) { /* write c data to disc */
     const ImageProps props = IMAGE_PROPERTIES[type][true];
 
     char fBuffer[PATH_MAX * 2] = "";
@@ -324,7 +324,7 @@ static void write_skybox_c() { /* write c data to disc */
     fclose(cFile);
 }
 
-static void write_cake_c() {
+static void write_cake_c(void) {
     char buffer[PATH_MAX] = "";
     if (realpath(output, buffer) == NULL) {
         fprintf(stderr, "err: Could not find find src dir %s", output);
@@ -492,7 +492,7 @@ fail:
 }
 
 // Modified from n64split
-static void usage() {
+static void usage(void) {
     fprintf(stderr,
             "Usage: %s --type sky|cake|cake_eu {--combine INPUT OUTPUT | --split INPUT OUTPUT}\n"
             "\n"
@@ -532,7 +532,7 @@ static int parse_arguments(int argc, char *argv[]) {
 
             output = argv[i];
         }
-        
+
         if (strcmp(argv[i], "--type") == 0) {
             if (++i >= argc || type != InvalidType) {
                 goto invalid;
@@ -645,7 +645,7 @@ int main(int argc, char *argv[]) {
             }
 
             allocate_tiles();
-            
+
             init_tiles(image, expanded);
             switch (type) {
                 case Skybox:

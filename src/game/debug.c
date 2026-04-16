@@ -338,7 +338,7 @@ void reset_debug_objectinfo(void) {
  * C Right) and then toggles the debug flags from FF to 2; 2 is unused,
  * despite so this has no effect, being called. (unused)
  */
-static void check_debug_button_seq(void) {
+UNUSED static void check_debug_button_seq(void) {
     s16 *buttonArr;
     s16 cButtonMask;
 
@@ -368,7 +368,7 @@ static void check_debug_button_seq(void) {
  * Poll the debug info flags and controller for appropriate presses that
  * control sDebugPage's range. (unused)
  */
-static void try_change_debug_page(void) {
+UNUSED static void try_change_debug_page(void) {
     if (gDebugInfoFlags & DEBUG_INFO_FLAG_DPRINT) {
         if ((gPlayer1Controller->buttonPressed & L_JPAD)
             && (gPlayer1Controller->buttonDown & (L_TRIG | R_TRIG))) {

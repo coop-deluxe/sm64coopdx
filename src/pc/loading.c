@@ -29,7 +29,7 @@ static struct LoadingScreen* sLoading = NULL;
 struct ThreadHandle gLoadingThread = { 0 };
 
 void loading_screen_set_segment_text(const char* text) {
-    snprintf(gCurrLoadingSegment.str, 256, text);
+    snprintf(gCurrLoadingSegment.str, 256, "%s", text);
 }
 
 void loading_screen_reset_progress_bar(void) {

@@ -67,7 +67,7 @@ static bool djui_panel_join_direct_ip_parse_port(char** msg) {
     return port <= 65535;
 }
 
-static bool djui_panel_join_direct_ip_valid(char* buffer) {
+UNUSED static bool djui_panel_join_direct_ip_valid(char* buffer) {
     char** msg = &buffer;
 
     if (!djui_panel_join_direct_ip_parse_numbers(msg)) { return false; }
@@ -107,7 +107,7 @@ static void djui_panel_join_direct_ip_text_set_new(void) {
     bool is_ipv6 = false;
     int port = 0;
 
-    // check if address starts with [ (meaning it's a direct IPv6 address. 
+    // check if address starts with [ (meaning it's a direct IPv6 address.
     // This is needed because we need to know when to get the port number. Example: [2001:db8::1000]:7777
     // If this character is not in the first character in the buffer, it will be treated as an IPv4 address or hostname.
     if (buffer[0] == '[') {
