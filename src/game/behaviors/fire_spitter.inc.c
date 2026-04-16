@@ -1,6 +1,6 @@
 
 static void fire_spitter_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     approach_f32_ptr(&o->header.gfx.scale[0], 0.2f, 0.002f);
     if (o->oTimer > 150 && distanceToPlayer < 800.0f && !(o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)) {
@@ -12,7 +12,7 @@ static void fire_spitter_act_idle(void) {
 static void fire_spitter_act_spit_fire(void) {
     s32 scaleStatus;
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     if (player) {
         o->oMoveAngleYaw = angleToPlayer;
@@ -29,8 +29,8 @@ static void fire_spitter_act_spit_fire(void) {
             if (sync_object_is_owned_locally(o->oSyncID)) {
                 cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
 
-                struct Object* fire = obj_spit_fire(0, 0, 0, 5.0f, MODEL_RED_FLAME_SHADOW, 20.0f, 15.0f, 0x1000);
-                struct Object* spawn_objects[] = { fire };
+                struct Object *fire = obj_spit_fire(0, 0, 0, 5.0f, MODEL_RED_FLAME_SHADOW, 20.0f, 15.0f, 0x1000);
+                struct Object *spawn_objects[] = { fire };
                 u32 models[] = { MODEL_RED_FLAME_SHADOW };
                 network_send_spawn_objects(spawn_objects, models, 1);
 
@@ -45,6 +45,7 @@ static void bhv_fire_spitter_on_received_post(UNUSED u8 localIndex) {
 }
 
 void bhv_fire_spitter_update(void) {
+    // uses event based syncing. When we shoot fire we sync the object
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
