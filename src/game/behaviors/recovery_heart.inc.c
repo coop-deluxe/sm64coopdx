@@ -27,7 +27,7 @@ void bhv_recovery_heart_loop(void) {
             o->oSpinningHeartPlayedSound += 1;
         }
 
-        struct MarioState* marioState = nearest_interacting_mario_state_to_object(o);
+        struct MarioState *marioState = nearest_interacting_mario_state_to_object(o);
         if (marioState) {
             o->oAngleVelYaw = (s32)(200.0f * marioState->forwardVel) + 1000;
         }
@@ -41,8 +41,7 @@ void bhv_recovery_heart_loop(void) {
     }
 
     if ((o->oSpinningHeartTotalSpin += o->oAngleVelYaw) >= 0x10000) {
-
-        struct MarioState* nearestInteractingState = nearest_interacting_mario_state_to_object(o);
+        struct MarioState *nearestInteractingState = nearest_interacting_mario_state_to_object(o);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!gMarioStates[i].visibleToEnemies) { continue; }
             if (!is_player_active(&gMarioStates[i])) { continue; }
