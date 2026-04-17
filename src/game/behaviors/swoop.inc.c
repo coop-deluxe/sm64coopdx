@@ -24,7 +24,7 @@ static struct ObjectHitbox sSwoopHitbox = {
  * toward him and enter the move action.
  */
 static void swoop_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -46,7 +46,7 @@ static void swoop_act_idle(void) {
  * him. Return to home once mario is far away.
  */
 static void swoop_act_move(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_animation_with_accel_and_sound(0, 2.0f);
@@ -105,6 +105,7 @@ static void swoop_act_move(void) {
  * Update function for swoop.
  */
 void bhv_swoop_update(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oFaceAngleRoll);

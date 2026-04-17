@@ -5,7 +5,7 @@
 #include "levels/lll/header.h"
 #include "levels/bitfs/header.h"
 
-struct Struct8032F34C sTumblingBridgeParams[] = {
+struct TumblingBridgeParams sTumblingBridgeParams[] = {
     { 9, -512, 0x80, MODEL_WF_TUMBLING_BRIDGE_PART, wf_seg7_collision_tumbling_bridge },
     { 9, -412, 103, MODEL_BBH_TUMBLING_PLATFORM_PART, bbh_seg7_collision_07026B1C },
     { 9, -512, 0x80, MODEL_LLL_FALLING_PLATFORM, lll_seg7_collision_0701D21C },
@@ -14,8 +14,10 @@ struct Struct8032F34C sTumblingBridgeParams[] = {
 
 void bhv_tumbling_bridge_platform_loop(void) {
     u8 isLLL = obj_has_behavior(o->parentObj, bhvLllTumblingBridge);
+    // uses event based sync system if we are in LLL. In LLL since the objects are gone forever, we need to
+    // sync that, not just when each platform falls as usual
     if (isLLL && !sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             sync_object_init_field(o, o->activeFlags);
             sync_object_init_field(o, o->oAction);
@@ -46,7 +48,7 @@ void bhv_tumbling_bridge_platform_loop(void) {
                 o->oAction++;
                 o->oTumblingBridgeUnkF4 = random_sign() * 0x80;
                 if (!(o->oInteractStatus & INT_STATUS_INTERACTED)) {
-                    network_send_collect_item(o);
+                    network_send_collect_item(o); // syncs the platform for all other players
                 }
                 o->oInteractStatus &= ~INT_STATUS_INTERACTED;
             }
@@ -59,10 +61,12 @@ void bhv_tumbling_bridge_platform_loop(void) {
             }
             break;
         case 2:
-            if (o->oAngleVelPitch < 0x400)
+            if (o->oAngleVelPitch < 0x400) {
                 o->oAngleVelPitch += 0x80;
-            if (o->oAngleVelRoll > -0x400 && o->oAngleVelRoll < 0x400)
+            }
+            if (o->oAngleVelRoll > -0x400 && o->oAngleVelRoll < 0x400) {
                 o->oAngleVelRoll += o->oTumblingBridgeUnkF4; // acceleration?
+            }
             o->oGravity = -3.0f;
             cur_obj_rotate_face_angle_using_vel();
             cur_obj_move_using_fvel_and_gravity();
@@ -88,34 +92,34 @@ void bhv_tumbling_bridge_platform_loop(void) {
 
 void tumbling_bridge_act_1(void) {
     struct Object *platformObj;
-    s32 i;
     s32 bridgeID = o->oBehParams2ndByte;
     s32 relativePlatformX;
     s32 relativePlatformZ;
     s32 relativePlatformY = 0;
     s32 relativeInitialPlatformY = 0;
-    if (!BHV_ARR_CHECK(sTumblingBridgeParams, bridgeID, struct Struct8032F34C)) { return; }
+    if (!BHV_ARR_CHECK(sTumblingBridgeParams, bridgeID, struct TumblingBridgeParams)) { return; }
 
-    for (i = 0; i < sTumblingBridgeParams[bridgeID].numBridgeSections; i++) {
+    for (s32 i = 0; i < sTumblingBridgeParams[bridgeID].numBridgeSections; i++) {
         relativePlatformX = 0;
         relativePlatformZ = 0;
 
-        if (bridgeID == 3)
-            relativePlatformX = sTumblingBridgeParams[bridgeID].bridgeRelativeStartingXorZ
-                                + sTumblingBridgeParams[bridgeID].platformWidth * i;
-        else
-            relativePlatformZ = sTumblingBridgeParams[bridgeID].bridgeRelativeStartingXorZ
-                                + sTumblingBridgeParams[bridgeID].platformWidth * i;
+        if (bridgeID == 3) {
+            relativePlatformX = sTumblingBridgeParams[bridgeID].bridgeRelativeStartingXorZ + sTumblingBridgeParams[bridgeID].platformWidth * i;
+        } else {
+            relativePlatformZ = sTumblingBridgeParams[bridgeID].bridgeRelativeStartingXorZ + sTumblingBridgeParams[bridgeID].platformWidth * i;
+        }
 
         if (cur_obj_has_behavior(bhvLllTumblingBridge)) {
-            if (i % 3 == 0)
+            if (i % 3 == 0) {
                 relativePlatformY -= 150;
+            }
             relativeInitialPlatformY = 450;
         }
 
         platformObj = spawn_object_relative(
             0, relativePlatformX, relativePlatformY + relativeInitialPlatformY, relativePlatformZ, o,
-            sTumblingBridgeParams[bridgeID].model, bhvTumblingBridgePlatform);
+            sTumblingBridgeParams[bridgeID].model, bhvTumblingBridgePlatform
+        );
         if (platformObj == NULL) { continue; }
         obj_set_collision_data(platformObj, sTumblingBridgeParams[bridgeID].segAddr);
     }
@@ -124,14 +128,14 @@ void tumbling_bridge_act_1(void) {
 }
 
 void tumbling_bridge_act_2(void) {
-    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_possible_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_hide();
-    if (cur_obj_has_behavior(bhvLllTumblingBridge))
+    if (cur_obj_has_behavior(bhvLllTumblingBridge)) {
         cur_obj_unhide();
-    else if (distanceToPlayer > 1200.0f) {
+    } else if (distanceToPlayer > 1200.0f) {
         o->oAction = 3;
         cur_obj_unhide();
     }
@@ -143,18 +147,20 @@ void tumbling_bridge_act_3(void) {
 }
 
 void tumbling_bridge_act_0(void) {
-    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_possible_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
-    if (cur_obj_has_behavior(bhvLllTumblingBridge) || distanceToPlayer < 1000.0f)
+    if (cur_obj_has_behavior(bhvLllTumblingBridge) || distanceToPlayer < 1000.0f) {
         o->oAction = 1;
+    }
 }
 
 void (*sTumblingBridgeActions[])(void) = { tumbling_bridge_act_0, tumbling_bridge_act_1,
                                            tumbling_bridge_act_2, tumbling_bridge_act_3 };
 
 void bhv_tumbling_bridge_loop(void) {
+    // syncs using distance-based events,
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {

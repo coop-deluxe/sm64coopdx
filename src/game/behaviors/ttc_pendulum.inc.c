@@ -25,7 +25,8 @@ void bhv_ttc_pendulum_init(void) {
         o->oTTCPendulumAngle = 6371.5557f;
     }
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based syncing
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCPendulumAccelDir);
@@ -42,8 +43,6 @@ void bhv_ttc_pendulum_init(void) {
  */
 void bhv_ttc_pendulum_update(void) {
     if (gTTCSpeedSetting != TTC_SPEED_STOPPED) {
-        UNUSED f32 startVel = o->oTTCPendulumAngleVel;
-
         // Play sound
         if (o->oTTCPendulumSoundTimer != 0) {
             if (--o->oTTCPendulumSoundTimer == 0) {
@@ -89,7 +88,6 @@ void bhv_ttc_pendulum_update(void) {
 
             o->oTTCPendulumAngle += o->oTTCPendulumAngleVel;
         }
-    } else {
     }
 
     o->oFaceAngleRoll = (s32) o->oTTCPendulumAngle;

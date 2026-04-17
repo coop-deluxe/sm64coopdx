@@ -126,7 +126,7 @@ void bhv_treasure_chest_bottom_loop(void) {
     o->oInteractStatus = 0;
 }
 
-struct Object* spawn_treasure_chest(s8 index, s32 x, s32 y, s32 z, s16 r) {
+struct Object *spawn_treasure_chest(s8 index, s32 x, s32 y, s32 z, s16 r) {
     struct Object *obj = spawn_object_abs_with_rot(o, 0, MODEL_TREASURE_CHEST_BASE, bhvTreasureChestBottom, x, y, z, 0, r, 0);
     if (obj != NULL) { obj->oBehParams2ndByte = index; }
     return obj;
@@ -150,6 +150,8 @@ void bhv_treasure_chest_ship_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -220,6 +222,8 @@ void bhv_treasure_chest_jrb_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -288,6 +292,8 @@ void bhv_treasure_chest_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {

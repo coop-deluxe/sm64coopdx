@@ -42,7 +42,8 @@ void bhv_ttc_2d_rotator_init(void) {
         o->oTTC2DRotatorIncrement = o->oTTC2DRotatorSpeed = gTTC2DRotatorSpeeds[o->oBehParams2ndByte];
     }
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // syncs using a standard distance-based system
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTC2DRotatorMinTimeUntilNextTurn);

@@ -59,7 +59,7 @@ struct WFRotatingPlatformData {
     s16 collisionDistance;
 };
 
-struct Struct8032F34C {
+struct TumblingBridgeParams {
     s16 numBridgeSections;
     s16 bridgeRelativeStartingXorZ;
     s16 platformWidth;

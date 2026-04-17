@@ -34,7 +34,8 @@ void bhv_ttc_moving_bar_init(void) {
 
     o->oMoveAngleYaw = 0x4000 - o->oMoveAngleYaw;
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based syncing
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCMovingBarDelay);
