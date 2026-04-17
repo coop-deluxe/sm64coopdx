@@ -2505,7 +2505,7 @@ void pss_end_slide(struct MarioState *m) {
         // only let local player spawn the star
 
         // Syncing TODO: Something is wrong with the syncing here
-        // the sync object completely fails to initalize every frame for the player that
+        // the sync object completely fails to initialize every frame for the player that
         // did not spawn the star
         if (m->playerIndex == 0) {
             // PSS secret star uses oBehParams to spawn

@@ -275,10 +275,10 @@ void bully_act_level_death(void) {
             spawn_mist_particles();
 
             if (o->oBullySubtype == BULLY_STYPE_CHILL) {
-                f32* starPos = gLevelValues.starPositions.ChillBullyStarPos;
+                f32 *starPos = gLevelValues.starPositions.ChillBullyStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
             } else {
-                f32* starPos = gLevelValues.starPositions.BigBullyTrioStarPos;
+                f32 *starPos = gLevelValues.starPositions.BigBullyTrioStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
                 struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
                 if (lllTumblingBridge != NULL) {

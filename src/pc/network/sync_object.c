@@ -342,7 +342,7 @@ u32 sync_object_get_available_local_id(void) {
     return 0;
 }
 
-bool sync_object_set_id(struct Object* o) {
+bool sync_object_set_id(struct Object *o) {
     u32 syncId = o->oSyncID;
     u8 ctx = o->ctx;
 

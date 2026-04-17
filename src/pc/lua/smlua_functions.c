@@ -184,7 +184,7 @@ int smlua_func_reset_level(lua_State* L) {
 int smlua_func_network_init_object(lua_State* L) {
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
-    struct Object* obj = smlua_to_cobject(L, 1, LOT_OBJECT);
+    struct Object *obj = smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess || obj == NULL) { LOG_LUA("network_init_object: Failed to convert parameter 1"); return 0; }
 
     bool standardSync = smlua_to_boolean(L, 2);
@@ -211,14 +211,14 @@ int smlua_func_network_init_object(lua_State* L) {
                 lua_pop(L, 1); // pop value
                 continue;
             }
-            const char* fieldIdentifier = smlua_to_string(L, -1);
+            const char *fieldIdentifier = smlua_to_string(L, -1);
             if (!gSmLuaConvertSuccess) {
                 LOG_LUA_LINE("Invalid field passed to network_init_object()");
                 lua_pop(L, 1); // pop value
                 continue;
             }
 
-            struct LuaObjectField* data = smlua_get_object_field(LOT_OBJECT, fieldIdentifier);
+            struct LuaObjectField *data = smlua_get_object_field(LOT_OBJECT, fieldIdentifier);
             if (data == NULL) {
                 data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
                 if (data == NULL) {
@@ -245,7 +245,7 @@ int smlua_func_network_init_object(lua_State* L) {
                 }
             }
 
-            u8* field = ((u8*)(intptr_t)obj) + data->valueOffset;
+            u8 *field = ((u8*)(intptr_t)obj) + data->valueOffset;
             sync_object_init_field_with_size(obj, field, lvtSizeBytes);
 
             lua_pop(L, 1); // pop value

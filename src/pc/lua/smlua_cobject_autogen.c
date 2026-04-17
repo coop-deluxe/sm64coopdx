@@ -2872,8 +2872,8 @@ const char *smlua_get_lot_name(u16 lot) {
     return sLuaLotNames[lot];
 }
 
-struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key) {
-    struct LuaObjectTable* ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];
+struct LuaObjectField *smlua_get_object_field_autogen(u16 lot, const char *key) {
+    struct LuaObjectTable *ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];
     return smlua_get_object_field_from_ot(ot, key);
 }
 
