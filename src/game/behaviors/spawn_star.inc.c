@@ -1,7 +1,6 @@
 // spawn_default_star.c.inc
 
 void bhv_star_number_loop(void) {
-
     // Check if the star still exists
     struct Object *star = o->parentObj;
     const BehaviorScript *starBhv = (const BehaviorScript *) o->oStarBehavior;

@@ -34,6 +34,7 @@ void bhv_sliding_plat_2_init(void) {
 }
 
 void bhv_sliding_plat_2_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {

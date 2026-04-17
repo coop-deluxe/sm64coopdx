@@ -13,8 +13,6 @@ static struct ObjectHitbox sRollingSphereHitbox = {
 };
 
 void bhv_snowmans_bottom_init(void) {
-    struct Object *sp34;
-
     o->oHomeX = o->oPosX;
     o->oHomeY = o->oPosY;
     o->oHomeZ = o->oPosZ;
@@ -27,12 +25,14 @@ void bhv_snowmans_bottom_init(void) {
     o->oForwardVel = 0;
     o->oSnowmansBottomUnkF4 = 0.4f;
 
-    sp34 = cur_obj_nearest_object_with_behavior(bhvSnowmansHead);
-    if (sp34 != NULL) {
-        o->parentObj = sp34;
+    struct Object *snowmansHeadObj = cur_obj_nearest_object_with_behavior(bhvSnowmansHead);
+    if (snowmansHeadObj != NULL) {
+        o->parentObj = snowmansHeadObj;
     }
     spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvSnowmansBodyCheckpoint, -402, 461, -2898, 0, 0, 0);
 
+    // Syncing TODO: Figure out the best way to sync this object (it's already cursed enough in vanilla, now I have to make it work in coop)
+    // Maybe have it only follow the person who triggers the dialog?
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     sync_object_init_field(o, o->oAction);
     sync_object_init_field(o, o->oForwardVel);
@@ -50,31 +50,27 @@ void adjust_rolling_face_pitch(f32 f12) {
     o->oFaceAnglePitch += (s16)(o->oForwardVel * (100.0f / f12));
     o->oSnowmansBottomUnkF4 += o->oForwardVel * 1e-4;
 
-    if (o->oSnowmansBottomUnkF4 > 1.0)
+    if (o->oSnowmansBottomUnkF4 > 1.0) {
         o->oSnowmansBottomUnkF4 = 1.0f;
+    }
 }
 
 void snowmans_bottom_act_1(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    UNUSED s16 sp26;
-    s32 sp20 = 0;
-    UNUSED s16 sp1E;
-
     o->oPathedStartWaypoint = segmented_to_virtual(gBehaviorValues.trajectories.SnowmanHeadTrajectory);
-    sp26 = object_step_without_floor_orient();
-    sp20 = cur_obj_follow_path(sp20);
+    object_step_without_floor_orient();
+    s32 followStatus = cur_obj_follow_path(0);
     o->oSnowmansBottomUnkF8 = o->oPathedTargetYaw;
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oSnowmansBottomUnkF8, 0x400);
 
-    if (o->oForwardVel > 70.0)
+    if (o->oForwardVel > 70.0) {
         o->oForwardVel = 70.0f;
+    }
 
-    if (sp20 == -1) {
-        sp1E = (u16)angleToPlayer - (u16) o->oMoveAngleYaw;
-        if (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, angleToPlayer, 0x2000) == TRUE
-            && o->oSnowmansBottomUnk1AC == 1) {
+    if (followStatus == -1) {
+        if (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, angleToPlayer, 0x2000) == TRUE && o->oSnowmansBottomUnk1AC == 1) {
             o->oSnowmansBottomUnkF8 = angleToPlayer;
         } else {
             o->oSnowmansBottomUnkF8 = o->oMoveAngleYaw;
@@ -84,11 +80,10 @@ void snowmans_bottom_act_1(void) {
 }
 
 void snowmans_bottom_act_2(void) {
-    UNUSED s16 sp26;
-
-    sp26 = object_step_without_floor_orient();
-    if (o->oForwardVel > 70.0)
+    object_step_without_floor_orient();
+    if (o->oForwardVel > 70.0) {
         o->oForwardVel = 70.0f;
+    }
 
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oSnowmansBottomUnkF8, 0x400);
     if (is_point_close_to_object(o, -4230.0f, -1344.0f, 1813.0f, 300)) {
@@ -110,15 +105,13 @@ void snowmans_bottom_act_2(void) {
 }
 
 void snowmans_bottom_act_3(void) {
-    UNUSED s16 sp1E;
-
-    sp1E = object_step_without_floor_orient();
-    if ((sp1E & 0x09) == 0x09) {
+    s16 collisionFlags = object_step_without_floor_orient();
+    if ((collisionFlags & OBJ_COL_FLAGS_LANDED) == OBJ_COL_FLAGS_LANDED) {
         o->oAction = 4;
         cur_obj_become_intangible();
     }
 
-    if ((sp1E & 0x01) != 0) {
+    if ((collisionFlags & OBJ_COL_FLAG_GROUNDED) != 0) {
         spawn_mist_particles_variable(0, 0, 70.0f);
         o->oPosX = -4230.0f;
         o->oPosZ = 1813.0f;
@@ -131,7 +124,7 @@ static u8 bhv_snowmans_bottom_loop_continue_dialog(void) {
 }
 
 void bhv_snowmans_bottom_loop(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
 
     switch (o->oAction) {
         case 0:
@@ -176,11 +169,8 @@ void bhv_snowmans_bottom_loop(void) {
 }
 
 void bhv_snowmans_head_init(void) {
-    u8 sp37;
-    s8 sp36;
-
-    sp37 = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
-    sp36 = (o->oBehParams >> 24) & 0xFF;
+    u8 starFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1);
+    s8 behParams = (o->oBehParams >> 24) & 0xFF;
 
     cur_obj_scale(0.7f);
 
@@ -188,7 +178,7 @@ void bhv_snowmans_head_init(void) {
     o->oFriction = 0.999f;
     o->oBuoyancy = 2.0f;
 
-    if ((sp37 & (1 << sp36)) && gCurrActNum != sp36 + 1) {
+    if ((starFlags & (1 << behParams)) && gCurrActNum != behParams + 1) {
         spawn_object_abs_with_rot(o, 0, MODEL_CCM_SNOWMAN_BASE, bhvBigSnowmanWhole, -4230, -1344, 1813,
                                   0, 0, 0);
         o->oPosX = -4230.0f;
@@ -210,9 +200,7 @@ static u8 bhv_snowmans_head_action_4_continue_dialog(void) {
 }
 
 void bhv_snowmans_head_loop(void) {
-    UNUSED s16 sp1E;
-    s16 sp1C;
-
+    s16 collisionFlags;
     switch (o->oAction) {
         case 0:
             if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadDialog, 400.0f, 1, bhv_snowmans_head_action_0_continue_dialog))
@@ -223,9 +211,10 @@ void bhv_snowmans_head_loop(void) {
             break;
 
         case 2:
-            sp1C = object_step_without_floor_orient();
-            if (sp1C & 0x08)
+            collisionFlags = object_step_without_floor_orient();
+            if (collisionFlags & OBJ_COL_FLAG_NO_Y_VEL) {
                 o->oAction = 3;
+            }
             break;
 
         case 3:
@@ -241,7 +230,7 @@ void bhv_snowmans_head_loop(void) {
         case 4:
             if (trigger_obj_dialog_when_facing(&gMarioStates[0], &o->oSnowmansHeadUnkF4, gBehaviorValues.dialogs.SnowmanHeadAfterDialog, 700.0f, 2, bhv_snowmans_head_action_4_continue_dialog)) {
                 spawn_mist_particles();
-                f32* starPos = gLevelValues.starPositions.SnowmanHeadStarPos;
+                f32 *starPos = gLevelValues.starPositions.SnowmanHeadStarPos;
                 spawn_default_star(starPos[0], starPos[1], starPos[2]);
                 o->oAction = 1;
                 network_send_object(o);
@@ -262,6 +251,7 @@ void bhv_snowmans_body_checkpoint_loop(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 
-    if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED)
+    if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 }

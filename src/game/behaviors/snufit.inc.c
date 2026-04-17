@@ -30,7 +30,7 @@ struct ObjectHitbox sSnufitBulletHitbox = {
 };
 
 /**
- * This geo function shifts snufit's mask when it shrinks down, 
+ * This geo function shifts snufit's mask when it shrinks down,
  * since the parts move independently.
  */
 Gfx *geo_snufit_move_mask(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c) {
@@ -71,7 +71,7 @@ Gfx *geo_snufit_scale_body(s32 callContext, struct GraphNode *node, UNUSED Mat4 
  * then prepares to shoot after a period.
  */
 void snufit_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 marioDist;
 
@@ -79,12 +79,10 @@ void snufit_act_idle(void) {
     // if the game would not have already crashed.
     marioDist = (s32)(distanceToPlayer / 10.0f);
     if (o->oTimer > marioDist && distanceToPlayer < 800.0f) {
-        
+
         // Controls an alternating scaling factor in a cos.
-        o->oSnufitBodyScalePeriod
-            = approach_s16_symmetric(o->oSnufitBodyScalePeriod, 0, 1500);
-        o->oSnufitBodyBaseScale
-            = approach_s16_symmetric(o->oSnufitBodyBaseScale, 600, 15);
+        o->oSnufitBodyScalePeriod = approach_s16_symmetric(o->oSnufitBodyScalePeriod, 0, 1500);
+        o->oSnufitBodyBaseScale = approach_s16_symmetric(o->oSnufitBodyBaseScale, 600, 15);
 
         if ((s16) o->oSnufitBodyScalePeriod == 0 && o->oSnufitBodyBaseScale == 600) {
             o->oAction = SNUFIT_ACT_SHOOT;
@@ -99,10 +97,8 @@ void snufit_act_idle(void) {
  * Controls the literal shooting action, spawning three bhvSnufitBalls.
  */
 void snufit_act_shoot(void) {
-    o->oSnufitBodyScalePeriod
-        = approach_s16_symmetric(o->oSnufitBodyScalePeriod, -0x8000, 3000);
-    o->oSnufitBodyBaseScale
-        = approach_s16_symmetric(o->oSnufitBodyBaseScale, 167, 20);
+    o->oSnufitBodyScalePeriod = approach_s16_symmetric(o->oSnufitBodyScalePeriod, -0x8000, 3000);
+    o->oSnufitBodyBaseScale = approach_s16_symmetric(o->oSnufitBodyBaseScale, 167, 20);
 
     if ((u16) o->oSnufitBodyScalePeriod == 0x8000 && o->oSnufitBodyBaseScale == 167) {
         o->oAction = SNUFIT_ACT_IDLE;
@@ -132,6 +128,7 @@ void snufit_act_shoot(void) {
  * and the action brain of the object.
  */
 void bhv_snufit_loop(void) {
+    // uses standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oSnufitBullets);
@@ -146,15 +143,15 @@ void bhv_snufit_loop(void) {
         sync_object_init_field(o, o->oDeathSound);
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     // Only update if Mario is in the current room.
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
-        
+
         // Face Mario if he is within range.
         if (distanceToPlayer < 800.0f) {
             if (marioState) {
@@ -232,8 +229,7 @@ void bhv_snufit_balls_loop(void) {
             o->oGravity = -4.0f;
 
             cur_obj_become_intangible();
-        } else if (o->oAction == 1 
-               || (o->oMoveFlags & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_HIT_WALL))) {
+        } else if (o->oAction == 1 || (o->oMoveFlags & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_HIT_WALL))) {
             // The Snufit shot Mario and has fulfilled its lonely existance.
             //! The above check could theoretically be avoided by finding a geometric
             //! situation that does not trigger those flags (Water?). If found,

@@ -27,16 +27,18 @@ static s32 sl_walking_penguin_turn(void) {
     o->oAngleVelYaw = 0x400;
     o->oMoveAngleYaw += o->oAngleVelYaw;
 
-    if (o->oTimer == 31)
+    if (o->oTimer == 31) {
         return TRUE; // Finished turning
-    else
+    } else {
         return FALSE;
+    }
 }
 
 void bhv_sl_walking_penguin_loop(void) {
     f32 adjustedXPos, adjustedZPos;
     f32 perpendicularOffset = 100.0f;
 
+    // uses a standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -62,20 +64,21 @@ void bhv_sl_walking_penguin_loop(void) {
                 o->oSLWalkingPenguinCurStepTimer = 0;
             }
             if (BHV_ARR_CHECK(sSLWalkingPenguinErraticSteps, o->oSLWalkingPenguinCurStep, struct SLWalkingPenguinStep)) {
-                if (o->oSLWalkingPenguinCurStepTimer < sSLWalkingPenguinErraticSteps[o->oSLWalkingPenguinCurStep].stepLength)
+                if (o->oSLWalkingPenguinCurStepTimer < sSLWalkingPenguinErraticSteps[o->oSLWalkingPenguinCurStep].stepLength) {
                     o->oSLWalkingPenguinCurStepTimer++;
-                else {
+                } else {
                     // Move to next step
                     o->oSLWalkingPenguinCurStepTimer = 0;
                     o->oSLWalkingPenguinCurStep++;
-                    if (sSLWalkingPenguinErraticSteps[o->oSLWalkingPenguinCurStep].stepLength < 0)
+                    if (sSLWalkingPenguinErraticSteps[o->oSLWalkingPenguinCurStep].stepLength < 0) {
                         // Reached the end of the list, go back to the start
                         o->oSLWalkingPenguinCurStep = 0;
+                    }
                 }
 
-                if (o->oPosX < 300.0f)
+                if (o->oPosX < 300.0f) {
                     o->oAction++; // If reached the end of the bridge, turn around and head back.
-                else {
+                } else {
                     // Move and animate the penguin
                     o->oForwardVel = sSLWalkingPenguinErraticSteps[o->oSLWalkingPenguinCurStep].speed;
 
@@ -89,8 +92,9 @@ void bhv_sl_walking_penguin_loop(void) {
 
         // At the end, turn around and prepare to head back across the bridge.
         case SL_WALKING_PENGUIN_ACT_TURNING_BACK:
-            if (sl_walking_penguin_turn())
+            if (sl_walking_penguin_turn()) {
                 o->oAction++; // Finished turning
+            }
             break;
 
         // Walk back across the bridge at a constant speed.
@@ -99,20 +103,23 @@ void bhv_sl_walking_penguin_loop(void) {
             o->oForwardVel = 12.0f;
             cur_obj_init_animation_with_accel_and_sound(PENGUIN_ANIM_WALK, 2.0f);
 
-            if (o->oPosX > 1700.0f)
+            if (o->oPosX > 1700.0f) {
                 o->oAction++; // If reached the start of the bridge, turn around.
+            }
             break;
 
         // At the start, turn around and prepare to walk erratically across the bridge.
         case SL_WALKING_PENGUIN_ACT_TURNING_FORWARDS:
-            if (sl_walking_penguin_turn())
+            if (sl_walking_penguin_turn()) {
                 o->oAction = SL_WALKING_PENGUIN_ACT_MOVING_FORWARDS; // Finished turning
+            }
             break;
     }
 
     cur_obj_move_standard(-78);
-    if (!cur_obj_hide_if_mario_far_away_y(1000.0f))
+    if (!cur_obj_hide_if_mario_far_away_y(1000.0f)) {
         play_penguin_walking_sound(PENGUIN_WALK_BIG);
+    }
 
     // Adjust the position to get a point better lined up with the visual model, for stopping the wind.
     // The new point is 60 units behind the penguin and 100 units perpedicularly, away from the snowman.
