@@ -1,24 +1,37 @@
 // whomp.c.inc
 
 void whomp_play_sfx_from_pound_animation(void) {
-    UNUSED s32 sp2C = o->header.gfx.animInfo.animFrame;
-    s32 sp28 = 0;
+    s32 playSound = 0;
     if (o->oForwardVel < 5.0f) {
-        sp28 = cur_obj_check_anim_frame(0);
-        sp28 |= cur_obj_check_anim_frame(23);
+        playSound = cur_obj_check_anim_frame(0);
+        playSound |= cur_obj_check_anim_frame(23);
     } else {
-        sp28 = cur_obj_check_anim_frame_in_range(0, 3);
-        sp28 |= cur_obj_check_anim_frame_in_range(23, 3);
+        playSound = cur_obj_check_anim_frame_in_range(0, 3);
+        playSound |= cur_obj_check_anim_frame_in_range(23, 3);
     }
-    if (sp28)
+    if (playSound) {
         cur_obj_play_sound_2(SOUND_OBJ_POUNDING1);
+    }
 }
 
-u8 whomp_act_0_continue_dialog(void) { return o->oAction == 0; }
+u8 whomp_act_0_continue_dialog(void) {
+    return o->oAction == 0;
+}
 
 void whomp_act_0(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = NULL;
+    if (o->oBehParams2ndByte == 0) {
+        marioState = nearest_mario_state_to_object(o);
+    } else if (o->oSubAction != 0) {
+        if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
+        marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+        if (!is_player_active(marioState)) {
+            marioState = &gMarioStates[get_network_player_smallest_global()->localIndex];
+        }
+    } else {
+        marioState = gMarioStates[0].visibleToEnemies ? &gMarioStates[0] : NULL;
+    }
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
@@ -29,17 +42,23 @@ void whomp_act_0(void) {
         if (o->oSubAction == 0) {
             if (distanceToPlayer < 600.0f) {
                 o->oSubAction++;
+                o->globalPlayerIndex = gNetworkPlayerLocal->globalIndex;
                 seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
+                network_send_object(o);
             } else {
                 cur_obj_set_pos_to_home();
                 o->oHealth = gBehaviorValues.KingWhompHealth;
             }
-        } else if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDialog, whomp_act_0_continue_dialog)) {
+        } else if (marioState && should_start_or_continue_dialog(marioState, o)
+                   && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG,
+                                                          gBehaviorValues.dialogs.KingWhompDialog,
+                                                          whomp_act_0_continue_dialog)) {
             o->oAction = 2;
             network_send_object(o);
         }
-    } else if (distanceToPlayer < 500.0f)
+    } else if (distanceToPlayer < 500.0f) {
         o->oAction = 1;
+    }
     whomp_play_sfx_from_pound_animation();
 }
 
@@ -47,65 +66,67 @@ void whomp_act_7(void) {
     if (o->oSubAction == 0) {
         o->oForwardVel = 0.0f;
         cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
-        if (o->oTimer > 31)
+        if (o->oTimer > 31) {
             o->oSubAction++;
-        else
+        } else {
             o->oMoveAngleYaw += 0x400;
+        }
     } else {
         o->oForwardVel = 3.0f;
-        if (o->oTimer > 42)
+        if (o->oTimer > 42) {
             o->oAction = 1;
+        }
     }
     whomp_play_sfx_from_pound_animation();
 }
 
 void whomp_act_1(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    s16 sp26;
-    f32 sp20;
-    f32 sp1C;
-    sp26 = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
-    sp20 = cur_obj_lateral_dist_to_home();
-    if (gCurrLevelNum == LEVEL_BITS)
-        sp1C = 200.0f;
-    else
-        sp1C = 700.0f;
+    f32 patrolDist;
+    s16 marioAngle = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
+    f32 distFromHome = cur_obj_lateral_dist_to_home();
+    if (gCurrLevelNum == LEVEL_BITS) {
+        patrolDist = 200.0f;
+    } else {
+        patrolDist = 700.0f;
+    }
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
     o->oForwardVel = 3.0f;
-    if (sp20 > sp1C)
+    if (distFromHome > patrolDist) {
         o->oAction = 7;
-    else if (sp26 < 0x2000) {
+    } else if (marioAngle < 0x2000) {
         if (distanceToPlayer < 1500.0f) {
             o->oForwardVel = 9.0f;
             cur_obj_init_animation_with_accel_and_sound(0, 3.0f);
         }
-        if (distanceToPlayer < 300.0f)
+        if (distanceToPlayer < 300.0f) {
             o->oAction = 3;
+        }
     }
     whomp_play_sfx_from_pound_animation();
 }
 
 void whomp_act_2(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    s16 sp1E;
     cur_obj_init_animation_with_accel_and_sound(0, 1.0f);
     o->oForwardVel = 3.0f;
     cur_obj_rotate_yaw_toward(angleToPlayer, 0x200);
     if (o->oTimer > 30) {
-        sp1E = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
-        if (sp1E < 0x2000) {
+        s16 marioAngle = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
+        if (marioAngle < 0x2000) {
             if (distanceToPlayer < 1500.0f) {
                 o->oForwardVel = 9.0f;
                 cur_obj_init_animation_with_accel_and_sound(0, 3.0f);
             }
-            if (distanceToPlayer < 300.0f)
+            if (distanceToPlayer < 300.0f) {
                 o->oAction = 3;
+            }
         }
     }
     whomp_play_sfx_from_pound_animation();
@@ -118,15 +139,17 @@ void whomp_act_2(void) {
 void whomp_act_3(void) {
     o->oForwardVel = 0.0f;
     cur_obj_init_animation_with_accel_and_sound(1, 1.0f);
-    if (cur_obj_check_if_near_animation_end())
+    if (cur_obj_check_if_near_animation_end()) {
         o->oAction = 4;
+    }
 }
 
 void whomp_act_4(void) {
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         o->oVelY = 40.0f;
-    if (o->oTimer < 8) {
-    } else {
+    }
+
+    if (o->oTimer >= 8) {
         o->oAngleVelPitch += 0x100;
         o->oFaceAnglePitch += o->oAngleVelPitch;
         if (o->oFaceAnglePitch > 0x4000) {
@@ -144,48 +167,58 @@ void whomp_act_5(void) {
         o->oVelY = 0.0f;
         o->oSubAction++;
     }
-    if (o->oMoveFlags & OBJ_MOVE_ON_GROUND)
+    if (o->oMoveFlags & OBJ_MOVE_ON_GROUND) {
         o->oAction = 6;
+    }
 }
 
 void king_whomp_on_ground(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
 
-    Vec3f pos;
     if (o->oSubAction == 0) {
         if (cur_obj_is_mario_ground_pounding_platform()) {
             o->oHealth--;
             cur_obj_play_sound_2(SOUND_OBJ2_WHOMP_SOUND_SHORT);
             cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);
-            if (o->oHealth == 0)
+            if (o->oHealth == 0) {
                 o->oAction = 8;
-            else {
-                vec3f_copy(pos, &o->oPosX);
+                for (s32 i = 0; i < MAX_PLAYERS; i++) {
+                    if (!is_player_active(&gMarioStates[i])) { continue; }
+                    if (obj_is_mario_ground_pounding_platform(&gMarioStates[i], o)) {
+                        o->globalPlayerIndex = network_global_index_from_local(i);
+                        break;
+                    }
+                }
+                network_send_object(o);
+            } else {
+                Vec3f tempPos;
+                vec3f_copy(tempPos, &o->oPosX);
                 if (player) {
                     vec3f_copy(&o->oPosX, &player->oPosX);
                 }
                 spawn_mist_particles_variable(0, 0, 100.0f);
                 spawn_triangle_break_particles(20, 138, 3.0f, 4);
                 cur_obj_shake_screen(SHAKE_POS_SMALL);
-                vec3f_copy(&o->oPosX, pos);
+                vec3f_copy(&o->oPosX, tempPos);
             }
             o->oSubAction++;
         }
         o->oWhompShakeVal = 0;
     } else {
         if (o->oWhompShakeVal < 10) {
-            if (o->oWhompShakeVal % 2)
+            if (o->oWhompShakeVal % 2) {
                 o->oPosY += 8.0f;
-            else
+            } else {
                 o->oPosY -= 8.0f;
-        } else
+            }
+        } else {
             o->oSubAction = 10;
+        }
         o->oWhompShakeVal++;
     }
 }
 
 void whomp_on_ground(void) {
-
     if (o->oSubAction == 0) {
         if (cur_obj_is_any_player_on_platform()) {
             if (cur_obj_is_mario_ground_pounding_platform()) {
@@ -193,15 +226,16 @@ void whomp_on_ground(void) {
                 obj_spawn_loot_yellow_coins(o, 5, 20.0f);
                 o->oAction = 8;
             } else {
-                struct MarioState* marioState = nearest_mario_state_to_object(o);
+                struct MarioState *marioState = nearest_mario_state_to_object(o);
                 if (marioState) {
                     cur_obj_spawn_loot_coin_at_mario_pos(marioState);
                 }
                 o->oSubAction++;
             }
         }
-    } else if (!cur_obj_is_mario_on_platform())
+    } else if (!cur_obj_is_mario_on_platform()) {
         o->oSubAction = 0;
+    }
 }
 
 void whomp_act_6(void) {
@@ -210,13 +244,15 @@ void whomp_act_6(void) {
         o->oAngleVelPitch = 0;
         o->oAngleVelYaw = 0;
         o->oAngleVelRoll = 0;
-        if (o->oBehParams2ndByte != 0)
+        if (o->oBehParams2ndByte != 0) {
             king_whomp_on_ground();
-        else
+        } else {
             whomp_on_ground();
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (o->oTimer > 100 || (marioState && marioState->action == ACT_SQUISHED && o->oTimer > 30))
+        }
+        struct MarioState *marioState = nearest_mario_state_to_object(o);
+        if (o->oTimer > 100 || (marioState && marioState->action == ACT_SQUISHED && o->oTimer > 30)) {
             o->oSubAction = 10;
+        }
     } else {
         if (o->oFaceAnglePitch > 0) {
             o->oAngleVelPitch = -0x200;
@@ -224,20 +260,30 @@ void whomp_act_6(void) {
         } else {
             o->oAngleVelPitch = 0;
             o->oFaceAnglePitch = 0;
-            if (o->oBehParams2ndByte != 0)
+            if (o->oBehParams2ndByte != 0) {
                 o->oAction = 2;
-            else
+            } else {
                 o->oAction = 1;
+            }
         }
     }
 }
 
-u8 whomp_act_8_continue_dialog(void) { return o->oAction == 8; }
+u8 whomp_act_8_continue_dialog(void) {
+    return o->oAction == 8;
+}
 
 void whomp_act_8(void) {
     if (o->oBehParams2ndByte != 0) {
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 2, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingWhompDefeatDialog, whomp_act_8_continue_dialog)) {
+        if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
+        struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+        if (!is_player_active(marioState)) {
+            marioState = &gMarioStates[get_network_player_smallest_global()->localIndex];
+        }
+        if (marioState && should_start_or_continue_dialog(marioState, o)
+            && cur_obj_update_dialog_with_cutscene(marioState, 2, 2, CUTSCENE_DIALOG,
+                                                   gBehaviorValues.dialogs.KingWhompDefeatDialog,
+                                                   whomp_act_8_continue_dialog)) {
             obj_set_angle(o, 0, 0, 0);
             cur_obj_hide();
             cur_obj_become_intangible();
@@ -246,7 +292,7 @@ void whomp_act_8(void) {
             cur_obj_shake_screen(SHAKE_POS_SMALL);
             o->oPosY += 100.0f;
 
-            f32* starPos = gLevelValues.starPositions.KingWhompStarPos;
+            f32 *starPos = gLevelValues.starPositions.KingWhompStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
             cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);
@@ -263,17 +309,15 @@ void whomp_act_8(void) {
 }
 
 void whomp_act_9(void) {
-    if (o->oTimer == 60)
-        stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
+    if (o->oTimer == 60) stop_background_music(SEQUENCE_ARGS(4, SEQ_EVENT_BOSS));
 }
 
-void (*sWhompActions[])(void) = {
-    whomp_act_0, whomp_act_1, whomp_act_2, whomp_act_3, whomp_act_4,
-    whomp_act_5, whomp_act_6, whomp_act_7, whomp_act_8, whomp_act_9
-};
+void (*sWhompActions[])(void) = { whomp_act_0, whomp_act_1, whomp_act_2, whomp_act_3, whomp_act_4,
+                                  whomp_act_5, whomp_act_6, whomp_act_7, whomp_act_8, whomp_act_9 };
 
 // MM
 void bhv_whomp_loop(void) {
+    // uses distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oAngleVelPitch);
@@ -281,6 +325,7 @@ void bhv_whomp_loop(void) {
         sync_object_init_field(o, o->oForwardVel);
         sync_object_init_field(o, o->oHealth);
         sync_object_init_field(o, o->oFaceAnglePitch);
+        sync_object_init_field(o, o->globalPlayerIndex);
     }
 
     cur_obj_update_floor_and_walls();
@@ -289,10 +334,11 @@ void bhv_whomp_loop(void) {
     if (o->oAction != 9) {
         // o->oBehParams2ndByte here seems to be a flag
         // indicating whether this is a normal or king whomp
-        if (o->oBehParams2ndByte != 0)
+        if (o->oBehParams2ndByte != 0) {
             cur_obj_hide_if_mario_far_away_y(2000.0f);
-        else
+        } else {
             cur_obj_hide_if_mario_far_away_y(1000.0f);
+        }
         load_object_collision_model();
     }
 }

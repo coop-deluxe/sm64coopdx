@@ -2,9 +2,9 @@
 static u32 sWaterDiamondPicked = 0;
 
 static void bhv_init_changing_water_level_on_received_post(UNUSED u8 fromLocalIndex) {
-    struct SyncObject* diamondSo = sync_object_get(sWaterDiamondPicked);
+    struct SyncObject *diamondSo = sync_object_get(sWaterDiamondPicked);
     if (diamondSo == NULL || diamondSo->behavior != smlua_override_behavior(bhvWaterLevelDiamond)) { return; }
-    struct Object* diamond = sync_object_get_object(sWaterDiamondPicked);
+    struct Object *diamond = sync_object_get_object(sWaterDiamondPicked);
     if (diamond == NULL || diamond->behavior != smlua_override_behavior(bhvWaterLevelDiamond)) { return; }
 
     diamond->oAction = WATER_LEVEL_DIAMOND_ACT_CHANGE_WATER_LEVEL;
@@ -13,9 +13,11 @@ static void bhv_init_changing_water_level_on_received_post(UNUSED u8 fromLocalIn
 
 // called when WDW is loaded.
 void bhv_init_changing_water_level_loop(void) {
+    // uses event based syncing system. Called when a new water diamond is picked and used and changes the water
+    // level accordingly
     if (!sync_object_is_initialized(o->oSyncID)) {
         sWaterDiamondPicked = 0;
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so != NULL) {
             so->on_received_post = bhv_init_changing_water_level_on_received_post;
             sync_object_init_field(o, sWaterDiamondPicked);
@@ -39,11 +41,11 @@ void bhv_init_changing_water_level_loop(void) {
 }
 
 void bhv_water_level_diamond_loop(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
+    struct Object *manager = cur_obj_nearest_object_with_behavior(bhvInitializeChangingWaterLevel);
 
-    struct Object* manager = cur_obj_nearest_object_with_behavior(bhvInitializeChangingWaterLevel);
-
+    // Syncing TODO: why is this synced? No fields are synced....
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
@@ -52,9 +54,10 @@ void bhv_water_level_diamond_loop(void) {
         switch (o->oAction) {
             case WATER_LEVEL_DIAMOND_ACT_INIT:
                 o->oFaceAngleYaw = 0;
-                o->oWaterLevelTriggerTargetWaterLevel = (s32) o->oPosY;
-                if (o->oTimer > 10)
+                o->oWaterLevelTriggerTargetWaterLevel = (s32)o->oPosY;
+                if (o->oTimer > 10) {
                     o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE
+                }
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE:
                 if (marioState == &gMarioStates[0] && player && obj_check_if_collided_with_object(o, player)) {
@@ -74,18 +77,20 @@ void bhv_water_level_diamond_loop(void) {
                 *gEnvironmentLevels = (s32) approach_f32_symmetric(
                     (f32) *gEnvironmentLevels, (f32) o->oWaterLevelTriggerTargetWaterLevel, gLevelValues.wdwWaterLevelSpeed);
                 if (*gEnvironmentLevels == o->oWaterLevelTriggerTargetWaterLevel) {
-                    if ((s16) o->oFaceAngleYaw == 0)
+                    if ((s16) o->oFaceAngleYaw == 0) {
                         o->oAction++; // Sets to WATER_LEVEL_DIAMOND_ACT_IDLE_SPINNING
-                    else
+                    } else {
                         o->oAngleVelYaw = 0x800;
+                    }
                 } else {
                     if (o->oTimer == 0)
                         cur_obj_play_sound_2(SOUND_GENERAL_WATER_LEVEL_TRIG);
                     else {
-                        if (*gEnvironmentLevels > o->oWaterLevelTriggerTargetWaterLevel)
+                        if (*gEnvironmentLevels > o->oWaterLevelTriggerTargetWaterLevel) {
                             cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
-                        else
+                        } else {
                             cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN); // same as above
+                        }
                     }
                     o->oAngleVelYaw = 0x800;
                     reset_rumble_timers_2(&gMarioStates[0], 2);
@@ -96,7 +101,7 @@ void bhv_water_level_diamond_loop(void) {
                     gWDWWaterLevelChanging = 0;
                     o->oAction = WATER_LEVEL_DIAMOND_ACT_IDLE;
                     o->oAngleVelYaw = 0;
-                    struct SyncObject* so = sync_object_get(o->oSyncID);
+                    struct SyncObject *so = sync_object_get(o->oSyncID);
                     if (so && so->behavior == o->behavior) {
                         so->lastReliablePacketIsStale = true;
                     }
