@@ -44,17 +44,25 @@ void bhv_ferris_wheel_axle_init(void) {
         }
     }
 
-    // syncs using the area timer
-    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
-    o->areaTimer = 0;
-    o->areaTimerDuration = 983; // it takes 163.84 frames to do a full rotation, to minimize drift, we use 983 frames
+    // does a distance-based sync method without standard fields, only syncs roll face angle
+    struct SyncObject* so = sync_object_init(o, 2000.0f);
+    if (so) {
+        so->hasStandardFields = FALSE;
+        so->maxUpdateRate = 5.0f;
+        sync_object_init_field(o, o->oFaceAngleRoll);
+    }
 }
 
 void bhv_ferris_wheel_platform_init(void) {
-    // syncs using the area timer
-    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
-    o->areaTimer = 0;
-    o->areaTimerDuration = 983;
+    // does a distance-based sync method without standard fields, only syncs position
+    struct SyncObject* so = sync_object_init(o, 2000.0f);
+    if (so) {
+        so->hasStandardFields = FALSE;
+        so->maxUpdateRate = 5.0f;
+        sync_object_init_field(o, o->oPosX);
+        sync_object_init_field(o, o->oPosY);
+        sync_object_init_field(o, o->oPosZ);
+    }
 }
 
 /**
