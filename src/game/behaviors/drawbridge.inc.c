@@ -17,6 +17,7 @@ void bhv_lll_drawbridge_spawner_init(void) {
         drawbridge[1]->oPosZ += sins(o->oMoveAngleYaw) * -640.0f;
     }
 
+    // syncing is done using a standard distance-based system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 3000.0f);
         for (s32 i = 0; i < 2; i++) {

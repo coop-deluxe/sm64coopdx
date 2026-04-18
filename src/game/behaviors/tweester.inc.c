@@ -25,12 +25,9 @@ void tweester_scale_and_move(f32 preScale) {
     s16 dYaw  = 0x2C00;
     f32 scale = preScale * 0.4;
 
-    o->header.gfx.scale[0] 
-        = (( coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.3 + 1.0) * scale;
-    o->header.gfx.scale[1] 
-        = ((-coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.5 + 0.5) * scale;
-    o->header.gfx.scale[2] 
-        = (( coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.3 + 1.0) * scale;
+    o->header.gfx.scale[0] = (( coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.3 + 1.0) * scale;
+    o->header.gfx.scale[1] = ((-coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.5 + 0.5) * scale;
+    o->header.gfx.scale[2] = (( coss(o->oTweesterScaleTimer) + 1.0) * 0.5 * 0.3 + 1.0) * scale;
 
     o->oTweesterScaleTimer += 0x200;
     o->oForwardVel = 14.0f;
@@ -43,7 +40,7 @@ void tweester_scale_and_move(f32 preScale) {
  * it enters the chasing action.
  */
 void tweester_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oSubAction == TWEESTER_SUB_ACT_WAIT) {
@@ -55,15 +52,17 @@ void tweester_act_idle(void) {
         o->oTweesterUnused = 0;
 
         // If Mario is within range, change to the growth sub-action.
-        if (distanceToPlayer < 1500.0f)
+        if (distanceToPlayer < 1500.0f) {
             o->oSubAction++;
+        }
 
         o->oTimer = 0;
     } else {
         cur_obj_play_sound_1(SOUND_ENV_WIND1);
         tweester_scale_and_move(o->oTimer / 60.0f);
-        if (o->oTimer > 59)
+        if (o->oTimer > 59) {
             o->oAction = TWEESTER_ACT_CHASE;
+        }
     }
 }
 
@@ -72,8 +71,8 @@ void tweester_act_idle(void) {
  * After Mario is twirling, then return home.
  */
 void tweester_act_chase(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -82,30 +81,31 @@ void tweester_act_chase(void) {
     o->oAngleToHome = cur_obj_angle_to_home();
     cur_obj_play_sound_1(SOUND_ENV_WIND1);
 
-    if (player
-        && cur_obj_lateral_dist_from_obj_to_home(player) < activationRadius
-        && o->oSubAction == TWEESTER_SUB_ACT_CHASE) {
-
+    if (player && cur_obj_lateral_dist_from_obj_to_home(player) < activationRadius && o->oSubAction == TWEESTER_SUB_ACT_CHASE) {
         o->oForwardVel = 20.0f;
         cur_obj_rotate_yaw_toward(angleToPlayer, 0x200);
         print_debug_top_down_objectinfo("off ", 0);
 
-        if (marioState->action == ACT_TWIRLING)
+        if (marioState->action == ACT_TWIRLING) {
             o->oSubAction++;
+        }
     } else {
         o->oForwardVel = 20.0f;
         cur_obj_rotate_yaw_toward(o->oAngleToHome, 0x200);
 
-        if (cur_obj_lateral_dist_to_home() < 200.0f)
+        if (cur_obj_lateral_dist_to_home() < 200.0f) {
             o->oAction = TWEESTER_ACT_HIDE;
+        }
     }
 
-    if (distanceToPlayer > 3000.0f)
+    if (distanceToPlayer > 3000.0f) {
         o->oAction = TWEESTER_ACT_HIDE;
+    }
 
     cur_obj_update_floor_and_walls();
-    if (o->oMoveFlags & OBJ_MOVE_HIT_WALL)
+    if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
         o->oMoveAngleYaw = o->oWallAngle;
+    }
 
     cur_obj_move_standard(60);
     tweester_scale_and_move(1.0f);
@@ -117,17 +117,20 @@ void tweester_act_chase(void) {
  * action if Mario is 2500 units away or 12 seconds passed.
  */
 void tweester_act_hide(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     f32 shrinkTimer = 60.0f - o->oTimer;
 
-    if (shrinkTimer >= 0.0f)
+    if (shrinkTimer >= 0.0f) {
         tweester_scale_and_move(shrinkTimer / 60.0f);
-    else {
+    } else {
         cur_obj_become_intangible();
-        if (player && cur_obj_lateral_dist_from_obj_to_home(player) > 2500.0f)
+        if (player && cur_obj_lateral_dist_from_obj_to_home(player) > 2500.0f) {
             o->oAction = TWEESTER_ACT_IDLE;
-        if (o->oTimer > 360)
+        }
+
+        if (o->oTimer > 360) {
             o->oAction = TWEESTER_ACT_IDLE;
+        }
     }
 }
 
@@ -135,10 +138,11 @@ void tweester_act_hide(void) {
 void (*sTweesterActions[])(void) = { tweester_act_idle, tweester_act_chase, tweester_act_hide };
 
 /**
- * Loop behavior for Tweester. 
+ * Loop behavior for Tweester.
  * Loads the hitbox and calls its relevant action.
  */
 void bhv_tweester_loop(void) {
+    // uses standard distance-based syncingh
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oForwardVel);
@@ -170,6 +174,7 @@ void bhv_tweester_sand_particle_loop(void) {
         o->oFaceAngleYaw = random_u16();
     }
 
-    if (o->oTimer > 15)
+    if (o->oTimer > 15) {
         obj_mark_for_deletion(o);
+    }
 }

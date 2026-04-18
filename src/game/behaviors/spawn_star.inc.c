@@ -1,7 +1,6 @@
 // spawn_default_star.c.inc
 
 void bhv_star_number_loop(void) {
-
     // Check if the star still exists
     struct Object *star = o->parentObj;
     const BehaviorScript *starBhv = (const BehaviorScript *) o->oStarBehavior;
@@ -24,7 +23,6 @@ void bhv_star_number_loop(void) {
 }
 
 void spawn_star_number(void) {
-
     // Check if the star already has a number
     struct Object *starNumber = obj_get_first_with_behavior_id(id_bhvStarNumber);
     u32 sanityDepth = 0;
@@ -59,10 +57,9 @@ static struct ObjectHitbox sCollectStarHitbox = {
 };
 
 void bhv_collect_star_init(void) {
-    s16 starId;
     u8 currentLevelStarFlags;
 
-    starId = o->oBehParams >> 24;
+    s16 starId = o->oBehParams >> 24;
     currentLevelStarFlags = save_file_get_star_flags(gCurrSaveFileNum - 1, (gLevelValues.useGlobalStarIds ? (starId / 7) - 1 : gCurrCourseNum - 1));
     if (currentLevelStarFlags & (1 << (gLevelValues.useGlobalStarIds ? starId % 7 : starId))) {
         cur_obj_set_model(MODEL_TRANSPARENT_STAR);
@@ -85,17 +82,25 @@ void bhv_collect_star_loop(void) {
 }
 
 void bhv_star_spawn_init(void) {
+    // uses standard distance-based syncing
+     if (!sync_object_is_initialized(o->oSyncID)) {
+        sync_object_init(o, 4000);
+        sync_object_init_field(o, o->oBehParams);
+        sync_object_init_field(o, o->oAction);
+    }
+
     o->oMoveAngleYaw = atan2s(o->oHomeZ - o->oPosZ, o->oHomeX - o->oPosX);
     o->oStarSpawnDisFromHome = sqrtf(sqr(o->oHomeX - o->oPosX) + sqr(o->oHomeZ - o->oPosZ));
     o->oVelY = (o->oHomeY - o->oPosY) / 30.0f;
     o->oForwardVel = o->oStarSpawnDisFromHome / 30.0f;
     o->oStarSpawnUnkFC = o->oPosY;
 
-    if (o->oStarSpawnExtCutsceneFlags && ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE)) {
-        if (o->oBehParams2ndByte == 0 || gCurrCourseNum == COURSE_BBH)
+    if (o->oStarSpawnExtCutsceneFlags) {
+        if (o->oBehParams2ndByte == 0 || gCurrCourseNum == COURSE_BBH) {
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
-        else
+        } else {
             cutscene_object(CUTSCENE_RED_COIN_STAR_SPAWN, o);
+        }
 
         // gMarioStates[0].freeze = 60;
         set_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
@@ -106,18 +111,12 @@ void bhv_star_spawn_init(void) {
 }
 
 void bhv_star_spawn_loop(void) {
-    if (!sync_object_is_initialized(o->oSyncID)) {
-        sync_object_init(o, 4000);
-        sync_object_init_field(o, o->oBehParams);
-        sync_object_init_field(o, o->oAction);
-        sync_object_init_field(o, o->oStarSpawnExtCutsceneFlags);
-    }
-
     switch (o->oAction) {
         case 0:
             o->oFaceAngleYaw += 0x1000;
-            if (o->oTimer > 20)
+            if (o->oTimer > 20) {
                 o->oAction = 1;
+            }
             break;
 
         case 1:
@@ -135,10 +134,11 @@ void bhv_star_spawn_loop(void) {
             break;
 
         case 2:
-            if (o->oTimer < 20)
+            if (o->oTimer < 20) {
                 o->oVelY = 20 - o->oTimer;
-            else
+            } else {
                 o->oVelY = -10.0f;
+            }
 
             spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
             obj_move_xyz_using_fvel_and_yaw(o);
@@ -169,12 +169,10 @@ void bhv_star_spawn_loop(void) {
                 o->oInteractStatus = 0;
             }
 
-            struct SyncObject* so = sync_object_get(o->oSyncID);
+            struct SyncObject *so = sync_object_get(o->oSyncID);
             if (so) {
                 so->owned = sync_object_should_own(so->id);
                 if (so->owned) { network_send_object(o); }
-            } else {
-                network_send_object(o);
             }
             break;
     }
@@ -182,8 +180,7 @@ void bhv_star_spawn_loop(void) {
 }
 
 struct Object *spawn_star(struct Object *obj, f32 x, f32 y, f32 z) {
-    obj = spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStarSpawnCoordinates, o->oPosX, o->oPosY,
-                                     o->oPosZ, 0, 0, 0);
+    obj = spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStarSpawnCoordinates, o->oPosX, o->oPosY, o->oPosZ, 0, 0, 0);
     if (obj == NULL) { return NULL; }
     obj->oBehParams = o->oBehParams;
     obj->oStarSpawnExtCutsceneFlags = 1;
@@ -235,7 +232,7 @@ struct Object *spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
         return NULL;
     }
 
-    struct Object * star = NULL;
+    struct Object *star = NULL;
     star = spawn_star(star, x, y, z);
     if (star != NULL) {
         star->oBehParams2ndByte = 1;
@@ -253,7 +250,7 @@ struct Object *spawn_no_exit_star(f32 x, f32 y, f32 z) {
         return NULL;
     }
 
-    struct Object * star = NULL;
+    struct Object *star = NULL;
     star = spawn_star(star, x, y, z);
     if (star != NULL) {
         star->oBehParams2ndByte = 1;
@@ -317,6 +314,9 @@ void bhv_hidden_red_coin_star_init(void) {
     // who last interacted to begin with.
     o->oHiddenStarLastInteractedObject = NULL;
 
+    // uses event based syncing system. See red_coin.inc.c to see the parent in use there, and also see
+    // interact_coin, which is the coin handler for INTERACT_COIN, and see network_send_collect_coin
+    // to see the packet for when mario collects a coin. This specifically is synced for late joiners
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {

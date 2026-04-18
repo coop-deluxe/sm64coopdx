@@ -5,13 +5,25 @@ void bhv_white_puff_smoke_init(void) {
     cur_obj_scale(random_float() * 2 + 2.0);
 }
 
+static void bhv_bullet_bill_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
+    if (o->oAction == 4) *shouldOverride = TRUE;
+
+    if (*shouldOverride) {
+        *shouldOwn = o->globalPlayerIndex == gNetworkPlayerLocal->globalIndex;
+    }
+}
+
 void bhv_bullet_bill_init(void) {
     o->oBulletBillInitialMoveYaw = o->oMoveAngleYaw;
+    // uses standard distance based syncing along with forcing ownership changes for guaranteeing syncing death
     if (!sync_object_is_initialized(o->oSyncID)) {
-        sync_object_init(o, 4000.0f);
-        sync_object_init_field(o, o->oFaceAnglePitch);
-        sync_object_init_field(o, o->oFaceAngleRoll);
-        sync_object_init_field(o, o->oForwardVel);
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
+        if (so) {
+            so->override_ownership = bhv_bullet_bill_override_ownership;
+            sync_object_init_field(o, o->oFaceAnglePitch);
+            sync_object_init_field(o, o->oFaceAngleRoll);
+            sync_object_init_field(o, o->oForwardVel);
+        }
     }
 }
 
@@ -27,34 +39,36 @@ void bullet_bill_act_0(void) {
 }
 
 void bullet_bill_act_1(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    s16 sp1E = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
-    if (sp1E < 0x2000 && 400.0f < distanceToPlayer && distanceToPlayer < 1500.0f)
+    s16 angleDiff = abs_angle_diff(angleToPlayer, o->oMoveAngleYaw);
+    if (angleDiff < 0x2000 && 400.0f < distanceToPlayer && distanceToPlayer < 1500.0f) {
         o->oAction = 2;
+    }
 }
 
 void bullet_bill_act_2(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (o->oTimer < 40)
         o->oForwardVel = 3.0f;
     else if (o->oTimer < 50) {
-        if (o->oTimer % 2)
+        if (o->oTimer % 2) {
             o->oForwardVel = 3.0f;
-        else
+        } else {
             o->oForwardVel = -3.0f;
+        }
     } else {
-        if (o->oTimer > 70)
-            cur_obj_update_floor_and_walls();
+        if (o->oTimer > 70) cur_obj_update_floor_and_walls();
         spawn_object(o, MODEL_SMOKE, bhvWhitePuffSmoke);
         o->oForwardVel = 30.0f;
-        if (distanceToPlayer > 300.0f)
+        if (distanceToPlayer > 300.0f) {
             cur_obj_rotate_yaw_toward(angleToPlayer, 0x100);
+        }
         if (o->oTimer == 50) {
             cur_obj_play_sound_2(SOUND_OBJ_POUNDING_CANNON);
             cur_obj_shake_screen(SHAKE_POS_SMALL);
@@ -78,8 +92,9 @@ void bullet_bill_act_4(void) {
     o->oFaceAnglePitch += 0x1000;
     o->oFaceAngleRoll += 0x1000;
     o->oPosY += 20.0f;
-    if (o->oTimer > 90)
+    if (o->oTimer > 90) {
         o->oAction = 0;
+    }
 }
 
 void (*sBulletBillActions[])(void) = { bullet_bill_act_0, bullet_bill_act_1, bullet_bill_act_2,
@@ -87,6 +102,10 @@ void (*sBulletBillActions[])(void) = { bullet_bill_act_0, bullet_bill_act_1, bul
 
 void bhv_bullet_bill_loop(void) {
     CUR_OBJ_CALL_ACTION_FUNCTION(sBulletBillActions);
-    if (cur_obj_check_interacted())
+    if (cur_obj_check_interacted() && gMarioState->interactObj == o) {
+        // local player interacted with bullet bill, force sync global player index and action
         o->oAction = 4;
+        o->globalPlayerIndex = gNetworkPlayerLocal->globalIndex;
+        network_send_object(o);
+    }
 }

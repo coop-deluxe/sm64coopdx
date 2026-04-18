@@ -24,6 +24,8 @@ static u8 boo_ignore_update(void) {
 }
 
 struct SyncObject* boo_sync_object_init(void) {
+    // There's lots of different boos, all of the sync objects are initialized via this function
+    // all of them use distance based syncing which works fine for boos
     struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
@@ -118,7 +120,7 @@ void bhv_courtyard_boo_triplet_init(void) {
         obj_mark_for_deletion(o);
         return;
     }
-    
+
     for (s32 i = 0; i < 3; i++) {
         struct Object *boo = spawn_object_relative(
             0x01,
@@ -338,7 +340,7 @@ static s32 obj_has_attack_type(u32 attackType) {
     if ((o->oInteractStatus & INT_STATUS_ATTACK_MASK) == attackType) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -528,14 +530,13 @@ static void (*sBooActions[])(void) = {
 };
 
 void bhv_boo_loop(void) {
-    // COOP: only sync when Boo isn't in a death state
+    // only sync when Boo isn't in a death state
     if (o->oAction < 3 || o->oAction == 5) {
         if (!sync_object_is_initialized(o->oSyncID)) {
             struct SyncObject* so = boo_sync_object_init();
             if (so) { so->syncDeathEvent = FALSE; }
         }
-    }
-    else {
+    } else {
         if (sync_object_is_initialized(o->oSyncID)) {
             network_send_object_reliability(o, TRUE);
             sync_object_forget(o->oSyncID);
@@ -654,7 +655,7 @@ static void big_boo_spawn_merry_go_round_star(void) {
 
     merryGoRound = cur_obj_nearest_object_with_behavior(bhvMerryGoRound);
     if (merryGoRound == NULL) { return; }
-    
+
     merryGoRound->oMerryGoRoundStopped = TRUE;
 }
 
@@ -827,10 +828,10 @@ void bhv_boo_with_cage_init(void) {
         obj_mark_for_deletion(o);
         return;
     }
-    
+
     struct Object *cage = spawn_object(o, MODEL_HAUNTED_CAGE, bhvBooCage);
     if (cage == NULL) { return; }
-    
+
     cage->oBehParams = o->oBehParams;
 }
 

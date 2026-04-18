@@ -106,10 +106,8 @@ void bhv_lll_bowser_puzzle_spawn_piece(s16 model, const BehaviorScript *behavior
  * Spawn the 14 puzzle pieces.
  */
 void bhv_lll_bowser_puzzle_spawn_pieces(f32 pieceWidth) {
-    s32 i;
-
     // Spawn all 14 puzzle pieces.
-    for (i = 0; i < 14; i++)
+    for (s32 i = 0; i < 14; i++)
         bhv_lll_bowser_puzzle_spawn_piece(sBowserPuzzlePieces[i].model, bhvLllBowserPuzzlePiece,
                                           sBowserPuzzlePieces[i].xOffset * pieceWidth / 10.0f,
                                           sBowserPuzzlePieces[i].zOffset * pieceWidth / 10.0f,
@@ -124,11 +122,11 @@ void bhv_lll_bowser_puzzle_spawn_pieces(f32 pieceWidth) {
  * Does the initial spawn of the puzzle pieces and then waits to spawn 5 coins.
  */
 void bhv_lll_bowser_puzzle_loop(void) {
-    s32 i;
-    UNUSED struct Object *sp28;
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
+    // does an event based sync. Specifically the action for spawning coins is what is synced
+    // everything else can be done deterministically
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -146,8 +144,9 @@ void bhv_lll_bowser_puzzle_loop(void) {
             // If both completion flags are set and Mario is within 1000 units...
             if (o->oBowserPuzzleCompletionFlags == 3 && distanceToPlayer < 1000.0f) {
                 // Spawn 5 coins.
-                for (i = 0; i < 5; i++)
-                    sp28 = spawn_object(o, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned);
+                for (s32 i = 0; i < 5; i++) {
+                    spawn_object(o, MODEL_YELLOW_COIN, bhvSingleCoinGetsSpawned);
+                }
 
                 // Reset completion flags (even though they never get checked again).
                 o->oBowserPuzzleCompletionFlags = 0;
@@ -184,8 +183,9 @@ void bhv_lll_bowser_puzzle_piece_update(void) {
     if (!nextAction) { return; }
 
     // If Mario is standing on this puzzle piece, set a flag in the parent.
-    if (cur_obj_is_any_player_on_platform() && o->parentObj)
+    if (cur_obj_is_any_player_on_platform() && o->parentObj) {
         o->parentObj->oBowserPuzzleCompletionFlags = 1;
+    }
 
     // If we should advance to the next action...
     if (o->oBowserPuzzlePieceContinuePerformingAction == 0) {
@@ -216,10 +216,11 @@ void bhv_lll_bowser_puzzle_piece_update(void) {
 void bhv_lll_bowser_puzzle_piece_move(f32 xOffset, f32 zOffset, s32 duration, UNUSED s32 a3) {
     // For the first 20 frames, shake the puzzle piece up and down.
     if (o->oTimer < 20) {
-        if (o->oTimer % 2)
+        if (o->oTimer % 2) {
             o->oBowserPuzzlePieceOffsetY = 0.0f;
-        else
+        } else {
             o->oBowserPuzzlePieceOffsetY = -6.0f;
+        }
     } else {
         // On frame 20, play the shifting sound.
         if (o->oTimer == 20)
@@ -242,14 +243,10 @@ void bhv_lll_bowser_puzzle_piece_move(f32 xOffset, f32 zOffset, s32 duration, UN
 }
 
 void bhv_lll_bowser_puzzle_piece_idle(void) {
-    UNUSED s32 sp4;
-
-    // For the first 24 frames, do nothing.
-    if (o->oTimer < 24)
-        sp4 = 0;
-    else
-        // Then advance to the next action.
+    // after 24 frames advance to the next action
+    if (o->oTimer >= 24) {
         o->oBowserPuzzlePieceContinuePerformingAction = 0;
+    }
 }
 
 void bhv_lll_bowser_puzzle_piece_move_left(void) {

@@ -1,43 +1,40 @@
 // lll_rotating_hex_flame.c.inc
 
 void bhv_lll_rotating_hex_flame_loop(void) {
-    f32 sp24 = o->oLllRotatingHexFlameUnkF4;
-    f32 sp20 = o->oLllRotatingHexFlameUnkF8;
-    f32 sp1C = o->oLllRotatingHexFlameUnkFC;
+    f32 relativePosX = o->oLllRotatingHexFlameUnkF4;
+    f32 relativePosY = o->oLllRotatingHexFlameUnkF8;
+    f32 relativePosZ = o->oLllRotatingHexFlameUnkFC;
 
     if (o->parentObj) {
-        cur_obj_set_pos_relative(o->parentObj, sp24, sp20, sp1C);
+        cur_obj_set_pos_relative(o->parentObj, relativePosX, relativePosY, relativePosZ);
         o->oPosY = o->parentObj->oPosY + 100.0f;
-        if (o->parentObj->oAction == 3)
+        if (o->parentObj->oAction == 3) {
             obj_mark_for_deletion(o);
+        }
     } else {
         obj_mark_for_deletion(o);
     }
 }
 
 void fire_bar_spawn_flames(s16 a0) {
-    struct Object *sp2C;
-    UNUSED s32 unused;
-    s32 i;
-    s32 sp20;
-    f32 sp1C = sins(a0) * 200.0f;
-    f32 sp18 = coss(a0) * 200.0f;
-    sp20 = (o->oBehParams2ndByte == 0) ? 4 : 3;
-    for (i = 0; i < sp20; i++) {
-        sp2C = spawn_object(o, MODEL_RED_FLAME, bhvLllRotatingHexFlame);
-        if (sp2C != NULL) {
-            sp2C->oLllRotatingHexFlameUnkF4 += sp1C;
-            sp2C->oLllRotatingHexFlameUnkF8 = o->oPosY - 200.0f;
-            sp2C->oLllRotatingHexFlameUnkFC += sp18;
-            obj_scale_xyz(sp2C, 6.0f, 6.0f, 6.0f);
+    f32 xOffset = sins(a0) * 200.0f;
+    f32 zOffset = coss(a0) * 200.0f;
+    s32 amount = (o->oBehParams2ndByte == 0) ? 4 : 3;
+    for (s32 i = 0; i < amount; i++) {
+        struct Object *lllRotatingHexFlameObj = spawn_object(o, MODEL_RED_FLAME, bhvLllRotatingHexFlame);
+        if (lllRotatingHexFlameObj != NULL) {
+            lllRotatingHexFlameObj->oLllRotatingHexFlameUnkF4 += xOffset;
+            lllRotatingHexFlameObj->oLllRotatingHexFlameUnkF8 = o->oPosY - 200.0f;
+            lllRotatingHexFlameObj->oLllRotatingHexFlameUnkFC += zOffset;
+            obj_scale_xyz(lllRotatingHexFlameObj, 6.0f, 6.0f, 6.0f);
         }
-        sp1C += sins(a0) * 150.0f;
-        sp18 += coss(a0) * 150.0f;
+        xOffset += sins(a0) * 150.0f;
+        zOffset += coss(a0) * 150.0f;
     }
 }
 
 void fire_bar_act_0(void) {
-     o->oAction = 1;
+    o->oAction = 1;
 }
 
 void fire_bar_act_1(void) {
@@ -61,11 +58,13 @@ void (*sRotatingCwFireBarsActions[])(void) = { fire_bar_act_0, fire_bar_act_1,
                                                fire_bar_act_2, fire_bar_act_3 };
 
 void bhv_lll_rotating_block_fire_bars_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oAngleVelYaw);
     }
     CUR_OBJ_CALL_ACTION_FUNCTION(sRotatingCwFireBarsActions);
-    if (o->oBehParams2ndByte == 0)
+    if (o->oBehParams2ndByte == 0) {
         load_object_collision_model();
+    }
 }

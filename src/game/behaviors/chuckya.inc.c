@@ -1,11 +1,11 @@
 // chuckya.c.inc
 
-void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
+void common_anchor_mario_behavior(f32 forwardVel, f32 yVel, s32 flag) {
     if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        struct MarioState* marioState = &gMarioStates[i];
-        struct Object* player = marioState->marioObj;
+        struct MarioState *marioState = &gMarioStates[i];
+        struct Object *player = marioState->marioObj;
         if (marioState->heldByObj != o->parentObj && marioState->heldByObj != o) { continue; }
         if (marioState->action != ACT_GRABBED) { continue; }
         switch (o->parentObj->oChuckyaUnk88) {
@@ -15,22 +15,22 @@ void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
                 obj_set_gfx_pos_at_obj_pos(player, o);
                 break;
             case 2:
-                player->oInteractStatus |= (sp30 + INT_STATUS_MARIO_UNK2);
-                marioState->forwardVel = sp28;
-                marioState->vel[1] = sp2C;
+                player->oInteractStatus |= (flag + INT_STATUS_MARIO_UNK2);
+                marioState->forwardVel = forwardVel;
+                marioState->vel[1] = yVel;
                 o->parentObj->oChuckyaUnk88 = 0;
                 break;
             case 3:
-                player->oInteractStatus |=
-                    (INT_STATUS_MARIO_UNK2 + INT_STATUS_MARIO_UNK6); // loads 2 interactions at once?
+                player->oInteractStatus |= (INT_STATUS_MARIO_UNK2 + INT_STATUS_MARIO_UNK6); // loads 2 interactions at once?
                 marioState->forwardVel = 10.0f;
                 marioState->vel[1] = 10.0f;
                 o->parentObj->oChuckyaUnk88 = 0;
                 break;
         }
         o->oMoveAngleYaw = o->parentObj->oMoveAngleYaw;
-        if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED)
+        if (o->parentObj->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
             obj_mark_for_deletion(o);
+        }
     }
 }
 
@@ -38,112 +38,93 @@ void bhv_chuckya_anchor_mario_loop(void) {
     common_anchor_mario_behavior(40.0f, 40.0f, 64);
 }
 
-s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
-    if (!o) { return 0; }
-    struct Object* player = nearest_player_to_object(o);
-    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
-    s32 sp1C = 0;
-    if (o->oChuckyaUnkF8 != 4) {
-        if (sp24 < cur_obj_lateral_dist_from_mario_to_home()) {
-            if (cur_obj_lateral_dist_to_home() < 200.0f)
-                sp1C = 0;
-            else {
-                sp1C = 1;
-                angleToPlayer = cur_obj_angle_to_home();
-            }
-        } else if (distanceToPlayer > sp28) {
-            if ((gGlobalTimer % (s16) sp2C == 0) && player) {
-                angleToPlayer = obj_angle_to_object(o, player);
-            }
-            sp1C = 2;
-        } else
-            sp1C = 3;
-        if (sp20 && update_angle_from_move_flags(&angleToPlayer)) {
-            sp1C = 4;
-            o->oChuckyaUnkF8 = 4;
+s32 approach_forward_vel(f32 *arr, f32 target, f32 accel) {
+    s32 atDestination = 0;
+    if (arr[0] > target) {
+        arr[0] -= accel;
+        if (arr[0] < target) {
+            arr[0] = target;
         }
-    } else
-        sp1C = 4;
-    return sp1C;
-}
-
-s32 approach_forward_vel(f32 *arr, f32 spC, f32 sp10) {
-    s32 sp4 = 0;
-    if (arr[0] > spC) {
-        arr[0] -= sp10;
-        if (arr[0] < spC)
-            arr[0] = spC;
-    } else if (arr[0] < spC) {
-        arr[0] += sp10;
-        if (arr[0] > spC)
-            arr[0] = spC;
-    } else
-        sp4 = 1;
-    return sp4;
+    } else if (arr[0] < target) {
+        arr[0] += accel;
+        if (arr[0] > target) {
+            arr[0] = target;
+        }
+    } else {
+        atDestination = 1;
+    }
+    return atDestination;
 }
 
 void chuckya_act_0(void) {
     if (!o) { return; }
     struct Object* player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
-    s32 sp3C = 0;
-    UNUSED u8 pad[16];
-    s32 sp28;
-    if (o->oTimer == 0)
+    s32 prevSubAction;
+    if (o->oTimer == 0) {
         o->oChuckyaUnkFC = 0;
+    }
 
-    switch (sp28 = o->oSubAction) {
+    switch (prevSubAction = o->oSubAction) {
         case 0:
             o->oForwardVel = 0;
             if (cur_obj_lateral_dist_from_mario_to_home() < 2000.0f) {
                 cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
-                if (o->oChuckyaUnkFC > 40
-                    || abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) < 0x1000)
+                if (o->oChuckyaUnkFC > 40 || abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) < 0x1000) {
                     o->oSubAction = 1;
-            } else
+                }
+            } else {
                 o->oSubAction = 3;
+            }
             break;
         case 1:
             approach_forward_vel(&o->oForwardVel, 30.0f, 4.0f);
-            if (abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) > 0x4000)
+            if (abs_angle_diff(o->oMoveAngleYaw, angleToPlayer) > 0x4000) {
                 o->oSubAction = 2;
-            if (cur_obj_lateral_dist_from_mario_to_home() > 2000.0f)
+            }
+
+            if (cur_obj_lateral_dist_from_mario_to_home() > 2000.0f) {
                 o->oSubAction = 3;
+            }
             break;
         case 2:
             approach_forward_vel(&o->oForwardVel, 0, 4.0f);
-            if (o->oChuckyaUnkFC > 48)
+            if (o->oChuckyaUnkFC > 48) {
                 o->oSubAction = 0;
+            }
             break;
         case 3:
-            if (cur_obj_lateral_dist_to_home() < 500.0f)
+            if (cur_obj_lateral_dist_to_home() < 500.0f) {
                 o->oForwardVel = 0;
-            else {
+            } else {
                 approach_forward_vel(&o->oForwardVel, 10.0f, 4.0f);
                 angleToPlayer = cur_obj_angle_to_home();
                 cur_obj_rotate_yaw_toward(angleToPlayer, 0x800);
             }
-            if (cur_obj_lateral_dist_from_mario_to_home() < 1900.0f)
+            if (cur_obj_lateral_dist_from_mario_to_home() < 1900.0f) {
                 o->oSubAction = 0;
+            }
             break;
     }
-    if (o->oSubAction != sp28)
+    if (o->oSubAction != prevSubAction) {
         o->oChuckyaUnkFC = 0;
-    else
+    } else {
         o->oChuckyaUnkFC++;
+    }
     cur_obj_init_animation_with_sound(4);
-    if (o->oForwardVel > 1.0f)
+    if (o->oForwardVel > 1.0f) {
         cur_obj_play_sound_1(SOUND_AIR_CHUCKYA_MOVE);
-    print_debug_bottom_up("fg %d", sp3C);
+    }
+    print_debug_bottom_up("fg %d", 0);
     print_debug_bottom_up("sp %d", o->oForwardVel);
 }
 
 void chuckya_act_1(void) {
     if (!o) { return; }
     if (o->oSubAction == 0) {
-        if (cur_obj_init_animation_and_check_if_near_end(0))
+        if (cur_obj_init_animation_and_check_if_near_end(0)) {
             o->oSubAction++;
+        }
         o->oChuckyaUnkFC = random_float() * 30.0f + 10.0f;
         o->oChuckyaUnk100 = 0;
         o->oForwardVel = 0.0f;
@@ -159,10 +140,9 @@ void chuckya_act_1(void) {
             } else {
                 cur_obj_init_animation_with_sound(1);
                 o->oMoveAngleYaw += INT_STATUS_GRABBED_MARIO;
-                if (o->oChuckyaUnkFC-- < 0)
-                    if (check_if_moving_over_floor(50.0f, 150.0f) || o->oChuckyaUnkFC < -16) {
-                        o->oSubAction++;
-                    }
+                if (o->oChuckyaUnkFC-- < 0 && (check_if_moving_over_floor(50.0f, 150.0f) || o->oChuckyaUnkFC < -16)) {
+                    o->oSubAction++;
+                }
             }
         } else {
             cur_obj_init_animation_with_sound(3);
@@ -182,8 +162,9 @@ void chuckya_act_3(void) {
     o->oForwardVel = 0;
     o->oVelY = 0;
     cur_obj_init_animation_with_sound(4);
-    if (o->oTimer > 100)
+    if (o->oTimer > 100) {
         o->oAction = 0;
+    }
 }
 
 void chuckya_act_2(void) {
@@ -210,7 +191,7 @@ void chuckya_move(void) {
     }
 }
 
-void bhv_chuckya_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_chuckya_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     *shouldOverride = (gMarioStates[0].heldByObj == o);
     if (*shouldOverride) {
         *shouldOwn = true;
@@ -222,6 +203,7 @@ u8 bhv_chuckya_ignore_if_true(void) {
 }
 
 void bhv_chuckya_loop(void) {
+    // uses standard distance-based sync. Ignore any syncs coming in and become the owner if you are holding chuckya
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so != NULL) {
@@ -235,8 +217,8 @@ void bhv_chuckya_loop(void) {
         }
     }
 
-    f32 sp2C = 20.0f;
-    f32 sp28 = 50.0f;
+    f32 forwardVel = 20.0f;
+    f32 velY = 50.0f;
     cur_obj_scale(2.0f);
     o->oInteractionSubtype |= INT_SUBTYPE_GRABS_MARIO;
     switch (o->oHeldState) {
@@ -248,7 +230,7 @@ void bhv_chuckya_loop(void) {
             break;
         case HELD_THROWN:
         case HELD_DROPPED:
-            cur_obj_get_thrown_or_placed(sp2C, sp28, 2);
+            cur_obj_get_thrown_or_placed(forwardVel, velY, 2);
             break;
     }
     o->oInteractStatus = 0;

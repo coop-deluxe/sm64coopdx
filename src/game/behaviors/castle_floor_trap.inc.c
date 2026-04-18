@@ -15,27 +15,28 @@ void bhv_floor_trap_in_castle_loop(void) {
 }
 
 void bhv_castle_floor_trap_init(void) {
-    struct Object *sp2C;
-    sp2C = spawn_object_relative(0, -358, 0, 0, o, MODEL_CASTLE_BOWSER_TRAP, bhvFloorTrapInCastle);
-    sp2C = spawn_object_relative(0, 358, 0, 0, o, MODEL_CASTLE_BOWSER_TRAP, bhvFloorTrapInCastle);
-    if (sp2C == NULL) { return; }
-    sp2C->oMoveAngleYaw += 0x8000;
+    struct Object *trap;
+    trap = spawn_object_relative(0, -358, 0, 0, o, MODEL_CASTLE_BOWSER_TRAP, bhvFloorTrapInCastle);
+    trap = spawn_object_relative(0, 358, 0, 0, o, MODEL_CASTLE_BOWSER_TRAP, bhvFloorTrapInCastle);
+    if (trap == NULL) { return; }
+    trap->oMoveAngleYaw += 0x8000;
 }
 
 void bhv_castle_floor_trap_open_detect(void) {
-    if (gMarioStates[0].action == ACT_SPECIAL_EXIT_AIRBORNE
-        || gMarioStates[0].action == ACT_SPECIAL_DEATH_EXIT)
+    if (gMarioStates[0].action == ACT_SPECIAL_EXIT_AIRBORNE || gMarioStates[0].action == ACT_SPECIAL_DEATH_EXIT) {
         o->oAction = 4; // rotates trapdoor so it looks always open
-    else {
+    } else {
         o->oAngleVelRoll = 0x400;
-        if (o->oInteractStatus & INT_STATUS_TRAP_TURN)
+        if (o->oInteractStatus & INT_STATUS_TRAP_TURN) {
             o->oAction = 1; // detects interact then opens the trapdoor
+        }
     }
 }
 
 void bhv_castle_floor_trap_open(void) {
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         cur_obj_play_sound_2(SOUND_GENERAL_CASTLE_TRAP_OPEN);
+    }
     o->oAngleVelRoll -= 0x100;
     o->oFaceAngleRoll += o->oAngleVelRoll;
     if (o->oFaceAngleRoll < -0x4000) {
@@ -48,8 +49,9 @@ void bhv_castle_floor_trap_close_detect(void) {
     struct Object* player = nearest_player_to_object(o);
     if (!player) { return; }
     s32 distanceToPlayer = dist_between_objects(o, player);
-    if (distanceToPlayer > 1000.0f)
+    if (distanceToPlayer > 1000.0f) {
         o->oAction = 3; // close trapdoor
+    }
 }
 
 void bhv_castle_floor_trap_close(void) {
@@ -66,7 +68,9 @@ void bhv_castle_floor_trap_rotate(void) {
 }
 
 void bhv_castle_floor_trap_loop(void) {
-    UNUSED s32 unused[3];
+    // this object does not sync directly, it instead uses all the player's platforms, so it
+    // syncs as long as mario is synced
+
     switch (o->oAction) {
         case 0:
             bhv_castle_floor_trap_open_detect();

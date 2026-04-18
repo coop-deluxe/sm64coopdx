@@ -5,6 +5,7 @@ void bhv_spindel_init(void) {
     o->oSpindelUnkF4 = 0;
     o->oSpindelUnkF8 = 0;
 
+    // uses standard distance-based syncing
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oSpindelUnkF4);
     sync_object_init_field(o, o->oSpindelUnkF8);
@@ -13,9 +14,6 @@ void bhv_spindel_init(void) {
 }
 
 void bhv_spindel_loop(void) {
-    f32 sp1C;
-    s32 sp18;
-
     if (o->oSpindelUnkF4 == -1) {
         if (o->oTimer == 32) {
             o->oSpindelUnkF4 = 0;
@@ -27,16 +25,18 @@ void bhv_spindel_loop(void) {
         }
     }
 
-    sp18 = 10 - o->oSpindelUnkF4;
+    s32 shake = 10 - o->oSpindelUnkF4;
 
-    if (sp18 < 0)
-        sp18 *= -1;
+    if (shake < 0) {
+        shake *= -1;
+    }
 
-    sp18 -= 6;
-    if (sp18 < 0)
-        sp18 = 0;
+    shake -= 6;
+    if (shake < 0) {
+        shake = 0;
+    }
 
-    if (o->oTimer == sp18 + 8) {
+    if (o->oTimer == shake + 8) {
         o->oTimer = 0;
         o->oSpindelUnkF4++;
         if (o->oSpindelUnkF4 == 20) {
@@ -50,20 +50,21 @@ void bhv_spindel_loop(void) {
         }
     }
 
-    if (sp18 == 4 || sp18 == 3)
-        sp18 = 4;
-    else if (sp18 == 2 || sp18 == 1)
-        sp18 = 2;
-    else if (sp18 == 0)
-        sp18 = 1;
+    if (shake == 4 || shake == 3) {
+        shake = 4;
+    } else if (shake == 2 || shake == 1) {
+        shake = 2;
+    } else if (shake == 0) {
+        shake = 1;
+    }
 
-    if (o->oTimer < sp18 * 8) {
+    if (o->oTimer < shake * 8) {
         if (o->oSpindelUnkF8 == 0) {
-            o->oVelZ = 20 / sp18;
-            o->oAngleVelPitch = 1024 / sp18;
+            o->oVelZ = 20 / shake;
+            o->oAngleVelPitch = 1024 / shake;
         } else {
-            o->oVelZ = -20 / sp18;
-            o->oAngleVelPitch = -1024 / sp18;
+            o->oVelZ = -20 / shake;
+            o->oAngleVelPitch = -1024 / shake;
         }
 
         o->oPosZ += o->oVelZ;
@@ -73,13 +74,15 @@ void bhv_spindel_loop(void) {
             cur_obj_play_sound_2(SOUND_GENERAL2_SPINDEL_ROLL);
         }
 
-        sp1C = sins(o->oMoveAnglePitch * 4) * 23.0;
-        if (sp1C < 0.0f)
-            sp1C *= -1.0f;
+        f32 yOffset = sins(o->oMoveAnglePitch * 4) * 23.0;
+        if (yOffset < 0.0f) {
+            yOffset *= -1.0f;
+        }
 
-        o->oPosY = o->oHomeY + sp1C;
+        o->oPosY = o->oHomeY + yOffset;
 
-        if (o->oTimer + 1 == sp18 * 8)
+        if (o->oTimer + 1 == shake * 8) {
             set_camera_shake_from_point(SHAKE_POS_SMALL, o->oPosX, o->oPosY, o->oPosZ);
+        }
     }
 }

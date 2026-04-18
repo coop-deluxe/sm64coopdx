@@ -13,7 +13,6 @@ struct ObjectHitbox sKoopaShellHitbox = {
 };
 
 void koopa_shell_spawn_water_drop(void) {
-    UNUSED s32 unused;
     struct Object *drop;
     spawn_object(o, MODEL_WAVE_TRAIL, bhvObjectWaveTrail);
     if (o->heldByPlayerIndex < MAX_PLAYERS) {
@@ -38,34 +37,35 @@ void bhv_koopa_shell_flame_loop(void) {
     }
     cur_obj_update_floor_height();
     cur_obj_move_using_fvel_and_gravity();
-    if (o->oFloorHeight > o->oPosY || o->oTimer > 10)
+    if (o->oFloorHeight > o->oPosY || o->oTimer > 10) {
         obj_mark_for_deletion(o);
+    }
     o->oKoopaShellFlameUnkF8 += -0.3;
     cur_obj_scale(o->oKoopaShellFlameUnkF8);
 }
 
 void bhv_koopa_shell_flame_spawn(void) {
-    s32 i;
-    for (i = 0; i < 2; i++)
+    for (u8 i = 0; i < 2; i++) {
         spawn_object(o, MODEL_RED_FLAME, bhvKoopaShellFlame);
+    }
 }
 
-void koopa_shell_spawn_sparkles(f32 a) {
-    struct Object *sp1C = spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
-    if (sp1C == NULL) { return; }
-    sp1C->oPosY += a;
+void koopa_shell_spawn_sparkles(f32 yOffset) {
+    struct Object *sparkles = spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
+    if (sparkles == NULL) { return; }
+    sparkles->oPosY += yOffset;
 }
 
 void bhv_koopa_shell_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 500.0f);
     }
 
-    struct Surface *sp34;
     obj_set_hitbox(o, &sKoopaShellHitbox);
     cur_obj_scale(1.0f);
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = NULL;
     switch (o->oAction) {
         case 0:
             cur_obj_update_floor_and_walls();
@@ -86,16 +86,18 @@ void bhv_koopa_shell_loop(void) {
                 if (player) {
                     obj_copy_pos(o, player);
                 }
-                sp34 = cur_obj_update_floor_height_and_get_floor();
-                if (absf(find_water_level(o->oPosX, o->oPosZ) - o->oPosY) < 10.0f)
+                struct Surface *surface = cur_obj_update_floor_height_and_get_floor();
+                if (absf(find_water_level(o->oPosX, o->oPosZ) - o->oPosY) < 10.0f) {
                     koopa_shell_spawn_water_drop();
-                else if (5.0f > absf(o->oPosY - o->oFloorHeight)) {
-                    if (sp34 != NULL && sp34->type == 1)
+                } else if (5.0f > absf(o->oPosY - o->oFloorHeight)) {
+                    if (surface != NULL && surface->type == 1) {
                         bhv_koopa_shell_flame_spawn();
-                    else
+                    } else {
                         koopa_shell_spawn_sparkles(10.0f);
-                } else
+                    }
+                } else {
                     koopa_shell_spawn_sparkles(10.0f);
+                }
                 if (player) {
                     o->oFaceAngleYaw = player->oMoveAngleYaw;
                 }

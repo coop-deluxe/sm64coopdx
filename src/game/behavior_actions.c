@@ -59,7 +59,7 @@ struct WFRotatingPlatformData {
     s16 collisionDistance;
 };
 
-struct Struct8032F34C {
+struct TumblingBridgeParams {
     s16 numBridgeSections;
     s16 bridgeRelativeStartingXorZ;
     s16 platformWidth;
@@ -67,18 +67,17 @@ struct Struct8032F34C {
     const void *segAddr;
 };
 
-struct Struct8032F698 {
-    void *unk0;
-    s16 unk1;
-    s16 unk2;
-    s16 unk3;
-    s16 unk4;
+struct BowserFallingPlatformData {
+    void *collisionData;
+    s16 x;
+    s16 z;
+    s16 angle;
 };
 
-struct Struct8032F754 {
-    s32 unk0;
-    Vec3f unk1;
-    f32 unk2;
+struct CheckerboardPlatformStartPos {
+    s32 relativePosZ;
+    Vec3f scale;
+    f32 radius;
 };
 
 struct OpenableGrill {

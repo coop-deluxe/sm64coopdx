@@ -1,10 +1,8 @@
 // thi_top.c.inc
 
-struct SpawnParticlesInfo D_8032F134 = {
+struct SpawnParticlesInfo sThiTopPuffs = {
     0, 30, MODEL_WHITE_PARTICLE_SMALL, 0, 40, 0, 20, 40, 252, 30, 20.0f, 0.0f
 };
-
-UNUSED u8 unused8032F134[] = { 10, 11, 12 };
 
 void bhv_thi_huge_island_top_loop(void) {
     if (gTHIWaterDrained & 1) {
@@ -12,11 +10,13 @@ void bhv_thi_huge_island_top_loop(void) {
             gEnvironmentRegions[18] = 3000;
         }
         cur_obj_hide();
-    } else
+    } else {
         load_object_collision_model();
+    }
 }
 
 void bhv_thi_tiny_island_top_loop(void) {
+    // uses event based syncing system. Syncs when the water is drained, or it's action changes
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -25,15 +25,15 @@ void bhv_thi_tiny_island_top_loop(void) {
         sync_object_init_field(o, o->header.gfx.node.flags);
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (!(gTHIWaterDrained & 1)) {
         if (o->oAction == 0) {
             if (distanceToPlayer < 500.0f && mario_is_ground_pound_landing(marioState)) {
                 o->oAction++;
-                cur_obj_spawn_particles(&D_8032F134);
+                cur_obj_spawn_particles(&sThiTopPuffs);
                 spawn_triangle_break_particles(20, 138, 0.3f, 3);
                 cur_obj_play_sound_2(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
                 cur_obj_hide();

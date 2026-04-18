@@ -70,6 +70,7 @@ static void bhv_platform_track_on_sent_pre(void) {
  * Init function for bhvPlatformOnTrack.
  */
 void bhv_platform_on_track_init(void) {
+    // uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 1000.0f);
         if (so != NULL) {
@@ -116,7 +117,6 @@ void bhv_platform_on_track_init(void) {
  * wait for mario action.
  */
 static void platform_on_track_act_init(void) {
-    s32 i;
 
     o->oPlatformOnTrackPrevWaypoint = o->oPlatformOnTrackStartWaypoint;
     o->oPlatformOnTrackPrevWaypointFlags = 0;
@@ -136,7 +136,7 @@ static void platform_on_track_act_init(void) {
     }
 
     // Spawn track balls
-    for (i = 1; i < 6; i++) {
+    for (s32 i = 1; i < 6; i++) {
         platform_on_track_update_pos_or_spawn_ball(i, o->oHomeX, o->oHomeY, o->oHomeZ);
     }
 
@@ -284,11 +284,10 @@ static void platform_on_track_act_fall(void) {
  */
 static void platform_on_track_rock_ski_lift(void) {
     s32 targetRoll = 0;
-    UNUSED s32 initialRoll = o->oFaceAngleRoll;
 
     o->oFaceAngleRoll += (s32) o->oPlatformOnTrackSkiLiftRollVel;
 
-    struct Object* player = NULL;
+    struct Object *player = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (gMarioStates[i].marioObj->platform != o) { continue; }
@@ -300,8 +299,7 @@ static void platform_on_track_rock_ski_lift(void) {
     if (player != NULL) {
         s32 distanceToPlayer = dist_between_objects(o, player);
         s32 angleToPlayer = obj_angle_to_object(o, player);
-        targetRoll = o->oForwardVel * sins(o->oMoveAngleYaw) * -50.0f
-                     + (s32)(distanceToPlayer * sins(angleToPlayer - o->oFaceAngleYaw) * -4.0f);
+        targetRoll = o->oForwardVel * sins(o->oMoveAngleYaw) * -50.0f + (s32)(distanceToPlayer * sins(angleToPlayer - o->oFaceAngleYaw) * -4.0f);
     }
 
     oscillate_toward(

@@ -22,7 +22,7 @@ void piranha_plant_act_idle(void) {
     cur_obj_scale(1);
 #endif
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer < 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_SLEEPING;
@@ -39,7 +39,6 @@ void piranha_plant_act_idle(void) {
  * @return 1 if the player interacted with the Piranha Plant, 0 otherwise
  */
 s32 piranha_plant_check_interactions(void) {
-    s32 i;
     s32 interacted = 1;
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         stop_secondary_music(50);
@@ -47,7 +46,7 @@ s32 piranha_plant_check_interactions(void) {
             cur_obj_play_sound_2(SOUND_OBJ2_PIRANHA_PLANT_DYING);
 
             // Spawn 20 intangible purple particles that quickly dissipate.
-            for (i = 0; i < 20; i++) {
+            for (s32 i = 0; i < 20; i++) {
                 spawn_object(o, MODEL_PURPLE_MARBLE, bhvPurpleParticle);
             }
             o->oAction = PIRANHA_PLANT_ACT_ATTACKED;
@@ -90,8 +89,8 @@ void piranha_plant_act_sleeping(void) {
     o->oDamageOrCoinValue = 3;
 #endif
 
-    struct Object* player = nearest_player_to_object(o);
-    struct Object* localPlayer = gMarioStates[0].marioObj;
+    struct Object *player = nearest_player_to_object(o);
+    struct Object *localPlayer = gMarioStates[0].marioObj;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 distanceToLocalPlayer = localPlayer ? dist_between_objects(o, localPlayer) : 10000;
     if (distanceToPlayer < 400.0f) {
@@ -123,8 +122,9 @@ void piranha_plant_act_woken_up(void) {
     o->oDamageOrCoinValue = 3;
 #endif
 
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         stop_secondary_music(50);
+    }
 
     if (piranha_plant_check_interactions() == 0) {
         if (o->oTimer > 10) {
@@ -211,7 +211,7 @@ void piranha_plant_act_shrink_and_die(void) {
  * Wait for Mario to move far away, then respawn the Piranha Plant.
  */
 void piranha_plant_act_wait_to_respawn(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     if (distanceToPlayer > 1200.0f) {
         o->oAction = PIRANHA_PLANT_ACT_RESPAWN;
@@ -258,8 +258,8 @@ static s8 sPiranhaPlantBiteSoundFrames[] = { 12, 28, 50, 64, -1 };
  * Piranha Plant will move to the attacked state.
  */
 void piranha_plant_act_biting(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -304,12 +304,14 @@ void piranha_plant_act_biting(void) {
  * This is called from both the "stopped biting" state and the "sleeping" state.
  */
 s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return FALSE; }
-    if (marioState->vel[1] > 10.0f)
+    if (marioState->vel[1] > 10.0f) {
         return TRUE;
-    if (marioState->forwardVel > 10.0f)
+    }
+    if (marioState->forwardVel > 10.0f) {
         return TRUE;
+    }
     return FALSE;
 }
 
@@ -319,7 +321,7 @@ s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
  * Plant start biting again. Otherwise, make it go back to sleep.
  */
 void piranha_plant_act_stopped_biting(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     cur_obj_become_intangible();
     cur_obj_init_animation_with_sound(6);
@@ -361,6 +363,7 @@ void (*TablePiranhaPlantActions[])(void) = {
  * Main loop for bhvPiranhaPlant.
  */
 void bhv_piranha_plant_loop(void) {
+    // uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 2000.0f);
         sync_object_init_field(o, o->oAction);
@@ -375,12 +378,13 @@ void bhv_piranha_plant_loop(void) {
     CUR_OBJ_CALL_ACTION_FUNCTION(TablePiranhaPlantActions);
     // In WF, hide all Piranha Plants once high enough up.
     if (gCurrLevelNum == LEVEL_WF) {
-        struct Object* player = gMarioStates[0].marioObj;
+        struct Object *player = gMarioStates[0].marioObj;
         f32 scalar = max(draw_distance_scalar(), 1.0f);
-        if (player->oPosY > 3400.0f * scalar)
+        if (player->oPosY > 3400.0f * scalar) {
             cur_obj_hide();
-        else
+        } else {
             cur_obj_unhide();
+        }
     }
     o->oInteractStatus = 0;
 }

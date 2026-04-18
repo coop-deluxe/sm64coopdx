@@ -24,14 +24,21 @@ static struct ObjectHitbox sWaterBombHitbox = {
     .hurtboxHeight = 50,
 };
 
+static void bhv_water_bomb_spawner_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
+    *shouldOverride = TRUE;
+    *shouldOwn = get_network_player_smallest_global()->localIndex == 0;
+}
+
 /**
  * Update function for bhvWaterBombSpawner.
  * Spawn water bombs targeting mario when he comes in range.
  */
 void bhv_water_bomb_spawner_update(void) {
+    // syncs using an event based system. Syncs when water bombs are spawned
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
+            so->override_ownership = bhv_water_bomb_spawner_override_ownership;
             so->fullObjectSync = TRUE;
             so->maxUpdateRate = 5.0f;
             sync_object_init_field(o, o->oWaterBombSpawnerBombActive);
@@ -41,12 +48,12 @@ void bhv_water_bomb_spawner_update(void) {
 
     f32 latDistToMario = 9999;
     f32 spawnerRadius;
-    struct MarioState* marioState = NULL;
-    struct Object* player = NULL;
+    struct MarioState *marioState = NULL;
+    struct Object *player = NULL;
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[0].visibleToEnemies) { continue; }
+        if (!gMarioStates[i].visibleToEnemies) { continue; }
         f32 latDist = lateral_dist_between_objects(o, gMarioStates[i].marioObj);
         if (latDist < latDistToMario) {
             latDistToMario = latDist;
@@ -64,7 +71,6 @@ void bhv_water_bomb_spawner_update(void) {
             o->oWaterBombSpawnerTimeToSpawn -= 1;
         } else if (sync_object_is_owned_locally(o->oSyncID)) {
             // this branch only runs for one player at a time
-
             struct Object *waterBomb = spawn_object_relative(0, 0, 2000, 0, o, MODEL_WATER_BOMB, bhvWaterBomb);
 
             if (waterBomb != NULL) {
@@ -86,7 +92,7 @@ void bhv_water_bomb_spawner_update(void) {
 
                 if (waterBombShadow != NULL) {
                     // send out the waterBomb objects
-                    struct Object* spawn_objects[] = {
+                    struct Object *spawn_objects[] = {
                         waterBomb,
                         waterBombShadow
                     };
@@ -142,8 +148,6 @@ static void water_bomb_act_init(void) {
  * explode.
  */
 static void water_bomb_act_drop(void) {
-    f32 stretch;
-
     obj_set_hitbox(o, &sWaterBombHitbox);
 
     // Explode if touched or if hit water
@@ -165,7 +169,7 @@ static void water_bomb_act_drop(void) {
             set_camera_shake_from_point(SHAKE_POS_SMALL, o->oPosX, o->oPosY, o->oPosZ);
 
             // Move toward mario
-            struct Object* player = nearest_player_to_object(o);
+            struct Object *player = nearest_player_to_object(o);
             s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
             o->oMoveAngleYaw = angleToPlayer;
             o->oForwardVel = 10.0f;
@@ -191,7 +195,7 @@ static void water_bomb_act_drop(void) {
 
     o->header.gfx.scale[1] = o->oWaterBombVerticalStretch + 1.0f;
 
-    stretch = o->oWaterBombVerticalStretch;
+    f32 stretch = o->oWaterBombVerticalStretch;
     if (o->oWaterBombNumBounces == 3.0f) {
         stretch *= 4.0f;
     }

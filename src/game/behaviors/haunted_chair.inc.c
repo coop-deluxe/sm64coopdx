@@ -13,16 +13,17 @@ struct ObjectHitbox sHauntedChairHitbox = {
 };
 
 void bhv_haunted_chair_init(void) {
-    struct Object *val04;
-    f32 val00;
+    struct Object *madPiano;
+    f32 distance;
 
-    val04 = cur_obj_find_nearest_object_with_behavior(bhvMadPiano, &val00);
-    if (val04 != NULL && val00 < 300.0f) {
-        o->parentObj = val04;
+    madPiano = cur_obj_find_nearest_object_with_behavior(bhvMadPiano, &distance);
+    if (madPiano != NULL && distance < 300.0f) {
+        o->parentObj = madPiano;
     } else {
         o->oHauntedChairUnkF4 = 1;
     }
 
+    // uses standard distance-based syncing
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oFaceAnglePitch);
     sync_object_init_field(o, o->oFaceAngleRoll);
@@ -36,7 +37,7 @@ void bhv_haunted_chair_init(void) {
 }
 
 void haunted_chair_act_0(void) {
-    s16 val0E;
+    s16 angleToMadPiano;
 
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
@@ -44,17 +45,17 @@ void haunted_chair_act_0(void) {
     if (o->parentObj != o) {
         if (o->oHauntedChairUnk104 == 0) {
             if (lateral_dist_between_objects(o, o->parentObj) < 250.0f) {
-                val0E = obj_angle_to_object(o, o->parentObj) - o->oFaceAngleYaw + 0x2000;
-                if (val0E & 0x4000) {
+                angleToMadPiano = obj_angle_to_object(o, o->parentObj) - o->oFaceAngleYaw + 0x2000;
+                if (angleToMadPiano & 0x4000) {
                     o->oHauntedChairUnk100 = &o->oFaceAngleRoll;
-                    if (val0E > 0) {
+                    if (angleToMadPiano > 0) {
                         o->oHauntedChairUnk104 = 0x4000;
                     } else {
                         o->oHauntedChairUnk104 = -0x4000;
                     }
                 } else {
                     o->oHauntedChairUnk100 = &o->oFaceAnglePitch;
-                    if (val0E < 0) {
+                    if (angleToMadPiano < 0) {
                         o->oHauntedChairUnk104 = 0x5000;
                     } else {
                         o->oHauntedChairUnk104 = -0x4000;
@@ -68,8 +69,7 @@ void haunted_chair_act_0(void) {
                 }
             }
         } else {
-            oscillate_toward(o->oHauntedChairUnk100, &o->oHauntedChairUnkF8, o->oHauntedChairUnk104,
-                             4000.0f, 20.0f, 2.0f);
+            oscillate_toward(o->oHauntedChairUnk100, &o->oHauntedChairUnkF8, o->oHauntedChairUnk104, 4000.0f, 20.0f, 2.0f);
         }
     } else if (o->oHauntedChairUnkF4 != 0) {
         if (distanceToPlayer < 500.0f) {
@@ -78,19 +78,19 @@ void haunted_chair_act_0(void) {
         o->oTimer = 0.0f;
     } else {
         if ((o->oTimer & 0x8) != 0) {
-            f32 val08;
+            f32 offset;
 
             if (o->oFaceAnglePitch < 0) {
                 cur_obj_play_sound_2(SOUND_GENERAL_HAUNTED_CHAIR_MOVE);
-                val08 = 4.0f;
+                offset = 4.0f;
             } else {
-                val08 = -4.0f;
+                offset = -4.0f;
             }
 
-            o->oHomeX -= val08;
-            o->oHomeZ -= val08;
+            o->oHomeX -= offset;
+            o->oHomeZ -= offset;
 
-            o->oFaceAnglePitch = o->oFaceAngleRoll = (s32)(50.0f * val08);
+            o->oFaceAnglePitch = o->oFaceAngleRoll = (s32)(50.0f * offset);
         } else {
             o->oFaceAnglePitch = o->oFaceAngleRoll = 0;
         }
@@ -109,8 +109,8 @@ void haunted_chair_act_0(void) {
 void haunted_chair_act_1(void) {
     cur_obj_update_floor_and_walls();
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (o->oTimer < 70) {

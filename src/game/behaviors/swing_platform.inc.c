@@ -2,7 +2,8 @@
 void bhv_swing_platform_init(void) {
     o->oSwingPlatformAngle = 0x2000;
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based syncing
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oSwingPlatformAngle);
@@ -13,7 +14,6 @@ void bhv_swing_platform_init(void) {
 }
 
 void bhv_swing_platform_update(void) {
-
     s32 startRoll = o->oFaceAngleRoll;
 
     if (o->oFaceAngleRoll < 0) {

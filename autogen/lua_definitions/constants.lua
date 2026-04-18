@@ -3363,7 +3363,7 @@ PVP_ATTACK_KNOCKBACK_ACTION_ARG = 0x10000
 INT_STATUS_ATTACK_MASK = 0x000000FF
 
 --- @type integer
-INT_STATUS_HOOT_GRABBED_BY_MARIO = (1 << 0)
+INT_STATUS_MARIO_STUNNED = (1 << 0)
 
 --- @type integer
 INT_STATUS_MARIO_UNK1 = (1 << 1)
@@ -5589,6 +5589,69 @@ BBH_DYNAMIC_SURFACE_ROOM = 0
 
 --- @type integer
 BBH_OUTSIDE_ROOM = 13
+
+--- @type integer
+BOWSER_ACT_DEFAULT = 0
+
+--- @type integer
+BOWSER_ACT_THROWN = 1
+
+--- @type integer
+BOWSER_ACT_JUMP_ONTO_STAGE = 2
+
+--- @type integer
+BOWSER_ACT_DANCE = 3
+
+--- @type integer
+BOWSER_ACT_DEAD = 4
+
+--- @type integer
+BOWSER_ACT_WAIT = 5
+
+--- @type integer
+BOWSER_ACT_INTRO_WALK = 6
+
+--- @type integer
+BOWSER_ACT_CHARGE_MARIO = 7
+
+--- @type integer
+BOWSER_ACT_SPIT_FIRE_INTO_SKY = 8
+
+--- @type integer
+BOWSER_ACT_SPIT_FIRE_ONTO_FLOOR = 9
+
+--- @type integer
+BOWSER_ACT_HIT_EDGE = 10
+
+--- @type integer
+BOWSER_ACT_TURN_FROM_EDGE = 11
+
+--- @type integer
+BOWSER_ACT_HIT_MINE = 12
+
+--- @type integer
+BOWSER_ACT_BIG_JUMP = 13
+
+--- @type integer
+BOWSER_ACT_WALK_TO_MARIO = 14
+
+--- @type integer
+BOWSER_ACT_BREATH_FIRE = 15
+
+--- @type integer
+BOWSER_ACT_TELEPORT = 16
+
+--- @type integer
+BOWSER_ACT_QUICK_JUMP = 17
+
+--- @type integer
+BOWSER_ACT_UNUSED_SLOW_WALK = 18
+
+--- @type integer
+BOWSER_ACT_TILT_LAVA_PLATFORM = 19
+
+--- @type integer
+BOWSER_ACT_NOTHING = 20
 
 --- @type integer
 COFFIN_SPAWNER_ACT_COFFINS_UNLOADED = 0

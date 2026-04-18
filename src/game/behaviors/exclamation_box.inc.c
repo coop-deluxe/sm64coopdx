@@ -22,10 +22,11 @@ void exclamation_box_act_0(void) {
     if (o->oBehParams2ndByte < 3) {
         o->oAnimState = o->oBehParams2ndByte;
         if ((save_file_get_flags() & BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32))
-            || ((o->oBehParams >> 24) & 0xFF) != 0)
+            || ((o->oBehParams >> 24) & 0xFF) != 0) {
             o->oAction = 2;
-        else
+        } else {
             o->oAction = 1;
+        }
     } else {
         o->oAnimState = 3;
         o->oAction = 2;
@@ -76,7 +77,6 @@ void exclamation_box_act_2(void) {
 }
 
 void exclamation_box_act_3(void) {
-    UNUSED s32 unused;
     cur_obj_move_using_fvel_and_gravity();
     if (o->oVelY < 0.0f) {
         o->oVelY = 0.0f;
@@ -89,11 +89,12 @@ void exclamation_box_act_3(void) {
     o->header.gfx.scale[0] = o->oExclamationBoxUnkF4 * 2.0f;
     o->header.gfx.scale[1] = o->oExclamationBoxUnkF8 * 2.0f;
     o->header.gfx.scale[2] = o->oExclamationBoxUnkF4 * 2.0f;
-    if (o->oTimer == 7)
+    if (o->oTimer == 7) {
         o->oAction = 4;
+    }
 }
 
-static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
+static s32 exclamation_replace_model(struct MarioState *m, s32 model) {
     if (!m) { return model; }
     switch (model) {
         case MODEL_MARIOS_CAP:              return m->character->capModelId;
@@ -106,8 +107,8 @@ static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
 
 void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 itemId) {
     if (content == NULL) { return; }
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     struct Object *spawnedObject = NULL;
 
     if (o->oExclamationBoxForce) {
@@ -128,8 +129,9 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
                 }
             }
             o->oBehParams |= content->firstByte << 24;
-            if (content->model == E_MODEL_STAR)
+            if (content->model == E_MODEL_STAR) {
                 o->oFlags |= OBJ_FLAG_PERSISTENT_RESPAWN;
+            }
 
             // send non-star spawn events
             // stars cant be sent here due to jankiness in oBehParams
@@ -174,8 +176,9 @@ void exclamation_box_act_5(void) {
 }
 void exclamation_box_act_6(void) {
     o->oExclamationBoxForce = FALSE;
-    if (o->oTimer > 1000)
+    if (o->oTimer > 1000) {
         obj_mark_for_deletion(o);
+    }
 }
 
 void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_box_act_1,
@@ -184,7 +187,10 @@ void (*sExclamationBoxActions[])(void) = { exclamation_box_act_0, exclamation_bo
                                            exclamation_box_act_6 };
 
 void bhv_exclamation_box_init(void) {
-    struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+    // uses a event based sync system. The main thing synced is forcing the exclamation box to be
+    // destroyed on all clients. Spawning is done via a distance based calculation and syncing
+    // the spawned object(s) from there
+    struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
         so->syncDeathEvent = FALSE;
         sync_object_init_field(o, o->oExclamationBoxForce);

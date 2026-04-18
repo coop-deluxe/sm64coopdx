@@ -52,8 +52,8 @@ void network_delayed_packet_object_execute(void) {
 
 // ----- header ----- //
 
-static void packet_write_object_header(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+static void packet_write_object_header(struct Packet *p, struct Object *o) {
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     u32 behaviorId = get_id_from_behavior(o->behavior);
 
@@ -65,7 +65,7 @@ static void packet_write_object_header(struct Packet* p, struct Object* o) {
 }
 
 static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* behavior) {
-    struct Object* o = so->o;
+    struct Object *o = so->o;
 
     // bhvPenguinBaby can be set to bhvSmallPenguin
     bool oBehaviorPenguin = (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvPenguinBaby)) || o->behavior == segmented_to_virtual(smlua_override_behavior(bhvSmallPenguin)));
@@ -79,32 +79,32 @@ static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* beh
     return true;
 }
 
-static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLocalIndex) {
+static struct SyncObject *packet_read_object_header(struct Packet* p, u8* fromLocalIndex) {
     // figure out where the packet came from
     u8 fromGlobalIndex = 0;
     packet_read(p, &fromGlobalIndex, sizeof(u8));
-    struct NetworkPlayer* np = network_player_from_global_index(fromGlobalIndex);
+    struct NetworkPlayer *np = network_player_from_global_index(fromGlobalIndex);
     *fromLocalIndex = (np != NULL) ? np->localIndex : p->localIndex;
 
     // get sync ID, sanity check
     u32 syncId = 0;
     packet_read(p, &syncId, sizeof(u32));
-    struct SyncObject* so = sync_object_get(syncId);
+    struct SyncObject *so = sync_object_get(syncId);
     if (!so) {
         LOG_ERROR("invalid SyncID: %d", syncId);
         return NULL;
     }
 
     // extract object, sanity check
-    struct Object* o = so->o;
+    struct Object *o = so->o;
     if (o == NULL) {
         LOG_ERROR("invalid SyncObject for %d", syncId);
         return NULL;
     }
 
     // retrieve SyncObject, check if we should update using callback
-    extern struct Object* gCurrentObject;
-    struct Object* tmp = gCurrentObject;
+    extern struct Object *gCurrentObject;
+    struct Object *tmp = gCurrentObject;
     gCurrentObject = o;
     if ((so->ignore_if_true != NULL) && ((*so->ignore_if_true)() != FALSE)) {
         gCurrentObject = tmp;
@@ -130,8 +130,8 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     u32 behaviorId;
     packet_read(p, &behaviorId, sizeof(u32));
 
-    BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
-    BehaviorScript* lBehavior = (BehaviorScript*)smlua_override_behavior(behavior);
+    BehaviorScript *behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
+    BehaviorScript *lBehavior = (BehaviorScript*)smlua_override_behavior(behavior);
     if (behavior == NULL) {
         LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
@@ -146,7 +146,7 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
 // ----- full sync ----- //
 
 static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so || !so->fullObjectSync) { return; }
 
     // write all of raw data
@@ -154,7 +154,7 @@ static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
 }
 
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so || !so->fullObjectSync) { return; }
 
     // read all of raw data
@@ -164,7 +164,7 @@ static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
 // ----- standard fields ----- //
 
 static void packet_write_object_standard_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
@@ -186,7 +186,7 @@ static void packet_write_object_standard_fields(struct Packet* p, struct Object*
 }
 
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
@@ -210,7 +210,7 @@ static void packet_read_object_standard_fields(struct Packet* p, struct Object* 
 // ----- extra fields ----- //
 
 static void packet_write_object_extra_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
@@ -225,7 +225,7 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 }
 
 static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
@@ -247,20 +247,20 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
 // ----- only death ----- //
 
 static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
     packet_write(p, &o->activeFlags, sizeof(s16));
 }
 
 static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
     s16 activeFlags;
     packet_read(p, &activeFlags, sizeof(u16));
     if (activeFlags == ACTIVE_FLAG_DEACTIVATED) {
-        // flag the object as dead, the behavior is responsible for clean up
+        // flag the object as dead, the behavior is responsible for clean up for only death packets
         so->o->oSyncDeath = 1;
         sync_object_forget(so->id);
     }
@@ -268,7 +268,7 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 
 // ----- main send/receive ----- //
 
-void network_send_object(struct Object* o) {
+void network_send_object(struct Object *o) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
     // sanity check SyncObject
@@ -281,7 +281,7 @@ void network_send_object(struct Object* o) {
         return;
     }
 
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (so == NULL) { LOG_ERROR("tried to send null sync obj"); return; }
     if (o != so->o) {
         LOG_ERROR("object mismatch for %d", o->oSyncID);
@@ -297,7 +297,7 @@ void network_send_object(struct Object* o) {
     network_send_object_reliability(o, reliable);
 }
 
-void network_send_object_reliability(struct Object* o, bool reliable) {
+void network_send_object_reliability(struct Object *o, bool reliable) {
     // don't send sync objects while area sync is invalid
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
         return;
@@ -305,14 +305,18 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     // prevent sending objects during credits sequence
     if (gCurrActStarNum == 99) { return; }
 
+    if (!o || !o->ctx) {
+        LOG_ERROR("Tried to send null obj (network_send_object_reliability)");
+    }
+
     // sanity check SyncObject
     if (!sync_object_is_initialized(o->oSyncID)) {
-        //LOG_ERROR("tried to send uninitialized sync obj");
+        LOG_ERROR("tried to send uninitialized sync obj");
         return;
     }
 
     u32 syncId = o->oSyncID;
-    struct SyncObject* so = sync_object_get(syncId);
+    struct SyncObject *so = sync_object_get(syncId);
     if (so == NULL) {
         LOG_ERROR("tried to send null sync obj");
         return;
@@ -362,8 +366,8 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
 
     // trigger on_sent_post callback
     if (so->on_sent_post != NULL) {
-        extern struct Object* gCurrentObject;
-        struct Object* tmp = gCurrentObject;
+        extern struct Object *gCurrentObject;
+        struct Object *tmp = gCurrentObject;
         gCurrentObject = so->o;
         so->on_sent_post();
         gCurrentObject = tmp;
@@ -382,12 +386,12 @@ void network_receive_object(struct Packet* p) {
 
     // read the header and sanity check the packet
     u8 fromLocalIndex = 0;
-    struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
+    struct SyncObject *so = packet_read_object_header(p, &fromLocalIndex);
     if (so == NULL) {
         LOG_ERROR("received null sync object");
         return;
     }
-    struct Object* o = so->o;
+    struct Object *o = so->o;
     if (!sync_object_is_initialized(o->oSyncID)) {
         LOG_ERROR("received uninitialized sync object");
         return;
@@ -404,8 +408,8 @@ void network_receive_object(struct Packet* p) {
 
     // trigger on-received callback
     if (so->on_received_pre != NULL && so->o != NULL) {
-        extern struct Object* gCurrentObject;
-        struct Object* tmp = gCurrentObject;
+        extern struct Object *gCurrentObject;
+        struct Object *tmp = gCurrentObject;
         gCurrentObject = so->o;
         (*so->on_received_pre)(fromLocalIndex);
         gCurrentObject = tmp;
@@ -447,7 +451,6 @@ void network_receive_object(struct Packet* p) {
             for (s32 j = 0; j < 3; j++) { gMarioStates[i].pos[j] += deltaPos[j]; }
         }
     }
-
 }
 
 void network_update_objects(void) {
@@ -463,14 +466,14 @@ void network_update_objects(void) {
     }
 #endif
 
-    for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+    for (struct SyncObject *so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
         if (!so || !so->o) { continue; }
 
         // check for stale sync object
         if (so->o->oSyncID != so->id) {
             if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED) { // check if object was just deleted
                 enum BehaviorId bhvId = get_id_from_behavior(so->o->behavior);
-                const char* bhvName = get_behavior_name_from_id(bhvId);
+                const char *bhvName = get_behavior_name_from_id(bhvId);
                 LOG_ERROR("sync id mismatch: %d vs %d (behavior %s, %d)", so->o->oSyncID, so->id, bhvName != NULL ? bhvName : "NULL", bhvId);
             }
             sync_object_forget(so->id);

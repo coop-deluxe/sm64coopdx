@@ -30,8 +30,9 @@ void cap_despawn(void) {
 }
 
 void cap_check_quicksand(void) {
-    if (sObjFloor == NULL)
+    if (sObjFloor == NULL) {
         return;
+    }
 
     switch (sObjFloor->type) {
         case SURFACE_DEATH_PLANE:
@@ -76,23 +77,26 @@ void cap_sink_quicksand(void) {
             break;
 
         case 11:
-            if (o->oTimer < 10)
+            if (o->oTimer < 10) {
                 o->oGraphYOffset += -3.0f;
+            }
 
             o->oFaceAnglePitch = 0x2000;
             break;
 
         case 12:
             o->oGraphYOffset += -1.0f;
-            if (o->oTimer >= 21)
+            if (o->oTimer >= 21) {
                 o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            }
 
             break;
 
         case 13:
             o->oGraphYOffset += -6.0f;
-            if (o->oTimer >= 21)
+            if (o->oTimer >= 21) {
                 o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            }
 
             o->oFaceAnglePitch = 0x2000;
             break;
@@ -118,11 +122,9 @@ void cap_scale_vertically(void) {
 }
 
 void wing_vanish_cap_act_0(void) {
-    s16 sp1E;
-
     o->oFaceAngleYaw += o->oForwardVel * 128.0f;
-    sp1E = object_step();
-    if (sp1E & 0x01) {
+    s16 step = object_step();
+    if (step & 0x01) {
         cap_check_quicksand();
         if (o->oVelY != 0.0f) {
             o->oCapUnkF4 = 1;
@@ -130,8 +132,9 @@ void wing_vanish_cap_act_0(void) {
         }
     }
 
-    if (o->oCapUnkF4 == 1)
+    if (o->oCapUnkF4 == 1) {
         cap_scale_vertically();
+    }
 }
 
 void bhv_wing_vanish_cap_loop(void) {
@@ -161,12 +164,11 @@ void bhv_metal_cap_init(void) {
 }
 
 void metal_cap_act_0(void) {
-    s16 sp1E;
-
     o->oFaceAngleYaw += o->oForwardVel * 128.0f;
-    sp1E = object_step();
-    if (sp1E & 0x01)
+    s16 step = object_step();
+    if (step & 0x01) {
         cap_check_quicksand();
+    }
 }
 
 void bhv_metal_cap_loop(void) {
@@ -181,8 +183,9 @@ void bhv_metal_cap_loop(void) {
             break;
     }
 
-    if (o->oTimer > 20)
+    if (o->oTimer > 20) {
         cur_obj_become_tangible();
+    }
 
     cap_set_hitbox();
     cap_despawn();
@@ -216,12 +219,10 @@ void normal_cap_set_save_flags(void) {
 }
 
 void normal_cap_act_0(void) {
-    s16 sp1E;
-
     o->oFaceAngleYaw += o->oForwardVel * 128.0f;
     o->oFaceAnglePitch += o->oForwardVel * 80.0f;
-    sp1E = object_step();
-    if (sp1E & 0x01) {
+    s16 step = object_step();
+    if (step & 0x01) {
         cap_check_quicksand();
 
         if (o->oVelY != 0.0f) {
@@ -231,8 +232,9 @@ void normal_cap_act_0(void) {
         }
     }
 
-    if (o->oCapUnkF4 == 1)
+    if (o->oCapUnkF4 == 1) {
         cap_scale_vertically();
+    }
 }
 
 void bhv_normal_cap_loop(void) {
@@ -247,16 +249,15 @@ void bhv_normal_cap_loop(void) {
             break;
     }
 
-    if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED)
+    if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         normal_cap_set_save_flags();
-
-    if (cap_set_hitbox() == 1)
-        save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
-
-    if (o->globalPlayerIndex >= MAX_PLAYERS) {
-        o->globalPlayerIndex = 0;
     }
 
+    if (cap_set_hitbox() == 1) {
+        save_file_clear_flags(SAVE_FLAG_CAP_ON_GROUND);
+    }
+
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
     obj_set_model(o, gMarioStates[network_local_index_from_global(o->globalPlayerIndex)].character->capModelId);
 }
 

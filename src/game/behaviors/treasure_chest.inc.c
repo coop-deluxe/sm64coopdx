@@ -126,7 +126,7 @@ void bhv_treasure_chest_bottom_loop(void) {
     o->oInteractStatus = 0;
 }
 
-struct Object* spawn_treasure_chest(s8 index, s32 x, s32 y, s32 z, s16 r) {
+struct Object *spawn_treasure_chest(s8 index, s32 x, s32 y, s32 z, s16 r) {
     struct Object *obj = spawn_object_abs_with_rot(o, 0, MODEL_TREASURE_CHEST_BASE, bhvTreasureChestBottom, x, y, z, 0, r, 0);
     if (obj != NULL) { obj->oBehParams2ndByte = index; }
     return obj;
@@ -138,10 +138,10 @@ void bhv_treasure_chest_ship_init(void) {
     chests[1] = spawn_treasure_chest(2, 650, -350, -940, -0x6001);
     chests[2] = spawn_treasure_chest(3, -550, -350, -770, 0x5FFF);
     chests[3] = spawn_treasure_chest(4, 100, -350, -1700, 0);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -150,6 +150,8 @@ void bhv_treasure_chest_ship_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -208,10 +210,10 @@ void bhv_treasure_chest_jrb_init(void) {
     chests[1] = spawn_treasure_chest(2, -1150, -2812, -1550, 0x7FFF);
     chests[2] = spawn_treasure_chest(3, -2400, -2812, -1800, 0x7FFF);
     chests[3] = spawn_treasure_chest(4, -1800, -2812, -2100, 0x7FFF);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 1;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -220,6 +222,8 @@ void bhv_treasure_chest_jrb_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -258,7 +262,7 @@ void bhv_treasure_chest_jrb_loop(void) {
             if (o->oTimer == 60) {
                 spawn_mist_particles();
 
-                f32* starPos = gLevelValues.starPositions.TreasureJrbStarPos;
+                f32 *starPos = gLevelValues.starPositions.TreasureJrbStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oTreasureChestLastNetworkPlayerIndex);
 
                 o->oAction = 2;
@@ -279,7 +283,7 @@ void bhv_treasure_chest_init(void) {
 
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -288,6 +292,8 @@ void bhv_treasure_chest_init(void) {
     // who last interacted to begin with.
     o->oTreasureChestLastNetworkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
 
+    // uses an event based syncing system. Syncs when a player touches a chest, the last player to touch the
+    // chest gets put into a cutscene
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -326,7 +332,7 @@ void bhv_treasure_chest_loop(void) {
             if (o->oTimer == 60) {
                 spawn_mist_particles();
 
-                f32* starPos = gLevelValues.starPositions.TreasureChestStarPos;
+                f32 *starPos = gLevelValues.starPositions.TreasureChestStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oTreasureChestLastNetworkPlayerIndex);
 
                 o->oAction = 2;

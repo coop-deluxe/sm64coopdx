@@ -590,7 +590,7 @@ u8 is_player_in_local_area(struct MarioState* m) {
 /* |description|Gets the nearest active Mario who isn't bubbled to `obj`|descriptionEnd| */
 struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
-    struct MarioState* nearest = NULL;
+    struct MarioState *nearest = NULL;
     f32 nearestDist = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gMarioStates[i].marioObj) { continue; }

@@ -43,7 +43,7 @@ s32 is_cap_ukiki_and_mario_has_normal_cap_on_head(void) {
  */
 Gfx *geo_update_projectile_pos_from_parent_copy(s32 run,UNUSED struct GraphNode *node, Mat4 mtx) {
     Mat4 mtx2;
-    struct Object* obj;
+    struct Object *obj;
 
     if (run == TRUE) {
         // TODO: change global type to Object pointer
@@ -124,7 +124,7 @@ void idle_ukiki_taunt(void) {
  * standing around.
  */
 void ukiki_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -134,7 +134,7 @@ void ukiki_act_idle(void) {
         if (distanceToPlayer > 700.0f && distanceToPlayer < 1000.0f) {
             o->oAction = UKIKI_ACT_RUN;
         } else if (distanceToPlayer <= 700.0f && 200.0f < distanceToPlayer) {
-            if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) > 0x1000)    {
+            if (abs_angle_diff(angleToPlayer, o->oMoveAngleYaw) > 0x1000) {
                 o->oAction = UKIKI_ACT_TURN_TO_MARIO;
             }
         }
@@ -180,8 +180,6 @@ void ukiki_act_idle(void) {
  * Only used for the cap ukiki.
  */
 void ukiki_act_return_home(void) {
-    UNUSED s32 unused;
-
     cur_obj_init_animation_with_sound(UKIKI_ANIM_RUN);
     o->oMoveAngleYaw = cur_obj_angle_to_home();
     o->oForwardVel = 10.0f;
@@ -212,7 +210,7 @@ void ukiki_act_wait_to_respawn(void) {
  * part of the ukiki_act_go_to_cage action.
  */
 void ukiki_act_unused_turn(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     idle_ukiki_taunt();
 
@@ -225,7 +223,7 @@ void ukiki_act_unused_turn(void) {
  * Turns ukiki to face towards Mario while moving with slow forward velocity.
  */
 void ukiki_act_turn_to_mario(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     s32 facingMario;
@@ -256,8 +254,8 @@ void ukiki_act_turn_to_mario(void) {
  * Ukiki either runs away away from Mario or towards him if stealing Mario's cap.
  */
 void ukiki_act_run(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -317,8 +315,7 @@ void ukiki_act_jump(void) {
     if (o->oSubAction == 0) {
         if (o->oTimer == 0) {
             cur_obj_set_y_vel_and_animation(random_float() * 10.0f + 45.0f, UKIKI_ANIM_JUMP);
-        } else if (o->oMoveFlags & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_AT_WATER_SURFACE
-                                   | OBJ_MOVE_UNDERWATER_ON_GROUND)) {
+        } else if (o->oMoveFlags & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_AT_WATER_SURFACE | OBJ_MOVE_UNDERWATER_ON_GROUND)) {
             o->oSubAction++;
             o->oVelY = 0.0f;
         }
@@ -358,11 +355,11 @@ u8 ukiki_act_go_to_cage_continue_dialog(void) { return o->oAction == UKIKI_ACT_G
  * our death. Ukiki is a tad suicidal.
  */
 void ukiki_act_go_to_cage(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    struct Object* obj;
+    struct Object *obj;
     f32 latDistToCage = 0.0f;
     s16 yawToCage = 0;
     if (cur_obj_nearest_object_with_behavior(bhvUkikiCageChild) != NULL) {
@@ -406,7 +403,7 @@ void ukiki_act_go_to_cage(void) {
             if (cur_obj_can_mario_activate_textbox(&gMarioStates[0], 200.0f, 30.0f, 0x7FFF)) {
                 o->oSubAction++; // fallthrough
             } else {
-            break;
+                break;
             }
 
         case UKIKI_SUB_ACT_CAGE_TALK_TO_MARIO:
@@ -531,7 +528,7 @@ void ukiki_free_loop(void) {
  *
  * Possibly unused so AnimState could be used for wearing a cap?
  */
-static void ukiki_blink_timer(void) {
+UNUSED static void ukiki_blink_timer(void) {
     if (gGlobalTimer % 50 < 7) {
         o->oAnimState = UKIKI_ANIM_STATE_EYE_CLOSED;
     } else {
@@ -548,7 +545,7 @@ static u8 cage_ukiki_held_default_continue_dialog(void) {
  */
 void cage_ukiki_held_loop(void) {
     if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
-    struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
+    struct MarioState *heldByMario = &gMarioStates[o->heldByPlayerIndex];
     if (heldByMario->playerIndex != 0) { return; }
 
     if (o->oPosY - o->oHomeY > -100.0f) {
@@ -600,7 +597,7 @@ u8 hat_ukiki_held_loop_2(void) { return o->oHeldState == HELD_HELD && o->oUkikiT
  */
 void cap_ukiki_held_loop(void) {
     if (o->heldByPlayerIndex >= MAX_PLAYERS) { return; }
-    struct MarioState* heldByMario = &gMarioStates[o->heldByPlayerIndex];
+    struct MarioState *heldByMario = &gMarioStates[o->heldByPlayerIndex];
     if (heldByMario->playerIndex != 0) { return; }
 
     // other player must catch ukiki
@@ -616,7 +613,7 @@ void cap_ukiki_held_loop(void) {
                 o->oUkikiHasCap |= UKIKI_CAP_ON;
                 o->globalPlayerIndex = gNetworkPlayers[heldByMario->playerIndex].globalIndex;
                 network_send_object(o);
-            } else {}
+            }
             break;
 
         case UKIKI_TEXT_STEAL_CAP:
@@ -658,6 +655,11 @@ void bhv_ukiki_init(void) {
         }
     }
 
+    // uses standard distance-based sync system
+    // Syncing TODO: Maybe take a closer look at this? It seems like the best it can be. For enemies like
+    // this you need to use a distance based system and it does. It uses the nearest mario and does actions
+    // according to that. Any lag caused from it is going to be just that, lag. I don't know if any
+    // improvements can be made. This is a complex behavior so it comes with the territory,
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oUkikiTauntCounter);
     sync_object_init_field(o, o->oUkikiChaseFleeRange);
@@ -671,7 +673,6 @@ void bhv_ukiki_init(void) {
  * dependent on the held state and whick ukiki it is (cage or cap).
  */
 void bhv_ukiki_loop(void) {
-
     switch(o->oHeldState) {
         case HELD_FREE:
             //! @bug (PARTIAL_UPDATE)
@@ -682,7 +683,7 @@ void bhv_ukiki_loop(void) {
         case HELD_HELD:
             cur_obj_unrender_and_reset_state(UKIKI_ANIM_HELD, 0);
             if (o->heldByPlayerIndex < MAX_PLAYERS) {
-                struct Object* heldByPlayer = gMarioStates[o->heldByPlayerIndex].marioObj;
+                struct Object *heldByPlayer = gMarioStates[o->heldByPlayerIndex].marioObj;
                 obj_copy_pos(o, heldByPlayer);
             }
 

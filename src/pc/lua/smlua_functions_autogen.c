@@ -4067,6 +4067,22 @@ int smlua_func_bhv_sushi_shark_collision_loop(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_bhv_jrb_sliding_box_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_jrb_sliding_box_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_jrb_sliding_box_init();
+
+    return 1;
+}
+
 int smlua_func_bhv_jrb_sliding_box_loop(UNUSED lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
@@ -4079,6 +4095,22 @@ int smlua_func_bhv_jrb_sliding_box_loop(UNUSED lua_State* L) {
 
 
     bhv_jrb_sliding_box_loop();
+
+    return 1;
+}
+
+int smlua_func_bhv_ship_part_3_init(UNUSED lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ship_part_3_init", 0, top);
+        return 0;
+    }
+
+
+    bhv_ship_part_3_init();
 
     return 1;
 }
@@ -37094,7 +37126,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_bowsers_sub_loop", smlua_func_bhv_bowsers_sub_loop);
     smlua_bind_function(L, "bhv_sushi_shark_loop", smlua_func_bhv_sushi_shark_loop);
     smlua_bind_function(L, "bhv_sushi_shark_collision_loop", smlua_func_bhv_sushi_shark_collision_loop);
+    smlua_bind_function(L, "bhv_jrb_sliding_box_init", smlua_func_bhv_jrb_sliding_box_init);
     smlua_bind_function(L, "bhv_jrb_sliding_box_loop", smlua_func_bhv_jrb_sliding_box_loop);
+    smlua_bind_function(L, "bhv_ship_part_3_init", smlua_func_bhv_ship_part_3_init);
     smlua_bind_function(L, "bhv_ship_part_3_loop", smlua_func_bhv_ship_part_3_loop);
     smlua_bind_function(L, "bhv_sunken_ship_part_loop", smlua_func_bhv_sunken_ship_part_loop);
     smlua_bind_function(L, "bhv_white_puff_1_loop", smlua_func_bhv_white_puff_1_loop);

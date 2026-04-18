@@ -494,11 +494,14 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
                 if ((!npi->connected) || npi == gNetworkPlayerLocal) { continue; }
                 npi->currPositionValid = false;
             }
-
         } else {
             for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
                 so->rxEventId[np->localIndex] = 0;
             }
+        }
+    } else if (np != gNetworkPlayerLocal) {
+        for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
+            so->rxEventId[np->localIndex] = 0;
         }
     }
 }

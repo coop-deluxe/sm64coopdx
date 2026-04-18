@@ -1718,6 +1718,9 @@
 --- @field public oKoopaRaceEndpointRaceStatus integer
 --- @field public oKoopaRaceEndpointUnk100 integer
 --- @field public oKoopaRaceEndpointRaceEnded integer
+--- @field public oKoopaRaceEndpointRaceCheated integer
+--- @field public oKoopaRaceEndpointRaceStartTime integer
+--- @field public oKoopaRaceEndpointRaceWinner integer
 --- @field public oKoopaShellFlameUnkF4 number
 --- @field public oKoopaShellFlameUnkF8 number
 --- @field public oCameraLakituBlinkTimer integer
@@ -1942,6 +1945,7 @@
 --- @field public oTTCTreadmillSpeed number
 --- @field public oTTCTreadmillTargetSpeed number
 --- @field public oTTCTreadmillTimeUntilSwitch integer
+--- @field public oTTCTreadmillPrevTTCSpeed integer
 --- @field public oTTCMovingBarDelay integer
 --- @field public oTTCMovingBarStoppedTimer integer
 --- @field public oTTCMovingBarOffset number
@@ -2035,7 +2039,7 @@
 --- @field public oWigglerTimeUntilRandomTurn integer
 --- @field public oWigglerTargetYaw integer
 --- @field public oWigglerWalkAwayFromWallTimer integer
---- @field public oWigglerUnused integer
+--- @field public oWigglerFinishedTalking integer
 --- @field public oWigglerTextStatus integer
 --- @field public oLllWoodPieceOscillationTimer integer
 --- @field public oWoodenPostTotalMarioAngle integer

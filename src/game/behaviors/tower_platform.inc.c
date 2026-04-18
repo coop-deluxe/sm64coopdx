@@ -12,6 +12,7 @@ void bhv_wf_solid_tower_platform_loop(void) {
 }
 
 void bhv_wf_elevator_tower_platform_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -28,21 +29,24 @@ void bhv_wf_elevator_tower_platform_loop(void) {
             break;
         case 1:
             cur_obj_play_sound_1(SOUND_ENV_ELEVATOR1);
-            if (o->oTimer > 140)
+            if (o->oTimer > 140) {
                 o->oAction++;
-            else
+            } else {
                 o->oPosY += 5.0f;
+            }
             break;
         case 2:
-            if (o->oTimer > 60)
+            if (o->oTimer > 60) {
                 o->oAction++;
+            }
             break;
         case 3:
             cur_obj_play_sound_1(SOUND_ENV_ELEVATOR1);
-            if (o->oTimer > 140)
+            if (o->oTimer > 140) {
                 o->oAction = 0;
-            else
+            } else {
                 o->oPosY -= 5.0f;
+            }
             break;
     }
 
@@ -58,17 +62,18 @@ void bhv_wf_elevator_tower_platform_loop(void) {
 }
 
 void bhv_wf_sliding_tower_platform_loop(void) {
-    s32 sp24 = o->oPlatformUnk110 / o->oPlatformUnk10C;
+    s32 timeRemaining = o->oPlatformUnk110 / o->oPlatformUnk10C;
     switch (o->oAction) {
         case 0:
-            if (o->oTimer > sp24) {
+            if (o->oTimer > timeRemaining) {
                 o->oAction++;
             }
             o->oForwardVel = -o->oPlatformUnk10C;
             break;
         case 1:
-            if (o->oTimer > sp24)
+            if (o->oTimer > timeRemaining) {
                 o->oAction = 0;
+            }
             o->oForwardVel = o->oPlatformUnk10C;
             break;
     }
@@ -87,9 +92,9 @@ void bhv_wf_sliding_tower_platform_loop(void) {
     }
 }
 
-void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
+void spawn_and_init_wf_platforms(s16 model, const BehaviorScript *bhv) {
     s16 yaw;
-    struct Object *platform = spawn_object(o, a, bhv);
+    struct Object *platform = spawn_object(o, model, bhv);
     yaw = o->oPlatformSpawnerUnkF4 * o->oPlatformSpawnerUnkFC + o->oPlatformSpawnerUnkF8;
     if (platform != NULL) {
         platform->oMoveAngleYaw = yaw;
@@ -106,6 +111,7 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
             u32 loopTime = 1 + (platform->oPlatformUnk110 / platform->oPlatformUnk10C);
             loopTime *= 2;
             loopTime += 1;
+            // uses area timer to sync platform
             platform->areaTimerType = AREA_TIMER_TYPE_LOOP;
             platform->areaTimer = 0;
             platform->areaTimerDuration = loopTime;
@@ -115,7 +121,6 @@ void spawn_and_init_wf_platforms(s16 a, const BehaviorScript *bhv) {
 }
 
 void spawn_wf_platform_group(void) {
-    UNUSED s32 unused = 8;
     o->oPlatformSpawnerUnkF4 = 0;
     o->oPlatformSpawnerUnkF8 = 0;
     o->oPlatformSpawnerUnkFC = 0x2000;
@@ -137,7 +142,6 @@ void bhv_tower_platform_group_init(void) {
 }
 
 void bhv_tower_platform_group_loop(void) {
-
     u8 anyPlayerInRange = FALSE;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }

@@ -5,8 +5,9 @@ void bhv_sliding_snow_mound_loop(void) {
         case 0:
             o->oVelX = -40.0f;
             o->oPosX += o->oVelX;
-            if (o->oTimer >= 118)
+            if (o->oTimer >= 118) {
                 o->oAction = 1;
+            }
 
             cur_obj_play_sound_1(SOUND_ENV_SINK_QUICKSAND);
             break;
@@ -17,24 +18,24 @@ void bhv_sliding_snow_mound_loop(void) {
             o->oVelY = -10.0f;
             o->oPosY += o->oVelY;
             o->oPosZ = o->oHomeZ - 2.0f;
-            if (o->oTimer > 50)
+            if (o->oTimer > 50) {
                 o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+            }
             break;
     }
 }
 
-void bhv_snow_mound_spawn_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_snow_mound_spawn_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     *shouldOverride = TRUE;
     *shouldOwn = (get_network_player_smallest_global() == gNetworkPlayerLocal);
 }
 
 void bhv_snow_mound_spawn_loop(void) {
-    struct Object* player = nearest_player_to_object(o);
-
-    struct Object *sp1C = NULL;
+    struct Object *player = nearest_player_to_object(o);
+    struct Object *moundObj = NULL;
 
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->override_ownership = bhv_snow_mound_spawn_override_ownership;
             sync_object_init_field(o, o->oTimer);
@@ -49,27 +50,28 @@ void bhv_snow_mound_spawn_loop(void) {
 
     if (o->oTimer == 64 || o->oTimer == 128 || o->oTimer == 192 || o->oTimer == 224 || o->oTimer == 256) {
         if (sync_object_is_owned_locally(o->oSyncID)) {
-            sp1C = spawn_object(o, MODEL_SL_SNOW_TRIANGLE, bhvSlidingSnowMound);
-            if (sp1C != NULL) {
-                sp1C->oHomeX = o->oPosX;
-                sp1C->oHomeY = o->oPosY;
-                sp1C->oHomeZ = o->oPosZ;
+            moundObj = spawn_object(o, MODEL_SL_SNOW_TRIANGLE, bhvSlidingSnowMound);
+            if (moundObj != NULL) {
+                moundObj->oHomeX = o->oPosX;
+                moundObj->oHomeY = o->oPosY;
+                moundObj->oHomeZ = o->oPosZ;
             }
             network_send_object(o);
         }
     }
 
-    if (sp1C != NULL && o->oTimer == 256) {
-        sp1C->header.gfx.scale[0] = 2.0f;
-        sp1C->header.gfx.scale[1] = 2.0f;
+    if (moundObj != NULL && o->oTimer == 256) {
+        moundObj->header.gfx.scale[0] = 2.0f;
+        moundObj->header.gfx.scale[1] = 2.0f;
     }
 
-    if (sp1C != NULL) {
-        struct Object* spawn_objects[] = { sp1C };
+    if (moundObj != NULL && sync_object_is_owned_locally(o->oSyncID)) {
+        struct Object *spawn_objects[] = { moundObj };
         u32 models[] = { MODEL_SL_SNOW_TRIANGLE };
         network_send_spawn_objects(spawn_objects, models, 1);
     }
 
-    if (o->oTimer >= 256)
+    if (o->oTimer >= 256) {
         o->oTimer = 0;
+    }
 }

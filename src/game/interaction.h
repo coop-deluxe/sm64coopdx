@@ -105,7 +105,7 @@ enum InteractionFlag {
 
 #define INT_STATUS_ATTACK_MASK 0x000000FF
 
-#define INT_STATUS_HOOT_GRABBED_BY_MARIO (1 <<  0) /* 0x00000001 */
+#define INT_STATUS_MARIO_STUNNED (1 <<  0) /* 0x00000001 */
 #define INT_STATUS_MARIO_UNK1            (1 <<  1) /* 0x00000002 */
 #define INT_STATUS_MARIO_UNK2            (1 <<  2) /* 0x00000004 */
 #define INT_STATUS_MARIO_DROP_OBJECT     (1 <<  3) /* 0x00000008 */
@@ -123,7 +123,6 @@ enum InteractionFlag {
 #define INT_STATUS_TOUCHED_BOB_OMB       (1 << 23) /* 0x00800000 */
 
 extern s16 gInteractionInvulnerable;
-extern u8 gPssSlideStarted;
 
 /* |description|
 Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.
@@ -173,7 +172,7 @@ Useful for transitioning to cannon-aiming mode and enabling cannon travel within
 u32 interact_cannon_base(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interaction with another player (in multiplayer scenarios). 
+Handles interaction with another player (in multiplayer scenarios).
 Checks if Mario and another player collide and resolves any special behavior like bouncing on top.
 Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
 |descriptionEnd| */
@@ -233,7 +232,7 @@ Useful for electric-themed enemies and obstacles
 u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. 
+Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects.
 If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 |descriptionEnd| */
 u32 interact_mr_blizzard(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
@@ -245,7 +244,7 @@ Useful for handling upward attacks, hitting coin blocks, or interacting with cer
 u32 interact_hit_from_below(struct MarioState *m, UNUSED u32 interactType, struct Object *o);
 
 /* |description|
-Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). 
+Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas).
 Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes.
 Useful for enemy defeat mechanics and platform bouncing
 |descriptionEnd| */
@@ -319,7 +318,7 @@ Useful for cleanly dismounting ridden objects
 void mario_stop_riding_object(struct MarioState *m);
 
 /* |description|
-Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. 
+Grabs the object currently referenced by Mario's `usedObj` if it's not already being held.
 Changes the object's state to indicate it is now held by Mario.
 Useful for handling the moment Mario successfully picks up an object
 |descriptionEnd| */
@@ -332,20 +331,20 @@ Useful for releasing carried objects, such as throwing Bob-ombs or setting down 
 void mario_drop_held_object(struct MarioState *m);
 
 /* |description|
-Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. 
+Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity.
 Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
 |descriptionEnd| */
 void mario_throw_held_object(struct MarioState *m);
 
 /* |description|
-Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. 
+Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object.
 Resets related states to ensure Mario is no longer attached to or holding anything.
 Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
 |descriptionEnd| */
 void mario_stop_riding_and_holding(struct MarioState *m);
 
 /* |description|
-Checks if Mario is currently wearing his normal cap on his head. 
+Checks if Mario is currently wearing his normal cap on his head.
 Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false.
 Useful for determining Mario's cap status
 |descriptionEnd| */
@@ -359,7 +358,7 @@ Useful to check if a blown cap exists in the level currently.
 bool does_mario_have_blown_cap(struct MarioState *m);
 
 /* |description|
-Makes Mario blow off his normal cap at a given speed. 
+Makes Mario blow off his normal cap at a given speed.
 Removes the normal cap from Mario's head and spawns it as a collectible object in the game world.
 Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
 |descriptionEnd| */
@@ -373,7 +372,7 @@ Useful for scenarios where enemies steal Mario's cap
 u32 mario_lose_cap_to_enemy(struct MarioState* m, u32 arg);
 
 /* |description|
-Retrieves Mario's normal cap if it was previously lost. 
+Retrieves Mario's normal cap if it was previously lost.
 Removes the cap from Mario's hand state and places it on his head.
 Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
 |descriptionEnd| */
@@ -414,7 +413,7 @@ Useful for animating door interactions realistically, depending on which side Ma
 u32 should_push_or_pull_door(struct MarioState *m, struct Object *o);
 
 /* |description|
-Handles the logic of Mario taking damage and being knocked back by a damaging object. 
+Handles the logic of Mario taking damage and being knocked back by a damaging object.
 Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects.
 Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
 |descriptionEnd| */
@@ -427,7 +426,7 @@ Useful for handling the logic of picking up, wearing, or losing different kinds 
 u32 get_mario_cap_flag(struct Object *capObject);
 
 /* |description|
-Determines how Mario interacts with a given object based on his current action, position, and other state variables. 
+Determines how Mario interacts with a given object based on his current action, position, and other state variables.
 Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`).
 Useful for handling different types of player-object collisions, attacks, and object behaviors
 |descriptionEnd| */

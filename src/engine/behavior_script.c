@@ -1356,8 +1356,6 @@ void cur_obj_update(void) {
 
 cur_obj_update_begin:;
 
-    UNUSED u32 unused;
-
     s16 objFlags = gCurrentObject->oFlags;
     f32 distanceFromMario;
     BhvCommandProc bhvCmdProc = NULL;

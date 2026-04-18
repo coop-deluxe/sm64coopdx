@@ -12,9 +12,8 @@ struct ObjectHitbox sMrBlizzardHitbox = {
 };
 
 // Mr. Blizzard particle spawner.
-void mr_blizzard_spawn_white_particles(s8 count, s8 offsetY, s8 forwardVelBase, s8 velYBase,
-                                       s8 sizeBase) {
-    static struct SpawnParticlesInfo D_80331A00 = {
+void mr_blizzard_spawn_white_particles(s8 count, s8 offsetY, s8 forwardVelBase, s8 velYBase, s8 sizeBase) {
+    static struct SpawnParticlesInfo sMrBlizzardParticlesInfo = {
         /* behParam:        */ 0,
         /* count:           */ 6,
         /* model:           */ MODEL_WHITE_PARTICLE,
@@ -29,12 +28,12 @@ void mr_blizzard_spawn_white_particles(s8 count, s8 offsetY, s8 forwardVelBase, 
         /* sizeRange:       */ 5.0f,
     };
 
-    D_80331A00.count = count;
-    D_80331A00.offsetY = offsetY;
-    D_80331A00.forwardVelBase = forwardVelBase;
-    D_80331A00.velYBase = velYBase;
-    D_80331A00.sizeBase = sizeBase;
-    cur_obj_spawn_particles(&D_80331A00);
+    sMrBlizzardParticlesInfo.count = count;
+    sMrBlizzardParticlesInfo.offsetY = offsetY;
+    sMrBlizzardParticlesInfo.forwardVelBase = forwardVelBase;
+    sMrBlizzardParticlesInfo.velYBase = velYBase;
+    sMrBlizzardParticlesInfo.sizeBase = sizeBase;
+    cur_obj_spawn_particles(&sMrBlizzardParticlesInfo);
 }
 
 /**
@@ -48,6 +47,8 @@ void bhv_mr_blizzard_init(void) {
         o->oMrBlizzardGraphYOffset = 24.0f;
         o->oMrBlizzardTargetMoveYaw = o->oMoveAngleYaw;
 
+        // uses an event based sync system. Syncs when mr blizzard comes in and out of his hole, throws
+        // a snowball, and some other actions
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oMrBlizzardTargetMoveYaw);
         sync_object_init_field(o, o->oMrBlizzardTimer);
@@ -107,7 +108,7 @@ static void mr_blizzard_act_spawn_snowball(void) {
  */
 
 static void mr_blizzard_act_hide_unhide(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -133,7 +134,6 @@ static void mr_blizzard_act_hide_unhide(void) {
  */
 
 static void mr_blizzard_act_rise_from_ground(void) {
-
     // If the timer is not 0, decrement by 1 until it reaches 0.
     if (o->oMrBlizzardTimer != 0) {
         o->oMrBlizzardTimer -= 1;
@@ -163,7 +163,7 @@ static void mr_blizzard_act_rise_from_ground(void) {
  */
 
 static void mr_blizzard_act_rotate(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -232,7 +232,7 @@ static void mr_blizzard_act_rotate(void) {
  */
 
 static void mr_blizzard_act_death(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     cur_obj_become_intangible();
@@ -302,7 +302,6 @@ static void mr_blizzard_act_death(void) {
  */
 
 static void mr_blizzard_act_throw_snowball(void) {
-
     // Play a sound and set HeldObj to NULL. Then set action to 0.
     if (cur_obj_init_anim_check_frame(1, 7)) {
         cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
@@ -317,7 +316,6 @@ static void mr_blizzard_act_throw_snowball(void) {
  */
 
 static void mr_blizzard_act_burrow(void) {
-
     // Reset Dizziness by increasing ChangeInDizziness if
     // dizziness is negative and decreasing it if Dizziness
     o->oMrBlizzardDizziness += o->oMrBlizzardChangeInDizziness;
@@ -340,7 +338,7 @@ static void mr_blizzard_act_burrow(void) {
  */
 
 static void mr_blizzard_act_jump(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oMrBlizzardTimer != 0) {
@@ -422,8 +420,7 @@ void bhv_mr_blizzard_update(void) {
     // slowly fall over.
     o->oFaceAngleRoll = o->oMrBlizzardDizziness;
     // Mr. Blizzard's graphical position changes by changing the Y offset.
-    o->oGraphYOffset = o->oMrBlizzardGraphYOffset + absf(20.0f * sins(o->oFaceAngleRoll))
-                       - 40.0f * (1.0f - o->oMrBlizzardScale);
+    o->oGraphYOffset = o->oMrBlizzardGraphYOffset + absf(20.0f * sins(o->oFaceAngleRoll)) - 40.0f * (1.0f - o->oMrBlizzardScale);
 
     cur_obj_scale(o->oMrBlizzardScale);
     cur_obj_move_standard(78);
@@ -448,7 +445,7 @@ static void mr_blizzard_snowball_act_0(void) {
  */
 
 static void mr_blizzard_snowball_act_1(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     f32 marioDist;

@@ -632,6 +632,9 @@
 #define /*0x0FC*/ oKoopaRaceEndpointRaceStatus    OBJECT_FIELD_S32(0x1D)
 #define /*0x100*/ oKoopaRaceEndpointUnk100        OBJECT_FIELD_S32(0x1E)
 #define /*0x104*/ oKoopaRaceEndpointRaceEnded     OBJECT_FIELD_S32(0x1F)
+#define /*0x108*/ oKoopaRaceEndpointRaceCheated   OBJECT_FIELD_S32(0x20)
+#define /*0x10C*/ oKoopaRaceEndpointRaceStartTime OBJECT_FIELD_S32(0x21)
+#define /*0x110*/ oKoopaRaceEndpointRaceWinner    OBJECT_FIELD_S32(0x22)
 
 /* Koopa Shell Flame */
 #define /*0x0F4*/ oKoopaShellFlameUnkF4 OBJECT_FIELD_F32(0x1B)
@@ -999,6 +1002,7 @@
 #define /*0x0FC*/ oTTCTreadmillSpeed           OBJECT_FIELD_F32(0x1D)
 #define /*0x100*/ oTTCTreadmillTargetSpeed     OBJECT_FIELD_F32(0x1E)
 #define /*0x104*/ oTTCTreadmillTimeUntilSwitch OBJECT_FIELD_S32(0x1F)
+#define /*0x108*/ oTTCTreadmillPrevTTCSpeed    OBJECT_FIELD_S32(0x20)
 
 /* TTC Moving Bar */
 #define /*0x0F4*/ oTTCMovingBarDelay        OBJECT_FIELD_S32(0x1B)
@@ -1154,8 +1158,8 @@
 #define /*0x108*/ oWigglerTimeUntilRandomTurn     OBJECT_FIELD_S32(0x20)
 #define /*0x10C*/ oWigglerTargetYaw               OBJECT_FIELD_S32(0x21)
 #define /*0x110*/ oWigglerWalkAwayFromWallTimer   OBJECT_FIELD_S32(0x22)
-#define /*0x1AC*/ oWigglerUnused                  OBJECT_FIELD_S16(0x49, 0)
-#define /*0x1AE*/ oWigglerTextStatus              OBJECT_FIELD_S16(0x49, + 1)
+#define /*0x1AC*/ oWigglerFinishedTalking         OBJECT_FIELD_S16(0x49, 0)
+#define /*0x1AE*/ oWigglerTextStatus              OBJECT_FIELD_S16(0x49, 1)
 
 /* Lll Wood Piece */
 #define /*0x0F4*/ oLllWoodPieceOscillationTimer OBJECT_FIELD_S32(0x1B)

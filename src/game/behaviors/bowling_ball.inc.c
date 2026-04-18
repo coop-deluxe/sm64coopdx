@@ -48,8 +48,9 @@ void bhv_bowling_ball_init(void) {
 void bowling_ball_set_hitbox(void) {
     obj_set_hitbox(o, &sBowlingBallHitbox);
 
-    if (o->oInteractStatus & INT_STATUS_INTERACTED)
+    if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         o->oInteractStatus = 0;
+    }
 }
 
 void bowling_ball_set_waypoints(void) {
@@ -78,12 +79,11 @@ void bowling_ball_set_waypoints(void) {
 
 void bhv_bowling_ball_roll_loop(void) {
     s16 collisionFlags;
-    s32 sp18 = 0;
 
     bowling_ball_set_waypoints();
     collisionFlags = object_step();
 
-    sp18 = cur_obj_follow_path(sp18);
+    s32 currentPath = cur_obj_follow_path(0);
 
     o->oBowlingBallTargetYaw = o->oPathedTargetYaw;
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oBowlingBallTargetYaw, 0x400);
@@ -93,7 +93,7 @@ void bhv_bowling_ball_roll_loop(void) {
 
     bowling_ball_set_hitbox();
 
-    if (sp18 == -1) {
+    if (currentPath == PATH_REACHED_END) {
         if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 7000)) {
             spawn_mist_particles();
             spawn_mist_particles_variable(0, 0, 92.0f);
@@ -107,11 +107,9 @@ void bhv_bowling_ball_roll_loop(void) {
 }
 
 void bhv_bowling_ball_initializeLoop(void) {
-    s32 sp1c = 0;
-
     bowling_ball_set_waypoints();
 
-    sp1c = cur_obj_follow_path(sp1c);
+    cur_obj_follow_path(0);
 
     o->oMoveAngleYaw = o->oPathedTargetYaw;
 
@@ -152,8 +150,9 @@ void bhv_bowling_ball_loop(void) {
             break;
     }
 
-    if (o->oBehParams2ndByte != 4)
+    if (o->oBehParams2ndByte != 4) {
         set_camera_shake_from_point(SHAKE_POS_BOWLING_BALL, o->oPosX, o->oPosY, o->oPosZ);
+    }
 
     set_object_visibility(o, 4000);
 }
@@ -178,6 +177,7 @@ void bhv_generic_bowling_ball_spawner_init(void) {
 }
 
 void bhv_generic_bowling_ball_spawner_loop(void) {
+    // this is a spawner sync object, which means only the owner of the spawner actually does the spawning
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
@@ -190,30 +190,23 @@ void bhv_generic_bowling_ball_spawner_loop(void) {
     struct Object* player = nearest_player_to_object(o);
     if (!player) { return; }
 
-    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1000)
-        || (o->oPosY < player->header.gfx.pos[1]))
+    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1000) || (o->oPosY < player->header.gfx.pos[1])) {
         return;
-
-    if ((o->oTimer & o->oBBallSpawnerPeriodMinus1) == 0) /* Modulus */
-    {
-        if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, o->oBBallSpawnerMaxSpawnDist)) {
-            if ((s32)(random_float() * o->oBBallSpawnerSpawnOdds) == 0) {
-                if (!sync_object_is_owned_locally(o->oSyncID)) {
-                    return;
-                }
-                // this branch only runs for one player at a time
-                bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
-                if (bowlingBall != NULL) {
-                    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
-
-                    // send out the bowlingBall object
-                    struct Object* spawn_objects[] = { bowlingBall };
-                    u32 models[] = { MODEL_BOWLING_BALL };
-                    network_send_spawn_objects(spawn_objects, models, 1);
-                }
-            }
-        }
     }
+
+    if ((o->oTimer & o->oBBallSpawnerPeriodMinus1) != 0) return; /* Modulus */
+    if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, o->oBBallSpawnerMaxSpawnDist)) return;
+    if ((s32)(random_float() * o->oBBallSpawnerSpawnOdds) != 0) return;
+    if (!sync_object_is_owned_locally(o->oSyncID)) return;
+
+    bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
+    if (bowlingBall == NULL) return;
+    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
+
+    // send out the bowlingBall object
+    struct Object* spawn_objects[] = { bowlingBall };
+    u32 models[] = { MODEL_BOWLING_BALL };
+    network_send_spawn_objects(spawn_objects, models, 1);
 }
 
 void bhv_thi_bowling_ball_spawner_loop(void) {
@@ -225,29 +218,27 @@ void bhv_thi_bowling_ball_spawner_loop(void) {
     struct Object* player = nearest_player_to_object(o);
     if (!player) { return; }
 
-    if (o->oTimer == 256)
+    if (o->oTimer == 256) {
         o->oTimer = 0;
-
-    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 800)
-        || (o->oPosY < player->header.gfx.pos[1]))
-        return;
-
-    if ((o->oTimer % 64) == 0) {
-        if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 12000)) {
-            if (sync_object_is_owned_locally(o->oSyncID) && (s32)(random_float() * 1.5) == 0) {
-                // this branch only runs for one player at a time
-                bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
-                if (bowlingBall != NULL) {
-                    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
-
-                    // send out the bowlingBall object
-                    struct Object* spawn_objects[] = { bowlingBall };
-                    u32 models[] = { MODEL_BOWLING_BALL };
-                    network_send_spawn_objects(spawn_objects, models, 1);
-                }
-            }
-        }
     }
+
+    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 800) || (o->oPosY < player->header.gfx.pos[1])) {
+        return;
+    }
+
+    if ((o->oTimer % 64) != 0) return;
+    if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 12000)) return;
+    if ((s32)(random_float() * 1.5) != 0) return;
+    if (sync_object_is_owned_locally(o->oSyncID)) return;
+
+    bowlingBall = spawn_object(o, MODEL_BOWLING_BALL, bhvBowlingBall);
+    if (bowlingBall == NULL) return;
+    bowlingBall->oBehParams2ndByte = o->oBehParams2ndByte;
+
+    // send out the bowlingBall object
+    struct Object* spawn_objects[] = { bowlingBall };
+    u32 models[] = { MODEL_BOWLING_BALL };
+    network_send_spawn_objects(spawn_objects, models, 1);
 }
 
 void bhv_bob_pit_bowling_ball_init(void) {
@@ -255,6 +246,7 @@ void bhv_bob_pit_bowling_ball_init(void) {
     o->oFriction = 1.0f;
     o->oBuoyancy = 2.0f;
 
+    // standard sync
     struct SyncObject* so = sync_object_init(o, 5000.0f);
     if (so) {
         so->maxUpdateRate = 5.0f;
@@ -262,12 +254,13 @@ void bhv_bob_pit_bowling_ball_init(void) {
 }
 
 void bhv_bob_pit_bowling_ball_loop(void) {
-    struct FloorGeometry *sp1c;
-    UNUSED s16 collisionFlags = object_step();
+    struct FloorGeometry *floorGeometry;
+    object_step();
 
-    find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp1c);
-    if (sp1c && (sp1c->normalX == 0) && (sp1c->normalZ == 0))
+    find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &floorGeometry);
+    if (floorGeometry && (floorGeometry->normalX == 0) && (floorGeometry->normalZ == 0)) {
         o->oForwardVel = 28.0f;
+    }
 
     bowling_ball_set_hitbox();
     set_camera_shake_from_point(SHAKE_POS_BOWLING_BALL, o->oPosX, o->oPosY, o->oPosZ);
@@ -298,7 +291,7 @@ void bhv_free_bowling_ball_roll_loop(void) {
     /*if ((collisionFlags & OBJ_COL_FLAG_GROUNDED) && !(collisionFlags & OBJ_COL_FLAGS_LANDED))
         cur_obj_play_sound_2(SOUND_GENERAL_QUIET_POUND1_LOWPRIO);*/
 
-    if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
+    if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
         o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
         cur_obj_become_intangible();
 

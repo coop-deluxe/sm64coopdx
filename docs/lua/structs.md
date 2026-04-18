@@ -2316,6 +2316,9 @@
 | oKoopaRaceEndpointRaceStatus | `integer` |  |
 | oKoopaRaceEndpointUnk100 | `integer` |  |
 | oKoopaRaceEndpointRaceEnded | `integer` |  |
+| oKoopaRaceEndpointRaceCheated | `integer` |  |
+| oKoopaRaceEndpointRaceStartTime | `integer` |  |
+| oKoopaRaceEndpointRaceWinner | `integer` |  |
 | oKoopaShellFlameUnkF4 | `number` |  |
 | oKoopaShellFlameUnkF8 | `number` |  |
 | oCameraLakituBlinkTimer | `integer` |  |
@@ -2540,6 +2543,7 @@
 | oTTCTreadmillSpeed | `number` |  |
 | oTTCTreadmillTargetSpeed | `number` |  |
 | oTTCTreadmillTimeUntilSwitch | `integer` |  |
+| oTTCTreadmillPrevTTCSpeed | `integer` |  |
 | oTTCMovingBarDelay | `integer` |  |
 | oTTCMovingBarStoppedTimer | `integer` |  |
 | oTTCMovingBarOffset | `number` |  |
@@ -2633,7 +2637,7 @@
 | oWigglerTimeUntilRandomTurn | `integer` |  |
 | oWigglerTargetYaw | `integer` |  |
 | oWigglerWalkAwayFromWallTimer | `integer` |  |
-| oWigglerUnused | `integer` |  |
+| oWigglerFinishedTalking | `integer` |  |
 | oWigglerTextStatus | `integer` |  |
 | oLllWoodPieceOscillationTimer | `integer` |  |
 | oWoodenPostTotalMarioAngle | `integer` |  |

@@ -38,6 +38,9 @@ static void bhv_bully_override_ownership(u8* shouldOverride, u8* shouldOwn) {
 }
 
 static void bhv_bully_network_init(void) {
+    // there are multiple bully behaviors that use this function
+    // syncing bullies works by doing the standard distance-based sync
+    // but overriding ownership and ignoring syncing if the bully is dead
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         sync_object_init_field(o, o->oFlags);
@@ -63,7 +66,7 @@ void bhv_small_bully_init(void) {
     o->oGravity = 4.0;
     o->oFriction = 0.91;
     o->oBuoyancy = 1.3;
-    
+
     // We only set this here so it has a set value just in case.
     // A mod may make a small bully spawn a star.
     // For whatever reason that may be.
@@ -83,7 +86,7 @@ void bhv_big_bully_init(void) {
     o->oGravity = 5.0;
     o->oFriction = 0.93;
     o->oBuoyancy = 1.3;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -202,8 +205,7 @@ void bully_act_back_up(void) {
 }
 
 void bully_backup_check(s16 collisionFlags) {
-    if (!(collisionFlags & 0x8) && o->oAction != BULLY_ACT_KNOCKBACK) /* bit 3 */
-    {
+    if (!(collisionFlags & 0x8) && o->oAction != BULLY_ACT_KNOCKBACK) { /* bit 3 */
         o->oPosX = o->oBullyPrevX;
         o->oPosZ = o->oBullyPrevZ;
         o->oAction = BULLY_ACT_BACK_UP;
@@ -211,10 +213,10 @@ void bully_backup_check(s16 collisionFlags) {
 }
 
 void bully_play_stomping_sound(void) {
-    s16 sp26 = o->header.gfx.animInfo.animFrame;
+    s16 animFrame = o->header.gfx.animInfo.animFrame;
     switch (o->oAction) {
         case BULLY_ACT_PATROL:
-            if (sp26 == 0 || sp26 == 12) {
+            if (animFrame == 0 || animFrame == 12) {
                 if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL)
                     cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALK);
                 else
@@ -224,7 +226,7 @@ void bully_play_stomping_sound(void) {
 
         case BULLY_ACT_CHASE_MARIO:
         case BULLY_ACT_BACK_UP:
-            if (sp26 == 0 || sp26 == 5) {
+            if (animFrame == 0 || animFrame == 5) {
                 if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL)
                     cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALK);
                 else
@@ -235,8 +237,7 @@ void bully_play_stomping_sound(void) {
 }
 
 void bully_step(void) {
-    s16 collisionFlags = 0;
-    collisionFlags = object_step();
+    s16 collisionFlags = object_step();
     bully_backup_check(collisionFlags);
     bully_play_stomping_sound();
     obj_check_floor_death(collisionFlags, sObjFloor);
@@ -274,10 +275,10 @@ void bully_act_level_death(void) {
             spawn_mist_particles();
 
             if (o->oBullySubtype == BULLY_STYPE_CHILL) {
-                f32* starPos = gLevelValues.starPositions.ChillBullyStarPos;
+                f32 *starPos = gLevelValues.starPositions.ChillBullyStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
             } else {
-                f32* starPos = gLevelValues.starPositions.BigBullyTrioStarPos;
+                f32 *starPos = gLevelValues.starPositions.BigBullyTrioStarPos;
                 spawn_networked_default_star(starPos[0], starPos[1], starPos[2], o->oBullyLastNetworkPlayerIndex);
                 struct Object* lllTumblingBridge = cur_obj_nearest_object_with_behavior(bhvLllTumblingBridge);
                 if (lllTumblingBridge != NULL) {
@@ -339,14 +340,8 @@ void bhv_bully_loop(void) {
     set_object_visibility(o, 3000);
 }
 
-// sp38 = arg0
-// sp3c = arg1
-// sp40 = arg2
-// sp44 = arg3
-
-void big_bully_spawn_minion(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-    struct Object *bully =
-        spawn_object_abs_with_rot(o, 0, MODEL_BULLY, bhvSmallBully, arg0, arg1, arg2, 0, arg3, 00);
+void big_bully_spawn_minion(s32 x, s32 y, s32 z, s16 rotY) {
+    struct Object *bully = spawn_object_abs_with_rot(o, 0, MODEL_BULLY, bhvSmallBully, x, y, z, 0, rotY, 0);
     if (bully != NULL) {
         bully->oBullySubtype = BULLY_STYPE_MINION;
         bully->oBehParams2ndByte = BULLY_BP_SIZE_SMALL;
@@ -425,8 +420,9 @@ void bhv_big_bully_with_minions_loop(void) {
 
         case BULLY_ACT_ACTIVATE_AND_FALL:
             collisionFlags = object_step();
-            if ((collisionFlags & 0x9) == 0x9) /* bits 0 and 3 */
+            if ((collisionFlags & 0x9) == 0x9) { /* bits 0 and 3 */
                 o->oAction = BULLY_ACT_PATROL;
+            }
 
             if (collisionFlags == 1) {
                 cur_obj_play_sound_2(SOUND_OBJ_THWOMP);

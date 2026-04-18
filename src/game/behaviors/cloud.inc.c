@@ -19,10 +19,9 @@ static s8 sCloudPartHeights[] = { 11, 8, 12, 8, 9, 9 };
  */
 static void cloud_act_spawn_parts(void) {
     struct Object *cloudPart;
-    s32 i;
 
     // Spawn the pieces of the cloud itself
-    for (i = 0; i < 5; i++) {
+    for (s32 i = 0; i < 5; i++) {
         cloudPart = spawn_object_relative(i, 0, 0, 0, o, MODEL_MIST, bhvCloudPart);
 
         if (cloudPart != NULL) {
@@ -56,6 +55,7 @@ static void cloud_act_fwoosh_hidden(void) {
  * long enough, blow wind at him.
  */
 static void cloud_fwoosh_update(void) {
+    // syncing here uses a standard distance-based method
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->header.gfx.scale[0]);
@@ -205,11 +205,8 @@ void bhv_cloud_part_update(void) {
         cloudRadius = 25.0f * size;
 
         o->oPosX = o->parentObj->oCloudCenterX + cloudRadius * sins(angleFromCenter) + localOffset;
-
         o->oPosY = o->parentObj->oCloudCenterY + localOffset + size * BHV_ARR(sCloudPartHeights, o->oBehParams2ndByte, s8);
-
         o->oPosZ = o->parentObj->oPosZ + cloudRadius * coss(angleFromCenter) + localOffset;
-
         o->oFaceAngleYaw = o->parentObj->oFaceAngleYaw;
     }
 }

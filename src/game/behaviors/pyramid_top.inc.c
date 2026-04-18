@@ -25,8 +25,6 @@ void bhv_pyramid_top_init(void) {
  * fragments in the process.
  */
 void bhv_pyramid_top_spinning(void) {
-    struct Object *pyramidFragment;
-
     // (TODO: What is this doing)
     o->oPosX = o->oHomeX + sins(o->oTimer * 0x4000) * 40.0f;
 
@@ -48,7 +46,7 @@ void bhv_pyramid_top_spinning(void) {
     // Every frame until 90 frames have passed, generate a pyramid fragment
     // with a random velocity and angle.
     if (o->oTimer < 90) {
-        pyramidFragment = spawn_object(o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment);
+        struct Object *pyramidFragment = spawn_object(o, MODEL_DIRT_ANIMATION, bhvPyramidTopFragment);
         if (pyramidFragment != NULL) {
             pyramidFragment->oForwardVel = random_float() * 10.0f + 20.0f;
             pyramidFragment->oMoveAngleYaw = random_u16();
@@ -88,6 +86,7 @@ void bhv_pyramid_top_explode(void) {
 }
 
 void bhv_pyramid_top_loop(void) {
+    // uses an event based sync system. Syncs when the puzzle is solved
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -97,7 +96,7 @@ void bhv_pyramid_top_loop(void) {
             sync_object_init_field(o, o->oTimer);
         }
     }
-    
+
     switch (o->oAction) {
         case PYRAMID_TOP_ACT_CHECK_IF_SOLVED:
             if (o->oPyramidTopPillarsTouched == 4) {

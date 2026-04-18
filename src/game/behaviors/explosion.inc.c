@@ -8,14 +8,14 @@ void bhv_explosion_init(void) {
 }
 
 void bhv_explosion_loop(void) {
-    s32 i;
-
     if (o->oTimer == 9) {
         if (find_water_level(o->oPosX, o->oPosZ) > o->oPosY) {
-            for (i = 0; i < 40; i++)
+            for (s32 i = 0; i < 40; i++) {
                 spawn_object(o, MODEL_WHITE_PARTICLE_SMALL, bhvBobombExplosionBubble);
-        } else
+            }
+        } else {
             spawn_object(o, MODEL_SMOKE, bhvBobombBullyDeathSmoke);
+        }
 
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }

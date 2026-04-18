@@ -1,6 +1,7 @@
 // express_elevator.c.inc
 
 void bhv_wdw_express_elevator_loop(void) {
+    // very simple, uses a event sync system. Syncs if mario gets on the elevator
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -20,11 +21,13 @@ void bhv_wdw_express_elevator_loop(void) {
         o->oVelY = -20.0f;
         o->oPosY += o->oVelY;
         cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
-        if (o->oTimer > 132)
+        if (o->oTimer > 132) {
             o->oAction++;
+        }
     } else if (o->oAction == 2) {
-        if (o->oTimer > 110)
+        if (o->oTimer > 110) {
             o->oAction++;
+        }
     } else if (o->oAction == 3) {
         o->oVelY = 10.0f;
         o->oPosY += o->oVelY;
@@ -33,6 +36,7 @@ void bhv_wdw_express_elevator_loop(void) {
             o->oPosY = o->oHomeY;
             o->oAction++;
         }
-    } else if (!cur_obj_is_any_player_on_platform())
+    } else if (!cur_obj_is_any_player_on_platform()) {
         o->oAction = 0;
+    }
 }

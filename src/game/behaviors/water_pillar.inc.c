@@ -11,16 +11,18 @@ void water_level_pillar_undrained(void) {
             }
             break;
         case 1:
-            if (o->oTimer < 4)
+            if (o->oTimer < 4) {
                 o->oPosY -= 20.0f;
-            else
+            } else {
                 o->oAction++;
+            }
             break;
         case 2:
             otherWaterPillar = cur_obj_nearest_object_with_behavior(bhvWaterLevelPillar);
             if (otherWaterPillar != NULL) {
-                if (otherWaterPillar->oAction < 2)
+                if (otherWaterPillar->oAction < 2) {
                     o->oAction++;
+                }
             }
             break;
         case 3:
@@ -37,13 +39,12 @@ void water_level_pillar_undrained(void) {
         case 4:
             cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
             if (o->oTimer < 300) {
-                gEnvironmentLevels[2] =
-                    (s32) approach_f32_symmetric(gEnvironmentLevels[2], -2450.0f, 5.0f);
-                gEnvironmentLevels[0] =
-                    (s32) approach_f32_symmetric(gEnvironmentLevels[0], -2450.0f, 5.0f);
+                gEnvironmentLevels[2] = (s32)approach_f32_symmetric(gEnvironmentLevels[2], -2450.0f, 5.0f);
+                gEnvironmentLevels[0] = (s32)approach_f32_symmetric(gEnvironmentLevels[0], -2450.0f, 5.0f);
                 reset_rumble_timers_2(&gMarioStates[0], 2);
-            } else
+            } else {
                 o->oAction++;
+            }
             break;
         case 5:
             break;
@@ -63,9 +64,11 @@ static u8 bhv_water_level_pillar_ignore_if_true(void) {
 }
 
 void bhv_water_level_pillar_init(void) {
-    if (save_file_get_flags() & SAVE_FLAG_MOAT_DRAINED)
+    if (save_file_get_flags() & SAVE_FLAG_MOAT_DRAINED) {
         o->oWaterLevelPillarDrained = 1;
+    }
 
+    // uses event based sync. Syncs when the pillar has been drained
     struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so) {
         so->ignore_if_true = bhv_water_level_pillar_ignore_if_true;
@@ -77,10 +80,11 @@ void bhv_water_level_pillar_init(void) {
 }
 
 void bhv_water_level_pillar_loop(void) {
-    if (o->oWaterLevelPillarDrained)
+    if (o->oWaterLevelPillarDrained) {
         water_level_pillar_drained();
-    else
+    } else {
         water_level_pillar_undrained();
+    }
     if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) {
         gEnvironmentRegions[18] = gEnvironmentLevels[2];
         gEnvironmentRegions[6] = gEnvironmentLevels[0];

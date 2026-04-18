@@ -17,6 +17,7 @@ static s16 sTTCSpinnerSpeeds[] = {
  * Update function for bhvTTCSpinner.
  */
 void bhv_ttc_spinner_update(void) {
+    // standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {

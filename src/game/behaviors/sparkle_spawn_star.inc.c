@@ -57,7 +57,7 @@ void set_home_to_mario(void) {
         o->oHomeZ = o->parentObj->oPosZ;
         o->oHomeY = o->parentObj->oPosY;
     } else {
-        struct Object* player = nearest_player_to_object(o);
+        struct Object *player = nearest_player_to_object(o);
         if (player) {
             o->oHomeX = player->oPosX;
             o->oHomeZ = player->oPosZ;
@@ -66,9 +66,9 @@ void set_home_to_mario(void) {
     }
     o->oHomeY += 250.0f;
     o->oPosY = o->oHomeY;
-    f32 sp1C = o->oHomeX - o->oPosX;
-    f32 sp18 = o->oHomeZ - o->oPosZ;
-    o->oForwardVel = sqrtf(sp1C * sp1C + sp18 * sp18) / 23.0f;
+    f32 distX = o->oHomeX - o->oPosX;
+    f32 distZ = o->oHomeZ - o->oPosZ;
+    o->oForwardVel = sqrtf(distX * distX + distZ * distZ) / 23.0f;
 }
 
 void set_y_home_to_pos(void) {
@@ -77,11 +77,13 @@ void set_y_home_to_pos(void) {
 }
 
 void slow_star_rotation(void) {
-    if (o->oAngleVelYaw > 0x400)
+    if (o->oAngleVelYaw > 0x400) {
         o->oAngleVelYaw -= 0x40;
+    }
 }
 
 void bhv_spawned_star_loop(void) {
+    // uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000);
         sync_object_init_field(o, o->oBehParams);
@@ -90,12 +92,12 @@ void bhv_spawned_star_loop(void) {
     }
 
     if (o->oAction == 0) {
-        // All of these are for checking if we spawned the star, If 
+        // All of these are for checking if we spawned the star, If
         // we didn't. We don't need the time stop.
         u8 playExclamationBoxCutscene = (is_nearest_mario_state_to_object(gMarioState, o) && o->oStarSpawnExtCutsceneFlags);
         u8 playGenericSpawnCutscene = (o->parentObj != NULL && o->parentObj == gMarioStates[0].marioObj);
         u8 playCutscene = (playExclamationBoxCutscene || playGenericSpawnCutscene);
-        
+
         if (o->oTimer == 0) {
             if (playCutscene && ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE)) {
                 cutscene_object(CUTSCENE_STAR_SPAWN, o);
@@ -104,10 +106,11 @@ void bhv_spawned_star_loop(void) {
                 o->activeFlags |= ACTIVE_FLAG_INITIATED_TIME_STOP;
             }
             o->oAngleVelYaw = 0x800;
-            if (o->oBehParams2ndByte == 0)
+            if (o->oBehParams2ndByte == 0) {
                 set_home_to_mario();
-            else
+            } else {
                 set_y_home_to_pos();
+            }
             o->oMoveAngleYaw = cur_obj_angle_to_home();
             o->oVelY = 50.0f;
             o->oGravity = -4.0f;
@@ -130,8 +133,10 @@ void bhv_spawned_star_loop(void) {
                 play_power_star_jingle(TRUE);
         }
     } else if (o->oAction == 1) {
-        if (o->oVelY < -4.0f)
+        if (o->oVelY < -4.0f) {
             o->oVelY = -4.0f;
+        }
+
         if (o->oVelY < 0 && o->oPosY < o->oHomeY) {
             gObjCutsceneDone = TRUE;
             o->oVelY = 0;
@@ -159,7 +164,7 @@ void bhv_spawned_star_loop(void) {
     spawn_star_number();
 }
 
-void bhv_spawn_star_no_level_exit(struct Object* object, u32 params, u8 networkSendEvent) {
+void bhv_spawn_star_no_level_exit(struct Object *object, u32 params, u8 networkSendEvent) {
     // de-duplication checking
     for (s32 i = 0; i < gSpawnedStarNLECount; i++) {
         if (gSpawnedStarNLE[i] == params) { return; }
