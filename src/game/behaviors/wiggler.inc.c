@@ -116,9 +116,7 @@ void bhv_wiggler_body_part_update(void) {
     if (parent->oAction == WIGGLER_ACT_SHRINK) {
         cur_obj_become_intangible();
     } else {
-        if (parent->oAction == wiggler_act_walk) {
-            cur_obj_become_tangible();
-        }
+        cur_obj_become_tangible();
         obj_check_attacks(&sWigglerBodyPartHitbox, o->oAction);
     }
 }
