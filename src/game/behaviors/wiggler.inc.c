@@ -63,19 +63,19 @@ static f32 sWigglerSpeeds[] = { 2.0f, 40.0f, 30.0f, 16.0f };
  */
 void bhv_wiggler_body_part_update(void) {
     if (o == NULL) { return; }
-    
+
     struct Object *parent = o->parentObj;
-    
+
     if (parent == NULL) { return; }
-    
+
     // Sanity check the array size of our segments,
     // This should never be higher then 3
     // in normal circumstances.
     if (o->oBehParams2ndByte > 3 || o->oBehParams2ndByte < 0) { return; }
     if (!parent->oWigglerSegments) { return; }
-    
+
     struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
-    
+
     if (segment == NULL) { return; }
 
     cur_obj_scale(parent->header.gfx.scale[0]);
@@ -100,8 +100,7 @@ void bhv_wiggler_body_part_update(void) {
         //  the floor
         o->oPosY += -30.0f;
         cur_obj_update_floor_height();
-        if (o->oFloorHeight > o->oPosY) // TODO: Check ineq swap
-        {
+        if (o->oFloorHeight > o->oPosY) { // TODO: Check ineq swap
             o->oPosY = o->oFloorHeight;
         }
     }
@@ -117,7 +116,9 @@ void bhv_wiggler_body_part_update(void) {
     if (parent->oAction == WIGGLER_ACT_SHRINK) {
         cur_obj_become_intangible();
     } else {
-        cur_obj_become_tangible();
+        if (parent->oAction == wiggler_act_walk) {
+            cur_obj_become_tangible();
+        }
         obj_check_attacks(&sWigglerBodyPartHitbox, o->oAction);
     }
 }
@@ -206,7 +207,101 @@ void wiggler_update_segments(void) {
     }
 }
 
- u8 wiggler_act_walk_continue_dialog(void) { return o->oAction == WIGGLER_ACT_WALK && o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG; }
+u8 wiggler_act_walk_continue_dialog(void) { return o->oAction == WIGGLER_ACT_WALK && o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG; }
+
+static void wiggler_act_walk_subact_talk(void) {
+    if (o->oWigglerTextStatus == WIGGLER_TEXT_STATUS_AWAIT_DIALOG && !gDjuiInMainMenu) {
+        seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
+        o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_SHOWING_DIALOG;
+    }
+
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
+    u8 prevGlobalIndex = o->globalPlayerIndex;
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+    if (!is_player_active(marioState) || marioState->pos[1] < o->oPosY - 300) { // 300 is roughly the maximum y difference for mario to be covered in the arena
+        // scan for the closest valid player to talk to wiggler
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            // use global index to keep order of for loop equivalent for all players
+            marioState = &gMarioStates[network_local_index_from_global(i)];
+            if (!is_player_active(marioState) || marioState->pos[1] < o->oPosY - 300) {
+                marioState = NULL;
+                continue;
+            }
+            o->globalPlayerIndex = i;
+            if (o->globalPlayerIndex != prevGlobalIndex && marioState->playerIndex == 0) {
+                network_send_object(o);
+            }
+            break;
+        }
+    }
+
+    if (!marioState || marioState->playerIndex != 0) return;
+    if (cur_obj_update_dialog_with_cutscene(marioState, 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.WigglerDialog, wiggler_act_walk_continue_dialog) != 0) {
+        o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
+        o->oWigglerFinishedTalking = 1;
+        network_send_object_reliability(o, TRUE);
+    }
+}
+
+static void wiggler_act_walk_subact_walk(void) {
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
+    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
+    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
+    treat_far_home_as_mario(1200.0f, &distanceToPlayer, &angleToPlayer);
+
+    //! Every object's health is initially 2048, and wiggler's doesn't change
+    //  to 4 until after this runs the first time. It indexes out of bounds
+    //  and uses the value 113762.3 for one frame on US. This is fixed up
+    //  in wiggler_init_segments if AVOID_UB is defined.
+    obj_forward_vel_approach(BHV_ARR(sWigglerSpeeds, o->oHealth - 1, f32), 1.0f);
+
+    if (o->oWigglerWalkAwayFromWallTimer != 0) {
+        o->oWigglerWalkAwayFromWallTimer -= 1;
+    } else {
+        if (distanceToPlayer >= 25000.0f) {
+            // If >1200 away from home, turn to home
+            o->oWigglerTargetYaw = angleToPlayer;
+        }
+
+        if (obj_bounce_off_walls_edges_objects(&o->oWigglerTargetYaw)) {
+            //! If the wiggler could self-intersect, or intersect a different
+            //  non-mario object, this could potentially be used to force
+            //  the wiggler to walk straight - past his usual radius
+            o->oWigglerWalkAwayFromWallTimer = random_linear_offset(30, 30);
+        } else {
+            if (o->oHealth < 4) {
+                o->oWigglerTargetYaw = angleToPlayer;
+            } else if (o->oWigglerTimeUntilRandomTurn != 0) {
+                o->oWigglerTimeUntilRandomTurn -= 1;
+            } else {
+                o->oWigglerTargetYaw = o->oMoveAngleYaw + 0x4000 * (s16) random_sign();
+                o->oWigglerTimeUntilRandomTurn = random_linear_offset(30, 50);
+            }
+        }
+    }
+
+    // If moving at high speeds, could overflow. But can't reach such speeds
+    // in practice
+    s16 yawTurnSpeed = (s16)(30.0f * o->oForwardVel);
+    cur_obj_rotate_yaw_toward(o->oWigglerTargetYaw, yawTurnSpeed);
+    obj_face_yaw_approach(o->oMoveAngleYaw, 2 * yawTurnSpeed);
+
+    obj_face_pitch_approach(0, 0x320);
+
+    // For the first two seconds of walking, stay invulnerable
+    cur_obj_become_tangible();
+    if (o->oTimer < 60) {
+        obj_check_attacks(&sWigglerHitbox, o->oAction);
+    } else if (obj_handle_attacks(&sWigglerHitbox, o->oAction, sWigglerAttackHandlers)) {
+        if (o->oAction != WIGGLER_ACT_JUMPED_ON) {
+            o->oAction = WIGGLER_ACT_KNOCKBACK;
+        }
+
+        o->oWigglerWalkAwayFromWallTimer = 0;
+        o->oWigglerWalkAnimSpeed = 0.0f;
+    }
+}
 
 /**
  * Show text if necessary. Then walk toward mario if not at full health, and
@@ -214,79 +309,19 @@ void wiggler_update_segments(void) {
  * If attacked by mario, enter either the jumped on or knockback action.
  */
 static void wiggler_act_walk(void) {
-    struct MarioState *marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
-    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
-    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
-    treat_far_home_as_mario(1200.0f, &distanceToPlayer, &angleToPlayer);
-
     o->oWigglerWalkAnimSpeed = 0.06f * o->oForwardVel;
 
+    // If Mario is positioned below the wiggler, assume he entered through the
+    // lower cave entrance, so don't display text.
+    if (o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG && gMarioStates[0].pos[1] < o->oPosY - 300) {
+        o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
+    }
+
     // Update text if necessary
-    if (o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG) {
-        if (o->oWigglerTextStatus == WIGGLER_TEXT_STATUS_AWAIT_DIALOG && !gDjuiInMainMenu) {
-            seq_player_lower_volume(SEQ_PLAYER_LEVEL, 60, 40);
-            o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_SHOWING_DIALOG;
-        }
-
-        // If Mario is positioned below the wiggler, assume he entered through the
-        // lower cave entrance, so don't display text.
-        if ((player && player->oPosY < o->oPosY) || (cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.WigglerDialog, wiggler_act_walk_continue_dialog) != 0)) {
-            o->oWigglerTextStatus = WIGGLER_TEXT_STATUS_COMPLETED_DIALOG;
-            network_send_object_reliability(o, TRUE);
-        }
+    if (o->oWigglerTextStatus < WIGGLER_TEXT_STATUS_COMPLETED_DIALOG && o->oWigglerFinishedTalking == 0) {
+        wiggler_act_walk_subact_talk();
     } else {
-        //! Every object's health is initially 2048, and wiggler's doesn't change
-        //  to 4 until after this runs the first time. It indexes out of bounds
-        //  and uses the value 113762.3 for one frame on US. This is fixed up
-        //  in wiggler_init_segments if AVOID_UB is defined.
-        obj_forward_vel_approach(BHV_ARR(sWigglerSpeeds, o->oHealth - 1, f32), 1.0f);
-
-        if (o->oWigglerWalkAwayFromWallTimer != 0) {
-            o->oWigglerWalkAwayFromWallTimer -= 1;
-        } else {
-            if (distanceToPlayer >= 25000.0f) {
-                // If >1200 away from home, turn to home
-                o->oWigglerTargetYaw = angleToPlayer;
-            }
-
-            if (obj_bounce_off_walls_edges_objects(&o->oWigglerTargetYaw)) {
-                //! If the wiggler could self-intersect, or intersect a different
-                //  non-mario object, this could potentially be used to force
-                //  the wiggler to walk straight - past his usual radius
-                o->oWigglerWalkAwayFromWallTimer = random_linear_offset(30, 30);
-            } else {
-                if (o->oHealth < 4) {
-                    o->oWigglerTargetYaw = angleToPlayer;
-                } else if (o->oWigglerTimeUntilRandomTurn != 0) {
-                    o->oWigglerTimeUntilRandomTurn -= 1;
-                } else {
-                    o->oWigglerTargetYaw = o->oMoveAngleYaw + 0x4000 * (s16) random_sign();
-                    o->oWigglerTimeUntilRandomTurn = random_linear_offset(30, 50);
-                }
-            }
-        }
-
-        // If moving at high speeds, could overflow. But can't reach such speeds
-        // in practice
-        s16 yawTurnSpeed = (s16)(30.0f * o->oForwardVel);
-        cur_obj_rotate_yaw_toward(o->oWigglerTargetYaw, yawTurnSpeed);
-        obj_face_yaw_approach(o->oMoveAngleYaw, 2 * yawTurnSpeed);
-
-        obj_face_pitch_approach(0, 0x320);
-
-        // For the first two seconds of walking, stay invulnerable
-        cur_obj_become_tangible();
-        if (o->oTimer < 60) {
-            obj_check_attacks(&sWigglerHitbox, o->oAction);
-        } else if (obj_handle_attacks(&sWigglerHitbox, o->oAction, sWigglerAttackHandlers)) {
-            if (o->oAction != WIGGLER_ACT_JUMPED_ON) {
-                o->oAction = WIGGLER_ACT_KNOCKBACK;
-            }
-
-            o->oWigglerWalkAwayFromWallTimer = 0;
-            o->oWigglerWalkAnimSpeed = 0.0f;
-        }
+        wiggler_act_walk_subact_walk();
     }
 }
 
@@ -297,16 +332,21 @@ u8 wiggler_act_jumped_on_continue_dialog(void) { return o->oAction == WIGGLER_AC
  * action.
  */
 static void wiggler_act_jumped_on(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    if (o->globalPlayerIndex >= MAX_PLAYERS) o->globalPlayerIndex = 0;
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+    if (!is_player_active(marioState)) {
+        // use player with the smallest global index instead
+        marioState = &gMarioStates[get_network_player_smallest_global()->localIndex];
+    }
 
     // Text to show on first, second, and third attack.
-    enum DialogId* attackText[3] = {
+    enum DialogId *attackText[3] = {
         &gBehaviorValues.dialogs.WigglerAttack1Dialog,
         &gBehaviorValues.dialogs.WigglerAttack2Dialog,
         &gBehaviorValues.dialogs.WigglerAttack3Dialog
     };
 
-    // Shrink until the squish speed becomes 0, then unisquish
+    // Shrink until the squish speed becomes 0, then unsquish
     if (approach_f32_ptr(&o->oWigglerSquishSpeed, 0.0f, 0.05f)) {
         // Note that 4 is the default scale
         approach_f32_ptr(&o->header.gfx.scale[1], 4.0f, 0.2f);
@@ -375,16 +415,15 @@ static void wiggler_act_shrink(void) {
 
         // 4 is the default scale, so shrink to 1/4 of regular size
         if (approach_f32_ptr(&o->header.gfx.scale[0], 1.0f, 0.1f)) {
-
-            f32* starPos = gLevelValues.starPositions.WigglerStarPos;
+            f32 *starPos = gLevelValues.starPositions.WigglerStarPos;
             struct Object *star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
-            
+
             // If we're not the closet to Wiggler,
             // Don't play this cutscene!
             if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
                 star->oStarSpawnExtCutsceneFlags = 0;
             }
-            
+
             o->oAction = WIGGLER_ACT_FALL_THROUGH_FLOOR;
         }
 
@@ -424,6 +463,8 @@ void wiggler_jumped_on_attack_handler(void) {
     o->oAction = WIGGLER_ACT_JUMPED_ON;
     o->oForwardVel = o->oVelY = 0.0f;
     o->oWigglerSquishSpeed = 0.4f;
+    o->globalPlayerIndex = network_global_index_from_local(0);
+    network_send_object(o);
 }
 
 u8 bhv_wiggler_ignore_if_true(void) {
@@ -462,8 +503,9 @@ void bhv_wiggler_on_received_post(UNUSED u8 localIndex) {
  */
 void bhv_wiggler_update(void) {
     // PARTIAL_UPDATE
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, 4000.0f);
+        struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
             so->ignore_if_true = bhv_wiggler_ignore_if_true;
             so->on_received_pre = bhv_wiggler_on_received_pre;
@@ -475,15 +517,17 @@ void bhv_wiggler_update(void) {
             sync_object_init_field(o, o->oWigglerTimeUntilRandomTurn);
             sync_object_init_field(o, o->oWigglerTargetYaw);
             sync_object_init_field(o, o->oWigglerWalkAwayFromWallTimer);
+            sync_object_init_field(o, o->oWigglerFinishedTalking);
             sync_object_init_field(o, o->oHealth);
             sync_object_init_field(o, o->header.gfx.scale[0]);
             sync_object_init_field(o, o->header.gfx.scale[1]);
             sync_object_init_field(o, o->header.gfx.scale[2]);
             sync_object_init_field(o, o->oFaceAngleYaw);
+            sync_object_init_field(o, o->globalPlayerIndex);
         }
     }
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 25000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     o->oDistanceToMario = distanceToPlayer;
@@ -500,8 +544,7 @@ void bhv_wiggler_update(void) {
             // Walking animation and sound
             cur_obj_init_animation_with_accel_and_sound(0, o->oWigglerWalkAnimSpeed);
             if (o->oWigglerWalkAnimSpeed != 0.0f) {
-                cur_obj_play_sound_at_anim_range(0, 13,
-                              o->oHealth >= 4 ? SOUND_OBJ_WIGGLER_LOW_PITCH : SOUND_OBJ_WIGGLER_HIGH_PITCH);
+                cur_obj_play_sound_at_anim_range(0, 13, o->oHealth >= 4 ? SOUND_OBJ_WIGGLER_LOW_PITCH : SOUND_OBJ_WIGGLER_HIGH_PITCH);
             } else {
                 cur_obj_reverse_animation();
             }

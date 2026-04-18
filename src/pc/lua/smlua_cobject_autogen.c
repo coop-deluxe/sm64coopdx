@@ -1580,7 +1580,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 763
+#define LUA_OBJECT_FIELD_COUNT 766
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1,                    sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1,                    sizeof(u8)                    },
@@ -1975,8 +1975,11 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oKoopaMovementType",                         LVT_S32,                 offsetof(struct Object, oKoopaMovementType),                         false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaRaceEndpointKoopaFinished",            LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointKoopaFinished),            false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaRaceEndpointRaceBegun",                LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceBegun),                false, LOT_NONE,         1,                    sizeof(s32)                   },
+    { "oKoopaRaceEndpointRaceCheated",              LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceCheated),              false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaRaceEndpointRaceEnded",                LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceEnded),                false, LOT_NONE,         1,                    sizeof(s32)                   },
+    { "oKoopaRaceEndpointRaceStartTime",            LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceStartTime),            false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaRaceEndpointRaceStatus",               LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceStatus),               false, LOT_NONE,         1,                    sizeof(s32)                   },
+    { "oKoopaRaceEndpointRaceWinner",               LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointRaceWinner),               false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaRaceEndpointUnk100",                   LVT_S32,                 offsetof(struct Object, oKoopaRaceEndpointUnk100),                   false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oKoopaShellFlameUnkF4",                      LVT_F32,                 offsetof(struct Object, oKoopaShellFlameUnkF4),                      false, LOT_NONE,         1,                    sizeof(f32)                   },
     { "oKoopaShellFlameUnkF8",                      LVT_F32,                 offsetof(struct Object, oKoopaShellFlameUnkF8),                      false, LOT_NONE,         1,                    sizeof(f32)                   },
@@ -2332,12 +2335,12 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oWhitePuffUnkFC",                            LVT_S32,                 offsetof(struct Object, oWhitePuffUnkFC),                            false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oWhompShakeVal",                             LVT_S32,                 offsetof(struct Object, oWhompShakeVal),                             false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oWigglerFallThroughFloorsHeight",            LVT_F32,                 offsetof(struct Object, oWigglerFallThroughFloorsHeight),            false, LOT_NONE,         1,                    sizeof(f32)                   },
+    { "oWigglerFinishedTalking",                    LVT_S16,                 offsetof(struct Object, oWigglerFinishedTalking),                    false, LOT_NONE,         1,                    sizeof(s16)                   },
     { "oWigglerSegments",                           LVT_COBJECT_P,           offsetof(struct Object, oWigglerSegments),                           true,  LOT_CHAINSEGMENT, 1,                    sizeof(struct ChainSegment*)  },
     { "oWigglerSquishSpeed",                        LVT_F32,                 offsetof(struct Object, oWigglerSquishSpeed),                        false, LOT_NONE,         1,                    sizeof(f32)                   },
     { "oWigglerTargetYaw",                          LVT_S32,                 offsetof(struct Object, oWigglerTargetYaw),                          false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oWigglerTextStatus",                         LVT_S16,                 offsetof(struct Object, oWigglerTextStatus),                         false, LOT_NONE,         1,                    sizeof(s16)                   },
     { "oWigglerTimeUntilRandomTurn",                LVT_S32,                 offsetof(struct Object, oWigglerTimeUntilRandomTurn),                false, LOT_NONE,         1,                    sizeof(s32)                   },
-    { "oWigglerUnused",                             LVT_S16,                 offsetof(struct Object, oWigglerUnused),                             false, LOT_NONE,         1,                    sizeof(s16)                   },
     { "oWigglerWalkAnimSpeed",                      LVT_F32,                 offsetof(struct Object, oWigglerWalkAnimSpeed),                      false, LOT_NONE,         1,                    sizeof(f32)                   },
     { "oWigglerWalkAwayFromWallTimer",              LVT_S32,                 offsetof(struct Object, oWigglerWalkAwayFromWallTimer),              false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oWoodenPostMarioPounding",                   LVT_S32,                 offsetof(struct Object, oWoodenPostMarioPounding),                   false, LOT_NONE,         1,                    sizeof(s32)                   },
@@ -2872,8 +2875,8 @@ const char *smlua_get_lot_name(u16 lot) {
     return sLuaLotNames[lot];
 }
 
-struct LuaObjectField *smlua_get_object_field_autogen(u16 lot, const char *key) {
-    struct LuaObjectTable *ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];
+struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key) {
+    struct LuaObjectTable* ot = &sLuaObjectAutogenTable[lot - LOT_AUTOGEN_MIN - 1];
     return smlua_get_object_field_from_ot(ot, key);
 }
 
