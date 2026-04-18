@@ -1732,6 +1732,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oTTCTreadmillSpeed);
     bhv_constant(oTTCTreadmillTargetSpeed);
     bhv_constant(oTTCTreadmillTimeUntilSwitch);
+    bhv_constant(oTTCTreadmillPrevTTCSpeed);
 
     /* TTCMovingBar */
     bhv_constant(oTTCMovingBarDelay);

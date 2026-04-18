@@ -2541,6 +2541,7 @@
 | oTTCTreadmillSpeed | `number` |  |
 | oTTCTreadmillTargetSpeed | `number` |  |
 | oTTCTreadmillTimeUntilSwitch | `integer` |  |
+| oTTCTreadmillPrevTTCSpeed | `integer` |  |
 | oTTCMovingBarDelay | `integer` |  |
 | oTTCMovingBarStoppedTimer | `integer` |  |
 | oTTCMovingBarOffset | `number` |  |

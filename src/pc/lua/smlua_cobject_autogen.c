@@ -1580,7 +1580,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE,          1, sizeof(u8)                   },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 766
+#define LUA_OBJECT_FIELD_COUNT 767
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE,         1,                    sizeof(s16)                   },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE,         1,                    sizeof(u8)                    },
@@ -2235,6 +2235,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oTTCRotatingSolidVelY",                      LVT_F32,                 offsetof(struct Object, oTTCRotatingSolidVelY),                      false, LOT_NONE,         1,                    sizeof(f32)                   },
     { "oTTCSpinnerDir",                             LVT_S32,                 offsetof(struct Object, oTTCSpinnerDir),                             false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oTTCTreadmillBigSurface",                    LVT_S16_P,               offsetof(struct Object, oTTCTreadmillBigSurface),                    true,  LOT_POINTER,      1,                    sizeof(s16*)                  },
+    { "oTTCTreadmillPrevTTCSpeed",                  LVT_S32,                 offsetof(struct Object, oTTCTreadmillPrevTTCSpeed),                  false, LOT_NONE,         1,                    sizeof(s32)                   },
     { "oTTCTreadmillSmallSurface",                  LVT_S16_P,               offsetof(struct Object, oTTCTreadmillSmallSurface),                  true,  LOT_POINTER,      1,                    sizeof(s16*)                  },
     { "oTTCTreadmillSpeed",                         LVT_F32,                 offsetof(struct Object, oTTCTreadmillSpeed),                         false, LOT_NONE,         1,                    sizeof(f32)                   },
     { "oTTCTreadmillTargetSpeed",                   LVT_F32,                 offsetof(struct Object, oTTCTreadmillTargetSpeed),                   false, LOT_NONE,         1,                    sizeof(f32)                   },

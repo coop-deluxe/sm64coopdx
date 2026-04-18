@@ -1943,6 +1943,7 @@
 --- @field public oTTCTreadmillSpeed number
 --- @field public oTTCTreadmillTargetSpeed number
 --- @field public oTTCTreadmillTimeUntilSwitch integer
+--- @field public oTTCTreadmillPrevTTCSpeed integer
 --- @field public oTTCMovingBarDelay integer
 --- @field public oTTCMovingBarStoppedTimer integer
 --- @field public oTTCMovingBarOffset number

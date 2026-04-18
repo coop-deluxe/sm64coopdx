@@ -156,6 +156,15 @@ static void ttc_moving_bar_act_retract(void) {
  * Update function for bhvTTCMovingBar.
  */
 void bhv_ttc_moving_bar_update(void) {
+    if (gTTCSpeedSetting == TTC_SPEED_STOPPED) {
+        if (o->oTTCMovingBarDelay != 0 && (o->oTTCMovingBarDelay = gTTCMovingBarDelays[gTTCSpeedSetting]) == 0) {
+            o->oTTCMovingBarOffset = 250.0f;
+        }
+        return;
+    } else if (o->oTTCMovingBarDelay == 0) {
+        o->oTTCMovingBarDelay = gTTCMovingBarDelays[gTTCSpeedSetting];
+    }
+
     o->oTTCMovingBarStartOffset = o->oTTCMovingBarOffset;
     obj_perform_position_op(POS_OP_SAVE_POSITION);
 
