@@ -2307,6 +2307,16 @@ u32 check_npc_talk(struct MarioState *m, struct Object *o) {
 
 u32 interact_text(struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
     if (!m || !o) { return FALSE; }
+
+    // make sure no other mario is reading a sign
+    // let npc's handle themselves properly
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        struct MarioState *marioState = &gMarioStates[i];
+        if (!is_player_active(marioState)) continue;
+        if (marioState->action != ACT_READING_SIGN) continue;
+        if (marioState->interactObj == o) return FALSE; // another mario is interacting with the sign
+    }
+
     u32 interact = FALSE;
 
     if (o->oInteractionSubtype & INT_SUBTYPE_SIGN) {
@@ -2503,10 +2513,6 @@ void pss_end_slide(struct MarioState *m) {
     u16 slideTime = level_control_timer(TIMER_CONTROL_STOP);
     if (slideTime < gLevelValues.pssSlideStarTime) {
         // only let local player spawn the star
-
-        // Syncing TODO: Something is wrong with the syncing here
-        // the sync object completely fails to initialize every frame for the player that
-        // did not spawn the star
         if (m->playerIndex == 0) {
             // PSS secret star uses oBehParams to spawn
             s32 savedBehParams = m->marioObj->oBehParams;

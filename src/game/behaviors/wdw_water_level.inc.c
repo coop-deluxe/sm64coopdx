@@ -45,7 +45,6 @@ void bhv_water_level_diamond_loop(void) {
     struct Object *player = marioState ? marioState->marioObj : NULL;
     struct Object *manager = cur_obj_nearest_object_with_behavior(bhvInitializeChangingWaterLevel);
 
-    // Syncing TODO: why is this synced? No fields are synced....
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     }
