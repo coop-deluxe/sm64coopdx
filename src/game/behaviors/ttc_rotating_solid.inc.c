@@ -35,7 +35,7 @@ void bhv_ttc_rotating_solid_init(void) {
     o->oTTCRotatingSolidRotationDelay = gTTCRotatingSolidInitialDelays[gTTCSpeedSetting];
 
     // uses standard distance-based syncing
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCRotatingSolidNumTurns);

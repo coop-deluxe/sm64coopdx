@@ -441,8 +441,12 @@ void bhv_bowsers_sub_loop(void);
 void bhv_sushi_shark_loop(void);
 /* |description|Behavior loop function for Sushi Shark collision|descriptionEnd| */
 void bhv_sushi_shark_collision_loop(void);
+/* |description|Behavior init function for Jolly Roger Bay sliding box|descriptionEnd| */
+void bhv_jrb_sliding_box_init(void);
 /* |description|Behavior loop function for Jolly Roger Bay sliding box|descriptionEnd| */
 void bhv_jrb_sliding_box_loop(void);
+/* |description|Behavior init function for Jolly Roger Bay ship part 3|descriptionEnd| */
+void bhv_ship_part_3_init(void);
 /* |description|Behavior loop function for Jolly Roger Bay ship part 3|descriptionEnd| */
 void bhv_ship_part_3_loop(void);
 /* |description|Behavior loop function for Jolly Roger Bay sunken ship part|descriptionEnd| */

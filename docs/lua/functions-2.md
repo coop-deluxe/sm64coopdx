@@ -4572,6 +4572,27 @@ Behavior loop function for Sushi Shark collision
 
 <br />
 
+## [bhv_jrb_sliding_box_init](#bhv_jrb_sliding_box_init)
+
+### Description
+Behavior init function for Jolly Roger Bay sliding box
+
+### Lua Example
+`bhv_jrb_sliding_box_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_jrb_sliding_box_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_jrb_sliding_box_loop](#bhv_jrb_sliding_box_loop)
 
 ### Description
@@ -4588,6 +4609,27 @@ Behavior loop function for Jolly Roger Bay sliding box
 
 ### C Prototype
 `void bhv_jrb_sliding_box_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_ship_part_3_init](#bhv_ship_part_3_init)
+
+### Description
+Behavior init function for Jolly Roger Bay ship part 3
+
+### Lua Example
+`bhv_ship_part_3_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_ship_part_3_init(void);`
 
 [:arrow_up_small:](#)
 

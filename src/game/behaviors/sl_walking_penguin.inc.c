@@ -39,7 +39,6 @@ void bhv_sl_walking_penguin_loop(void) {
     f32 perpendicularOffset = 100.0f;
 
     // uses a standard distance-based sync system
-    // Syncing TODO: Can't this use an area timer?
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {

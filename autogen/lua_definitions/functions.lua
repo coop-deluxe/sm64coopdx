@@ -1161,8 +1161,18 @@ function bhv_sushi_shark_collision_loop()
     -- ...
 end
 
+--- Behavior init function for Jolly Roger Bay sliding box
+function bhv_jrb_sliding_box_init()
+    -- ...
+end
+
 --- Behavior loop function for Jolly Roger Bay sliding box
 function bhv_jrb_sliding_box_loop()
+    -- ...
+end
+
+--- Behavior init function for Jolly Roger Bay ship part 3
+function bhv_ship_part_3_init()
     -- ...
 end
 

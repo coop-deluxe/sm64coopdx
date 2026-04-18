@@ -54,9 +54,9 @@ void bhv_ttc_cog_update(void) {
             if (approach_f32_ptr(&o->oTTCCogSpeed, o->oTTCCogTargetVel, 50.0f)) {
                 o->oTTCCogTargetVel = 200.0f * (random_u16() % 7) * random_sign();
             }
-
-        // Syncing TODO: !!! if this is changed midlevel the cog speed is NOT set to 0, it should be set to 0
+            break;
         case TTC_SPEED_STOPPED:
+            o->oTTCCogSpeed = 0;
             break;
     }
 

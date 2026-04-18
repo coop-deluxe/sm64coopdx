@@ -48,6 +48,10 @@ void bhv_ttc_treadmill_init(void) {
  * Update function for bhvTTCTreadmill. It calls cur_obj_compute_vel_xz afterward.
  */
 void bhv_ttc_treadmill_update(void) {
+    if (gTTCSpeedSetting >= 0 && gTTCSpeedSetting <= 3 && *o->oTTCTreadmillBigSurface != gTTCTreadmillSpeeds[gTTCSpeedSetting]) {
+        *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = gTTCTreadmillSpeeds[gTTCSpeedSetting];
+    }
+
     if (sMasterTreadmill == o || sMasterTreadmill == NULL) {
         sMasterTreadmill = o;
 

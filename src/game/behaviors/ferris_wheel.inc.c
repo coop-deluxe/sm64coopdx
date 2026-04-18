@@ -44,27 +44,17 @@ void bhv_ferris_wheel_axle_init(void) {
         }
     }
 
-    // does a distance-based sync method without standard fields, only syncs roll face angle
-    // Syncing TODO: Can't you use areaTimer here?
-    struct SyncObject* so = sync_object_init(o, 2000.0f);
-    if (so) {
-        so->hasStandardFields = FALSE;
-        so->maxUpdateRate = 5.0f;
-        sync_object_init_field(o, o->oFaceAngleRoll);
-    }
+    // syncs using the area timer
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
+    o->areaTimer = 0;
+    o->areaTimerDuration = 983; // it takes 163.84 frames to do a full rotation, to minimize drift, we use 983 frames
 }
 
 void bhv_ferris_wheel_platform_init(void) {
-    // does a distance-based sync method without standard fields, only syncs position
-    // Syncing TODO: Can't you use areaTimer here?
-    struct SyncObject* so = sync_object_init(o, 2000.0f);
-    if (so) {
-        so->hasStandardFields = FALSE;
-        so->maxUpdateRate = 5.0f;
-        sync_object_init_field(o, o->oPosX);
-        sync_object_init_field(o, o->oPosY);
-        sync_object_init_field(o, o->oPosZ);
-    }
+    // syncs using the area timer
+    o->areaTimerType = AREA_TIMER_TYPE_LOOP;
+    o->areaTimer = 0;
+    o->areaTimerDuration = 983;
 }
 
 /**
@@ -83,9 +73,7 @@ void bhv_ferris_wheel_platform_update(void) {
     offsetXZ = 400.0f * coss(offsetAngle);
 
     o->oPosX = o->parentObj->oPosX + offsetXZ * sins(o->parentObj->oMoveAngleYaw) + 300.0f * coss(o->parentObj->oMoveAngleYaw);
-
     o->oPosY = o->parentObj->oPosY + 400.0f * sins(offsetAngle);
-
     o->oPosZ = o->parentObj->oPosZ + offsetXZ * coss(o->parentObj->oMoveAngleYaw) + 300.0f * sins(o->parentObj->oMoveAngleYaw);
 
     obj_perform_position_op(POS_OP_COMPUTE_VELOCITY);
