@@ -23,8 +23,13 @@ struct ModAudioSampleCopies {
     struct ModAudio *parent;
 };
 
+struct ModAudioLegacyPath {
+    char relativePath[SYS_MAX_PATH];
+};
+
 struct ModAudio {
     const char *filepath;
+	struct ModAudioLegacyPath* file;
     ma_sound sound;
     ma_decoder decoder;
     void *buffer;
