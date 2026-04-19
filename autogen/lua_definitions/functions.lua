@@ -3837,7 +3837,7 @@ function djui_hud_set_font(fontType)
 end
 
 --- @return DjuiColor
---- Gets the current DJUI HUD color
+--- Gets the current DJUI HUD global color
 function djui_hud_get_color()
     -- ...
 end
@@ -3846,13 +3846,33 @@ end
 --- @param g integer
 --- @param b integer
 --- @param a integer
---- Sets the current DJUI HUD color
+--- Sets the current DJUI HUD global color
 function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
---- Resets the current DJUI HUD color
+--- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
+    -- ...
+end
+
+--- @return DjuiColor
+--- Gets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_get_text_color()
+    -- ...
+end
+
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Sets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_set_text_color(r, g, b, a)
+    -- ...
+end
+
+--- Resets the current DJUI HUD text default color. This color is overridden by color codes
+function djui_hud_reset_text_color()
     -- ...
 end
 
@@ -4013,8 +4033,9 @@ function djui_hud_reset_scissor()
 end
 
 --- @param message string
---- @return number
---- Measures the length of `message` in the current font
+--- @return number width
+--- @return number height
+--- Measures the width and height of `message` in the current font
 function djui_hud_measure_text(message)
     -- ...
 end
@@ -7742,6 +7763,14 @@ function mod_fs_file_set_public(file, pub)
     -- ...
 end
 
+--- @param file ModFsFile
+--- @param level integer
+--- @return boolean
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+function mod_fs_file_set_compression(file, level)
+    -- ...
+end
+
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
@@ -7763,9 +7792,17 @@ function mod_storage_save(key, value)
 end
 
 --- @param key string
+--- @param value integer
+--- @return boolean
+--- Saves a `key` corresponding to an integer `value` to mod storage
+function mod_storage_save_integer(key, value)
+    -- ...
+end
+
+--- @param key string
 --- @param value number
 --- @return boolean
---- Saves a `key` corresponding to a float `value` to mod storage
+--- Saves a `key` corresponding to a number `value` to mod storage
 function mod_storage_save_number(key, value)
     -- ...
 end
@@ -7786,8 +7823,15 @@ function mod_storage_load(key)
 end
 
 --- @param key string
+--- @return integer
+--- Loads an integer `value` from a `key` in mod storage
+function mod_storage_load_integer(key)
+    -- ...
+end
+
+--- @param key string
 --- @return number
---- Loads a float `value` from a `key` in mod storage
+--- Loads a number `value` from a `key` in mod storage
 function mod_storage_load_number(key)
     -- ...
 end
@@ -9077,12 +9121,6 @@ function cur_obj_check_anim_frame_in_range(startFrame, rangeLength)
     -- ...
 end
 
---- @param a0 Pointer_integer
---- @return integer
-function cur_obj_check_frame_prior_current_frame(a0)
-    -- ...
-end
-
 --- @param m MarioState
 --- @return integer
 function mario_is_in_air_action(m)
@@ -10205,6 +10243,12 @@ end
 --- @param m64Name string
 --- Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
 function smlua_audio_utils_replace_sequence(sequenceId, bankId, defaultVolume, m64Name)
+    -- ...
+end
+
+--- @return integer
+--- Allocates a new sequence ID
+function smlua_audio_utils_allocate_sequence()
     -- ...
 end
 
@@ -11644,6 +11688,14 @@ end
 --- @return Mod
 --- Gets the mod currently being processed
 function get_active_mod()
+    -- ...
+end
+
+--- @param mod Mod
+--- @param subDirectory? string
+--- @return table
+--- Gets all files a mod contains
+function get_mod_files(mod, subDirectory)
     -- ...
 end
 

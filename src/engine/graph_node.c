@@ -508,7 +508,7 @@ struct GraphNodeBackground *init_graph_node_background(struct DynamicPool *pool,
             : (backgroundFunc && background >= BACKGROUND_CUSTOM);
 
         if (invalidBackground) {
-            LOG_ERROR("invalid background id");
+            LOG_ERROR("invalid background id %d", background);
             background = BACKGROUND_HAUNTED;
         }
 

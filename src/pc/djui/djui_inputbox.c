@@ -594,6 +594,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     }
 
     // set color
+    gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
 
     // make selection well formed

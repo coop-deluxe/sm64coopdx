@@ -2858,7 +2858,7 @@ Sets the current DJUI HUD font
 ## [djui_hud_get_color](#djui_hud_get_color)
 
 ### Description
-Gets the current DJUI HUD color
+Gets the current DJUI HUD global color
 
 ### Lua Example
 `local djuiColorValue = djui_hud_get_color()`
@@ -2879,7 +2879,7 @@ Gets the current DJUI HUD color
 ## [djui_hud_set_color](#djui_hud_set_color)
 
 ### Description
-Sets the current DJUI HUD color
+Sets the current DJUI HUD global color
 
 ### Lua Example
 `djui_hud_set_color(r, g, b, a)`
@@ -2905,7 +2905,7 @@ Sets the current DJUI HUD color
 ## [djui_hud_reset_color](#djui_hud_reset_color)
 
 ### Description
-Resets the current DJUI HUD color
+Resets the current DJUI HUD global color
 
 ### Lua Example
 `djui_hud_reset_color()`
@@ -2918,6 +2918,74 @@ Resets the current DJUI HUD color
 
 ### C Prototype
 `void djui_hud_reset_color(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_get_text_color](#djui_hud_get_text_color)
+
+### Description
+Gets the current DJUI HUD text default color. This color is overridden by color codes
+
+### Lua Example
+`local djuiColorValue = djui_hud_get_text_color()`
+
+### Parameters
+- None
+
+### Returns
+- [DjuiColor](structs.md#DjuiColor)
+
+### C Prototype
+`struct DjuiColor* djui_hud_get_text_color(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_text_color](#djui_hud_set_text_color)
+
+### Description
+Sets the current DJUI HUD text default color. This color is overridden by color codes
+
+### Lua Example
+`djui_hud_set_text_color(r, g, b, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| a | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_text_color(u8 r, u8 g, u8 b, u8 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_reset_text_color](#djui_hud_reset_text_color)
+
+### Description
+Resets the current DJUI HUD text default color. This color is overridden by color codes
+
+### Lua Example
+`djui_hud_reset_text_color()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_reset_text_color(void);`
 
 [:arrow_up_small:](#)
 
@@ -3443,10 +3511,10 @@ Resets the scissor rectangle to a fullscreen state
 ## [djui_hud_measure_text](#djui_hud_measure_text)
 
 ### Description
-Measures the length of `message` in the current font
+Measures the width and height of `message` in the current font
 
 ### Lua Example
-`local numberValue = djui_hud_measure_text(message)`
+`local width, height = djui_hud_measure_text(message)`
 
 ### Parameters
 | Field | Type |
@@ -3455,9 +3523,10 @@ Measures the length of `message` in the current font
 
 ### Returns
 - `number`
+- `number`
 
 ### C Prototype
-`f32 djui_hud_measure_text(const char* message);`
+`void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);`
 
 [:arrow_up_small:](#)
 

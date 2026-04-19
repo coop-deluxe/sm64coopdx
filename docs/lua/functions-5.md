@@ -2117,6 +2117,30 @@ Marks the provided modfs `file` as public (i.e. readable by other mods). Returns
 
 <br />
 
+## [mod_fs_file_set_compression](#mod_fs_file_set_compression)
+
+### Description
+Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+
+### Lua Example
+`local booleanValue = mod_fs_file_set_compression(file, level)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| level | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_fs_hide_errors](#mod_fs_hide_errors)
 
 ### Description
@@ -2191,10 +2215,34 @@ Saves a `key` corresponding to a string `value` to mod storage
 
 <br />
 
+## [mod_storage_save_integer](#mod_storage_save_integer)
+
+### Description
+Saves a `key` corresponding to an integer `value` to mod storage
+
+### Lua Example
+`local booleanValue = mod_storage_save_integer(key, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+| value | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_storage_save_integer(const char* key, lua_Integer value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_storage_save_number](#mod_storage_save_number)
 
 ### Description
-Saves a `key` corresponding to a float `value` to mod storage
+Saves a `key` corresponding to a number `value` to mod storage
 
 ### Lua Example
 `local booleanValue = mod_storage_save_number(key, value)`
@@ -2209,7 +2257,7 @@ Saves a `key` corresponding to a float `value` to mod storage
 - `boolean`
 
 ### C Prototype
-`bool mod_storage_save_number(const char* key, f32 value);`
+`bool mod_storage_save_number(const char* key, lua_Number value);`
 
 [:arrow_up_small:](#)
 
@@ -2262,10 +2310,33 @@ Loads a string `value` from a `key` in mod storage
 
 <br />
 
+## [mod_storage_load_integer](#mod_storage_load_integer)
+
+### Description
+Loads an integer `value` from a `key` in mod storage
+
+### Lua Example
+`local integerValue = mod_storage_load_integer(key)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| key | `string` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`lua_Integer mod_storage_load_integer(const char* key);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_storage_load_number](#mod_storage_load_number)
 
 ### Description
-Loads a float `value` from a `key` in mod storage
+Loads a number `value` from a `key` in mod storage
 
 ### Lua Example
 `local numberValue = mod_storage_load_number(key)`
@@ -2279,7 +2350,7 @@ Loads a float `value` from a `key` in mod storage
 - `number`
 
 ### C Prototype
-`f32 mod_storage_load_number(const char* key);`
+`lua_Number mod_storage_load_number(const char* key);`
 
 [:arrow_up_small:](#)
 
