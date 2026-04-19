@@ -57,6 +57,29 @@ const f32 font_title_widths[] = {
 
 //////////////////////////////////////////////////////////
 
+ALIGNED8 const u8 texture_font_title_dark[] = {
+#include "textures/custom_font/custom_font_title_dark.rgba32.inc.c"
+};
+
+const f32 font_title_dark_widths[] = {
+/*      !      "      #      $      %      &      '      (      )      *      +      ,      -      .      /      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      0      1      2      3      4      5      6      7      8      9      */
+    0.45f, 0.35f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f, 0.45f,
+/*      :      ;      <      =      >      ?      @      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      A      B      C      D      E      F      G      H      I      J      K      L      M      N      O      P      Q      R      S      T      U      V      W      X      Y      Z      */
+    0.55f, 0.50f, 0.50f, 0.50f, 0.45f, 0.45f, 0.50f, 0.55f, 0.28f, 0.60f, 0.50f, 0.45f, 0.55f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.55f, 0.50f, 0.50f, 0.50f, 0.60f, 0.52f, 0.60f, 0.45f,
+/*      [      \      ]      ^      _      `      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+/*      a      b      c      d      e      f      g      h      i      j      k      l      m      n      o      p      q      r      s      t      u      v      w      x      y      z      */
+    0.45f, 0.45f, 0.40f, 0.40f, 0.45f, 0.37f, 0.40f, 0.40f, 0.20f, 0.45f, 0.40f, 0.30f, 0.50f, 0.40f, 0.40f, 0.40f, 0.45f, 0.40f, 0.50f, 0.45f, 0.50f, 0.40f, 0.50f, 0.50f, 0.45f, 0.45f,
+/*      {      |      }      ~    DEL      */
+    0.50f, 0.50f, 0.50f, 0.50f, 0.50f,
+};
+
+//////////////////////////////////////////////////////////
+
 ALIGNED8 const u8 texture_font_aliased[] = {
 #include "textures/custom_font/custom_font_aliased.rgba32.inc.c"
 };

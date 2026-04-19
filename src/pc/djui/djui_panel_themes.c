@@ -168,9 +168,10 @@ static void djui_panel_theme_font_setting_change(UNUSED struct DjuiBase* caller)
 }
 
 static void djui_panel_theme_header_font_setting_change(UNUSED struct DjuiBase* caller) {
-    u8 djuiHeaderFontChoices[6] = {
+    u8 djuiHeaderFontChoices[7] = {
         FONT_NORMAL,
         FONT_MENU,
+        FONT_MENU_DARK,
         FONT_CUSTOM_HUD,
         FONT_ALIASED,
         FONT_SPECIAL,
@@ -562,21 +563,23 @@ void djui_panel_themes_create(struct DjuiBase* caller) {
         u8 djuiHeaderFontSelectIndexes[FONT_COUNT] = {
             [FONT_NORMAL]     = 0,
             [FONT_MENU]       = 1,
-            [FONT_CUSTOM_HUD] = 2,
-            [FONT_ALIASED]    = 3,
-            [FONT_SPECIAL]    = 4,
-            [FONT_CLASSIC]    = 5,
+            [FONT_MENU_DARK]  = 2,
+            [FONT_CUSTOM_HUD] = 3,
+            [FONT_ALIASED]    = 4,
+            [FONT_SPECIAL]    = 5,
+            [FONT_CLASSIC]    = 6,
         };
         sDjuiHeaderFontSelected = djuiHeaderFontSelectIndexes[configDjuiTheme.headerFont];
-        char* djuiHeaderFontChoices[6] = {
+        char* djuiHeaderFontChoices[7] = {
             DLANG(DJUI_THEMES, FONT_NORMAL),
             DLANG(DJUI_THEMES, FONT_MENU),
+            DLANG(DJUI_THEMES, FONT_MENU_DARK),
             DLANG(DJUI_THEMES, FONT_CUSTOM_HUD),
             DLANG(DJUI_THEMES, FONT_ALIASED),
             DLANG(DJUI_THEMES, FONT_SPECIAL),
             DLANG(DJUI_THEMES, FONT_CLASSIC)
         };
-        sSelectionboxes[sSelectionboxesCount++] = djui_selectionbox_create(body, DLANG(DJUI_THEMES, HEADER_FONT), djuiHeaderFontChoices, 6, &sDjuiHeaderFontSelected, djui_panel_theme_header_font_setting_change);
+        sSelectionboxes[sSelectionboxesCount++] = djui_selectionbox_create(body, DLANG(DJUI_THEMES, HEADER_FONT), djuiHeaderFontChoices, 7, &sDjuiHeaderFontSelected, djui_panel_theme_header_font_setting_change);
 
         sCheckboxes[sCheckboxesCount++] = djui_checkbox_create(body, DLANG(DJUI_THEMES, USE_RAINBOW), &configDjuiTheme.useRainbowColor, djui_panel_themes_reload);
         sCheckboxes[sCheckboxesCount++] = djui_checkbox_create(body, DLANG(DJUI_THEMES, GRADIENTS), &configDjuiTheme.gradients, djui_panel_themes_reload);

@@ -1182,13 +1182,14 @@
 | FONT_LEGACY | -1 |
 | FONT_NORMAL | 0 |
 | FONT_MENU | 1 |
-| FONT_HUD | 2 |
-| FONT_ALIASED | 3 |
-| FONT_CUSTOM_HUD | 4 |
-| FONT_RECOLOR_HUD | 5 |
-| FONT_SPECIAL | 6 |
-| FONT_CLASSIC | 7 |
-| FONT_COUNT | 8 |
+| FONT_MENU_DARK | 2 |
+| FONT_HUD | 3 |
+| FONT_ALIASED | 4 |
+| FONT_CUSTOM_HUD | 5 |
+| FONT_RECOLOR_HUD | 6 |
+| FONT_SPECIAL | 7 |
+| FONT_CLASSIC | 8 |
+| FONT_COUNT | 9 |
 
 [:arrow_up_small:](#)
 
