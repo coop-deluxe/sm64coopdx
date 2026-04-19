@@ -1482,12 +1482,18 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "size",                 LVT_U64,      offsetof(struct Mod, size),                 true, LOT_NONE, 1, sizeof(size_t) },
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 4
+#define LUA_MOD_AUDIO_FIELD_COUNT 5
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume", LVT_F32,      offsetof(struct ModAudio, baseVolume), false, LOT_NONE, 1, sizeof(f32)         },
-    { "filepath",   LVT_STRING_P, offsetof(struct ModAudio, filepath),   true,  LOT_NONE, 1, sizeof(const char*) },
-    { "isStream",   LVT_BOOL,     offsetof(struct ModAudio, isStream),   true,  LOT_NONE, 1, sizeof(bool)        },
-    { "loaded",     LVT_BOOL,     offsetof(struct ModAudio, loaded),     true,  LOT_NONE, 1, sizeof(bool)        },
+    { "baseVolume", LVT_F32,       offsetof(struct ModAudio, baseVolume), false, LOT_NONE,               1, sizeof(f32)                        },
+    { "file",       LVT_COBJECT_P, offsetof(struct ModAudio, file),       false, LOT_MODAUDIOLEGACYPATH, 1, sizeof(struct ModAudioLegacyPath*) },
+    { "filepath",   LVT_STRING_P,  offsetof(struct ModAudio, filepath),   true,  LOT_NONE,               1, sizeof(const char*)                },
+    { "isStream",   LVT_BOOL,      offsetof(struct ModAudio, isStream),   true,  LOT_NONE,               1, sizeof(bool)                       },
+    { "loaded",     LVT_BOOL,      offsetof(struct ModAudio, loaded),     true,  LOT_NONE,               1, sizeof(bool)                       },
+};
+
+#define LUA_MOD_AUDIO_LEGACY_PATH_FIELD_COUNT 1
+static struct LuaObjectField sModAudioLegacyPathFields[LUA_MOD_AUDIO_LEGACY_PATH_FIELD_COUNT] = {
+    { "relativePath", LVT_STRING, offsetof(struct ModAudioLegacyPath, relativePath), false, LOT_NONE, 1, sizeof(char) },
 };
 
 #define LUA_MOD_FS_FIELD_COUNT 15
@@ -2734,6 +2740,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_MARIOSTATE,                   sMarioStateFields,                   LUA_MARIO_STATE_FIELD_COUNT                     },
     { LOT_MOD,                          sModFields,                          LUA_MOD_FIELD_COUNT                             },
     { LOT_MODAUDIO,                     sModAudioFields,                     LUA_MOD_AUDIO_FIELD_COUNT                       },
+    { LOT_MODAUDIOLEGACYPATH,           sModAudioLegacyPathFields,           LUA_MOD_AUDIO_LEGACY_PATH_FIELD_COUNT           },
     { LOT_MODFS,                        sModFsFields,                        LUA_MOD_FS_FIELD_COUNT                          },
     { LOT_MODFSFILE,                    sModFsFileFields,                    LUA_MOD_FS_FILE_FIELD_COUNT                     },
     { LOT_NAMETAGSSETTINGS,             sNametagsSettingsFields,             LUA_NAMETAGS_SETTINGS_FIELD_COUNT               },
@@ -2839,6 +2846,7 @@ const char *sLuaLotNames[] = {
 	[LOT_MARIOSTATE] = "MarioState",
 	[LOT_MOD] = "Mod",
 	[LOT_MODAUDIO] = "ModAudio",
+	[LOT_MODAUDIOLEGACYPATH] = "ModAudioLegacyPath",
 	[LOT_MODFS] = "ModFs",
 	[LOT_MODFSFILE] = "ModFsFile",
 	[LOT_NAMETAGSSETTINGS] = "NametagsSettings",
