@@ -181,10 +181,25 @@ static void djui_panel_theme_header_font_setting_change(UNUSED struct DjuiBase* 
     djui_panel_themes_reload(NULL);
 }
 
+static void djui_panel_theme_header_font_set_selected(u8 headerFont) {
+    if (headerFont >= FONT_COUNT) return;
+    u8 djuiHeaderFontSelectIndexes[FONT_COUNT] = {
+        [FONT_NORMAL]     = 0,
+        [FONT_MENU]       = 1,
+        [FONT_MENU_DARK]  = 2,
+        [FONT_CUSTOM_HUD] = 3,
+        [FONT_ALIASED]    = 4,
+        [FONT_SPECIAL]    = 5,
+        [FONT_CLASSIC]    = 6,
+    };
+    sDjuiHeaderFontSelected = djuiHeaderFontSelectIndexes[headerFont];
+}
+
 static void djui_panel_theme_theme_changed(UNUSED struct DjuiBase* caller) {
     if (sDjuiThemeSelected <= 0 || !gDjuiThemes[sDjuiThemeSelected - 1]) return;
     configDjuiTheme = *gDjuiThemes[sDjuiThemeSelected - 1];
     snprintf(sThemeNameTextBox->buffer, sThemeNameTextBox->bufferSize, "%s", configDjuiTheme.name);
+    djui_panel_theme_header_font_set_selected(configDjuiTheme.headerFont);
     djui_panel_themes_reload(NULL);
 }
 
@@ -451,6 +466,7 @@ static void djui_panel_themes_reload(UNUSED struct DjuiBase* caller) {
     for (unsigned int i = 0; i < sSelectionboxesCount; i++) {
         if (!sSelectionboxes[i]) continue;
         djui_selectionbox_update_style(&sSelectionboxes[i]->base);
+        djui_selectionbox_update_value(&sSelectionboxes[i]->base);
         djui_base_set_gradient(&sSelectionboxes[i]->rect->base, configDjuiTheme.gradients);
         djui_text_set_font(sSelectionboxes[i]->text, gDjuiFonts[configDjuiThemeFont]);
         djui_text_set_font(sSelectionboxes[i]->rectText, gDjuiFonts[configDjuiThemeFont]);
@@ -560,16 +576,7 @@ void djui_panel_themes_create(struct DjuiBase* caller) {
         djui_base_set_border_width(&sColorRect->base, 2);
         djui_base_set_border_color(&sColorRect->base, 173, 173, 173, 255);
 
-        u8 djuiHeaderFontSelectIndexes[FONT_COUNT] = {
-            [FONT_NORMAL]     = 0,
-            [FONT_MENU]       = 1,
-            [FONT_MENU_DARK]  = 2,
-            [FONT_CUSTOM_HUD] = 3,
-            [FONT_ALIASED]    = 4,
-            [FONT_SPECIAL]    = 5,
-            [FONT_CLASSIC]    = 6,
-        };
-        sDjuiHeaderFontSelected = djuiHeaderFontSelectIndexes[configDjuiTheme.headerFont];
+        djui_panel_theme_header_font_set_selected(configDjuiTheme.headerFont);
         char* djuiHeaderFontChoices[7] = {
             DLANG(DJUI_THEMES, FONT_NORMAL),
             DLANG(DJUI_THEMES, FONT_MENU),
