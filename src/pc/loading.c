@@ -111,7 +111,7 @@ static void init_loading_screen(void) {
         struct DjuiText* splashDjuiText = djui_text_create(base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
         djui_base_set_location_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_location(&splashDjuiText->base, 0, 0);
-        djui_text_set_font(splashDjuiText, gDjuiFonts[1]);
+        djui_text_set_font(splashDjuiText, gDjuiFonts[configDjuiTheme.headerFont]);
         djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale);
         djui_text_set_alignment(splashDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_size_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -129,7 +129,6 @@ static void init_loading_screen(void) {
 
         load->splashImage = splashImage;
     }
-
     {
         // current loading stage text
         struct DjuiText *text = djui_text_create(base, "");
@@ -137,15 +136,14 @@ static void init_loading_screen(void) {
         djui_base_set_location(&text->base, 0, 0);
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 3.0f);
+        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[configDjuiThemeFont]->defaultFontScale * 3.0f);
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale);
+        djui_text_set_font(text, gDjuiFonts[configDjuiThemeFont]);
+        djui_text_set_font_scale(text, gDjuiFonts[configDjuiThemeFont]->defaultFontScale);
 
         load->loadingDesc = text;
     }
-
     {
         // loading bar
         struct DjuiProgressBar *progressBar = djui_progress_bar_create(base, &gCurrLoadingSegment.percentage, 0.0f, 1.0f, false);

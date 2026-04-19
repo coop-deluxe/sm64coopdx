@@ -161,7 +161,7 @@ static char* djui_panel_player_edit_palette_preset_name_get_text(void) {
 static void djui_panel_player_edit_palette_preset_name_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     if (djui_panel_player_edit_palette_preset_name_valid(inputbox1->buffer)) {
-        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        djui_inputbox_reset_text_color(inputbox1);
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
     }
@@ -171,8 +171,9 @@ static void djui_panel_player_edit_palette_preset_name_on_focus_end(struct DjuiB
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     if (!djui_panel_player_edit_palette_preset_name_valid(inputbox1->buffer)) {
         djui_inputbox_set_text(inputbox1, djui_panel_player_edit_palette_preset_name_get_text());
+    } else {
+        djui_inputbox_reset_text_color(inputbox1);
     }
-    djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
 
     djui_inputbox_on_focus_end(&inputbox1->base);
 }
@@ -244,7 +245,6 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
     panel->base.destroy = djui_panel_player_edit_palette_destroy;
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
-
     {
         sCurrentPlayerPart = PANTS;
         djui_selectionbox_create(body, DLANG(PLAYER, PART), sPartStrings, PLAYER_PART_MAX, &sCurrentPlayerPart, djui_panel_player_edit_palette_part_changed);
@@ -253,7 +253,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(PLAYER, HEX_CODE));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -299,7 +299,7 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(PLAYER, PRESET_NAME));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -315,14 +315,13 @@ static void djui_panel_player_edit_palette_create(struct DjuiBase* caller) {
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 32);
         {
-            struct DjuiButton* button1 = djui_button_left_create(&rect3->base, DLANG(PLAYER, DELETE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_delete);
+            struct DjuiButton* button1 = djui_button_left_create(&rect3->base, DLANG(PLAYER, DELETE_PRESET), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_edit_palette_delete);
             djui_base_set_size(&button1->base, 0.485f, 32);
-            struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_export);
+            struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_edit_palette_export);
             djui_base_set_size(&button2->base, 0.485f, 32);
         }
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
         {
             struct DjuiText *text = djui_text_create(body, DLANG(PLAYER, CAP_TOGGLE));
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
@@ -352,7 +351,7 @@ static void djui_panel_player_name_active_palette(struct DjuiBase* caller) {
         {
             struct DjuiText* text1 = djui_text_create(&rect2->base, DLANG(PLAYER, PRESET_NAME));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -368,9 +367,9 @@ static void djui_panel_player_name_active_palette(struct DjuiBase* caller) {
 
         struct DjuiRect* rect3 = djui_rect_container_create(body, 32);
         {
-            struct DjuiButton* button1 = djui_button_left_create(&rect3->base, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_left_create(&rect3->base, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 32);
-            struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_active_palette_export);
+            struct DjuiButton* button2 = djui_button_right_create(&rect3->base, DLANG(PLAYER, SAVE_PRESET), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_active_palette_export);
             djui_base_set_size(&button2->base, 0.485f, 32);
         }
 
@@ -404,7 +403,7 @@ static char *djui_panel_player_name_default_get(void) {
 static void djui_panel_player_name_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
     if (network_player_name_valid(inputbox1->buffer)) {
-        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        djui_inputbox_reset_text_color(inputbox1);
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
     }
@@ -416,7 +415,7 @@ static void djui_panel_player_name_on_focus_end(struct DjuiBase* caller) {
         djui_inputbox_set_text(inputbox1, djui_panel_player_name_default_get());
     }
     snprintf(configPlayerName, MAX_CONFIG_STRING, "%s", inputbox1->buffer);
-    djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+    djui_inputbox_reset_text_color(inputbox1);
 
     if (gNetworkType != NT_NONE) {
         network_send_player_settings();
@@ -479,7 +478,7 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(PLAYER, NAME));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -523,9 +522,9 @@ void djui_panel_player_create(struct DjuiBase* caller) {
         }
         sPalettePresetSelection = djui_selectionbox_create(body, DLANG(PLAYER, PALETTE_PRESET), palettePresets, gPresetPaletteCount + 1, &sPalettePresetIndex, djui_panel_player_update_preset_palette);
 
-        djui_button_create(body, DLANG(PLAYER, EDIT_PALETTE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_edit_palette_create);
-        djui_button_create(body, DLANG(PLAYER, ACTIVE_PALETTE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_player_name_active_palette);
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(PLAYER, EDIT_PALETTE), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_edit_palette_create);
+        djui_button_create(body, DLANG(PLAYER, ACTIVE_PALETTE), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_player_name_active_palette);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
 
         {
             struct DjuiText *text = djui_text_create(body, DLANG(PLAYER, CAP_TOGGLE));

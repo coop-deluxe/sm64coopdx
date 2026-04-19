@@ -12,5 +12,6 @@ struct DjuiSlider {
     bool updateRectValueColor;
 };
 
+void djui_slider_update_style(struct DjuiBase* base);
 struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max, void (*on_value_change)(struct DjuiBase*));
 void djui_slider_update_value(struct DjuiBase* base);

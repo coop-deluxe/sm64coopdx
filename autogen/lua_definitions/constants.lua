@@ -2817,22 +2817,26 @@ FILTER_COUNT   = 2 --- @type HudUtilsFilter
 FONT_LEGACY      = -1 --- @type DjuiFontType
 FONT_NORMAL      =  0 --- @type DjuiFontType
 FONT_MENU        =  1 --- @type DjuiFontType
-FONT_HUD         =  2 --- @type DjuiFontType
-FONT_ALIASED     =  3 --- @type DjuiFontType
-FONT_CUSTOM_HUD  =  4 --- @type DjuiFontType
-FONT_RECOLOR_HUD =  5 --- @type DjuiFontType
-FONT_SPECIAL     =  6 --- @type DjuiFontType
-FONT_COUNT       =  7 --- @type DjuiFontType
+FONT_MENU_DARK   =  2 --- @type DjuiFontType
+FONT_HUD         =  3 --- @type DjuiFontType
+FONT_ALIASED     =  4 --- @type DjuiFontType
+FONT_CUSTOM_HUD  =  5 --- @type DjuiFontType
+FONT_RECOLOR_HUD =  6 --- @type DjuiFontType
+FONT_SPECIAL     =  7 --- @type DjuiFontType
+FONT_CLASSIC     =  8 --- @type DjuiFontType
+FONT_COUNT       =  9 --- @type DjuiFontType
 
 --- @alias DjuiFontType
 --- | `FONT_LEGACY`
 --- | `FONT_NORMAL`
 --- | `FONT_MENU`
+--- | `FONT_MENU_DARK`
 --- | `FONT_HUD`
 --- | `FONT_ALIASED`
 --- | `FONT_CUSTOM_HUD`
 --- | `FONT_RECOLOR_HUD`
 --- | `FONT_SPECIAL`
+--- | `FONT_CLASSIC`
 --- | `FONT_COUNT`
 
 DJUI_RAINBOW_COLOR_RED    = 0 --- @type DjuiRainbowColor

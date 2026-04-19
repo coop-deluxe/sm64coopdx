@@ -91,8 +91,52 @@ static const struct DjuiFont sDjuiFontTitle = {
     .char_width           = djui_font_title_char_width,
 };
 
+  ////////////////////////////////
+ // font 2 (custom dark title font) //
+////////////////////////////////
+
+static void djui_font_title_dark_render_char(const char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+    if ((u8)*c < '!' || (u8)*c > '~' + 1) {
+        char tmp[2] = { 0 };
+        tmp[0] = djui_unicode_get_base_char(c);
+        index = djui_unicode_get_sprite_index(tmp);
+    }
+
+    u32 tx = index % 16;
+    u32 ty = index / 16;
+
+    extern ALIGNED8 const Texture texture_font_title_dark[];
+    djui_gfx_render_texture_tile_font(texture_font_title_dark, 1024, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b, tx * 64, ty * 64, 64, 64);
+}
+
+static f32 djui_font_title_dark_char_width(const char* text) {
+    char c = *text;
+    if (c == ' ') { return 0.30f; }
+    c = djui_unicode_get_base_char(text);
+    extern const f32 font_title_dark_widths[];
+    return font_title_dark_widths[(u8)c - '!'] * 1.1f;
+}
+
+static const struct DjuiFont sDjuiFontTitleDark = {
+    .charWidth            = 1.0f,
+    .charHeight           = 0.95f,
+    .lineHeight           = 0.7f,
+    .xOffset              = 0.0f,
+    .yOffset              = 0.0f,
+    .defaultFontScale     = 64.0f,
+    .textBeginDisplayList = NULL,
+    .render_begin         = djui_gfx_render_texture_tile_font_begin,
+    .render_char          = djui_font_title_dark_render_char,
+    .render_end           = djui_gfx_render_texture_tile_font_end,
+    .char_width           = djui_font_title_dark_char_width,
+};
+
   ///////////////////////
- // font 2 (hud font) //
+ // font 3 (hud font) //
 ///////////////////////
 
 static u8 djui_font_hud_index(char c) {
@@ -155,7 +199,7 @@ static const struct DjuiFont sDjuiFontHud = {
 };
 
   ////////////////////////////////
- // font 3 (DJ's aliased font) //
+ // font 4 (DJ's aliased font) //
 ////////////////////////////////
 
 static void djui_font_aliased_render_char(const char* c) {
@@ -308,6 +352,47 @@ static const struct DjuiFont sDjuiFontSpecial = {
     .char_width           = djui_font_special_char_width,
 };
 
+  ///////////////////////////
+ // font 7 (classic font) //
+///////////////////////////
+
+static void djui_font_classic_render_char(const char* c) {
+    // replace undisplayable characters
+    if (*c == ' ') { return; }
+
+    u32 index = djui_unicode_get_sprite_index(c);
+    if (index & 0x010000) {
+        index &= ~0x010000;
+        u32 tx = index % 64;
+        u32 ty = index / 64;
+        extern ALIGNED8 const Texture texture_font_jp[];
+        djui_gfx_render_texture_tile_font(texture_font_jp, 512, 1024, G_IM_FMT_RGBA, G_IM_SIZ_32b, tx * 8, ty * 16, 8, 16);
+    } else {
+        u32 tx = index % 32;
+        u32 ty = index / 32;
+        extern ALIGNED8 const Texture texture_font_classic[];
+        djui_gfx_render_texture_tile_font(texture_font_classic, 512, 256, G_IM_FMT_RGBA, G_IM_SIZ_32b, tx * 16, ty * 32, 16, 32);
+    }
+}
+
+static f32 djui_font_classic_char_width(const char* c) {
+    if (*c == ' ') { return 6 / 32.0f; }
+    extern const f32 font_classic_widths[];
+    return djui_unicode_get_sprite_width(c, font_classic_widths, 32.0f) / 32.0f;
+}
+
+static const struct DjuiFont sDjuiFontExCoop = {
+    .charWidth            = 0.5f,
+    .charHeight           = 1.0f,
+    .lineHeight           = 0.8125f,
+    .defaultFontScale     = 32.0f,
+    .textBeginDisplayList = NULL,
+    .render_begin         = djui_gfx_render_texture_tile_font_begin,
+    .render_char          = djui_font_classic_render_char,
+    .render_end           = djui_gfx_render_texture_tile_font_end,
+    .char_width           = djui_font_classic_char_width,
+};
+
   ///////////////
  // font list //
 ///////////////
@@ -315,9 +400,11 @@ static const struct DjuiFont sDjuiFontSpecial = {
 const struct DjuiFont* gDjuiFonts[] = {
     &sDjuiFontNormal,
     &sDjuiFontTitle,
+    &sDjuiFontTitleDark,
     &sDjuiFontHud,
     &sDjuiFontAliased,
     &sDjuiFontCustomHud,
     &sDjuiFontCustomHudRecolor,
-    &sDjuiFontSpecial
+    &sDjuiFontSpecial,
+    &sDjuiFontExCoop
 };
