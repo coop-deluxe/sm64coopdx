@@ -159,6 +159,7 @@ void djui_lua_error(char* text, struct DjuiColor color) {
     djui_base_set_color(&sDjuiLuaError->base, color.r, color.g, color.b, color.a);
     djui_text_set_text(sDjuiLuaError, text);
     djui_base_set_visible(&sDjuiLuaError->base, true);
+    djui_text_set_font(sDjuiLuaError, gDjuiFonts[configDjuiThemeFont]);
     sDjuiLuaErrorTimeout = 30 * 5;
 }
 

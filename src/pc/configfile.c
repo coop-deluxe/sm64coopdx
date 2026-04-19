@@ -883,6 +883,8 @@ NEXT_OPTION:
 
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
+    if (configDjuiThemeFont == FONT_MENU) configDjuiThemeFont = FONT_NORMAL;
+
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
     } else if (gCLIOpts.fullscreen == 2) {
