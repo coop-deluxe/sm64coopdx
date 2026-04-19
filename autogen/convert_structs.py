@@ -103,6 +103,10 @@ override_field_invisible = {
     "ModFs": [ "files" ],
 }
 
+override_hide_fields = {
+    "ModAudio": [ "file" ],
+}
+
 override_field_deprecated = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
 }
@@ -158,6 +162,10 @@ override_allowed_structs = {
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ],
+}
+
+override_hide_structs = {
+    "ModAudioLegacyPath",
 }
 
 sLuaManuallyDefinedStructs = [{
@@ -699,6 +707,8 @@ def doc_struct_index(structs):
         sid = struct['identifier']
         if sid in exclude_structs:
             continue
+        if sid in override_hide_structs:
+            continue
         s += '- [%s](#%s)\n' % (sid, sid)
         global total_structs
         total_structs += 1
@@ -715,6 +725,10 @@ def doc_struct_field(struct, field):
 
     if sid in override_field_deprecated:
         if fid in override_field_deprecated[sid]:
+            return '', False
+    
+    if sid in override_hide_fields:
+        if fid in override_hide_fields[sid]:
             return '', False
 
     if '???' in lvt or '???' in lot:
@@ -795,6 +809,8 @@ def doc_structs(structs):
     for struct in structs:
         if struct['identifier'] in exclude_structs:
             continue
+        if struct['identifier'] in override_hide_structs:
+            continue
         s += doc_struct(struct) + '\n'
 
     with open(get_path(out_filename_docs), 'w', encoding='utf-8', newline='\n') as out:
@@ -845,6 +861,9 @@ def def_struct(struct):
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
                 continue
+        if sid in override_hide_fields:
+            if fid in override_hide_fields[sid]:
+                continue
 
         if '???' in lvt or '???' in lot:
             continue
@@ -869,6 +888,8 @@ def def_structs(structs):
 
     for struct in structs:
         if struct['identifier'] in exclude_structs:
+            continue
+        if struct['identifier'] in override_hide_structs:
             continue
         s += def_struct(struct)
 
