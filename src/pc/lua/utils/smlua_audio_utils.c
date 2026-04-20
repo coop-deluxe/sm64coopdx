@@ -301,8 +301,10 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
 
     // remember file
     audio->filepath = strdup(filepath);
-    struct ModAudioLegacyPath* fileLegacy = { strdup(filepath) };
+    struct ModAudioLegacyPath* fileLegacy = (struct ModAudioLegacyPath*)malloc(sizeof(struct ModAudioLegacyPath));
+    strncpy(fileLegacy->relativePath, audio->filepath, SYS_MAX_PATH);
     audio->file = fileLegacy;
+
 
     void *buffer = NULL;
     u32 size = 0;
@@ -662,6 +664,7 @@ void audio_custom_shutdown(void) {
             }
             ma_sound_uninit(&audio->sound);
             free((void *) audio->filepath);
+            free(audio->file);
         }
         dynamic_pool_free(sModAudioPool, audio);
         node = prev;
