@@ -79,6 +79,7 @@
 - [seq_ids.h](#seq_idsh)
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
+- [smlua_audio_utils.h](#smlua_audio_utilsh)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
     - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
@@ -3481,6 +3482,16 @@
 - ACT_RELEASING_BOWSER
 - VALID_BUTTONS
 - C_BUTTONS
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_audio_utils.h](#smlua_audio_utils.h)
+- MOD_AUDIO_CHANNEL_MASTER
+- MOD_AUDIO_CHANNEL_MUSIC
+- MOD_AUDIO_CHANNEL_SFX
+- MOD_AUDIO_CHANNEL_ENV
 
 [:arrow_up_small:](#)
 

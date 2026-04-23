@@ -8171,6 +8171,18 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
+--- @type integer
+MOD_AUDIO_CHANNEL_MASTER = 0
+
+--- @type integer
+MOD_AUDIO_CHANNEL_MUSIC = 1
+
+--- @type integer
+MOD_AUDIO_CHANNEL_SFX = 2
+
+--- @type integer
+MOD_AUDIO_CHANNEL_ENV = 3
+
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
 HOOK_BEFORE_MARIO_UPDATE                    =  2 --- @type LuaHookedEventType
