@@ -45,7 +45,7 @@ void discord_fatal(int rc) {
     }
 }
 
-static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordOAuth2Token* token) {
+UNUSED static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordOAuth2Token* token) {
     LOG_INFO("> get_oauth2_token_callback returned %d", result);
     if (result != DiscordResult_Ok) { return; }
     LOG_INFO("OAuth2 token: %s", token->access_token);

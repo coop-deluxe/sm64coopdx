@@ -2037,6 +2037,7 @@ static const DynosBuiltinFunction sDynosBuiltinFuncs[] = {
     define_builtin_function(bhv_ambient_light_update, FUNCTION_BHV),
     define_builtin_function(bhv_point_light_init, FUNCTION_BHV),
     define_builtin_function(bhv_point_light_loop, FUNCTION_BHV),
+    define_builtin_function(geo_switch_character_type, FUNCTION_GEO),
 };
 
 static const char *sDynosBuiltinFuncTypeNames[] = {
@@ -2087,7 +2088,7 @@ static String DynOS_Builtin_Func_CheckMisuse_Internal(s32 aIndex, const char* aD
         if (aFuncType != builtinFunc.type && (
             aIndex == i || (aDataName && strcmp(aDataName, builtinFunc.name) == 0) || aData == builtinFunc.func)) {
             return String(
-                "Invalid use of function %s: trying to assign %s function to %s",
+                "Invalid use of %s function in %s: %s",
                 builtinFunc.name,
                 sDynosBuiltinFuncTypeNames[builtinFunc.type],
                 sDynosBuiltinFuncTypeNames[aFuncType]

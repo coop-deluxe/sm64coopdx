@@ -18017,6 +18017,26 @@ int smlua_func_stuck_in_ground_handler(lua_State* L) {
     return 1;
 }
 
+/*
+int smlua_func_jumbo_star_offset(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "jumbo_star_offset", 1, top);
+        return 0;
+    }
+
+    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "jumbo_star_offset"); return 0; }
+
+    extern UNUSED static void jumbo_star_offset(struct MarioState* m);
+    UNIMPLEMENTED -->(L, jumbo_star_offset(m));
+
+    return 1;
+}
+*/
+
 int smlua_func_generate_yellow_sparkles(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -23045,6 +23065,25 @@ int smlua_func_mod_fs_file_set_public(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_public"); return 0; }
 
     lua_pushboolean(L, mod_fs_file_set_public(file, pub));
+
+    return 1;
+}
+
+int smlua_func_mod_fs_file_set_compression(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_file_set_compression", 2, top);
+        return 0;
+    }
+
+    struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_set_compression"); return 0; }
+    s32 level = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_compression"); return 0; }
+
+    lua_pushboolean(L, mod_fs_file_set_compression(file, level));
 
     return 1;
 }
@@ -37902,6 +37941,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "common_death_handler", smlua_func_common_death_handler);
     smlua_bind_function(L, "launch_mario_until_land", smlua_func_launch_mario_until_land);
     smlua_bind_function(L, "stuck_in_ground_handler", smlua_func_stuck_in_ground_handler);
+    //smlua_bind_function(L, "jumbo_star_offset", smlua_func_jumbo_star_offset); <--- UNIMPLEMENTED
     smlua_bind_function(L, "generate_yellow_sparkles", smlua_func_generate_yellow_sparkles);
     smlua_bind_function(L, "mario_execute_cutscene_action", smlua_func_mario_execute_cutscene_action);
 
@@ -38153,6 +38193,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_erase", smlua_func_mod_fs_file_erase);
     smlua_bind_function(L, "mod_fs_file_set_text_mode", smlua_func_mod_fs_file_set_text_mode);
     smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
+    smlua_bind_function(L, "mod_fs_file_set_compression", smlua_func_mod_fs_file_set_compression);
     smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
     smlua_bind_function(L, "mod_fs_get_last_error", smlua_func_mod_fs_get_last_error);
 

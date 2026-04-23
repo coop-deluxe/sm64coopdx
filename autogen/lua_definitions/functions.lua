@@ -7763,6 +7763,14 @@ function mod_fs_file_set_public(file, pub)
     -- ...
 end
 
+--- @param file ModFsFile
+--- @param level integer
+--- @return boolean
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+function mod_fs_file_set_compression(file, level)
+    -- ...
+end
+
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
@@ -7984,7 +7992,7 @@ function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
---- Resets Yoshi as being alive
+--- Marks Yoshi as alive
 function set_yoshi_as_not_dead()
     -- ...
 end

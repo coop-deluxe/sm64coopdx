@@ -196,7 +196,6 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
 
     // Vertices
     String _VtxArrayName = "";
-    uintptr_t _VtxArrayStart = 0;
     for (auto& _Node : aGfxData->mVertices) {
         if (_Node->mData == aPtr) {
             return { _Node->mName, _Offset };
@@ -465,6 +464,10 @@ void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFunc
     // LUAV
     if (aValue == LUA_VAR_CODE) {
         String token; token.Read(aFile);
+        if (aGfxData->mModIndex == PACK_MOD_INDEX) {
+            sys_fatal("Invalid use of Lua function in DynOS pack: %s", token.begin());
+            return NULL;
+        }
         for (s32 i = 0; i < aGfxData->mLuaTokenList.Count(); i++) {
             if (token == aGfxData->mLuaTokenList[i]) {
                 return (void*)(uintptr_t)(i+1);

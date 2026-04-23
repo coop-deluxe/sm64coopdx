@@ -148,7 +148,7 @@ override_field_immutable = {
 }
 
 override_field_version_excludes = {
-    "oCameraLakituUnk104": "VERSION_JP",
+    "oCameraLakituMusicPlayed": "VERSION_JP",
     "oCoinUnk1B0": "VERSION_JP",
 }
 

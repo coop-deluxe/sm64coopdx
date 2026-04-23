@@ -1222,6 +1222,7 @@
 --- @field public filepath string
 --- @field public size integer
 --- @field public offset integer
+--- @field public compressionLevel integer
 --- @field public isText boolean
 --- @field public isPublic boolean
 --- @field public read_bool fun(file: ModFsFile): boolean
@@ -1243,6 +1244,7 @@
 --- @field public erase fun(file: ModFsFile, length: integer): boolean
 --- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
 --- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
+--- @field public set_compression fun(file: ModFsFile, level: integer): boolean
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
@@ -1722,7 +1724,7 @@
 --- @field public oCameraLakituSpeed number
 --- @field public oCameraLakituCircleRadius number
 --- @field public oCameraLakituFinishedDialog integer
---- @field public oCameraLakituUnk104 integer
+--- @field public oCameraLakituMusicPlayed integer
 --- @field public oCameraLakituPitchVel integer
 --- @field public oCameraLakituYawVel integer
 --- @field public oEnemyLakituNumSpinies integer
