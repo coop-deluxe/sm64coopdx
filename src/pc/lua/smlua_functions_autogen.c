@@ -30774,6 +30774,42 @@ int smlua_func_audio_stream_set_volume(lua_State* L) {
     return 1;
 }
 
+int smlua_func_audio_stream_get_volume_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_get_volume_channel", 1, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_get_volume_channel"); return 0; }
+
+    lua_pushinteger(L, audio_stream_get_volume_channel(audio));
+
+    return 1;
+}
+
+int smlua_func_audio_stream_set_volume_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "audio_stream_set_volume_channel", 2, top);
+        return 0;
+    }
+
+    struct ModAudio* audio = (struct ModAudio*)smlua_to_cobject(L, 1, LOT_MODAUDIO);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "audio_stream_set_volume_channel"); return 0; }
+    u8 channel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "audio_stream_set_volume_channel"); return 0; }
+
+    audio_stream_set_volume_channel(audio, channel);
+
+    return 1;
+}
+
 int smlua_func_audio_sample_load(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38680,6 +38716,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "audio_stream_set_frequency", smlua_func_audio_stream_set_frequency);
     smlua_bind_function(L, "audio_stream_get_volume", smlua_func_audio_stream_get_volume);
     smlua_bind_function(L, "audio_stream_set_volume", smlua_func_audio_stream_set_volume);
+    smlua_bind_function(L, "audio_stream_get_volume_channel", smlua_func_audio_stream_get_volume_channel);
+    smlua_bind_function(L, "audio_stream_set_volume_channel", smlua_func_audio_stream_set_volume_channel);
     smlua_bind_function(L, "audio_sample_load", smlua_func_audio_sample_load);
     smlua_bind_function(L, "audio_sample_destroy", smlua_func_audio_sample_destroy);
     smlua_bind_function(L, "audio_sample_stop", smlua_func_audio_sample_stop);
