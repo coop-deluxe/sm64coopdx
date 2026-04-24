@@ -208,6 +208,14 @@ static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     }
 }
 
+static void djui_mod_website_open(UNUSED struct DjuiBase* caller) {
+    open_url("https://mods.sm64coopdx.com/mods/");
+}
+
+static void djui_mod_folder_open(UNUSED struct DjuiBase* caller) {
+    open_folder(fs_get_write_path("/mods"));
+}
+
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     mods_update_selectable();
@@ -234,15 +242,19 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
+            struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
             {
                 sBackButton = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
                 sRefreshButton = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_menu_refresh);
+
+                djui_button_left_create(&rect2->base, DLANG(HOST_MODS, BROWSE_MODS), DJUI_BUTTON_STYLE_NORMAL, djui_mod_website_open);
+                djui_button_right_create(&rect2->base, DLANG(HOST_MODS, OPEN_MOD_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_mod_folder_open);
             }
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + 64 + 64;
+        panel->bodySize.value = paginated->base.height.value + (70 * 3); // not 64 because there is an offset between each button
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;

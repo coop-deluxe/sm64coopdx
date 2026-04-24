@@ -4,6 +4,11 @@
 #include <stdbool.h>
 #include <time.h>
 #include <float.h>
+#include <sys/stat.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#include <direct.h>
+#endif
 
 #include "misc.h"
 
@@ -593,4 +598,39 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
+}
+
+void open_url(const char* url) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+
+#elif __linux__ // linux
+    char cmd[512];
+    snprintf(cmd, sizeof(cmd), "xdg-open '%s'", url);
+    system(cmd);
+
+#elif __APPLE__ // macOS
+    char cmd[512];
+    snprintf(cmd, sizeof(cmd), "open '%s'", url);
+    system(cmd);
+#endif
+}
+
+void open_folder(const char* path) {
+#if defined(_WIN32) || defined(_WIN64) // windows
+    _mkdir(path); 
+    ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
+    
+#elif __linux__ // linux
+    mkdir(path, 0777);
+    char command[512];
+    snprintf(command, sizeof(command), "xdg-open \"%s\"", path);
+    system(command);
+
+#elif __APPLE__ // macOS
+    mkdir(path, 0777);
+    char command[512];
+    snprintf(command, sizeof(command), "open \"%s\"", path);
+    system(command);
+#endif
 }

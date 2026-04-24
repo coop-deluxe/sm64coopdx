@@ -617,11 +617,6 @@ LANG_DIR := lang
 # Remove old lang dir
 _ := $(shell rm -rf ./$(BUILD_DIR)/$(LANG_DIR))
 
-MOD_DIR := mods
-
-# Remove old mod dir
-_ := $(shell $(PYTHON) $(TOOLS_DIR)/remove_built_in_mods.py)
-
 PALETTES_DIR := palettes
 
 # Remove old palettes dir
@@ -1215,9 +1210,6 @@ $(BUILD_DIR)/$(COOPNET_LIBS):
 $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
-$(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
-
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
 
@@ -1560,7 +1552,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
@@ -1591,9 +1583,7 @@ all:
 		mkdir -p $(APP_MACOS_DIR); \
 		mkdir -p $(APP_RESOURCES_DIR); \
 		mv build/us_pc/sm64coopdx $(APP_MACOS_DIR)/sm64coopdx; \
-    cp -r build/us_pc/mods $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
-    cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/palettes $(APP_RESOURCES_DIR); \
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
