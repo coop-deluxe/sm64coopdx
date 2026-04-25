@@ -215,28 +215,28 @@ void set_screen_rendering(u16 index) {
     }
 }
 
-bool dummy_initialize(UNUSED enum NetworkType type, UNUSED bool reconnecting) { return true; }
-s64 dummy_get_id(UNUSED u8 localIndex) { return 0; }
-char* dummy_get_id_str(UNUSED u8 localIndex) { return "dummy_id"; }
-void dummy_save_id(UNUSED u8 localIndex, UNUSED s64 networkId) {}
-void dummy_clear_id(UNUSED u8 localIndex) {}
-void* dummy_dup_addr(UNUSED u8 localIndex) { return NULL; }
-bool dummy_match_addr(void* addr1, void* addr2) { return addr1 == addr2; }
-void dummy_update(void) {}
-int dummy_send(UNUSED u8 localIndex, UNUSED void* addr, UNUSED u8* data, UNUSED u16 dataLength) { return 0; }
-void dummy_get_lobby_id(char* destination, u32 destLength) {
+static bool dummy_initialize(UNUSED enum NetworkType type, UNUSED bool reconnecting) { return true; }
+static s64 dummy_get_id(UNUSED u8 localIndex) { return 0; }
+static char* dummy_get_id_str(UNUSED u8 localIndex) { return "dummy_id"; }
+static void dummy_save_id(UNUSED u8 localIndex, UNUSED s64 networkId) {}
+static void dummy_clear_id(UNUSED u8 localIndex) {}
+static void* dummy_dup_addr(UNUSED u8 localIndex) { return NULL; }
+static bool dummy_match_addr(void* addr1, void* addr2) { return addr1 == addr2; }
+static void dummy_update(void) {}
+static int dummy_send(UNUSED u8 localIndex, UNUSED void* addr, UNUSED u8* data, UNUSED u16 dataLength) { return 0; }
+static void dummy_get_lobby_id(char* destination, u32 destLength) {
     if (destLength > 0) {
         strncpy(destination, "dummy_lobby", destLength - 1);
         destination[destLength - 1] = '\0';
     }
 }
-void dummy_get_lobby_secret(char* destination, u32 destLength) {
+static void dummy_get_lobby_secret(char* destination, u32 destLength) {
     if (destLength > 0) {
         strncpy(destination, "dummy_secret", destLength - 1);
         destination[destLength - 1] = '\0';
     }
 }
-void dummy_shutdown(UNUSED bool reconnecting) {}
+static void dummy_shutdown(UNUSED bool reconnecting) {}
 
 struct NetworkSystem gNetworkSystemDummy = {
     .initialize       = dummy_initialize,
