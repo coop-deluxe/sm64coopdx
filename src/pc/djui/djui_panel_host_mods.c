@@ -254,7 +254,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
 
-        panel->bodySize.value = paginated->base.height.value + (70 * 3); // not 64 because there is an offset between each button
+        djui_three_panel_recalculate_body_size(panel);
     }
 
     panel->base.destroy = djui_panel_host_mods_destroy;
