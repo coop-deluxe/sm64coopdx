@@ -2,6 +2,8 @@
 #include "coopnet/coopnet.h"
 #include <stdio.h>
 #include "network.h"
+
+#include "badnet.h"
 #include "object_fields.h"
 #include "game/level_update.h"
 #include "object_constants.h"
@@ -99,7 +101,13 @@ void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
 
     switch (nsType) {
-        case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
+        case NS_SOCKET:
+            if (gBadNetEnabled) {
+                gNetworkSystem = &gNetworkSystemBadNet;
+            } else {
+                gNetworkSystem = &gNetworkSystemSocket;
+            }
+            break;
 #ifdef COOPNET
         case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
 #endif
