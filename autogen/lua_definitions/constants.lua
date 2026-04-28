@@ -4751,6 +4751,15 @@ PLAYER_PVP_REVAMPED = 1 --- @type PvpType
 --- | `PLAYER_PVP_CLASSIC`
 --- | `PLAYER_PVP_REVAMPED`
 
+STAR_LEAVE_LEVEL   = 0 --- @type StarExitType
+STAR_STAY_IN_LEVEL = 1 --- @type StarExitType
+STAR_NON_STOP      = 2 --- @type StarExitType
+
+--- @alias StarExitType
+--- | `STAR_LEAVE_LEVEL`
+--- | `STAR_STAY_IN_LEVEL`
+--- | `STAR_NON_STOP`
+
 --- @type integer
 UNKNOWN_LOCAL_INDEX = (-1)
 

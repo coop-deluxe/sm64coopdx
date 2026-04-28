@@ -62,6 +62,7 @@
     - [enum PlayerInteractions](#enum-PlayerInteractions)
     - [enum BouncyLevelBounds](#enum-BouncyLevelBounds)
     - [enum PvpType](#enum-PvpType)
+    - [enum StarExitType](#enum-StarExitType)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
@@ -2233,6 +2234,13 @@
 | :--------- | :---- |
 | PLAYER_PVP_CLASSIC | 0 |
 | PLAYER_PVP_REVAMPED | 1 |
+
+### [enum StarExitType](#StarExitType)
+| Identifier | Value |
+| :--------- | :---- |
+| STAR_LEAVE_LEVEL | 0 |
+| STAR_STAY_IN_LEVEL | 1 |
+| STAR_NON_STOP | 2 |
 
 [:arrow_up_small:](#)
 

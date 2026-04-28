@@ -2158,8 +2158,8 @@
 --- @field public playerInteractions PlayerInteractions
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public pvpType PvpType
+--- @field public stayInLevelAfterStar StarExitType
 --- @field public playerKnockbackStrength integer
---- @field public stayInLevelAfterStar integer
 --- @field public skipIntro integer
 --- @field public bubbleDeath integer
 --- @field public enablePlayersInLevelDisplay integer

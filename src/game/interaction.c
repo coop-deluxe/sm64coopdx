@@ -941,7 +941,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 
     if (m->health >= 0x100) {
 
-        if (gServerSettings.stayInLevelAfterStar != 2) {
+        if (gServerSettings.stayInLevelAfterStar != STAR_NON_STOP) {
             mario_stop_riding_and_holding(m);
         }
 
@@ -1015,7 +1015,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         }
         save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 
-        if (noExit && gServerSettings.stayInLevelAfterStar == 2) {
+        if (noExit && gServerSettings.stayInLevelAfterStar == STAR_NON_STOP) {
             return TRUE;
         }
 

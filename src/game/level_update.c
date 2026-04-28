@@ -1144,7 +1144,7 @@ void update_hud_values(void) {
                 gHudDisplay.coins += 1;
                 play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
 
-                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
+                if (gServerSettings.stayInLevelAfterStar > STAR_LEAVE_LEVEL && gCurrCourseNum != COURSE_NONE) {
                     // retain vanilla behavior
                     if (gLevelValues.numCoinsToLife == 50) {
                         if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
