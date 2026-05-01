@@ -652,7 +652,7 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
 }
 
 bool network_allow_mod_dev_mode(void) {
-    return (configModDevMode && gNetworkSystem == &gNetworkSystemSocket && gNetworkType == NT_SERVER);
+    return (configModDevMode && gNetworkSystem != &gNetworkSystemCoopNet && gNetworkType == NT_SERVER);
 }
 
 void network_mod_dev_mode_reload(void) {
