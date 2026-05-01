@@ -23,7 +23,7 @@ struct DelayedPacket {
 
 // Requires reconnection
 // Set to `true` to wrap gNetworkSystemSocket
-bool gBadNetEnabled = true;
+bool gBadNetEnabled = false;
 
 // Time in seconds for round trip
 // 0.1 -> Good
