@@ -45,8 +45,16 @@ static s32 RetrieveCurrentAnimationIndex(struct Object *aObject) {
 void DynOS_Anim_Swap(void *aPtr) {
     if (!aPtr) { return; }
 
-    static Animation *pDefaultAnimation = NULL;
-    static Animation  sGfxDataAnimation;
+    // Must support nested calls (held objects render inside other object render)
+    // and interleaving objects without corrupting swap state.
+    struct AnimSwapFrame {
+        struct Object *obj;
+        Animation *defaultAnim;
+        Animation gfxDataAnim;
+    };
+
+    static AnimSwapFrame sFrames[32] = { 0 };
+    static s32 sTop = 0;
 
     // Does the object have a model?
     struct Object *_Object = (struct Object *) aPtr;
@@ -54,10 +62,21 @@ void DynOS_Anim_Swap(void *aPtr) {
         return;
     }
 
-    // Swap the current animation with the one from the Gfx data
-    if (!pDefaultAnimation) {
-        pDefaultAnimation = _Object->header.gfx.animInfo.curAnim;
+    // Determine if this call is the "swap" phase or "restore" phase.
+    // The engine calls DynOS_Anim_Swap twice around geo_set_animation_globals.
+    const bool restoring = (sTop > 0 && sFrames[sTop - 1].obj == _Object);
 
+    // Swap the current animation with the one from the Gfx data
+    if (!restoring) {
+        if (sTop >= (s32)(sizeof(sFrames) / sizeof(sFrames[0]))) {
+            return;
+        }
+
+        AnimSwapFrame *frame = &sFrames[sTop++];
+        frame->obj = _Object;
+        frame->defaultAnim = _Object->header.gfx.animInfo.curAnim;
+
+    
         // ActorGfx data
         ActorGfx* _ActorGfx = DynOS_Actor_GetActorGfx(_Object->header.gfx.sharedChild);
         if (!_ActorGfx) {
@@ -77,8 +96,8 @@ void DynOS_Anim_Swap(void *aPtr) {
 
         // Animation index
         s32 _AnimIndex = -1;
-        s8 index = geo_get_processing_mario_index(_Object);
-        if (index != -1) {
+        s8 index = geo_get_processing_mario_index();
+        if (index != -1 && _Object == gMarioStates[index].marioObj) {
             _AnimIndex = RetrieveCurrentMarioAnimationIndex(index);
 
             // Don't allow Mario animations to be treated as regular objects
@@ -100,23 +119,26 @@ void DynOS_Anim_Swap(void *aPtr) {
         // Animation data
         const AnimData *_AnimData = (const AnimData *) _GfxData->mAnimationTable[_AnimIndex].second;
         if (_AnimData) {
-            sGfxDataAnimation.flags = _AnimData->mFlags;
-            sGfxDataAnimation.animYTransDivisor = _AnimData->mUnk02;
-            sGfxDataAnimation.startFrame = _AnimData->mUnk04;
-            sGfxDataAnimation.loopStart = _AnimData->mUnk06;
-            sGfxDataAnimation.loopEnd = _AnimData->mUnk08;
-            sGfxDataAnimation.unusedBoneCount = _AnimData->mUnk0A.second;
-            sGfxDataAnimation.values = (u16*)_AnimData->mValues.second.begin();
-            sGfxDataAnimation.index = (u16*)_AnimData->mIndex.second.begin();
-            sGfxDataAnimation.valuesLength = _AnimData->mValues.second.Count();
-            sGfxDataAnimation.indexLength = _AnimData->mIndex.second.Count();
-            sGfxDataAnimation.length = _AnimData->mLength;
-            _Object->header.gfx.animInfo.curAnim = &sGfxDataAnimation;
+            frame->gfxDataAnim.flags = _AnimData->mFlags;
+            frame->gfxDataAnim.animYTransDivisor = _AnimData->mUnk02;
+            frame->gfxDataAnim.startFrame = _AnimData->mUnk04;
+            frame->gfxDataAnim.loopStart = _AnimData->mUnk06;
+            frame->gfxDataAnim.loopEnd = _AnimData->mUnk08;
+            frame->gfxDataAnim.unusedBoneCount = _AnimData->mUnk0A.second;
+            frame->gfxDataAnim.values = (u16*) _AnimData->mValues.second.begin();
+            frame->gfxDataAnim.index = (u16*) _AnimData->mIndex.second.begin();
+            frame->gfxDataAnim.valuesLength = _AnimData->mValues.second.Count();
+            frame->gfxDataAnim.indexLength = _AnimData->mIndex.second.Count();
+            frame->gfxDataAnim.length = _AnimData->mLength;
+            _Object->header.gfx.animInfo.curAnim = &frame->gfxDataAnim;
         }
 
     // Restore the default animation
     } else {
-        _Object->header.gfx.animInfo.curAnim = pDefaultAnimation;
-        pDefaultAnimation = NULL;
+        AnimSwapFrame *frame = &sFrames[sTop - 1];
+        _Object->header.gfx.animInfo.curAnim = frame->defaultAnim;
+        frame->obj = NULL;
+        frame->defaultAnim = NULL;
+        sTop--;
     }
 }
