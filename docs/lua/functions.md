@@ -25,6 +25,8 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -787,8 +789,6 @@
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
-   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -983,6 +983,7 @@
    - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
    - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
+   - [le_set_enabled](functions-4.md#le_set_enabled)
    - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
@@ -1399,6 +1400,7 @@
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_text_mode](functions-5.md#mod_fs_file_set_text_mode)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
@@ -2725,6 +2727,64 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

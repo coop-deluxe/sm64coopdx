@@ -184,6 +184,28 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
+static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
+                                        int16_t input_x, int16_t input_y) {
+    float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
+    float deadzone = configStickDeadzone * DEADZONE_STEP;
+
+    if (magnitude_sq > (deadzone * deadzone)) {
+        float magnitude = sqrtf(magnitude_sq);
+        float dir_x = (float)input_x / magnitude;
+        float dir_y = (float)input_y / magnitude;
+        float scale = 1.f / fmaxf(fabsf(dir_x), fabsf(dir_y));
+        float max_magnitude = 0x8000 * scale;
+
+        magnitude -= deadzone;
+        magnitude *= max_magnitude / (max_magnitude - deadzone);
+        magnitude /= 0x100;
+        magnitude = fminf(magnitude, scale * 127.f);
+
+        *stick_x = dir_x * magnitude;
+        *stick_y = -dir_y * magnitude;
+    }
+}
+
 extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
@@ -321,21 +343,8 @@ static void controller_sdl_read(OSContPad *pad) {
     if (righty < -0x4000) pad->button |= U_CBUTTONS;
     if (righty > 0x4000) pad->button |= D_CBUTTONS;
 
-    uint32_t magnitude_sq = (uint32_t)(leftx * leftx) + (uint32_t)(lefty * lefty);
-    uint32_t stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
-    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
-        pad->stick_x = leftx / 0x100;
-        int stick_y = -lefty / 0x100;
-        pad->stick_y = stick_y == 128 ? 127 : stick_y;
-    }
-
-    magnitude_sq = (uint32_t)(rightx * rightx) + (uint32_t)(righty * righty);
-    stickDeadzoneActual = configStickDeadzone * DEADZONE_STEP;
-    if (magnitude_sq > (uint32_t)(stickDeadzoneActual * stickDeadzoneActual)) {
-        pad->ext_stick_x = rightx / 0x100;
-        int stick_y = -righty / 0x100;
-        pad->ext_stick_y = stick_y == 128 ? 127 : stick_y;
-    }
+    update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty);
+    update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty);
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) {

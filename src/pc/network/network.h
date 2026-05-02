@@ -74,12 +74,18 @@ enum PvpType {
     PLAYER_PVP_REVAMPED
 };
 
+enum StarExitType {
+    STAR_LEAVE_LEVEL,
+    STAR_STAY_IN_LEVEL,
+    STAR_NON_STOP,
+};
+
 struct ServerSettings {
     enum PlayerInteractions playerInteractions;
     enum BouncyLevelBounds bouncyLevelBounds;
     enum PvpType pvpType;
+    enum StarExitType stayInLevelAfterStar;
     u8 playerKnockbackStrength;
-    u8 stayInLevelAfterStar;
     u8 skipIntro;
     u8 bubbleDeath;
     u8 enablePlayersInLevelDisplay;

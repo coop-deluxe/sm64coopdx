@@ -88,6 +88,7 @@ static int16_t resample_table[64][4] = {
     {0xffd8, 0x0e5f, 0x6696, 0x0b39}, {0xffdf, 0x0d46, 0x66ad, 0x0c39}
 };
 
+#if !HAS_SSE41 && !HAS_NEON
 static inline int16_t OPTIMIZE_O3 clamp16(int32_t v) {
     if (v < -0x8000) {
         return -0x8000;
@@ -105,6 +106,7 @@ static inline int32_t clamp32(int64_t v) {
     }
     return (int32_t)v;
 }
+#endif
 
 void aClearBufferImpl(uint16_t addr, int nbytes) {
     nbytes = ROUND_UP_16(nbytes);

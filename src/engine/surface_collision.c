@@ -581,8 +581,6 @@ f32 unused_obj_find_floor_height(struct Object *obj) {
  */
 struct FloorGeometry sFloorGeo;
 
-static u8 unused8038BE50[0x40];
-
 /**
  * Return the floor height underneath (xPos, yPos, zPos) and populate `floorGeo`
  * with data about the floor's normal vector and origin offset. Also update
@@ -631,7 +629,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
         interpolate = gInterpolatingSurfaces;
-        
+
         if (surf->flags & SURFACE_FLAG_INTANGIBLE) { continue; }
         if (gCheckingSurfaceCollisionsForObject != NULL) {
             if (surf->object != gCheckingSurfaceCollisionsForObject) {

@@ -51,7 +51,7 @@ static void on_activity_join(UNUSED void* data, const char* secret) {
 #endif
 }
 
-static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordResult result) {
+UNUSED static void on_activity_join_request_callback(UNUSED void* data, enum EDiscordResult result) {
     LOG_INFO("> on_activity_join_request_callback returned %d", (int)result);
     DISCORD_REQUIRE(result);
 }
@@ -60,7 +60,7 @@ static void on_activity_join_request(UNUSED void* data, struct DiscordUser* user
     LOG_INFO("> on_activity_join_request from " DISCORD_ID_FORMAT, user->id);
 }
 
-static void strncat_len(char* destination, char* source, size_t destinationLength, size_t sourceLength) {
+UNUSED static void strncat_len(char* destination, char* source, size_t destinationLength, size_t sourceLength) {
     char altered[128] = { 0 };
     snprintf(altered, (sourceLength < 127) ? sourceLength : 127, "%s", source);
     strncat(destination, altered, destinationLength);

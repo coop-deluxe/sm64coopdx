@@ -2117,6 +2117,30 @@ Marks the provided modfs `file` as public (i.e. readable by other mods). Returns
 
 <br />
 
+## [mod_fs_file_set_compression](#mod_fs_file_set_compression)
+
+### Description
+Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+
+### Lua Example
+`local booleanValue = mod_fs_file_set_compression(file, level)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| file | [ModFsFile](structs.md#ModFsFile) |
+| level | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [mod_fs_hide_errors](#mod_fs_hide_errors)
 
 ### Description
@@ -2858,7 +2882,7 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 ## [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
 
 ### Description
-Resets Yoshi as being alive
+Marks Yoshi as alive
 
 ### Lua Example
 `set_yoshi_as_not_dead()`

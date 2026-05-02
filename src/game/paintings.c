@@ -214,13 +214,13 @@ struct Painting_List_Item paintingZero = {
 // } Vtx_Interp;
 
 static Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
-static u8 sVerticesCurIndex = 0;
-static u8 sVertexSwaps = 0;
-static Vtx_Interp* sVerticesCur  = sVertexBuffers[0];
-static Vtx_Interp* sVerticesPrev = NULL;
-static u32 sVerticesPrevTimestamp;
-static Vtx *sVerticesPtr[2];
-static s32 sVerticesCount;
+UNUSED static u8 sVerticesCurIndex = 0;
+UNUSED static u8 sVertexSwaps = 0;
+UNUSED static Vtx_Interp* sVerticesCur  = sVertexBuffers[0];
+UNUSED static Vtx_Interp* sVerticesPrev = NULL;
+UNUSED static u32 sVerticesPrevTimestamp;
+UNUSED static Vtx *sVerticesPtr[2];
+UNUSED static s32 sVerticesCount;
 
 void patch_paintings_init(struct Painting *painting) {
     painting->ripples.sVerticesCurIndex = 0;

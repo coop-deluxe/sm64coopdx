@@ -140,9 +140,9 @@ void djui_hud_reset_scissor(void);
 /* |description|Measures the width and height of `message` in the current font|descriptionEnd| */
 void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);
 /* |description|Prints DJUI HUD text onto the screen|descriptionEnd| */
-void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scale);
+void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);
 /* |description|Prints interpolated DJUI HUD text onto the screen|descriptionEnd| */
-void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
+void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);
 /* |description|Renders a DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders a DJUI HUD texture tile onto the screen|descriptionEnd| */

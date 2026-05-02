@@ -23,6 +23,8 @@
 #define MAX_MATRIX_STACK_SIZE 11
 #define MAX_LIGHTS 18
 #define MAX_VERTICES 64
+#define MAX_TILES 8
+#define MAX_TEXTURES 2
 #define MAX_CACHED_TEXTURES 4096 // for preloading purposes
 
 #define HASH_SHIFT 0
@@ -60,15 +62,18 @@ struct GfxTexture {
 struct UnloadedTex {
     const uint8_t *addr;
     uint8_t siz;
-    uint8_t tile_number;
 };
 
 struct TextureTile {
     uint8_t fmt;
     uint8_t siz;
+    uint16_t tmem;
+    uint8_t index;
     uint8_t cms, cmt;
+    uint8_t masks, maskt, shifts, shiftt;
     uint16_t uls, ult, lrs, lrt; // U10.2
     uint32_t line_size_bytes;
+    uint8_t palette;
 };
 
 struct TextureHashmapNode {

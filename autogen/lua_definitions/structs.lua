@@ -970,6 +970,15 @@
 --- @field public translation Vec3s
 --- @field public rotation Vec3s
 
+--- @class HudDisplay
+--- @field public lives integer
+--- @field public coins integer
+--- @field public stars integer
+--- @field public wedges integer
+--- @field public keys integer
+--- @field public flags integer
+--- @field public timer integer
+
 --- @class InstantWarp
 --- @field public id integer
 --- @field public area integer
@@ -1337,6 +1346,7 @@
 --- @field public common_death_handler fun(m: MarioState, animation: integer, frameToDeathWarp: integer): integer Handles shared logic for Mario's various death states. Plays the specified death animation (`animation`), checks for a specific frame (`frameToDeathWarp`) to trigger a warp or bubble state if allowed, and sets Mario's eye state to 'dead'
 --- @field public launch_until_land fun(m: MarioState, endAction: integer, animation: integer, forwardVel: number): integer Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
 --- @field public stuck_in_ground_handler fun(m: MarioState, animation: integer, unstuckFrame: integer, target2: integer, target3: integer, endAction: integer) Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
+--- @field public jumbo_star_offset function 
 --- @field public execute_cutscene_action fun(m: MarioState): boolean Executes Mario's current cutscene action based on his `action` field. Includes various story-related sequences like entering doors, collecting stars, and final boss cutscenes. Delegates to the appropriate function for each cutscene action
 --- @field public tilt_body_running fun(m: MarioState): integer Tilts Mario's body according to his running speed and slope angle. Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
 --- @field public play_step_sound fun(m: MarioState, frame1: integer, frame2: integer) Checks the current animation frame against two specified frames to trigger footstep sounds. Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
@@ -1447,9 +1457,15 @@
 
 --- @class ModAudio
 --- @field public filepath string
+--- @field public relativePath string
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
+--- @field public position number
+--- @field public looping boolean
+--- @field public frequency number
+--- @field public volume number
+--- @field public file unction
 --- @field public stream_destroy fun(audio: ModAudio) Destroys an `audio` stream
 --- @field public stream_play fun(audio: ModAudio, restart: boolean, volume: number) Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 --- @field public stream_pause fun(audio: ModAudio) Pauses an `audio` stream
@@ -1492,6 +1508,7 @@
 --- @field public filepath string
 --- @field public size integer
 --- @field public offset integer
+--- @field public compressionLevel integer
 --- @field public isText boolean
 --- @field public isPublic boolean
 --- @field public read_bool fun(file: ModFsFile): boolean
@@ -1513,6 +1530,7 @@
 --- @field public erase fun(file: ModFsFile, length: integer): boolean
 --- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
 --- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
+--- @field public set_compression fun(file: ModFsFile, level: integer): boolean
 
 --- @class NametagsSettings
 --- @field public showHealth boolean
@@ -2002,7 +2020,7 @@
 --- @field public oCameraLakituSpeed number
 --- @field public oCameraLakituCircleRadius number
 --- @field public oCameraLakituFinishedDialog integer
---- @field public oCameraLakituUnk104 integer
+--- @field public oCameraLakituMusicPlayed integer
 --- @field public oCameraLakituPitchVel integer
 --- @field public oCameraLakituYawVel integer
 --- @field public oEnemyLakituNumSpinies integer
@@ -2455,6 +2473,8 @@
 --- @field public check_overlap_with_hitbox_params fun(o: Object, x: number, y: number, z: number, h: number, r: number, d: number): boolean Checks if `o`'s hitbox is colliding with the parameters of a hitbox
 --- @field public set_vel fun(o: Object, vx: number, vy: number, vz: number) Sets an object's velocity to `vx`, `vy`, and `vz`
 --- @field public move_xyz fun(o: Object, dx: number, dy: number, dz: number) Moves the object in the direction of `dx`, `dy`, and `dz`
+--- @field public skip_interpolation fun(o: Object) Skips object interpolation for a frame
+--- @field public anim_skip_interpolation fun(o: Object) Skips animation interpolation for a frame
 --- @field public get_surface_from_index fun(o: Object, index: integer): Surface Gets a surface corresponding to `index` from the surface pool buffer
 
 --- @class ObjectHitbox
@@ -2566,8 +2586,8 @@
 --- @field public playerInteractions PlayerInteractions
 --- @field public bouncyLevelBounds BouncyLevelBounds
 --- @field public pvpType PvpType
+--- @field public stayInLevelAfterStar StarExitType
 --- @field public playerKnockbackStrength integer
---- @field public stayInLevelAfterStar integer
 --- @field public skipIntro integer
 --- @field public bubbleDeath integer
 --- @field public enablePlayersInLevelDisplay integer

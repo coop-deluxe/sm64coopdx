@@ -1144,7 +1144,7 @@ void update_hud_values(void) {
                 gHudDisplay.coins += 1;
                 play_sound(coinSound, gMarioState->marioObj->header.gfx.cameraToObject);
 
-                if (gServerSettings.stayInLevelAfterStar > 0 && gCurrCourseNum != COURSE_NONE) {
+                if (gServerSettings.stayInLevelAfterStar > STAR_LEAVE_LEVEL && gCurrCourseNum != COURSE_NONE) {
                     // retain vanilla behavior
                     if (gLevelValues.numCoinsToLife == 50) {
                         if (gHudDisplay.coins == 50 || gHudDisplay.coins == 100 || gHudDisplay.coins == 150) {
@@ -1938,7 +1938,6 @@ s32 lvl_init_from_save_file(UNUSED s16 arg0, s16 levelNum) {
     disable_warp_checkpoint();
     save_file_move_cap_to_default_location();
     select_mario_cam_mode();
-    set_yoshi_as_not_dead();
 
     return levelNum;
 }
@@ -2028,7 +2027,6 @@ void fake_lvl_init_from_save_file(void) {
     disable_warp_checkpoint();
     save_file_move_cap_to_default_location();
     select_mario_cam_mode();
-    set_yoshi_as_not_dead();
     fadeout_music(30);
 
     gChangeLevel = gLevelValues.entryLevel;

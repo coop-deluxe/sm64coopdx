@@ -4040,27 +4040,6 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
---- @param message string
---- @param x number
---- @param y number
---- @param scale number
---- Prints DJUI HUD text onto the screen
-function djui_hud_print_text(message, x, y, scale)
-    -- ...
-end
-
---- @param message string
---- @param prevX number
---- @param prevY number
---- @param prevScale number
---- @param x number
---- @param y number
---- @param scale number
---- Prints interpolated DJUI HUD text onto the screen
-function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
-    -- ...
-end
-
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
@@ -5152,6 +5131,12 @@ end
 --- @param count integer
 --- Sets the max amount of lights that can affect a vertex
 function le_set_max_lights_per_vertex(count)
+    -- ...
+end
+
+--- @param value boolean
+--- This will let the user control the lighting engine in real time to disable or enable it.
+function le_set_enabled(value)
     -- ...
 end
 
@@ -7763,6 +7748,14 @@ function mod_fs_file_set_public(file, pub)
     -- ...
 end
 
+--- @param file ModFsFile
+--- @param level integer
+--- @return boolean
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+function mod_fs_file_set_compression(file, level)
+    -- ...
+end
+
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
@@ -7984,7 +7977,7 @@ function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
---- Resets Yoshi as being alive
+--- Marks Yoshi as alive
 function set_yoshi_as_not_dead()
     -- ...
 end
