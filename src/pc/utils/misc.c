@@ -36,7 +36,7 @@ static void _clock_gettime(struct timespec* clock_time) {
     clock_gettime(CLOCK_MONOTONIC, clock_time);
 #else
     if (clock_gettime(CLOCK_MONOTONIC, clock_time))
-        clock_gettime(CLOCK_REALTIME, clock_time));
+        clock_gettime(CLOCK_REALTIME, clock_time);
 #endif
 
 #ifdef DEVELOPMENT

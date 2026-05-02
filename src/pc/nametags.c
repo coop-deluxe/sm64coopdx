@@ -26,14 +26,14 @@ void djui_hud_print_outlined_text_interpolated(const char* text, f32 prevX, f32 
 
     // render outline
     djui_hud_set_color(255 * outlineDarkness, 255 * outlineDarkness, 255 * outlineDarkness, a);
-    djui_hud_print_text_interpolated(text, prevX - prevOffset, prevY,              prevScale, x - offset, y,          scale);
-    djui_hud_print_text_interpolated(text, prevX + prevOffset, prevY,              prevScale, x + offset, y,          scale);
-    djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, x,          y - offset, scale);
-    djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, x,          y + offset, scale);
+    djui_hud_print_text_interpolated(text, prevX - prevOffset, prevY,              prevScale, prevScale, x - offset, y,          scale, scale);
+    djui_hud_print_text_interpolated(text, prevX + prevOffset, prevY,              prevScale, prevScale, x + offset, y,          scale, scale);
+    djui_hud_print_text_interpolated(text, prevX,              prevY - prevOffset, prevScale, prevScale, x,          y - offset, scale, scale);
+    djui_hud_print_text_interpolated(text, prevX,              prevY + prevOffset, prevScale, prevScale, x,          y + offset, scale, scale);
 
     // render text
     djui_hud_set_color(255, 255, 255, a);
-    djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale);
+    djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, prevScale, x, y, scale, scale);
 
     // reset colors
     djui_hud_set_color(255, 255, 255, 255);

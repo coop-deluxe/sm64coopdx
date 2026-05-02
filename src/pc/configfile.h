@@ -171,6 +171,7 @@ extern unsigned int configDjuiThemeFont;
 extern unsigned int configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
+extern bool         configHideSocketWarning;
 extern bool         configCompressOnStartup;
 extern bool         configSkipPackGeneration;
 

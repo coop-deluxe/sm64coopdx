@@ -778,7 +778,7 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
 #define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
 #define define_gfx_symbol(symb, params, addPtr, ...)                \
 if (_Symbol == #symb) {                                             \
-    static const GfxParamType paramTypes[] = { __VA_ARGS__ };       \
+    UNUSED static const GfxParamType paramTypes[] = { __VA_ARGS__ };\
     REPEAT(HANDLE_PARAM, params);                                   \
     if (addPtr) { aGfxData->mPointerList.Add(aHead); }              \
     Gfx _Gfx[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };   \

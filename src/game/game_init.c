@@ -319,7 +319,7 @@ void display_and_vsync(void) {
 
 // this function records distinct inputs over a 255-frame interval to RAM locations and was likely
 // used to record the demo sequences seen in the final game. This function is unused.
-static void record_demo(void) {
+UNUSED static void record_demo(void) {
     // record the player's button mask and current rawStickX and rawStickY.
     u8 buttonMask =
         ((gPlayer1Controller->buttonDown & (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON)) >> 8)

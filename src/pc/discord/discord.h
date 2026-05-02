@@ -3,7 +3,7 @@
 #include <PR/ultratypes.h>
 #include "discord_game_sdk.h"
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(OSX_BUILD)
 #define DISCORD_ID_FORMAT "%lld"
 #else
 #define DISCORD_ID_FORMAT "%ld"

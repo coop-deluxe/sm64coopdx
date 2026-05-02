@@ -64,6 +64,7 @@
     - [enum PlayerInteractions](#enum-PlayerInteractions)
     - [enum BouncyLevelBounds](#enum-BouncyLevelBounds)
     - [enum PvpType](#enum-PvpType)
+    - [enum StarExitType](#enum-StarExitType)
 - [network_player.h](#network_playerh)
     - [enum NetworkPlayerType](#enum-NetworkPlayerType)
 - [obj_behaviors.c](#obj_behaviorsc)
@@ -2255,6 +2256,13 @@
 | PLAYER_PVP_CLASSIC | 0 |
 | PLAYER_PVP_REVAMPED | 1 |
 
+### [enum StarExitType](#StarExitType)
+| Identifier | Value |
+| :--------- | :---- |
+| STAR_LEAVE_LEVEL | 0 |
+| STAR_STAY_IN_LEVEL | 1 |
+| STAR_NON_STOP | 2 |
+
 [:arrow_up_small:](#)
 
 <br />
@@ -2577,6 +2585,8 @@
 - YOSHI_ACT_WALK_JUMP_OFF_ROOF
 - YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN
 - YOSHI_ACT_GIVE_PRESENT
+- YOSHI_ACT_GONE
+- YOSHI_ACT_REAPPEAR
 - YOSHI_ACT_CREDITS
 - KOOPA_UNSHELLED_ACT_RUN
 - KOOPA_UNSHELLED_ACT_DIVE
@@ -3567,7 +3577,8 @@
 | HOOK_ON_FIND_WATER_LEVEL | 63 |
 | HOOK_ON_FIND_POISON_GAS_LEVEL | 64 |
 | HOOK_ON_FIND_SURFACE_ON_RAY | 65 |
-| HOOK_MAX | 66 |
+| HOOK_ON_DYNOS_PACK_TOGGLED | 66 |
+| HOOK_MAX | 67 |
 - MAX_HOOKED_BEHAVIORS
 
 [:arrow_up_small:](#)

@@ -1374,7 +1374,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oCameraLakituCircleRadius);
     bhv_constant(oCameraLakituFinishedDialog);
 #ifndef VERSION_JP
-    bhv_constant(oCameraLakituUnk104);
+    bhv_constant(oCameraLakituMusicPlayed);
 #endif
     bhv_constant(oCameraLakituPitchVel);
     bhv_constant(oCameraLakituYawVel);
@@ -1928,7 +1928,6 @@ DataNode<T> *FindDataNode(DataNodes<T> &aDataNodes, String &aName, u32 aModelIde
 
 static BehaviorScript ParseBehaviorScriptSymbolArgInternal(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, u64 &aTokenIndex, bool *found) {
     String _Arg = aNode->mTokens[aTokenIndex++];
-    u64 _ModelIdentifier = aNode->mModelIdentifier;
     *found = true;
 
     // Remove (de-)referencing
@@ -2288,7 +2287,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     }
 
     if (_Symbol == "LOAD_ANIMATIONS") {
-        u64 topTokenIndex = aTokenIndex;
+        //u64 topTokenIndex = aTokenIndex;
 
         bool foundAnimation = true;
 

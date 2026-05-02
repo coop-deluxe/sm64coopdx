@@ -135,7 +135,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
 
     // Scanning the loaded data
     u32 _LineNumber = 1;
-    u32 pDataLineNumber = 1;
+    UNUSED u32 pDataLineNumber = 1;
     s32 _DataType = DATA_TYPE_NONE;
     String* pDataName = NULL;
     Array<String> *pDataTokens = NULL;

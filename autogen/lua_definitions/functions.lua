@@ -4040,27 +4040,6 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
---- @param message string
---- @param x number
---- @param y number
---- @param scale number
---- Prints DJUI HUD text onto the screen
-function djui_hud_print_text(message, x, y, scale)
-    -- ...
-end
-
---- @param message string
---- @param prevX number
---- @param prevY number
---- @param prevScale number
---- @param x number
---- @param y number
---- @param scale number
---- Prints interpolated DJUI HUD text onto the screen
-function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
-    -- ...
-end
-
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
@@ -5152,6 +5131,12 @@ end
 --- @param count integer
 --- Sets the max amount of lights that can affect a vertex
 function le_set_max_lights_per_vertex(count)
+    -- ...
+end
+
+--- @param value boolean
+--- This will let the user control the lighting engine in real time to disable or enable it.
+function le_set_enabled(value)
     -- ...
 end
 
@@ -7992,7 +7977,7 @@ function network_discord_id_from_local_index(localIndex)
     -- ...
 end
 
---- Resets Yoshi as being alive
+--- Marks Yoshi as alive
 function set_yoshi_as_not_dead()
     -- ...
 end

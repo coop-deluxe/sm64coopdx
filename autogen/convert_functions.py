@@ -118,7 +118,7 @@ override_disallowed_functions = {
     "src/game/mario.h":                         [ " init_mario" ],
     "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data" ],
+    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data", "djui_hud_print_text", "djui_hud_print_text_interpolated" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
     "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
     "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
@@ -234,6 +234,8 @@ manual_index_documentation = """
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -722,6 +724,64 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

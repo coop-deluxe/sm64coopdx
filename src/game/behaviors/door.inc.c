@@ -72,7 +72,7 @@ void play_warp_door_open_noise(void) {
 
 void bhv_door_loop(void) {
     s32 sp1C = 0;
-    
+
     if (o->oAction != 100) {
         while (D_8032F300[sp1C].flag != (u32)~0) {
             if (cur_obj_clear_interact_status_flag(D_8032F300[sp1C].flag)) {

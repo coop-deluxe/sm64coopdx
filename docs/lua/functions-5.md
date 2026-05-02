@@ -2882,7 +2882,7 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 ## [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
 
 ### Description
-Resets Yoshi as being alive
+Marks Yoshi as alive
 
 ### Lua Example
 `set_yoshi_as_not_dead()`

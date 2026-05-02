@@ -620,7 +620,7 @@ inline
 #else
 static
 #endif
-void DiscordCreateParamsSetDefault(struct DiscordCreateParams* params)
+__attribute__((unused)) void DiscordCreateParamsSetDefault(struct DiscordCreateParams* params)
 {
     memset(params, 0, sizeof(struct DiscordCreateParams));
     params->application_version = DISCORD_APPLICATION_MANAGER_VERSION;

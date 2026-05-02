@@ -1,9 +1,3 @@
-#define MINIAUDIO_IMPLEMENTATION // required by miniaudio
-
-// enable Vorbis decoding (provides ogg audio decoding support) for miniaudio
-#define STB_VORBIS_HEADER_ONLY
-#include "pc/utils/stb_vorbis.c"
-
 #include "types.h"
 #include "seq_ids.h"
 #include "audio/external.h"

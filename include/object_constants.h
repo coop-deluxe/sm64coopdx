@@ -197,7 +197,7 @@
     /* oAction */
     #define FISH_SPAWNER_ACT_SPAWN   0
     #define FISH_SPAWNER_ACT_IDLE    1
-    #define FISH_SPAWNER_ACT_RESPAWN 2    
+    #define FISH_SPAWNER_ACT_RESPAWN 2
     /* oBehParams2ndByte */
     #define FISH_SPAWNER_BP_MANY_BLUE 0
     #define FISH_SPAWNER_BP_FEW_BLUE  1
@@ -437,6 +437,8 @@
     #define YOSHI_ACT_WALK_JUMP_OFF_ROOF 3
     #define YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN 4
     #define YOSHI_ACT_GIVE_PRESENT 5
+    #define YOSHI_ACT_GONE 6
+    #define YOSHI_ACT_REAPPEAR 7
     #define YOSHI_ACT_CREDITS 10
 
 /* Koopa */
