@@ -1231,13 +1231,13 @@ static struct LuaObjectField sGraphNodeTranslationRotationFields[LUA_GRAPH_NODE_
 
 #define LUA_HUD_DISPLAY_FIELD_COUNT 7
 static struct LuaObjectField sHudDisplayFields[LUA_HUD_DISPLAY_FIELD_COUNT] = {
-    { "coins",  LVT_S16, offsetof(struct HudDisplay, coins),  false, LOT_NONE, 1, sizeof(s16) },
-    { "flags",  LVT_S16, offsetof(struct HudDisplay, flags),  false, LOT_NONE, 1, sizeof(s16) },
-    { "keys",   LVT_S16, offsetof(struct HudDisplay, keys),   false, LOT_NONE, 1, sizeof(s16) },
-    { "lives",  LVT_S16, offsetof(struct HudDisplay, lives),  false, LOT_NONE, 1, sizeof(s16) },
-    { "stars",  LVT_S16, offsetof(struct HudDisplay, stars),  false, LOT_NONE, 1, sizeof(s16) },
-    { "timer",  LVT_U16, offsetof(struct HudDisplay, timer),  false, LOT_NONE, 1, sizeof(u16) },
-    { "wedges", LVT_S16, offsetof(struct HudDisplay, wedges), false, LOT_NONE, 1, sizeof(s16) },
+    { "coins",  LVT_S16, offsetof(struct HudDisplay, coins),  false, LOT_NONE },
+    { "flags",  LVT_S16, offsetof(struct HudDisplay, flags),  false, LOT_NONE },
+    { "keys",   LVT_S16, offsetof(struct HudDisplay, keys),   false, LOT_NONE },
+    { "lives",  LVT_S16, offsetof(struct HudDisplay, lives),  false, LOT_NONE },
+    { "stars",  LVT_S16, offsetof(struct HudDisplay, stars),  false, LOT_NONE },
+    { "timer",  LVT_U16, offsetof(struct HudDisplay, timer),  false, LOT_NONE },
+    { "wedges", LVT_S16, offsetof(struct HudDisplay, wedges), false, LOT_NONE },
 };
 
 #define LUA_INSTANT_WARP_FIELD_COUNT 3

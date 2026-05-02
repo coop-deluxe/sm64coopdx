@@ -1205,7 +1205,6 @@
 
 --- @class ModAudio
 --- @field public filepath string
---- @field public relativePath string
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
@@ -1213,7 +1212,6 @@
 --- @field public looping boolean
 --- @field public frequency number
 --- @field public volume number
---- @field public file unction
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1295,9 +1293,6 @@
 --- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
---- @field public paletteIndex integer
---- @field public overridePaletteIndex integer
---- @field public overridePaletteIndexLp integer
 
 --- @class Object
 --- @field public header ObjectNode

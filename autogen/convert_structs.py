@@ -870,6 +870,10 @@ def def_struct(struct):
             if fid in override_field_invisible[sid]:
                 continue
 
+        if sid in override_field_deprecated:
+            if fid in override_field_deprecated[sid]:
+                continue
+
         if '???' in lvt or '???' in lot:
             continue
 
