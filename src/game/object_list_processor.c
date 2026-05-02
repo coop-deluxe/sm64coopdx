@@ -25,6 +25,7 @@
 #include "engine/math_util.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/djui/djui_hud_utils.h"
 
 /**
  * Flags controlling what debug info is displayed.
@@ -605,6 +606,7 @@ void clear_objects(void) {
 
     clear_dynamic_surfaces();
     geo_clear_interp_data();
+    djui_hud_clear_interp_data();
 }
 
 /**
@@ -652,7 +654,7 @@ void unload_deactivated_objects(void) {
 /**
  * Unused profiling function.
  */
-static u16 unused_get_elapsed_time(u64 *cycleCounts, s32 index) {
+UNUSED static u16 unused_get_elapsed_time(u64 *cycleCounts, s32 index) {
     u16 time;
     f64 cycles;
 

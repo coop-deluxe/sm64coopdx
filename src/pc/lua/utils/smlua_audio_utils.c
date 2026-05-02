@@ -1,9 +1,3 @@
-#define MINIAUDIO_IMPLEMENTATION // required by miniaudio
-
-// enable Vorbis decoding (provides ogg audio decoding support) for miniaudio
-#define STB_VORBIS_HEADER_ONLY
-#include "pc/utils/stb_vorbis.c"
-
 #include "types.h"
 #include "seq_ids.h"
 #include "audio/external.h"
@@ -171,6 +165,16 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
     }
 
     LOG_LUA_LINE("Could not find m64 at path: %s", m64path);
+}
+
+u8 smlua_audio_utils_allocate_sequence(void) {
+    for (u8 seqId = SEQ_COUNT + 1; seqId < MAX_AUDIO_OVERRIDE; seqId++) {
+        if (!sAudioOverrides[seqId].enabled) {
+            return seqId;
+        }
+    }
+    LOG_ERROR("Cannot allocate more custom sequences.");
+    return MAX_AUDIO_OVERRIDE;
 }
 
   ///////////////

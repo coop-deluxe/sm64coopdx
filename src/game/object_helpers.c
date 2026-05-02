@@ -1333,21 +1333,6 @@ s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
     }
 }
 
-s32 cur_obj_check_frame_prior_current_frame(s16 *a0) {
-    if (!o) { return 0; }
-    s16 sp6 = o->header.gfx.animInfo.animFrame;
-
-    while (*a0 != -1) {
-        if (*a0 == sp6) {
-            return TRUE;
-        }
-
-        a0++;
-    }
-
-    return FALSE;
-}
-
 s32 mario_is_in_air_action(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->action & ACT_FLAG_AIR) {
@@ -1729,9 +1714,6 @@ void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
     } else {
         o->oMoveFlags |= OBJ_MOVE_IN_AIR;
     }
-}
-
-static void stub_obj_helpers_1(void) {
 }
 
 void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
@@ -2723,9 +2705,6 @@ void bhv_dust_smoke_loop(void) {
     o->oSmokeTimer++;
 }
 
-static void stub_obj_helpers_2(void) {
-}
-
 s32 cur_obj_set_direction_table(s8 *a0) {
     if (!o) { return 0; }
     o->oToxBoxMovementPattern = a0;
@@ -2908,9 +2887,6 @@ s32 is_item_in_array(s8 item, s8 *array) {
     }
 
     return FALSE;
-}
-
-static void stub_obj_helpers_5(void) {
 }
 
 void bhv_init_room(void) {

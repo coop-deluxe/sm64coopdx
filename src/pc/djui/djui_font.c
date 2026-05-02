@@ -79,7 +79,7 @@ static f32 djui_font_title_char_width(const char* text) {
 
 static const struct DjuiFont sDjuiFontTitle = {
     .charWidth            = 1.0f,
-    .charHeight           = 0.9f,
+    .charHeight           = 0.95f,
     .lineHeight           = 0.7f,
     .xOffset              = 0.0f,
     .yOffset              = 0.0f,
@@ -142,7 +142,7 @@ static f32 djui_font_hud_char_width(UNUSED const char* text) {
 
 static const struct DjuiFont sDjuiFontHud = {
     .charWidth            = 1.0f,
-    .charHeight           = 0.9f,
+    .charHeight           = 1.0f,
     .lineHeight           = 1.25f,
     .xOffset              = 0.0f,
     .yOffset              = 0.0f,
@@ -238,7 +238,7 @@ static f32 djui_font_custom_hud_char_width(const char* text) {
 
 static const struct DjuiFont sDjuiFontCustomHud = {
     .charWidth            = 1.0f,
-    .charHeight           = 0.9f,
+    .charHeight           = 0.7f,
     .lineHeight           = 0.7f,
     .xOffset              = -0.25f,
     .yOffset              = -10.25f,
@@ -252,7 +252,7 @@ static const struct DjuiFont sDjuiFontCustomHud = {
 
 static const struct DjuiFont sDjuiFontCustomHudRecolor = {
     .charWidth            = 1.0f,
-    .charHeight           = 0.9f,
+    .charHeight           = 0.7f,
     .lineHeight           = 0.7f,
     .xOffset              = -0.25f,
     .yOffset              = -10.25f,

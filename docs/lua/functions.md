@@ -25,6 +25,8 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -760,6 +762,9 @@
    - [djui_hud_get_color](functions-3.md#djui_hud_get_color)
    - [djui_hud_set_color](functions-3.md#djui_hud_set_color)
    - [djui_hud_reset_color](functions-3.md#djui_hud_reset_color)
+   - [djui_hud_get_text_color](functions-3.md#djui_hud_get_text_color)
+   - [djui_hud_set_text_color](functions-3.md#djui_hud_set_text_color)
+   - [djui_hud_reset_text_color](functions-3.md#djui_hud_reset_text_color)
    - [djui_hud_get_rotation](functions-3.md#djui_hud_get_rotation)
    - [djui_hud_set_rotation](functions-3.md#djui_hud_set_rotation)
    - [djui_hud_set_rotation_interpolated](functions-3.md#djui_hud_set_rotation_interpolated)
@@ -784,8 +789,6 @@
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
-   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -980,6 +983,7 @@
    - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
    - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
+   - [le_set_enabled](functions-4.md#le_set_enabled)
    - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
@@ -1396,6 +1400,7 @@
    - [mod_fs_file_erase](functions-5.md#mod_fs_file_erase)
    - [mod_fs_file_set_text_mode](functions-5.md#mod_fs_file_set_text_mode)
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
+   - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
@@ -1403,9 +1408,11 @@
 
 - mod_storage.h
    - [mod_storage_save](functions-5.md#mod_storage_save)
+   - [mod_storage_save_integer](functions-5.md#mod_storage_save_integer)
    - [mod_storage_save_number](functions-5.md#mod_storage_save_number)
    - [mod_storage_save_bool](functions-5.md#mod_storage_save_bool)
    - [mod_storage_load](functions-5.md#mod_storage_load)
+   - [mod_storage_load_integer](functions-5.md#mod_storage_load_integer)
    - [mod_storage_load_number](functions-5.md#mod_storage_load_number)
    - [mod_storage_load_bool](functions-5.md#mod_storage_load_bool)
    - [mod_storage_load_all](functions-5.md#mod_storage_load_all)
@@ -1609,7 +1616,6 @@
    - [cur_obj_check_if_at_animation_end](functions-6.md#cur_obj_check_if_at_animation_end)
    - [cur_obj_check_anim_frame](functions-6.md#cur_obj_check_anim_frame)
    - [cur_obj_check_anim_frame_in_range](functions-6.md#cur_obj_check_anim_frame_in_range)
-   - [cur_obj_check_frame_prior_current_frame](functions-6.md#cur_obj_check_frame_prior_current_frame)
    - [mario_is_in_air_action](functions-6.md#mario_is_in_air_action)
    - [mario_is_dive_sliding](functions-6.md#mario_is_dive_sliding)
    - [cur_obj_set_y_vel_and_animation](functions-6.md#cur_obj_set_y_vel_and_animation)
@@ -1828,6 +1834,7 @@
 - smlua_audio_utils.h
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
+   - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
    - [audio_stream_load](functions-6.md#audio_stream_load)
    - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
    - [audio_stream_play](functions-6.md#audio_stream_play)
@@ -2074,6 +2081,7 @@
    - [set_environment_region](functions-7.md#set_environment_region)
    - [mod_file_exists](functions-7.md#mod_file_exists)
    - [get_active_mod](functions-7.md#get_active_mod)
+   - [get_mod_files](functions-7.md#get_mod_files)
    - [set_window_title](functions-7.md#set_window_title)
    - [reset_window_title](functions-7.md#reset_window_title)
    - [get_os_name](functions-7.md#get_os_name)
@@ -2723,6 +2731,64 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

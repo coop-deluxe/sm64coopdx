@@ -8,6 +8,8 @@ void smlua_audio_utils_reset_all(void);
 bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData);
 /* |description|Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`|descriptionEnd| */
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char* m64Name);
+/* |description|Allocates a new sequence ID|descriptionEnd| */
+u8 smlua_audio_utils_allocate_sequence(void);
 
   ////////////////
  // mod sounds //
@@ -22,7 +24,10 @@ struct ModAudioSampleCopies {
 };
 
 struct ModAudio {
-    const char *filepath;
+    union {
+        const char *filepath;
+        const char *relativePath; // compatibility band-aid
+    };
     ma_sound sound;
     ma_decoder decoder;
     void *buffer;
@@ -31,6 +36,13 @@ struct ModAudio {
     bool isStream;
     f32 baseVolume;
     bool loaded;
+
+    PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
+    PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
+    PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
+    PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
+
+    PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
 
 /* |description|Loads an `audio` stream by `filename` (with extension)|descriptionEnd| */

@@ -94,6 +94,9 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
         _GfxData = New<GfxData>();
+        if (aAddToPack) {
+            _GfxData->mModIndex = PACK_MOD_INDEX;
+        }
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
                 case DATA_TYPE_LIGHT:           DynOS_Lights_Load    (_File, _GfxData); break;
@@ -262,9 +265,6 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             SysPath _Folder = fstring("%s/%s", aPackFolder.c_str(), _PackEnt->d_name);
             if (fs_sys_dir_exists(_Folder.c_str())) {
                 _GfxData->mModelIdentifier = 0;
-
-                // Remember the geo layout count
-                s32 prevGeoLayoutCount = _GfxData->mGeoLayouts.Count();
 
                 DynOS_Read_Source(_GfxData, fstring("%s/texture.inc.c", _Folder.c_str()));
                 DynOS_Read_Source(_GfxData, fstring("%s/model.inc.c", _Folder.c_str()));

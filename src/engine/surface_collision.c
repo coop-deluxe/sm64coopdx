@@ -12,6 +12,7 @@
 #include "game/hardcoded.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
+#include "pc/lua/smlua_hooks.h"
 
 Vec3f gFindWallDirection = { 0 };
 u8 gFindWallDirectionActive = false;
@@ -343,6 +344,9 @@ s32 find_wall_collisions(struct WallCollisionData *colData) {
     s32 numCollisions = 0;
     s16 x = colData->x;
     s16 z = colData->z;
+    f32 posX = colData->x;
+    f32 posY = colData->y;
+    f32 posZ = colData->z;
 
     colData->numWalls = 0;
 
@@ -370,6 +374,8 @@ s32 find_wall_collisions(struct WallCollisionData *colData) {
 
     // Increment the debug tracker.
     gNumCalls.wall += 1;
+
+    smlua_call_event_hooks(HOOK_ON_FIND_WALL_COLLISION, posX, posY, posZ, colData, &numCollisions);
 
     return numCollisions;
 }
@@ -544,6 +550,8 @@ f32 find_ceil(f32 posX, f32 posY, f32 posZ, RET struct Surface **pceil) {
     // Increment the debug tracker.
     gNumCalls.ceil += 1;
 
+    smlua_call_event_hooks(HOOK_ON_FIND_CEIL, posX, posY, posZ, pceil, &height);
+
     return height;
 }
 
@@ -572,8 +580,6 @@ f32 unused_obj_find_floor_height(struct Object *obj) {
  * Basically a local variable that passes through floor geo info.
  */
 struct FloorGeometry sFloorGeo;
-
-static u8 unused8038BE50[0x40];
 
 /**
  * Return the floor height underneath (xPos, yPos, zPos) and populate `floorGeo`
@@ -623,7 +629,7 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
         if (surf == NULL) { break; }
         surfaceNode = surfaceNode->next;
         interpolate = gInterpolatingSurfaces;
-        
+
         if (surf->flags & SURFACE_FLAG_INTANGIBLE) { continue; }
         if (gCheckingSurfaceCollisionsForObject != NULL) {
             if (surf->object != gCheckingSurfaceCollisionsForObject) {
@@ -882,6 +888,8 @@ f32 find_floor(f32 xPos, f32 yPos, f32 zPos, RET struct Surface **pfloor) {
     // Increment the debug tracker.
     gNumCalls.floor += 1;
 
+    smlua_call_event_hooks(HOOK_ON_FIND_FLOOR, xPos, yPos, zPos, pfloor, &height);
+
     return height;
 }
 
@@ -921,6 +929,8 @@ f32 find_water_level(f32 x, f32 z) {
             p++;
         }
     }
+
+    smlua_call_event_hooks(HOOK_ON_FIND_WATER_LEVEL, x, z, &waterLevel);
 
     return waterLevel;
 }
@@ -962,6 +972,8 @@ f32 find_poison_gas_level(f32 x, f32 z) {
             p += 6;
         }
     }
+
+    smlua_call_event_hooks(HOOK_ON_FIND_POISON_GAS_LEVEL, x, z, &gasLevel);
 
     return gasLevel;
 }
@@ -1227,6 +1239,7 @@ void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Ve
     if (normalized_dir[1] >= 1.0f || normalized_dir[1] <= -1.0f)
     {
         find_surface_on_ray_cell(cellX, cellZ, orig, normalized_dir, dir_length, hit_surface, hit_pos, &max_length);
+        smlua_call_event_hooks(HOOK_ON_FIND_SURFACE_ON_RAY, orig, dir, hit_surface, hit_pos);
         return;
     }
 
@@ -1249,4 +1262,6 @@ void find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Ve
         cellX = (s16)fCellX;
         cellZ = (s16)fCellZ;
     }
+
+    smlua_call_event_hooks(HOOK_ON_FIND_SURFACE_ON_RAY, orig, dir, hit_surface, hit_pos);
 }

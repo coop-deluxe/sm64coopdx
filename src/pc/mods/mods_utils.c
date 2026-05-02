@@ -144,7 +144,7 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile) {
     char* p = path;
     u16 index = 0;
     while (*p != '\0') {
-        if (*p == '/' || *p == '\\') {
+        if (*p == *PATH_SEPARATOR || *p == *PATH_SEPARATOR_ALT) {
             if (snprintf(tmpPath, index + 1, "%s", path) < 0) { }
             if (!fs_sys_dir_exists(tmpPath)) {
                 fs_sys_mkdir(tmpPath);
@@ -210,11 +210,9 @@ void normalize_path(char* path) {
     // replace slashes
     char* p = path;
     while (*p) {
-#if defined(_WIN32)
-        if (*p == '/') { *p = '\\'; }
-#else
-        if (*p == '\\') { *p = '/'; }
-#endif
+        if (*p == *PATH_SEPARATOR_ALT) {
+            *p = *PATH_SEPARATOR;
+        }
         p++;
     }
 }
@@ -227,7 +225,7 @@ char* path_basename(char* path) {
     char* base = path;
     while (*path != '\0') {
         if (*(path + 1) != '\0') {
-            if (*path == '\\' || *path == '/') {
+            if (*path == *PATH_SEPARATOR || *path == *PATH_SEPARATOR_ALT) {
                 base = path + 1;
             }
         }
@@ -251,7 +249,7 @@ void path_get_folder(char* path, char* outpath) {
 int path_depth(const char* path) {
     int depth = 0;
     for (; *path; path++) {
-        if (*path == '/' || *path == '\\') {
+        if (*path == *PATH_SEPARATOR || *path == *PATH_SEPARATOR_ALT) {
             depth++;
         }
     }
@@ -262,7 +260,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     char combined[SYS_MAX_PATH] = "";
 
     // If path is absolute, copy as is. Otherwise, combine base and relative path
-    if (path[0] == '/' || path[0] == '\\') {
+    if (path[0] == *PATH_SEPARATOR || path[0] == *PATH_SEPARATOR_ALT) {
         snprintf(combined, sizeof(combined), "%s", path);
     } else {
         snprintf(combined, sizeof(combined), "%s/%s", base, path);
@@ -272,7 +270,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     int tokenCount = 0;
 
     // Tokenize path by separators
-    char* token = strtok(combined, "/\\");
+    char* token = strtok(combined, PATH_SEPARATOR PATH_SEPARATOR_ALT);
     while (token && tokenCount < 64) {
         if (strcmp(token, "..") == 0) {
             // Pop last token to go up a directory
@@ -283,7 +281,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
             tokens[tokenCount++] = token;
         }
 
-        token = strtok(NULL, "/\\");
+        token = strtok(NULL, PATH_SEPARATOR PATH_SEPARATOR_ALT);
     }
 
     output[0] = '\0';
@@ -291,7 +289,7 @@ void resolve_relative_path(const char* base, const char* path, char* output) {
     // Build output path from tokens
     for (int i = 0; i < tokenCount; i++) {
         if (i > 0) {
-            strncat(output, "/", SYS_MAX_PATH - strlen(output) - 1);
+            strncat(output, PATH_SEPARATOR, SYS_MAX_PATH - strlen(output) - 1);
         }
         strncat(output, tokens[i], SYS_MAX_PATH - strlen(output) - 1);
     }
@@ -308,8 +306,8 @@ bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     if (!fs_sys_filename_is_portable(dir->d_name)) { return false; }
 
     // skip anything that contains \ or /
-    if (strchr(dir->d_name, '/') != NULL)  { return false; }
-    if (strchr(dir->d_name, '\\') != NULL) { return false; }
+    if (strchr(dir->d_name, *PATH_SEPARATOR) != NULL) { return false; }
+    if (strchr(dir->d_name, *PATH_SEPARATOR_ALT) != NULL) { return false; }
 
     // skip anything that starts with .
     if (dir->d_name[0] == '.') { return false; }

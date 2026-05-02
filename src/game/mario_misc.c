@@ -334,13 +334,13 @@ static Gfx *make_gfx_mario_alpha(struct GraphNodeGenerated *node, s16 alpha) {
 }
 
 // Calculates if the processing geo is a mirror mario
-static s8 geo_get_processing_mirror_mario_index() {
-    ptrdiff_t ptrDiff = (struct GraphNodeObject *) gCurGraphNodeProcessingObject - gMirrorMario;
+static s8 geo_get_processing_mirror_mario_index(struct Object *obj) {
+    ptrdiff_t ptrDiff = (struct GraphNodeObject *) obj - gMirrorMario;
     return (ptrDiff >= 0 && ptrDiff < MAX_PLAYERS) ? ptrDiff : -1;
 }
 
 static u8 geo_get_processing_object_index(void) {
-    s8 index = geo_get_processing_mirror_mario_index();
+    s8 index = geo_get_processing_mirror_mario_index(gCurGraphNodeProcessingObject);
     if (index != -1) {
         return index;
     }
@@ -351,19 +351,19 @@ static u8 geo_get_processing_object_index(void) {
     return (index >= MAX_PLAYERS) ? 0 : index;
 }
 
-s8 geo_get_processing_mario_index(void) {
-    if (gCurGraphNodeProcessingObject == NULL) { return -1; }
+s8 geo_get_processing_mario_index(struct Object *obj) {
+    if (obj == NULL) { return -1; }
 
-    s8 index = geo_get_processing_mirror_mario_index();
+    s8 index = geo_get_processing_mirror_mario_index(obj);
     if (index != -1) {
         return index;
     }
 
-    if (gCurGraphNodeProcessingObject->behavior != bhvMario) {
+    if (obj->behavior != bhvMario) {
         return -1;
     }
 
-    index = gCurGraphNodeProcessingObject->oBehParams - 1;
+    index = obj->oBehParams - 1;
     return (index >= MAX_PLAYERS) ? -1 : index;
 }
 
@@ -890,10 +890,6 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     // Retrieve function ref
     gSmLuaConvertSuccess = true;
     LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
-    if (!gSmLuaConvertSuccess) {
-        gSmLuaConvertSuccess = true;
-        funcRef = smlua_get_any_function_mod_variable(funcStr);
-    }
     if (!gSmLuaConvertSuccess || funcRef == 0) {
         LOG_LUA("Failed to call lua geo function, could not find lua function '%s'", funcStr);
         return NULL;
@@ -922,6 +918,25 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     // Call the callback
     if (0 != smlua_call_hook(L, 2, 0, 0, mod, modFile)) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
+    }
+
+    return NULL;
+}
+
+Gfx *geo_switch_character_type(s32 callContext, struct GraphNode *node, UNUSED void *context) {
+    struct GraphNodeSwitchCase *switchCase;
+    
+    if (callContext == GEO_CONTEXT_RENDER) {
+        // move to a local var because GraphNodes are passed in all geo functions.
+        // cast the pointer.
+        switchCase = (struct GraphNodeSwitchCase *) node;
+
+        // pass in -1 to always use local mario
+        // otherwise use the mariostate asssociated with the object
+        struct MarioState* marioState = switchCase->parameter == -1 ? gMarioState : geo_get_mario_state();
+
+        // assign the case number for execution.
+        switchCase->selectedCase = marioState->character->type;
     }
 
     return NULL;

@@ -70,6 +70,7 @@ exclude_constants = {
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
     "src/engine/surface_load.h": [ "NUM_CELLS" ],
+    "src/pc/network/version.h": [ "VERSION_OFFSET" ],
 }
 
 include_constants = {

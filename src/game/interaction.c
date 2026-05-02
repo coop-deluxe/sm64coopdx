@@ -308,7 +308,7 @@ u32 attack_object(struct MarioState* m, struct Object *o, s32 interaction) {
 
 void mario_stop_riding_object(struct MarioState *m) {
     if (!m || m->riddenObj == NULL || m->playerIndex != 0) { return; }
-    
+
     m->riddenObj->oInteractStatus = INT_STATUS_STOP_RIDING;
     if (m->riddenObj->oSyncID != 0) {
         network_send_object_reliability(m->riddenObj, TRUE);
@@ -411,7 +411,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (!does_mario_have_normal_cap_on_head(m) || does_mario_have_blown_cap(m)) { return; }
-    
+
     m->cap = SAVE_FLAG_CAP_ON_MR_BLIZZARD;
 
     m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
@@ -612,7 +612,7 @@ void hit_object_from_below(struct MarioState *m, UNUSED struct Object *o) {
     if (m->playerIndex == 0) { set_camera_shake_from_hit(SHAKE_HIT_FROM_BELOW); }
 }
 
-static u32 unused_determine_knockback_action(struct MarioState *m) {
+UNUSED static u32 unused_determine_knockback_action(struct MarioState *m) {
     if (!m) { return 0; }
     u32 bonkAction;
     s16 angleToObject = mario_obj_angle_to_object(m, m->interactObj);
@@ -941,7 +941,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
 
     if (m->health >= 0x100) {
 
-        if (gServerSettings.stayInLevelAfterStar != 2) {
+        if (gServerSettings.stayInLevelAfterStar != STAR_NON_STOP) {
             mario_stop_riding_and_holding(m);
         }
 
@@ -1015,7 +1015,7 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         }
         save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 
-        if (noExit && gServerSettings.stayInLevelAfterStar == 2) {
+        if (noExit && gServerSettings.stayInLevelAfterStar == STAR_NON_STOP) {
             return TRUE;
         }
 
@@ -1516,7 +1516,7 @@ u32 interact_player_pvp(struct MarioState* attacker, struct MarioState* victim) 
     // see if it was an attack
     u32 interaction = determine_interaction(attacker, cVictim->marioObj);
     // Specfically override jump kicks to prevent low damage and low knockback kicks
-    if (attacker->action == ACT_JUMP_KICK) { interaction = INT_KICK; }
+    if (attacker->action == ACT_JUMP_KICK && attacker->flags & MARIO_KICKING) { interaction = INT_KICK; }
     // Allow rollouts to attack
     else if (PLAYER_IN_ROLLOUT_FLIP(attacker)) { interaction = INT_HIT_FROM_BELOW; }
     if (!(interaction & INT_ANY_ATTACK) || (interaction & INT_HIT_FROM_ABOVE) || !passes_pvp_interaction_checks(attacker, cVictim)) {
@@ -1833,7 +1833,7 @@ u32 interact_shock(struct MarioState *m, UNUSED u32 interactType, struct Object 
     return FALSE;
 }
 
-static u32 interact_stub(UNUSED struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
+UNUSED static u32 interact_stub(UNUSED struct MarioState *m, UNUSED u32 interactType, struct Object *o) {
     if (!m || !o) { return FALSE; }
     if (!(o->oInteractionSubtype & INT_SUBTYPE_DELAY_INVINCIBILITY)) {
         sDelayInvincTimer = TRUE;
@@ -2164,7 +2164,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
                 capTime = gLevelValues.wingCapDuration;
                 capMusic = SEQUENCE_ARGS(4, gLevelValues.wingCapSequence);
                 break;
-            
+
             case MARIO_NORMAL_CAP:
                 m->cap = 0;
                 break;
@@ -2445,7 +2445,7 @@ void check_death_barrier(struct MarioState *m) {
         smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
         if (!allowDeath) { return; }
 
-        if (mario_can_bubble(m)) {
+        if ((mario_can_bubble(m) && m->numLives > 0)) {
             switch (gCurrCourseNum) {
                 case COURSE_COTMC:    // (20) Cavern of the Metal Cap
                 case COURSE_TOTWC:    // (21) Tower of the Wing Cap

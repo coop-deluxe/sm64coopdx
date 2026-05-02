@@ -382,8 +382,10 @@ static void djui_text_render_line(struct DjuiText* text, char* c1, char* c2, f32
     for (char* c = c1; c < c2;) {
         struct DjuiColor parsedColor;
         if (djui_text_parse_color(c, c2, true, &sDjuiTextDefaultColor, &c, &parsedColor)) {
-            gDPSetEnvColor(gDisplayListHead++, parsedColor.r, parsedColor.g, parsedColor.b, parsedColor.a);
-            sDjuiTextCurrentColor = parsedColor;
+            sDjuiTextCurrentColor.r = parsedColor.r;
+            sDjuiTextCurrentColor.g = parsedColor.g;
+            sDjuiTextCurrentColor.b = parsedColor.b;
+            gDPSetEnvColor(gDisplayListHead++, sDjuiTextCurrentColor.r, sDjuiTextCurrentColor.g, sDjuiTextCurrentColor.b, sDjuiTextCurrentColor.a);
             continue;
         }
 
@@ -450,6 +452,7 @@ static bool djui_text_render(struct DjuiBase* base) {
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
 
     // set color
+    gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
     sDjuiTextCurrentColor = base->color;
 
