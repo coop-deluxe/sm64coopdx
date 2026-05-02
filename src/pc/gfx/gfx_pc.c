@@ -121,7 +121,16 @@ Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
 
 int gShaderFlags[SHADER_FLAG_MAX] = { 0 };
-f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = { 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 8.0f, 1.0f };
+f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = {
+    [SHADER_FLAG_HUE] = 0.0f,
+    [SHADER_FLAG_SATURATION] = 1.0f,
+    [SHADER_FLAG_BRIGHTNESS] = 1.0f, 
+    [SHADER_FLAG_CONTRAST] = 1.0f,
+    [SHADER_FLAG_EXPOSURE] = 1.0f,
+    [SHADER_FLAG_DITHERING] = 0.0f,
+    [SHADER_FLAG_POSTERIZATION] = 8.0f,
+    [SHADER_FLAG_SCANLINES] = 1.0f
+};
 f32 gShaderFlagValues[SHADER_FLAG_MAX] = { 0 };
 bool gShaderFlagsEnabled = true;
 

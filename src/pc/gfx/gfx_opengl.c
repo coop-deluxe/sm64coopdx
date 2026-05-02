@@ -399,6 +399,28 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "    }");
         append_line(fs_buf, &fs_len, "    return brightness < limit ? 0.0 : 1.0;");
         append_line(fs_buf, &fs_len, "}");
+    
+        append_line(fs_buf, &fs_len, "vec3 rgb2hsv(vec3 c) {");
+        append_line(fs_buf, &fs_len, "    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);");
+        append_line(fs_buf, &fs_len, "    vec4 p = mix(vec4(c.bg, K.wz),");
+        append_line(fs_buf, &fs_len, "                 vec4(c.gb, K.xy),");
+        append_line(fs_buf, &fs_len, "                 step(c.b, c.g));");
+        append_line(fs_buf, &fs_len, "    vec4 q = mix(vec4(p.xyw, c.r),");
+        append_line(fs_buf, &fs_len, "                 vec4(c.r, p.yzx),");
+        append_line(fs_buf, &fs_len, "                 step(p.x, c.r));");
+        append_line(fs_buf, &fs_len, "    float d = q.x - min(q.w, q.y);");
+        append_line(fs_buf, &fs_len, "    float e = 1.0e-10;");
+        append_line(fs_buf, &fs_len, "    return vec3(");
+        append_line(fs_buf, &fs_len, "        abs(q.z + (q.w - q.y) / (6.0 * d + e)), // hue");
+        append_line(fs_buf, &fs_len, "        d / (q.x + e),                          // saturation");
+        append_line(fs_buf, &fs_len, "        q.x                                     // value");
+        append_line(fs_buf, &fs_len, "    );");
+        append_line(fs_buf, &fs_len, "}");
+        append_line(fs_buf, &fs_len, "");
+        append_line(fs_buf, &fs_len, "vec3 hsv2rgb(vec3 c) {");
+        append_line(fs_buf, &fs_len, "    vec3 p = abs(fract(c.xxx + vec3(0.0, 2.0/3.0, 1.0/3.0)) * 6.0 - 3.0);");
+        append_line(fs_buf, &fs_len, "    return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);");
+        append_line(fs_buf, &fs_len, "}");
     }
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
@@ -472,10 +494,10 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     if (world_geometry) {
         // hue
         append_line(fs_buf, &fs_len, "if (uShaderFlags[0] == 1) {");
-        append_line(fs_buf, &fs_len, "const vec3 k = vec3(0.57735, 0.57735, 0.57735);");
-        append_line(fs_buf, &fs_len, "float sinAngle = sin(uShaderFlagValues[0]);");
-        append_line(fs_buf, &fs_len, "float cosAngle = cos(uShaderFlagValues[0]);");
-        append_line(fs_buf, &fs_len, "texel.rgb = texel.rgb * cosAngle * cross(k, texel.rgb) * sinAngle + k * dot(k, texel.rgb) * (1.0 - cosAngle);");
+        append_line(fs_buf, &fs_len, "vec3 hsv = rgb2hsv(texel.rgb);");
+        append_line(fs_buf, &fs_len, "hsv.x = fract(hsv.x + uShaderFlagValues[0]);");
+        append_line(fs_buf, &fs_len, "vec3 finalColor = hsv2rgb(hsv);");
+        append_line(fs_buf, &fs_len, "texel.rgb = finalColor;");
         append_line(fs_buf, &fs_len, "}");
 
         // saturation
@@ -492,12 +514,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
         // contrast
         append_line(fs_buf, &fs_len, "if (uShaderFlags[3] == 1) {");
-        append_line(fs_buf, &fs_len, "texel.rgb = 0.5 + (1.0 + uShaderFlagValues[3]) * (texel.rgb - 0.5);");
+        append_line(fs_buf, &fs_len, "texel.rgb = 0.5 + uShaderFlagValues[3] * (texel.rgb - 0.5);");
         append_line(fs_buf, &fs_len, "}");
 
         // exposure
         append_line(fs_buf, &fs_len, "if (uShaderFlags[4] == 1) {");
-        append_line(fs_buf, &fs_len, "texel.rgb = texel.rgb + uShaderFlagValues[4] * texel.rgb + texel.rgb;");
+        append_line(fs_buf, &fs_len, "texel.rgb = texel.rgb + (uShaderFlagValues[4] - 2) * texel.rgb + texel.rgb;");
         append_line(fs_buf, &fs_len, "}");
 
         // dithering
