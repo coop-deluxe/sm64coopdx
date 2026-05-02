@@ -34,7 +34,17 @@ extern s32 gNumStaticSurfaces;
 extern s32 gNumSOCSurfaceNodes;
 extern s32 gNumSOCSurfaces;
 
+#define SURFACE_POOL_STATIC  0
+#define SURFACE_POOL_DYNAMIC 1
+#define SURFACE_POOL_SOC     2
+
 void alloc_surface_pools(void);
+struct Surface *alloc_surface(s32 poolType);
+void add_surface(struct Surface *surface);
+void add_surface_without_hook(struct Surface *surface);
+void remove_surface_from_partition(struct Surface *surface);
+void delete_surface(struct Surface *surface);
+bool swap_and_pop_surface_pool(s32 poolType, struct Surface *surface);
 
 u32 get_area_terrain_size(s16 *data);
 
@@ -54,6 +64,8 @@ struct StaticObjectCollision *load_static_object_collision();
 void toggle_static_object_collision(struct StaticObjectCollision *col, bool tangible);
 /* |description|Gets a surface corresponding to `index` from the static object collision|descriptionEnd| */
 struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index);
+/* |description|Removes all surfaces belonging to a static object collision and reclaims the SOC metadata|descriptionEnd| */
+void remove_static_object_collision(struct StaticObjectCollision *col);
 /* |description|Gets a surface corresponding to `index` from the surface pool buffer|descriptionEnd| */
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index);
 /* |description|Checks if a surface has force|descriptionEnd| */

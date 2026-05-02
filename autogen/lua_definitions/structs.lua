@@ -2240,13 +2240,13 @@
 --- @field public dialog6 integer
 
 --- @class StaticObjectCollision
---- @field public index integer
 --- @field public length integer
 
 --- @class Surface
 --- @field public type integer
 --- @field public flags integer
 --- @field public room integer
+--- @field public poolType integer
 --- @field public force integer
 --- @field public lowerY integer
 --- @field public upperY integer
@@ -2259,6 +2259,7 @@
 --- @field public normal Vec3f
 --- @field public originOffset number
 --- @field public modifiedTimestamp integer
+--- @field public socId integer
 --- @field public object Object
 
 --- @class TextureInfo
