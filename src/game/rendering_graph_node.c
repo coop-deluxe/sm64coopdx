@@ -383,14 +383,6 @@ void patch_mtx_interpolated(f32 delta) {
 /**
  * Graph node interpolation
  */
-
-struct GraphNodeInterpData {
-    Vec3s translation;
-    Vec3s rotation;
-    Vec3f scale;
-    u32 timestamp;
-};
-
 static void *sGraphNodeInterpDataMap = NULL;
 
 struct GraphNodeInterpData *geo_get_interp_data(void *node, struct GraphNodeObject *obj) {
