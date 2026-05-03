@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#if defined(_WIN32)
 
 #include <cstdio>
 

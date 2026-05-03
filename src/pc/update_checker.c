@@ -1,5 +1,5 @@
 #include <stdio.h>
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #include <windows.h>
 #include <wininet.h>
 #else
@@ -104,7 +104,7 @@ void parse_version(const char *data) {
 void get_version_remote(void) {
     sRemoteVersionStr[0] = '\0';
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
     char buffer[0xFF] = { 0 };
 
     // initialize WinINet

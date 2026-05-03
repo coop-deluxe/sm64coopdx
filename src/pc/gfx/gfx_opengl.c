@@ -1,5 +1,3 @@
-#ifdef RAPI_GL
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,18 +19,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#ifdef WAPI_SDL2
-# include <SDL2/SDL.h>
-# ifdef USE_GLES
-#  include <SDL2/SDL_opengles2.h>
-# else
-#  include <SDL2/SDL_opengl.h>
-# endif
-#elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
+#include <SDL2/SDL.h>
+#ifdef USE_GLES
+#include <SDL2/SDL_opengles2.h>
+#else
+#include <SDL2/SDL_opengl.h>
 #endif
 
 #include "../platform.h"
@@ -745,6 +736,10 @@ static void gfx_opengl_end_frame(void) {
 static void gfx_opengl_finish_render(void) {
 }
 
+static const char* gfx_opengl_get_name(void) {
+    return "OpenGL";
+}
+
 static void gfx_opengl_shutdown(void) {
 }
 
@@ -771,7 +766,6 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_start_frame,
     gfx_opengl_end_frame,
     gfx_opengl_finish_render,
+    gfx_opengl_get_name,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL

@@ -9,7 +9,7 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #include <windows.h>
 #endif
 
@@ -124,7 +124,7 @@ bool mods_generate_remote_base_path(void) {
     }
     if (!fs_sys_dir_exists(tmpPath)) {
         fs_sys_mkdir(tmpPath);
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
         SetFileAttributesA(tmpPath, FILE_ATTRIBUTE_HIDDEN);
 #endif
     }

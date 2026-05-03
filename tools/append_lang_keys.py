@@ -1,7 +1,8 @@
 import os
 import sys
 
-# I can't stand it anymore, editing like 9 different INI files and finding the right spot just to add 1 line and also translating them all at the same time too, I'm making a script for this!
+# I can't stand it anymore, editing like 9 different INI files and finding the right spot just to add 1 line and also translating them all at the same time too.
+# I'm making a script for this!
 
 def add_new_key(ini_path, section, search_key, new_key):
     new_value = input(f"{new_key} for {os.path.basename(ini_path)}: ")

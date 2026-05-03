@@ -1,4 +1,4 @@
-#ifdef WAPI_DXGI
+#if defined(_WIN32)
 
 #include <stdint.h>
 #include <math.h>

@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#if defined(_WIN32)
 
 #include <cstdio>
 #include <vector>
@@ -712,6 +712,10 @@ static void gfx_d3d11_start_frame(void) {
 static void gfx_d3d11_end_frame(void) {
 }
 
+static const char* gfx_d3d11_get_name(void) {
+    return "DirectX 11";
+}
+
 static void gfx_d3d11_finish_render(void) {
 }
 
@@ -739,7 +743,8 @@ struct GfxRenderingAPI gfx_direct3d11_api = {
     gfx_d3d11_on_resize,
     gfx_d3d11_start_frame,
     gfx_d3d11_end_frame,
-    gfx_d3d11_finish_render
+    gfx_d3d11_finish_render,
+    gfx_d3d11_get_name,
 };
 
 #endif
