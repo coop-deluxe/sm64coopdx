@@ -222,7 +222,9 @@ static void select_graphics_backend(void) {
     }
 
     int backend = configGraphicsBackend;
+#if defined(_WIN32)
     if (gCLIOpts.backend != -1) { backend = gCLIOpts.backend; }
+#endif
 
     switch (backend) {
         case GAPI_GL:
