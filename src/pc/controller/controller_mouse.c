@@ -5,10 +5,12 @@
 
 #include <SDL2/SDL.h>
 
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 extern HWND gfx_dxgi_get_h_wnd(void);
 static bool mouse_relative_prev_cursor_state;
+#endif
 
 bool mouse_init_ok;
 
