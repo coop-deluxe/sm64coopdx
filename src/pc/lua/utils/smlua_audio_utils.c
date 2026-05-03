@@ -369,6 +369,18 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     return audio;
 }
 
+static f32 get_audio_volume(struct ModAudio* audio) {
+    f32 volume = audio->baseVolume;
+    if (audio->volChannel == MOD_AUDIO_CHANNEL_MUSIC) {
+        volume *= (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_SFX) {
+        volume *= (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_ENV) {
+        volume *= (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
+    }
+    return gMasterVolume * volume;
+}
+
 struct ModAudio* audio_stream_load(const char* filename) {
     return audio_load_internal(filename, true);
 }
