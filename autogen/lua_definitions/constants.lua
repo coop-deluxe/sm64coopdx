@@ -11200,6 +11200,9 @@ ANIM_FLAG_7 = (1 << 7)
 ANIM_FLAG_BONE_TRANS = (1 << 8)
 
 --- @type integer
+ANIM_FLAG_BONE_SCALE = (1 << 9)
+
+--- @type integer
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer

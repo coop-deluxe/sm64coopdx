@@ -72,9 +72,10 @@ void DynOS_Anim_Swap(void *aPtr) {
             return;
         }
 
-        AnimSwapFrame *frame = &sAnimSwapFrames[sCurrAnimSwapIndex++];
+        AnimSwapFrame *frame = &sAnimSwapFrames[sCurrAnimSwapIndex];
         frame->obj = _Object;
         frame->defaultAnim = _Object->header.gfx.animInfo.curAnim;
+        sCurrAnimSwapIndex++;
 
         // ActorGfx data
         ActorGfx* _ActorGfx = DynOS_Actor_GetActorGfx(_Object->header.gfx.sharedChild);
@@ -134,10 +135,10 @@ void DynOS_Anim_Swap(void *aPtr) {
 
     // Restore the default animation
     } else {
-        AnimSwapFrame *frame = &sAnimSwapFrames[sCurrAnimSwapIndex - 1];
+        sCurrAnimSwapIndex--;
+        AnimSwapFrame *frame = &sAnimSwapFrames[sCurrAnimSwapIndex];
         _Object->header.gfx.animInfo.curAnim = frame->defaultAnim;
         frame->obj = NULL;
         frame->defaultAnim = NULL;
-        sCurrAnimSwapIndex--;
     }
 }

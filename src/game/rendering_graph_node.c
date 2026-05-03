@@ -1131,7 +1131,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     // current frame
     vec3s_copy(rotation, gVec3sZero);
     vec3s_to_vec3f(translation, node->translation);
-    vec3f_set(scale, 1.0f, 1.0f, 1.0f);
+    vec3f_set(scale, gVec3fOne);
     anim_process(translation, rotation, scale, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
     mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
     mtxf_scale_vec3f(matrix, matrix, scale);
@@ -1145,7 +1145,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
             node->translation
         );
         vec3s_copy(rotation, gVec3sZero);
-        vec3f_set(scale, 1.0f, 1.0f, 1.0f);
+        vec3f_set(scale, gVec3fOne);
         anim_process(translation, rotation, scale, &animType, gPrevAnimFrame, &animAttribute);
         mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
         mtxf_scale_vec3f(matrix, matrix, scale);
