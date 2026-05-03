@@ -437,12 +437,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     if (world_geometry) {
-        char line[64];
-        snprintf(line, 64, "uniform int uShaderFlags[%d];", SHADER_FLAG_MAX);
-        append_line(fs_buf, &fs_len, line);
-        
-        snprintf(line, 64, "uniform float uShaderFlagValues[%d];", SHADER_FLAG_MAX);
-        append_line(fs_buf, &fs_len, line);
+        fs_len += sprintf(fs_buf + fs_len, "uniform int uShaderFlags[%d];\n", SHADER_FLAG_MAX);
+        fs_len += sprintf(fs_buf + fs_len, "uniform float uShaderFlagValues[%d];\n", SHADER_FLAG_MAX);
     }
 
     append_line(fs_buf, &fs_len, "uniform int uFilter;");
