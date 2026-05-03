@@ -1212,6 +1212,7 @@
 --- @field public looping boolean
 --- @field public frequency number
 --- @field public volume number
+--- @field public channel integer
 
 --- @class ModFs
 --- @field public mod Mod

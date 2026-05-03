@@ -57,6 +57,7 @@ in_files = [
     "include/PR/gbi_extension.h",
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
 ]
 
 exclude_constants = {
@@ -78,6 +79,7 @@ include_constants = {
     "include/geo_commands.h": [ "BACKGROUND" ],
     "include/level_commands.h": [ "WARP_CHECKPOINT", "WARP_NO_CHECKPOINT" ],
     "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
+    "src/pc/lua/utils/smlua_audio_utils.h": ["MOD_AUDIO_CHANNEL"],
     "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
     "include/PR/gbi.h": [
         "^G_NOOP$",

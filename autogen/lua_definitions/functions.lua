@@ -10334,6 +10334,20 @@ function audio_stream_set_volume(audio, volume)
     -- ...
 end
 
+--- @param audio ModAudio
+--- @return integer
+--- Gets the volume channel of an `audio` stream
+function audio_stream_get_volume_channel(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param channel integer
+--- Sets the volume channel of an `audio` stream
+function audio_stream_set_volume_channel(audio, channel)
+    -- ...
+end
+
 --- @param filename string
 --- @return ModAudio
 --- Loads an `audio` sample
