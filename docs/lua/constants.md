@@ -79,6 +79,7 @@
 - [seq_ids.h](#seq_idsh)
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
+- [smlua_audio_utils.h](#smlua_audio_utilsh)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
     - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
@@ -3486,6 +3487,16 @@
 
 <br />
 
+## [smlua_audio_utils.h](#smlua_audio_utils.h)
+- MOD_AUDIO_CHANNEL_MASTER
+- MOD_AUDIO_CHANNEL_MUSIC
+- MOD_AUDIO_CHANNEL_SFX
+- MOD_AUDIO_CHANNEL_ENV
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_hooks.h](#smlua_hooks.h)
 
 ### [enum LuaHookedEventType](#LuaHookedEventType)
@@ -4719,6 +4730,7 @@
 - ANIM_FLAG_6
 - ANIM_FLAG_7
 - ANIM_FLAG_BONE_TRANS
+- ANIM_FLAG_BONE_SCALE
 - OBJECT_MAX_BHV_STACK
 - OBJECT_NUM_REGULAR_FIELDS
 - OBJECT_NUM_CUSTOM_FIELDS

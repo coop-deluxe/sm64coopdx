@@ -1494,18 +1494,19 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "size",                 LVT_U64,      offsetof(struct Mod, size),                 true, LOT_NONE },
 };
 
-#define LUA_MOD_AUDIO_FIELD_COUNT 10
+#define LUA_MOD_AUDIO_FIELD_COUNT 11
 static struct LuaObjectField sModAudioFields[LUA_MOD_AUDIO_FIELD_COUNT] = {
-    { "baseVolume",   LVT_F32,      offsetof(struct ModAudio, baseVolume),   false, LOT_NONE },
-    { "file",         LVT_PROPERTY, .get = "return_self"                                     },
-    { "filepath",     LVT_STRING_P, offsetof(struct ModAudio, filepath),     true,  LOT_NONE },
-    { "frequency",    LVT_PROPERTY, .get = "audio_stream_get_frequency",     .set = "audio_stream_set_frequency" },
-    { "isStream",     LVT_BOOL,     offsetof(struct ModAudio, isStream),     true,  LOT_NONE },
-    { "loaded",       LVT_BOOL,     offsetof(struct ModAudio, loaded),       true,  LOT_NONE },
-    { "looping",      LVT_PROPERTY, .get = "audio_stream_get_looping",       .set = "audio_stream_set_looping" },
-    { "position",     LVT_PROPERTY, .get = "audio_stream_get_position",      .set = "audio_stream_set_position" },
-    { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath), true,  LOT_NONE },
-    { "volume",       LVT_PROPERTY, .get = "audio_stream_get_volume",        .set = "audio_stream_set_volume" },
+    { "baseVolume",   LVT_F32,      offsetof(struct ModAudio, baseVolume),    false, LOT_NONE },
+    { "channel",      LVT_PROPERTY, .get = "audio_stream_get_volume_channel", .set = "audio_stream_set_volume_channel" },
+    { "file",         LVT_PROPERTY, .get = "return_self"                                      },
+    { "filepath",     LVT_STRING_P, offsetof(struct ModAudio, filepath),      true,  LOT_NONE },
+    { "frequency",    LVT_PROPERTY, .get = "audio_stream_get_frequency",      .set = "audio_stream_set_frequency" },
+    { "isStream",     LVT_BOOL,     offsetof(struct ModAudio, isStream),      true,  LOT_NONE },
+    { "loaded",       LVT_BOOL,     offsetof(struct ModAudio, loaded),        true,  LOT_NONE },
+    { "looping",      LVT_PROPERTY, .get = "audio_stream_get_looping",        .set = "audio_stream_set_looping" },
+    { "position",     LVT_PROPERTY, .get = "audio_stream_get_position",       .set = "audio_stream_set_position" },
+    { "relativePath", LVT_STRING_P, offsetof(struct ModAudio, relativePath),  true,  LOT_NONE },
+    { "volume",       LVT_PROPERTY, .get = "audio_stream_get_volume",         .set = "audio_stream_set_volume" },
 };
 
 #define LUA_MOD_FS_FIELD_COUNT 15

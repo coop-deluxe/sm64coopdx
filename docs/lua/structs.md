@@ -1768,6 +1768,7 @@
 | looping | `boolean` |  |
 | frequency | `number` |  |
 | volume | `number` |  |
+| channel | `integer` |  |
 
 [:arrow_up_small:](#)
 

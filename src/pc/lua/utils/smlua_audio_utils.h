@@ -15,6 +15,11 @@ u8 smlua_audio_utils_allocate_sequence(void);
  // mod sounds //
 ////////////////
 
+#define MOD_AUDIO_CHANNEL_MASTER 0
+#define MOD_AUDIO_CHANNEL_MUSIC 1
+#define MOD_AUDIO_CHANNEL_SFX 2
+#define MOD_AUDIO_CHANNEL_ENV 3
+
 struct ModAudioSampleCopies {
     ma_sound sound;
     ma_decoder decoder;
@@ -35,12 +40,14 @@ struct ModAudio {
     struct ModAudioSampleCopies* sampleCopiesTail;
     bool isStream;
     f32 baseVolume;
+    u8 volChannel;
     bool loaded;
 
     PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
     PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
     PROPERTY(frequency, audio_stream_get_frequency, audio_stream_set_frequency);
     PROPERTY(volume,    audio_stream_get_volume,    audio_stream_set_volume);
+    PROPERTY(channel, audio_stream_get_volume_channel, audio_stream_set_volume_channel);
 
     PROPERTY(file, return_self, NULL); // compatibility band-aid
 };
@@ -73,6 +80,10 @@ void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);
 f32 audio_stream_get_volume(struct ModAudio* audio);
 /* |description|Sets the volume of an `audio` stream|descriptionEnd| */
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume);
+/* |description|Gets the volume channel of an `audio` stream|descriptionEnd| */
+u8 audio_stream_get_volume_channel(struct ModAudio *audio);
+/* |description|Sets the volume channel of an `audio` stream|descriptionEnd| */
+void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);
 
 void audio_sample_destroy_pending_copies(void);
 /* |description|Loads an `audio` sample|descriptionEnd| */
