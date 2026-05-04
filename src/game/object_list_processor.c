@@ -595,22 +595,16 @@ void clear_objects(void) {
 
     gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_CAPACITY, malloc, free);
     if (gObjectPool == NULL) {
-        LOG_ERROR("Could not initialize object pool");
+        LOG_ERROR("Could not initialize object pool.\n");
         return;
     }
 
     debug_unknown_level_select_check();
 
-    init_free_object_list();
     clear_object_lists(gObjectListArray);
-
-    for (u32 i = 0; i < gObjectPool->count; i++) {
-        struct Object* obj = gObjectPool->buffer[i];
-        obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-        geo_reset_object_node(&obj->header.gfx);
-    }
-
     gObjectLists = gObjectListArray;
+
+    gFreeObjectList.next = NULL;
 
     clear_dynamic_surfaces();
     geo_clear_interp_data();
@@ -745,6 +739,6 @@ void update_objects(UNUSED s32 unused) {
 
     gPrevFrameObjectCount = gObjectCounter;
     char buffer[256];
-    sprintf(buffer, "%d", gObjectCounter);
+    sprintf(buffer, "%d", gObjectPool->count);
     djui_chat_message_create(buffer);
 }

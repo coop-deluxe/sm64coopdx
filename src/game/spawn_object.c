@@ -13,6 +13,7 @@
 #include "object_helpers.h"
 #include "object_list_processor.h"
 #include "spawn_object.h"
+#include "pc/debuglog.h"
 #include "types.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
@@ -83,41 +84,41 @@ struct LinkedList *unused_try_allocate(struct LinkedList *destList,
  * freeList is empty.
  */
 struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNode *freeList) {
-    struct ObjectNode *nextObj = NULL;
-
     if (destList == NULL || freeList == NULL) {
         fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because either the destList %p or freeList %p was NULL!\n", destList, freeList);
         return NULL;
     }
 
-    if ((nextObj = freeList->next) != NULL) {
-        // Remove from free list
-        freeList->next = nextObj->next;
-
-        // Insert at end of destination list
-        nextObj->prev = destList->prev;
-        nextObj->next = destList;
-        if (destList->prev != NULL) {
-            destList->prev->next = nextObj;
-        } else {
-            fprintf(stderr, "ERROR: The previous object in the destination list %p was NULL! Unexpected errors may occur.\n", destList);
-        }
-        destList->prev = nextObj;
-    } else {
+    struct Object *nextObj = growing_array_alloc(gObjectPool, sizeof(struct Object));
+    if (nextObj == NULL) {
+        LOG_ERROR("Failed to allocate an object.\n");
         return NULL;
     }
 
-    geo_remove_child(&nextObj->gfx.node);
-    geo_add_child(&gObjParentGraphNode, &nextObj->gfx.node);
+    // Insert at end of destination list
+    nextObj->header.prev = destList->prev;
+    nextObj->header.next = destList;
+    if (destList->prev != NULL) {
+        destList->prev->next = &nextObj->header;
+    } else {
+        fprintf(stderr, "ERROR: The previous object in the destination list %p was NULL! Unexpected errors may occur.\n", destList);
+    }
+    destList->prev = &nextObj->header;
 
-    struct Object* ret = (struct Object *) nextObj;
-    ret->ctx = 0
+    // Remove from free list
+    freeList->next = nextObj->header.next;
+
+    geo_reset_object_node(&nextObj->header.gfx);
+    geo_remove_child(&nextObj->header.gfx.node);
+    geo_add_child(&gObjParentGraphNode, &nextObj->header.gfx.node);
+
+    nextObj->ctx = 0
         | ((u8)CTX_WITHIN(CTX_LEVEL_SCRIPT) << 0)
         | ((u8)CTX_WITHIN(CTX_HOOK)         << 1);
 
-    ret->header.gfx.sharedChild = NULL;
+    nextObj->header.gfx.sharedChild = NULL;
 
-    return ret;
+    return nextObj;
 }
 
 /**
@@ -148,25 +149,6 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
     // Insert at beginning of free list
     obj->next = freeList->next;
     freeList->next = obj;
-}
-
-/**
- * Add every object in the pool to the free object list.
- */
-void init_free_object_list(void) {
-    // Add the first object in the pool to the free list
-    struct Object* obj = growing_array_alloc(gObjectPool, sizeof(struct Object));
-    gFreeObjectList.next = (struct ObjectNode *) obj;
-
-    // Link each object in the pool to the following object
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY - 1; i++) {
-        struct Object* next_obj = growing_array_alloc(gObjectPool, sizeof(struct Object));
-        obj->header.next = &next_obj->header;
-        obj = next_obj;
-    }
-
-    // End the list
-    obj->header.next = NULL;
 }
 
 /**
