@@ -10791,9 +10791,23 @@ function surface_is_painting_warp(surf)
 end
 
 --- @param flag ShaderFlag
+--- @return boolean
+--- Gets if a custom shader flag (`SHADER_FLAG_*`) is enabled or not
+function get_shader_flag_enabled(flag)
+    -- ...
+end
+
+--- @param flag ShaderFlag
 --- @param enabled boolean
 --- Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
-function enable_shader_flag(flag, enabled)
+function set_shader_flag_enabled(flag, enabled)
+    -- ...
+end
+
+--- @param flag ShaderFlag
+--- @return number
+--- Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
+function get_shader_flag_value(flag)
     -- ...
 end
 
@@ -10804,9 +10818,15 @@ function set_shader_flag_value(flag, value)
     -- ...
 end
 
+--- @return boolean
+--- Gets if custom shader flags are enabled globally
+function get_global_shader_flags_enabled()
+    -- ...
+end
+
 --- @param enabled boolean
 --- Enables custom shader flags as a global toggle, useful for disabling without manually going through every effect
-function enable_shader_flags_global(enabled)
+function set_global_shader_flags_enabled(enabled)
     -- ...
 end
 

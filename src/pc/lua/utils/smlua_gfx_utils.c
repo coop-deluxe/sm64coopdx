@@ -4,9 +4,19 @@
 #include "game/skybox.h"
 #include "geo_commands.h"
 
-void enable_shader_flag(enum ShaderFlag flag, bool enabled) {
+bool get_shader_flag_enabled(enum ShaderFlag flag) {
+    if (flag < 0 || flag >= SHADER_FLAG_MAX) { return false; }
+    return gShaderFlags[flag];
+}
+
+void set_shader_flag_enabled(enum ShaderFlag flag, bool enabled) {
     if (flag < 0 || flag >= SHADER_FLAG_MAX) { return; }
     gShaderFlags[flag] = enabled ? 1 : 0;
+}
+
+f32 get_shader_flag_value(enum ShaderFlag flag) {
+    if (flag < 0 || flag >= SHADER_FLAG_MAX) { return 0.0f; }
+    return gShaderFlagValues[flag];
 }
 
 void set_shader_flag_value(enum ShaderFlag flag, f32 value) {
@@ -14,7 +24,11 @@ void set_shader_flag_value(enum ShaderFlag flag, f32 value) {
     gShaderFlagValues[flag] = value;
 }
 
-void enable_shader_flags_global(bool enabled) {
+bool get_global_shader_flags_enabled(void) {
+    return gShaderFlagsEnabled;
+}
+
+void set_global_shader_flags_enabled(bool enabled) {
     gShaderFlagsEnabled = enabled;
 }
 
