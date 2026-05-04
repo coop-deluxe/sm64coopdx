@@ -8,6 +8,7 @@
 #include "object_list_processor.h"
 #include "platform_displacement.h"
 #include "mario.h"
+#include "pc/network/network_player.h"
 #include "types.h"
 
 struct Object *gMarioPlatform = NULL;
@@ -169,6 +170,8 @@ void apply_platform_displacement(struct Object *o, struct Object *platform) {
  */
 void apply_mario_platform_displacement(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        struct NetworkPlayer* np = &gNetworkPlayers[i];
+        if (!np || !np->connected) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         if (player == NULL) { continue; }
 

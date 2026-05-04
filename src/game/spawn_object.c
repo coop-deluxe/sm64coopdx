@@ -149,6 +149,9 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
     // Insert at beginning of free list
     obj->next = freeList->next;
     freeList->next = obj;
+
+    growing_array_swap_and_pop(gObjectPool, obj);
+    gObjectPool->buffer[gObjectPool->count] = NULL;
 }
 
 /**
