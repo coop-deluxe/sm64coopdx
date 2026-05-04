@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <memory>
+#include <string>
 
 enum class MapType {
     Ordered,
@@ -134,6 +135,40 @@ private:
     typename std::unordered_map<int64_t, void*>::iterator mUnorderedIterator;
 };
 
+class HMapData {
+public:
+    HMapData() {
+        mMap = std::make_unique<std::unordered_map<std::string, void*>>();
+    }
+
+    void* get(const char* data, size_t len) {
+        auto it = mMap->find(std::string(data, len));
+        if (it != mMap->end()) {
+            return it->second;
+        }
+        return nullptr;
+    }
+
+    void put(const char* data, size_t len, void* value) {
+        mMap->insert_or_assign(std::string(data, len), value);
+    }
+
+    void erase(const char* data, size_t len) {
+        mMap->erase(std::string(data, len));
+    }
+
+    void clear() {
+        mMap->clear();
+    }
+
+    size_t size() const {
+        return mMap->size();
+    }
+
+private:
+    std::unique_ptr<std::unordered_map<std::string, void*>> mMap;
+};
+
 extern "C" {
 void* hmap_create(bool useUnordered) {
     return new HMap(useUnordered ? MapType::Unordered : MapType::Ordered);
@@ -184,5 +219,35 @@ void* hmap_next(void* map) {
     if (!map) { return NULL; }
     HMap* hmap = reinterpret_cast<HMap*>(map);
     return hmap->next();
+}
+
+// Data/String map (for larger keys)
+void* hmap_data_create(void) {
+    return new HMapData();
+}
+
+void* hmap_data_get(void* map, const char* data, size_t len) {
+    if (!map) { return NULL; }
+    return reinterpret_cast<HMapData*>(map)->get(data, len);
+}
+
+void hmap_data_put(void* map, const char* data, size_t len, void* value) {
+    if (!map) { return; }
+    reinterpret_cast<HMapData*>(map)->put(data, len, value);
+}
+
+void hmap_data_del(void* map, const char* data, size_t len) {
+    if (!map) { return; }
+    reinterpret_cast<HMapData*>(map)->erase(data, len);
+}
+
+void hmap_data_clear(void* map) {
+    if (!map) { return; }
+    reinterpret_cast<HMapData*>(map)->clear();
+}
+
+void hmap_data_destroy(void* map) {
+    if (!map) { return; }
+    delete reinterpret_cast<HMapData*>(map);
 }
 }
