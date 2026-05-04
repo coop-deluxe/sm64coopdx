@@ -10,7 +10,7 @@ extern "C" {
 // Scroll Targets
 //
 
-void DynOS_Add_Scroll_Target_Match(u32 index, const char* name, u32 offset, u32 size, DataNode<Vtx>* node) {
+static void DynOS_Add_Scroll_Target_Match(u32 index, const char* name, u32 offset, u32 size, DataNode<Vtx>* node) {
     if (offset >= node->mSize) { return; }
     u32 finalSize = (size > 0 && size <= (node->mSize - offset)) ? size : (node->mSize - offset);
     add_vtx_scroll_target(
