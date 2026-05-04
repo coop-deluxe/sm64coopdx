@@ -363,8 +363,22 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     audio->buffer = buffer;
     audio->bufferSize = size;
     audio->isStream = isStream;
+    audio->baseVolume = 1.0f;
+    audio->volChannel = MOD_AUDIO_CHANNEL_MUSIC;
     audio->loaded = true;
     return audio;
+}
+
+static f32 get_audio_volume(struct ModAudio* audio) {
+    f32 volume = audio->baseVolume;
+    if (audio->volChannel == MOD_AUDIO_CHANNEL_MUSIC) {
+        volume *= (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
+    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_SFX) {
+        volume *= (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f;
+    } else if (audio->volChannel == MOD_AUDIO_CHANNEL_ENV) {
+        volume *= (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f;
+    }
+    return gMasterVolume * volume;
 }
 
 struct ModAudio* audio_stream_load(const char* filename) {
@@ -388,6 +402,7 @@ void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume) {
         ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
     }
     audio->baseVolume = volume;
+    ma_sound_set_volume(&audio->sound, get_audio_volume(audio));
     if (restart || !ma_sound_is_playing(&audio->sound)) { ma_sound_seek_to_pcm_frame(&audio->sound, 0); }
     ma_sound_start(&audio->sound);
 }
@@ -473,14 +488,9 @@ f32 audio_stream_get_volume(struct ModAudio* audio) {
 
 void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
     if (!audio_sanity_check(audio, true, "set stream volume for")) { return; }
-    
-    if (configMuteFocusLoss && !WAPI.has_focus()) {
-        ma_sound_set_volume(&audio->sound, 0);
-    } else {
-        f32 musicVolume = (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f;
-        ma_sound_set_volume(&audio->sound, gMasterVolume * musicVolume * volume);
-    }
+
     audio->baseVolume = volume;
+    ma_sound_set_volume(&audio->sound, get_audio_volume(audio));
 }
 
 // void audio_stream_set_speed(struct ModAudio* audio, f32 initial_freq, f32 speed, bool pitch) {
@@ -488,6 +498,28 @@ void audio_stream_set_volume(struct ModAudio* audio, f32 volume) {
 //
 //     bassh_set_speed(audio->handle, initial_freq, speed, pitch);
 // }
+
+u8 audio_stream_get_volume_channel(struct ModAudio* audio) {
+    if (!audio_sanity_check(audio, true, "get stream volume channel from")) {
+        return 0;
+    }
+
+    return audio->volChannel;
+}
+
+void audio_stream_set_volume_channel(struct ModAudio* audio, u8 channel) {
+    if (!audio_sanity_check(audio, true, "set stream volume channel for")) {
+        return;
+    }
+
+    if (channel > MOD_AUDIO_CHANNEL_ENV) {
+        LOG_LUA_LINE("Tried to set volume channel to invalid value: %d", channel);
+        return;
+    }
+
+    audio->volChannel = channel;
+    ma_sound_set_volume(&audio->sound, get_audio_volume(audio));
+}
 
 //////////////////////////////////////
 

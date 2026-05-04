@@ -55,6 +55,8 @@ in_files = [
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
+    "src/engine/surface_load.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
 ]
 
 exclude_constants = {
@@ -68,6 +70,7 @@ exclude_constants = {
     "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
+    "src/engine/surface_load.h": [ "NUM_CELLS" ],
     "src/pc/network/version.h": [ "VERSION_OFFSET" ],
 }
 
@@ -75,6 +78,7 @@ include_constants = {
     "include/geo_commands.h": [ "BACKGROUND" ],
     "include/level_commands.h": [ "WARP_CHECKPOINT", "WARP_NO_CHECKPOINT" ],
     "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
+    "src/pc/lua/utils/smlua_audio_utils.h": ["MOD_AUDIO_CHANNEL"],
     "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
     "include/PR/gbi.h": [
         "^G_NOOP$",

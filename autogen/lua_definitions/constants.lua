@@ -8171,6 +8171,18 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
+--- @type integer
+MOD_AUDIO_CHANNEL_MASTER = 0
+
+--- @type integer
+MOD_AUDIO_CHANNEL_MUSIC = 1
+
+--- @type integer
+MOD_AUDIO_CHANNEL_SFX = 2
+
+--- @type integer
+MOD_AUDIO_CHANNEL_ENV = 3
+
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
 HOOK_BEFORE_MARIO_UPDATE                    =  2 --- @type LuaHookedEventType
@@ -10627,6 +10639,15 @@ SOUND_OBJ2_BOSS_DIALOG_GRUNT = SOUND_ARG_LOAD(SOUND_BANK_OBJ2, 0x69, 0x40, SOUND
 
 --- @type integer
 SOUND_OBJ2_MRI_SPINNING = SOUND_ARG_LOAD(SOUND_BANK_OBJ2, 0x6B, 0x00, SOUND_DISCRETE)
+
+--- @type integer
+SURFACE_POOL_STATIC = 0
+
+--- @type integer
+SURFACE_POOL_DYNAMIC = 1
+
+--- @type integer
+SURFACE_POOL_SOC = 2
 
 --- @type integer
 SURFACE_DEFAULT = 0x0000

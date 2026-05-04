@@ -98,7 +98,7 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail" ],
+    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
@@ -107,6 +107,7 @@ override_field_invisible = {
 
 override_field_deprecated = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
+    "StaticObjectCollision": [ "index" ],
     "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
 }
 
@@ -118,6 +119,7 @@ override_field_immutable = {
     "NetworkPlayer": [ "*" ],
     "TextureInfo": [ "*" ],
     "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
+    "Surface": [ "poolType", "socId" ],
     "GlobalObjectAnimations": [ "*"],
     "SpawnParticlesInfo": [ "model" ],
     "WaterDropletParams": [ "model" ],
@@ -991,6 +993,10 @@ def def_struct(struct):
 
         if sid in override_field_invisible:
             if fid in override_field_invisible[sid]:
+                continue
+
+        if sid in override_field_deprecated:
+            if fid in override_field_deprecated[sid]:
                 continue
 
         if '???' in lvt or '???' in lot:

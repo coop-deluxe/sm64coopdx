@@ -5947,6 +5947,53 @@ Sets the volume of an `audio` stream
 
 <br />
 
+## [audio_stream_get_volume_channel](#audio_stream_get_volume_channel)
+
+### Description
+Gets the volume channel of an `audio` stream
+
+### Lua Example
+`local integerValue = audio_stream_get_volume_channel(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 audio_stream_get_volume_channel(struct ModAudio *audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_stream_set_volume_channel](#audio_stream_set_volume_channel)
+
+### Description
+Sets the volume channel of an `audio` stream
+
+### Lua Example
+`audio_stream_set_volume_channel(audio, channel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| channel | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [audio_sample_load](#audio_sample_load)
 
 ### Description
@@ -7374,6 +7421,82 @@ Gets a table of the surface types from `data`
 
 ### C Prototype
 `void smlua_collision_util_find_surface_types(Collision* data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_add_surface](#smlua_collision_add_surface)
+
+### Description
+Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition. Returns the new surface, or `nil` if the triangle is degenerate (zero area). Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+
+### Lua Example
+`local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dynamic | `boolean` |
+| surfaceType | `integer` |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_move_surface](#smlua_collision_move_surface)
+
+### Description
+Moves an existing collision surface to new vertex positions. Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells. The previous vertices are preserved for interpolation
+
+### Lua Example
+`smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_collision_delete_surface](#smlua_collision_delete_surface)
+
+### Description
+Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
+
+### Lua Example
+`smlua_collision_delete_surface(surface)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_delete_surface(struct Surface *surface);`
 
 [:arrow_up_small:](#)
 

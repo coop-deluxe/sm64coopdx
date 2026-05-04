@@ -79,6 +79,7 @@
 - [seq_ids.h](#seq_idsh)
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
+- [smlua_audio_utils.h](#smlua_audio_utilsh)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
     - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
@@ -91,6 +92,7 @@
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
 - [sounds.h](#soundsh)
+- [surface_load.h](#surface_loadh)
 - [surface_terrains.h](#surface_terrainsh)
 - [types.h](#typesh)
     - [enum SpTaskState](#enum-SpTaskState)
@@ -3485,6 +3487,16 @@
 
 <br />
 
+## [smlua_audio_utils.h](#smlua_audio_utils.h)
+- MOD_AUDIO_CHANNEL_MASTER
+- MOD_AUDIO_CHANNEL_MUSIC
+- MOD_AUDIO_CHANNEL_SFX
+- MOD_AUDIO_CHANNEL_ENV
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_hooks.h](#smlua_hooks.h)
 
 ### [enum LuaHookedEventType](#LuaHookedEventType)
@@ -4498,6 +4510,15 @@
 - SOUND_OBJ2_MONTY_MOLE_APPEAR
 - SOUND_OBJ2_BOSS_DIALOG_GRUNT
 - SOUND_OBJ2_MRI_SPINNING
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [surface_load.h](#surface_load.h)
+- SURFACE_POOL_STATIC
+- SURFACE_POOL_DYNAMIC
+- SURFACE_POOL_SOC
 
 [:arrow_up_small:](#)
 

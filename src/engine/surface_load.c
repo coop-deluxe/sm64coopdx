@@ -62,8 +62,12 @@ s32 gNumSOCSurfaces;
 /**
  * Pools of data to contain either surface nodes or surfaces.
  */
-static struct GrowingArray *sSurfaceNodePool = NULL;
-static struct GrowingArray *sSurfacePool = NULL;
+static struct GrowingArray *sSurfaceStaticNodePool = NULL;
+static struct GrowingArray *sSurfaceStaticPool = NULL;
+static struct GrowingArray *sSurfaceSOCNodePool = NULL;
+static struct GrowingArray *sSurfaceSOCPool = NULL;
+static struct GrowingArray *sSurfaceDynamicNodePool = NULL;
+static struct GrowingArray *sSurfaceDynamicPool = NULL;
 
 /**
  * Pool of data for static object collisions.
@@ -71,20 +75,53 @@ static struct GrowingArray *sSurfacePool = NULL;
 static struct GrowingArray *sSOCPool = NULL;
 
 /**
- * Allocate the part of the surface node pool to contain a surface node.
+ * Counter for assigning unique SOC IDs.
  */
-static struct SurfaceNode *alloc_surface_node(void) {
-    sSurfaceNodePool->count = gSurfaceNodesAllocated++;
-    return growing_array_alloc(sSurfaceNodePool, sizeof(struct SurfaceNode));
+static u32 sSOCIdCounter = 0;
+
+/**
+ * When true, add_surface skips firing HOOK_ON_ADD_SURFACE.
+ */
+static bool sSkipAddSurfaceHook = false;
+
+/**
+ * Custom free function for StaticObjectCollision entries.
+ * Invalidates the Lua CObject, then frees the struct.
+ */
+static void free_static_object_collision(void *ptr) {
+    smlua_free_soc(ptr);
 }
 
 /**
- * Allocate the part of the surface pool to contain a surface and
- * initialize the surface.
+ * Allocate a surface node from the appropriate pool.
  */
-static struct Surface *alloc_surface(void) {
-    sSurfacePool->count = gSurfacesAllocated++;
-    return growing_array_alloc(sSurfacePool, sizeof(struct Surface));
+static struct SurfaceNode *alloc_surface_node(s32 poolType) {
+    gSurfaceNodesAllocated++;
+    struct GrowingArray *pool;
+    switch (poolType) {
+        case SURFACE_POOL_DYNAMIC: pool = sSurfaceDynamicNodePool; break;
+        case SURFACE_POOL_SOC:     pool = sSurfaceSOCNodePool; break;
+        default:                   pool = sSurfaceStaticNodePool; break;
+    }
+    return growing_array_alloc(pool, sizeof(struct SurfaceNode));
+}
+
+/**
+ * Allocate a surface from the appropriate pool.
+ */
+struct Surface *alloc_surface(s32 poolType) {
+    gSurfacesAllocated++;
+    struct GrowingArray *pool;
+    switch (poolType) {
+        case SURFACE_POOL_DYNAMIC: pool = sSurfaceDynamicPool; break;
+        case SURFACE_POOL_SOC:     pool = sSurfaceSOCPool; break;
+        default:                   pool = sSurfaceStaticPool; break;
+    }
+    struct Surface *surface = growing_array_alloc(pool, sizeof(struct Surface));
+    if (surface != NULL) {
+        surface->poolType = poolType;
+    }
+    return surface;
 }
 
 static struct StaticObjectCollision *alloc_static_object_collision(void) {
@@ -111,18 +148,39 @@ static void clear_spatial_partition(SpatialPartitionCell *cells) {
  */
 static void clear_static_surfaces(void) {
     clear_spatial_partition(&gStaticSurfacePartition[0][0]);
-    sSOCPool = growing_array_init(sSOCPool, 0x100, malloc, smlua_free_soc);
+
+    // Invalidate Lua CObjects for surfaces that are about to be recycled
+    if (sSurfaceStaticPool) {
+        for (u32 i = 0; i < sSurfaceStaticPool->count; i++) {
+            if (sSurfaceStaticPool->buffer[i]) {
+                smlua_invalidate_surface(sSurfaceStaticPool->buffer[i]);
+            }
+        }
+        sSurfaceStaticPool->count = 0;
+    }
+    if (sSurfaceSOCPool) {
+        for (u32 i = 0; i < sSurfaceSOCPool->count; i++) {
+            if (sSurfaceSOCPool->buffer[i]) {
+                smlua_invalidate_surface(sSurfaceSOCPool->buffer[i]);
+            }
+        }
+        sSurfaceSOCPool->count = 0;
+    }
+    if (sSurfaceStaticNodePool) { sSurfaceStaticNodePool->count = 0; }
+    if (sSurfaceSOCNodePool) { sSurfaceSOCNodePool->count = 0; }
+
+    sSOCPool = growing_array_init(sSOCPool, 0x100, malloc, free_static_object_collision);
+    sSOCIdCounter = 0;
 }
 
 /**
  * Add a surface to the correct cell list of surfaces.
- * @param dynamic Determines whether the surface is static or dynamic
  * @param cellX The X position of the cell in which the surface resides
  * @param cellZ The Z position of the cell in which the surface resides
  * @param surface The surface to add
  */
-static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surface *surface) {
-    struct SurfaceNode *newNode = alloc_surface_node();
+static void add_surface_to_cell(s16 cellX, s16 cellZ, struct Surface *surface) {
+    struct SurfaceNode *newNode = alloc_surface_node(surface->poolType);
     if (newNode == NULL) { return; }
     struct SurfaceNode *list;
     s16 surfacePriority;
@@ -159,7 +217,7 @@ static void add_surface_to_cell(s16 dynamic, s16 cellX, s16 cellZ, struct Surfac
 
     newNode->surface = surface;
 
-    if (dynamic) {
+    if (surface->poolType == SURFACE_POOL_DYNAMIC) {
         list = &gDynamicSurfacePartition[cellZ][cellX][listIndex];
     } else {
         list = &gStaticSurfacePartition[cellZ][cellX][listIndex];
@@ -260,10 +318,9 @@ static s16 upper_cell_index(s32 coord) {
  * Every level is split into 16x16 cells, this takes a surface, finds
  * the appropriate cells (with a buffer), and adds the surface to those
  * cells.
- * @param surface The surface to check
- * @param dynamic Boolean determining whether the surface is static or dynamic
+ * @param surface The surface to add
  */
-static void add_surface(struct Surface *surface, s32 dynamic) {
+void add_surface(struct Surface *surface) {
     // minY/maxY maybe? s32 instead of s16, though.
     s16 minX, minZ, maxX, maxZ;
 
@@ -271,7 +328,9 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
 
     s16 cellZ, cellX;
 
-    smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, dynamic);
+    if (!sSkipAddSurfaceHook) {
+        smlua_call_event_hooks(HOOK_ON_ADD_SURFACE, surface, surface->poolType == SURFACE_POOL_DYNAMIC);
+    }
 
     minX = min_3(surface->vertex1[0], surface->vertex2[0], surface->vertex3[0]);
     minZ = min_3(surface->vertex1[2], surface->vertex2[2], surface->vertex3[2]);
@@ -285,18 +344,150 @@ static void add_surface(struct Surface *surface, s32 dynamic) {
 
     for (cellZ = minCellZ; cellZ <= maxCellZ; cellZ++) {
         for (cellX = minCellX; cellX <= maxCellX; cellX++) {
-            add_surface_to_cell(dynamic, cellX, cellZ, surface);
+            add_surface_to_cell(cellX, cellZ, surface);
         }
     }
 
 }
 
 /**
+ * Add a surface, but don't call HOOK_ON_ADD_SURFACE.
+ */
+void add_surface_without_hook(struct Surface *surface) {
+    sSkipAddSurfaceHook = true;
+    add_surface(surface);
+    sSkipAddSurfaceHook = false;
+}
+
+/**
+ * Swap-and-pop a surface out of its owning pool, selected by poolType.
+ * Does not touch counters or partitions; the caller is responsible.
+ */
+bool swap_and_pop_surface_pool(s32 poolType, struct Surface *surface) {
+    switch (poolType) {
+        case SURFACE_POOL_DYNAMIC: return growing_array_swap_and_pop(sSurfaceDynamicPool, surface);
+        case SURFACE_POOL_SOC:     return growing_array_swap_and_pop(sSurfaceSOCPool,     surface);
+        default:                   return growing_array_swap_and_pop(sSurfaceStaticPool,  surface);
+    }
+}
+
+/**
+ * Removes a surface from the spatial partition, reclaiming any nodes that were allocated for it.
+ */
+void remove_surface_from_partition(struct Surface *surface) {
+    if (surface == NULL) { return; }
+
+    s32 poolType = surface->poolType;
+    bool isDynamic = (poolType == SURFACE_POOL_DYNAMIC);
+
+    SpatialPartitionCell (*partition)[NUM_CELLS] = isDynamic
+        ? gDynamicSurfacePartition
+        : gStaticSurfacePartition;
+
+    struct GrowingArray *nodePool;
+
+    switch (poolType) {
+        case SURFACE_POOL_DYNAMIC: nodePool = sSurfaceDynamicNodePool; break;
+        case SURFACE_POOL_SOC:     nodePool = sSurfaceSOCNodePool;     break;
+        default:                   nodePool = sSurfaceStaticNodePool;  break;
+    }
+
+    for (s32 cellZ = 0; cellZ < NUM_CELLS; cellZ++) {
+        for (s32 cellX = 0; cellX < NUM_CELLS; cellX++) {
+            for (s32 listIndex = 0; listIndex < 3; listIndex++) {
+                struct SurfaceNode *prev = &partition[cellZ][cellX][listIndex];
+                struct SurfaceNode *node = prev->next;
+
+                while (node != NULL) {
+                    if (node->surface != surface) {
+                        prev = node;
+                        node = node->next;
+                        continue;
+                    }
+
+                    if (growing_array_swap_and_pop(nodePool, node)) {
+                        prev->next = node->next;
+                        gSurfaceNodesAllocated--;
+                        node = prev->next;
+                        continue;
+                    }
+
+                    prev = node;
+                    node = node->next;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Fully delete a surface: invalidate any Lua CObject reference,
+ * remove it from spatial partitions, swap-and-pop it out of its
+ * owning pool, and update counters.
+ */
+void delete_surface(struct Surface *surface) {
+    if (surface == NULL) { return; }
+
+    s32 poolType = surface->poolType;
+
+    // Invalidate Lua CObject reference
+    smlua_invalidate_surface(surface);
+
+    // Snapshot the relevant node pool count to track how many nodes are reclaimed
+    struct GrowingArray *nodePool;
+    switch (poolType) {
+        case SURFACE_POOL_DYNAMIC: nodePool = sSurfaceDynamicNodePool; break;
+        case SURFACE_POOL_SOC:     nodePool = sSurfaceSOCNodePool; break;
+        default:                   nodePool = sSurfaceStaticNodePool; break;
+    }
+    u32 nodesBefore = nodePool ? nodePool->count : 0;
+
+    // Remove from spatial partitions (also reclaims node pool slots)
+    remove_surface_from_partition(surface);
+
+    u32 nodesRemoved = nodesBefore - (nodePool ? nodePool->count : 0);
+
+    // Decrement the owning SOC's tracked length
+    if (poolType == SURFACE_POOL_SOC && sSOCPool) {
+        for (u32 ci = 0; ci < sSOCPool->count; ci++) {
+            struct StaticObjectCollision *col = sSOCPool->buffer[ci];
+            if (col && col->index == surface->socId) {
+                if (col->length > 0) { col->length--; }
+                break;
+            }
+        }
+    }
+
+    // Swap-and-pop from the owning pool and update counters
+    switch (poolType) {
+        case SURFACE_POOL_SOC:
+            growing_array_swap_and_pop(sSurfaceSOCPool, surface);
+            gNumSOCSurfaces--;
+            gNumSOCSurfaceNodes -= nodesRemoved;
+            break;
+        case SURFACE_POOL_STATIC:
+            growing_array_swap_and_pop(sSurfaceStaticPool, surface);
+            gNumStaticSurfaces--;
+            gNumStaticSurfaceNodes -= nodesRemoved;
+            break;
+        case SURFACE_POOL_DYNAMIC:
+            if (surface->object && surface->object->numSurfaces > 0) {
+                surface->object->numSurfaces--;
+            }
+            growing_array_swap_and_pop(sSurfaceDynamicPool, surface);
+            break;
+    }
+    gSurfacesAllocated--;
+}
+
+/**
  * Initializes a Surface struct using the given vertex data
  * @param vertexData The raw data containing vertex positions
  * @param vertexIndices Helper which tells positions in vertexData to start reading vertices
+ * @param poolType The pool type to allocate the surface from
+ * @return A pointer to the newly allocated surface, or NULL on failure
  */
-static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
+static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices, s32 poolType) {
     if (vertexData == NULL || vertexIndices == NULL || *vertexIndices == NULL) { return NULL; }
 
     struct Surface *surface;
@@ -356,7 +547,7 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
     ny *= mag;
     nz *= mag;
 
-    surface = alloc_surface();
+    surface = alloc_surface(poolType);
     if (surface == NULL) { return NULL; }
 
     vec3s_copy(surface->prevVertex1, surface->vertex1);
@@ -435,7 +626,7 @@ static void load_static_surfaces(s16 **data, s16 *vertexData, s16 surfaceType, s
             *surfaceRooms += 1;
         }
 
-        surface = read_surface_data(vertexData, data);
+        surface = read_surface_data(vertexData, data, SURFACE_POOL_STATIC);
         if (surface != NULL) {
             surface->room = room;
             surface->type = surfaceType;
@@ -447,7 +638,7 @@ static void load_static_surfaces(s16 **data, s16 *vertexData, s16 surfaceType, s
                 surface->force = 0;
             }
 
-            add_surface(surface, FALSE);
+            add_surface(surface);
         }
 
         *data += 3;
@@ -513,8 +704,14 @@ void alloc_surface_pools(void) {
     clear_static_surfaces();
     clear_dynamic_surfaces();
 
-    sSurfaceNodePool = growing_array_init(sSurfaceNodePool, 0x1000, malloc, free);
-    sSurfacePool = growing_array_init(sSurfacePool, 0x400, malloc, smlua_free_surface);
+    sSurfaceStaticNodePool  = growing_array_init(sSurfaceStaticNodePool, 0x1000, malloc, free);
+    sSurfaceStaticPool      = growing_array_init(sSurfaceStaticPool, 0x400, malloc, smlua_free_surface);
+
+    sSurfaceSOCNodePool     = growing_array_init(sSurfaceSOCNodePool, 0x800, malloc, free);
+    sSurfaceSOCPool         = growing_array_init(sSurfaceSOCPool, 0x200, malloc, smlua_free_surface);
+
+    sSurfaceDynamicNodePool = growing_array_init(sSurfaceDynamicNodePool, 0x1000, malloc, free);
+    sSurfaceDynamicPool     = growing_array_init(sSurfaceDynamicPool, 0x400, malloc, smlua_free_surface);
 
     gEnvironmentRegions = NULL;
     gSurfaceNodesAllocated = 0;
@@ -638,17 +835,32 @@ void load_area_terrain(s16 index, s16 *data, s8 *surfaceRooms, s16 *macroObjects
  * If not in time stop, clear the surface partitions.
  */
 void clear_dynamic_surfaces(void) {
-    if (!(gTimeStopState & TIME_STOP_ACTIVE)) {
-        gSurfacesAllocated = gNumStaticSurfaces + gNumSOCSurfaces;
-        gSurfaceNodesAllocated = gNumStaticSurfaceNodes + gNumSOCSurfaceNodes;
+    if (gTimeStopState & TIME_STOP_ACTIVE) { return; }
 
-        clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
-
-        for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-            struct Object *obj = &gObjectPool[i];
-            obj->firstSurface = 0;
-            obj->numSurfaces = 0;
+    if (sSurfaceDynamicPool) {
+        // Invalidate Lua CObjects for dynamic surfaces being recycled
+        for (u32 i = 0; i < sSurfaceDynamicPool->count; i++) {
+            if (sSurfaceDynamicPool->buffer[i]) {
+                smlua_invalidate_surface(sSurfaceDynamicPool->buffer[i]);
+            }
         }
+        sSurfaceDynamicPool->count = 0;
+    }
+
+    if (sSurfaceDynamicNodePool) {
+        sSurfaceDynamicNodePool->count = 0;
+    }
+
+    gSurfacesAllocated = (sSurfaceStaticPool ? sSurfaceStaticPool->count : 0)
+                       + (sSurfaceSOCPool    ? sSurfaceSOCPool->count    : 0);
+
+    gSurfaceNodesAllocated = (sSurfaceStaticNodePool ? sSurfaceStaticNodePool->count : 0)
+                           + (sSurfaceSOCNodePool    ? sSurfaceSOCNodePool->count    : 0);
+
+    clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
+
+    for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
+        gObjectPool[i].numSurfaces = 0;
     }
 }
 
@@ -714,7 +926,9 @@ void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
     hasForce = surface_has_force(surfaceType);
 
     flags = surf_has_no_cam_collision(surfaceType) ? SURFACE_FLAG_NO_CAM_COLLISION : 0;
-    flags |= SURFACE_FLAG_DYNAMIC;
+    if (!isSOC) {
+        flags |= SURFACE_FLAG_DYNAMIC;
+    }
 
     // The DDD warp is initially loaded at the origin and moved to the proper
     // position in paintings.c and doesn't update its room, so set it here.
@@ -725,19 +939,10 @@ void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
     }
 
     for (i = 0; i < numSurfaces; i++) {
-        struct Surface* surface = read_surface_data(vertexData, data);
+        s32 poolType = isSOC ? SURFACE_POOL_SOC : SURFACE_POOL_DYNAMIC;
+        struct Surface* surface = read_surface_data(vertexData, data, poolType);
 
         if (surface != NULL) {
-            if (!isSOC) {
-                // Set index of first surface
-                if (gCurrentObject->firstSurface == 0) {
-                    gCurrentObject->firstSurface = gSurfacesAllocated - 1;
-                }
-    
-                // Increase surface count
-                gCurrentObject->numSurfaces++;
-            }
-
             surface->object = gCurrentObject;
             surface->type = surfaceType;
 
@@ -749,7 +954,11 @@ void load_object_surfaces(s16** data, s16* vertexData, bool isSOC) {
 
             surface->flags |= flags;
             surface->room = (s8)room;
-            add_surface(surface, !isSOC);
+            add_surface(surface);
+
+            if (!isSOC) {
+                gCurrentObject->numSurfaces++;
+            }
         }
 
         if (hasForce) {
@@ -852,36 +1061,38 @@ void load_object_collision_model(void) {
 }
 
 struct StaticObjectCollision *load_static_object_collision() {
-    struct StaticObjectCollision *col;
-    u32 lastSurfaceIndex = gSurfacesAllocated;
-    u32 lastSurfaceNodeIndex = gSurfaceNodesAllocated;
-    u32 lastSOCSurfaceIndex = gNumStaticSurfaces + gNumSOCSurfaces;
-    u32 lastSOCSurfaceNodeIndex = gNumStaticSurfaceNodes + gNumSOCSurfaceNodes;
+    u32 startCount    = sSurfaceSOCPool->count;
+    u32 startNodeCount = sSurfaceSOCNodePool->count;
 
     load_object_collision_model_internal(true);
 
-    // Reorder surfaces and nodes and update SOC variables
-    u32 addedSurfaces = gSurfacesAllocated - lastSurfaceIndex;
-    u32 addedSurfaceNodes = gSurfaceNodesAllocated - lastSurfaceNodeIndex;
-    if (addedSurfaces > 0) {
-        growing_array_move(sSurfacePool, lastSurfaceIndex, lastSOCSurfaceIndex, addedSurfaces);
-        gNumSOCSurfaces += addedSurfaces;
-    }
-    if (addedSurfaceNodes > 0) {
-        growing_array_move(sSurfaceNodePool, lastSurfaceNodeIndex, lastSOCSurfaceNodeIndex, addedSurfaceNodes);
-        gNumSOCSurfaceNodes += addedSurfaceNodes;
-    }
+    u32 addedSurfaces = sSurfaceSOCPool->count - startCount;
+    u32 addedNodes    = sSurfaceSOCNodePool->count - startNodeCount;
 
-    col = alloc_static_object_collision();
-    col->index = lastSOCSurfaceIndex;
+    gNumSOCSurfaces     += addedSurfaces;
+    gNumSOCSurfaceNodes += addedNodes;
+
+    struct StaticObjectCollision *col = alloc_static_object_collision();
+    col->index  = ++sSOCIdCounter;
     col->length = addedSurfaces;
+
+    // Tag each new surface with this SOC's unique ID
+    for (u32 i = 0; i < addedSurfaces; i++) {
+        struct Surface *surf = sSurfaceSOCPool->buffer[startCount + i];
+        if (surf) { surf->socId = col->index; }
+    }
 
     return col;
 }
 
 void toggle_static_object_collision(struct StaticObjectCollision *col, bool tangible) {
-    for (s32 i = 0; i < col->length; i++) {
-        struct Surface *surf = sSurfacePool->buffer[col->index + i];
+    if (!col || !sSurfaceSOCPool) { return; }
+
+    for (u32 i = 0; i < sSurfaceSOCPool->count; i++) {
+        struct Surface *surf = sSurfaceSOCPool->buffer[i];
+
+        if (!surf || surf->socId != col->index) { continue; }
+
         if (tangible) {
             surf->flags &= ~SURFACE_FLAG_INTANGIBLE;
         } else {
@@ -891,15 +1102,56 @@ void toggle_static_object_collision(struct StaticObjectCollision *col, bool tang
 }
 
 struct Surface *get_static_object_surface(struct StaticObjectCollision *col, u32 index) {
-    if (!col) { return NULL; }
-    if (index >= col->length) { return NULL; }
-    struct Surface *surf = sSurfacePool->buffer[col->index + index];
-    return surf;
+    if (!col || !sSurfaceSOCPool) { return NULL; }
+
+    u32 count = 0;
+
+    for (u32 i = 0; i < sSurfaceSOCPool->count; i++) {
+        struct Surface *surf = sSurfaceSOCPool->buffer[i];
+        if (!surf || surf->socId != col->index) { continue; }
+        if (count == index) { return surf; }
+        count++;
+    }
+
+    return NULL;
+}
+
+void remove_static_object_collision(struct StaticObjectCollision *col) {
+    if (!col || !sSurfaceSOCPool) { return; }
+
+    // delete_surface uses swap-and-pop, so after deleting buffer[i] the slot
+    // is filled by the former last element (and must be checked again)
+    u32 i = 0;
+    while (i < sSurfaceSOCPool->count) {
+        struct Surface *surf = sSurfaceSOCPool->buffer[i];
+        if (surf && surf->socId == col->index) {
+            delete_surface(surf);
+        } else {
+            i++;
+        }
+    }
+
+    col->length = 0;
+    col->index = 0;
+
+    // reclaim the SOC metadata from the pool
+    smlua_cobject_invalidate(col, LOT_STATICOBJECTCOLLISION);
+    growing_array_swap_and_pop(sSOCPool, col);
 }
 
 struct Surface *obj_get_surface_from_index(struct Object *o, u32 index) {
-    if (!o || o->firstSurface == 0) { return NULL; }
-    if (index >= o->numSurfaces) { return NULL; }
-    struct Surface *surf = sSurfacePool->buffer[o->firstSurface + index];
-    return surf;
+    if (!o || !sSurfaceDynamicPool) { return NULL; }
+
+    u32 count = 0;
+    for (u32 i = 0; i < sSurfaceDynamicPool->count; i++) {
+        struct Surface *surf = sSurfaceDynamicPool->buffer[i];
+        if (surf && surf->object == o) {
+            if (count == index) {
+                return surf;
+            }
+            count++;
+        }
+    }
+
+    return NULL;
 }

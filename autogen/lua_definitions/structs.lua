@@ -1457,7 +1457,6 @@
 
 --- @class ModAudio
 --- @field public filepath string
---- @field public relativePath string
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
@@ -1465,7 +1464,7 @@
 --- @field public looping boolean
 --- @field public frequency number
 --- @field public volume number
---- @field public file unction
+--- @field public channel integer
 --- @field public stream_destroy fun(audio: ModAudio) Destroys an `audio` stream
 --- @field public stream_play fun(audio: ModAudio, restart: boolean, volume: number) Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 --- @field public stream_pause fun(audio: ModAudio) Pauses an `audio` stream
@@ -1479,6 +1478,8 @@
 --- @field public stream_set_frequency fun(audio: ModAudio, freq: number) Sets the frequency of an `audio` stream
 --- @field public stream_get_volume fun(audio: ModAudio): number Gets the volume of an `audio` stream
 --- @field public stream_set_volume fun(audio: ModAudio, volume: number) Sets the volume of an `audio` stream
+--- @field public stream_get_volume_channel fun(audio: ModAudio): integer Gets the volume channel of an `audio` stream
+--- @field public stream_set_volume_channel fun(audio: ModAudio, channel: integer) Sets the volume channel of an `audio` stream
 --- @field public sample_destroy fun(audio: ModAudio) Destroys an `audio` sample
 --- @field public sample_stop fun(audio: ModAudio) Stops an `audio` sample
 --- @field public sample_play fun(audio: ModAudio, position: Vec3f, volume: number) Plays an `audio` sample at `position` with `volume`
@@ -1566,9 +1567,6 @@
 --- @field public overrideLocation string
 --- @field public overrideModelIndex integer
 --- @field public overridePalette PlayerPalette
---- @field public paletteIndex integer
---- @field public overridePaletteIndex integer
---- @field public overridePaletteIndexLp integer
 --- @field public lag_compensation_get_local_state fun(otherNp: NetworkPlayer): MarioState Gets the local Mario's state stored in lag compensation history
 --- @field public set_description fun(np: NetworkPlayer, description: string, r: integer, g: integer, b: integer, a: integer) Sets the description field of `np`
 --- @field public set_override_location fun(np: NetworkPlayer, location: string) Overrides the location of `np`
@@ -2658,13 +2656,13 @@
 --- @field public dialog6 integer
 
 --- @class StaticObjectCollision
---- @field public index integer
 --- @field public length integer
 
 --- @class Surface
 --- @field public type integer
 --- @field public flags integer
 --- @field public room integer
+--- @field public poolType integer
 --- @field public force integer
 --- @field public lowerY integer
 --- @field public upperY integer
@@ -2677,10 +2675,13 @@
 --- @field public normal Vec3f
 --- @field public originOffset number
 --- @field public modifiedTimestamp integer
+--- @field public socId integer
 --- @field public object Object
 --- @field public turn_obj_away_from_steep_floor fun(objFloor: Surface, floorY: number, objVelX: number, objVelZ: number): boolean Turns an object away from steep floors, similarly to walls.
 --- @field public calc_new_obj_vel_and_pos_y fun(objFloor: Surface, objFloorY: number, objVelX: number, objVelZ: number) Updates an objects speed for gravity and updates Y position.
 --- @field public calc_new_obj_vel_and_pos_y_underwater fun(objFloor: Surface, floorY: number, objVelX: number, objVelZ: number, waterY: number) Adjusts the current object's veloicty and y position for being underwater
+--- @field public smlua_collision_move fun(surface: Surface, vertex1: Vec3s, vertex2: Vec3s, vertex3: Vec3s) Moves an existing collision surface to new vertex positions. Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells. The previous vertices are preserved for interpolation
+--- @field public smlua_collision_delete fun(surface: Surface) Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
 --- @field public is_quicksand fun(surf: Surface): boolean Checks if the surface is quicksand
 --- @field public is_not_hard fun(surf: Surface): boolean Checks if the surface is not a hard surface
 --- @field public is_painting_warp fun(surf: Surface): boolean Checks if the surface is a painting warp
