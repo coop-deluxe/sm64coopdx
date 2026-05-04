@@ -12201,6 +12201,12 @@ function obj_anim_skip_interpolation(o)
     -- ...
 end
 
+--- @return integer
+--- Gets the current area's object count
+function obj_get_count()
+    -- ...
+end
+
 --- Resets every modified dialog back to vanilla
 function smlua_text_utils_reset_all()
     -- ...

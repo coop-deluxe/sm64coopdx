@@ -160,4 +160,7 @@ void obj_skip_interpolation(struct Object *o);
 /* |description|Skips animation interpolation for a frame|descriptionEnd| */
 void obj_anim_skip_interpolation(struct Object *o);
 
+/* |description|Gets the current area's object count|descriptionEnd| */
+u32 obj_get_count(void);
+
 #endif
