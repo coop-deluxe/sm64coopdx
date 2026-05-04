@@ -23,8 +23,14 @@
 
 /**
  * The maximum number of objects that can be loaded at once.
+ * The game seems to stop rendering new object GFX soon after this limit.
  */
-#define OBJECT_POOL_CAPACITY 256
+#define OBJECT_POOL_CAPACITY 4096
+
+/**
+ * The initial capacity of the object pool on area load.
+ */
+#define OBJECT_POOL_INIT_CAPACITY 256
 
 /**
  * Every object is categorized into an object list, which controls the order

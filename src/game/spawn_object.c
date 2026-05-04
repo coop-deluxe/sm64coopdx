@@ -89,6 +89,10 @@ struct Object *try_allocate_object(struct ObjectNode *destList, struct ObjectNod
         return NULL;
     }
 
+    if (gObjectPool->count >= OBJECT_POOL_CAPACITY) {
+        return NULL;
+    }
+
     struct Object *nextObj = growing_array_alloc(gObjectPool, sizeof(struct Object));
     if (nextObj == NULL) {
         LOG_ERROR("Failed to allocate an object.\n");
@@ -245,27 +249,8 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     struct Object *obj = try_allocate_object(objList, &gFreeObjectList);
 
     // The object list is full if the newly created pointer is NULL.
-    // If this happens, we first attempt to unload unimportant objects
-    // in order to finish allocating the object.
     if (obj == NULL) {
-        // Look for an unimportant object to kick out.
-        struct Object *unimportantObj = find_unimportant_object();
-
-        // If no unimportant object exists, then the object pool is exhausted.
-        if (unimportantObj == NULL) {
-            // We've met with a terrible fate.
-            return NULL;
-        } else {
-            // If an unimportant object does exist, unload it and take its slot.
-            unload_object(unimportantObj);
-            obj = try_allocate_object(objList, &gFreeObjectList);
-            if (gCurrentObject == obj) {
-                //! Uh oh, the unimportant object was in the middle of
-                //  updating! This could cause some interesting logic errors,
-                //  but I don't know of any unimportant objects that spawn
-                //  other objects.
-            }
-        }
+        return NULL;
     }
 
     // Initialize object fields

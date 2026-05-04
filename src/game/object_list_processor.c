@@ -593,7 +593,7 @@ void clear_objects(void) {
         gDoorAdjacentRooms[i][1] = 0;
     }
 
-    gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_CAPACITY, malloc, free);
+    gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_INIT_CAPACITY, malloc, free);
     if (gObjectPool == NULL) {
         LOG_ERROR("Could not initialize object pool.\n");
         return;
@@ -738,7 +738,4 @@ void update_objects(UNUSED s32 unused) {
     }
 
     gPrevFrameObjectCount = gObjectCounter;
-    char buffer[256];
-    sprintf(buffer, "%d", gObjectPool->count);
-    djui_chat_message_create(buffer);
 }
