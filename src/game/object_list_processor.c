@@ -1,5 +1,7 @@
 #include <PR/ultratypes.h>
 
+#include "pc/debuglog.h"
+#include "pc/djui/djui_chat_message.h"
 #include "sm64.h"
 #include "area.h"
 #include "behavior_data.h"
@@ -72,7 +74,7 @@ u32 gTimeStopState;
 /**
  * The pool that objects are allocated from.
  */
-struct Object gObjectPool[OBJECT_POOL_CAPACITY];
+struct GrowingArray* gObjectPool;
 
 /**
  * A special object whose purpose is to act as a parent for macro objects.
@@ -573,7 +575,6 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
  * Clear objects, dynamic surfaces, and some miscellaneous level data used by objects.
  */
 void clear_objects(void) {
-    s32 i;
     sync_objects_clear();
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
@@ -587,9 +588,15 @@ void clear_objects(void) {
         gMarioStates[i].currentRoom = 0;
     }
 
-    for (i = 0; i < 60; i++) {
+    for (s32 i = 0; i < 60; i++) {
         gDoorAdjacentRooms[i][0] = 0;
         gDoorAdjacentRooms[i][1] = 0;
+    }
+
+    gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_CAPACITY, malloc, free);
+    if (gObjectPool == NULL) {
+        LOG_ERROR("Could not initialize object pool");
+        return;
     }
 
     debug_unknown_level_select_check();
@@ -597,9 +604,10 @@ void clear_objects(void) {
     init_free_object_list();
     clear_object_lists(gObjectListArray);
 
-    for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
-        geo_reset_object_node(&gObjectPool[i].header.gfx);
+    for (u32 i = 0; i < gObjectPool->count; i++) {
+        struct Object* obj = gObjectPool->buffer[i];
+        obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        geo_reset_object_node(&obj->header.gfx);
     }
 
     gObjectLists = gObjectListArray;
@@ -736,4 +744,7 @@ void update_objects(UNUSED s32 unused) {
     }
 
     gPrevFrameObjectCount = gObjectCounter;
+    char buffer[256];
+    sprintf(buffer, "%d", gObjectCounter);
+    djui_chat_message_create(buffer);
 }

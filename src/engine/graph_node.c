@@ -582,7 +582,7 @@ struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *chil
     struct GraphNode *parentFirstChild;
     struct GraphNode *parentLastChild;
 
-    if (childNode != NULL) {
+    if (childNode != NULL && parent != NULL) {
         childNode->parent = parent;
         parentFirstChild = parent->children;
 
@@ -592,10 +592,12 @@ struct GraphNode *geo_add_child(struct GraphNode *parent, struct GraphNode *chil
             childNode->next = childNode;
         } else {
             parentLastChild = parentFirstChild->prev;
-            childNode->prev = parentLastChild;
-            childNode->next = parentFirstChild;
-            parentFirstChild->prev = childNode;
-            parentLastChild->next = childNode;
+            if (parentLastChild != NULL) {
+                childNode->prev = parentLastChild;
+                childNode->next = parentFirstChild;
+                parentFirstChild->prev = childNode;
+                parentLastChild->next = childNode;
+            }
         }
     }
 

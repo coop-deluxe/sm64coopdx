@@ -4,6 +4,7 @@
 #include <PR/ultratypes.h>
 
 #include "area.h"
+#include "game/memory.h"
 #include "macros.h"
 #include "types.h"
 
@@ -23,7 +24,7 @@
 /**
  * The maximum number of objects that can be loaded at once.
  */
-#define OBJECT_POOL_CAPACITY 1200
+#define OBJECT_POOL_CAPACITY 256
 
 /**
  * Every object is categorized into an object list, which controls the order
@@ -79,7 +80,7 @@ extern s16 gDebugInfo[][8];
 extern s16 gDebugInfoOverwrite[][8];
 
 extern u32 gTimeStopState;
-extern struct Object gObjectPool[];
+extern struct GrowingArray* gObjectPool;
 extern struct Object gMacroObjectDefaultParent;
 extern struct ObjectNode *gObjectLists;
 extern struct ObjectNode gFreeObjectList;

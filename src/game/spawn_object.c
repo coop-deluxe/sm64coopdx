@@ -6,6 +6,7 @@
 #include "engine/graph_node.h"
 #include "engine/math_util.h"
 #include "engine/surface_collision.h"
+#include "game/memory.h"
 #include "level_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
@@ -153,16 +154,15 @@ static void deallocate_object(struct ObjectNode *freeList, struct ObjectNode *ob
  * Add every object in the pool to the free object list.
  */
 void init_free_object_list(void) {
-    s32 poolLength = OBJECT_POOL_CAPACITY;
-
     // Add the first object in the pool to the free list
-    struct Object *obj = &gObjectPool[0];
+    struct Object* obj = growing_array_alloc(gObjectPool, sizeof(struct Object));
     gFreeObjectList.next = (struct ObjectNode *) obj;
 
     // Link each object in the pool to the following object
-    for (s32 i = 0; i < poolLength - 1; i++) {
-        obj->header.next = &(obj + 1)->header;
-        obj++;
+    for (s32 i = 0; i < OBJECT_POOL_CAPACITY - 1; i++) {
+        struct Object* next_obj = growing_array_alloc(gObjectPool, sizeof(struct Object));
+        obj->header.next = &next_obj->header;
+        obj = next_obj;
     }
 
     // End the list

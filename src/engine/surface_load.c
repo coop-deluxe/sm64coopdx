@@ -859,8 +859,9 @@ void clear_dynamic_surfaces(void) {
 
     clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
 
-    for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        gObjectPool[i].numSurfaces = 0;
+    for (u16 i = 0; i < gObjectPool->count; i++) {
+        struct Object* obj = gObjectPool->buffer[i];
+        obj->numSurfaces = 0;
     }
 }
 

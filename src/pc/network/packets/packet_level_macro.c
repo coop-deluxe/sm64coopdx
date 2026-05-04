@@ -18,8 +18,8 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
+    for (u32 i = 0; i < gObjectPool->count; i++) {
+        struct Object* o = gObjectPool->buffer[i];
         if (o->respawnInfo == respawnInfo) { return o; }
     }
     return NULL;
@@ -196,8 +196,8 @@ void network_receive_level_macro(struct Packet* p) {
                 o->oCoinUnkF4 = (o->oBehParams >> 8) & 0xFF;
 
                 u8 childIndex = 0;
-                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-                    struct Object* o2 = &gObjectPool[i];
+                for (u32 i = 0; i < gObjectPool->count; i++) {
+                    struct Object* o2 = gObjectPool->buffer[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
                     if (o2->behavior != smlua_override_behavior(bhvCoinFormationSpawn) && o2->behavior != smlua_override_behavior(bhvYellowCoin)) { continue; }
@@ -207,8 +207,8 @@ void network_receive_level_macro(struct Packet* p) {
                 }
                 LOG_INFO("rx macro special: coin formation");
             } else if (behavior == bhvGoombaTripletSpawner) {
-                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-                    struct Object* o2 = &gObjectPool[i];
+                for (u32 i = 0; i < gObjectPool->count; i++) {
+                    struct Object* o2 = gObjectPool->buffer[i];
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
                     if (o2->behavior != smlua_override_behavior(bhvGoomba)) { continue; }

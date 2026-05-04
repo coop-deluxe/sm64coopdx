@@ -16,8 +16,8 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
+    for (u32 i = 0; i < gObjectPool->count; i++) {
+        struct Object* o = gObjectPool->buffer[i];
         if (o->respawnInfo == respawnInfo) { return o; }
     }
     return NULL;
