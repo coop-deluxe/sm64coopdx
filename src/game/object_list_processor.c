@@ -1,7 +1,6 @@
 #include <PR/ultratypes.h>
 
 #include "pc/debuglog.h"
-#include "pc/djui/djui_chat_message.h"
 #include "sm64.h"
 #include "area.h"
 #include "behavior_data.h"
