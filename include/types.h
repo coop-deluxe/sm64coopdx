@@ -112,6 +112,7 @@ struct VblankHandler
 #define ANIM_FLAG_6           (1 << 6) // 0x40
 #define ANIM_FLAG_7           (1 << 7) // 0x80
 #define ANIM_FLAG_BONE_TRANS  (1 << 8)
+#define ANIM_FLAG_BONE_SCALE  (1 << 9)
 
 struct Animation {
     // TODO: Optimize this later if possible.
