@@ -1183,6 +1183,15 @@
 --- @field public floorAngle integer
 --- @field public waterLevel integer
 --- @field public currentRoom integer
+--- @field public swimStrength integer
+--- @field public minSwimStrength integer
+--- @field public waterBobTimer integer
+--- @field public waterBobIncrement integer
+--- @field public maxSwimStrength integer
+--- @field public minSwimDecelThreshold number
+--- @field public maxSwimSpeed number
+--- @field public waterBobHeight number
+--- @field public isAtWaterSurface boolean
 
 --- @class Mod
 --- @field public name string

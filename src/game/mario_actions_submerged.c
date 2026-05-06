@@ -22,38 +22,21 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
 
-#define MIN_SWIM_STRENGTH 160
-#define MIN_SWIM_SPEED 16.0f
-
-static s16 sWasAtSurface[MAX_PLAYERS] = { FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE };
-static s16 sSwimStrength[MAX_PLAYERS] = { MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH };
-
 static s16 sWaterCurrentSpeeds[] = { 28, 12, 8, 4 };
-
-static s16 sBobTimer;
-static s16 sBobIncrement;
-static f32 sBobHeight;
 
 /* |description|Sets Mario's particle flags if he's at the surface of a water box|descriptionEnd| */
 void set_swimming_at_surface_particles(struct MarioState *m, u32 particleFlag) {
     if (!m) { return; }
     s16 atSurface = m->pos[1] >= m->waterLevel - 130;
-    u16 pIndex = m->playerIndex;
 
     if (atSurface) {
         set_mario_particle_flags(m, particleFlag, FALSE);
-        if (atSurface ^ sWasAtSurface[pIndex]) {
+        if (m->isAtWaterSurface) {
             play_sound(SOUND_ACTION_UNKNOWN431, m->marioObj->header.gfx.cameraToObject);
         }
     }
 
-    sWasAtSurface[pIndex] = atSurface;
+    m->isAtWaterSurface = atSurface;
 }
 
 static s32 swimming_near_surface(struct MarioState *m) {
@@ -209,7 +192,7 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-  
+
     if (nextPos[1] > m->waterLevel - 80) {
         bool allowForceAction = true;
         smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
@@ -265,7 +248,7 @@ static void stationary_slow_down(struct MarioState *m) {
 static void update_swimming_speed(struct MarioState *m, f32 decelThreshold) {
     if (!m) { return; }
     f32 buoyancy = get_buoyancy(m);
-    f32 maxSpeed = 28.0f;
+    f32 maxSpeed = m->maxSwimSpeed;
 
     if (m->action & ACT_FLAG_STATIONARY) {
         m->forwardVel -= 2.0f;
@@ -346,7 +329,7 @@ static void common_idle_step(struct MarioState *m, s32 animation, s32 arg) {
 
     update_swimming_yaw(m);
     update_swimming_pitch(m);
-    update_swimming_speed(m, MIN_SWIM_SPEED);
+    update_swimming_speed(m, m->minSwimDecelThreshold);
     perform_water_step(m);
     update_water_pitch(m);
 
@@ -461,22 +444,22 @@ static s32 act_hold_water_action_end(struct MarioState *m) {
 
 static void reset_float_globals(struct MarioState *m) {
     if (!m) { return; }
-    sBobTimer = 0;
-    sBobIncrement = 0x800;
-    sBobHeight = m->faceAngle[0] / 256.0f + 20.0f;
+    m->waterBobTimer = 0;
+    m->waterBobIncrement = 0x800;
+    m->waterBobHeight = m->faceAngle[0] / 256.0f + 20.0f;
 }
 
 /* |description|Controls the bobbing that happens when you swim near the water surface|descriptionEnd| */
 void float_surface_gfx(struct MarioState *m) {
     if (!m) { return; }
-    if (sBobIncrement != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
-        if ((sBobTimer += sBobIncrement) >= 0) {
-            m->marioObj->header.gfx.pos[1] += sBobHeight * sins(sBobTimer);
+    if (m->waterBobIncrement != 0 && m->pos[1] > m->waterLevel - 85 && m->faceAngle[0] >= 0) {
+        if ((m->waterBobTimer += m->waterBobIncrement) >= 0) {
+            m->marioObj->header.gfx.pos[1] += m->waterBobHeight * sins(m->waterBobTimer);
             return;
         }
     }
 
-    sBobIncrement = 0;
+    m->waterBobIncrement = 0;
 }
 
 static void common_swimming_step(struct MarioState *m, s16 swimStrength) {
@@ -539,9 +522,9 @@ static s32 check_water_jump(struct MarioState *m) {
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
-        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
+        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
             bool allowForceAction = true;
-            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction); 
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
             if (!allowForceAction) { return FALSE; }
 
             vec3s_set(m->angleVel, 0, 0, 0);
@@ -561,10 +544,9 @@ static s32 check_water_jump(struct MarioState *m) {
 
 static s32 act_breaststroke(struct MarioState *m) {
     if (!m) { return 0; }
-    u16 pIndex = m->playerIndex;
 
     if (m->actionArg == 0) {
-        sSwimStrength[pIndex] = MIN_SWIM_STRENGTH;
+        m->swimStrength = m->minSwimStrength;
     }
 
     if (m->flags & MARIO_METAL_CAP) {
@@ -600,12 +582,12 @@ static s32 act_breaststroke(struct MarioState *m) {
             set_anim_to_frame(m, 0);
             m->actionState = 0;
             m->actionTimer = 1;
-            sSwimStrength[pIndex] = MIN_SWIM_STRENGTH;
+            m->swimStrength = m->minSwimStrength;
         }
     }
 
     if (m->actionTimer == 1) {
-        play_sound(sSwimStrength[pIndex] == MIN_SWIM_STRENGTH ? SOUND_ACTION_SWIM : SOUND_ACTION_SWIM_FAST,
+        play_sound(m->swimStrength == m->minSwimStrength ? SOUND_ACTION_SWIM : SOUND_ACTION_SWIM_FAST,
                    m->marioObj->header.gfx.cameraToObject);
         reset_float_globals(m);
     }
@@ -615,14 +597,13 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     set_character_animation(m, CHAR_ANIM_SWIM_PART1);
-    common_swimming_step(m, sSwimStrength[pIndex]);
+    common_swimming_step(m, m->swimStrength);
 
     return FALSE;
 }
 
 static s32 act_swimming_end(struct MarioState *m) {
     if (!m) { return 0; }
-    u16 pIndex = m->playerIndex;
 
     if (m->flags & MARIO_METAL_CAP) {
         return set_mario_action(m, ACT_METAL_WATER_FALLING, 1);
@@ -641,28 +622,27 @@ static s32 act_swimming_end(struct MarioState *m) {
     }
 
     if ((m->input & INPUT_A_DOWN) && m->actionTimer >= 7) {
-        if (m->actionTimer == 7 && sSwimStrength[pIndex] < 280) {
-            sSwimStrength[pIndex] += 10;
+        if (m->actionTimer == 7 && m->swimStrength < m->maxSwimStrength) {
+            m->swimStrength += 10;
         }
         return set_mario_action(m, ACT_BREASTSTROKE, 1);
     }
 
     if (m->actionTimer >= 7) {
-        sSwimStrength[pIndex] = MIN_SWIM_STRENGTH;
+        m->swimStrength = m->minSwimStrength;
     }
 
     m->actionTimer++;
 
     m->forwardVel -= 0.25f;
     set_character_animation(m, CHAR_ANIM_SWIM_PART2);
-    common_swimming_step(m, sSwimStrength[pIndex]);
+    common_swimming_step(m, m->swimStrength);
 
     return FALSE;
 }
 
 static s32 act_flutter_kick(struct MarioState *m) {
     if (!m) { return 0; }
-    u16 pIndex = m->playerIndex;
 
     if (m->flags & MARIO_METAL_CAP) {
         return set_mario_action(m, ACT_METAL_WATER_FALLING, 1);
@@ -673,22 +653,22 @@ static s32 act_flutter_kick(struct MarioState *m) {
     }
 
     if (!(m->input & INPUT_A_DOWN)) {
-        if (m->actionTimer == 0 && sSwimStrength[pIndex] < 280) {
-            sSwimStrength[pIndex] += 10;
+        if (m->actionTimer == 0 && m->swimStrength < m->maxSwimStrength) {
+            m->swimStrength += 10;
         }
         return set_mario_action(m, ACT_SWIMMING_END, 0);
     }
 
     m->forwardVel = approach_f32(m->forwardVel, 12.0f, 0.1f, 0.15f);
     m->actionTimer = 1;
-    sSwimStrength[pIndex] = MIN_SWIM_STRENGTH;
+    m->swimStrength = m->minSwimStrength;
 
     if (m->forwardVel < 14.0f) {
         play_swimming_noise(m);
         set_character_animation(m, CHAR_ANIM_FLUTTERKICK);
     }
 
-    common_swimming_step(m, sSwimStrength[pIndex]);
+    common_swimming_step(m, m->swimStrength);
     return FALSE;
 }
 
@@ -862,7 +842,7 @@ static s32 act_water_throw(struct MarioState *m) {
     if (!m) { return 0; }
     update_swimming_yaw(m);
     update_swimming_pitch(m);
-    update_swimming_speed(m, MIN_SWIM_SPEED);
+    update_swimming_speed(m, m->minSwimDecelThreshold);
     perform_water_step(m);
     update_water_pitch(m);
 
@@ -891,7 +871,7 @@ static s32 act_water_punch(struct MarioState *m) {
 
     update_swimming_yaw(m);
     update_swimming_pitch(m);
-    update_swimming_speed(m, MIN_SWIM_SPEED);
+    update_swimming_speed(m, m->minSwimDecelThreshold);
     perform_water_step(m);
     update_water_pitch(m);
 
@@ -1107,7 +1087,7 @@ static s32 act_water_plunge(struct MarioState *m) {
                 set_mario_action(m, ACT_HOLD_METAL_WATER_FALLING, 0);
                 break;
         }
-        sBobIncrement = 0;
+        m->waterBobIncrement = 0;
     }
 
     switch (stateFlags) {

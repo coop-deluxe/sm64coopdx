@@ -1700,6 +1700,15 @@
 | floorAngle | `integer` |  |
 | waterLevel | `integer` |  |
 | currentRoom | `integer` |  |
+| swimStrength | `integer` |  |
+| minSwimStrength | `integer` |  |
+| waterBobTimer | `integer` |  |
+| waterBobIncrement | `integer` |  |
+| maxSwimStrength | `integer` |  |
+| minSwimDecelThreshold | `number` |  |
+| maxSwimSpeed | `number` |  |
+| waterBobHeight | `number` |  |
+| isAtWaterSurface | `boolean` |  |
 
 [:arrow_up_small:](#)
 

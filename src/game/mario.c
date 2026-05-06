@@ -2277,6 +2277,16 @@ void init_single_mario(struct MarioState* m) {
 
     m->action = (m->pos[1] <= (m->waterLevel - 100)) ? ACT_WATER_IDLE : ACT_IDLE;
 
+    m->minSwimStrength = 160;
+    m->maxSwimStrength = 280;
+    m->swimStrength = m->minSwimStrength;
+    m->minSwimDecelThreshold = 16.0f;
+    m->maxSwimSpeed = 28.0f;
+    m->isAtWaterSurface = false;
+    m->waterBobHeight = 0;
+    m->waterBobIncrement = 0;
+    m->waterBobTimer = 0;
+
     update_mario_info_for_cam(m);
     m->marioBodyState->punchState = 0;
 

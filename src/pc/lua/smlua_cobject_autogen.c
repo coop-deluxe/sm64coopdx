@@ -1389,7 +1389,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE                                      },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 80
+#define LUA_MARIO_STATE_FIELD_COUNT 89
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                    LVT_U32,       offsetof(struct MarioState, action),                    false, LOT_NONE              },
     { "actionArg",                 LVT_U32,       offsetof(struct MarioState, actionArg),                 false, LOT_NONE              },
@@ -1431,10 +1431,15 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "intendedYaw",               LVT_S16,       offsetof(struct MarioState, intendedYaw),               false, LOT_NONE              },
     { "interactObj",               LVT_COBJECT_P, offsetof(struct MarioState, interactObj),               false, LOT_OBJECT            },
     { "invincTimer",               LVT_S16,       offsetof(struct MarioState, invincTimer),               false, LOT_NONE              },
+    { "isAtWaterSurface",          LVT_BOOL,      offsetof(struct MarioState, isAtWaterSurface),          false, LOT_NONE              },
     { "isSnoring",                 LVT_U8,        offsetof(struct MarioState, isSnoring),                 false, LOT_NONE              },
     { "knockbackTimer",            LVT_S8,        offsetof(struct MarioState, knockbackTimer),            false, LOT_NONE              },
     { "marioBodyState",            LVT_COBJECT_P, offsetof(struct MarioState, marioBodyState),            true,  LOT_MARIOBODYSTATE    },
     { "marioObj",                  LVT_COBJECT_P, offsetof(struct MarioState, marioObj),                  true,  LOT_OBJECT            },
+    { "maxSwimSpeed",              LVT_F32,       offsetof(struct MarioState, maxSwimSpeed),              false, LOT_NONE              },
+    { "maxSwimStrength",           LVT_S16,       offsetof(struct MarioState, maxSwimStrength),           false, LOT_NONE              },
+    { "minSwimDecelThreshold",     LVT_F32,       offsetof(struct MarioState, minSwimDecelThreshold),     false, LOT_NONE              },
+    { "minSwimStrength",           LVT_S16,       offsetof(struct MarioState, minSwimStrength),           false, LOT_NONE              },
     { "minimumBoneY",              LVT_F32,       offsetof(struct MarioState, minimumBoneY),              false, LOT_NONE              },
     { "nonInstantWarpPos",         LVT_COBJECT,   offsetof(struct MarioState, nonInstantWarpPos),         true,  LOT_VEC3F             },
     { "numCoins",                  LVT_S16,       offsetof(struct MarioState, numCoins),                  false, LOT_NONE              },
@@ -1460,6 +1465,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "splineState",               LVT_S32,       offsetof(struct MarioState, splineState),               false, LOT_NONE              },
     { "squishTimer",               LVT_U8,        offsetof(struct MarioState, squishTimer),               false, LOT_NONE              },
     { "statusForCamera",           LVT_COBJECT_P, offsetof(struct MarioState, statusForCamera),           true,  LOT_PLAYERCAMERASTATE },
+    { "swimStrength",              LVT_S16,       offsetof(struct MarioState, swimStrength),              false, LOT_NONE              },
     { "terrainSoundAddend",        LVT_U32,       offsetof(struct MarioState, terrainSoundAddend),        false, LOT_NONE              },
     { "twirlYaw",                  LVT_S16,       offsetof(struct MarioState, twirlYaw),                  false, LOT_NONE              },
     { "unkB0",                     LVT_S16,       offsetof(struct MarioState, unkB0),                     false, LOT_NONE              },
@@ -1470,6 +1476,9 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "wallKickTimer",             LVT_U8,        offsetof(struct MarioState, wallKickTimer),             false, LOT_NONE              },
     { "wallNormal",                LVT_COBJECT,   offsetof(struct MarioState, wallNormal),                true,  LOT_VEC3F             },
     { "wasNetworkVisible",         LVT_U8,        offsetof(struct MarioState, wasNetworkVisible),         false, LOT_NONE              },
+    { "waterBobHeight",            LVT_F32,       offsetof(struct MarioState, waterBobHeight),            false, LOT_NONE              },
+    { "waterBobIncrement",         LVT_S16,       offsetof(struct MarioState, waterBobIncrement),         false, LOT_NONE              },
+    { "waterBobTimer",             LVT_S16,       offsetof(struct MarioState, waterBobTimer),             false, LOT_NONE              },
     { "waterLevel",                LVT_S16,       offsetof(struct MarioState, waterLevel),                false, LOT_NONE              },
 };
 
