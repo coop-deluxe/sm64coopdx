@@ -75,7 +75,7 @@ void network_receive_sync_valid(struct Packet* p) {
     }
 
     // inform server
-    if (isOurSyncValid && fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
+    if (gNetworkType != NT_SERVER && fromGlobalIndex != gNetworkPlayerServer->globalIndex) {
         LOG_INFO("informing server of sync valid");
         network_send_sync_valid(np, courseNum, actNum, levelNum, areaIndex, true);
     }
