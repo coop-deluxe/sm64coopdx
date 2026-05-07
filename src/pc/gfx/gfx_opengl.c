@@ -268,8 +268,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_dither = cc->cm.use_dither;
 #endif
 
-    char vs_buf[1024];
-    char fs_buf[4096];
+    char vs_buf[8192];
+    char fs_buf[8192];
     size_t vs_len = 0;
     size_t fs_len = 0;
     size_t num_floats = 4;
