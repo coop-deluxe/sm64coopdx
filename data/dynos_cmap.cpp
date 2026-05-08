@@ -131,22 +131,22 @@ void* hmap_data_create(void) {
     return new HMap<std::string, true>();
 }
 
-void* hmap_data_get(void* map, const char* data, size_t len) {
+void* hmap_data_get(void* map, const char* key, size_t len) {
     if (!map) { return NULL; }
-    std::string key(data, len);
-    return static_cast<IHMap<std::string>*>(map)->get(key);
+    std::string keyString(key, len);
+    return static_cast<IHMap<std::string>*>(map)->get(keyString);
 }
 
-void hmap_data_put(void* map, const char* data, size_t len, void* value) {
+void hmap_data_put(void* map, const char* key, size_t len, void* value) {
     if (!map) { return; }
-    std::string key(data, len);
-    static_cast<IHMap<std::string>*>(map)->put(key, value);
+    std::string keyString(key, len);
+    static_cast<IHMap<std::string>*>(map)->put(keyString, value);
 }
 
-void hmap_data_del(void* map, const char* data, size_t len) {
+void hmap_data_del(void* map, const char* key, size_t len) {
     if (!map) { return; }
-    std::string key(data, len);
-    static_cast<IHMap<std::string>*>(map)->erase(key);
+    std::string keyString(key, len);
+    static_cast<IHMap<std::string>*>(map)->erase(keyString);
 }
 
 void hmap_data_clear(void* map) {
