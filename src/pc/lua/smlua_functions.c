@@ -821,8 +821,11 @@ int smlua_func_add_scroll_target(lua_State* L) {
     }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
-    if (!smlua_functions_valid_param_range(L, 2, 4)) { return 0; }
     int paramCount = lua_gettop(L);
+    if (paramCount < 2 || paramCount > 4) {
+        LOG_LUA_LINE("Improper param count: Expected (2 - 4), Received %u", paramCount);
+        return 0;
+    }
 
     u32 index = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("add_scroll_target: Failed to convert parameter 1 for function"); return 0; }

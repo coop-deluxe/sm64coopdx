@@ -9,7 +9,7 @@
 // Please update the following table when implementing a new command.
 //
 // RSP ->                     09 0a 0b 0c 0d 0e 0f
-// 10          14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
+//             14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
 // 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
 // 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f
 // 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f
@@ -222,3 +222,55 @@
 #define gsSPFresnel(scale, offset) \
     gsMoveWd(G_MW_FX, G_MWO_FRESNEL, \
         (_SHIFTL((scale), 16, 16) | _SHIFTL((offset), 0, 16)))
+
+/////////////////
+// G_STATE_EXT //
+/////////////////
+
+#define G_STATE_EXT     0x10
+
+#define G_STATE_LOAD    0
+#define G_STATE_SAVE    1
+
+#define G_STATE_GEOMETRY_MODE   (1 << 0)
+#define G_STATE_COMBINE_MODE    (1 << 1)
+#define G_STATE_OTHER_MODE_L    (1 << 2)
+#define G_STATE_OTHER_MODE_H    (1 << 3)
+#define G_STATE_OTHER_MODE      (G_STATE_OTHER_MODE_L | G_STATE_OTHER_MODE_H)
+#define G_STATE_ENV_COLOR       (1 << 4)
+#define G_STATE_PRIM_COLOR      (1 << 5)
+#define G_STATE_FOG_COLOR       (1 << 6)
+#define G_STATE_FILL_COLOR      (1 << 7)
+#define G_STATE_FRESNEL         (1 << 8)
+#define G_STATE_TEXTURES        (1 << 9)
+#define G_STATE_LIGHTS          (1 << 10)
+#define G_STATE_VIEWPORT        (1 << 11)
+#define G_STATE_SCISSOR         (1 << 12)
+#define G_STATE_Z_BUFFER        (1 << 13)
+#define G_STATE_COLOR_IMAGE     (1 << 14)
+
+#define gSPLoadState(pkt, state) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_STATE_EXT,24,8)|_SHIFTL(G_STATE_LOAD,16,8); \
+    _g->words.w1 = (u32)(state); \
+}
+
+#define gsSPLoadState(state) \
+{{ \
+    (_SHIFTL(G_STATE_EXT,24,8)|_SHIFTL(G_STATE_LOAD,16,8)), \
+    (u32)(state) \
+}}
+
+#define gSPSaveState(pkt, state) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_STATE_EXT,24,8)|_SHIFTL(G_STATE_SAVE,16,8); \
+    _g->words.w1 = (u32)(state); \
+}
+
+#define gsSPSaveState(state) \
+{{ \
+    (_SHIFTL(G_STATE_EXT,24,8)|_SHIFTL(G_STATE_SAVE,16,8)), \
+    (u32)(state) \
+}}

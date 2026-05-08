@@ -30,6 +30,7 @@
 struct ScrollTarget {
     u32 id;
     u32 size;
+    u32 capacity;
     Vtx* *vertices;
 
     bool hasOffset;

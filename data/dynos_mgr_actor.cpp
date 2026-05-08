@@ -1,16 +1,24 @@
-#include <map>
-#include <algorithm>
 #include <unordered_map>
 #include "dynos.cpp.h"
 
 extern "C" {
-#include "object_fields.h"
-#include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "pc/configfile.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mod_fs.h"
 }
+
+static ObjectList sObjectListsToOverride[] = {
+    OBJ_LIST_PLAYER,
+    OBJ_LIST_DESTRUCTIVE,
+    OBJ_LIST_GENACTOR,
+    OBJ_LIST_PUSHABLE,
+    OBJ_LIST_LEVEL,
+    OBJ_LIST_DEFAULT,
+    OBJ_LIST_SURFACE,
+    OBJ_LIST_POLELIKE,
+    OBJ_LIST_UNIMPORTANT
+};
 
 // Static maps/arrays
 static std::map<const void*, ActorGfx>& DynosValidActors() {
@@ -25,13 +33,11 @@ static std::vector<std::pair<std::string, void *>> &DynosCustomActors() {
 
 static std::map<struct GraphNode *, struct GraphNode *> sModifiedGraphNodes;
 
-// TODO: the cleanup/refactor didn't really go as planned.
-//       clean up the actor management code more
-
 std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors() {
     return DynosValidActors();
 }
 
+// Only used for mods with custom actors.
 bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName) {
     const void* georef = DynOS_Builtin_Actor_GetFromName(aActorName);
 
@@ -51,23 +57,27 @@ bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
         return false;
     }
 
-    // Alloc and init the actors gfx list
+    // Load the graph node
     u32 id = 0;
-    ActorGfx actorGfx   = {  };
-    actorGfx.mGfxData   = _GfxData;
-    actorGfx.mPackIndex = MOD_PACK_INDEX;
-    actorGfx.mGraphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
-    if (!actorGfx.mGraphNode) {
+    GraphNode *graphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
+    if (!graphNode) {
         PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName.c_str());
         return false;
     }
-    actorGfx.mGraphNode->georef = georef;
+    graphNode->georef = georef;
 
     // Add to custom actors
     if (georef == NULL) {
         DynosCustomActors().emplace_back(actorName, geoLayout);
         georef = geoLayout;
     }
+
+    // Alloc and init the actors gfx list
+    ActorGfx actorGfx = {
+        .mGfxData   = _GfxData,
+        .mGraphNode = graphNode,
+        .mPackIndex = MOD_PACK_INDEX,
+    };
 
     // Add to list
     DynOS_Actor_Valid(georef, actorGfx);
@@ -121,44 +131,28 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     return NULL;
 }
 
+bool DynOS_Actor_GetModIndexAndTokenFromGfxData(const GfxData *aGfxData, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken) {
+    if (aGfxData) {
+        if (outModIndex) { *outModIndex = aGfxData->mModIndex; }
+        if (outModFileIndex) { *outModFileIndex = aGfxData->mModFileIndex; }
+        if (outToken) {
+            if (!aTokenIndex || aTokenIndex > aGfxData->mLuaTokenList.Count()) {
+                return false;
+            }
+            *outToken = aGfxData->mLuaTokenList[aTokenIndex - 1].begin(); // token index is 1-indexed
+        }
+        return true;
+    }
+    return false;
+}
+
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken) {
     ActorGfx *_ActorGfx = DynOS_Actor_GetActorGfx(aGraphNode);
     if (_ActorGfx) {
-        GfxData *_GfxData = _ActorGfx->mGfxData;
-        if (_GfxData) {
-            if (outModIndex) {
-                *outModIndex = _GfxData->mModIndex;
-            }
-            if (outModFileIndex) {
-                *outModFileIndex = _GfxData->mModFileIndex;
-            }
-            if (outToken) {
-                if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
-                    return false;
-                }
-                *outToken = _GfxData->mLuaTokenList[aTokenIndex - 1].begin(); // token index is 1-indexed
-            }
-            return true;
-        }
+        return DynOS_Actor_GetModIndexAndTokenFromGfxData(_ActorGfx->mGfxData, aTokenIndex, outModIndex, outModFileIndex, outToken);
     } else { // try the active level
-        GfxData *_GfxData = DynOS_Lvl_GetActiveGfx();
-        if (_GfxData) {
-            if (outModIndex) {
-                *outModIndex = _GfxData->mModIndex;
-            }
-            if (outModFileIndex) {
-                *outModFileIndex = _GfxData->mModFileIndex;
-            }
-            if (outToken) {
-                if (!aTokenIndex || aTokenIndex > _GfxData->mLuaTokenList.Count()) {
-                    return false;
-                }
-                *outToken = _GfxData->mLuaTokenList[aTokenIndex - 1].begin(); // token index is 1-indexed
-            }
-            return true;
-        }
+        return DynOS_Actor_GetModIndexAndTokenFromGfxData(DynOS_Lvl_GetActiveGfx(), aTokenIndex, outModIndex, outModFileIndex, outToken);
     }
-    return false;
 }
 
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode) {
@@ -214,13 +208,15 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     if (it == _ValidActors.end()) { return; }
 
     // Check if the behavior uses a character specific model
-    if (obj && (obj->behavior == bhvMario ||
-            obj->behavior == smlua_override_behavior(bhvNormalCap) ||
-            obj->behavior == smlua_override_behavior(bhvWingCap) ||
-            obj->behavior == smlua_override_behavior(bhvMetalCap) ||
-            obj->behavior == smlua_override_behavior(bhvVanishCap))) {
+    if (obj && (
+        obj->behavior == smlua_override_behavior(bhvMario)     ||
+        obj->behavior == smlua_override_behavior(bhvNormalCap) ||
+        obj->behavior == smlua_override_behavior(bhvWingCap)   ||
+        obj->behavior == smlua_override_behavior(bhvMetalCap)  ||
+        obj->behavior == smlua_override_behavior(bhvVanishCap)
+    )) {
         struct NetworkPlayer* np = network_player_from_global_index(obj->globalPlayerIndex);
-        if (np && np->localIndex > 0 && configDynosLocalPlayerModelOnly && it->second.mPackIndex != MOD_PACK_INDEX) {
+        if (np != NULL && np->localIndex > 0 && configDynosLocalPlayerModelOnly && it->second.mPackIndex != MOD_PACK_INDEX) {
             return;
         }
     }
@@ -228,10 +224,12 @@ void DynOS_Actor_Override(struct Object* obj, void** aSharedChild) {
     *aSharedChild = (void*)it->second.mGraphNode;
 }
 
+// Used for both DynOS packs and actors from mods, only overrides existing actors
 void DynOS_Actor_Override_All(void) {
     if (!gObjectLists) { return; }
+
     // Loop through all object lists
-    for (s32 list : { OBJ_LIST_PLAYER, OBJ_LIST_DESTRUCTIVE, OBJ_LIST_GENACTOR, OBJ_LIST_PUSHABLE, OBJ_LIST_LEVEL, OBJ_LIST_DEFAULT, OBJ_LIST_SURFACE, OBJ_LIST_POLELIKE, OBJ_LIST_UNIMPORTANT }) {
+    for (ObjectList list : sObjectListsToOverride) {
         struct Object *_Head = (struct Object *) &gObjectLists[list];
         for (struct Object *_Object = (struct Object *) _Head->header.next; _Object != _Head; _Object = (struct Object *) _Object->header.next) {
             if (_Object->activeFlags && _Object->header.gfx.sharedChild != NULL) {

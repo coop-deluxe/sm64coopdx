@@ -617,7 +617,7 @@ void network_update(void) {
             bool inCredits = (np->currActNum == 99);
             if (gNetworkType == NT_SERVER && (npAny == NULL || inCredits)) {
                 // no NetworkPlayer in the level
-                network_send_sync_valid(np, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
+                network_send_sync_valid(np, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex, false);
                 return;
             }
 
