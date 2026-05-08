@@ -90,6 +90,34 @@ static Gfx obj_sanitize_gfx[] = {
     gsSPEndDisplayList(),
 };
 
+static Gfx obj_load_gfx_state[] = {
+    gsSPLoadState(G_STATE_GEOMETRY_MODE
+                | G_STATE_COMBINE_MODE
+                | G_STATE_OTHER_MODE
+                | G_STATE_ENV_COLOR
+                | G_STATE_PRIM_COLOR
+                | G_STATE_FOG_COLOR
+                | G_STATE_FILL_COLOR
+                | G_STATE_FRESNEL
+                | G_STATE_TEXTURES
+                | G_STATE_LIGHTS),
+    gsSPEndDisplayList(),
+};
+
+static Gfx obj_save_gfx_state[] = {
+    gsSPSaveState(G_STATE_GEOMETRY_MODE
+                | G_STATE_COMBINE_MODE
+                | G_STATE_OTHER_MODE
+                | G_STATE_ENV_COLOR
+                | G_STATE_PRIM_COLOR
+                | G_STATE_FOG_COLOR
+                | G_STATE_FILL_COLOR
+                | G_STATE_FRESNEL
+                | G_STATE_TEXTURES
+                | G_STATE_LIGHTS),
+    gsSPEndDisplayList(),
+};
+
 /**
  * Animation nodes have state in global variables, so this struct captures
  * the animation state so a 'context switch' can be made when rendering the
@@ -550,6 +578,16 @@ static void geo_append_display_list(void *displayList, s16 layer) {
         }
         gCurGraphNodeMasterList->listTails[layer] = listNode;
     }
+}
+
+static void geo_append_display_list_to_all_layers(void *displayList) {
+    geo_append_display_list(displayList, LAYER_OPAQUE);
+    geo_append_display_list(displayList, LAYER_OPAQUE_DECAL);
+    geo_append_display_list(displayList, LAYER_OPAQUE_INTER);
+    geo_append_display_list(displayList, LAYER_ALPHA);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT_DECAL);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT_INTER);
 }
 
 /**
@@ -1436,13 +1474,15 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
 }
 
 static void geo_sanitize_object_gfx(void) {
-    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE_DECAL);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE_INTER);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT_DECAL);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT_INTER);
+    geo_append_display_list_to_all_layers(obj_sanitize_gfx);
+}
+
+static void geo_load_object_gfx_state(void) {
+    geo_append_display_list_to_all_layers(obj_load_gfx_state);
+}
+
+static void geo_save_object_gfx_state(void) {
+    geo_append_display_list_to_all_layers(obj_save_gfx_state);
 }
 
 static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
@@ -1729,6 +1769,10 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
             dynos_gfx_swap_animations(node->objNode);
         }
 
+        // The held object is going to change the gfx state before
+        // the holder finishes rendering, so let's save the state now
+        geo_save_object_gfx_state();
+
         geo_sanitize_object_gfx();
         // While rendering the held object's geo tree, ensure "current object" globals
         // refer to the held object, otherwise Lua geo callbacks can accidentally
@@ -1745,13 +1789,13 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         gCurrAnimAttribute = gGeoTempState.attribute;
         gCurAnim = gGeoTempState.anim;
         gPrevAnimFrame = gGeoTempState.prevFrame;
+
         // Force-restore matrix stack index to avoid any imbalance caused by
         // held object geo trees (including Lua geo callbacks).
         gMatStackIndex = savedMatStackIndex;
 
-        // Reset any render-state changes performed by the held object's geo tree
-        // so the holder's remaining body parts render correctly.
-        geo_sanitize_object_gfx();
+        // Restore the previously saved state before continuing
+        geo_load_object_gfx_state();
     }
 
     if (node->fnNode.node.children != NULL) {

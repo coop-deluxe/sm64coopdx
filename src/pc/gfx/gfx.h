@@ -26,6 +26,7 @@
 #define MAX_TILES 8
 #define MAX_TEXTURES 2
 #define MAX_CACHED_TEXTURES 4096 // for preloading purposes
+#define MAX_GFX_STATES 8
 
 #define HASH_SHIFT 0
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)

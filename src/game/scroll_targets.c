@@ -22,6 +22,7 @@ struct ScrollTarget *get_scroll_targets(u32 id, u16 size, u16 offset) {
             free(scroll->vertices);
             scroll->vertices = newVtx;
             scroll->size = size;
+            scroll->capacity = size;
             scroll->hasOffset = true;
         }
 
@@ -51,6 +52,7 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
         scroll = malloc(sizeof(struct ScrollTarget));
         scroll->id = id;
         scroll->size = 0;
+        scroll->capacity = 0;
         scroll->vertices = NULL;
         scroll->hasOffset = hasOffset;
         scroll->hasInterpInit = false;
@@ -75,25 +77,24 @@ struct ScrollTarget* find_or_create_scroll_targets(u32 id, bool hasOffset) {
 void add_vtx_scroll_target(u32 id, Vtx *vtx, u32 size, bool hasOffset) {
     struct ScrollTarget *scroll = find_or_create_scroll_targets(id, hasOffset);
     if (!scroll) { return; }
-    u32 oldSize = sizeof(Vtx*) * scroll->size;
-    u32 newSize = oldSize + (sizeof(Vtx*) * size);
 
-    Vtx* *newArray = realloc(scroll->vertices, newSize);
-
-    if (!newArray) {
-        newArray = malloc(newSize);
-        if (!newArray) { return; }
-        if (scroll->vertices && oldSize > 0) {
-            memcpy(newArray, scroll->vertices, oldSize);
+    u32 neededSize = scroll->size + size;
+    if (neededSize > scroll->capacity) {
+        u32 newCapacity = scroll->capacity == 0 ? 16 : scroll->capacity;
+        while (newCapacity < neededSize) {
+            newCapacity *= 2;
         }
-        free(scroll->vertices);
+        Vtx* *newArray = realloc(scroll->vertices, sizeof(Vtx*) * newCapacity);
+        if (!newArray) { return; }
+        scroll->vertices = newArray;
+        scroll->capacity = newCapacity;
     }
 
-    scroll->vertices = newArray;
-
+    Vtx** dest = &scroll->vertices[scroll->size];
     for (u32 i = 0; i < size; ++i) {
-        scroll->vertices[scroll->size++] = &vtx[i];
+        dest[i] = &vtx[i];
     }
+    scroll->size += size;
 }
 
 /*
