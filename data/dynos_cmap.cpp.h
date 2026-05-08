@@ -1,5 +1,7 @@
 #ifndef DYNOS_CMAP_CPP_H
 #define DYNOS_CMAP_CPP_H
+#endif
+
 #ifndef __cplusplus
 
 void* hmap_create(bool useUnordered);
@@ -21,5 +23,4 @@ void hmap_data_clear(void* map);
 void hmap_data_destroy(void* map);
 size_t hmap_data_len(void* map);
 
-#endif
 #endif
