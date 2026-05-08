@@ -19,6 +19,7 @@ void hmap_data_put(void* map, const char* data, size_t len, void* value);
 void hmap_data_del(void* map, const char* data, size_t len);
 void hmap_data_clear(void* map);
 void hmap_data_destroy(void* map);
+size_t hmap_data_len(void* map);
 
 #endif
 #endif
