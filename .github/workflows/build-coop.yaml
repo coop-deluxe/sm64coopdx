@@ -115,7 +115,7 @@ jobs:
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                name: sm64coopdx-windows-opengl
+                name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx_Windows.zip
 
     build-macos-arm:
