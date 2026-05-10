@@ -510,6 +510,15 @@ void render_game(void) {
             }
         }
     } else {
+        // this will get drawn over anyway so it doesn't
+        // matter to try and setup the rendering
+        //
+        // call this so any code running will still run
+        // even if nothing is shown on screen
+        if (!gDjuiDisabled) {
+            smlua_call_event_hooks(HOOK_ON_HUD_RENDER_BEHIND, djui_reset_hud_params);
+        }
+
         render_text_labels();
         if (gViewportClip != NULL) {
             clear_viewport(gViewportClip, gWarpTransFBSetColor);

@@ -61,6 +61,8 @@ define_gfx_symbol(gsSPFresnel, 2, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT)
 define_gfx_symbol(gsDPSetColorImage, 4, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol(gsSPNoOp, 0, false);
 define_gfx_symbol(gsSPMatrix, 2, false, GFX_PARAM_TYPE_PTR, GFX_PARAM_TYPE_INT);
+define_gfx_symbol(gsSPLoadState, 1, false, GFX_PARAM_TYPE_INT);
+define_gfx_symbol(gsSPSaveState, 1, false, GFX_PARAM_TYPE_INT);
 
 define_gfx_symbol_manual(gsSPTexture, 5, false, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT, GFX_PARAM_TYPE_INT);
 define_gfx_symbol_manual(gsSPSetGeometryMode, 1, false, GFX_PARAM_TYPE_INT);

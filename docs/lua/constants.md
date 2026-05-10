@@ -1318,6 +1318,7 @@
 - G_VTX_EXT
 - G_SETENVRGB
 - G_PPARTTOCOLOR
+- G_STATE_EXT
 
 [:arrow_up_small:](#)
 

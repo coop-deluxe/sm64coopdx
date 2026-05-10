@@ -119,7 +119,8 @@ include_constants = {
     "include/PR/gbi_extension.h": [
         "^G_VTX_EXT$",
         "^G_PPARTTOCOLOR$",
-        "^G_SETENVRGB$"
+        "^G_SETENVRGB$",
+        "^G_STATE_EXT$",
     ],
 }
 

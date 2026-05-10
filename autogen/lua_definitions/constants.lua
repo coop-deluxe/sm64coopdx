@@ -3031,6 +3031,9 @@ G_SETENVRGB = 0xd1
 --- @type integer
 G_PPARTTOCOLOR = 0xd3
 
+--- @type integer
+G_STATE_EXT = 0x10
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams

@@ -556,7 +556,7 @@ void init_mario_after_warp(void) {
     }
 
     if (gMarioState && gMarioState->health <= 0x110) {
-        gMarioState->health = 0x880;
+        gMarioState->health = 0x180;
     }
 
     if (gMarioState) {

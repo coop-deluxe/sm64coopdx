@@ -292,9 +292,8 @@ static void sys_fatal_impl(const char *msg) {
     exit(1);
 }
 
-#elif defined(HAVE_SDL2)
+#else
 
-// we can just ask SDL for most of this shit if we have it
 #include <SDL2/SDL.h>
 
 const char *sys_user_path(void) {
@@ -391,32 +390,4 @@ static void sys_fatal_impl(const char *msg) {
     exit(1);
 }
 
-#else
-
-#ifndef WAPI_DUMMY
-#warning "You might want to implement these functions for your platform"
 #endif
-
-const char *sys_user_path(void) {
-    return ".";
-}
-
-const char *sys_exe_path(void) {
-    return ".";
-}
-
-static void sys_fatal_impl(const char *msg) {
-    fprintf(stderr, "FATAL ERROR:\n%s\n", msg);
-    fflush(stderr);
-    exit(1);
-}
-
-const char *sys_resource_path(void) {
-    return ".";
-}
-
-const char *sys_exe_path_dir(void) {
-    return ".";
-}
-
-#endif // platform switch

@@ -192,6 +192,10 @@ static void gfx_dummy_renderer_end_frame(void) {
 static void gfx_dummy_renderer_finish_render(void) {
 }
 
+static const char* gfx_dummy_renderer_get_name(void) {
+    return "Headless";
+}
+
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
@@ -242,5 +246,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_start_frame,
     gfx_dummy_renderer_end_frame,
     gfx_dummy_renderer_finish_render,
+    gfx_dummy_renderer_get_name,
     gfx_dummy_renderer_shutdown
 };
