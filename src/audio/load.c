@@ -1595,7 +1595,7 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
             // Check if the bank is already loaded in the temporary cache
             if (get_bank_or_seq(&gBankLoadedPool, 0, bankId) == NULL) {
                 if (!bank_load_immediate(bankId, 0)) { return; }
-            } else {
+            } else if (gBankLoadStatus[bankId] == SOUND_LOAD_STATUS_DISCARDABLE) {
                 // This bank is still available, so just mark it as loaded again
                 gBankLoadStatus[bankId] = SOUND_LOAD_STATUS_COMPLETE;
             }
