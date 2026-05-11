@@ -613,9 +613,16 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     if (ma_sound_is_playing(sound)) {
         struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
         ma_result result = ma_decoder_init_memory(audio->buffer, audio->bufferSize, NULL, &copy->decoder);
-        if (result != MA_SUCCESS) { return; }
+        if (result != MA_SUCCESS) {
+            free(copy);
+            return;
+        }
         result = ma_sound_init_from_data_source(&sModAudioEngine, &copy->decoder, MA_SOUND_SAMPLE_FLAGS, NULL, &copy->sound);
-        if (result != MA_SUCCESS) { return; }
+        if (result != MA_SUCCESS) {
+            ma_decoder_uninit(&copy->decoder);
+            free(copy);
+            return;
+        }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
 
