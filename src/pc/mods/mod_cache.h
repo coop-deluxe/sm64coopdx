@@ -7,7 +7,7 @@ struct ModCacheEntry {
     u8 dataHash[16];
     u64 lastLoaded;
     char* path;
-    u64 pathHash;
+    size_t arrayIndex;
 };
 
 void mod_cache_md5(const char* inPath, u8* outDataPath);

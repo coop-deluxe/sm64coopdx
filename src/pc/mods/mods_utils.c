@@ -4,7 +4,7 @@
 #include "mods_utils.h"
 #include "pc/debuglog.h"
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #include <windows.h>
 #include <winuser.h>
 #else

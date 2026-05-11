@@ -1,12 +1,6 @@
 #ifndef LOADING_HEADER
 #define LOADING_HEADER
 
-#if !defined(WAPI_DUMMY)
-#define LOADING_SCREEN_SUPPORTED
-#endif
-
-#ifdef LOADING_SCREEN_SUPPORTED
-
 #include "src/pc/thread.h"
 #include "djui/djui_hud_utils.h"
 
@@ -32,10 +26,4 @@ void render_loading_screen(void);
 void loading_screen_reset(void);
 void render_rom_setup_screen(void);
 
-#else // LOADING_SCREEN_SUPPORTED
-
-#define LOADING_SCREEN_MUTEX(...)
-
-#endif // LOADING_SCREEN_SUPPORTED
-
-#endif
+#endif // LOADING_HEADER

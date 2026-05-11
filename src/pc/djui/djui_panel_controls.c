@@ -42,7 +42,6 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #endif
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
-#ifdef HAVE_SDL2
         djui_checkbox_create(body, DLANG(CONTROLS, EXTENDED_REPORTS), &configExtendedReports, NULL);
 
         int numJoys = SDL_NumJoysticks();
@@ -93,7 +92,6 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         }
 
         free(gamepadChoices);
-#endif
 
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);

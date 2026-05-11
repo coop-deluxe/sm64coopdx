@@ -5,6 +5,7 @@
 #include "djui_panel_pause.h"
 #include "djui_panel_join.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_confirm.h"
 #include "djui_ctx_display.h"
 #include "djui_fps_display.h"
 #include "djui_lua_profiler.h"
@@ -150,6 +151,17 @@ void djui_connect_menu_open(void) {
     djui_panel_main_create(NULL);
     djui_panel_join_create(NULL);
     djui_panel_join_message_create(NULL);
+}
+
+static void djui_update_game(UNUSED struct DjuiBase *caller) {
+    update_game();
+}
+
+void djui_open_update_panel(void) {
+    djui_panel_shutdown();
+    gDjuiInMainMenu = true;
+    djui_panel_main_create(NULL);
+    djui_panel_confirm_create(NULL, DLANG(UPDATE, UPDATE_TITLE), DLANG(UPDATE, UPDATE_AVAILABLE), djui_update_game);
 }
 
 void djui_lua_error(char* text, struct DjuiColor color) {
