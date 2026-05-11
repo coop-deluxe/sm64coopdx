@@ -415,7 +415,7 @@ void smlua_shutdown(void) {
     hardcoded_reset_default_values();
     smlua_text_utils_reset_all();
     smlua_audio_utils_reset_all();
-    audio_custom_shutdown();
+    smlua_audio_custom_deinit();
     smlua_clear_hooks();
     smlua_model_util_clear();
     smlua_level_util_reset();

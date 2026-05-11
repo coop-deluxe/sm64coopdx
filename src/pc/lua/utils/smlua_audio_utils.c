@@ -685,7 +685,14 @@ void audio_custom_shutdown(void) {
                 audio_sample_destroy_copies(audio);
             }
             ma_sound_uninit(&audio->sound);
+        }
+        if (audio->filepath) {
             free((void *) audio->filepath);
+            audio->filepath = NULL;
+        }
+        if (audio->buffer) {
+            free(audio->buffer);
+            audio->buffer = NULL;
         }
         dynamic_pool_free(sModAudioPool, audio);
         node = prev;
