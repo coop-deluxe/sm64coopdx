@@ -61,7 +61,7 @@ Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
 ## [get_shader_flag_value](#get_shader_flag_value)
 
 ### Description
-Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
+Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)
 
 ### Lua Example
 `local numberValue = get_shader_flag_value(flag)`
@@ -985,7 +985,7 @@ Deletes all display lists created by `gfx_create`
 ## [vtx_get_from_name](#vtx_get_from_name)
 
 ### Description
-Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffer and its vertex count
 
 ### Lua Example
 `local pointerValue, count = vtx_get_from_name(name)`

@@ -37,7 +37,7 @@
 #include "game/mario.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
-#include "src/audio/load.h"
+#include "audio/load.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"

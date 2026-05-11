@@ -17,7 +17,7 @@ u32 gfx_get_length_no_sentinel(const Gfx *gfx);
 bool get_shader_flag_enabled(enum ShaderFlag flag);
 /* |description|Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
 void set_shader_flag_enabled(enum ShaderFlag flag, bool enabled);
-/* |description|Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)*/
+/* |description|Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)|descriptionEnd| */
 f32 get_shader_flag_value(enum ShaderFlag flag);
 /* |description|Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer|descriptionEnd| */
 void set_shader_flag_value(enum ShaderFlag flag, f32 value);
@@ -112,7 +112,7 @@ void gfx_delete_all();
 
 /* |description|
 Gets a vertex buffer of the current mod from its name.
-Returns a pointer to the vertex buffering and its vertex count
+Returns a pointer to the vertex buffer and its vertex count
 |descriptionEnd| */
 Vtx *vtx_get_from_name(const char *name, RET u32 *count);
 /* |description|Gets the name of a vertex buffer|descriptionEnd| */

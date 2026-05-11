@@ -10806,7 +10806,7 @@ end
 
 --- @param flag ShaderFlag
 --- @return number
---- Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
+--- Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)
 function get_shader_flag_value(flag)
     -- ...
 end
@@ -11077,7 +11077,7 @@ end
 --- @param name string
 --- @return Pointer_Vtx
 --- @return integer count
---- Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffering and its vertex count
+--- Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffer and its vertex count
 function vtx_get_from_name(name)
     -- ...
 end

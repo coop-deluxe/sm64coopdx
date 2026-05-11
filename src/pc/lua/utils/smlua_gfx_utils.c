@@ -33,6 +33,7 @@ void set_global_shader_flags_enabled(bool enabled) {
 }
 
 AT_STARTUP void clear_all_shader_flags(void) {
+    gShaderFlagsEnabled = true;
     memset(gShaderFlags, 0, sizeof(s32) * SHADER_FLAG_MAX);
     memcpy(gShaderFlagValues, gDefaultShaderFlagValues, sizeof(f32) * SHADER_FLAG_MAX);
 }
