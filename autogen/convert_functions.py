@@ -142,7 +142,7 @@ override_disallowed_functions = {
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/mods/mod_storage.h":                [ "mod_storage_shutdown" ],
     "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
-    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64" ],
+    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64", "can_update_game", "update_game" ],
     "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
 

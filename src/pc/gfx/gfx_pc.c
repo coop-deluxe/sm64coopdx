@@ -127,7 +127,9 @@ Vec3f gLightingDir = { 0.0f, 0.0f, 0.0f };
 Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
 Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
-f32 gFogIntensity = 1;
+f32 gFogIntensity = 1.0f;
+
+bool gFullbright = false;
 
 int gShaderFlags[SHADER_FLAG_MAX] = { 0 };
 f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = {
@@ -821,9 +823,13 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            float r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * globalLightCached[1][0];
-            float g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1];
-            float b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2];
+            bool useShade =
+                rsp.current_lights[rsp.current_num_lights - 2].col[0] == 0 &&
+                rsp.current_lights[rsp.current_num_lights - 2].col[1] == 0 &&
+                rsp.current_lights[rsp.current_num_lights - 2].col[2] == 0;
+            float r = !gFullbright ? rsp.current_lights[rsp.current_num_lights - 1].col[0] * globalLightCached[1][0] : rsp.current_lights[rsp.current_num_lights - (useShade ? 1 : 2)].col[0];
+            float g = !gFullbright ? rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1] : rsp.current_lights[rsp.current_num_lights - (useShade ? 1 : 2)].col[1];
+            float b = !gFullbright ? rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2] : rsp.current_lights[rsp.current_num_lights - (useShade ? 1 : 2)].col[2];
 
             signed char nx = vn->n[0];
             signed char ny = vn->n[1];
@@ -849,18 +855,20 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 SUPPORT_CHECK(absi(nx) + absi(ny) + absi(nz) == 127);
             }
 
-            for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
-                float intensity = 0;
+            if (!gFullbright) {
+                for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
+                    float intensity = 0;
 
-                intensity += nx * rsp.current_lights_coeffs[i][0];
-                intensity += ny * rsp.current_lights_coeffs[i][1];
-                intensity += nz * rsp.current_lights_coeffs[i][2];
+                    intensity += nx * rsp.current_lights_coeffs[i][0];
+                    intensity += ny * rsp.current_lights_coeffs[i][1];
+                    intensity += nz * rsp.current_lights_coeffs[i][2];
 
-                intensity /= 127.0f;
-                if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
-                    g += intensity * rsp.current_lights[i].col[1] * globalLightCached[0][1];
-                    b += intensity * rsp.current_lights[i].col[2] * globalLightCached[0][2];
+                    intensity /= 127.0f;
+                    if (intensity > 0.0f) {
+                        r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
+                        g += intensity * rsp.current_lights[i].col[1] * globalLightCached[0][1];
+                        b += intensity * rsp.current_lights[i].col[2] * globalLightCached[0][2];
+                    }
                 }
             }
 
