@@ -37,7 +37,11 @@ struct ModCategory sCategories[] = {
     { "ROMHACKS", "romhack" },
     { "GAMEMODES", "gamemode" },
     { "MOVESETS", "moveset" },
-    { "CHARACTER_SELECT", "cs" },
+    { "GRAPHICS", "graphics" },
+    { "QOL", "qol" },
+    { "UTILITY", "utility" },
+    { "AUDIO", "audio" },
+    { "CHARACTERS", "character" }
 };
 static const int numCategories = sizeof(sCategories) / sizeof(sCategories[0]);
 
@@ -95,7 +99,7 @@ static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
 static void djui_mod_checkbox_on_value_change(UNUSED struct DjuiBase* base) {
     mods_update_selectable();
 
-    if (mods_get_enabled_count() - mods_get_character_select_count() >= 10) {
+    if (mods_get_enabled_count() >= 10) {
         if (!sWarned) {
             sWarned = true;
             djui_popup_create(DLANG(HOST_MODS, WARNING), 3);
@@ -135,6 +139,10 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     for (int i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         char* category = mod->category != NULL ? mod->category : mod->incompatible;
+        if (category != NULL) {
+            category = !strcmp(category, "cs") ? "character" : category;
+        }
+        
         switch (sSelectedCategory) {
             case MOD_CATEGORY_ALL: { break; }
             case MOD_CATEGORY_MISC: {

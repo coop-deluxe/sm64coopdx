@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#if defined(_WIN32)
 
 #include <cstdio>
 
@@ -122,7 +122,7 @@ static void append_formula(char *buf, size_t *len, const uint8_t* c, bool do_sin
     }
 }
 
-void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_floats, struct ColorCombiner& cc, const CCFeatures& ccf, bool include_root_signature, bool three_point_filtering) {
+void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_floats, struct ColorCombiner& cc, const CCFeatures& ccf, bool include_root_signature) {
     len = 0;
     num_floats = 4;
 
@@ -146,9 +146,11 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     append_line(buf, &len, "struct PSInput {");
     append_line(buf, &len, "    float4 position : SV_POSITION;");
-    if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        append_line(buf, &len, "    float2 uv : TEXCOORD;");
-        num_floats += 2;
+    for (int t = 0; t < 2; t++) {
+        if (ccf.used_textures[t]) {
+            len += sprintf(buf + len, "    float2 uv%d : TEXCOORD%d;", t, t);
+            num_floats += 2;
+        }
     }
     if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
         append_line(buf, &len, "    float4 screenPos : TEXCOORD1;");
@@ -192,17 +194,26 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "}");
     }
 
+    if (cc.cm.light_map) {
+        append_line(buf, &len, "cbuffer LightmapCB : register(b2) {");
+        append_line(buf, &len, "    float3 lightmap_color;");
+        append_line(buf, &len, "}");
+    }
+
     // 3 point texture filtering
     // Original author: ArthurCarvalho
     // Based on GLSL implementation by twinaphex, mupen64plus-libretro project.
 
-    if (three_point_filtering && (ccf.used_textures[0] || ccf.used_textures[1])) {
+    if (ccf.used_textures[0] || ccf.used_textures[1]) {
         append_line(buf, &len, "cbuffer PerDrawCB : register(b1) {");
         append_line(buf, &len, "    struct {");
         append_line(buf, &len, "        uint width;");
         append_line(buf, &len, "        uint height;");
         append_line(buf, &len, "        bool linear_filtering;");
+        append_line(buf, &len, "        bool padding;");
         append_line(buf, &len, "    } textures[2];");
+        append_line(buf, &len, "    uint filter;");
+        append_line(buf, &len, "    uint padding[3];");
         append_line(buf, &len, "}");
         append_line(buf, &len, "#define TEX_OFFSET(tex, tSampler, texCoord, off, texSize) tex.Sample(tSampler, texCoord - off / texSize)");
         append_line(buf, &len, "float4 tex2D3PointFilter(in Texture2D tex, in SamplerState tSampler, in float2 texCoord, in float2 texSize) {");
@@ -218,8 +229,10 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     // Vertex shader
 
     append_str(buf, &len, "PSInput VSMain(float4 position : POSITION");
-    if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        append_str(buf, &len, ", float2 uv : TEXCOORD");
+    for (int t = 0; t < 2; t++) {
+        if (ccf.used_textures[t]) {
+            len += sprintf(buf + len, ", float2 uv%d : TEXCOORD%d", t, t);
+        }
     }
     if (cc.cm.use_fog) {
         append_str(buf, &len, ", float4 fog : FOG");
@@ -236,8 +249,10 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
         append_line(buf, &len, "    result.screenPos = position;");
     }
-    if (ccf.used_textures[0] || ccf.used_textures[1]) {
-        append_line(buf, &len, "    result.uv = uv;");
+    for (int t = 0; t < 2; t++) {
+        if (ccf.used_textures[t]) {
+            len += sprintf(buf + len, "    result.uv%d = uv%d;", t, t);
+        }
     }
     if (cc.cm.use_fog) {
         append_line(buf, &len, "    result.fog = fog;");
@@ -263,38 +278,27 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     }
 
     if (ccf.used_textures[0]) {
-        if (three_point_filtering) {
-            append_line(buf, &len, "    float4 texVal0;");
-            append_line(buf, &len, "    if (textures[0].linear_filtering)");
-            append_line(buf, &len, "        texVal0 = tex2D3PointFilter(g_texture0, g_sampler0, input.uv, float2(textures[0].width, textures[0].height));");
-            append_line(buf, &len, "    else");
-            append_line(buf, &len, "        texVal0 = g_texture0.Sample(g_sampler0, input.uv);");
-        } else {
-            append_line(buf, &len, "    float4 texVal0 = g_texture0.Sample(g_sampler0, input.uv);");
-        }
+        append_line(buf, &len, "    float4 texVal0;");
+        append_line(buf, &len, "    if (textures[0].linear_filtering && filter == 2)");
+        append_line(buf, &len, "        texVal0 = tex2D3PointFilter(g_texture0, g_sampler0, input.uv0, float2(textures[0].width, textures[0].height));");
+        append_line(buf, &len, "    else");
+        append_line(buf, &len, "        texVal0 = g_texture0.Sample(g_sampler0, input.uv0);");
     }
     if (ccf.used_textures[1]) {
         if (cc.cm.light_map) {
-            if (three_point_filtering) {
-                append_line(buf, &len, "    float4 texVal1;");
-                append_line(buf, &len, "    if (textures[1].linear_filtering)");
-                append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.lightmap, float2(textures[1].width, textures[1].height));");
-                append_line(buf, &len, "    else");
-                append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
-            } else {
-                append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
-            }
+            append_line(buf, &len, "    float4 texVal1;");
+            append_line(buf, &len, "    if (textures[1].linear_filtering && filter == 2)");
+            append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.lightmap, float2(textures[1].width, textures[1].height));");
+            append_line(buf, &len, "    else");
+            append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.lightmap);");
             append_line(buf, &len, "    texVal1.rgb = texVal1.rgb * texVal1.rgb + texVal1.rgb;");
+            append_line(buf, &len, "    texVal0.rgb *= lightmap_color;");
         } else {
-            if (three_point_filtering) {
-                append_line(buf, &len, "    float4 texVal1;");
-                append_line(buf, &len, "    if (textures[1].linear_filtering)");
-                append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.uv, float2(textures[1].width, textures[1].height));");
-                append_line(buf, &len, "    else");
-                append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
-            } else {
-                append_line(buf, &len, "    float4 texVal1 = g_texture1.Sample(g_sampler1, input.uv);");
-            }
+            append_line(buf, &len, "    float4 texVal1;");
+            append_line(buf, &len, "    if (textures[1].linear_filtering && filter == 2)");
+            append_line(buf, &len, "        texVal1 = tex2D3PointFilter(g_texture1, g_sampler1, input.uv1, float2(textures[1].width, textures[1].height));");
+            append_line(buf, &len, "    else");
+            append_line(buf, &len, "        texVal1 = g_texture1.Sample(g_sampler1, input.uv1);");
         }
     }
 

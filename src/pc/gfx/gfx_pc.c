@@ -48,7 +48,7 @@ static struct ColorCombiner color_combiner_pool[CC_MAX_SHADERS] = { 0 };
 static uint8_t color_combiner_pool_size = 0;
 static uint8_t color_combiner_pool_index = 0;
 
-static struct RSP {
+struct RSP {
     ALIGNED16 Mat4 MP_matrix;
     ALIGNED16 Mat4 P_matrix;
     ALIGNED16 Mat4 modelview_matrix_stack[MAX_MATRIX_STACK_SIZE];
@@ -70,9 +70,10 @@ static struct RSP {
     Light_t current_lights[MAX_LIGHTS + 1];
 
     struct GfxVertex loaded_vertices[MAX_VERTICES + 4];
-} rsp;
+};
+static struct RSP rsp;
 
-static struct RDP {
+struct RDP {
     const uint8_t *palette[2];
     struct UnloadedTex texture_to_load;
     struct TextureTile texture_tile[MAX_TILES];
@@ -87,7 +88,15 @@ static struct RDP {
     bool viewport_or_scissor_changed;
     void *z_buf_address;
     void *color_image_address;
-} rdp;
+};
+static struct RDP rdp;
+
+struct GfxState {
+    struct RSP rsp;
+    struct RDP rdp;
+};
+static struct GfxState gfx_states[MAX_GFX_STATES];
+static size_t num_gfx_states;
 
 static struct RenderingState {
     bool depth_test;
@@ -119,6 +128,20 @@ Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
 Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1;
+
+int gShaderFlags[SHADER_FLAG_MAX] = { 0 };
+f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = {
+    [SHADER_FLAG_HUE] = 0.0f,
+    [SHADER_FLAG_SATURATION] = 1.0f,
+    [SHADER_FLAG_BRIGHTNESS] = 1.0f, 
+    [SHADER_FLAG_CONTRAST] = 1.0f,
+    [SHADER_FLAG_EXPOSURE] = 1.0f,
+    [SHADER_FLAG_DITHERING] = 0.0f,
+    [SHADER_FLAG_POSTERIZATION] = 8.0f,
+    [SHADER_FLAG_SCANLINES] = 1.0f
+};
+f32 gShaderFlagValues[SHADER_FLAG_MAX] = { 0 };
+bool gShaderFlagsEnabled = true;
 
 // need inverse camera matrix to compute world space for lighting engine
 static Mat4 sInverseCameraMatrix;
@@ -1006,6 +1029,8 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
         if (!(rsp.geometry_mode & G_FRESNEL_ALPHA_EXT)) {
             d->color.a = v->cn[3];
         }
+
+        d->world_geometry = luaVertexColor;
     }
 }
 
@@ -1094,12 +1119,13 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
 
     struct CombineMode* cm = &rdp.combine_mode;
 
-    cm->use_alpha    = (rdp.other_mode_l & (G_BL_A_MEM << 18))        == 0;
-    cm->texture_edge = (rdp.other_mode_l & CVG_X_ALPHA)               == CVG_X_ALPHA;
-    cm->use_dither   = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
-    cm->use_2cycle   = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
-    cm->use_fog      = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
-    cm->light_map    = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;
+    cm->use_alpha      = (rdp.other_mode_l & (G_BL_A_MEM << 18))        == 0;
+    cm->texture_edge   = (rdp.other_mode_l & CVG_X_ALPHA)               == CVG_X_ALPHA;
+    cm->use_dither     = (rdp.other_mode_l & G_AC_DITHER)               == G_AC_DITHER;
+    cm->use_2cycle     = (rdp.other_mode_h & (3U << G_MDSFT_CYCLETYPE)) == G_CYC_2CYCLE;
+    cm->use_fog        = (rdp.other_mode_l >> 30)                       == G_BL_CLR_FOG;
+    cm->light_map      = (rsp.geometry_mode & G_LIGHT_MAP_EXT)          == G_LIGHT_MAP_EXT;
+    cm->world_geometry = gShaderFlagsEnabled && (v1->world_geometry && v2->world_geometry && v3->world_geometry);
 
     if (cm->texture_edge) {
         cm->use_alpha = true;
@@ -1997,6 +2023,7 @@ static void gfx_sp_reset(void) {
     rsp.modelview_matrix_stack_size = 1;
     rsp.current_num_lights = 2;
     rsp.lights_changed = true;
+    num_gfx_states = 0;
 }
 
 void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
@@ -2245,6 +2272,150 @@ static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_i
     return;
 }
 
+static void gfx_sp_load_or_save_state(uint8_t cmd, uint32_t state) {
+
+    // Load state
+    if (cmd == G_STATE_LOAD) {
+        if (num_gfx_states == 0) {
+            return;
+        }
+
+        num_gfx_states--;
+        struct GfxState *gfx_state = &gfx_states[num_gfx_states];
+
+        if (state & G_STATE_GEOMETRY_MODE) {
+            rsp.geometry_mode = gfx_state->rsp.geometry_mode;
+        }
+        if (state & G_STATE_COMBINE_MODE) {
+            gfx_dp_set_combine_mode(
+                gfx_state->rdp.combine_mode.rgb1,
+                gfx_state->rdp.combine_mode.alpha1,
+                gfx_state->rdp.combine_mode.rgb2,
+                gfx_state->rdp.combine_mode.alpha2
+            );
+        }
+        if (state & G_STATE_OTHER_MODE_L) {
+            rdp.other_mode_l = gfx_state->rdp.other_mode_l;
+        }
+        if (state & G_STATE_OTHER_MODE_H) {
+            rdp.other_mode_h = gfx_state->rdp.other_mode_h;
+        }
+        if (state & G_STATE_ENV_COLOR) {
+            rdp.env_color = gfx_state->rdp.env_color;
+        }
+        if (state & G_STATE_PRIM_COLOR) {
+            rdp.prim_color = gfx_state->rdp.prim_color;
+        }
+        if (state & G_STATE_FOG_COLOR) {
+            rdp.fog_color = gfx_state->rdp.fog_color;
+            rsp.fog_mul = gfx_state->rsp.fog_mul;
+            rsp.fog_offset = gfx_state->rsp.fog_offset;
+        }
+        if (state & G_STATE_FILL_COLOR) {
+            rdp.fill_color = gfx_state->rdp.fill_color;
+        }
+        if (state & G_STATE_FRESNEL) {
+            rsp.fresnel_scale = gfx_state->rsp.fresnel_scale;
+            rsp.fresnel_offset = gfx_state->rsp.fresnel_offset;
+        }
+        if (state & G_STATE_TEXTURES) {
+            rsp.texture_scaling_factor = gfx_state->rsp.texture_scaling_factor;
+            rdp.texture_to_load = gfx_state->rdp.texture_to_load;
+            memcpy(rdp.palette, gfx_state->rdp.palette, sizeof(rdp.palette));
+            memcpy(rdp.texture_tile, gfx_state->rdp.texture_tile, sizeof(rdp.texture_tile));
+            memcpy(rdp.loaded_texture, gfx_state->rdp.loaded_texture, sizeof(rdp.loaded_texture));
+            for (s32 i = 0; i != ARRAY_COUNT(rdp.textures_changed); ++i) {
+                rdp.textures_changed[i] = true;
+            }
+        }
+        if (state & G_STATE_LIGHTS) {
+            rsp.current_num_lights = gfx_state->rsp.current_num_lights;
+            memcpy(rsp.current_lights, gfx_state->rsp.current_lights, sizeof(rsp.current_lights));
+            rsp.lights_changed = true;
+        }
+        if (state & G_STATE_VIEWPORT) {
+            rdp.viewport = gfx_state->rdp.viewport;
+            rdp.viewport_or_scissor_changed = true;
+        }
+        if (state & G_STATE_SCISSOR) {
+            rdp.scissor = gfx_state->rdp.scissor;
+            rdp.viewport_or_scissor_changed = true;
+        }
+        if (state & G_STATE_Z_BUFFER) {
+            rdp.z_buf_address = gfx_state->rdp.z_buf_address;
+        }
+        if (state & G_STATE_COLOR_IMAGE) {
+            rdp.color_image_address = gfx_state->rdp.color_image_address;
+        }
+        return;
+    }
+
+    // Save state
+    if (cmd == G_STATE_SAVE) {
+        if (num_gfx_states == MAX_GFX_STATES) {
+            return;
+        }
+
+        struct GfxState *gfx_state = &gfx_states[num_gfx_states];
+        num_gfx_states++;
+
+        if (state & G_STATE_GEOMETRY_MODE) {
+            gfx_state->rsp.geometry_mode = rsp.geometry_mode;
+        }
+        if (state & G_STATE_COMBINE_MODE) {
+            gfx_state->rdp.combine_mode = rdp.combine_mode;
+        }
+        if (state & G_STATE_OTHER_MODE_L) {
+            gfx_state->rdp.other_mode_l = rdp.other_mode_l;
+        }
+        if (state & G_STATE_OTHER_MODE_H) {
+            gfx_state->rdp.other_mode_h = rdp.other_mode_h;
+        }
+        if (state & G_STATE_ENV_COLOR) {
+            gfx_state->rdp.env_color = rdp.env_color;
+        }
+        if (state & G_STATE_PRIM_COLOR) {
+            gfx_state->rdp.prim_color = rdp.prim_color;
+        }
+        if (state & G_STATE_FOG_COLOR) {
+            gfx_state->rdp.fog_color = rdp.fog_color;
+            gfx_state->rsp.fog_mul = rsp.fog_mul;
+            gfx_state->rsp.fog_offset = rsp.fog_offset;
+        }
+        if (state & G_STATE_FILL_COLOR) {
+            gfx_state->rdp.fill_color = rdp.fill_color;
+        }
+        if (state & G_STATE_FRESNEL) {
+            gfx_state->rsp.fresnel_scale = rsp.fresnel_scale;
+            gfx_state->rsp.fresnel_offset = rsp.fresnel_offset;
+        }
+        if (state & G_STATE_TEXTURES) {
+            gfx_state->rsp.texture_scaling_factor = rsp.texture_scaling_factor;
+            gfx_state->rdp.texture_to_load = rdp.texture_to_load;
+            memcpy(gfx_state->rdp.palette, rdp.palette, sizeof(rdp.palette));
+            memcpy(gfx_state->rdp.texture_tile, rdp.texture_tile, sizeof(rdp.texture_tile));
+            memcpy(gfx_state->rdp.loaded_texture, rdp.loaded_texture, sizeof(rdp.loaded_texture));
+        }
+        if (state & G_STATE_LIGHTS) {
+            gfx_state->rsp.current_num_lights = rsp.current_num_lights;
+            memcpy(gfx_state->rsp.current_lights, rsp.current_lights, sizeof(rsp.current_lights));
+        }
+        if (state & G_STATE_VIEWPORT) {
+            gfx_state->rdp.viewport = rdp.viewport;
+        }
+        if (state & G_STATE_SCISSOR) {
+            gfx_state->rdp.scissor = rdp.scissor;
+        }
+        if (state & G_STATE_Z_BUFFER) {
+            gfx_state->rdp.z_buf_address = rdp.z_buf_address;
+        }
+        if (state & G_STATE_COLOR_IMAGE) {
+            gfx_state->rdp.color_image_address = rdp.color_image_address;
+        }
+        return;
+    }
+}
+
 void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32_t alpha2, uint32_t flags) {
     gfx_dp_set_combine_mode(rgb1, alpha1, rgb2, alpha2);
 
@@ -2284,6 +2455,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_PPARTTOCOLOR:
             gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
+            break;
+        case G_STATE_EXT:
+            gfx_sp_load_or_save_state(C0(16, 8), cmd->words.w1);
             break;
     }
 }

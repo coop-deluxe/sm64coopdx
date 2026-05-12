@@ -890,10 +890,6 @@ Gfx *geo_process_lua_function(s32 callContext, struct GraphNode *node, UNUSED Ma
     // Retrieve function ref
     gSmLuaConvertSuccess = true;
     LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
-    if (!gSmLuaConvertSuccess) {
-        gSmLuaConvertSuccess = true;
-        funcRef = smlua_get_any_function_mod_variable(funcStr);
-    }
     if (!gSmLuaConvertSuccess || funcRef == 0) {
         LOG_LUA("Failed to call lua geo function, could not find lua function '%s'", funcStr);
         return NULL;

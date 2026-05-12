@@ -1,4 +1,4 @@
-#ifdef WAPI_DXGI
+#if defined(_WIN32)
 
 #include <stdint.h>
 #include <math.h>
@@ -394,12 +394,13 @@ static void gfx_dxgi_init(const char *window_title) {
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = nullptr;
-    wcex.hIcon          = nullptr;
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    wcex.hIcon          = LoadIconW(hInstance, L"id");
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)GetStockObject(BLACK_BRUSH);
     wcex.lpszMenuName   = nullptr;
     wcex.lpszClassName  = WINCLASS_NAME;
-    wcex.hIconSm        = nullptr;
+    wcex.hIconSm        = (HICON)LoadImageW(hInstance, L"id", IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
 
     ATOM winclass = RegisterClassExW(&wcex);
 
@@ -411,6 +412,14 @@ static void gfx_dxgi_init(const char *window_title) {
 
         dxgi.h_wnd = CreateWindowW(WINCLASS_NAME, w_title, WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, 0, wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, nullptr, nullptr);
+
+        // Set the window icons
+        if (wcex.hIcon) {
+            SendMessage(dxgi.h_wnd, WM_SETICON, ICON_BIG, (LPARAM)wcex.hIcon);
+        }
+        if (wcex.hIconSm) {
+            SendMessage(dxgi.h_wnd, WM_SETICON, ICON_SMALL, (LPARAM)wcex.hIconSm);
+        }
     });
 
     load_dxgi_library();

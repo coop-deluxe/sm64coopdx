@@ -1,4 +1,4 @@
-#ifdef RAPI_D3D11
+#if defined(_WIN32)
 
 #include <cstdio>
 #include <vector>
@@ -17,6 +17,9 @@
 #endif
 #include <PR/gbi.h>
 
+#include "types.h"
+#include "pc/configfile.h"
+
 #include "gfx_cc.h"
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
@@ -24,6 +27,7 @@
 
 extern "C" {
     #include "pc/controller/controller_bind_mapping.h"
+    extern Color gVertexColor;
 }
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
@@ -31,7 +35,6 @@ extern "C" {
 
 #include "gfx_screen_config.h"
 
-#define THREE_POINT_FILTERING 0
 #define DEBUG_D3D 0
 
 using namespace Microsoft::WRL; // For ComPtr
@@ -52,6 +55,13 @@ struct PerDrawCB {
         uint32_t linear_filtering;
         uint32_t padding;
     } textures[2];
+    uint32_t filter;
+    uint32_t padding[3];
+};
+
+struct LightmapCB {
+    float color[3];
+    float padding;
 };
 
 struct TextureData {
@@ -72,17 +82,18 @@ struct ShaderProgramD3D11 {
     uint8_t num_inputs;
     uint8_t num_floats;
     bool used_textures[2];
+    bool used_lightmap;
 };
 
 static struct {
     HMODULE d3d11_module;
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice;
-    
+
     HMODULE d3dcompiler_module;
     pD3DCompile D3DCompile;
-    
+
     D3D_FEATURE_LEVEL feature_level;
-    
+
     ComPtr<ID3D11Device> device;
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D11DeviceContext> context;
@@ -93,6 +104,7 @@ static struct {
     ComPtr<ID3D11Buffer> vertex_buffer;
     ComPtr<ID3D11Buffer> per_frame_cb;
     ComPtr<ID3D11Buffer> per_draw_cb;
+    ComPtr<ID3D11Buffer> lightmap_cb;
 
 #if DEBUG_D3D
     ComPtr<ID3D11Debug> debug;
@@ -102,6 +114,7 @@ static struct {
 
     PerFrameCB per_frame_cb_data;
     PerDrawCB per_draw_cb_data;
+    LightmapCB lightmap_cb_data;
 
     struct ShaderProgramD3D11 shader_program_pool[CC_MAX_SHADERS];
     uint8_t shader_program_pool_size;
@@ -272,7 +285,7 @@ static void gfx_d3d11_init(void) {
     ZeroMemory(&vertex_buffer_desc, sizeof(D3D11_BUFFER_DESC));
 
     vertex_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-    vertex_buffer_desc.ByteWidth = 256 * 26 * 3 * sizeof(float); // Same as buf_vbo size in gfx_pc
+    vertex_buffer_desc.ByteWidth = 256 * 28 * 3 * sizeof(float); // Same as buf_vbo size in gfx_pc
     vertex_buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertex_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     vertex_buffer_desc.MiscFlags = 0;
@@ -309,6 +322,19 @@ static void gfx_d3d11_init(void) {
 
     d3d.context->PSSetConstantBuffers(1, 1, d3d.per_draw_cb.GetAddressOf());
 
+    // Create lightmap constant buffer
+
+    constant_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    constant_buffer_desc.ByteWidth = (sizeof(LightmapCB) + 15) / 16 * 16;
+    constant_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constant_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constant_buffer_desc.MiscFlags = 0;
+
+    ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.lightmap_cb.GetAddressOf()),
+                  gfx_dxgi_get_h_wnd(), "Failed to create lightmap constant buffer.");
+
+    d3d.context->PSSetConstantBuffers(2, 1, d3d.lightmap_cb.GetAddressOf());
+
     controller_bind_init();
 }
 
@@ -331,7 +357,7 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
     char buf[4096];
     size_t len, num_floats;
 
-    gfx_direct3d_common_build_shader(buf, len, num_floats, *cc, cc_features, false, THREE_POINT_FILTERING);
+    gfx_direct3d_common_build_shader(buf, len, num_floats, *cc, cc_features, false);
 
     ComPtr<ID3DBlob> vs, ps;
     ComPtr<ID3DBlob> error_blob;
@@ -342,14 +368,14 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
     UINT compile_flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 #endif
 
-    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0_level_9_1", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
+    HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
         MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
         throw hr;
     }
 
-    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0_level_9_1", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
+    hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
         MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
@@ -365,11 +391,13 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
 
     // Input Layout
 
-    D3D11_INPUT_ELEMENT_DESC ied[7];
+    D3D11_INPUT_ELEMENT_DESC ied[16];
     uint8_t ied_index = 0;
     ied[ied_index++] = { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-    if (cc_features.used_textures[0] || cc_features.used_textures[1]) {
-        ied[ied_index++] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+    for (unsigned int t = 0; t < 2; t++) {
+        if (cc_features.used_textures[t]) {
+            ied[ied_index++] = { "TEXCOORD", t, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        }
     }
     if (cc->cm.use_fog) {
         ied[ied_index++] = { "FOG", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
@@ -412,6 +440,7 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
     prg->num_floats = num_floats;
     prg->used_textures[0] = cc_features.used_textures[0];
     prg->used_textures[1] = cc_features.used_textures[1];
+    prg->used_lightmap = cc->cm.light_map;
 
     return (struct ShaderProgram *)(d3d.shader_program = prg);
 }
@@ -502,11 +531,7 @@ static void gfx_d3d11_set_sampler_parameters(int tile, bool linear_filter, uint3
     D3D11_SAMPLER_DESC sampler_desc;
     ZeroMemory(&sampler_desc, sizeof(D3D11_SAMPLER_DESC));
 
-#if THREE_POINT_FILTERING
-    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-#else
     sampler_desc.Filter = linear_filter ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
-#endif
     sampler_desc.AddressU = gfx_cm_to_d3d11(cms);
     sampler_desc.AddressV = gfx_cm_to_d3d11(cmt);
     sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -609,33 +634,56 @@ static void gfx_d3d11_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t
 
     for (int32_t i = 0; i < 2; i++) {
         if (d3d.shader_program->used_textures[i]) {
-            if (d3d.last_resource_views[i].Get() != d3d.textures[d3d.current_texture_ids[i]].resource_view.Get()) {
-                d3d.last_resource_views[i] = d3d.textures[d3d.current_texture_ids[i]].resource_view.Get();
-                d3d.context->PSSetShaderResources(i, 1, d3d.textures[d3d.current_texture_ids[i]].resource_view.GetAddressOf());
+            TextureData &texture_data = d3d.textures[d3d.current_texture_ids[i]];
+            bool resource_changed = d3d.last_resource_views[i].Get() != texture_data.resource_view.Get();
+            bool sampler_changed = d3d.last_sampler_states[i].Get() != texture_data.sampler_state.Get();
 
-#if THREE_POINT_FILTERING
-                d3d.per_draw_cb_data.textures[i].width = d3d.textures[d3d.current_texture_ids[i]].width;
-                d3d.per_draw_cb_data.textures[i].height = d3d.textures[d3d.current_texture_ids[i]].height;
-                d3d.per_draw_cb_data.textures[i].linear_filtering = d3d.textures[d3d.current_texture_ids[i]].linear_filtering;
+            if (resource_changed) {
+                d3d.last_resource_views[i] = texture_data.resource_view.Get();
+                d3d.context->PSSetShaderResources(i, 1, texture_data.resource_view.GetAddressOf());
+            }
+
+            if (sampler_changed) {
+                d3d.last_sampler_states[i] = texture_data.sampler_state.Get();
+                d3d.context->PSSetSamplers(i, 1, texture_data.sampler_state.GetAddressOf());
+            }
+
+            if (resource_changed || sampler_changed) {
+                d3d.per_draw_cb_data.textures[i].width = texture_data.width;
+                d3d.per_draw_cb_data.textures[i].height = texture_data.height;
+                d3d.per_draw_cb_data.textures[i].linear_filtering = texture_data.linear_filtering;
                 textures_changed = true;
-#endif
-
-                if (d3d.last_sampler_states[i].Get() != d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get()) {
-                    d3d.last_sampler_states[i] = d3d.textures[d3d.current_texture_ids[i]].sampler_state.Get();
-                    d3d.context->PSSetSamplers(i, 1, d3d.textures[d3d.current_texture_ids[i]].sampler_state.GetAddressOf());
-                }
             }
         }
     }
 
     // Set per-draw constant buffer
 
-    if (textures_changed) {
+    bool per_draw_cb_dirty = textures_changed;
+    if (d3d.per_draw_cb_data.filter != configFiltering) {
+        d3d.per_draw_cb_data.filter = configFiltering;
+        per_draw_cb_dirty = true;
+    }
+    if (per_draw_cb_dirty) {
         D3D11_MAPPED_SUBRESOURCE ms;
         ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
         d3d.context->Map(d3d.per_draw_cb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
         memcpy(ms.pData, &d3d.per_draw_cb_data, sizeof(PerDrawCB));
         d3d.context->Unmap(d3d.per_draw_cb.Get(), 0);
+    }
+
+    // Set lightmap constant buffer
+
+    if (d3d.shader_program->used_lightmap) {
+        d3d.lightmap_cb_data.color[0] = gVertexColor[0] / 255.0f;
+        d3d.lightmap_cb_data.color[1] = gVertexColor[1] / 255.0f;
+        d3d.lightmap_cb_data.color[2] = gVertexColor[2] / 255.0f;
+
+        D3D11_MAPPED_SUBRESOURCE ms;
+        ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
+        d3d.context->Map(d3d.lightmap_cb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
+        memcpy(ms.pData, &d3d.lightmap_cb_data, sizeof(LightmapCB));
+        d3d.context->Unmap(d3d.lightmap_cb.Get(), 0);
     }
 
     // Set vertex buffer data
@@ -710,6 +758,10 @@ static void gfx_d3d11_start_frame(void) {
 static void gfx_d3d11_end_frame(void) {
 }
 
+static const char* gfx_d3d11_get_name(void) {
+    return "DirectX 11";
+}
+
 static void gfx_d3d11_finish_render(void) {
 }
 
@@ -737,7 +789,8 @@ struct GfxRenderingAPI gfx_direct3d11_api = {
     gfx_d3d11_on_resize,
     gfx_d3d11_start_frame,
     gfx_d3d11_end_frame,
-    gfx_d3d11_finish_render
+    gfx_d3d11_finish_render,
+    gfx_d3d11_get_name,
 };
 
 #endif

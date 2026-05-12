@@ -9,7 +9,7 @@
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #include <windows.h>
 #endif
 
@@ -51,19 +51,6 @@ u16 mods_get_enabled_count(void) {
     for (u16 i = 0; i < gLocalMods.entryCount; i++) {
         if (!gLocalMods.entries[i]->enabled) { continue; }
         enabled++;
-    }
-
-    return enabled;
-}
-
-u16 mods_get_character_select_count(void) {
-    u16 enabled = 0;
-
-    for (u16 i = 0; i < gLocalMods.entryCount; i++) {
-        struct Mod* mod = gLocalMods.entries[i];
-        if (mod->enabled && mod->category && strcmp(mod->category, "cs") == 0) {
-            enabled++;
-        }
     }
 
     return enabled;
@@ -124,7 +111,7 @@ bool mods_generate_remote_base_path(void) {
     }
     if (!fs_sys_dir_exists(tmpPath)) {
         fs_sys_mkdir(tmpPath);
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
         SetFileAttributesA(tmpPath, FILE_ATTRIBUTE_HIDDEN);
 #endif
     }

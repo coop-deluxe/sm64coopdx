@@ -1004,12 +1004,6 @@ static s32 bhv_cmd_call_native_ext(void) {
 
     gSmLuaConvertSuccess = true;
     LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
-
-    if (!gSmLuaConvertSuccess) {
-        gSmLuaConvertSuccess = true;
-        funcRef = smlua_get_any_function_mod_variable(funcStr);
-    }
-
     if (!gSmLuaConvertSuccess || funcRef == 0) {
         LOG_LUA("Failed to call lua behavior function, could not find lua function '%s'", funcStr);
         gCurBhvCommand += 2;

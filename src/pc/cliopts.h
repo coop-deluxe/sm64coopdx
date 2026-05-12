@@ -14,7 +14,7 @@ enum NetworkType {
 #define PORT_MAX_LEN 16
 
 struct CLIOptions {
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
     bool console;
 #endif
     char savePath[SYS_MAX_PATH];
@@ -37,6 +37,9 @@ struct CLIOptions {
     int enabledModsCount;
     char** enableMods;
     bool headless;
+#if defined(_WIN32)
+    int backend;
+#endif
 };
 
 extern struct CLIOptions gCLIOpts;

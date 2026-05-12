@@ -270,6 +270,12 @@ void yoshi_reappear(void) {
 }
 
 void bhv_yoshi_loop(void) {
+    // sanity check main menu
+    if (gDjuiInMainMenu) {
+        yoshi_idle_loop();
+        return;
+    }
+
     switch (o->oAction) {
         case YOSHI_ACT_IDLE:
             yoshi_idle_loop();

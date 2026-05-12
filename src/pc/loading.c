@@ -1,7 +1,5 @@
 #include "loading.h"
 
-#ifdef LOADING_SCREEN_SUPPORTED
-
 #include <assert.h>
 
 #include "djui/djui.h"
@@ -179,7 +177,7 @@ void render_loading_screen(void) {
 
     // loading screen loop
     while (!gGameInited) {
-        WAPI.main_loop(loading_screen_produce_one_frame);
+        gWindowApi->main_loop(loading_screen_produce_one_frame);
     }
 
     int err = join_thread(&gLoadingThread);
@@ -192,8 +190,6 @@ void render_rom_setup_screen(void) {
     loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
 
     while (!gRomIsValid) {
-        WAPI.main_loop(loading_screen_produce_one_frame);
+        gWindowApi->main_loop(loading_screen_produce_one_frame);
     }
 }
-
-#endif

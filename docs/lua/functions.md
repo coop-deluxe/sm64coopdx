@@ -25,6 +25,8 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [djui_hud_print_text](#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -787,8 +789,6 @@
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
-   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -983,6 +983,7 @@
    - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
    - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
    - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
+   - [le_set_enabled](functions-4.md#le_set_enabled)
    - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
    - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
    - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
@@ -1848,6 +1849,8 @@
    - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
    - [audio_stream_get_volume](functions-6.md#audio_stream_get_volume)
    - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
+   - [audio_stream_get_volume_channel](functions-6.md#audio_stream_get_volume_channel)
+   - [audio_stream_set_volume_channel](functions-6.md#audio_stream_set_volume_channel)
    - [audio_sample_load](functions-6.md#audio_sample_load)
    - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
    - [audio_sample_stop](functions-6.md#audio_sample_stop)
@@ -1920,6 +1923,9 @@
    - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
    - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
    - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
    - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
    - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
    - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
@@ -1931,51 +1937,58 @@
 <br />
 
 - smlua_gfx_utils.h
-   - [set_override_fov](functions-6.md#set_override_fov)
-   - [set_override_near](functions-6.md#set_override_near)
-   - [set_override_far](functions-6.md#set_override_far)
-   - [get_lighting_dir](functions-6.md#get_lighting_dir)
-   - [set_lighting_dir](functions-6.md#set_lighting_dir)
-   - [get_lighting_color](functions-6.md#get_lighting_color)
-   - [get_lighting_color_ambient](functions-6.md#get_lighting_color_ambient)
-   - [set_lighting_color](functions-6.md#set_lighting_color)
-   - [set_lighting_color_ambient](functions-6.md#set_lighting_color_ambient)
-   - [get_vertex_color](functions-6.md#get_vertex_color)
-   - [set_vertex_color](functions-6.md#set_vertex_color)
-   - [get_fog_color](functions-6.md#get_fog_color)
-   - [set_fog_color](functions-6.md#set_fog_color)
-   - [get_fog_intensity](functions-6.md#get_fog_intensity)
-   - [set_fog_intensity](functions-6.md#set_fog_intensity)
-   - [get_skybox](functions-6.md#get_skybox)
-   - [set_override_skybox](functions-6.md#set_override_skybox)
-   - [get_skybox_color](functions-6.md#get_skybox_color)
-   - [set_skybox_color](functions-6.md#set_skybox_color)
-   - [gfx_parse](functions-6.md#gfx_parse)
-   - [gfx_get_op](functions-6.md#gfx_get_op)
-   - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
-   - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
-   - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
-   - [gfx_get_texture](functions-6.md#gfx_get_texture)
-   - [gfx_get_from_name](functions-6.md#gfx_get_from_name)
-   - [gfx_get_name](functions-6.md#gfx_get_name)
-   - [gfx_get_length](functions-6.md#gfx_get_length)
-   - [gfx_get_command](functions-6.md#gfx_get_command)
-   - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
-   - [gfx_copy](functions-6.md#gfx_copy)
-   - [gfx_create](functions-6.md#gfx_create)
-   - [gfx_resize](functions-6.md#gfx_resize)
-   - [gfx_delete](functions-6.md#gfx_delete)
-   - [gfx_delete_all](functions-6.md#gfx_delete_all)
-   - [vtx_get_from_name](functions-6.md#vtx_get_from_name)
-   - [vtx_get_name](functions-6.md#vtx_get_name)
-   - [vtx_get_count](functions-6.md#vtx_get_count)
-   - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
-   - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
-   - [vtx_copy](functions-6.md#vtx_copy)
-   - [vtx_create](functions-6.md#vtx_create)
-   - [vtx_resize](functions-6.md#vtx_resize)
-   - [vtx_delete](functions-6.md#vtx_delete)
-   - [vtx_delete_all](functions-6.md#vtx_delete_all)
+   - [get_shader_flag_enabled](functions-7.md#get_shader_flag_enabled)
+   - [set_shader_flag_enabled](functions-7.md#set_shader_flag_enabled)
+   - [get_shader_flag_value](functions-7.md#get_shader_flag_value)
+   - [set_shader_flag_value](functions-7.md#set_shader_flag_value)
+   - [get_global_shader_flags_enabled](functions-7.md#get_global_shader_flags_enabled)
+   - [set_global_shader_flags_enabled](functions-7.md#set_global_shader_flags_enabled)
+   - [clear_all_shader_flags](functions-7.md#clear_all_shader_flags)
+   - [set_override_fov](functions-7.md#set_override_fov)
+   - [set_override_near](functions-7.md#set_override_near)
+   - [set_override_far](functions-7.md#set_override_far)
+   - [get_lighting_dir](functions-7.md#get_lighting_dir)
+   - [set_lighting_dir](functions-7.md#set_lighting_dir)
+   - [get_lighting_color](functions-7.md#get_lighting_color)
+   - [get_lighting_color_ambient](functions-7.md#get_lighting_color_ambient)
+   - [set_lighting_color](functions-7.md#set_lighting_color)
+   - [set_lighting_color_ambient](functions-7.md#set_lighting_color_ambient)
+   - [get_vertex_color](functions-7.md#get_vertex_color)
+   - [set_vertex_color](functions-7.md#set_vertex_color)
+   - [get_fog_color](functions-7.md#get_fog_color)
+   - [set_fog_color](functions-7.md#set_fog_color)
+   - [get_fog_intensity](functions-7.md#get_fog_intensity)
+   - [set_fog_intensity](functions-7.md#set_fog_intensity)
+   - [get_skybox](functions-7.md#get_skybox)
+   - [set_override_skybox](functions-7.md#set_override_skybox)
+   - [get_skybox_color](functions-7.md#get_skybox_color)
+   - [set_skybox_color](functions-7.md#set_skybox_color)
+   - [gfx_parse](functions-7.md#gfx_parse)
+   - [gfx_get_op](functions-7.md#gfx_get_op)
+   - [gfx_get_display_list](functions-7.md#gfx_get_display_list)
+   - [gfx_get_vertex_buffer](functions-7.md#gfx_get_vertex_buffer)
+   - [gfx_get_vertex_count](functions-7.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-7.md#gfx_get_texture)
+   - [gfx_get_from_name](functions-7.md#gfx_get_from_name)
+   - [gfx_get_name](functions-7.md#gfx_get_name)
+   - [gfx_get_length](functions-7.md#gfx_get_length)
+   - [gfx_get_command](functions-7.md#gfx_get_command)
+   - [gfx_get_next_command](functions-7.md#gfx_get_next_command)
+   - [gfx_copy](functions-7.md#gfx_copy)
+   - [gfx_create](functions-7.md#gfx_create)
+   - [gfx_resize](functions-7.md#gfx_resize)
+   - [gfx_delete](functions-7.md#gfx_delete)
+   - [gfx_delete_all](functions-7.md#gfx_delete_all)
+   - [vtx_get_from_name](functions-7.md#vtx_get_from_name)
+   - [vtx_get_name](functions-7.md#vtx_get_name)
+   - [vtx_get_count](functions-7.md#vtx_get_count)
+   - [vtx_get_vertex](functions-7.md#vtx_get_vertex)
+   - [vtx_get_next_vertex](functions-7.md#vtx_get_next_vertex)
+   - [vtx_copy](functions-7.md#vtx_copy)
+   - [vtx_create](functions-7.md#vtx_create)
+   - [vtx_resize](functions-7.md#vtx_resize)
+   - [vtx_delete](functions-7.md#vtx_delete)
+   - [vtx_delete_all](functions-7.md#vtx_delete_all)
 
 <br />
 
@@ -2230,6 +2243,7 @@
    - [load_static_object_collision](functions-7.md#load_static_object_collision)
    - [toggle_static_object_collision](functions-7.md#toggle_static_object_collision)
    - [get_static_object_surface](functions-7.md#get_static_object_surface)
+   - [remove_static_object_collision](functions-7.md#remove_static_object_collision)
    - [obj_get_surface_from_index](functions-7.md#obj_get_surface_from_index)
    - [surface_has_force](functions-7.md#surface_has_force)
 
@@ -2726,6 +2740,64 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

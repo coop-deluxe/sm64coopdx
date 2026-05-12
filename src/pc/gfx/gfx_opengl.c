@@ -1,5 +1,3 @@
-#ifdef RAPI_GL
-
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -21,18 +19,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#ifdef WAPI_SDL2
-# include <SDL2/SDL.h>
-# ifdef USE_GLES
-#  include <SDL2/SDL_opengles2.h>
-# else
-#  include <SDL2/SDL_opengl.h>
-# endif
-#elif defined(WAPI_SDL1)
-# include <SDL/SDL.h>
-# ifndef GLEW_STATIC
-#  include <SDL/SDL_opengl.h>
-# endif
+#include <SDL2/SDL.h>
+#ifdef USE_GLES
+#include <SDL2/SDL_opengles2.h>
+#else
+#include <SDL2/SDL_opengl.h>
 #endif
 
 #include "../platform.h"
@@ -50,11 +41,12 @@ struct ShaderProgram {
     bool used_textures[2];
     uint8_t num_floats;
     GLint attrib_locations[7];
-    GLint uniform_locations[7];
+    GLint uniform_locations[9];
     uint8_t attrib_sizes[7];
     uint8_t num_attribs;
     bool used_noise;
     bool used_lightmap;
+    bool world_geometry;
 };
 
 struct GLTexture {
@@ -97,7 +89,12 @@ static void gfx_opengl_vertex_array_set_attribs(struct ShaderProgram *prg) {
 static inline void gfx_opengl_set_shader_uniforms(struct ShaderProgram *prg) {
     if (prg->used_noise) { glUniform1f(prg->uniform_locations[4], (float)frame_count); }
     if (prg->used_lightmap) { glUniform3f(prg->uniform_locations[5], gVertexColor[0] / 255.0f, gVertexColor[1] / 255.0f, gVertexColor[2] / 255.0f); }
-    glUniform1i(prg->uniform_locations[6], configFiltering);
+    if (prg->world_geometry) {
+        glUniform1iv(prg->uniform_locations[6], SHADER_FLAG_MAX, gShaderFlags);
+        glUniform1fv(prg->uniform_locations[7], SHADER_FLAG_MAX, gShaderFlagValues);
+    }
+
+    glUniform1i(prg->uniform_locations[8], configFiltering);
 }
 
 static inline void gfx_opengl_set_texture_uniforms(struct ShaderProgram *prg, const int tile) {
@@ -254,6 +251,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_texture_edge = cc->cm.texture_edge;
     bool opt_2cycle = cc->cm.use_2cycle;
     bool opt_light_map = cc->cm.light_map;
+    bool world_geometry = cc->cm.world_geometry;
 
 #ifdef USE_GLES
     bool opt_dither = false;
@@ -261,8 +259,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     bool opt_dither = cc->cm.use_dither;
 #endif
 
-    char vs_buf[1024];
-    char fs_buf[2048];
+    char vs_buf[8192];
+    char fs_buf[8192];
     size_t vs_len = 0;
     size_t fs_len = 0;
     size_t num_floats = 4;
@@ -366,6 +364,56 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "}");
     }
 
+    if (world_geometry) {
+        append_line(fs_buf, &fs_len, "float dither4x4(vec2 position, float brightness) {");
+        append_line(fs_buf, &fs_len, "    int x = int(mod(position.x, 4.0));");
+        append_line(fs_buf, &fs_len, "    int y = int(mod(position.y, 4.0));");
+        append_line(fs_buf, &fs_len, "    int index = x + y * 4;");
+        append_line(fs_buf, &fs_len, "    float limit = 0.0;");
+        append_line(fs_buf, &fs_len, "    if (x < 8) {");
+        append_line(fs_buf, &fs_len, "        if (index == 0) limit = 0.0625;");
+        append_line(fs_buf, &fs_len, "        if (index == 1) limit = 0.5625;");
+        append_line(fs_buf, &fs_len, "        if (index == 2) limit = 0.1875;");
+        append_line(fs_buf, &fs_len, "        if (index == 3) limit = 0.6875;");
+        append_line(fs_buf, &fs_len, "        if (index == 4) limit = 0.8125;");
+        append_line(fs_buf, &fs_len, "        if (index == 5) limit = 0.3125;");
+        append_line(fs_buf, &fs_len, "        if (index == 6) limit = 0.9375;");
+        append_line(fs_buf, &fs_len, "        if (index == 7) limit = 0.4375;");
+        append_line(fs_buf, &fs_len, "        if (index == 8) limit = 0.25;");
+        append_line(fs_buf, &fs_len, "        if (index == 9) limit = 0.75;");
+        append_line(fs_buf, &fs_len, "        if (index == 10) limit = 0.125;");
+        append_line(fs_buf, &fs_len, "        if (index == 11) limit = 0.625;");
+        append_line(fs_buf, &fs_len, "        if (index == 12) limit = 1.0;");
+        append_line(fs_buf, &fs_len, "        if (index == 13) limit = 0.5;");
+        append_line(fs_buf, &fs_len, "        if (index == 14) limit = 0.875;");
+        append_line(fs_buf, &fs_len, "        if (index == 15) limit = 0.375;");
+        append_line(fs_buf, &fs_len, "    }");
+        append_line(fs_buf, &fs_len, "    return brightness < limit ? 0.0 : 1.0;");
+        append_line(fs_buf, &fs_len, "}");
+    
+        append_line(fs_buf, &fs_len, "vec3 rgb2hsv(vec3 c) {");
+        append_line(fs_buf, &fs_len, "    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);");
+        append_line(fs_buf, &fs_len, "    vec4 p = mix(vec4(c.bg, K.wz),");
+        append_line(fs_buf, &fs_len, "                 vec4(c.gb, K.xy),");
+        append_line(fs_buf, &fs_len, "                 step(c.b, c.g));");
+        append_line(fs_buf, &fs_len, "    vec4 q = mix(vec4(p.xyw, c.r),");
+        append_line(fs_buf, &fs_len, "                 vec4(c.r, p.yzx),");
+        append_line(fs_buf, &fs_len, "                 step(p.x, c.r));");
+        append_line(fs_buf, &fs_len, "    float d = q.x - min(q.w, q.y);");
+        append_line(fs_buf, &fs_len, "    float e = 1.0e-10;");
+        append_line(fs_buf, &fs_len, "    return vec3(");
+        append_line(fs_buf, &fs_len, "        abs(q.z + (q.w - q.y) / (6.0 * d + e)), // hue");
+        append_line(fs_buf, &fs_len, "        d / (q.x + e),                          // saturation");
+        append_line(fs_buf, &fs_len, "        q.x                                     // value");
+        append_line(fs_buf, &fs_len, "    );");
+        append_line(fs_buf, &fs_len, "}");
+        append_line(fs_buf, &fs_len, "");
+        append_line(fs_buf, &fs_len, "vec3 hsv2rgb(vec3 c) {");
+        append_line(fs_buf, &fs_len, "    vec3 p = abs(fract(c.xxx + vec3(0.0, 2.0/3.0, 1.0/3.0)) * 6.0 - 3.0);");
+        append_line(fs_buf, &fs_len, "    return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);");
+        append_line(fs_buf, &fs_len, "}");
+    }
+
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
         append_line(fs_buf, &fs_len, "uniform float uFrameCount;");
 
@@ -377,6 +425,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
 
     if (opt_light_map) {
         append_line(fs_buf, &fs_len, "uniform vec3 uLightmapColor;");
+    }
+
+    if (world_geometry) {
+        fs_len += sprintf(fs_buf + fs_len, "uniform int uShaderFlags[%d];\n", SHADER_FLAG_MAX);
+        fs_len += sprintf(fs_buf + fs_len, "uniform float uShaderFlagValues[%d];\n", SHADER_FLAG_MAX);
     }
 
     append_line(fs_buf, &fs_len, "uniform int uFilter;");
@@ -424,6 +477,55 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     // TODO discard if alpha is 0?
+
+    if (world_geometry) {
+        // hue
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[0] == 1) {");
+        append_line(fs_buf, &fs_len, "vec3 hsv = rgb2hsv(texel.rgb);");
+        append_line(fs_buf, &fs_len, "hsv.x = fract(hsv.x + uShaderFlagValues[0]);");
+        append_line(fs_buf, &fs_len, "vec3 finalColor = hsv2rgb(hsv);");
+        append_line(fs_buf, &fs_len, "texel.rgb = finalColor;");
+        append_line(fs_buf, &fs_len, "}");
+
+        // saturation
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[1] == 1) {");
+        append_line(fs_buf, &fs_len, "const vec3 w = vec3(0.2125, 0.7154, 0.0721);");
+        append_line(fs_buf, &fs_len, "vec3 intensity = vec3(dot(texel.rgb, w));");
+        append_line(fs_buf, &fs_len, "texel.rgb = mix(intensity, texel.rgb, uShaderFlagValues[1]);");
+        append_line(fs_buf, &fs_len, "}");
+
+        // brightness
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[2] == 1) {");
+        append_line(fs_buf, &fs_len, "texel.rgb *= uShaderFlagValues[2];");
+        append_line(fs_buf, &fs_len, "}");
+
+        // contrast
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[3] == 1) {");
+        append_line(fs_buf, &fs_len, "texel.rgb = 0.5 + uShaderFlagValues[3] * (texel.rgb - 0.5);");
+        append_line(fs_buf, &fs_len, "}");
+
+        // exposure
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[4] == 1) {");
+        append_line(fs_buf, &fs_len, "texel.rgb = texel.rgb + (uShaderFlagValues[4] - 2) * texel.rgb + texel.rgb;");
+        append_line(fs_buf, &fs_len, "}");
+
+        // dithering
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[5] == 1) {");
+        append_line(fs_buf, &fs_len, "texel.rgb *= dither4x4(gl_FragCoord.xy, dot(texel.rgb, vec3(0.299, 0.587, 0.114)));");
+        append_line(fs_buf, &fs_len, "}");
+
+        // posterization
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[6] == 1) {");
+        append_line(fs_buf, &fs_len, "int levels = int(max(1.0, uShaderFlagValues[6]));");
+        append_line(fs_buf, &fs_len, "texel.rgb = floor(texel.rgb * levels) / levels;");
+        append_line(fs_buf, &fs_len, "}");
+
+        // scan lines
+        append_line(fs_buf, &fs_len, "if (uShaderFlags[7] == 1) {");
+        append_line(fs_buf, &fs_len, "float scan = sin(gl_FragCoord.y * 1.5) * 0.04;");
+        append_line(fs_buf, &fs_len, "texel.rgb -= scan * uShaderFlagValues[7];");
+        append_line(fs_buf, &fs_len, "}");
+    }
 
     if (opt_fog) {
         if (opt_alpha) {
@@ -567,7 +669,15 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         prg->used_lightmap = false;
     }
 
-    prg->uniform_locations[6] = glGetUniformLocation(shader_program, "uFilter");
+    if (world_geometry) {
+        prg->uniform_locations[6] = glGetUniformLocation(shader_program, "uShaderFlags");
+        prg->uniform_locations[7] = glGetUniformLocation(shader_program, "uShaderFlagValues");
+        prg->world_geometry = true;
+    } else {
+        prg->world_geometry = false;
+    }
+
+    prg->uniform_locations[8] = glGetUniformLocation(shader_program, "uFilter");
 
     return prg;
 }
@@ -745,6 +855,10 @@ static void gfx_opengl_end_frame(void) {
 static void gfx_opengl_finish_render(void) {
 }
 
+static const char* gfx_opengl_get_name(void) {
+    return "OpenGL";
+}
+
 static void gfx_opengl_shutdown(void) {
 }
 
@@ -771,7 +885,6 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_start_frame,
     gfx_opengl_end_frame,
     gfx_opengl_finish_render,
+    gfx_opengl_get_name,
     gfx_opengl_shutdown
 };
-
-#endif // RAPI_GL

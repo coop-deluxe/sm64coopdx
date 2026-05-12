@@ -46,7 +46,7 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
             network_send_area(toNp);
         } else {
             // send sync valid
-            network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, -1);
+            network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, -1, false);
         }
     }
     packet_ordered_end();

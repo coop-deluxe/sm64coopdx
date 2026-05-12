@@ -6,6 +6,7 @@ usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32', 'f64']
 vec_types = list(VEC_TYPES.keys())
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory', 'Texture']
 cobject_function_identifier = 'FUNCTION'
+cobject_property_identifier = 'PROPERTY'
 
 type_mappings = {
     'char': 's8',
@@ -149,14 +150,10 @@ def translate_type_to_lvt(ptype, allowArrays=False):
     if ptype == cobject_function_identifier:
         return "LVT_FUNCTION"
 
-    if "struct" in ptype:
-        if pointerLvl > 1:
-            return "LVT_???"
-        if pointerLvl == 1:
-            return "LVT_COBJECT_P"
-        return "LVT_COBJECT"
+    if ptype == cobject_property_identifier:
+        return "LVT_PROPERTY"
 
-    if ptype in override_types:
+    if "struct" in ptype or ptype in override_types:
         if pointerLvl > 1:
             return "LVT_???"
         if pointerLvl == 1:
@@ -174,16 +171,8 @@ def translate_type_to_lot(ptype, allowArrays=True):
     pointerLvl = 0
     lvt = translate_type_to_lvt(ptype, allowArrays=allowArrays)
 
-    if ptype == 'void':
-        return 'LOT_NONE'
-
-    if ptype == 'const char*':
-        return 'LOT_NONE'
-
-    if ptype == 'ByteString':
-        return 'LOT_NONE'
-
-    if 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
+    if ptype == ('void', 'const char*', 'ByteString') \
+    or 'unsigned' not in ptype and (ptype == 'char*' or ('char' in ptype and '[' in ptype)):
         return 'LOT_NONE'
 
     # Remove array symbols so they can be identified
@@ -199,13 +188,7 @@ def translate_type_to_lot(ptype, allowArrays=True):
     if '[' in ptype or '{' in ptype:
         return 'LOT_???'
 
-    if 'enum ' in ptype:
-        return 'LOT_NONE'
-
-    if ptype in usf_types:
-        return 'LOT_NONE'
-
-    if extract_integer_datatype(ptype):
+    if 'enum ' in ptype or ptype in usf_types or extract_integer_datatype(ptype):
         return 'LOT_NONE'
 
     # Strip out our pointer stars to get the true type.
@@ -214,22 +197,10 @@ def translate_type_to_lot(ptype, allowArrays=True):
         pointerLvl = ptype.count("*")
         ptype = ptype.replace("*", "").strip()
 
-    if ptype == 'bool':
-        return 'LOT_NONE'
-
     if ptype in vec_types:
         return 'LOT_' + ptype.upper()
 
-    if ptype == 'float':
-        return 'LOT_NONE'
-
-    if ptype == 'LuaFunction':
-        return 'LOT_NONE'
-
-    if ptype == 'LuaTable':
-        return 'LOT_NONE'
-
-    if ptype == cobject_function_identifier:
+    if ptype in ('bool', 'float', 'LuaFunction', 'LuaTable', cobject_function_identifier, cobject_property_identifier):
         return 'LOT_NONE'
 
     if ptype in override_types:
@@ -291,22 +262,10 @@ def translate_type_to_lua(ptype):
             return '`number`', None
         return '`integer`', None
 
-    if ptype == 'char':
+    if ptype in ('char', 'int', 'lua_Integer'):
         return '`integer`', None
 
-    if ptype == 'int':
-        return '`integer`', None
-
-    if ptype == 'lua_Integer':
-        return '`integer`', None
-
-    if ptype == 'float':
-        return '`number`', None
-
-    if ptype == 'lua_Number':
-        return '`number`', None
-
-    if ptype == 'double':
+    if ptype in ('float', 'lua_Number', 'double'):
         return '`number`', None
 
     if ptype == 'bool':
@@ -323,6 +282,9 @@ def translate_type_to_lua(ptype):
 
     if ptype == cobject_function_identifier:
         return cobject_function_identifier, None
+
+    if ptype == cobject_property_identifier:
+        return cobject_property_identifier, None
 
     if ptype.count('*') == 1 and '???' not in translate_type_to_lvt(ptype):
         ptype = ptype.replace('const', '').replace('*', '').strip()
