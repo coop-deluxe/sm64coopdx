@@ -815,6 +815,7 @@ void save_file_set_sound_mode(u16 mode) {
 }
 
 u16 save_file_get_sound_mode(void) {
+    if (configSoundOutput > SOUND_MODE_HEADSET) { return SOUND_MODE_STEREO; }
     return configSoundOutput;
 }
 
