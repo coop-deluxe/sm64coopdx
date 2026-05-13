@@ -90,7 +90,7 @@ struct ObjectNode *gObjectLists;
 /**
  * A singly linked list of available slots in the object pool.
  */
-struct ObjectNode gFreeObjectList;
+UNUSED struct ObjectNode gFreeObjectList;
 
 /**
  * The object representing Mario.
@@ -594,7 +594,7 @@ void clear_objects(void) {
 
     gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_INIT_CAPACITY, malloc, free);
     if (gObjectPool == NULL) {
-        LOG_ERROR("Could not initialize object pool.\n");
+        fprintf(stderr, "FATAL ERROR: Could not initialize the object pool!\n");
         return;
     }
 
@@ -602,8 +602,6 @@ void clear_objects(void) {
 
     clear_object_lists(gObjectListArray);
     gObjectLists = gObjectListArray;
-
-    gFreeObjectList.next = NULL;
 
     clear_dynamic_surfaces();
     geo_clear_interp_data();

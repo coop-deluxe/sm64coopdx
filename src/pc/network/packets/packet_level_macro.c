@@ -18,6 +18,10 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
+    if (gObjectPool == NULL) {
+        fprintf(stderr, "FATAL ERROR: The object pool was not created but object respawn infos were attempted to be checked.\n");
+        return NULL;
+    }
     for (u32 i = 0; i < gObjectPool->count; i++) {
         struct Object* o = gObjectPool->buffer[i];
         if (o->respawnInfo == respawnInfo) { return o; }
@@ -188,7 +192,7 @@ void network_receive_level_macro(struct Packet* p) {
         const BehaviorScript* behavior = MacroObjectPresets[presetID].behavior;
 
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
-        if (o != NULL) {
+        if (o != NULL && gObjectPool != NULL) {
             LOG_INFO("rx macro special: object");
             // coin formation
             if (behavior == smlua_override_behavior(bhvCoinFormation)) {

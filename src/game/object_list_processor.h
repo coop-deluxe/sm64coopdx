@@ -89,7 +89,7 @@ extern u32 gTimeStopState;
 extern struct GrowingArray* gObjectPool;
 extern struct Object gMacroObjectDefaultParent;
 extern struct ObjectNode *gObjectLists;
-extern struct ObjectNode gFreeObjectList;
+extern UNUSED struct ObjectNode gFreeObjectList;
 
 extern struct Object *gMarioObject;
 extern struct Object *gMarioObjects[];

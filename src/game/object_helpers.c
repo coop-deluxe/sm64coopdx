@@ -714,17 +714,12 @@ struct Object *spawn_object(struct Object *parent, s32 model, const BehaviorScri
 
 struct Object *try_to_spawn_object(s16 offsetY, f32 scale, struct Object *parent, s32 model,
                                    const BehaviorScript *behavior) {
-    struct Object *obj;
 
-    if (gFreeObjectList.next != NULL) {
-        obj = spawn_object(parent, model, behavior);
-        if (obj == NULL) { return NULL; }
-        obj->oPosY += offsetY;
-        obj_scale(obj, scale);
-        return obj;
-    } else {
-        return NULL;
-    }
+    struct Object *obj = spawn_object(parent, model, behavior);
+    if (obj == NULL) { return NULL; }
+    obj->oPosY += offsetY;
+    obj_scale(obj, scale);
+    return obj;
 }
 
 struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const BehaviorScript *behavior, f32 scale) {
