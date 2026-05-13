@@ -155,6 +155,7 @@ static void deallocate_object(struct ObjectNode *obj) {
         return;
     }
     growing_array_swap_and_pop(gObjectPool, obj);
+    obj = NULL;
     gObjectPool->buffer[gObjectPool->count] = NULL;
 }
 
