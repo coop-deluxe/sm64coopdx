@@ -139,6 +139,27 @@ Sets the current object's position to random floats between 0.0 and 1.0
 
 <br />
 
+## [draw_distance_scalar_is_infinite](#draw_distance_scalar_is_infinite)
+
+### Description
+Checks if the draw distance scalar is infinite
+
+### Lua Example
+`local booleanValue = draw_distance_scalar_is_infinite()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool draw_distance_scalar_is_infinite(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [draw_distance_scalar](#draw_distance_scalar)
 
 ### Description

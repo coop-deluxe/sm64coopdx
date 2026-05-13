@@ -44,11 +44,15 @@ void bhv_whirlpool_loop(void) {
         o->oWhirlpoolTimeout = 30;
     }
 
-    f32 marioDist = dist_between_objects(o, gMarioStates[0].marioObj);
-    if (marioDist < 5000.0f * draw_distance_scalar()) {
+    if (draw_distance_scalar_is_infinite()) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
     } else {
-        o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+        f32 marioDist = dist_between_objects(o, gMarioStates[0].marioObj);
+        if (marioDist < 5000.0f * draw_distance_scalar()) {
+            o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        } else {
+            o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
+        }
     }
 
     // not sure if actually an array

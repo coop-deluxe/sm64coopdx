@@ -623,6 +623,7 @@
    - [obj_update_gfx_pos_and_angle](functions-3.md#obj_update_gfx_pos_and_angle)
    - [position_based_random_u16](functions-3.md#position_based_random_u16)
    - [position_based_random_float_position](functions-3.md#position_based_random_float_position)
+   - [draw_distance_scalar_is_infinite](functions-3.md#draw_distance_scalar_is_infinite)
    - [draw_distance_scalar](functions-3.md#draw_distance_scalar)
 
 <br />

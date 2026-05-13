@@ -9889,6 +9889,21 @@ int smlua_func_position_based_random_float_position(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_draw_distance_scalar_is_infinite(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "draw_distance_scalar_is_infinite", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, draw_distance_scalar_is_infinite());
+
+    return 1;
+}
+
 int smlua_func_draw_distance_scalar(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37695,6 +37710,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_update_gfx_pos_and_angle", smlua_func_obj_update_gfx_pos_and_angle);
     smlua_bind_function(L, "position_based_random_u16", smlua_func_position_based_random_u16);
     smlua_bind_function(L, "position_based_random_float_position", smlua_func_position_based_random_float_position);
+    smlua_bind_function(L, "draw_distance_scalar_is_infinite", smlua_func_draw_distance_scalar_is_infinite);
     smlua_bind_function(L, "draw_distance_scalar", smlua_func_draw_distance_scalar);
 
     // behavior_table.h

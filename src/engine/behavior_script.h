@@ -37,6 +37,8 @@ void obj_update_gfx_pos_and_angle(struct Object *obj);
 u16 position_based_random_u16(void);
 /* |description|Sets the current object's position to random floats between 0.0 and 1.0|descriptionEnd| */
 f32 position_based_random_float_position(void);
+/* |description|Checks if the draw distance scalar is infinite|descriptionEnd| */
+bool draw_distance_scalar_is_infinite(void);
 /* |description|Gets the draw distance scalar|descriptionEnd| */
 f32 draw_distance_scalar(void);
 

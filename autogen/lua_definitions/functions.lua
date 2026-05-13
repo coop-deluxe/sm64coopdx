@@ -2994,6 +2994,12 @@ function position_based_random_float_position()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the draw distance scalar is infinite
+function draw_distance_scalar_is_infinite()
+    -- ...
+end
+
 --- @return number
 --- Gets the draw distance scalar
 function draw_distance_scalar()

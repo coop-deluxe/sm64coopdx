@@ -89,7 +89,7 @@ bool         configShowPing                       = false;
 enum RefreshRateMode configFramerateMode          = RRM_AUTO;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
-unsigned int configDrawDistance                   = 4;
+unsigned int configDrawDistance                   = 6;
 // sound settings
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;

@@ -129,8 +129,16 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_selectionbox_create(body, DLANG(DISPLAY, ANTIALIASING), msaaChoices, choiceCount, &sMsaaSelection, djui_panel_display_msaa_change);
         }
 
-        char* drawDistanceChoices[6] = { DLANG(DISPLAY, D0P5X), DLANG(DISPLAY, D1X), DLANG(DISPLAY, D1P5X), DLANG(DISPLAY, D3X), DLANG(DISPLAY, D10X), DLANG(DISPLAY, D100X) };
-        djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, 6, &configDrawDistance, NULL);
+        char* drawDistanceChoices[] = {
+            DLANG(DISPLAY, D0P5X),
+            DLANG(DISPLAY, D1X),
+            DLANG(DISPLAY, D1P5X),
+            DLANG(DISPLAY, D3X),
+            DLANG(DISPLAY, D10X),
+            DLANG(DISPLAY, D100X),
+            DLANG(DISPLAY, INFINITE),
+        };
+        djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, ARRAY_COUNT(drawDistanceChoices), &configDrawDistance, NULL);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 
