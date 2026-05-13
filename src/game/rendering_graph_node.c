@@ -314,7 +314,7 @@ void patch_mtx_interpolated(f32 delta) {
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
 
         // "infinite" draw distance
-        if (configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+        if (gOverrideNear != 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
 
         guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -658,7 +658,7 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     f32 far = replace_value_if_not_zero(node->far, gOverrideFar);
 
     // "infinite" draw distance
-    if (configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+    if (gOverrideNear != 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
 
     guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
 
