@@ -1139,7 +1139,7 @@ static void anim_process(Vec3f translation, Vec3s rotation, Vec3f scale, u8 *ani
                 scale[2] *= ((f32) scaleZ) / 256.0f;
             }
         }
-    
+
         if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
             *animType = ANIM_TYPE_TRANSLATION;
         }
@@ -1165,6 +1165,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
     u16 *animAttribute = gCurrAnimAttribute;
     u8 animType = gCurAnimType;
+    // this is a test
 
     // current frame
     vec3s_copy(rotation, gVec3sZero);
