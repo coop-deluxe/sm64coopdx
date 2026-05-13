@@ -1492,7 +1492,7 @@ bool draw_distance_scalar_is_infinite(void) {
     if (!gBehaviorValues.InfiniteRenderDistance) {
         return false;
     }
-    return configDrawDistance == 6; // Assuming 6 is the index for "∞"
+    return configDrawDistance == 6; // Expecting this to be "Infinite"
 }
 
 f32 draw_distance_scalar(void) {
