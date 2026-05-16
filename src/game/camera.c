@@ -3119,7 +3119,9 @@ void update_lakitu(struct Camera *c) {
         gLakituState.roll += sHandheldShakeRoll;
         gLakituState.roll += gLakituState.keyDanceRoll;
 
-        if (c->mode != CAMERA_MODE_C_UP && c->cutscene == 0 && c->mode != CAMERA_MODE_NEWCAM) {
+        if (c->mode != CAMERA_MODE_C_UP && c->cutscene == 0 &&
+        c->mode != CAMERA_MODE_NEWCAM &&
+        (c->mode != CAMERA_MODE_ROM_HACK || !gRomhackCameraSettings.following)) {
             gCheckingSurfaceCollisionsForCamera = TRUE;
             distToFloor = find_floor(gLakituState.pos[0],
                                      gLakituState.pos[1] + 20.0f,
@@ -3192,7 +3194,7 @@ void update_camera(struct Camera *c) {
     }
 
     u8 isEnabled = update_romhack_camera_override(c);
-    if (gRomhackCameraSettings.switchable && isEnabled) {
+    if (gRomhackCameraSettings.switchable && isEnabled && sCurrPlayMode != PLAY_MODE_PAUSED) {
         u8 inValidActions = ((gMarioStates[0].action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) ||
                             (gMarioStates[0].action == ACT_FLYING);
         if (inValidActions && gMarioStates[0].controller->buttonPressed & L_TRIG) {
@@ -3467,6 +3469,7 @@ void reset_camera(struct Camera *c) {
     sCSideButtonYaw = 0;
     s8DirModeBaseYaw = 0;
     s8DirModeYawOffset = 0;
+    sForceRomhackCamera = FALSE;
 
     if (c) {
         c->doorStatus = DOOR_DEFAULT;
