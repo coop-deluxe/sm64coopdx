@@ -755,12 +755,13 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
-#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 7
+#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 8
 static struct LuaObjectField sDjuiInteractableThemeFields[LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT] = {
     { "cursorDownBorderColor", LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownBorderColor), true, LOT_DJUICOLOR },
     { "cursorDownRectColor",   LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownRectColor),   true, LOT_DJUICOLOR },
     { "defaultBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultBorderColor),    true, LOT_DJUICOLOR },
     { "defaultRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultRectColor),      true, LOT_DJUICOLOR },
+    { "disabledTextColor",     LVT_COBJECT, offsetof(struct DjuiInteractableTheme, disabledTextColor),     true, LOT_DJUICOLOR },
     { "hoveredBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredBorderColor),    true, LOT_DJUICOLOR },
     { "hoveredRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredRectColor),      true, LOT_DJUICOLOR },
     { "textColor",             LVT_COBJECT, offsetof(struct DjuiInteractableTheme, textColor),             true, LOT_DJUICOLOR },
@@ -2493,12 +2494,12 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
 
 #define LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT 10
 static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT] = {
-    { "centering",       LVT_U8,  offsetof(struct RomhackCameraSettings, centering),       false, LOT_NONE },
     { "collisions",      LVT_U8,  offsetof(struct RomhackCameraSettings, collisions),      false, LOT_NONE },
     { "dpad",            LVT_U8,  offsetof(struct RomhackCameraSettings, dpad),            false, LOT_NONE },
     { "enable",          LVT_S32, offsetof(struct RomhackCameraSettings, enable),          false, LOT_NONE },
+    { "following",       LVT_U8,  offsetof(struct RomhackCameraSettings, following),       false, LOT_NONE },
     { "modsOnly",        LVT_U8,  offsetof(struct RomhackCameraSettings, modsOnly),        false, LOT_NONE },
-    { "slowFall",        LVT_U8,  offsetof(struct RomhackCameraSettings, slowFall),        false, LOT_NONE },
+    { "switchable",      LVT_U8,  offsetof(struct RomhackCameraSettings, switchable),      false, LOT_NONE },
     { "zoomedInDist",    LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInDist),    false, LOT_NONE },
     { "zoomedInHeight",  LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInHeight),  false, LOT_NONE },
     { "zoomedOutDist",   LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutDist),   false, LOT_NONE },

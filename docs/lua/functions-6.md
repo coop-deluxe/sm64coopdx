@@ -6252,13 +6252,13 @@ Sets the romhack camera override status
 
 <br />
 
-## [camera_romhack_allow_centering](#camera_romhack_allow_centering)
+## [camera_romhack_allow_switchable](#camera_romhack_allow_switchable)
 
 ### Description
-Sets if the romhack camera should allow centering, triggered with the L button
+Sets if the romhack camera should allow water/flying switching, triggered with the L button
 
 ### Lua Example
-`camera_romhack_allow_centering(allow)`
+`camera_romhack_allow_switchable(allow)`
 
 ### Parameters
 | Field | Type |
@@ -6269,7 +6269,7 @@ Sets if the romhack camera should allow centering, triggered with the L button
 - None
 
 ### C Prototype
-`void camera_romhack_allow_centering(u8 allow);`
+`void camera_romhack_allow_switchable(u8 allow);`
 
 [:arrow_up_small:](#)
 
@@ -6542,13 +6542,13 @@ Gets the current romhack camera override status
 
 <br />
 
-## [camera_romhack_get_allow_centering](#camera_romhack_get_allow_centering)
+## [camera_romhack_get_allow_switchable](#camera_romhack_get_allow_switchable)
 
 ### Description
-Gets if the romhack camera should allow centering
+Gets if the romhack camera should allow water/flying switching
 
 ### Lua Example
-`local integerValue = camera_romhack_get_allow_centering()`
+`local integerValue = camera_romhack_get_allow_switchable()`
 
 ### Parameters
 - None
@@ -6557,7 +6557,7 @@ Gets if the romhack camera should allow centering
 - `integer`
 
 ### C Prototype
-`u8 camera_romhack_get_allow_centering(void);`
+`u8 camera_romhack_get_allow_switchable(void);`
 
 [:arrow_up_small:](#)
 

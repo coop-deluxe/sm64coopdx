@@ -149,9 +149,9 @@ unsigned int configFreeCameraDegrade              = 50; // 0 - 100%
 unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
 bool         configRomhackCameraHasCollision      = true;
-bool         configRomhackCameraHasCentering      = false;
+bool         configRomhackCameraSwitchable      = false;
 bool         configRomhackCameraDPadBehavior      = false;
-bool         configRomhackCameraSlowFall          = true;
+bool         configRomhackCameraFollowing          = true;
 
 // common camera settings
 bool         configCameraInvertX                  = false;
@@ -304,9 +304,9 @@ static const struct ConfigOption options[] = {
     {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
     {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
-    {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
+    {.name = "romhackcam_switchable",          .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSwitchable},
     {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDPadBehavior},
-    {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    {.name = "romhackcam_following",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraFollowing},
     // common camera settings
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},

@@ -10717,8 +10717,8 @@ function camera_set_romhack_override(rco)
 end
 
 --- @param allow integer
---- Sets if the romhack camera should allow centering, triggered with the L button
-function camera_romhack_allow_centering(allow)
+--- Sets if the romhack camera should allow water/flying switching, triggered with the L button
+function camera_romhack_allow_switchable(allow)
     -- ...
 end
 
@@ -10796,8 +10796,8 @@ function camera_get_romhack_override()
 end
 
 --- @return integer
---- Gets if the romhack camera should allow centering
-function camera_romhack_get_allow_centering()
+--- Gets if the romhack camera should allow water/flying switching
+function camera_romhack_get_allow_switchable()
     -- ...
 end
 

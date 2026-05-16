@@ -123,9 +123,9 @@ extern unsigned int configFreeCameraDegrade;
 extern unsigned int configEnableRomhackCamera;
 extern bool         configRomhackCameraBowserFights;
 extern bool         configRomhackCameraHasCollision;
-extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraSwitchable;
 extern bool         configRomhackCameraDPadBehavior;
-extern bool         configRomhackCameraSlowFall;
+extern bool         configRomhackCameraFollowing;
 // common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
