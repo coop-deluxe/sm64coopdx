@@ -1,5 +1,6 @@
 #include <deque>
 #include <regex>
+#include <charconv>
 #include "dynos.cpp.h"
 extern "C" {
 #include "engine/graph_node.h"
@@ -8,6 +9,23 @@ extern "C" {
 static std::deque<PackData>& DynosPacks() {
     static std::deque<PackData> sDynosPacks;
     return sDynosPacks;
+}
+
+static bool ParseU8(const std::string& s, u8& out) {
+    unsigned int value = 0;
+    auto [ptr, ec] = std::from_chars(s.data(), s.data() + s.size(), value);
+
+    // Reject:
+    // - parse errors
+    // - overflow
+    // - trailing junk
+    // - values outside u8 range
+    if (ec != std::errc() || ptr != s.data() + s.size() || value > 0xFF) {
+        return false;
+    }
+
+    out = static_cast<u8>(value);
+    return true;
 }
 
 static void ScanPackBins(struct PackData* aPack) {
@@ -45,13 +63,21 @@ static void ScanPackBins(struct PackData* aPack) {
             std::regex re(".*_(\\d+)_(\\d+)_(\\d+)$");
             std::smatch match;
             if (std::regex_match(seqName, match, re) && match.size() == 4) {
-                u8 sequenceId = static_cast<u8>(std::stoi(match[1].str()));
-                u8 bankId = static_cast<u8>(std::stoi(match[2].str()));
-                u8 defaultVolume = static_cast<u8>(std::stoi(match[3].str()));
-                AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, _FileName.c_str(), true);
-                if (audioOverride) {
-                    aPack->mAudioOverrides.push_back(audioOverride);
+                u8 sequenceId, bankId, defaultVolume;
+                if (ParseU8(match[1].str(), sequenceId) &&
+                    ParseU8(match[2].str(), bankId) &&
+                    ParseU8(match[3].str(), defaultVolume)
+                ) {
+                    AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, _FileName.c_str(), true);
+                    if (audioOverride) {
+                        aPack->mAudioOverrides.push_back(audioOverride);
+                    }
                 }
+            } else {
+                PrintError(
+                    "Invalid sequence override filename (expected format: <name>_<sequenceId>_<bankId>_<defaultVolume>.m64): '%s.m64'",
+                    _SeqName.begin()
+                );
             }
         }
     }

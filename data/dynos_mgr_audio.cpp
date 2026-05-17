@@ -40,12 +40,12 @@ void DynOS_Audio_ResetMods() {
     audio_init();
     for (s32 i = 0; i < MAX_AUDIO_OVERRIDE; i++) {
 #ifdef VERSION_EU
-        if (!sAudioOverrides[i].pack.enabled || sAudioOverrides[i].mod.enabled) {
+        if (!sAudioOverrides[i].pack.enabled && sAudioOverrides[i].mod.enabled) {
             if (i >= SEQ_EVENT_CUTSCENE_LAKITU) {
                 sBackgroundMusicDefaultVolume[i] = 75;
-                return;
+            } else {
+                sBackgroundMusicDefaultVolume[i] = sBackgroundMusicDefaultVolumeDefault[i];
             }
-            sBackgroundMusicDefaultVolume[i] = sBackgroundMusicDefaultVolumeDefault[i];
         } else if (sAudioOverrides[i].pack.enabled) {
             // keep pack override default volume
             sBackgroundMusicDefaultVolume[i] = sAudioOverrides[i].pack.defaultVolume;
@@ -68,6 +68,7 @@ static bool DynOS_Audio_LoadEntry(AudioOverrideEntry* aOverride, u8 aSequenceId,
     if (gOverrideBank > -1) { aOverride->bank = gOverrideBank; }
 
     if (aOverride->loaded) {
+        sound_set_background_music_default_volume(aSequenceId, aOverride->defaultVolume);
         *aSeqData = aOverride->buffer;
         *aBankId = aOverride->bank;
         return true;
@@ -149,20 +150,44 @@ static void DynOS_Audio_HotSwapIfActive(u8 aSequenceId) {
 void DynOS_Audio_ActivateOverride(AudioOverrideEntry* aOverride) {
     if (aOverride == NULL || aOverride->enabled) { return; }
     aOverride->enabled = true;
+    sound_set_background_music_default_volume(aOverride->sequenceId, aOverride->defaultVolume);
     DynOS_Audio_HotSwapIfActive(aOverride->sequenceId);
 }
 
 void DynOS_Audio_DeactivateOverride(AudioOverrideEntry* aOverride) {
     if (aOverride == NULL || !aOverride->enabled) { return; }
     aOverride->enabled = false;
+    if (sAudioOverrides[aOverride->sequenceId].mod.enabled) {
+        sound_set_background_music_default_volume(
+            aOverride->sequenceId,
+            sAudioOverrides[aOverride->sequenceId].mod.defaultVolume
+        );
+    } else {
+        sound_reset_background_music_default_volume(aOverride->sequenceId);
+    }
     DynOS_Audio_HotSwapIfActive(aOverride->sequenceId);
 }
 
 AudioOverrideEntry* DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aDefaultVolume, const char *aFilepath, bool aIsPack) {
-    if (aSequenceId >= MAX_AUDIO_OVERRIDE) { return NULL; }
+    if (aSequenceId >= MAX_AUDIO_OVERRIDE) {
+        PrintError("Invalid sequenceId while creating override: %d", aSequenceId);
+        return NULL;
+    }
+
+    if (aBankId >= 64) {
+        PrintError("Invalid bankId while creating override: %d", aBankId);
+        return NULL;
+    }
+
     AudioOverrideEntry* override = aIsPack ? &sAudioOverrides[aSequenceId].pack : &sAudioOverrides[aSequenceId].mod;
 
-    if (override->enabled) { audio_init(); }
+    if (override->enabled) {
+        if (aIsPack) {
+            PrintError("Pack sequence override already exists for sequence ID %d", aSequenceId);
+            return NULL;
+        }
+        audio_init();
+    }
     DynOS_Audio_ResetEntry(override);
     Print("Loading audio: %s", aFilepath);
     override->sequenceId = aSequenceId;
