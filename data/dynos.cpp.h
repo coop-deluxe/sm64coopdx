@@ -604,6 +604,17 @@ struct ActorGfx {
     s32 mPackIndex = 0;
 };
 
+struct AudioOverrideEntry {
+    u8 sequenceId;
+    bool enabled;
+    bool loaded;
+    char* filename;
+    u64 length;
+    u8 bank;
+    u8 defaultVolume;
+    u8* buffer;
+};
+
 struct PackData {
     s32 mIndex;
     bool mEnabled;
@@ -611,6 +622,7 @@ struct PackData {
     String mDisplayName;
     std::vector<std::pair<std::string, GfxData *>> mGfxData;
     std::vector<DataNode<TexData>*> mTextures;
+    std::vector<struct AudioOverrideEntry *> mAudioOverrides;
     bool mLoaded;
 };
 
@@ -894,6 +906,17 @@ std::pair<std::string, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, cons
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
 void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
+
+//
+// Audio Manager
+//
+
+void DynOS_Audio_ResetMods();
+bool DynOS_Audio_Override(u8 aSequenceId, s32* aBankId, void** aSeqData);
+void DynOS_Audio_ActivateOverride(AudioOverrideEntry* aOverride);
+void DynOS_Audio_DeactivateOverride(AudioOverrideEntry* aOverride);
+AudioOverrideEntry* DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aDefaultVolume, const char *aFilepath, bool aIsPack);
+u8 DynOS_Audio_AllocSequence();
 
 //
 // Actor Manager

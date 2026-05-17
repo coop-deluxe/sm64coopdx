@@ -1,4 +1,5 @@
 #include <deque>
+#include <regex>
 #include "dynos.cpp.h"
 extern "C" {
 #include "engine/graph_node.h"
@@ -34,6 +35,24 @@ static void ScanPackBins(struct PackData* aPack) {
             String _TexName = _PackEnt->d_name;
             _TexName[length - 4] = '\0';
             DynOS_Tex_LoadFromBinary(aPack->mPath, _FileName, _TexName.begin(), true);
+        }
+
+        // check for sequences
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".m64", 4)) {
+            String _SeqName = _PackEnt->d_name;
+            _SeqName[length - 4] = '\0';
+            std::string seqName = _SeqName.begin();
+            std::regex re(".*_(\\d+)_(\\d+)_(\\d+)$");
+            std::smatch match;
+            if (std::regex_match(seqName, match, re) && match.size() == 4) {
+                u8 sequenceId = static_cast<u8>(std::stoi(match[1].str()));
+                u8 bankId = static_cast<u8>(std::stoi(match[2].str()));
+                u8 defaultVolume = static_cast<u8>(std::stoi(match[3].str()));
+                AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, _FileName.c_str(), true);
+                if (audioOverride) {
+                    aPack->mAudioOverrides.push_back(audioOverride);
+                }
+            }
         }
     }
 }
@@ -106,12 +125,18 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
         for (auto& _Tex : aPack->mTextures) {
             DynOS_Tex_Activate(_Tex, false);
         }
+        for (auto& audioOverride : aPack->mAudioOverrides) {
+            DynOS_Audio_ActivateOverride(audioOverride);
+        }
     } else {
         for (auto& pair : aPack->mGfxData) {
             DynOS_Pack_DeactivateActor(aPack->mIndex, pair);
         }
         for (auto& _Tex : aPack->mTextures) {
             DynOS_Tex_Deactivate(_Tex);
+        }
+        for (auto& audioOverride : aPack->mAudioOverrides) {
+            DynOS_Audio_DeactivateOverride(audioOverride);
         }
     }
     DynOS_Actor_Override_All();
