@@ -155,6 +155,39 @@ static void gfx_sdl_init(const char *window_title) {
     controller_bind_init();
 }
 
+bool gfx_sdl_check_opengl_compatibility(void) {
+    if (!(SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO)) {
+        if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+            return false;
+        }
+    }
+
+    // hidden window
+    SDL_Window* window = SDL_CreateWindow(
+        "",
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN
+    );
+
+    if (!window) {
+        return false;
+    }
+
+    SDL_GLContext ctx = SDL_GL_CreateContext(window);
+
+    if (!ctx) {
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
+    bool validVersion = gfx_opengl_check_compatibility();
+
+    SDL_GL_DeleteContext(ctx);
+    SDL_DestroyWindow(window);
+
+    return validVersion;
+}
+
 static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {
     run_one_game_iter();
 }

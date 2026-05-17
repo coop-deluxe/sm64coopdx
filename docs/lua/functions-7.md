@@ -751,7 +751,8 @@ Gets the texture from a display list command if it has an image related op
 ## [gfx_get_from_name](#gfx_get_from_name)
 
 ### Description
-Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+Gets a display list of the current mod from its name.
+Returns a pointer to the display list and its length
 
 ### Lua Example
 `local pointerValue, length = gfx_get_from_name(name)`
@@ -985,7 +986,8 @@ Deletes all display lists created by `gfx_create`
 ## [vtx_get_from_name](#vtx_get_from_name)
 
 ### Description
-Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffer and its vertex count
+Gets a vertex buffer of the current mod from its name.
+Returns a pointer to the vertex buffer and its vertex count
 
 ### Lua Example
 `local pointerValue, count = vtx_get_from_name(name)`
@@ -2533,7 +2535,8 @@ Allocates an action ID with bitwise flags
 ## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
 
 ### Description
-Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+Gets the X coordinate of Mario's hand (0-1) or foot (2-3)
+but it is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_x(m, index)`
@@ -2557,7 +2560,8 @@ Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to
 ## [get_hand_foot_pos_y](#get_hand_foot_pos_y)
 
 ### Description
-Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
+Gets the Y coordinate of Mario's hand (0-1) or foot (2-3)
+but It is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_y(m, index)`
@@ -2581,7 +2585,8 @@ Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to
 ## [get_hand_foot_pos_z](#get_hand_foot_pos_z)
 
 ### Description
-Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+Gets the Z coordinate of Mario's hand (0-1) or foot (2-3)
+but it is important to note that the positions are not updated off-screen
 
 ### Lua Example
 `local numberValue = get_hand_foot_pos_z(m, index)`
@@ -3620,7 +3625,8 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 ## [spawn_sync_object](#spawn_sync_object)
 
 ### Description
-Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local objectValue = spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -3648,7 +3654,8 @@ Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local
 ## [spawn_non_sync_object](#spawn_non_sync_object)
 
 ### Description
-Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
+You can change the fields of the object in `objSetupFunction`
 
 ### Lua Example
 `local objectValue = spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)`
@@ -3991,7 +3998,8 @@ Gets the first object loaded with `behaviorId`
 ## [obj_get_first_with_behavior_id_and_field_s32](#obj_get_first_with_behavior_id_and_field_s32)
 
 ### Description
-Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+Gets the first object loaded with `behaviorId` and object signed 32-bit integer field
+(look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local objectValue = obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)`
@@ -4016,7 +4024,8 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 ## [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
 
 ### Description
-Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
+Gets the first object loaded with `behaviorId` and object float field
+(look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local objectValue = obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)`
@@ -4087,7 +4096,8 @@ Gets the next object loaded with the same behavior ID
 ## [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
 
 ### Description
-Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+Gets the next object loaded with the same behavior ID and object signed 32-bit integer field
+(look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local objectValue = obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)`
@@ -4112,7 +4122,8 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 ## [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
 
 ### Description
-Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
+Gets the next object loaded with the same behavior ID and object float field
+(look in `object_fields.h` to get the index of a field)
 
 ### Lua Example
 `local objectValue = obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)`
@@ -5882,7 +5893,8 @@ Plays a sound if the current object is visible and queues rumble for specific so
 ## [create_sound_spawner](#create_sound_spawner)
 
 ### Description
-Create a sound spawner for objects that need a sound play once. (Breakable walls, King Bobomb exploding, etc)
+Create a sound spawner for objects that need a sound play once.
+(Breakable walls, King Bobomb exploding, etc)
 
 ### Lua Example
 `create_sound_spawner(soundMagic)`
@@ -5905,7 +5917,9 @@ Create a sound spawner for objects that need a sound play once. (Breakable walls
 ## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
 
 ### Description
-Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124. What an even more strange and confusing function
+Unused vanilla function, calculates a volume based on `distance`.
+If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.
+What an even more strange and confusing function
 
 ### Lua Example
 `local integerValue = calc_dist_to_volume_range_1(distance)`
@@ -5928,7 +5942,9 @@ Unused vanilla function, calculates a volume based on `distance`. If `distance` 
 ## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
 
 ### Description
-Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127. What a strange and confusing function
+Unused vanilla function, calculates a volume based on `distance`.
+If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.
+What a strange and confusing function
 
 ### Lua Example
 `local integerValue = calc_dist_to_volume_range_2(distance)`
@@ -5957,7 +5973,8 @@ Unused vanilla function, calculates a volume based on `distance`. If `distance` 
 ## [find_wall_collisions](#find_wall_collisions)
 
 ### Description
-Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected
+Detects wall collisions at a given position and adjusts the position based on the walls found.
+Returns the number of wall collisions detected
 
 ### Lua Example
 `local integerValue = find_wall_collisions(colData)`
@@ -5980,7 +5997,8 @@ Detects wall collisions at a given position and adjusts the position based on th
 ## [find_ceil](#find_ceil)
 
 ### Description
-Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface. If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface.
+If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 
 ### Lua Example
 `local numberValue, pceil = find_ceil(posX, posY, posZ)`
@@ -6006,7 +6024,8 @@ Finds the height of the highest ceiling above a given position (x, y, z) and ret
 ## [find_ceil_height](#find_ceil_height)
 
 ### Description
-Finds the height of the highest ceiling above a given position (x, y, z). If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+Finds the height of the highest ceiling above a given position (x, y, z).
+If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 
 ### Lua Example
 `local numberValue = find_ceil_height(x, y, z)`
@@ -6031,7 +6050,8 @@ Finds the height of the highest ceiling above a given position (x, y, z). If no 
 ## [find_floor_height](#find_floor_height)
 
 ### Description
-Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+Finds the height of the highest floor below a given position (x, y, z).
+If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue = find_floor_height(x, y, z)`
@@ -6056,7 +6076,8 @@ Finds the height of the highest floor below a given position (x, y, z). If no fl
 ## [find_floor](#find_floor)
 
 ### Description
-Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface. If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface.
+If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue, pfloor = find_floor(xPos, yPos, zPos)`
@@ -6082,7 +6103,8 @@ Finds the height of the highest floor below a given position (x, y, z) and retur
 ## [find_water_level](#find_water_level)
 
 ### Description
-Finds the height of water at a given position (x, z), if the position is within a water region. If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
+Finds the height of water at a given position (x, z), if the position is within a water region.
+If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue = find_water_level(x, z)`
@@ -6106,7 +6128,8 @@ Finds the height of water at a given position (x, z), if the position is within 
 ## [find_poison_gas_level](#find_poison_gas_level)
 
 ### Description
-Finds the height of the poison gas at a given position (x, z), if the position is within a gas region. If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
+Finds the height of the poison gas at a given position (x, z), if the position is within a gas region.
+If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 
 ### Lua Example
 `local numberValue = find_poison_gas_level(x, z)`
@@ -6186,7 +6209,8 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 ## [load_object_collision_model](#load_object_collision_model)
 
 ### Description
-Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
+Loads the object's collision data into dynamic collision.
+You must run this every frame in your object's behavior loop for it to have collision
 
 ### Lua Example
 `load_object_collision_model()`
@@ -6207,7 +6231,8 @@ Loads the object's collision data into dynamic collision. You must run this ever
 ## [load_static_object_collision](#load_static_object_collision)
 
 ### Description
-Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+Loads the object's collision data into static collision.
+You may run this only once to capture the object's collision at that frame.
 
 ### Lua Example
 `local staticObjectCollisionValue = load_static_object_collision()`

@@ -777,7 +777,12 @@ Overrides the current room Mario is in. Set to -1 to reset override
 ## [linear_mtxf_mul_vec3f](#linear_mtxf_mul_vec3f)
 
 ### Description
-Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
+Multiplies a vector by a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
 
 ### Lua Example
 `linear_mtxf_mul_vec3f(m, dst, v)`
@@ -802,7 +807,12 @@ Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? 
 ## [linear_mtxf_transpose_mul_vec3f](#linear_mtxf_transpose_mul_vec3f)
 
 ### Description
-Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
+Multiplies a vector by the transpose of a matrix of the form:
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| ? ? ? 0 |`
+`| 0 0 0 1 |`
+i.e. a matrix representing a linear transformation over 3 space
 
 ### Lua Example
 `linear_mtxf_transpose_mul_vec3f(m, dst, v)`
@@ -4788,7 +4798,8 @@ Gets the level number's corresponding course number
 ## [touch_coin_score_age](#touch_coin_score_age)
 
 ### Description
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
+Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
+Useful for leaderboard tracking or displaying recent progress
 
 ### Lua Example
 `touch_coin_score_age(fileIndex, courseIndex)`
@@ -4812,7 +4823,8 @@ Marks the coin score for a specific course as the newest among all save files. A
 ## [save_file_do_save](#save_file_do_save)
 
 ### Description
-Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
+Saves the current state of the game into a specified save file. Includes data verification and backup management.
+Useful for maintaining game progress during play or when saving manually
 
 ### Lua Example
 `save_file_do_save(fileIndex, forceSave)`
@@ -4836,7 +4848,8 @@ Saves the current state of the game into a specified save file. Includes data ve
 ## [save_file_erase](#save_file_erase)
 
 ### Description
-Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
+Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes.
+Useful for resetting a save file to its default state
 
 ### Lua Example
 `save_file_erase(fileIndex)`
@@ -4880,7 +4893,8 @@ Erases the backup data for the current save file without affecting the primary s
 ## [save_file_reload](#save_file_reload)
 
 ### Description
-Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
+Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified.
+Useful for reloading state after data corruption or during development debugging
 
 ### Lua Example
 `save_file_reload(load_all)`
@@ -4903,7 +4917,8 @@ Reloads the save file data into memory, optionally resetting all save files. Mar
 ## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
 
 ### Description
-Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
+Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it.
+Useful for leaderboard-style comparisons and overall progress tracking
 
 ### Lua Example
 `local integerValue = save_file_get_max_coin_score(courseIndex)`
@@ -4926,7 +4941,8 @@ Determines the maximum coin score for a course across all save files. Returns th
 ## [save_file_get_course_star_count](#save_file_get_course_star_count)
 
 ### Description
-Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
+Calculates the total number of stars collected in a specific course for a given save file.
+Useful for determining completion status of individual levels
 
 ### Lua Example
 `local integerValue = save_file_get_course_star_count(fileIndex, courseIndex)`
@@ -4950,7 +4966,8 @@ Calculates the total number of stars collected in a specific course for a given 
 ## [save_file_get_total_star_count](#save_file_get_total_star_count)
 
 ### Description
-Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
+Calculates the total number of stars collected across multiple courses within a specified range.
+Useful for determining the overall progress toward game completion
 
 ### Lua Example
 `local integerValue = save_file_get_total_star_count(fileIndex, minCourse, maxCourse)`
@@ -4975,7 +4992,8 @@ Calculates the total number of stars collected across multiple courses within a 
 ## [save_file_set_flags](#save_file_set_flags)
 
 ### Description
-Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
+Adds new flags to the save file's flag bitmask.
+Useful for updating progress or triggering new gameplay features
 
 ### Lua Example
 `save_file_set_flags(flags)`
@@ -4998,7 +5016,8 @@ Adds new flags to the save file's flag bitmask. Useful for updating progress or 
 ## [save_file_clear_flags](#save_file_clear_flags)
 
 ### Description
-Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
+Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing.
+Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
 
 ### Lua Example
 `save_file_clear_flags(flags)`
@@ -5021,7 +5040,8 @@ Clears specific flags in the current save file. The flags are specified as a bit
 ## [save_file_get_flags](#save_file_get_flags)
 
 ### Description
-Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
+Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states.
+Useful for checking specific game progress details
 
 ### Lua Example
 `local integerValue = save_file_get_flags()`
@@ -5042,7 +5062,8 @@ Retrieves the bitmask of flags representing the current state of the save file. 
 ## [save_file_get_star_flags](#save_file_get_star_flags)
 
 ### Description
-Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
+Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1).
+Useful for evaluating level progress and completion
 
 ### Lua Example
 `local integerValue = save_file_get_star_flags(fileIndex, courseIndex)`
@@ -5066,7 +5087,8 @@ Retrieves the bitmask of stars collected in a specific course or castle secret s
 ## [save_file_set_star_flags](#save_file_set_star_flags)
 
 ### Description
-Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
+Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary.
+Useful for recording progress after star collection
 
 ### Lua Example
 `save_file_set_star_flags(fileIndex, courseIndex, starFlags)`
@@ -5091,7 +5113,8 @@ Adds specific star flags to the save file, indicating collected stars for a cour
 ## [save_file_remove_star_flags](#save_file_remove_star_flags)
 
 ### Description
-Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
+Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars.
+Useful for undoing progress or debugging collected stars
 
 ### Lua Example
 `save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)`
@@ -5116,7 +5139,8 @@ Removes specific star flags from the save file. This modifies the bitmask repres
 ## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
 
 ### Description
-Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
+Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid.
+Useful for tracking player achievements and high scores
 
 ### Lua Example
 `local integerValue = save_file_get_course_coin_score(fileIndex, courseIndex)`
@@ -5140,7 +5164,8 @@ Returns the highest coin score for a specified course in the save file. Performs
 ## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
 
 ### Description
-Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
+Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter.
+Useful for manually setting achievements such as high coin counts in individual levels
 
 ### Lua Example
 `save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)`
@@ -5165,7 +5190,8 @@ Updates the coin score for a specific course in the save file. The new score is 
 ## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
 
 ### Description
-Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
+Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false.
+Useful for tracking course-specific progress and enabling shortcuts
 
 ### Lua Example
 `local integerValue = save_file_is_cannon_unlocked(fileIndex, courseIndex)`
@@ -5210,7 +5236,8 @@ Unlocks the cannon in the current course
 ## [save_file_get_cap_pos](#save_file_get_cap_pos)
 
 ### Description
-Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
+Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter.
+Useful for tracking the cap's location after it has been dropped or lost
 
 ### Lua Example
 `local integerValue = save_file_get_cap_pos(capPos)`
@@ -5233,7 +5260,8 @@ Retrieves the current position of Mario's cap, if it is on the ground in the cur
 ## [save_file_get_sound_mode](#save_file_get_sound_mode)
 
 ### Description
-Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
+Returns the current sound mode (e.g., stereo, mono) stored in the save file.
+Useful for checking the audio output preferences when loading a save
 
 ### Lua Example
 `local integerValue = save_file_get_sound_mode()`
@@ -6224,13 +6252,13 @@ Sets the romhack camera override status
 
 <br />
 
-## [camera_romhack_allow_centering](#camera_romhack_allow_centering)
+## [camera_romhack_allow_switchable](#camera_romhack_allow_switchable)
 
 ### Description
-Sets if the romhack camera should allow centering, triggered with the L button
+Sets if the romhack camera should allow water/flying switching, triggered with the L button
 
 ### Lua Example
-`camera_romhack_allow_centering(allow)`
+`camera_romhack_allow_switchable(allow)`
 
 ### Parameters
 | Field | Type |
@@ -6241,7 +6269,7 @@ Sets if the romhack camera should allow centering, triggered with the L button
 - None
 
 ### C Prototype
-`void camera_romhack_allow_centering(u8 allow);`
+`void camera_romhack_allow_switchable(u8 allow);`
 
 [:arrow_up_small:](#)
 
@@ -6296,7 +6324,8 @@ Sets if the romhack camera should allow D-Pad movement
 ## [camera_romhack_set_collisions](#camera_romhack_set_collisions)
 
 ### Description
-Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+Toggles collision settings for the ROM hack camera.
+This enables or disables specific collision behaviors in modded levels
 
 ### Lua Example
 `camera_romhack_set_collisions(enable)`
@@ -6513,13 +6542,13 @@ Gets the current romhack camera override status
 
 <br />
 
-## [camera_romhack_get_allow_centering](#camera_romhack_get_allow_centering)
+## [camera_romhack_get_allow_switchable](#camera_romhack_get_allow_switchable)
 
 ### Description
-Gets if the romhack camera should allow centering
+Gets if the romhack camera should allow water/flying switching
 
 ### Lua Example
-`local integerValue = camera_romhack_get_allow_centering()`
+`local integerValue = camera_romhack_get_allow_switchable()`
 
 ### Parameters
 - None
@@ -6528,7 +6557,7 @@ Gets if the romhack camera should allow centering
 - `integer`
 
 ### C Prototype
-`u8 camera_romhack_get_allow_centering(void);`
+`u8 camera_romhack_get_allow_switchable(void);`
 
 [:arrow_up_small:](#)
 
@@ -7429,7 +7458,9 @@ Gets a table of the surface types from `data`
 ## [smlua_collision_add_surface](#smlua_collision_add_surface)
 
 ### Description
-Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition. Returns the new surface, or `nil` if the triangle is degenerate (zero area). Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.
+Returns the new surface, or `nil` if the triangle is degenerate (zero area).
+Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
 
 ### Lua Example
 `local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
@@ -7456,7 +7487,9 @@ Allocates a new collision surface with the given vertices, computes the surface 
 ## [smlua_collision_move_surface](#smlua_collision_move_surface)
 
 ### Description
-Moves an existing collision surface to new vertex positions. Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells. The previous vertices are preserved for interpolation
+Moves an existing collision surface to new vertex positions.
+Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.
+The previous vertices are preserved for interpolation
 
 ### Lua Example
 `smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`

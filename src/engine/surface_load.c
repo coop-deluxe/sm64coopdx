@@ -1045,7 +1045,9 @@ static void load_object_collision_model_internal(bool isSOC) {
 
     if (!isSOC) {
         f32 marioDist = dist_between_objects(gCurrentObject, gMarioStates[0].marioObj);
-        if (marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
+        if (draw_distance_scalar_is_infinite() ||
+            marioDist < gCurrentObject->oDrawingDistance * draw_distance_scalar()
+        ) {
             gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
         } else {
             gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;

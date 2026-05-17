@@ -727,7 +727,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     clear_all_shader_flags();
     gOverrideBackground = -1;
     gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
-    gRomhackCameraSettings.centering = FALSE;
+    gRomhackCameraSettings.switchable = FALSE;
     gOverrideAllowToxicGasCamera = FALSE;
     gRomhackCameraSettings.dpad = FALSE;
     camera_reset_overrides();

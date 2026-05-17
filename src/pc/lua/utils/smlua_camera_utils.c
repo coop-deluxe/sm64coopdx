@@ -57,8 +57,8 @@ void camera_set_romhack_override(enum RomhackCameraOverride rco) {
     gRomhackCameraSettings.enable = rco;
 }
 
-void camera_romhack_allow_centering(u8 allow) {
-    gRomhackCameraSettings.centering = allow;
+void camera_romhack_allow_switchable(u8 allow) {
+    gRomhackCameraSettings.switchable = allow;
 }
 
 void camera_allow_toxic_gas_camera(u8 allow) {
@@ -109,8 +109,8 @@ enum RomhackCameraOverride camera_get_romhack_override(void) {
     return gRomhackCameraSettings.enable;
 }
 
-u8 camera_romhack_get_allow_centering(void) {
-    return gRomhackCameraSettings.centering;
+u8 camera_romhack_get_allow_switchable(void) {
+    return gRomhackCameraSettings.switchable;
 }
 
 u8 camera_get_allow_toxic_gas_camera(void) {

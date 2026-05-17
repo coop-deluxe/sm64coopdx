@@ -71,6 +71,7 @@ extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
+extern unsigned int configSoundOutput;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -122,9 +123,9 @@ extern unsigned int configFreeCameraDegrade;
 extern unsigned int configEnableRomhackCamera;
 extern bool         configRomhackCameraBowserFights;
 extern bool         configRomhackCameraHasCollision;
-extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraSwitchable;
 extern bool         configRomhackCameraDPadBehavior;
-extern bool         configRomhackCameraSlowFall;
+extern bool         configRomhackCameraFollowing;
 // common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;

@@ -28,6 +28,7 @@
 #include "djui_progress_bar.h"
 #include "djui_checkbox.h"
 #include "djui_flow_layout.h"
+#include "djui_searchbox.h"
 #include "djui_selectionbox.h"
 #include "djui_bind.h"
 #include "djui_popup.h"

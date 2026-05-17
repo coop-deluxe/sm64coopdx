@@ -1438,7 +1438,9 @@ cur_obj_update_begin:;
     } else if ((objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO) && gCurrentObject->collisionData == NULL) {
         if (!(objFlags & OBJ_FLAG_ACTIVE_FROM_AFAR)) {
             // If the object has a render distance, check if it should be shown.
-            if (distanceFromMario > gCurrentObject->oDrawingDistance * draw_distance_scalar()) {
+            if (!draw_distance_scalar_is_infinite() &&
+                distanceFromMario > gCurrentObject->oDrawingDistance * draw_distance_scalar()
+            ) {
                 // Out of render distance, hide the object.
                 gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
@@ -1484,6 +1486,13 @@ u16 position_based_random_u16(void) {
 f32 position_based_random_float_position(void) {
     f32 rnd = position_based_random_u16();
     return rnd / (double)0x10000;
+}
+
+bool draw_distance_scalar_is_infinite(void) {
+    if (!gBehaviorValues.InfiniteRenderDistance) {
+        return false;
+    }
+    return configDrawDistance == 6; // Expecting this to be "Infinite"
 }
 
 f32 draw_distance_scalar(void) {

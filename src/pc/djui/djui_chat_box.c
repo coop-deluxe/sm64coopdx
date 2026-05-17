@@ -417,7 +417,7 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
     sent_history_init(&sentHistory);
 
     if (gDjuiChatBox == NULL) { return false; }
-    
+
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
 
     char previousText[MAX_CHAT_MSG_LENGTH];
@@ -547,7 +547,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     struct DjuiBase* cfBase = &chatFlow->base;
     djui_base_set_location(cfBase, 0, 0);
     djui_base_set_size_type(cfBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(cfBase, 1.0f, 2);
+    djui_base_set_size(cfBase, 1.0f, 0);
     djui_base_set_color(cfBase, 0, 0, 0, 128);
     djui_base_set_padding(cfBase, 2, 2, 2, 2);
     djui_flow_layout_set_margin(chatFlow, 2);

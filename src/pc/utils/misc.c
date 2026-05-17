@@ -15,6 +15,7 @@
 #include <windows.h>
 #include <direct.h>
 #endif
+#include <ctype.h>
 
 #include "misc.h"
 
@@ -640,6 +641,31 @@ void open_folder(const char* path) {
     snprintf(command, sizeof(command), "open \"%s\"", path);
     system(command);
 #endif
+}
+
+const char *strstr_lowercased(const char *haystack, const char *needle) {
+    // sanity check
+    if (!*needle) {
+        return haystack;
+    }
+
+    while (*haystack) {
+        const char *h = haystack;
+        const char *n = needle;
+
+        while (*h && *n && tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
+            ++h;
+            ++n;
+        }
+
+        if (!*n) {
+            return haystack;
+        }
+
+        ++haystack;
+    }
+
+    return NULL;
 }
 
 static char *get_update_path(void) {

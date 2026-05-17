@@ -5,4 +5,6 @@
 
 extern struct GfxWindowManagerAPI gfx_sdl;
 
+bool gfx_sdl_check_opengl_compatibility(void);
+
 #endif

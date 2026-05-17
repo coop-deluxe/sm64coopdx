@@ -836,6 +836,18 @@ static void gfx_opengl_init(void) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+bool gfx_opengl_check_compatibility(void) {
+    // check GL version
+    int vmajor = 0;
+    int vminor = 0;
+    bool is_es = false;
+    gl_get_version(&vmajor, &vminor, &is_es);
+    if (vmajor < 2 && vminor < 1 && !is_es)
+        return false;
+
+    return true;
+}
+
 static void gfx_opengl_on_resize(void) {
 }
 

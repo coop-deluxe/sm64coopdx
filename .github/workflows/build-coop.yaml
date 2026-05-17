@@ -4,10 +4,12 @@ on:
     workflow_dispatch:
     push:
         branches: [ dev ]
+    pull_request:
+        branches: [ dev ]
 
 jobs:
     build-linux:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
@@ -39,7 +41,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_Linux.zip
 
     build-steamos:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
@@ -71,7 +73,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_SteamOS.zip
 
     build-windows:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: windows-latest
         defaults:
             run:
@@ -119,7 +121,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_Windows.zip
 
     build-macos-arm:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: macos-26
         steps:
             - name: Checkout repository
@@ -174,7 +176,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
 
     build-macos-intel:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: macos-15-intel
         steps:
             - name: Checkout repository
