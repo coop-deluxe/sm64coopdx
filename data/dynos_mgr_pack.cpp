@@ -68,7 +68,9 @@ static void ScanPackBins(struct PackData* aPack) {
                     ParseU8(match[2].str(), bankId) &&
                     ParseU8(match[3].str(), defaultVolume)
                 ) {
-                    AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, _FileName.c_str(), true);
+                    AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(
+                        sequenceId, bankId, defaultVolume, _FileName.c_str(), true
+                    );
                     if (audioOverride) {
                         aPack->mAudioOverrides.push_back(audioOverride);
                     }
