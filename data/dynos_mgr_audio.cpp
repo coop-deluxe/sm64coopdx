@@ -190,8 +190,12 @@ AudioOverrideEntry* DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aD
     }
     DynOS_Audio_ResetEntry(override);
     Print("Loading audio: %s", aFilepath);
-    override->sequenceId = aSequenceId;
     override->filename = strdup(aFilepath);
+    if (override->filename == NULL) {
+        PrintError("Failed to allocate memory for audio filepath");
+        return NULL;
+    }
+    override->sequenceId = aSequenceId;
     override->enabled = true;
     override->bank = aBankId;
     override->defaultVolume = aDefaultVolume;
