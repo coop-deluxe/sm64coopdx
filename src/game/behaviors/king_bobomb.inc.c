@@ -7,7 +7,7 @@ struct MarioState* king_bobomb_nearest_mario_state(void) {
     do {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
-            if (gMarioStates[i].visibleToObjects != 1) { continue; }
+            if (!gMarioStates[i].visibleToObjects) { continue; }
             float ydiff = (o->oPosY - gMarioStates[i].marioObj->oPosY);
             if (ydiff >= 1200) { continue; }
 

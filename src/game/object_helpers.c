@@ -3085,7 +3085,7 @@ void clear_time_stop_flags(s32 flags) {
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
     if (!o || !m) { return 0; }
-    if (m->visibleToObjects != 1) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
         UNUSED s16 angleFromMario = obj_angle_to_object(m->marioObj, o);
@@ -3203,7 +3203,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
-    if (m->visibleToObjects != 1) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP

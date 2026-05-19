@@ -34169,23 +34169,6 @@ int smlua_func_get_mario_anim_part_rot(lua_State* L) {
     return 1;
 }
 
-int smlua_func_override_mario_visibility_to_objects(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "override_mario_visibility_to_objects", 1, top);
-        return 0;
-    }
-
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "override_mario_visibility_to_objects"); return 0; }
-
-    override_mario_visibility_to_objects(m);
-
-    return 1;
-}
-
 int smlua_func_get_current_save_file_num(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -39091,7 +39074,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_hand_foot_pos_z", smlua_func_get_hand_foot_pos_z);
     smlua_bind_function(L, "get_mario_anim_part_pos", smlua_func_get_mario_anim_part_pos);
     smlua_bind_function(L, "get_mario_anim_part_rot", smlua_func_get_mario_anim_part_rot);
-    smlua_bind_function(L, "override_mario_visibility_to_objects", smlua_func_override_mario_visibility_to_objects);
     smlua_bind_function(L, "get_current_save_file_num", smlua_func_get_current_save_file_num);
     smlua_bind_function(L, "save_file_get_using_backup_slot", smlua_func_save_file_get_using_backup_slot);
     smlua_bind_function(L, "save_file_set_using_backup_slot", smlua_func_save_file_set_using_backup_slot);

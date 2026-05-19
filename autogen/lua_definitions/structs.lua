@@ -1126,6 +1126,7 @@
 --- @field public doubleJumpTimer integer
 --- @field public specialTripleJump integer
 --- @field public fadeWarpOpacity integer
+--- @field public visibleToObjects integer
 --- @field public wasNetworkVisible integer
 --- @field public dialogId integer
 --- @field public prevNumStarsForDialog integer

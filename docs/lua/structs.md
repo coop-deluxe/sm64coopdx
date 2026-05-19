@@ -1643,6 +1643,7 @@
 | doubleJumpTimer | `integer` |  |
 | specialTripleJump | `integer` |  |
 | fadeWarpOpacity | `integer` |  |
+| visibleToObjects | `integer` |  |
 | wasNetworkVisible | `integer` |  |
 | dialogId | `integer` | read-only |
 | prevNumStarsForDialog | `integer` |  |

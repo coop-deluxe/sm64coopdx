@@ -149,7 +149,6 @@ override_disallowed_functions = {
 override_hide_functions = {
     "smlua_deprecated.h": [ ".*" ],
     "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ],
-    "smlua_misc_utils.h":   [ "override_mario_visibility_to_objects" ],
 }
 
 override_function_version_excludes = {

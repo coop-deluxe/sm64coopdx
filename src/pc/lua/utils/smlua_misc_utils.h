@@ -174,11 +174,6 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 |descriptionEnd| */
 bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot);
 
-/* |description|
-Temporarily overrides the `visibleToObjects` field of a MarioState to hide it from some objects.
-|descriptionEnd| */
-void override_mario_visibility_to_objects(struct MarioState *m);
-
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);
 /* |description|Checks if the save file is using its backup slot|descriptionEnd| */
