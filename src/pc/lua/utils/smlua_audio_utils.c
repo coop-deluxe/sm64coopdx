@@ -356,6 +356,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
     );
     if (result != MA_SUCCESS) {
         free(buffer);
+        ma_decoder_uninit(&audio->decoder);
         LOG_ERROR("failed to load audio file '%s': %d", filename, result);
         return NULL;
     }
@@ -389,6 +390,7 @@ void audio_stream_destroy(struct ModAudio* audio) {
     if (!audio_sanity_check(audio, true, "destroy")) { return; }
 
     ma_sound_uninit(&audio->sound);
+    ma_decoder_uninit(&audio->decoder);
     audio->loaded = false;
 }
 
@@ -558,6 +560,7 @@ void audio_destroy_copies(struct ModAudioSampleCopies* node) {
     while (node) {
         struct ModAudioSampleCopies* prev = node->prev;
         ma_sound_uninit(&node->sound);
+        ma_decoder_uninit(&node->decoder);
         free(node);
         node = prev;
     }
@@ -593,6 +596,7 @@ void audio_sample_destroy(struct ModAudio* audio) {
     }
     ma_sound_stop(&audio->sound);
     ma_sound_uninit(&audio->sound);
+    ma_decoder_uninit(&audio->decoder);
     audio->loaded = false;
 }
 
@@ -695,6 +699,7 @@ void audio_custom_shutdown(void) {
                 audio_sample_destroy_copies(audio);
             }
             ma_sound_uninit(&audio->sound);
+            ma_decoder_uninit(&audio->decoder);
         }
         free((void *) audio->filepath);
         free(audio->buffer);
