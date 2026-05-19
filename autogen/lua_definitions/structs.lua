@@ -1208,7 +1208,6 @@
 --- @field public isStream boolean
 --- @field public baseVolume number
 --- @field public loaded boolean
---- @field public alive boolean
 --- @field public position number
 --- @field public looping boolean
 --- @field public frequency number

@@ -1764,7 +1764,6 @@
 | isStream | `boolean` | read-only |
 | baseVolume | `number` |  |
 | loaded | `boolean` | read-only |
-| alive | `boolean` |  |
 | position | `number` |  |
 | looping | `boolean` |  |
 | frequency | `number` |  |
