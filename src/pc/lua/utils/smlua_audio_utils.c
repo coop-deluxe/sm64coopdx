@@ -273,7 +273,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
 
     // find stream in ModAudio list
     struct ModAudio* audio = find_mod_audio(filepath);
-    if (audio) {
+    if (audio && audio->loaded) {
         if (isStream != audio->isStream) {
             if (isStream) {
                 LOG_LUA_LINE("Tried to load a stream, when a sample already exists for '%s'", filename);
@@ -282,9 +282,7 @@ struct ModAudio* audio_load_internal(const char* filename, bool isStream) {
             }
             return NULL;
         }
-        if (audio->loaded) {
-            return audio;
-        }
+        return audio;
     }
 
     // allocate in ModAudio pool if needed
@@ -690,8 +688,9 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
     if (!audio_sanity_check(audio, false, "play")) { return; }
 
     ma_sound *sound = &audio->sound;
+    struct ModAudioSampleCopies* copy = NULL;
     if (ma_sound_is_playing(sound)) {
-        struct ModAudioSampleCopies* copy = calloc(1, sizeof(struct ModAudioSampleCopies));
+        copy = calloc(1, sizeof(struct ModAudioSampleCopies));
         if (!copy) {
             LOG_ERROR("Failed to allocate memory for sample copy track.");
             return;
@@ -709,15 +708,6 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         }
         ma_sound_set_end_callback(&copy->sound, audio_sample_copy_end_callback, copy);
         copy->parent = audio;
-
-        // Add to list
-        pthread_mutex_lock(&sSampleCopyMutex);
-        if (audio->sampleCopiesTail) {
-            copy->prev = audio->sampleCopiesTail;
-            audio->sampleCopiesTail->next = copy;
-        }
-        audio->sampleCopiesTail = copy;
-        pthread_mutex_unlock(&sSampleCopyMutex);
 
         sound = &copy->sound;
     }
@@ -745,11 +735,32 @@ void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume) {
         ma_sound_set_volume(sound, gMasterVolume * sfxVolume * volume * intensity);
     }
     ma_sound_set_pan(sound, pan);
+
+    ma_result startResult = ma_sound_start(sound);
+    if (startResult != MA_SUCCESS) {
+        if (copy) {
+            ma_sound_uninit(&copy->sound);
+            ma_decoder_uninit(&copy->decoder);
+            free(copy);
+        }
+        LOG_ERROR("Failed to start mod audio sample: %d", startResult);
+        return;
+    }
+
+    // Only add the copy to the list after a successful start
+    if (copy) {
+        pthread_mutex_lock(&sSampleCopyMutex);
+        if (audio->sampleCopiesTail) {
+            copy->prev = audio->sampleCopiesTail;
+            audio->sampleCopiesTail->next = copy;
+        }
+        audio->sampleCopiesTail = copy;
+        pthread_mutex_unlock(&sSampleCopyMutex);
+    }
+
     if (sound == &audio->sound) {
         audio->baseVolume = volume;
     }
-
-    ma_sound_start(sound);
 }
 
 void audio_custom_update_volume(void) {
