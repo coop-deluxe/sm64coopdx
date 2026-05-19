@@ -235,7 +235,7 @@ AudioOverrideEntry *DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aD
         sAudioModOverrides[aSequenceId].push_back(override);
     }
 
-    // Apply the pack if it's active
+    // Apply the sequence override if it's active
     if (override->enabled && DynOS_Audio_GetActiveOverride(aSequenceId) == override) {
         sound_set_background_music_default_volume(aSequenceId, override->defaultVolume);
         DynOS_Audio_HotSwapIfActive(aSequenceId);
