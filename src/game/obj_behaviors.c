@@ -504,7 +504,7 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (gMarioStates[i].visibleToObjects != 1) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         if (!player) { continue; }
         f32 mGfxX = player->header.gfx.pos[0];
@@ -595,7 +595,7 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (gMarioStates[i].visibleToObjects != 1) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
         float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
         if (nearest == NULL || dist < nearestDist) {
@@ -644,7 +644,7 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
         if (gMarioStates[i].interactObj != obj) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (gMarioStates[i].visibleToObjects != 1) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
         float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
         if (nearest == NULL || dist < nearestDist) {

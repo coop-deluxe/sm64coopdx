@@ -89,7 +89,7 @@ override_field_mutable = {
 override_field_invisible = {
     "Mod": [ "files", "showedScriptWarning" ],
     "Camera": [ "paletteEditorCapState" ],
-    "MarioState": [ "visibleToEnemies" ],
+    "MarioState": [ "visibleToObjects" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
