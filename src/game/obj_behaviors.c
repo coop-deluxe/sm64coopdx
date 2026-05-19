@@ -500,7 +500,7 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
     obj->oPosZ += o->oVelZ;
 }
 
-/* |description|Checks if a point is within distance from any active Mario visible to enemies' graphical position|descriptionEnd| */
+/* |description|Checks if a point is within distance from any active Mario visible to objects' graphical position|descriptionEnd| */
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
