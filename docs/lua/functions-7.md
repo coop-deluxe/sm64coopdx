@@ -4219,7 +4219,7 @@ Gets the corresponding collided object to an index from `o`
 ## [obj_get_field_u32](#obj_get_field_u32)
 
 ### Description
-Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+Gets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_u32(o, fieldIndex)`
@@ -4243,7 +4243,7 @@ Gets the unsigned 32-bit integer value from the field corresponding to `fieldInd
 ## [obj_get_field_s32](#obj_get_field_s32)
 
 ### Description
-Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+Gets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_s32(o, fieldIndex)`
@@ -4267,7 +4267,7 @@ Gets the signed 32-bit integer value from the field corresponding to `fieldIndex
 ## [obj_get_field_f32](#obj_get_field_f32)
 
 ### Description
-Sets the float value from the field corresponding to `fieldIndex`
+Gets the float value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `local numberValue = obj_get_field_f32(o, fieldIndex)`
@@ -4291,7 +4291,7 @@ Sets the float value from the field corresponding to `fieldIndex`
 ## [obj_get_field_s16](#obj_get_field_s16)
 
 ### Description
-Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+Gets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 
 ### Lua Example
 `local integerValue = obj_get_field_s16(o, fieldIndex, fieldSubIndex)`
@@ -4316,7 +4316,7 @@ Gets the signed 32-bit integer value from the sub field corresponding to `fieldS
 ## [obj_set_field_u32](#obj_set_field_u32)
 
 ### Description
-Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+Sets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_u32(o, fieldIndex, value)`
@@ -4341,7 +4341,7 @@ Sets the unsigned 32-bit integer value from the field corresponding to `fieldInd
 ## [obj_set_field_s32](#obj_set_field_s32)
 
 ### Description
-Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+Sets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_s32(o, fieldIndex, value)`
@@ -4366,7 +4366,7 @@ Sets the signed 32-bit integer value from the field corresponding to `fieldIndex
 ## [obj_set_field_f32](#obj_set_field_f32)
 
 ### Description
-Sets the float value from the field corresponding to `fieldIndex`
+Sets the float value of the object field corresponding to `fieldIndex`
 
 ### Lua Example
 `obj_set_field_f32(o, fieldIndex, value)`
@@ -4391,7 +4391,7 @@ Sets the float value from the field corresponding to `fieldIndex`
 ## [obj_set_field_s16](#obj_set_field_s16)
 
 ### Description
-Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 
 ### Lua Example
 `obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)`

@@ -258,6 +258,7 @@ struct Object
     void *respawnInfo;
     void (*areaTimerRunOnceCallback)(void);
     const BehaviorScript *behavior;
+    const BehaviorScript *initBhvCommand;
     const BehaviorScript *curBhvCommand;
     uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
     

@@ -374,7 +374,6 @@ static void snap_object_to_floor(struct Object *obj) {
 struct Object *create_object(const BehaviorScript *bhvScript) {
     if (!bhvScript) { return NULL; }
     s32 objListIndex = OBJ_LIST_DEFAULT;
-    bool luaBehavior = smlua_is_behavior_hooked(bhvScript);
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
 
     // If the first behavior script command is "begin <object list>", then
@@ -392,7 +391,8 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     struct Object *obj = allocate_object(objList);
     if (obj == NULL) { return NULL; }
 
-    obj->curBhvCommand = luaBehavior ? bhvScript : behavior;
+    obj->initBhvCommand = smlua_get_behavior_command(bhvScript);
+    obj->curBhvCommand = obj->initBhvCommand;
     obj->behavior = behavior;
 
     if (objListIndex == OBJ_LIST_UNIMPORTANT) {

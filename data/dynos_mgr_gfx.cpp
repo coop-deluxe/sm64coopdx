@@ -140,21 +140,19 @@ Gfx *DynOS_Gfx_Get(const char *aName, u32 *outLength) {
 
     // Check levels
     for (auto &lvl : DynOS_Lvl_GetArray()) {
-        for (auto &gfx : lvl.second->mDisplayLists) {
-            if (gfx->mName == aName) {
-                *outLength = gfx->mSize;
-                return gfx->mData;
-            }
+        auto gfx = lvl.second->mDisplayLists.Find(aName);
+        if (gfx) {
+            *outLength = gfx->mSize;
+            return gfx->mData;
         }
     }
 
     // Check loaded actors
     for (auto &actor : DynOS_Actor_GetValidActors()) {
-        for (auto &gfx : actor.second.mGfxData->mDisplayLists) {
-            if (gfx->mName == aName) {
-                *outLength = gfx->mSize;
-                return gfx->mData;
-            }
+        auto gfx = actor.second.mGfxData->mDisplayLists.Find(aName);
+        if (gfx) {
+            *outLength = gfx->mSize;
+            return gfx->mData;
         }
     }
 
@@ -276,21 +274,19 @@ Vtx *DynOS_Vtx_Get(const char *aName, u32 *outCount) {
 
     // Check levels
     for (auto &lvl : DynOS_Lvl_GetArray()) {
-        for (auto &vtx : lvl.second->mVertices) {
-            if (vtx->mName == aName) {
-                *outCount = vtx->mSize;
-                return vtx->mData;
-            }
+        auto vtx = lvl.second->mVertices.Find(aName);
+        if (vtx) {
+            *outCount = vtx->mSize;
+            return vtx->mData;
         }
     }
 
     // Check loaded actors
     for (auto &actor : DynOS_Actor_GetValidActors()) {
-        for (auto &vtx : actor.second.mGfxData->mVertices) {
-            if (vtx->mName == aName) {
-                *outCount = vtx->mSize;
-                return vtx->mData;
-            }
+        auto vtx = actor.second.mGfxData->mVertices.Find(aName);
+        if (vtx) {
+            *outCount = vtx->mSize;
+            return vtx->mData;
         }
     }
 

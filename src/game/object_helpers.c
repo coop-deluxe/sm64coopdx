@@ -345,7 +345,8 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
             obj->heldByPlayerIndex = 0;
         }
     } else {
-        obj->curBhvCommand = segmented_to_virtual(smlua_override_behavior(heldBehavior));
+        obj->initBhvCommand = smlua_get_behavior_command(heldBehavior);
+        obj->curBhvCommand = obj->initBhvCommand;
         obj->bhvStackIndex = 0;
     }
 }

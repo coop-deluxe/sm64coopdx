@@ -1906,6 +1906,7 @@
 | collidedObjs | `Array` <`Object`> |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
+| initBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | bhvStack | `Array` <`integer`> | read-only |
 | bhvStackIndex | `integer` | read-only |

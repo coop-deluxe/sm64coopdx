@@ -190,7 +190,7 @@ Gets the draw distance scalar
 ## [get_id_from_behavior](#get_id_from_behavior)
 
 ### Description
-Gets a behavior ID from a behavior script
+Gets the behavior ID of the provided `behavior`
 
 ### Lua Example
 `local enumValue = get_id_from_behavior(behavior)`
@@ -213,7 +213,7 @@ Gets a behavior ID from a behavior script
 ## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
 
 ### Description
-Gets a behavior ID from only vanilla behavior scripts
+Gets the behavior ID of the provided `behavior` if it's a vanilla behavior, `id_bhv_max_count` otherwise
 
 ### Lua Example
 `local enumValue = get_id_from_vanilla_behavior(behavior)`
@@ -236,7 +236,7 @@ Gets a behavior ID from only vanilla behavior scripts
 ## [get_behavior_from_id](#get_behavior_from_id)
 
 ### Description
-Gets a behavior script from a behavior ID
+Gets the behavior script corresponding to the provided `id`
 
 ### Lua Example
 `local pointerValue = get_behavior_from_id(id)`
@@ -256,10 +256,33 @@ Gets a behavior script from a behavior ID
 
 <br />
 
+## [get_vanilla_behavior_from_id](#get_vanilla_behavior_from_id)
+
+### Description
+Gets the behavior script corresponding to the provided `id` if it's a vanilla behavior, `nil` otherwise
+
+### Lua Example
+`local pointerValue = get_vanilla_behavior_from_id(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | [enum BehaviorId](constants.md#enum-BehaviorId) |
+
+### Returns
+- `Pointer` <`BehaviorScript`>
+
+### C Prototype
+`const BehaviorScript* get_vanilla_behavior_from_id(enum BehaviorId id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_behavior_name_from_id](#get_behavior_name_from_id)
 
 ### Description
-Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
+Gets the behavior name from the provided `id` (bhvMyGreatMODCustom004)
 
 ### Lua Example
 `local stringValue = get_behavior_name_from_id(id)`
@@ -282,7 +305,7 @@ Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
 ## [get_id_from_behavior_name](#get_id_from_behavior_name)
 
 ### Description
-Gets a behavior ID from a behavior name
+Gets the behavior ID corresponding to the provided `name`
 
 ### Lua Example
 `local enumValue = get_id_from_behavior_name(name)`

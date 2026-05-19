@@ -573,34 +573,38 @@ enum BehaviorId get_id_from_vanilla_behavior(const BehaviorScript* behavior) {
 }
 
 const BehaviorScript* get_behavior_from_id(enum BehaviorId id) {
-    const BehaviorScript* behavior = smlua_get_hooked_behavior_from_id(id, true);
-    if (behavior != NULL) { return behavior; }
-
-    if (id < 0 || id >= id_bhv_max_count) {
-        return NULL;
+    const BehaviorScript* behavior = smlua_get_original_behavior_from_id(id);
+    if (behavior != NULL) {
+        return behavior;
     }
+    return get_vanilla_behavior_from_id(id);
+}
 
-    return gBehaviorTable[id].script;
+const BehaviorScript* get_vanilla_behavior_from_id(enum BehaviorId id) {
+    if (id >= 0 && id < id_bhv_max_count) {
+        return gBehaviorTable[id].script;
+    }
+    return NULL;
 }
 
 const char* get_behavior_name_from_id(enum BehaviorId id) {
-    if (id < 0 || id >= id_bhv_max_count) {
-        return smlua_get_name_from_hooked_behavior_id(id);
+    if (id >= 0 && id < id_bhv_max_count) {
+        return gBehaviorTable[id].name;
     }
-
-    return gBehaviorTable[id].name;
+    return smlua_get_behavior_name_from_id(id);
 }
 
 enum BehaviorId get_id_from_behavior_name(const char* name) {
-    for (enum BehaviorId i = 0; i < id_bhv_max_count; i++) {
-        if (gBehaviorTable[i].name && !strcmp(name, gBehaviorTable[i].name)) {
-            return i;
+    growing_array_for_each_(gHookedBehaviors, struct LuaHookedBehavior, hooked) {
+        growing_array_for_each_(hooked->bhvNames, const char, bhvName) {
+            if (strcmp(name, bhvName) == 0) {
+                return hooked->customId;
+            }
         }
     }
-    for (int i = 0; i < gHookedBehaviorsCount; i++) {
-        struct LuaHookedBehavior *hooked = &gHookedBehaviors[i];
-        if (hooked->bhvName && !strcmp(name, hooked->bhvName)) {
-            return hooked->overrideId;
+    for (enum BehaviorId id = 0; id < id_bhv_max_count; id++) {
+        if (gBehaviorTable[id].name && strcmp(name, gBehaviorTable[id].name) == 0) {
+            return id;
         }
     }
     return id_bhv_max_count;

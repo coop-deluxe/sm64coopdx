@@ -3011,35 +3011,42 @@ end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
---- Gets a behavior ID from a behavior script
+--- Gets the behavior ID of the provided `behavior`
 function get_id_from_behavior(behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
---- Gets a behavior ID from only vanilla behavior scripts
+--- Gets the behavior ID of the provided `behavior` if it's a vanilla behavior, `id_bhv_max_count` otherwise
 function get_id_from_vanilla_behavior(behavior)
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
---- Gets a behavior script from a behavior ID
+--- Gets the behavior script corresponding to the provided `id`
 function get_behavior_from_id(id)
     -- ...
 end
 
 --- @param id BehaviorId
+--- @return Pointer_BehaviorScript
+--- Gets the behavior script corresponding to the provided `id` if it's a vanilla behavior, `nil` otherwise
+function get_vanilla_behavior_from_id(id)
+    -- ...
+end
+
+--- @param id BehaviorId
 --- @return string
---- Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
+--- Gets the behavior name from the provided `id` (bhvMyGreatMODCustom004)
 function get_behavior_name_from_id(id)
     -- ...
 end
 
 --- @param name string
 --- @return BehaviorId
---- Gets a behavior ID from a behavior name
+--- Gets the behavior ID corresponding to the provided `name`
 function get_id_from_behavior_name(name)
     -- ...
 end
@@ -12361,7 +12368,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
---- Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- Gets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_get_field_u32(o, fieldIndex)
     -- ...
 end
@@ -12369,7 +12376,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
---- Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- Gets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_get_field_s32(o, fieldIndex)
     -- ...
 end
@@ -12377,7 +12384,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return number
---- Sets the float value from the field corresponding to `fieldIndex`
+--- Gets the float value of the object field corresponding to `fieldIndex`
 function obj_get_field_f32(o, fieldIndex)
     -- ...
 end
@@ -12386,7 +12393,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @return integer
---- Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- Gets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
     -- ...
 end
@@ -12394,7 +12401,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
---- Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- Sets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_set_field_u32(o, fieldIndex, value)
     -- ...
 end
@@ -12402,7 +12409,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
---- Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- Sets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_set_field_s32(o, fieldIndex, value)
     -- ...
 end
@@ -12410,7 +12417,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value number
---- Sets the float value from the field corresponding to `fieldIndex`
+--- Sets the float value of the object field corresponding to `fieldIndex`
 function obj_set_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -12419,7 +12426,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @param value integer
---- Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
     -- ...
 end

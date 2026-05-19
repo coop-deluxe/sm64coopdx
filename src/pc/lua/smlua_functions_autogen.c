@@ -9974,6 +9974,23 @@ int smlua_func_get_behavior_from_id(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_vanilla_behavior_from_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_vanilla_behavior_from_id", 1, top);
+        return 0;
+    }
+
+    int id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_vanilla_behavior_from_id"); return 0; }
+
+    smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_vanilla_behavior_from_id(id), NULL);
+
+    return 1;
+}
+
 int smlua_func_get_behavior_name_from_id(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37717,6 +37734,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior);
     smlua_bind_function(L, "get_id_from_vanilla_behavior", smlua_func_get_id_from_vanilla_behavior);
     smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id);
+    smlua_bind_function(L, "get_vanilla_behavior_from_id", smlua_func_get_vanilla_behavior_from_id);
     smlua_bind_function(L, "get_behavior_name_from_id", smlua_func_get_behavior_name_from_id);
     smlua_bind_function(L, "get_id_from_behavior_name", smlua_func_get_id_from_behavior_name);
 

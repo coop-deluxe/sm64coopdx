@@ -1305,6 +1305,7 @@
 --- @field public collidedObjs Object[]
 --- @field public collisionData Pointer_Collision
 --- @field public behavior Pointer_BehaviorScript
+--- @field public initBhvCommand Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
 --- @field public bhvStack integer[]
 --- @field public bhvStackIndex integer

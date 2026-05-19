@@ -632,6 +632,7 @@
    - [get_id_from_behavior](functions-3.md#get_id_from_behavior)
    - [get_id_from_vanilla_behavior](functions-3.md#get_id_from_vanilla_behavior)
    - [get_behavior_from_id](functions-3.md#get_behavior_from_id)
+   - [get_vanilla_behavior_from_id](functions-3.md#get_vanilla_behavior_from_id)
    - [get_behavior_name_from_id](functions-3.md#get_behavior_name_from_id)
    - [get_id_from_behavior_name](functions-3.md#get_id_from_behavior_name)
 

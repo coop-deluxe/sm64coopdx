@@ -1478,7 +1478,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "basePath",             LVT_STRING,   offsetof(struct Mod, basePath),             true, LOT_NONE },
     { "category",             LVT_STRING_P, offsetof(struct Mod, category),             true, LOT_NONE },
-    { "customBehaviorIndex",  LVT_U8,       offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
+    { "customBehaviorIndex",  LVT_U16,      offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
     { "description",          LVT_STRING_P, offsetof(struct Mod, description),          true, LOT_NONE },
     { "enabled",              LVT_BOOL,     offsetof(struct Mod, enabled),              true, LOT_NONE },
     { "fileCapacity",         LVT_U16,      offsetof(struct Mod, fileCapacity),         true, LOT_NONE },
@@ -1602,7 +1602,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 763
+#define LUA_OBJECT_FIELD_COUNT 764
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE                                                     },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE                                                     },
@@ -1629,6 +1629,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "hookRender",                                 LVT_U8,                  offsetof(struct Object, hookRender),                                 false, LOT_NONE                                                     },
     { "hurtboxHeight",                              LVT_F32,                 offsetof(struct Object, hurtboxHeight),                              false, LOT_NONE                                                     },
     { "hurtboxRadius",                              LVT_F32,                 offsetof(struct Object, hurtboxRadius),                              false, LOT_NONE                                                     },
+    { "initBhvCommand",                             LVT_BEHAVIORSCRIPT_P,    offsetof(struct Object, initBhvCommand),                             true,  LOT_POINTER                                                  },
     { "numCollidedObjs",                            LVT_S16,                 offsetof(struct Object, numCollidedObjs),                            false, LOT_NONE                                                     },
     { "numSurfaces",                                LVT_U32,                 offsetof(struct Object, numSurfaces),                                true,  LOT_NONE                                                     },
     { "o1UpForceSpawn",                             LVT_S32,                 offsetof(struct Object, o1UpForceSpawn),                             false, LOT_NONE                                                     },

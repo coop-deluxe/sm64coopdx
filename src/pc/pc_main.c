@@ -442,7 +442,6 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
 }
 
 void audio_shutdown(void) {
-    audio_custom_shutdown();
     if (gAudioApi) {
         if (gAudioApi->shutdown) gAudioApi->shutdown();
         gAudioApi = NULL;
@@ -452,12 +451,10 @@ void audio_shutdown(void) {
 void game_deinit(void) {
     if (gGameInited) { configfile_save(configfile_name()); }
     controller_shutdown();
-    audio_custom_shutdown();
     audio_shutdown();
     network_shutdown(true, true, false, false);
     smlua_text_utils_shutdown();
     smlua_shutdown();
-    smlua_audio_custom_deinit();
     mods_shutdown();
     djui_shutdown();
     gfx_shutdown();

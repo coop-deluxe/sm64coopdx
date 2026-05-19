@@ -97,7 +97,7 @@ override_field_invisible = {
     "FnGraphNode": [ "luaTokenIndex" ],
     "Object": [ "firstSurface" ],
     "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
+    "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
@@ -273,7 +273,7 @@ def table_to_string(table):
                 continue
             if len(row[i]) > column_width[i]:
                 column_width[i] = len(row[i])
-    
+
     for row in table:
         for i in range(columns):
             if row[i][-1] == '\\':
@@ -508,7 +508,7 @@ def get_struct_field_info(struct, field):
     fimmutable = str(lvt == 'LVT_COBJECT' or 'const ' in ftype).lower()
     if lvt.startswith('LVT_') and lvt.endswith('_P') and 'OBJECT' not in lvt and 'COLLISION' not in lvt and 'TRAJECTORY' not in lvt:
         fimmutable = 'true'
-    
+
     if field.get('get') and field['set'] == 'NULL':
         fimmutable = 'true'
 

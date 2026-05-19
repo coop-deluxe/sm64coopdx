@@ -84,9 +84,6 @@
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
-    - [enum LuaHookedEventReturn](#enum-LuaHookedEventReturn)
-    - [enum LuaActionHookType](#enum-LuaActionHookType)
-    - [enum LuaModMenuElementType](#enum-LuaModMenuElementType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
@@ -3594,7 +3591,6 @@
 | HOOK_BEFORE_PLAY_MODE_UPDATE | 67 |
 | HOOK_ON_PLAY_MODE_UPDATE | 68 |
 | HOOK_MAX | 69 |
-- MAX_HOOKED_BEHAVIORS
 
 [:arrow_up_small:](#)
 

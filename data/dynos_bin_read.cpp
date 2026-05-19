@@ -8,6 +8,11 @@ enum {
     COMMENT_BLOCK_END,   // slash-star-star, set to comment none if / is hit, else return to COMMENT_BLOCK
 };
 
+u64 DynOS_NewDataIdentifier() {
+    static u64 sDataIdentifier = 0;
+    return ++sDataIdentifier;
+}
+
 struct IfDefPtr { const char *mPtr; u64 mSize; bool mErase; };
 static IfDefPtr GetNearestIfDefPointer(char *pFileBuffer) {
     static const IfDefPtr sIfDefs[] = {
@@ -32,8 +37,8 @@ static IfDefPtr GetNearestIfDefPointer(char *pFileBuffer) {
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
     fseek(aFile, 0, SEEK_END);
     s32 _Length = ftell(aFile);
-    if (aGfxData && aGfxData->mModelIdentifier == 0) {
-        aGfxData->mModelIdentifier = (u32) _Length;
+    if (aGfxData && aGfxData->mDataIdentifier == 0) {
+        aGfxData->mDataIdentifier = DynOS_NewDataIdentifier();
     }
 
     char *_OrigFileBuffer = New<char>(_Length + 1);
@@ -117,9 +122,19 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
 
 template <typename T>
 static void AppendNewNode(GfxData *aGfxData, DataNodes<T> &aNodes, const String &aName, String *&aDataName, Array<String> *&aDataTokens) {
-    DataNode<T> *_Node = New<DataNode<T>>();
+    DataNode<T> *_Node = aNodes.FindExact(aName, aGfxData->mDataIdentifier);
+    if (_Node != NULL) {
+        static Array<String> sDummyDataTokens;
+        sDummyDataTokens.Clear();
+        PrintDataError("  ERROR: Node \"%s\" already exists for data identifier: %llX", aName.begin(), aGfxData->mDataIdentifier);
+        aDataName = &_Node->mName;
+        aDataTokens = &sDummyDataTokens;
+        return;
+    }
+
+    _Node = New<DataNode<T>>();
     _Node->mName = aName;
-    _Node->mModelIdentifier = aGfxData->mModelIdentifier;
+    _Node->mDataIdentifier = aGfxData->mDataIdentifier;
     aNodes.Add(_Node);
     aDataName = &_Node->mName;
     aDataTokens = &_Node->mTokens;

@@ -68,7 +68,7 @@ exclude_constants = {
     "src/game/save_file.h": [ "EEPROM_SIZE" ],
     "src/game/obj_behaviors.c": [ "^o$" ],
     "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
-    "src/pc/lua/smlua_hooks.h": [ "MAX_HOOKED_MOD_MENU_ELEMENTS", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
+    "src/pc/lua/smlua_hooks.h": [ "^LUA_BEHAVIOR_.*", "MAX_HOOKED_.*", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
     "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
     "src/engine/surface_load.h": [ "NUM_CELLS" ],
@@ -451,7 +451,8 @@ def doc_constant_index(processed_files):
         s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
         for c in constants:
-            s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
+            if len(c['constants']) > 0:
+                s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
     s += '\n<br />\n\n'
     return s
 

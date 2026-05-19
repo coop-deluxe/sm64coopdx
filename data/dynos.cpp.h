@@ -538,12 +538,52 @@ struct DataNode : NoCopy {
     T* mData = NULL;
     u32 mSize = 0;
     Array<String> mTokens;
-    u64 mModelIdentifier = 0;
+    u64 mDataIdentifier = 0;
     u64 mLoadIndex = 0;
     u8 mFlags = 0;
 };
+
 template <typename T>
-using DataNodes = Array<DataNode<T>*>;
+class DataNodes : public Array<DataNode<T>*> {
+public:
+
+    // Find a node given a name.
+    // Return the first node found, ignoring the data identifier.
+    DataNode<T> *Find(const String &aName) {
+        for (auto &node : *this) {
+            if (aName == node->mName) {
+                return node;
+            }
+        }
+        return NULL;
+    }
+
+    // Find a node given a name and a data identifier.
+    // If a node with the same name and data identifier is not found,
+    // return the last loaded node with the same name.
+    DataNode<T> *Find(const String &aName, u64 aDataIdentifier) {
+        DataNode<T> *best = NULL;
+        for (auto &node : *this) {
+            if (aName == node->mName) {
+                if (aDataIdentifier == node->mDataIdentifier) {
+                    return node;
+                }
+                best = node;
+            }
+        }
+        return best;
+    }
+
+    // Find a node given a name and a data identifier.
+    DataNode<T> *FindExact(const String &aName, u64 aDataIdentifier) {
+        for (auto &node : *this) {
+            if (aName == node->mName && aDataIdentifier == node->mDataIdentifier) {
+                return node;
+            }
+        }
+        return NULL;
+    }
+};
 
 struct GfxContext {
     DataNode<TexData>* mCurrentTexture = NULL;
@@ -586,7 +626,7 @@ struct GfxData : NoCopy {
     // Current
     u64 mLoadIndex = 0;
     s32 mErrorCount = 0;
-    u32 mModelIdentifier = 0;
+    u64 mDataIdentifier = 0;
     s32 mModIndex = 0;
     s32 mModFileIndex = 0;
     SysPath mPackFolder;
@@ -1051,6 +1091,8 @@ u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& toke
 void DynOS_Gfx_GenerateModPacks(char* modPath);
 void DynOS_Gfx_GeneratePacks(const char* directory);
 s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
+
+u64 DynOS_NewDataIdentifier();
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
 char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData);
 
