@@ -281,6 +281,7 @@ void produce_interpolation_frames_and_delay(void) {
     // make sure to draw at least one frame to prevent the game from freezing completely
     // (including inputs and window events) if the game update duration is greater than 33ms
     do {
+        curTime = clock_elapsed_f64();
         ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
@@ -293,6 +294,7 @@ void produce_interpolation_frames_and_delay(void) {
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
         gfx_end_frame_render();
+        gfx_display_frame();
 
         // delay if our framerate is capped
         if (shouldDelay) {
@@ -305,8 +307,6 @@ void produce_interpolation_frames_and_delay(void) {
             }
         }
 
-        // send the frame to the screen (should be directly after the delay for good frame pacing)
-        gfx_display_frame();
         sDrawnFrames++;
         if (shouldDelay) { numFramesToDraw--; }
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
