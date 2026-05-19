@@ -97,7 +97,9 @@ void DynOS_Audio_ResetMods() {
 #endif
         for (auto& override : sAudioModOverrides[i]) {
             DynOS_Audio_ResetModEntry(override);
+            free(override);
         }
+        sAudioModOverrides[i].clear();
     }
 }
 
@@ -171,8 +173,8 @@ void DynOS_Audio_ActivatePackOverride(AudioOverrideEntry *aOverride) {
     if (aOverride == NULL || aOverride->enabled) { return; }
     u8 sequenceId = aOverride->sequenceId;
     aOverride->enabled = true;
-    sound_set_background_music_default_volume(sequenceId, aOverride->defaultVolume);
     if (DynOS_Audio_GetActiveOverride(sequenceId) == aOverride) {
+        sound_set_background_music_default_volume(sequenceId, aOverride->defaultVolume);
         DynOS_Audio_HotSwapIfActive(sequenceId);
     }
 }
@@ -213,10 +215,6 @@ AudioOverrideEntry *DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aD
         return NULL;
     }
 
-    if (!aIsPack) {
-        audio_init();
-    }
-
     Print("Loading audio: %s", aFilepath);
     override->filename = strdup(aFilepath);
     if (override->filename == NULL) {
@@ -225,7 +223,7 @@ AudioOverrideEntry *DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aD
         return NULL;
     }
     override->sequenceId = aSequenceId;
-    override->enabled = false;
+    override->enabled = !aIsPack;
     override->loaded = false;
     override->bank = aBankId;
     override->defaultVolume = aDefaultVolume;
@@ -237,7 +235,12 @@ AudioOverrideEntry *DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aD
         sAudioModOverrides[aSequenceId].push_back(override);
     }
 
-    DynOS_Audio_HotSwapIfActive(aSequenceId);
+    // Apply the pack if it's active
+    if (override->enabled && DynOS_Audio_GetActiveOverride(aSequenceId) == override) {
+        sound_set_background_music_default_volume(aSequenceId, override->defaultVolume);
+        DynOS_Audio_HotSwapIfActive(aSequenceId);
+    }
+
     return override;
 }
 
