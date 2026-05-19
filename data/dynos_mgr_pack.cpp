@@ -62,6 +62,7 @@ static void ScanPackBins(struct PackData* aPack) {
             std::string seqName = _SeqName.begin();
             std::regex re(".*_(\\d+)_(\\d+)_(\\d+)$");
             std::smatch match;
+            bool success = false;
             if (std::regex_match(seqName, match, re) && match.size() == 4) {
                 u8 sequenceId, bankId, defaultVolume;
                 if (ParseU8(match[1].str(), sequenceId) &&
@@ -74,8 +75,10 @@ static void ScanPackBins(struct PackData* aPack) {
                     if (audioOverride) {
                         aPack->mAudioOverrides.push_back(audioOverride);
                     }
+                    success = true; // Not a formatting error
                 }
-            } else {
+            }
+            if (!success) {
                 PrintError(
                     "Invalid sequence override filename (expected format: <name>_<sequenceId>_<bankId>_<defaultVolume>.m64): '%s.m64'",
                     _SeqName.begin()
