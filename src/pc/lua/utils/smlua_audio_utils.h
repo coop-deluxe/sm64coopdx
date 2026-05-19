@@ -42,6 +42,7 @@ struct ModAudio {
     f32 baseVolume;
     u8 volChannel;
     bool loaded;
+    bool alive;
 
     PROPERTY(position,  audio_stream_get_position,  audio_stream_set_position);
     PROPERTY(looping,   audio_stream_get_looping,   audio_stream_set_looping);
