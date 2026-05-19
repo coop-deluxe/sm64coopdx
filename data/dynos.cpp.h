@@ -913,8 +913,8 @@ void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
 
 void DynOS_Audio_ResetMods();
 bool DynOS_Audio_Override(u8 aSequenceId, s32* aBankId, void** aSeqData);
-void DynOS_Audio_ActivateOverride(AudioOverrideEntry* aOverride);
-void DynOS_Audio_DeactivateOverride(AudioOverrideEntry* aOverride);
+void DynOS_Audio_ActivatePackOverride(AudioOverrideEntry* aOverride);
+void DynOS_Audio_DeactivatePackOverride(AudioOverrideEntry* aOverride);
 AudioOverrideEntry* DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aDefaultVolume, const char *aFilepath, bool aIsPack);
 u8 DynOS_Audio_AllocSequence();
 

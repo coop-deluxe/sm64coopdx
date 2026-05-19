@@ -154,7 +154,7 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
             DynOS_Tex_Activate(_Tex, false);
         }
         for (auto& audioOverride : aPack->mAudioOverrides) {
-            DynOS_Audio_ActivateOverride(audioOverride);
+            DynOS_Audio_ActivatePackOverride(audioOverride);
         }
     } else {
         for (auto& pair : aPack->mGfxData) {
@@ -164,7 +164,7 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
             DynOS_Tex_Deactivate(_Tex);
         }
         for (auto& audioOverride : aPack->mAudioOverrides) {
-            DynOS_Audio_DeactivateOverride(audioOverride);
+            DynOS_Audio_DeactivatePackOverride(audioOverride);
         }
     }
     DynOS_Actor_Override_All();
