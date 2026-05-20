@@ -722,7 +722,7 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 
     // Force 2D coordinates to be aligned perfectly on the nearest pixel
     // This prevents MSAA sub-pixel gaps (e.g. on vanilla dialog boxes)
-    if (rsp.P_matrix[3][3] > 0.5f) {
+    if (rsp.P_matrix[3][3] > 0.5f && rdp.viewport.width > 0.0f) {
         float pixelX = rdp.viewport.x + (adjusted + 1.0f) * 0.5f * rdp.viewport.width;
         pixelX = floorf(pixelX + 0.5f);
         adjusted = ((pixelX - rdp.viewport.x) / rdp.viewport.width) * 2.0f - 1.0f;
