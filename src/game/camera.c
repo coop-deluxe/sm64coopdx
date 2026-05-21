@@ -3195,8 +3195,9 @@ void update_camera(struct Camera *c) {
 
     u8 isEnabled = update_romhack_camera_override(c);
     if (gRomhackCameraSettings.switchable && isEnabled && sCurrPlayMode != PLAY_MODE_PAUSED) {
-        u8 inValidActions = ((gMarioStates[0].action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) ||
-                            (gMarioStates[0].action == ACT_FLYING);
+        struct MarioState* m = &gMarioStates[0];
+        u8 inValidActions = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) ||
+                            (m->action == ACT_FLYING) || (m->action == ACT_SHOT_FROM_CANNON);
         if (inValidActions && gMarioStates[0].controller->buttonPressed & L_TRIG) {
             sForceRomhackCamera = c->mode != CAMERA_MODE_ROM_HACK;
             set_camera_mode(c, sForceRomhackCamera ? CAMERA_MODE_ROM_HACK : CAMERA_MODE_BEHIND_MARIO, 0);
