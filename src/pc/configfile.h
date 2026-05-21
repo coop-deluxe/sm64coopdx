@@ -190,6 +190,7 @@ extern bool configExCoopTheme;
 
 void enable_queued_mods(void);
 void enable_queued_dynos_packs(void);
+void configfile_reset_keybinds(bool extra);
 void configfile_load(void);
 void configfile_save(const char *filename);
 const char *configfile_name(void);

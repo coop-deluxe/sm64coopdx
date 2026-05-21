@@ -1,7 +1,32 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
+#include "djui_panel_main.h"
+#include "djui_panel_pause.h"
+#include "djui_panel_options.h"
+#include "djui_panel_controls.h"
 #include "pc/configfile.h"
+
+void djui_panel_controls_n64_create(struct DjuiBase* caller);
+
+void djui_panel_controls_reset_binds_n64(UNUSED struct DjuiBase* caller) {
+    if (gDjuiInMainMenu) {
+        djui_panel_shutdown();
+        gDjuiInMainMenu = true;
+        configfile_reset_keybinds(false);
+        djui_panel_main_create(NULL);
+        djui_panel_options_create(NULL);
+        djui_panel_controls_create(NULL);
+        djui_panel_controls_n64_create(NULL);
+    } else if (gDjuiPanelPauseCreated) {
+        djui_panel_shutdown();
+        configfile_reset_keybinds(false);
+        djui_panel_pause_create(NULL);
+        djui_panel_options_create(NULL);
+        djui_panel_controls_create(NULL);
+        djui_panel_controls_n64_create(NULL);
+    }
+}
 
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 14 + 1 * 13;
@@ -30,7 +55,7 @@ void djui_panel_controls_n64_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, C_LEFT),  configKeyCLeft);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, C_RIGHT), configKeyCRight);
         }
-
+        djui_button_create(body, DLANG(MENU, RESET_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_reset_binds_n64);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
