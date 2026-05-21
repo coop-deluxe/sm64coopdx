@@ -3198,7 +3198,7 @@ void update_camera(struct Camera *c) {
         struct MarioState* m = &gMarioStates[0];
         u8 inValidActions = ((m->action & ACT_GROUP_MASK) == ACT_GROUP_SUBMERGED) ||
                             (m->action == ACT_FLYING) || (m->action == ACT_SHOT_FROM_CANNON);
-        if (inValidActions && gMarioStates[0].controller->buttonPressed & L_TRIG) {
+        if (inValidActions && m->controller->buttonPressed & L_TRIG) {
             sForceRomhackCamera = c->mode != CAMERA_MODE_ROM_HACK;
             set_camera_mode(c, sForceRomhackCamera ? CAMERA_MODE_ROM_HACK : CAMERA_MODE_BEHIND_MARIO, 0);
         }
