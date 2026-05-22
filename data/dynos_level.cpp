@@ -217,6 +217,9 @@ const void *DynOS_Level_GetScript(s32 aLevel) {
 }
 
 const void *DynOS_Level_GetVanillaScript(s32 aLevel) {
+    if (aLevel < LEVEL_MIN || aLevel >= LEVEL_COUNT) {
+        return NULL;
+    }
     return (const void *) gDynosLevelScriptsOriginal[aLevel];
 }
 
