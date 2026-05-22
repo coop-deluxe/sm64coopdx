@@ -136,6 +136,7 @@ void dorrie_act_raise_head(void) {
 
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
+            if (gMarioStates[i].marioObj == NULL) { continue; }
             if (gMarioStates[i].marioObj->platform != o) { continue; }
             s32 dist = dist_between_objects(o, gMarioStates[0].marioObj);
             if (dist <= 780.0f) { continue; }

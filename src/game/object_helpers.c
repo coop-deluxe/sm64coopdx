@@ -345,7 +345,8 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
             obj->heldByPlayerIndex = 0;
         }
     } else {
-        obj->curBhvCommand = segmented_to_virtual(smlua_override_behavior(heldBehavior));
+        obj->initBhvCommand = smlua_get_behavior_command(heldBehavior);
+        obj->curBhvCommand = obj->initBhvCommand;
         obj->bhvStackIndex = 0;
     }
 }
@@ -3005,7 +3006,9 @@ void cur_obj_if_hit_wall_bounce_away(void) {
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
     if (!o) { return 0; }
     if (!gMarioStates[0].marioObj) { return FALSE; }
-    if (absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()) {
+    if (draw_distance_scalar_is_infinite() ||
+        absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()
+    ) {
         cur_obj_unhide();
         return FALSE;
     }
@@ -3077,7 +3080,7 @@ void clear_time_stop_flags(s32 flags) {
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
     if (!o || !m) { return 0; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
         UNUSED s16 angleFromMario = obj_angle_to_object(m->marioObj, o);
@@ -3195,7 +3198,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP

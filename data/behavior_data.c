@@ -303,15 +303,17 @@ const BehaviorScript bhvSmallWaterWave[] = {
     SET_RANDOM_FLOAT(oWaterObjUnkFC, /*Minimum*/ 0, /*Range*/ 50),
     SUM_FLOAT(/*Dest*/ oPosY, /*Value 1*/ oPosY, /*Value 2*/ oWaterObjUnkFC),
     SET_INT(oAnimState, -1),
-    CALL(bhvSmallWaterWave398),
+    CALL(bhvSmallWaterWave398 + 2),
     BEGIN_REPEAT(60),
-        CALL(bhvSmallWaterWave398),
+        CALL(bhvSmallWaterWave398 + 2),
         CALL_NATIVE(bhv_small_water_wave_loop),
     END_REPEAT(),
     DEACTIVATE(),
 };
 
 const BehaviorScript bhvSmallWaterWave398[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSmallWaterWave398),
     ADD_INT(oAnimState, 1),
     ADD_FLOAT(oPosY, 7),
     SET_RANDOM_FLOAT(oWaterObjUnkF4, /*Minimum*/ -2, /*Range*/ 5),
@@ -1283,6 +1285,8 @@ const BehaviorScript bhvCutOutObject[] = {
 };
 
 const BehaviorScript bhvBetaMovingFlamesSpawn[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvBetaMovingFlamesSpawn),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_beta_moving_flames_spawn_loop),
     END_LOOP(),
@@ -2224,6 +2228,8 @@ const BehaviorScript bhvLllMovingOctagonalMeshPlatform[] = {
 };
 
 const BehaviorScript bhvSnowBall[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSnowBall),
     BREAK(),
 };
 
@@ -2560,10 +2566,12 @@ const BehaviorScript bhvChirpChirp[] = {
     BEGIN(OBJ_LIST_DEFAULT),
     ID(id_bhvChirpChirp),
     SET_INT(oBirdChirpChirpUnkF4, 1),
-    GOTO(bhvChirpChirpUnused),
+    GOTO(bhvChirpChirpUnused + 2),
 };
 
 const BehaviorScript bhvChirpChirpUnused[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvChirpChirpUnused),
     DISABLE_RENDERING(),
     OR_INT(oFlags, (OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
     BEGIN_LOOP(),
@@ -2732,6 +2740,8 @@ const BehaviorScript bhvSunkenShipPart[] = {
 };
 
 const BehaviorScript bhvSunkenShipSetRotation[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSunkenShipSetRotation),
     SET_INT(oFaceAnglePitch, 0xE958),
     SET_INT(oFaceAngleYaw, 0xEE6C),
     SET_INT(oFaceAngleRoll, 0x0C80),
@@ -2745,7 +2755,7 @@ const BehaviorScript bhvSunkenShipPart2[] = {
     SCALE(/*Unused*/ 0, /*Field*/ 100),
     SET_FLOAT(oDrawingDistance, 6000),
     SET_HOME(),
-    CALL(bhvSunkenShipSetRotation),
+    CALL(bhvSunkenShipSetRotation + 2),
     BREAK(),
 };
 
@@ -2763,7 +2773,7 @@ const BehaviorScript bhvInSunkenShip2[] = {
     // Sunken ship - common:
     OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
     SET_FLOAT(oCollisionDistance, 4000),
-    CALL(bhvSunkenShipSetRotation),
+    CALL(bhvSunkenShipSetRotation + 2),
     BEGIN_LOOP(),
         CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
@@ -3141,6 +3151,8 @@ const BehaviorScript bhvPlaysMusicTrackWhenTouched[] = {
 #endif
 
 const BehaviorScript bhvInsideCannon[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvInsideCannon),
     BREAK(),
 };
 
@@ -3186,14 +3198,6 @@ const BehaviorScript bhvUnusedFakeStar[] = {
         ADD_INT(oFaceAnglePitch, 0x100),
         ADD_INT(oFaceAngleYaw, 0x100),
     END_LOOP(),
-};
-
-// What is this?
-UNUSED static const BehaviorScript unused_1[] = {
-    BREAK(),
-    BREAK(),
-    BREAK(),
-    BREAK(),
 };
 
 const BehaviorScript bhvStaticObject[] = {
@@ -3619,58 +3623,86 @@ const BehaviorScript bhvUnlockDoorStar[] = {
 };
 
 const BehaviorScript bhvInstantActiveWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvInstantActiveWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvAirborneWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvAirborneWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvHardAirKnockBackWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvHardAirKnockBackWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvSpinAirborneCircleWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSpinAirborneCircleWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvDeathWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvDeathWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvSpinAirborneWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSpinAirborneWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvFlyingWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvFlyingWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvPaintingStarCollectWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvPaintingStarCollectWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvPaintingDeathWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvPaintingDeathWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvAirborneDeathWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvAirborneDeathWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvAirborneStarCollectWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvAirborneStarCollectWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvLaunchStarCollectWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvLaunchStarCollectWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvLaunchDeathWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvLaunchDeathWarp),
     BREAK(),
 };
 
 const BehaviorScript bhvSwimmingWarp[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvSwimmingWarp),
     BREAK(),
 };
 
@@ -4141,15 +4173,17 @@ const BehaviorScript bhvBobombExplosionBubble[] = {
     ADD_RANDOM_FLOAT(oPosX, /*Minimum*/ -50, /*Range*/ 100),
     ADD_RANDOM_FLOAT(oPosY, /*Minimum*/ -50, /*Range*/ 100),
     ADD_RANDOM_FLOAT(oPosZ, /*Minimum*/ -50, /*Range*/ 100),
-    CALL(bhvBobombExplosionBubble3600),
+    CALL(bhvBobombExplosionBubble3600 + 2),
     DELAY(1),
     BEGIN_LOOP(),
-        CALL(bhvBobombExplosionBubble3600),
+        CALL(bhvBobombExplosionBubble3600 + 2),
         CALL_NATIVE(bhv_bobomb_explosion_bubble_loop),
     END_LOOP(),
 };
 
 const BehaviorScript bhvBobombExplosionBubble3600[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvBobombExplosionBubble3600),
     ADD_RANDOM_FLOAT(oPosX, /*Minimum*/ -2, /*Range*/ 4),
     ADD_RANDOM_FLOAT(oPosZ, /*Minimum*/ -2, /*Range*/ 4),
     RETURN(),

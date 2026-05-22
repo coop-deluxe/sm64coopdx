@@ -69,7 +69,7 @@ static void first_person_camera_update(void) {
         s16 extStickX = m->controller->extStickX;
         s16 extStickY = m->controller->extStickY;
         if (extStickX == 0) {
-            extStickX = (clamp(m->controller->buttonDown & R_CBUTTONS, 0, 1) - clamp(m->controller->buttonDown & L_CBUTTONS, 0, 1)) * 32;
+            extStickX = (clamp(m->controller->buttonDown & L_CBUTTONS, 0, 1) - clamp(m->controller->buttonDown & R_CBUTTONS, 0, 1)) * 32;
         }
         if (extStickY == 0) {
             extStickY = (clamp(m->controller->buttonDown & U_CBUTTONS, 0, 1) - clamp(m->controller->buttonDown & D_CBUTTONS, 0, 1)) * 24;

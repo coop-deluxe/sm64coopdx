@@ -755,12 +755,13 @@ static struct LuaObjectField sDjuiColorFields[LUA_DJUI_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, offsetof(struct DjuiColor, r), false, LOT_NONE },
 };
 
-#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 7
+#define LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT 8
 static struct LuaObjectField sDjuiInteractableThemeFields[LUA_DJUI_INTERACTABLE_THEME_FIELD_COUNT] = {
     { "cursorDownBorderColor", LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownBorderColor), true, LOT_DJUICOLOR },
     { "cursorDownRectColor",   LVT_COBJECT, offsetof(struct DjuiInteractableTheme, cursorDownRectColor),   true, LOT_DJUICOLOR },
     { "defaultBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultBorderColor),    true, LOT_DJUICOLOR },
     { "defaultRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, defaultRectColor),      true, LOT_DJUICOLOR },
+    { "disabledTextColor",     LVT_COBJECT, offsetof(struct DjuiInteractableTheme, disabledTextColor),     true, LOT_DJUICOLOR },
     { "hoveredBorderColor",    LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredBorderColor),    true, LOT_DJUICOLOR },
     { "hoveredRectColor",      LVT_COBJECT, offsetof(struct DjuiInteractableTheme, hoveredRectColor),      true, LOT_DJUICOLOR },
     { "textColor",             LVT_COBJECT, offsetof(struct DjuiInteractableTheme, textColor),             true, LOT_DJUICOLOR },
@@ -1389,7 +1390,7 @@ static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_CO
     { "wingFlutter",         LVT_S8,      offsetof(struct MarioBodyState, wingFlutter),         false, LOT_NONE                                      },
 };
 
-#define LUA_MARIO_STATE_FIELD_COUNT 80
+#define LUA_MARIO_STATE_FIELD_COUNT 81
 static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "action",                    LVT_U32,       offsetof(struct MarioState, action),                    false, LOT_NONE              },
     { "actionArg",                 LVT_U32,       offsetof(struct MarioState, actionArg),                 false, LOT_NONE              },
@@ -1466,6 +1467,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "unkC4",                     LVT_F32,       offsetof(struct MarioState, unkC4),                     false, LOT_NONE              },
     { "usedObj",                   LVT_COBJECT_P, offsetof(struct MarioState, usedObj),                   false, LOT_OBJECT            },
     { "vel",                       LVT_COBJECT,   offsetof(struct MarioState, vel),                       true,  LOT_VEC3F             },
+    { "visibleToObjects",          LVT_BOOL,      offsetof(struct MarioState, visibleToObjects),          false, LOT_NONE              },
     { "wall",                      LVT_COBJECT_P, offsetof(struct MarioState, wall),                      false, LOT_SURFACE           },
     { "wallKickTimer",             LVT_U8,        offsetof(struct MarioState, wallKickTimer),             false, LOT_NONE              },
     { "wallNormal",                LVT_COBJECT,   offsetof(struct MarioState, wallNormal),                true,  LOT_VEC3F             },
@@ -1477,7 +1479,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "basePath",             LVT_STRING,   offsetof(struct Mod, basePath),             true, LOT_NONE },
     { "category",             LVT_STRING_P, offsetof(struct Mod, category),             true, LOT_NONE },
-    { "customBehaviorIndex",  LVT_U8,       offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
+    { "customBehaviorIndex",  LVT_U16,      offsetof(struct Mod, customBehaviorIndex),  true, LOT_NONE },
     { "description",          LVT_STRING_P, offsetof(struct Mod, description),          true, LOT_NONE },
     { "enabled",              LVT_BOOL,     offsetof(struct Mod, enabled),              true, LOT_NONE },
     { "fileCapacity",         LVT_U16,      offsetof(struct Mod, fileCapacity),         true, LOT_NONE },
@@ -1601,7 +1603,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 763
+#define LUA_OBJECT_FIELD_COUNT 764
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE                                                     },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE                                                     },
@@ -1628,6 +1630,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "hookRender",                                 LVT_U8,                  offsetof(struct Object, hookRender),                                 false, LOT_NONE                                                     },
     { "hurtboxHeight",                              LVT_F32,                 offsetof(struct Object, hurtboxHeight),                              false, LOT_NONE                                                     },
     { "hurtboxRadius",                              LVT_F32,                 offsetof(struct Object, hurtboxRadius),                              false, LOT_NONE                                                     },
+    { "initBhvCommand",                             LVT_BEHAVIORSCRIPT_P,    offsetof(struct Object, initBhvCommand),                             true,  LOT_POINTER                                                  },
     { "numCollidedObjs",                            LVT_S16,                 offsetof(struct Object, numCollidedObjs),                            false, LOT_NONE                                                     },
     { "numSurfaces",                                LVT_U32,                 offsetof(struct Object, numSurfaces),                                true,  LOT_NONE                                                     },
     { "o1UpForceSpawn",                             LVT_S32,                 offsetof(struct Object, o1UpForceSpawn),                             false, LOT_NONE                                                     },
@@ -2493,12 +2496,12 @@ static struct LuaObjectField sRayIntersectionInfoFields[LUA_RAY_INTERSECTION_INF
 
 #define LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT 10
 static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SETTINGS_FIELD_COUNT] = {
-    { "centering",       LVT_U8,  offsetof(struct RomhackCameraSettings, centering),       false, LOT_NONE },
     { "collisions",      LVT_U8,  offsetof(struct RomhackCameraSettings, collisions),      false, LOT_NONE },
     { "dpad",            LVT_U8,  offsetof(struct RomhackCameraSettings, dpad),            false, LOT_NONE },
     { "enable",          LVT_S32, offsetof(struct RomhackCameraSettings, enable),          false, LOT_NONE },
+    { "following",       LVT_U8,  offsetof(struct RomhackCameraSettings, following),       false, LOT_NONE },
     { "modsOnly",        LVT_U8,  offsetof(struct RomhackCameraSettings, modsOnly),        false, LOT_NONE },
-    { "slowFall",        LVT_U8,  offsetof(struct RomhackCameraSettings, slowFall),        false, LOT_NONE },
+    { "switchable",      LVT_U8,  offsetof(struct RomhackCameraSettings, switchable),      false, LOT_NONE },
     { "zoomedInDist",    LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInDist),    false, LOT_NONE },
     { "zoomedInHeight",  LVT_U32, offsetof(struct RomhackCameraSettings, zoomedInHeight),  false, LOT_NONE },
     { "zoomedOutDist",   LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutDist),   false, LOT_NONE },

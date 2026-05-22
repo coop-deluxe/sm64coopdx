@@ -10,27 +10,58 @@
 #include "pc/utils/md5.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/loading.h"
+#include "data/dynos_cmap.cpp.h"
 
 #define MOD_CACHE_FILENAME "mod.cache"
 #define MOD_CACHE_VERSION 7
 #define MD5_BUFFER_SIZE 1024
 
-static struct ModCacheEntry* sModCacheEntries = NULL;
+static struct ModCacheEntry** sModCacheEntries = NULL;
 static size_t sModCacheLength = 0;
 static size_t sModLengthCapacity = 0;
 
+static void* sPathMap = NULL; // lookup by file path
+static void* sDataMap = NULL; // lookup by file data md5 hash
+
 static void mod_cache_remove_node(struct ModCacheEntry* node) {
+
+    // remove from hashmaps
+    if (node->path) {
+        hmap_data_del(sPathMap, node->path, strlen(node->path));
+    }
+    hmap_data_del(sDataMap, (const char*)node->dataHash, 16);
+
     if (node->path) {
         free(node->path);
         node->path = NULL;
     }
-    if (node != &sModCacheEntries[sModCacheLength - 1])
-        memcpy(node, &sModCacheEntries[sModCacheLength - 1], sizeof(struct ModCacheEntry));
+    size_t index = node->arrayIndex;
+    size_t lastIndex = sModCacheLength - 1;
+    if (index != lastIndex) {
+        struct ModCacheEntry* lastNode = sModCacheEntries[lastIndex];
+        sModCacheEntries[index] = lastNode;
+        lastNode->arrayIndex = index;
+    }
+    sModCacheEntries[lastIndex] = NULL;
     sModCacheLength--;
+    free(node);
 }
 
 void mod_cache_shutdown(void) {
     LOG_INFO("Shutting down mod cache.");
+
+    // destroy maps
+    hmap_data_destroy(sPathMap);
+    hmap_data_destroy(sDataMap);
+    sPathMap = NULL;
+    sDataMap = NULL;
+
+    for (size_t i = 0; i < sModCacheLength; i++) {
+        if (sModCacheEntries[i]->path) {
+            free(sModCacheEntries[i]->path);
+        }
+        free(sModCacheEntries[i]);
+    }
     sModCacheLength = 0;
     sModLengthCapacity = 0;
     free(sModCacheEntries);
@@ -78,15 +109,6 @@ void mod_cache_md5(const char* inPath, u8* outDataPath) {
     MD5_Final(outDataPath, &ctx);
 }
 
-static u64 mod_cache_fnv1a(const char* str) {
-    u64 hash = 0xCBF29CE484222325;
-    while (*str) {
-        hash *= 0x100000001B3;
-        hash ^= *str++;
-    }
-    return hash;
-}
-
 static bool mod_cache_is_valid(struct ModCacheEntry* node) {
     if (node == NULL || node->path == NULL || strlen(node->path) == 0) {
         return false;
@@ -98,38 +120,24 @@ static bool mod_cache_is_valid(struct ModCacheEntry* node) {
 
 struct ModCacheEntry* mod_cache_get_from_hash(u8* dataHash) {
     if (dataHash == NULL) { return NULL; }
-    for (size_t i = 0; i < sModCacheLength;) {
-        struct ModCacheEntry* node = &sModCacheEntries[i];
-        if (!memcmp(node->dataHash, dataHash, 16)) {
-            if (mod_cache_is_valid(node)) {
-                return node;
-            } else {
-                mod_cache_remove_node(node);
-                continue;
-            }
-        }
-        i++;
-    }
+
+    struct ModCacheEntry* node = hmap_data_get(sDataMap, (const char*) dataHash, 16);
+    if (!node) { return NULL; }
+    if (mod_cache_is_valid(node)) { return node; }
+
+    mod_cache_remove_node(node);
     return NULL;
 }
 
 struct ModCacheEntry* mod_cache_get_from_path(const char* path, bool validate) {
     if (path == NULL || strlen(path) == 0) { return NULL; }
-    u64 pathHash = mod_cache_fnv1a(path);
-    for (size_t i = 0; i < sModCacheLength;) {
-        struct ModCacheEntry* node = &sModCacheEntries[i];
-        if (node->pathHash == pathHash && !strcmp(node->path, path)) {
-            if (!validate) {
-                return node;
-            } else if (mod_cache_is_valid(node)) {
-                return node;
-            } else {
-                mod_cache_remove_node(node);
-                continue;
-            }
-        }
-        i++;
-    }
+
+    struct ModCacheEntry* node = hmap_data_get(sPathMap, path, strlen(path));
+    if (!node) { return NULL; }
+    if (!validate) { return node; }
+    if (mod_cache_is_valid(node)) { return node; }
+
+    mod_cache_remove_node(node);
     return NULL;
 }
 
@@ -148,7 +156,6 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
         return;
     }
     normalize_path((char*)path);
-    u64 pathHash = mod_cache_fnv1a(path);
 
     bool foundNonZero = false;
     for (u8 i = 0; i < 16; i++) {
@@ -163,34 +170,35 @@ void mod_cache_add_internal(u8* dataHash, u64 lastLoaded, char* inPath) {
         return;
     }
 
+    if (!sPathMap) { sPathMap = hmap_data_create(); }
+    if (!sDataMap) { sDataMap = hmap_data_create(); }
+
+    struct ModCacheEntry* existing = hmap_data_get(sPathMap, path, strlen(path));
+    if (existing) {
+        mod_cache_remove_node(existing);
+    }
+
     if (sModCacheEntries == NULL) {
         sModLengthCapacity = 16;
         sModCacheLength = 0;
-        sModCacheEntries = calloc(sModLengthCapacity, sizeof(struct ModCacheEntry));
+        sModCacheEntries = calloc(sModLengthCapacity, sizeof(struct ModCacheEntry *));
     } else if (sModCacheLength == sModLengthCapacity) {
         sModLengthCapacity *= 2;
-        sModCacheEntries = realloc(sModCacheEntries, sizeof(struct ModCacheEntry) * sModLengthCapacity);
+        sModCacheEntries = realloc(sModCacheEntries, sizeof(struct ModCacheEntry *) * sModLengthCapacity);
     }
 
-    struct ModCacheEntry node = {};
-    memcpy(node.dataHash, dataHash, sizeof(u8) * 16);
+    struct ModCacheEntry *node = malloc(sizeof(struct ModCacheEntry));
+    sModCacheEntries[sModCacheLength] = node;
+    memcpy(node->dataHash, dataHash, sizeof(u8) * 16);
     if (lastLoaded == 0) { lastLoaded = clock(); }
-    node.lastLoaded = lastLoaded;
-    node.path = (char*)path;
-    node.pathHash = pathHash;
+    node->lastLoaded = lastLoaded;
+    node->path = path;
+    node->arrayIndex = sModCacheLength;
+    sModCacheLength++;
 
-    for (size_t i = 0; i < sModCacheLength;) {
-        struct ModCacheEntry* n = &sModCacheEntries[i];
-
-        // found old hash, remove it
-        if (n->pathHash == pathHash && !strcmp(n->path, path)) {
-            LOG_INFO("Removing old node: %s", node->path);
-            mod_cache_remove_node(n);
-        } else {
-            i++;
-        }
-    }
-    memcpy(&sModCacheEntries[sModCacheLength++], &node, sizeof(node));
+    // insert into hashmaps
+    hmap_data_put(sPathMap, path, strlen(path), node);
+    hmap_data_put(sDataMap, (const char*) dataHash, 16, node);
 }
 
 void mod_cache_add(struct Mod* mod, struct ModFile* file, bool useFilePath) {
@@ -325,7 +333,7 @@ void mod_cache_save(void) {
     fwrite(&t, sizeof(u8), 1, fp);
 
     for (size_t i = 0; i < sModCacheLength; i++) {
-        struct ModCacheEntry* node = &sModCacheEntries[i];
+        struct ModCacheEntry *node = sModCacheEntries[i];
         if (node->path == NULL) { continue; }
         u16 pathLen = strlen(node->path);
         if (pathLen == 0) { continue; }

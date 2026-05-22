@@ -96,7 +96,7 @@ static void racing_penguin_act_wait_for_mario(void) {
 u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction == RACING_PENGUIN_ACT_SHOW_INIT_TEXT; }
 
 static void racing_penguin_act_show_init_text(void) {
-    if (!gMarioStates[0].visibleToEnemies) { return; }
+    if (!gMarioStates[0].visibleToObjects) { return; }
     if (!BHV_ARR_CHECK(sRacingPenguinData, o->oBehParams2ndByte, struct RacingPenguinData)) { return; }
     s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 

@@ -50,6 +50,8 @@
 
 #define DISPLAY_LIST_HEAP_SIZE 32000
 
+#define MAX_FAR_PLANE_DIST 1000000.f
+
 f32 gProjectionMaxNearValue = 5;
 s16 gProjectionVanillaNearValue = 100;
 s16 gProjectionVanillaFarValue = 1000;
@@ -87,6 +89,34 @@ static Gfx obj_sanitize_gfx[] = {
     gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsSPNumLights(NUMLIGHTS_1),
+    gsSPEndDisplayList(),
+};
+
+static Gfx obj_load_gfx_state[] = {
+    gsSPLoadState(G_STATE_GEOMETRY_MODE
+                | G_STATE_COMBINE_MODE
+                | G_STATE_OTHER_MODE
+                | G_STATE_ENV_COLOR
+                | G_STATE_PRIM_COLOR
+                | G_STATE_FOG_COLOR
+                | G_STATE_FILL_COLOR
+                | G_STATE_FRESNEL
+                | G_STATE_TEXTURES
+                | G_STATE_LIGHTS),
+    gsSPEndDisplayList(),
+};
+
+static Gfx obj_save_gfx_state[] = {
+    gsSPSaveState(G_STATE_GEOMETRY_MODE
+                | G_STATE_COMBINE_MODE
+                | G_STATE_OTHER_MODE
+                | G_STATE_ENV_COLOR
+                | G_STATE_PRIM_COLOR
+                | G_STATE_FOG_COLOR
+                | G_STATE_FILL_COLOR
+                | G_STATE_FRESNEL
+                | G_STATE_TEXTURES
+                | G_STATE_LIGHTS),
     gsSPEndDisplayList(),
 };
 
@@ -282,6 +312,10 @@ void patch_mtx_interpolated(f32 delta) {
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
         f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+
+        // "infinite" draw distance
+        if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+
         guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
@@ -383,7 +417,6 @@ void patch_mtx_interpolated(f32 delta) {
 /**
  * Graph node interpolation
  */
-
 static void *sGraphNodeInterpDataMap = NULL;
 
 struct GraphNodeInterpData *geo_get_interp_data(void *node, struct GraphNodeObject *obj) {
@@ -553,6 +586,16 @@ static void geo_append_display_list(void *displayList, s16 layer) {
     }
 }
 
+static void geo_append_display_list_to_all_layers(void *displayList) {
+    geo_append_display_list(displayList, LAYER_OPAQUE);
+    geo_append_display_list(displayList, LAYER_OPAQUE_DECAL);
+    geo_append_display_list(displayList, LAYER_OPAQUE_INTER);
+    geo_append_display_list(displayList, LAYER_ALPHA);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT_DECAL);
+    geo_append_display_list(displayList, LAYER_TRANSPARENT_INTER);
+}
+
 /**
  * Process the master list node.
  */
@@ -613,6 +656,10 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     gProjectionVanillaFarValue = node->far;
     f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(node->near, gProjectionMaxNearValue), gOverrideNear);
     f32 far = replace_value_if_not_zero(node->far, gOverrideFar);
+
+    // "infinite" draw distance
+    if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+
     guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
 
     sPerspectiveNode = node;
@@ -1059,7 +1106,7 @@ static void geo_process_background(struct GraphNodeBackground *node) {
     }
 }
 
-static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 animFrame, u16 **animAttribute) {
+static void anim_process(Vec3f translation, Vec3s rotation, Vec3f scale, u8 *animType, s16 animFrame, u16 **animAttribute) {
     if (*animType == ANIM_TYPE_TRANSLATION) {
         translation[0] += retrieve_animation_value(gCurAnim, animFrame, animAttribute) * gCurAnimTranslationMultiplier;
         translation[1] += retrieve_animation_value(gCurAnim, animFrame, animAttribute) * gCurAnimTranslationMultiplier;
@@ -1090,6 +1137,19 @@ static void anim_process(Vec3f translation, Vec3s rotation, u8 *animType, s16 an
         rotation[0] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         rotation[1] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
         rotation[2] += retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+
+        if (gCurAnim->flags & ANIM_FLAG_BONE_SCALE) {
+            s16 scaleX = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+            s16 scaleY = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+            s16 scaleZ = retrieve_animation_value(gCurAnim, animFrame, animAttribute);
+
+            if (scale != NULL) {
+                scale[0] *= ((f32) scaleX) / 256.0f;
+                scale[1] *= ((f32) scaleY) / 256.0f;
+                scale[2] *= ((f32) scaleZ) / 256.0f;
+            }
+        }
+
         if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
             *animType = ANIM_TYPE_TRANSLATION;
         }
@@ -1108,6 +1168,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     Mat4 matrix;
     Vec3s rotation;
     Vec3f translation;
+    Vec3f scale;
 
     // Sanity check our stack index, If we above or equal to our stack size. Return to prevent OOB\.
     if ((gMatStackIndex + 1) >= MATRIX_STACK_SIZE) { LOG_ERROR("Preventing attempt to exceed the maximum size %i for our matrix stack with size of %i.", MATRIX_STACK_SIZE - 1, gMatStackIndex); return; }
@@ -1118,8 +1179,10 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     // current frame
     vec3s_copy(rotation, gVec3sZero);
     vec3s_to_vec3f(translation, node->translation);
-    anim_process(translation, rotation, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
+    vec3f_copy(scale, gVec3fOne);
+    anim_process(translation, rotation, scale, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
     mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
+    mtxf_scale_vec3f(matrix, matrix, scale);
     mtxf_mul(gMatStack[gMatStackIndex + 1], matrix, gMatStack[gMatStackIndex]);
 
     // previous frame
@@ -1130,8 +1193,10 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
             node->translation
         );
         vec3s_copy(rotation, gVec3sZero);
-        anim_process(translation, rotation, &animType, gPrevAnimFrame, &animAttribute);
+        vec3f_copy(scale, gVec3fOne);
+        anim_process(translation, rotation, scale, &animType, gPrevAnimFrame, &animAttribute);
         mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
+        mtxf_scale_vec3f(matrix, matrix, scale);
         mtxf_mul(gMatStackPrev[gMatStackIndex + 1], matrix, gMatStackPrev[gMatStackIndex]);
     );
 
@@ -1404,7 +1469,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     //  makes PU travel safe when the camera is locked on the main map.
     //  If Mario were rendered with a depth over 65536 it would cause overflow
     //  when converting the transformation matrix to a fixed point matrix.
-    if (matrix[3][2] < -20000.0f - cullingRadius) {
+    if (configDrawDistance != 6 && matrix[3][2] < -20000.0f - cullingRadius) {
         return FALSE;
     }
 
@@ -1419,9 +1484,15 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
 }
 
 static void geo_sanitize_object_gfx(void) {
-    geo_append_display_list(obj_sanitize_gfx, LAYER_OPAQUE);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_ALPHA);
-    geo_append_display_list(obj_sanitize_gfx, LAYER_TRANSPARENT);
+    geo_append_display_list_to_all_layers(obj_sanitize_gfx);
+}
+
+static void geo_load_object_gfx_state(void) {
+    geo_append_display_list_to_all_layers(obj_load_gfx_state);
+}
+
+static void geo_save_object_gfx_state(void) {
+    geo_append_display_list_to_all_layers(obj_save_gfx_state);
 }
 
 static struct MarioBodyState *get_mario_body_state_from_mario_object(struct Object *marioObj) {
@@ -1688,6 +1759,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
             node->fnNode.func(GEO_CONTEXT_HELD_OBJ, &node->fnNode.node, (struct DynamicPool *) gMatStack[gMatStackIndex + 1]);
         }
 
+        s32 savedMatStackIndex = gMatStackIndex;
         // Increment the matrix stack, If we fail to do so. Just return.
         if (!increment_mat_stack()) { return; }
 
@@ -1707,8 +1779,18 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
             dynos_gfx_swap_animations(node->objNode);
         }
 
+        // The held object is going to change the gfx state before
+        // the holder finishes rendering, so let's save the state now
+        geo_save_object_gfx_state();
+
         geo_sanitize_object_gfx();
+        // While rendering the held object's geo tree, ensure "current object" globals
+        // refer to the held object, otherwise Lua geo callbacks can accidentally
+        // mutate the holder's render state (e.g. make Wario limbs disappear).
+        struct GraphNodeObject *savedCurGraphNodeObject = gCurGraphNodeObject;
+        gCurGraphNodeObject = &node->objNode->header.gfx;
         geo_process_node_and_siblings(node->objNode->header.gfx.sharedChild);
+        gCurGraphNodeObject = savedCurGraphNodeObject;
         gCurGraphNodeHeldObject = NULL;
         gCurAnimType = gGeoTempState.type;
         gCurAnimEnabled = gGeoTempState.enabled;
@@ -1717,7 +1799,13 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
         gCurrAnimAttribute = gGeoTempState.attribute;
         gCurAnim = gGeoTempState.anim;
         gPrevAnimFrame = gGeoTempState.prevFrame;
-        gMatStackIndex--;
+
+        // Force-restore matrix stack index to avoid any imbalance caused by
+        // held object geo trees (including Lua geo callbacks).
+        gMatStackIndex = savedMatStackIndex;
+
+        // Restore the previously saved state before continuing
+        geo_load_object_gfx_state();
     }
 
     if (node->fnNode.node.children != NULL) {
@@ -1748,7 +1836,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     vec3s_copy(rotation, node->rotation);
     vec3s_to_vec3f(translation, node->translation);
     vec3f_copy(scale, node->scale);
-    anim_process(translation, rotation, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
+    anim_process(translation, rotation, scale, &gCurAnimType, gCurrAnimFrame, &gCurrAnimAttribute);
     mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
     mtxf_scale_vec3f(matrix, matrix, scale);
     mtxf_mul(gMatStack[gMatStackIndex + 1], matrix, gMatStack[gMatStackIndex]);
@@ -1764,7 +1852,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
             vec3s_to_vec3f(translation, node->translation);
             vec3f_copy(scale, node->scale);
         }
-        anim_process(translation, rotation, &animType, gPrevAnimFrame, &animAttribute);
+        anim_process(translation, rotation, scale, &animType, gPrevAnimFrame, &animAttribute);
         mtxf_rotate_xyz_and_translate(matrix, translation, rotation);
         mtxf_scale_vec3f(matrix, matrix, scale);
         mtxf_mul(gMatStackPrev[gMatStackIndex + 1], matrix, gMatStackPrev[gMatStackIndex]);

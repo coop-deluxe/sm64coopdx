@@ -31,7 +31,7 @@ struct DialogEntry* dialog_table_alloc(s32 *dialogId) {
     DialogTable *table = gDialogTable;
 
     if (table->count >= MAX_ALLOCATED_DIALOGS) {
-        LOG_LUA_LINE_WARNING("Dialog limit reached! (%d max)", MAX_ALLOCATED_DIALOGS);
+        LOG_LUA_WARNING("Dialog limit reached! (%d max)", MAX_ALLOCATED_DIALOGS);
         if (dialogId) *dialogId = DIALOG_NONE;
         return NULL;
     }
@@ -39,7 +39,7 @@ struct DialogEntry* dialog_table_alloc(s32 *dialogId) {
     struct DialogEntry* dialog = growing_array_alloc(table, sizeof(struct DialogEntry));
 
     if (!dialog) {
-        LOG_LUA_LINE_WARNING("Failed to allocate DialogEntry");
+        LOG_LUA_WARNING("Failed to allocate DialogEntry");
         if (dialogId) *dialogId = DIALOG_NONE;
         return NULL;
     }

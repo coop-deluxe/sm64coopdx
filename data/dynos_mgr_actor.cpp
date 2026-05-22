@@ -90,10 +90,9 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     // check levels
     auto& levelsArray = DynOS_Lvl_GetArray();
     for (auto& lvl : levelsArray) {
-        for (auto& geo : lvl.second->mGeoLayouts) {
-            if (geo->mName == aActorName) {
-                return geo->mData;
-            }
+        auto geo = lvl.second->mGeoLayouts.Find(aActorName);
+        if (geo) {
+            return geo->mData;
         }
     }
 
@@ -106,10 +105,9 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
 
     // check loaded actors
     for (auto& pair : DynosValidActors()) {
-        for (auto& geo : pair.second.mGfxData->mGeoLayouts) {
-            if (!strcmp(aActorName, geo->mName.begin())) {
-                return geo->mData;
-            }
+        auto geo = pair.second.mGfxData->mGeoLayouts.Find(aActorName);
+        if (geo) {
+            return geo->mData;
         }
     }
 

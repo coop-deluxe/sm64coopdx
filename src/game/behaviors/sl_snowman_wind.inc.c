@@ -36,7 +36,7 @@ void bhv_sl_snowman_wind_loop(void) {
         
     // Mario has come close, begin dialog.
     } else if (o->oSubAction == SL_SNOWMAN_WIND_ACT_TALKING) {
-        if (gMarioStates[0].visibleToEnemies && cur_obj_update_dialog(&gMarioStates[0], 2, 2, gBehaviorValues.dialogs.SnowmanWindDialog, 0, bhv_sl_snowman_wind_loop_continue_dialog)) {
+        if (gMarioStates[0].visibleToObjects && cur_obj_update_dialog(&gMarioStates[0], 2, 2, gBehaviorValues.dialogs.SnowmanWindDialog, 0, bhv_sl_snowman_wind_loop_continue_dialog)) {
             o->oSubAction++;
             network_send_object(o);
         }

@@ -781,6 +781,7 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | textColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| disabledTextColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
 | hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
@@ -1642,6 +1643,7 @@
 | doubleJumpTimer | `integer` |  |
 | specialTripleJump | `integer` |  |
 | fadeWarpOpacity | `integer` |  |
+| visibleToObjects | `boolean` |  |
 | wasNetworkVisible | `integer` |  |
 | dialogId | `integer` | read-only |
 | prevNumStarsForDialog | `integer` |  |
@@ -1905,6 +1907,7 @@
 | collidedObjs | `Array` <`Object`> |  |
 | collisionData | `Pointer` <`Collision`> |  |
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
+| initBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | bhvStack | `Array` <`integer`> | read-only |
 | bhvStackIndex | `integer` | read-only |
@@ -2827,10 +2830,10 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | enable | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |  |
-| centering | `integer` |  |
+| switchable | `integer` |  |
 | dpad | `integer` |  |
 | collisions | `integer` |  |
-| slowFall | `integer` |  |
+| following | `integer` |  |
 | zoomedInDist | `integer` |  |
 | zoomedOutDist | `integer` |  |
 | zoomedInHeight | `integer` |  |

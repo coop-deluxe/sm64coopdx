@@ -66,7 +66,7 @@ char configSaveNames[4][MAX_SAVE_NAME_STRING] = {
 };
 
 // Video/audio stuff
-ConfigWindow configWindow       = {
+ConfigWindow configWindow = {
     .x = WAPI_WIN_CENTERPOS,
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
@@ -82,13 +82,14 @@ ConfigWindow configWindow       = {
 ConfigStick configStick = { 0 };
 
 // display settings
+enum GraphicsBackend configGraphicsBackend        = GAPI_GL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
 enum RefreshRateMode configFramerateMode          = RRM_AUTO;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
-unsigned int configDrawDistance                   = 4;
+unsigned int configDrawDistance                   = 6;
 // sound settings
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
@@ -96,6 +97,7 @@ unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
 bool         configMuteFocusLoss                  = false;
+unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 2 = Headset
 // control binds
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -147,9 +149,9 @@ unsigned int configFreeCameraDegrade              = 50; // 0 - 100%
 unsigned int configEnableRomhackCamera            = 0; // 0 for automatic, 1 for force on, 2 for force off
 bool         configRomhackCameraBowserFights      = false;
 bool         configRomhackCameraHasCollision      = true;
-bool         configRomhackCameraHasCentering      = false;
+bool         configRomhackCameraSwitchable      = false;
 bool         configRomhackCameraDPadBehavior      = false;
-bool         configRomhackCameraSlowFall          = true;
+bool         configRomhackCameraFollowing          = true;
 
 // common camera settings
 bool         configCameraInvertX                  = false;
@@ -227,6 +229,7 @@ static const struct ConfigOption options[] = {
     {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
     {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
     // display settings
+    {.name = "graphics_backend",               .type = CONFIG_TYPE_UINT, .uintValue = &configGraphicsBackend},
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "show_ping",                      .type = CONFIG_TYPE_BOOL, .boolValue = &configShowPing},
@@ -241,6 +244,7 @@ static const struct ConfigOption options[] = {
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
+    {.name = "sound_output",                   .type = CONFIG_TYPE_UINT, .uintValue = &configSoundOutput},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -300,9 +304,9 @@ static const struct ConfigOption options[] = {
     {.name = "romhackcam_enable",              .type = CONFIG_TYPE_UINT, .uintValue = &configEnableRomhackCamera},
     {.name = "romhackcam_bowser",              .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraBowserFights},
     {.name = "romhackcam_collision",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCollision},
-    {.name = "romhackcam_centering",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraHasCentering},
+    {.name = "romhackcam_switchable",          .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSwitchable},
     {.name = "romhackcam_dpad",                .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraDPadBehavior},
-    {.name = "romhackcam_slowfall",            .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraSlowFall},
+    {.name = "romhackcam_following",           .type = CONFIG_TYPE_BOOL, .boolValue = &configRomhackCameraFollowing},
     // common camera settings
     {.name = "bettercam_invertx",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertX},
     {.name = "bettercam_inverty",              .type = CONFIG_TYPE_BOOL, .boolValue = &configCameraInvertY},
@@ -781,6 +785,8 @@ NEXT_OPTION:
     }
 
     fs_close(file);
+
+    if (configGraphicsBackend < GAPI_GL || configGraphicsBackend > GAPI_MAX) { configGraphicsBackend = GAPI_GL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }

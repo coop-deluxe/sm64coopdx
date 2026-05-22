@@ -623,6 +623,7 @@
    - [obj_update_gfx_pos_and_angle](functions-3.md#obj_update_gfx_pos_and_angle)
    - [position_based_random_u16](functions-3.md#position_based_random_u16)
    - [position_based_random_float_position](functions-3.md#position_based_random_float_position)
+   - [draw_distance_scalar_is_infinite](functions-3.md#draw_distance_scalar_is_infinite)
    - [draw_distance_scalar](functions-3.md#draw_distance_scalar)
 
 <br />
@@ -631,6 +632,7 @@
    - [get_id_from_behavior](functions-3.md#get_id_from_behavior)
    - [get_id_from_vanilla_behavior](functions-3.md#get_id_from_vanilla_behavior)
    - [get_behavior_from_id](functions-3.md#get_behavior_from_id)
+   - [get_vanilla_behavior_from_id](functions-3.md#get_vanilla_behavior_from_id)
    - [get_behavior_name_from_id](functions-3.md#get_behavior_name_from_id)
    - [get_id_from_behavior_name](functions-3.md#get_id_from_behavior_name)
 
@@ -1865,7 +1867,7 @@
    - [camera_is_frozen](functions-6.md#camera_is_frozen)
    - [camera_romhack_allow_only_mods](functions-6.md#camera_romhack_allow_only_mods)
    - [camera_set_romhack_override](functions-6.md#camera_set_romhack_override)
-   - [camera_romhack_allow_centering](functions-6.md#camera_romhack_allow_centering)
+   - [camera_romhack_allow_switchable](functions-6.md#camera_romhack_allow_switchable)
    - [camera_allow_toxic_gas_camera](functions-6.md#camera_allow_toxic_gas_camera)
    - [camera_romhack_allow_dpad_usage](functions-6.md#camera_romhack_allow_dpad_usage)
    - [camera_romhack_set_collisions](functions-6.md#camera_romhack_set_collisions)
@@ -1878,7 +1880,7 @@
    - [camera_romhack_get_zoomed_in_height](functions-6.md#camera_romhack_get_zoomed_in_height)
    - [camera_romhack_get_zoomed_out_height](functions-6.md#camera_romhack_get_zoomed_out_height)
    - [camera_get_romhack_override](functions-6.md#camera_get_romhack_override)
-   - [camera_romhack_get_allow_centering](functions-6.md#camera_romhack_get_allow_centering)
+   - [camera_romhack_get_allow_switchable](functions-6.md#camera_romhack_get_allow_switchable)
    - [camera_get_allow_toxic_gas_camera](functions-6.md#camera_get_allow_toxic_gas_camera)
    - [camera_romhack_get_allow_dpad_usage](functions-6.md#camera_romhack_get_allow_dpad_usage)
    - [camera_romhack_get_collisions](functions-6.md#camera_romhack_get_collisions)
@@ -1937,51 +1939,58 @@
 <br />
 
 - smlua_gfx_utils.h
-   - [set_override_fov](functions-6.md#set_override_fov)
-   - [set_override_near](functions-6.md#set_override_near)
-   - [set_override_far](functions-6.md#set_override_far)
-   - [get_lighting_dir](functions-6.md#get_lighting_dir)
-   - [set_lighting_dir](functions-6.md#set_lighting_dir)
-   - [get_lighting_color](functions-6.md#get_lighting_color)
-   - [get_lighting_color_ambient](functions-6.md#get_lighting_color_ambient)
-   - [set_lighting_color](functions-6.md#set_lighting_color)
-   - [set_lighting_color_ambient](functions-6.md#set_lighting_color_ambient)
-   - [get_vertex_color](functions-6.md#get_vertex_color)
-   - [set_vertex_color](functions-6.md#set_vertex_color)
-   - [get_fog_color](functions-6.md#get_fog_color)
-   - [set_fog_color](functions-6.md#set_fog_color)
-   - [get_fog_intensity](functions-6.md#get_fog_intensity)
-   - [set_fog_intensity](functions-6.md#set_fog_intensity)
-   - [get_skybox](functions-6.md#get_skybox)
-   - [set_override_skybox](functions-6.md#set_override_skybox)
-   - [get_skybox_color](functions-6.md#get_skybox_color)
-   - [set_skybox_color](functions-6.md#set_skybox_color)
-   - [gfx_parse](functions-6.md#gfx_parse)
-   - [gfx_get_op](functions-6.md#gfx_get_op)
-   - [gfx_get_display_list](functions-6.md#gfx_get_display_list)
-   - [gfx_get_vertex_buffer](functions-6.md#gfx_get_vertex_buffer)
-   - [gfx_get_vertex_count](functions-6.md#gfx_get_vertex_count)
-   - [gfx_get_texture](functions-6.md#gfx_get_texture)
-   - [gfx_get_from_name](functions-6.md#gfx_get_from_name)
-   - [gfx_get_name](functions-6.md#gfx_get_name)
-   - [gfx_get_length](functions-6.md#gfx_get_length)
-   - [gfx_get_command](functions-6.md#gfx_get_command)
-   - [gfx_get_next_command](functions-6.md#gfx_get_next_command)
-   - [gfx_copy](functions-6.md#gfx_copy)
-   - [gfx_create](functions-6.md#gfx_create)
-   - [gfx_resize](functions-6.md#gfx_resize)
-   - [gfx_delete](functions-6.md#gfx_delete)
-   - [gfx_delete_all](functions-6.md#gfx_delete_all)
-   - [vtx_get_from_name](functions-6.md#vtx_get_from_name)
-   - [vtx_get_name](functions-6.md#vtx_get_name)
-   - [vtx_get_count](functions-6.md#vtx_get_count)
-   - [vtx_get_vertex](functions-6.md#vtx_get_vertex)
-   - [vtx_get_next_vertex](functions-6.md#vtx_get_next_vertex)
-   - [vtx_copy](functions-6.md#vtx_copy)
-   - [vtx_create](functions-6.md#vtx_create)
-   - [vtx_resize](functions-6.md#vtx_resize)
-   - [vtx_delete](functions-6.md#vtx_delete)
-   - [vtx_delete_all](functions-6.md#vtx_delete_all)
+   - [get_shader_flag_enabled](functions-7.md#get_shader_flag_enabled)
+   - [set_shader_flag_enabled](functions-7.md#set_shader_flag_enabled)
+   - [get_shader_flag_value](functions-7.md#get_shader_flag_value)
+   - [set_shader_flag_value](functions-7.md#set_shader_flag_value)
+   - [get_global_shader_flags_enabled](functions-7.md#get_global_shader_flags_enabled)
+   - [set_global_shader_flags_enabled](functions-7.md#set_global_shader_flags_enabled)
+   - [clear_all_shader_flags](functions-7.md#clear_all_shader_flags)
+   - [set_override_fov](functions-7.md#set_override_fov)
+   - [set_override_near](functions-7.md#set_override_near)
+   - [set_override_far](functions-7.md#set_override_far)
+   - [get_lighting_dir](functions-7.md#get_lighting_dir)
+   - [set_lighting_dir](functions-7.md#set_lighting_dir)
+   - [get_lighting_color](functions-7.md#get_lighting_color)
+   - [get_lighting_color_ambient](functions-7.md#get_lighting_color_ambient)
+   - [set_lighting_color](functions-7.md#set_lighting_color)
+   - [set_lighting_color_ambient](functions-7.md#set_lighting_color_ambient)
+   - [get_vertex_color](functions-7.md#get_vertex_color)
+   - [set_vertex_color](functions-7.md#set_vertex_color)
+   - [get_fog_color](functions-7.md#get_fog_color)
+   - [set_fog_color](functions-7.md#set_fog_color)
+   - [get_fog_intensity](functions-7.md#get_fog_intensity)
+   - [set_fog_intensity](functions-7.md#set_fog_intensity)
+   - [get_skybox](functions-7.md#get_skybox)
+   - [set_override_skybox](functions-7.md#set_override_skybox)
+   - [get_skybox_color](functions-7.md#get_skybox_color)
+   - [set_skybox_color](functions-7.md#set_skybox_color)
+   - [gfx_parse](functions-7.md#gfx_parse)
+   - [gfx_get_op](functions-7.md#gfx_get_op)
+   - [gfx_get_display_list](functions-7.md#gfx_get_display_list)
+   - [gfx_get_vertex_buffer](functions-7.md#gfx_get_vertex_buffer)
+   - [gfx_get_vertex_count](functions-7.md#gfx_get_vertex_count)
+   - [gfx_get_texture](functions-7.md#gfx_get_texture)
+   - [gfx_get_from_name](functions-7.md#gfx_get_from_name)
+   - [gfx_get_name](functions-7.md#gfx_get_name)
+   - [gfx_get_length](functions-7.md#gfx_get_length)
+   - [gfx_get_command](functions-7.md#gfx_get_command)
+   - [gfx_get_next_command](functions-7.md#gfx_get_next_command)
+   - [gfx_copy](functions-7.md#gfx_copy)
+   - [gfx_create](functions-7.md#gfx_create)
+   - [gfx_resize](functions-7.md#gfx_resize)
+   - [gfx_delete](functions-7.md#gfx_delete)
+   - [gfx_delete_all](functions-7.md#gfx_delete_all)
+   - [vtx_get_from_name](functions-7.md#vtx_get_from_name)
+   - [vtx_get_name](functions-7.md#vtx_get_name)
+   - [vtx_get_count](functions-7.md#vtx_get_count)
+   - [vtx_get_vertex](functions-7.md#vtx_get_vertex)
+   - [vtx_get_next_vertex](functions-7.md#vtx_get_next_vertex)
+   - [vtx_copy](functions-7.md#vtx_copy)
+   - [vtx_create](functions-7.md#vtx_create)
+   - [vtx_resize](functions-7.md#vtx_resize)
+   - [vtx_delete](functions-7.md#vtx_delete)
+   - [vtx_delete_all](functions-7.md#vtx_delete_all)
 
 <br />
 
@@ -2830,7 +2839,8 @@ Derives a `MARIO_SPAWN_*` constant from `o`
 ## [area_get_warp_node](#area_get_warp_node)
 
 ### Description
-Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
+Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area.
+Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 
 ### Lua Example
 `local objectWarpNodeValue = area_get_warp_node(id)`
@@ -2874,7 +2884,8 @@ Gets the first warp node found in the area, otherwise returns nil
 ## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
 
 ### Description
-Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
+Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID.
+Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 
 ### Lua Example
 `local objectWarpNodeValue = area_get_warp_node_from_params(o)`

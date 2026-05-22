@@ -107,10 +107,10 @@ gHudDisplay = {}
 
 --- @param behaviorId BehaviorId | integer?  The behavior id of the object to modify. Pass in as `nil` to create a custom object
 --- @param objectList ObjectList | integer Object list
---- @param replaceBehavior boolean Whether or not to completely replace the behavior
+--- @param replaceBehavior boolean Whether or not to completely replace the behavior (ignored for non-vanilla behaviors, which are always replaced)
 --- @param initFunction? fun(obj:Object) Run on object creation
 --- @param loopFunction? fun(obj:Object) Run every frame
---- @param behaviorName? string Optional
+--- @param behaviorName? string Optional, name to give to the behavior to be able to retrieve it with `get_id_from_behavior_name`
 --- @return BehaviorId BehaviorId Use if creating a custom object, otherwise can be ignored
 --- Modify an object's behavior or create a new custom object
 function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction, behaviorName)

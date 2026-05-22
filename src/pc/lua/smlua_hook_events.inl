@@ -65,3 +65,5 @@ SMLUA_EVENT_HOOK(HOOK_ON_FIND_WATER_LEVEL, _, f32 x, f32 z, f32 *waterLevel) // 
 SMLUA_EVENT_HOOK(HOOK_ON_FIND_POISON_GAS_LEVEL, _, f32 x, f32 z, f32 *gasLevel) // Manually defined hook
 SMLUA_EVENT_HOOK(HOOK_ON_FIND_SURFACE_ON_RAY, _, Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos) // Manually defined hook
 SMLUA_EVENT_HOOK(HOOK_ON_DYNOS_PACK_TOGGLED, HOOK_RETURN_NEVER, const char *dynosPackName, bool enabled)
+SMLUA_EVENT_HOOK(HOOK_BEFORE_PLAY_MODE_UPDATE, HOOK_RETURN_NEVER, s16 playmode, OUTPUT s16 *overridePlaymode)
+SMLUA_EVENT_HOOK(HOOK_ON_PLAY_MODE_UPDATE, HOOK_RETURN_NEVER, s16 playmode, OUTPUT s32 *changeLevel)

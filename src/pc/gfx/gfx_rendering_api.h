@@ -31,6 +31,7 @@ struct GfxRenderingAPI {
     void (*start_frame)(void);
     void (*end_frame)(void);
     void (*finish_render)(void);
+    const char* (*get_name)(void);
     void (*shutdown)(void);
 };
 

@@ -500,11 +500,11 @@ void obj_move_xyz_using_fvel_and_yaw(struct Object *obj) {
     obj->oPosZ += o->oVelZ;
 }
 
-/* |description|Checks if a point is within distance from any active Mario visible to enemies' graphical position|descriptionEnd| */
+/* |description|Checks if a point is within distance from any active Mario visible to objects' graphical position|descriptionEnd| */
 s8 is_point_within_radius_of_mario(f32 x, f32 y, f32 z, s32 dist) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!gMarioStates[i].visibleToObjects) { continue; }
         struct Object* player = gMarioStates[i].marioObj;
         if (!player) { continue; }
         f32 mGfxX = player->header.gfx.pos[0];
@@ -595,7 +595,7 @@ struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!gMarioStates[i].visibleToObjects) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
         float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
         if (nearest == NULL || dist < nearestDist) {
@@ -644,7 +644,7 @@ struct MarioState *nearest_interacting_mario_state_to_object(struct Object *obj)
         if (!gMarioStates[i].marioObj) { continue; }
         if (gMarioStates[i].marioObj == obj) { continue; }
         if (gMarioStates[i].interactObj != obj) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!gMarioStates[i].visibleToObjects) { continue; }
         if (!is_player_active(&gMarioStates[i])) { continue; }
         float dist = dist_between_objects(obj, gMarioStates[i].marioObj);
         if (nearest == NULL || dist < nearestDist) {
@@ -701,6 +701,10 @@ s8 is_point_close_to_object(struct Object *obj, f32 x, f32 y, f32 z, s32 dist) {
 /* |description|Sets an object as visible if within a certain distance of Mario's graphical position|descriptionEnd| */
 void set_object_visibility(struct Object *obj, s32 dist) {
     if (!obj) { return; }
+    if (draw_distance_scalar_is_infinite()) {
+        obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        return;
+    }
     s32 distanceToPlayer = dist_between_objects(obj, gMarioStates[0].marioObj);
     if (distanceToPlayer < dist * draw_distance_scalar()) {
         obj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;

@@ -341,7 +341,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
             else if (strcmp(key, "model") == 0) { exclamationBoxNewContents[exclamationBoxIndex].model = value; confirm[3] = true; }
             else if (strcmp(key, "behavior") == 0) { exclamationBoxNewContents[exclamationBoxIndex].behavior = value; confirm[4] = true; }
             else {
-                LOG_LUA_LINE_WARNING("set_exclamation_box: Invalid key passed (Subtable %d)", exclamationBoxIndex);
+                LOG_LUA_WARNING_ONCE("set_exclamation_box: Invalid key passed (Subtable %d)", exclamationBoxIndex);
             }
 
             lua_pop(L, 1); // Pop value
@@ -357,7 +357,7 @@ int smlua_func_set_exclamation_box_contents(lua_State* L) {
         if (++exclamationBoxIndex == EXCLAMATION_BOX_MAX_SIZE) { // There is an edge case where the 254th element will warn even though it works just fine
             // Immediately exit if at risk for out of bounds array access.
             lua_pop(L, 1);
-            LOG_LUA_LINE_WARNING("set_exclamation_box: Too many items have been set for the exclamation box. Some content spawns may be lost.");
+            LOG_LUA_WARNING_ONCE("set_exclamation_box: Too many items have been set for the exclamation box. Some content spawns may be lost.");
             break;
         }
         lua_pop(L, 1); // Pop subtable
@@ -821,8 +821,11 @@ int smlua_func_add_scroll_target(lua_State* L) {
     }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
-    if (!smlua_functions_valid_param_range(L, 2, 4)) { return 0; }
     int paramCount = lua_gettop(L);
+    if (paramCount < 2 || paramCount > 4) {
+        LOG_LUA_LINE("Improper param count: Expected (2 - 4), Received %u", paramCount);
+        return 0;
+    }
 
     u32 index = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("add_scroll_target: Failed to convert parameter 1 for function"); return 0; }
@@ -897,6 +900,7 @@ static GraphNodeLot graphNodeLots[] = {
     { GRAPH_NODE_TYPE_ROOT, LOT_GRAPHNODE },
     { GRAPH_NODE_TYPE_ROTATION, LOT_GRAPHNODEROTATION },
     { GRAPH_NODE_TYPE_SCALE, LOT_GRAPHNODESCALE },
+    { GRAPH_NODE_TYPE_SCALE_XYZ, LOT_GRAPHNODESCALEXYZ },
     { GRAPH_NODE_TYPE_SHADOW, LOT_GRAPHNODESHADOW },
     { GRAPH_NODE_TYPE_START, LOT_GRAPHNODESTART },
     { GRAPH_NODE_TYPE_SWITCH_CASE, LOT_GRAPHNODESWITCHCASE },

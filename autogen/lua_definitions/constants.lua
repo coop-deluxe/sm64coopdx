@@ -3031,6 +3031,9 @@ G_SETENVRGB = 0xd1
 --- @type integer
 G_PPARTTOCOLOR = 0xd3
 
+--- @type integer
+G_STATE_EXT = 0x10
+
 BACKGROUND_OCEAN_SKY       =  0 --- @type SkyBackgroundParams
 BACKGROUND_FLAMING_SKY     =  1 --- @type SkyBackgroundParams
 BACKGROUND_UNDERWATER_CITY =  2 --- @type SkyBackgroundParams
@@ -3055,6 +3058,27 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_ABOVE_CLOUDS`
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
+
+SHADER_FLAG_HUE           = 0 --- @type ShaderFlag
+SHADER_FLAG_SATURATION    = 1 --- @type ShaderFlag
+SHADER_FLAG_BRIGHTNESS    = 2 --- @type ShaderFlag
+SHADER_FLAG_CONTRAST      = 3 --- @type ShaderFlag
+SHADER_FLAG_EXPOSURE      = 4 --- @type ShaderFlag
+SHADER_FLAG_DITHERING     = 5 --- @type ShaderFlag
+SHADER_FLAG_POSTERIZATION = 6 --- @type ShaderFlag
+SHADER_FLAG_SCANLINES     = 7 --- @type ShaderFlag
+SHADER_FLAG_MAX           = 8 --- @type ShaderFlag
+
+--- @alias ShaderFlag
+--- | `SHADER_FLAG_HUE`
+--- | `SHADER_FLAG_SATURATION`
+--- | `SHADER_FLAG_BRIGHTNESS`
+--- | `SHADER_FLAG_CONTRAST`
+--- | `SHADER_FLAG_EXPOSURE`
+--- | `SHADER_FLAG_DITHERING`
+--- | `SHADER_FLAG_POSTERIZATION`
+--- | `SHADER_FLAG_SCANLINES`
+--- | `SHADER_FLAG_MAX`
 
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)
@@ -8253,7 +8277,9 @@ HOOK_ON_FIND_WATER_LEVEL                    = 63 --- @type LuaHookedEventType
 HOOK_ON_FIND_POISON_GAS_LEVEL               = 64 --- @type LuaHookedEventType
 HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
 HOOK_ON_DYNOS_PACK_TOGGLED                  = 66 --- @type LuaHookedEventType
-HOOK_MAX                                    = 67 --- @type LuaHookedEventType
+HOOK_BEFORE_PLAY_MODE_UPDATE                = 67 --- @type LuaHookedEventType
+HOOK_ON_PLAY_MODE_UPDATE                    = 68 --- @type LuaHookedEventType
+HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8323,10 +8349,9 @@ HOOK_MAX                                    = 67 --- @type LuaHookedEventType
 --- | `HOOK_ON_FIND_POISON_GAS_LEVEL`
 --- | `HOOK_ON_FIND_SURFACE_ON_RAY`
 --- | `HOOK_ON_DYNOS_PACK_TOGGLED`
+--- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
+--- | `HOOK_ON_PLAY_MODE_UPDATE`
 --- | `HOOK_MAX`
-
---- @type integer
-MAX_HOOKED_BEHAVIORS = 1024
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
@@ -11222,6 +11247,9 @@ ANIM_FLAG_7 = (1 << 7)
 
 --- @type integer
 ANIM_FLAG_BONE_TRANS = (1 << 8)
+
+--- @type integer
+ANIM_FLAG_BONE_SCALE = (1 << 9)
 
 --- @type integer
 OBJECT_MAX_BHV_STACK = 16

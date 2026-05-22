@@ -594,6 +594,14 @@ enum ModelExtendedId smlua_model_util_get_id(const char* name) {
         }
     }
 
+    if (!sCustomModels) {
+        smlua_model_util_initialize();
+        if (!sCustomModels) {
+            LOG_LUA("Failed to initialize custom models!");
+            return E_MODEL_ERROR_MODEL;
+        }
+    }
+
     // If we've extended past our current custom model limit. Reallocate so we have more space.
     if (sCustomModelsCount >= sMaxCustomModelsCount) {
         if (sMaxCustomModelsCount + CUSTOM_MODEL_CHUNK_SIZE >= 0xFFFF) {
@@ -602,6 +610,10 @@ enum ModelExtendedId smlua_model_util_get_id(const char* name) {
         }
         sMaxCustomModelsCount += CUSTOM_MODEL_CHUNK_SIZE;
         sCustomModels = (struct ModelUtilsInfo *)realloc(sCustomModels, sMaxCustomModelsCount * sizeof(struct ModelUtilsInfo));
+    }
+    if (!sCustomModels) {
+        LOG_LUA("Failed to allocate custom model: '%s'", name);
+        return E_MODEL_ERROR_MODEL;
     }
 
     // Allocate custom model

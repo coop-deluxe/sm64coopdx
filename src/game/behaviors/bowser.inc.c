@@ -1003,7 +1003,7 @@ s32 bowser_dead_not_bits_end(void) {
         bowser_dead_hide();
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
         bowser_spawn_grand_star_key();
-        if (gMarioStates[0].visibleToEnemies) {
+        if (gMarioStates[0].visibleToObjects) {
             set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
         }
         return 1;

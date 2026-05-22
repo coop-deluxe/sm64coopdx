@@ -43,11 +43,20 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
+enum GraphicsBackend {
+    GAPI_GL,
+#if defined(_WIN32)
+    GAPI_D3D11,
+#endif
+    GAPI_MAX
+};
+
 extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
+extern enum GraphicsBackend configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -62,6 +71,7 @@ extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
+extern unsigned int configSoundOutput;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -113,9 +123,9 @@ extern unsigned int configFreeCameraDegrade;
 extern unsigned int configEnableRomhackCamera;
 extern bool         configRomhackCameraBowserFights;
 extern bool         configRomhackCameraHasCollision;
-extern bool         configRomhackCameraHasCentering;
+extern bool         configRomhackCameraSwitchable;
 extern bool         configRomhackCameraDPadBehavior;
-extern bool         configRomhackCameraSlowFall;
+extern bool         configRomhackCameraFollowing;
 // common camera settings
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;

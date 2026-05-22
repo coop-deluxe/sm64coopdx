@@ -37,5 +37,9 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
 void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
 
 void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator);
+const char *strstr_lowercased(const char *haystack, const char *needle);
+
+bool can_update_game(void);
+void update_game(void);
 
 #endif
