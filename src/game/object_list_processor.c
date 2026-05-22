@@ -596,7 +596,7 @@ void clear_objects(void) {
 
     gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_INIT_CAPACITY, malloc, free);
     if (gObjectPool == NULL) {
-        fprintf(stderr, "FATAL ERROR: Could not initialize the object pool!\n");
+        sys_fatal("FATAL ERROR: Could not initialize the object pool!\n");
         return;
     }
 
@@ -615,8 +615,6 @@ void clear_objects(void) {
  */
 void update_terrain_objects(void) {
     gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SPAWNER]);
-    //! This was meant to be +=
-    // Fixed
     gObjectCounter += update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
 }
 

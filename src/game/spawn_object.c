@@ -85,11 +85,11 @@ struct LinkedList *unused_try_allocate(struct LinkedList *destList,
  */
 struct Object *try_allocate_object(struct ObjectNode *destList) {
     if (destList == NULL) {
-        fprintf(stderr, "FATAL ERROR: Failed to try and allocate a object because the destList %p was NULL!\n", destList);
+        LOG_ERROR("Failed to try and allocate an object whlie the destList %p was NULL!", destList);
         return NULL;
     }
     if (gObjectPool == NULL) {
-        fprintf(stderr, "FATAL ERROR: The object pool was not created but an object allocation was attempted!\n");
+        LOG_ERROR("The object pool was not created but an object allocation was attempted!");
         return NULL;
     }
 
@@ -109,7 +109,7 @@ struct Object *try_allocate_object(struct ObjectNode *destList) {
     if (destList->prev != NULL) {
         destList->prev->next = &nextObj->header;
     } else {
-        fprintf(stderr, "ERROR: The previous object in the destination list %p was NULL! Unexpected errors may occur.\n", destList);
+        LOG_ERROR("The previous object in the destination list %p was NULL! Unexpected errors may occur.", destList);
     }
     destList->prev = &nextObj->header;
 
@@ -151,11 +151,10 @@ static void deallocate_object(struct ObjectNode *obj) {
     if (obj->prev) { obj->prev->next = obj->next; }
 
     if (gObjectPool == NULL) {
-        fprintf(stderr, "FATAL ERROR: The object pool was not created but an object deallocation was attempted!\n");
+        LOG_ERROR("The object pool was not created but an object deallocation was attempted!");
         return;
     }
     growing_array_swap_and_pop(gObjectPool, obj);
-    obj = NULL;
     gObjectPool->buffer[gObjectPool->count] = NULL;
 }
 

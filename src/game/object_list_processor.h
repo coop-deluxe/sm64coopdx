@@ -26,6 +26,7 @@
  * The game seems to stop rendering new object GFX soon after this limit.
  */
 #define OBJECT_POOL_CAPACITY 4096
+#define OBJECT_POOL_PARTICLES_THRESHOLD (OBJECT_POOL_CAPACITY - 200)
 
 /**
  * The initial capacity of the object pool on area load.
