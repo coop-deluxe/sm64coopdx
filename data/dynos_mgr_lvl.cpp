@@ -211,9 +211,13 @@ void *DynOS_Lvl_Override(void *aCmd) {
         }
     }
 
+    // Evict the VM from any custom level scripts because we're about to delete it
     if (DynOS_Mod_IsShuttingDown() && !sLevelIsVanilla) {
+        LevelScript *vanillaScript = (LevelScript *) DynOS_Level_GetVanillaScript(get_menu_level());
+        gLevelScriptModIndex = -1;
+        gLevelScriptActive = vanillaScript;
         sLevelIsVanilla = true;
-        return (void*) DynOS_Level_GetVanillaScript(get_menu_level());
+        return vanillaScript;
     }
 
     return aCmd;
