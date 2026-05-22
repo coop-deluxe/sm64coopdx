@@ -738,10 +738,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     mods_clear(&gRemoteMods);
     smlua_shutdown();
     extern s16 gChangeLevel;
-    gChangeLevel = LEVEL_CASTLE_GROUNDS;
-    void force_level_script_change(const void *script);
-    s16 get_menu_level();
-    force_level_script_change(dynos_level_get_vanilla_script(get_menu_level()));
+    s16 menuLevel = get_menu_level();
+    gChangeLevel = menuLevel;
     network_player_init();
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;

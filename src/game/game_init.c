@@ -576,10 +576,6 @@ void setup_game_memory(void) {
 
 static struct LevelCommand *levelCommandAddr;
 
-void force_level_script_change(const void *script) {
-    levelCommandAddr = (struct LevelCommand *) script;
-}
-
 // main game loop thread. runs forever as long as the game
 // continues.
 void thread5_game_loop(UNUSED void *arg) {

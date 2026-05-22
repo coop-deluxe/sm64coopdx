@@ -1541,7 +1541,7 @@ s32 update_current_play_mode() {
     return changeLevel;
 }
 
-s16 get_menu_level() {
+s16 get_menu_level(void) {
     switch (configMenuLevel) {
         case 0:  return LEVEL_CASTLE_GROUNDS;
         case 1:  return LEVEL_BOB;
