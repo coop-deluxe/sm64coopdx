@@ -4,6 +4,7 @@
 #include <PR/ultratypes.h>
 
 #include "area.h"
+#include "game/memory.h"
 #include "macros.h"
 #include "types.h"
 
@@ -22,8 +23,15 @@
 
 /**
  * The maximum number of objects that can be loaded at once.
+ * The game seems to stop rendering new object GFX soon after this limit.
  */
-#define OBJECT_POOL_CAPACITY 1200
+#define OBJECT_POOL_CAPACITY 4096
+#define OBJECT_POOL_PARTICLES_THRESHOLD (OBJECT_POOL_CAPACITY - 200)
+
+/**
+ * The initial capacity of the object pool on area load.
+ */
+#define OBJECT_POOL_INIT_CAPACITY 256
 
 /**
  * Every object is categorized into an object list, which controls the order
@@ -79,10 +87,10 @@ extern s16 gDebugInfo[][8];
 extern s16 gDebugInfoOverwrite[][8];
 
 extern u32 gTimeStopState;
-extern struct Object gObjectPool[];
+extern struct GrowingArray* gObjectPool;
 extern struct Object gMacroObjectDefaultParent;
 extern struct ObjectNode *gObjectLists;
-extern struct ObjectNode gFreeObjectList;
+extern UNUSED struct ObjectNode gFreeObjectList;
 
 extern struct Object *gMarioObject;
 extern struct Object *gMarioObjects[];

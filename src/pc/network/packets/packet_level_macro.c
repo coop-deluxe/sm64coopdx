@@ -18,8 +18,11 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
+    if (gObjectPool == NULL) {
+        LOG_ERROR("The object pool was not created but object respawn infos were attempted to be checked.");
+        return NULL;
+    }
+    growing_array_for_each_(gObjectPool, struct Object, o) {
         if (o->respawnInfo == respawnInfo) { return o; }
     }
     return NULL;
@@ -188,7 +191,7 @@ void network_receive_level_macro(struct Packet* p) {
         const BehaviorScript* behavior = MacroObjectPresets[presetID].behavior;
 
         struct Object* o = get_object_matching_respawn_info(respawnInfo);
-        if (o != NULL) {
+        if (o != NULL && gObjectPool != NULL) {
             LOG_INFO("rx macro special: object");
             // coin formation
             if (behavior == smlua_override_behavior(bhvCoinFormation)) {
@@ -196,8 +199,7 @@ void network_receive_level_macro(struct Packet* p) {
                 o->oCoinUnkF4 = (o->oBehParams >> 8) & 0xFF;
 
                 u8 childIndex = 0;
-                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-                    struct Object* o2 = &gObjectPool[i];
+                growing_array_for_each_(gObjectPool, struct Object, o2) {
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
                     if (o2->behavior != smlua_override_behavior(bhvCoinFormationSpawn) && o2->behavior != smlua_override_behavior(bhvYellowCoin)) { continue; }
@@ -207,8 +209,7 @@ void network_receive_level_macro(struct Packet* p) {
                 }
                 LOG_INFO("rx macro special: coin formation");
             } else if (behavior == bhvGoombaTripletSpawner) {
-                for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-                    struct Object* o2 = &gObjectPool[i];
+                growing_array_for_each_(gObjectPool, struct Object, o2) {
                     if (o2->parentObj != o) { continue; }
                     if (o2 == o) { continue; }
                     if (o2->behavior != smlua_override_behavior(bhvGoomba)) { continue; }

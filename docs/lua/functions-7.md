@@ -4868,6 +4868,27 @@ Skips animation interpolation for a frame
 
 <br />
 
+## [obj_get_count](#obj_get_count)
+
+### Description
+Gets the current area's object count
+
+### Lua Example
+`local integerValue = obj_get_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 obj_get_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_text_utils.h
 

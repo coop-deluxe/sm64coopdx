@@ -715,17 +715,12 @@ struct Object *spawn_object(struct Object *parent, s32 model, const BehaviorScri
 
 struct Object *try_to_spawn_object(s16 offsetY, f32 scale, struct Object *parent, s32 model,
                                    const BehaviorScript *behavior) {
-    struct Object *obj;
 
-    if (gFreeObjectList.next != NULL) {
-        obj = spawn_object(parent, model, behavior);
-        if (obj == NULL) { return NULL; }
-        obj->oPosY += offsetY;
-        obj_scale(obj, scale);
-        return obj;
-    } else {
-        return NULL;
-    }
+    struct Object *obj = spawn_object(parent, model, behavior);
+    if (obj == NULL) { return NULL; }
+    obj->oPosY += offsetY;
+    obj_scale(obj, scale);
+    return obj;
 }
 
 struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const BehaviorScript *behavior, f32 scale) {
@@ -2530,14 +2525,14 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     s32 numParticles = info->count;
 
     // If there are a lot of objects already, limit the number of particles
-    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 150 / 240) && numParticles > 10) {
+    if (gPrevFrameObjectCount > OBJECT_POOL_PARTICLES_THRESHOLD && numParticles > 10) {
         numParticles = 10;
     }
 
 
     // We're close to running out of object slots, so don't spawn particles at
     // all
-    if (gPrevFrameObjectCount > (OBJECT_POOL_CAPACITY * 210 / 240)) {
+    if (gPrevFrameObjectCount > OBJECT_POOL_PARTICLES_THRESHOLD + 100) {
         numParticles = 0;
     }
 

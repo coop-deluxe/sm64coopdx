@@ -1,5 +1,6 @@
 #include <PR/ultratypes.h>
 
+#include "pc/debuglog.h"
 #include "sm64.h"
 #include "area.h"
 #include "behavior_data.h"
@@ -72,7 +73,7 @@ u32 gTimeStopState;
 /**
  * The pool that objects are allocated from.
  */
-struct Object gObjectPool[OBJECT_POOL_CAPACITY];
+struct GrowingArray* gObjectPool;
 
 /**
  * A special object whose purpose is to act as a parent for macro objects.
@@ -89,7 +90,7 @@ struct ObjectNode *gObjectLists;
 /**
  * A singly linked list of available slots in the object pool.
  */
-struct ObjectNode gFreeObjectList;
+UNUSED struct ObjectNode gFreeObjectList;
 
 /**
  * The object representing Mario.
@@ -575,7 +576,6 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
  * Clear objects, dynamic surfaces, and some miscellaneous level data used by objects.
  */
 void clear_objects(void) {
-    s32 i;
     sync_objects_clear();
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
@@ -589,21 +589,20 @@ void clear_objects(void) {
         gMarioStates[i].currentRoom = 0;
     }
 
-    for (i = 0; i < 60; i++) {
+    for (s32 i = 0; i < 60; i++) {
         gDoorAdjacentRooms[i][0] = 0;
         gDoorAdjacentRooms[i][1] = 0;
     }
 
-    debug_unknown_level_select_check();
-
-    init_free_object_list();
-    clear_object_lists(gObjectListArray);
-
-    for (i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        gObjectPool[i].activeFlags = ACTIVE_FLAG_DEACTIVATED;
-        geo_reset_object_node(&gObjectPool[i].header.gfx);
+    gObjectPool = growing_array_init(gObjectPool, OBJECT_POOL_INIT_CAPACITY, malloc, free);
+    if (gObjectPool == NULL) {
+        sys_fatal("FATAL ERROR: Could not initialize the object pool!\n");
+        return;
     }
 
+    debug_unknown_level_select_check();
+
+    clear_object_lists(gObjectListArray);
     gObjectLists = gObjectListArray;
 
     clear_dynamic_surfaces();
@@ -616,8 +615,7 @@ void clear_objects(void) {
  */
 void update_terrain_objects(void) {
     gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SPAWNER]);
-    //! This was meant to be +=
-    gObjectCounter = update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
+    gObjectCounter += update_objects_in_list(&gObjectLists[OBJ_LIST_SURFACE]);
 }
 
 /**

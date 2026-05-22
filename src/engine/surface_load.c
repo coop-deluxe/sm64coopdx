@@ -859,8 +859,12 @@ void clear_dynamic_surfaces(void) {
 
     clear_spatial_partition(&gDynamicSurfacePartition[0][0]);
 
-    for (u16 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        gObjectPool[i].numSurfaces = 0;
+    if (gObjectPool == NULL) {
+        LOG_ERROR("The object pool was not created but object surfaces were attempted to be cleared.");
+        return;
+    }
+    growing_array_for_each_(gObjectPool, struct Object, obj) {
+        obj->numSurfaces = 0;
     }
 }
 

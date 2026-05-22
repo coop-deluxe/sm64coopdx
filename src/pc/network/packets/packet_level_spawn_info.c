@@ -16,8 +16,11 @@
 
 // TODO: move to common utility location
 static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
-    for (s32 i = 0; i < OBJECT_POOL_CAPACITY; i++) {
-        struct Object* o = &gObjectPool[i];
+    if (gObjectPool == NULL) {
+        fprintf(stderr, "FATAL ERROR: The object pool was not created but object respawn infos were attempted to be checked.\n");
+        return NULL;
+    }
+    growing_array_for_each_(gObjectPool, struct Object, o) {
         if (o->respawnInfo == respawnInfo) { return o; }
     }
     return NULL;
