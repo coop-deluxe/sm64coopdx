@@ -36,9 +36,7 @@ bool DynOS_IsTransitionActive() {
 //
 static bool sDynosModShutdown = false;
 
-void DynOS_Lvl_FreeScheduledLvlData();
 void DynOS_Mod_Update() {
-    DynOS_Lvl_FreeScheduledLvlData();
     if (sDynosModShutdown) {
         sDynosModShutdown = false;
         DynOS_Actor_ModShutdown();
@@ -53,4 +51,8 @@ void DynOS_Mod_Update() {
 
 void DynOS_Mod_Shutdown() {
     sDynosModShutdown = true;
+}
+
+bool DynOS_Mod_IsShuttingDown() {
+    return sDynosModShutdown;
 }

@@ -1541,30 +1541,33 @@ s32 update_current_play_mode() {
     return changeLevel;
 }
 
+s16 get_menu_level() {
+    switch (configMenuLevel) {
+        case 0:  return LEVEL_CASTLE_GROUNDS;
+        case 1:  return LEVEL_BOB;
+        case 2:  return LEVEL_WF;
+        case 3:  return LEVEL_WMOTR;
+        case 4:  return LEVEL_JRB;
+        case 5:  return LEVEL_SSL;
+        case 6:  return LEVEL_TTM;
+        case 7:  return LEVEL_SL;
+        case 8:  return LEVEL_BBH;
+        case 9:  return LEVEL_LLL;
+        case 10: return LEVEL_THI;
+        case 11: return LEVEL_HMC;
+        case 12: return LEVEL_CCM;
+        case 13: return LEVEL_RR;
+        case 14: return LEVEL_BITDW;
+        case 15: return LEVEL_PSS;
+        case 16: return LEVEL_TTC;
+        case 17: return LEVEL_WDW;
+    }
+    return LEVEL_CASTLE_GROUNDS;
+}
+
 void update_menu_level(void) {
     // figure out level
-    s32 curLevel = 0;
-    switch (configMenuLevel) {
-        case 0:  curLevel = LEVEL_CASTLE_GROUNDS; break;
-        case 1:  curLevel = LEVEL_BOB;            break;
-        case 2:  curLevel = LEVEL_WF;             break;
-        case 3:  curLevel = LEVEL_WMOTR;          break;
-        case 4:  curLevel = LEVEL_JRB;            break;
-        case 5:  curLevel = LEVEL_SSL;            break;
-        case 6:  curLevel = LEVEL_TTM;            break;
-        case 7:  curLevel = LEVEL_SL;             break;
-        case 8:  curLevel = LEVEL_BBH;            break;
-        case 9:  curLevel = LEVEL_LLL;            break;
-        case 10: curLevel = LEVEL_THI;            break;
-        case 11: curLevel = LEVEL_HMC;            break;
-        case 12: curLevel = LEVEL_CCM;            break;
-        case 13: curLevel = LEVEL_RR;             break;
-        case 14: curLevel = LEVEL_BITDW;          break;
-        case 15: curLevel = LEVEL_PSS;            break;
-        case 16: curLevel = LEVEL_TTC;            break;
-        case 17: curLevel = LEVEL_WDW;            break;
-        default: curLevel = LEVEL_CASTLE_GROUNDS; break;
-    }
+    s16 curLevel = get_menu_level();
 
     // figure out music
     stop_cap_music();

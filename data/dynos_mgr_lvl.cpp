@@ -21,11 +21,6 @@ std::vector<std::pair<std::string, GfxData *>> &DynOS_Lvl_GetArray() {
     return sDynosCustomLevelScripts;
 }
 
-std::vector<GfxData *> &DynOS_Lvl_GetScheduledInvalidLevels() {
-    static std::vector<GfxData *> sDynosScheduledInvalidLevels;
-    return sDynosScheduledInvalidLevels;
-}
-
 LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName) {
     auto& _CustomLevelScripts = DynOS_Lvl_GetArray();
     for (size_t i = 0; i < _CustomLevelScripts.size(); ++i) {
@@ -39,14 +34,6 @@ LevelScript* DynOS_Lvl_GetScript(const char* aScriptEntryName) {
     return NULL;
 }
 
-void DynOS_Lvl_FreeScheduledLvlData() {
-    auto& _ScheduledInvalidLevels = DynOS_Lvl_GetScheduledInvalidLevels();
-    for (auto& gfxData : _ScheduledInvalidLevels) {
-        DynOS_Gfx_Free(gfxData);
-    }
-    _ScheduledInvalidLevels.clear();
-}
-
 void DynOS_Lvl_ModShutdown() {
     DynOS_Level_Unoverride();
 
@@ -54,11 +41,7 @@ void DynOS_Lvl_ModShutdown() {
     if (!_CustomLevelScripts.empty()) {
         for (auto& pair : _CustomLevelScripts) {
             DynOS_Tex_Invalid(pair.second);
-
-            // we need to free all level data after the level script is
-            // no longer in circulation, as the level script VM
-            // may be processing commands in the level script still
-            DynOS_Lvl_GetScheduledInvalidLevels().push_back(pair.second);
+            DynOS_Gfx_Free(pair.second);
         }
         _CustomLevelScripts.clear();
     }
@@ -190,6 +173,10 @@ double_break:
 }
 
 void *DynOS_Lvl_Override(void *aCmd) {
+    if (DynOS_Mod_IsShuttingDown()) {
+        return aCmd;
+    }
+
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
     for (auto& overrideStruct : _OverrideLevelScripts) {
         if (aCmd == overrideStruct.originalScript || aCmd == overrideStruct.newScript) {
