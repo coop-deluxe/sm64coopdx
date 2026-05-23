@@ -823,7 +823,7 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            bool useShade =
+            bool useShade = rsp.current_num_lights > 1 &&
                 rsp.current_lights[rsp.current_num_lights - 2].col[0] == 0 &&
                 rsp.current_lights[rsp.current_num_lights - 2].col[1] == 0 &&
                 rsp.current_lights[rsp.current_num_lights - 2].col[2] == 0;
