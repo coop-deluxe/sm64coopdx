@@ -859,8 +859,6 @@ void configfile_reset_keybinds(bool extra) {
     if (!extra) {
         memcpy(configKeyA, defaultConfigKeyA, sizeof(configKeyA));
         memcpy(configKeyB, defaultConfigKeyB, sizeof(configKeyB));
-        memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
-        memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
         memcpy(configKeyStart, defaultConfigKeyStart, sizeof(configKeyStart));
         memcpy(configKeyL, defaultConfigKeyL, sizeof(configKeyL));
         memcpy(configKeyR, defaultConfigKeyR, sizeof(configKeyR));
@@ -874,6 +872,8 @@ void configfile_reset_keybinds(bool extra) {
         memcpy(configKeyStickLeft, defaultConfigKeyStickLeft, sizeof(configKeyStickLeft));
         memcpy(configKeyStickRight, defaultConfigKeyStickRight, sizeof(configKeyStickRight));
     } else {
+        memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
+        memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
         memcpy(configKeyChat, defaultConfigKeyChat, sizeof(configKeyChat));
         memcpy(configKeyPlayerList, defaultConfigKeyPlayerList, sizeof(configKeyPlayerList));
         memcpy(configKeyDUp, defaultConfigKeyDUp, sizeof(configKeyDUp));
