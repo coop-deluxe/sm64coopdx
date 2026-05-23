@@ -201,7 +201,7 @@ static s64 ns_socket_get_id(UNUSED u8 localId) {
 static char* ns_socket_get_id_str(u8 localId) {
     if (localId == UNKNOWN_LOCAL_INDEX) { localId = 0; }
     static char id_str[INET6_ADDRSTRLEN] = { 0 };
-    snprintf(id_str, INET6_ADDRSTRLEN, "%s", inet_ntop(AF_INET6, &sAddr[localId].sin6_addr, id_str, sizeof(id_str)));
+    inet_ntop(AF_INET6, &sAddr[localId].sin6_addr, id_str, sizeof(id_str));
     return id_str;
 }
 

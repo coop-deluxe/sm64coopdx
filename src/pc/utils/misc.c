@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <float.h>
+#include <ctype.h>
 
 #include "misc.h"
 
@@ -600,6 +601,31 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
             buffer_index += seperator_length;
         }
     }
+}
+
+const char *strstr_lowercased(const char *haystack, const char *needle) {
+    // sanity check
+    if (!*needle) {
+        return haystack;
+    }
+
+    while (*haystack) {
+        const char *h = haystack;
+        const char *n = needle;
+
+        while (*h && *n && tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
+            ++h;
+            ++n;
+        }
+
+        if (!*n) {
+            return haystack;
+        }
+
+        ++haystack;
+    }
+
+    return NULL;
 }
 
 static char *get_update_path(void) {

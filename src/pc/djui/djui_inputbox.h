@@ -8,6 +8,7 @@ struct DjuiInputbox {
     u16 bufferSize;
     u16 selection[2];
     f32 viewX;
+    f32 yOffset;
     struct DjuiColor textColor;
     void (*on_enter_press)(struct DjuiInputbox*);
     void (*on_escape_press)(struct DjuiInputbox*);

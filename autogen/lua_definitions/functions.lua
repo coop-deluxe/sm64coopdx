@@ -9,7 +9,8 @@ end
 
 --- @param id integer
 --- @return ObjectWarpNode
---- Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area. Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
+--- Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area.<br>
+--- Useful for locating a specific warp point in the level, such as teleportation zones or connections to other areas
 function area_get_warp_node(id)
     -- ...
 end
@@ -22,7 +23,8 @@ end
 
 --- @param o Object
 --- @return ObjectWarpNode
---- Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID. Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
+--- Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID.<br>
+--- Useful for associating an object (like a door or warp pipe) with its corresponding warp node in the area
 function area_get_warp_node_from_params(o)
     -- ...
 end
@@ -1071,7 +1073,8 @@ function bhv_tox_box_loop()
 end
 
 --- @return integer
---- Checks if Mario is moving fast enough to make Piranha Plant bite. This one is a mouthful
+--- Checks if Mario is moving fast enough to make Piranha Plant bite.<br>
+--- This one is a mouthful
 function mario_moving_fast_enough_to_make_piranha_plant_bite()
     -- ...
 end
@@ -2994,6 +2997,12 @@ function position_based_random_float_position()
     -- ...
 end
 
+--- @return boolean
+--- Checks if the draw distance scalar is infinite
+function draw_distance_scalar_is_infinite()
+    -- ...
+end
+
 --- @return number
 --- Gets the draw distance scalar
 function draw_distance_scalar()
@@ -3002,52 +3011,62 @@ end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
---- Gets a behavior ID from a behavior script
+--- Gets the behavior ID of the provided `behavior`
 function get_id_from_behavior(behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return BehaviorId
---- Gets a behavior ID from only vanilla behavior scripts
+--- Gets the behavior ID of the provided `behavior` if it's a vanilla behavior, `id_bhv_max_count` otherwise
 function get_id_from_vanilla_behavior(behavior)
     -- ...
 end
 
 --- @param id BehaviorId
 --- @return Pointer_BehaviorScript
---- Gets a behavior script from a behavior ID
+--- Gets the behavior script corresponding to the provided `id`
 function get_behavior_from_id(id)
     -- ...
 end
 
 --- @param id BehaviorId
+--- @return Pointer_BehaviorScript
+--- Gets the behavior script corresponding to the provided `id` if it's a vanilla behavior, `nil` otherwise
+function get_vanilla_behavior_from_id(id)
+    -- ...
+end
+
+--- @param id BehaviorId
 --- @return string
---- Gets a behavior name from a behavior ID (bhvMyGreatMODCustom004)
+--- Gets the behavior name from the provided `id` (bhvMyGreatMODCustom004)
 function get_behavior_name_from_id(id)
     -- ...
 end
 
 --- @param name string
 --- @return BehaviorId
---- Gets a behavior ID from a behavior name
+--- Gets the behavior ID corresponding to the provided `name`
 function get_id_from_behavior_name(name)
     -- ...
 end
 
---- Skips camera interpolation for a frame, locking the camera instantly to the target position. Useful for immediate changes in camera state or position without smooth transitions
+--- Skips camera interpolation for a frame, locking the camera instantly to the target position.<br>
+--- Useful for immediate changes in camera state or position without smooth transitions
 function skip_camera_interpolation()
     -- ...
 end
 
 --- @param shake integer
---- Applies a shake effect to the camera based on a hit type. Different shake types simulate various impacts, such as attacks, falls, or shocks
+--- Applies a shake effect to the camera based on a hit type.<br>
+--- Different shake types simulate various impacts, such as attacks, falls, or shocks
 function set_camera_shake_from_hit(shake)
     -- ...
 end
 
 --- @param shake integer
---- Applies an environmental shake effect to the camera. Handles predefined shake types triggered by environmental events like explosions or platform movements
+--- Applies an environmental shake effect to the camera.<br>
+--- Handles predefined shake types triggered by environmental events like explosions or platform movements
 function set_environmental_camera_shake(shake)
     -- ...
 end
@@ -3056,20 +3075,23 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- Applies a shake effect to the camera, scaled by its proximity to a specified point. The intensity decreases with distance from the point
+--- Applies a shake effect to the camera, scaled by its proximity to a specified point.<br>
+--- The intensity decreases with distance from the point
 function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
 
 --- @param c Camera
---- Moves Mario's head slightly upward when the C-Up button is pressed. This function aligns the camera to match the head movement for consistency
+--- Moves Mario's head slightly upward when the C-Up button is pressed.<br>
+--- This function aligns the camera to match the head movement for consistency
 function move_mario_head_c_up(c)
     -- ...
 end
 
 --- @param c Camera
 --- @param frames integer
---- Transitions the camera to the next state over a specified number of frames. This is typically used for cutscenes or scripted sequences
+--- Transitions the camera to the next state over a specified number of frames.<br>
+--- This is typically used for cutscenes or scripted sequences
 function transition_next_state(c, frames)
     -- ...
 end
@@ -3077,38 +3099,44 @@ end
 --- @param c Camera
 --- @param mode integer
 --- @param frames integer
---- Changes the camera to a new mode, optionally interpolating over a specified number of frames. Useful for transitioning between different camera behaviors dynamically
+--- Changes the camera to a new mode, optionally interpolating over a specified number of frames.<br>
+--- Useful for transitioning between different camera behaviors dynamically
 function set_camera_mode(c, mode, frames)
     -- ...
 end
 
 --- @param c Camera
---- Resets the camera's state while retaining some settings, such as position or mode. This is often used when soft-resetting gameplay without reinitialization
+--- Resets the camera's state while retaining some settings, such as position or mode.<br>
+--- This is often used when soft-resetting gameplay without reinitialization
 function soft_reset_camera(c)
     -- ...
 end
 
 --- @param c Camera
---- Fully resets the camera to its default state and reinitializes all settings. This is typically used when restarting gameplay or loading a new area
+--- Fully resets the camera to its default state and reinitializes all settings.<br>
+--- This is typically used when restarting gameplay or loading a new area
 function reset_camera(c)
     -- ...
 end
 
---- Selects the appropriate camera mode for Mario based on the current gameplay context. Adapts camera behavior dynamically to match Mario's environment or state
+--- Selects the appropriate camera mode for Mario based on the current gameplay context.<br>
+--- Adapts camera behavior dynamically to match Mario's environment or state
 function select_mario_cam_mode()
     -- ...
 end
 
 --- @param dst Vec3f
 --- @param o Object
---- Converts an object's position to a `Vec3f` format. Useful for aligning object behaviors or interactions with the camera system
+--- Converts an object's position to a `Vec3f` format.<br>
+--- Useful for aligning object behaviors or interactions with the camera system
 function object_pos_to_vec3f(dst, o)
     -- ...
 end
 
 --- @param o Object
 --- @param src Vec3f
---- Converts a `Vec3f` position to an object's internal format. Useful for syncing 3D positions between objects and the game world
+--- Converts a `Vec3f` position to an object's internal format.<br>
+--- Useful for syncing 3D positions between objects and the game world
 function vec3f_to_object_pos(o, src)
     -- ...
 end
@@ -3143,27 +3171,31 @@ end
 
 --- @param angle integer
 --- @return integer
---- Selects an alternate camera mode based on the given angle. Used to toggle between predefined camera modes dynamically
+--- Selects an alternate camera mode based on the given angle.<br>
+--- Used to toggle between predefined camera modes dynamically
 function cam_select_alt_mode(angle)
     -- ...
 end
 
 --- @param mode integer
 --- @return integer
---- Sets the camera's angle based on the specified mode. Handles rotation and focus adjustments for predefined camera behaviors
+--- Sets the camera's angle based on the specified mode.<br>
+--- Handles rotation and focus adjustments for predefined camera behaviors
 function set_cam_angle(mode)
     -- ...
 end
 
 --- @param mode integer
---- Applies a handheld camera shake effect with configurable parameters. Can be used to simulate dynamic, realistic camera movement
+--- Applies a handheld camera shake effect with configurable parameters.<br>
+--- Can be used to simulate dynamic, realistic camera movement
 function set_handheld_shake(mode)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- Activates a handheld camera shake effect. Calculates positional and focus adjustments to simulate manual movement
+--- Activates a handheld camera shake effect.<br>
+--- Calculates positional and focus adjustments to simulate manual movement
 function shake_camera_handheld(pos, focus)
     -- ...
 end
@@ -3172,7 +3204,8 @@ end
 --- @param buttonsPressed integer
 --- @param buttonsDown integer
 --- @return integer
---- Determines which C-buttons are currently pressed by the player. Returns a bitmask indicating the active buttons for camera control
+--- Determines which C-buttons are currently pressed by the player.<br>
+--- Returns a bitmask indicating the active buttons for camera control
 function find_c_buttons_pressed(currentState, buttonsPressed, buttonsDown)
     -- ...
 end
@@ -3181,7 +3214,8 @@ end
 --- @param offsetY number
 --- @param radius number
 --- @return integer
---- Checks for collisions between the camera and level geometry. Adjusts the camera's position to avoid clipping into walls or obstacles
+--- Checks for collisions between the camera and level geometry.<br>
+--- Adjusts the camera's position to avoid clipping into walls or obstacles
 function collide_with_walls(pos, offsetY, radius)
     -- ...
 end
@@ -3191,7 +3225,8 @@ end
 --- @param maxPitch integer
 --- @param minPitch integer
 --- @return integer
---- Clamps the camera's pitch angle between a maximum and minimum value. Prevents over-rotation and maintains a consistent viewing angle
+--- Clamps the camera's pitch angle between a maximum and minimum value.<br>
+--- Prevents over-rotation and maintains a consistent viewing angle
 function clamp_pitch(from, to, maxPitch, minPitch)
     -- ...
 end
@@ -3200,7 +3235,8 @@ end
 --- @param posY number
 --- @param posZ number
 --- @return integer
---- Checks if a position is within 100 units of Mario's current position. Returns true if the position is within the specified radius and false otherwise
+--- Checks if a position is within 100 units of Mario's current position.<br>
+--- Returns true if the position is within the specified radius and false otherwise
 function is_within_100_units_of_mario(posX, posY, posZ)
     -- ...
 end
@@ -3210,7 +3246,9 @@ end
 --- @param scale number
 --- @return integer
 --- @return number dst
---- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`). Uses asymptotic scaling for gradual adjustments or direct assignment. Returns FALSE if `dst` reaches `goal`
+--- Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`).<br>
+--- Uses asymptotic scaling for gradual adjustments or direct assignment.<br>
+--- Returns FALSE if `dst` reaches `goal`
 function set_or_approach_f32_asymptotic(dst, goal, scale)
     -- ...
 end
@@ -3220,7 +3258,8 @@ end
 --- @param multiplier number
 --- @return integer
 --- @return number current
---- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches the `target`
+--- Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing.<br>
+--- Returns FALSE if `current` reaches the `target`
 function approach_f32_asymptotic_bool(current, target, multiplier)
     -- ...
 end
@@ -3229,7 +3268,9 @@ end
 --- @param target number
 --- @param multiplier number
 --- @return number
---- Gradually approaches a floating-point value (`target`) using asymptotic smoothing. The rate of approach is controlled by the `multiplier`. Useful for smoothly adjusting camera parameters like field-of-view or position
+--- Gradually approaches a floating-point value (`target`) using asymptotic smoothing.<br>
+--- The rate of approach is controlled by the `multiplier`.<br>
+--- Useful for smoothly adjusting camera parameters like field-of-view or position
 function approach_f32_asymptotic(current, target, multiplier)
     -- ...
 end
@@ -3239,7 +3280,8 @@ end
 --- @param divisor integer
 --- @return integer
 --- @return integer current
---- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing. Returns FALSE if `current` reaches `target`
+--- Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing.<br>
+--- Returns FALSE if `current` reaches `target`
 function approach_s16_asymptotic_bool(current, target, divisor)
     -- ...
 end
@@ -3248,7 +3290,9 @@ end
 --- @param target integer
 --- @param divisor integer
 --- @return integer
---- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing. The divisor controls the rate of the adjustment. Useful for adjusting angles or positions smoothly
+--- Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing.<br>
+--- The divisor controls the rate of the adjustment.<br>
+--- Useful for adjusting angles or positions smoothly
 function approach_s16_asymptotic(current, target, divisor)
     -- ...
 end
@@ -3258,7 +3302,8 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
---- Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
+--- Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling.<br>
+--- Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function approach_vec3f_asymptotic(current, target, xMul, yMul, zMul)
     -- ...
 end
@@ -3268,7 +3313,8 @@ end
 --- @param xMul number
 --- @param yMul number
 --- @param zMul number
---- Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling. Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
+--- Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling.<br>
+--- Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of adjustment for each component
 function set_or_approach_vec3f_asymptotic(dst, goal, xMul, yMul, zMul)
     -- ...
 end
@@ -3278,7 +3324,8 @@ end
 --- @param increment integer
 --- @return integer
 --- @return integer current
---- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
+--- Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).<br>
+--- Returns FALSE if `current` reaches the `target`
 function camera_approach_s16_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3288,7 +3335,9 @@ end
 --- @param increment integer
 --- @return integer
 --- @return integer current
---- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`). Uses symmetric scaling for gradual or immediate adjustments. Returns FALSE if `current` reaches the `target`
+--- Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`).<br>
+--- Uses symmetric scaling for gradual or immediate adjustments.<br>
+--- Returns FALSE if `current` reaches the `target`
 function set_or_approach_s16_symmetric(current, target, increment)
     -- ...
 end
@@ -3298,7 +3347,8 @@ end
 --- @param increment number
 --- @return integer
 --- @return number current
---- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`). Returns FALSE if `current` reaches the `target`
+--- Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).<br>
+--- Returns FALSE if `current` reaches the `target`
 function camera_approach_f32_symmetric_bool(current, target, increment)
     -- ...
 end
@@ -3307,7 +3357,8 @@ end
 --- @param target number
 --- @param increment number
 --- @return number
---- Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame. Limits the rate of change to ensure gradual transitions
+--- Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame.<br>
+--- Limits the rate of change to ensure gradual transitions
 function camera_approach_f32_symmetric(value, target, increment)
     -- ...
 end
@@ -3316,7 +3367,8 @@ end
 --- @param xRange integer
 --- @param yRange integer
 --- @param zRange integer
---- Generates a random 3D vector with short integer components. Useful for randomized offsets or environmental effects
+--- Generates a random 3D vector with short integer components.<br>
+--- Useful for randomized offsets or environmental effects
 function random_vec3s(dst, xRange, yRange, zRange)
     -- ...
 end
@@ -3328,7 +3380,8 @@ end
 --- @param zMax number
 --- @param zMin number
 --- @return integer
---- Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin. Prevents the camera from moving outside of the designated area
+--- Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin.<br>
+--- Prevents the camera from moving outside of the designated area
 function clamp_positions_and_find_yaw(pos, origin, xMax, xMin, zMax, zMin)
     -- ...
 end
@@ -3339,7 +3392,8 @@ end
 --- @param range integer
 --- @param surfType integer
 --- @return integer
---- Determines if a range is obstructed by a surface relative to the camera. Returns true if the range is behind the specified surface
+--- Determines if a range is obstructed by a surface relative to the camera.<br>
+--- Returns true if the range is behind the specified surface
 function is_range_behind_surface(from, to, surf, range, surfType)
     -- ...
 end
@@ -3348,7 +3402,9 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param scale number
---- Scales a point along a line between two 3D points (`from` and `to`). The scaling factor determines how far along the line the resulting point will be. The result is stored in the destination vector (`dest`)
+--- Scales a point along a line between two 3D points (`from` and `to`).<br>
+--- The scaling factor determines how far along the line the resulting point will be.<br>
+--- The result is stored in the destination vector (`dest`)
 function scale_along_line(dest, from, to, scale)
     -- ...
 end
@@ -3356,7 +3412,8 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
---- Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`). Returns the pitch as a signed 16-bit integer
+--- Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`).<br>
+--- Returns the pitch as a signed 16-bit integer
 function calculate_pitch(from, to)
     -- ...
 end
@@ -3364,7 +3421,8 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @return integer
---- Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`). Returns the yaw as a signed 16-bit integer
+--- Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`).<br>
+--- Returns the yaw as a signed 16-bit integer
 function calculate_yaw(from, to)
     -- ...
 end
@@ -3381,7 +3439,9 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
---- Calculates the absolute distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for determining proximity between objects in 3D space
+--- Calculates the absolute distance between two 3D points (`a` and `b`).<br>
+--- Returns the distance as a floating-point value.<br>
+--- Useful for determining proximity between objects in 3D space
 function calc_abs_dist(a, b)
     -- ...
 end
@@ -3389,7 +3449,9 @@ end
 --- @param a Vec3f
 --- @param b Vec3f
 --- @return number
---- Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`). Returns the distance as a floating-point value. Useful for terrain navigation or collision detection
+--- Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`).<br>
+--- Returns the distance as a floating-point value.<br>
+--- Useful for terrain navigation or collision detection
 function calc_hor_dist(a, b)
     -- ...
 end
@@ -3397,7 +3459,9 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param yaw integer
---- Rotates a vector around the XZ-plane by a specified yaw angle. The result is stored in the destination vector (`dst`). Useful for rotating camera positions or object coordinates horizontally
+--- Rotates a vector around the XZ-plane by a specified yaw angle.<br>
+--- The result is stored in the destination vector (`dst`).<br>
+--- Useful for rotating camera positions or object coordinates horizontally
 function rotate_in_xz(dst, src, yaw)
     -- ...
 end
@@ -3405,7 +3469,9 @@ end
 --- @param dst Vec3f
 --- @param src Vec3f
 --- @param pitch integer
---- Rotates a vector around the YZ-plane by a specified pitch angle. The result is stored in the destination vector (`dst`). Useful for vertical camera rotations or object transformations
+--- Rotates a vector around the YZ-plane by a specified pitch angle.<br>
+--- The result is stored in the destination vector (`dst`).<br>
+--- Useful for vertical camera rotations or object transformations
 function rotate_in_yz(dst, src, pitch)
     -- ...
 end
@@ -3413,7 +3479,9 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- Applies a pitch-based shake effect to the camera. The shake's magnitude, decay, and increment are configurable. Simulates vertical disturbances like impacts or explosions
+--- Applies a pitch-based shake effect to the camera.<br>
+--- The shake's magnitude, decay, and increment are configurable.<br>
+--- Simulates vertical disturbances like impacts or explosions
 function set_camera_pitch_shake(mag, decay, inc)
     -- ...
 end
@@ -3421,7 +3489,8 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- Applies a yaw-based shake effect to the camera. Simulates horizontal vibrations or rotational impacts
+--- Applies a yaw-based shake effect to the camera.<br>
+--- Simulates horizontal vibrations or rotational impacts
 function set_camera_yaw_shake(mag, decay, inc)
     -- ...
 end
@@ -3429,7 +3498,8 @@ end
 --- @param mag integer
 --- @param decay integer
 --- @param inc integer
---- Applies a roll-based shake effect to the camera. Simulates rotational disturbances for dynamic camera effects
+--- Applies a roll-based shake effect to the camera.<br>
+--- Simulates rotational disturbances for dynamic camera effects
 function set_camera_roll_shake(mag, decay, inc)
     -- ...
 end
@@ -3441,28 +3511,32 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- Applies a pitch shake effect to the camera, scaled by proximity to a specified point. Simulates vibrations with intensity decreasing further from the point
+--- Applies a pitch shake effect to the camera, scaled by proximity to a specified point.<br>
+--- Simulates vibrations with intensity decreasing further from the point
 function set_pitch_shake_from_point(mag, decay, inc, maxDist, posX, posY, posZ)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- Activates a pitch-based shake effect. Adds vertical vibrational movement to the camera's behavior
+--- Activates a pitch-based shake effect.<br>
+--- Adds vertical vibrational movement to the camera's behavior
 function shake_camera_pitch(pos, focus)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param focus Vec3f
---- Activates a yaw-based shake effect. Adds horizontal vibrational movement to the camera's behavior
+--- Activates a yaw-based shake effect.<br>
+--- Adds horizontal vibrational movement to the camera's behavior
 function shake_camera_yaw(pos, focus)
     -- ...
 end
 
 --- @param roll integer
 --- @return integer roll
---- Applies a roll-based shake effect to the camera. Simulates rotational disturbances caused by impacts or other events
+--- Applies a roll-based shake effect to the camera.<br>
+--- Simulates rotational disturbances caused by impacts or other events
 function shake_camera_roll(roll)
     -- ...
 end
@@ -3470,52 +3544,62 @@ end
 --- @param c Camera
 --- @param areaYaw integer
 --- @return integer
---- Calculates an outward radial offset based on the camera's yaw angle. Returns the offset yaw, used for positioning or alignment
+--- Calculates an outward radial offset based on the camera's yaw angle.<br>
+--- Returns the offset yaw, used for positioning or alignment
 function offset_yaw_outward_radial(c, areaYaw)
     -- ...
 end
 
---- Plays a buzzing sound effect when the camera attempts to move downward but is restricted. Provides feedback for invalid C-Down input actions
+--- Plays a buzzing sound effect when the camera attempts to move downward but is restricted.<br>
+--- Provides feedback for invalid C-Down input actions
 function play_camera_buzz_if_cdown()
     -- ...
 end
 
---- Plays a buzzing sound effect when a blocked C-button action is attempted. Used to signal invalid input or restricted camera movement
+--- Plays a buzzing sound effect when a blocked C-button action is attempted.<br>
+--- Used to signal invalid input or restricted camera movement
 function play_camera_buzz_if_cbutton()
     -- ...
 end
 
---- Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective. Used as audio feedback for incorrect camera behavior
+--- Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective.<br>
+--- Used as audio feedback for incorrect camera behavior
 function play_camera_buzz_if_c_sideways()
     -- ...
 end
 
---- Plays a sound effect when the C-Up button is pressed for camera movement. Provides feedback for vertical camera adjustments
+--- Plays a sound effect when the C-Up button is pressed for camera movement.<br>
+--- Provides feedback for vertical camera adjustments
 function play_sound_cbutton_up()
     -- ...
 end
 
---- Plays a sound effect when the C-Down button is pressed for camera movement. Provides auditory feedback for valid camera input
+--- Plays a sound effect when the C-Down button is pressed for camera movement.<br>
+--- Provides auditory feedback for valid camera input
 function play_sound_cbutton_down()
     -- ...
 end
 
---- Plays a sound effect when the C-Side button (left or right) is pressed for camera movement. Used as audio feedback for horizontal adjustments to the camera
+--- Plays a sound effect when the C-Side button (left or right) is pressed for camera movement.<br>
+--- Used as audio feedback for horizontal adjustments to the camera
 function play_sound_cbutton_side()
     -- ...
 end
 
---- Plays a sound effect when a blocked action changes the camera mode. This provides feedback for invalid attempts to switch the camera state
+--- Plays a sound effect when a blocked action changes the camera mode.<br>
+--- This provides feedback for invalid attempts to switch the camera state
 function play_sound_button_change_blocked()
     -- ...
 end
 
---- Plays a sound effect when the R-Button camera mode is changed. Provides feedback for toggling camera behaviors
+--- Plays a sound effect when the R-Button camera mode is changed.<br>
+--- Provides feedback for toggling camera behaviors
 function play_sound_rbutton_changed()
     -- ...
 end
 
---- Plays a sound effect when the camera switches between Lakitu and Mario perspectives. Signals a successful change in camera mode
+--- Plays a sound effect when the camera switches between Lakitu and Mario perspectives.<br>
+--- Signals a successful change in camera mode
 function play_sound_if_cam_switched_to_lakitu_or_mario()
     -- ...
 end
@@ -3523,34 +3607,39 @@ end
 --- @param c Camera
 --- @param unused number
 --- @return integer
---- Handles radial camera movement based on player input. Updates the camera's position or orientation accordingly
+--- Handles radial camera movement based on player input.<br>
+--- Updates the camera's position or orientation accordingly
 function radial_camera_input(c, unused)
     -- ...
 end
 
 --- @param trigger integer
 --- @return integer
---- Triggers a dialog sequence during a cutscene. The dialog is synchronized with the camera's position and movement
+--- Triggers a dialog sequence during a cutscene.<br>
+--- The dialog is synchronized with the camera's position and movement
 function trigger_cutscene_dialog(trigger)
     -- ...
 end
 
 --- @param c Camera
---- Handles camera movement based on input from the C-buttons. Updates the camera's position or angle to match directional player input
+--- Handles camera movement based on input from the C-buttons.<br>
+--- Updates the camera's position or angle to match directional player input
 function handle_c_button_movement(c)
     -- ...
 end
 
 --- @param c Camera
 --- @param cutscene integer
---- Starts a cutscene based on the provided ID. The camera transitions to predefined behaviors for the duration of the cutscene
+--- Starts a cutscene based on the provided ID.<br>
+--- The camera transitions to predefined behaviors for the duration of the cutscene
 function start_cutscene(c, cutscene)
     -- ...
 end
 
 --- @param c Camera
 --- @return integer
---- Gets the appropriate cutscene to play based on Mario's current gameplay state. This function helps determine transitions for cinematic or scripted sequences
+--- Gets the appropriate cutscene to play based on Mario's current gameplay state.<br>
+--- This function helps determine transitions for cinematic or scripted sequences
 function get_cutscene_from_mario_status(c)
     -- ...
 end
@@ -3558,7 +3647,8 @@ end
 --- @param displacementX number
 --- @param displacementY number
 --- @param displacementZ number
---- Moves the camera to a specified warp destination. This function handles transitions between levels or areas seamlessly
+--- Moves the camera to a specified warp destination.<br>
+--- This function handles transitions between levels or areas seamlessly
 function warp_camera(displacementX, displacementY, displacementZ)
     -- ...
 end
@@ -3566,7 +3656,8 @@ end
 --- @param c Camera
 --- @param goal number
 --- @param inc number
---- Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions. This is really wonky and probably shouldn't be used, prefer `gLakituStates`
+--- Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions.<br>
+--- This is really wonky and probably shouldn't be used, prefer `gLakituStates`
 function approach_camera_height(c, goal, inc)
     -- ...
 end
@@ -3575,7 +3666,8 @@ end
 --- @param from Vec3f
 --- @param to Vec3f
 --- @param rotation Vec3s
---- Offsets a vector by rotating it in 3D space relative to a reference position. This is useful for creating radial effects or dynamic transformations
+--- Offsets a vector by rotating it in 3D space relative to a reference position.<br>
+--- This is useful for creating radial effects or dynamic transformations
 function offset_rotated(dst, from, to, rotation)
     -- ...
 end
@@ -3588,7 +3680,8 @@ end
 --- @param oldFoc Vec3f
 --- @param yaw integer
 --- @return integer
---- Transitions the camera to the next Lakitu state, updating position and focus. This function handles smooth transitions between different gameplay scenarios
+--- Transitions the camera to the next Lakitu state, updating position and focus.<br>
+--- This function handles smooth transitions between different gameplay scenarios
 function next_lakitu_state(newPos, newFoc, curPos, curFoc, oldPos, oldFoc, yaw)
     -- ...
 end
@@ -3601,14 +3694,16 @@ end
 
 --- @param c Camera
 --- @return integer
---- Processes course-specific camera settings, such as predefined positions or modes. Adjusts the camera to match the design and gameplay requirements of the current course
+--- Processes course-specific camera settings, such as predefined positions or modes.<br>
+--- Adjusts the camera to match the design and gameplay requirements of the current course
 function camera_course_processing(c)
     -- ...
 end
 
 --- @param pos Vec3f
 --- @param lastGood Vec3f
---- Resolves collisions between the camera and level geometry. Adjusts the camera's position to prevent clipping or intersecting with objects
+--- Resolves collisions between the camera and level geometry.<br>
+--- Adjusts the camera's position to prevent clipping or intersecting with objects
 function resolve_geometry_collisions(pos, lastGood)
     -- ...
 end
@@ -3619,14 +3714,16 @@ end
 --- @param yawRange integer
 --- @return integer
 --- @return integer avoidYaw
---- Rotates the camera to avoid walls or other obstructions. Ensures clear visibility of the player or target objects
+--- Rotates the camera to avoid walls or other obstructions.<br>
+--- Ensures clear visibility of the player or target objects
 function rotate_camera_around_walls(c, cPos, avoidYaw, yawRange)
     -- ...
 end
 
 --- @param cutscene integer
 --- @return integer
---- Starts a cutscene focused on an object without requiring focus to remain locked. This is useful for dynamic events where the camera adjusts freely
+--- Starts a cutscene focused on an object without requiring focus to remain locked.<br>
+--- This is useful for dynamic events where the camera adjusts freely
 function start_object_cutscene_without_focus(cutscene)
     -- ...
 end
@@ -3635,7 +3732,8 @@ end
 --- @param o Object
 --- @param dialogID integer
 --- @return integer
---- Starts a cutscene involving an object and displays dialog during the sequence. The camera focuses on the object while synchronizing dialog with the scene
+--- Starts a cutscene involving an object and displays dialog during the sequence.<br>
+--- The camera focuses on the object while synchronizing dialog with the scene
 function cutscene_object_with_dialog(cutscene, o, dialogID)
     -- ...
 end
@@ -3643,7 +3741,8 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
---- Starts a cutscene involving an object without dialog. The camera transitions smoothly to focus on the object
+--- Starts a cutscene involving an object without dialog.<br>
+--- The camera transitions smoothly to focus on the object
 function cutscene_object_without_dialog(cutscene, o)
     -- ...
 end
@@ -3651,13 +3750,15 @@ end
 --- @param cutscene integer
 --- @param o Object
 --- @return integer
---- Initiates a cutscene focusing on a specific object in the game world. The camera transitions smoothly to the object, adapting its position as needed
+--- Initiates a cutscene focusing on a specific object in the game world.<br>
+--- The camera transitions smoothly to the object, adapting its position as needed
 function cutscene_object(cutscene, o)
     -- ...
 end
 
 --- @param c Camera
---- Starts the execution of a predefined cutscene. The camera transitions dynamically to follow the scripted sequence
+--- Starts the execution of a predefined cutscene.<br>
+--- The camera transitions dynamically to follow the scripted sequence
 function play_cutscene(c)
     -- ...
 end
@@ -3665,7 +3766,8 @@ end
 --- @param obj integer
 --- @param frame integer
 --- @return integer
---- Spawns an object as part of a cutscene, such as props or interactive elements. Returns the spawned object's reference for further manipulation
+--- Spawns an object as part of a cutscene, such as props or interactive elements.<br>
+--- Returns the spawned object's reference for further manipulation
 function cutscene_spawn_obj(obj, frame)
     -- ...
 end
@@ -3673,19 +3775,22 @@ end
 --- @param amplitude integer
 --- @param decay integer
 --- @param shakeSpeed integer
---- Applies a field-of-view shake effect to simulate zoom or focus disruptions. Shake parameters, such as amplitude and decay, control the intensity
+--- Applies a field-of-view shake effect to simulate zoom or focus disruptions.<br>
+--- Shake parameters, such as amplitude and decay, control the intensity
 function set_fov_shake(amplitude, decay, shakeSpeed)
     -- ...
 end
 
 --- @param func integer
---- Assigns a custom function for dynamic field-of-view adjustments. This allows precise control over the camera's zoom behavior during gameplay
+--- Assigns a custom function for dynamic field-of-view adjustments.<br>
+--- This allows precise control over the camera's zoom behavior during gameplay
 function set_fov_function(func)
     -- ...
 end
 
 --- @param preset integer
---- Applies a preset field-of-view shake effect during a cutscene. This creates dynamic visual effects, such as zoom or focus disruptions
+--- Applies a preset field-of-view shake effect during a cutscene.<br>
+--- This creates dynamic visual effects, such as zoom or focus disruptions
 function cutscene_set_fov_shake_preset(preset)
     -- ...
 end
@@ -3694,7 +3799,8 @@ end
 --- @param posX number
 --- @param posY number
 --- @param posZ number
---- Applies a preset field-of-view shake effect relative to a specific point. The intensity diminishes as the distance from the point increases
+--- Applies a preset field-of-view shake effect relative to a specific point.<br>
+--- The intensity diminishes as the distance from the point increases
 function set_fov_shake_from_point_preset(preset, posX, posY, posZ)
     -- ...
 end
@@ -3705,7 +3811,8 @@ end
 --- @param yawOff integer
 --- @param pitchDiv integer
 --- @param yawDiv integer
---- Rotates an object toward a specific point in 3D space. Gradually updates the object's pitch and yaw angles to face the target
+--- Rotates an object toward a specific point in 3D space.<br>
+--- Gradually updates the object's pitch and yaw angles to face the target
 function obj_rotate_towards_point(o, point, pitchOff, yawOff, pitchDiv, yawDiv)
     -- ...
 end
@@ -3715,25 +3822,29 @@ end
 --- @param y integer
 --- @param z integer
 --- @return integer
---- Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates. This is useful for predefined static views in specific areas
+--- Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates.<br>
+--- This is useful for predefined static views in specific areas
 function set_camera_mode_fixed(c, x, y, z)
     -- ...
 end
 
 --- @param angle integer
 --- @return integer
---- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units. Useful when needing to align angles (camera, yaw, etc.)
+--- Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units.<br>
+--- Useful when needing to align angles (camera, yaw, etc.)
 function snap_to_45_degrees(angle)
     -- ...
 end
 
 --- @param enable integer
---- Toggles whether the camera uses course-specific settings. This is useful for enabling or disabling custom behaviors in specific courses or areas
+--- Toggles whether the camera uses course-specific settings.<br>
+--- This is useful for enabling or disabling custom behaviors in specific courses or areas
 function camera_set_use_course_specific_settings(enable)
     -- ...
 end
 
---- Centers the ROM hack camera. This function is designed for non-standard level layouts and modded game environments
+--- Centers the ROM hack camera.<br>
+--- This function is designed for non-standard level layouts and modded game environments
 function center_rom_hack_camera()
     -- ...
 end
@@ -3747,7 +3858,8 @@ end
 
 --- @param m MarioState
 --- @param characterSound CharacterSound
---- Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`). Useful for triggering sound effects for actions like jumping or interacting with the environment
+--- Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`).<br>
+--- Useful for triggering sound effects for actions like jumping or interacting with the environment
 function play_character_sound(m, characterSound)
     -- ...
 end
@@ -3755,7 +3867,8 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param offset integer
---- Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). Useful for adding dynamic sound effects or syncing sounds to specific animations or events
+--- Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`).<br>
+--- Useful for adding dynamic sound effects or syncing sounds to specific animations or events
 function play_character_sound_offset(m, characterSound, offset)
     -- ...
 end
@@ -3763,14 +3876,16 @@ end
 --- @param m MarioState
 --- @param characterSound CharacterSound
 --- @param flags integer
---- Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`. Useful for avoiding duplicate sound effects in rapid succession or conditional actions
+--- Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`.<br>
+--- Useful for avoiding duplicate sound effects in rapid succession or conditional actions
 function play_character_sound_if_no_flag(m, characterSound, flags)
     -- ...
 end
 
 --- @param m MarioState
 --- @return number
---- Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement). Useful for smoothly syncing Mario's model height or positional adjustments during animations
+--- Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement).<br>
+--- Useful for smoothly syncing Mario's model height or positional adjustments during animations
 function get_character_anim_offset(m)
     -- ...
 end
@@ -3778,13 +3893,15 @@ end
 --- @param m MarioState
 --- @param characterAnim CharacterAnimID
 --- @return integer
---- Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`). Useful for determining which animation to play for actions like walking, jumping, or idle states
+--- Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`).<br>
+--- Useful for determining which animation to play for actions like walking, jumping, or idle states
 function get_character_anim(m, characterAnim)
     -- ...
 end
 
 --- @param m MarioState
---- Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural. Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
+--- Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural.<br>
+--- Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 function update_character_anim_offset(m)
     -- ...
 end
@@ -4530,7 +4647,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly. Useful for score, and coin management
+--- Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.<br>
+--- Useful for score, and coin management
 function interact_coin(m, interactType, o)
     -- ...
 end
@@ -4539,7 +4657,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter. Useful for underwater stages
+--- Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter.<br>
+--- Useful for underwater stages
 function interact_water_ring(m, interactType, o)
     -- ...
 end
@@ -4548,7 +4667,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star). Useful for the main progression system of collecting Stars and unlocking new areas
+--- Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star).<br>
+--- Useful for the main progression system of collecting Stars and unlocking new areas
 function interact_star_or_key(m, interactType, o)
     -- ...
 end
@@ -4566,7 +4686,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level. Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
+--- Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level.<br>
+--- Useful for connecting different parts of the game world and controlling transitions between levels as well as custom warp areas
 function interact_warp(m, interactType, o)
     -- ...
 end
@@ -4575,7 +4696,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog. Useful for restricting access to certain areas based on progression
+--- Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog.<br>
+--- Useful for restricting access to certain areas based on progression
 function interact_warp_door(m, interactType, o)
     -- ...
 end
@@ -4584,7 +4706,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement. Useful for controlling access to locked areas and providing progression gating in the game
+--- Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement.<br>
+--- Useful for controlling access to locked areas and providing progression gating in the game
 function interact_door(m, interactType, o)
     -- ...
 end
@@ -4593,7 +4716,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior. Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
+--- Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior.<br>
+--- Useful for transitioning to cannon-aiming mode and enabling cannon travel within levels
 function interact_cannon_base(m, interactType, o)
     -- ...
 end
@@ -4602,7 +4726,9 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with another player (in multiplayer scenarios). Checks if Mario and another player collide and resolves any special behavior like bouncing on top. Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
+--- Handles interaction with another player (in multiplayer scenarios).<br>
+--- Checks if Mario and another player collide and resolves any special behavior like bouncing on top.<br>
+--- Useful for multiplayer interactions, such as PvP or cooperative gameplay mechanics
 function interact_player(m, interactType, o)
     -- ...
 end
@@ -4611,7 +4737,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap. Useful for enforcing require-caps to access certain areas
+--- Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap.<br>
+--- Useful for enforcing require-caps to access certain areas
 function interact_igloo_barrier(m, interactType, o)
     -- ...
 end
@@ -4620,7 +4747,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily. Useful for desert levels or areas where environmental hazards lift Mario into the air
+--- Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily.<br>
+--- Useful for desert levels or areas where environmental hazards lift Mario into the air
 function interact_tornado(m, interactType, o)
     -- ...
 end
@@ -4629,7 +4757,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action. Useful for hazards that trap Mario like whirlpools
+--- Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action.<br>
+--- Useful for hazards that trap Mario like whirlpools
 function interact_whirlpool(m, interactType, o)
     -- ...
 end
@@ -4638,7 +4767,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards. Useful for environmental wind hazards
+--- Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards.<br>
+--- Useful for environmental wind hazards
 function interact_strong_wind(m, interactType, o)
     -- ...
 end
@@ -4647,7 +4777,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump. Useful for simulating fire damage and hazards in levels
+--- Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump.<br>
+--- Useful for simulating fire damage and hazards in levels
 function interact_flame(m, interactType, o)
     -- ...
 end
@@ -4665,7 +4796,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario. If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
+--- Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario.<br>
+--- If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals damage and knockback if hit by a Clam
 function interact_clam_or_bubba(m, interactType, o)
     -- ...
 end
@@ -4674,7 +4806,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully. Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
+--- Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully.<br>
+--- Useful for enemy encounters that involve pushing and shoving mechanics rather than just stomping like the bullies
 function interact_bully(m, interactType, o)
     -- ...
 end
@@ -4683,7 +4816,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked. Useful for electric-themed enemies and obstacles
+--- Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked.<br>
+--- Useful for electric-themed enemies and obstacles
 function interact_shock(m, interactType, o)
     -- ...
 end
@@ -4692,7 +4826,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects. If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
+--- Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects.<br>
+--- If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockback if not protected or attacking
 function interact_mr_blizzard(m, interactType, o)
     -- ...
 end
@@ -4701,7 +4836,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario. Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
+--- Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario.<br>
+--- Useful for handling upward attacks, hitting coin blocks, or interacting with certain NPCs from below
 function interact_hit_from_below(m, interactType, o)
     -- ...
 end
@@ -4710,7 +4846,9 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas). Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes. Useful for enemy defeat mechanics and platform bouncing
+--- Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas).<br>
+--- Checks if Mario attacks the object from above and applies the appropriate knockback, sound effects, and object state changes.<br>
+--- Useful for enemy defeat mechanics and platform bouncing
 function interact_bounce_top(m, interactType, o)
     -- ...
 end
@@ -4719,7 +4857,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback. Useful for enemies that cannot be stomped from above and require direct attacks
+--- Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback.<br>
+--- Useful for enemies that cannot be stomped from above and require direct attacks
 function interact_spiny_walking(m, interactType, o)
     -- ...
 end
@@ -4728,7 +4867,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health. Useful for enemy attacks, environmental hazards, and managing damage related behaviors
+--- Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health.<br>
+--- Useful for enemy attacks, environmental hazards, and managing damage related behaviors
 function interact_damage(m, interactType, o)
     -- ...
 end
@@ -4737,7 +4877,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state. Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
+--- Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state.<br>
+--- Useful for managing collectible items hidden in breakable objects and level progression through destructible blocks or walls
 function interact_breakable(m, interactType, o)
     -- ...
 end
@@ -4746,7 +4887,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics. Useful for implementing Koopa Shell behavior
+--- Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics.<br>
+--- Useful for implementing Koopa Shell behavior
 function interact_koopa_shell(m, interactType, o)
     -- ...
 end
@@ -4755,7 +4897,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing. Useful for platforming mechanics
+--- Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing.<br>
+--- Useful for platforming mechanics
 function interact_pole(m, interactType, o)
     -- ...
 end
@@ -4764,7 +4907,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level. Useful for special traversal mechanics and shortcuts within a course
+--- Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level.<br>
+--- Useful for special traversal mechanics and shortcuts within a course
 function interact_hoot(m, interactType, o)
     -- ...
 end
@@ -4773,7 +4917,9 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps. Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation. Useful for managing cap statuses
+--- Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps.<br>
+--- Updates Mario's state (e.g., cap timers, sound effects) and may initiate putting on the cap animation.<br>
+--- Useful for managing cap statuses
 function interact_cap(m, interactType, o)
     -- ...
 end
@@ -4782,7 +4928,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible. Useful for course mechanics, throwing items, and Bowser
+--- Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible.<br>
+--- Useful for course mechanics, throwing items, and Bowser
 function interact_grabbable(m, interactType, o)
     -- ...
 end
@@ -4791,7 +4938,8 @@ end
 --- @param interactType integer
 --- @param o Object
 --- @return integer
---- Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state. Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
+--- Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state.<br>
+--- Useful for managing hints, story elements, or gameplay instructions through in-game dialogue
 function interact_text(m, interactType, o)
     -- ...
 end
@@ -4799,58 +4947,72 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
---- Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object. Useful for deciding directions between Mario and NPCs
+--- Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object.<br>
+--- Useful for deciding directions between Mario and NPCs
 function mario_obj_angle_to_object(m, o)
     -- ...
 end
 
 --- @param m MarioState
---- Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state. Useful for cleanly dismounting ridden objects
+--- Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state.<br>
+--- Useful for cleanly dismounting ridden objects
 function mario_stop_riding_object(m)
     -- ...
 end
 
 --- @param m MarioState
---- Grabs the object currently referenced by Mario's `usedObj` if it's not already being held. Changes the object's state to indicate it is now held by Mario. Useful for handling the moment Mario successfully picks up an object
+--- Grabs the object currently referenced by Mario's `usedObj` if it's not already being held.<br>
+--- Changes the object's state to indicate it is now held by Mario.<br>
+--- Useful for handling the moment Mario successfully picks up an object
 function mario_grab_used_object(m)
     -- ...
 end
 
 --- @param m MarioState
---- Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario. Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
+--- Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario.<br>
+--- Useful for releasing carried objects, such as throwing Bob-ombs or setting down crates
 function mario_drop_held_object(m)
     -- ...
 end
 
 --- @param m MarioState
---- Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity. Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
+--- Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity.<br>
+--- Useful for attacking enemies with thrown objects, solving puzzles by throwing crates, or interacting with environment items
 function mario_throw_held_object(m)
     -- ...
 end
 
 --- @param m MarioState
---- Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object. Resets related states to ensure Mario is no longer attached to or holding anything. Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
+--- Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object.<br>
+--- Resets related states to ensure Mario is no longer attached to or holding anything.<br>
+--- Useful when changing Mario's state after certain actions, transitions, or to prevent exploits
 function mario_stop_riding_and_holding(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario is currently wearing his normal cap on his head. Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false. Useful for determining Mario's cap status
+--- Checks if Mario is currently wearing his normal cap on his head.<br>
+--- Returns true if Mario's flag state matches that of having the normal cap equipped on his head, otherwise false.<br>
+--- Useful for determining Mario's cap status
 function does_mario_have_normal_cap_on_head(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return boolean
---- Checks if Mario has already had a cap blown off of his head in the current level, Returns true if a blown cap can be found for Mario, false if not. Useful to check if a blown cap exists in the level currently.
+--- Checks if Mario has already had a cap blown off of his head in the current level,<br>
+--- Returns true if a blown cap can be found for Mario, false if not.<br>
+--- Useful to check if a blown cap exists in the level currently.
 function does_mario_have_blown_cap(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @param capSpeed number
---- Makes Mario blow off his normal cap at a given speed. Removes the normal cap from Mario's head and spawns it as a collectible object in the game world. Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
+--- Makes Mario blow off his normal cap at a given speed.<br>
+--- Removes the normal cap from Mario's head and spawns it as a collectible object in the game world.<br>
+--- Useful for simulating events where Mario loses his cap due to enemy attacks or environmental forces
 function mario_blow_off_cap(m, capSpeed)
     -- ...
 end
@@ -4858,13 +5020,17 @@ end
 --- @param m MarioState
 --- @param arg integer
 --- @return integer
---- Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head. Returns true if Mario was wearing his normal cap, otherwise false. Useful for scenarios where enemies steal Mario's cap
+--- Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head.<br>
+--- Returns true if Mario was wearing his normal cap, otherwise false.<br>
+--- Useful for scenarios where enemies steal Mario's cap
 function mario_lose_cap_to_enemy(m, arg)
     -- ...
 end
 
 --- @param m MarioState
---- Retrieves Mario's normal cap if it was previously lost. Removes the cap from Mario's hand state and places it on his head. Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
+--- Retrieves Mario's normal cap if it was previously lost.<br>
+--- Removes the cap from Mario's hand state and places it on his head.<br>
+--- Useful when Mario recovers his normal cap from enemies, finds it in a level, or if it were to disappear
 function mario_retrieve_cap(m)
     -- ...
 end
@@ -4872,21 +5038,24 @@ end
 --- @param m MarioState
 --- @param interactType integer
 --- @return Object
---- Returns a collided object that matches a given interaction type from Mario's current collision data. Useful for determining which object Mario has come into contact with
+--- Returns a collided object that matches a given interaction type from Mario's current collision data.<br>
+--- Useful for determining which object Mario has come into contact with
 function mario_get_collided_object(m, interactType)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process. Useful for picking up objects, throwing enemies, or grabbing special items
+--- Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process.<br>
+--- Useful for picking up objects, throwing enemies, or grabbing special items
 function mario_check_object_grab(m)
     -- ...
 end
 
 --- @param door Object
 --- @return integer
---- Retrieves the save file flag associated with a door, based on the number of stars required to open it. Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
+--- Retrieves the save file flag associated with a door, based on the number of stars required to open it.<br>
+--- Used to check if the player has unlocked certain star doors or progressed far enough to access new areas
 function get_door_save_file_flag(door)
     -- ...
 end
@@ -4894,7 +5063,9 @@ end
 --- @param attacker MarioState
 --- @param victim MarioState
 --- @return integer
---- Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario. Considers factors like invincibility, action states, and whether the attack is valid. Useful for multiplayer where players can harm each other
+--- Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario.<br>
+--- Considers factors like invincibility, action states, and whether the attack is valid.<br>
+--- Useful for multiplayer where players can harm each other
 function passes_pvp_interaction_checks(attacker, victim)
     -- ...
 end
@@ -4902,7 +5073,8 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
---- Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position. Useful for animating door interactions realistically, depending on which side Mario approaches from
+--- Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position.<br>
+--- Useful for animating door interactions realistically, depending on which side Mario approaches from
 function should_push_or_pull_door(m, o)
     -- ...
 end
@@ -4910,14 +5082,17 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
---- Handles the logic of Mario taking damage and being knocked back by a damaging object. Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects. Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
+--- Handles the logic of Mario taking damage and being knocked back by a damaging object.<br>
+--- Decreases Mario's health, sets his knockback state, and triggers appropriate sound and camera effects.<br>
+--- Useful for implementing enemy attacks, hazards, and ensuring Mario receives proper feedback upon taking damage
 function take_damage_and_knock_back(m, o)
     -- ...
 end
 
 --- @param capObject Object
 --- @return integer
---- Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish). Useful for handling the logic of picking up, wearing, or losing different kinds of caps
+--- Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish).<br>
+--- Useful for handling the logic of picking up, wearing, or losing different kinds of caps
 function get_mario_cap_flag(capObject)
     -- ...
 end
@@ -4925,7 +5100,9 @@ end
 --- @param m MarioState
 --- @param o Object
 --- @return integer
---- Determines how Mario interacts with a given object based on his current action, position, and other state variables. Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`). Useful for handling different types of player-object collisions, attacks, and object behaviors
+--- Determines how Mario interacts with a given object based on his current action, position, and other state variables.<br>
+--- Calculates the appropriate interaction type (e.g., punch, kick, ground pound) that should result from Mario's contact with the specified object (`o`).<br>
+--- Useful for handling different types of player-object collisions, attacks, and object behaviors
 function determine_interaction(m, o)
     -- ...
 end
@@ -4959,7 +5136,8 @@ end
 --- @param areaIndex integer
 --- @param charCase integer
 --- @return string
---- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string.<br>
+--- Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_level_name_ascii(courseNum, levelNum, areaIndex, charCase)
     -- ...
 end
@@ -4969,7 +5147,9 @@ end
 --- @param areaIndex integer
 --- @param charCase integer
 --- @return Pointer_integer
---- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+--- Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string.<br>
+--- This function should not be used in Lua mods.<br>
+--- Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_level_name_sm64(courseNum, levelNum, areaIndex, charCase)
     -- ...
 end
@@ -4987,7 +5167,8 @@ end
 --- @param starNum integer
 --- @param charCase integer
 --- @return string
---- Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string.<br>
+--- Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_star_name_ascii(courseNum, starNum, charCase)
     -- ...
 end
@@ -4996,7 +5177,9 @@ end
 --- @param starNum integer
 --- @param charCase integer
 --- @return Pointer_integer
---- Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string. This function should not be used in Lua mods. Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
+--- Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string.<br>
+--- This function should not be used in Lua mods.<br>
+--- Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 function get_star_name_sm64(courseNum, starNum, charCase)
     -- ...
 end
@@ -5016,7 +5199,9 @@ end
 --- @param checkpoint integer
 --- @param o Object
 --- @return ObjectWarpNode
---- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`. To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.) `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
+--- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.<br>
+--- To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)<br>
+--- `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
 function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
     -- ...
 end
@@ -5279,14 +5464,16 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation). Useful for deciding when to transition out of an animation-driven action
+--- Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation).<br>
+--- Useful for deciding when to transition out of an animation-driven action
 function is_anim_at_end(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames). Useful for advanced checks where slightly early transitions or timing are needed before the final frame
+--- Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames).<br>
+--- Useful for advanced checks where slightly early transitions or timing are needed before the final frame
 function is_anim_past_end(m)
     -- ...
 end
@@ -5303,7 +5490,8 @@ end
 --- @param targetAnimID integer
 --- @param accel integer
 --- @return integer
---- Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation. Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
+--- Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation.<br>
+--- Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
 function set_mario_anim_with_accel(m, targetAnimID, accel)
     -- ...
 end
@@ -5320,7 +5508,8 @@ end
 --- @param targetAnimID CharacterAnimID
 --- @param accel integer
 --- @return integer
---- Sets a character-specific animation where the animation speed is adjusted by `accel`. Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
+--- Sets a character-specific animation where the animation speed is adjusted by `accel`.<br>
+--- Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
 function set_character_anim_with_accel(m, targetAnimID, accel)
     -- ...
 end
@@ -5335,7 +5524,8 @@ end
 --- @param m MarioState
 --- @param animFrame integer
 --- @return integer
---- Checks if Mario's current animation is past a specified `animFrame`. Useful for conditional logic where an action can branch after reaching a specific point in the animation
+--- Checks if Mario's current animation is past a specified `animFrame`.<br>
+--- Useful for conditional logic where an action can branch after reaching a specific point in the animation
 function is_anim_past_frame(m, animFrame)
     -- ...
 end
@@ -5344,7 +5534,8 @@ end
 --- @param yaw integer
 --- @param translation Vec3s
 --- @return integer
---- Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
+--- Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`.<br>
+--- Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 function find_mario_anim_flags_and_translation(o, yaw, translation)
     -- ...
 end
@@ -5357,7 +5548,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation. Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
+--- Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation.<br>
+--- Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
 function return_mario_anim_y_translation(m)
     -- ...
 end
@@ -5377,7 +5569,8 @@ function play_mario_jump_sound(m)
 end
 
 --- @param m MarioState
---- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
+--- Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`).<br>
+--- Useful for adding dynamic audio feedback based on Mario's running or walking speed
 function adjust_sound_for_speed(m)
     -- ...
 end
@@ -5414,14 +5607,16 @@ end
 
 --- @param m MarioState
 --- @param soundBits integer
---- Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped. Useful for making big impact landings stand out aurally
+--- Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped.<br>
+--- Useful for making big impact landings stand out aurally
 function play_mario_heavy_landing_sound(m, soundBits)
     -- ...
 end
 
 --- @param m MarioState
 --- @param soundBits integer
---- A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally). Useful for consistent heavy landing effects without repetition
+--- A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally).<br>
+--- Useful for consistent heavy landing effects without repetition
 function play_mario_heavy_landing_sound_once(m, soundBits)
     -- ...
 end
@@ -5463,21 +5658,24 @@ end
 
 --- @param m MarioState
 --- @param speed number
---- Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`. Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
+--- Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`.<br>
+--- Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
 function mario_set_forward_vel(m, speed)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces. Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
+--- Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces.<br>
+--- Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
 function mario_get_floor_class(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
+--- Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects.<br>
+--- Useful for playing context-specific footstep or movement sounds
 function mario_get_terrain_sound_addend(m)
     -- ...
 end
@@ -5486,7 +5684,8 @@ end
 --- @param offset number
 --- @param radius number
 --- @return Surface
---- Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario's movement or adjusting his position
+--- Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls.<br>
+--- Useful for collision detection when updating Mario's movement or adjusting his position
 function resolve_and_return_wall_collisions(pos, offset, radius)
     -- ...
 end
@@ -5504,7 +5703,8 @@ end
 --- @param height number
 --- @return number
 --- @return Surface ceil
---- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Returns the ceiling height and surface
+--- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).<br>
+--- Returns the ceiling height and surface
 function vec3f_find_ceil(pos, height)
     -- ...
 end
@@ -5513,7 +5713,9 @@ end
 --- @param height number
 --- @return number
 --- @return Surface ceil
---- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Prevents exposed ceiling bug. Returns the ceiling height and surface
+--- Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).<br>
+--- Prevents exposed ceiling bug.<br>
+--- Returns the ceiling height and surface
 function vec3f_mario_ceil(pos, height)
     -- ...
 end
@@ -5521,14 +5723,16 @@ end
 --- @param m MarioState
 --- @param turnYaw integer
 --- @return integer
---- Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope. Useful for deciding if Mario will walk or slide on sloped floors
+--- Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope.<br>
+--- Useful for deciding if Mario will walk or slide on sloped floors
 function mario_facing_downhill(m, turnYaw)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides). Useful for deciding if Mario should transition to sliding or maintain normal traction
+--- Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides).<br>
+--- Useful for deciding if Mario should transition to sliding or maintain normal traction
 function mario_floor_is_slippery(m)
     -- ...
 end
@@ -5542,7 +5746,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+--- Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep.<br>
+--- Useful for restricting normal movement on surfaces with extreme angles
 function mario_floor_is_steep(m)
     -- ...
 end
@@ -5551,7 +5756,8 @@ end
 --- @param angleFromMario integer
 --- @param distFromMario number
 --- @return number
---- Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`). Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
+--- Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`).<br>
+--- Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
 function find_floor_height_relative_polar(m, angleFromMario, distFromMario)
     -- ...
 end
@@ -5559,19 +5765,22 @@ end
 --- @param m MarioState
 --- @param yawOffset integer
 --- @return integer
---- Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction. Useful for slope-based calculations such as setting walking or sliding behaviors
+--- Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction.<br>
+--- Useful for slope-based calculations such as setting walking or sliding behaviors
 function find_floor_slope(m, yawOffset)
     -- ...
 end
 
 --- @param m MarioState
---- Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping. Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
+--- Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping.<br>
+--- Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
 function update_mario_sound_and_camera(m)
     -- ...
 end
 
 --- @param m MarioState
---- Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly. Useful for forcing special jump states on surfaces exceeding normal slope limits
+--- Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly.<br>
+--- Useful for forcing special jump states on surfaces exceeding normal slope limits
 function set_steep_jump_action(m)
     -- ...
 end
@@ -5630,7 +5839,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Checks for inputs that cause common action transitions (jump, freefall, walking, sliding). Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
+--- Checks for inputs that cause common action transitions (jump, freefall, walking, sliding).<br>
+--- Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
 function check_common_action_exits(m)
     -- ...
 end
@@ -5644,7 +5854,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states. Useful for restoring standard ground movement when emerging from water
+--- Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states.<br>
+--- Useful for restoring standard ground movement when emerging from water
 function transition_submerged_to_walking(m)
     -- ...
 end
@@ -5665,7 +5876,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
+--- Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged.<br>
+--- Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
 function force_idle_state(m)
     -- ...
 end
@@ -5702,26 +5914,31 @@ end
 --- @param frame1 integer
 --- @param frame2 integer
 --- @param frame3 integer
---- Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips). If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
+--- Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips).<br>
+--- If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
 function play_flip_sounds(m, frame1, frame2, frame3)
     -- ...
 end
 
 --- @param m MarioState
---- Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying. If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
+--- Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying.<br>
+--- If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
 function play_far_fall_sound(m)
     -- ...
 end
 
 --- @param m MarioState
---- Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs depending on whether Mario's forward velocity is high enough to be considered a strong knockback
+--- Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs<br>
+--- depending on whether Mario's forward velocity is high enough to be considered a strong knockback
 function play_knockback_sound(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity. Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`. Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
+--- Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity.<br>
+--- Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`.<br>
+--- Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
 function lava_boost_on_wall(m)
     -- ...
 end
@@ -5729,21 +5946,27 @@ end
 --- @param m MarioState
 --- @param hardFallAction integer
 --- @return integer
---- Evaluates whether Mario should take fall damage based on the height difference between his peak and current position. If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied. Useful for determining if Mario's fall warrants a health penalty or a special landing action
+--- Evaluates whether Mario should take fall damage based on the height difference between his peak and current position.<br>
+--- If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter<br>
+--- a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied.<br>
+--- Useful for determining if Mario's fall warrants a health penalty or a special landing action
 function check_fall_damage(m, hardFallAction)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity. Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
+--- Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity.<br>
+--- Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
 function check_kick_or_dive_in_air(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.). Returns true if Mario should be stuck, false otherwise
+--- Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow<br>
+--- or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.).<br>
+--- Returns true if Mario should be stuck, false otherwise
 function should_get_stuck_in_ground(m)
     -- ...
 end
@@ -5751,50 +5974,59 @@ end
 --- @param m MarioState
 --- @param hardFallAction integer
 --- @return integer
---- Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
+--- Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he<br>
+--- should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's<br>
+--- action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
 function check_fall_damage_or_get_stuck(m, hardFallAction)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
+--- Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal<br>
+--- velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
 function check_horizontal_wind(m)
     -- ...
 end
 
 --- @param m MarioState
---- Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag, approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
+--- Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag,<br>
+--- approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
 function update_air_with_turn(m)
     -- ...
 end
 
 --- @param m MarioState
---- Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
+--- Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can<br>
+--- move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
 function update_air_without_turn(m)
     -- ...
 end
 
 --- @param m MarioState
---- Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
+--- Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity<br>
+--- and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
 function update_lava_boost_or_twirling(m)
     -- ...
 end
 
 --- @param m MarioState
---- Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
+--- Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity<br>
+--- and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
 function update_flying_yaw(m)
     -- ...
 end
 
 --- @param m MarioState
---- Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity and clamps the final pitch angle to a certain range, simulating a smooth flight control
+--- Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity<br>
+--- and clamps the final pitch angle to a certain range, simulating a smooth flight control
 function update_flying_pitch(m)
     -- ...
 end
 
 --- @param m MarioState
---- Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input, applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
+--- Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input,<br>
+--- applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
 function update_flying(m)
     -- ...
 end
@@ -5804,7 +6036,9 @@ end
 --- @param animation integer
 --- @param stepArg integer
 --- @return integer
---- Performs a standard step update for air actions without knockback, typically used for jumps or freefalls. Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`. Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
+--- Performs a standard step update for air actions without knockback, typically used for jumps or freefalls.<br>
+--- Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`.<br>
+--- Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
 function common_air_action_step(m, landAction, animation, stepArg)
     -- ...
 end
@@ -5815,34 +6049,40 @@ end
 --- @param animation integer
 --- @param speed number
 --- @return integer
---- A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`, and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
+--- A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`,<br>
+--- and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
 function common_air_knockback_step(m, landAction, hardFallAction, animation, speed)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A) and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
+--- Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A)<br>
+--- and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
 function check_wall_kick(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action if on certain wind surfaces. Also resets `m.quicksandDepth`
+--- Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning<br>
+--- to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action<br>
+--- if on certain wind surfaces. Also resets `m.quicksandDepth`
 function check_common_airborne_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed. Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
+--- Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed.<br>
+--- Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
 function mario_execute_airborne_action(m)
     -- ...
 end
 
 --- @param m MarioState
---- Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor. In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
+--- Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor.<br>
+--- In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
 function add_tree_leaf_particles(m)
     -- ...
 end
@@ -5857,7 +6097,8 @@ end
 --- @param m MarioState
 --- @param offsetY number
 --- @return integer
---- Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor. Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
+--- Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor.<br>
+--- Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
 function set_pole_position(m, offsetY)
     -- ...
 end
@@ -5925,7 +6166,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water. Returns true if the action was canceled and a new action was set, or false otherwise
+--- Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water.<br>
+--- Returns true if the action was canceled and a new action was set, or false otherwise
 function mario_execute_automatic_action(m)
     -- ...
 end
@@ -6042,7 +6284,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Tilts Mario's body according to his running speed and slope angle. Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
+--- Tilts Mario's body according to his running speed and slope angle.<br>
+--- Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
 function tilt_body_running(m)
     -- ...
 end
@@ -6050,7 +6293,8 @@ end
 --- @param m MarioState
 --- @param frame1 integer
 --- @param frame2 integer
---- Checks the current animation frame against two specified frames to trigger footstep sounds. Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
+--- Checks the current animation frame against two specified frames to trigger footstep sounds.<br>
+--- Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
 function play_step_sound(m, frame1, frame2)
     -- ...
 end
@@ -6072,7 +6316,8 @@ function begin_walking_action(m, forwardVel, action, actionArg)
 end
 
 --- @param m MarioState
---- Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower. If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
+--- Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower.<br>
+--- If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
 function check_ledge_climb_down(m)
     -- ...
 end
@@ -6097,7 +6342,9 @@ end
 --- @param m MarioState
 --- @param accel number
 --- @param lossFactor number
---- Adjusts Mario's slide velocity and facing angle when on a slope. Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill). Handles facing-direction changes and maximum speed limits
+--- Adjusts Mario's slide velocity and facing angle when on a slope.<br>
+--- Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill).<br>
+--- Handles facing-direction changes and maximum speed limits
 function update_sliding_angle(m, accel, lossFactor)
     -- ...
 end
@@ -6105,13 +6352,16 @@ end
 --- @param m MarioState
 --- @param stopSpeed number
 --- @return integer
---- Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness. Also checks if speed has slowed below a threshold to end the slide. Returns `true` if sliding has stopped
+--- Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness.<br>
+--- Also checks if speed has slowed below a threshold to end the slide.<br>
+--- Returns `true` if sliding has stopped
 function update_sliding(m, stopSpeed)
     -- ...
 end
 
 --- @param m MarioState
---- Applies acceleration or deceleration based on the slope of the floor. On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
+--- Applies acceleration or deceleration based on the slope of the floor.<br>
+--- On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
 function apply_slope_accel(m)
     -- ...
 end
@@ -6119,7 +6369,8 @@ end
 --- @param m MarioState
 --- @param frictionFactor number
 --- @return integer
---- Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped. Capped in such a way that Mario eventually stops or stabilizes on flatter ground
+--- Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped.<br>
+--- Capped in such a way that Mario eventually stops or stabilizes on flatter ground
 function apply_landing_accel(m, frictionFactor)
     -- ...
 end
@@ -6133,66 +6384,76 @@ end
 --- @param m MarioState
 --- @param decelCoef number
 --- @return integer
---- Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness. This function can completely stop Mario if the slope is gentle enough or if friction is high
+--- Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness.<br>
+--- This function can completely stop Mario if the slope is gentle enough or if friction is high
 function apply_slope_decel(m, decelCoef)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
+--- Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction.<br>
+--- Returns true if Mario's speed reaches zero, meaning he has stopped
 function update_decelerating_speed(m)
     -- ...
 end
 
 --- @param m MarioState
---- Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand). Caps speed at a certain value and may reduce it slightly on steep slopes
+--- Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand).<br>
+--- Caps speed at a certain value and may reduce it slightly on steep slopes
 function update_walking_speed(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
+--- Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness.<br>
+--- Returns true if conditions to slide are met.
 function should_begin_sliding(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if the analog stick is held significantly behind Mario's current facing angle. Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
+--- Checks if the analog stick is held significantly behind Mario's current facing angle.<br>
+--- Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
 function analog_stick_held_back(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly). Returns `true` if the action was changed to either a dive or a punching attack
+--- Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly).<br>
+--- Returns `true` if the action was changed to either a dive or a punching attack
 function check_ground_dive_or_punch(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise. Also handles the scenario where Mario is up against a wall, transitioning to a standing state
+--- Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise.<br>
+--- Also handles the scenario where Mario is up against a wall, transitioning to a standing state
 function begin_braking_action(m)
     -- ...
 end
 
 --- @param m MarioState
---- Handles the animation and audio (footstep sounds) for normal walking or running. The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
+--- Handles the animation and audio (footstep sounds) for normal walking or running.<br>
+--- The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
 function anim_and_audio_for_walk(m)
     -- ...
 end
 
 --- @param m MarioState
---- Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box). Adjusts the animation speed dynamically based on Mario's velocity
+--- Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box).<br>
+--- Adjusts the animation speed dynamically based on Mario's velocity
 function anim_and_audio_for_hold_walk(m)
     -- ...
 end
 
 --- @param m MarioState
---- Plays the appropriate animation and footstep sounds for walking while carrying a heavy object. Sets the character animation speed based on Mario's intended movement speed
+--- Plays the appropriate animation and footstep sounds for walking while carrying a heavy object.<br>
+--- Sets the character animation speed based on Mario's intended movement speed
 function anim_and_audio_for_heavy_walk(m)
     -- ...
 end
@@ -6206,20 +6467,23 @@ end
 
 --- @param m MarioState
 --- @param startYaw integer
---- Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running. The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
+--- Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running.<br>
+--- The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
 function tilt_body_walking(m, startYaw)
     -- ...
 end
 
 --- @param m MarioState
 --- @param startYaw integer
---- Tilts Mario's torso and head while riding a shell on the ground to reflect turning. Similar to other tilt functions but tuned for shell-riding speeds and angles
+--- Tilts Mario's torso and head while riding a shell on the ground to reflect turning.<br>
+--- Similar to other tilt functions but tuned for shell-riding speeds and angles
 function tilt_body_ground_shell(m, startYaw)
     -- ...
 end
 
 --- @param m MarioState
---- Tilts Mario's torso while butt sliding based on analog input direction and magnitude. Gives the appearance that Mario is balancing or leaning into a turn
+--- Tilts Mario's torso while butt sliding based on analog input direction and magnitude.<br>
+--- Gives the appearance that Mario is balancing or leaning into a turn
 function tilt_body_butt_slide(m)
     -- ...
 end
@@ -6239,7 +6503,8 @@ end
 --- @param airAction integer
 --- @param animation integer
 --- @return integer
---- Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay. If the sliding slows enough, Mario transitions to a specified stopping action
+--- Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.<br>
+--- If the sliding slows enough, Mario transitions to a specified stopping action
 function common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)
     -- ...
 end
@@ -6249,7 +6514,8 @@ end
 --- @param airAction integer
 --- @param animation integer
 --- @return integer
---- Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed. Uses `common_slide_action` for the core movement logic
+--- Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed.<br>
+--- Uses `common_slide_action` for the core movement logic
 function stomach_slide_action(m, stopAction, airAction, animation)
     -- ...
 end
@@ -6280,7 +6546,8 @@ end
 --- @param endAction integer
 --- @param airAction integer
 --- @return integer
---- Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+--- Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand.<br>
+--- First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
 function quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)
     -- ...
 end
@@ -6316,14 +6583,17 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action if Mario is dead
+--- Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning<br>
+--- to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action<br>
+--- if Mario is dead
 function check_common_object_cancels(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current object action by first checking common object cancels, then updating quicksand state. Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
+--- Executes Mario's current object action by first checking common object cancels, then updating quicksand state.<br>
+--- Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
 function mario_execute_object_action(m)
     -- ...
 end
@@ -6392,7 +6662,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state. Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
+--- Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state.<br>
+--- Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
 function mario_execute_stationary_action(m)
     -- ...
 end
@@ -6434,7 +6705,8 @@ end
 
 --- @param m MarioState
 --- @return integer
---- Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0. Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
+--- Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0.<br>
+--- Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
 function mario_execute_submerged_action(m)
     -- ...
 end
@@ -6836,7 +7108,8 @@ function degrees_to_sm64(degreesAngle)
 end
 
 --- @param mtx Mat4
---- Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+--- Sets the 4x4 floating-point matrix `mtx` to all zeros.<br>
+--- Unless you really need this-It's reccomended to use mtxf_identity instead.
 function mtxf_zero(mtx)
     -- ...
 end
@@ -7696,14 +7969,19 @@ end
 --- @param offset integer
 --- @param origin ModFsFileSeek
 --- @return boolean
---- Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+--- Sets the current position of a modfs `file`.<br>
+--- If `origin` is `FILE_SEEK_SET`, file position is set to `offset`.<br>
+--- If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.<br>
+--- If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`.<br>
+--- Returns true on success
 function mod_fs_file_seek(file, offset, origin)
     -- ...
 end
 
 --- @param file ModFsFile
 --- @return boolean
---- Sets the current position of a modfs `file` to its beginning. Returns true on success
+--- Sets the current position of a modfs `file` to its beginning.<br>
+--- Returns true on success
 function mod_fs_file_rewind(file)
     -- ...
 end
@@ -8058,19 +8336,21 @@ function obj_splash(waterY, objY)
 end
 
 --- @return integer
---- Generic object move function. Handles walls, water, floors, and gravity. Returns flags for certain interactions
+--- Generic object move function. Handles walls, water, floors, and gravity.<br>
+--- Returns flags for certain interactions
 function object_step()
     -- ...
 end
 
 --- @return integer
---- Takes an object step but does not orient with the object's floor. Used for boulders, falling pillars, and the rolling snowman body
+--- Takes an object step but does not orient with the object's floor.<br>
+--- Used for boulders, falling pillars, and the rolling snowman body
 function object_step_without_floor_orient()
     -- ...
 end
 
 --- @param obj Object
---- Don't use this function outside of of a context where the current object and `obj` are the same. Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+--- Updates the object `obj` horizontal velocity using its forward vel and move angle yaw, then moves it
 function obj_move_xyz_using_fvel_and_yaw(obj)
     -- ...
 end
@@ -8080,7 +8360,7 @@ end
 --- @param z number
 --- @param dist integer
 --- @return integer
---- Checks if a point is within distance from any active Mario visible to enemies' graphical position
+--- Checks if a point is within distance from any active Mario visible to objects' graphical position
 function is_point_within_radius_of_mario(x, y, z, dist)
     -- ...
 end
@@ -8209,7 +8489,8 @@ end
 --- @param goal integer
 --- @param range integer
 --- @return integer
---- A series of checks using sin and cos to see if a given angle is facing in the same direction of a given angle, within a certain range
+--- A series of checks using sin and cos to see if a given angle is facing in the same direction<br>
+--- of a given angle, within a certain range
 function obj_check_if_facing_toward_angle(base, goal, range)
     -- ...
 end
@@ -8249,13 +8530,15 @@ end
 
 --- @param collisionFlags integer
 --- @param floor Surface
---- Checks if `floor`'s type is burning or death plane and if so change the current object's action accordingly
+--- Checks if `floor`'s type is burning or death plane and if so change the<br>
+--- current object's action accordingly
 function obj_check_floor_death(collisionFlags, floor)
     -- ...
 end
 
 --- @return integer
---- Controls an object dying in lava by creating smoke, sinking the object, playing audio, and eventually despawning it. Returns TRUE when the obj is dead
+--- Controls an object dying in lava by creating smoke, sinking the object, playing<br>
+--- audio, and eventually despawning it. Returns TRUE when the obj is dead
 function obj_lava_death()
     -- ...
 end
@@ -8487,7 +8770,10 @@ end
 --- @param endScale number
 --- @return integer
 --- @return number scaleVel
---- Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
+--- Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`.<br>
+--- Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`.<br>
+--- The first time it reaches below `shootFireScale` during this time, return 1.<br>
+--- Return -1 once it's reached endScale
 function obj_grow_then_shrink(scaleVel, shootFireScale, endScale)
     -- ...
 end
@@ -8873,7 +9159,12 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- Multiplies a vector by a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
+--- Multiplies a vector by a matrix of the form:<br>
+--- `| ? ? ? 0 |`<br>
+--- `| ? ? ? 0 |`<br>
+--- `| ? ? ? 0 |`<br>
+--- `| 0 0 0 1 |`<br>
+--- i.e. a matrix representing a linear transformation over 3 space
 function linear_mtxf_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -8881,7 +9172,12 @@ end
 --- @param m Mat4
 --- @param dst Vec3f
 --- @param v Vec3f
---- Multiplies a vector by the transpose of a matrix of the form: `| ? ? ? 0 |` `| ? ? ? 0 |` `| ? ? ? 0 |` `| 0 0 0 1 |` i.e. a matrix representing a linear transformation over 3 space
+--- Multiplies a vector by the transpose of a matrix of the form:<br>
+--- `| ? ? ? 0 |`<br>
+--- `| ? ? ? 0 |`<br>
+--- `| ? ? ? 0 |`<br>
+--- `| 0 0 0 1 |`<br>
+--- i.e. a matrix representing a linear transformation over 3 space
 function linear_mtxf_transpose_mul_vec3f(m, dst, v)
     -- ...
 end
@@ -9369,17 +9665,17 @@ function cur_obj_set_billboard_if_vanilla_cam()
     -- ...
 end
 
---- @param o Object
+--- @param obj Object
 --- @param radius number
 --- @param height number
-function obj_set_hitbox_radius_and_height(o, radius, height)
+function obj_set_hitbox_radius_and_height(obj, radius, height)
     -- ...
 end
 
---- @param o Object
+--- @param obj Object
 --- @param radius number
 --- @param height number
-function obj_set_hurtbox_radius_and_height(o, radius, height)
+function obj_set_hurtbox_radius_and_height(obj, radius, height)
     -- ...
 end
 
@@ -9996,20 +10292,23 @@ end
 
 --- @param fileIndex integer
 --- @param courseIndex integer
---- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update. Useful for leaderboard tracking or displaying recent progress
+--- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.<br>
+--- Useful for leaderboard tracking or displaying recent progress
 function touch_coin_score_age(fileIndex, courseIndex)
     -- ...
 end
 
 --- @param fileIndex integer
 --- @param forceSave integer
---- Saves the current state of the game into a specified save file. Includes data verification and backup management. Useful for maintaining game progress during play or when saving manually
+--- Saves the current state of the game into a specified save file. Includes data verification and backup management.<br>
+--- Useful for maintaining game progress during play or when saving manually
 function save_file_do_save(fileIndex, forceSave)
     -- ...
 end
 
 --- @param fileIndex integer
---- Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes. Useful for resetting a save file to its default state
+--- Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes.<br>
+--- Useful for resetting a save file to its default state
 function save_file_erase(fileIndex)
     -- ...
 end
@@ -10020,14 +10319,16 @@ function save_file_erase_current_backup_save()
 end
 
 --- @param load_all integer
---- Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified. Useful for reloading state after data corruption or during development debugging
+--- Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified.<br>
+--- Useful for reloading state after data corruption or during development debugging
 function save_file_reload(load_all)
     -- ...
 end
 
 --- @param courseIndex integer
 --- @return integer
---- Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it. Useful for leaderboard-style comparisons and overall progress tracking
+--- Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it.<br>
+--- Useful for leaderboard-style comparisons and overall progress tracking
 function save_file_get_max_coin_score(courseIndex)
     -- ...
 end
@@ -10035,7 +10336,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
---- Calculates the total number of stars collected in a specific course for a given save file. Useful for determining completion status of individual levels
+--- Calculates the total number of stars collected in a specific course for a given save file.<br>
+--- Useful for determining completion status of individual levels
 function save_file_get_course_star_count(fileIndex, courseIndex)
     -- ...
 end
@@ -10044,25 +10346,29 @@ end
 --- @param minCourse integer
 --- @param maxCourse integer
 --- @return integer
---- Calculates the total number of stars collected across multiple courses within a specified range. Useful for determining the overall progress toward game completion
+--- Calculates the total number of stars collected across multiple courses within a specified range.<br>
+--- Useful for determining the overall progress toward game completion
 function save_file_get_total_star_count(fileIndex, minCourse, maxCourse)
     -- ...
 end
 
 --- @param flags integer
---- Adds new flags to the save file's flag bitmask. Useful for updating progress or triggering new gameplay features
+--- Adds new flags to the save file's flag bitmask.<br>
+--- Useful for updating progress or triggering new gameplay features
 function save_file_set_flags(flags)
     -- ...
 end
 
 --- @param flags integer
---- Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing. Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
+--- Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing.<br>
+--- Useful for removing specific game states, such as collected items or completed objectives, without resetting the entire save
 function save_file_clear_flags(flags)
     -- ...
 end
 
 --- @return integer
---- Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states. Useful for checking specific game progress details
+--- Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states.<br>
+--- Useful for checking specific game progress details
 function save_file_get_flags()
     -- ...
 end
@@ -10070,7 +10376,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
---- Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1). Useful for evaluating level progress and completion
+--- Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1).<br>
+--- Useful for evaluating level progress and completion
 function save_file_get_star_flags(fileIndex, courseIndex)
     -- ...
 end
@@ -10078,7 +10385,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlags integer
---- Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary. Useful for recording progress after star collection
+--- Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary.<br>
+--- Useful for recording progress after star collection
 function save_file_set_star_flags(fileIndex, courseIndex, starFlags)
     -- ...
 end
@@ -10086,7 +10394,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param starFlagsToRemove integer
---- Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars. Useful for undoing progress or debugging collected stars
+--- Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars.<br>
+--- Useful for undoing progress or debugging collected stars
 function save_file_remove_star_flags(fileIndex, courseIndex, starFlagsToRemove)
     -- ...
 end
@@ -10094,7 +10403,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
---- Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid. Useful for tracking player achievements and high scores
+--- Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid.<br>
+--- Useful for tracking player achievements and high scores
 function save_file_get_course_coin_score(fileIndex, courseIndex)
     -- ...
 end
@@ -10102,7 +10412,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @param coinScore integer
---- Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter. Useful for manually setting achievements such as high coin counts in individual levels
+--- Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter.<br>
+--- Useful for manually setting achievements such as high coin counts in individual levels
 function save_file_set_course_coin_score(fileIndex, courseIndex, coinScore)
     -- ...
 end
@@ -10110,7 +10421,8 @@ end
 --- @param fileIndex integer
 --- @param courseIndex integer
 --- @return integer
---- Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false. Useful for tracking course-specific progress and enabling shortcuts
+--- Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false.<br>
+--- Useful for tracking course-specific progress and enabling shortcuts
 function save_file_is_cannon_unlocked(fileIndex, courseIndex)
     -- ...
 end
@@ -10122,13 +10434,15 @@ end
 
 --- @param capPos Vec3s
 --- @return integer
---- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter. Useful for tracking the cap's location after it has been dropped or lost
+--- Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter.<br>
+--- Useful for tracking the cap's location after it has been dropped or lost
 function save_file_get_cap_pos(capPos)
     -- ...
 end
 
 --- @return integer
---- Returns the current sound mode (e.g., stereo, mono) stored in the save file. Useful for checking the audio output preferences when loading a save
+--- Returns the current sound mode (e.g., stereo, mono) stored in the save file.<br>
+--- Useful for checking the audio output preferences when loading a save
 function save_file_get_sound_mode()
     -- ...
 end
@@ -10409,8 +10723,8 @@ function camera_set_romhack_override(rco)
 end
 
 --- @param allow integer
---- Sets if the romhack camera should allow centering, triggered with the L button
-function camera_romhack_allow_centering(allow)
+--- Sets if the romhack camera should allow water/flying switching, triggered with the L button
+function camera_romhack_allow_switchable(allow)
     -- ...
 end
 
@@ -10427,7 +10741,8 @@ function camera_romhack_allow_dpad_usage(allow)
 end
 
 --- @param enable integer
---- Toggles collision settings for the ROM hack camera. This enables or disables specific collision behaviors in modded levels
+--- Toggles collision settings for the ROM hack camera.<br>
+--- This enables or disables specific collision behaviors in modded levels
 function camera_romhack_set_collisions(enable)
     -- ...
 end
@@ -10487,8 +10802,8 @@ function camera_get_romhack_override()
 end
 
 --- @return integer
---- Gets if the romhack camera should allow centering
-function camera_romhack_get_allow_centering()
+--- Gets if the romhack camera should allow water/flying switching
+function camera_romhack_get_allow_switchable()
     -- ...
 end
 
@@ -10749,7 +11064,9 @@ end
 --- @param vertex2 Vec3s
 --- @param vertex3 Vec3s
 --- @return Surface
---- Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition. Returns the new surface, or `nil` if the triangle is degenerate (zero area). Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+--- Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.<br>
+--- Returns the new surface, or `nil` if the triangle is degenerate (zero area).<br>
+--- Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
 function smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)
     -- ...
 end
@@ -10758,7 +11075,9 @@ end
 --- @param vertex1 Vec3s
 --- @param vertex2 Vec3s
 --- @param vertex3 Vec3s
---- Moves an existing collision surface to new vertex positions. Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells. The previous vertices are preserved for interpolation
+--- Moves an existing collision surface to new vertex positions.<br>
+--- Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.<br>
+--- The previous vertices are preserved for interpolation
 function smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)
     -- ...
 end
@@ -11018,7 +11337,8 @@ end
 --- @param name string
 --- @return Pointer_Gfx
 --- @return integer length
---- Gets a display list of the current mod from its name. Returns a pointer to the display list and its length
+--- Gets a display list of the current mod from its name.<br>
+--- Returns a pointer to the display list and its length
 function gfx_get_from_name(name)
     -- ...
 end
@@ -11089,7 +11409,8 @@ end
 --- @param name string
 --- @return Pointer_Vtx
 --- @return integer count
---- Gets a vertex buffer of the current mod from its name. Returns a pointer to the vertex buffer and its vertex count
+--- Gets a vertex buffer of the current mod from its name.<br>
+--- Returns a pointer to the vertex buffer and its vertex count
 function vtx_get_from_name(name)
     -- ...
 end
@@ -11543,7 +11864,8 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
---- Gets the X coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+--- Gets the X coordinate of Mario's hand (0-1) or foot (2-3)<br>
+--- but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_x(m, index)
     -- ...
 end
@@ -11551,7 +11873,8 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
---- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3) but It is important to note that the positions are not updated off-screen
+--- Gets the Y coordinate of Mario's hand (0-1) or foot (2-3)<br>
+--- but It is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_y(m, index)
     -- ...
 end
@@ -11559,7 +11882,8 @@ end
 --- @param m MarioState
 --- @param index integer
 --- @return number
---- Gets the Z coordinate of Mario's hand (0-1) or foot (2-3) but it is important to note that the positions are not updated off-screen
+--- Gets the Z coordinate of Mario's hand (0-1) or foot (2-3)<br>
+--- but it is important to note that the positions are not updated off-screen
 function get_hand_foot_pos_z(m, index)
     -- ...
 end
@@ -11863,7 +12187,8 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
+--- You can change the fields of the object in `objSetupFunction`
 function spawn_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -11875,7 +12200,8 @@ end
 --- @param z number
 --- @param objSetupFunction function
 --- @return Object
---- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation. You can change the fields of the object in `objSetupFunction`
+--- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
+--- You can change the fields of the object in `objSetupFunction`
 function spawn_non_sync_object(behaviorId, modelId, x, y, z, objSetupFunction)
     -- ...
 end
@@ -11977,7 +12303,8 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
---- Gets the first object loaded with `behaviorId` and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+--- Gets the first object loaded with `behaviorId` and object signed 32-bit integer field<br>
+--- (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_s32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -11986,7 +12313,8 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
---- Gets the first object loaded with `behaviorId` and object float field (look in `object_fields.h` to get the index of a field)
+--- Gets the first object loaded with `behaviorId` and object float field<br>
+--- (look in `object_fields.h` to get the index of a field)
 function obj_get_first_with_behavior_id_and_field_f32(behaviorId, fieldIndex, value)
     -- ...
 end
@@ -12009,7 +12337,8 @@ end
 --- @param fieldIndex integer
 --- @param value integer
 --- @return Object
---- Gets the next object loaded with the same behavior ID and object signed 32-bit integer field (look in `object_fields.h` to get the index of a field)
+--- Gets the next object loaded with the same behavior ID and object signed 32-bit integer field<br>
+--- (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_s32(o, fieldIndex, value)
     -- ...
 end
@@ -12018,7 +12347,8 @@ end
 --- @param fieldIndex integer
 --- @param value number
 --- @return Object
---- Gets the next object loaded with the same behavior ID and object float field (look in `object_fields.h` to get the index of a field)
+--- Gets the next object loaded with the same behavior ID and object float field<br>
+--- (look in `object_fields.h` to get the index of a field)
 function obj_get_next_with_same_behavior_id_and_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -12049,7 +12379,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
---- Gets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- Gets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_get_field_u32(o, fieldIndex)
     -- ...
 end
@@ -12057,7 +12387,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return integer
---- Gets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- Gets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_get_field_s32(o, fieldIndex)
     -- ...
 end
@@ -12065,7 +12395,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @return number
---- Sets the float value from the field corresponding to `fieldIndex`
+--- Gets the float value of the object field corresponding to `fieldIndex`
 function obj_get_field_f32(o, fieldIndex)
     -- ...
 end
@@ -12074,7 +12404,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @return integer
---- Gets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- Gets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 function obj_get_field_s16(o, fieldIndex, fieldSubIndex)
     -- ...
 end
@@ -12082,7 +12412,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
---- Sets the unsigned 32-bit integer value from the field corresponding to `fieldIndex`
+--- Sets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_set_field_u32(o, fieldIndex, value)
     -- ...
 end
@@ -12090,7 +12420,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value integer
---- Sets the signed 32-bit integer value from the field corresponding to `fieldIndex`
+--- Sets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
 function obj_set_field_s32(o, fieldIndex, value)
     -- ...
 end
@@ -12098,7 +12428,7 @@ end
 --- @param o Object
 --- @param fieldIndex integer
 --- @param value number
---- Sets the float value from the field corresponding to `fieldIndex`
+--- Sets the float value of the object field corresponding to `fieldIndex`
 function obj_set_field_f32(o, fieldIndex, value)
     -- ...
 end
@@ -12107,7 +12437,7 @@ end
 --- @param fieldIndex integer
 --- @param fieldSubIndex integer
 --- @param value integer
---- Sets the signed 32-bit integer value from the sub field corresponding to `fieldSubIndex` from the field corresponding to `fieldIndex`
+--- Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
     -- ...
 end
@@ -12542,28 +12872,34 @@ function cur_obj_play_sound_2(soundMagic)
 end
 
 --- @param soundMagic integer
---- Create a sound spawner for objects that need a sound play once. (Breakable walls, King Bobomb exploding, etc)
+--- Create a sound spawner for objects that need a sound play once.<br>
+--- (Breakable walls, King Bobomb exploding, etc)
 function create_sound_spawner(soundMagic)
     -- ...
 end
 
 --- @param distance number
 --- @return integer
---- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124. What an even more strange and confusing function
+--- Unused vanilla function, calculates a volume based on `distance`.<br>
+--- If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.<br>
+--- What an even more strange and confusing function
 function calc_dist_to_volume_range_1(distance)
     -- ...
 end
 
 --- @param distance number
 --- @return integer
---- Unused vanilla function, calculates a volume based on `distance`. If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127. What a strange and confusing function
+--- Unused vanilla function, calculates a volume based on `distance`.<br>
+--- If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.<br>
+--- What a strange and confusing function
 function calc_dist_to_volume_range_2(distance)
     -- ...
 end
 
 --- @param colData WallCollisionData
 --- @return integer
---- Detects wall collisions at a given position and adjusts the position based on the walls found. Returns the number of wall collisions detected
+--- Detects wall collisions at a given position and adjusts the position based on the walls found.<br>
+--- Returns the number of wall collisions detected
 function find_wall_collisions(colData)
     -- ...
 end
@@ -12573,7 +12909,8 @@ end
 --- @param posZ number
 --- @return number
 --- @return Surface pceil
---- Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface. If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+--- Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface.<br>
+--- If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 function find_ceil(posX, posY, posZ)
     -- ...
 end
@@ -12582,7 +12919,8 @@ end
 --- @param y number
 --- @param z number
 --- @return number
---- Finds the height of the highest ceiling above a given position (x, y, z). If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
+--- Finds the height of the highest ceiling above a given position (x, y, z).<br>
+--- If no ceiling is found, returns the default height limit of `gLevelValues.cellHeightLimit`(20000 by default)
 function find_ceil_height(x, y, z)
     -- ...
 end
@@ -12591,7 +12929,8 @@ end
 --- @param y number
 --- @param z number
 --- @return number
---- Finds the height of the highest floor below a given position (x, y, z). If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+--- Finds the height of the highest floor below a given position (x, y, z).<br>
+--- If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_floor_height(x, y, z)
     -- ...
 end
@@ -12601,7 +12940,8 @@ end
 --- @param zPos number
 --- @return number
 --- @return Surface pfloor
---- Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface. If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
+--- Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface.<br>
+--- If no floor is found, returns the default floor height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_floor(xPos, yPos, zPos)
     -- ...
 end
@@ -12609,7 +12949,8 @@ end
 --- @param x number
 --- @param z number
 --- @return number
---- Finds the height of water at a given position (x, z), if the position is within a water region. If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
+--- Finds the height of water at a given position (x, z), if the position is within a water region.<br>
+--- If no water is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_water_level(x, z)
     -- ...
 end
@@ -12617,7 +12958,8 @@ end
 --- @param x number
 --- @param z number
 --- @return number
---- Finds the height of the poison gas at a given position (x, z), if the position is within a gas region. If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
+--- Finds the height of the poison gas at a given position (x, z), if the position is within a gas region.<br>
+--- If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`(-11000 by default)
 function find_poison_gas_level(x, z)
     -- ...
 end
@@ -12638,13 +12980,15 @@ function closest_point_to_triangle(surf, src, out)
     -- ...
 end
 
---- Loads the object's collision data into dynamic collision. You must run this every frame in your object's behavior loop for it to have collision
+--- Loads the object's collision data into dynamic collision.<br>
+--- You must run this every frame in your object's behavior loop for it to have collision
 function load_object_collision_model()
     -- ...
 end
 
 --- @return StaticObjectCollision
---- Loads the object's collision data into static collision. You may run this only once to capture the object's collision at that frame.
+--- Loads the object's collision data into static collision.<br>
+--- You may run this only once to capture the object's collision at that frame.
 function load_static_object_collision()
     -- ...
 end

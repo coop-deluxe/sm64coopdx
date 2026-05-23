@@ -7,7 +7,7 @@ struct MarioState* king_bobomb_nearest_mario_state(void) {
     do {
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (checkActive && !is_player_active(&gMarioStates[i])) { continue; }
-            if (!gMarioStates[i].visibleToEnemies) { continue; }
+            if (!gMarioStates[i].visibleToObjects) { continue; }
             float ydiff = (o->oPosY - gMarioStates[i].marioObj->oPosY);
             if (ydiff >= 1200) { continue; }
 
@@ -230,7 +230,7 @@ void king_bobomb_act_7(void) {
 void king_bobomb_act_8(void) {
     if (!(o->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE)) {
         struct Object *star = NULL;
-        
+
         create_sound_spawner(SOUND_OBJ_KING_WHOMP_DEATH);
         cur_obj_hide();
         cur_obj_become_intangible();
@@ -367,6 +367,10 @@ void king_bobomb_move(void) {
         cur_obj_move_using_fvel_and_gravity();
     CUR_OBJ_CALL_ACTION_FUNCTION(sKingBobombActions);
     exec_anim_sound_state(sKingBobombSoundStates, sizeof(sKingBobombSoundStates) / sizeof(struct SoundState));
+    if (draw_distance_scalar_is_infinite()) {
+        cur_obj_enable_rendering();
+        return;
+    }
     s32 distanceToPlayer = dist_between_objects(o, gMarioStates[0].marioObj);
     if (distanceToPlayer < 5000.0f * draw_distance_scalar())
         cur_obj_enable_rendering();

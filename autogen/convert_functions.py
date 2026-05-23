@@ -1076,7 +1076,7 @@ def build_function(function, do_extern):
     else:
         global total_functions
         total_functions += 1
-        if function['description'] != "":
+        if function['description'][0] != "":
             global total_doc_functions
             total_doc_functions += 1
         elif verbose:
@@ -1212,7 +1212,7 @@ def process_functions(fname, file_str, extracted_descriptions):
             rejects += line + '\n'
             continue
         line = line.strip()
-        description = extracted_descriptions.get(line, "")
+        description = extracted_descriptions.get(line, [""])
         fn = process_function(fname, line, description)
         if fn == None:
             continue
@@ -1354,14 +1354,15 @@ def doc_function(fname, function):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
-    description = function.get('description', "")
+    description = function.get('description', [""])
 
     rtype, rlink = translate_type_to_lua(function['type'])
     param_str = ', '.join([x['identifier'] for x in function['params'] if 'RET' not in x])
 
-    if description != "":
+    if description[0] != "":
         s += '\n### Description\n'
-        s +=  f'{description}\n'
+        for line in description:
+            s +=  f'{line}\n'
 
     s += "\n### Lua Example\n"
     rvalues = []
@@ -1510,7 +1511,7 @@ def def_function(fname, function):
         rid = param['identifier']
         rtypes.append((rtype, rid))
 
-    if function['description'].startswith("[DEPRECATED"):
+    if function['description'][0].startswith("[DEPRECATED"):
         s += "--- @deprecated\n"
 
     for param in fparams:
@@ -1532,8 +1533,9 @@ def def_function(fname, function):
         if rtype != "nil":
             s += ('--- @return %s' % rtype) + (' %s' % rid if rid else '') + '\n'
 
-    if function['description'] != "":
-        s += "--- %s\n" % (function['description'])
+    if function['description'][0] != "":
+        for n, line in enumerate(function['description']):
+            s += "--- %s%s\n" % (line, "<br>" if n != len(function['description']) - 1 else "")
     s += "function %s(%s)\n    -- ...\nend\n\n" % (fid, param_str)
 
     return s

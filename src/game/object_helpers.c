@@ -345,7 +345,8 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
             obj->heldByPlayerIndex = 0;
         }
     } else {
-        obj->curBhvCommand = segmented_to_virtual(smlua_override_behavior(heldBehavior));
+        obj->initBhvCommand = smlua_get_behavior_command(heldBehavior);
+        obj->curBhvCommand = obj->initBhvCommand;
         obj->bhvStackIndex = 0;
     }
 }
@@ -500,7 +501,7 @@ s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
 }
 
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount) {
-    if (obj == NULL || target == NULL || !o) { return 0; }
+    if (obj == NULL || target == NULL) { return 0; }
     f32 a, b, c, d;
     UNUSED s32 unused;
     s16 targetAngle = 0;
@@ -530,8 +531,8 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
             break;
     }
 
-    startAngle = o->OBJECT_FIELD_U32(angleIndex);
-    o->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
+    startAngle = obj->OBJECT_FIELD_U32(angleIndex);
+    obj->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
     return targetAngle;
 }
 
@@ -913,9 +914,8 @@ void cur_obj_init_animation_with_sound(s32 animIndex) {
 }
 
 void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel) {
-    if (!o) { return; }
     if (obj != NULL) {
-        struct AnimationTable *animations = o->oAnimations;
+        struct AnimationTable *animations = obj->oAnimations;
         if (animations && (u32)animIndex < animations->count) {
             s32 animAccel = (s32)(accel * 65536.0f);
             geo_obj_init_animation_accel(&obj->header.gfx, animations->anims[animIndex], animAccel);
@@ -1953,18 +1953,18 @@ void cur_obj_set_billboard_if_vanilla_cam(void) {
     }
 }
 
-void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
-    if (o == NULL) { return; }
+void obj_set_hitbox_radius_and_height(struct Object *obj, f32 radius, f32 height) {
+    if (obj == NULL) { return; }
 
-    o->hitboxRadius = radius;
-    o->hitboxHeight = height;
+    obj->hitboxRadius = radius;
+    obj->hitboxHeight = height;
 }
 
-void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height) {
-    if (o == NULL) { return; }
+void obj_set_hurtbox_radius_and_height(struct Object *obj, f32 radius, f32 height) {
+    if (obj == NULL) { return; }
 
-    o->hurtboxRadius = radius;
-    o->hurtboxHeight = height;
+    obj->hurtboxRadius = radius;
+    obj->hurtboxHeight = height;
 }
 
 void cur_obj_set_hitbox_radius_and_height(f32 radius, f32 height) {
@@ -3010,7 +3010,9 @@ void cur_obj_if_hit_wall_bounce_away(void) {
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
     if (!o) { return 0; }
     if (!gMarioStates[0].marioObj) { return FALSE; }
-    if (absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()) {
+    if (draw_distance_scalar_is_infinite() ||
+        absf(o->oPosY - gMarioStates[0].marioObj->oPosY) < distY * draw_distance_scalar()
+    ) {
         cur_obj_unhide();
         return FALSE;
     }
@@ -3082,7 +3084,7 @@ void clear_time_stop_flags(s32 flags) {
 
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
     if (!o || !m) { return 0; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
         f32 latDistToMario = lateral_dist_between_objects(o, m->marioObj);
         UNUSED s16 angleFromMario = obj_angle_to_object(m->marioObj, o);
@@ -3200,7 +3202,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     s32 doneTurning = TRUE;
 
     if (m->playerIndex != 0) { return 0; }
-    if (!m->visibleToEnemies) { return FALSE; }
+    if (!m->visibleToObjects) { return FALSE; }
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP

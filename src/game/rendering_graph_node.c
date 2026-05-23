@@ -50,6 +50,8 @@
 
 #define DISPLAY_LIST_HEAP_SIZE 32000
 
+#define MAX_FAR_PLANE_DIST 1000000.f
+
 f32 gProjectionMaxNearValue = 5;
 s16 gProjectionVanillaNearValue = 100;
 s16 gProjectionVanillaFarValue = 1000;
@@ -310,6 +312,10 @@ void patch_mtx_interpolated(f32 delta) {
         f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
         f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+
+        // "infinite" draw distance
+        if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+
         guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
@@ -650,6 +656,10 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     gProjectionVanillaFarValue = node->far;
     f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(node->near, gProjectionMaxNearValue), gOverrideNear);
     f32 far = replace_value_if_not_zero(node->far, gOverrideFar);
+
+    // "infinite" draw distance
+    if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+
     guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
 
     sPerspectiveNode = node;
@@ -1139,7 +1149,7 @@ static void anim_process(Vec3f translation, Vec3s rotation, Vec3f scale, u8 *ani
                 scale[2] *= ((f32) scaleZ) / 256.0f;
             }
         }
-    
+
         if (gCurAnim->flags & ANIM_FLAG_BONE_TRANS) {
             *animType = ANIM_TYPE_TRANSLATION;
         }
@@ -1459,7 +1469,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
     //  makes PU travel safe when the camera is locked on the main map.
     //  If Mario were rendered with a depth over 65536 it would cause overflow
     //  when converting the transformation matrix to a fixed point matrix.
-    if (matrix[3][2] < -20000.0f - cullingRadius) {
+    if (configDrawDistance != 6 && matrix[3][2] < -20000.0f - cullingRadius) {
         return FALSE;
     }
 

@@ -49,19 +49,20 @@ struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot,
     return NULL;
 }
 
-struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key) {
+bool smlua_valid_lot(u16 lot) {
+    if (lot > LOT_NONE && lot < LOT_MAX) { return true; }
+    if (lot > LOT_AUTOGEN_MIN && lot < LOT_AUTOGEN_MAX) { return true; }
+    return false;
+}
+
+struct LuaObjectField *smlua_get_object_field(u16 lot, const char* key) {
+    if (!smlua_valid_lot(lot)) { return NULL; }
     if (lot > LOT_AUTOGEN_MIN) {
         return smlua_get_object_field_autogen(lot, key);
     }
 
     struct LuaObjectTable* ot = &sLuaObjectTable[lot];
     return smlua_get_object_field_from_ot(ot, key);
-}
-
-bool smlua_valid_lot(u16 lot) {
-    if (lot > LOT_NONE && lot < LOT_MAX) { return true; }
-    if (lot > LOT_AUTOGEN_MIN && lot < LOT_AUTOGEN_MAX) { return true; }
-    return false;
 }
 
 bool smlua_valid_lvt(u16 lvt) {
@@ -684,11 +685,16 @@ int smlua__iter(lua_State *L) {
     lua_rawgeti(L, 1, 2);
     const CObject *cobj = lua_touserdata(L, -1);
     lua_pop(L, 1);
-    
+
+    // Only support autogen objects
+    if (cobj->lot <= LOT_AUTOGEN_MIN || cobj->lot >= LOT_AUTOGEN_MAX) {
+        return 0;
+    }
+
     extern struct LuaObjectTable sLuaObjectAutogenTable[];
     struct LuaObjectTable* ot = &sLuaObjectAutogenTable[cobj->lot - LOT_AUTOGEN_MIN - 1];
     if (i >= ot->fieldCount) { return 0; }
-    
+
     u8* pointer = (u8*)(intptr_t) cobj->pointer;
     struct LuaObjectField* data = &ot->fields[i];
     lua_pushstring(L, data->key);

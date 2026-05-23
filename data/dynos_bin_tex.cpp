@@ -256,16 +256,14 @@ DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData) {
 
         // That's a duplicate, find the original node and copy its content
         String _NodeName; _NodeName.Read(aFile);
-        for (const auto& _LoadedNode : aGfxData->mTextures) {
-            if (_LoadedNode->mName == _NodeName) {
-                _Node->mData->mPngData   = _LoadedNode->mData->mPngData;
-                _Node->mData->mRawData   = _LoadedNode->mData->mRawData;
-                _Node->mData->mRawWidth  = _LoadedNode->mData->mRawWidth;
-                _Node->mData->mRawHeight = _LoadedNode->mData->mRawHeight;
-                _Node->mData->mRawFormat = _LoadedNode->mData->mRawFormat;
-                _Node->mData->mRawSize   = _LoadedNode->mData->mRawSize;
-                break;
-            }
+        auto _LoadedNode = aGfxData->mTextures.Find(_NodeName);
+        if (_LoadedNode) {
+            _Node->mData->mPngData   = _LoadedNode->mData->mPngData;
+            _Node->mData->mRawData   = _LoadedNode->mData->mRawData;
+            _Node->mData->mRawWidth  = _LoadedNode->mData->mRawWidth;
+            _Node->mData->mRawHeight = _LoadedNode->mData->mRawHeight;
+            _Node->mData->mRawFormat = _LoadedNode->mData->mRawFormat;
+            _Node->mData->mRawSize   = _LoadedNode->mData->mRawSize;
         }
     } else {
         aFile->SetOffset(_FileOffset);
@@ -442,7 +440,7 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         }
 
         // read the file
-        aGfxData->mModelIdentifier++;
+        aGfxData->mDataIdentifier = DynOS_NewDataIdentifier();
         TexData* _TexData = LoadTextureFromFile(aGfxData, _Path.c_str());
         if (_TexData == NULL) {
             PrintDataError("Error reading texture from file: %s", _Path.c_str());
@@ -504,7 +502,7 @@ void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, 
     }
 
     GfxData *_GfxData = New<GfxData>();
-    _GfxData->mModelIdentifier = 0;
+    _GfxData->mDataIdentifier = 0;
     SysPath _Empty = "";
     DynOS_Tex_GeneratePack_Recursive(aPackFolder, aOutputFolder, _Empty, _Empty, _GfxData, aAllowCustomTextures);
     DynOS_Gfx_Free(_GfxData);

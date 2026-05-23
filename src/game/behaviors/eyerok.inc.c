@@ -32,7 +32,7 @@ static struct Object* eyerok_nearest_targetable_player_to_object(s32 zDist) {
         struct MarioState *m = &gMarioStates[i];
         if (!m->marioObj) { continue; }
         if (m->marioObj == o) { continue; }
-        if (!m->visibleToEnemies) { continue; }
+        if (!m->visibleToObjects) { continue; }
         if (!is_player_active(m)) { continue; }
         f32 dist = dist_between_objects(o, m->marioObj);
         if (m->marioObj->oPosZ - o->oHomeZ < zDist) {

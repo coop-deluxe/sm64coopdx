@@ -1004,7 +1004,7 @@ static struct MarioState* nearest_antibubble_mario_state_to_object(struct Object
         struct MarioState* m = &gMarioStates[i];
         if (!m->marioObj) { continue; }
         if (m->marioObj == obj) { continue; }
-        if (!m->visibleToEnemies) { continue; }
+        if (!m->visibleToObjects) { continue; }
         if (!is_player_active(m)) { continue; }
 
         switch (m->action) {
@@ -1069,7 +1069,7 @@ s32 act_bubbled(struct MarioState* m) {
         u8 allInBubble = TRUE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
-            if (!gMarioStates[i].visibleToEnemies) { continue; }
+            if (!gMarioStates[i].visibleToObjects) { continue; }
             if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
                 allInBubble = FALSE;
                 break;

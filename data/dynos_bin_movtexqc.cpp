@@ -20,10 +20,9 @@ static Movtex* ParseMovtexQCSymbolArg(GfxData* aGfxData, DataNode<MovtexQC>* aNo
     movtexqc_constant(NULL);
 
     // Movtexs
-    for (auto& _Node : aGfxData->mMovtexs) {
-        if (_Arg == _Node->mName) {
-            return DynOS_Movtex_Parse(aGfxData, _Node, false)->mData;
-        }
+    auto _Node = aGfxData->mMovtexs.Find(_Arg, aGfxData->mDataIdentifier);
+    if (_Node) {
+        return DynOS_Movtex_Parse(aGfxData, _Node, false)->mData;
     }
 
     // Unknown

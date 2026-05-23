@@ -9889,6 +9889,21 @@ int smlua_func_position_based_random_float_position(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_draw_distance_scalar_is_infinite(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "draw_distance_scalar_is_infinite", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, draw_distance_scalar_is_infinite());
+
+    return 1;
+}
+
 int smlua_func_draw_distance_scalar(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -9955,6 +9970,23 @@ int smlua_func_get_behavior_from_id(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_behavior_from_id"); return 0; }
 
     smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_behavior_from_id(id), NULL);
+
+    return 1;
+}
+
+int smlua_func_get_vanilla_behavior_from_id(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_vanilla_behavior_from_id", 1, top);
+        return 0;
+    }
+
+    int id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_vanilla_behavior_from_id"); return 0; }
+
+    smlua_push_pointer(L, LVT_BEHAVIORSCRIPT_P, (void*)get_vanilla_behavior_from_id(id), NULL);
 
     return 1;
 }
@@ -27835,15 +27867,15 @@ int smlua_func_obj_set_hitbox_radius_and_height(lua_State* L) {
         return 0;
     }
 
-    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_hitbox_radius_and_height"); return 0; }
     f32 radius = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_hitbox_radius_and_height"); return 0; }
     f32 height = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_hitbox_radius_and_height"); return 0; }
 
-    extern void obj_set_hitbox_radius_and_height(struct Object *o, f32 radius, f32 height);
-    obj_set_hitbox_radius_and_height(o, radius, height);
+    extern void obj_set_hitbox_radius_and_height(struct Object *obj, f32 radius, f32 height);
+    obj_set_hitbox_radius_and_height(obj, radius, height);
 
     return 1;
 }
@@ -27857,15 +27889,15 @@ int smlua_func_obj_set_hurtbox_radius_and_height(lua_State* L) {
         return 0;
     }
 
-    struct Object* o = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_set_hurtbox_radius_and_height"); return 0; }
     f32 radius = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_set_hurtbox_radius_and_height"); return 0; }
     f32 height = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_set_hurtbox_radius_and_height"); return 0; }
 
-    extern void obj_set_hurtbox_radius_and_height(struct Object *o, f32 radius, f32 height);
-    obj_set_hurtbox_radius_and_height(o, radius, height);
+    extern void obj_set_hurtbox_radius_and_height(struct Object *obj, f32 radius, f32 height);
+    obj_set_hurtbox_radius_and_height(obj, radius, height);
 
     return 1;
 }
@@ -30982,19 +31014,19 @@ int smlua_func_camera_set_romhack_override(lua_State* L) {
     return 1;
 }
 
-int smlua_func_camera_romhack_allow_centering(lua_State* L) {
+int smlua_func_camera_romhack_allow_switchable(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_allow_centering", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_allow_switchable", 1, top);
         return 0;
     }
 
     u8 allow = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_centering"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "camera_romhack_allow_switchable"); return 0; }
 
-    camera_romhack_allow_centering(allow);
+    camera_romhack_allow_switchable(allow);
 
     return 1;
 }
@@ -31193,17 +31225,17 @@ int smlua_func_camera_get_romhack_override(UNUSED lua_State* L) {
     return 1;
 }
 
-int smlua_func_camera_romhack_get_allow_centering(UNUSED lua_State* L) {
+int smlua_func_camera_romhack_get_allow_switchable(UNUSED lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_centering", 0, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "camera_romhack_get_allow_switchable", 0, top);
         return 0;
     }
 
 
-    lua_pushinteger(L, camera_romhack_get_allow_centering());
+    lua_pushinteger(L, camera_romhack_get_allow_switchable());
 
     return 1;
 }
@@ -37727,12 +37759,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "obj_update_gfx_pos_and_angle", smlua_func_obj_update_gfx_pos_and_angle);
     smlua_bind_function(L, "position_based_random_u16", smlua_func_position_based_random_u16);
     smlua_bind_function(L, "position_based_random_float_position", smlua_func_position_based_random_float_position);
+    smlua_bind_function(L, "draw_distance_scalar_is_infinite", smlua_func_draw_distance_scalar_is_infinite);
     smlua_bind_function(L, "draw_distance_scalar", smlua_func_draw_distance_scalar);
 
     // behavior_table.h
     smlua_bind_function(L, "get_id_from_behavior", smlua_func_get_id_from_behavior);
     smlua_bind_function(L, "get_id_from_vanilla_behavior", smlua_func_get_id_from_vanilla_behavior);
     smlua_bind_function(L, "get_behavior_from_id", smlua_func_get_behavior_from_id);
+    smlua_bind_function(L, "get_vanilla_behavior_from_id", smlua_func_get_vanilla_behavior_from_id);
     smlua_bind_function(L, "get_behavior_name_from_id", smlua_func_get_behavior_name_from_id);
     smlua_bind_function(L, "get_id_from_behavior_name", smlua_func_get_id_from_behavior_name);
 
@@ -38881,7 +38915,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_is_frozen", smlua_func_camera_is_frozen);
     smlua_bind_function(L, "camera_romhack_allow_only_mods", smlua_func_camera_romhack_allow_only_mods);
     smlua_bind_function(L, "camera_set_romhack_override", smlua_func_camera_set_romhack_override);
-    smlua_bind_function(L, "camera_romhack_allow_centering", smlua_func_camera_romhack_allow_centering);
+    smlua_bind_function(L, "camera_romhack_allow_switchable", smlua_func_camera_romhack_allow_switchable);
     smlua_bind_function(L, "camera_allow_toxic_gas_camera", smlua_func_camera_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_romhack_allow_dpad_usage", smlua_func_camera_romhack_allow_dpad_usage);
     smlua_bind_function(L, "camera_romhack_set_collisions", smlua_func_camera_romhack_set_collisions);
@@ -38894,7 +38928,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_romhack_get_zoomed_in_height", smlua_func_camera_romhack_get_zoomed_in_height);
     smlua_bind_function(L, "camera_romhack_get_zoomed_out_height", smlua_func_camera_romhack_get_zoomed_out_height);
     smlua_bind_function(L, "camera_get_romhack_override", smlua_func_camera_get_romhack_override);
-    smlua_bind_function(L, "camera_romhack_get_allow_centering", smlua_func_camera_romhack_get_allow_centering);
+    smlua_bind_function(L, "camera_romhack_get_allow_switchable", smlua_func_camera_romhack_get_allow_switchable);
     smlua_bind_function(L, "camera_get_allow_toxic_gas_camera", smlua_func_camera_get_allow_toxic_gas_camera);
     smlua_bind_function(L, "camera_romhack_get_allow_dpad_usage", smlua_func_camera_romhack_get_allow_dpad_usage);
     smlua_bind_function(L, "camera_romhack_get_collisions", smlua_func_camera_romhack_get_collisions);

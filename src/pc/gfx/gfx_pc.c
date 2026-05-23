@@ -135,7 +135,7 @@ int gShaderFlags[SHADER_FLAG_MAX] = { 0 };
 f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = {
     [SHADER_FLAG_HUE] = 0.0f,
     [SHADER_FLAG_SATURATION] = 1.0f,
-    [SHADER_FLAG_BRIGHTNESS] = 1.0f, 
+    [SHADER_FLAG_BRIGHTNESS] = 1.0f,
     [SHADER_FLAG_CONTRAST] = 1.0f,
     [SHADER_FLAG_EXPOSURE] = 1.0f,
     [SHADER_FLAG_DITHERING] = 0.0f,
@@ -720,7 +720,17 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 }
 
 static float gfx_adjust_x_for_aspect_ratio(float x) {
-    return x * gfx_current_dimensions.x_adjust_ratio;
+    float adjusted = x * gfx_current_dimensions.x_adjust_ratio;
+
+    // Force 2D coordinates to be aligned perfectly on the nearest pixel
+    // This prevents MSAA sub-pixel gaps (e.g. on vanilla dialog boxes)
+    if (rsp.P_matrix[3][3] > 0.5f && rdp.viewport.width > 0.0f) {
+        float pixelX = rdp.viewport.x + (adjusted + 1.0f) * 0.5f * rdp.viewport.width;
+        pixelX = floorf(pixelX + 0.5f);
+        adjusted = ((pixelX - rdp.viewport.x) / rdp.viewport.width) * 2.0f - 1.0f;
+    }
+
+    return adjusted;
 }
 
 static OPTIMIZE_O3 void gfx_local_to_world_space(VEC_OUT Vec3f pos, VEC_OUT Vec3f normal) {

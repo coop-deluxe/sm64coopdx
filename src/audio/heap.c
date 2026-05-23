@@ -228,6 +228,13 @@ void discard_bank(s32 bankId) {
                 note->parentLayer->finished = TRUE;
             }
             note_disable(note);
+
+            // Reset sample state
+            note->sound = NULL;
+            note->samplePosInt = 0;
+            note->samplePosFrac = 0;
+            note->sampleDmaIndex = 0;
+
             audio_list_remove(&note->listItem);
             audio_list_push_back(&gNoteFreeLists.disabled, &note->listItem);
         }

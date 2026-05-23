@@ -644,7 +644,8 @@ Overrides the soundbank, set to -1 to reset
 ## [is_anim_at_end](#is_anim_at_end)
 
 ### Description
-Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation). Useful for deciding when to transition out of an animation-driven action
+Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation).
+Useful for deciding when to transition out of an animation-driven action
 
 ### Lua Example
 `local integerValue = is_anim_at_end(m)`
@@ -667,7 +668,8 @@ Checks if Mario's current animation has reached its final frame (i.e., the last 
 ## [is_anim_past_end](#is_anim_past_end)
 
 ### Description
-Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames). Useful for advanced checks where slightly early transitions or timing are needed before the final frame
+Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames).
+Useful for advanced checks where slightly early transitions or timing are needed before the final frame
 
 ### Lua Example
 `local integerValue = is_anim_past_end(m)`
@@ -714,7 +716,8 @@ Sets Mario's current animation to `targetAnimID` at a default acceleration (no s
 ## [set_mario_anim_with_accel](#set_mario_anim_with_accel)
 
 ### Description
-Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation. Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
+Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation.
+Useful for controlling animation timing, e.g., slow-motion or fast-forward effects
 
 ### Lua Example
 `local integerValue = set_mario_anim_with_accel(m, targetAnimID, accel)`
@@ -763,7 +766,8 @@ Sets the character-specific animation at its default rate (no acceleration)
 ## [set_character_anim_with_accel](#set_character_anim_with_accel)
 
 ### Description
-Sets a character-specific animation where the animation speed is adjusted by `accel`. Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
+Sets a character-specific animation where the animation speed is adjusted by `accel`.
+Useful for varying animation speeds based on context or dynamic conditions (e.g., slow-motion)
 
 ### Lua Example
 `local integerValue = set_character_anim_with_accel(m, targetAnimID, accel)`
@@ -812,7 +816,8 @@ Sets the current animation frame to a specific `animFrame`
 ## [is_anim_past_frame](#is_anim_past_frame)
 
 ### Description
-Checks if Mario's current animation is past a specified `animFrame`. Useful for conditional logic where an action can branch after reaching a specific point in the animation
+Checks if Mario's current animation is past a specified `animFrame`.
+Useful for conditional logic where an action can branch after reaching a specific point in the animation
 
 ### Lua Example
 `local integerValue = is_anim_past_frame(m, animFrame)`
@@ -836,7 +841,8 @@ Checks if Mario's current animation is past a specified `animFrame`. Useful for 
 ## [find_mario_anim_flags_and_translation](#find_mario_anim_flags_and_translation)
 
 ### Description
-Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`. Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
+Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`.
+Useful for determining positional offsets from animations (e.g., stepping forward in a walk animation) and applying them to Mario's position
 
 ### Lua Example
 `local integerValue = find_mario_anim_flags_and_translation(o, yaw, translation)`
@@ -884,7 +890,8 @@ Applies the translation from Mario's current animation to his world position. Co
 ## [return_mario_anim_y_translation](#return_mario_anim_y_translation)
 
 ### Description
-Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation. Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
+Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation.
+Useful for adjusting Mario's vertical position based on an ongoing animation (e.g., a bounce or jump)
 
 ### Lua Example
 `local integerValue = return_mario_anim_y_translation(m)`
@@ -955,7 +962,8 @@ Plays Mario's jump sound if it hasn't been played yet since the last action chan
 ## [adjust_sound_for_speed](#adjust_sound_for_speed)
 
 ### Description
-Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`). Useful for adding dynamic audio feedback based on Mario's running or walking speed
+Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`).
+Useful for adding dynamic audio feedback based on Mario's running or walking speed
 
 ### Lua Example
 `adjust_sound_for_speed(m)`
@@ -1076,7 +1084,8 @@ A variant of `play_mario_landing_sound` that ensures the sound is only played on
 ## [play_mario_heavy_landing_sound](#play_mario_heavy_landing_sound)
 
 ### Description
-Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped. Useful for making big impact landings stand out aurally
+Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped.
+Useful for making big impact landings stand out aurally
 
 ### Lua Example
 `play_mario_heavy_landing_sound(m, soundBits)`
@@ -1100,7 +1109,8 @@ Plays a heavier, more forceful landing sound, possibly for ground pounds or larg
 ## [play_mario_heavy_landing_sound_once](#play_mario_heavy_landing_sound_once)
 
 ### Description
-A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally). Useful for consistent heavy landing effects without repetition
+A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally).
+Useful for consistent heavy landing effects without repetition
 
 ### Lua Example
 `play_mario_heavy_landing_sound_once(m, soundBits)`
@@ -1241,7 +1251,8 @@ Transitions Mario into a bubbled state (if available in multiplayer), decrementi
 ## [mario_set_forward_vel](#mario_set_forward_vel)
 
 ### Description
-Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`. Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
+Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`.
+Useful for controlling Mario's speed and direction in various actions (jumping, walking, sliding, etc.)
 
 ### Lua Example
 `mario_set_forward_vel(m, speed)`
@@ -1265,7 +1276,8 @@ Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.
 ## [mario_get_floor_class](#mario_get_floor_class)
 
 ### Description
-Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces. Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
+Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces.
+Useful for controlling friction, movement speed adjustments, and whether Mario slips or walks
 
 ### Lua Example
 `local integerValue = mario_get_floor_class(m)`
@@ -1288,7 +1300,8 @@ Retrieves the slipperiness class of Mario's current floor, ranging from not slip
 ## [mario_get_terrain_sound_addend](#mario_get_terrain_sound_addend)
 
 ### Description
-Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects. Useful for playing context-specific footstep or movement sounds
+Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects.
+Useful for playing context-specific footstep or movement sounds
 
 ### Lua Example
 `local integerValue = mario_get_terrain_sound_addend(m)`
@@ -1311,7 +1324,8 @@ Computes a value added to terrain sounds, depending on the floor's type (sand, s
 ## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
 
 ### Description
-Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls. Useful for collision detection when updating Mario's movement or adjusting his position
+Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls.
+Useful for collision detection when updating Mario's movement or adjusting his position
 
 ### Lua Example
 `local surfaceValue = resolve_and_return_wall_collisions(pos, offset, radius)`
@@ -1362,7 +1376,8 @@ Similar to `resolve_and_return_wall_collisions` but also returns detailed collis
 ## [vec3f_find_ceil](#vec3f_find_ceil)
 
 ### Description
-Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Returns the ceiling height and surface
+Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
+Returns the ceiling height and surface
 
 ### Lua Example
 `local numberValue, ceil = vec3f_find_ceil(pos, height)`
@@ -1387,7 +1402,9 @@ Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffe
 ## [vec3f_mario_ceil](#vec3f_mario_ceil)
 
 ### Description
-Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer). Prevents exposed ceiling bug. Returns the ceiling height and surface
+Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
+Prevents exposed ceiling bug.
+Returns the ceiling height and surface
 
 ### Lua Example
 `local numberValue, ceil = vec3f_mario_ceil(pos, height)`
@@ -1412,7 +1429,8 @@ Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffe
 ## [mario_facing_downhill](#mario_facing_downhill)
 
 ### Description
-Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope. Useful for deciding if Mario will walk or slide on sloped floors
+Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope.
+Useful for deciding if Mario will walk or slide on sloped floors
 
 ### Lua Example
 `local integerValue = mario_facing_downhill(m, turnYaw)`
@@ -1436,7 +1454,8 @@ Determines if Mario is facing downhill relative to his floor angle, optionally a
 ## [mario_floor_is_slippery](#mario_floor_is_slippery)
 
 ### Description
-Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides). Useful for deciding if Mario should transition to sliding or maintain normal traction
+Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides).
+Useful for deciding if Mario should transition to sliding or maintain normal traction
 
 ### Lua Example
 `local integerValue = mario_floor_is_slippery(m)`
@@ -1482,7 +1501,8 @@ Checks whether Mario's floor is a slope, i.e., not flat but not necessarily stee
 ## [mario_floor_is_steep](#mario_floor_is_steep)
 
 ### Description
-Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep. Useful for restricting normal movement on surfaces with extreme angles
+Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep.
+Useful for restricting normal movement on surfaces with extreme angles
 
 ### Lua Example
 `local integerValue = mario_floor_is_steep(m)`
@@ -1505,7 +1525,8 @@ Checks whether Mario's floor is steep enough to cause special behavior, such as 
 ## [find_floor_height_relative_polar](#find_floor_height_relative_polar)
 
 ### Description
-Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`). Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
+Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`).
+Useful for determining height differentials ahead or behind Mario, e.g. for slope checks or collision logic
 
 ### Lua Example
 `local numberValue = find_floor_height_relative_polar(m, angleFromMario, distFromMario)`
@@ -1530,7 +1551,8 @@ Finds the floor height relative to Mario's current position given a polar displa
 ## [find_floor_slope](#find_floor_slope)
 
 ### Description
-Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction. Useful for slope-based calculations such as setting walking or sliding behaviors
+Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction.
+Useful for slope-based calculations such as setting walking or sliding behaviors
 
 ### Lua Example
 `local integerValue = find_floor_slope(m, yawOffset)`
@@ -1554,7 +1576,8 @@ Returns a slope angle based on comparing the floor heights slightly in front and
 ## [update_mario_sound_and_camera](#update_mario_sound_and_camera)
 
 ### Description
-Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping. Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
+Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping.
+Useful for synchronizing camera behavior and ambient sounds with Mario's state changes
 
 ### Lua Example
 `update_mario_sound_and_camera(m)`
@@ -1577,7 +1600,8 @@ Updates the background noise and camera modes based on Mario's action. Especiall
 ## [set_steep_jump_action](#set_steep_jump_action)
 
 ### Description
-Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly. Useful for forcing special jump states on surfaces exceeding normal slope limits
+Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly.
+Useful for forcing special jump states on surfaces exceeding normal slope limits
 
 ### Lua Example
 `set_steep_jump_action(m)`
@@ -1749,7 +1773,8 @@ Increments Mario's `hurtCounter` and immediately sets a new action. Often used w
 ## [check_common_action_exits](#check_common_action_exits)
 
 ### Description
-Checks for inputs that cause common action transitions (jump, freefall, walking, sliding). Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
+Checks for inputs that cause common action transitions (jump, freefall, walking, sliding).
+Useful for quickly exiting certain stationary actions when Mario begins moving or leaves the floor
 
 ### Lua Example
 `local integerValue = check_common_action_exits(m)`
@@ -1795,7 +1820,8 @@ Checks for inputs that cause common hold-action transitions (hold jump, hold fre
 ## [transition_submerged_to_walking](#transition_submerged_to_walking)
 
 ### Description
-Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states. Useful for restoring standard ground movement when emerging from water
+Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states.
+Useful for restoring standard ground movement when emerging from water
 
 ### Lua Example
 `local integerValue = transition_submerged_to_walking(m)`
@@ -1864,7 +1890,8 @@ Main driver for Mario's behavior. Executes the current action group (stationary,
 ## [force_idle_state](#force_idle_state)
 
 ### Description
-Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged. Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
+Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged.
+Useful for quickly resetting Mario's state to an idle pose under special conditions (e.g., cutscene triggers)
 
 ### Lua Example
 `local integerValue = force_idle_state(m)`
@@ -1988,7 +2015,8 @@ Gets the MarioState corresponding to the provided object if the object is a Mari
 ## [play_flip_sounds](#play_flip_sounds)
 
 ### Description
-Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips). If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
+Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips).
+If the current animation frame matches any of the specified frames, it triggers `SOUND_ACTION_SPIN`
 
 ### Lua Example
 `play_flip_sounds(m, frame1, frame2, frame3)`
@@ -2014,7 +2042,8 @@ Plays a spinning sound at specific animation frames for flips (usually side flip
 ## [play_far_fall_sound](#play_far_fall_sound)
 
 ### Description
-Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying. If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
+Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying.
+If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a flag to prevent repeated triggering
 
 ### Lua Example
 `play_far_fall_sound(m)`
@@ -2037,7 +2066,8 @@ Plays a unique sound when Mario has fallen a significant distance without being 
 ## [play_knockback_sound](#play_knockback_sound)
 
 ### Description
-Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs depending on whether Mario's forward velocity is high enough to be considered a strong knockback
+Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs
+depending on whether Mario's forward velocity is high enough to be considered a strong knockback
 
 ### Lua Example
 `play_knockback_sound(m)`
@@ -2060,7 +2090,9 @@ Plays a knockback sound effect if Mario is hit or knocked back with significant 
 ## [lava_boost_on_wall](#lava_boost_on_wall)
 
 ### Description
-Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity. Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`. Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
+Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity.
+Increases Mario's hurt counter if he's not metal, plays a burning sound, and transitions his action to `ACT_LAVA_BOOST`.
+Useful for handling collisions with lava walls, giving Mario a strong upward/forward boost at the cost of health
 
 ### Lua Example
 `local integerValue = lava_boost_on_wall(m)`
@@ -2083,7 +2115,10 @@ Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from 
 ## [check_fall_damage](#check_fall_damage)
 
 ### Description
-Evaluates whether Mario should take fall damage based on the height difference between his peak and current position. If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied. Useful for determining if Mario's fall warrants a health penalty or a special landing action
+Evaluates whether Mario should take fall damage based on the height difference between his peak and current position.
+If the fall is large enough and does not occur over burning surfaces or while twirling, Mario may get hurt or enter
+a hard fall action. If the fall is significant but not extreme, minimal damage and a squish effect may be applied.
+Useful for determining if Mario's fall warrants a health penalty or a special landing action
 
 ### Lua Example
 `local integerValue = check_fall_damage(m, hardFallAction)`
@@ -2107,7 +2142,8 @@ Evaluates whether Mario should take fall damage based on the height difference b
 ## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
 
 ### Description
-Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity. Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
+Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity.
+Pressing the B button in the air can trigger a jump kick (at lower speeds) or a dive (at higher speeds)
 
 ### Lua Example
 `local integerValue = check_kick_or_dive_in_air(m)`
@@ -2130,7 +2166,9 @@ Checks if Mario should perform a kick or a dive while in mid-air, depending on h
 ## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
 
 ### Description
-Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.). Returns true if Mario should be stuck, false otherwise
+Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow
+or sand, provided certain conditions are met (height of the fall, normal of the floor, etc.).
+Returns true if Mario should be stuck, false otherwise
 
 ### Lua Example
 `local integerValue = should_get_stuck_in_ground(m)`
@@ -2153,7 +2191,9 @@ Determines whether Mario should become stuck in the ground after landing, specif
 ## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
 
 ### Description
-Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
+Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he
+should just proceed with regular fall damage calculations. If the terrain and height conditions are met, Mario's
+action changes to being stuck in the ground. Otherwise, normal fall damage logic applies
 
 ### Lua Example
 `local integerValue = check_fall_damage_or_get_stuck(m, hardFallAction)`
@@ -2177,7 +2217,8 @@ Checks if Mario should get stuck in the ground after a large fall onto soft terr
 ## [check_horizontal_wind](#check_horizontal_wind)
 
 ### Description
-Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
+Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal
+velocity. Caps speed at certain thresholds, updates Mario's forward velocity and yaw for sliding/wind movement
 
 ### Lua Example
 `local integerValue = check_horizontal_wind(m)`
@@ -2200,7 +2241,8 @@ Checks for the presence of a horizontal wind surface under Mario. If found, appl
 ## [update_air_with_turn](#update_air_with_turn)
 
 ### Description
-Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag, approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
+Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag,
+approaches the forward velocity toward zero if no input is pressed, and modifies forward velocity/angle based on stick input
 
 ### Lua Example
 `update_air_with_turn(m)`
@@ -2223,7 +2265,8 @@ Updates Mario's air movement while allowing him to turn. Checks horizontal wind 
 ## [update_air_without_turn](#update_air_without_turn)
 
 ### Description
-Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
+Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can
+move sideways relative to his current facing direction. Also checks horizontal wind and applies drag
 
 ### Lua Example
 `update_air_without_turn(m)`
@@ -2246,7 +2289,8 @@ Updates Mario's air movement without directly turning his facing angle to match 
 ## [update_lava_boost_or_twirling](#update_lava_boost_or_twirling)
 
 ### Description
-Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
+Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity
+and facing angle, but in a more restricted manner compared to standard jump movement. Used by `ACT_LAVA_BOOST` and `ACT_TWIRLING`
 
 ### Lua Example
 `update_lava_boost_or_twirling(m)`
@@ -2269,7 +2313,8 @@ Updates Mario's movement when in actions like lava boost or twirling in mid-air.
 ## [update_flying_yaw](#update_flying_yaw)
 
 ### Description
-Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
+Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity
+and sets Mario's roll angle to simulate banking turns. This results in a more natural, curved flight path
 
 ### Lua Example
 `update_flying_yaw(m)`
@@ -2292,7 +2337,8 @@ Calculates and applies a change in Mario's yaw while flying, based on horizontal
 ## [update_flying_pitch](#update_flying_pitch)
 
 ### Description
-Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity and clamps the final pitch angle to a certain range, simulating a smooth flight control
+Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity
+and clamps the final pitch angle to a certain range, simulating a smooth flight control
 
 ### Lua Example
 `update_flying_pitch(m)`
@@ -2315,7 +2361,8 @@ Calculates and applies a change in Mario's pitch while flying, based on vertical
 ## [update_flying](#update_flying)
 
 ### Description
-Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input, applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
+Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input,
+applies drag, and adjusts forward velocity. Also updates Mario's model angles for flight animations
 
 ### Lua Example
 `update_flying(m)`
@@ -2338,7 +2385,9 @@ Handles the complete flying logic for Mario (usually with the wing cap). Continu
 ## [common_air_action_step](#common_air_action_step)
 
 ### Description
-Performs a standard step update for air actions without knockback, typically used for jumps or freefalls. Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`. Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
+Performs a standard step update for air actions without knockback, typically used for jumps or freefalls.
+Updates Mario's velocity (and possibly checks horizontal wind), then calls `perform_air_step` with given `stepArg`.
+Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally sets an animation
 
 ### Lua Example
 `local integerValue = common_air_action_step(m, landAction, animation, stepArg)`
@@ -2364,7 +2413,8 @@ Performs a standard step update for air actions without knockback, typically use
 ## [common_air_knockback_step](#common_air_knockback_step)
 
 ### Description
-A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`, and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
+A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`,
+and handles wall collisions or landing transitions to appropriate ground knockback actions. Also sets animation and speed
 
 ### Lua Example
 `local integerValue = common_air_knockback_step(m, landAction, hardFallAction, animation, speed)`
@@ -2391,7 +2441,8 @@ A shared step update used for airborne knockback states (both forward and backwa
 ## [check_wall_kick](#check_wall_kick)
 
 ### Description
-Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A) and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
+Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A)
+and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
 
 ### Lua Example
 `local integerValue = check_wall_kick(m)`
@@ -2414,7 +2465,9 @@ Checks if Mario should wall kick after performing an air hit against a wall. If 
 ## [check_common_airborne_cancels](#check_common_airborne_cancels)
 
 ### Description
-Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action if on certain wind surfaces. Also resets `m.quicksandDepth`
+Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning
+to a water plunge if below the water level, becoming squished if appropriate, or switching to vertical wind action
+if on certain wind surfaces. Also resets `m.quicksandDepth`
 
 ### Lua Example
 `local integerValue = check_common_airborne_cancels(m)`
@@ -2437,7 +2490,8 @@ Checks for and handles common conditions that would cancel Mario's current air a
 ## [mario_execute_airborne_action](#mario_execute_airborne_action)
 
 ### Description
-Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed. Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
+Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed.
+Dispatches to the appropriate action function, such as jump, double jump, freefall, etc
 
 ### Lua Example
 `local integerValue = mario_execute_airborne_action(m)`
@@ -2466,7 +2520,8 @@ Executes Mario's current airborne action by first checking common airborne cance
 ## [add_tree_leaf_particles](#add_tree_leaf_particles)
 
 ### Description
-Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor. In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
+Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor.
+In Shifting Sand Land, the leaf effect spawns higher due to the taller palm trees
 
 ### Lua Example
 `add_tree_leaf_particles(m)`
@@ -2513,7 +2568,8 @@ Plays the appropriate climbing sound effect depending on whether Mario is on a t
 ## [set_pole_position](#set_pole_position)
 
 ### Description
-Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor. Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
+Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor.
+Useful for ensuring Mario's correct placement and transitions when climbing poles or trees
 
 ### Lua Example
 `local integerValue = set_pole_position(m, offsetY)`
@@ -2747,7 +2803,8 @@ Checks if Mario should cancel his current automatic action, primarily by detecti
 ## [mario_execute_automatic_action](#mario_execute_automatic_action)
 
 ### Description
-Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water. Returns true if the action was canceled and a new action was set, or false otherwise
+Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water.
+Returns true if the action was canceled and a new action was set, or false otherwise
 
 ### Lua Example
 `local integerValue = mario_execute_automatic_action(m)`
@@ -3138,7 +3195,8 @@ Executes Mario's current cutscene action based on his `action` field. Includes v
 ## [tilt_body_running](#tilt_body_running)
 
 ### Description
-Tilts Mario's body according to his running speed and slope angle. Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
+Tilts Mario's body according to his running speed and slope angle.
+Calculates a pitch offset used while running to simulate leaning forward at higher speeds or on slopes
 
 ### Lua Example
 `local integerValue = tilt_body_running(m)`
@@ -3161,7 +3219,8 @@ Tilts Mario's body according to his running speed and slope angle. Calculates a 
 ## [play_step_sound](#play_step_sound)
 
 ### Description
-Checks the current animation frame against two specified frames to trigger footstep sounds. Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
+Checks the current animation frame against two specified frames to trigger footstep sounds.
+Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
 
 ### Lua Example
 `play_step_sound(m, frame1, frame2)`
@@ -3235,7 +3294,8 @@ Sets Mario's facing yaw to his intended yaw, applies a specified forward velocit
 ## [check_ledge_climb_down](#check_ledge_climb_down)
 
 ### Description
-Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower. If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
+Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower.
+If the conditions are met, transitions Mario into a ledge-climb-down action and positions him accordingly on the edge
 
 ### Lua Example
 `check_ledge_climb_down(m)`
@@ -3308,7 +3368,9 @@ Determines the proper triple jump action based on Mario's forward velocity and t
 ## [update_sliding_angle](#update_sliding_angle)
 
 ### Description
-Adjusts Mario's slide velocity and facing angle when on a slope. Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill). Handles facing-direction changes and maximum speed limits
+Adjusts Mario's slide velocity and facing angle when on a slope.
+Calculates slope direction and steepness, then modifies velocity accordingly (speed up downhill, slow uphill).
+Handles facing-direction changes and maximum speed limits
 
 ### Lua Example
 `update_sliding_angle(m, accel, lossFactor)`
@@ -3333,7 +3395,9 @@ Adjusts Mario's slide velocity and facing angle when on a slope. Calculates slop
 ## [update_sliding](#update_sliding)
 
 ### Description
-Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness. Also checks if speed has slowed below a threshold to end the slide. Returns `true` if sliding has stopped
+Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness.
+Also checks if speed has slowed below a threshold to end the slide.
+Returns `true` if sliding has stopped
 
 ### Lua Example
 `local integerValue = update_sliding(m, stopSpeed)`
@@ -3357,7 +3421,8 @@ Updates Mario's sliding state each frame, applying additional friction or accele
 ## [apply_slope_accel](#apply_slope_accel)
 
 ### Description
-Applies acceleration or deceleration based on the slope of the floor. On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
+Applies acceleration or deceleration based on the slope of the floor.
+On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
 
 ### Lua Example
 `apply_slope_accel(m)`
@@ -3380,7 +3445,8 @@ Applies acceleration or deceleration based on the slope of the floor. On downwar
 ## [apply_landing_accel](#apply_landing_accel)
 
 ### Description
-Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped. Capped in such a way that Mario eventually stops or stabilizes on flatter ground
+Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped.
+Capped in such a way that Mario eventually stops or stabilizes on flatter ground
 
 ### Lua Example
 `local integerValue = apply_landing_accel(m, frictionFactor)`
@@ -3427,7 +3493,8 @@ Controls Mario's speed when riding a Koopa Shell on the ground.
 ## [apply_slope_decel](#apply_slope_decel)
 
 ### Description
-Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness. This function can completely stop Mario if the slope is gentle enough or if friction is high
+Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness.
+This function can completely stop Mario if the slope is gentle enough or if friction is high
 
 ### Lua Example
 `local integerValue = apply_slope_decel(m, decelCoef)`
@@ -3451,7 +3518,8 @@ Approaches Mario's forward velocity toward zero at a rate dependent on the floor
 ## [update_decelerating_speed](#update_decelerating_speed)
 
 ### Description
-Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction. Returns true if Mario's speed reaches zero, meaning he has stopped
+Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction.
+Returns true if Mario's speed reaches zero, meaning he has stopped
 
 ### Lua Example
 `local integerValue = update_decelerating_speed(m)`
@@ -3474,7 +3542,8 @@ Gradually reduces Mario's forward speed to zero over time on level ground, unles
 ## [update_walking_speed](#update_walking_speed)
 
 ### Description
-Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand). Caps speed at a certain value and may reduce it slightly on steep slopes
+Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand).
+Caps speed at a certain value and may reduce it slightly on steep slopes
 
 ### Lua Example
 `update_walking_speed(m)`
@@ -3497,7 +3566,8 @@ Updates Mario's walking speed based on player input and floor conditions (e.g., 
 ## [should_begin_sliding](#should_begin_sliding)
 
 ### Description
-Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness. Returns true if conditions to slide are met.
+Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness.
+Returns true if conditions to slide are met.
 
 ### Lua Example
 `local integerValue = should_begin_sliding(m)`
@@ -3520,7 +3590,8 @@ Checks if Mario should begin sliding, based on player input (facing downhill, pr
 ## [analog_stick_held_back](#analog_stick_held_back)
 
 ### Description
-Checks if the analog stick is held significantly behind Mario's current facing angle. Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
+Checks if the analog stick is held significantly behind Mario's current facing angle.
+Returns true if the stick is far enough in the opposite direction, indicating Mario wants to move backward
 
 ### Lua Example
 `local integerValue = analog_stick_held_back(m)`
@@ -3543,7 +3614,8 @@ Checks if the analog stick is held significantly behind Mario's current facing a
 ## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
 
 ### Description
-Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly). Returns `true` if the action was changed to either a dive or a punching attack
+Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly).
+Returns `true` if the action was changed to either a dive or a punching attack
 
 ### Lua Example
 `local integerValue = check_ground_dive_or_punch(m)`
@@ -3566,7 +3638,8 @@ Checks if the B button was pressed to either initiate a dive (if moving fast eno
 ## [begin_braking_action](#begin_braking_action)
 
 ### Description
-Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise. Also handles the scenario where Mario is up against a wall, transitioning to a standing state
+Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise.
+Also handles the scenario where Mario is up against a wall, transitioning to a standing state
 
 ### Lua Example
 `local integerValue = begin_braking_action(m)`
@@ -3589,7 +3662,8 @@ Begins a braking action if Mario's forward velocity is high enough or transition
 ## [anim_and_audio_for_walk](#anim_and_audio_for_walk)
 
 ### Description
-Handles the animation and audio (footstep sounds) for normal walking or running. The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
+Handles the animation and audio (footstep sounds) for normal walking or running.
+The specific animation used (tiptoe, walk, or run) depends on Mario's current speed
 
 ### Lua Example
 `anim_and_audio_for_walk(m)`
@@ -3612,7 +3686,8 @@ Handles the animation and audio (footstep sounds) for normal walking or running.
 ## [anim_and_audio_for_hold_walk](#anim_and_audio_for_hold_walk)
 
 ### Description
-Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box). Adjusts the animation speed dynamically based on Mario's velocity
+Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box).
+Adjusts the animation speed dynamically based on Mario's velocity
 
 ### Lua Example
 `anim_and_audio_for_hold_walk(m)`
@@ -3635,7 +3710,8 @@ Plays the appropriate animation and footstep sounds for walking while carrying a
 ## [anim_and_audio_for_heavy_walk](#anim_and_audio_for_heavy_walk)
 
 ### Description
-Plays the appropriate animation and footstep sounds for walking while carrying a heavy object. Sets the character animation speed based on Mario's intended movement speed
+Plays the appropriate animation and footstep sounds for walking while carrying a heavy object.
+Sets the character animation speed based on Mario's intended movement speed
 
 ### Lua Example
 `anim_and_audio_for_heavy_walk(m)`
@@ -3682,7 +3758,8 @@ When Mario hits a wall during movement, decides whether he's pushing against the
 ## [tilt_body_walking](#tilt_body_walking)
 
 ### Description
-Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running. The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
+Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running.
+The tilt is based on his change in yaw and current speed, giving a leaning appearance when turning
 
 ### Lua Example
 `tilt_body_walking(m, startYaw)`
@@ -3706,7 +3783,8 @@ Applies a left/right tilt to Mario's torso (and some pitch if running fast) whil
 ## [tilt_body_ground_shell](#tilt_body_ground_shell)
 
 ### Description
-Tilts Mario's torso and head while riding a shell on the ground to reflect turning. Similar to other tilt functions but tuned for shell-riding speeds and angles
+Tilts Mario's torso and head while riding a shell on the ground to reflect turning.
+Similar to other tilt functions but tuned for shell-riding speeds and angles
 
 ### Lua Example
 `tilt_body_ground_shell(m, startYaw)`
@@ -3730,7 +3808,8 @@ Tilts Mario's torso and head while riding a shell on the ground to reflect turni
 ## [tilt_body_butt_slide](#tilt_body_butt_slide)
 
 ### Description
-Tilts Mario's torso while butt sliding based on analog input direction and magnitude. Gives the appearance that Mario is balancing or leaning into a turn
+Tilts Mario's torso while butt sliding based on analog input direction and magnitude.
+Gives the appearance that Mario is balancing or leaning into a turn
 
 ### Lua Example
 `tilt_body_butt_slide(m)`
@@ -3779,7 +3858,8 @@ Applies shared logic for sliding-related actions while playing sliding sounds, m
 ## [common_slide_action_with_jump](#common_slide_action_with_jump)
 
 ### Description
-Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay. If the sliding slows enough, Mario transitions to a specified stopping action
+Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.
+If the sliding slows enough, Mario transitions to a specified stopping action
 
 ### Lua Example
 `local integerValue = common_slide_action_with_jump(m, stopAction, jumpAction, airAction, animation)`
@@ -3806,7 +3886,8 @@ Builds on `common_slide_action` by also allowing Mario to jump out of a slide if
 ## [stomach_slide_action](#stomach_slide_action)
 
 ### Description
-Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed. Uses `common_slide_action` for the core movement logic
+Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed.
+Uses `common_slide_action` for the core movement logic
 
 ### Lua Example
 `local integerValue = stomach_slide_action(m, stopAction, airAction, animation)`
@@ -3884,7 +3965,8 @@ Applies movement upon landing from a jump or fall. Adjusts velocity based on slo
 ## [quicksand_jump_land_action](#quicksand_jump_land_action)
 
 ### Description
-Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand. First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
+Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand.
+First part of the animation reduces his quicksand depth. Ends with a normal landing action or transitions back to air if he leaves the ground
 
 ### Lua Example
 `local integerValue = quicksand_jump_land_action(m, animation1, animation2, endAction, airAction)`
@@ -4011,7 +4093,9 @@ Updates Mario's punching state
 ## [check_common_object_cancels](#check_common_object_cancels)
 
 ### Description
-Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action if Mario is dead
+Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning
+to a water plunge if below the water level, becoming squished if appropriate, or switching to standing death action
+if Mario is dead
 
 ### Lua Example
 `local integerValue = check_common_object_cancels(m)`
@@ -4034,7 +4118,8 @@ Checks for and handles common conditions that would cancel Mario's current objec
 ## [mario_execute_object_action](#mario_execute_object_action)
 
 ### Description
-Executes Mario's current object action by first checking common object cancels, then updating quicksand state. Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
+Executes Mario's current object action by first checking common object cancels, then updating quicksand state.
+Dispatches to the appropriate action function, such as punching, throwing, picking up Bowser, etc
 
 ### Lua Example
 `local integerValue = mario_execute_object_action(m)`
@@ -4253,7 +4338,8 @@ Checks for and handles common conditions that would cancel Mario's current stati
 ## [mario_execute_stationary_action](#mario_execute_stationary_action)
 
 ### Description
-Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state. Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
+Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state.
+Dispatches to the appropriate action function, such as idle, sleeping, crouching, ect
 
 ### Lua Example
 `local integerValue = mario_execute_stationary_action(m)`
@@ -4400,7 +4486,8 @@ Controls the bobbing that happens when you swim near the water surface
 ## [mario_execute_submerged_action](#mario_execute_submerged_action)
 
 ### Description
-Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0. Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
+Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0.
+Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
 
 ### Lua Example
 `local integerValue = mario_execute_submerged_action(m)`
@@ -5678,7 +5765,8 @@ Converts an angle from degrees to SM64 format
 ## [mtxf_zero](#mtxf_zero)
 
 ### Description
-Sets the 4x4 floating-point matrix `mtx` to all zeros. Unless you really need this-It's reccomended to use mtxf_identity instead.
+Sets the 4x4 floating-point matrix `mtx` to all zeros.
+Unless you really need this-It's reccomended to use mtxf_identity instead.
 
 ### Lua Example
 `mtxf_zero(mtx)`

@@ -1110,9 +1110,9 @@ MAPFILE = $(BUILD_DIR)/coop.map
 exemap: $(EXE)
 	@$(PRINT) "$(GREEN)Creating map file: $(BLUE)$(MAPFILE) $(NO_COL)\n"
 	$(V)$(OBJDUMP) -t $(EXE) > $(MAPFILE)
+ifeq ($(IS_DEV_OR_DEBUG),0)
 	@cp $(EXE) $(EXE).bak && cp $(MAPFILE) $(MAPFILE).bak
 	$(V)$(PYTHON) $(TOOLS_DIR)/clean_mapfile.py $(EXE) $(MAPFILE)
-ifeq ($(IS_DEV_OR_DEBUG),0)
 	$(V)$(OBJCOPY) -p --strip-unneeded $(EXE)
 endif
 all: exemap

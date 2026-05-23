@@ -10,7 +10,8 @@ ANIM_FLAG_FORWARD = (1 << 1)
 -----------------------
 
 rom_hack_cam_set_collisions = camera_romhack_set_collisions
-
+camera_romhack_allow_centering = camera_romhack_allow_switchable
+camera_romhack_get_allow_centering = camera_romhack_get_allow_switchable
 
 --------------------
 -- Math functions --

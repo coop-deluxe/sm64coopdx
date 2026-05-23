@@ -258,6 +258,7 @@ struct Object
     void *respawnInfo;
     void (*areaTimerRunOnceCallback)(void);
     const BehaviorScript *behavior;
+    const BehaviorScript *initBhvCommand;
     const BehaviorScript *curBhvCommand;
     uintptr_t bhvStack[OBJECT_MAX_BHV_STACK];
     
@@ -504,7 +505,7 @@ struct MarioState
     u8 specialTripleJump;
     u8 fadeWarpOpacity;
     
-    u8 visibleToEnemies;
+    bool visibleToObjects;
     u8 wasNetworkVisible;
     s32 dialogId;
     s16 prevNumStarsForDialog;

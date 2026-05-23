@@ -1952,7 +1952,11 @@ Writes a line to a text modfs `file`. Returns true on success
 ## [mod_fs_file_seek](#mod_fs_file_seek)
 
 ### Description
-Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, file position is set to `offset`. If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position. If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`. Returns true on success
+Sets the current position of a modfs `file`.
+If `origin` is `FILE_SEEK_SET`, file position is set to `offset`.
+If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.
+If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`.
+Returns true on success
 
 ### Lua Example
 `local booleanValue = mod_fs_file_seek(file, offset, origin)`
@@ -1977,7 +1981,8 @@ Sets the current position of a modfs `file`. If `origin` is `FILE_SEEK_SET`, fil
 ## [mod_fs_file_rewind](#mod_fs_file_rewind)
 
 ### Description
-Sets the current position of a modfs `file` to its beginning. Returns true on success
+Sets the current position of a modfs `file` to its beginning.
+Returns true on success
 
 ### Lua Example
 `local booleanValue = mod_fs_file_rewind(file)`
@@ -3126,7 +3131,8 @@ Generates splashes if at surface of water, entering water, or bubbles if underwa
 ## [object_step](#object_step)
 
 ### Description
-Generic object move function. Handles walls, water, floors, and gravity. Returns flags for certain interactions
+Generic object move function. Handles walls, water, floors, and gravity.
+Returns flags for certain interactions
 
 ### Lua Example
 `local integerValue = object_step()`
@@ -3147,7 +3153,8 @@ Generic object move function. Handles walls, water, floors, and gravity. Returns
 ## [object_step_without_floor_orient](#object_step_without_floor_orient)
 
 ### Description
-Takes an object step but does not orient with the object's floor. Used for boulders, falling pillars, and the rolling snowman body
+Takes an object step but does not orient with the object's floor.
+Used for boulders, falling pillars, and the rolling snowman body
 
 ### Lua Example
 `local integerValue = object_step_without_floor_orient()`
@@ -3168,7 +3175,7 @@ Takes an object step but does not orient with the object's floor. Used for bould
 ## [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
 
 ### Description
-Don't use this function outside of of a context where the current object and `obj` are the same. Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+Updates the object `obj` horizontal velocity using its forward vel and move angle yaw, then moves it
 
 ### Lua Example
 `obj_move_xyz_using_fvel_and_yaw(obj)`
@@ -3191,7 +3198,7 @@ Don't use this function outside of of a context where the current object and `ob
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Description
-Checks if a point is within distance from any active Mario visible to enemies' graphical position
+Checks if a point is within distance from any active Mario visible to objects' graphical position
 
 ### Lua Example
 `local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
@@ -3578,7 +3585,8 @@ Randomly displaces an objects home if RNG says to, and turns the object towards 
 ## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
 
 ### Description
-A series of checks using sin and cos to see if a given angle is facing in the same direction of a given angle, within a certain range
+A series of checks using sin and cos to see if a given angle is facing in the same direction
+of a given angle, within a certain range
 
 ### Lua Example
 `local integerValue = obj_check_if_facing_toward_angle(base, goal, range)`
@@ -3701,7 +3709,8 @@ Checks if a given room is Mario's current room, even if on an object
 ## [obj_check_floor_death](#obj_check_floor_death)
 
 ### Description
-Checks if `floor`'s type is burning or death plane and if so change the current object's action accordingly
+Checks if `floor`'s type is burning or death plane and if so change the
+current object's action accordingly
 
 ### Lua Example
 `obj_check_floor_death(collisionFlags, floor)`
@@ -3725,7 +3734,8 @@ Checks if `floor`'s type is burning or death plane and if so change the current 
 ## [obj_lava_death](#obj_lava_death)
 
 ### Description
-Controls an object dying in lava by creating smoke, sinking the object, playing audio, and eventually despawning it. Returns TRUE when the obj is dead
+Controls an object dying in lava by creating smoke, sinking the object, playing
+audio, and eventually despawning it. Returns TRUE when the obj is dead
 
 ### Lua Example
 `local integerValue = obj_lava_death()`
@@ -4426,7 +4436,10 @@ Rotates the current object's move angle yaw using `delta` in either a randomly d
 ## [obj_grow_then_shrink](#obj_grow_then_shrink)
 
 ### Description
-Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`. Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`. The first time it reaches below `shootFireScale` during this time, return 1. Return -1 once it's reached endScale
+Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`.
+Once the object starts to shrink, wait a bit, and then begin to scale the object toward `endScale`.
+The first time it reaches below `shootFireScale` during this time, return 1.
+Return -1 once it's reached endScale
 
 ### Lua Example
 `local integerValue, scaleVel = obj_grow_then_shrink(scaleVel, shootFireScale, endScale)`

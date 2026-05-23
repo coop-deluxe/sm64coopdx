@@ -14,8 +14,8 @@
 #define SEQUENCE_ARGS(priority, seqId) ((priority << 8) | seqId)
 
 #define SOUND_MODE_STEREO           0
-#define SOUND_MODE_MONO             3
-#define SOUND_MODE_HEADSET          1
+#define SOUND_MODE_MONO             1
+#define SOUND_MODE_HEADSET          2
 
 #define SEQ_PLAYER_LEVEL            0  // Level background music
 #define SEQ_PLAYER_ENV              1  // Misc music like the puzzle jingle

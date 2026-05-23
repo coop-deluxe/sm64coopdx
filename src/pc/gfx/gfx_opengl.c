@@ -640,8 +640,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     prg->num_floats = num_floats;
     prg->num_attribs = cnt;
 
-    gfx_opengl_load_shader(prg);
-
+    glUseProgram(shader_program);
     for (int t = 0; t < 2; t++) {
         if (ccf.used_textures[t]) {
             char name[16];
@@ -678,6 +677,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     prg->uniform_locations[8] = glGetUniformLocation(shader_program, "uFilter");
+
+    gfx_opengl_load_shader(prg);
 
     return prg;
 }
@@ -789,6 +790,13 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
 }
 
+static inline bool gl_version_is_supported(int major, int minor, bool is_es) {
+    if (is_es) {
+        return major >= 2;
+    }
+    return (major > 2) || (major == 2 && minor >= 1);
+}
+
 static inline bool gl_get_version(int *major, int *minor, bool *is_es) {
     const char *vstr = (const char *)glGetString(GL_VERSION);
     if (!vstr || !vstr[0]) return false;
@@ -819,9 +827,9 @@ static void gfx_opengl_init(void) {
     int vmajor = 0;
     int vminor = 0;
     bool is_es = false;
-    gl_get_version(&vmajor, &vminor, &is_es);
-    if (vmajor < 2 && vminor < 1 && !is_es)
+    if (!gl_get_version(&vmajor, &vminor, &is_es) || !gl_version_is_supported(vmajor, vminor, is_es)) {
         sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor, vminor);
+    }
 
     glGenBuffers(1, &opengl_vbo);
 
@@ -834,6 +842,17 @@ static void gfx_opengl_init(void) {
 
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+bool gfx_opengl_check_compatibility(void) {
+    // check GL version
+    int vmajor = 0;
+    int vminor = 0;
+    bool is_es = false;
+    if (!gl_get_version(&vmajor, &vminor, &is_es)) {
+        return false;
+    }
+    return gl_version_is_supported(vmajor, vminor, is_es);
 }
 
 static void gfx_opengl_on_resize(void) {

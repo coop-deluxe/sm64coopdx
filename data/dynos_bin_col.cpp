@@ -749,7 +749,7 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         SysPath _ColFilename = fstring("%s/%s.col", aPackFolder.c_str(), _ColRootName.begin());
 
         // If there is an existing binary file for this collision, skip and go to the next collision
-        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _ColNode->mModelIdentifier);
+        String _ActorFolder = DynOS_GetActorFolder(_ActorsFolders, _ColNode->mDataIdentifier);
         SysPath _SrcFilename = fstring("%s/%s/collision.inc.c", aPackFolder.c_str(), _ActorFolder.begin());
         if (DynOS_GenFileExistsAndIsNewerThanFile(_ColFilename, _SrcFilename)) {
             continue;
@@ -760,8 +760,8 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         _GfxData->mLoadIndex = 0;
 
         // Parse data
-        PrintNoNewLine("%s.col: Collision identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.col: Collision identifier: %X - Processing... ", _ColRootName.begin(), _GfxData->mModelIdentifier);
+        PrintNoNewLine("%s.col: Collision identifier: %llX - Processing... ", _ColRootName.begin(), _ColNode->mDataIdentifier);
+        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.col: Collision identifier: %llX - Processing... ", _ColRootName.begin(), _ColNode->mDataIdentifier);
         DynOS_Col_Parse(_GfxData, _ColNode, true);
 
         // Write if no error

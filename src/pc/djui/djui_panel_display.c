@@ -26,9 +26,11 @@ static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* cal
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiColor* textColor = &theme->interactables.textColor;
     s32 frameLimit = atoi(inputbox1->buffer);
     if (frameLimit >= 30 && frameLimit <= 3000) {
-        djui_inputbox_set_text_color(inputbox1, 0, 0, 0, 255);
+        djui_inputbox_set_text_color(inputbox1, textColor->r, textColor->g, textColor->b, textColor->a);
         configFrameLimit = frameLimit;
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
@@ -129,8 +131,16 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_selectionbox_create(body, DLANG(DISPLAY, ANTIALIASING), msaaChoices, choiceCount, &sMsaaSelection, djui_panel_display_msaa_change);
         }
 
-        char* drawDistanceChoices[6] = { DLANG(DISPLAY, D0P5X), DLANG(DISPLAY, D1X), DLANG(DISPLAY, D1P5X), DLANG(DISPLAY, D3X), DLANG(DISPLAY, D10X), DLANG(DISPLAY, D100X) };
-        djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, 6, &configDrawDistance, NULL);
+        char* drawDistanceChoices[] = {
+            DLANG(DISPLAY, D0P5X),
+            DLANG(DISPLAY, D1X),
+            DLANG(DISPLAY, D1P5X),
+            DLANG(DISPLAY, D3X),
+            DLANG(DISPLAY, D10X),
+            DLANG(DISPLAY, D100X),
+            DLANG(DISPLAY, INFINITE),
+        };
+        djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, ARRAY_COUNT(drawDistanceChoices), &configDrawDistance, NULL);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
 

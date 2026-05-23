@@ -645,7 +645,6 @@ static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32
             f32 diff = (surf->prevVertex1[0] - x1) * (surf->prevVertex1[0] - x1);
             diff += (surf->prevVertex1[1] - surf->vertex1[1]) * (surf->prevVertex1[1] - surf->vertex1[1]);
             diff += (surf->prevVertex1[2] - z1) * (surf->prevVertex1[2] - z1);
-            //printf("%f\n", sqrtf(diff));
             if (diff > 10000) {
                 interpolate = FALSE;
             } else {
