@@ -1542,25 +1542,28 @@ s32 update_current_play_mode() {
 }
 
 s16 get_menu_level(void) {
-    switch (configMenuLevel) {
-        case 0:  return LEVEL_CASTLE_GROUNDS;
-        case 1:  return LEVEL_BOB;
-        case 2:  return LEVEL_WF;
-        case 3:  return LEVEL_WMOTR;
-        case 4:  return LEVEL_JRB;
-        case 5:  return LEVEL_SSL;
-        case 6:  return LEVEL_TTM;
-        case 7:  return LEVEL_SL;
-        case 8:  return LEVEL_BBH;
-        case 9:  return LEVEL_LLL;
-        case 10: return LEVEL_THI;
-        case 11: return LEVEL_HMC;
-        case 12: return LEVEL_CCM;
-        case 13: return LEVEL_RR;
-        case 14: return LEVEL_BITDW;
-        case 15: return LEVEL_PSS;
-        case 16: return LEVEL_TTC;
-        case 17: return LEVEL_WDW;
+    static enum LevelNum sMenuLevels[] = {
+        LEVEL_CASTLE_GROUNDS,
+        LEVEL_BOB,
+        LEVEL_WF,
+        LEVEL_WMOTR,
+        LEVEL_JRB,
+        LEVEL_SSL,
+        LEVEL_TTM,
+        LEVEL_SL,
+        LEVEL_BBH,
+        LEVEL_LLL,
+        LEVEL_THI,
+        LEVEL_HMC,
+        LEVEL_CCM,
+        LEVEL_RR,
+        LEVEL_BITDW,
+        LEVEL_PSS,
+        LEVEL_TTC,
+        LEVEL_WDW,
+    };
+    if (configMenuLevel < ARRAY_COUNT(sMenuLevels)) {
+        return sMenuLevels[configMenuLevel];
     }
     return LEVEL_CASTLE_GROUNDS;
 }
