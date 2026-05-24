@@ -101,3 +101,14 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 
     djui_panel_add(caller, panel, NULL);
 }
+
+void djui_panel_controls_refresh_binds(struct DjuiBase *parent) {
+    if (!parent) { return; }
+
+    struct DjuiBaseChild *child = parent->child;
+    while (child) {
+        struct DjuiBind *bind = (struct DjuiBind *) child->base;
+        djui_bind_refresh(bind);
+        child = child->next;
+    }
+}

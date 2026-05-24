@@ -22,6 +22,8 @@ static enum PadHoldDirection sKeyboardHoldDirection = PAD_HOLD_DIR_NONE;
 static u16 sKeyboardButtons = 0;
 
 static bool sIgnoreInteractableUntilCursorReleased = false;
+static bool sIgnoreAllInputsWhenBinding = false;
+static bool sAttemptingToToggleConsole = false;
 
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
@@ -198,6 +200,15 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
+    if (!gDjuiChatBoxFocus) {
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyConsole[i]) {
+                sAttemptingToToggleConsole = true;
+                break;
+            }
+        }
+    }
+
     bool keyFocused = (gInteractableFocus != NULL)
                    && (gInteractableFocus->interactable != NULL)
                    && (gInteractableFocus->interactable->on_key_down != NULL);
@@ -279,9 +290,13 @@ bool djui_interactable_on_key_down(int scancode) {
 
 void djui_interactable_on_key_up(int scancode) {
 
-    if (!gDjuiChatBoxFocus) {
+    if (!gDjuiChatBoxFocus && sAttemptingToToggleConsole) {
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
+            if (scancode == (int)configKeyConsole[i]) {
+                djui_console_toggle();
+                sAttemptingToToggleConsole = false;
+                break;
+            }
         }
     }
 
@@ -390,7 +405,7 @@ void djui_interactable_update_pad(void) {
         validPadHold = true;
     }
 
-    if (validPadHold && gInteractableFocus == NULL) {
+    if (validPadHold && gInteractableFocus == NULL && !sIgnoreAllInputsWhenBinding) {
         switch (padHoldDirection) {
             case PAD_HOLD_DIR_UP:    djui_cursor_move( 0, -1); break;
             case PAD_HOLD_DIR_DOWN:  djui_cursor_move( 0,  1); break;
@@ -408,21 +423,25 @@ void djui_interactable_update(void) {
     djui_interactable_update_pad();
 
     // prevent pressing buttons when they should be ignored
-    int mouseButtons = mouse_window_buttons;
-    u16 padButtons = gInteractablePad.button;
-    if (sIgnoreInteractableUntilCursorReleased) {
-        if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
-            padButtons   &= ~PAD_BUTTON_A;
-            mouseButtons &= ~MOUSE_BUTTON_1;
-        } else {
-            sIgnoreInteractableUntilCursorReleased = false;
+    int mouseButtons = 0;
+    u16 padButtons = 0;
+    if (!sIgnoreAllInputsWhenBinding) {
+        mouseButtons = mouse_window_buttons;
+        padButtons = gInteractablePad.button;
+        if (sIgnoreInteractableUntilCursorReleased) {
+            if ((padButtons & PAD_BUTTON_A) || (mouseButtons & L_MOUSE_BUTTON)) {
+                padButtons   &= ~PAD_BUTTON_A;
+                mouseButtons &= ~L_MOUSE_BUTTON;
+            } else {
+                sIgnoreInteractableUntilCursorReleased = false;
+            }
         }
     }
 
     // update focused
     if (gInteractableFocus) {
         u16 mainButtons = PAD_BUTTON_A | PAD_BUTTON_B;
-        if ((mouseButtons & MOUSE_BUTTON_1) && !(sLastMouseButtons & MOUSE_BUTTON_1) && !djui_cursor_inside_base(gInteractableFocus)) {
+        if ((mouseButtons & L_MOUSE_BUTTON) && !(sLastMouseButtons & L_MOUSE_BUTTON) && !djui_cursor_inside_base(gInteractableFocus)) {
             // clicked outside of focus
             if (!gDjuiChatBoxFocus) {
                 djui_interactable_set_input_focus(NULL);
@@ -449,7 +468,10 @@ void djui_interactable_update(void) {
 
     if (gInteractableBinding != NULL) {
         djui_interactable_on_bind(gInteractableBinding);
-    } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & MOUSE_BUTTON_1)) {
+        // make sure to cancel all inputs when binding a key
+        sIgnoreAllInputsWhenBinding = true;
+        return;
+    } else if ((padButtons & PAD_BUTTON_A) || (mouseButtons & L_MOUSE_BUTTON)) {
         // cursor down events
         if (gDjuiHovered != NULL) {
             gInteractableMouseDown = gDjuiHovered;
@@ -457,6 +479,12 @@ void djui_interactable_update(void) {
             djui_interactable_on_cursor_down_begin(gInteractableMouseDown, !mouseButtons);
         } else {
             djui_interactable_on_cursor_down(gInteractableMouseDown);
+        }
+    } else if (((padButtons & PAD_BUTTON_Z) && !(sLastInteractablePad.button & PAD_BUTTON_Z)) ||
+               ((mouseButtons & R_MOUSE_BUTTON) && !(sLastMouseButtons & R_MOUSE_BUTTON))) {
+        // pressed unbind
+        if (gDjuiHovered != NULL) {
+            djui_bind_unbind(gDjuiHovered);
         }
     } else {
         // cursor up event
@@ -476,6 +504,13 @@ void djui_interactable_update(void) {
 
     sLastInteractablePad = gInteractablePad;
     sLastMouseButtons = mouseButtons;
+
+    // Stop ignoring inputs, but set all buttons to "pressed", so they can't reactivate during the next frame
+    if (sIgnoreAllInputsWhenBinding) {
+        sLastInteractablePad.button = ~0;
+        sLastMouseButtons = ~0;
+        sIgnoreAllInputsWhenBinding = false;
+    }
 }
 
 void djui_interactable_hook_hover(struct DjuiBase* base,
