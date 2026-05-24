@@ -23,7 +23,7 @@ static u16 sKeyboardButtons = 0;
 
 static bool sIgnoreInteractableUntilCursorReleased = false;
 static bool sIgnoreAllInputsWhenBinding = false;
-static bool sAttemptingToToggleConsole = false;
+static int sPendingConsoleToggleScancode = -1;
 
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
@@ -203,7 +203,7 @@ bool djui_interactable_on_key_down(int scancode) {
     if (!gDjuiChatBoxFocus) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyConsole[i]) {
-                sAttemptingToToggleConsole = true;
+                sPendingConsoleToggleScancode = scancode;
                 break;
             }
         }
@@ -290,14 +290,11 @@ bool djui_interactable_on_key_down(int scancode) {
 
 void djui_interactable_on_key_up(int scancode) {
 
-    if (!gDjuiChatBoxFocus && sAttemptingToToggleConsole) {
-        for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyConsole[i]) {
-                djui_console_toggle();
-                sAttemptingToToggleConsole = false;
-                break;
-            }
+    if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
+        if (!gDjuiChatBoxFocus) {
+            djui_console_toggle();
         }
+        sPendingConsoleToggleScancode = -1;
     }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
