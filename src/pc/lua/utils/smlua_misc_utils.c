@@ -327,7 +327,17 @@ void game_unpause(void) {
 ///
 
 bool is_transition_playing(void) {
-    return sTransitionUpdate != NULL || gWarpTransition.isActive;
+    return gWarpTransition.isActive;
+}
+
+///
+
+s16 get_current_play_mode(void) {
+    return sCurrPlayMode;
+}
+
+s16 get_delayed_warp_op(void) {
+    return sDelayedWarpOp;
 }
 
 ///

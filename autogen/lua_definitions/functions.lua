@@ -11859,6 +11859,18 @@ function is_transition_playing()
     -- ...
 end
 
+--- @return integer
+--- Gets the current play mode (`PLAY_MODE_*`)
+function get_current_play_mode()
+    -- ...
+end
+
+--- @return integer
+--- Gets the delayed warp operation type (`WARP_OP_*`)
+function get_delayed_warp_op()
+    -- ...
+end
+
 --- @param actFlags integer
 --- @return integer
 --- Allocates an action ID with bitwise flags

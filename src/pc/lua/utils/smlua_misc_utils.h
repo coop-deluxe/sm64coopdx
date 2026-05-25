@@ -150,6 +150,11 @@ void game_unpause(void);
 /* |description|Checks if a screen transition is playing|descriptionEnd| */
 bool is_transition_playing(void);
 
+/* |description|Gets the current play mode (`PLAY_MODE_*`)|descriptionEnd| */
+s16 get_current_play_mode(void);
+/* |description|Gets the delayed warp operation type (`WARP_OP_*`)|descriptionEnd| */
+s16 get_delayed_warp_op(void);
+
 /* |description|Allocates an action ID with bitwise flags|descriptionEnd| */
 u32 allocate_mario_action(u32 actFlags);
 

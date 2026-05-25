@@ -2058,6 +2058,8 @@
    - [game_pause](functions-7.md#game_pause)
    - [game_unpause](functions-7.md#game_unpause)
    - [is_transition_playing](functions-7.md#is_transition_playing)
+   - [get_current_play_mode](functions-7.md#get_current_play_mode)
+   - [get_delayed_warp_op](functions-7.md#get_delayed_warp_op)
    - [allocate_mario_action](functions-7.md#allocate_mario_action)
    - [get_hand_foot_pos_x](functions-7.md#get_hand_foot_pos_x)
    - [get_hand_foot_pos_y](functions-7.md#get_hand_foot_pos_y)

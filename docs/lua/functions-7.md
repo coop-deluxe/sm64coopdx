@@ -2558,6 +2558,48 @@ Checks if a screen transition is playing
 
 <br />
 
+## [get_current_play_mode](#get_current_play_mode)
+
+### Description
+Gets the current play mode (`PLAY_MODE_*`)
+
+### Lua Example
+`local integerValue = get_current_play_mode()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_current_play_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_delayed_warp_op](#get_delayed_warp_op)
+
+### Description
+Gets the delayed warp operation type (`WARP_OP_*`)
+
+### Lua Example
+`local integerValue = get_delayed_warp_op()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 get_delayed_warp_op(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [allocate_mario_action](#allocate_mario_action)
 
 ### Description

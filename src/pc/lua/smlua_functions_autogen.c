@@ -34077,6 +34077,36 @@ int smlua_func_is_transition_playing(UNUSED lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_current_play_mode(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_current_play_mode", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_current_play_mode());
+
+    return 1;
+}
+
+int smlua_func_get_delayed_warp_op(UNUSED lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_delayed_warp_op", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, get_delayed_warp_op());
+
+    return 1;
+}
+
 int smlua_func_allocate_mario_action(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -39102,6 +39132,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "game_pause", smlua_func_game_pause);
     smlua_bind_function(L, "game_unpause", smlua_func_game_unpause);
     smlua_bind_function(L, "is_transition_playing", smlua_func_is_transition_playing);
+    smlua_bind_function(L, "get_current_play_mode", smlua_func_get_current_play_mode);
+    smlua_bind_function(L, "get_delayed_warp_op", smlua_func_get_delayed_warp_op);
     smlua_bind_function(L, "allocate_mario_action", smlua_func_allocate_mario_action);
     smlua_bind_function(L, "get_hand_foot_pos_x", smlua_func_get_hand_foot_pos_x);
     smlua_bind_function(L, "get_hand_foot_pos_y", smlua_func_get_hand_foot_pos_y);
