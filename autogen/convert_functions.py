@@ -973,10 +973,7 @@ def build_function(function, do_extern):
 
     fparams, freturns = split_function_parameters_and_returns(function)
 
-    if len(function['params']) <= 0:
-        s += 'int smlua_func_%s(UNUSED lua_State* L) {\n' % function['identifier']
-    else:
-        s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+    s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
 
     # make sure the bhv functions have a current object
     fname = function['filename']
