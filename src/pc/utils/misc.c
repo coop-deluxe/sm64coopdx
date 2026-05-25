@@ -2,6 +2,7 @@
 #include <windows.h>
 #else
 #include <unistd.h>
+#include <sys/wait.h>
 #endif
 
 #include <stdio.h>
@@ -608,38 +609,49 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
     }
 }
 
+#if defined(__linux__) || defined(__APPLE__)
+static s8 launch(const char* program, const char* arg) {
+    pid_t pid = fork();
+
+    if (pid < 0) { return -1; }
+
+    if (pid == 0) {
+        execlp(program, program, arg, (char*)NULL);
+        _exit(127);
+    }
+
+    s8 status;
+    waitpid(pid, &status, 0);
+    return WIFEXITED(status) && WEXITSTATUS(status) == 0 ? 0 : -1;
+}
+#endif
+
+
 void open_url(const char* url) {
 #if defined(_WIN32) || defined(_WIN64) // windows
     ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 
 #elif __linux__ // linux
-    char cmd[512];
-    snprintf(cmd, sizeof(cmd), "xdg-open '%s'", url);
-    system(cmd);
+    launch("xdg-open", url);
 
 #elif __APPLE__ // macOS
-    char cmd[512];
-    snprintf(cmd, sizeof(cmd), "open '%s'", url);
-    system(cmd);
+    launch("open", url);
+
 #endif
 }
 
 void open_folder(const char* path) {
 #if defined(_WIN32) || defined(_WIN64) // windows
-    _mkdir(path); 
+    _mkdir(path);
     ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
-    
+
 #elif __linux__ // linux
     mkdir(path, 0777);
-    char command[512];
-    snprintf(command, sizeof(command), "xdg-open \"%s\"", path);
-    system(command);
+    launch("xdg-open", path);
 
 #elif __APPLE__ // macOS
     mkdir(path, 0777);
-    char command[512];
-    snprintf(command, sizeof(command), "open \"%s\"", path);
-    system(command);
+    launch("open", path);
 #endif
 }
 
