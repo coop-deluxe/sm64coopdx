@@ -139,7 +139,8 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     if (behavior == NULL) {
         LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
-    } if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
+    }
+    if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
         enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
         enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
         LOG_ERROR(
