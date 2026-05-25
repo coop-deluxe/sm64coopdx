@@ -320,7 +320,7 @@ void smlua_init(void) {
 
     // load libraries
     luaopen_base(L);
-#if defined(THIS_IS_VERY_UNSAFE_AND_I_KNOW_WHAT_IM_DOING)
+#if defined(DEVELOPMENT) && defined(LUA_UNSAFE)
     luaL_requiref(L, "debug", luaopen_debug, 1);
     luaL_requiref(L, "io", luaopen_io, 1);
     luaL_requiref(L, "os", luaopen_os, 1);
