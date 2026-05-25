@@ -620,7 +620,7 @@ static s8 launch(const char* program, const char* arg) {
         _exit(127);
     }
 
-    s8 status;
+    s32 status;
     waitpid(pid, &status, 0);
     return WIFEXITED(status) && WEXITSTATUS(status) == 0 ? 0 : -1;
 }
