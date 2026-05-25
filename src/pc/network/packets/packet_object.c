@@ -142,11 +142,11 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     }
     if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
         enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
-        enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
+        enum BehaviorId inBehaviorId = get_id_from_behavior(behavior);
         LOG_ERROR(
             "during read behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
             objBehaviorId, get_behavior_name_from_id(objBehaviorId),
-            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
+            inBehaviorId,  get_behavior_name_from_id(inBehaviorId)
         );
         return NULL;
     }
@@ -491,7 +491,10 @@ void network_update_objects(void) {
 
         // check for stale sync object
         if (so->o->oSyncID != so->id) {
-            if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED) { // check if object was just deleted
+            // check if object was deleted
+            if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED &&
+                so->o->behavior == so->behavior // a new object may be in this slot
+            ) {
                 enum BehaviorId bhvId = get_id_from_behavior(so->o->behavior);
                 const char* bhvName = get_behavior_name_from_id(bhvId);
                 LOG_ERROR("sync id mismatch: %d vs %d (behavior %s, %d)", so->o->oSyncID, so->id, bhvName != NULL ? bhvName : "NULL", bhvId);
