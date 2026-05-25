@@ -117,6 +117,11 @@ static bool djui_slider_render(struct DjuiBase* base) {
     struct DjuiText *text = slider->textValueForeground;
     struct DjuiBaseRect* clip = &slider->rect->base.clip;
 
+    if (clip->width <= 0.f || slider->max <= slider->min) {
+        djui_base_set_visible(&slider->textValueForeground->base, false); // hide it
+        return true;
+    }
+
     //
     // clipping magic
     //
@@ -131,6 +136,7 @@ static bool djui_slider_render(struct DjuiBase* base) {
     f32 charHalfWidth = (text->font->char_width("0") * text->fontScale) / (2.f * clip->width);
     f32 width = (0.5f + charHalfWidth * strlen(text->message)) / MAX(sliderValue01, 0.1f);
     djui_base_set_size(&slider->textValueForeground->base, width, 1.0f);
+    djui_base_set_visible(&slider->textValueForeground->base, true);
 
     return true;
 }
