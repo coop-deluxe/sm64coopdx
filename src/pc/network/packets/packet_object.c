@@ -145,8 +145,8 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
         enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
         LOG_ERROR(
             "during read behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
-            objBehaviorId,  get_behavior_name_from_id(objBehaviorId),
-            soBehaviorId, get_behavior_name_from_id(soBehaviorId)
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
         );
         return NULL;
     }
@@ -303,8 +303,8 @@ void network_send_object(struct Object* o) {
         enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
         LOG_ERROR(
             "during send behavior mismatch for %d: %04X (%s) vs %04X (%s)", o->oSyncID,
-            objBehaviorId,  get_behavior_name_from_id(objBehaviorId),
-            soBehaviorId, get_behavior_name_from_id(soBehaviorId)
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
         );
         sync_object_forget(so->id);
         return;
@@ -343,8 +343,8 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
         enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
         LOG_ERROR(
             "during send reliability behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
-            objBehaviorId,  get_behavior_name_from_id(objBehaviorId),
-            soBehaviorId, get_behavior_name_from_id(soBehaviorId)
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
         );
         sync_object_forget(so->id);
         return;
