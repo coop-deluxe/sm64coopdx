@@ -6,6 +6,8 @@ struct DjuiSlider {
     struct DjuiRect* rect;
     struct DjuiRect* rectValue;
     struct DjuiText* text;
+    struct DjuiText* textValueForeground;
+    struct DjuiText* textValueBackground;
     unsigned int* value;
     unsigned int min;
     unsigned int max;
