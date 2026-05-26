@@ -216,15 +216,26 @@ static void update_screen_settings(void) {
     if (configWindow.fullscreen != dxgi.is_full_screen)
         toggle_borderless_window_full_screen(configWindow.fullscreen);
     if (!dxgi.is_full_screen) {
-        // this code is buggy, and I just simply don't care enough about direct x to fix it
-        // when this is enabled, the window will be placed in the wrong spot...
-        const int screen_width = GetSystemMetrics(SM_CXSCREEN);
-        const int screen_height = GetSystemMetrics(SM_CYSCREEN);
+        // use the current monitor work area for centering and apply the real window styles
+        HMONITOR h_monitor = MonitorFromWindow(dxgi.h_wnd, MONITOR_DEFAULTTONEAREST);
+        MONITORINFO monitor_info;
+        monitor_info.cbSize = sizeof(monitor_info);
+        if (!GetMonitorInfo(h_monitor, &monitor_info)) {
+            return;
+        }
 
-        const int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? (screen_width - configWindow.w) * 0.5 : configWindow.x;
-        const int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? (screen_height - configWindow.h) * 0.5 : configWindow.y;
+        const RECT work_rect = monitor_info.rcWork;
+        const int xpos = (configWindow.x == WAPI_WIN_CENTERPOS)
+            ? work_rect.left + ((work_rect.right - work_rect.left) - (int)configWindow.w) / 2
+            : (int)configWindow.x;
+        const int ypos = (configWindow.y == WAPI_WIN_CENTERPOS)
+            ? work_rect.top + ((work_rect.bottom - work_rect.top) - (int)configWindow.h) / 2
+            : (int)configWindow.y;
+
         RECT wr = { xpos, ypos, xpos + (int)configWindow.w, ypos + (int)configWindow.h };
-        AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
+        const DWORD style = (DWORD)GetWindowLongPtr(dxgi.h_wnd, GWL_STYLE);
+        const DWORD ex_style = (DWORD)GetWindowLongPtr(dxgi.h_wnd, GWL_EXSTYLE);
+        AdjustWindowRectEx(&wr, style, FALSE, ex_style);
         SetWindowPos(dxgi.h_wnd, NULL, wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top, SWP_NOACTIVATE | SWP_NOZORDER);
     }
 }
