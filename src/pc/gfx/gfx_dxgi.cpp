@@ -232,11 +232,13 @@ static void update_screen_settings(void) {
             ? work_rect.top + ((work_rect.bottom - work_rect.top) - (int)configWindow.h) / 2
             : (int)configWindow.y;
 
-        RECT wr = { xpos, ypos, xpos + (int)configWindow.w, ypos + (int)configWindow.h };
+        RECT wr = { 0, 0, (int)configWindow.w, (int)configWindow.h };
         const DWORD style = (DWORD)GetWindowLongPtr(dxgi.h_wnd, GWL_STYLE);
         const DWORD ex_style = (DWORD)GetWindowLongPtr(dxgi.h_wnd, GWL_EXSTYLE);
         AdjustWindowRectEx(&wr, style, FALSE, ex_style);
-        SetWindowPos(dxgi.h_wnd, NULL, wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top, SWP_NOACTIVATE | SWP_NOZORDER);
+        const int window_w = wr.right - wr.left;
+        const int window_h = wr.bottom - wr.top;
+        SetWindowPos(dxgi.h_wnd, NULL, xpos, ypos, window_w, window_h, SWP_NOACTIVATE | SWP_NOZORDER);
     }
 }
 
