@@ -2295,21 +2295,22 @@ Saves a `key` corresponding to a bool `value` to mod storage
 ## [mod_storage_load](#mod_storage_load)
 
 ### Description
-Loads a string `value` from a `key` in mod storage
+Loads a string `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `nil`
 
 ### Lua Example
-`local stringValue = mod_storage_load(key)`
+`local stringValue = mod_storage_load(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `string` |
 
 ### Returns
 - `string`
 
 ### C Prototype
-`const char *mod_storage_load(const char* key);`
+`const char *mod_storage_load(const char* key, OPTIONAL const char* defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2318,21 +2319,22 @@ Loads a string `value` from a `key` in mod storage
 ## [mod_storage_load_integer](#mod_storage_load_integer)
 
 ### Description
-Loads an integer `value` from a `key` in mod storage
+Loads an integer `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
 
 ### Lua Example
-`local integerValue = mod_storage_load_integer(key)`
+`local integerValue = mod_storage_load_integer(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`lua_Integer mod_storage_load_integer(const char* key);`
+`lua_Integer mod_storage_load_integer(const char* key, OPTIONAL lua_Integer defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2341,21 +2343,22 @@ Loads an integer `value` from a `key` in mod storage
 ## [mod_storage_load_number](#mod_storage_load_number)
 
 ### Description
-Loads a number `value` from a `key` in mod storage
+Loads a number `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
 
 ### Lua Example
-`local numberValue = mod_storage_load_number(key)`
+`local numberValue = mod_storage_load_number(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `number` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`lua_Number mod_storage_load_number(const char* key);`
+`lua_Number mod_storage_load_number(const char* key, OPTIONAL lua_Number defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2364,21 +2367,22 @@ Loads a number `value` from a `key` in mod storage
 ## [mod_storage_load_bool](#mod_storage_load_bool)
 
 ### Description
-Loads a bool `value` from a `key` in mod storage
+Loads a bool `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `false`
 
 ### Lua Example
-`local booleanValue = mod_storage_load_bool(key)`
+`local booleanValue = mod_storage_load_bool(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `boolean` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool mod_storage_load_bool(const char* key);`
+`bool mod_storage_load_bool(const char* key, OPTIONAL bool defaultValue);`
 
 [:arrow_up_small:](#)
 

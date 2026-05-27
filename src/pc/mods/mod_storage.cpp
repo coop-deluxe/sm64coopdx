@@ -117,15 +117,15 @@ static mINI::INIStructure &mod_storage_read_file(const char *filename) {
     return sModStorageFiles[filename];
 }
 
-C_FIELD const char* mod_storage_load(const char* key) {
+C_FIELD const char *mod_storage_load(const char* key, OPTIONAL const char* defaultValue) {
     char filename[SYS_MAX_PATH] = { 0 };
     if (!mod_storage_check_inputs(key, NULL, filename)) {
-        return NULL;
+        return defaultValue;
     }
 
     const mINI::INIStructure &ini = mod_storage_read_file(filename);
     std::string str = ini.get("storage").get(key);
-    if (str.empty()) { return NULL; }
+    if (str.empty()) { return defaultValue; }
 
     // Store string results in a temporary buffer
     // this assumes mod_storage_load will only ever be called by Lua
@@ -134,29 +134,29 @@ C_FIELD const char* mod_storage_load(const char* key) {
     return value;
 }
 
-C_FIELD lua_Integer mod_storage_load_integer(const char* key) {
-    const char* value = mod_storage_load(key);
-    if (value == NULL) { return 0; }
+C_FIELD lua_Integer mod_storage_load_integer(const char* key, OPTIONAL lua_Integer defaultValue) {
+    const char* value = mod_storage_load(key, NULL);
+    if (value == NULL) { return defaultValue; }
 
     return std::strtoll(value, NULL, 10);
 }
 
-C_FIELD lua_Number mod_storage_load_number(const char* key) {
-    const char* value = mod_storage_load(key);
-    if (value == NULL) { return 0.0; }
+C_FIELD lua_Number mod_storage_load_number(const char* key, OPTIONAL lua_Number defaultValue) {
+    const char* value = mod_storage_load(key, NULL);
+    if (value == NULL) { return defaultValue; }
 
     return std::strtod(value, NULL);
 }
 
-C_FIELD bool mod_storage_load_bool(const char* key) {
-    const char* value = mod_storage_load(key);
-    if (value == NULL) { return false; }
+C_FIELD bool mod_storage_load_bool(const char* key, OPTIONAL bool defaultValue) {
+    const char* value = mod_storage_load(key, NULL);
+    if (value == NULL) { return defaultValue; }
 
     return !strcmp(value, "true");
 }
 
 C_FIELD bool mod_storage_exists(const char* key) {
-    return mod_storage_load(key) != NULL;
+    return mod_storage_load(key, NULL) != NULL;
 }
 
 C_FIELD LuaTable mod_storage_load_all(void) {
