@@ -101,7 +101,7 @@ extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
 extern unsigned int configStickDeadzone;
 extern unsigned int configStickAxialDeadzone;
-extern unsigned int configMovementStickSensitivity;
+extern unsigned int configStickMovementSensitivity;
 extern unsigned int configTriggerSensitivity;
 extern unsigned int configStickToButtonSensitivity;
 extern unsigned int configRumbleStrength;

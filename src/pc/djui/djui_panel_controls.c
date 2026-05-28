@@ -18,7 +18,7 @@ void djui_panel_controls_analog_stick_options_create(struct DjuiBase* caller) {
     {
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, AXIAL_DEADZONE), &configStickAxialDeadzone, 0, 50, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, MOVEMENT_SENSITIVITY), &configMovementStickSensitivity, 0, 150, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, MOVEMENT_SENSITIVITY), &configStickMovementSensitivity, 0, 150, djui_panel_controls_value_change);
         djui_checkbox_create(body, DLANG(CONTROLS, ROTATE_LEFT), &configStick.rotateLeft, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_X), &configStick.invertLeftX, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_Y), &configStick.invertLeftY, NULL);
