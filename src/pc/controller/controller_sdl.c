@@ -182,6 +182,17 @@ static inline void update_button(const int i, const bool new) {
     }
 }
 
+static inline float map_range_to_range (float value, float old_min, float old_max, float new_min, float new_max) {
+    return (new_min + (new_max - new_min) * (value - old_min) / (old_max - old_min));
+}
+
+static inline void apply_axial_deadzone(s8 *stick_x, s8 *stick_y) {
+    float deadzone_x = configStickAxialDeadzone * abs(*stick_y) / 127;
+    float deadzone_y = configStickAxialDeadzone * abs(*stick_x) / 127;
+    *stick_x = (abs(*stick_x) > deadzone_x) ? copysign(map_range_to_range(abs(*stick_x), deadzone_x, 127, 0 , 127), *stick_x) : 0;
+    *stick_y = (abs(*stick_y) > deadzone_y) ? copysign(map_range_to_range(abs(*stick_y), deadzone_y, 127, 0 , 127), *stick_y) : 0;
+}
+
 static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
     float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
@@ -197,10 +208,10 @@ static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
         magnitude -= deadzone;
         magnitude *= max_magnitude / (max_magnitude - deadzone);
         magnitude /= 0x100;
-        magnitude = fminf(magnitude, scale * 127.f);
-
+        magnitude = fminf(magnitude, scale * 127.f) * ((float)configStickSensitivity / 100); 
         *stick_x = dir_x * magnitude;
         *stick_y = -dir_y * magnitude;
+        apply_axial_deadzone(stick_x, stick_y);
     }
 }
 
