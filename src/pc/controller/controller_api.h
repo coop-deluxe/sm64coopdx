@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_API
 #define CONTROLLER_API
 
-#define DEADZONE_STEP 310  // original deadzone is 4960
+#define INPUT_STEP 310  // original is 4960 (originally used for just the deadzone, now used for general analog input handling)
 #define VK_INVALID 0xFFFF
 #define VK_SIZE 0x1000
 

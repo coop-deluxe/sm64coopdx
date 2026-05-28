@@ -127,7 +127,9 @@ unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK
 unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configStickAxialDeadzone             = 0;
-unsigned int configStickSensitivity               = 100;
+unsigned int configMovementStickSensitivity       = 100;
+unsigned int configTriggerSensitivity             = 50;
+unsigned int configStickToButtonSensitivity             = 50;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
@@ -276,7 +278,9 @@ static const struct ConfigOption options[] = {
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "stick_axial_deadzone",           .type = CONFIG_TYPE_UINT, .uintValue = &configStickAxialDeadzone},
-    {.name = "stick_sensitivity",              .type = CONFIG_TYPE_UINT, .uintValue = &configStickSensitivity},
+    {.name = "movement_stick_sensitivity",     .type = CONFIG_TYPE_UINT, .uintValue = &configMovementStickSensitivity},
+    {.name = "trigger_sensitivity",            .type = CONFIG_TYPE_UINT, .uintValue = &configTriggerSensitivity},
+    {.name = "stick_to_button_sensitivity",    .type = CONFIG_TYPE_UINT, .uintValue = &configStickToButtonSensitivity},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
