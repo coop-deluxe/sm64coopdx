@@ -100,6 +100,8 @@ extern unsigned int configKeyPrevPage[MAX_BINDS];
 extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
 extern unsigned int configStickDeadzone;
+extern unsigned int configStickAxialDeadzone;
+extern unsigned int configStickSensitivity;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
