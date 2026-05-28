@@ -2844,7 +2844,7 @@ Creates a `message` in the game's chat box
 ## [djui_console_toggle](#djui_console_toggle)
 
 ### Description
-Toggles the visibility of the DJUI console
+Returns whether the DJUI console is currently open or not
 
 ### Lua Example
 `djui_console_toggle()`
