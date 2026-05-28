@@ -124,7 +124,7 @@ static const unsigned int defaultConfigKeyDRight[MAX_BINDS]     = { 0x0151,     
 static const unsigned int defaultConfigKeyConsole[MAX_BINDS]    = { 0x0029,     0x003B,     VK_INVALID };
 static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { VK_INVALID, VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
 
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -151,8 +151,7 @@ unsigned int configKeyDRight[MAX_BINDS]           = { 0x0151,     0x100e,     VK
 unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK_INVALID };
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
-unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
-
+unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
