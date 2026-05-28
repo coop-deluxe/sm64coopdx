@@ -196,25 +196,22 @@ static inline void apply_axial_deadzone(s8 *stick_x, s8 *stick_y) {
 static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
     float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
-    float deadzone = configStickDeadzone * DEADZONE_STEP;
-
+    float deadzone = configStickDeadzone * INPUT_STEP;
     if (magnitude_sq > (deadzone * deadzone)) {
         float magnitude = sqrtf(magnitude_sq);
         float dir_x = (float)input_x / magnitude;
         float dir_y = (float)input_y / magnitude;
         float scale = 1.f / fmaxf(fabsf(dir_x), fabsf(dir_y));
-        float max_magnitude = 0x8000 * scale;
+        float max_magnitude = 0x7FFF * scale;
 
         magnitude -= deadzone;
         magnitude *= max_magnitude / (max_magnitude - deadzone);
         magnitude /= 0x100;
-        magnitude = fminf(magnitude * ((float)configStickSensitivity / 100), scale * 127.f); 
+        magnitude = fminf(magnitude, scale * 127.f); 
         *stick_x = dir_x * magnitude;
         *stick_y = -dir_y * magnitude;
-        apply_axial_deadzone(stick_x, stick_y);
     }
 }
-
 extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
@@ -287,6 +284,11 @@ static void controller_sdl_read(OSContPad *pad) {
         righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
         ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
         rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+
+        // handles movement stick sensitivity separate from right stick
+        leftx = (leftx * ((float)configMovementStickSensitivity / 100) > 0x7FFF) ? 0x7FFF : leftx * ((float)configMovementStickSensitivity / 100);
+        lefty = (lefty * ((float)configMovementStickSensitivity / 100) > 0x7FFF) ? 0x7FFF : lefty * ((float)configMovementStickSensitivity / 100);
+
         for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
             const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
             update_button(i, new);
@@ -322,13 +324,16 @@ static void controller_sdl_read(OSContPad *pad) {
         rightx = invert_s16(righty);
         righty = tmp;
     }
+
     if (configStick.invertLeftX) { leftx = invert_s16(leftx); }
     if (configStick.invertLeftY) { lefty = invert_s16(lefty); }
     if (configStick.invertRightX) { rightx = invert_s16(rightx); }
     if (configStick.invertRightY) { righty = invert_s16(righty); }
 
-    update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
-    update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
+    s16 triggerThreshold = configTriggerSensitivity * INPUT_STEP;
+
+    update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > triggerThreshold);
+    update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > triggerThreshold);
 
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
@@ -347,12 +352,15 @@ static void controller_sdl_read(OSContPad *pad) {
     else if (ystick == STICK_UP)
         pad->stick_y = 127;
 
-    if (rightx < -0x4000) pad->button |= L_CBUTTONS;
-    if (rightx > 0x4000) pad->button |= R_CBUTTONS;
-    if (righty < -0x4000) pad->button |= U_CBUTTONS;
-    if (righty > 0x4000) pad->button |= D_CBUTTONS;
+    s16 stickToButtonThreshold = (map_range_to_range(configStickToButtonSensitivity, 0, 100, configStickDeadzone, 100) * INPUT_STEP);
+    
+    if (rightx < -stickToButtonThreshold) pad->button |= L_CBUTTONS;
+    if (rightx > stickToButtonThreshold) pad->button |= R_CBUTTONS;
+    if (righty < -stickToButtonThreshold) pad->button |= U_CBUTTONS;
+    if (righty > stickToButtonThreshold) pad->button |= D_CBUTTONS;
 
     update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty);
+    apply_axial_deadzone(&pad->stick_x, &pad->stick_y);
     update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty);
 }
 

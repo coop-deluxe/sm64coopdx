@@ -18,7 +18,7 @@ void djui_panel_controls_analog_stick_options_create(struct DjuiBase* caller) {
     {
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, AXIAL_DEADZONE), &configStickAxialDeadzone, 0, 50, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, SENSITIVITY), &configStickSensitivity, 0, 150, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, MOVEMENT_SENSITIVITY), &configMovementStickSensitivity, 0, 150, djui_panel_controls_value_change);
         djui_checkbox_create(body, DLANG(CONTROLS, ROTATE_LEFT), &configStick.rotateLeft, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_X), &configStick.invertLeftX, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_Y), &configStick.invertLeftY, NULL);
@@ -96,8 +96,9 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         }
 
         free(gamepadChoices);
-
-
+        
+        djui_slider_create(body, DLANG(CONTROLS, TRIGGER_SENSITIVITY), &configTriggerSensitivity, 1, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, STICK_TO_BUTTON_SENSITIVITY), &configStickToButtonSensitivity, 1, 100, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
