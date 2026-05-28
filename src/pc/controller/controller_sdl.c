@@ -208,7 +208,7 @@ static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
         magnitude -= deadzone;
         magnitude *= max_magnitude / (max_magnitude - deadzone);
         magnitude /= 0x100;
-        magnitude = fminf(magnitude, scale * 127.f) * ((float)configStickSensitivity / 100); 
+        magnitude = fminf(magnitude * ((float)configStickSensitivity / 100), scale * 127.f); 
         *stick_x = dir_x * magnitude;
         *stick_y = -dir_y * magnitude;
         apply_axial_deadzone(stick_x, stick_y);
