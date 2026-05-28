@@ -3917,6 +3917,12 @@ function djui_console_toggle()
     -- ...
 end
 
+--- @return boolean
+--- Toggles the visibility of the DJUI console
+function djui_console_is_open()
+    -- ...
+end
+
 --- @return integer
 --- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()

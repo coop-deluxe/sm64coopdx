@@ -12197,6 +12197,21 @@ int smlua_func_djui_console_toggle(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_console_is_open(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_console_is_open", 0, top);
+        return 0;
+    }
+
+
+    lua_pushboolean(L, djui_console_is_open());
+
+    return 1;
+}
+
   //////////////////////
  // djui_hud_utils.h //
 //////////////////////
@@ -37929,6 +37944,7 @@ void smlua_bind_functions_autogen(void) {
 
     // djui_console.h
     smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
+    smlua_bind_function(L, "djui_console_is_open", smlua_func_djui_console_is_open);
 
     // djui_hud_utils.h
     smlua_bind_function(L, "djui_hud_get_resolution", smlua_func_djui_hud_get_resolution);

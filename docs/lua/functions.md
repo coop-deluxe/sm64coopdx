@@ -751,6 +751,7 @@
 
 - djui_console.h
    - [djui_console_toggle](functions-3.md#djui_console_toggle)
+   - [djui_console_is_open](functions-3.md#djui_console_is_open)
 
 <br />
 

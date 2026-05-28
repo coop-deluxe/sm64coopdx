@@ -2862,6 +2862,27 @@ Toggles the visibility of the DJUI console
 
 <br />
 
+## [djui_console_is_open](#djui_console_is_open)
+
+### Description
+Toggles the visibility of the DJUI console
+
+### Lua Example
+`local booleanValue = djui_console_is_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_console_is_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from djui_hud_utils.h
 
