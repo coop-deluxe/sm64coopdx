@@ -193,6 +193,12 @@ static inline void apply_axial_deadzone(s8 *stick_x, s8 *stick_y) {
     *stick_y = (abs(*stick_y) > deadzone_y) ? copysign(map_range_to_range(abs(*stick_y), deadzone_y, 127, 0 , 127), *stick_y) : 0;
 }
 
+static inline void apply_sensitivity(s8 *stick_x, s8 *stick_y, float inputSensitivity) {
+    float sensitivity = inputSensitivity / 100;
+    *stick_x = (fabsf(*stick_x * sensitivity) > 127) ? copysign(127, *stick_x) : *stick_x * sensitivity;
+    *stick_y = (fabsf(*stick_y * sensitivity) > 127) ? copysign(127, *stick_y) : *stick_y * sensitivity;
+}
+
 static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
                                         int16_t input_x, int16_t input_y) {
     float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
@@ -285,10 +291,6 @@ static void controller_sdl_read(OSContPad *pad) {
         ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
         rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
-        // handles movement stick sensitivity separate from right stick
-        leftx = (leftx * ((float)configMovementStickSensitivity / 100) > 0x7FFF) ? 0x7FFF : leftx * ((float)configMovementStickSensitivity / 100);
-        lefty = (lefty * ((float)configMovementStickSensitivity / 100) > 0x7FFF) ? 0x7FFF : lefty * ((float)configMovementStickSensitivity / 100);
-
         for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
             const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
             update_button(i, new);
@@ -360,8 +362,11 @@ static void controller_sdl_read(OSContPad *pad) {
     if (righty > stickToButtonThreshold) pad->button |= D_CBUTTONS;
 
     update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty);
-    apply_axial_deadzone(&pad->stick_x, &pad->stick_y);
     update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty);
+
+    // extra input processing
+    apply_sensitivity(&pad->stick_x, &pad->stick_y, configStickMovementSensitivity);
+    apply_axial_deadzone(&pad->stick_x, &pad->stick_y);
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) {
