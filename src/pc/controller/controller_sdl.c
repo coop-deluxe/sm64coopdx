@@ -332,7 +332,7 @@ static void controller_sdl_read(OSContPad *pad) {
     if (configStick.invertRightX) { rightx = invert_s16(rightx); }
     if (configStick.invertRightY) { righty = invert_s16(righty); }
 
-    s16 triggerThreshold = configTriggerSensitivity * INPUT_STEP;
+    float triggerThreshold = configTriggerSensitivity * INPUT_STEP;
 
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > triggerThreshold);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > triggerThreshold);
@@ -354,7 +354,7 @@ static void controller_sdl_read(OSContPad *pad) {
     else if (ystick == STICK_UP)
         pad->stick_y = 127;
 
-    s16 stickToButtonThreshold = (map_range_to_range(configStickToButtonSensitivity, 0, 100, configStickDeadzone, 100) * INPUT_STEP);
+    float stickToButtonThreshold = (map_range_to_range(configStickToButtonSensitivity, 0, 100, configStickDeadzone, 100) * INPUT_STEP);
     
     if (rightx < -stickToButtonThreshold) pad->button |= L_CBUTTONS;
     if (rightx > stickToButtonThreshold) pad->button |= R_CBUTTONS;
