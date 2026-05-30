@@ -3081,6 +3081,11 @@ function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
 
+--- Centers the free camera
+function center_free_camera()
+    -- ...
+end
+
 --- @param c Camera
 --- Moves Mario's head slightly upward when the C-Up button is pressed.<br>
 --- This function aligns the camera to match the head movement for consistency
@@ -3918,7 +3923,7 @@ function djui_console_toggle()
 end
 
 --- @return boolean
---- Toggles the visibility of the DJUI console
+--- Returns whether the DJUI console is currently open or not
 function djui_console_is_open()
     -- ...
 end

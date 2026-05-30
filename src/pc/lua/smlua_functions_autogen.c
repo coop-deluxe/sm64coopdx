@@ -10101,6 +10101,21 @@ int smlua_func_set_camera_shake_from_point(lua_State* L) {
     return 1;
 }
 
+int smlua_func_center_free_camera(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "center_free_camera", 0, top);
+        return 0;
+    }
+
+
+    center_free_camera();
+
+    return 1;
+}
+
 int smlua_func_move_mario_head_c_up(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37840,6 +37855,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_camera_shake_from_hit", smlua_func_set_camera_shake_from_hit);
     smlua_bind_function(L, "set_environmental_camera_shake", smlua_func_set_environmental_camera_shake);
     smlua_bind_function(L, "set_camera_shake_from_point", smlua_func_set_camera_shake_from_point);
+    smlua_bind_function(L, "center_free_camera", smlua_func_center_free_camera);
     smlua_bind_function(L, "move_mario_head_c_up", smlua_func_move_mario_head_c_up);
     smlua_bind_function(L, "transition_next_state", smlua_func_transition_next_state);
     smlua_bind_function(L, "set_camera_mode", smlua_func_set_camera_mode);

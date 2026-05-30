@@ -428,6 +428,27 @@ The intensity decreases with distance from the point
 
 <br />
 
+## [center_free_camera](#center_free_camera)
+
+### Description
+Centers the free camera
+
+### Lua Example
+`center_free_camera()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void center_free_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [move_mario_head_c_up](#move_mario_head_c_up)
 
 ### Description
@@ -2844,7 +2865,7 @@ Creates a `message` in the game's chat box
 ## [djui_console_toggle](#djui_console_toggle)
 
 ### Description
-Returns whether the DJUI console is currently open or not
+Toggles the visibility of the DJUI console
 
 ### Lua Example
 `djui_console_toggle()`
@@ -2865,7 +2886,7 @@ Returns whether the DJUI console is currently open or not
 ## [djui_console_is_open](#djui_console_is_open)
 
 ### Description
-Toggles the visibility of the DJUI console
+Returns whether the DJUI console is currently open or not
 
 ### Lua Example
 `local booleanValue = djui_console_is_open()`
