@@ -19295,6 +19295,21 @@ int smlua_func_geo_get_body_state(lua_State* L) {
     return 1;
 }
 
+int smlua_func_geo_get_mario_object(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "geo_get_mario_object", 0, top);
+        return 0;
+    }
+
+
+    smlua_push_object(L, LOT_OBJECT, geo_get_mario_object(), NULL);
+
+    return 1;
+}
+
   //////////////////
  // mario_step.h //
 //////////////////
@@ -38359,6 +38374,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_unlock_door_star_loop", smlua_func_bhv_unlock_door_star_loop);
     smlua_bind_function(L, "geo_get_mario_state", smlua_func_geo_get_mario_state);
     smlua_bind_function(L, "geo_get_body_state", smlua_func_geo_get_body_state);
+    smlua_bind_function(L, "geo_get_mario_object", smlua_func_geo_get_mario_object);
 
     // mario_step.h
     smlua_bind_function(L, "get_additive_y_vel_for_jumps", smlua_func_get_additive_y_vel_for_jumps);

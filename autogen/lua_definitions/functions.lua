@@ -6749,6 +6749,12 @@ function geo_get_body_state()
     -- ...
 end
 
+--- @return Object
+--- When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise
+function geo_get_mario_object()
+    -- ...
+end
+
 --- @return number
 --- Always returns zero. May have been originally used for beta trampolines
 function get_additive_y_vel_for_jumps()

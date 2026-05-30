@@ -93,7 +93,7 @@ override_allowed_functions = {
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
-    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
+    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_warp", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "pressed_pause", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
