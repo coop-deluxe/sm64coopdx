@@ -736,6 +736,8 @@ else
   BACKEND_LDFLAGS += -lGL
 endif
 
+BACKEND_LDFLAGS += -lopus
+
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
 SDLCONFIG := $(CROSS)sdl2-config

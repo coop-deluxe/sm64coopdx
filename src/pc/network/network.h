@@ -21,7 +21,6 @@ extern struct MarioState gMarioStates[];
 #define SYNC_DISTANCE_ONLY_DEATH -1.0f
 #define SYNC_DISTANCE_ONLY_EVENTS -2.0f
 #define SYNC_DISTANCE_INFINITE 0
-#define PACKET_LENGTH 3000
 #define NETWORKTYPESTR (gNetworkType == NT_CLIENT                            \
                         ? "Client"                                           \
                         : (gNetworkType == NT_SERVER ? "Server" : " None ")) \

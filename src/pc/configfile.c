@@ -95,6 +95,7 @@ unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
+unsigned int configProxchatVolume                 = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
 bool         configMuteFocusLoss                  = false;
 unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 2 = Headset
@@ -242,6 +243,7 @@ static const struct ConfigOption options[] = {
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
+    {.name = "proxchat_volume",                .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
     {.name = "sound_output",                   .type = CONFIG_TYPE_UINT, .uintValue = &configSoundOutput},

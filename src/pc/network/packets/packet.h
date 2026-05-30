@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define PACKET_LENGTH 3000
+#define PACKET_LENGTH 4096
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 #define PACKET_DESTINATION_SERVER ((u8)-2)
 
@@ -36,6 +36,7 @@ enum PacketType {
     PACKET_SAVE_REMOVE_FLAG,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
+    PACKET_PROXCHAT_FRAME,
 
     PACKET_PING,
     PACKET_PONG,
@@ -277,6 +278,10 @@ void network_receive_network_players(struct Packet* p);
 // packet_death.c
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
+
+// packet_proxchat.c
+void network_send_proxchat_frame(void);
+void network_receive_proxchat_frame(struct Packet* p);
 
 // packet_ping.c
 void network_send_ping(struct NetworkPlayer* toNp);

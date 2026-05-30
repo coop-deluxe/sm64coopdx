@@ -69,6 +69,7 @@ extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
+extern unsigned int configProxchatVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
 extern unsigned int configSoundOutput;
