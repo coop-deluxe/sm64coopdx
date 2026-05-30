@@ -7242,6 +7242,28 @@ Sets if the camera should account for surfaces
 
 <br />
 
+## [center_free_camera](#center_free_camera)
+
+### Description
+Centers the free camera.
+This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+
+### Lua Example
+`center_free_camera()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void center_free_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_collision_utils.h
 

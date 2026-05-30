@@ -262,3 +262,8 @@ bool camera_get_checking_surfaces(void) {
 void camera_set_checking_surfaces(bool value) {
     gCheckingSurfaceCollisionsForCamera = value;
 }
+
+void center_free_camera(void) {
+    gNewCamera.yawTarget = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
+    gNewCamera.centering = true;
+}

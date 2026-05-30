@@ -428,27 +428,6 @@ The intensity decreases with distance from the point
 
 <br />
 
-## [center_free_camera](#center_free_camera)
-
-### Description
-Centers the free camera
-
-### Lua Example
-`center_free_camera()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void center_free_camera(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [move_mario_head_c_up](#move_mario_head_c_up)
 
 ### Description

@@ -643,7 +643,6 @@
    - [set_camera_shake_from_hit](functions-3.md#set_camera_shake_from_hit)
    - [set_environmental_camera_shake](functions-3.md#set_environmental_camera_shake)
    - [set_camera_shake_from_point](functions-3.md#set_camera_shake_from_point)
-   - [center_free_camera](functions-3.md#center_free_camera)
    - [move_mario_head_c_up](functions-3.md#move_mario_head_c_up)
    - [transition_next_state](functions-3.md#transition_next_state)
    - [set_camera_mode](functions-3.md#set_camera_mode)
@@ -1914,6 +1913,7 @@
    - [camera_config_set_deceleration](functions-6.md#camera_config_set_deceleration)
    - [camera_get_checking_surfaces](functions-6.md#camera_get_checking_surfaces)
    - [camera_set_checking_surfaces](functions-6.md#camera_set_checking_surfaces)
+   - [center_free_camera](functions-6.md#center_free_camera)
 
 <br />
 

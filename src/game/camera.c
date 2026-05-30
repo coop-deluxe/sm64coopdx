@@ -758,11 +758,6 @@ BAD_RETURN(f32) calc_y_to_curr_floor(f32 *posOff, f32 posMul, f32 posBound, f32 
 // compiler gets mad if I put this any further above. thanks refresh 7
 #include "bettercamera.inc.h"
 
-void center_free_camera(void) {
-    gNewCamera.yawTarget = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
-    gNewCamera.centering = true;
-}
-
 void focus_on_mario(Vec3f focus, Vec3f pos, f32 posYOff, f32 focYOff, f32 dist, s16 pitch, s16 yaw) {
     Vec3f marioPos;
 

@@ -3081,11 +3081,6 @@ function set_camera_shake_from_point(shake, posX, posY, posZ)
     -- ...
 end
 
---- Centers the free camera
-function center_free_camera()
-    -- ...
-end
-
 --- @param c Camera
 --- Moves Mario's head slightly upward when the C-Up button is pressed.<br>
 --- This function aligns the camera to match the head movement for consistency
@@ -11005,6 +11000,12 @@ end
 --- @param value boolean
 --- Sets if the camera should account for surfaces
 function camera_set_checking_surfaces(value)
+    -- ...
+end
+
+--- Centers the free camera.<br>
+--- This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+function center_free_camera()
     -- ...
 end
 

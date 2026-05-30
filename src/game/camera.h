@@ -738,9 +738,6 @@ The intensity decreases with distance from the point
 |descriptionEnd| */
 void set_camera_shake_from_point(s16 shake, f32 posX, f32 posY, f32 posZ);
 
-/* |description|Centers the free camera|descriptionEnd|*/
-void center_free_camera(void);
-
 /* |description|
 Moves Mario's head slightly upward when the C-Up button is pressed.
 This function aligns the camera to match the head movement for consistency
