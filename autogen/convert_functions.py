@@ -112,7 +112,7 @@ override_disallowed_functions = {
     "src/game/mario_actions_cutscene.c":        [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
     "src/game/mario_actions_moving.c":          [ "^[us]32 act_.*" ],
     "src/game/mario_actions_object.c":          [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*", "mario_exit_palette_editor" ],
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],

@@ -1185,7 +1185,6 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
-   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -1917,21 +1916,21 @@
 <br />
 
 - smlua_collision_utils.h
-   - [collision_find_floor](functions-6.md#collision_find_floor)
-   - [collision_find_ceil](functions-6.md#collision_find_ceil)
-   - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-6.md#smlua_collision_util_get)
-   - [collision_get_temp_wall_collision_data](functions-6.md#collision_get_temp_wall_collision_data)
-   - [get_surface_from_wcd_index](functions-6.md#get_surface_from_wcd_index)
-   - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
-   - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
-   - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
-   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
-   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
-   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
-   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
-   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
-   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
+   - [collision_find_floor](functions-7.md#collision_find_floor)
+   - [collision_find_ceil](functions-7.md#collision_find_ceil)
+   - [get_water_surface_pseudo_floor](functions-7.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-7.md#smlua_collision_util_get)
+   - [collision_get_temp_wall_collision_data](functions-7.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-7.md#get_surface_from_wcd_index)
+   - [smlua_collision_util_get_current_terrain_collision](functions-7.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-7.md#smlua_collision_util_get_level_collision)
+   - [smlua_collision_util_find_surface_types](functions-7.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-7.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-7.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-7.md#smlua_collision_delete_surface)
+   - [surface_is_quicksand](functions-7.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-7.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-7.md#surface_is_painting_warp)
 
 <br />
 
