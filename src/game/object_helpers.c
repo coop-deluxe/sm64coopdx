@@ -2621,7 +2621,7 @@ void chain_segment_init(struct ChainSegment *segment) {
     segment->roll = 0;
 }
 
-/* |description|Returns a random floating-point value within ±diameter/2|descriptionEnd| */
+/* |description|Returns a random floating-point value within +/- diameter/2|descriptionEnd| */
 f32 random_f32_around_zero(f32 diameter) {
     return random_float() * diameter - diameter / 2;
 }

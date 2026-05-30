@@ -10010,7 +10010,7 @@ end
 
 --- @param diameter number
 --- @return number
---- Returns a random floating-point value within Â±diameter/2
+--- Returns a random floating-point value within +/- diameter/2
 function random_f32_around_zero(diameter)
     -- ...
 end

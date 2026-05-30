@@ -3660,7 +3660,7 @@ Initializes a chain segment's position and orientation to identity values
 ## [random_f32_around_zero](#random_f32_around_zero)
 
 ### Description
-Returns a random floating-point value within Â±diameter/2
+Returns a random floating-point value within +/- diameter/2
 
 ### Lua Example
 `local numberValue = random_f32_around_zero(diameter)`
