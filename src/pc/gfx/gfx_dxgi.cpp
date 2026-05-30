@@ -221,7 +221,11 @@ static void update_screen_settings(void) {
         MONITORINFO monitor_info;
         monitor_info.cbSize = sizeof(monitor_info);
         if (!GetMonitorInfo(h_monitor, &monitor_info)) {
-            return;
+            monitor_info.rcWork = {
+                0, 0,
+                GetSystemMetrics(SM_CXSCREEN),
+                GetSystemMetrics(SM_CYSCREEN)
+            };
         }
 
         const RECT work_rect = monitor_info.rcWork;
