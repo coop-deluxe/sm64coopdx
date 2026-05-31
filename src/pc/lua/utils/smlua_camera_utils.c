@@ -1,6 +1,7 @@
 #include "smlua_camera_utils.h"
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
+#include "game/level_update.h"
 
 struct CameraOverride {
     u32 value;
