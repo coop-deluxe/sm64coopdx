@@ -103,35 +103,23 @@ static bool proxchat_is_ingame(s32 id) {
         && gNetworkPlayers[id].currActNum    == gNetworkPlayers[0].currActNum;
 }
 
-typedef void*(*Writer)(void*, s16);
-static void proxchat_resample(Writer writer, void* ctx, const s16* from, f32 target_rate, f32 source_rate, u32 num_frames, u32 num_channels) {
-    f32 ratio = source_rate / (f32)target_rate;
-    u32 resampled_num_frames = num_frames * ratio;
+static void mix_and_resample_stereo_pcm(s16* dst, const s16* src, u32 dst_frames, u32 src_frames) {
+    f32 step = (f32)(src_frames - 1) / (f32)(dst_frames - 1);
 
-    for (u32 i = 0; i < resampled_num_frames; i++) {
-        for (u32 c = 0; c < num_channels; c++) {
-            f32 float_index = i * ratio;
-            u32 index = float_index;
-            f32 interp = float_index - index;
+    for (u32 i = 0; i < dst_frames; i++) {
+        f32 pos = i * step;
+        u32 idx = (s32)pos;
+        f32 interp  = pos - idx;
 
-            s16 sample = (from[(index + 1) * num_channels + c] - from[index * num_channels + c]) * interp + from[index * num_channels + c];
-            ctx = writer(ctx, sample);
-        }
+        u32 idx1 = idx + 1;
+        if (idx1 >= src_frames) idx1 = src_frames - 1;
+
+        s32 sample_l = dst[2 * i + 0] + src[2 * idx + 0] + interp * (src[2 * idx1 + 0] - src[2 * idx + 0]);
+        s32 sample_r = dst[2 * i + 1] + src[2 * idx + 1] + interp * (src[2 * idx1 + 1] - src[2 * idx + 1]);
+
+        dst[2 * i + 0] = sample_l < -32767 ? -32767 : sample_l > 32767 ? 32767 : sample_l;
+        dst[2 * i + 1] = sample_r < -32767 ? -32767 : sample_r > 32767 ? 32767 : sample_r;
     }
-}
-
-static void* buffer_writer(void* buf, s16 sample) {
-    buffer_write(buf, sizeof(sample), &sample);
-    return buf;
-}
-
-static void* byte_mixer(void* ptr, s16 sample) {
-    s16* data = ptr;
-    s32 mixed = *data + sample;
-    if (mixed > +32767) mixed = +32767;
-    if (mixed < -32767) mixed = -32767;
-    *data = mixed;
-    return ++data;
 }
 
 static bool is_below_threshold() {
@@ -265,8 +253,8 @@ void proxchat_decode_audio(s32 id, u8* packet, u32 packet_size) {
     buffer_write(&players[id].audio, num_frames * sizeof(s16), pcm);
 }
 
-void proxchat_mix(s16* out_pcm, u32 num_samples) {
-    num_samples = num_samples * INTERNAL_SAMPLE_RATE / SAMPLE_RATE;
+void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
+    s32 num_samples = num_out_samples * INTERNAL_SAMPLE_RATE / SAMPLE_RATE;
     s16 mixed[num_samples * 2 /* stereo */] = {};
 
     // skip over player 0 because thats the client
@@ -300,7 +288,7 @@ void proxchat_mix(s16* out_pcm, u32 num_samples) {
         u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
         memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
         
-        for (u32 s = 0; s < num_samples * 2; s++) {
+        for (s32 s = 0; s < num_samples * 2; s++) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;
 
             s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * volume * players[i].volume * configProxchatVolume / 127.f);
@@ -313,11 +301,11 @@ void proxchat_mix(s16* out_pcm, u32 num_samples) {
         u32 n = buffer_read(&loopback_buffer, sizeof(pcm), pcm) / sizeof(s16);
         memset(pcm + n, 0, sizeof(pcm) - n * sizeof(s16));
 
-        for (u32 s = 0; s < num_samples * 2; s++) {
+        for (s32 s = 0; s < num_samples * 2; s++) {
             s32 mixed_sample = mixed[s] + pcm[(int)(s / 2)];
             mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
         }
     }
 
-    proxchat_resample(byte_mixer, out_pcm, mixed, SAMPLE_RATE, INTERNAL_SAMPLE_RATE, num_samples, 2);
+    mix_and_resample_stereo_pcm(out_pcm, mixed, num_out_samples, num_samples);
 }
