@@ -4051,7 +4051,7 @@ Pushes any player within a vertical cylinder away from the current object
 ## [bhv_dust_smoke_loop](#bhv_dust_smoke_loop)
 
 ### Description
-Updates dust smoke particles and deletes them after a short lifetime
+Behavior loop function for dust smoke
 
 ### Lua Example
 `bhv_dust_smoke_loop()`

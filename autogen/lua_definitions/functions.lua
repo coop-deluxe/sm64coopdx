@@ -10120,7 +10120,7 @@ function cur_obj_push_mario_away_from_cylinder(radius, extentY)
     -- ...
 end
 
---- Updates dust smoke particles and deletes them after a short lifetime
+--- Behavior loop function for dust smoke
 function bhv_dust_smoke_loop()
     -- ...
 end

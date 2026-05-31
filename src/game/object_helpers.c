@@ -2859,7 +2859,7 @@ void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
     }
 }
 
-/* |description|Updates dust smoke particles and deletes them after a short lifetime|descriptionEnd| */
+/* |description|Behavior loop function for dust smoke|descriptionEnd| */
 void bhv_dust_smoke_loop(void) {
     if (!o) { return; }
     o->oPosX += o->oVelX;
@@ -2871,6 +2871,43 @@ void bhv_dust_smoke_loop(void) {
     }
 
     o->oSmokeTimer++;
+}
+
+/* |description|Sets the the tox box movement pattern table pointer and resets the step to 0|descriptionEnd| */
+s32 cur_obj_set_direction_table(s8 *a0) {
+    if (!o) { return 0; }
+    o->oToxBoxMovementPattern = a0;
+    o->oToxBoxMovementStep = 0;
+
+    return *(s8 *) o->oToxBoxMovementPattern;
+}
+
+/* |description|Progresses through a tox box movement pattern table pointer (`oToxBoxMovementPattern`) using `oToxBoxMovementStep`|descriptionEnd| */
+s32 cur_obj_progress_direction_table(void) {
+    if (!o) { return 0; }
+    s8 ret;
+    s8 *table = o->oToxBoxMovementPattern;
+    s32 index = o->oToxBoxMovementStep + 1;
+    if (!table) { return 0; }
+
+    s32 tableLength = 0;
+    while (table[tableLength] != -1 && tableLength < 150) {
+        tableLength++;
+    }
+
+    if (tableLength < 0 || index < 0 || tableLength >= 150 || index >= tableLength) {
+        ret = table[0];
+        o->oToxBoxMovementStep = 0;
+        LOG_ERROR("Exceeded direction table! tableLength %d, index %d", tableLength, index);
+    } else if (table[index] != -1) {
+        ret = table[index];
+        o->oToxBoxMovementStep++;
+    } else {
+        ret = table[0];
+        o->oToxBoxMovementStep = 0;
+    }
+
+    return ret;
 }
 
 /* |description|Placeholder function with no behavior|descriptionEnd| */
