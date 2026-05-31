@@ -135,7 +135,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
     gServerSettings.nametags = configNametags;
-    gServerSettings.proximityChat = configProximityChat;
+    gServerSettings.proximityChat = configProximityChat && !(configNetworkSystem == NS_COOPNET && configPassword[0] == 0);
     gServerSettings.maxPlayers = configAmountOfPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
     gServerSettings.pvpType = configPvpType;
