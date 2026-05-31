@@ -14,7 +14,6 @@
 #define SAMPLE_RATE 32000
 #define BITRATE 64000
 #define FRAME_SIZE 960
-#define STEREO_SPREAD 0.75
 #define DECAY_TIME 20
 #define MIN_FRAMES_REQUIRED 2
 #define MAX_FRAMES 4
@@ -296,7 +295,7 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
 
         float pan = vec3f_dot(right, to_target);
 
-        float pan_mono = 0.5f + pan * 0.5f * STEREO_SPREAD;
+        float pan_mono = 0.5f + pan * 0.5f * (configProxchatStereoSpread / 100.f);
         float vol_right = pan_mono;
         float vol_left  = 1 - pan_mono;
 

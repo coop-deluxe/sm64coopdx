@@ -77,6 +77,7 @@ extern unsigned int configSoundOutput;
 extern unsigned int configProxchatActivationMode;
 extern unsigned int configProxchatActivationThreshold;
 extern unsigned int configProxchatMicrophoneGain;
+extern unsigned int configProxchatStereoSpread;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];

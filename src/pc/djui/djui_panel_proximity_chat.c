@@ -36,6 +36,7 @@ void djui_panel_proximity_chat_create(struct DjuiBase* caller) {
         djui_bind_create(body,   DLANG(CONTROLS, MUTE_MIC),     configKeyMuteMic);
         djui_bind_create(body,   DLANG(CONTROLS, PUSH_TO_TALK), configKeyPushToTalk);
         djui_slider_create(body, DLANG(SOUND, PROXCHAT_VOLUME), &configProxchatVolume, 0, 127, djui_panel_sound_value_change);
+        djui_slider_create(body, DLANG(PROXCHAT, STEREO_SPREAD), &configProxchatStereoSpread, 0, 100, NULL);
         djui_slider_create(body, DLANG(PROXCHAT, MICROPHONE_GAIN), &configProxchatMicrophoneGain, 0, 400, NULL);
         activation_threshold_slider = &djui_slider_create(body, DLANG(PROXCHAT, ACTIVATION_THRESHOLD), &configProxchatActivationThreshold, 0, 100, djui_panel_threshold_value_change)->base;
 

@@ -103,6 +103,7 @@ unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 
 unsigned int configProxchatActivationMode         = 0; // 0 = Disabled, 1 = Push to talk, 2 = Threshold
 unsigned int configProxchatActivationThreshold    = 10;
 unsigned int configProxchatMicrophoneGain         = 100;
+unsigned int configProxchatStereoSpread           = 75;
 // control binds
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -258,6 +259,7 @@ static const struct ConfigOption options[] = {
     {.name = "proxchat_microphone_gain",       .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatMicrophoneGain},
     {.name = "proxchat_activation_mode",       .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatActivationMode},
     {.name = "proxchat_activation_threshold",  .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatActivationThreshold},
+    {.name = "proxchat_stereo_spread",         .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatStereoSpread},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
