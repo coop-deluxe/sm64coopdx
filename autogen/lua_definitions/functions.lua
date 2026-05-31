@@ -11221,6 +11221,12 @@ function camera_set_checking_surfaces(value)
     -- ...
 end
 
+--- Centers the free camera.<br>
+--- This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+function center_free_camera()
+    -- ...
+end
+
 --- @param x number
 --- @param y number
 --- @param z number

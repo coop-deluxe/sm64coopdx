@@ -117,4 +117,10 @@ bool camera_get_checking_surfaces(void);
 /* |description|Sets if the camera should account for surfaces|descriptionEnd| */
 void camera_set_checking_surfaces(bool value);
 
+/* |description|
+Centers the free camera.
+This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+|descriptionEnd|*/
+void center_free_camera(void);
+
 #endif

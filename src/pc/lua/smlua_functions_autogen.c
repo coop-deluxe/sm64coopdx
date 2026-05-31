@@ -31748,6 +31748,21 @@ int smlua_func_camera_set_checking_surfaces(lua_State* L) {
     return 1;
 }
 
+int smlua_func_center_free_camera(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "center_free_camera", 0, top);
+        return 0;
+    }
+
+
+    center_free_camera();
+
+    return 1;
+}
+
   /////////////////////////////
  // smlua_collision_utils.h //
 /////////////////////////////
@@ -39005,6 +39020,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "camera_config_set_deceleration", smlua_func_camera_config_set_deceleration);
     smlua_bind_function(L, "camera_get_checking_surfaces", smlua_func_camera_get_checking_surfaces);
     smlua_bind_function(L, "camera_set_checking_surfaces", smlua_func_camera_set_checking_surfaces);
+    smlua_bind_function(L, "center_free_camera", smlua_func_center_free_camera);
 
     // smlua_collision_utils.h
     smlua_bind_function(L, "collision_find_floor", smlua_func_collision_find_floor);

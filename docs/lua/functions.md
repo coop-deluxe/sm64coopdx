@@ -1912,6 +1912,7 @@
    - [camera_config_set_deceleration](functions-6.md#camera_config_set_deceleration)
    - [camera_get_checking_surfaces](functions-6.md#camera_get_checking_surfaces)
    - [camera_set_checking_surfaces](functions-6.md#camera_set_checking_surfaces)
+   - [center_free_camera](functions-6.md#center_free_camera)
 
 <br />
 
