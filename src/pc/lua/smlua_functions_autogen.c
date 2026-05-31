@@ -55,6 +55,7 @@
 #include "src/engine/lighting_engine.h"
 #include "src/pc/network/sync_object.h"
 #include "src/audio/load.h"
+#include "src/pc/djui/djui_gfx.h"
 
 
   ///////////////
@@ -12208,6 +12209,25 @@ int smlua_func_djui_console_is_open(lua_State* L) {
 
 
     lua_pushboolean(L, djui_console_is_open());
+
+    return 1;
+}
+
+  ////////////////
+ // djui_gfx.h //
+////////////////
+
+int smlua_func_djui_gfx_get_scale(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_gfx_get_scale", 0, top);
+        return 0;
+    }
+
+
+    lua_pushnumber(L, djui_gfx_get_scale());
 
     return 1;
 }
@@ -37960,6 +37980,9 @@ void smlua_bind_functions_autogen(void) {
     // djui_console.h
     smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
     smlua_bind_function(L, "djui_console_is_open", smlua_func_djui_console_is_open);
+
+    // djui_gfx.h
+    smlua_bind_function(L, "djui_gfx_get_scale", smlua_func_djui_gfx_get_scale);
 
     // djui_hud_utils.h
     smlua_bind_function(L, "djui_hud_get_resolution", smlua_func_djui_hud_get_resolution);

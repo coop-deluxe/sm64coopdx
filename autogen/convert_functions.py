@@ -81,6 +81,7 @@ in_files = [
     "src/engine/lighting_engine.h",
     "src/pc/network/sync_object.h",
     "src/audio/load.h",
+    "src/pc/djui/djui_gfx.h",
 ]
 
 override_allowed_functions = {
@@ -101,6 +102,7 @@ override_allowed_functions = {
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
     "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
     "src/audio/load.h":                     [ "set_sound_bank_override" ],
+    "src/pc/djui/djui_gfx.h":               [ "djui_gfx_get_scale" ],
 }
 
 override_disallowed_functions = {

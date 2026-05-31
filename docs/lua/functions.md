@@ -755,6 +755,11 @@
 
 <br />
 
+- djui_gfx.h
+   - [djui_gfx_get_scale](functions-3.md#djui_gfx_get_scale)
+
+<br />
+
 - djui_hud_utils.h
    - [djui_hud_get_resolution](functions-3.md#djui_hud_get_resolution)
    - [djui_hud_set_resolution](functions-3.md#djui_hud_set_resolution)

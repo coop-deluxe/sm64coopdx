@@ -3923,6 +3923,12 @@ function djui_console_is_open()
     -- ...
 end
 
+--- @return number
+--- Gets the current visual scaling factor of DJUI
+function djui_gfx_get_scale()
+    -- ...
+end
+
 --- @return integer
 --- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
