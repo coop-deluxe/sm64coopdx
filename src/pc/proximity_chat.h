@@ -27,7 +27,8 @@ void proxchat_shutdown();
 
 const Texture* proxchat_get_microphone_texture();
 
-f32* proxchat_player_volume(s32 id);
+bool* proxchat_player_muted(s32 id);
+u32* proxchat_player_volume(s32 id);
 bool proxchat_player_is_talking(s32 id);
 
 u32 proxchat_encode_audio(u8* packet, u32 max_size);

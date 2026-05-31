@@ -26,6 +26,7 @@
 #include "pc/lua/smlua.h"
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "pc/network/coopnet/coopnet.h"
 
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
@@ -123,6 +124,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
     packet_write(&p, &gServerSettings.nametags, sizeof(u8));
+    packet_write(&p, &gServerSettings.proximityChat, sizeof(u8));
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
@@ -176,10 +178,15 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, &gServerSettings.nametags, sizeof(u8));
+    packet_read(p, &gServerSettings.proximityChat, sizeof(u8));
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
+
+    // force disable proximity chat if in a public lobby
+    if (gNetworkSystem == &gNetworkSystemCoopNet && gCoopNetPassword[0] == 0)
+        gServerSettings.proximityChat = false;
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
     network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());

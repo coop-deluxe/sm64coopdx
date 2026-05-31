@@ -16,6 +16,8 @@
 #define FRAME_SIZE 960
 #define STEREO_SPREAD 0.75
 #define DECAY_TIME 20
+#define MIN_FRAMES_REQUIRED 2
+#define MAX_FRAMES 4
 
 #define HEARING_RADIUS 8192
 #define FULL_VOL_RADIUS 1024
@@ -28,7 +30,8 @@ typedef struct {
 } Buffer;
 
 static struct {
-    float volume;
+    bool muted;
+    u32 volume;
     Buffer audio;
     union {
         OpusEncoder* encoder;
@@ -96,6 +99,14 @@ static void buffer_write(Buffer* buffer, u32 bytes, void* data) {
     if (buffer->size > buffer->capacity) buffer->size = buffer->capacity;
 }
 
+static void buffer_drain(Buffer* buffer) {
+    buffer->head = buffer->tail = buffer->size = 0;
+}
+
+static u32 proxchat_num_frames_in_buffer(Buffer* buffer) {
+    return buffer->size / FRAME_SIZE / sizeof(s16);
+}
+
 static bool proxchat_is_ingame(s32 id) {
     return gNetworkPlayers[id].connected
         && gNetworkPlayers[id].currLevelNum  == gNetworkPlayers[0].currLevelNum
@@ -161,13 +172,13 @@ static void proxchat_callback(const u8* input, u32 bytes) {
         !gServerSettings.proximityChat || proxchat_muted || is_below_threshold()
     ) {
         // drain the pcm buffer
-        buffer_read(&client->audio, client->audio.size, NULL);
+        buffer_drain(&client->audio);
         return;
     }
 
     buffer_write(&client->audio, bytes, samples);
 
-    if (client->audio.size >= FRAME_SIZE * sizeof(s16) * 2)
+    if (proxchat_num_frames_in_buffer(&client->audio) >= MIN_FRAMES_REQUIRED)
         network_send_proxchat_frame();
 }
 
@@ -190,8 +201,8 @@ void proxchat_init() {
         }
         else proxchat_error[i] = PROXCHAT_ERR_NONE;
 
-        players[i].audio.capacity = FRAME_SIZE * sizeof(s16) * 4;
-        players[i].audio.dynamic = true;
+        players[i].audio.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
+        players[i].audio.dynamic = false;
         players[i].volume = 1;
     }
 
@@ -215,7 +226,7 @@ bool proxchat_inited() {
     return inited;
 }
 
-f32* proxchat_player_volume(s32 id) {
+u32* proxchat_player_volume(s32 id) {
     return &players[id].volume;
 }
 
@@ -259,7 +270,12 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
 
     // skip over player 0 because thats the client
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        if (!proxchat_is_ingame(i)) continue;
+        if (!proxchat_is_ingame(i)) {
+            buffer_drain(&players[i].audio);
+            continue;
+        }
+
+        if (proxchat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
 
         float volume;
         float dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
@@ -291,7 +307,7 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
         for (s32 s = 0; s < num_samples * 2; s++) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;
 
-            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * volume * players[i].volume * configProxchatVolume / 127.f);
+            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * volume * (players[i].volume / 100.f) * (configProxchatVolume / 127.f));
             mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
         }
     }
