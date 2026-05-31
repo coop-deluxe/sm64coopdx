@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/proximity_chat.h"
 
 #define FADE_SCALE 4.f
 
@@ -169,6 +170,17 @@ void nametags_render(void) {
               e->prevPos[0] - prevHalfWidth, prevNametagPosY,   e->prevScale,
             nametag->pos[0] - currHalfWidth, currNametagPosY, nametag->scale,
             color[0], color[1], color[2], alpha, 0.25);
+
+
+        // render mic icon
+        if (proxchat_player_is_talking(playerIndex)) {
+            struct TextureInfo texture;
+            dynos_texture_get("texture_microphone", &texture);
+            djui_hud_render_texture_interpolated(&texture,
+                  e->prevPos[0] - prevHalfWidth - 36 *   e->prevScale, prevNametagPosY,   e->prevScale * 2,   e->prevScale * 2,
+                nametag->pos[0] - currHalfWidth - 36 * nametag->scale, currNametagPosY, nametag->scale * 2, nametag->scale * 2
+            );
+        }
 
         // render power meter
         if (playerIndex != 0 && gNametagsSettings.showHealth) {

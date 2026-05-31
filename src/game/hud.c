@@ -23,6 +23,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
+#include "pc/proximity_chat.h"
 #include "data/dynos_mgr_builtin_externs.h"
 
 extern bool gDjuiInMainMenu;
@@ -590,6 +591,30 @@ void render_hud_camera_status(void) {
     gSPDisplayList(gDisplayListHead++, dl_hud_img_end);
 }
 
+void render_hud_proxchat(void) {
+    if (!gServerSettings.proximityChat || configProxchatActivationMode == PROXCHAT_ACTMODE_DISABLED) return;
+    
+    s32 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22);
+    s32 y = 35;
+
+    const Texture* tex = NULL;
+    if (proxchat_error[0] != PROXCHAT_ERR_NONE) tex = texture_microphone_warning;
+    else if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) {
+        if (proxchat_muted) tex = texture_microphone_muted;
+        else tex = texture_microphone;
+    }
+    else if (configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) {
+        if (proxchat_muted) tex = texture_microphone_muted;
+        else if (proxchat_player_is_talking(0)) tex = texture_microphone;
+        else tex = NULL;
+    }
+
+    if (!tex) return;
+
+    gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
+    render_hud_icon(NULL, tex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x, y, 16, 16, 0, 0, 16, 16);
+}
+
 /**
  * Render HUD strings using hudDisplayFlags with it's render functions,
  * excluding the cannon reticle which detects a camera preset for it.
@@ -666,6 +691,10 @@ void render_hud(void) {
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
+        }
+
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_PROXCHAT && showHud) {
+            render_hud_proxchat();
         }
     }
 }

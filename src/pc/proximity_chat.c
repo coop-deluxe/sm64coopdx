@@ -15,6 +15,7 @@
 #define BITRATE 64000
 #define FRAME_SIZE 960
 #define STEREO_SPREAD 0.75
+#define DECAY_TIME 20
 
 #define HEARING_RADIUS 8192
 #define FULL_VOL_RADIUS 1024
@@ -27,7 +28,6 @@ typedef struct {
 } Buffer;
 
 static struct {
-    bool is_talking;
     float volume;
     Buffer audio;
     union {
@@ -42,12 +42,26 @@ bool proxchat_muted = false;
 bool proxchat_loopback = false;
 float proxchat_mic_level = 0;
 
+enum ProxchatError proxchat_error[MAX_PLAYERS];
+
 static Buffer loopback_buffer = { .capacity = 8192 };
+
+static const char* get_opus_error(int err) {
+    switch (err) {
+        case OPUS_ALLOC_FAIL: return "Allocation failed";
+        case OPUS_BAD_ARG: return "Bad argument";
+        case OPUS_BUFFER_TOO_SMALL: return "Buffer is too small";
+        case OPUS_INTERNAL_ERROR: return "Internal error";
+        case OPUS_INVALID_PACKET: return "Invalid packet";
+        case OPUS_INVALID_STATE: return "Invalid state";
+        default: return "No error";
+    }
+}
 
 static u32 buffer_read(Buffer* buffer, u32 bytes, void* out) {
     if (bytes > buffer->size) bytes = buffer->size;
     for (u32 i = 0; i < bytes; i++) {
-        ((u8*)out)[i] = buffer->bytes[buffer->tail];
+        if (out) ((u8*)out)[i] = buffer->bytes[buffer->tail];
         buffer->tail = (buffer->tail + 1) % buffer->capacity;
     }
     buffer->size -= bytes;
@@ -72,7 +86,7 @@ static void buffer_grow(Buffer* buffer, u32 bytes) {
     if (!buffer->bytes) buffer->bytes = malloc(buffer->capacity);
 }
 
-static void buffer_write(Buffer* buffer, void* data, u32 bytes) {
+static void buffer_write(Buffer* buffer, u32 bytes, void* data) {
     buffer_grow(buffer, bytes);
     for (u32 i = 0; i < bytes; i++) {
         buffer->bytes[buffer->head] = data ? ((u8*)data)[i] : 0;
@@ -107,7 +121,7 @@ static void proxchat_resample(Writer writer, void* ctx, const s16* from, f32 tar
 }
 
 static void* buffer_writer(void* buf, s16 sample) {
-    buffer_write(buf, &sample, sizeof(sample));
+    buffer_write(buf, sizeof(sample), &sample);
     return buf;
 }
 
@@ -118,6 +132,21 @@ static void* byte_mixer(void* ptr, s16 sample) {
     if (mixed < -32767) mixed = -32767;
     *data = mixed;
     return ++data;
+}
+
+static bool is_below_threshold() {
+    if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) return false;
+    
+    static int decay = 0;
+    if (proxchat_mic_level < configProxchatActivationThreshold / 100.f) {
+        if (decay > 0) {
+            decay--;
+            return false;
+        }
+        return true;
+    }
+    decay = DECAY_TIME;
+    return false;
 }
 
 static void proxchat_callback(const u8* input, u32 bytes) {
@@ -137,15 +166,18 @@ static void proxchat_callback(const u8* input, u32 bytes) {
     proxchat_mic_level = 1 - powf(1 - avg / 32767.f, 10);
 
     if (proxchat_loopback)
-        buffer_write(&loopback_buffer, samples, bytes);
+        buffer_write(&loopback_buffer, bytes, samples);
 
-    if (!inited || gNetworkType == NT_NONE) return;
-    if (proxchat_muted) {
-        buffer_write(&client->audio, NULL, bytes);
+    if (!inited || gNetworkType == NT_NONE ||
+        configProxchatActivationMode == PROXCHAT_ACTMODE_DISABLED ||
+        !gServerSettings.proximityChat || proxchat_muted || is_below_threshold()
+    ) {
+        // drain the pcm buffer
+        buffer_read(&client->audio, client->audio.size, NULL);
         return;
     }
 
-    buffer_write(&client->audio, samples, bytes);
+    buffer_write(&client->audio, bytes, samples);
 
     if (client->audio.size >= FRAME_SIZE * sizeof(s16) * 2)
         network_send_proxchat_frame();
@@ -154,19 +186,28 @@ static void proxchat_callback(const u8* input, u32 bytes) {
 void proxchat_init() {
     gAudioApi->record_callback(proxchat_callback);
 
-    int err;
     for (int i = 0; i < MAX_PLAYERS; i++) {
+        int err;
         if (i == 0) {
             players[i].encoder = opus_encoder_create(INTERNAL_SAMPLE_RATE, 1, OPUS_APPLICATION_VOIP, &err);
-            opus_encoder_ctl(client->encoder, OPUS_SET_BITRATE(BITRATE));
+            if (err >= 0) opus_encoder_ctl(players[i].encoder, OPUS_SET_BITRATE(BITRATE));
         }
         else {
             players[i].decoder = opus_decoder_create(INTERNAL_SAMPLE_RATE, 1, &err);
         }
+
+        if (err < 0) {
+            fprintf(stderr, "[PROXCHAT] Failed to initialize player %d: %s\n", i, get_opus_error(err));
+            proxchat_error[i] = PROXCHAT_ERR_FAILED_TO_INITIALIZE;
+        }
+        else proxchat_error[i] = PROXCHAT_ERR_NONE;
+
         players[i].audio.capacity = FRAME_SIZE * sizeof(s16) * 4;
         players[i].audio.dynamic = true;
         players[i].volume = 1;
     }
+
+    proxchat_muted = configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK;
 
     inited = true;
 }
@@ -174,9 +215,9 @@ void proxchat_init() {
 void proxchat_shutdown() {
     if (!inited) return;
 
-    opus_encoder_destroy(client->encoder);
+    if (client->encoder) opus_encoder_destroy(client->encoder);
     for (int i = 1; i < MAX_PLAYERS; i++) {
-        opus_decoder_destroy(players[i].decoder);
+        if (players[i].decoder) opus_decoder_destroy(players[i].decoder);
     }
     
     inited = false;
@@ -191,7 +232,7 @@ f32* proxchat_player_volume(s32 id) {
 }
 
 bool proxchat_player_is_talking(s32 id) {
-    return players[id].is_talking;
+    return players[id].audio.size >= FRAME_SIZE;
 }
 
 u32 proxchat_encode_audio(u8* packet, u32 max_size) {
@@ -199,28 +240,29 @@ u32 proxchat_encode_audio(u8* packet, u32 max_size) {
     u32 bytes_read = buffer_read(&client->audio, FRAME_SIZE * sizeof(s16), pcm);
     memset((u8*)pcm + bytes_read, 0, sizeof(pcm) - bytes_read);
 
+    if (!client->encoder) return 0;
+
     s32 out = opus_encode(client->encoder, pcm, FRAME_SIZE, packet, max_size);
     if (out < 0) {
-        switch (out) {
-            case OPUS_ALLOC_FAIL: printf("OPUS_ALLOC_FAIL\n"); break;
-            case OPUS_BAD_ARG: printf("OPUS_BAD_ARG\n"); break;
-            case OPUS_BUFFER_TOO_SMALL: printf("OPUS_BUFFER_TOO_SMALL\n"); break;
-            case OPUS_INTERNAL_ERROR: printf("OPUS_INTERNAL_ERROR\n"); break;
-            case OPUS_INVALID_PACKET: printf("OPUS_INVALID_PACKET\n"); break;
-            case OPUS_INVALID_STATE: printf("OPUS_INVALID_STATE\n"); break;
-        }
+        fprintf(stderr, "[PROXIMITY CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
+        proxchat_error[0] = PROXCHAT_ERR_FAILED_TO_DECODE;
         return 0;
     }
+    proxchat_error[0] = PROXCHAT_ERR_NONE;
     return out;
 }
 
 void proxchat_decode_audio(s32 id, u8* packet, u32 packet_size) {
-    if (!proxchat_is_ingame(id)) return;
+    if (!proxchat_is_ingame(id) || !players[id].decoder) return;
 
     s16 pcm[FRAME_SIZE * sizeof(s16)];
     s32 num_frames = opus_decode(players[id].decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
-    if (num_frames < 0) return;
-    buffer_write(&players[id].audio, pcm, num_frames * sizeof(s16));
+    if (num_frames < 0) {
+        proxchat_error[id] = PROXCHAT_ERR_FAILED_TO_DECODE;
+        return;
+    }
+    else proxchat_error[id] = PROXCHAT_ERR_NONE;
+    buffer_write(&players[id].audio, num_frames * sizeof(s16), pcm);
 }
 
 void proxchat_mix(s16* out_pcm, u32 num_samples) {

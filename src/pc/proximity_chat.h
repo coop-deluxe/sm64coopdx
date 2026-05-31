@@ -7,6 +7,14 @@ extern bool proxchat_muted;
 extern bool proxchat_loopback;
 extern float proxchat_mic_level;
 
+extern enum ProxchatError {
+    PROXCHAT_ERR_NONE,
+    PROXCHAT_ERR_NO_MICROPHONE,
+    PROXCHAT_ERR_FAILED_TO_INITIALIZE,
+    PROXCHAT_ERR_FAILED_TO_ENCODE,
+    PROXCHAT_ERR_FAILED_TO_DECODE,
+} proxchat_error[MAX_PLAYERS];
+
 enum ProxchatActivationMode {
     PROXCHAT_ACTMODE_DISABLED,
     PROXCHAT_ACTMODE_PUSH_TO_TALK,
@@ -16,6 +24,8 @@ enum ProxchatActivationMode {
 void proxchat_init();
 bool proxchat_inited();
 void proxchat_shutdown();
+
+const Texture* proxchat_get_microphone_texture();
 
 f32* proxchat_player_volume(s32 id);
 bool proxchat_player_is_talking(s32 id);

@@ -10,6 +10,7 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
+#include "pc/proximity_chat.h"
 
 #include "sounds.h"
 #include "audio/external.h"
@@ -218,15 +219,18 @@ bool djui_interactable_on_key_down(int scancode) {
     }
 
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
-        bool pressChat = false;
+        bool pressChat = false, pressMute = false, pressPushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyChat[i]) { pressChat = true; }
+            if (scancode == (int)configKeyChat[i]) pressChat = true;
+            if (scancode == (int)configKeyMuteMic[i]) pressMute = true;
+            if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
-        if (pressChat && !gDjuiConsoleFocus) {
-            djui_chat_box_toggle();
-            return true;
-        }
+        if (pressChat) djui_chat_box_toggle();
+        if (pressMute && configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) proxchat_muted ^= 1; // flip
+        if (pressPushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) proxchat_muted = false;
+
+        return pressChat || pressMute || pressPushToTalk;
     }
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
@@ -280,9 +284,14 @@ bool djui_interactable_on_key_down(int scancode) {
 void djui_interactable_on_key_up(int scancode) {
 
     if (!gDjuiChatBoxFocus) {
+        bool toggleConsole = false, disablePushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyConsole[i]) { djui_console_toggle(); break; }
+            if (scancode == (int)configKeyConsole[i]) toggleConsole = true;
+            if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
         }
+
+        if (toggleConsole) djui_console_toggle();
+        if (disablePushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) proxchat_muted = true;
     }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
