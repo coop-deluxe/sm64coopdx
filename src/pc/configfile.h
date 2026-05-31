@@ -73,6 +73,10 @@ extern unsigned int configProxchatVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
 extern unsigned int configSoundOutput;
+// proximity chat settings
+extern unsigned int configProxchatActivationMode;
+extern unsigned int configProxchatActivationThreshold;
+extern unsigned int configProxchatMicrophoneGain;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -100,6 +104,8 @@ extern unsigned int configKeyConsole[MAX_BINDS];
 extern unsigned int configKeyPrevPage[MAX_BINDS];
 extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
+extern unsigned int configKeyMuteMic[MAX_BINDS];
+extern unsigned int configKeyPushToTalk[MAX_BINDS];
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
@@ -156,6 +162,7 @@ extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
 extern bool         configModDevMode;
+extern bool         configProximityChat;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;

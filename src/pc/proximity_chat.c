@@ -39,6 +39,10 @@ static struct {
 static bool inited = false;
 
 bool proxchat_muted = false;
+bool proxchat_loopback = false;
+float proxchat_mic_level = 0;
+
+static Buffer loopback_buffer = { .capacity = 8192 };
 
 static u32 buffer_read(Buffer* buffer, u32 bytes, void* out) {
     if (bytes > buffer->size) bytes = buffer->size;
@@ -117,13 +121,31 @@ static void* byte_mixer(void* ptr, s16 sample) {
 }
 
 static void proxchat_callback(const u8* input, u32 bytes) {
+    u32 num_samples = bytes / sizeof(s16);
+    s16 samples[num_samples];
+    memcpy(samples, input, bytes);
+    
+    s32 sum = 0, avg;
+    for (u32 i = 0; i < num_samples; i++) {
+        s32 with_gain = samples[i] * (int)configProxchatMicrophoneGain / 100;
+        if (with_gain < -32767) with_gain = -32767;
+        if (with_gain > +32767) with_gain = +32767;
+        samples[i] = with_gain;
+        sum += abs(samples[i]);
+    }
+    avg = sum / num_samples;
+    proxchat_mic_level = 1 - powf(1 - avg / 32767.f, 10);
+
+    if (proxchat_loopback)
+        buffer_write(&loopback_buffer, samples, bytes);
+
     if (!inited || gNetworkType == NT_NONE) return;
     if (proxchat_muted) {
         buffer_write(&client->audio, NULL, bytes);
         return;
     }
 
-    buffer_write(&client->audio, (s16*)input, bytes);
+    buffer_write(&client->audio, samples, bytes);
 
     if (client->audio.size >= FRAME_SIZE * sizeof(s16) * 2)
         network_send_proxchat_frame();
@@ -240,6 +262,17 @@ void proxchat_mix(s16* out_pcm, u32 num_samples) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;
 
             s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * volume * players[i].volume * configProxchatVolume / 127.f);
+            mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
+        }
+    }
+
+    if (proxchat_loopback) {
+        s16 pcm[num_samples];
+        u32 n = buffer_read(&loopback_buffer, sizeof(pcm), pcm) / sizeof(s16);
+        memset(pcm + n, 0, sizeof(pcm) - n * sizeof(s16));
+
+        for (u32 s = 0; s < num_samples * 2; s++) {
+            s32 mixed_sample = mixed[s] + pcm[(int)(s / 2)];
             mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
         }
     }

@@ -75,6 +75,8 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* chkDevMode = djui_checkbox_create(body, DLANG(HOST_SETTINGS, MOD_DEV_MODE), (configNetworkSystem == NS_SOCKET) ? &configModDevMode : &sFalse, NULL);
         djui_base_set_enabled(&chkDevMode->base, configNetworkSystem == NS_SOCKET);
 
+        djui_checkbox_create(body, DLANG(HOST_SETTINGS, PROXIMITY_CHAT), &configProximityChat, NULL);
+
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(HOST_SETTINGS, AMOUNT_OF_PLAYERS));

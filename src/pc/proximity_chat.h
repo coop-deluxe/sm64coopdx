@@ -4,6 +4,14 @@
 #include "types.h"
 
 extern bool proxchat_muted;
+extern bool proxchat_loopback;
+extern float proxchat_mic_level;
+
+enum ProxchatActivationMode {
+    PROXCHAT_ACTMODE_DISABLED,
+    PROXCHAT_ACTMODE_PUSH_TO_TALK,
+    PROXCHAT_ACTMODE_THRESHOLD
+};
 
 void proxchat_init();
 bool proxchat_inited();

@@ -99,6 +99,10 @@ unsigned int configProxchatVolume                 = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
 bool         configMuteFocusLoss                  = false;
 unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 2 = Headset
+// proximity chat settings
+unsigned int configProxchatActivationMode         = 0; // 0 = Disabled, 1 = Push to talk, 2 = Threshold
+unsigned int configProxchatActivationThreshold    = 10;
+unsigned int configProxchatMicrophoneGain         = 100;
 // control binds
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -126,6 +130,8 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
+unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0032,     VK_INVALID, VK_INVALID };
+unsigned int configKeyPushToTalk[MAX_BINDS]       = { 0x001d,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
@@ -182,6 +188,7 @@ unsigned int configPlayerInteraction              = 1;
 unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
+bool         configProximityChat                  = false;
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
@@ -247,6 +254,10 @@ static const struct ConfigOption options[] = {
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
     {.name = "sound_output",                   .type = CONFIG_TYPE_UINT, .uintValue = &configSoundOutput},
+    // proximity chat settings
+    {.name = "proxchat_microphone_gain",       .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatMicrophoneGain},
+    {.name = "proxchat_activation_mode",       .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatActivationMode},
+    {.name = "proxchat_activation_threshold",  .type = CONFIG_TYPE_UINT, .uintValue = &configProxchatActivationThreshold},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -274,6 +285,8 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "key_mute_mic",                   .type = CONFIG_TYPE_BIND, .uintValue = configKeyMuteMic},
+    {.name = "key_push_to_talk",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyPushToTalk},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
@@ -347,6 +360,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
     {.name = "coop_mod_dev_mode",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configModDevMode},
+    {.name = "coop_proximity_chat",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configProximityChat},
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
