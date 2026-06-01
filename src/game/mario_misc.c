@@ -377,6 +377,8 @@ struct MarioBodyState *geo_get_body_state(void) {
     return &gBodyStates[index];
 }
 
+// Retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario. Return NULL otherwise.
+// When rendering mirror Mario, return the real Mario object for that player.
 struct Object *geo_get_mario_object(void) {
     struct Object *obj = gCurGraphNodeProcessingObject;
     if (obj == NULL) {
