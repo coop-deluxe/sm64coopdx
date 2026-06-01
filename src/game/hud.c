@@ -599,12 +599,13 @@ void render_hud_proxchat(void) {
 
     const Texture* tex = NULL;
     if (proxchat_error[0] != PROXCHAT_ERR_NONE) tex = texture_microphone_warning;
+    else if (*proxchat_player_muted(0) & PROXCHAT_MUTE_GLOBAL) tex = texture_microphone_red_muted;
     else if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) {
-        if (proxchat_muted) tex = texture_microphone_muted;
+        if (*proxchat_player_muted(0) != PROXCHAT_UNMUTED) tex = texture_microphone_muted;
         else tex = texture_microphone;
     }
     else if (configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) {
-        if (proxchat_muted) tex = texture_microphone_muted;
+        if (*proxchat_player_muted(0) != PROXCHAT_UNMUTED) tex = texture_microphone_muted;
         else if (proxchat_player_is_talking(0)) tex = texture_microphone;
         else tex = NULL;
     }

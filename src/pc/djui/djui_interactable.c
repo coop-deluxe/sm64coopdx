@@ -226,9 +226,14 @@ bool djui_interactable_on_key_down(int scancode) {
             if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
+        u32* mute_state = proxchat_player_muted(0);
         if (pressChat) djui_chat_box_toggle();
-        if (pressMute && configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) proxchat_muted ^= 1; // flip
-        if (pressPushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) proxchat_muted = false;
+        if (pressMute && configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) {
+            if (*mute_state & PROXCHAT_MUTE_LOCAL) *mute_state &= ~PROXCHAT_MUTE_LOCAL;
+            else *mute_state |= PROXCHAT_MUTE_LOCAL;
+        }
+        if (pressPushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
+           *mute_state &= ~PROXCHAT_MUTE_LOCAL;
 
         return pressChat || pressMute || pressPushToTalk;
     }
@@ -291,7 +296,8 @@ void djui_interactable_on_key_up(int scancode) {
         }
 
         if (toggleConsole) djui_console_toggle();
-        if (disablePushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) proxchat_muted = true;
+        if (disablePushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
+            *proxchat_player_muted(0) |= PROXCHAT_MUTE_LOCAL;
     }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {

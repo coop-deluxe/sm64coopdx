@@ -29,7 +29,7 @@ typedef struct {
 } Buffer;
 
 static struct {
-    bool muted;
+    u32 muted_state;
     u32 volume;
     Buffer audio;
     union {
@@ -40,7 +40,6 @@ static struct {
 
 static bool inited = false;
 
-bool proxchat_muted = false;
 bool proxchat_loopback = false;
 float proxchat_mic_level = 0;
 
@@ -168,7 +167,8 @@ static void proxchat_callback(const u8* input, u32 bytes) {
 
     if (!inited || gNetworkType == NT_NONE ||
         configProxchatActivationMode == PROXCHAT_ACTMODE_DISABLED ||
-        !gServerSettings.proximityChat || proxchat_muted || is_below_threshold()
+        !gServerSettings.proximityChat || client->muted_state != PROXCHAT_UNMUTED ||
+        is_below_threshold()
     ) {
         // drain the pcm buffer
         buffer_drain(&client->audio);
@@ -202,10 +202,11 @@ void proxchat_init() {
 
         players[i].audio.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
         players[i].audio.dynamic = false;
-        players[i].volume = 1;
+        players[i].volume = 100;
     }
 
-    proxchat_muted = configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK;
+    if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
+        client->muted_state |= PROXCHAT_MUTE_LOCAL;
 
     inited = true;
 }
@@ -223,6 +224,10 @@ void proxchat_shutdown() {
 
 bool proxchat_inited() {
     return inited;
+}
+
+u32* proxchat_player_muted(s32 id) {
+    return &players[id].muted_state;
 }
 
 u32* proxchat_player_volume(s32 id) {
@@ -276,6 +281,12 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
 
         if (proxchat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
 
+        s16 player_pcm[num_samples];
+        u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
+        memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
+
+        if (players[i].muted_state != PROXCHAT_UNMUTED) continue;
+
         float volume;
         float dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
         if (dist < FULL_VOL_RADIUS) volume = 1;
@@ -298,10 +309,6 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
         float pan_mono = 0.5f + pan * 0.5f * (configProxchatStereoSpread / 100.f);
         float vol_right = pan_mono;
         float vol_left  = 1 - pan_mono;
-
-        s16 player_pcm[num_samples];
-        u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
-        memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
         
         for (s32 s = 0; s < num_samples * 2; s++) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;

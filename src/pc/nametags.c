@@ -173,9 +173,12 @@ void nametags_render(void) {
 
 
         // render mic icon
-        if (proxchat_player_is_talking(playerIndex)) {
+        const char* mic = NULL;
+        if     (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_GLOBAL) mic = "texture_microphone_red_muted";
+        else if (proxchat_player_is_talking(playerIndex)) mic = "texture_microphone";
+        if (mic) {
             struct TextureInfo texture;
-            dynos_texture_get("texture_microphone", &texture);
+            dynos_texture_get(mic, &texture);
             djui_hud_render_texture_interpolated(&texture,
                   e->prevPos[0] - prevHalfWidth - 36 *   e->prevScale, prevNametagPosY,   e->prevScale * 2,   e->prevScale * 2,
                 nametag->pos[0] - currHalfWidth - 36 * nametag->scale, currNametagPosY, nametag->scale * 2, nametag->scale * 2

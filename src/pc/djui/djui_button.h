@@ -4,7 +4,10 @@
 struct DjuiButton {
     struct DjuiBase base;
     struct DjuiRect* rect;
-    struct DjuiText* text;
+    union {
+        struct DjuiText* text;
+        struct DjuiImage* icon;
+    };
     u8 style;
 };
 
@@ -16,5 +19,6 @@ enum DjuiButtonStyle {
 void djui_button_set_style(struct DjuiButton* button, enum DjuiButtonStyle style);
 
 struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*));
+struct DjuiButton* djui_image_button_create(struct DjuiBase* parent, const Texture* tex, u16 width, u16 height, u8 fmt, u8 siz, enum DjuiButtonStyle style, void(*on_click)(struct DjuiBase*));
 struct DjuiButton* djui_button_left_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*));
 struct DjuiButton* djui_button_right_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*));

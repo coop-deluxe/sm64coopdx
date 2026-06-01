@@ -67,6 +67,14 @@ ALIGNED8 const Texture texture_microphone_muted[] = {
 #include "textures/segment2/custom_microphone_muted.rgba16.inc.c"
 };
 
+ALIGNED8 const Texture texture_microphone_red[] = {
+#include "textures/segment2/custom_microphone_red.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture texture_microphone_red_muted[] = {
+#include "textures/segment2/custom_microphone_red_muted.rgba16.inc.c"
+};
+
 ALIGNED8 const Texture texture_microphone_warning[] = {
 #include "textures/segment2/custom_microphone_warning.rgba16.inc.c"
 };

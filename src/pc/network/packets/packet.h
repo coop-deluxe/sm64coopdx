@@ -37,6 +37,7 @@ enum PacketType {
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
     PACKET_PROXCHAT_FRAME,
+    PACKET_PROXCHAT_GLOBAL_MUTE,
 
     PACKET_PING,
     PACKET_PONG,
@@ -282,6 +283,8 @@ void network_receive_death(struct Packet* p);
 // packet_proxchat.c
 void network_send_proxchat_frame(void);
 void network_receive_proxchat_frame(struct Packet* p);
+void network_send_proxchat_muted(s32 globalIndex, bool mute);
+void network_receive_proxchat_muted(struct Packet* p);
 
 // packet_ping.c
 void network_send_ping(struct NetworkPlayer* toNp);

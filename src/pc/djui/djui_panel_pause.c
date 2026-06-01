@@ -9,6 +9,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
 #include "djui_panel_mod_menu.h"
+#include "djui_panel_proximity_chat.h"
 #include "pc/pc_main.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
@@ -74,6 +75,9 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         } else {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_client_server_settings_create);
         }
+
+        if (gServerSettings.proximityChat)
+            djui_button_create(body, DLANG(PAUSE, PROXIMITY_CHAT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_proximity_chat_ingame_create);
 
         struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
         int modCount = 0;

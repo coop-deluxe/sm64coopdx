@@ -1562,6 +1562,8 @@ extern ALIGNED8 const Texture texture_ping_four[];
 extern ALIGNED8 const Texture texture_ping_full[];
 extern ALIGNED8 const Texture texture_microphone[];
 extern ALIGNED8 const Texture texture_microphone_muted[];
+extern ALIGNED8 const Texture texture_microphone_red[];
+extern ALIGNED8 const Texture texture_microphone_red_muted[];
 extern ALIGNED8 const Texture texture_microphone_warning[];
 extern ALIGNED8 const Texture pss_seg7_texture_07000000[];
 extern ALIGNED8 const Texture pss_seg7_texture_07000800[];
