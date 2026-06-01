@@ -1193,6 +1193,12 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_microphone_muted, "textures/segment2/custom_microphone_muted.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(texture_microphone_red, "textures/segment2/custom_microphone_red.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(texture_microphone_red_muted, "textures/segment2/custom_microphone_red_muted.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_icon, "textures/segment2/custom_microphone_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_icon_muted, "textures/segment2/custom_microphone_icon_muted.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_red_icon, "textures/segment2/custom_microphone_red_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_red_icon_muted, "textures/segment2/custom_microphone_red_icon_muted.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_black_icon, "textures/segment2/custom_microphone_black_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_microphone_black_icon_muted, "textures/segment2/custom_microphone_black_icon_muted.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(texture_microphone_warning, "textures/segment2/custom_microphone_warning.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
 
     // Goddard

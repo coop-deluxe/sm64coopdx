@@ -73,6 +73,29 @@ static struct MicButton {
     struct DjuiButton* button;
 } sMicButtons[32];
 
+static bool is_dark_theme() {
+    struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.defaultRectColor;
+    return color.r + color.g + color.b < 128 * 3;
+}
+
+static void get_microphone_icon(struct TextureInfo* tex, s32 player, bool red) {
+    u32* mute_state = proxchat_player_muted(player);
+    if (red) {
+        if (*mute_state & PROXCHAT_MUTE_GLOBAL) dynos_texture_get("texture_microphone_red_icon_muted", tex);
+        else dynos_texture_get("texture_microphone_red_icon", tex);
+    }
+    else {
+        if (is_dark_theme()) {
+            if (*mute_state & PROXCHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_icon_muted", tex);
+            else dynos_texture_get("texture_microphone_icon", tex);
+        }
+        else {
+            if (*mute_state & PROXCHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_black_icon_muted", tex);
+            else dynos_texture_get("texture_microphone_black_icon", tex);
+        }
+    }
+}
+
 static void toggle_mute(struct DjuiBase* caller) {
     struct MicButton* mic = NULL;
     for (int i = 0; i < 32 && !mic; i++) {
@@ -84,14 +107,13 @@ static void toggle_mute(struct DjuiBase* caller) {
     if (mic->global) {
         if (*mute_state & PROXCHAT_MUTE_GLOBAL) *mute_state &= ~PROXCHAT_MUTE_GLOBAL;
         else *mute_state |= PROXCHAT_MUTE_GLOBAL;
-        dynos_texture_get(*mute_state & PROXCHAT_MUTE_GLOBAL ? "texture_microphone_red_muted" : "texture_microphone_red", &mic->button->icon->textureInfo);
         network_send_proxchat_muted(gNetworkPlayers[mic->player_id].globalIndex, *mute_state & PROXCHAT_MUTE_GLOBAL);
     }
     else {
         if (*mute_state & PROXCHAT_MUTE_LOCAL) *mute_state &= ~PROXCHAT_MUTE_LOCAL;
         else *mute_state |= PROXCHAT_MUTE_LOCAL;
-        dynos_texture_get(*mute_state & PROXCHAT_MUTE_LOCAL ? "texture_microphone_muted" : "texture_microphone", &mic->button->icon->textureInfo);
     }
+    get_microphone_icon(&mic->button->icon->textureInfo, mic->player_id, mic->global);
 }
 
 #define TEXTURE_INFO(tex) (tex).texture, (tex).width, (tex).height, (tex).format, (tex).size
@@ -121,8 +143,8 @@ static void djui_panel_proximity_chat_add_players(struct DjuiBase* body) {
         djui_base_set_color(&inner_layout->base, 0, 0, 0, 0);
 
         struct TextureInfo lmute_tex, gmute_tex;
-        dynos_texture_get(*proxchat_player_muted(i) & PROXCHAT_MUTE_LOCAL  ? "texture_microphone_muted"     : "texture_microphone",     &lmute_tex);
-        dynos_texture_get(*proxchat_player_muted(i) & PROXCHAT_MUTE_GLOBAL ? "texture_microphone_red_muted" : "texture_microphone_red", &gmute_tex);
+        get_microphone_icon(&lmute_tex, i, false);
+        get_microphone_icon(&gmute_tex, i, true);
 
         struct DjuiButton* gmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(gmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
         struct DjuiButton* lmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(lmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
