@@ -10,6 +10,7 @@ void network_send_proxchat_frame(void) {
     if (size == 0) return;
 
     packet_init(&p, PACKET_PROXCHAT_FRAME, false, PLMT_NONE);
+    packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, &size, sizeof(u32));
     packet_write(&p, frame, size);
     
@@ -17,14 +18,17 @@ void network_send_proxchat_frame(void) {
 }
 
 void network_receive_proxchat_frame(struct Packet* p) {
+    u8 sender_global_index;
+    packet_read(p, &sender_global_index, sizeof(u8));
+
     u32 frame_size;
     packet_read(p, &frame_size, sizeof(u32));
 
     u8 frame_data[frame_size];
     packet_read(p, frame_data, frame_size);
-
+    
     proxchat_decode_audio(
-        network_player_from_global_index(p->orderedFromGlobalId)->localIndex,
+        network_player_from_global_index(sender_global_index)->localIndex,
         frame_data, frame_size
     );
 }
@@ -46,8 +50,11 @@ void network_receive_proxchat_muted(struct Packet* p) {
     packet_read(p, &globalIndex, sizeof(s32));
     packet_read(p, &muted, sizeof(bool));
 
-    if (!network_player_from_global_index(p->orderedFromGlobalId)->moderator) return;
+    struct NetworkPlayer* sender = network_player_from_global_index(p->orderedFromGlobalId);
+    struct NetworkPlayer* receiver = network_player_from_global_index(globalIndex);
 
-    if (muted) *proxchat_player_muted(network_player_from_global_index(globalIndex)->localIndex) |=  PROXCHAT_MUTE_GLOBAL;
-    else       *proxchat_player_muted(network_player_from_global_index(globalIndex)->localIndex) &= ~PROXCHAT_MUTE_GLOBAL;
+    if (!sender->moderator && sender->globalIndex != 0) return;
+
+    if (muted) *proxchat_player_muted(receiver->localIndex) |=  PROXCHAT_MUTE_GLOBAL;
+    else       *proxchat_player_muted(receiver->localIndex) &= ~PROXCHAT_MUTE_GLOBAL;
 }

@@ -174,8 +174,9 @@ void nametags_render(void) {
 
         // render mic icon
         const char* mic = NULL;
-        if     (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_GLOBAL) mic = "texture_microphone_red_muted";
-        else if (proxchat_player_is_talking(playerIndex)) mic = "texture_microphone";
+        if      (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_GLOBAL) mic = "texture_microphone_red_muted";
+        else if (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_LOCAL)  mic = "texture_microphone_muted";
+        else if  (proxchat_player_is_talking(playerIndex)) mic = "texture_microphone";
         if (mic) {
             struct TextureInfo texture;
             dynos_texture_get(mic, &texture);

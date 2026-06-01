@@ -16,7 +16,7 @@
 #define FRAME_SIZE 960
 #define DECAY_TIME 20
 #define MIN_FRAMES_REQUIRED 2
-#define MAX_FRAMES 4
+#define MAX_FRAMES 16
 
 #define HEARING_RADIUS 8192
 #define FULL_VOL_RADIUS 1024
@@ -29,6 +29,7 @@ typedef struct {
 } Buffer;
 
 static struct {
+    bool talking;
     u32 muted_state;
     u32 volume;
     Buffer audio;
@@ -171,9 +172,12 @@ static void proxchat_callback(const u8* input, u32 bytes) {
         is_below_threshold()
     ) {
         // drain the pcm buffer
+        client->talking = false;
         buffer_drain(&client->audio);
         return;
     }
+
+    client->talking = true;
 
     buffer_write(&client->audio, bytes, samples);
 
@@ -235,7 +239,7 @@ u32* proxchat_player_volume(s32 id) {
 }
 
 bool proxchat_player_is_talking(s32 id) {
-    return players[id].audio.size >= FRAME_SIZE;
+    return players[id].talking;
 }
 
 u32 proxchat_encode_audio(u8* packet, u32 max_size) {
@@ -248,7 +252,7 @@ u32 proxchat_encode_audio(u8* packet, u32 max_size) {
     s32 out = opus_encode(client->encoder, pcm, FRAME_SIZE, packet, max_size);
     if (out < 0) {
         fprintf(stderr, "[PROXIMITY CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
-        proxchat_error[0] = PROXCHAT_ERR_FAILED_TO_DECODE;
+        proxchat_error[0] = PROXCHAT_ERR_FAILED_TO_ENCODE;
         return 0;
     }
     proxchat_error[0] = PROXCHAT_ERR_NONE;
@@ -261,10 +265,11 @@ void proxchat_decode_audio(s32 id, u8* packet, u32 packet_size) {
     s16 pcm[FRAME_SIZE * sizeof(s16)];
     s32 num_frames = opus_decode(players[id].decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
     if (num_frames < 0) {
+        fprintf(stderr, "[PROXIMITY CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
         proxchat_error[id] = PROXCHAT_ERR_FAILED_TO_DECODE;
         return;
     }
-    else proxchat_error[id] = PROXCHAT_ERR_NONE;
+    proxchat_error[id] = PROXCHAT_ERR_NONE;
     buffer_write(&players[id].audio, num_frames * sizeof(s16), pcm);
 }
 
@@ -273,19 +278,22 @@ void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
     s16 mixed[num_samples * 2 /* stereo */] = {};
 
     // skip over player 0 because thats the client
+    static int counter = 0;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        if (!proxchat_is_ingame(i)) {
+        players[i].talking = false;
+
+        if (!proxchat_is_ingame(i) || players[i].muted_state != PROXCHAT_UNMUTED) {
             buffer_drain(&players[i].audio);
             continue;
         }
 
         if (proxchat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
 
+        players[i].talking = true;
+
         s16 player_pcm[num_samples];
         u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
         memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
-
-        if (players[i].muted_state != PROXCHAT_UNMUTED) continue;
 
         float volume;
         float dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
