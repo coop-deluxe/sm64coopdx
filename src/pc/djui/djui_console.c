@@ -86,6 +86,10 @@ void djui_console_toggle(void) {
     }
 }
 
+bool djui_console_is_open(void) {
+    return gDjuiConsoleFocus;
+}
+
 static void djui_console_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {
     if (gDjuiConsole == NULL) { return; }
 

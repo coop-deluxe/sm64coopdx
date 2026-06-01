@@ -263,6 +263,7 @@ Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED 
     return NULL;
 }
 
+/* |description|Updates an object's position based on a parent transformation matrix|descriptionEnd| */
 void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     if (a1 == NULL) { return; }
     f32 spC = a1->oParentRelativePosX;
@@ -274,6 +275,7 @@ void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
     a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
 }
 
+/* |description|Applies an object's scale to a transformation matrix|descriptionEnd| */
 void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src) {
     if (obj == NULL) { return; }
     dst[0][0] = src[0][0] * obj->header.gfx.scale[0];
@@ -297,6 +299,7 @@ void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src) {
     dst[3][3] = src[3][3];
 }
 
+/* |description|Combines two transformation matrices into a single result matrix|descriptionEnd| */
 void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     f32 spC, sp8, sp4;
 
@@ -326,6 +329,7 @@ void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2) {
     a0[3][3] = 1.0f;
 }
 
+/* |description|Sets an object's held state based on the behavior script it will perform|descriptionEnd| */
 void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) {
     if (obj == NULL) { return; }
     obj->parentObj = o;
@@ -351,6 +355,7 @@ void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) 
     }
 }
 
+/* |description|Calculates the lateral (XZ) distance between two objects|descriptionEnd| */
 f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2) {
     if (obj1 == NULL || obj2 == NULL) { return 0; }
     f32 dx = obj1->oPosX - obj2->oPosX;
@@ -359,6 +364,7 @@ f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2) {
     return sqrtf(dx * dx + dz * dz);
 }
 
+/* |description|Calculates the 3D distance between two objects|descriptionEnd| */
 f32 dist_between_objects(struct Object *obj1, struct Object *obj2) {
     if (obj1 == NULL || obj2 == NULL) { return 0; }
     f32 dx = obj1->oPosX - obj2->oPosX;
@@ -368,6 +374,7 @@ f32 dist_between_objects(struct Object *obj1, struct Object *obj2) {
     return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
+/* |description|Calculates the 3D distance between an object and a point|descriptionEnd| */
 f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f32 pointZ) {
     if (obj == NULL) { return 0; }
     f32 dx = (f32)obj->oPosX - pointX;
@@ -377,6 +384,7 @@ f32 dist_between_object_and_point(struct Object *obj, f32 pointX, f32 pointY, f3
     return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
+/* |description|Increases the current object's forward velocity toward target by increment|descriptionEnd| */
 void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
     if (!o) { return; }
     if (o->oForwardVel >= target) {
@@ -386,6 +394,7 @@ void cur_obj_forward_vel_approach_upward(f32 target, f32 increment) {
     }
 }
 
+/* |description|Approaches a value toward a target using signed increments. Returns `TRUE` when target is reached|descriptionEnd| */
 s32 approach_f32_signed(INOUT f32 *value, f32 target, f32 increment) {
     if (value == NULL) { return 0; }
     s32 reachedTarget = FALSE;
@@ -407,6 +416,7 @@ s32 approach_f32_signed(INOUT f32 *value, f32 target, f32 increment) {
     return reachedTarget;
 }
 
+/* |description|Approaches a value toward a target using symmetric increments|descriptionEnd| */
 f32 approach_f32_symmetric(f32 value, f32 target, f32 increment) {
     f32 dist;
 
@@ -427,6 +437,7 @@ f32 approach_f32_symmetric(f32 value, f32 target, f32 increment) {
     return value;
 }
 
+/* |description|Approaches a 16-bit value toward a target using symmetric increments|descriptionEnd| */
 s16 approach_s16_symmetric(s16 value, s16 target, s16 increment) {
     s16 dist = target - value;
 
@@ -447,6 +458,7 @@ s16 approach_s16_symmetric(s16 value, s16 target, s16 increment) {
     return value;
 }
 
+/* |description|Rotates the current object's yaw angle toward a target. Returns `TRUE` when target is reached|descriptionEnd| */
 s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment) {
     if (!o) { return 0; }
     s16 startYaw;
@@ -461,6 +473,7 @@ s32 cur_obj_rotate_yaw_toward(s16 target, s16 increment) {
     }
 }
 
+/* |description|Calculates the angle from one object to another in yaw|descriptionEnd| */
 s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
     if (obj1 == NULL || obj2 == NULL) { return 0; }
 
@@ -474,6 +487,7 @@ s16 obj_angle_to_object(struct Object *obj1, struct Object *obj2) {
     return angle;
 }
 
+/* |description|Calculates the pitch angle from one object to another|descriptionEnd| */
 s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
     if (obj == NULL) { return 0; }
     if (!target) { return 0; }
@@ -488,6 +502,7 @@ s16 obj_pitch_to_object(struct Object* obj, struct Object* target) {
     return atan2s(a, d - b);
 }
 
+/* |description|Calculates the yaw angle from an object to a point|descriptionEnd| */
 s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
     if (obj == NULL) { return 0; }
     f32 z1, x1, z2, x2;
@@ -500,6 +515,7 @@ s16 obj_angle_to_point(struct Object *obj, f32 pointX, f32 pointZ) {
     return angle;
 }
 
+/* |description|Rotates an object's specified angle toward another object by `turnAmount`|descriptionEnd| */
 s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleIndex, s16 turnAmount) {
     if (obj == NULL || target == NULL) { return 0; }
     f32 a, b, c, d;
@@ -536,6 +552,7 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
     return targetAngle;
 }
 
+/* |description|Sets an object's position relative to its parent|descriptionEnd| */
 void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 relZ) {
     if (obj == NULL) { return; }
 
@@ -544,6 +561,7 @@ void obj_set_parent_relative_pos(struct Object *obj, s16 relX, s16 relY, s16 rel
     obj->oParentRelativePosZ = relZ;
 }
 
+/* |description|Sets an object's position in 3D space|descriptionEnd| */
 void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
     if (obj == NULL) { return; }
 
@@ -552,6 +570,7 @@ void obj_set_pos(struct Object *obj, s16 x, s16 y, s16 z) {
     obj->oPosZ = z;
 }
 
+/* |description|Sets an object's face and move angles to the same pitch, yaw, and roll|descriptionEnd| */
 void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
 
@@ -564,6 +583,7 @@ void obj_set_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     obj->oMoveAngleRoll = roll;
 }
 
+/* |description|Sets an object's movement angle (pitch, yaw, roll)|descriptionEnd| */
 void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
 
@@ -572,6 +592,7 @@ void obj_set_move_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     obj->oMoveAngleRoll = roll;
 }
 
+/* |description|Sets an object's face angle (pitch, yaw, roll)|descriptionEnd| */
 void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
 
@@ -580,6 +601,7 @@ void obj_set_face_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     obj->oFaceAngleRoll = roll;
 }
 
+/* |description|Sets the graphics angle for an object (pitch, yaw, roll)|descriptionEnd| */
 void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     if (obj == NULL) { return; }
 
@@ -588,6 +610,7 @@ void obj_set_gfx_angle(struct Object *obj, s16 pitch, s16 yaw, s16 roll) {
     obj->header.gfx.angle[2] = roll;
 }
 
+/* |description|Sets the graphics position for an object in 3D space|descriptionEnd| */
 void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
 
@@ -596,6 +619,7 @@ void obj_set_gfx_pos(struct Object *obj, f32 x, f32 y, f32 z) {
     obj->header.gfx.pos[2] = z;
 }
 
+/* |description|Sets the graphics scale for an object in X, Y, Z dimensions|descriptionEnd| */
 void obj_set_gfx_scale(struct Object *obj, f32 x, f32 y, f32 z) {
     if (obj == NULL) { return; }
 
@@ -642,6 +666,7 @@ struct Object *spawn_obj_with_transform_flags(struct Object *sp20, s32 model, co
     return sp1C;
 }
 
+/* |description|Spawns a water droplet object with the specified parameters|descriptionEnd| */
 struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params) {
     f32 randomScale;
     struct Object *newObj = spawn_object(parent, params->model, params->behavior);
@@ -738,6 +763,7 @@ struct Object *spawn_object_with_scale(struct Object *parent, s32 model, const B
     return obj;
 }
 
+/* |description|Builds a relative transformation matrix for an object based on parent-relative position and face angle|descriptionEnd| */
 void obj_build_relative_transform(struct Object *obj) {
     obj_build_transform_from_pos_and_angle(obj, O_PARENT_RELATIVE_POS_INDEX, O_FACE_ANGLE_INDEX);
     obj_translate_local(obj, O_POS_INDEX, O_PARENT_RELATIVE_POS_INDEX);
@@ -769,6 +795,7 @@ struct Object *spawn_object_relative_with_scale(s16 behaviorParam, s16 relativeP
     return obj;
 }
 
+/* |description|Moves the current object using its velocity vector|descriptionEnd| */
 void cur_obj_move_using_vel(void) {
     if (!o) { return; }
     o->oPosX += o->oVelX;
@@ -776,16 +803,19 @@ void cur_obj_move_using_vel(void) {
     o->oPosZ += o->oVelZ;
 }
 
+/* |description|Copies the graph Y offset from one object to another|descriptionEnd| */
 void obj_copy_graph_y_offset(struct Object *dst, struct Object *src) {
     if (!dst || !src) { return; }
     dst->oGraphYOffset = src->oGraphYOffset;
 }
 
+/* |description|Copies both position and angles from one object to another|descriptionEnd| */
 void obj_copy_pos_and_angle(struct Object *dst, struct Object *src) {
     obj_copy_pos(dst, src);
     obj_copy_angle(dst, src);
 }
 
+/* |description|Copies position from one object to another|descriptionEnd| */
 void obj_copy_pos(struct Object *dst, struct Object *src) {
     if (!dst || !src) { return; }
     dst->oPosX = src->oPosX;
@@ -793,6 +823,7 @@ void obj_copy_pos(struct Object *dst, struct Object *src) {
     dst->oPosZ = src->oPosZ;
 }
 
+/* |description|Copies move and face angles from one object to another|descriptionEnd| */
 void obj_copy_angle(struct Object *dst, struct Object *src) {
     if (!dst || !src) { return; }
     dst->oMoveAnglePitch = src->oMoveAnglePitch;
@@ -804,6 +835,7 @@ void obj_copy_angle(struct Object *dst, struct Object *src) {
     dst->oFaceAngleRoll = src->oFaceAngleRoll;
 }
 
+/* |description|Synchronizes an object's graphics position with its physical position|descriptionEnd| */
 void obj_set_gfx_pos_from_pos(struct Object *obj) {
     if (!obj) { return; }
     obj->header.gfx.pos[0] = obj->oPosX;
@@ -811,6 +843,7 @@ void obj_set_gfx_pos_from_pos(struct Object *obj) {
     obj->header.gfx.pos[2] = obj->oPosZ;
 }
 
+/* |description|Initializes an animation for an object by index|descriptionEnd| */
 void obj_init_animation(struct Object *obj, s32 animIndex) {
     if (!obj) { return; }
     struct AnimationTable *animations = obj->oAnimations;
@@ -849,6 +882,7 @@ void linear_mtxf_transpose_mul_vec3f(Mat4 m, VEC_OUT Vec3f dst, Vec3f v) {
     }
 }
 
+/* |description|Applies an object's scale to its transformation matrix|descriptionEnd| */
 void obj_apply_scale_to_transform(struct Object *obj) {
     if (obj == NULL) { return; }
     f32 scaleX = obj->header.gfx.scale[0];
@@ -868,6 +902,7 @@ void obj_apply_scale_to_transform(struct Object *obj) {
     obj->transform[2][2] *= scaleZ;
 }
 
+/* |description|Copies the scale from one object to another|descriptionEnd| */
 void obj_copy_scale(struct Object *dst, struct Object *src) {
     if (dst == NULL || src == NULL) { return; }
     dst->header.gfx.scale[0] = src->header.gfx.scale[0];
@@ -875,6 +910,7 @@ void obj_copy_scale(struct Object *dst, struct Object *src) {
     dst->header.gfx.scale[2] = src->header.gfx.scale[2];
 }
 
+/* |description|Sets an object's scale independently for X, Y, Z dimensions|descriptionEnd| */
 void obj_scale_xyz(struct Object *obj, f32 xScale, f32 yScale, f32 zScale) {
     if (obj == NULL) { return; }
     obj->header.gfx.scale[0] = xScale;
@@ -882,6 +918,7 @@ void obj_scale_xyz(struct Object *obj, f32 xScale, f32 yScale, f32 zScale) {
     obj->header.gfx.scale[2] = zScale;
 }
 
+/* |description|Sets an object's uniform scale for all dimensions|descriptionEnd| */
 void obj_scale(struct Object *obj, f32 scale) {
     if (obj == NULL) { return; }
     obj->header.gfx.scale[0] = scale;
@@ -889,6 +926,7 @@ void obj_scale(struct Object *obj, f32 scale) {
     obj->header.gfx.scale[2] = scale;
 }
 
+/* |description|Sets the current object's uniform scale for all dimensions|descriptionEnd| */
 void cur_obj_scale(f32 scale) {
     if (!o) { return; }
     o->header.gfx.scale[0] = scale;
@@ -896,6 +934,7 @@ void cur_obj_scale(f32 scale) {
     o->header.gfx.scale[2] = scale;
 }
 
+/* |description|Initializes an animation for the current object by index|descriptionEnd| */
 void cur_obj_init_animation(s32 animIndex) {
     if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
@@ -904,6 +943,7 @@ void cur_obj_init_animation(s32 animIndex) {
     }
 }
 
+/* |description|Initializes an animation for the current object and sets sound state|descriptionEnd| */
 void cur_obj_init_animation_with_sound(s32 animIndex) {
     if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
@@ -913,6 +953,7 @@ void cur_obj_init_animation_with_sound(s32 animIndex) {
     o->oSoundStateID = animIndex;
 }
 
+/* |description|Initializes an animation with acceleration and sound state for an object|descriptionEnd| */
 void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, f32 accel) {
     if (obj != NULL) {
         struct AnimationTable *animations = obj->oAnimations;
@@ -924,6 +965,7 @@ void obj_init_animation_with_accel_and_sound(struct Object *obj, s32 animIndex, 
     }
 }
 
+/* |description|Initializes an animation with acceleration and sound state for the current object|descriptionEnd| */
 void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
     if (!o) { return; }
     struct AnimationTable *animations = o->oAnimations;
@@ -934,6 +976,7 @@ void cur_obj_init_animation_with_accel_and_sound(s32 animIndex, f32 accel) {
     o->oSoundStateID = animIndex;
 }
 
+/* |description|Initializes an animation with sound state for an object|descriptionEnd| */
 void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex) {
     if (obj == NULL) { return; }
     if (animations && (u32)animIndex < animations->count) {
@@ -942,38 +985,45 @@ void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTab
     obj->oSoundStateID = animIndex;
 }
 
+/* |description|Enables rendering and tangibility for an object|descriptionEnd| */
 void cur_obj_enable_rendering_and_become_tangible(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
     obj->oIntangibleTimer = 0;
 }
 
+/* |description|Enables rendering for the current object|descriptionEnd| */
 void cur_obj_enable_rendering(void) {
     if (!o) { return; }
     o->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
 }
 
+/* |description|Disables rendering and makes an object intangible|descriptionEnd| */
 void cur_obj_disable_rendering_and_become_intangible(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     obj->oIntangibleTimer = -1;
 }
 
+/* |description|Disables rendering for the current object|descriptionEnd| */
 void cur_obj_disable_rendering(void) {
     if (!o) { return; }
     o->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 }
 
+/* |description|Makes the current object visible by removing the invisible flag|descriptionEnd| */
 void cur_obj_unhide(void) {
     if (!o) { return; }
     o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
 }
 
+/* |description|Hides the current object by setting the invisible flag|descriptionEnd| */
 void cur_obj_hide(void) {
     if (!o) { return; }
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
 }
 
+/* |description|Sets the current object's position relative to another object's facing direction|descriptionEnd| */
 void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward) {
     if (!o) { return; }
     if (other == NULL) { return; }
@@ -990,15 +1040,18 @@ void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforw
     o->oPosZ = other->oPosZ + dz;
 }
 
+/* |description|Sets the current object's position relative to its parent's facing direction|descriptionEnd| */
 void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward) {
     if (!o) { return; }
     cur_obj_set_pos_relative(o->parentObj, dleft, dy, dforward);
 }
 
+/* |description|Alternative function that enables rendering for the current object|descriptionEnd| */
 void cur_obj_enable_rendering_2(void) {
     cur_obj_enable_rendering();
 }
 
+/* |description|Unused function that initializes the current object on the floor|descriptionEnd| */
 void cur_obj_unused_init_on_floor(void) {
     if (!o) { return; }
     cur_obj_enable_rendering();
@@ -1010,6 +1063,7 @@ void cur_obj_unused_init_on_floor(void) {
     }
 }
 
+/* |description|Synchronizes an object's face angle with its move angle|descriptionEnd| */
 void obj_set_face_angle_to_move_angle(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->oFaceAnglePitch = obj->oMoveAnglePitch;
@@ -1017,6 +1071,7 @@ void obj_set_face_angle_to_move_angle(struct Object *obj) {
     obj->oFaceAngleRoll = obj->oMoveAngleRoll;
 }
 
+/* |description|Retrieves the object list type that a behavior script belongs to|descriptionEnd| */
 u32 get_object_list_from_behavior(const BehaviorScript *behavior) {
     if (!behavior) { return OBJ_LIST_DEFAULT; }
     u32 objectList;
@@ -1032,6 +1087,7 @@ u32 get_object_list_from_behavior(const BehaviorScript *behavior) {
     return objectList;
 }
 
+/* |description|Finds the nearest object with the specified behavior to the current object|descriptionEnd| */
 struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior) {
     if (!behavior) { return NULL; }
     struct Object *obj;
@@ -1042,6 +1098,7 @@ struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavi
     return obj;
 }
 
+/* |description|Calculates the distance from the current object to the nearest object with specified behavior|descriptionEnd| */
 f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior) {
     if (!behavior) { return 0; }
     struct Object *obj;
@@ -1055,6 +1112,7 @@ f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior)
     return dist;
 }
 
+/* |description|Finds the nearest pole-like object to the current object|descriptionEnd| */
 struct Object* cur_obj_find_nearest_pole(void) {
     struct Object* closestObj = NULL;
     struct Object* obj;
@@ -1080,6 +1138,7 @@ struct Object* cur_obj_find_nearest_pole(void) {
     return closestObj;
 }
 
+/* |description|Finds the nearest object with specified behavior and returns distance via pointer|descriptionEnd| */
 struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist) {
     if (!behavior || !dist) { return NULL; }
 
@@ -1112,6 +1171,7 @@ struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *b
     return closestObj;
 }
 
+/* |description|Counts objects with specified behavior within distance of current object|descriptionEnd| */
 u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist) {
     if (!behavior) { return 0; }
     behavior = smlua_override_behavior(behavior);
@@ -1141,6 +1201,7 @@ u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist
     return numObjs;
 }
 
+/* |description|Finds an unimportant object from the unimportant object list|descriptionEnd| */
 struct Object *find_unimportant_object(void) {
     struct ObjectNode *listHead = &gObjectLists[OBJ_LIST_UNIMPORTANT];
     struct ObjectNode *obj = listHead->next;
@@ -1152,6 +1213,7 @@ struct Object *find_unimportant_object(void) {
     return (struct Object *) obj;
 }
 
+/* |description|Counts the number of unimportant objects in the unimportant object list|descriptionEnd| */
 s32 count_unimportant_objects(void) {
     struct ObjectNode *listHead = &gObjectLists[OBJ_LIST_UNIMPORTANT];
     struct ObjectNode *obj = listHead->next;
@@ -1165,6 +1227,7 @@ s32 count_unimportant_objects(void) {
     return count;
 }
 
+/* |description|Counts the number of objects with the specified behavior|descriptionEnd| */
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     if (!behavior) { return 0; }
     behavior = smlua_override_behavior(behavior);
@@ -1188,6 +1251,7 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     return count;
 }
 
+/* |description|Finds any object with the specified behavior|descriptionEnd| */
 struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
     behavior = smlua_override_behavior(behavior);
     uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
@@ -1209,6 +1273,7 @@ struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
     return NULL;
 }
 
+/* |description|Finds an object with specified behavior within `maxDist` that is being held by a player|descriptionEnd| */
 struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist) {
     behavior = smlua_override_behavior(behavior);
     const BehaviorScript *behaviorAddr = segmented_to_virtual(behavior);
@@ -1240,12 +1305,14 @@ struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f3
     return foundObj;
 }
 
+/* |description|Resets the current object's timer and sub-action to 0|descriptionEnd| */
 void cur_obj_reset_timer_and_subaction(void) {
     if (!o) { return; }
     o->oTimer = 0;
     o->oSubAction = 0;
 }
 
+/* |description|Changes the current object's action and resets timer and subaction|descriptionEnd| */
 void cur_obj_change_action(s32 action) {
     if (!o) { return; }
     o->oAction = action;
@@ -1253,6 +1320,7 @@ void cur_obj_change_action(s32 action) {
     cur_obj_reset_timer_and_subaction();
 }
 
+/* |description|Sets the current object's forward velocity based on Mario's velocity with scaling|descriptionEnd| */
 void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14) {
     if (!o) { return; }
     if (!m) { return; }
@@ -1266,14 +1334,16 @@ void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12, f32 f14) {
     }
 }
 
-BAD_RETURN(s16) cur_obj_reverse_animation(void) {
+/* |description|Decreases the current object's animation frame by one|descriptionEnd| */
+void cur_obj_reverse_animation(void) {
     if (!o) { return; }
     if (o->header.gfx.animInfo.animFrame >= 0) {
         o->header.gfx.animInfo.animFrame--;
     }
 }
 
-BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void) {
+/* |description|Extends the current object's animation frame if at loop end|descriptionEnd| */
+void cur_obj_extend_animation_if_at_end(void) {
     if (!o) { return; }
     s32 sp4 = o->header.gfx.animInfo.animFrame;
     s32 sp0 = o->header.gfx.animInfo.curAnim ? o->header.gfx.animInfo.curAnim->loopEnd - 2 : 0;
@@ -1281,6 +1351,7 @@ BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void) {
     if (sp4 == sp0) o->header.gfx.animInfo.animFrame--;
 }
 
+/* |description|Checks if the current object's animation is near the end|descriptionEnd| */
 s32 cur_obj_check_if_near_animation_end(void) {
     if (!o) { return 0; }
     u32 animFlags = o->header.gfx.animInfo.curAnim ? (s32) o->header.gfx.animInfo.curAnim->flags : 0;
@@ -1299,6 +1370,7 @@ s32 cur_obj_check_if_near_animation_end(void) {
     return isNearEnd;
 }
 
+/* |description|Checks if the current object's animation is at the end|descriptionEnd| */
 s32 cur_obj_check_if_at_animation_end(void) {
     if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
@@ -1311,6 +1383,7 @@ s32 cur_obj_check_if_at_animation_end(void) {
     }
 }
 
+/* |description|Checks if the current object's animation is at a specific frame|descriptionEnd| */
 s32 cur_obj_check_anim_frame(s32 frame) {
     if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
@@ -1322,6 +1395,7 @@ s32 cur_obj_check_anim_frame(s32 frame) {
     }
 }
 
+/* |description|Checks if the current object's animation frame is within a range|descriptionEnd| */
 s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
     if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
@@ -1333,6 +1407,7 @@ s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength) {
     }
 }
 
+/* |description|Checks if Mario is in an air action|descriptionEnd| */
 s32 mario_is_in_air_action(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->action & ACT_FLAG_AIR) {
@@ -1342,6 +1417,7 @@ s32 mario_is_in_air_action(struct MarioState* m) {
     }
 }
 
+/* |description|Checks if Mario is performing a dive slide action|descriptionEnd| */
 s32 mario_is_dive_sliding(struct MarioState* m) {
     if (!m) { return 0; }
     if (m->action == ACT_DIVE_SLIDE) {
@@ -1351,12 +1427,14 @@ s32 mario_is_dive_sliding(struct MarioState* m) {
     }
 }
 
+/* |description|Sets the current object's vertical velocity and initializes an animation|descriptionEnd| */
 void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C) {
     if (!o) { return; }
     o->oVelY = sp18;
     cur_obj_init_animation_with_sound(sp1C);
 }
 
+/* |description|Disables rendering, makes intangible, and resets action and animation|descriptionEnd| */
 void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
     if (!o) { return; }
     cur_obj_become_intangible();
@@ -1369,6 +1447,7 @@ void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
     o->oAction = sp1C;
 }
 
+/* |description|Moves an object after being thrown or dropped with gravity applied|descriptionEnd| */
 void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
     if (!o) { return; }
     o->oMoveFlags = 0;
@@ -1392,6 +1471,7 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
     }
 }
 
+/* |description|Handles object state when it's been thrown or placed by a player|descriptionEnd| */
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
     if (!o) { return; }
     if (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvBowser))) {
@@ -1419,6 +1499,7 @@ void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
     }
 }
 
+/* |description|Handles object state when it's been dropped by a player|descriptionEnd| */
 void cur_obj_get_dropped(void) {
     if (!o) { return; }
     cur_obj_become_tangible();
@@ -1433,20 +1514,24 @@ void cur_obj_get_dropped(void) {
     }
 }
 
+/* |description|Sets the model of the current object|descriptionEnd| */
 void cur_obj_set_model(s32 modelID) {
     obj_set_model(o, modelID);
 }
 
+/* |description|Sets the model for an object|descriptionEnd| */
 void obj_set_model(struct Object* obj, s32 modelID) {
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
 }
 
+/* |description|Sets a flag on Mario's state|descriptionEnd| */
 void mario_set_flag(s32 flag) {
     gMarioStates[0].flags |= flag;
 }
 
+/* |description|Clears a flag from the current object's interaction status|descriptionEnd| */
 s32 cur_obj_clear_interact_status_flag(s32 flag) {
     if (!o) { return 0; }
     if (o->oInteractStatus & flag) {
@@ -1456,9 +1541,7 @@ s32 cur_obj_clear_interact_status_flag(s32 flag) {
     return FALSE;
 }
 
-/* |description|
-Marks an object to be unloaded at the end of the frame
-|descriptionEnd| */
+/* |description|Marks an object to be unloaded at the end of the frame|descriptionEnd| */
 void obj_mark_for_deletion(struct Object *obj) {
     //! This clears all activeFlags. Since some of these flags disable behavior,
     //  setting it to 0 could potentially enable unexpected behavior. After an
@@ -1469,12 +1552,14 @@ void obj_mark_for_deletion(struct Object *obj) {
     }
 }
 
+/* |description|Disables the current object by hiding, disabling rendering, and making intangible|descriptionEnd| */
 void cur_obj_disable(void) {
     cur_obj_disable_rendering();
     cur_obj_hide();
     cur_obj_become_intangible();
 }
 
+/* |description|Makes the current object intangible|descriptionEnd| */
 void cur_obj_become_intangible(void) {
     if (!o) { return; }
     // When the timer is negative, the object is intangible and the timer
@@ -1482,22 +1567,26 @@ void cur_obj_become_intangible(void) {
     o->oIntangibleTimer = -1;
 }
 
+/* |description|Makes the current object tangible|descriptionEnd| */
 void cur_obj_become_tangible(void) {
     if (!o) { return; }
     o->oIntangibleTimer = 0;
 }
 
+/* |description|Makes an object tangible|descriptionEnd| */
 void obj_become_tangible(struct Object *obj) {
     if (!obj) { return; }
     obj->oIntangibleTimer = 0;
 }
 
+/* |description|Updates the current object's floor height based on its position|descriptionEnd| */
 void cur_obj_update_floor_height(void) {
     if (!o) { return; }
     struct Surface *floor;
     o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &floor);
 }
 
+/* |description|Updates the current object's floor height and returns the floor surface under it|descriptionEnd| */
 struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
     if (!o) { return NULL; }
     struct Surface *floor;
@@ -1505,6 +1594,7 @@ struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
     return floor;
 }
 
+/* |description|Applies nonlinear drag to a value pointer based on drag strength|descriptionEnd| */
 void apply_drag_to_value(INOUT f32 *value, f32 dragStrength) {
     f32 decel;
 
@@ -1526,12 +1616,14 @@ void apply_drag_to_value(INOUT f32 *value, f32 dragStrength) {
     }
 }
 
+/* |description|Applies drag to the current object's horizontal velocity components|descriptionEnd| */
 void cur_obj_apply_drag_xz(f32 dragStrength) {
     if (!o) { return; }
     apply_drag_to_value(&o->oVelX, dragStrength);
     apply_drag_to_value(&o->oVelZ, dragStrength);
 }
 
+/* |description|Attempts to move the current object in XZ, handling floor slope, edges, and room boundaries|descriptionEnd| */
 s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
     if (!o) { return 0; }
     struct Surface *intendedFloor = NULL;
@@ -1592,6 +1684,7 @@ s32 cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
     return FALSE;
 }
 
+/* |description|Updates underwater movement flags and vertical damping while submerged|descriptionEnd| */
 void cur_obj_move_update_underwater_flags(void) {
     if (!o) { return; }
     f32 decelY = (f32)(sqrtf(o->oVelY * o->oVelY) * (o->oDragStrength * 7.0f)) / 100.0L;
@@ -1610,6 +1703,7 @@ void cur_obj_move_update_underwater_flags(void) {
     }
 }
 
+/* |description|Updates ground and air movement flags after a vertical move|descriptionEnd| */
 void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
     if (!o) { return; }
     o->oMoveFlags &= ~OBJ_MOVE_BOUNCE;
@@ -1646,6 +1740,7 @@ void cur_obj_move_update_ground_air_flags(UNUSED f32 gravity, f32 bounciness) {
     o->oMoveFlags &= ~OBJ_MOVE_MASK_IN_WATER;
 }
 
+/* |description|Applies gravity and buoyancy to vertical velocity and returns the water level at the current XZ position|descriptionEnd| */
 f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
     if (!o) { return 0; }
     f32 waterLevel;
@@ -1665,6 +1760,7 @@ f32 cur_obj_move_y_and_get_water_level(f32 gravity, f32 buoyancy) {
     return waterLevel;
 }
 
+/* |description|Moves the current object vertically while handling ground, water surface, and underwater states|descriptionEnd| */
 void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
     if (!o) { return; }
     f32 waterLevel;
@@ -1716,6 +1812,7 @@ void cur_obj_move_y(f32 gravity, f32 bounciness, f32 buoyancy) {
     }
 }
 
+/* |description|Performs a wall collision sweep for the current object if the radius is positive|descriptionEnd| */
 void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
     if (!o) { return; }
     if (radius > 0.1L) {
@@ -1723,6 +1820,7 @@ void cur_obj_unused_resolve_wall_collisions(f32 offsetY, f32 radius) {
     }
 }
 
+/* |description|Returns the absolute difference between two 16-bit angles|descriptionEnd| */
 s16 abs_angle_diff(s16 x0, s16 x1) {
     s16 diff = x1 - x0;
 
@@ -1737,6 +1835,7 @@ s16 abs_angle_diff(s16 x0, s16 x1) {
     return diff;
 }
 
+/* |description|Sets the current object's horizontal velocity from forward speed and yaw, then moves it in XZ|descriptionEnd| */
 void cur_obj_move_xz_using_fvel_and_yaw(void) {
     if (!o) { return; }
     o->oVelX = o->oForwardVel * sins(o->oMoveAngleYaw);
@@ -1746,6 +1845,7 @@ void cur_obj_move_xz_using_fvel_and_yaw(void) {
     o->oPosZ += o->oVelZ;
 }
 
+/* |description|Moves the current object vertically and caps downward speed at terminal velocity|descriptionEnd| */
 void cur_obj_move_y_with_terminal_vel(void) {
     if (!o) { return; }
     if (o->oVelY < -70.0f) {
@@ -1755,12 +1855,14 @@ void cur_obj_move_y_with_terminal_vel(void) {
     o->oPosY += o->oVelY;
 }
 
+/* |description|Computes the current object's horizontal velocity from forward speed and yaw|descriptionEnd| */
 void cur_obj_compute_vel_xz(void) {
     if (!o) { return; }
     o->oVelX = o->oForwardVel * sins(o->oMoveAngleYaw);
     o->oVelZ = o->oForwardVel * coss(o->oMoveAngleYaw);
 }
 
+/* |description|Returns a signed velocity increment that moves a value toward a target range around center|descriptionEnd| */
 f32 increment_velocity_toward_range(f32 value, f32 center, f32 zeroThreshold, f32 increment) {
     f32 relative;
     if ((relative = value - center) > 0) {
@@ -1778,6 +1880,7 @@ f32 increment_velocity_toward_range(f32 value, f32 center, f32 zeroThreshold, f3
     }
 }
 
+/* |description|Checks whether obj1's collided object list contains obj2|descriptionEnd| */
 s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) {
     if (obj1 == NULL) { return FALSE; }
     s32 i;
@@ -1790,16 +1893,19 @@ s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) 
     return FALSE;
 }
 
+/* |description|Sets the current object's behavior script|descriptionEnd| */
 void cur_obj_set_behavior(const BehaviorScript *behavior) {
     if (!o) { return; }
     o->behavior = segmented_to_virtual(behavior);
 }
 
+/* |description|Sets the specified object's behavior script|descriptionEnd| */
 void obj_set_behavior(struct Object *obj, const BehaviorScript *behavior) {
     if (!obj) { return; }
     obj->behavior = segmented_to_virtual(behavior);
 }
 
+/* |description|Checks whether the current object has the specified behavior|descriptionEnd| */
 s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
     if (!o) { return 0; }
     behavior = smlua_override_behavior(behavior);
@@ -1810,6 +1916,7 @@ s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
     }
 }
 
+/* |description|Checks whether an object has the specified behavior|descriptionEnd| */
 s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
     if (!obj || !behavior) { return FALSE; }
     behavior = smlua_override_behavior(behavior);
@@ -1820,6 +1927,7 @@ s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
     }
 }
 
+/* |description|Calculates the lateral distance from another object to the current object's home position|descriptionEnd| */
 f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
     if (!o) { return 0; }
     f32 dist;
@@ -1830,6 +1938,7 @@ f32 cur_obj_lateral_dist_from_obj_to_home(struct Object *obj) {
     return dist;
 }
 
+/* |description|Calculates Mario's lateral distance to the current object's home position|descriptionEnd| */
 f32 cur_obj_lateral_dist_from_mario_to_home(void) {
     if (!o) { return 0; }
     struct Object* player = nearest_player_to_object(o);
@@ -1842,6 +1951,7 @@ f32 cur_obj_lateral_dist_from_mario_to_home(void) {
     return dist;
 }
 
+/* |description|Calculates the current object's lateral distance to its home position|descriptionEnd| */
 f32 cur_obj_lateral_dist_to_home(void) {
     if (!o) { return 0; }
     f32 dist;
@@ -1852,6 +1962,7 @@ f32 cur_obj_lateral_dist_to_home(void) {
     return dist;
 }
 
+/* |description|Checks whether the current object is outside a square centered on its home position|descriptionEnd| */
 s32 cur_obj_outside_home_square(f32 halfLength) {
     if (!o) { return 0; }
     if (o->oHomeX - halfLength > o->oPosX) {
@@ -1873,6 +1984,7 @@ s32 cur_obj_outside_home_square(f32 halfLength) {
     return FALSE;
 }
 
+/* |description|Checks whether the current object is outside a rectangle centered on its home position|descriptionEnd| */
 s32 cur_obj_outside_home_rectangle(f32 minX, f32 maxX, f32 minZ, f32 maxZ) {
     if (!o) { return 0; }
     if (o->oHomeX + minX > o->oPosX) {
@@ -1894,6 +2006,7 @@ s32 cur_obj_outside_home_rectangle(f32 minX, f32 maxX, f32 minZ, f32 maxZ) {
     return FALSE;
 }
 
+/* |description|Teleports the current object to its home position|descriptionEnd| */
 void cur_obj_set_pos_to_home(void) {
     if (!o) { return; }
     o->oPosX = o->oHomeX;
@@ -1902,6 +2015,7 @@ void cur_obj_set_pos_to_home(void) {
     o->header.gfx.skipInterpolationTimestamp = gGlobalTimer;
 }
 
+/* |description|Teleports the current object to its home position and stops its motion|descriptionEnd| */
 void cur_obj_set_pos_to_home_and_stop(void) {
     if (!o) { return; }
     cur_obj_set_pos_to_home();
@@ -1910,6 +2024,7 @@ void cur_obj_set_pos_to_home_and_stop(void) {
     o->oVelY = 0;
 }
 
+/* |description|Shakes the current object vertically by alternating upward and downward offsets|descriptionEnd| */
 void cur_obj_shake_y(f32 amount) {
     if (!o) { return; }
     //! Technically could cause a bit of drift, but not much
@@ -1920,11 +2035,13 @@ void cur_obj_shake_y(f32 amount) {
     }
 }
 
+/* |description|Starts a camera event and makes the current object the secondary camera focus|descriptionEnd| */
 void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent) {
     gPlayerCameraState->cameraEvent = (s16) cameraEvent;
     gSecondCameraFocus = o;
 }
 
+/* |description|Sets Mario's interact status to hoot-grabbed if Mario is within range|descriptionEnd| */
 void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8) {
     if (!o || !gMarioObject) { return; }
     if (o->oDistanceToMario < sp8) {
@@ -1932,16 +2049,19 @@ void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8
     }
 }
 
+/* |description|Enables billboard rendering for an object|descriptionEnd| */
 void obj_set_billboard(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_BILLBOARD;
 }
 
+/* |description|Enables cylindrical billboard rendering for an object|descriptionEnd| */
 void obj_set_cylboard(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
 }
 
+/* |description|Chooses the appropriate billboard type for the current object based on camera mode|descriptionEnd| */
 void cur_obj_set_billboard_if_vanilla_cam(void) {
     if (!o) { return; }
     if (camera_config_is_free_cam_enabled() || get_first_person_enabled()) {
@@ -1953,6 +2073,7 @@ void cur_obj_set_billboard_if_vanilla_cam(void) {
     }
 }
 
+/* |description|Sets an object's hitbox radius and height|descriptionEnd| */
 void obj_set_hitbox_radius_and_height(struct Object *obj, f32 radius, f32 height) {
     if (obj == NULL) { return; }
 
@@ -1960,6 +2081,7 @@ void obj_set_hitbox_radius_and_height(struct Object *obj, f32 radius, f32 height
     obj->hitboxHeight = height;
 }
 
+/* |description|Sets an object's hurtbox radius and height|descriptionEnd| */
 void obj_set_hurtbox_radius_and_height(struct Object *obj, f32 radius, f32 height) {
     if (obj == NULL) { return; }
 
@@ -1967,21 +2089,22 @@ void obj_set_hurtbox_radius_and_height(struct Object *obj, f32 radius, f32 heigh
     obj->hurtboxHeight = height;
 }
 
+/* |description|Sets the current object's hitbox radius and height|descriptionEnd| */
 void cur_obj_set_hitbox_radius_and_height(f32 radius, f32 height) {
     if (!o) { return; }
     o->hitboxRadius = radius;
     o->hitboxHeight = height;
 }
 
+/* |description|Sets the current object's hurtbox radius and height|descriptionEnd| */
 void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
     if (!o) { return; }
     o->hurtboxRadius = radius;
     o->hurtboxHeight = height;
 }
 
-void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
-                                    const BehaviorScript *coinBehavior,
-                                    s16 posJitter, s16 model) {
+/* |description|Spawns loot coins from an object using the specified behavior, jitter, and model|descriptionEnd| */
+void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model) {
     if (obj == NULL) { return; }
     s32 i;
     f32 spawnHeight;
@@ -2008,14 +2131,17 @@ void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30,
     }
 }
 
+/* |description|Spawns blue loot coins from an object|descriptionEnd| */
 void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter) {
     obj_spawn_loot_coins(obj, numCoins, sp28, bhvBlueCoinJumping, posJitter, MODEL_BLUE_COIN);
 }
 
+/* |description|Spawns yellow loot coins from an object|descriptionEnd| */
 void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28) {
     obj_spawn_loot_coins(obj, numCoins, sp28, bhvSingleCoinGetsSpawned, 0, MODEL_YELLOW_COIN);
 }
 
+/* |description|Spawns a yellow coin at Mario's position and decrements the current object's loot count|descriptionEnd| */
 void cur_obj_spawn_loot_coin_at_mario_pos(struct MarioState* m) {
     struct Object *coin;
     if (!m) { return; }
@@ -2034,6 +2160,7 @@ void cur_obj_spawn_loot_coin_at_mario_pos(struct MarioState* m) {
     obj_copy_pos(coin, m->marioObj);
 }
 
+/* |description|Returns the absolute vertical distance from the object to its home position|descriptionEnd| */
 f32 cur_obj_abs_y_dist_to_home(void) {
     if (!o) { return 0; }
     f32 dist = o->oHomeY - o->oPosY;
@@ -2045,6 +2172,7 @@ f32 cur_obj_abs_y_dist_to_home(void) {
     return dist;
 }
 
+/* |description|Advances the current object animation frame and returns the normalized frame progress|descriptionEnd| */
 s32 cur_obj_advance_looping_anim(void) {
     if (!o) { return 0; }
     s32 animFrame = o->header.gfx.animInfo.animFrame;
@@ -2064,6 +2192,7 @@ s32 cur_obj_advance_looping_anim(void) {
     return result;
 }
 
+/* |description|Checks whether the object is moving into a steep floor or death plane and returns a collision code|descriptionEnd| */
 s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
     if (!o) { return 0; }
     struct Surface *intendedFloor;
@@ -2092,6 +2221,7 @@ s32 cur_obj_detect_steep_floor(s16 steepAngleDegrees) {
     return 0;
 }
 
+/* |description|Resolves wall collisions for the current object and returns `TRUE` if it hit a steep wall|descriptionEnd| */
 s32 cur_obj_resolve_wall_collisions(void) {
     if (!o) { return 0; }
     s32 numCollisions;
@@ -2127,6 +2257,7 @@ s32 cur_obj_resolve_wall_collisions(void) {
     return FALSE;
 }
 
+/* |description|Updates the current object's floor pointer, floor type, and floor room based on the surface below it|descriptionEnd| */
 void cur_obj_update_floor(void) {
     if (!o) { return; }
     struct Surface *floor = cur_obj_update_floor_height_and_get_floor();
@@ -2151,6 +2282,7 @@ void cur_obj_update_floor(void) {
     }
 }
 
+/* |description|Updates the floor and resolves walls for the current object, setting move flags accordingly|descriptionEnd| */
 void cur_obj_update_floor_and_resolve_wall_collisions(s16 steepSlopeDegrees) {
     if (!o) { return; }
 #ifdef VERSION_JP
@@ -2184,10 +2316,12 @@ void cur_obj_update_floor_and_resolve_wall_collisions(s16 steepSlopeDegrees) {
     }
 }
 
+/* |description|Updates the current object floor and wall state using a default steep slope threshold|descriptionEnd| */
 void cur_obj_update_floor_and_walls(void) {
     cur_obj_update_floor_and_resolve_wall_collisions(60);
 }
 
+/* |description|Updates the current object velocity and position using standard gravity, drag, and slope behavior|descriptionEnd| */
 void cur_obj_move_standard(s16 steepSlopeAngleDegrees) {
     if (!o) { return; }
     f32 gravity = o->oGravity;
@@ -2229,6 +2363,7 @@ void cur_obj_move_standard(s16 steepSlopeAngleDegrees) {
     }
 }
 
+/* |description|Checks whether the current object is within a 12,000-unit world bound on all axes|descriptionEnd| */
 s32 cur_obj_within_12k_bounds(void) {
     if (!o) { return 0; }
     if (o->oPosX < -12000.0f || 12000.0f < o->oPosX) {
@@ -2246,6 +2381,7 @@ s32 cur_obj_within_12k_bounds(void) {
     return TRUE;
 }
 
+/* |description|Applies object velocity and gravity directly to the object's position with no terminal velocity|descriptionEnd| */
 void cur_obj_move_using_vel_and_gravity(void) {
     if (!o) { return; }
     //if (cur_obj_within_12k_bounds()) {
@@ -2256,13 +2392,14 @@ void cur_obj_move_using_vel_and_gravity(void) {
     //}
 }
 
+/* |description|Computes the object's XZ velocity from forward velocity then applies gravity-based movement|descriptionEnd| */
 void cur_obj_move_using_fvel_and_gravity(void) {
     cur_obj_compute_vel_xz();
     cur_obj_move_using_vel_and_gravity(); //! No terminal velocity
 }
 
-void obj_set_pos_relative(struct Object *obj, struct Object *other, f32 dleft, f32 dy,
-                             f32 dforward) {
+/* |description|Sets an object position relative to another object using local left, up, and forward offsets|descriptionEnd| */
+void obj_set_pos_relative(struct Object *obj, struct Object *other, f32 dleft, f32 dy, f32 dforward) {
     if (!obj || !other) { return; }
     f32 facingZ = coss(other->oMoveAngleYaw);
     f32 facingX = sins(other->oMoveAngleYaw);
@@ -2277,6 +2414,7 @@ void obj_set_pos_relative(struct Object *obj, struct Object *other, f32 dleft, f
     obj->oPosZ = other->oPosZ + dz;
 }
 
+/* |description|Returns the yaw angle from the current object toward its home position|descriptionEnd| */
 s16 cur_obj_angle_to_home(void) {
     if (!o) { return 0; }
     s16 angle;
@@ -2287,6 +2425,7 @@ s16 cur_obj_angle_to_home(void) {
     return angle;
 }
 
+/* |description|Copies an object's world position and orientation into another object's graphics node|descriptionEnd| */
 void obj_set_gfx_pos_at_obj_pos(struct Object *obj1, struct Object *obj2) {
     if (!obj1 || !obj2) { return; }
     obj1->header.gfx.pos[0] = obj2->oPosX;
@@ -2315,6 +2454,7 @@ void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateInd
         obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz;
 }
 
+/* |description|Copies an object's position and rotation into its transform matrix using the specified field indices|descriptionEnd| */
 void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s16 angleIndex) {
     if (obj == NULL) { return; }
     f32 translate[3];
@@ -2331,6 +2471,7 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
     mtxf_rotate_zxy_and_translate(obj->transform, translate, rotation);
 }
 
+/* |description|Sets the object's graphics throw matrix from its transform and applies object scale if needed|descriptionEnd| */
 void obj_set_throw_matrix_from_transform(struct Object *obj) {
     if (obj == NULL) { return; }
     if (obj->oFlags & OBJ_FLAG_0020) {
@@ -2345,6 +2486,7 @@ void obj_set_throw_matrix_from_transform(struct Object *obj) {
     cur_obj_scale(1.0f);
 }
 
+/* |description|Builds the object's world transform relative to its parent and updates its world position|descriptionEnd| */
 void obj_build_transform_relative_to_parent(struct Object *obj) {
     if (obj == NULL) { return; }
     struct Object *parent = obj->parentObj;
@@ -2365,6 +2507,7 @@ void obj_build_transform_relative_to_parent(struct Object *obj) {
     cur_obj_scale(1.0f);
 }
 
+/* |description|Initializes the object's own transform matrix from its current world position|descriptionEnd| */
 void obj_create_transform_from_self(struct Object *obj) {
     if (obj == NULL) { return; }
     obj->oFlags &= ~OBJ_FLAG_TRANSFORM_RELATIVE_TO_PARENT;
@@ -2375,6 +2518,7 @@ void obj_create_transform_from_self(struct Object *obj) {
     obj->transform[3][2] = obj->oPosZ;
 }
 
+/* |description|Rotates the current object's move angles by its angular velocity components|descriptionEnd| */
 void cur_obj_rotate_move_angle_using_vel(void) {
     if (!o) { return; }
     o->oMoveAnglePitch += o->oAngleVelPitch;
@@ -2382,6 +2526,7 @@ void cur_obj_rotate_move_angle_using_vel(void) {
     o->oMoveAngleRoll += o->oAngleVelRoll;
 }
 
+/* |description|Rotates the current object's face angles by its angular velocity components|descriptionEnd| */
 void cur_obj_rotate_face_angle_using_vel(void) {
     if (!o) { return; }
     o->oFaceAnglePitch += o->oAngleVelPitch;
@@ -2389,6 +2534,7 @@ void cur_obj_rotate_face_angle_using_vel(void) {
     o->oFaceAngleRoll += o->oAngleVelRoll;
 }
 
+/* |description|Copies the current object's move angles into its face angles|descriptionEnd| */
 void cur_obj_set_face_angle_to_move_angle(void) {
     if (!o) { return; }
     o->oFaceAnglePitch = o->oMoveAnglePitch;
@@ -2396,6 +2542,7 @@ void cur_obj_set_face_angle_to_move_angle(void) {
     o->oFaceAngleRoll = o->oMoveAngleRoll;
 }
 
+/* |description|Advances path-following state and returns whether a waypoint or path end was reached|descriptionEnd| */
 s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     if (!o) { return 0; }
     struct Waypoint *startWaypoint;
@@ -2461,6 +2608,7 @@ s32 cur_obj_follow_path(UNUSED s32 unusedArg) {
     return PATH_NONE;
 }
 
+/* |description|Initializes a chain segment's position and orientation to identity values|descriptionEnd| */
 void chain_segment_init(struct ChainSegment *segment) {
     if (!o) { return; }
     if (segment == NULL) { return; }
@@ -2473,15 +2621,18 @@ void chain_segment_init(struct ChainSegment *segment) {
     segment->roll = 0;
 }
 
+/* |description|Returns a random floating-point value within +/- diameter/2|descriptionEnd| */
 f32 random_f32_around_zero(f32 diameter) {
     return random_float() * diameter - diameter / 2;
 }
 
+/* |description|Randomly scales an object within a range and applies a minimum scale|descriptionEnd| */
 void obj_scale_random(struct Object *obj, f32 rangeLength, f32 minScale) {
     f32 scale = random_float() * rangeLength + minScale;
     obj_scale_xyz(obj, scale, scale, scale);
 }
 
+/* |description|Applies a random translation to an object on all three axes|descriptionEnd| */
 void obj_translate_xyz_random(struct Object *obj, f32 rangeLength) {
     if (obj == NULL) { return; }
     obj->oPosX += random_float() * rangeLength - rangeLength * 0.5f;
@@ -2489,12 +2640,14 @@ void obj_translate_xyz_random(struct Object *obj, f32 rangeLength) {
     obj->oPosZ += random_float() * rangeLength - rangeLength * 0.5f;
 }
 
+/* |description|Applies a random translation to an object on the X and Z axes|descriptionEnd| */
 void obj_translate_xz_random(struct Object *obj, f32 rangeLength) {
     if (obj == NULL) { return; }
     obj->oPosX += random_float() * rangeLength - rangeLength * 0.5f;
     obj->oPosZ += random_float() * rangeLength - rangeLength * 0.5f;
 }
 
+/* |description|Builds the object's world velocity from its transform basis vectors|descriptionEnd| */
 void obj_build_vel_from_transform(struct Object *a0) {
     if (a0 == NULL) { return; }
     f32 spC = a0->oUnkC0;
@@ -2506,6 +2659,7 @@ void obj_build_vel_from_transform(struct Object *a0) {
     a0->oVelZ = a0->transform[0][2] * spC + a0->transform[1][2] * sp8 + a0->transform[2][2] * sp4;
 }
 
+/* |description|Moves the current object using its transform-derived velocity|descriptionEnd| */
 void cur_obj_set_pos_via_transform(void) {
     if (!o) { return; }
     obj_build_transform_from_pos_and_angle(o, O_PARENT_RELATIVE_POS_INDEX, O_MOVE_ANGLE_INDEX);
@@ -2515,12 +2669,14 @@ void cur_obj_set_pos_via_transform(void) {
     o->oPosZ += o->oVelZ;
 }
 
+/* |description|Reflects the current object's move angle across its wall normal|descriptionEnd| */
 s16 cur_obj_reflect_move_angle_off_wall(void) {
     if (!o) { return 0; }
     s16 angle = o->oWallAngle - ((s16) o->oMoveAngleYaw - (s16) o->oWallAngle) + 0x8000;
     return angle;
 }
 
+/* |description|Spawns particles based on information in a SpawnParticlesInfo structure|descriptionEnd| */
 void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     if (info == NULL) { return; }
     struct Object *particle;
@@ -2559,6 +2715,7 @@ void cur_obj_spawn_particles(struct SpawnParticlesInfo *info) {
     }
 }
 
+/* |description|Sets an object's hitbox and hurtbox quantities then makes it tangible|descriptionEnd| */
 void obj_set_hitbox(struct Object *obj, struct ObjectHitbox *hitbox) {
     if (obj == NULL || hitbox == NULL) { return; }
     if (!(obj->oFlags & OBJ_FLAG_30)) {
@@ -2579,6 +2736,7 @@ void obj_set_hitbox(struct Object *obj, struct ObjectHitbox *hitbox) {
     obj->hitboxDownOffset = obj->header.gfx.scale[1] * hitbox->downOffset;
 }
 
+/* |description|Returns 1 for non-negative values and -1 for negative values|descriptionEnd| */
 s32 signum_positive(s32 x) {
     if (x >= 0) {
         return 1;
@@ -2587,6 +2745,7 @@ s32 signum_positive(s32 x) {
     }
 }
 
+/* |description|Returns the absolute value of a floating-point number|descriptionEnd| */
 f32 absf(f32 x) {
     if (x >= 0) {
         return x;
@@ -2595,6 +2754,7 @@ f32 absf(f32 x) {
     }
 }
 
+/* |description|Returns the absolute value of an integer|descriptionEnd| */
 s32 absi(s32 x) {
     if (x >= 0) {
         return x;
@@ -2603,6 +2763,7 @@ s32 absi(s32 x) {
     }
 }
 
+/* |description|Makes the current object blink after a delay and returns `TRUE` when blinking is complete|descriptionEnd| */
 s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
     if (!o) { return 0; }
     s32 done = FALSE;
@@ -2622,6 +2783,7 @@ s32 cur_obj_wait_then_blink(s32 timeUntilBlinking, s32 numBlinks) {
     return done;
 }
 
+/* |description|Returns `TRUE` if any active player is ground-pounding the current platform object|descriptionEnd| */
 s32 cur_obj_is_mario_ground_pounding_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -2633,21 +2795,25 @@ s32 cur_obj_is_mario_ground_pounding_platform(void) {
     return FALSE;
 }
 
+/* |description|Checks whether a MarioState is ground-pounding the specified platform object|descriptionEnd| */
 s32 obj_is_mario_ground_pounding_platform(struct MarioState *m, struct Object *obj) {
     if (!m || !obj || !m->marioObj) { return FALSE; }
     if (m->marioObj->platform != obj) { return FALSE; }
     return mario_is_ground_pound_landing(m);
 }
 
+/* |description|Spawns mist particles at the current object without playing sound|descriptionEnd| */
 void spawn_mist_particles(void) {
     spawn_mist_particles_variable(0, 0, 46.0f);
 }
 
+/* |description|Spawns mist particles at the current object and plays the specified sound|descriptionEnd| */
 void spawn_mist_particles_with_sound(u32 sp18) {
     spawn_mist_particles_variable(0, 0, 46.0f);
     create_sound_spawner(sp18);
 }
 
+/* |description|Pushes any player within a radius away from the current object on the XZ plane|descriptionEnd| */
 void cur_obj_push_mario_away(f32 radius) {
     if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -2666,6 +2832,7 @@ void cur_obj_push_mario_away(f32 radius) {
     }
 }
 
+/* |description|Pushes any player within a vertical cylinder away from the current object|descriptionEnd| */
 void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
     if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -2692,6 +2859,7 @@ void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY) {
     }
 }
 
+/* |description|Behavior loop function for dust smoke|descriptionEnd| */
 void bhv_dust_smoke_loop(void) {
     if (!o) { return; }
     o->oPosX += o->oVelX;
@@ -2705,6 +2873,7 @@ void bhv_dust_smoke_loop(void) {
     o->oSmokeTimer++;
 }
 
+/* |description|Sets the the tox box movement pattern table pointer and resets the step to 0|descriptionEnd| */
 s32 cur_obj_set_direction_table(s8 *a0) {
     if (!o) { return 0; }
     o->oToxBoxMovementPattern = a0;
@@ -2713,6 +2882,7 @@ s32 cur_obj_set_direction_table(s8 *a0) {
     return *(s8 *) o->oToxBoxMovementPattern;
 }
 
+/* |description|Progresses through a tox box movement pattern table pointer (`oToxBoxMovementPattern`) using `oToxBoxMovementStep`|descriptionEnd| */
 s32 cur_obj_progress_direction_table(void) {
     if (!o) { return 0; }
     s8 ret;
@@ -2740,9 +2910,11 @@ s32 cur_obj_progress_direction_table(void) {
     return ret;
 }
 
+/* |description|Placeholder function with no behavior|descriptionEnd| */
 void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4) {
 }
 
+/* |description|Smoothly scales the current object over time using enabled axes|descriptionEnd| */
 void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14) {
     if (!o) { return; }
     f32 sp4 = sp14 - sp10;
@@ -2761,6 +2933,7 @@ void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14) {
     }
 }
 
+/* |description|Moves an object to its home position while applying debug position offsets|descriptionEnd| */
 void cur_obj_set_pos_to_home_with_debug(void) {
     if (!o) { return; }
     o->oPosX = o->oHomeX + gDebugInfo[5][0];
@@ -2769,9 +2942,11 @@ void cur_obj_set_pos_to_home_with_debug(void) {
     cur_obj_scale(gDebugInfo[5][3] / 100.0f + 1.0l);
 }
 
+/* |description|Placeholder function with no behavior|descriptionEnd| */
 void stub_obj_helpers_4(void) {
 }
 
+/* |description|Returns `TRUE` if Mario is currently standing on the current platform object|descriptionEnd| */
 s32 cur_obj_is_mario_on_platform(void) {
     if (gMarioObject && gMarioObject->platform == o) {
         return TRUE;
@@ -2779,6 +2954,7 @@ s32 cur_obj_is_mario_on_platform(void) {
     return FALSE;
 }
 
+/* |description|Returns `TRUE` if any player is standing on the current platform object|descriptionEnd| */
 s32 cur_obj_is_any_player_on_platform(void) {
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -2790,6 +2966,7 @@ s32 cur_obj_is_any_player_on_platform(void) {
     return FALSE;
 }
 
+/* |description|Oscillates the current object vertically until a specified number of cycles passes|descriptionEnd| */
 s32 cur_obj_shake_y_until(s32 cycles, s32 amount) {
     if (!o) { return 0; }
     if (o->oTimer % 2 != 0) {
@@ -2805,6 +2982,7 @@ s32 cur_obj_shake_y_until(s32 cycles, s32 amount) {
     }
 }
 
+/* |description|Moves the current object up and down along a preset displacement table|descriptionEnd| */
 s32 cur_obj_move_up_and_down(s32 a0) {
     if (!o) { return 0; }
     if (a0 >= 4 || a0 < 0) {
@@ -2815,6 +2993,7 @@ s32 cur_obj_move_up_and_down(s32 a0) {
     return FALSE;
 }
 
+/* |description|Calls the current object's action function from an array if valid|descriptionEnd| */
 void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t actionFunctionsLength) {
     if (!o) { return; }
     if (!actionFunctions) { return; }
@@ -2824,6 +3003,7 @@ void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t acti
     actionFunction();
 }
 
+/* |description|Spawns a star object without triggering level exit behavior|descriptionEnd| */
 struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
     if (!o) { return NULL; }
     struct Object *sp1C = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
@@ -2835,16 +3015,17 @@ struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
     return sp1C;
 }
 
-// old unused initializer for 2d star spawn behavior.
-// uses behavior parameters not used in the current sparkle code.
+/* |description|Spawns a base star with default parameters and no level exit behavior|descriptionEnd| */
 void spawn_base_star_with_no_lvl_exit(void) {
     spawn_star_with_no_lvl_exit(0, 0);
 }
 
+/* |description|Returns the value at index a0 from a behavior-specific left-shift table|descriptionEnd| */
 s32 bit_shift_left(s32 a0) {
     return BHV_ARR(D_8032F0A4, a0, s16);
 }
 
+/* |description|Returns `TRUE` if the current object is farther than 2000 units from every active Mario|descriptionEnd| */
 s32 cur_obj_mario_far_away(void) {
     if (!o) { return 0; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
@@ -2860,6 +3041,7 @@ s32 cur_obj_mario_far_away(void) {
     return (o->oDistanceToMario > 2000.0f);
 }
 
+/* |description|Returns `TRUE` if the current Mario is moving faster than threshold or is airborne|descriptionEnd| */
 s32 is_mario_moving_fast_or_in_air(s32 speedThreshold) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (!marioState) {
@@ -2877,6 +3059,7 @@ s32 is_mario_moving_fast_or_in_air(s32 speedThreshold) {
     }
 }
 
+/* |description|Checks whether a signed item appears in a terminated array|descriptionEnd| */
 s32 is_item_in_array(s8 item, s8 *array) {
     while (*array != -1) {
         if (*array == item) {
@@ -2889,6 +3072,7 @@ s32 is_item_in_array(s8 item, s8 *array) {
     return FALSE;
 }
 
+/* |description|Sets the current object's room based on the floor surface underneath it|descriptionEnd| */
 void bhv_init_room(void) {
     if (!o) { return; }
     struct Surface *floor;
@@ -2915,6 +3099,7 @@ void bhv_init_room(void) {
     }
 }
 
+/* |description|Enables rendering for the current object if any active player is in a connected room|descriptionEnd| */
 void cur_obj_enable_rendering_if_mario_in_room(void) {
     if (!o) { return; }
     if (o->oRoom == -1) { return; }
@@ -2957,6 +3142,7 @@ void cur_obj_enable_rendering_if_mario_in_room(void) {
     }
 }
 
+/* |description|Gives the current object a hitbox and kills it if attacked, with optional loot suppression|descriptionEnd| */
 s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deathSound, s32 noLootCoins) {
     if (!o) { return 0; }
     s32 interacted = FALSE;
@@ -2982,7 +3168,7 @@ s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deat
     return interacted;
 }
 
-
+/* |description|Explodes the current object, spawns particles, and optionally spawns coins|descriptionEnd| */
 void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C) {
     if (!o) { return; }
     spawn_mist_particles_variable(0, 0, sp18);
@@ -2996,10 +3182,12 @@ void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C) {
     }
 }
 
+/* |description|Sets an object's collision data pointer from a segmented address|descriptionEnd| */
 void obj_set_collision_data(struct Object *obj, const void *segAddr) {
     obj->collisionData = segmented_to_virtual(segAddr);
 }
 
+/* |description|Sets the current object to bounce away if it hit a wall|descriptionEnd| */
 void cur_obj_if_hit_wall_bounce_away(void) {
     if (!o) { return; }
     if (o->oMoveFlags & OBJ_MOVE_HIT_WALL) {
@@ -3007,6 +3195,7 @@ void cur_obj_if_hit_wall_bounce_away(void) {
     }
 }
 
+/* |description|Hides the current object if Mario is too far above or below it, otherwise ensures it is visible|descriptionEnd| */
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
     if (!o) { return 0; }
     if (!gMarioStates[0].marioObj) { return FALSE; }
@@ -3020,6 +3209,7 @@ s32 cur_obj_hide_if_mario_far_away_y(f32 distY) {
     return TRUE;
 }
 
+/* |description|Offsets Klepto's held object graphics during render|descriptionEnd| */
 Gfx *geo_offset_klepto_held_object(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
     if (callContext == GEO_CONTEXT_RENDER) {
         ((struct GraphNodeTranslationRotation *) node->next)->translation[0] = 300;
@@ -3030,6 +3220,7 @@ Gfx *geo_offset_klepto_held_object(s32 callContext, struct GraphNode *node, UNUS
     return NULL;
 }
 
+/* |description|Updates debug data for Klepto's render graph node during rendering|descriptionEnd| */
 s32 geo_offset_klepto_debug(s32 callContext, struct GraphNode *a1, UNUSED s32 sp8) {
     if (callContext == GEO_CONTEXT_RENDER) {
         ((struct GraphNode_802A45E4 *) a1->next)->unk18 = gDebugInfo[4][0];
@@ -3043,6 +3234,7 @@ s32 geo_offset_klepto_debug(s32 callContext, struct GraphNode *a1, UNUSED s32 sp
     return 0;
 }
 
+/* |description|Returns `TRUE` if the given object is currently hidden from rendering|descriptionEnd| */
 s32 obj_is_hidden(struct Object *obj) {
     if (!obj) { return 0; }
     if (obj->header.gfx.node.flags & GRAPH_RENDER_INVISIBLE) {
@@ -3052,10 +3244,12 @@ s32 obj_is_hidden(struct Object *obj) {
     }
 }
 
+/* |description|Enables global time stop state|descriptionEnd| */
 void enable_time_stop(void) {
     gTimeStopState |= TIME_STOP_ENABLED;
 }
 
+/* |description|Enables time stop only when the local player is alone|descriptionEnd| */
 void enable_time_stop_if_alone(void) {
     if (network_player_connected_count() > 1) {
         return;
@@ -3063,14 +3257,17 @@ void enable_time_stop_if_alone(void) {
     gTimeStopState |= TIME_STOP_ENABLED;
 }
 
+/* |description|Disables global time stop state|descriptionEnd| */
 void disable_time_stop(void) {
     gTimeStopState &= ~TIME_STOP_ENABLED;
 }
 
+/* |description|Sets global time stop flags|descriptionEnd| */
 void set_time_stop_flags(s32 flags) {
     gTimeStopState |= flags;
 }
 
+/* |description|Sets time stop flags only if the local player is alone|descriptionEnd| */
 void set_time_stop_flags_if_alone(s32 flags) {
     if (network_player_connected_count() > 1) {
         return;
@@ -3078,10 +3275,12 @@ void set_time_stop_flags_if_alone(s32 flags) {
     gTimeStopState |= flags;
 }
 
+/* |description|Clears selected global time stop flags|descriptionEnd| */
 void clear_time_stop_flags(s32 flags) {
     gTimeStopState = gTimeStopState & (flags ^ 0xFFFFFFFF);
 }
 
+/* |description|Checks whether Mario can activate the current object's textbox within a vertical and horizontal range|descriptionEnd| */
 s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
     if (!o || !m) { return 0; }
     if (!m->visibleToObjects) { return FALSE; }
@@ -3099,11 +3298,13 @@ s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 hei
     return FALSE;
 }
 
+/* |description|Wrapper that checks Mario textbox activation using a fixed unused parameter value|descriptionEnd| */
 s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height) {
     // The last argument here is unused. When this function is called directly the argument is always set to 0x7FFF.
     return cur_obj_can_mario_activate_textbox(m, radius, height, 0x1000);
 }
 
+/* |description|Ends dialog state for the current object and records Mario's response|descriptionEnd| */
 void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult) {
     if (!o || !m) { return; }
     if (m->playerIndex != 0) { return; }
@@ -3116,6 +3317,7 @@ void cur_obj_end_dialog(struct MarioState* m, s32 dialogFlags, s32 dialogResult)
     }
 }
 
+/* |description|Processes object dialog state and returns the dialog response result|descriptionEnd| */
 s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void)) {
     if (!o || !m) { return 0; }
     s32 dialogResponse = 0;
@@ -3196,6 +3398,7 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
     return dialogResponse;
 }
 
+/* |description|Processes dialog state for cutscene-triggered object dialog and returns the dialog result|descriptionEnd| */
 s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void)) {
     if (!o || !m) { return 0; }
     s32 dialogResponse = 0;
@@ -3278,6 +3481,7 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
     return dialogResponse;
 }
 
+/* |description|Checks whether the current object uses the specified model geometry|descriptionEnd| */
 s32 cur_obj_has_model(u16 modelID) {
     if (!o) { return 0; }
     struct GraphNode* node = dynos_model_get_geo(modelID);
@@ -3290,6 +3494,7 @@ s32 cur_obj_has_model(u16 modelID) {
     }
 }
 
+/* |description|Aligns the current object's graphics with the floor normal at its position|descriptionEnd| */
 void cur_obj_align_gfx_with_floor(void) {
     if (!o) { return; }
     struct Surface *floor;
@@ -3311,6 +3516,7 @@ void cur_obj_align_gfx_with_floor(void) {
     }
 }
 
+/* |description|Returns `TRUE` if Mario's position lies within a 2D rectangle on the XZ plane|descriptionEnd| */
 s32 mario_is_within_rectangle(s16 minX, s16 maxX, s16 minZ, s16 maxZ) {
     if (!gMarioObject) { return FALSE; }
     if (gMarioObject->oPosX < minX || maxX < gMarioObject->oPosX) {
@@ -3324,11 +3530,13 @@ s32 mario_is_within_rectangle(s16 minX, s16 maxX, s16 minZ, s16 maxZ) {
     return TRUE;
 }
 
+/* |description|Shakes the camera around the current object with a given intensity|descriptionEnd| */
 void cur_obj_shake_screen(s32 shake) {
     if (!o) { return; }
     set_camera_shake_from_point(shake, o->oPosX, o->oPosY, o->oPosZ);
 }
 
+/* |description|Marks another object as attacked by the current object and returns whether it collided|descriptionEnd| */
 s32 obj_attack_collided_from_other_object(struct Object *obj) {
     if (obj == NULL) { return FALSE; }
     s32 numCollidedObjs;
@@ -3349,6 +3557,7 @@ s32 obj_attack_collided_from_other_object(struct Object *obj) {
     return touchedOtherObject;
 }
 
+/* |description|Returns `TRUE` if the current object was attacked or ground-pounded and clears interact status|descriptionEnd| */
 s32 cur_obj_was_attacked_or_ground_pounded(void) {
     if (!o) { return 0; }
     s32 attacked = FALSE;
@@ -3366,28 +3575,33 @@ s32 cur_obj_was_attacked_or_ground_pounded(void) {
     return attacked;
 }
 
+/* |description|Copies behavior parameters from one object to another|descriptionEnd| */
 void obj_copy_behavior_params(struct Object *dst, struct Object *src) {
     if (dst == NULL || src == NULL) { return; }
     dst->oBehParams = src->oBehParams;
     dst->oBehParams2ndByte = src->oBehParams2ndByte;
 }
 
+/* |description|Initializes the current object's animation and sets a specific frame|descriptionEnd| */
 void cur_obj_init_animation_and_anim_frame(s32 animIndex, s32 animFrame) {
     if (!o) { return; }
     cur_obj_init_animation_with_sound(animIndex);
     o->header.gfx.animInfo.animFrame = animFrame;
 }
 
+/* |description|Initializes the current object's animation and checks if it is near the end|descriptionEnd| */
 s32 cur_obj_init_animation_and_check_if_near_end(s32 animIndex) {
     cur_obj_init_animation_with_sound(animIndex);
     return cur_obj_check_if_near_animation_end();
 }
 
+/* |description|Initializes the current object's animation and extends it if the animation has ended|descriptionEnd| */
 void cur_obj_init_animation_and_extend_if_at_end(s32 animIndex) {
     cur_obj_init_animation_with_sound(animIndex);
     cur_obj_extend_animation_if_at_end();
 }
 
+/* |description|Checks whether the current object has grabbed Mario and becomes intangible if so|descriptionEnd| */
 s32 cur_obj_check_grabbed_mario(void) {
     if (!o) { return 0; }
     if (o->oInteractStatus & INT_STATUS_GRABBED_MARIO) {
@@ -3399,6 +3613,7 @@ s32 cur_obj_check_grabbed_mario(void) {
     return FALSE;
 }
 
+/* |description|Returns `TRUE` if the player performed an escape action during a grab|descriptionEnd| */
 s32 player_performed_grab_escape_action(void) {
     static s32 grabReleaseState;
     s32 result = FALSE;
@@ -3419,12 +3634,14 @@ s32 player_performed_grab_escape_action(void) {
     return result;
 }
 
+/* |description|Plays a footstep sound when the current animation reaches one of two frames|descriptionEnd| */
 void cur_obj_unused_play_footstep_sound(s32 animFrame1, s32 animFrame2, s32 sound) {
     if (cur_obj_check_anim_frame(animFrame1) || cur_obj_check_anim_frame(animFrame2)) {
         cur_obj_play_sound_2(sound);
     }
 }
 
+/* |description|Enables time stop for the world and Mario/doors|descriptionEnd| */
 void enable_time_stop_including_mario(void) {
     gTimeStopState |= TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS;
     if (o) {
@@ -3432,6 +3649,7 @@ void enable_time_stop_including_mario(void) {
     }
 }
 
+/* |description|Disables time stop for the world and Mario/doors|descriptionEnd| */
 void disable_time_stop_including_mario(void) {
     gTimeStopState &= ~(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
     if (o) {
@@ -3439,6 +3657,7 @@ void disable_time_stop_including_mario(void) {
     }
 }
 
+/* |description|Returns `TRUE` if the current object has been interacted with and clears the status|descriptionEnd| */
 s32 cur_obj_check_interacted(void) {
     if (!o) { return 0; }
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
@@ -3449,6 +3668,7 @@ s32 cur_obj_check_interacted(void) {
     }
 }
 
+/* |description|Spawns a blue coin from the current object when sufficient loot coins are available|descriptionEnd| */
 void cur_obj_spawn_loot_blue_coin(void) {
     if (o && o->oNumLootCoins >= 5) {
         spawn_object(o, MODEL_BLUE_COIN, bhvMrIBlueCoin);
@@ -3457,6 +3677,7 @@ void cur_obj_spawn_loot_blue_coin(void) {
 }
 
 #ifndef VERSION_JP
+/* |description|Temporarily shifts the current object's Y position and spawns a star|descriptionEnd| */
 void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 offsetY) {
     if (!o) { return; }
     f32 objectPosY = o->oPosY;
@@ -3466,7 +3687,7 @@ void cur_obj_spawn_star_at_y_offset(f32 targetX, f32 targetY, f32 targetZ, f32 o
 }
 #endif
 
-/* |description|Sets the current object's home only the first time it's called|descriptionEnd| */
+/* |description|Sets the current object's home position once and marks it as initialized|descriptionEnd| */
 void cur_obj_set_home_once(void) {
     if (!o) { return; }
     if (o->setHome) { return; }
@@ -3477,7 +3698,7 @@ void cur_obj_set_home_once(void) {
 }
 
 
-/* |description|Gets a trajectory's length|descriptionEnd| */
+/* |description|Gets the number of steps in a trajectory until the end marker|descriptionEnd| */
 s32 get_trajectory_length(Trajectory* trajectory) {
     if (!trajectory) { return 0; }
     s32 count = 0;

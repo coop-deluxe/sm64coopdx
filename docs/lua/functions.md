@@ -751,6 +751,12 @@
 
 - djui_console.h
    - [djui_console_toggle](functions-3.md#djui_console_toggle)
+   - [djui_console_is_open](functions-3.md#djui_console_is_open)
+
+<br />
+
+- djui_gfx.h
+   - [djui_gfx_get_scale](functions-3.md#djui_gfx_get_scale)
 
 <br />
 
@@ -1184,7 +1190,6 @@
    - [stopping_step](functions-4.md#stopping_step)
    - [landing_step](functions-4.md#landing_step)
    - [check_common_landing_cancels](functions-4.md#check_common_landing_cancels)
-   - [mario_exit_palette_editor](functions-4.md#mario_exit_palette_editor)
    - [check_common_stationary_cancels](functions-4.md#check_common_stationary_cancels)
    - [mario_execute_stationary_action](functions-4.md#mario_execute_stationary_action)
 
@@ -1207,6 +1212,7 @@
    - [bhv_unlock_door_star_loop](functions-4.md#bhv_unlock_door_star_loop)
    - [geo_get_mario_state](functions-4.md#geo_get_mario_state)
    - [geo_get_body_state](functions-4.md#geo_get_body_state)
+   - [geo_get_mario_object](functions-4.md#geo_get_mario_object)
 
 <br />
 
@@ -1912,25 +1918,26 @@
    - [camera_config_set_deceleration](functions-6.md#camera_config_set_deceleration)
    - [camera_get_checking_surfaces](functions-6.md#camera_get_checking_surfaces)
    - [camera_set_checking_surfaces](functions-6.md#camera_set_checking_surfaces)
+   - [center_free_camera](functions-6.md#center_free_camera)
 
 <br />
 
 - smlua_collision_utils.h
-   - [collision_find_floor](functions-6.md#collision_find_floor)
-   - [collision_find_ceil](functions-6.md#collision_find_ceil)
-   - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-6.md#smlua_collision_util_get)
-   - [collision_get_temp_wall_collision_data](functions-6.md#collision_get_temp_wall_collision_data)
-   - [get_surface_from_wcd_index](functions-6.md#get_surface_from_wcd_index)
-   - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
-   - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
-   - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
-   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
-   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
-   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
-   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
-   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
-   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
+   - [collision_find_floor](functions-7.md#collision_find_floor)
+   - [collision_find_ceil](functions-7.md#collision_find_ceil)
+   - [get_water_surface_pseudo_floor](functions-7.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-7.md#smlua_collision_util_get)
+   - [collision_get_temp_wall_collision_data](functions-7.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-7.md#get_surface_from_wcd_index)
+   - [smlua_collision_util_get_current_terrain_collision](functions-7.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-7.md#smlua_collision_util_get_level_collision)
+   - [smlua_collision_util_find_surface_types](functions-7.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-7.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-7.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-7.md#smlua_collision_delete_surface)
+   - [surface_is_quicksand](functions-7.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-7.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-7.md#surface_is_painting_warp)
 
 <br />
 

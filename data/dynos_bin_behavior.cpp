@@ -2291,7 +2291,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
             //BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
             //memcpy(aHead, _Bs, sizeof(_Bs));
             //aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
-            PrintDataError("  ERROR: : Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
+            PrintDataError("  ERROR: Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
         }
         return;
     }
@@ -2635,6 +2635,7 @@ GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehavio
     GfxData *_GfxData = NULL;
     BinFile *_File = BinFile::OpenR(aFilename.c_str());
     if (_File != NULL) {
+        PrintInfo("Loading behavior '%s' from file: %s", aBehaviorName, aFilename.c_str());
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
@@ -2685,8 +2686,7 @@ static void DynOS_Bhv_Generate(const SysPath &aPackFolder, Array<Pair<u64, Strin
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bhv: Behavior identifier: %llX - Processing... ", _BhvRootName.begin(), _GfxData->mDataIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bhv: Behavior identifier: %llX - Processing... ", _BhvRootName.begin(), _GfxData->mDataIdentifier);
+        PrintInfoNoNewLine("%s.bhv: Behavior identifier: %llX - Processing... ", _BhvRootName.begin(), _GfxData->mDataIdentifier);
         DynOS_Bhv_Parse(_GfxData, _BhvNode, true);
 
         // Write if no error

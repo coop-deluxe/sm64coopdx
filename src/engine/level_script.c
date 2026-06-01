@@ -1008,9 +1008,8 @@ static void level_cmd_place_object_ext_lua_params(void) {
 
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
 
-        spawnInfo->syncID = spawnInfo->next
-                          ? spawnInfo->next->syncID + 10
-                          : 10;
+        spawnInfo->syncID = gAreas[sCurrAreaIndex].nextSyncID;
+        gAreas[sCurrAreaIndex].nextSyncID += 10;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
         area_check_red_coin_or_secret(spawnInfo->behaviorScript, false);

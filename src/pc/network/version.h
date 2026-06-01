@@ -1,12 +1,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define SM64COOPDX_VERSION "v1.5"
+#define SM64COOPDX_VERSION "v1.5.1"
 
 // internal version
 #define VERSION_TEXT "v"
 #define VERSION_NUMBER 42
-#define MINOR_VERSION_NUMBER 0
+#define MINOR_VERSION_NUMBER 1
 
 #define VERSION_OFFSET 37 // difference from old versioning system
 

@@ -743,10 +743,20 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 }
 
 template <typename... Args>
+void PrintInfoNoNewLine(const char *aFmt, Args... aArgs) {
+    PrintNoNewLine(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
+void PrintInfo(const char *aFmt, Args... aArgs) {
+    Print(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    Print(aFmt, aArgs...);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \

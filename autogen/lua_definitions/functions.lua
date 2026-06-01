@@ -3917,6 +3917,18 @@ function djui_console_toggle()
     -- ...
 end
 
+--- @return boolean
+--- Returns whether the DJUI console is currently open or not
+function djui_console_is_open()
+    -- ...
+end
+
+--- @return number
+--- Gets the current visual scaling factor of DJUI
+function djui_gfx_get_scale()
+    -- ...
+end
+
 --- @return integer
 --- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
@@ -6647,13 +6659,6 @@ function check_common_landing_cancels(m, action)
 end
 
 --- @param m MarioState
---- @param c Camera
---- @return integer
-function mario_exit_palette_editor(m, c)
-    -- ...
-end
-
---- @param m MarioState
 --- @return integer
 --- Checks for and handles common conditions that would cancel Mario's current stationary action.
 function check_common_stationary_cancels(m)
@@ -6740,6 +6745,12 @@ end
 --- @return MarioBodyState
 --- When used in a geo function, retrieve the MarioBodyState associated to the current processed object
 function geo_get_body_state()
+    -- ...
+end
+
+--- @return Object
+--- When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise
+function geo_get_mario_object()
     -- ...
 end
 
@@ -8079,30 +8090,34 @@ function mod_storage_save_bool(key, value)
 end
 
 --- @param key string
+--- @param defaultValue? string
 --- @return string
---- Loads a string `value` from a `key` in mod storage
-function mod_storage_load(key)
+--- Loads a string `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `nil`
+function mod_storage_load(key, defaultValue)
     -- ...
 end
 
 --- @param key string
+--- @param defaultValue? integer
 --- @return integer
---- Loads an integer `value` from a `key` in mod storage
-function mod_storage_load_integer(key)
+--- Loads an integer `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
+function mod_storage_load_integer(key, defaultValue)
     -- ...
 end
 
 --- @param key string
+--- @param defaultValue? number
 --- @return number
---- Loads a number `value` from a `key` in mod storage
-function mod_storage_load_number(key)
+--- Loads a number `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
+function mod_storage_load_number(key, defaultValue)
     -- ...
 end
 
 --- @param key string
+--- @param defaultValue? boolean
 --- @return boolean
---- Loads a bool `value` from a `key` in mod storage
-function mod_storage_load_bool(key)
+--- Loads a bool `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `false`
+function mod_storage_load_bool(key, defaultValue)
     -- ...
 end
 
@@ -8262,7 +8277,7 @@ end
 
 --- @param f number
 --- @return number
---- An absolute value (always positive) function.
+--- Absolute value (always positive) function
 function absf_2(f)
     -- ...
 end
@@ -8273,7 +8288,7 @@ end
 --- @param objVelX number
 --- @param objVelZ number
 --- @return integer
---- Finds any wall collisions, applies them, and turns away from the surface.
+--- Finds any wall collisions, applies them, and turns away from the surface
 function obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)
     -- ...
 end
@@ -8283,7 +8298,7 @@ end
 --- @param objVelX number
 --- @param objVelZ number
 --- @return integer
---- Turns an object away from steep floors, similarly to walls.
+--- Turns an object away from steep floors, similarly to walls
 function turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)
     -- ...
 end
@@ -8292,14 +8307,14 @@ end
 --- @param normalX number
 --- @param normalY number
 --- @param normalZ number
---- Orients an object with the given normals, typically the surface under the object.
+--- Orients an object with the given normals, typically the surface under the object
 function obj_orient_graph(obj, normalX, normalY, normalZ)
     -- ...
 end
 
 --- @param floor_nY number
 --- @return number objFriction
---- Determines an object's forward speed multiplier.
+--- Determines an object's forward speed multiplier
 function calc_obj_friction(floor_nY)
     -- ...
 end
@@ -8308,7 +8323,7 @@ end
 --- @param objFloorY number
 --- @param objVelX number
 --- @param objVelZ number
---- Updates an objects speed for gravity and updates Y position.
+--- Updates an objects speed for gravity and updates Y position
 function calc_new_obj_vel_and_pos_y(objFloor, objFloorY, objVelX, objVelZ)
     -- ...
 end
@@ -8323,7 +8338,7 @@ function calc_new_obj_vel_and_pos_y_underwater(objFloor, floorY, objVelX, objVel
     -- ...
 end
 
---- Updates an objects position from oForwardVel and oMoveAngleYaw.
+--- Updates an objects position from forward velocity and move angle yaw
 function obj_update_pos_vel_xz()
     -- ...
 end
@@ -8350,7 +8365,7 @@ function object_step_without_floor_orient()
 end
 
 --- @param obj Object
---- Updates the object `obj` horizontal velocity using its forward vel and move angle yaw, then moves it
+--- Updates the object `obj` horizontal velocity using its forward velocity and move angle yaw, then moves it
 function obj_move_xyz_using_fvel_and_yaw(obj)
     -- ...
 end
@@ -8501,7 +8516,7 @@ end
 --- @param z number
 --- @param radius number
 --- @return integer
---- Finds any wall collisions and returns what the displacement vector would be.
+--- Finds any wall collisions and returns what the displacement vector would be
 function obj_find_wall_displacement(dist, x, y, z, radius)
     -- ...
 end
@@ -8547,7 +8562,7 @@ end
 --- @param relX integer
 --- @param relY integer
 --- @param relZ integer
---- Spawns an orange number object relatively, such as those that count up for secrets.
+--- Spawns an orange number object relatively, such as those that count up for secrets
 function spawn_orange_number(behParam, relX, relY, relZ)
     -- ...
 end
@@ -8729,6 +8744,7 @@ end
 --- @return integer
 --- @return integer angleVel
 --- @return integer angle
+--- Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `angle` reaches `targetAngle`
 function obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)
     -- ...
 end
@@ -8787,6 +8803,7 @@ end
 --- @return integer
 --- @return integer value
 --- @return number vel
+--- Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`
 function oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)
     -- ...
 end
@@ -8796,6 +8813,7 @@ end
 --- @param cycleLengthRange integer
 --- @param blinkLength integer
 --- @return integer blinkTimer
+--- Update the current object's blinking through `oAnimState`
 function obj_update_blinking(blinkTimer, baseCycleLength, cycleLengthRange, blinkLength)
     -- ...
 end
@@ -8844,6 +8862,7 @@ function obj_set_squished_action()
 end
 
 --- @return integer
+--- Checks if the object is above lava and has non-positive health. Kills the object if true and returns `TRUE` if above lava
 function obj_die_if_above_lava_and_health_non_positive()
     -- ...
 end
@@ -8852,22 +8871,26 @@ end
 --- @param attackedMarioAction integer
 --- @param attackHandlers Pointer_integer
 --- @return integer
+--- Sets the object's hitbox, handles attack interactions by calling appropriate attack handlers, and returns the attack type or 0
 function obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)
     -- ...
 end
 
 --- @param baseScale number
+--- Handles the knockback action by updating floor/walls, extending animation, checking lava, and moving the object
 function obj_act_knockback(baseScale)
     -- ...
 end
 
 --- @param baseScale number
+--- Handles the squished action by scaling the object vertically and horizontally while checking if it's time to die
 function obj_act_squished(baseScale)
     -- ...
 end
 
 --- @param scale number
 --- @return integer
+--- Updates standard object actions like knockback and squished. Returns TRUE if action is less than 100, `FALSE` otherwise
 function obj_update_standard_actions(scale)
     -- ...
 end
@@ -8904,6 +8927,7 @@ end
 --- @param endSpeed number
 --- @param movePitch integer
 --- @return Object
+--- Spawns a small piranha flame object with the given parameters. Used by Bowser, Fly Guy, Piranha Plant, and Fire Spitters
 function obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, startSpeed, endSpeed, movePitch)
     -- ...
 end
@@ -8925,6 +8949,7 @@ end
 
 --- @param a0 Mat4
 --- @param a1 Object
+--- Updates an object's position based on a parent transformation matrix
 function obj_update_pos_from_parent_transformation(a0, a1)
     -- ...
 end
@@ -8932,6 +8957,7 @@ end
 --- @param obj Object
 --- @param dst Mat4
 --- @param src Mat4
+--- Applies an object's scale to a transformation matrix
 function obj_apply_scale_to_matrix(obj, dst, src)
     -- ...
 end
@@ -8939,12 +8965,14 @@ end
 --- @param a0 Mat4
 --- @param a1 Mat4
 --- @param a2 Mat4
+--- Combines two transformation matrices into a single result matrix
 function create_transformation_from_matrices(a0, a1, a2)
     -- ...
 end
 
 --- @param obj Object
 --- @param heldBehavior Pointer_BehaviorScript
+--- Sets an object's held state based on the behavior script it will perform
 function obj_set_held_state(obj, heldBehavior)
     -- ...
 end
@@ -8952,6 +8980,7 @@ end
 --- @param obj1 Object
 --- @param obj2 Object
 --- @return number
+--- Calculates the lateral (XZ) distance between two objects
 function lateral_dist_between_objects(obj1, obj2)
     -- ...
 end
@@ -8959,6 +8988,7 @@ end
 --- @param obj1 Object
 --- @param obj2 Object
 --- @return number
+--- Calculates the 3D distance between two objects
 function dist_between_objects(obj1, obj2)
     -- ...
 end
@@ -8968,12 +8998,14 @@ end
 --- @param pointY number
 --- @param pointZ number
 --- @return number
+--- Calculates the 3D distance between an object and a point
 function dist_between_object_and_point(obj, pointX, pointY, pointZ)
     -- ...
 end
 
 --- @param target number
 --- @param increment number
+--- Increases the current object's forward velocity toward target by increment
 function cur_obj_forward_vel_approach_upward(target, increment)
     -- ...
 end
@@ -8983,6 +9015,7 @@ end
 --- @param increment number
 --- @return integer
 --- @return number value
+--- Approaches a value toward a target using signed increments. Returns `TRUE` when target is reached
 function approach_f32_signed(value, target, increment)
     -- ...
 end
@@ -8991,6 +9024,7 @@ end
 --- @param target number
 --- @param increment number
 --- @return number
+--- Approaches a value toward a target using symmetric increments
 function approach_f32_symmetric(value, target, increment)
     -- ...
 end
@@ -8999,6 +9033,7 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Approaches a 16-bit value toward a target using symmetric increments
 function approach_s16_symmetric(value, target, increment)
     -- ...
 end
@@ -9006,6 +9041,7 @@ end
 --- @param target integer
 --- @param increment integer
 --- @return integer
+--- Rotates the current object's yaw angle toward a target. Returns `TRUE` when target is reached
 function cur_obj_rotate_yaw_toward(target, increment)
     -- ...
 end
@@ -9013,6 +9049,7 @@ end
 --- @param obj1 Object
 --- @param obj2 Object
 --- @return integer
+--- Calculates the angle from one object to another in yaw
 function obj_angle_to_object(obj1, obj2)
     -- ...
 end
@@ -9020,6 +9057,7 @@ end
 --- @param obj Object
 --- @param target Object
 --- @return integer
+--- Calculates the pitch angle from one object to another
 function obj_pitch_to_object(obj, target)
     -- ...
 end
@@ -9028,6 +9066,7 @@ end
 --- @param pointX number
 --- @param pointZ number
 --- @return integer
+--- Calculates the yaw angle from an object to a point
 function obj_angle_to_point(obj, pointX, pointZ)
     -- ...
 end
@@ -9037,6 +9076,7 @@ end
 --- @param angleIndex integer
 --- @param turnAmount integer
 --- @return integer
+--- Rotates an object's specified angle toward another object by `turnAmount`
 function obj_turn_toward_object(obj, target, angleIndex, turnAmount)
     -- ...
 end
@@ -9045,6 +9085,7 @@ end
 --- @param relX integer
 --- @param relY integer
 --- @param relZ integer
+--- Sets an object's position relative to its parent
 function obj_set_parent_relative_pos(obj, relX, relY, relZ)
     -- ...
 end
@@ -9053,6 +9094,7 @@ end
 --- @param x integer
 --- @param y integer
 --- @param z integer
+--- Sets an object's position in 3D space
 function obj_set_pos(obj, x, y, z)
     -- ...
 end
@@ -9061,6 +9103,7 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
+--- Sets an object's face and move angles to the same pitch, yaw, and roll
 function obj_set_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -9069,6 +9112,7 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
+--- Sets an object's movement angle (pitch, yaw, roll)
 function obj_set_move_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -9077,6 +9121,7 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
+--- Sets an object's face angle (pitch, yaw, roll)
 function obj_set_face_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -9085,6 +9130,7 @@ end
 --- @param pitch integer
 --- @param yaw integer
 --- @param roll integer
+--- Sets the graphics angle for an object (pitch, yaw, roll)
 function obj_set_gfx_angle(obj, pitch, yaw, roll)
     -- ...
 end
@@ -9093,6 +9139,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
+--- Sets the graphics position for an object in 3D space
 function obj_set_gfx_pos(obj, x, y, z)
     -- ...
 end
@@ -9101,6 +9148,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
+--- Sets the graphics scale for an object in X, Y, Z dimensions
 function obj_set_gfx_scale(obj, x, y, z)
     -- ...
 end
@@ -9108,50 +9156,59 @@ end
 --- @param parent Object
 --- @param params WaterDropletParams
 --- @return Object
+--- Spawns a water droplet object with the specified parameters
 function spawn_water_droplet(parent, params)
     -- ...
 end
 
 --- @param obj Object
+--- Builds a relative transformation matrix for an object based on parent-relative position and face angle
 function obj_build_relative_transform(obj)
     -- ...
 end
 
+--- Moves the current object using its velocity vector
 function cur_obj_move_using_vel()
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies the graph Y offset from one object to another
 function obj_copy_graph_y_offset(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies both position and angles from one object to another
 function obj_copy_pos_and_angle(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies position from one object to another
 function obj_copy_pos(dst, src)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies move and face angles from one object to another
 function obj_copy_angle(dst, src)
     -- ...
 end
 
 --- @param obj Object
+--- Synchronizes an object's graphics position with its physical position
 function obj_set_gfx_pos_from_pos(obj)
     -- ...
 end
 
 --- @param obj Object
 --- @param animIndex integer
+--- Initializes an animation for an object by index
 function obj_init_animation(obj, animIndex)
     -- ...
 end
@@ -9183,12 +9240,14 @@ function linear_mtxf_transpose_mul_vec3f(m, dst, v)
 end
 
 --- @param obj Object
+--- Applies an object's scale to its transformation matrix
 function obj_apply_scale_to_transform(obj)
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies the scale from one object to another
 function obj_copy_scale(dst, src)
     -- ...
 end
@@ -9197,27 +9256,32 @@ end
 --- @param xScale number
 --- @param yScale number
 --- @param zScale number
+--- Sets an object's scale independently for X, Y, Z dimensions
 function obj_scale_xyz(obj, xScale, yScale, zScale)
     -- ...
 end
 
 --- @param obj Object
 --- @param scale number
+--- Sets an object's uniform scale for all dimensions
 function obj_scale(obj, scale)
     -- ...
 end
 
 --- @param scale number
+--- Sets the current object's uniform scale for all dimensions
 function cur_obj_scale(scale)
     -- ...
 end
 
 --- @param animIndex integer
+--- Initializes an animation for the current object by index
 function cur_obj_init_animation(animIndex)
     -- ...
 end
 
 --- @param animIndex integer
+--- Initializes an animation for the current object and sets sound state
 function cur_obj_init_animation_with_sound(animIndex)
     -- ...
 end
@@ -9225,38 +9289,46 @@ end
 --- @param obj Object
 --- @param animIndex integer
 --- @param accel number
+--- Initializes an animation with acceleration and sound state for an object
 function obj_init_animation_with_accel_and_sound(obj, animIndex, accel)
     -- ...
 end
 
 --- @param animIndex integer
 --- @param accel number
+--- Initializes an animation with acceleration and sound state for the current object
 function cur_obj_init_animation_with_accel_and_sound(animIndex, accel)
     -- ...
 end
 
 --- @param obj Object
+--- Enables rendering and tangibility for an object
 function cur_obj_enable_rendering_and_become_tangible(obj)
     -- ...
 end
 
+--- Enables rendering for the current object
 function cur_obj_enable_rendering()
     -- ...
 end
 
 --- @param obj Object
+--- Disables rendering and makes an object intangible
 function cur_obj_disable_rendering_and_become_intangible(obj)
     -- ...
 end
 
+--- Disables rendering for the current object
 function cur_obj_disable_rendering()
     -- ...
 end
 
+--- Makes the current object visible by removing the invisible flag
 function cur_obj_unhide()
     -- ...
 end
 
+--- Hides the current object by setting the invisible flag
 function cur_obj_hide()
     -- ...
 end
@@ -9265,6 +9337,7 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
+--- Sets the current object's position relative to another object's facing direction
 function cur_obj_set_pos_relative(other, dleft, dy, dforward)
     -- ...
 end
@@ -9272,42 +9345,50 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
+--- Sets the current object's position relative to its parent's facing direction
 function cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)
     -- ...
 end
 
+--- Alternative function that enables rendering for the current object
 function cur_obj_enable_rendering_2()
     -- ...
 end
 
+--- Unused function that initializes the current object on the floor
 function cur_obj_unused_init_on_floor()
     -- ...
 end
 
 --- @param obj Object
+--- Synchronizes an object's face angle with its move angle
 function obj_set_face_angle_to_move_angle(obj)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return integer
+--- Retrieves the object list type that a behavior script belongs to
 function get_object_list_from_behavior(behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return Object
+--- Finds the nearest object with the specified behavior to the current object
 function cur_obj_nearest_object_with_behavior(behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return number
+--- Calculates the distance from the current object to the nearest object with specified behavior
 function cur_obj_dist_to_nearest_object_with_behavior(behavior)
     -- ...
 end
 
 --- @return Object
+--- Finds the nearest pole-like object to the current object
 function cur_obj_find_nearest_pole()
     -- ...
 end
@@ -9315,6 +9396,7 @@ end
 --- @param behavior Pointer_BehaviorScript
 --- @return Object
 --- @return number dist
+--- Finds the nearest object with specified behavior and returns distance via pointer
 function cur_obj_find_nearest_object_with_behavior(behavior)
     -- ...
 end
@@ -9322,28 +9404,33 @@ end
 --- @param behavior Pointer_BehaviorScript
 --- @param dist number
 --- @return integer
+--- Counts objects with specified behavior within distance of current object
 function cur_obj_count_objects_with_behavior(behavior, dist)
     -- ...
 end
 
 --- @return Object
+--- Finds an unimportant object from the unimportant object list
 function find_unimportant_object()
     -- ...
 end
 
 --- @return integer
+--- Counts the number of unimportant objects in the unimportant object list
 function count_unimportant_objects()
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return integer
+--- Counts the number of objects with the specified behavior
 function count_objects_with_behavior(behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return Object
+--- Finds any object with the specified behavior
 function find_object_with_behavior(behavior)
     -- ...
 end
@@ -9351,15 +9438,18 @@ end
 --- @param behavior Pointer_BehaviorScript
 --- @param maxDist number
 --- @return Object
+--- Finds an object with specified behavior within `maxDist` that is being held by a player
 function cur_obj_find_nearby_held_actor(behavior, maxDist)
     -- ...
 end
 
+--- Resets the current object's timer and sub-action to 0
 function cur_obj_reset_timer_and_subaction()
     -- ...
 end
 
 --- @param action integer
+--- Changes the current object's action and resets timer and subaction
 function cur_obj_change_action(action)
     -- ...
 end
@@ -9367,30 +9457,36 @@ end
 --- @param m MarioState
 --- @param f12 number
 --- @param f14 number
+--- Sets the current object's forward velocity based on Mario's velocity with scaling
 function cur_obj_set_vel_from_mario_vel(m, f12, f14)
     -- ...
 end
 
+--- Decreases the current object's animation frame by one
 function cur_obj_reverse_animation()
     -- ...
 end
 
+--- Extends the current object's animation frame if at loop end
 function cur_obj_extend_animation_if_at_end()
     -- ...
 end
 
 --- @return integer
+--- Checks if the current object's animation is near the end
 function cur_obj_check_if_near_animation_end()
     -- ...
 end
 
 --- @return integer
+--- Checks if the current object's animation is at the end
 function cur_obj_check_if_at_animation_end()
     -- ...
 end
 
 --- @param frame integer
 --- @return integer
+--- Checks if the current object's animation is at a specific frame
 function cur_obj_check_anim_frame(frame)
     -- ...
 end
@@ -9398,36 +9494,42 @@ end
 --- @param startFrame integer
 --- @param rangeLength integer
 --- @return integer
+--- Checks if the current object's animation frame is within a range
 function cur_obj_check_anim_frame_in_range(startFrame, rangeLength)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario is in an air action
 function mario_is_in_air_action(m)
     -- ...
 end
 
 --- @param m MarioState
 --- @return integer
+--- Checks if Mario is performing a dive slide action
 function mario_is_dive_sliding(m)
     -- ...
 end
 
 --- @param sp18 number
 --- @param sp1C integer
+--- Sets the current object's vertical velocity and initializes an animation
 function cur_obj_set_y_vel_and_animation(sp18, sp1C)
     -- ...
 end
 
 --- @param sp18 integer
 --- @param sp1C integer
+--- Disables rendering, makes intangible, and resets action and animation
 function cur_obj_unrender_and_reset_state(sp18, sp1C)
     -- ...
 end
 
 --- @param forwardVel number
 --- @param velY number
+--- Moves an object after being thrown or dropped with gravity applied
 function cur_obj_move_after_thrown_or_dropped(forwardVel, velY)
     -- ...
 end
@@ -9435,21 +9537,25 @@ end
 --- @param forwardVel number
 --- @param velY number
 --- @param thrownAction integer
+--- Handles object state when it's been thrown or placed by a player
 function cur_obj_get_thrown_or_placed(forwardVel, velY, thrownAction)
     -- ...
 end
 
+--- Handles object state when it's been dropped by a player
 function cur_obj_get_dropped()
     -- ...
 end
 
 --- @param flag integer
+--- Sets a flag on Mario's state
 function mario_set_flag(flag)
     -- ...
 end
 
 --- @param flag integer
 --- @return integer
+--- Clears a flag from the current object's interaction status
 function cur_obj_clear_interact_status_flag(flag)
     -- ...
 end
@@ -9460,28 +9566,34 @@ function obj_mark_for_deletion(obj)
     -- ...
 end
 
+--- Disables the current object by hiding, disabling rendering, and making intangible
 function cur_obj_disable()
     -- ...
 end
 
+--- Makes the current object intangible
 function cur_obj_become_intangible()
     -- ...
 end
 
+--- Makes the current object tangible
 function cur_obj_become_tangible()
     -- ...
 end
 
 --- @param obj Object
+--- Makes an object tangible
 function obj_become_tangible(obj)
     -- ...
 end
 
+--- Updates the current object's floor height based on its position
 function cur_obj_update_floor_height()
     -- ...
 end
 
 --- @return Surface
+--- Updates the current object's floor height and returns the floor surface under it
 function cur_obj_update_floor_height_and_get_floor()
     -- ...
 end
@@ -9489,11 +9601,13 @@ end
 --- @param value number
 --- @param dragStrength number
 --- @return number value
+--- Applies nonlinear drag to a value pointer based on drag strength
 function apply_drag_to_value(value, dragStrength)
     -- ...
 end
 
 --- @param dragStrength number
+--- Applies drag to the current object's horizontal velocity components
 function cur_obj_apply_drag_xz(dragStrength)
     -- ...
 end
@@ -9501,16 +9615,19 @@ end
 --- @param steepSlopeNormalY number
 --- @param careAboutEdgesAndSteepSlopes integer
 --- @return integer
+--- Attempts to move the current object in XZ, handling floor slope, edges, and room boundaries
 function cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)
     -- ...
 end
 
+--- Updates underwater movement flags and vertical damping while submerged
 function cur_obj_move_update_underwater_flags()
     -- ...
 end
 
 --- @param gravity number
 --- @param bounciness number
+--- Updates ground and air movement flags after a vertical move
 function cur_obj_move_update_ground_air_flags(gravity, bounciness)
     -- ...
 end
@@ -9518,6 +9635,7 @@ end
 --- @param gravity number
 --- @param buoyancy number
 --- @return number
+--- Applies gravity and buoyancy to vertical velocity and returns the water level at the current XZ position
 function cur_obj_move_y_and_get_water_level(gravity, buoyancy)
     -- ...
 end
@@ -9525,12 +9643,14 @@ end
 --- @param gravity number
 --- @param bounciness number
 --- @param buoyancy number
+--- Moves the current object vertically while handling ground, water surface, and underwater states
 function cur_obj_move_y(gravity, bounciness, buoyancy)
     -- ...
 end
 
 --- @param offsetY number
 --- @param radius number
+--- Performs a wall collision sweep for the current object if the radius is positive
 function cur_obj_unused_resolve_wall_collisions(offsetY, radius)
     -- ...
 end
@@ -9538,18 +9658,22 @@ end
 --- @param x0 integer
 --- @param x1 integer
 --- @return integer
+--- Returns the absolute difference between two 16-bit angles
 function abs_angle_diff(x0, x1)
     -- ...
 end
 
+--- Sets the current object's horizontal velocity from forward speed and yaw, then moves it in XZ
 function cur_obj_move_xz_using_fvel_and_yaw()
     -- ...
 end
 
+--- Moves the current object vertically and caps downward speed at terminal velocity
 function cur_obj_move_y_with_terminal_vel()
     -- ...
 end
 
+--- Computes the current object's horizontal velocity from forward speed and yaw
 function cur_obj_compute_vel_xz()
     -- ...
 end
@@ -9559,6 +9683,7 @@ end
 --- @param zeroThreshold number
 --- @param increment number
 --- @return number
+--- Returns a signed velocity increment that moves a value toward a target range around center
 function increment_velocity_toward_range(value, center, zeroThreshold, increment)
     -- ...
 end
@@ -9566,23 +9691,27 @@ end
 --- @param obj1 Object
 --- @param obj2 Object
 --- @return integer
+--- Checks whether obj1's collided object list contains obj2
 function obj_check_if_collided_with_object(obj1, obj2)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
+--- Sets the current object's behavior script
 function cur_obj_set_behavior(behavior)
     -- ...
 end
 
 --- @param obj Object
 --- @param behavior Pointer_BehaviorScript
+--- Sets the specified object's behavior script
 function obj_set_behavior(obj, behavior)
     -- ...
 end
 
 --- @param behavior Pointer_BehaviorScript
 --- @return integer
+--- Checks whether the current object has the specified behavior
 function cur_obj_has_behavior(behavior)
     -- ...
 end
@@ -9590,28 +9719,33 @@ end
 --- @param obj Object
 --- @param behavior Pointer_BehaviorScript
 --- @return integer
+--- Checks whether an object has the specified behavior
 function obj_has_behavior(obj, behavior)
     -- ...
 end
 
 --- @param obj Object
 --- @return number
+--- Calculates the lateral distance from another object to the current object's home position
 function cur_obj_lateral_dist_from_obj_to_home(obj)
     -- ...
 end
 
 --- @return number
+--- Calculates Mario's lateral distance to the current object's home position
 function cur_obj_lateral_dist_from_mario_to_home()
     -- ...
 end
 
 --- @return number
+--- Calculates the current object's lateral distance to its home position
 function cur_obj_lateral_dist_to_home()
     -- ...
 end
 
 --- @param halfLength number
 --- @return integer
+--- Checks whether the current object is outside a square centered on its home position
 function cur_obj_outside_home_square(halfLength)
     -- ...
 end
@@ -9621,25 +9755,30 @@ end
 --- @param minZ number
 --- @param maxZ number
 --- @return integer
+--- Checks whether the current object is outside a rectangle centered on its home position
 function cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)
     -- ...
 end
 
+--- Teleports the current object to its home position
 function cur_obj_set_pos_to_home()
     -- ...
 end
 
+--- Teleports the current object to its home position and stops its motion
 function cur_obj_set_pos_to_home_and_stop()
     -- ...
 end
 
 --- @param amount number
+--- Shakes the current object vertically by alternating upward and downward offsets
 function cur_obj_shake_y(amount)
     -- ...
 end
 
 --- @param obj Object
 --- @param cameraEvent integer
+--- Starts a camera event and makes the current object the secondary camera focus
 function cur_obj_start_cam_event(obj, cameraEvent)
     -- ...
 end
@@ -9647,20 +9786,24 @@ end
 --- @param sp0 integer
 --- @param sp4 integer
 --- @param sp8 number
+--- Sets Mario's interact status to hoot-grabbed if Mario is within range
 function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
     -- ...
 end
 
 --- @param obj Object
+--- Enables billboard rendering for an object
 function obj_set_billboard(obj)
     -- ...
 end
 
 --- @param obj Object
+--- Enables cylindrical billboard rendering for an object
 function obj_set_cylboard(obj)
     -- ...
 end
 
+--- Chooses the appropriate billboard type for the current object based on camera mode
 function cur_obj_set_billboard_if_vanilla_cam()
     -- ...
 end
@@ -9668,6 +9811,7 @@ end
 --- @param obj Object
 --- @param radius number
 --- @param height number
+--- Sets an object's hitbox radius and height
 function obj_set_hitbox_radius_and_height(obj, radius, height)
     -- ...
 end
@@ -9675,18 +9819,21 @@ end
 --- @param obj Object
 --- @param radius number
 --- @param height number
+--- Sets an object's hurtbox radius and height
 function obj_set_hurtbox_radius_and_height(obj, radius, height)
     -- ...
 end
 
 --- @param radius number
 --- @param height number
+--- Sets the current object's hitbox radius and height
 function cur_obj_set_hitbox_radius_and_height(radius, height)
     -- ...
 end
 
 --- @param radius number
 --- @param height number
+--- Sets the current object's hurtbox radius and height
 function cur_obj_set_hurtbox_radius_and_height(radius, height)
     -- ...
 end
@@ -9697,6 +9844,7 @@ end
 --- @param coinBehavior Pointer_BehaviorScript
 --- @param posJitter integer
 --- @param model integer
+--- Spawns loot coins from an object using the specified behavior, jitter, and model
 function obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)
     -- ...
 end
@@ -9705,6 +9853,7 @@ end
 --- @param numCoins integer
 --- @param sp28 number
 --- @param posJitter integer
+--- Spawns blue loot coins from an object
 function obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)
     -- ...
 end
@@ -9712,63 +9861,76 @@ end
 --- @param obj Object
 --- @param numCoins integer
 --- @param sp28 number
+--- Spawns yellow loot coins from an object
 function obj_spawn_loot_yellow_coins(obj, numCoins, sp28)
     -- ...
 end
 
 --- @param m MarioState
+--- Spawns a yellow coin at Mario's position and decrements the current object's loot count
 function cur_obj_spawn_loot_coin_at_mario_pos(m)
     -- ...
 end
 
 --- @return number
+--- Returns the absolute vertical distance from the object to its home position
 function cur_obj_abs_y_dist_to_home()
     -- ...
 end
 
 --- @return integer
+--- Advances the current object animation frame and returns the normalized frame progress
 function cur_obj_advance_looping_anim()
     -- ...
 end
 
 --- @param steepAngleDegrees integer
 --- @return integer
+--- Checks whether the object is moving into a steep floor or death plane and returns a collision code
 function cur_obj_detect_steep_floor(steepAngleDegrees)
     -- ...
 end
 
 --- @return integer
+--- Resolves wall collisions for the current object and returns `TRUE` if it hit a steep wall
 function cur_obj_resolve_wall_collisions()
     -- ...
 end
 
+--- Updates the current object's floor pointer, floor type, and floor room based on the surface below it
 function cur_obj_update_floor()
     -- ...
 end
 
 --- @param steepSlopeDegrees integer
+--- Updates the floor and resolves walls for the current object, setting move flags accordingly
 function cur_obj_update_floor_and_resolve_wall_collisions(steepSlopeDegrees)
     -- ...
 end
 
+--- Updates the current object floor and wall state using a default steep slope threshold
 function cur_obj_update_floor_and_walls()
     -- ...
 end
 
 --- @param steepSlopeAngleDegrees integer
+--- Updates the current object velocity and position using standard gravity, drag, and slope behavior
 function cur_obj_move_standard(steepSlopeAngleDegrees)
     -- ...
 end
 
 --- @return integer
+--- Checks whether the current object is within a 12,000-unit world bound on all axes
 function cur_obj_within_12k_bounds()
     -- ...
 end
 
+--- Applies object velocity and gravity directly to the object's position with no terminal velocity
 function cur_obj_move_using_vel_and_gravity()
     -- ...
 end
 
+--- Computes the object's XZ velocity from forward velocity then applies gravity-based movement
 function cur_obj_move_using_fvel_and_gravity()
     -- ...
 end
@@ -9778,17 +9940,20 @@ end
 --- @param dleft number
 --- @param dy number
 --- @param dforward number
+--- Sets an object position relative to another object using local left, up, and forward offsets
 function obj_set_pos_relative(obj, other, dleft, dy, dforward)
     -- ...
 end
 
 --- @return integer
+--- Returns the yaw angle from the current object toward its home position
 function cur_obj_angle_to_home()
     -- ...
 end
 
 --- @param obj1 Object
 --- @param obj2 Object
+--- Copies an object's world position and orientation into another object's graphics node
 function obj_set_gfx_pos_at_obj_pos(obj1, obj2)
     -- ...
 end
@@ -9804,50 +9969,60 @@ end
 --- @param obj Object
 --- @param posIndex integer
 --- @param angleIndex integer
+--- Copies an object's position and rotation into its transform matrix using the specified field indices
 function obj_build_transform_from_pos_and_angle(obj, posIndex, angleIndex)
     -- ...
 end
 
 --- @param obj Object
+--- Sets the object's graphics throw matrix from its transform and applies object scale if needed
 function obj_set_throw_matrix_from_transform(obj)
     -- ...
 end
 
 --- @param obj Object
+--- Builds the object's world transform relative to its parent and updates its world position
 function obj_build_transform_relative_to_parent(obj)
     -- ...
 end
 
 --- @param obj Object
+--- Initializes the object's own transform matrix from its current world position
 function obj_create_transform_from_self(obj)
     -- ...
 end
 
+--- Rotates the current object's move angles by its angular velocity components
 function cur_obj_rotate_move_angle_using_vel()
     -- ...
 end
 
+--- Rotates the current object's face angles by its angular velocity components
 function cur_obj_rotate_face_angle_using_vel()
     -- ...
 end
 
+--- Copies the current object's move angles into its face angles
 function cur_obj_set_face_angle_to_move_angle()
     -- ...
 end
 
 --- @param unusedArg integer
 --- @return integer
+--- Advances path-following state and returns whether a waypoint or path end was reached
 function cur_obj_follow_path(unusedArg)
     -- ...
 end
 
 --- @param segment ChainSegment
+--- Initializes a chain segment's position and orientation to identity values
 function chain_segment_init(segment)
     -- ...
 end
 
 --- @param diameter number
 --- @return number
+--- Returns a random floating-point value within +/- diameter/2
 function random_f32_around_zero(diameter)
     -- ...
 end
@@ -9855,49 +10030,58 @@ end
 --- @param obj Object
 --- @param rangeLength number
 --- @param minScale number
+--- Randomly scales an object within a range and applies a minimum scale
 function obj_scale_random(obj, rangeLength, minScale)
     -- ...
 end
 
 --- @param obj Object
 --- @param rangeLength number
+--- Applies a random translation to an object on all three axes
 function obj_translate_xyz_random(obj, rangeLength)
     -- ...
 end
 
 --- @param obj Object
 --- @param rangeLength number
+--- Applies a random translation to an object on the X and Z axes
 function obj_translate_xz_random(obj, rangeLength)
     -- ...
 end
 
 --- @param a0 Object
+--- Builds the object's world velocity from its transform basis vectors
 function obj_build_vel_from_transform(a0)
     -- ...
 end
 
+--- Moves the current object using its transform-derived velocity
 function cur_obj_set_pos_via_transform()
     -- ...
 end
 
 --- @return integer
+--- Reflects the current object's move angle across its wall normal
 function cur_obj_reflect_move_angle_off_wall()
     -- ...
 end
 
 --- @param info SpawnParticlesInfo
+--- Spawns particles based on information in a SpawnParticlesInfo structure
 function cur_obj_spawn_particles(info)
     -- ...
 end
 
 --- @param obj Object
 --- @param hitbox ObjectHitbox
+--- Sets an object's hitbox and hurtbox quantities then makes it tangible
 function obj_set_hitbox(obj, hitbox)
     -- ...
 end
 
 --- @param x integer
 --- @return integer
+--- Returns 1 for non-negative values and -1 for negative values
 function signum_positive(x)
     -- ...
 end
@@ -9905,11 +10089,13 @@ end
 --- @param timeUntilBlinking integer
 --- @param numBlinks integer
 --- @return integer
+--- Makes the current object blink after a delay and returns `TRUE` when blinking is complete
 function cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if any active player is ground-pounding the current platform object
 function cur_obj_is_mario_ground_pounding_platform()
     -- ...
 end
@@ -9917,36 +10103,43 @@ end
 --- @param m MarioState
 --- @param obj Object
 --- @return integer
+--- Checks whether a MarioState is ground-pounding the specified platform object
 function obj_is_mario_ground_pounding_platform(m, obj)
     -- ...
 end
 
+--- Spawns mist particles at the current object without playing sound
 function spawn_mist_particles()
     -- ...
 end
 
 --- @param sp18 integer
+--- Spawns mist particles at the current object and plays the specified sound
 function spawn_mist_particles_with_sound(sp18)
     -- ...
 end
 
 --- @param radius number
+--- Pushes any player within a radius away from the current object on the XZ plane
 function cur_obj_push_mario_away(radius)
     -- ...
 end
 
 --- @param radius number
 --- @param extentY number
+--- Pushes any player within a vertical cylinder away from the current object
 function cur_obj_push_mario_away_from_cylinder(radius, extentY)
     -- ...
 end
 
+--- Behavior loop function for dust smoke
 function bhv_dust_smoke_loop()
     -- ...
 end
 
 --- @param sp0 integer
 --- @param sp4 integer
+--- Placeholder function with no behavior
 function stub_obj_helpers_3(sp0, sp4)
     -- ...
 end
@@ -9955,24 +10148,29 @@ end
 --- @param a1 integer
 --- @param sp10 number
 --- @param sp14 number
+--- Smoothly scales the current object over time using enabled axes
 function cur_obj_scale_over_time(a0, a1, sp10, sp14)
     -- ...
 end
 
+--- Moves an object to its home position while applying debug position offsets
 function cur_obj_set_pos_to_home_with_debug()
     -- ...
 end
 
+--- Placeholder function with no behavior
 function stub_obj_helpers_4()
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if Mario is currently standing on the current platform object
 function cur_obj_is_mario_on_platform()
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if any player is standing on the current platform object
 function cur_obj_is_any_player_on_platform()
     -- ...
 end
@@ -9980,12 +10178,14 @@ end
 --- @param cycles integer
 --- @param amount integer
 --- @return integer
+--- Oscillates the current object vertically until a specified number of cycles passes
 function cur_obj_shake_y_until(cycles, amount)
     -- ...
 end
 
 --- @param a0 integer
 --- @return integer
+--- Moves the current object up and down along a preset displacement table
 function cur_obj_move_up_and_down(a0)
     -- ...
 end
@@ -9993,27 +10193,32 @@ end
 --- @param sp20 integer
 --- @param sp24 integer
 --- @return Object
+--- Spawns a star object without triggering level exit behavior
 function spawn_star_with_no_lvl_exit(sp20, sp24)
     -- ...
 end
 
+--- Spawns a base star with default parameters and no level exit behavior
 function spawn_base_star_with_no_lvl_exit()
     -- ...
 end
 
 --- @param a0 integer
 --- @return integer
+--- Returns the value at index a0 from a behavior-specific left-shift table
 function bit_shift_left(a0)
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if the current object is farther than 2000 units from every active Mario
 function cur_obj_mario_far_away()
     -- ...
 end
 
 --- @param speedThreshold integer
 --- @return integer
+--- Returns `TRUE` if the current Mario is moving faster than threshold or is airborne
 function is_mario_moving_fast_or_in_air(speedThreshold)
     -- ...
 end
@@ -10021,14 +10226,17 @@ end
 --- @param item integer
 --- @param array Pointer_integer
 --- @return integer
+--- Checks whether a signed item appears in a terminated array
 function is_item_in_array(item, array)
     -- ...
 end
 
+--- Sets the current object's room based on the floor surface underneath it
 function bhv_init_room()
     -- ...
 end
 
+--- Enables rendering for the current object if any active player is in a connected room
 function cur_obj_enable_rendering_if_mario_in_room()
     -- ...
 end
@@ -10037,55 +10245,66 @@ end
 --- @param deathSound integer
 --- @param noLootCoins integer
 --- @return integer
+--- Gives the current object a hitbox and kills it if attacked, with optional loot suppression
 function cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)
     -- ...
 end
 
 --- @param sp18 number
 --- @param sp1C integer
+--- Explodes the current object, spawns particles, and optionally spawns coins
 function obj_explode_and_spawn_coins(sp18, sp1C)
     -- ...
 end
 
+--- Sets the current object to bounce away if it hit a wall
 function cur_obj_if_hit_wall_bounce_away()
     -- ...
 end
 
 --- @param distY number
 --- @return integer
+--- Hides the current object if Mario is too far above or below it, otherwise ensures it is visible
 function cur_obj_hide_if_mario_far_away_y(distY)
     -- ...
 end
 
 --- @param obj Object
 --- @return integer
+--- Returns `TRUE` if the given object is currently hidden from rendering
 function obj_is_hidden(obj)
     -- ...
 end
 
+--- Enables global time stop state
 function enable_time_stop()
     -- ...
 end
 
+--- Enables time stop only when the local player is alone
 function enable_time_stop_if_alone()
     -- ...
 end
 
+--- Disables global time stop state
 function disable_time_stop()
     -- ...
 end
 
 --- @param flags integer
+--- Sets global time stop flags
 function set_time_stop_flags(flags)
     -- ...
 end
 
 --- @param flags integer
+--- Sets time stop flags only if the local player is alone
 function set_time_stop_flags_if_alone(flags)
     -- ...
 end
 
 --- @param flags integer
+--- Clears selected global time stop flags
 function clear_time_stop_flags(flags)
     -- ...
 end
@@ -10095,6 +10314,7 @@ end
 --- @param height number
 --- @param unused integer
 --- @return integer
+--- Checks whether Mario can activate the current object's textbox within a vertical and horizontal range
 function cur_obj_can_mario_activate_textbox(m, radius, height, unused)
     -- ...
 end
@@ -10103,6 +10323,7 @@ end
 --- @param radius number
 --- @param height number
 --- @return integer
+--- Wrapper that checks Mario textbox activation using a fixed unused parameter value
 function cur_obj_can_mario_activate_textbox_2(m, radius, height)
     -- ...
 end
@@ -10110,16 +10331,19 @@ end
 --- @param m MarioState
 --- @param dialogFlags integer
 --- @param dialogResult integer
+--- Ends dialog state for the current object and records Mario's response
 function cur_obj_end_dialog(m, dialogFlags, dialogResult)
     -- ...
 end
 
 --- @param modelID integer
 --- @return integer
+--- Checks whether the current object uses the specified model geometry
 function cur_obj_has_model(modelID)
     -- ...
 end
 
+--- Aligns the current object's graphics with the floor normal at its position
 function cur_obj_align_gfx_with_floor()
     -- ...
 end
@@ -10129,55 +10353,65 @@ end
 --- @param minZ integer
 --- @param maxZ integer
 --- @return integer
+--- Returns `TRUE` if Mario's position lies within a 2D rectangle on the XZ plane
 function mario_is_within_rectangle(minX, maxX, minZ, maxZ)
     -- ...
 end
 
 --- @param shake integer
+--- Shakes the camera around the current object with a given intensity
 function cur_obj_shake_screen(shake)
     -- ...
 end
 
 --- @param obj Object
 --- @return integer
+--- Marks another object as attacked by the current object and returns whether it collided
 function obj_attack_collided_from_other_object(obj)
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if the current object was attacked or ground-pounded and clears interact status
 function cur_obj_was_attacked_or_ground_pounded()
     -- ...
 end
 
 --- @param dst Object
 --- @param src Object
+--- Copies behavior parameters from one object to another
 function obj_copy_behavior_params(dst, src)
     -- ...
 end
 
 --- @param animIndex integer
 --- @param animFrame integer
+--- Initializes the current object's animation and sets a specific frame
 function cur_obj_init_animation_and_anim_frame(animIndex, animFrame)
     -- ...
 end
 
 --- @param animIndex integer
 --- @return integer
+--- Initializes the current object's animation and checks if it is near the end
 function cur_obj_init_animation_and_check_if_near_end(animIndex)
     -- ...
 end
 
 --- @param animIndex integer
+--- Initializes the current object's animation and extends it if the animation has ended
 function cur_obj_init_animation_and_extend_if_at_end(animIndex)
     -- ...
 end
 
 --- @return integer
+--- Checks whether the current object has grabbed Mario and becomes intangible if so
 function cur_obj_check_grabbed_mario()
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if the player performed an escape action during a grab
 function player_performed_grab_escape_action()
     -- ...
 end
@@ -10185,23 +10419,28 @@ end
 --- @param animFrame1 integer
 --- @param animFrame2 integer
 --- @param sound integer
+--- Plays a footstep sound when the current animation reaches one of two frames
 function cur_obj_unused_play_footstep_sound(animFrame1, animFrame2, sound)
     -- ...
 end
 
+--- Enables time stop for the world and Mario/doors
 function enable_time_stop_including_mario()
     -- ...
 end
 
+--- Disables time stop for the world and Mario/doors
 function disable_time_stop_including_mario()
     -- ...
 end
 
 --- @return integer
+--- Returns `TRUE` if the current object has been interacted with and clears the status
 function cur_obj_check_interacted()
     -- ...
 end
 
+--- Spawns a blue coin from the current object when sufficient loot coins are available
 function cur_obj_spawn_loot_blue_coin()
     -- ...
 end
@@ -10210,18 +10449,19 @@ end
 --- @param targetY number
 --- @param targetZ number
 --- @param offsetY number
+--- Temporarily shifts the current object's Y position and spawns a star
 function cur_obj_spawn_star_at_y_offset(targetX, targetY, targetZ, offsetY)
     -- ...
 end
 
---- Sets the current object's home only the first time it's called
+--- Sets the current object's home position once and marks it as initialized
 function cur_obj_set_home_once()
     -- ...
 end
 
 --- @param trajectory Pointer_Trajectory
 --- @return integer
---- Gets a trajectory's length
+--- Gets the number of steps in a trajectory until the end marker
 function get_trajectory_length(trajectory)
     -- ...
 end
@@ -10990,6 +11230,12 @@ end
 --- @param value boolean
 --- Sets if the camera should account for surfaces
 function camera_set_checking_surfaces(value)
+    -- ...
+end
+
+--- Centers the free camera.<br>
+--- This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+function center_free_camera()
     -- ...
 end
 

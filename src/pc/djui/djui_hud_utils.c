@@ -993,14 +993,6 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out) {
         return false;
     }
 
-    out[0] *= 256.0f / -out[2];
-    out[1] *= 256.0f / out[2];
-
-    f32 fovCoeff = djui_hud_get_fov_coeff();
-
-    out[0] *= fovCoeff;
-    out[1] *= fovCoeff;
-
     f32 screenWidth, screenHeight;
     if (sHudUtilsState.resolution == RESOLUTION_N64) {
         screenWidth = GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT;
@@ -1008,9 +1000,17 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out) {
     } else {
         u32 windowWidth, windowHeight;
         gfx_get_dimensions(&windowWidth, &windowHeight);
-        screenWidth = (f32) windowWidth;
-        screenHeight = (f32) windowHeight;
+        screenWidth = (f32) windowWidth / djui_gfx_get_scale();
+        screenHeight = (f32) windowHeight / djui_gfx_get_scale();
     }
+
+    float scale = 256.0f * (screenHeight / 240.0f);
+    out[0] *= scale / -out[2];
+    out[1] *= scale /  out[2];
+
+    f32 fovCoeff = djui_hud_get_fov_coeff();
+    out[0] *= fovCoeff;
+    out[1] *= fovCoeff;
 
     out[0] += screenWidth  / 2.0f;
     out[1] += screenHeight / 2.0f;

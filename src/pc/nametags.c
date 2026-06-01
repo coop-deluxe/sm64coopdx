@@ -122,6 +122,7 @@ void nametags_render(void) {
             vec3f_copy(nametag->pos, out);
             nametag->scale = scale;
             memcpy(nametag->name, name, sizeof(name));
+            djui_text_remove_alpha(nametag->name);
 
             numNametags++;
         }

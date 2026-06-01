@@ -1,7 +1,26 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
+#include "djui_panel_main.h"
+#include "djui_panel_pause.h"
+#include "djui_panel_options.h"
+#include "djui_panel_controls.h"
+#include "djui_panel_controls_n64.h"
+#include "pc/controller/controller_api.h"
 #include "pc/configfile.h"
+#include "audio/external.h"
+
+static void djui_panel_controls_reset_binds_n64(struct DjuiBase* caller) {
+    configfile_reset_keybinds(false);
+    controller_reconfigure();
+    play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource);
+
+    struct DjuiBase *resetButtonBody = caller->parent;
+    if (!resetButtonBody || !resetButtonBody->child) { return; }
+    struct DjuiBase *bindBody = resetButtonBody->child->base;
+
+    djui_panel_controls_refresh_binds(bindBody);
+}
 
 void djui_panel_controls_n64_create(struct DjuiBase* caller) {
     f32 bindBodyHeight = 28 * 14 + 1 * 13;
@@ -30,7 +49,7 @@ void djui_panel_controls_n64_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, C_LEFT),  configKeyCLeft);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, C_RIGHT), configKeyCRight);
         }
-
+        djui_button_create(body, DLANG(MENU, RESET_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_reset_binds_n64);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 

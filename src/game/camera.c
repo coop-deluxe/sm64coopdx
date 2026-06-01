@@ -12374,19 +12374,19 @@ void mode_rom_hack_camera(struct Camera *c) {
     };
 
     // look left
-    if (gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
+    if (sCurrPlayMode != PLAY_MODE_PAUSED && gMarioStates[0].controller->buttonPressed & L_CBUTTONS) {
         sRomHackYaw += DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // look right
-    if (gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
+    if (sCurrPlayMode != PLAY_MODE_PAUSED && gMarioStates[0].controller->buttonPressed & R_CBUTTONS) {
         sRomHackYaw -= DEGREES(45) * (camera_config_is_x_inverted() ? -1 : 1);
         play_sound_cbutton_side();
     }
 
     // zoom in
-    if ((gMarioStates[0].controller->buttonPressed & U_CBUTTONS)) {
+    if (sCurrPlayMode != PLAY_MODE_PAUSED && gMarioStates[0].controller->buttonPressed & U_CBUTTONS) {
         if (!sRomHackZoom) {
             sRomHackZoom = 1;
             play_sound_cbutton_up();
@@ -12396,7 +12396,7 @@ void mode_rom_hack_camera(struct Camera *c) {
     }
 
     // zoom out
-    if ((gMarioStates[0].controller->buttonPressed & D_CBUTTONS)) {
+    if (sCurrPlayMode != PLAY_MODE_PAUSED && gMarioStates[0].controller->buttonPressed & D_CBUTTONS) {
         if (sRomHackZoom) {
             play_sound_cbutton_down();
         } else {

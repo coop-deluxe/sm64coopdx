@@ -2862,6 +2862,54 @@ Toggles the visibility of the DJUI console
 
 <br />
 
+## [djui_console_is_open](#djui_console_is_open)
+
+### Description
+Returns whether the DJUI console is currently open or not
+
+### Lua Example
+`local booleanValue = djui_console_is_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_console_is_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from djui_gfx.h
+
+<br />
+
+
+## [djui_gfx_get_scale](#djui_gfx_get_scale)
+
+### Description
+Gets the current visual scaling factor of DJUI
+
+### Lua Example
+`local numberValue = djui_gfx_get_scale()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 djui_gfx_get_scale(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from djui_hud_utils.h
 

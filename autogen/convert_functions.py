@@ -81,6 +81,7 @@ in_files = [
     "src/engine/lighting_engine.h",
     "src/pc/network/sync_object.h",
     "src/audio/load.h",
+    "src/pc/djui/djui_gfx.h",
 ]
 
 override_allowed_functions = {
@@ -93,7 +94,7 @@ override_allowed_functions = {
     "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
     "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
     "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
-    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*_state" ],
+    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*" ],
     "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_warp", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "pressed_pause", "fade_into_special_warp", "get_instant_warp" ],
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
@@ -101,6 +102,7 @@ override_allowed_functions = {
     "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
     "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
     "src/audio/load.h":                     [ "set_sound_bank_override" ],
+    "src/pc/djui/djui_gfx.h":               [ "djui_gfx_get_scale" ],
 }
 
 override_disallowed_functions = {
@@ -112,7 +114,7 @@ override_disallowed_functions = {
     "src/game/mario_actions_cutscene.c":        [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
     "src/game/mario_actions_moving.c":          [ "^[us]32 act_.*" ],
     "src/game/mario_actions_object.c":          [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*" ],
+    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*", "mario_exit_palette_editor" ],
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],

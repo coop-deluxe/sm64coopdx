@@ -747,9 +747,18 @@ const BehaviorScript *smlua_get_behavior_command(const BehaviorScript *behavior)
     enum BehaviorId id = get_id_from_behavior(behavior);
     struct LuaHookedBehavior *hooked = smlua_find_hooked_behavior(id);
 
-    // Lua and custom behaviors only
-    if (hooked && hooked->type > LUA_BEHAVIOR_TYPE_CALLBACKS) {
-        return hooked->script;
+    if (hooked) {
+
+        // Lua and custom behaviors only
+        if (hooked->type > LUA_BEHAVIOR_TYPE_CALLBACKS) {
+            return hooked->script;
+        }
+
+        // Try to find the vanilla behavior script
+        const BehaviorScript *vanillaScript = get_vanilla_behavior_from_id(hooked->behaviorId);
+        if (vanillaScript) {
+            return vanillaScript;
+        }
     }
     return behavior;
 }
@@ -812,7 +821,7 @@ int smlua_hook_custom_bhv(BehaviorScript *bhvScript, const char *bhvName) {
     // It's also used for some things that would normally access a LUA behavior instead.
     lua_State *L = gLuaState;
     if (L != NULL) {
-        lua_pushinteger(L, hooked->behaviorId);
+        lua_pushinteger(L, hooked->customId);
         lua_setglobal(L, bhvName);
         LOG_INFO("Registered custom behavior for behavior id 0x%04hX (custom id: 0x%04hX, custom name: %s)", hooked->behaviorId, hooked->customId, bhvName);
     }
@@ -1025,7 +1034,7 @@ int smlua_hook_behavior(lua_State *L) {
     // We want to push the behavior into the global LUA state. So mods can access it.
     // It's also used for some things that would normally access a LUA behavior instead.
     if (bhvName) {
-        lua_pushinteger(L, hooked->behaviorId);
+        lua_pushinteger(L, hooked->customId);
         lua_setglobal(L, bhvName);
     } else {
         bhvName = hooked->bhvNames->buffer[hooked->bhvNames->count - 1]; // log with last registered name
@@ -1033,7 +1042,7 @@ int smlua_hook_behavior(lua_State *L) {
     LOG_INFO("Registered Lua behavior for behavior id 0x%04hX (custom id: 0x%04hX, custom name: %s)", hooked->behaviorId, hooked->customId, bhvName);
 
     // return behavior ID
-    lua_pushinteger(L, hooked->behaviorId);
+    lua_pushinteger(L, hooked->customId);
 
     return 1;
 }

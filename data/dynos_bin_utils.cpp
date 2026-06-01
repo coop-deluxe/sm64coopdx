@@ -287,6 +287,13 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
 }
 
 u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& token) {
+
+    // no Lua pointer allowed in DynOS packs
+    if (aGfxData->mModIndex == PACK_MOD_INDEX) {
+        PrintDataError("  ERROR: DynOS packs cannot contain Lua variables or functions: %s", token.begin());
+        return 0;
+    }
+
     // remember as lua pointer
     aGfxData->mLuaPointerList.Add(aPtr);
 

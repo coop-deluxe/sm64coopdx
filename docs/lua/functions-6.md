@@ -61,6 +61,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_update_pos_from_parent_transformation](#obj_update_pos_from_parent_transformation)
 
+### Description
+Updates an object's position based on a parent transformation matrix
+
 ### Lua Example
 `obj_update_pos_from_parent_transformation(a0, a1)`
 
@@ -81,6 +84,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_apply_scale_to_matrix](#obj_apply_scale_to_matrix)
+
+### Description
+Applies an object's scale to a transformation matrix
 
 ### Lua Example
 `obj_apply_scale_to_matrix(obj, dst, src)`
@@ -104,6 +110,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [create_transformation_from_matrices](#create_transformation_from_matrices)
 
+### Description
+Combines two transformation matrices into a single result matrix
+
 ### Lua Example
 `create_transformation_from_matrices(a0, a1, a2)`
 
@@ -126,6 +135,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_held_state](#obj_set_held_state)
 
+### Description
+Sets an object's held state based on the behavior script it will perform
+
 ### Lua Example
 `obj_set_held_state(obj, heldBehavior)`
 
@@ -146,6 +158,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [lateral_dist_between_objects](#lateral_dist_between_objects)
+
+### Description
+Calculates the lateral (XZ) distance between two objects
 
 ### Lua Example
 `local numberValue = lateral_dist_between_objects(obj1, obj2)`
@@ -168,6 +183,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [dist_between_objects](#dist_between_objects)
 
+### Description
+Calculates the 3D distance between two objects
+
 ### Lua Example
 `local numberValue = dist_between_objects(obj1, obj2)`
 
@@ -188,6 +206,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [dist_between_object_and_point](#dist_between_object_and_point)
+
+### Description
+Calculates the 3D distance between an object and a point
 
 ### Lua Example
 `local numberValue = dist_between_object_and_point(obj, pointX, pointY, pointZ)`
@@ -212,6 +233,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [cur_obj_forward_vel_approach_upward](#cur_obj_forward_vel_approach_upward)
 
+### Description
+Increases the current object's forward velocity toward target by increment
+
 ### Lua Example
 `cur_obj_forward_vel_approach_upward(target, increment)`
 
@@ -232,6 +256,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [approach_f32_signed](#approach_f32_signed)
+
+### Description
+Approaches a value toward a target using signed increments. Returns `TRUE` when target is reached
 
 ### Lua Example
 `local integerValue, value = approach_f32_signed(value, target, increment)`
@@ -256,6 +283,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [approach_f32_symmetric](#approach_f32_symmetric)
 
+### Description
+Approaches a value toward a target using symmetric increments
+
 ### Lua Example
 `local numberValue = approach_f32_symmetric(value, target, increment)`
 
@@ -277,6 +307,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [approach_s16_symmetric](#approach_s16_symmetric)
+
+### Description
+Approaches a 16-bit value toward a target using symmetric increments
 
 ### Lua Example
 `local integerValue = approach_s16_symmetric(value, target, increment)`
@@ -300,6 +333,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
 
+### Description
+Rotates the current object's yaw angle toward a target. Returns `TRUE` when target is reached
+
 ### Lua Example
 `local integerValue = cur_obj_rotate_yaw_toward(target, increment)`
 
@@ -320,6 +356,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_angle_to_object](#obj_angle_to_object)
+
+### Description
+Calculates the angle from one object to another in yaw
 
 ### Lua Example
 `local integerValue = obj_angle_to_object(obj1, obj2)`
@@ -342,6 +381,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_pitch_to_object](#obj_pitch_to_object)
 
+### Description
+Calculates the pitch angle from one object to another
+
 ### Lua Example
 `local integerValue = obj_pitch_to_object(obj, target)`
 
@@ -362,6 +404,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_angle_to_point](#obj_angle_to_point)
+
+### Description
+Calculates the yaw angle from an object to a point
 
 ### Lua Example
 `local integerValue = obj_angle_to_point(obj, pointX, pointZ)`
@@ -384,6 +429,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_turn_toward_object](#obj_turn_toward_object)
+
+### Description
+Rotates an object's specified angle toward another object by `turnAmount`
 
 ### Lua Example
 `local integerValue = obj_turn_toward_object(obj, target, angleIndex, turnAmount)`
@@ -408,6 +456,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_parent_relative_pos](#obj_set_parent_relative_pos)
 
+### Description
+Sets an object's position relative to its parent
+
 ### Lua Example
 `obj_set_parent_relative_pos(obj, relX, relY, relZ)`
 
@@ -430,6 +481,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_set_pos](#obj_set_pos)
+
+### Description
+Sets an object's position in 3D space
 
 ### Lua Example
 `obj_set_pos(obj, x, y, z)`
@@ -454,6 +508,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_angle](#obj_set_angle)
 
+### Description
+Sets an object's face and move angles to the same pitch, yaw, and roll
+
 ### Lua Example
 `obj_set_angle(obj, pitch, yaw, roll)`
 
@@ -476,6 +533,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_set_move_angle](#obj_set_move_angle)
+
+### Description
+Sets an object's movement angle (pitch, yaw, roll)
 
 ### Lua Example
 `obj_set_move_angle(obj, pitch, yaw, roll)`
@@ -500,6 +560,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_face_angle](#obj_set_face_angle)
 
+### Description
+Sets an object's face angle (pitch, yaw, roll)
+
 ### Lua Example
 `obj_set_face_angle(obj, pitch, yaw, roll)`
 
@@ -522,6 +585,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_set_gfx_angle](#obj_set_gfx_angle)
+
+### Description
+Sets the graphics angle for an object (pitch, yaw, roll)
 
 ### Lua Example
 `obj_set_gfx_angle(obj, pitch, yaw, roll)`
@@ -546,6 +612,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_gfx_pos](#obj_set_gfx_pos)
 
+### Description
+Sets the graphics position for an object in 3D space
+
 ### Lua Example
 `obj_set_gfx_pos(obj, x, y, z)`
 
@@ -568,6 +637,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_set_gfx_scale](#obj_set_gfx_scale)
+
+### Description
+Sets the graphics scale for an object in X, Y, Z dimensions
 
 ### Lua Example
 `obj_set_gfx_scale(obj, x, y, z)`
@@ -592,6 +664,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [spawn_water_droplet](#spawn_water_droplet)
 
+### Description
+Spawns a water droplet object with the specified parameters
+
 ### Lua Example
 `local objectValue = spawn_water_droplet(parent, params)`
 
@@ -613,6 +688,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_build_relative_transform](#obj_build_relative_transform)
 
+### Description
+Builds a relative transformation matrix for an object based on parent-relative position and face angle
+
 ### Lua Example
 `obj_build_relative_transform(obj)`
 
@@ -633,6 +711,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [cur_obj_move_using_vel](#cur_obj_move_using_vel)
 
+### Description
+Moves the current object using its velocity vector
+
 ### Lua Example
 `cur_obj_move_using_vel()`
 
@@ -650,6 +731,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_copy_graph_y_offset](#obj_copy_graph_y_offset)
+
+### Description
+Copies the graph Y offset from one object to another
 
 ### Lua Example
 `obj_copy_graph_y_offset(dst, src)`
@@ -672,6 +756,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_copy_pos_and_angle](#obj_copy_pos_and_angle)
 
+### Description
+Copies both position and angles from one object to another
+
 ### Lua Example
 `obj_copy_pos_and_angle(dst, src)`
 
@@ -692,6 +779,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_copy_pos](#obj_copy_pos)
+
+### Description
+Copies position from one object to another
 
 ### Lua Example
 `obj_copy_pos(dst, src)`
@@ -714,6 +804,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_copy_angle](#obj_copy_angle)
 
+### Description
+Copies move and face angles from one object to another
+
 ### Lua Example
 `obj_copy_angle(dst, src)`
 
@@ -735,6 +828,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 ## [obj_set_gfx_pos_from_pos](#obj_set_gfx_pos_from_pos)
 
+### Description
+Synchronizes an object's graphics position with its physical position
+
 ### Lua Example
 `obj_set_gfx_pos_from_pos(obj)`
 
@@ -754,6 +850,9 @@ Overrides the current room Mario is in. Set to -1 to reset override
 <br />
 
 ## [obj_init_animation](#obj_init_animation)
+
+### Description
+Initializes an animation for an object by index
 
 ### Lua Example
 `obj_init_animation(obj, animIndex)`
@@ -836,6 +935,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [obj_apply_scale_to_transform](#obj_apply_scale_to_transform)
 
+### Description
+Applies an object's scale to its transformation matrix
+
 ### Lua Example
 `obj_apply_scale_to_transform(obj)`
 
@@ -855,6 +957,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [obj_copy_scale](#obj_copy_scale)
+
+### Description
+Copies the scale from one object to another
 
 ### Lua Example
 `obj_copy_scale(dst, src)`
@@ -876,6 +981,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [obj_scale_xyz](#obj_scale_xyz)
+
+### Description
+Sets an object's scale independently for X, Y, Z dimensions
 
 ### Lua Example
 `obj_scale_xyz(obj, xScale, yScale, zScale)`
@@ -900,6 +1008,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [obj_scale](#obj_scale)
 
+### Description
+Sets an object's uniform scale for all dimensions
+
 ### Lua Example
 `obj_scale(obj, scale)`
 
@@ -921,6 +1032,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_scale](#cur_obj_scale)
 
+### Description
+Sets the current object's uniform scale for all dimensions
+
 ### Lua Example
 `cur_obj_scale(scale)`
 
@@ -940,6 +1054,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_init_animation](#cur_obj_init_animation)
+
+### Description
+Initializes an animation for the current object by index
 
 ### Lua Example
 `cur_obj_init_animation(animIndex)`
@@ -961,6 +1078,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_init_animation_with_sound](#cur_obj_init_animation_with_sound)
 
+### Description
+Initializes an animation for the current object and sets sound state
+
 ### Lua Example
 `cur_obj_init_animation_with_sound(animIndex)`
 
@@ -980,6 +1100,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [obj_init_animation_with_accel_and_sound](#obj_init_animation_with_accel_and_sound)
+
+### Description
+Initializes an animation with acceleration and sound state for an object
 
 ### Lua Example
 `obj_init_animation_with_accel_and_sound(obj, animIndex, accel)`
@@ -1003,6 +1126,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_init_animation_with_accel_and_sound](#cur_obj_init_animation_with_accel_and_sound)
 
+### Description
+Initializes an animation with acceleration and sound state for the current object
+
 ### Lua Example
 `cur_obj_init_animation_with_accel_and_sound(animIndex, accel)`
 
@@ -1024,6 +1150,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_enable_rendering_and_become_tangible](#cur_obj_enable_rendering_and_become_tangible)
 
+### Description
+Enables rendering and tangibility for an object
+
 ### Lua Example
 `cur_obj_enable_rendering_and_become_tangible(obj)`
 
@@ -1044,6 +1173,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_enable_rendering](#cur_obj_enable_rendering)
 
+### Description
+Enables rendering for the current object
+
 ### Lua Example
 `cur_obj_enable_rendering()`
 
@@ -1061,6 +1193,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_disable_rendering_and_become_intangible](#cur_obj_disable_rendering_and_become_intangible)
+
+### Description
+Disables rendering and makes an object intangible
 
 ### Lua Example
 `cur_obj_disable_rendering_and_become_intangible(obj)`
@@ -1082,6 +1217,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_disable_rendering](#cur_obj_disable_rendering)
 
+### Description
+Disables rendering for the current object
+
 ### Lua Example
 `cur_obj_disable_rendering()`
 
@@ -1099,6 +1237,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_unhide](#cur_obj_unhide)
+
+### Description
+Makes the current object visible by removing the invisible flag
 
 ### Lua Example
 `cur_obj_unhide()`
@@ -1118,6 +1259,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_hide](#cur_obj_hide)
 
+### Description
+Hides the current object by setting the invisible flag
+
 ### Lua Example
 `cur_obj_hide()`
 
@@ -1135,6 +1279,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_set_pos_relative](#cur_obj_set_pos_relative)
+
+### Description
+Sets the current object's position relative to another object's facing direction
 
 ### Lua Example
 `cur_obj_set_pos_relative(other, dleft, dy, dforward)`
@@ -1159,6 +1306,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_set_pos_relative_to_parent](#cur_obj_set_pos_relative_to_parent)
 
+### Description
+Sets the current object's position relative to its parent's facing direction
+
 ### Lua Example
 `cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)`
 
@@ -1181,6 +1331,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_enable_rendering_2](#cur_obj_enable_rendering_2)
 
+### Description
+Alternative function that enables rendering for the current object
+
 ### Lua Example
 `cur_obj_enable_rendering_2()`
 
@@ -1199,6 +1352,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
 
+### Description
+Unused function that initializes the current object on the floor
+
 ### Lua Example
 `cur_obj_unused_init_on_floor()`
 
@@ -1216,6 +1372,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [obj_set_face_angle_to_move_angle](#obj_set_face_angle_to_move_angle)
+
+### Description
+Synchronizes an object's face angle with its move angle
 
 ### Lua Example
 `obj_set_face_angle_to_move_angle(obj)`
@@ -1237,6 +1396,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [get_object_list_from_behavior](#get_object_list_from_behavior)
 
+### Description
+Retrieves the object list type that a behavior script belongs to
+
 ### Lua Example
 `local integerValue = get_object_list_from_behavior(behavior)`
 
@@ -1256,6 +1418,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_nearest_object_with_behavior](#cur_obj_nearest_object_with_behavior)
+
+### Description
+Finds the nearest object with the specified behavior to the current object
 
 ### Lua Example
 `local objectValue = cur_obj_nearest_object_with_behavior(behavior)`
@@ -1277,6 +1442,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
 
+### Description
+Calculates the distance from the current object to the nearest object with specified behavior
+
 ### Lua Example
 `local numberValue = cur_obj_dist_to_nearest_object_with_behavior(behavior)`
 
@@ -1297,6 +1465,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_find_nearest_pole](#cur_obj_find_nearest_pole)
 
+### Description
+Finds the nearest pole-like object to the current object
+
 ### Lua Example
 `local objectValue = cur_obj_find_nearest_pole()`
 
@@ -1314,6 +1485,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_find_nearest_object_with_behavior](#cur_obj_find_nearest_object_with_behavior)
+
+### Description
+Finds the nearest object with specified behavior and returns distance via pointer
 
 ### Lua Example
 `local objectValue, dist = cur_obj_find_nearest_object_with_behavior(behavior)`
@@ -1336,6 +1510,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
 
+### Description
+Counts objects with specified behavior within distance of current object
+
 ### Lua Example
 `local integerValue = cur_obj_count_objects_with_behavior(behavior, dist)`
 
@@ -1357,6 +1534,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [find_unimportant_object](#find_unimportant_object)
 
+### Description
+Finds an unimportant object from the unimportant object list
+
 ### Lua Example
 `local objectValue = find_unimportant_object()`
 
@@ -1375,6 +1555,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [count_unimportant_objects](#count_unimportant_objects)
 
+### Description
+Counts the number of unimportant objects in the unimportant object list
+
 ### Lua Example
 `local integerValue = count_unimportant_objects()`
 
@@ -1392,6 +1575,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [count_objects_with_behavior](#count_objects_with_behavior)
+
+### Description
+Counts the number of objects with the specified behavior
 
 ### Lua Example
 `local integerValue = count_objects_with_behavior(behavior)`
@@ -1413,6 +1599,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [find_object_with_behavior](#find_object_with_behavior)
 
+### Description
+Finds any object with the specified behavior
+
 ### Lua Example
 `local objectValue = find_object_with_behavior(behavior)`
 
@@ -1432,6 +1621,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_find_nearby_held_actor](#cur_obj_find_nearby_held_actor)
+
+### Description
+Finds an object with specified behavior within `maxDist` that is being held by a player
 
 ### Lua Example
 `local objectValue = cur_obj_find_nearby_held_actor(behavior, maxDist)`
@@ -1454,6 +1646,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_reset_timer_and_subaction](#cur_obj_reset_timer_and_subaction)
 
+### Description
+Resets the current object's timer and sub-action to 0
+
 ### Lua Example
 `cur_obj_reset_timer_and_subaction()`
 
@@ -1471,6 +1666,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_change_action](#cur_obj_change_action)
+
+### Description
+Changes the current object's action and resets timer and subaction
 
 ### Lua Example
 `cur_obj_change_action(action)`
@@ -1491,6 +1689,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_set_vel_from_mario_vel](#cur_obj_set_vel_from_mario_vel)
+
+### Description
+Sets the current object's forward velocity based on Mario's velocity with scaling
 
 ### Lua Example
 `cur_obj_set_vel_from_mario_vel(m, f12, f14)`
@@ -1514,6 +1715,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_reverse_animation](#cur_obj_reverse_animation)
 
+### Description
+Decreases the current object's animation frame by one
+
 ### Lua Example
 `cur_obj_reverse_animation()`
 
@@ -1531,6 +1735,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_extend_animation_if_at_end](#cur_obj_extend_animation_if_at_end)
+
+### Description
+Extends the current object's animation frame if at loop end
 
 ### Lua Example
 `cur_obj_extend_animation_if_at_end()`
@@ -1550,6 +1757,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_check_if_near_animation_end](#cur_obj_check_if_near_animation_end)
 
+### Description
+Checks if the current object's animation is near the end
+
 ### Lua Example
 `local integerValue = cur_obj_check_if_near_animation_end()`
 
@@ -1568,6 +1778,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_check_if_at_animation_end](#cur_obj_check_if_at_animation_end)
 
+### Description
+Checks if the current object's animation is at the end
+
 ### Lua Example
 `local integerValue = cur_obj_check_if_at_animation_end()`
 
@@ -1585,6 +1798,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_check_anim_frame](#cur_obj_check_anim_frame)
+
+### Description
+Checks if the current object's animation is at a specific frame
 
 ### Lua Example
 `local integerValue = cur_obj_check_anim_frame(frame)`
@@ -1605,6 +1821,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_check_anim_frame_in_range](#cur_obj_check_anim_frame_in_range)
+
+### Description
+Checks if the current object's animation frame is within a range
 
 ### Lua Example
 `local integerValue = cur_obj_check_anim_frame_in_range(startFrame, rangeLength)`
@@ -1627,6 +1846,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [mario_is_in_air_action](#mario_is_in_air_action)
 
+### Description
+Checks if Mario is in an air action
+
 ### Lua Example
 `local integerValue = mario_is_in_air_action(m)`
 
@@ -1647,6 +1869,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [mario_is_dive_sliding](#mario_is_dive_sliding)
 
+### Description
+Checks if Mario is performing a dive slide action
+
 ### Lua Example
 `local integerValue = mario_is_dive_sliding(m)`
 
@@ -1666,6 +1891,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_set_y_vel_and_animation](#cur_obj_set_y_vel_and_animation)
+
+### Description
+Sets the current object's vertical velocity and initializes an animation
 
 ### Lua Example
 `cur_obj_set_y_vel_and_animation(sp18, sp1C)`
@@ -1688,6 +1916,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_unrender_and_reset_state](#cur_obj_unrender_and_reset_state)
 
+### Description
+Disables rendering, makes intangible, and resets action and animation
+
 ### Lua Example
 `cur_obj_unrender_and_reset_state(sp18, sp1C)`
 
@@ -1709,6 +1940,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_move_after_thrown_or_dropped](#cur_obj_move_after_thrown_or_dropped)
 
+### Description
+Moves an object after being thrown or dropped with gravity applied
+
 ### Lua Example
 `cur_obj_move_after_thrown_or_dropped(forwardVel, velY)`
 
@@ -1729,6 +1963,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_get_thrown_or_placed](#cur_obj_get_thrown_or_placed)
+
+### Description
+Handles object state when it's been thrown or placed by a player
 
 ### Lua Example
 `cur_obj_get_thrown_or_placed(forwardVel, velY, thrownAction)`
@@ -1752,6 +1989,9 @@ i.e. a matrix representing a linear transformation over 3 space
 
 ## [cur_obj_get_dropped](#cur_obj_get_dropped)
 
+### Description
+Handles object state when it's been dropped by a player
+
 ### Lua Example
 `cur_obj_get_dropped()`
 
@@ -1769,6 +2009,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [mario_set_flag](#mario_set_flag)
+
+### Description
+Sets a flag on Mario's state
 
 ### Lua Example
 `mario_set_flag(flag)`
@@ -1789,6 +2032,9 @@ i.e. a matrix representing a linear transformation over 3 space
 <br />
 
 ## [cur_obj_clear_interact_status_flag](#cur_obj_clear_interact_status_flag)
+
+### Description
+Clears a flag from the current object's interaction status
 
 ### Lua Example
 `local integerValue = cur_obj_clear_interact_status_flag(flag)`
@@ -1833,6 +2079,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_disable](#cur_obj_disable)
 
+### Description
+Disables the current object by hiding, disabling rendering, and making intangible
+
 ### Lua Example
 `cur_obj_disable()`
 
@@ -1850,6 +2099,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_become_intangible](#cur_obj_become_intangible)
+
+### Description
+Makes the current object intangible
 
 ### Lua Example
 `cur_obj_become_intangible()`
@@ -1869,6 +2121,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_become_tangible](#cur_obj_become_tangible)
 
+### Description
+Makes the current object tangible
+
 ### Lua Example
 `cur_obj_become_tangible()`
 
@@ -1886,6 +2141,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_become_tangible](#obj_become_tangible)
+
+### Description
+Makes an object tangible
 
 ### Lua Example
 `obj_become_tangible(obj)`
@@ -1907,6 +2165,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_update_floor_height](#cur_obj_update_floor_height)
 
+### Description
+Updates the current object's floor height based on its position
+
 ### Lua Example
 `cur_obj_update_floor_height()`
 
@@ -1925,6 +2186,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_update_floor_height_and_get_floor](#cur_obj_update_floor_height_and_get_floor)
 
+### Description
+Updates the current object's floor height and returns the floor surface under it
+
 ### Lua Example
 `local surfaceValue = cur_obj_update_floor_height_and_get_floor()`
 
@@ -1942,6 +2206,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [apply_drag_to_value](#apply_drag_to_value)
+
+### Description
+Applies nonlinear drag to a value pointer based on drag strength
 
 ### Lua Example
 `local value = apply_drag_to_value(value, dragStrength)`
@@ -1964,6 +2231,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_apply_drag_xz](#cur_obj_apply_drag_xz)
 
+### Description
+Applies drag to the current object's horizontal velocity components
+
 ### Lua Example
 `cur_obj_apply_drag_xz(dragStrength)`
 
@@ -1983,6 +2253,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_xz](#cur_obj_move_xz)
+
+### Description
+Attempts to move the current object in XZ, handling floor slope, edges, and room boundaries
 
 ### Lua Example
 `local integerValue = cur_obj_move_xz(steepSlopeNormalY, careAboutEdgesAndSteepSlopes)`
@@ -2005,6 +2278,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_move_update_underwater_flags](#cur_obj_move_update_underwater_flags)
 
+### Description
+Updates underwater movement flags and vertical damping while submerged
+
 ### Lua Example
 `cur_obj_move_update_underwater_flags()`
 
@@ -2022,6 +2298,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_update_ground_air_flags](#cur_obj_move_update_ground_air_flags)
+
+### Description
+Updates ground and air movement flags after a vertical move
 
 ### Lua Example
 `cur_obj_move_update_ground_air_flags(gravity, bounciness)`
@@ -2044,6 +2323,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_move_y_and_get_water_level](#cur_obj_move_y_and_get_water_level)
 
+### Description
+Applies gravity and buoyancy to vertical velocity and returns the water level at the current XZ position
+
 ### Lua Example
 `local numberValue = cur_obj_move_y_and_get_water_level(gravity, buoyancy)`
 
@@ -2064,6 +2346,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_y](#cur_obj_move_y)
+
+### Description
+Moves the current object vertically while handling ground, water surface, and underwater states
 
 ### Lua Example
 `cur_obj_move_y(gravity, bounciness, buoyancy)`
@@ -2087,6 +2372,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_unused_resolve_wall_collisions](#cur_obj_unused_resolve_wall_collisions)
 
+### Description
+Performs a wall collision sweep for the current object if the radius is positive
+
 ### Lua Example
 `cur_obj_unused_resolve_wall_collisions(offsetY, radius)`
 
@@ -2107,6 +2395,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [abs_angle_diff](#abs_angle_diff)
+
+### Description
+Returns the absolute difference between two 16-bit angles
 
 ### Lua Example
 `local integerValue = abs_angle_diff(x0, x1)`
@@ -2129,6 +2420,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_move_xz_using_fvel_and_yaw](#cur_obj_move_xz_using_fvel_and_yaw)
 
+### Description
+Sets the current object's horizontal velocity from forward speed and yaw, then moves it in XZ
+
 ### Lua Example
 `cur_obj_move_xz_using_fvel_and_yaw()`
 
@@ -2146,6 +2440,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_y_with_terminal_vel](#cur_obj_move_y_with_terminal_vel)
+
+### Description
+Moves the current object vertically and caps downward speed at terminal velocity
 
 ### Lua Example
 `cur_obj_move_y_with_terminal_vel()`
@@ -2165,6 +2462,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_compute_vel_xz](#cur_obj_compute_vel_xz)
 
+### Description
+Computes the current object's horizontal velocity from forward speed and yaw
+
 ### Lua Example
 `cur_obj_compute_vel_xz()`
 
@@ -2182,6 +2482,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [increment_velocity_toward_range](#increment_velocity_toward_range)
+
+### Description
+Returns a signed velocity increment that moves a value toward a target range around center
 
 ### Lua Example
 `local numberValue = increment_velocity_toward_range(value, center, zeroThreshold, increment)`
@@ -2206,6 +2509,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [obj_check_if_collided_with_object](#obj_check_if_collided_with_object)
 
+### Description
+Checks whether obj1's collided object list contains obj2
+
 ### Lua Example
 `local integerValue = obj_check_if_collided_with_object(obj1, obj2)`
 
@@ -2227,6 +2533,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_behavior](#cur_obj_set_behavior)
 
+### Description
+Sets the current object's behavior script
+
 ### Lua Example
 `cur_obj_set_behavior(behavior)`
 
@@ -2246,6 +2555,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_set_behavior](#obj_set_behavior)
+
+### Description
+Sets the specified object's behavior script
 
 ### Lua Example
 `obj_set_behavior(obj, behavior)`
@@ -2268,6 +2580,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_has_behavior](#cur_obj_has_behavior)
 
+### Description
+Checks whether the current object has the specified behavior
+
 ### Lua Example
 `local integerValue = cur_obj_has_behavior(behavior)`
 
@@ -2287,6 +2602,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_has_behavior](#obj_has_behavior)
+
+### Description
+Checks whether an object has the specified behavior
 
 ### Lua Example
 `local integerValue = obj_has_behavior(obj, behavior)`
@@ -2309,6 +2627,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_lateral_dist_from_obj_to_home](#cur_obj_lateral_dist_from_obj_to_home)
 
+### Description
+Calculates the lateral distance from another object to the current object's home position
+
 ### Lua Example
 `local numberValue = cur_obj_lateral_dist_from_obj_to_home(obj)`
 
@@ -2329,6 +2650,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_lateral_dist_from_mario_to_home](#cur_obj_lateral_dist_from_mario_to_home)
 
+### Description
+Calculates Mario's lateral distance to the current object's home position
+
 ### Lua Example
 `local numberValue = cur_obj_lateral_dist_from_mario_to_home()`
 
@@ -2347,6 +2671,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_lateral_dist_to_home](#cur_obj_lateral_dist_to_home)
 
+### Description
+Calculates the current object's lateral distance to its home position
+
 ### Lua Example
 `local numberValue = cur_obj_lateral_dist_to_home()`
 
@@ -2364,6 +2691,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_outside_home_square](#cur_obj_outside_home_square)
+
+### Description
+Checks whether the current object is outside a square centered on its home position
 
 ### Lua Example
 `local integerValue = cur_obj_outside_home_square(halfLength)`
@@ -2384,6 +2714,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_outside_home_rectangle](#cur_obj_outside_home_rectangle)
+
+### Description
+Checks whether the current object is outside a rectangle centered on its home position
 
 ### Lua Example
 `local integerValue = cur_obj_outside_home_rectangle(minX, maxX, minZ, maxZ)`
@@ -2408,6 +2741,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_pos_to_home](#cur_obj_set_pos_to_home)
 
+### Description
+Teleports the current object to its home position
+
 ### Lua Example
 `cur_obj_set_pos_to_home()`
 
@@ -2426,6 +2762,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_pos_to_home_and_stop](#cur_obj_set_pos_to_home_and_stop)
 
+### Description
+Teleports the current object to its home position and stops its motion
+
 ### Lua Example
 `cur_obj_set_pos_to_home_and_stop()`
 
@@ -2443,6 +2782,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_shake_y](#cur_obj_shake_y)
+
+### Description
+Shakes the current object vertically by alternating upward and downward offsets
 
 ### Lua Example
 `cur_obj_shake_y(amount)`
@@ -2464,6 +2806,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_start_cam_event](#cur_obj_start_cam_event)
 
+### Description
+Starts a camera event and makes the current object the secondary camera focus
+
 ### Lua Example
 `cur_obj_start_cam_event(obj, cameraEvent)`
 
@@ -2484,6 +2829,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [set_mario_interact_hoot_if_in_range](#set_mario_interact_hoot_if_in_range)
+
+### Description
+Sets Mario's interact status to hoot-grabbed if Mario is within range
 
 ### Lua Example
 `set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)`
@@ -2507,6 +2855,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [obj_set_billboard](#obj_set_billboard)
 
+### Description
+Enables billboard rendering for an object
+
 ### Lua Example
 `obj_set_billboard(obj)`
 
@@ -2526,6 +2877,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_set_cylboard](#obj_set_cylboard)
+
+### Description
+Enables cylindrical billboard rendering for an object
 
 ### Lua Example
 `obj_set_cylboard(obj)`
@@ -2547,6 +2901,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_billboard_if_vanilla_cam](#cur_obj_set_billboard_if_vanilla_cam)
 
+### Description
+Chooses the appropriate billboard type for the current object based on camera mode
+
 ### Lua Example
 `cur_obj_set_billboard_if_vanilla_cam()`
 
@@ -2564,6 +2921,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_set_hitbox_radius_and_height](#obj_set_hitbox_radius_and_height)
+
+### Description
+Sets an object's hitbox radius and height
 
 ### Lua Example
 `obj_set_hitbox_radius_and_height(obj, radius, height)`
@@ -2587,6 +2947,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [obj_set_hurtbox_radius_and_height](#obj_set_hurtbox_radius_and_height)
 
+### Description
+Sets an object's hurtbox radius and height
+
 ### Lua Example
 `obj_set_hurtbox_radius_and_height(obj, radius, height)`
 
@@ -2609,6 +2972,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_hitbox_radius_and_height](#cur_obj_set_hitbox_radius_and_height)
 
+### Description
+Sets the current object's hitbox radius and height
+
 ### Lua Example
 `cur_obj_set_hitbox_radius_and_height(radius, height)`
 
@@ -2630,6 +2996,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_set_hurtbox_radius_and_height](#cur_obj_set_hurtbox_radius_and_height)
 
+### Description
+Sets the current object's hurtbox radius and height
+
 ### Lua Example
 `cur_obj_set_hurtbox_radius_and_height(radius, height)`
 
@@ -2650,6 +3019,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_spawn_loot_coins](#obj_spawn_loot_coins)
+
+### Description
+Spawns loot coins from an object using the specified behavior, jitter, and model
 
 ### Lua Example
 `obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)`
@@ -2676,6 +3048,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [obj_spawn_loot_blue_coins](#obj_spawn_loot_blue_coins)
 
+### Description
+Spawns blue loot coins from an object
+
 ### Lua Example
 `obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)`
 
@@ -2699,6 +3074,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [obj_spawn_loot_yellow_coins](#obj_spawn_loot_yellow_coins)
 
+### Description
+Spawns yellow loot coins from an object
+
 ### Lua Example
 `obj_spawn_loot_yellow_coins(obj, numCoins, sp28)`
 
@@ -2721,6 +3099,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_spawn_loot_coin_at_mario_pos](#cur_obj_spawn_loot_coin_at_mario_pos)
 
+### Description
+Spawns a yellow coin at Mario's position and decrements the current object's loot count
+
 ### Lua Example
 `cur_obj_spawn_loot_coin_at_mario_pos(m)`
 
@@ -2741,6 +3122,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_abs_y_dist_to_home](#cur_obj_abs_y_dist_to_home)
 
+### Description
+Returns the absolute vertical distance from the object to its home position
+
 ### Lua Example
 `local numberValue = cur_obj_abs_y_dist_to_home()`
 
@@ -2759,6 +3143,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_advance_looping_anim](#cur_obj_advance_looping_anim)
 
+### Description
+Advances the current object animation frame and returns the normalized frame progress
+
 ### Lua Example
 `local integerValue = cur_obj_advance_looping_anim()`
 
@@ -2776,6 +3163,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_detect_steep_floor](#cur_obj_detect_steep_floor)
+
+### Description
+Checks whether the object is moving into a steep floor or death plane and returns a collision code
 
 ### Lua Example
 `local integerValue = cur_obj_detect_steep_floor(steepAngleDegrees)`
@@ -2797,6 +3187,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_resolve_wall_collisions](#cur_obj_resolve_wall_collisions)
 
+### Description
+Resolves wall collisions for the current object and returns `TRUE` if it hit a steep wall
+
 ### Lua Example
 `local integerValue = cur_obj_resolve_wall_collisions()`
 
@@ -2815,6 +3208,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_update_floor](#cur_obj_update_floor)
 
+### Description
+Updates the current object's floor pointer, floor type, and floor room based on the surface below it
+
 ### Lua Example
 `cur_obj_update_floor()`
 
@@ -2832,6 +3228,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_update_floor_and_resolve_wall_collisions](#cur_obj_update_floor_and_resolve_wall_collisions)
+
+### Description
+Updates the floor and resolves walls for the current object, setting move flags accordingly
 
 ### Lua Example
 `cur_obj_update_floor_and_resolve_wall_collisions(steepSlopeDegrees)`
@@ -2853,6 +3252,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_update_floor_and_walls](#cur_obj_update_floor_and_walls)
 
+### Description
+Updates the current object floor and wall state using a default steep slope threshold
+
 ### Lua Example
 `cur_obj_update_floor_and_walls()`
 
@@ -2870,6 +3272,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_standard](#cur_obj_move_standard)
+
+### Description
+Updates the current object velocity and position using standard gravity, drag, and slope behavior
 
 ### Lua Example
 `cur_obj_move_standard(steepSlopeAngleDegrees)`
@@ -2891,6 +3296,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_within_12k_bounds](#cur_obj_within_12k_bounds)
 
+### Description
+Checks whether the current object is within a 12,000-unit world bound on all axes
+
 ### Lua Example
 `local integerValue = cur_obj_within_12k_bounds()`
 
@@ -2908,6 +3316,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [cur_obj_move_using_vel_and_gravity](#cur_obj_move_using_vel_and_gravity)
+
+### Description
+Applies object velocity and gravity directly to the object's position with no terminal velocity
 
 ### Lua Example
 `cur_obj_move_using_vel_and_gravity()`
@@ -2927,6 +3338,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_move_using_fvel_and_gravity](#cur_obj_move_using_fvel_and_gravity)
 
+### Description
+Computes the object's XZ velocity from forward velocity then applies gravity-based movement
+
 ### Lua Example
 `cur_obj_move_using_fvel_and_gravity()`
 
@@ -2944,6 +3358,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_set_pos_relative](#obj_set_pos_relative)
+
+### Description
+Sets an object position relative to another object using local left, up, and forward offsets
 
 ### Lua Example
 `obj_set_pos_relative(obj, other, dleft, dy, dforward)`
@@ -2969,6 +3386,9 @@ Marks an object to be unloaded at the end of the frame
 
 ## [cur_obj_angle_to_home](#cur_obj_angle_to_home)
 
+### Description
+Returns the yaw angle from the current object toward its home position
+
 ### Lua Example
 `local integerValue = cur_obj_angle_to_home()`
 
@@ -2986,6 +3406,9 @@ Marks an object to be unloaded at the end of the frame
 <br />
 
 ## [obj_set_gfx_pos_at_obj_pos](#obj_set_gfx_pos_at_obj_pos)
+
+### Description
+Copies an object's world position and orientation into another object's graphics node
 
 ### Lua Example
 `obj_set_gfx_pos_at_obj_pos(obj1, obj2)`
@@ -3033,6 +3456,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_build_transform_from_pos_and_angle](#obj_build_transform_from_pos_and_angle)
 
+### Description
+Copies an object's position and rotation into its transform matrix using the specified field indices
+
 ### Lua Example
 `obj_build_transform_from_pos_and_angle(obj, posIndex, angleIndex)`
 
@@ -3055,6 +3481,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_set_throw_matrix_from_transform](#obj_set_throw_matrix_from_transform)
 
+### Description
+Sets the object's graphics throw matrix from its transform and applies object scale if needed
+
 ### Lua Example
 `obj_set_throw_matrix_from_transform(obj)`
 
@@ -3074,6 +3503,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_build_transform_relative_to_parent](#obj_build_transform_relative_to_parent)
+
+### Description
+Builds the object's world transform relative to its parent and updates its world position
 
 ### Lua Example
 `obj_build_transform_relative_to_parent(obj)`
@@ -3095,6 +3527,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_create_transform_from_self](#obj_create_transform_from_self)
 
+### Description
+Initializes the object's own transform matrix from its current world position
+
 ### Lua Example
 `obj_create_transform_from_self(obj)`
 
@@ -3115,6 +3550,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_rotate_move_angle_using_vel](#cur_obj_rotate_move_angle_using_vel)
 
+### Description
+Rotates the current object's move angles by its angular velocity components
+
 ### Lua Example
 `cur_obj_rotate_move_angle_using_vel()`
 
@@ -3132,6 +3570,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_rotate_face_angle_using_vel](#cur_obj_rotate_face_angle_using_vel)
+
+### Description
+Rotates the current object's face angles by its angular velocity components
 
 ### Lua Example
 `cur_obj_rotate_face_angle_using_vel()`
@@ -3151,6 +3592,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_set_face_angle_to_move_angle](#cur_obj_set_face_angle_to_move_angle)
 
+### Description
+Copies the current object's move angles into its face angles
+
 ### Lua Example
 `cur_obj_set_face_angle_to_move_angle()`
 
@@ -3168,6 +3612,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_follow_path](#cur_obj_follow_path)
+
+### Description
+Advances path-following state and returns whether a waypoint or path end was reached
 
 ### Lua Example
 `local integerValue = cur_obj_follow_path(unusedArg)`
@@ -3189,6 +3636,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [chain_segment_init](#chain_segment_init)
 
+### Description
+Initializes a chain segment's position and orientation to identity values
+
 ### Lua Example
 `chain_segment_init(segment)`
 
@@ -3209,6 +3659,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [random_f32_around_zero](#random_f32_around_zero)
 
+### Description
+Returns a random floating-point value within +/- diameter/2
+
 ### Lua Example
 `local numberValue = random_f32_around_zero(diameter)`
 
@@ -3228,6 +3681,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_scale_random](#obj_scale_random)
+
+### Description
+Randomly scales an object within a range and applies a minimum scale
 
 ### Lua Example
 `obj_scale_random(obj, rangeLength, minScale)`
@@ -3251,6 +3707,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_translate_xyz_random](#obj_translate_xyz_random)
 
+### Description
+Applies a random translation to an object on all three axes
+
 ### Lua Example
 `obj_translate_xyz_random(obj, rangeLength)`
 
@@ -3271,6 +3730,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_translate_xz_random](#obj_translate_xz_random)
+
+### Description
+Applies a random translation to an object on the X and Z axes
 
 ### Lua Example
 `obj_translate_xz_random(obj, rangeLength)`
@@ -3293,6 +3755,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_build_vel_from_transform](#obj_build_vel_from_transform)
 
+### Description
+Builds the object's world velocity from its transform basis vectors
+
 ### Lua Example
 `obj_build_vel_from_transform(a0)`
 
@@ -3313,6 +3778,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_set_pos_via_transform](#cur_obj_set_pos_via_transform)
 
+### Description
+Moves the current object using its transform-derived velocity
+
 ### Lua Example
 `cur_obj_set_pos_via_transform()`
 
@@ -3331,6 +3799,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_reflect_move_angle_off_wall](#cur_obj_reflect_move_angle_off_wall)
 
+### Description
+Reflects the current object's move angle across its wall normal
+
 ### Lua Example
 `local integerValue = cur_obj_reflect_move_angle_off_wall()`
 
@@ -3348,6 +3819,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_spawn_particles](#cur_obj_spawn_particles)
+
+### Description
+Spawns particles based on information in a SpawnParticlesInfo structure
 
 ### Lua Example
 `cur_obj_spawn_particles(info)`
@@ -3368,6 +3842,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_set_hitbox](#obj_set_hitbox)
+
+### Description
+Sets an object's hitbox and hurtbox quantities then makes it tangible
 
 ### Lua Example
 `obj_set_hitbox(obj, hitbox)`
@@ -3390,6 +3867,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [signum_positive](#signum_positive)
 
+### Description
+Returns 1 for non-negative values and -1 for negative values
+
 ### Lua Example
 `local integerValue = signum_positive(x)`
 
@@ -3409,6 +3889,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_wait_then_blink](#cur_obj_wait_then_blink)
+
+### Description
+Makes the current object blink after a delay and returns `TRUE` when blinking is complete
 
 ### Lua Example
 `local integerValue = cur_obj_wait_then_blink(timeUntilBlinking, numBlinks)`
@@ -3431,6 +3914,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_is_mario_ground_pounding_platform](#cur_obj_is_mario_ground_pounding_platform)
 
+### Description
+Returns `TRUE` if any active player is ground-pounding the current platform object
+
 ### Lua Example
 `local integerValue = cur_obj_is_mario_ground_pounding_platform()`
 
@@ -3448,6 +3934,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_is_mario_ground_pounding_platform](#obj_is_mario_ground_pounding_platform)
+
+### Description
+Checks whether a MarioState is ground-pounding the specified platform object
 
 ### Lua Example
 `local integerValue = obj_is_mario_ground_pounding_platform(m, obj)`
@@ -3470,6 +3959,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [spawn_mist_particles](#spawn_mist_particles)
 
+### Description
+Spawns mist particles at the current object without playing sound
+
 ### Lua Example
 `spawn_mist_particles()`
 
@@ -3487,6 +3979,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [spawn_mist_particles_with_sound](#spawn_mist_particles_with_sound)
+
+### Description
+Spawns mist particles at the current object and plays the specified sound
 
 ### Lua Example
 `spawn_mist_particles_with_sound(sp18)`
@@ -3508,6 +4003,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_push_mario_away](#cur_obj_push_mario_away)
 
+### Description
+Pushes any player within a radius away from the current object on the XZ plane
+
 ### Lua Example
 `cur_obj_push_mario_away(radius)`
 
@@ -3527,6 +4025,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_push_mario_away_from_cylinder](#cur_obj_push_mario_away_from_cylinder)
+
+### Description
+Pushes any player within a vertical cylinder away from the current object
 
 ### Lua Example
 `cur_obj_push_mario_away_from_cylinder(radius, extentY)`
@@ -3549,6 +4050,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [bhv_dust_smoke_loop](#bhv_dust_smoke_loop)
 
+### Description
+Behavior loop function for dust smoke
+
 ### Lua Example
 `bhv_dust_smoke_loop()`
 
@@ -3566,6 +4070,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [stub_obj_helpers_3](#stub_obj_helpers_3)
+
+### Description
+Placeholder function with no behavior
 
 ### Lua Example
 `stub_obj_helpers_3(sp0, sp4)`
@@ -3587,6 +4094,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_scale_over_time](#cur_obj_scale_over_time)
+
+### Description
+Smoothly scales the current object over time using enabled axes
 
 ### Lua Example
 `cur_obj_scale_over_time(a0, a1, sp10, sp14)`
@@ -3611,6 +4121,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_set_pos_to_home_with_debug](#cur_obj_set_pos_to_home_with_debug)
 
+### Description
+Moves an object to its home position while applying debug position offsets
+
 ### Lua Example
 `cur_obj_set_pos_to_home_with_debug()`
 
@@ -3628,6 +4141,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [stub_obj_helpers_4](#stub_obj_helpers_4)
+
+### Description
+Placeholder function with no behavior
 
 ### Lua Example
 `stub_obj_helpers_4()`
@@ -3647,6 +4163,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_is_mario_on_platform](#cur_obj_is_mario_on_platform)
 
+### Description
+Returns `TRUE` if Mario is currently standing on the current platform object
+
 ### Lua Example
 `local integerValue = cur_obj_is_mario_on_platform()`
 
@@ -3665,6 +4184,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_is_any_player_on_platform](#cur_obj_is_any_player_on_platform)
 
+### Description
+Returns `TRUE` if any player is standing on the current platform object
+
 ### Lua Example
 `local integerValue = cur_obj_is_any_player_on_platform()`
 
@@ -3682,6 +4204,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_shake_y_until](#cur_obj_shake_y_until)
+
+### Description
+Oscillates the current object vertically until a specified number of cycles passes
 
 ### Lua Example
 `local integerValue = cur_obj_shake_y_until(cycles, amount)`
@@ -3704,6 +4229,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_move_up_and_down](#cur_obj_move_up_and_down)
 
+### Description
+Moves the current object up and down along a preset displacement table
+
 ### Lua Example
 `local integerValue = cur_obj_move_up_and_down(a0)`
 
@@ -3723,6 +4251,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [spawn_star_with_no_lvl_exit](#spawn_star_with_no_lvl_exit)
+
+### Description
+Spawns a star object without triggering level exit behavior
 
 ### Lua Example
 `local objectValue = spawn_star_with_no_lvl_exit(sp20, sp24)`
@@ -3745,6 +4276,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [spawn_base_star_with_no_lvl_exit](#spawn_base_star_with_no_lvl_exit)
 
+### Description
+Spawns a base star with default parameters and no level exit behavior
+
 ### Lua Example
 `spawn_base_star_with_no_lvl_exit()`
 
@@ -3762,6 +4296,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [bit_shift_left](#bit_shift_left)
+
+### Description
+Returns the value at index a0 from a behavior-specific left-shift table
 
 ### Lua Example
 `local integerValue = bit_shift_left(a0)`
@@ -3783,6 +4320,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_mario_far_away](#cur_obj_mario_far_away)
 
+### Description
+Returns `TRUE` if the current object is farther than 2000 units from every active Mario
+
 ### Lua Example
 `local integerValue = cur_obj_mario_far_away()`
 
@@ -3800,6 +4340,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [is_mario_moving_fast_or_in_air](#is_mario_moving_fast_or_in_air)
+
+### Description
+Returns `TRUE` if the current Mario is moving faster than threshold or is airborne
 
 ### Lua Example
 `local integerValue = is_mario_moving_fast_or_in_air(speedThreshold)`
@@ -3820,6 +4363,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [is_item_in_array](#is_item_in_array)
+
+### Description
+Checks whether a signed item appears in a terminated array
 
 ### Lua Example
 `local integerValue = is_item_in_array(item, array)`
@@ -3842,6 +4388,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [bhv_init_room](#bhv_init_room)
 
+### Description
+Sets the current object's room based on the floor surface underneath it
+
 ### Lua Example
 `bhv_init_room()`
 
@@ -3860,6 +4409,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_enable_rendering_if_mario_in_room](#cur_obj_enable_rendering_if_mario_in_room)
 
+### Description
+Enables rendering for the current object if any active player is in a connected room
+
 ### Lua Example
 `cur_obj_enable_rendering_if_mario_in_room()`
 
@@ -3877,6 +4429,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_set_hitbox_and_die_if_attacked](#cur_obj_set_hitbox_and_die_if_attacked)
+
+### Description
+Gives the current object a hitbox and kills it if attacked, with optional loot suppression
 
 ### Lua Example
 `local integerValue = cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)`
@@ -3900,6 +4455,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_explode_and_spawn_coins](#obj_explode_and_spawn_coins)
 
+### Description
+Explodes the current object, spawns particles, and optionally spawns coins
+
 ### Lua Example
 `obj_explode_and_spawn_coins(sp18, sp1C)`
 
@@ -3921,6 +4479,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_if_hit_wall_bounce_away](#cur_obj_if_hit_wall_bounce_away)
 
+### Description
+Sets the current object to bounce away if it hit a wall
+
 ### Lua Example
 `cur_obj_if_hit_wall_bounce_away()`
 
@@ -3938,6 +4499,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_hide_if_mario_far_away_y](#cur_obj_hide_if_mario_far_away_y)
+
+### Description
+Hides the current object if Mario is too far above or below it, otherwise ensures it is visible
 
 ### Lua Example
 `local integerValue = cur_obj_hide_if_mario_far_away_y(distY)`
@@ -3959,6 +4523,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [obj_is_hidden](#obj_is_hidden)
 
+### Description
+Returns `TRUE` if the given object is currently hidden from rendering
+
 ### Lua Example
 `local integerValue = obj_is_hidden(obj)`
 
@@ -3979,6 +4546,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [enable_time_stop](#enable_time_stop)
 
+### Description
+Enables global time stop state
+
 ### Lua Example
 `enable_time_stop()`
 
@@ -3996,6 +4566,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [enable_time_stop_if_alone](#enable_time_stop_if_alone)
+
+### Description
+Enables time stop only when the local player is alone
 
 ### Lua Example
 `enable_time_stop_if_alone()`
@@ -4015,6 +4588,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [disable_time_stop](#disable_time_stop)
 
+### Description
+Disables global time stop state
+
 ### Lua Example
 `disable_time_stop()`
 
@@ -4032,6 +4608,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [set_time_stop_flags](#set_time_stop_flags)
+
+### Description
+Sets global time stop flags
 
 ### Lua Example
 `set_time_stop_flags(flags)`
@@ -4053,6 +4632,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [set_time_stop_flags_if_alone](#set_time_stop_flags_if_alone)
 
+### Description
+Sets time stop flags only if the local player is alone
+
 ### Lua Example
 `set_time_stop_flags_if_alone(flags)`
 
@@ -4073,6 +4655,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [clear_time_stop_flags](#clear_time_stop_flags)
 
+### Description
+Clears selected global time stop flags
+
 ### Lua Example
 `clear_time_stop_flags(flags)`
 
@@ -4092,6 +4677,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_can_mario_activate_textbox](#cur_obj_can_mario_activate_textbox)
+
+### Description
+Checks whether Mario can activate the current object's textbox within a vertical and horizontal range
 
 ### Lua Example
 `local integerValue = cur_obj_can_mario_activate_textbox(m, radius, height, unused)`
@@ -4116,6 +4704,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_can_mario_activate_textbox_2](#cur_obj_can_mario_activate_textbox_2)
 
+### Description
+Wrapper that checks Mario textbox activation using a fixed unused parameter value
+
 ### Lua Example
 `local integerValue = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
 
@@ -4137,6 +4728,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_end_dialog](#cur_obj_end_dialog)
+
+### Description
+Ends dialog state for the current object and records Mario's response
 
 ### Lua Example
 `cur_obj_end_dialog(m, dialogFlags, dialogResult)`
@@ -4160,6 +4754,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_has_model](#cur_obj_has_model)
 
+### Description
+Checks whether the current object uses the specified model geometry
+
 ### Lua Example
 `local integerValue = cur_obj_has_model(modelID)`
 
@@ -4180,6 +4777,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_align_gfx_with_floor](#cur_obj_align_gfx_with_floor)
 
+### Description
+Aligns the current object's graphics with the floor normal at its position
+
 ### Lua Example
 `cur_obj_align_gfx_with_floor()`
 
@@ -4197,6 +4797,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [mario_is_within_rectangle](#mario_is_within_rectangle)
+
+### Description
+Returns `TRUE` if Mario's position lies within a 2D rectangle on the XZ plane
 
 ### Lua Example
 `local integerValue = mario_is_within_rectangle(minX, maxX, minZ, maxZ)`
@@ -4221,6 +4824,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_shake_screen](#cur_obj_shake_screen)
 
+### Description
+Shakes the camera around the current object with a given intensity
+
 ### Lua Example
 `cur_obj_shake_screen(shake)`
 
@@ -4240,6 +4846,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_attack_collided_from_other_object](#obj_attack_collided_from_other_object)
+
+### Description
+Marks another object as attacked by the current object and returns whether it collided
 
 ### Lua Example
 `local integerValue = obj_attack_collided_from_other_object(obj)`
@@ -4261,6 +4870,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_was_attacked_or_ground_pounded](#cur_obj_was_attacked_or_ground_pounded)
 
+### Description
+Returns `TRUE` if the current object was attacked or ground-pounded and clears interact status
+
 ### Lua Example
 `local integerValue = cur_obj_was_attacked_or_ground_pounded()`
 
@@ -4278,6 +4890,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [obj_copy_behavior_params](#obj_copy_behavior_params)
+
+### Description
+Copies behavior parameters from one object to another
 
 ### Lua Example
 `obj_copy_behavior_params(dst, src)`
@@ -4300,6 +4915,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_init_animation_and_anim_frame](#cur_obj_init_animation_and_anim_frame)
 
+### Description
+Initializes the current object's animation and sets a specific frame
+
 ### Lua Example
 `cur_obj_init_animation_and_anim_frame(animIndex, animFrame)`
 
@@ -4321,6 +4939,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_init_animation_and_check_if_near_end](#cur_obj_init_animation_and_check_if_near_end)
 
+### Description
+Initializes the current object's animation and checks if it is near the end
+
 ### Lua Example
 `local integerValue = cur_obj_init_animation_and_check_if_near_end(animIndex)`
 
@@ -4340,6 +4961,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_init_animation_and_extend_if_at_end](#cur_obj_init_animation_and_extend_if_at_end)
+
+### Description
+Initializes the current object's animation and extends it if the animation has ended
 
 ### Lua Example
 `cur_obj_init_animation_and_extend_if_at_end(animIndex)`
@@ -4361,6 +4985,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_check_grabbed_mario](#cur_obj_check_grabbed_mario)
 
+### Description
+Checks whether the current object has grabbed Mario and becomes intangible if so
+
 ### Lua Example
 `local integerValue = cur_obj_check_grabbed_mario()`
 
@@ -4379,6 +5006,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [player_performed_grab_escape_action](#player_performed_grab_escape_action)
 
+### Description
+Returns `TRUE` if the player performed an escape action during a grab
+
 ### Lua Example
 `local integerValue = player_performed_grab_escape_action()`
 
@@ -4396,6 +5026,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_unused_play_footstep_sound](#cur_obj_unused_play_footstep_sound)
+
+### Description
+Plays a footstep sound when the current animation reaches one of two frames
 
 ### Lua Example
 `cur_obj_unused_play_footstep_sound(animFrame1, animFrame2, sound)`
@@ -4419,6 +5052,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [enable_time_stop_including_mario](#enable_time_stop_including_mario)
 
+### Description
+Enables time stop for the world and Mario/doors
+
 ### Lua Example
 `enable_time_stop_including_mario()`
 
@@ -4436,6 +5072,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [disable_time_stop_including_mario](#disable_time_stop_including_mario)
+
+### Description
+Disables time stop for the world and Mario/doors
 
 ### Lua Example
 `disable_time_stop_including_mario()`
@@ -4455,6 +5094,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_check_interacted](#cur_obj_check_interacted)
 
+### Description
+Returns `TRUE` if the current object has been interacted with and clears the status
+
 ### Lua Example
 `local integerValue = cur_obj_check_interacted()`
 
@@ -4473,6 +5115,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 ## [cur_obj_spawn_loot_blue_coin](#cur_obj_spawn_loot_blue_coin)
 
+### Description
+Spawns a blue coin from the current object when sufficient loot coins are available
+
 ### Lua Example
 `cur_obj_spawn_loot_blue_coin()`
 
@@ -4490,6 +5135,9 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 <br />
 
 ## [cur_obj_spawn_star_at_y_offset](#cur_obj_spawn_star_at_y_offset)
+
+### Description
+Temporarily shifts the current object's Y position and spawns a star
 
 ### Lua Example
 `cur_obj_spawn_star_at_y_offset(targetX, targetY, targetZ, offsetY)`
@@ -4515,7 +5163,7 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 ## [cur_obj_set_home_once](#cur_obj_set_home_once)
 
 ### Description
-Sets the current object's home only the first time it's called
+Sets the current object's home position once and marks it as initialized
 
 ### Lua Example
 `cur_obj_set_home_once()`
@@ -4536,7 +5184,7 @@ Sets the current object's home only the first time it's called
 ## [get_trajectory_length](#get_trajectory_length)
 
 ### Description
-Gets a trajectory's length
+Gets the number of steps in a trajectory until the end marker
 
 ### Lua Example
 `local integerValue = get_trajectory_length(trajectory)`
@@ -7242,373 +7890,27 @@ Sets if the camera should account for surfaces
 
 <br />
 
----
-# functions from smlua_collision_utils.h
-
-<br />
-
-
-## [collision_find_floor](#collision_find_floor)
+## [center_free_camera](#center_free_camera)
 
 ### Description
-Finds a potential floor at the given `x`, `y`, and `z` values
+Centers the free camera.
+This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
 
 ### Lua Example
-`local surfaceValue = collision_find_floor(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_find_ceil](#collision_find_ceil)
-
-### Description
-Finds a potential ceiling at the given `x`, `y`, and `z` values
-
-### Lua Example
-`local surfaceValue = collision_find_ceil(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
-
-### Description
-Gets the generated water floor surface used when riding a shell
-
-### Lua Example
-`local surfaceValue = get_water_surface_pseudo_floor()`
+`center_free_camera()`
 
 ### Parameters
 - None
 
 ### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* get_water_surface_pseudo_floor(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get](#smlua_collision_util_get)
-
-### Description
-Gets the `Collision` with `name`
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get(name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision* smlua_collision_util_get(const char* name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
-
-### Description
-Returns a temporary wall collision data pointer
-
-### Lua Example
-`local wallCollisionDataValue = collision_get_temp_wall_collision_data()`
-
-### Parameters
-- None
-
-### Returns
-- [WallCollisionData](structs.md#WallCollisionData)
-
-### C Prototype
-`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_surface_from_wcd_index](#get_surface_from_wcd_index)
-
-### Description
-Gets the surface corresponding to `index` from `wcd`
-
-### Lua Example
-`local surfaceValue = get_surface_from_wcd_index(wcd, index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| wcd | [WallCollisionData](structs.md#WallCollisionData) |
-| index | `integer` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get_current_terrain_collision](#smlua_collision_util_get_current_terrain_collision)
-
-### Description
-Gets the current level terrain collision
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get_current_terrain_collision()`
-
-### Parameters
-- None
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision* smlua_collision_util_get_current_terrain_collision(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get_level_collision](#smlua_collision_util_get_level_collision)
-
-### Description
-Gets the `level` terrain collision from `area`
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get_level_collision(level, area)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| level | `integer` |
-| area | `integer` |
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_find_surface_types](#smlua_collision_util_find_surface_types)
-
-### Description
-Gets a table of the surface types from `data`
-
-### Lua Example
-`smlua_collision_util_find_surface_types(data)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | `Pointer` <`Collision`> |
-
-### Returns
 - None
 
 ### C Prototype
-`void smlua_collision_util_find_surface_types(Collision* data);`
+`void center_free_camera(void);`
 
 [:arrow_up_small:](#)
 
 <br />
-
-## [smlua_collision_add_surface](#smlua_collision_add_surface)
-
-### Description
-Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.
-Returns the new surface, or `nil` if the triangle is degenerate (zero area).
-Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
-
-### Lua Example
-`local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dynamic | `boolean` |
-| surfaceType | `integer` |
-| vertex1 | [Vec3s](structs.md#Vec3s) |
-| vertex2 | [Vec3s](structs.md#Vec3s) |
-| vertex3 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_move_surface](#smlua_collision_move_surface)
-
-### Description
-Moves an existing collision surface to new vertex positions.
-Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.
-The previous vertices are preserved for interpolation
-
-### Lua Example
-`smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surface | [Surface](structs.md#Surface) |
-| vertex1 | [Vec3s](structs.md#Vec3s) |
-| vertex2 | [Vec3s](structs.md#Vec3s) |
-| vertex3 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_delete_surface](#smlua_collision_delete_surface)
-
-### Description
-Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
-
-### Lua Example
-`smlua_collision_delete_surface(surface)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surface | [Surface](structs.md#Surface) |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_collision_delete_surface(struct Surface *surface);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_quicksand](#surface_is_quicksand)
-
-### Description
-Checks if the surface is quicksand
-
-### Lua Example
-`local booleanValue = surface_is_quicksand(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_quicksand(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_not_hard](#surface_is_not_hard)
-
-### Description
-Checks if the surface is not a hard surface
-
-### Lua Example
-`local booleanValue = surface_is_not_hard(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_not_hard(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_painting_warp](#surface_is_painting_warp)
-
-### Description
-Checks if the surface is a painting warp
-
-### Lua Example
-`local booleanValue = surface_is_painting_warp(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_painting_warp(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_deprecated.h
-
-<br />
-
 ---
 
 [< prev](functions-5.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | 6 | [7](functions-7.md) | [next >](functions-7.md)]

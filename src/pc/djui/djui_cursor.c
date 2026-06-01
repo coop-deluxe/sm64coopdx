@@ -155,7 +155,7 @@ static void djui_cursor_update_position(void) {
     djui_base_set_location(&sMouseCursor->base, gCursorX - 13, gCursorY - 13);
 
     // set cursor sprite
-    if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
+    if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & L_MOUSE_BUTTON)) {
         sMouseCursor->textureInfo.texture = gd_texture_hand_closed;
     } else {
         sMouseCursor->textureInfo.texture = gd_texture_hand_open;

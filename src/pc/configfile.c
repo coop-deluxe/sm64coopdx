@@ -105,6 +105,35 @@ unsigned int configProxchatActivationThreshold    = 10;
 unsigned int configProxchatMicrophoneGain         = 100;
 unsigned int configProxchatStereoSpread           = 75;
 // control binds
+static const unsigned int defaultConfigKeyA[MAX_BINDS]          = { 0x0026,     0x1000,     0x1103     };
+static const unsigned int defaultConfigKeyB[MAX_BINDS]          = { 0x0033,     0x1001,     0x1101     };
+static const unsigned int defaultConfigKeyX[MAX_BINDS]          = { 0x0017,     0x1002,     VK_INVALID };
+static const unsigned int defaultConfigKeyY[MAX_BINDS]          = { 0x0032,     0x1003,     VK_INVALID };
+static const unsigned int defaultConfigKeyStart[MAX_BINDS]      = { 0x0039,     0x1006,     VK_INVALID };
+static const unsigned int defaultConfigKeyL[MAX_BINDS]          = { 0x002A,     0x1009,     0x1104     };
+static const unsigned int defaultConfigKeyR[MAX_BINDS]          = { 0x0036,     0x100A,     0x101B     };
+static const unsigned int defaultConfigKeyZ[MAX_BINDS]          = { 0x0025,     0x1007,     0x101A     };
+static const unsigned int defaultConfigKeyCUp[MAX_BINDS]        = { 0x0148,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCDown[MAX_BINDS]      = { 0x0150,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCLeft[MAX_BINDS]      = { 0x014B,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyCRight[MAX_BINDS]     = { 0x014D,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickUp[MAX_BINDS]    = { 0x0011,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyStickRight[MAX_BINDS] = { 0x0020,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyChat[MAX_BINDS]       = { 0x001C,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS] = { 0x000F,     0x1004,     VK_INVALID };
+static const unsigned int defaultConfigKeyDUp[MAX_BINDS]        = { 0x0147,     0x100b,     VK_INVALID };
+static const unsigned int defaultConfigKeyDDown[MAX_BINDS]      = { 0x014f,     0x100c,     VK_INVALID };
+static const unsigned int defaultConfigKeyDLeft[MAX_BINDS]      = { 0x0153,     0x100d,     VK_INVALID };
+static const unsigned int defaultConfigKeyDRight[MAX_BINDS]     = { 0x0151,     0x100e,     VK_INVALID };
+static const unsigned int defaultConfigKeyConsole[MAX_BINDS]    = { 0x0029,     0x003B,     VK_INVALID };
+static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyMuteMic[MAX_BINDS]    = { 0x0032,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPushToTalk[MAX_BINDS] = { 0x001d,     VK_INVALID, VK_INVALID };
+
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
 unsigned int configKeyX[MAX_BINDS]                = { 0x0017,     0x1002,     VK_INVALID };
@@ -130,7 +159,7 @@ unsigned int configKeyDRight[MAX_BINDS]           = { 0x0151,     0x100e,     VK
 unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK_INVALID };
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
-unsigned int configKeyDisconnect[MAX_BINDS]       = { VK_INVALID, VK_INVALID, VK_INVALID };
+unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
 unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0032,     VK_INVALID, VK_INVALID };
 unsigned int configKeyPushToTalk[MAX_BINDS]       = { 0x001d,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
@@ -843,6 +872,40 @@ NEXT_OPTION:
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif
+}
+
+void configfile_reset_keybinds(bool extra) {
+    if (!extra) {
+        memcpy(configKeyA, defaultConfigKeyA, sizeof(configKeyA));
+        memcpy(configKeyB, defaultConfigKeyB, sizeof(configKeyB));
+        memcpy(configKeyStart, defaultConfigKeyStart, sizeof(configKeyStart));
+        memcpy(configKeyL, defaultConfigKeyL, sizeof(configKeyL));
+        memcpy(configKeyR, defaultConfigKeyR, sizeof(configKeyR));
+        memcpy(configKeyZ, defaultConfigKeyZ, sizeof(configKeyZ));
+        memcpy(configKeyCUp, defaultConfigKeyCUp, sizeof(configKeyCUp));
+        memcpy(configKeyCDown, defaultConfigKeyCDown, sizeof(configKeyCDown));
+        memcpy(configKeyCLeft, defaultConfigKeyCLeft, sizeof(configKeyCLeft));
+        memcpy(configKeyCRight, defaultConfigKeyCRight, sizeof(configKeyCRight));
+        memcpy(configKeyStickUp, defaultConfigKeyStickUp, sizeof(configKeyStickUp));
+        memcpy(configKeyStickDown, defaultConfigKeyStickDown, sizeof(configKeyStickDown));
+        memcpy(configKeyStickLeft, defaultConfigKeyStickLeft, sizeof(configKeyStickLeft));
+        memcpy(configKeyStickRight, defaultConfigKeyStickRight, sizeof(configKeyStickRight));
+    } else {
+        memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
+        memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
+        memcpy(configKeyChat, defaultConfigKeyChat, sizeof(configKeyChat));
+        memcpy(configKeyPlayerList, defaultConfigKeyPlayerList, sizeof(configKeyPlayerList));
+        memcpy(configKeyDUp, defaultConfigKeyDUp, sizeof(configKeyDUp));
+        memcpy(configKeyDDown, defaultConfigKeyDDown, sizeof(configKeyDDown));
+        memcpy(configKeyDLeft, defaultConfigKeyDLeft, sizeof(configKeyDLeft));
+        memcpy(configKeyDRight, defaultConfigKeyDRight, sizeof(configKeyDRight));
+        memcpy(configKeyConsole, defaultConfigKeyConsole, sizeof(configKeyConsole));
+        memcpy(configKeyPrevPage, defaultConfigKeyPrevPage, sizeof(configKeyPrevPage));
+        memcpy(configKeyNextPage, defaultConfigKeyNextPage, sizeof(configKeyNextPage));
+        memcpy(configKeyDisconnect, defaultConfigKeyDisconnect, sizeof(configKeyDisconnect));
+        memcpy(configKeyMuteMic, defaultConfigKeyMuteMic, sizeof(configKeyMuteMic));
+        memcpy(configKeyPushToTalk, defaultConfigKeyPushToTalk, sizeof(configKeyPushToTalk));
+    }
 }
 
 void configfile_load(void) {

@@ -4291,27 +4291,6 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
-## [mario_exit_palette_editor](#mario_exit_palette_editor)
-
-### Lua Example
-`local integerValue = mario_exit_palette_editor(m, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| c | [Camera](structs.md#Camera) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Description
@@ -4634,6 +4613,27 @@ When used in a geo function, retrieve the MarioBodyState associated to the curre
 
 ### C Prototype
 `struct MarioBodyState *geo_get_body_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_mario_object](#geo_get_mario_object)
+
+### Description
+When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise
+
+### Lua Example
+`local objectValue = geo_get_mario_object()`
+
+### Parameters
+- None
+
+### Returns
+- [Object](structs.md#Object)
+
+### C Prototype
+`struct Object *geo_get_mario_object(void);`
 
 [:arrow_up_small:](#)
 

@@ -119,6 +119,11 @@ void yoshi_talk_loop(void) {
     sYoshiTalkingState = 1;
     push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
     struct NetworkPlayer* np = network_player_from_global_index(o->globalPlayerIndex);
+    if (!np) {
+        // go back to idle action as the player is no longer active
+        o->oAction = YOSHI_ACT_IDLE;
+        return;
+    }
     struct MarioState* marioState = &gMarioStates[np->localIndex];
     struct Object* player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;

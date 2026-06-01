@@ -729,6 +729,7 @@ DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const ch
     DataNode<Collision>* collisionNode = NULL;
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
+        PrintInfo("Loading collision '%s' from file: %s", aCollisionName, aFilename.c_str());
         u8 type = _File->Read<u8>();
         if (type == DATA_TYPE_COLLISION) {
             collisionNode = DynOS_Col_Load(_File, NULL);
@@ -760,8 +761,7 @@ void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _Ac
         _GfxData->mLoadIndex = 0;
 
         // Parse data
-        PrintNoNewLine("%s.col: Collision identifier: %llX - Processing... ", _ColRootName.begin(), _ColNode->mDataIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.col: Collision identifier: %llX - Processing... ", _ColRootName.begin(), _ColNode->mDataIdentifier);
+        PrintInfoNoNewLine("%s.col: Collision identifier: %llX - Processing... ", _ColRootName.begin(), _ColNode->mDataIdentifier);
         DynOS_Col_Parse(_GfxData, _ColNode, true);
 
         // Write if no error

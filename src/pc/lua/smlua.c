@@ -339,7 +339,7 @@ void smlua_init(void) {
     smlua_bind_sync_table();
     smlua_init_require_system();
 
-    extern char gSmluaConstants[];
+    extern const char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
 
     smlua_cobject_init_globals();

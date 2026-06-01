@@ -1072,6 +1072,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
     GfxData *_GfxData = NULL;
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
+        PrintInfo("Loading level '%s' from file: %s", aLevelName, aFilename.c_str());
         _GfxData = New<GfxData>();
         for (bool _Done = false; !_Done;) {
             switch (_File->Read<u8>()) {
@@ -1131,8 +1132,7 @@ static bool DynOS_Lvl_GeneratePack_Internal(const SysPath &aPackFolder, Array<Pa
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.lvl: Level identifier: %llX - Processing... ", _LvlRootName.begin(), _GfxData->mDataIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.lvl: Level identifier: %llX - Processing... ", _LvlRootName.begin(), _GfxData->mDataIdentifier);
+        PrintInfoNoNewLine("%s.lvl: Level identifier: %llX - Processing... ", _LvlRootName.begin(), _GfxData->mDataIdentifier);
         DynOS_Lvl_Parse(_GfxData, _LvlRoot, true);
 
         // Force all of the movtexs, collisions, and trajectories into the compiled lvl

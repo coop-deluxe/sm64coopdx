@@ -138,7 +138,7 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(PAUSE, MOD_MENU_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        struct DjuiPaginated* paginated = djui_paginated_create(body, 6);
         struct DjuiBase* layoutBase = &paginated->layout->base;
         struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
         int modCount = 0;
@@ -159,6 +159,7 @@ void djui_panel_mod_menu_create(struct DjuiBase* caller) {
             addedMods[modCount++] = hooked->mod;
         }
         djui_paginated_calculate_height(paginated);
+        djui_base_set_size(layoutBase, layoutBase->width.value, 700);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

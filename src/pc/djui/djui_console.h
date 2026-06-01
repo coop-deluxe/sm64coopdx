@@ -23,4 +23,6 @@ void djui_console_message_dequeue(void);
 void djui_console_message_create(const char* message, enum ConsoleMessageLevel level);
 /* |description|Toggles the visibility of the DJUI console|descriptionEnd| */
 void djui_console_toggle(void);
+/* |description|Returns whether the DJUI console is currently open or not|descriptionEnd| */
+bool djui_console_is_open(void);
 struct DjuiConsole* djui_console_create(void);
