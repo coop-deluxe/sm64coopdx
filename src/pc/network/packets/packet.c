@@ -101,7 +101,7 @@ void packet_process(struct Packet* p) {
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
         case PACKET_PROXCHAT_FRAME:          network_receive_proxchat_frame(p);          break;
-        case PACKET_PROXCHAT_GLOBAL_MUTE:    network_receive_proxchat_muted(p);          break;
+        case PACKET_PROXCHAT_MUTE:           network_receive_proxchat_muted(p);          break;
 
         case PACKET_PING:                    network_receive_ping(p);                    break;
         case PACKET_PONG:                    network_receive_pong(p);                    break;

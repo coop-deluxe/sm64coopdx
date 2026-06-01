@@ -44,6 +44,8 @@ static bool inited = false;
 bool proxchat_loopback = false;
 float proxchat_mic_level = 0;
 
+bool proxchat_others_muted[MAX_PLAYERS];
+
 enum ProxchatError proxchat_error[MAX_PLAYERS];
 
 static Buffer loopback_buffer = { .capacity = 8192 };

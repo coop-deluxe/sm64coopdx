@@ -9,12 +9,16 @@ void network_send_proxchat_frame(void) {
     u32 size = proxchat_encode_audio(frame, sizeof(frame));
     if (size == 0) return;
 
-    packet_init(&p, PACKET_PROXCHAT_FRAME, false, PLMT_NONE);
+    packet_init(&p, PACKET_PROXCHAT_FRAME, false, PLMT_AREA);
     packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, &size, sizeof(u32));
     packet_write(&p, frame, size);
-    
-    network_send(&p);
+
+    for (int i = 1; i < MAX_PLAYERS; i++) {
+        if (!gNetworkPlayers[i].connected) continue;
+        if (proxchat_others_muted[i]) continue;
+        network_send_to(i, &p);
+    }
 }
 
 void network_receive_proxchat_frame(struct Packet* p) {
@@ -33,28 +37,34 @@ void network_receive_proxchat_frame(struct Packet* p) {
     );
 }
 
-void network_send_proxchat_muted(s32 globalIndex, bool muted) {
+void network_send_proxchat_muted(s32 globalIndex, bool global, bool muted) {
     struct Packet p = {};
 
-    packet_init(&p, PACKET_PROXCHAT_GLOBAL_MUTE, false, PLMT_NONE);
+    packet_init(&p, PACKET_PROXCHAT_MUTE, false, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(s32));
+    packet_write(&p, &global, sizeof(bool));
     packet_write(&p, &muted, sizeof(bool));
 
-    network_send(&p);
+    if (global) network_send(&p);
+    else network_send_to(gNetworkPlayers[globalIndex].localIndex, &p);
 }
 
 void network_receive_proxchat_muted(struct Packet* p) {
     s32 globalIndex;
-    bool muted;
+    bool muted, global;
 
     packet_read(p, &globalIndex, sizeof(s32));
+    packet_read(p, &global, sizeof(bool));
     packet_read(p, &muted, sizeof(bool));
 
     struct NetworkPlayer* sender = network_player_from_global_index(p->orderedFromGlobalId);
     struct NetworkPlayer* receiver = network_player_from_global_index(globalIndex);
 
-    if (!sender->moderator && sender->globalIndex != 0) return;
+    if (global) {
+        if (!sender->moderator && sender->globalIndex != 0) return;
 
-    if (muted) *proxchat_player_muted(receiver->localIndex) |=  PROXCHAT_MUTE_GLOBAL;
-    else       *proxchat_player_muted(receiver->localIndex) &= ~PROXCHAT_MUTE_GLOBAL;
+        if (muted) *proxchat_player_muted(receiver->localIndex) |=  PROXCHAT_MUTE_GLOBAL;
+        else       *proxchat_player_muted(receiver->localIndex) &= ~PROXCHAT_MUTE_GLOBAL;
+    }
+    else proxchat_others_muted[sender->localIndex] = muted;
 }

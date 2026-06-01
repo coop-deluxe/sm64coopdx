@@ -6,6 +6,8 @@
 extern bool proxchat_loopback;
 extern float proxchat_mic_level;
 
+extern bool proxchat_others_muted[MAX_PLAYERS];
+
 extern enum ProxchatError {
     PROXCHAT_ERR_NONE,
     PROXCHAT_ERR_NO_MICROPHONE,
