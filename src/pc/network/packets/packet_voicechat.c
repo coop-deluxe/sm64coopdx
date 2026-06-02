@@ -37,34 +37,36 @@ void network_receive_voicechat_frame(struct Packet* p) {
     );
 }
 
-void network_send_voicechat_muted(u8 globalIndex, bool global, bool muted) {
+void network_send_voicechat_muted(u8 globalIndex, u8 mask, bool muted) {
     struct Packet p = {};
 
     packet_init(&p, PACKET_VOICECHAT_MUTE, false, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
-    packet_write(&p, &global, sizeof(bool));
+    packet_write(&p, &mask, sizeof(u8));
     packet_write(&p, &muted, sizeof(bool));
 
-    if (global) network_send(&p);
-    else network_send_to(gNetworkPlayers[globalIndex].localIndex, &p);
+    if (mask == VOICECHAT_MUTE_LOCAL) network_send_to(gNetworkPlayers[globalIndex].localIndex, &p);
+    else network_send(&p);
 }
 
 void network_receive_voicechat_muted(struct Packet* p) {
-    u8 globalIndex;
-    bool muted, global;
+    u8 globalIndex, mask;
+    bool muted;
 
     packet_read(p, &globalIndex, sizeof(u8));
-    packet_read(p, &global, sizeof(bool));
+    packet_read(p, &mask, sizeof(u8));
     packet_read(p, &muted, sizeof(bool));
 
     struct NetworkPlayer* sender = network_player_from_global_index(p->orderedFromGlobalId);
     struct NetworkPlayer* receiver = network_player_from_global_index(globalIndex);
 
-    if (global) {
-        if (!sender->moderator && sender->globalIndex != 0) return;
+    if (!sender->moderator && sender->globalIndex != 0) mask &= ~VOICECHAT_MUTE_GLOBAL;
 
+    if (mask & VOICECHAT_MUTE_GLOBAL) {
         if (muted) *voicechat_player_muted(receiver->localIndex) |=  VOICECHAT_MUTE_GLOBAL;
         else       *voicechat_player_muted(receiver->localIndex) &= ~VOICECHAT_MUTE_GLOBAL;
     }
-    else voicechat_others_muted[sender->localIndex] = muted;
+
+    if (muted) voicechat_others_muted[sender->localIndex] |=  (mask & ~VOICECHAT_MUTE_GLOBAL);
+    else       voicechat_others_muted[sender->localIndex] &= ~(mask & ~VOICECHAT_MUTE_GLOBAL);
 }

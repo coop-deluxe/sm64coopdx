@@ -6,7 +6,17 @@
 extern bool voicechat_loopback;
 extern float voicechat_mic_level;
 
-extern bool voicechat_others_muted[MAX_PLAYERS];
+enum VoiceChatType {
+    VOICECHAT_TYPE_DISABLED,
+    VOICECHAT_TYPE_VOICE,
+    VOICECHAT_TYPE_PROXIMITY,
+};
+
+enum VoiceChatActivationMode {
+    VOICECHAT_ACTMODE_DISABLED,
+    VOICECHAT_ACTMODE_PUSH_TO_TALK,
+    VOICECHAT_ACTMODE_THRESHOLD
+};
 
 extern enum VoiceChatError {
     VOICECHAT_ERR_NONE,
@@ -16,24 +26,13 @@ extern enum VoiceChatError {
     VOICECHAT_ERR_FAILED_TO_DECODE,
 } voicechat_error[MAX_PLAYERS];
 
-enum VoiceChatActivationMode {
-    VOICECHAT_ACTMODE_DISABLED,
-    VOICECHAT_ACTMODE_PUSH_TO_TALK,
-    VOICECHAT_ACTMODE_THRESHOLD
-};
-
-enum VoiceChatMuteState {
+extern enum VoiceChatMuteState {
     VOICECHAT_UNMUTED     = 0,
 
-    VOICECHAT_MUTE_LOCAL  = (1 << 0),
-    VOICECHAT_MUTE_GLOBAL = (1 << 1),
-};
-
-enum {
-    VOICECHAT_TYPE_DISABLED,
-    VOICECHAT_TYPE_VOICE,
-    VOICECHAT_TYPE_PROXIMITY,
-};
+    VOICECHAT_MUTE_LOCAL    = (1 << 0),
+    VOICECHAT_MUTE_GLOBAL   = (1 << 1),
+    VOICECHAT_MUTE_DEAFENED = (1 << 2),
+} voicechat_others_muted[MAX_PLAYERS];
 
 void voicechat_init();
 bool voicechat_inited();

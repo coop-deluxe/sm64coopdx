@@ -107,12 +107,12 @@ static void toggle_mute(struct DjuiBase* caller) {
     if (mic->global) {
         if (*mute_state & VOICECHAT_MUTE_GLOBAL) *mute_state &= ~VOICECHAT_MUTE_GLOBAL;
         else *mute_state |= VOICECHAT_MUTE_GLOBAL;
-        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, true, *mute_state & VOICECHAT_MUTE_GLOBAL);
+        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, VOICECHAT_MUTE_GLOBAL, *mute_state & VOICECHAT_MUTE_GLOBAL);
     }
     else {
         if (*mute_state & VOICECHAT_MUTE_LOCAL) *mute_state &= ~VOICECHAT_MUTE_LOCAL;
         else *mute_state |= VOICECHAT_MUTE_LOCAL;
-        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, false, *mute_state & VOICECHAT_MUTE_LOCAL);
+        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, VOICECHAT_MUTE_LOCAL, *mute_state & VOICECHAT_MUTE_LOCAL);
     }
     get_microphone_icon(&mic->button->icon->textureInfo, mic->player_id, mic->global);
 }

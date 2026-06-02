@@ -102,3 +102,7 @@ ALIGNED8 const Texture texture_microphone_black_icon_muted[] = {
 ALIGNED8 const Texture texture_microphone_warning[] = {
 #include "textures/segment2/custom_microphone_warning.rgba16.inc.c"
 };
+
+ALIGNED8 const Texture texture_headphones[] = {
+#include "textures/segment2/custom_headphones.rgba16.inc.c"
+};

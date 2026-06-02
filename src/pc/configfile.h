@@ -106,6 +106,7 @@ extern unsigned int configKeyPrevPage[MAX_BINDS];
 extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
 extern unsigned int configKeyMuteMic[MAX_BINDS];
+extern unsigned int configKeyDeafen[MAX_BINDS];
 extern unsigned int configKeyPushToTalk[MAX_BINDS];
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;

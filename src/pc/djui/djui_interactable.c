@@ -230,10 +230,11 @@ bool djui_interactable_on_key_down(int scancode) {
     }
 
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
-        bool pressChat = false, pressMute = false, pressPushToTalk = false;
+        bool pressChat = false, pressMute = false, pressDeafen = false, pressPushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyChat[i]) pressChat = true;
             if (scancode == (int)configKeyMuteMic[i]) pressMute = true;
+            if (scancode == (int)configKeyDeafen[i]) pressDeafen = true;
             if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
@@ -243,10 +244,15 @@ bool djui_interactable_on_key_down(int scancode) {
             if (*mute_state & VOICECHAT_MUTE_LOCAL) *mute_state &= ~VOICECHAT_MUTE_LOCAL;
             else *mute_state |= VOICECHAT_MUTE_LOCAL;
         }
+        if (pressDeafen) {
+            if (*mute_state & VOICECHAT_MUTE_DEAFENED) *mute_state &= ~VOICECHAT_MUTE_DEAFENED;
+            else *mute_state |= VOICECHAT_MUTE_DEAFENED;
+            network_send_voicechat_muted(gNetworkPlayers[0].globalIndex, VOICECHAT_MUTE_DEAFENED, *mute_state & VOICECHAT_MUTE_DEAFENED);
+        }
         if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
            *mute_state &= ~VOICECHAT_MUTE_LOCAL;
 
-        return pressChat || pressMute || pressPushToTalk;
+        return pressChat || pressMute || pressDeafen || pressPushToTalk;
     }
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {

@@ -283,7 +283,7 @@ void network_receive_death(struct Packet* p);
 // packet_voicechat.c
 void network_send_voicechat_frame(void);
 void network_receive_voicechat_frame(struct Packet* p);
-void network_send_voicechat_muted(u8 globalIndex, bool global, bool mute);
+void network_send_voicechat_muted(u8 globalIndex, u8 mask, bool mute);
 void network_receive_voicechat_muted(struct Packet* p);
 
 // packet_ping.c

@@ -185,7 +185,7 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
 
-    // force disable proximity chat if in a public lobby
+    // force disable voice chat if in a public lobby
     if (gNetworkSystem == &gNetworkSystemCoopNet && gCoopNetPassword[0] == 0)
         gServerSettings.voiceChat = VOICECHAT_TYPE_DISABLED;
 

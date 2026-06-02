@@ -599,7 +599,8 @@ void render_hud_voicechat(void) {
 
     const Texture* tex = NULL;
     if (voicechat_error[0] != VOICECHAT_ERR_NONE) tex = texture_microphone_warning;
-    else if (*voicechat_player_muted(0) & VOICECHAT_MUTE_GLOBAL) tex = texture_microphone_red_muted;
+    else if (*voicechat_player_muted(0) & VOICECHAT_MUTE_DEAFENED) tex = texture_headphones;
+    else if (*voicechat_player_muted(0) & VOICECHAT_MUTE_GLOBAL)   tex = texture_microphone_red_muted;
     else if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
         if (*voicechat_player_muted(0) != VOICECHAT_UNMUTED) tex = texture_microphone_muted;
         else tex = texture_microphone;

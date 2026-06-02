@@ -132,6 +132,7 @@ static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     
 static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyMuteMic[MAX_BINDS]    = { 0x0032,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDeafen[MAX_BINDS]     = { 0x0031,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyPushToTalk[MAX_BINDS] = { 0x001d,     VK_INVALID, VK_INVALID };
 
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
@@ -161,6 +162,7 @@ unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
 unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0032,     VK_INVALID, VK_INVALID };
+unsigned int configKeyDeafen[MAX_BINDS]           = { 0x0031,     VK_INVALID, VK_INVALID };
 unsigned int configKeyPushToTalk[MAX_BINDS]       = { 0x001d,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
@@ -317,6 +319,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
     {.name = "key_mute_mic",                   .type = CONFIG_TYPE_BIND, .uintValue = configKeyMuteMic},
+    {.name = "key_deafen",                     .type = CONFIG_TYPE_BIND, .uintValue = configKeyDeafen},
     {.name = "key_push_to_talk",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyPushToTalk},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
@@ -904,6 +907,7 @@ void configfile_reset_keybinds(bool extra) {
         memcpy(configKeyNextPage, defaultConfigKeyNextPage, sizeof(configKeyNextPage));
         memcpy(configKeyDisconnect, defaultConfigKeyDisconnect, sizeof(configKeyDisconnect));
         memcpy(configKeyMuteMic, defaultConfigKeyMuteMic, sizeof(configKeyMuteMic));
+        memcpy(configKeyDeafen, defaultConfigKeyDeafen, sizeof(configKeyDeafen));
         memcpy(configKeyPushToTalk, defaultConfigKeyPushToTalk, sizeof(configKeyPushToTalk));
     }
 }

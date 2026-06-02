@@ -44,8 +44,7 @@ static bool inited = false;
 bool voicechat_loopback = false;
 float voicechat_mic_level = 0;
 
-bool voicechat_others_muted[MAX_PLAYERS];
-
+enum VoiceChatMuteState voicechat_others_muted[MAX_PLAYERS];
 enum VoiceChatError voicechat_error[MAX_PLAYERS];
 
 static Buffer loopback_buffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
@@ -254,7 +253,7 @@ u32 voicechat_encode_audio(u8* packet, u32 max_size) {
 
     s32 out = opus_encode(client->encoder, pcm, FRAME_SIZE, packet, max_size);
     if (out < 0) {
-        fprintf(stderr, "[PROXIMITY CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
+        fprintf(stderr, "[VOICE CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
         voicechat_error[0] = VOICECHAT_ERR_FAILED_TO_ENCODE;
         return 0;
     }
@@ -268,7 +267,7 @@ void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size) {
     s16 pcm[FRAME_SIZE * sizeof(s16)];
     s32 num_frames = opus_decode(players[id].decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
     if (num_frames < 0) {
-        fprintf(stderr, "[PROXIMITY CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
+        fprintf(stderr, "[VOICE CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
         voicechat_error[id] = VOICECHAT_ERR_FAILED_TO_DECODE;
         return;
     }
@@ -284,7 +283,7 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         players[i].talking = false;
 
-        if (!voicechat_is_ingame(i) || players[i].muted_state != VOICECHAT_UNMUTED) {
+        if (!voicechat_is_ingame(i) || players[i].muted_state != VOICECHAT_UNMUTED || client->muted_state & VOICECHAT_MUTE_DEAFENED) {
             buffer_drain(&players[i].audio);
             continue;
         }
