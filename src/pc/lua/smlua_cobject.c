@@ -15,6 +15,7 @@
 #include "pc/lua/utils/smlua_collision_utils.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/mods/mods.h"
+#include "pc/voice_chat.h"
 
 extern struct LuaObjectTable sLuaObjectTable[LOT_MAX];
 
@@ -829,6 +830,8 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
 
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStackPrev, MATRIX_STACK_SIZE);
+
+    EXPOSE_GLOBAL_ARRAY(LOT_VOICEPLAYER, gVoicePlayers, MAX_PLAYERS);
 
     // Structs
 

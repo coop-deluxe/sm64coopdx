@@ -101,6 +101,12 @@ gNametagsSettings = {}
 --- Struct containing the flags for the hud display
 gHudDisplay = {}
 
+--- @type VoicePlayer
+--- Voice chat related information for players
+--- - Indexed by the player's local index
+--- - Shouldn't be accessed if `gServerSettings.voiceChat == VOICECHAT_TYPE_DISABLED` is true
+gVoicePlayers = {}
+
 -----------
 -- hooks --
 -----------
