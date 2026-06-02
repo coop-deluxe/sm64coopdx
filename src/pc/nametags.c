@@ -175,11 +175,11 @@ void nametags_render(void) {
 
         // render mic icon
         const char* mic = NULL;
-        if       (voicechat_error[playerIndex] != VOICECHAT_ERR_NONE) mic = "texture_microphone_warning";
-        else if  (voicechat_others_muted[playerIndex] & VOICECHAT_MUTE_DEAFENED) mic = "texture_headphones";
-        else if (*voicechat_player_muted(playerIndex) & VOICECHAT_MUTE_GLOBAL)   mic = "texture_microphone_red_muted";
-        else if (*voicechat_player_muted(playerIndex) & VOICECHAT_MUTE_LOCAL)    mic = "texture_microphone_muted";
-        else if  (voicechat_player_is_talking(playerIndex)) mic = "texture_microphone";
+        if      (gVoicePlayers[playerIndex].error != VOICECHAT_ERR_NONE) mic = "texture_microphone_warning";
+        else if (gVoicePlayers[playerIndex].playerMutedState & VOICECHAT_MUTE_DEAFENED) mic = "texture_headphones";
+        else if (gVoicePlayers[playerIndex].clientMutedState & VOICECHAT_MUTE_GLOBAL)   mic = "texture_microphone_red_muted";
+        else if (gVoicePlayers[playerIndex].clientMutedState & VOICECHAT_MUTE_LOCAL)    mic = "texture_microphone_muted";
+        else if (gVoicePlayers[playerIndex].talking) mic = "texture_microphone";
         if (mic) {
             struct TextureInfo texture;
             dynos_texture_get(mic, &texture);

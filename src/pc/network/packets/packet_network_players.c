@@ -6,6 +6,7 @@
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/moderator_list.h"
+#include "pc/voice_chat.h"
 
 static void network_send_to_network_players(u8 sendToLocalIndex) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
@@ -134,6 +135,9 @@ void network_receive_network_players(struct Packet *p) {
                 np->palette      = palette;
                 network_player_update_model(localIndex);
             }
+
+            if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED)
+                voicechat_init_player(localIndex);
         }
     }
 }

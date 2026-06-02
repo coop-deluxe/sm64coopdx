@@ -238,19 +238,10 @@ bool djui_interactable_on_key_down(int scancode) {
             if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
-        u32* mute_state = voicechat_player_muted(0);
         if (pressChat) djui_chat_box_toggle();
-        if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
-            if (*mute_state & VOICECHAT_MUTE_LOCAL) *mute_state &= ~VOICECHAT_MUTE_LOCAL;
-            else *mute_state |= VOICECHAT_MUTE_LOCAL;
-        }
-        if (pressDeafen) {
-            if (*mute_state & VOICECHAT_MUTE_DEAFENED) *mute_state &= ~VOICECHAT_MUTE_DEAFENED;
-            else *mute_state |= VOICECHAT_MUTE_DEAFENED;
-            network_send_voicechat_muted(gNetworkPlayers[0].globalIndex, VOICECHAT_MUTE_DEAFENED, *mute_state & VOICECHAT_MUTE_DEAFENED);
-        }
-        if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
-           *mute_state &= ~VOICECHAT_MUTE_LOCAL;
+        if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) voicechat_toggle_mute();
+        if (pressDeafen) voicechat_toggle_deafen();
+        if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(false);
 
         return pressChat || pressMute || pressDeafen || pressPushToTalk;
     }
@@ -310,8 +301,7 @@ void djui_interactable_on_key_up(int scancode) {
             if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
         }
 
-        if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
-            *voicechat_player_muted(0) |= VOICECHAT_MUTE_LOCAL;
+        if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
     }
 
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {

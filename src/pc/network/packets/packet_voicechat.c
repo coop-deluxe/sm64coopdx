@@ -16,7 +16,7 @@ void network_send_voicechat_frame(void) {
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) continue;
-        if (voicechat_others_muted[i]) continue;
+        if (gVoicePlayers[i].playerMutedState) continue;
         network_send_to(i, &p);
     }
 }
@@ -63,10 +63,10 @@ void network_receive_voicechat_muted(struct Packet* p) {
     if (!sender->moderator && sender->globalIndex != 0) mask &= ~VOICECHAT_MUTE_GLOBAL;
 
     if (mask & VOICECHAT_MUTE_GLOBAL) {
-        if (muted) *voicechat_player_muted(receiver->localIndex) |=  VOICECHAT_MUTE_GLOBAL;
-        else       *voicechat_player_muted(receiver->localIndex) &= ~VOICECHAT_MUTE_GLOBAL;
+        if (muted) gVoicePlayers[receiver->localIndex].clientMutedState |=  VOICECHAT_MUTE_GLOBAL;
+        else       gVoicePlayers[receiver->localIndex].clientMutedState &= ~VOICECHAT_MUTE_GLOBAL;
     }
 
-    if (muted) voicechat_others_muted[sender->localIndex] |=  (mask & ~VOICECHAT_MUTE_GLOBAL);
-    else       voicechat_others_muted[sender->localIndex] &= ~(mask & ~VOICECHAT_MUTE_GLOBAL);
+    if (muted) gVoicePlayers[sender->localIndex].playerMutedState |=  (mask & ~VOICECHAT_MUTE_GLOBAL);
+    else       gVoicePlayers[sender->localIndex].playerMutedState &= ~(mask & ~VOICECHAT_MUTE_GLOBAL);
 }

@@ -17,9 +17,7 @@ static void djui_panel_sound_value_change(UNUSED struct DjuiBase* caller) {
 static void djui_panel_mode_value_change(UNUSED struct DjuiBase* caller) {
     djui_base_set_enabled(activation_threshold_slider, configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD);
 
-    u32* mute_state = voicechat_player_muted(0);
-    if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) *mute_state |= VOICECHAT_MUTE_LOCAL;
-    else *mute_state &= ~VOICECHAT_MUTE_LOCAL;
+    voicechat_set_mute(configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK);
 }
 
 static void djui_panel_threshold_value_change(UNUSED struct DjuiBase* caller) {
@@ -27,7 +25,7 @@ static void djui_panel_threshold_value_change(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_voicechat_back(struct DjuiBase* caller) {
-    voicechat_loopback = false;
+    gVoiceChatLoopback = false;
     djui_panel_menu_back(caller);
 }
 
@@ -46,8 +44,8 @@ void djui_panel_voice_chat_create(struct DjuiBase* caller) {
         activation_threshold_slider = &djui_slider_create(body, DLANG(VOICECHAT, ACTIVATION_THRESHOLD), &configVoiceChatActivationThreshold, 0, 100, djui_panel_threshold_value_change)->base;
 
         djui_progress_bar_create(body, &threshold, 0, 1, false);
-        djui_progress_bar_create(body, &voicechat_mic_level, 0, 1, false);
-        djui_checkbox_create(body, DLANG(VOICECHAT, LOOPBACK), &voicechat_loopback, NULL);
+        djui_progress_bar_create(body, &gVoiceChatMicLevel, 0, 1, false);
+        djui_checkbox_create(body, DLANG(VOICECHAT, LOOPBACK), &gVoiceChatLoopback, NULL);
 
         djui_panel_mode_value_change(NULL);
         djui_panel_threshold_value_change(NULL);
@@ -79,18 +77,17 @@ static bool is_dark_theme() {
 }
 
 static void get_microphone_icon(struct TextureInfo* tex, s32 player, bool red) {
-    u32* mute_state = voicechat_player_muted(player);
     if (red) {
-        if (*mute_state & VOICECHAT_MUTE_GLOBAL) dynos_texture_get("texture_microphone_red_icon_muted", tex);
+        if (gVoicePlayers[player].clientMutedState & VOICECHAT_MUTE_GLOBAL) dynos_texture_get("texture_microphone_red_icon_muted", tex);
         else dynos_texture_get("texture_microphone_red_icon", tex);
     }
     else {
         if (is_dark_theme()) {
-            if (*mute_state & VOICECHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_icon_muted", tex);
+            if (gVoicePlayers[player].clientMutedState & VOICECHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_icon_muted", tex);
             else dynos_texture_get("texture_microphone_icon", tex);
         }
         else {
-            if (*mute_state & VOICECHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_black_icon_muted", tex);
+            if (gVoicePlayers[player].clientMutedState & VOICECHAT_MUTE_LOCAL) dynos_texture_get("texture_microphone_black_icon_muted", tex);
             else dynos_texture_get("texture_microphone_black_icon", tex);
         }
     }
@@ -103,17 +100,9 @@ static void toggle_mute(struct DjuiBase* caller) {
     }
     if (!mic) return;
 
-    u32* mute_state = voicechat_player_muted(mic->player_id);
-    if (mic->global) {
-        if (*mute_state & VOICECHAT_MUTE_GLOBAL) *mute_state &= ~VOICECHAT_MUTE_GLOBAL;
-        else *mute_state |= VOICECHAT_MUTE_GLOBAL;
-        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, VOICECHAT_MUTE_GLOBAL, *mute_state & VOICECHAT_MUTE_GLOBAL);
-    }
-    else {
-        if (*mute_state & VOICECHAT_MUTE_LOCAL) *mute_state &= ~VOICECHAT_MUTE_LOCAL;
-        else *mute_state |= VOICECHAT_MUTE_LOCAL;
-        network_send_voicechat_muted(gNetworkPlayers[mic->player_id].globalIndex, VOICECHAT_MUTE_LOCAL, *mute_state & VOICECHAT_MUTE_LOCAL);
-    }
+    if (mic->global) voicechat_toggle_global_mute(mic->player_id);
+    else voicechat_toggle_mute_other(mic->player_id);
+
     get_microphone_icon(&mic->button->icon->textureInfo, mic->player_id, mic->global);
 }
 
@@ -149,7 +138,7 @@ static void djui_panel_voice_chat_add_players(struct DjuiBase* body) {
 
         struct DjuiButton* gmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(gmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
         struct DjuiButton* lmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(lmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
-        struct DjuiSlider* vol   = djui_slider_create(&inner_layout->base, gNetworkPlayers[i].name, voicechat_player_volume(i), 0, 100, NULL);
+        struct DjuiSlider* vol   = djui_slider_create(&inner_layout->base, gNetworkPlayers[i].name, &gVoicePlayers[i].volume, 0, 200, NULL);
 
         sMicButtons[button_counter++] = (struct MicButton){ .base = &lmute->base, .button = lmute, .player_id = i, .global = false };
         sMicButtons[button_counter++] = (struct MicButton){ .base = &gmute->base, .button = gmute, .player_id = i, .global = true };

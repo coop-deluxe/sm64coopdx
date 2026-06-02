@@ -21,33 +21,14 @@
 #define HEARING_RADIUS 8192
 #define FULL_VOL_RADIUS 1024
 
-typedef struct {
-    bool dynamic;
-    u32 size, capacity;
-    u32 tail, head;
-    u8* bytes;
-} Buffer;
+bool gVoiceChatLoopback = false;
+float gVoiceChatMicLevel = 0;
+s32 gVoiceChatDefaultChannel = 0;
 
-static struct {
-    bool talking;
-    u32 muted_state;
-    u32 volume;
-    Buffer audio;
-    union {
-        OpusEncoder* encoder;
-        OpusDecoder* decoder;
-    };
-} players[MAX_PLAYERS], *client = &players[0];
+struct VoicePlayer gVoicePlayers[MAX_PLAYERS];
+struct VoicePlayer* gVoicePlayer = &gVoicePlayers[0];
 
-static bool inited = false;
-
-bool voicechat_loopback = false;
-float voicechat_mic_level = 0;
-
-enum VoiceChatMuteState voicechat_others_muted[MAX_PLAYERS];
-enum VoiceChatError voicechat_error[MAX_PLAYERS];
-
-static Buffer loopback_buffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
+static struct VoiceBuffer sLoopbackBuffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
 
 static const char* get_opus_error(int err) {
     switch (err) {
@@ -61,7 +42,7 @@ static const char* get_opus_error(int err) {
     }
 }
 
-static u32 buffer_read(Buffer* buffer, u32 bytes, void* out) {
+static u32 buffer_read(struct VoiceBuffer* buffer, u32 bytes, void* out) {
     if (bytes > buffer->size) bytes = buffer->size;
     for (u32 i = 0; i < bytes; i++) {
         if (out) ((u8*)out)[i] = buffer->bytes[buffer->tail];
@@ -71,7 +52,7 @@ static u32 buffer_read(Buffer* buffer, u32 bytes, void* out) {
     return bytes;
 }
 
-static void buffer_grow(Buffer* buffer, u32 bytes) {
+static void buffer_grow(struct VoiceBuffer* buffer, u32 bytes) {
     if (buffer->dynamic && buffer->size + bytes > buffer->capacity) {
         buffer->capacity = buffer->size + bytes;
         if (buffer->capacity % 1024) buffer->capacity += 1024 - (buffer->capacity % 1024);
@@ -89,7 +70,7 @@ static void buffer_grow(Buffer* buffer, u32 bytes) {
     if (!buffer->bytes) buffer->bytes = malloc(buffer->capacity);
 }
 
-static void buffer_write(Buffer* buffer, u32 bytes, void* data) {
+static void buffer_write(struct VoiceBuffer* buffer, u32 bytes, void* data) {
     buffer_grow(buffer, bytes);
     for (u32 i = 0; i < bytes; i++) {
         buffer->bytes[buffer->head] = data ? ((u8*)data)[i] : 0;
@@ -99,11 +80,11 @@ static void buffer_write(Buffer* buffer, u32 bytes, void* data) {
     if (buffer->size > buffer->capacity) buffer->size = buffer->capacity;
 }
 
-static void buffer_drain(Buffer* buffer) {
+static void buffer_drain(struct VoiceBuffer* buffer) {
     buffer->head = buffer->tail = buffer->size = 0;
 }
 
-static u32 voicechat_num_frames_in_buffer(Buffer* buffer) {
+static u32 voicechat_num_frames_in_buffer(struct VoiceBuffer* buffer) {
     return buffer->size / FRAME_SIZE / sizeof(s16);
 }
 
@@ -138,7 +119,7 @@ static bool is_below_threshold() {
     if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) return false;
     
     static int decay = 0;
-    if (voicechat_mic_level < configVoiceChatActivationThreshold / 100.f) {
+    if (gVoiceChatMicLevel < configVoiceChatActivationThreshold / 100.f) {
         if (decay > 0) {
             decay--;
             return false;
@@ -163,116 +144,113 @@ static void voicechat_callback(const u8* input, u32 bytes) {
         sum += abs(samples[i]);
     }
     avg = sum / num_samples;
-    voicechat_mic_level = 1 - powf(1 - avg / 32767.f, 10);
+    gVoiceChatMicLevel = 1 - powf(1 - avg / 32767.f, 10);
 
-    if (voicechat_loopback)
-        buffer_write(&loopback_buffer, bytes, samples);
+    if (gVoiceChatLoopback)
+        buffer_write(&sLoopbackBuffer, bytes, samples);
 
-    if (!inited || gNetworkType == NT_NONE ||
-        configVoiceChatActivationMode == VOICECHAT_ACTMODE_DISABLED ||
-        !gServerSettings.voiceChat || client->muted_state != VOICECHAT_UNMUTED ||
+    if (gNetworkType == NT_NONE || configVoiceChatActivationMode == VOICECHAT_ACTMODE_DISABLED ||
+        !gServerSettings.voiceChat || gVoicePlayer->clientMutedState != VOICECHAT_UNMUTED ||
         is_below_threshold()
     ) {
         // drain the pcm buffer
-        client->talking = false;
-        buffer_drain(&client->audio);
+        gVoicePlayer->talking = false;
+        buffer_drain(&gVoicePlayer->internal.buffer);
         return;
     }
 
-    client->talking = true;
+    gVoicePlayer->talking = true;
 
-    buffer_write(&client->audio, bytes, samples);
+    buffer_write(&gVoicePlayer->internal.buffer, bytes, samples);
 
-    if (voicechat_num_frames_in_buffer(&client->audio) >= MIN_FRAMES_REQUIRED)
+    if (voicechat_num_frames_in_buffer(&gVoicePlayer->internal.buffer) >= MIN_FRAMES_REQUIRED)
         network_send_voicechat_frame();
 }
 
 void voicechat_init() {
     gAudioApi->record_callback(voicechat_callback);
+}
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        int err;
-        if (i == 0) {
-            players[i].encoder = opus_encoder_create(INTERNAL_SAMPLE_RATE, 1, OPUS_APPLICATION_VOIP, &err);
-            if (err >= 0) opus_encoder_ctl(players[i].encoder, OPUS_SET_BITRATE(BITRATE));
-        }
-        else {
-            players[i].decoder = opus_decoder_create(INTERNAL_SAMPLE_RATE, 1, &err);
-        }
-
-        if (err < 0) {
-            fprintf(stderr, "[VOICECHAT] Failed to initialize player %d: %s\n", i, get_opus_error(err));
-            voicechat_error[i] = VOICECHAT_ERR_FAILED_TO_INITIALIZE;
-        }
-        else voicechat_error[i] = VOICECHAT_ERR_NONE;
-
-        players[i].audio.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
-        players[i].audio.dynamic = false;
-        players[i].volume = 100;
+static void voicechat_shutdown_player(s32 id) {
+    if (id == 0) {
+        if (gVoicePlayers[id].internal.encoder) opus_encoder_destroy(gVoicePlayers[id].internal.encoder);
+        gVoicePlayers[id].internal.encoder = NULL;
+    }
+    else {
+        if (gVoicePlayers[id].internal.decoder) opus_decoder_destroy(gVoicePlayers[id].internal.decoder);
+        gVoicePlayers[id].internal.decoder = NULL;
     }
 
-    if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
-        client->muted_state |= VOICECHAT_MUTE_LOCAL;
-
-    inited = true;
+    buffer_drain(&gVoicePlayers[id].internal.buffer);
+    free(gVoicePlayers[id].internal.buffer.bytes);
+    gVoicePlayers[id].internal.buffer.bytes = NULL;
 }
 
 void voicechat_shutdown() {
-    if (!inited) return;
-
-    if (client->encoder) opus_encoder_destroy(client->encoder);
-    for (int i = 1; i < MAX_PLAYERS; i++) {
-        if (players[i].decoder) opus_decoder_destroy(players[i].decoder);
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        voicechat_shutdown_player(i);
     }
-    
-    inited = false;
 }
 
-bool voicechat_inited() {
-    return inited;
-}
+void voicechat_init_player(s32 id) {
+    // clear any previous state
+    voicechat_shutdown_player(id);
 
-u32* voicechat_player_muted(s32 id) {
-    return &players[id].muted_state;
-}
+    int err;
+    if (id == 0) {
+        gVoicePlayers[id].internal.encoder = opus_encoder_create(INTERNAL_SAMPLE_RATE, 1, OPUS_APPLICATION_VOIP, &err);
+        if (err >= 0) opus_encoder_ctl(gVoicePlayers[id].internal.encoder, OPUS_SET_BITRATE(BITRATE));
+    }
+    else {
+        gVoicePlayers[id].internal.decoder = opus_decoder_create(INTERNAL_SAMPLE_RATE, 1, &err);
+    }
 
-u32* voicechat_player_volume(s32 id) {
-    return &players[id].volume;
-}
+    if (err < 0) {
+        fprintf(stderr, "[VOICE CHAT] Failed to initialize player %d: %s\n", id, get_opus_error(err));
+        gVoicePlayers[id].error = VOICECHAT_ERR_FAILED_TO_INITIALIZE;
+    }
+    else gVoicePlayers[id].error = VOICECHAT_ERR_NONE;
 
-bool voicechat_player_is_talking(s32 id) {
-    return players[id].talking;
+    gVoicePlayers[id].internal.buffer.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
+    gVoicePlayers[id].internal.buffer.dynamic = false;
+    gVoicePlayers[id].volume = 100;
+    gVoicePlayers[id].talking = false;
+    gVoicePlayers[id].clientMutedState = 0;
+    gVoicePlayers[id].playerMutedState = 0;
+
+    if (id == 0 && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
+        gVoicePlayers[id].clientMutedState |= VOICECHAT_MUTE_LOCAL;
 }
 
 u32 voicechat_encode_audio(u8* packet, u32 max_size) {
     s16 pcm[FRAME_SIZE];
-    u32 bytes_read = buffer_read(&client->audio, FRAME_SIZE * sizeof(s16), pcm);
+    u32 bytes_read = buffer_read(&gVoicePlayer->internal.buffer, FRAME_SIZE * sizeof(s16), pcm);
     memset((u8*)pcm + bytes_read, 0, sizeof(pcm) - bytes_read);
 
-    if (!client->encoder) return 0;
+    if (!gVoicePlayer->internal.encoder) return 0;
 
-    s32 out = opus_encode(client->encoder, pcm, FRAME_SIZE, packet, max_size);
+    s32 out = opus_encode(gVoicePlayer->internal.encoder, pcm, FRAME_SIZE, packet, max_size);
     if (out < 0) {
         fprintf(stderr, "[VOICE CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
-        voicechat_error[0] = VOICECHAT_ERR_FAILED_TO_ENCODE;
+        gVoicePlayers[0].error = VOICECHAT_ERR_FAILED_TO_ENCODE;
         return 0;
     }
-    voicechat_error[0] = VOICECHAT_ERR_NONE;
+    gVoicePlayers[0].error = VOICECHAT_ERR_NONE;
     return out;
 }
 
 void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size) {
-    if (!voicechat_is_ingame(id) || !players[id].decoder) return;
+    if (!voicechat_is_ingame(id) || !gVoicePlayers[id].internal.decoder) return;
 
     s16 pcm[FRAME_SIZE * sizeof(s16)];
-    s32 num_frames = opus_decode(players[id].decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
+    s32 num_frames = opus_decode(gVoicePlayers[id].internal.decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
     if (num_frames < 0) {
         fprintf(stderr, "[VOICE CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
-        voicechat_error[id] = VOICECHAT_ERR_FAILED_TO_DECODE;
+        gVoicePlayers[id].error = VOICECHAT_ERR_FAILED_TO_DECODE;
         return;
     }
-    voicechat_error[id] = VOICECHAT_ERR_NONE;
-    buffer_write(&players[id].audio, num_frames * sizeof(s16), pcm);
+    gVoicePlayers[id].error = VOICECHAT_ERR_NONE;
+    buffer_write(&gVoicePlayers[id].internal.buffer, num_frames * sizeof(s16), pcm);
 }
 
 void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
@@ -281,19 +259,19 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
 
     // skip over player 0 because thats the client
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
-        players[i].talking = false;
+        gVoicePlayers[i].talking = false;
 
-        if (!voicechat_is_ingame(i) || players[i].muted_state != VOICECHAT_UNMUTED || client->muted_state & VOICECHAT_MUTE_DEAFENED) {
-            buffer_drain(&players[i].audio);
+        if (!voicechat_is_ingame(i) || gVoicePlayers[i].clientMutedState != VOICECHAT_UNMUTED || gVoicePlayer->clientMutedState & VOICECHAT_MUTE_DEAFENED) {
+            buffer_drain(&gVoicePlayers[i].internal.buffer);
             continue;
         }
 
-        if (voicechat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
+        if (voicechat_num_frames_in_buffer(&gVoicePlayers[i].internal.buffer) < MIN_FRAMES_REQUIRED) continue;
 
-        players[i].talking = true;
+        gVoicePlayers[i].talking = true;
         
         s16 player_pcm[num_samples];
-        u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
+        u32 n = buffer_read(&gVoicePlayers[i].internal.buffer, sizeof(player_pcm), player_pcm) / sizeof(s16);
         memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
 
         f32 vol_left = 1, vol_right = 1;
@@ -325,14 +303,14 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
         for (s32 s = 0; s < num_samples * 2; s++) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;
 
-            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * (players[i].volume / 100.f) * (configVoiceChatVolume / 127.f));
+            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * (gVoicePlayers[i].volume / 100.f) * (configVoiceChatVolume / 127.f));
             mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
         }
     }
 
-    if (voicechat_loopback) {
+    if (gVoiceChatLoopback) {
         s16 pcm[num_samples];
-        u32 n = buffer_read(&loopback_buffer, sizeof(pcm), pcm) / sizeof(s16);
+        u32 n = buffer_read(&sLoopbackBuffer, sizeof(pcm), pcm) / sizeof(s16);
         memset(pcm + n, 0, sizeof(pcm) - n * sizeof(s16));
 
         for (s32 s = 0; s < num_samples * 2; s++) {
@@ -342,4 +320,45 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     }
 
     mix_and_resample_stereo_pcm(out_pcm, mixed, num_out_samples, num_samples);
+}
+
+void voicechat_toggle_mute() {
+    voicechat_set_mute(!(gVoicePlayer->clientMutedState & VOICECHAT_MUTE_LOCAL));
+}
+
+void voicechat_toggle_global_mute(s32 id) {
+    voicechat_set_global_mute(id, !(gVoicePlayers[id].clientMutedState & VOICECHAT_MUTE_GLOBAL));
+}
+
+void voicechat_toggle_mute_other(s32 id) {
+    voicechat_set_mute_other(id, !(gVoicePlayers[id].clientMutedState & VOICECHAT_MUTE_LOCAL));
+}
+
+void voicechat_toggle_deafen() {
+    voicechat_set_deafen(!(gVoicePlayer->clientMutedState & VOICECHAT_MUTE_DEAFENED));
+}
+
+void voicechat_set_mute(bool muted) {
+    if (muted) gVoicePlayer->clientMutedState |=  VOICECHAT_MUTE_LOCAL;
+    else       gVoicePlayer->clientMutedState &= ~VOICECHAT_MUTE_LOCAL;
+}
+
+void voicechat_set_global_mute(s32 id, bool muted) {
+    if (!gNetworkPlayers[0].moderator && gNetworkPlayers[0].globalIndex != 0) return;
+    
+    if (muted) gVoicePlayers[id].clientMutedState |=  VOICECHAT_MUTE_GLOBAL;
+    else       gVoicePlayers[id].clientMutedState &= ~VOICECHAT_MUTE_GLOBAL;
+    network_send_voicechat_muted(gNetworkPlayers[id].globalIndex, VOICECHAT_MUTE_GLOBAL, muted);
+}
+
+void voicechat_set_mute_other(s32 id, bool muted) {
+    if (muted) gVoicePlayers[id].clientMutedState |=  VOICECHAT_MUTE_LOCAL;
+    else       gVoicePlayers[id].clientMutedState &= ~VOICECHAT_MUTE_LOCAL;
+    network_send_voicechat_muted(gNetworkPlayers[id].globalIndex, VOICECHAT_MUTE_LOCAL, muted);
+}
+
+void voicechat_set_deafen(bool muted) {
+    if (muted) gVoicePlayer->clientMutedState |=  VOICECHAT_MUTE_DEAFENED;
+    else       gVoicePlayer->clientMutedState &= ~VOICECHAT_MUTE_DEAFENED;
+    network_send_voicechat_muted(gNetworkPlayers[0].globalIndex, VOICECHAT_MUTE_DEAFENED, muted);
 }

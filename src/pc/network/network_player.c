@@ -17,6 +17,7 @@
 #endif
 #include "game/mario.h"
 #include "pc/djui/djui_unicode.h"
+#include "pc/voice_chat.h"
 
 struct NetworkPlayer gNetworkPlayers[MAX_PLAYERS] = { 0 };
 struct NetworkPlayer *gNetworkPlayerLocal = NULL;
@@ -363,6 +364,9 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         discord_activity_update();
     }
 #endif
+
+    if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED)
+        voicechat_init_player(localIndex);
 
     return localIndex;
 }
