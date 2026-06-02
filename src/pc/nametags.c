@@ -8,7 +8,7 @@
 #include "game/camera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
-#include "pc/proximity_chat.h"
+#include "pc/voice_chat.h"
 
 #define FADE_SCALE 4.f
 
@@ -175,10 +175,10 @@ void nametags_render(void) {
 
         // render mic icon
         const char* mic = NULL;
-        if       (proxchat_error[playerIndex] != PROXCHAT_ERR_NONE) mic = "texture_microphone_warning";
-        else if (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_GLOBAL) mic = "texture_microphone_red_muted";
-        else if (*proxchat_player_muted(playerIndex) & PROXCHAT_MUTE_LOCAL)  mic = "texture_microphone_muted";
-        else if  (proxchat_player_is_talking(playerIndex)) mic = "texture_microphone";
+        if       (voicechat_error[playerIndex] != VOICECHAT_ERR_NONE) mic = "texture_microphone_warning";
+        else if (*voicechat_player_muted(playerIndex) & VOICECHAT_MUTE_GLOBAL) mic = "texture_microphone_red_muted";
+        else if (*voicechat_player_muted(playerIndex) & VOICECHAT_MUTE_LOCAL)  mic = "texture_microphone_muted";
+        else if  (voicechat_player_is_talking(playerIndex)) mic = "texture_microphone";
         if (mic) {
             struct TextureInfo texture;
             dynos_texture_get(mic, &texture);

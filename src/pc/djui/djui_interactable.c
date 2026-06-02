@@ -10,7 +10,7 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
-#include "pc/proximity_chat.h"
+#include "pc/voice_chat.h"
 
 #include "sounds.h"
 #include "audio/external.h"
@@ -237,14 +237,14 @@ bool djui_interactable_on_key_down(int scancode) {
             if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
-        u32* mute_state = proxchat_player_muted(0);
+        u32* mute_state = voicechat_player_muted(0);
         if (pressChat) djui_chat_box_toggle();
-        if (pressMute && configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) {
-            if (*mute_state & PROXCHAT_MUTE_LOCAL) *mute_state &= ~PROXCHAT_MUTE_LOCAL;
-            else *mute_state |= PROXCHAT_MUTE_LOCAL;
+        if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
+            if (*mute_state & VOICECHAT_MUTE_LOCAL) *mute_state &= ~VOICECHAT_MUTE_LOCAL;
+            else *mute_state |= VOICECHAT_MUTE_LOCAL;
         }
-        if (pressPushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
-           *mute_state &= ~PROXCHAT_MUTE_LOCAL;
+        if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
+           *mute_state &= ~VOICECHAT_MUTE_LOCAL;
 
         return pressChat || pressMute || pressPushToTalk;
     }
@@ -304,8 +304,8 @@ void djui_interactable_on_key_up(int scancode) {
             if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
         }
 
-        if (disablePushToTalk && configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
-            *proxchat_player_muted(0) |= PROXCHAT_MUTE_LOCAL;
+        if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
+            *voicechat_player_muted(0) |= VOICECHAT_MUTE_LOCAL;
     }
 
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {

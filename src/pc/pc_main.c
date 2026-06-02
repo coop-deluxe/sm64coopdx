@@ -49,7 +49,7 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mods.h"
-#include "pc/proximity_chat.h"
+#include "pc/voice_chat.h"
 
 #include "debug_context.h"
 #include "menu/intro_geo.h"
@@ -346,7 +346,7 @@ inline static void buffer_audio(void) {
     for (s32 i = 0; i < 2; i++) {
         s16* buffer = sAudioBuffer + i * (numAudioSamples * 2);
         create_next_audio_buffer(buffer, numAudioSamples);
-        proxchat_mix(buffer, numAudioSamples);
+        voicechat_mix(buffer, numAudioSamples);
     }
 
     if (!shouldMute) {
@@ -577,7 +577,7 @@ int main(int argc, char *argv[]) {
 
     loading_screen_reset();
 
-    proxchat_init();
+    voicechat_init();
 
     // initialize djui
     djui_init();

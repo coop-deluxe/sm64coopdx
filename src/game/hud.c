@@ -23,7 +23,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
-#include "pc/proximity_chat.h"
+#include "pc/voice_chat.h"
 #include "data/dynos_mgr_builtin_externs.h"
 
 extern bool gDjuiInMainMenu;
@@ -591,22 +591,22 @@ void render_hud_camera_status(void) {
     gSPDisplayList(gDisplayListHead++, dl_hud_img_end);
 }
 
-void render_hud_proxchat(void) {
-    if (!gServerSettings.proximityChat || configProxchatActivationMode == PROXCHAT_ACTMODE_DISABLED) return;
+void render_hud_voicechat(void) {
+    if (gServerSettings.voiceChat == VOICECHAT_TYPE_DISABLED || configVoiceChatActivationMode == VOICECHAT_ACTMODE_DISABLED) return;
     
     s32 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22);
     s32 y = 35;
 
     const Texture* tex = NULL;
-    if (proxchat_error[0] != PROXCHAT_ERR_NONE) tex = texture_microphone_warning;
-    else if (*proxchat_player_muted(0) & PROXCHAT_MUTE_GLOBAL) tex = texture_microphone_red_muted;
-    else if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) {
-        if (*proxchat_player_muted(0) != PROXCHAT_UNMUTED) tex = texture_microphone_muted;
+    if (voicechat_error[0] != VOICECHAT_ERR_NONE) tex = texture_microphone_warning;
+    else if (*voicechat_player_muted(0) & VOICECHAT_MUTE_GLOBAL) tex = texture_microphone_red_muted;
+    else if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
+        if (*voicechat_player_muted(0) != VOICECHAT_UNMUTED) tex = texture_microphone_muted;
         else tex = texture_microphone;
     }
-    else if (configProxchatActivationMode == PROXCHAT_ACTMODE_THRESHOLD) {
-        if (*proxchat_player_muted(0) != PROXCHAT_UNMUTED) tex = texture_microphone_muted;
-        else if (proxchat_player_is_talking(0)) tex = texture_microphone;
+    else if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
+        if (*voicechat_player_muted(0) != VOICECHAT_UNMUTED) tex = texture_microphone_muted;
+        else if (voicechat_player_is_talking(0)) tex = texture_microphone;
         else tex = NULL;
     }
 
@@ -694,8 +694,8 @@ void render_hud(void) {
             render_hud_timer();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_PROXCHAT && showHud) {
-            render_hud_proxchat();
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_VOICECHAT && showHud) {
+            render_hud_voicechat();
         }
     }
 }

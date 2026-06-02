@@ -7,6 +7,7 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "djui_inputbox.h"
+#include "pc/voice_chat.h"
 
 static unsigned int sKnockbackIndex = 0;
 struct DjuiInputbox* sPlayerAmount = NULL;
@@ -79,9 +80,11 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* chkDevMode = djui_checkbox_create(body, DLANG(HOST_SETTINGS, MOD_DEV_MODE), (configNetworkSystem == NS_SOCKET) ? &configModDevMode : &sFalse, NULL);
         djui_base_set_enabled(&chkDevMode->base, configNetworkSystem == NS_SOCKET);
 
-        if (is_public_coopnet_lobby()) configProximityChat = false;
-        struct DjuiCheckbox* chkProxchat = djui_checkbox_create(body, DLANG(HOST_SETTINGS, PROXIMITY_CHAT), &configProximityChat, NULL);
-        djui_base_set_enabled(&chkProxchat->base, !is_public_coopnet_lobby());
+        if (is_public_coopnet_lobby()) configVoiceChat = VOICECHAT_TYPE_DISABLED;
+        struct DjuiSelectionbox* selVoiceChat = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, VOICECHAT), (char*[]){
+            DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
+        }, 3, &configVoiceChat, NULL);
+        djui_base_set_enabled(&selVoiceChat->base, !is_public_coopnet_lobby());
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

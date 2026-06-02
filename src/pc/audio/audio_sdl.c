@@ -4,7 +4,7 @@
 
 #include "audio_api.h"
 
-#include "pc/proximity_chat.h"
+#include "pc/voice_chat.h"
 
 static SDL_AudioDeviceID dev;
 static SDL_AudioDeviceID capture_dev;
@@ -45,7 +45,7 @@ static bool audio_sdl_init(void) {
         .callback = audio_sdl_capture_callback
     }, NULL, 0);
     if (capture_dev == 0) {
-        proxchat_error[0] = PROXCHAT_ERR_NO_MICROPHONE;
+        voicechat_error[0] = VOICECHAT_ERR_NO_MICROPHONE;
         fprintf(stderr, "SDL_OpenAudio capture error: %s\n", SDL_GetError());
         return false;
     }

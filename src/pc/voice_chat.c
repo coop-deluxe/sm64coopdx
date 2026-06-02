@@ -1,4 +1,4 @@
-#include "proximity_chat.h"
+#include "voice_chat.h"
 
 #include "engine/math_util.h"
 #include "game/camera.h"
@@ -41,14 +41,14 @@ static struct {
 
 static bool inited = false;
 
-bool proxchat_loopback = false;
-float proxchat_mic_level = 0;
+bool voicechat_loopback = false;
+float voicechat_mic_level = 0;
 
-bool proxchat_others_muted[MAX_PLAYERS];
+bool voicechat_others_muted[MAX_PLAYERS];
 
-enum ProxchatError proxchat_error[MAX_PLAYERS];
+enum VoiceChatError voicechat_error[MAX_PLAYERS];
 
-static Buffer loopback_buffer = { .capacity = 8192 };
+static Buffer loopback_buffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
 
 static const char* get_opus_error(int err) {
     switch (err) {
@@ -104,15 +104,16 @@ static void buffer_drain(Buffer* buffer) {
     buffer->head = buffer->tail = buffer->size = 0;
 }
 
-static u32 proxchat_num_frames_in_buffer(Buffer* buffer) {
+static u32 voicechat_num_frames_in_buffer(Buffer* buffer) {
     return buffer->size / FRAME_SIZE / sizeof(s16);
 }
 
-static bool proxchat_is_ingame(s32 id) {
-    return gNetworkPlayers[id].connected
-        && gNetworkPlayers[id].currLevelNum  == gNetworkPlayers[0].currLevelNum
-        && gNetworkPlayers[id].currAreaIndex == gNetworkPlayers[0].currAreaIndex
-        && gNetworkPlayers[id].currActNum    == gNetworkPlayers[0].currActNum;
+static bool voicechat_is_ingame(s32 id) {
+    return gNetworkPlayers[id].connected && (gServerSettings.voiceChat == VOICECHAT_TYPE_VOICE || (
+        gNetworkPlayers[id].currLevelNum  == gNetworkPlayers[0].currLevelNum &&
+        gNetworkPlayers[id].currAreaIndex == gNetworkPlayers[0].currAreaIndex &&
+        gNetworkPlayers[id].currActNum    == gNetworkPlayers[0].currActNum
+    ));
 }
 
 static void mix_and_resample_stereo_pcm(s16* dst, const s16* src, u32 dst_frames, u32 src_frames) {
@@ -135,10 +136,10 @@ static void mix_and_resample_stereo_pcm(s16* dst, const s16* src, u32 dst_frames
 }
 
 static bool is_below_threshold() {
-    if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK) return false;
+    if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) return false;
     
     static int decay = 0;
-    if (proxchat_mic_level < configProxchatActivationThreshold / 100.f) {
+    if (voicechat_mic_level < configVoiceChatActivationThreshold / 100.f) {
         if (decay > 0) {
             decay--;
             return false;
@@ -149,28 +150,28 @@ static bool is_below_threshold() {
     return false;
 }
 
-static void proxchat_callback(const u8* input, u32 bytes) {
+static void voicechat_callback(const u8* input, u32 bytes) {
     u32 num_samples = bytes / sizeof(s16);
     s16 samples[num_samples];
     memcpy(samples, input, bytes);
     
     s32 sum = 0, avg;
     for (u32 i = 0; i < num_samples; i++) {
-        s32 with_gain = samples[i] * (int)configProxchatMicrophoneGain / 100;
+        s32 with_gain = samples[i] * (int)configVoiceChatMicrophoneGain / 100;
         if (with_gain < -32767) with_gain = -32767;
         if (with_gain > +32767) with_gain = +32767;
         samples[i] = with_gain;
         sum += abs(samples[i]);
     }
     avg = sum / num_samples;
-    proxchat_mic_level = 1 - powf(1 - avg / 32767.f, 10);
+    voicechat_mic_level = 1 - powf(1 - avg / 32767.f, 10);
 
-    if (proxchat_loopback)
+    if (voicechat_loopback)
         buffer_write(&loopback_buffer, bytes, samples);
 
     if (!inited || gNetworkType == NT_NONE ||
-        configProxchatActivationMode == PROXCHAT_ACTMODE_DISABLED ||
-        !gServerSettings.proximityChat || client->muted_state != PROXCHAT_UNMUTED ||
+        configVoiceChatActivationMode == VOICECHAT_ACTMODE_DISABLED ||
+        !gServerSettings.voiceChat || client->muted_state != VOICECHAT_UNMUTED ||
         is_below_threshold()
     ) {
         // drain the pcm buffer
@@ -183,12 +184,12 @@ static void proxchat_callback(const u8* input, u32 bytes) {
 
     buffer_write(&client->audio, bytes, samples);
 
-    if (proxchat_num_frames_in_buffer(&client->audio) >= MIN_FRAMES_REQUIRED)
-        network_send_proxchat_frame();
+    if (voicechat_num_frames_in_buffer(&client->audio) >= MIN_FRAMES_REQUIRED)
+        network_send_voicechat_frame();
 }
 
-void proxchat_init() {
-    gAudioApi->record_callback(proxchat_callback);
+void voicechat_init() {
+    gAudioApi->record_callback(voicechat_callback);
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         int err;
@@ -201,23 +202,23 @@ void proxchat_init() {
         }
 
         if (err < 0) {
-            fprintf(stderr, "[PROXCHAT] Failed to initialize player %d: %s\n", i, get_opus_error(err));
-            proxchat_error[i] = PROXCHAT_ERR_FAILED_TO_INITIALIZE;
+            fprintf(stderr, "[VOICECHAT] Failed to initialize player %d: %s\n", i, get_opus_error(err));
+            voicechat_error[i] = VOICECHAT_ERR_FAILED_TO_INITIALIZE;
         }
-        else proxchat_error[i] = PROXCHAT_ERR_NONE;
+        else voicechat_error[i] = VOICECHAT_ERR_NONE;
 
         players[i].audio.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
         players[i].audio.dynamic = false;
         players[i].volume = 100;
     }
 
-    if (configProxchatActivationMode == PROXCHAT_ACTMODE_PUSH_TO_TALK)
-        client->muted_state |= PROXCHAT_MUTE_LOCAL;
+    if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
+        client->muted_state |= VOICECHAT_MUTE_LOCAL;
 
     inited = true;
 }
 
-void proxchat_shutdown() {
+void voicechat_shutdown() {
     if (!inited) return;
 
     if (client->encoder) opus_encoder_destroy(client->encoder);
@@ -228,23 +229,23 @@ void proxchat_shutdown() {
     inited = false;
 }
 
-bool proxchat_inited() {
+bool voicechat_inited() {
     return inited;
 }
 
-u32* proxchat_player_muted(s32 id) {
+u32* voicechat_player_muted(s32 id) {
     return &players[id].muted_state;
 }
 
-u32* proxchat_player_volume(s32 id) {
+u32* voicechat_player_volume(s32 id) {
     return &players[id].volume;
 }
 
-bool proxchat_player_is_talking(s32 id) {
+bool voicechat_player_is_talking(s32 id) {
     return players[id].talking;
 }
 
-u32 proxchat_encode_audio(u8* packet, u32 max_size) {
+u32 voicechat_encode_audio(u8* packet, u32 max_size) {
     s16 pcm[FRAME_SIZE];
     u32 bytes_read = buffer_read(&client->audio, FRAME_SIZE * sizeof(s16), pcm);
     memset((u8*)pcm + bytes_read, 0, sizeof(pcm) - bytes_read);
@@ -254,81 +255,83 @@ u32 proxchat_encode_audio(u8* packet, u32 max_size) {
     s32 out = opus_encode(client->encoder, pcm, FRAME_SIZE, packet, max_size);
     if (out < 0) {
         fprintf(stderr, "[PROXIMITY CHAT] Failed to encode opus packet: %s\n", get_opus_error(out));
-        proxchat_error[0] = PROXCHAT_ERR_FAILED_TO_ENCODE;
+        voicechat_error[0] = VOICECHAT_ERR_FAILED_TO_ENCODE;
         return 0;
     }
-    proxchat_error[0] = PROXCHAT_ERR_NONE;
+    voicechat_error[0] = VOICECHAT_ERR_NONE;
     return out;
 }
 
-void proxchat_decode_audio(s32 id, u8* packet, u32 packet_size) {
-    if (!proxchat_is_ingame(id) || !players[id].decoder) return;
+void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size) {
+    if (!voicechat_is_ingame(id) || !players[id].decoder) return;
 
     s16 pcm[FRAME_SIZE * sizeof(s16)];
     s32 num_frames = opus_decode(players[id].decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
     if (num_frames < 0) {
         fprintf(stderr, "[PROXIMITY CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
-        proxchat_error[id] = PROXCHAT_ERR_FAILED_TO_DECODE;
+        voicechat_error[id] = VOICECHAT_ERR_FAILED_TO_DECODE;
         return;
     }
-    proxchat_error[id] = PROXCHAT_ERR_NONE;
+    voicechat_error[id] = VOICECHAT_ERR_NONE;
     buffer_write(&players[id].audio, num_frames * sizeof(s16), pcm);
 }
 
-void proxchat_mix(s16* out_pcm, u32 num_out_samples) {
+void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     s32 num_samples = num_out_samples * INTERNAL_SAMPLE_RATE / SAMPLE_RATE;
     s16 mixed[num_samples * 2 /* stereo */] = {};
 
     // skip over player 0 because thats the client
-    static int counter = 0;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         players[i].talking = false;
 
-        if (!proxchat_is_ingame(i) || players[i].muted_state != PROXCHAT_UNMUTED) {
+        if (!voicechat_is_ingame(i) || players[i].muted_state != VOICECHAT_UNMUTED) {
             buffer_drain(&players[i].audio);
             continue;
         }
 
-        if (proxchat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
+        if (voicechat_num_frames_in_buffer(&players[i].audio) < MIN_FRAMES_REQUIRED) continue;
 
         players[i].talking = true;
-
+        
         s16 player_pcm[num_samples];
         u32 n = buffer_read(&players[i].audio, sizeof(player_pcm), player_pcm) / sizeof(s16);
         memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
 
-        float volume;
-        float dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
-        if (dist < FULL_VOL_RADIUS) volume = 1;
-        else volume = 1 - (dist - FULL_VOL_RADIUS) / (HEARING_RADIUS - FULL_VOL_RADIUS);
-        if (volume <= 0.0f) continue;
-
-        Vec3f forward, right, to_target;
-        vec3f_copy(forward, gCamera->focus);
-        vec3f_sub(forward, gCamera->pos);
-        vec3f_normalize(forward);
-
-        vec3f_cross(right, forward, (Vec3f){ 0, 1, 0 });
+        f32 vol_left = 1, vol_right = 1;
+        if (gServerSettings.voiceChat == VOICECHAT_TYPE_PROXIMITY) {
+            f32 volume;
+            f32 dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
+            if (dist < FULL_VOL_RADIUS) volume = 1;
+            else volume = 1 - (dist - FULL_VOL_RADIUS) / (HEARING_RADIUS - FULL_VOL_RADIUS);
+            if (volume <= 0.0f) continue;
     
-        vec3f_copy(to_target, gMarioStates[i].pos);
-        vec3f_sub(to_target, gCamera->pos);
-        vec3f_normalize(to_target);
-
-        float pan = vec3f_dot(right, to_target);
-
-        float pan_mono = 0.5f + pan * 0.5f * (configProxchatStereoSpread / 100.f);
-        float vol_right = pan_mono;
-        float vol_left  = 1 - pan_mono;
+            Vec3f forward, right, to_target;
+            vec3f_copy(forward, gCamera->focus);
+            vec3f_sub(forward, gCamera->pos);
+            vec3f_normalize(forward);
+    
+            vec3f_cross(right, forward, (Vec3f){ 0, 1, 0 });
+        
+            vec3f_copy(to_target, gMarioStates[i].pos);
+            vec3f_sub(to_target, gCamera->pos);
+            vec3f_normalize(to_target);
+    
+            f32 pan = vec3f_dot(right, to_target);
+    
+            f32 pan_mono = 0.5f + pan * 0.5f * (configVoiceChatStereoSpread / 100.f);
+            vol_right = volume * (pan_mono);
+            vol_left  = volume * (1 - pan_mono);
+        }
         
         for (s32 s = 0; s < num_samples * 2; s++) {
             float pan_factor = s % 2 == 0 ? vol_left : vol_right;
 
-            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * volume * (players[i].volume / 100.f) * (configProxchatVolume / 127.f));
+            s32 mixed_sample = mixed[s] + (s16)(player_pcm[(int)(s / 2)] * pan_factor * (players[i].volume / 100.f) * (configVoiceChatVolume / 127.f));
             mixed[s] = mixed_sample > 32767 ? 32767 : mixed_sample < -32767 ? -32767 : mixed_sample;
         }
     }
 
-    if (proxchat_loopback) {
+    if (voicechat_loopback) {
         s16 pcm[num_samples];
         u32 n = buffer_read(&loopback_buffer, sizeof(pcm), pcm) / sizeof(s16);
         memset(pcm + n, 0, sizeof(pcm) - n * sizeof(s16));

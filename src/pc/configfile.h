@@ -69,15 +69,15 @@ extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
-extern unsigned int configProxchatVolume;
+extern unsigned int configVoiceChatVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
 extern unsigned int configSoundOutput;
-// proximity chat settings
-extern unsigned int configProxchatActivationMode;
-extern unsigned int configProxchatActivationThreshold;
-extern unsigned int configProxchatMicrophoneGain;
-extern unsigned int configProxchatStereoSpread;
+// voice chat settings
+extern unsigned int configVoiceChatActivationMode;
+extern unsigned int configVoiceChatActivationThreshold;
+extern unsigned int configVoiceChatMicrophoneGain;
+extern unsigned int configVoiceChatStereoSpread;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -163,7 +163,7 @@ extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
 extern bool         configModDevMode;
-extern bool         configProximityChat;
+extern unsigned int configVoiceChat;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;
