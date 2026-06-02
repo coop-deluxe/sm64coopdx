@@ -23,6 +23,7 @@ static bool audio_sdl_init(void) {
     dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
     if (dev == 0) {
         fprintf(stderr, "SDL_OpenAudioDevice error: %s\n", SDL_GetError());
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
         return false;
     }
 
