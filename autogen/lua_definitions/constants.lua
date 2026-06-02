@@ -3712,18 +3712,19 @@ PAINTING_WARP_INDEX_FA = 0x2A
 --- @type integer
 PAINTING_WARP_INDEX_END = 0x2D
 
-HUD_DISPLAY_FLAG_LIVES            =                                                                                                                                                                                                                            0x0001 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_COIN_COUNT       =                                                                                                                                                                                                                            0x0002 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_STAR_COUNT       =                                                                                                                                                                                                                            0x0004 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_CAMERA_AND_POWER =                                                                                                                                                                                                                            0x0008 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_KEYS             =                                                                                                                                                                                                                            0x0010 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_UNKNOWN_0020     =                                                                                                                                                                                                                            0x0020 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_TIMER            =                                                                                                                                                                                                                            0x0040 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_CAMERA           =                                                                                                                                                                                                                            0x0080 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_POWER            =                                                                                                                                                                                                                            0x0100 --- @type HUDDisplayFlag
-HUD_DISPLAY_FLAG_EMPHASIZE_POWER  =                                                                                                                                                                                                                            0x8000 --- @type HUDDisplayFlag
-HUD_DISPLAY_NONE                  =                                                                                                                                                                                                                            0x0000 --- @type HUDDisplayFlag
-HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_LIVES            =                                                                                                                                                                                                                                                         0x0001 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_COIN_COUNT       =                                                                                                                                                                                                                                                         0x0002 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_STAR_COUNT       =                                                                                                                                                                                                                                                         0x0004 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_CAMERA_AND_POWER =                                                                                                                                                                                                                                                         0x0008 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_KEYS             =                                                                                                                                                                                                                                                         0x0010 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_UNKNOWN_0020     =                                                                                                                                                                                                                                                         0x0020 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_TIMER            =                                                                                                                                                                                                                                                         0x0040 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_CAMERA           =                                                                                                                                                                                                                                                         0x0080 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_POWER            =                                                                                                                                                                                                                                                         0x0100 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_EMPHASIZE_POWER  =                                                                                                                                                                                                                                                         0x8000 --- @type HUDDisplayFlag
+HUD_DISPLAY_FLAG_VOICECHAT        =                                                                                                                                                                                                                                                         0x0200 --- @type HUDDisplayFlag
+HUD_DISPLAY_NONE                  =                                                                                                                                                                                                                                                         0x0000 --- @type HUDDisplayFlag
+HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 | HUD_DISPLAY_FLAG_VOICECHAT --- @type HUDDisplayFlag
 
 --- @alias HUDDisplayFlag
 --- | `HUD_DISPLAY_FLAG_LIVES`
@@ -3736,6 +3737,7 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_FLAG_CAMERA`
 --- | `HUD_DISPLAY_FLAG_POWER`
 --- | `HUD_DISPLAY_FLAG_EMPHASIZE_POWER`
+--- | `HUD_DISPLAY_FLAG_VOICECHAT`
 --- | `HUD_DISPLAY_NONE`
 --- | `HUD_DISPLAY_DEFAULT`
 
@@ -11360,3 +11362,45 @@ WINDOW_NAME = "Super Mario 64 Coop Deluxe"
 
 --- @type integer
 MAX_VERSION_LENGTH = 128
+
+VOICECHAT_TYPE_DISABLED  = 0 --- @type VoiceChatType
+VOICECHAT_TYPE_VOICE     = 1 --- @type VoiceChatType
+VOICECHAT_TYPE_PROXIMITY = 2 --- @type VoiceChatType
+
+--- @alias VoiceChatType
+--- | `VOICECHAT_TYPE_DISABLED`
+--- | `VOICECHAT_TYPE_VOICE`
+--- | `VOICECHAT_TYPE_PROXIMITY`
+
+VOICECHAT_ACTMODE_DISABLED     = 0 --- @type VoiceChatActivationMode
+VOICECHAT_ACTMODE_PUSH_TO_TALK = 1 --- @type VoiceChatActivationMode
+VOICECHAT_ACTMODE_THRESHOLD    = 2 --- @type VoiceChatActivationMode
+
+--- @alias VoiceChatActivationMode
+--- | `VOICECHAT_ACTMODE_DISABLED`
+--- | `VOICECHAT_ACTMODE_PUSH_TO_TALK`
+--- | `VOICECHAT_ACTMODE_THRESHOLD`
+
+VOICECHAT_ERR_NONE                 = 0 --- @type VoiceChatError
+VOICECHAT_ERR_NO_MICROPHONE        = 1 --- @type VoiceChatError
+VOICECHAT_ERR_FAILED_TO_INITIALIZE = 2 --- @type VoiceChatError
+VOICECHAT_ERR_FAILED_TO_ENCODE     = 3 --- @type VoiceChatError
+VOICECHAT_ERR_FAILED_TO_DECODE     = 4 --- @type VoiceChatError
+
+--- @alias VoiceChatError
+--- | `VOICECHAT_ERR_NONE`
+--- | `VOICECHAT_ERR_NO_MICROPHONE`
+--- | `VOICECHAT_ERR_FAILED_TO_INITIALIZE`
+--- | `VOICECHAT_ERR_FAILED_TO_ENCODE`
+--- | `VOICECHAT_ERR_FAILED_TO_DECODE`
+
+VOICECHAT_UNMUTED       =        0 --- @type VoiceChatMuteState
+VOICECHAT_MUTE_LOCAL    = (1 << 0) --- @type VoiceChatMuteState
+VOICECHAT_MUTE_GLOBAL   = (1 << 1) --- @type VoiceChatMuteState
+VOICECHAT_MUTE_DEAFENED = (1 << 2) --- @type VoiceChatMuteState
+
+--- @alias VoiceChatMuteState
+--- | `VOICECHAT_UNMUTED`
+--- | `VOICECHAT_MUTE_LOCAL`
+--- | `VOICECHAT_MUTE_GLOBAL`
+--- | `VOICECHAT_MUTE_DEAFENED`

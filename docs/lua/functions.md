@@ -2269,6 +2269,24 @@
 
 <br />
 
+- voice_chat.h
+   - [voicechat_toggle_mute](functions-7.md#voicechat_toggle_mute)
+   - [voicechat_toggle_global_mute](functions-7.md#voicechat_toggle_global_mute)
+   - [voicechat_toggle_mute_other](functions-7.md#voicechat_toggle_mute_other)
+   - [voicechat_toggle_deafen](functions-7.md#voicechat_toggle_deafen)
+   - [voicechat_set_mute](functions-7.md#voicechat_set_mute)
+   - [voicechat_set_global_mute](functions-7.md#voicechat_set_global_mute)
+   - [voicechat_set_mute_other](functions-7.md#voicechat_set_mute_other)
+   - [voicechat_set_deafen](functions-7.md#voicechat_set_deafen)
+   - [voicechat_create_channel](functions-7.md#voicechat_create_channel)
+   - [voicechat_remove_channel](functions-7.md#voicechat_remove_channel)
+   - [voicechat_get_channel](functions-7.md#voicechat_get_channel)
+   - [voicechat_switch_channel](functions-7.md#voicechat_switch_channel)
+   - [voicechat_hear](functions-7.md#voicechat_hear)
+   - [voicechat_can_hear](functions-7.md#voicechat_can_hear)
+
+<br />
+
 
 ---
 # manually written functions

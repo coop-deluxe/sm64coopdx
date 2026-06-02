@@ -56,6 +56,7 @@
 #include "src/pc/network/sync_object.h"
 #include "src/audio/load.h"
 #include "src/pc/djui/djui_gfx.h"
+#include "src/pc/voice_chat.h"
 
 
   ///////////////
@@ -37258,6 +37259,254 @@ int smlua_func_sync_object_is_owned_locally(lua_State* L) {
     return 1;
 }
 
+  //////////////////
+ // voice_chat.h //
+//////////////////
+
+int smlua_func_voicechat_toggle_mute(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_toggle_mute", 0, top);
+        return 0;
+    }
+
+
+    voicechat_toggle_mute();
+
+    return 1;
+}
+
+int smlua_func_voicechat_toggle_global_mute(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_toggle_global_mute", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_toggle_global_mute"); return 0; }
+
+    voicechat_toggle_global_mute(id);
+
+    return 1;
+}
+
+int smlua_func_voicechat_toggle_mute_other(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_toggle_mute_other", 1, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_toggle_mute_other"); return 0; }
+
+    voicechat_toggle_mute_other(id);
+
+    return 1;
+}
+
+int smlua_func_voicechat_toggle_deafen(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_toggle_deafen", 0, top);
+        return 0;
+    }
+
+
+    voicechat_toggle_deafen();
+
+    return 1;
+}
+
+int smlua_func_voicechat_set_mute(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_set_mute", 1, top);
+        return 0;
+    }
+
+    bool muted = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_set_mute"); return 0; }
+
+    voicechat_set_mute(muted);
+
+    return 1;
+}
+
+int smlua_func_voicechat_set_global_mute(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_set_global_mute", 2, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_set_global_mute"); return 0; }
+    bool muted = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_set_global_mute"); return 0; }
+
+    voicechat_set_global_mute(id, muted);
+
+    return 1;
+}
+
+int smlua_func_voicechat_set_mute_other(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_set_mute_other", 2, top);
+        return 0;
+    }
+
+    s32 id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_set_mute_other"); return 0; }
+    bool muted = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_set_mute_other"); return 0; }
+
+    voicechat_set_mute_other(id, muted);
+
+    return 1;
+}
+
+int smlua_func_voicechat_set_deafen(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_set_deafen", 1, top);
+        return 0;
+    }
+
+    bool muted = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_set_deafen"); return 0; }
+
+    voicechat_set_deafen(muted);
+
+    return 1;
+}
+
+int smlua_func_voicechat_create_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_create_channel", 0, top);
+        return 0;
+    }
+
+
+    lua_pushinteger(L, voicechat_create_channel());
+
+    return 1;
+}
+
+int smlua_func_voicechat_remove_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_remove_channel", 1, top);
+        return 0;
+    }
+
+    s32 channel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_remove_channel"); return 0; }
+
+    voicechat_remove_channel(channel);
+
+    return 1;
+}
+
+int smlua_func_voicechat_get_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_get_channel", 1, top);
+        return 0;
+    }
+
+    s32 local_id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_get_channel"); return 0; }
+
+    lua_pushinteger(L, voicechat_get_channel(local_id));
+
+    return 1;
+}
+
+int smlua_func_voicechat_switch_channel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_switch_channel", 2, top);
+        return 0;
+    }
+
+    s32 local_id = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_switch_channel"); return 0; }
+    s32 channel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_switch_channel"); return 0; }
+
+    voicechat_switch_channel(local_id, channel);
+
+    return 1;
+}
+
+int smlua_func_voicechat_hear(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_hear", 3, top);
+        return 0;
+    }
+
+    s32 channel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_hear"); return 0; }
+    s32 other_channel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_hear"); return 0; }
+    bool can_hear = smlua_to_boolean(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "voicechat_hear"); return 0; }
+
+    voicechat_hear(channel, other_channel, can_hear);
+
+    return 1;
+}
+
+int smlua_func_voicechat_can_hear(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_can_hear", 2, top);
+        return 0;
+    }
+
+    s32 channel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_can_hear"); return 0; }
+    s32 other_channel = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_can_hear"); return 0; }
+
+    voicechat_can_hear(channel, other_channel);
+
+    return 1;
+}
+
 
 
 void smlua_bind_functions_autogen(void) {
@@ -39389,5 +39638,21 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "sync_object_get_object", smlua_func_sync_object_get_object);
     smlua_bind_function(L, "sync_object_is_initialized", smlua_func_sync_object_is_initialized);
     smlua_bind_function(L, "sync_object_is_owned_locally", smlua_func_sync_object_is_owned_locally);
+
+    // voice_chat.h
+    smlua_bind_function(L, "voicechat_toggle_mute", smlua_func_voicechat_toggle_mute);
+    smlua_bind_function(L, "voicechat_toggle_global_mute", smlua_func_voicechat_toggle_global_mute);
+    smlua_bind_function(L, "voicechat_toggle_mute_other", smlua_func_voicechat_toggle_mute_other);
+    smlua_bind_function(L, "voicechat_toggle_deafen", smlua_func_voicechat_toggle_deafen);
+    smlua_bind_function(L, "voicechat_set_mute", smlua_func_voicechat_set_mute);
+    smlua_bind_function(L, "voicechat_set_global_mute", smlua_func_voicechat_set_global_mute);
+    smlua_bind_function(L, "voicechat_set_mute_other", smlua_func_voicechat_set_mute_other);
+    smlua_bind_function(L, "voicechat_set_deafen", smlua_func_voicechat_set_deafen);
+    smlua_bind_function(L, "voicechat_create_channel", smlua_func_voicechat_create_channel);
+    smlua_bind_function(L, "voicechat_remove_channel", smlua_func_voicechat_remove_channel);
+    smlua_bind_function(L, "voicechat_get_channel", smlua_func_voicechat_get_channel);
+    smlua_bind_function(L, "voicechat_switch_channel", smlua_func_voicechat_switch_channel);
+    smlua_bind_function(L, "voicechat_hear", smlua_func_voicechat_hear);
+    smlua_bind_function(L, "voicechat_can_hear", smlua_func_voicechat_can_hear);
 
 }

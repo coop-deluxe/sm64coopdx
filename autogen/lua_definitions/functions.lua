@@ -13313,6 +13313,96 @@ function sync_object_is_owned_locally(syncId)
     -- ...
 end
 
+--- Toggles mute state on the current player
+function voicechat_toggle_mute()
+    -- ...
+end
+
+--- @param id integer
+--- Toggles global mute state on another player
+function voicechat_toggle_global_mute(id)
+    -- ...
+end
+
+--- @param id integer
+--- Toggles mute state on another player for the current client
+function voicechat_toggle_mute_other(id)
+    -- ...
+end
+
+--- Toggles deafen state on the current player
+function voicechat_toggle_deafen()
+    -- ...
+end
+
+--- @param muted boolean
+--- Sets mute state on the current player
+function voicechat_set_mute(muted)
+    -- ...
+end
+
+--- @param id integer
+--- @param muted boolean
+--- Sets global mute state on another player
+function voicechat_set_global_mute(id, muted)
+    -- ...
+end
+
+--- @param id integer
+--- @param muted boolean
+--- Sets mute state on another player for the current client
+function voicechat_set_mute_other(id, muted)
+    -- ...
+end
+
+--- @param muted boolean
+--- Sets deafen state on the current player
+function voicechat_set_deafen(muted)
+    -- ...
+end
+
+--- @return integer
+--- Creates a new voice channel and returns its ID
+function voicechat_create_channel()
+    -- ...
+end
+
+--- @param channel integer
+--- Removes a voice channel.<br>
+--- All players in the to-be-removed channel will get moved to the default channel
+function voicechat_remove_channel(channel)
+    -- ...
+end
+
+--- @param local_id integer
+--- @return integer
+--- Returns the channel ID that the player is in
+function voicechat_get_channel(local_id)
+    -- ...
+end
+
+--- @param local_id integer
+--- @param channel integer
+--- Moves a player to another channel
+function voicechat_switch_channel(local_id, channel)
+    -- ...
+end
+
+--- @param channel integer
+--- @param other_channel integer
+--- @param can_hear boolean
+--- Sets if players in `channel` should be able to hear players in `other_channel`
+function voicechat_hear(channel, other_channel, can_hear)
+    -- ...
+end
+
+--- @param channel integer
+--- @param other_channel integer
+--- Checks if players in `channel` can hear players in `other_channel`
+function voicechat_can_hear(channel, other_channel)
+    -- ...
+end
+
 --- @alias Pointer_BehaviorScript BehaviorScript
 --- @alias Pointer_integer integer
 --- @alias Pointer_Vec4s Vec4s

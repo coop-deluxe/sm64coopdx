@@ -58,6 +58,7 @@ in_files = [
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/pc/voice_chat.h",
 ]
 
 exclude_constants = {

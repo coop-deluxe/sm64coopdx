@@ -36,6 +36,7 @@ in_files = [
     "src/game/player_palette.h",
     "src/engine/graph_node.h",
     "include/PR/gbi.h",
+    "src/pc/voice_chat.h",
 ]
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
@@ -101,6 +102,7 @@ override_field_invisible = {
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],
+    "VoicePlayer": [ "internal" ],
 }
 
 override_field_deprecated = {
@@ -148,6 +150,7 @@ override_field_immutable = {
     "ModFsFile": [ "*" ],
     "ModFs": [ "*" ],
     "StaticObjectCollision": [ "*" ],
+    "VoicePlayer": [ "talking", "error", "clientMutedState", "playerMutedState" ],
 }
 
 override_field_version_excludes = {
@@ -162,6 +165,7 @@ override_allowed_structs = {
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "Vtx" ],
+    "src/pc/voice_chat.h": [ "VoicePlayer" ],
 }
 
 sLuaManuallyDefinedStructs = [{
