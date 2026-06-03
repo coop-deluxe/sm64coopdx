@@ -200,7 +200,7 @@ static inline void apply_sensitivity(s8 *stick_x, s8 *stick_y, float inputSensit
 }
 
 static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
-                                        int16_t input_x, int16_t input_y) {
+                                        int16_t input_x, int16_t input_y, int configStickDeadzone) {
     float magnitude_sq = (float)(input_x * input_x) + (float)(input_y * input_y);
     float deadzone = configStickDeadzone * INPUT_STEP;
     if (magnitude_sq > (deadzone * deadzone)) {
@@ -218,6 +218,7 @@ static inline void update_analog_stick(s8 *stick_x, s8 *stick_y,
         *stick_y = -dir_y * magnitude;
     }
 }
+
 extern s16 gMenuMode;
 static void controller_sdl_read(OSContPad *pad) {
     if (!init_ok) { return; }
@@ -332,16 +333,27 @@ static void controller_sdl_read(OSContPad *pad) {
     if (configStick.invertRightX) { rightx = invert_s16(rightx); }
     if (configStick.invertRightY) { righty = invert_s16(righty); }
 
-    float triggerThreshold = configTriggerSensitivity * INPUT_STEP;
-
-    update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > triggerThreshold);
-    update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > triggerThreshold);
-
     for (u32 i = 0; i < num_joy_binds; ++i)
         if (joy_buttons[joy_binds[i][0]])
             buttons_down |= joy_binds[i][1];
 
     pad->button |= buttons_down;
+       
+    float triggerSensitivity = configAnalogTriggerSensitivity * INPUT_STEP;
+    float stickToButtonLeftThreshold = map_range_to_range(configAnalogStickButtonSensitivity, 0, 100, configStickLeftDeadzone, 100) * INPUT_STEP;
+    float stickToButtonRightThreshold = map_range_to_range(configAnalogStickButtonSensitivity, 0, 100, configStickRightDeadzone, 100) * INPUT_STEP;
+    update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > triggerSensitivity);
+    update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > triggerSensitivity);
+    
+    update_button(VK_L_STICK_UP - VK_BASE_SDL_GAMEPAD, lefty < -stickToButtonLeftThreshold);
+    update_button(VK_L_STICK_DOWN - VK_BASE_SDL_GAMEPAD, lefty > stickToButtonLeftThreshold);
+    update_button(VK_L_STICK_LEFT - VK_BASE_SDL_GAMEPAD, leftx < -stickToButtonLeftThreshold);
+    update_button(VK_L_STICK_RIGHT - VK_BASE_SDL_GAMEPAD, leftx > stickToButtonLeftThreshold);
+
+    update_button(VK_R_STICK_UP - VK_BASE_SDL_GAMEPAD, righty < -stickToButtonRightThreshold);
+    update_button(VK_R_STICK_DOWN - VK_BASE_SDL_GAMEPAD, righty > stickToButtonRightThreshold);
+    update_button(VK_R_STICK_LEFT - VK_BASE_SDL_GAMEPAD, rightx < -stickToButtonRightThreshold);
+    update_button(VK_R_STICK_RIGHT - VK_BASE_SDL_GAMEPAD, rightx > stickToButtonRightThreshold);
 
     const u32 xstick = buttons_down & STICK_XMASK;
     const u32 ystick = buttons_down & STICK_YMASK;
@@ -354,18 +366,12 @@ static void controller_sdl_read(OSContPad *pad) {
     else if (ystick == STICK_UP)
         pad->stick_y = 127;
 
-    float stickToButtonThreshold = (map_range_to_range(configStickToButtonSensitivity, 0, 100, configStickDeadzone, 100) * INPUT_STEP);
-    
-    if (rightx < -stickToButtonThreshold) pad->button |= L_CBUTTONS;
-    if (rightx > stickToButtonThreshold) pad->button |= R_CBUTTONS;
-    if (righty < -stickToButtonThreshold) pad->button |= U_CBUTTONS;
-    if (righty > stickToButtonThreshold) pad->button |= D_CBUTTONS;
-
-    update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty);
-    update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty);
+    update_analog_stick(&pad->stick_x, &pad->stick_y, leftx, lefty, configStickLeftDeadzone);
+    update_analog_stick(&pad->ext_stick_x, &pad->ext_stick_y, rightx, righty, configStickRightDeadzone);
 
     // extra input processing
-    apply_sensitivity(&pad->stick_x, &pad->stick_y, configStickMovementSensitivity);
+    apply_sensitivity(&pad->stick_x, &pad->stick_y, configStickLeftSensitivity);
+    apply_sensitivity(&pad->ext_stick_x, &pad->ext_stick_y, configStickRightSensitivity);
     apply_axial_deadzone(&pad->stick_x, &pad->stick_y);
 }
 

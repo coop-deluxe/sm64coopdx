@@ -12,26 +12,42 @@ void djui_panel_controls_value_change(UNUSED struct DjuiBase* caller) {
     controller_reconfigure();
 }
 
+void djui_panel_controls_advanced_analog_options_create(struct DjuiBase* caller) {
+    struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
+    struct DjuiBase* body = djui_three_panel_get_body(panel);
+    {
+        djui_slider_create(body, DLANG(CONTROLS, L_SENSITIVITY), &configStickLeftSensitivity, 0, 150, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, R_SENSITIVITY), &configStickRightSensitivity, 0, 150, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, TRIGGER_SENSITIVITY), &configAnalogTriggerSensitivity, 1, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, STICK_TO_BUTTON_SENSITIVITY), &configAnalogStickButtonSensitivity, 1, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, AXIAL_DEADZONE), &configStickAxialDeadzone, 0, 50, djui_panel_controls_value_change);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+    }
+
+    djui_panel_add(caller, panel, NULL);
+}
+
 void djui_panel_controls_analog_stick_options_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, AXIAL_DEADZONE), &configStickAxialDeadzone, 0, 50, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, MOVEMENT_SENSITIVITY), &configStickMovementSensitivity, 0, 150, djui_panel_controls_value_change);
         djui_checkbox_create(body, DLANG(CONTROLS, ROTATE_LEFT), &configStick.rotateLeft, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_X), &configStick.invertLeftX, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_LEFT_Y), &configStick.invertLeftY, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, ROTATE_RIGHT), &configStick.rotateRight, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_RIGHT_X), &configStick.invertRightX, NULL);
         djui_checkbox_create(body, DLANG(CONTROLS, INVERT_RIGHT_Y), &configStick.invertRightY, NULL);
-        
-        
+        djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickLeftDeadzone, 0, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, R_DEADZONE), &configStickRightDeadzone, 0, 100, djui_panel_controls_value_change);
+        djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
+        djui_button_create(body, DLANG(CONTROLS, ADVANCED), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_advanced_analog_options_create);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
 }
+
+
 
 void djui_panel_controls_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
@@ -96,10 +112,6 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         }
 
         free(gamepadChoices);
-        
-        djui_slider_create(body, DLANG(CONTROLS, TRIGGER_SENSITIVITY), &configTriggerSensitivity, 1, 100, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, STICK_TO_BUTTON_SENSITIVITY), &configStickToButtonSensitivity, 1, 100, djui_panel_controls_value_change);
-        djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }

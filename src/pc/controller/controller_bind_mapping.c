@@ -129,8 +129,16 @@ const char* translate_bind_to_name(int bind) {
             case 12: return "[DPAD Down]";
             case 13: return "[DPAD Left]";
             case 14: return "[DPAD Right]";
-            case 0x1A: return "[L Trig]";
-            case 0x1B: return "[R Trig]";
+            case 0x15: return "[L Trig]";
+            case 0x16: return "[R Trig]";
+            case 0x17: return "[L Stick Left]";
+            case 0x18: return "[L Stick Right]";
+            case 0x19: return "[L Stick Up]";
+            case 0x1A: return "[L Stick Down]";
+            case 0x1B: return "[R Stick Left]";
+            case 0x1C: return "[R Stick Right]";
+            case 0x1D: return "[R Stick Up]";
+            case 0x1E: return "[R Stick Down]";
             default: return name;
         }
     }

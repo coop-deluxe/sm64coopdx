@@ -105,12 +105,12 @@ static const unsigned int defaultConfigKeyX[MAX_BINDS]          = { 0x0017,     
 static const unsigned int defaultConfigKeyY[MAX_BINDS]          = { 0x0032,     0x1003,     VK_INVALID };
 static const unsigned int defaultConfigKeyStart[MAX_BINDS]      = { 0x0039,     0x1006,     VK_INVALID };
 static const unsigned int defaultConfigKeyL[MAX_BINDS]          = { 0x002A,     0x1009,     0x1104     };
-static const unsigned int defaultConfigKeyR[MAX_BINDS]          = { 0x0036,     0x100A,     0x101B     };
-static const unsigned int defaultConfigKeyZ[MAX_BINDS]          = { 0x0025,     0x1007,     0x101A     };
-static const unsigned int defaultConfigKeyCUp[MAX_BINDS]        = { 0x0148,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyCDown[MAX_BINDS]      = { 0x0150,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyCLeft[MAX_BINDS]      = { 0x014B,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyCRight[MAX_BINDS]     = { 0x014D,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyR[MAX_BINDS]          = { 0x0036,     0x100A,     0x1016     };
+static const unsigned int defaultConfigKeyZ[MAX_BINDS]          = { 0x0025,     0x1007,     0x1015     };
+static const unsigned int defaultConfigKeyCUp[MAX_BINDS]        = { 0x0148,     0x101D, VK_INVALID };
+static const unsigned int defaultConfigKeyCDown[MAX_BINDS]      = { 0x0150,     0x101E, VK_INVALID };
+static const unsigned int defaultConfigKeyCLeft[MAX_BINDS]      = { 0x014B,     0x101B, VK_INVALID };
+static const unsigned int defaultConfigKeyCRight[MAX_BINDS]     = { 0x014D,     0x101C, VK_INVALID };
 static const unsigned int defaultConfigKeyStickUp[MAX_BINDS]    = { 0x0011,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
@@ -133,7 +133,7 @@ unsigned int configKeyY[MAX_BINDS]                = { 0x0032,     0x1003,     VK
 unsigned int configKeyStart[MAX_BINDS]            = { 0x0039,     0x1006,     VK_INVALID };
 unsigned int configKeyL[MAX_BINDS]                = { 0x002A,     0x1009,     0x1104     };
 unsigned int configKeyR[MAX_BINDS]                = { 0x0036,     0x100A,     0x101B     };
-unsigned int configKeyZ[MAX_BINDS]                = { 0x0025,     0x1007,     0x101A     };
+unsigned int configKeyZ[MAX_BINDS]                = { 0x0025,     0x1007,     0x1015     };
 unsigned int configKeyCUp[MAX_BINDS]              = { 0x0148,     VK_INVALID, VK_INVALID };
 unsigned int configKeyCDown[MAX_BINDS]            = { 0x0150,     VK_INVALID, VK_INVALID };
 unsigned int configKeyCLeft[MAX_BINDS]            = { 0x014B,     VK_INVALID, VK_INVALID };
@@ -152,11 +152,13 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
-unsigned int configStickDeadzone                  = 16;
+unsigned int configStickLeftDeadzone              = 16;
+unsigned int configStickRightDeadzone             = 16;
 unsigned int configStickAxialDeadzone             = 0;
-unsigned int configStickMovementSensitivity       = 100;
-unsigned int configTriggerSensitivity             = 50;
-unsigned int configStickToButtonSensitivity             = 50;
+unsigned int configStickLeftSensitivity           = 100;
+unsigned int configStickRightSensitivity          = 100;
+unsigned int configAnalogTriggerSensitivity       = 50;
+unsigned int configAnalogStickButtonSensitivity   = 50;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
 bool         configBackgroundGamepad              = true;
@@ -303,11 +305,13 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
-    {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
+    {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickLeftDeadzone},
+    {.name = "stick_deadzone_right",           .type = CONFIG_TYPE_UINT, .uintValue = &configStickRightDeadzone},
     {.name = "stick_axial_deadzone",           .type = CONFIG_TYPE_UINT, .uintValue = &configStickAxialDeadzone},
-    {.name = "movement_stick_sensitivity",     .type = CONFIG_TYPE_UINT, .uintValue = &configStickMovementSensitivity},
-    {.name = "trigger_sensitivity",            .type = CONFIG_TYPE_UINT, .uintValue = &configTriggerSensitivity},
-    {.name = "stick_to_button_sensitivity",    .type = CONFIG_TYPE_UINT, .uintValue = &configStickToButtonSensitivity},
+    {.name = "left_stick_sensitivity",         .type = CONFIG_TYPE_UINT, .uintValue = &configStickLeftSensitivity},
+    {.name = "right_stick_sensitivity",        .type = CONFIG_TYPE_UINT, .uintValue = &configStickRightSensitivity},
+    {.name = "trigger_sensitivity",            .type = CONFIG_TYPE_UINT, .uintValue = &configAnalogTriggerSensitivity},
+    {.name = "stick_to_button_sensitivity",    .type = CONFIG_TYPE_UINT, .uintValue = &configAnalogStickButtonSensitivity},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
     {.name = "background_gamepad",             .type = CONFIG_TYPE_UINT, .boolValue = &configBackgroundGamepad},
