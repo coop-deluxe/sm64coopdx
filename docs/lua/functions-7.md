@@ -7093,7 +7093,8 @@ Sets deafen state on the current player
 ## [voicechat_create_channel](#voicechat_create_channel)
 
 ### Description
-Creates a new voice channel and returns its ID
+Creates a new voice channel and returns its ID.
+The ID of the default channel is always 0
 
 ### Lua Example
 `local integerValue = voicechat_create_channel()`
@@ -7115,7 +7116,8 @@ Creates a new voice channel and returns its ID
 
 ### Description
 Removes a voice channel.
-All players in the to-be-removed channel will get moved to the default channel
+All players in the to-be-removed channel will get moved to the default channel.
+The default channel cannot be removed
 
 ### Lua Example
 `voicechat_remove_channel(channel)`
@@ -7130,53 +7132,6 @@ All players in the to-be-removed channel will get moved to the default channel
 
 ### C Prototype
 `void voicechat_remove_channel(s32 channel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [voicechat_get_channel](#voicechat_get_channel)
-
-### Description
-Returns the channel ID that the player is in
-
-### Lua Example
-`local integerValue = voicechat_get_channel(local_id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| local_id | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 voicechat_get_channel(s32 local_id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [voicechat_switch_channel](#voicechat_switch_channel)
-
-### Description
-Moves a player to another channel
-
-### Lua Example
-`voicechat_switch_channel(local_id, channel)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| local_id | `integer` |
-| channel | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void voicechat_switch_channel(s32 local_id, s32 channel);`
 
 [:arrow_up_small:](#)
 
@@ -7213,7 +7168,7 @@ Sets if players in `channel` should be able to hear players in `other_channel`
 Checks if players in `channel` can hear players in `other_channel`
 
 ### Lua Example
-`voicechat_can_hear(channel, other_channel)`
+`local booleanValue = voicechat_can_hear(channel, other_channel)`
 
 ### Parameters
 | Field | Type |
@@ -7222,10 +7177,10 @@ Checks if players in `channel` can hear players in `other_channel`
 | other_channel | `integer` |
 
 ### Returns
-- None
+- `boolean`
 
 ### C Prototype
-`void voicechat_can_hear(s32 channel, s32 other_channel);`
+`bool voicechat_can_hear(s32 channel, s32 other_channel);`
 
 [:arrow_up_small:](#)
 

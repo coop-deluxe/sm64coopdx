@@ -23,12 +23,18 @@
 
 bool gVoiceChatLoopback = false;
 float gVoiceChatMicLevel = 0;
-s32 gVoiceChatDefaultChannel = 0;
 
 struct VoicePlayer gVoicePlayers[MAX_PLAYERS];
 struct VoicePlayer* gVoicePlayer = &gVoicePlayers[0];
 
 static struct VoiceBuffer sLoopbackBuffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
+
+static s32 sNumVoiceChannels = 0;
+static struct VoiceChannel {
+    bool active;
+    u32 numAllocated;
+    bool* canHear;
+}* sVoiceChannels;
 
 static const char* get_opus_error(int err) {
     switch (err) {
@@ -169,6 +175,10 @@ static void voicechat_callback(const u8* input, u32 bytes) {
 
 void voicechat_init() {
     gAudioApi->record_callback(voicechat_callback);
+
+    sNumVoiceChannels = 4;
+    sVoiceChannels = malloc(sizeof(struct VoiceChannel) * sNumVoiceChannels);
+    memset(sVoiceChannels, 0, sizeof(struct VoiceChannel) * sNumVoiceChannels);
 }
 
 static void voicechat_shutdown_player(s32 id) {
@@ -214,6 +224,7 @@ void voicechat_init_player(s32 id) {
     gVoicePlayers[id].internal.buffer.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
     gVoicePlayers[id].internal.buffer.dynamic = false;
     gVoicePlayers[id].volume = 100;
+    gVoicePlayers[id].channel = 0;
     gVoicePlayers[id].talking = false;
     gVoicePlayers[id].clientMutedState = 0;
     gVoicePlayers[id].playerMutedState = 0;
@@ -361,4 +372,48 @@ void voicechat_set_deafen(bool muted) {
     if (muted) gVoicePlayer->clientMutedState |=  VOICECHAT_MUTE_DEAFENED;
     else       gVoicePlayer->clientMutedState &= ~VOICECHAT_MUTE_DEAFENED;
     network_send_voicechat_muted(gNetworkPlayers[0].globalIndex, VOICECHAT_MUTE_DEAFENED, muted);
+}
+
+static void voicechat_channel_grow(s32 index) {
+    struct VoiceChannel* channel = &sVoiceChannels[index];
+    if (channel->numAllocated >= sNumVoiceChannels) return;
+
+    channel->canHear = realloc(channel->canHear, sizeof(bool) * sNumVoiceChannels);
+    memset(channel->canHear + channel->numAllocated, 0, sizeof(bool) * (sNumVoiceChannels - channel->numAllocated));
+    channel->numAllocated = sNumVoiceChannels;
+}
+
+static s32 voicechat_init_channel(s32 index) {
+    sVoiceChannels[index].active = true;
+    voicechat_channel_grow(index);
+    return index;
+}
+
+s32 voicechat_create_channel() {
+    for (s32 i = 1; i < sNumVoiceChannels; i++) {
+        if (!sVoiceChannels[i].active) return voicechat_init_channel(i);
+    }
+
+    s32 id = sNumVoiceChannels;
+    sNumVoiceChannels *= 2;
+    sVoiceChannels = realloc(sVoiceChannels, sizeof(struct VoiceChannel) * sNumVoiceChannels);
+    memset(sVoiceChannels + id, 0, sizeof(struct VoiceChannel) * (sNumVoiceChannels - id));
+    return voicechat_init_channel(id);
+}
+
+void voicechat_remove_channel(s32 channel) {
+    if (channel < 1 || channel >= sNumVoiceChannels) return;
+    sVoiceChannels[channel].active = false;
+}
+
+void voicechat_hear(s32 channel, s32 other_channel, bool can_hear) {
+    if (channel < 0 || channel >= sNumVoiceChannels) return;
+    voicechat_channel_grow(channel);
+    sVoiceChannels[channel].canHear[other_channel] = can_hear;
+}
+
+bool voicechat_can_hear(s32 channel, s32 other_channel) {
+    if (channel < 0 || channel >= sNumVoiceChannels) return false;
+    voicechat_channel_grow(channel);
+    return sVoiceChannels[channel].canHear[other_channel];
 }

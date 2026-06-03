@@ -4821,6 +4821,7 @@
 <br />
 
 ## [voice_chat.h](#voice_chat.h)
+- VOICECHAT_DEFAULT_CHANNEL
 
 ### [enum VoiceChatType](#VoiceChatType)
 | Identifier | Value |

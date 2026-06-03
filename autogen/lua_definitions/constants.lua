@@ -11363,6 +11363,9 @@ WINDOW_NAME = "Super Mario 64 Coop Deluxe"
 --- @type integer
 MAX_VERSION_LENGTH = 128
 
+--- @type integer
+VOICECHAT_DEFAULT_CHANNEL = 0
+
 VOICECHAT_TYPE_DISABLED  = 0 --- @type VoiceChatType
 VOICECHAT_TYPE_VOICE     = 1 --- @type VoiceChatType
 VOICECHAT_TYPE_PROXIMITY = 2 --- @type VoiceChatType

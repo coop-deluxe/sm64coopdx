@@ -13362,29 +13362,17 @@ function voicechat_set_deafen(muted)
 end
 
 --- @return integer
---- Creates a new voice channel and returns its ID
+--- Creates a new voice channel and returns its ID.<br>
+--- The ID of the default channel is always 0
 function voicechat_create_channel()
     -- ...
 end
 
 --- @param channel integer
 --- Removes a voice channel.<br>
---- All players in the to-be-removed channel will get moved to the default channel
+--- All players in the to-be-removed channel will get moved to the default channel.<br>
+--- The default channel cannot be removed
 function voicechat_remove_channel(channel)
-    -- ...
-end
-
---- @param local_id integer
---- @return integer
---- Returns the channel ID that the player is in
-function voicechat_get_channel(local_id)
-    -- ...
-end
-
---- @param local_id integer
---- @param channel integer
---- Moves a player to another channel
-function voicechat_switch_channel(local_id, channel)
     -- ...
 end
 
@@ -13398,6 +13386,7 @@ end
 
 --- @param channel integer
 --- @param other_channel integer
+--- @return boolean
 --- Checks if players in `channel` can hear players in `other_channel`
 function voicechat_can_hear(channel, other_channel)
     -- ...

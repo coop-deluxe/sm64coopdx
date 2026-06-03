@@ -3122,6 +3122,7 @@
 | ----- | ---- | ------ |
 | talking | `boolean` | read-only |
 | volume | `integer` |  |
+| channel | `integer` |  |
 | error | [enum VoiceChatError](constants.md#enum-VoiceChatError) | read-only |
 | clientMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |
 | playerMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |

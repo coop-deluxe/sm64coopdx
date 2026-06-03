@@ -17,6 +17,8 @@ void network_send_voicechat_frame(void) {
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (!gNetworkPlayers[i].connected) continue;
         if (gVoicePlayers[i].playerMutedState) continue;
+        if (!voicechat_can_hear(gVoicePlayer->channel, gVoicePlayers[i].channel)) continue;
+
         network_send_to(i, &p);
     }
 }

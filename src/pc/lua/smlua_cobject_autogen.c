@@ -2634,8 +2634,9 @@ static struct LuaObjectField sTextureInfoFields[LUA_TEXTURE_INFO_FIELD_COUNT] = 
     { "width",   LVT_U32,       offsetof(struct TextureInfo, width),   true, LOT_NONE    },
 };
 
-#define LUA_VOICE_PLAYER_FIELD_COUNT 5
+#define LUA_VOICE_PLAYER_FIELD_COUNT 6
 static struct LuaObjectField sVoicePlayerFields[LUA_VOICE_PLAYER_FIELD_COUNT] = {
+    { "channel",          LVT_S32,  offsetof(struct VoicePlayer, channel),          false, LOT_NONE },
     { "clientMutedState", LVT_S32,  offsetof(struct VoicePlayer, clientMutedState), true,  LOT_NONE },
     { "error",            LVT_S32,  offsetof(struct VoicePlayer, error),            true,  LOT_NONE },
     { "playerMutedState", LVT_S32,  offsetof(struct VoicePlayer, playerMutedState), true,  LOT_NONE },

@@ -2280,8 +2280,6 @@
    - [voicechat_set_deafen](functions-7.md#voicechat_set_deafen)
    - [voicechat_create_channel](functions-7.md#voicechat_create_channel)
    - [voicechat_remove_channel](functions-7.md#voicechat_remove_channel)
-   - [voicechat_get_channel](functions-7.md#voicechat_get_channel)
-   - [voicechat_switch_channel](functions-7.md#voicechat_switch_channel)
    - [voicechat_hear](functions-7.md#voicechat_hear)
    - [voicechat_can_hear](functions-7.md#voicechat_can_hear)
 

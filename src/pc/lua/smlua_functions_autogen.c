@@ -37431,42 +37431,6 @@ int smlua_func_voicechat_remove_channel(lua_State* L) {
     return 1;
 }
 
-int smlua_func_voicechat_get_channel(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_get_channel", 1, top);
-        return 0;
-    }
-
-    s32 local_id = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_get_channel"); return 0; }
-
-    lua_pushinteger(L, voicechat_get_channel(local_id));
-
-    return 1;
-}
-
-int smlua_func_voicechat_switch_channel(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "voicechat_switch_channel", 2, top);
-        return 0;
-    }
-
-    s32 local_id = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "voicechat_switch_channel"); return 0; }
-    s32 channel = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_switch_channel"); return 0; }
-
-    voicechat_switch_channel(local_id, channel);
-
-    return 1;
-}
-
 int smlua_func_voicechat_hear(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37502,7 +37466,7 @@ int smlua_func_voicechat_can_hear(lua_State* L) {
     s32 other_channel = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "voicechat_can_hear"); return 0; }
 
-    voicechat_can_hear(channel, other_channel);
+    lua_pushboolean(L, voicechat_can_hear(channel, other_channel));
 
     return 1;
 }
@@ -39650,8 +39614,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "voicechat_set_deafen", smlua_func_voicechat_set_deafen);
     smlua_bind_function(L, "voicechat_create_channel", smlua_func_voicechat_create_channel);
     smlua_bind_function(L, "voicechat_remove_channel", smlua_func_voicechat_remove_channel);
-    smlua_bind_function(L, "voicechat_get_channel", smlua_func_voicechat_get_channel);
-    smlua_bind_function(L, "voicechat_switch_channel", smlua_func_voicechat_switch_channel);
     smlua_bind_function(L, "voicechat_hear", smlua_func_voicechat_hear);
     smlua_bind_function(L, "voicechat_can_hear", smlua_func_voicechat_can_hear);
 

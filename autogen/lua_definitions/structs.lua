@@ -2278,6 +2278,7 @@
 --- @class VoicePlayer
 --- @field public talking boolean
 --- @field public volume integer
+--- @field public channel integer
 --- @field public error VoiceChatError
 --- @field public clientMutedState VoiceChatMuteState
 --- @field public playerMutedState VoiceChatMuteState
