@@ -8,13 +8,13 @@
 // virtual buttons for analog triggers and stick directions
 // maximum supported value is 0x1020 (arbitrary, see MAX_JOYBUTTONS in controller_sdl.c)
 // shouldn't interfere with extra controller binds (Touchpad button, XSX Elite Paddles, etc)
-#define VK_LTRIGGER 0x1015
-#define VK_RTRIGGER 0x1016
+#define VK_LTRIGGER 0x101A
+#define VK_RTRIGGER 0x101B
 #define VK_L_STICK_LEFT 0x1017
 #define VK_L_STICK_RIGHT 0x1018
 #define VK_L_STICK_UP 0x1019
-#define VK_L_STICK_DOWN 0x101A
-#define VK_R_STICK_LEFT 0x101B
+#define VK_L_STICK_DOWN 0x1015 // should not interfere with existing installations of sm64coopdx
+#define VK_R_STICK_LEFT 0x1016
 #define VK_R_STICK_RIGHT 0x101C
 #define VK_R_STICK_UP 0x101D
 #define VK_R_STICK_DOWN 0x101E
