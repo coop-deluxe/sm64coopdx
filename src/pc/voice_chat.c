@@ -7,6 +7,7 @@
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/network/network.h"
 #include "pc_main.h"
+#include "pc/network/voice_list.h"
 
 #include <opus/opus.h>
 
@@ -28,6 +29,8 @@ struct VoicePlayer gVoicePlayers[MAX_PLAYERS];
 struct VoicePlayer* gVoicePlayer = &gVoicePlayers[0];
 
 static struct VoiceBuffer sLoopbackBuffer = { .capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16) };
+
+static bool sPendingGlobalMutes[MAX_PLAYERS];
 
 static s32 sNumVoiceChannels = 0;
 static struct VoiceChannel {
@@ -333,6 +336,17 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     mix_and_resample_stereo_pcm(out_pcm, mixed, num_out_samples, num_samples);
 }
 
+void voicechat_push_pending_global_mute(s32 global_id) {
+    sPendingGlobalMutes[global_id] = true;
+}
+
+void voicechat_resolve_pending_global_mutes() {
+    for (s32 i = 0; i < MAX_PLAYERS; i++) {
+        if (!sPendingGlobalMutes[i]) continue;
+        gVoicePlayers[network_local_index_from_global(i)].clientMutedState |= VOICECHAT_MUTE_GLOBAL;
+    }
+}
+
 void voicechat_toggle_mute() {
     voicechat_set_mute(!(gVoicePlayer->clientMutedState & VOICECHAT_MUTE_LOCAL));
 }
@@ -356,6 +370,9 @@ void voicechat_set_mute(bool muted) {
 
 void voicechat_set_global_mute(s32 id, bool muted) {
     if (!gNetworkPlayers[0].moderator && gNetworkPlayers[0].globalIndex != 0) return;
+
+    if (gNetworkPlayers[0].globalIndex == 0)
+        voice_list_get_or_create(gNetworkSystem->get_id_str(id))->is_globally_muted = muted;
     
     if (muted) gVoicePlayers[id].clientMutedState |=  VOICECHAT_MUTE_GLOBAL;
     else       gVoicePlayers[id].clientMutedState &= ~VOICECHAT_MUTE_GLOBAL;
@@ -363,6 +380,8 @@ void voicechat_set_global_mute(s32 id, bool muted) {
 }
 
 void voicechat_set_mute_other(s32 id, bool muted) {
+    voice_list_get_or_create(gNetworkSystem->get_id_str(id))->is_muted = muted;
+
     if (muted) gVoicePlayers[id].clientMutedState |=  VOICECHAT_MUTE_LOCAL;
     else       gVoicePlayers[id].clientMutedState &= ~VOICECHAT_MUTE_LOCAL;
     network_send_voicechat_muted(gNetworkPlayers[id].globalIndex, VOICECHAT_MUTE_LOCAL, muted);

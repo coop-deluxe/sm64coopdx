@@ -62,6 +62,12 @@ void network_receive_voicechat_muted(struct Packet* p) {
     struct NetworkPlayer* sender = network_player_from_global_index(p->orderedFromGlobalId);
     struct NetworkPlayer* receiver = network_player_from_global_index(globalIndex);
 
+    if (!sender) {
+        if (p->orderedFromGlobalId == 0 && mask & VOICECHAT_MUTE_GLOBAL)
+            voicechat_push_pending_global_mute(globalIndex);
+        return;
+    }
+
     if (!sender->moderator && sender->globalIndex != 0) mask &= ~VOICECHAT_MUTE_GLOBAL;
 
     if (mask & VOICECHAT_MUTE_GLOBAL) {

@@ -22,6 +22,7 @@
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
+#include "pc/network/voice_list.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -610,12 +611,26 @@ static void save_name_write(FILE* file) {
     }
 }
 
+static void voice_read(char** tokens, int numTokens) {
+    struct VoiceList* data = voice_list_get_or_create(tokens[1]);
+    data->volume = atoi(tokens[2]);
+    data->is_muted = atoi(tokens[3]);
+    data->is_globally_muted = atoi(tokens[4]);
+}
+
+static void voice_write(FILE* file) {
+    for (int i = 0; i < gVoiceListCount; i++) {
+        fprintf(file, "voice: %s %d %d %d\n", gVoiceList[i].address, gVoiceList[i].volume, gVoiceList[i].is_muted, gVoiceList[i].is_globally_muted);
+    }
+}
+
 static const struct FunctionConfigOption functionOptions[] = {
     { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
     { .name = "moderator:",  .read = moderator_read,  .write = moderator_write  },
     { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },
-    { .name = "save-name:",  .read = save_name_read,  .write = save_name_write  }
+    { .name = "save-name:",  .read = save_name_read,  .write = save_name_write  },
+    { .name = "voice:",      .read = voice_read,      .write = voice_write      },
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

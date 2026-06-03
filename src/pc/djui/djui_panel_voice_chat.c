@@ -5,6 +5,7 @@
 #include "pc/voice_chat.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/network/network.h"
+#include "pc/network/voice_list.h"
 #include "pc/utils/misc.h"
 
 static struct DjuiBase* activation_threshold_slider;
@@ -106,6 +107,12 @@ static void toggle_mute(struct DjuiBase* caller) {
     get_microphone_icon(&mic->button->icon->textureInfo, mic->player_id, mic->global);
 }
 
+static void adjust_volume(struct DjuiBase* caller) {
+    struct DjuiSlider* slider = (struct DjuiSlider*)caller;
+    int index = (struct VoicePlayer*)((char*)slider->value - offsetof(struct VoicePlayer, volume)) - &gVoicePlayers[0];
+    voice_list_get_or_create(gNetworkSystem->get_id_str(index))->volume = *slider->value;
+}
+
 #define TEXTURE_INFO(tex) (tex).texture, (tex).width, (tex).height, (tex).format, (tex).size
 
 static void djui_panel_voice_chat_add_players(struct DjuiBase* body) {
@@ -138,7 +145,7 @@ static void djui_panel_voice_chat_add_players(struct DjuiBase* body) {
 
         struct DjuiButton* gmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(gmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
         struct DjuiButton* lmute = djui_image_button_create(&inner_layout->base, TEXTURE_INFO(lmute_tex), DJUI_BUTTON_STYLE_NORMAL, toggle_mute);
-        struct DjuiSlider* vol   = djui_slider_create(&inner_layout->base, gNetworkPlayers[i].name, &gVoicePlayers[i].volume, 0, 200, NULL);
+        struct DjuiSlider* vol   = djui_slider_create(&inner_layout->base, gNetworkPlayers[i].name, &gVoicePlayers[i].volume, 0, 200, adjust_volume);
 
         sMicButtons[button_counter++] = (struct MicButton){ .base = &lmute->base, .button = lmute, .player_id = i, .global = false };
         sMicButtons[button_counter++] = (struct MicButton){ .base = &gmute->base, .button = gmute, .player_id = i, .global = true };

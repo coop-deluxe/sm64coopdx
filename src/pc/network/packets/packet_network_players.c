@@ -6,6 +6,7 @@
 #include "pc/debuglog.h"
 #include "pc/configfile.h"
 #include "pc/network/moderator_list.h"
+#include "pc/network/voice_list.h"
 #include "pc/voice_chat.h"
 
 static void network_send_to_network_players(u8 sendToLocalIndex) {
@@ -136,8 +137,18 @@ void network_receive_network_players(struct Packet *p) {
                 network_player_update_model(localIndex);
             }
 
-            if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED)
+            if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED) {
                 voicechat_init_player(localIndex);
+
+                struct VoiceList* data = voice_list_get(gNetworkSystem->get_id_str(localIndex));
+                if (data) {
+                    if (data->is_muted) voicechat_set_mute_other(localIndex, true);
+                    gVoicePlayers[localIndex].volume = data->volume;
+                }
+            }
         }
     }
+
+    if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED)
+        voicechat_resolve_pending_global_mutes();
 }

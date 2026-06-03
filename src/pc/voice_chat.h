@@ -75,6 +75,9 @@ u32 voicechat_encode_audio(u8* packet, u32 max_size);
 void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size);
 void voicechat_mix(s16* out_pcm, u32 num_samples);
 
+void voicechat_push_pending_global_mute(s32 global_id);
+void voicechat_resolve_pending_global_mutes();
+
 /* |description|Toggles mute state on the current player|descriptionEnd| */
 void voicechat_toggle_mute();
 /* |description|Toggles global mute state on another player|descriptionEnd| */
