@@ -10,7 +10,6 @@ void network_send_voicechat_frame(void) {
     if (size == 0) return;
 
     packet_init(&p, PACKET_VOICECHAT_FRAME, false, gServerSettings.voiceChat == VOICECHAT_TYPE_PROXIMITY ? PLMT_AREA : PLMT_NONE);
-    packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, &size, sizeof(u32));
     packet_write(&p, frame, size);
 
@@ -24,9 +23,6 @@ void network_send_voicechat_frame(void) {
 }
 
 void network_receive_voicechat_frame(struct Packet* p) {
-    u8 sender_global_index;
-    packet_read(p, &sender_global_index, sizeof(u8));
-
     u32 frame_size;
     packet_read(p, &frame_size, sizeof(u32));
 
@@ -34,7 +30,7 @@ void network_receive_voicechat_frame(struct Packet* p) {
     packet_read(p, frame_data, frame_size);
     
     voicechat_decode_audio(
-        network_player_from_global_index(sender_global_index)->localIndex,
+        network_local_index_from_global(p->orderedFromGlobalId),
         frame_data, frame_size
     );
 }
