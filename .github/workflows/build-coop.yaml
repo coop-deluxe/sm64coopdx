@@ -18,7 +18,7 @@ jobs:
             - name: Install dependencies
               run: |
                 sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libopus-dev libz-dev libcurl4-openssl-dev zip
 
             - name: Build the game
               run: make -j$(nproc)
@@ -50,7 +50,7 @@ jobs:
             - name: Install dependencies
               run: |
                 sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libopus-dev libz-dev libcurl4-openssl-dev zip
 
             - name: Build the game
               run: make -j$(nproc) HANDHELD=1
@@ -95,6 +95,8 @@ jobs:
                     mingw-w64-x86_64-gcc
                     mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
+                    mingw-w64-i686-opus
+                    mingw-w64-x86_64-opus
                     mingw-w64-i686-SDL2
                     mingw-w64-x86_64-SDL2
                     python3
