@@ -250,7 +250,8 @@ void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size) {
 
 void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     s32 num_samples = num_out_samples * INTERNAL_SAMPLE_RATE / SAMPLE_RATE;
-    s16 mixed[num_samples * 2 /* stereo */] = {};
+    s16 mixed[num_samples * 2 /* stereo */];
+    memset(mixed, 0, sizeof(mixed)); // initialize via memset cuz older gcc was complaining about "= {}"
 
     // skip over player 0 because thats the client
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
