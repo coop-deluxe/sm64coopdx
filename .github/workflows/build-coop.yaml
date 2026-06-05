@@ -93,7 +93,6 @@ jobs:
                     git
                     mingw-w64-i686-gcc
                     mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
                     mingw-w64-i686-opus
                     mingw-w64-x86_64-opus
