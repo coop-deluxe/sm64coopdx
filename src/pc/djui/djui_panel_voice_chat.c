@@ -70,7 +70,7 @@ static struct MicButton {
     s32 player_id;
     struct DjuiBase* base;
     struct DjuiButton* button;
-} sMicButtons[32];
+} sMicButtons[MAX_PLAYERS * 2];
 
 static bool is_dark_theme() {
     struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.defaultRectColor;

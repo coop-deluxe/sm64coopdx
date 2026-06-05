@@ -163,7 +163,7 @@ It ranges from 0 to `(MAX_PLAYERS - 1)`.
 
 It is indexed by the local `playerIndex`, so `gVoicePlayers[0]` is always the local player.
 
-`gVoicePlayers`'s fields are listed in [VoicePlayer](structs.md#gVoicePlayers).
+`gVoicePlayers`'s fields are listed in [VoicePlayer](structs.md#VoicePlayer).
 
 __**NOTE**__: It shouldn't be read from or modified if the server has voice chat disabled.
 To check if the server has voice chat disabled, you can check if `gServerSettings.voiceChat` is equal to `VOICECHAT_TYPE_DISALBED`.

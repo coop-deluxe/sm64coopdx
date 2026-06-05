@@ -61,26 +61,8 @@ static u32 buffer_read(struct VoiceBuffer* buffer, u32 bytes, void* out) {
     return bytes;
 }
 
-static void buffer_grow(struct VoiceBuffer* buffer, u32 bytes) {
-    if (buffer->dynamic && buffer->size + bytes > buffer->capacity) {
-        buffer->capacity = buffer->size + bytes;
-        if (buffer->capacity % 1024) buffer->capacity += 1024 - (buffer->capacity % 1024);
-        if (buffer->bytes) {
-            u8* new_bytes = malloc(buffer->capacity);
-            memcpy(new_bytes, buffer->bytes + buffer->tail, (buffer->size - buffer->tail));
-            memcpy(new_bytes + (buffer->size - buffer->tail), buffer->bytes, buffer->tail);
-            free(buffer->bytes);
-            buffer->bytes = new_bytes;
-        }
-        buffer->tail = 0;
-        buffer->head = buffer->size;
-    }
-
-    if (!buffer->bytes) buffer->bytes = malloc(buffer->capacity);
-}
-
 static void buffer_write(struct VoiceBuffer* buffer, u32 bytes, void* data) {
-    buffer_grow(buffer, bytes);
+    if (!buffer->bytes) buffer->bytes = malloc(buffer->capacity);
     for (u32 i = 0; i < bytes; i++) {
         buffer->bytes[buffer->head] = data ? ((u8*)data)[i] : 0;
         buffer->head = (buffer->head + 1) % buffer->capacity;
@@ -225,7 +207,6 @@ void voicechat_init_player(s32 id) {
     else gVoicePlayers[id].error = VOICECHAT_ERR_NONE;
 
     gVoicePlayers[id].internal.buffer.capacity = FRAME_SIZE * MAX_FRAMES * sizeof(s16);
-    gVoicePlayers[id].internal.buffer.dynamic = false;
     gVoicePlayers[id].volume = 100;
     gVoicePlayers[id].channel = 0;
     gVoicePlayers[id].talking = false;
@@ -256,7 +237,7 @@ u32 voicechat_encode_audio(u8* packet, u32 max_size) {
 void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size) {
     if (!voicechat_is_ingame(id) || !gVoicePlayers[id].internal.decoder) return;
 
-    s16 pcm[FRAME_SIZE * sizeof(s16)];
+    s16 pcm[FRAME_SIZE];
     s32 num_frames = opus_decode(gVoicePlayers[id].internal.decoder, packet, packet_size, pcm, FRAME_SIZE, 0);
     if (num_frames < 0) {
         fprintf(stderr, "[VOICE CHAT] Failed to decode opus packet: %s\n", get_opus_error(num_frames));
@@ -427,12 +408,14 @@ void voicechat_remove_channel(s32 channel) {
 
 void voicechat_hear(s32 channel, s32 other_channel, bool can_hear) {
     if (channel < 0 || channel >= sNumVoiceChannels) return;
+    if (other_channel < 0 || other_channel >= sNumVoiceChannels) return;
     voicechat_channel_grow(channel);
     sVoiceChannels[channel].canHear[other_channel] = can_hear;
 }
 
 bool voicechat_can_hear(s32 channel, s32 other_channel) {
     if (channel < 0 || channel >= sNumVoiceChannels) return false;
+    if (other_channel < 0 || other_channel >= sNumVoiceChannels) return false;
     voicechat_channel_grow(channel);
     return sVoiceChannels[channel].canHear[other_channel];
 }

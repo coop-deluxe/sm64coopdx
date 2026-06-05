@@ -2,10 +2,13 @@
 
 #include "pc/voice_chat.h"
 
+// max frame size for opus frames; defined by the opus spec
+#define OPUS_MAX_FRAME_SIZE 1275
+
 void network_send_voicechat_frame(void) {
     struct Packet p = {};
 
-    u8 frame[4096];
+    u8 frame[OPUS_MAX_FRAME_SIZE];
     u32 size = voicechat_encode_audio(frame, sizeof(frame));
     if (size == 0) return;
 
@@ -25,6 +28,8 @@ void network_send_voicechat_frame(void) {
 void network_receive_voicechat_frame(struct Packet* p) {
     u32 frame_size;
     packet_read(p, &frame_size, sizeof(u32));
+
+    if (frame_size > OPUS_MAX_FRAME_SIZE) return;
 
     u8 frame_data[frame_size];
     packet_read(p, frame_data, frame_size);

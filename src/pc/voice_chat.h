@@ -36,7 +36,6 @@ enum VoiceChatMuteState {
 };
 
 struct VoiceBuffer {
-    bool dynamic;
     u32 size, capacity;
     u32 tail, head;
     u8* bytes;

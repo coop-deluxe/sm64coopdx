@@ -33,8 +33,8 @@ void djui_panel_options_create(struct DjuiBase* caller) {
         djui_button_create(body, DLANG(OPTIONS, CONTROLS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_create);
         djui_button_create(body, DLANG(OPTIONS, DISPLAY), DJUI_BUTTON_STYLE_NORMAL, djui_panel_display_create);
         djui_button_create(body, DLANG(OPTIONS, SOUND), DJUI_BUTTON_STYLE_NORMAL, djui_panel_sound_create);
-        djui_button_create(body, DLANG(OPTIONS, MISC), DJUI_BUTTON_STYLE_NORMAL, djui_panel_misc_create);
         djui_button_create(body, DLANG(OPTIONS, VOICECHAT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_voice_chat_create);
+        djui_button_create(body, DLANG(OPTIONS, MISC), DJUI_BUTTON_STYLE_NORMAL, djui_panel_misc_create);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_options_back);
     }
 

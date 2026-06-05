@@ -47,7 +47,6 @@ static bool audio_sdl_init(void) {
     if (capture_dev == 0) {
         gVoicePlayer->error = VOICECHAT_ERR_NO_MICROPHONE;
         fprintf(stderr, "SDL_OpenAudio capture error: %s\n", SDL_GetError());
-        return false;
     }
 
     SDL_PauseAudioDevice(dev, 0);
@@ -70,6 +69,7 @@ static void audio_sdl_play(const uint8_t *buf, size_t len) {
 }
 
 static void audio_sdl_record_start() {
+    if (capture_dev == 0) return;
     SDL_PauseAudioDevice(capture_dev, 0);
 }
 
@@ -78,6 +78,7 @@ static void audio_sdl_record_callback(AudioCaptureCallback callback) {
 }
 
 static void audio_sdl_record_stop() {
+    if (capture_dev == 0) return;
     SDL_PauseAudioDevice(capture_dev, 1);
 }
 

@@ -80,11 +80,14 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* chkDevMode = djui_checkbox_create(body, DLANG(HOST_SETTINGS, MOD_DEV_MODE), (configNetworkSystem == NS_SOCKET) ? &configModDevMode : &sFalse, NULL);
         djui_base_set_enabled(&chkDevMode->base, configNetworkSystem == NS_SOCKET);
 
-        if (is_public_coopnet_lobby()) configVoiceChat = VOICECHAT_TYPE_DISABLED;
+        static unsigned int sVoiceChatDisabled = VOICECHAT_TYPE_DISABLED;
+        unsigned int* configVoiceChatPtr = &configVoiceChat;
+        
+        if (is_public_coopnet_lobby()) configVoiceChatPtr = &sVoiceChatDisabled;
         struct DjuiSelectionbox* selVoiceChat = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, VOICECHAT), (char*[]){
             DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
-        }, 3, &configVoiceChat, NULL);
-        djui_base_set_enabled(&selVoiceChat->base, !is_public_coopnet_lobby());
+        }, 3, configVoiceChatPtr, NULL);
+        djui_base_set_enabled(&selVoiceChat->base, configVoiceChatPtr == &configVoiceChat);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

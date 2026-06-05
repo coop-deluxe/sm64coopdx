@@ -132,8 +132,8 @@ static const unsigned int defaultConfigKeyConsole[MAX_BINDS]    = { 0x0029,     
 static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyMuteMic[MAX_BINDS]    = { 0x0032,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyDeafen[MAX_BINDS]     = { 0x0031,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyMuteMic[MAX_BINDS]    = { 0x0043,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDeafen[MAX_BINDS]     = { 0x0044,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyPushToTalk[MAX_BINDS] = { 0x001d,     VK_INVALID, VK_INVALID };
 
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
@@ -162,8 +162,8 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
-unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0032,     VK_INVALID, VK_INVALID };
-unsigned int configKeyDeafen[MAX_BINDS]           = { 0x0031,     VK_INVALID, VK_INVALID };
+unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0043,     VK_INVALID, VK_INVALID };
+unsigned int configKeyDeafen[MAX_BINDS]           = { 0x0044,     VK_INVALID, VK_INVALID };
 unsigned int configKeyPushToTalk[MAX_BINDS]       = { 0x001d,     VK_INVALID, VK_INVALID };
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
@@ -612,6 +612,7 @@ static void save_name_write(FILE* file) {
 }
 
 static void voice_read(char** tokens, int numTokens) {
+    if (numTokens < 5) return;
     struct VoiceList* data = voice_list_get_or_create(tokens[1]);
     data->volume = atoi(tokens[2]);
     data->is_muted = atoi(tokens[3]);
