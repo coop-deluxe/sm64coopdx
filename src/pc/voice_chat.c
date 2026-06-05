@@ -417,6 +417,7 @@ void voicechat_hear(s32 channel, s32 other_channel, bool can_hear) {
 bool voicechat_can_hear(s32 channel, s32 other_channel) {
     if (channel < 0 || channel >= sNumVoiceChannels) return false;
     if (other_channel < 0 || other_channel >= sNumVoiceChannels) return false;
+    if (channel == other_channel) return true;
     voicechat_channel_grow(channel);
     return sVoiceChannels[channel].canHear[other_channel];
 }

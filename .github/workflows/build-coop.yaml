@@ -121,6 +121,8 @@ jobs:
                 name: sm64coopdx-windows
                 path: ./build/us_pc/sm64coopdx_Windows.zip
 
+    # todo: add opus build step
+    #   someone who has a mac hit me up
     build-macos-arm:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-26
@@ -176,6 +178,8 @@ jobs:
                 name: sm64coopdx-macos-arm
                 path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
 
+    # todo: add opus build step
+    #   someone who has a mac hit me up
     build-macos-intel:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-15-intel

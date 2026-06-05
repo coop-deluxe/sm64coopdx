@@ -1565,8 +1565,8 @@ all:
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib > /dev/null 2>&1; \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib; \
     cp $(OPUS_LIB) $(APP_MACOS_DIR)/libopus.dylib; \
-    install_name_tool -change $(BREW_PREFIX)/lib/libopus.dylib `@executable_path/libopus.dylib` $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
-    install_name_tool -id `@executable_path/libopus.dylib` $(APP_MACOS_DIR)/libopus.dylib > /dev/null 2>&1; \
+    install_name_tool -change $(BREW_PREFIX)/lib/libopus.dylib @executable_path/libopus.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
+    install_name_tool -id @executable_path/libopus.dylib $(APP_MACOS_DIR)/libopus.dylib > /dev/null 2>&1; \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libopus.dylib; \
     mkdir res/build; \
     xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target $(MIN_MACOS_VERSION) --platform macosx > /dev/null 2>&1; \
