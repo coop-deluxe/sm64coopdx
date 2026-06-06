@@ -38,7 +38,7 @@ struct ObjectHitbox sBookSwitchHitbox = {
 void flying_bookend_act_0(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     if (marioState && obj_is_near_to_and_facing_mario(marioState, 400.0f, 0x3000)) {
-        cur_obj_play_sound_2(SOUND_OBJ_DEFAULT_DEATH);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_DEFAULT_DEATH);
         o->oAction = 1;
         o->oBookendUnkF4 = o->oFaceAnglePitch + 0x7FFF;
         o->oBookendUnkF8 = o->oFaceAngleRoll - 0x7FFF;
@@ -152,7 +152,7 @@ void bhv_bookend_spawn_loop(void) {
                 u32 models[] = { MODEL_BOOKEND };
                 network_send_spawn_objects(spawn_objects, models, 1);
 
-                cur_obj_play_sound_2(SOUND_OBJ_DEFAULT_DEATH);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_DEFAULT_DEATH);
             }
             o->oTimer = 0;
         }
@@ -355,7 +355,7 @@ void bhv_book_switch_loop(void) {
             }
 
             if (o->oBookSwitchUnkF4 == 0.0f) {
-                cur_obj_play_sound_2(SOUND_OBJ_DEFAULT_DEATH);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_DEFAULT_DEATH);
             }
 
             if (approach_f32_ptr(&o->oBookSwitchUnkF4, 50.0f, 20.0f)) {

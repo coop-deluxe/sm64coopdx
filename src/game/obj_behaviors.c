@@ -125,14 +125,6 @@ Gfx UNUSED *geo_obj_transparency_something(s32 callContext, struct GraphNode *no
     return gfxHead;
 }
 
-/* |description|Absolute value (always positive) function|descriptionEnd| */
-f32 absf_2(f32 f) {
-    if (f < 0) {
-        f *= -1.0f;
-    }
-    return f;
-}
-
 /**
  * Turns an object away from floors/walls that it runs into.
  */
@@ -411,7 +403,7 @@ void obj_splash(s32 waterY, s32 objY) {
         spawn_object(o, MODEL_IDLE_WATER_WAVE, bhvObjectWaterWave);
 
         if (o->oVelY < -20.0f) {
-            cur_obj_play_sound_2(SOUND_OBJ_DIVING_INTO_WATER);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_DIVING_INTO_WATER);
         }
     }
 
@@ -917,7 +909,7 @@ s8 obj_lava_death(void) {
     }
 
     if ((o->oTimer % 8) == 0) {
-        cur_obj_play_sound_2(SOUND_OBJ_BULLY_EXPLODE_2);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BULLY_EXPLODE_2);
         deathSmoke = spawn_object(o, MODEL_SMOKE, bhvBobombBullyDeathSmoke);
         if (deathSmoke != NULL) {
             deathSmoke->oPosX += random_float() * 20.0f;

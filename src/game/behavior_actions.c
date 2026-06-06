@@ -230,7 +230,7 @@ s32 set_obj_anim_with_accel_and_sound(s16 a0, s16 a1, s32 a2) {
     if ((sp1C = o->header.gfx.animInfo.animAccel / (f32) 0x10000) == 0)
         sp1C = 1.0f;
     if (cur_obj_check_anim_frame_in_range(a0, sp1C) || cur_obj_check_anim_frame_in_range(a1, sp1C)) {
-        cur_obj_play_sound_2(a2);
+        cur_obj_play_sound_and_rumble_if_visible(a2);
         return 1;
     }
     return 0;

@@ -1,7 +1,7 @@
 // elevator.c.inc
 
 void elevator_starting_shake(void) {
-    cur_obj_play_sound_2(SOUND_GENERAL_QUIET_POUND1);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_QUIET_POUND1);
     cur_obj_shake_screen(SHAKE_POS_SMALL);
 }
 
@@ -43,7 +43,7 @@ void elevator_act_1(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
 
-    cur_obj_play_sound_1(SOUND_ENV_ELEVATOR1);
+    cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR1);
     if (o->oTimer == 0 && cur_obj_is_any_player_on_platform()) {
         elevator_starting_shake();
     }
@@ -67,7 +67,7 @@ void elevator_act_2(void) { // Pretty similar code to action 1
     struct MarioState* marioState = nearest_mario_state_to_object(o);
     struct Object* player = marioState ? marioState->marioObj : NULL;
 
-    cur_obj_play_sound_1(SOUND_ENV_ELEVATOR1);
+    cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR1);
     if (o->oTimer == 0 && cur_obj_is_any_player_on_platform()) {
         elevator_starting_shake();
     }
@@ -96,7 +96,7 @@ void elevator_act_4(void) {
     o->oVelY = 0;
     if (o->oTimer == 0) {
         cur_obj_shake_screen(SHAKE_POS_SMALL);
-        cur_obj_play_sound_2(SOUND_GENERAL_METAL_POUND);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_METAL_POUND);
     }
     if (marioState && !mario_is_in_air_action(marioState) && !cur_obj_is_any_player_on_platform()) {
         o->oAction = 1;
@@ -112,7 +112,7 @@ void elevator_act_3(void) // nearly identical to action 2
     o->oVelY = 0;
     if (o->oTimer == 0) {
         cur_obj_shake_screen(SHAKE_POS_SMALL);
-        cur_obj_play_sound_2(SOUND_GENERAL_METAL_POUND);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_METAL_POUND);
     }
     if (marioState && !mario_is_in_air_action(marioState) && !cur_obj_is_any_player_on_platform()) {
         o->oAction = 0;

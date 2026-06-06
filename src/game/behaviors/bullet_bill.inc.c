@@ -56,7 +56,7 @@ void bullet_bill_act_2(void) {
         if (distanceToPlayer > 300.0f)
             cur_obj_rotate_yaw_toward(angleToPlayer, 0x100);
         if (o->oTimer == 50) {
-            cur_obj_play_sound_2(SOUND_OBJ_POUNDING_CANNON);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_POUNDING_CANNON);
             cur_obj_shake_screen(SHAKE_POS_SMALL);
         }
         if (o->oTimer > 150 || o->oMoveFlags & OBJ_MOVE_HIT_WALL) {

@@ -81,72 +81,6 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     )
 end
 
--------------
--- courses --
--------------
-
---- @type integer
-COURSE_NONE     = 0
---- @type integer
-COURSE_BOB      = 1
---- @type integer
-COURSE_WF       = 2
---- @type integer
-COURSE_JRB      = 3
---- @type integer
-COURSE_CCM      = 4
---- @type integer
-COURSE_BBH      = 5
---- @type integer
-COURSE_HMC      = 6
---- @type integer
-COURSE_LLL      = 7
---- @type integer
-COURSE_SSL      = 8
---- @type integer
-COURSE_DDD      = 9
---- @type integer
-COURSE_SL       = 10
---- @type integer
-COURSE_WDW      = 11
---- @type integer
-COURSE_TTM      = 12
---- @type integer
-COURSE_THI      = 13
---- @type integer
-COURSE_TTC      = 14
---- @type integer
-COURSE_RR       = 15
---- @type integer
-COURSE_BITDW    = 16
---- @type integer
-COURSE_BITFS    = 17
---- @type integer
-COURSE_BITS     = 18
---- @type integer
-COURSE_PSS      = 19
---- @type integer
-COURSE_COTMC    = 20
---- @type integer
-COURSE_TOTWC    = 21
---- @type integer
-COURSE_VCUTM    = 22
---- @type integer
-COURSE_WMOTR    = 23
---- @type integer
-COURSE_SA       = 24
---- @type integer
-COURSE_CAKE_END = 25
---- @type integer
-COURSE_END = 26
---- @type integer
-COURSE_MAX = 25
---- @type integer
-COURSE_COUNT = 25
---- @type integer
-COURSE_MIN = 1
-
-
 ------------------------------
 -- player palette functions --
 ------------------------------
@@ -177,15 +111,11 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
---------------------------
--- local math functions --
---------------------------
 local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
 
 ------------
 -- tweens --
 ------------
--- Unrelated to SM64, but these are for `math.tween`
 
 ---@param x number
 ---@return number
@@ -2403,6 +2333,69 @@ M_MOUSE_BUTTON = MOUSE_BUTTON_2
 
 --- @type integer
 R_MOUSE_BUTTON = MOUSE_BUTTON_3
+
+COURSE_NONE     =              0 --- @type CourseNum
+COURSE_BOB      =              1 --- @type CourseNum
+COURSE_WF       =              2 --- @type CourseNum
+COURSE_JRB      =              3 --- @type CourseNum
+COURSE_CCM      =              4 --- @type CourseNum
+COURSE_BBH      =              5 --- @type CourseNum
+COURSE_HMC      =              6 --- @type CourseNum
+COURSE_LLL      =              7 --- @type CourseNum
+COURSE_SSL      =              8 --- @type CourseNum
+COURSE_DDD      =              9 --- @type CourseNum
+COURSE_SL       =             10 --- @type CourseNum
+COURSE_WDW      =             11 --- @type CourseNum
+COURSE_TTM      =             12 --- @type CourseNum
+COURSE_THI      =             13 --- @type CourseNum
+COURSE_TTC      =             14 --- @type CourseNum
+COURSE_RR       =             15 --- @type CourseNum
+COURSE_BITDW    =             16 --- @type CourseNum
+COURSE_BITFS    =             17 --- @type CourseNum
+COURSE_BITS     =             18 --- @type CourseNum
+COURSE_PSS      =             19 --- @type CourseNum
+COURSE_COTMC    =             20 --- @type CourseNum
+COURSE_TOTWC    =             21 --- @type CourseNum
+COURSE_VCUTM    =             22 --- @type CourseNum
+COURSE_WMOTR    =             23 --- @type CourseNum
+COURSE_SA       =             24 --- @type CourseNum
+COURSE_CAKE_END =             25 --- @type CourseNum
+COURSE_END      =             26 --- @type CourseNum
+COURSE_COUNT    = COURSE_END - 1 --- @type CourseNum
+COURSE_MAX      =   COURSE_COUNT --- @type CourseNum
+COURSE_MIN      =              1 --- @type CourseNum
+
+--- @alias CourseNum
+--- | `COURSE_NONE`
+--- | `COURSE_BOB`
+--- | `COURSE_WF`
+--- | `COURSE_JRB`
+--- | `COURSE_CCM`
+--- | `COURSE_BBH`
+--- | `COURSE_HMC`
+--- | `COURSE_LLL`
+--- | `COURSE_SSL`
+--- | `COURSE_DDD`
+--- | `COURSE_SL`
+--- | `COURSE_WDW`
+--- | `COURSE_TTM`
+--- | `COURSE_THI`
+--- | `COURSE_TTC`
+--- | `COURSE_RR`
+--- | `COURSE_BITDW`
+--- | `COURSE_BITFS`
+--- | `COURSE_BITS`
+--- | `COURSE_PSS`
+--- | `COURSE_COTMC`
+--- | `COURSE_TOTWC`
+--- | `COURSE_VCUTM`
+--- | `COURSE_WMOTR`
+--- | `COURSE_SA`
+--- | `COURSE_CAKE_END`
+--- | `COURSE_END`
+--- | `COURSE_COUNT`
+--- | `COURSE_MAX`
+--- | `COURSE_MIN`
 
 DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId

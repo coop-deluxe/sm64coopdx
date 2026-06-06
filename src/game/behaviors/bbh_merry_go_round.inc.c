@@ -62,7 +62,7 @@ static void handle_merry_go_round_music(void) {
             stop_secondary_music(300); // Switch to BBH music? FIXME: Audio needs labelling
             o->oMerryGoRoundMusicShouldPlay = FALSE;
         } else {
-            cur_obj_play_sound_1(SOUND_ENV_MERRY_GO_ROUND_CREAKING);
+            cur_obj_play_sound_if_visible(SOUND_ENV_MERRY_GO_ROUND_CREAKING);
         }
     }
 

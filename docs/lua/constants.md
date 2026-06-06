@@ -11,6 +11,8 @@
     - [enum CharacterType](#enum-CharacterType)
     - [enum CharacterSound](#enum-CharacterSound)
 - [controller_mouse.h](#controller_mouseh)
+- [course_defines.h](#course_definesh)
+    - [enum CourseNum](#enum-CourseNum)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -950,6 +952,46 @@
 - L_MOUSE_BUTTON
 - M_MOUSE_BUTTON
 - R_MOUSE_BUTTON
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [course_defines.h](#course_defines.h)
+
+### [enum CourseNum](#CourseNum)
+| Identifier | Value |
+| :--------- | :---- |
+| COURSE_NONE | 0 |
+| COURSE_BOB | 1 |
+| COURSE_WF | 2 |
+| COURSE_JRB | 3 |
+| COURSE_CCM | 4 |
+| COURSE_BBH | 5 |
+| COURSE_HMC | 6 |
+| COURSE_LLL | 7 |
+| COURSE_SSL | 8 |
+| COURSE_DDD | 9 |
+| COURSE_SL | 10 |
+| COURSE_WDW | 11 |
+| COURSE_TTM | 12 |
+| COURSE_THI | 13 |
+| COURSE_TTC | 14 |
+| COURSE_RR | 15 |
+| COURSE_BITDW | 16 |
+| COURSE_BITFS | 17 |
+| COURSE_BITS | 18 |
+| COURSE_PSS | 19 |
+| COURSE_COTMC | 20 |
+| COURSE_TOTWC | 21 |
+| COURSE_VCUTM | 22 |
+| COURSE_WMOTR | 23 |
+| COURSE_SA | 24 |
+| COURSE_CAKE_END | 25 |
+| COURSE_END | 26 |
+| COURSE_COUNT | COURSE_END - 1 |
+| COURSE_MAX | COURSE_COUNT |
+| COURSE_MIN | 1 |
 
 [:arrow_up_small:](#)
 
