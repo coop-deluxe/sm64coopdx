@@ -36,6 +36,7 @@
 #include "../configfile.h"
 #include "../cliopts.h"
 
+#include "../platform.h"
 #include "pc/controller/controller_keyboard.h"
 #include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_bind_mapping.h"
@@ -143,7 +144,13 @@ static void gfx_sdl_init(const char *window_title) {
         xpos, ypos, configWindow.w, configWindow.h,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
+    if (!wnd) {
+        sys_fatal("Failed to create SDL window: %s", SDL_GetError());
+    }
     ctx = SDL_GL_CreateContext(wnd);
+    if (!ctx) {
+        sys_fatal("Failed to create OpenGL context: %s", SDL_GetError());
+    }
 
     gfx_sdl_set_vsync(configWindow.vsync);
 
