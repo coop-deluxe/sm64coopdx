@@ -77,7 +77,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         }
 
         if (gServerSettings.voiceChat)
-            djui_button_create(body, DLANG(PAUSE, VOICE_CHAT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_voice_chat_ingame_create);
+            djui_button_create(body, DLANG(OPTIONS, VOICECHAT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_voice_chat_ingame_create);
 
         struct Mod* addedMods[MAX_HOOKED_MOD_MENU_ELEMENTS] = { 0 };
         int modCount = 0;

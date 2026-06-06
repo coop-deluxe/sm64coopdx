@@ -27,6 +27,7 @@ void network_send_voicechat_frame(void) {
 }
 
 void network_receive_voicechat_frame(struct Packet* p) {
+    // really curious why p->orderedFromGlobalId is a wrong value...
     u8 global_index;
     packet_read(p, &global_index, sizeof(u8));
 
@@ -48,7 +49,6 @@ void network_send_voicechat_muted(u8 receiverIndex, u8 mask, bool muted) {
     struct Packet p = {};
 
     packet_init(&p, PACKET_VOICECHAT_MUTE, false, PLMT_NONE);
-    packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, &receiverIndex, sizeof(u8));
     packet_write(&p, &mask, sizeof(u8));
     packet_write(&p, &muted, sizeof(bool));
@@ -58,25 +58,24 @@ void network_send_voicechat_muted(u8 receiverIndex, u8 mask, bool muted) {
 }
 
 void network_receive_voicechat_muted(struct Packet* p) {
-    u8 sender_index, receiver_index, mask;
+    u8 receiver_index, mask;
     bool muted;
 
-    packet_read(p, &sender_index, sizeof(u8));
     packet_read(p, &receiver_index, sizeof(u8));
     packet_read(p, &mask, sizeof(u8));
     packet_read(p, &muted, sizeof(bool));
 
-    struct NetworkPlayer* sender = network_player_from_global_index(sender_index);
+    struct NetworkPlayer* sender = network_player_from_global_index(p->orderedFromGlobalId);
     struct NetworkPlayer* receiver = network_player_from_global_index(receiver_index);
 
     if (!receiver) return;
     if (!sender) {
-        if (sender_index == 0 && mask & VOICECHAT_MUTE_GLOBAL)
+        if (p->orderedFromGlobalId == 0 && mask & VOICECHAT_MUTE_GLOBAL)
             voicechat_push_pending_global_mute(receiver_index);
         return;
     }
 
-    if (!sender->moderator && sender_index != 0) mask &= ~VOICECHAT_MUTE_GLOBAL;
+    if (!sender->moderator && p->orderedFromGlobalId != 0) mask &= ~VOICECHAT_MUTE_GLOBAL;
 
     if (mask & VOICECHAT_MUTE_GLOBAL) {
         if (muted) gVoicePlayers[receiver->localIndex].clientMutedState |=  VOICECHAT_MUTE_GLOBAL;

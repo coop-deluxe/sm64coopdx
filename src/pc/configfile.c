@@ -823,9 +823,11 @@ static void configfile_load_internal(const char *filename, bool* error) {
                                 if (ptr >= option->maxStringLength) break;
                                 strncpy(option->stringValue + ptr, tokens[i], option->maxStringLength - ptr - 1);
                                 ptr += strlen(tokens[i]);
+                                if (ptr >= option->maxStringLength) break;
                                 if (i + 1 < numTokens) {
                                     int spaces = tokens[i + 1] - (tokens[i] + strlen(tokens[i]));
                                     if (ptr + spaces >= option->maxStringLength) spaces = option->maxStringLength - ptr - 1;
+                                    if (spaces < 0) spaces = 0;
                                     memset(option->stringValue + ptr, ' ', spaces);
                                     ptr += spaces;
                                 }

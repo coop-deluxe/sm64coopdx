@@ -84,7 +84,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         unsigned int* configVoiceChatPtr = &configVoiceChat;
         
         if (is_public_coopnet_lobby()) configVoiceChatPtr = &sVoiceChatDisabled;
-        struct DjuiSelectionbox* selVoiceChat = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, VOICECHAT), (char*[]){
+        struct DjuiSelectionbox* selVoiceChat = djui_selectionbox_create(body, DLANG(OPTIONS, VOICECHAT), (char*[]){
             DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
         }, 3, configVoiceChatPtr, NULL);
         djui_base_set_enabled(&selVoiceChat->base, configVoiceChatPtr == &configVoiceChat);

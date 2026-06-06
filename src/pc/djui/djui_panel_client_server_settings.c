@@ -54,7 +54,7 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         djui_base_set_enabled(&checkbox4->base, false);
     
         sVoiceChat = gServerSettings.voiceChat;
-        struct DjuiSelectionbox* selectionbox6 = djui_selectionbox_create(body, DLANG(HOST_SETTINGS, VOICECHAT), (char*[]){
+        struct DjuiSelectionbox* selectionbox6 = djui_selectionbox_create(body, DLANG(OPTIONS, VOICECHAT), (char*[]){
             DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
         }, 3, &sVoiceChat, NULL);
         djui_base_set_enabled(&selectionbox6->base, false);

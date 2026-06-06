@@ -20,8 +20,8 @@ static void djui_panel_sound_output_change(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_sound_device_change(UNUSED struct DjuiBase* caller) {
-    gAudioApi->reopen_speaker(sAudioDevices[sCurrAudioDevice]);
-    strncpy(configAudioOutputDevice, sAudioDevices[sCurrAudioDevice], MAX_AUDIO_DEVICE_LENGTH - 1);
+    if (gAudioApi->reopen_speaker(sAudioDevices[sCurrAudioDevice]))
+        strncpy(configAudioOutputDevice, sAudioDevices[sCurrAudioDevice], MAX_AUDIO_DEVICE_LENGTH - 1);
 }
 
 static void djui_panel_sound_destroy(UNUSED struct DjuiBase* caller) {

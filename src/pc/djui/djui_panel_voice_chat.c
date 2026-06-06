@@ -31,8 +31,8 @@ static void djui_panel_threshold_value_change(UNUSED struct DjuiBase* caller) {
 }
 
 static void djui_panel_voice_chat_device_change(UNUSED struct DjuiBase* caller) {
-    gAudioApi->reopen_microphone(sAudioDevices[sCurrAudioDevice]);
-    strncpy(configAudioInputDevice, sAudioDevices[sCurrAudioDevice], MAX_AUDIO_DEVICE_LENGTH - 1);
+    if (gAudioApi->reopen_microphone(sAudioDevices[sCurrAudioDevice]))
+        strncpy(configAudioInputDevice, sAudioDevices[sCurrAudioDevice], MAX_AUDIO_DEVICE_LENGTH - 1);
 }
 
 static void djui_panel_voice_chat_back(struct DjuiBase* caller) {

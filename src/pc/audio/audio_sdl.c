@@ -5,6 +5,7 @@
 #include "audio_api.h"
 
 #include "pc/voice_chat.h"
+#include "pc/djui/djui_language.h"
 
 static AudioCaptureCallback sCaptureCallback;
 static SDL_AudioDeviceID sSpeakerDev, sMicrophoneDev;
@@ -47,29 +48,20 @@ static const char* audio_sdl_find_device(const char* name, int type) {
     return name;
 }
 
-static char* audio_sdl_update_name(char* current, const char* name, int type) {
-    if (current) free(current);
-    if (name) current = strdup(name);
-    else {
-        char* default_name = NULL;
-        // for some reason SDL doesnt allow the audio spec to be null, so were using a dummy
-        SDL_GetDefaultAudioInfo(&default_name, &(SDL_AudioSpec){}, type);
-        current = strdup(default_name);
-        SDL_free(default_name);
-    }
-    return current;
-}
-
 static bool audio_sdl_reopen_speaker(const char* name) {
     name = audio_sdl_find_device(name, AudioDevType_Speakers);
 
-    if (sSpeakerDev != 0) SDL_CloseAudioDevice(sSpeakerDev);
-    sSpeakerDev = SDL_OpenAudioDevice(name, AudioDevType_Speakers, &sSpeakerSpec, NULL, 0);
-    if (sSpeakerDev == 0) {
+    SDL_AudioDeviceID dev = SDL_OpenAudioDevice(name, AudioDevType_Speakers, &sSpeakerSpec, NULL, 0);
+    if (dev == 0) {
         fprintf(stderr, "SDL_OpenAudio playback error: %s\n", SDL_GetError());
         return false;
     }
-    sActiveSpeaker = audio_sdl_update_name(sActiveSpeaker, name, AudioDevType_Speakers);
+    if (sSpeakerDev != 0) SDL_CloseAudioDevice(sSpeakerDev);
+    sSpeakerDev = dev;
+
+    if (sActiveSpeaker) free(sActiveSpeaker);
+    sActiveSpeaker = strdup(name ?: DLANG(SOUND, SYSTEM_DEFAULT));
+
     SDL_PauseAudioDevice(sSpeakerDev, 0);
     return true;
 }
@@ -77,14 +69,18 @@ static bool audio_sdl_reopen_speaker(const char* name) {
 static bool audio_sdl_reopen_microphone(const char* name) {
     name = audio_sdl_find_device(name, AudioDevType_Microphone);
 
-    if (sMicrophoneDev != 0) SDL_CloseAudioDevice(sMicrophoneDev);
-    sMicrophoneDev = SDL_OpenAudioDevice(name, AudioDevType_Microphone, &sMicrophoneSpec, NULL, 0);
-    if (sMicrophoneDev == 0) {
+    SDL_AudioDeviceID dev = SDL_OpenAudioDevice(name, AudioDevType_Microphone, &sMicrophoneSpec, NULL, 0);
+    if (dev == 0) {
         gVoicePlayer->error = VOICECHAT_ERR_NO_MICROPHONE;
         fprintf(stderr, "SDL_OpenAudio capture error: %s\n", SDL_GetError());
         return false;
     }
-    sActiveMicrophone = audio_sdl_update_name(sActiveMicrophone, name, AudioDevType_Microphone);
+    if (sMicrophoneDev != 0) SDL_CloseAudioDevice(sMicrophoneDev);
+    sMicrophoneDev = dev;
+
+    if (sActiveMicrophone) free(sActiveMicrophone);
+    sActiveSpeaker = strdup(name ?: DLANG(SOUND, SYSTEM_DEFAULT));
+
     if (sCurrentlyCapturing) SDL_PauseAudioDevice(sMicrophoneDev, 0);
     return true;
 }
@@ -122,8 +118,8 @@ static void audio_sdl_play(const uint8_t *buf, size_t len) {
 }
 
 static void audio_sdl_record_start() {
-    if (sMicrophoneDev == 0) return;
     sCurrentlyCapturing = true;
+    if (sMicrophoneDev == 0) return;
     SDL_PauseAudioDevice(sMicrophoneDev, 0);
 }
 
@@ -132,8 +128,8 @@ static void audio_sdl_record_callback(AudioCaptureCallback callback) {
 }
 
 static void audio_sdl_record_stop() {
-    if (sMicrophoneDev == 0) return;
     sCurrentlyCapturing = false;
+    if (sMicrophoneDev == 0) return;
     SDL_PauseAudioDevice(sMicrophoneDev, 1);
 }
 
@@ -141,10 +137,11 @@ static char** audio_sdl_list_devices(int* count, unsigned int* current, int type
     int num = SDL_GetNumAudioDevices(type);
     if (count) *count = num;
 
+    char* curr_name = type == AudioDevType_Microphone ? sActiveMicrophone : sActiveSpeaker;
     char** strings = malloc(num * sizeof(const char*));
     for (int i = 0; i < num; i++) {
         strings[i] = strdup(SDL_GetAudioDeviceName(i, type));
-        if (strcmp(strings[i], type == AudioDevType_Microphone ? sActiveMicrophone : sActiveSpeaker) == 0)
+        if (curr_name && strcmp(strings[i], curr_name) == 0)
             if (current) *current = i;
     }
     return strings;
