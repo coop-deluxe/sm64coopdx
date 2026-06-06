@@ -11,6 +11,7 @@
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
+#define MAX_AUDIO_DEVICE_LENGTH 256
 #define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
@@ -65,6 +66,8 @@ extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
 // sound settings
+extern char configAudioOutputDevice[MAX_AUDIO_DEVICE_LENGTH];
+extern char configAudioInputDevice[MAX_AUDIO_DEVICE_LENGTH];
 extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;

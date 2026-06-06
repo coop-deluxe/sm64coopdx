@@ -252,7 +252,7 @@ static void select_graphics_backend(void) {
             break;
     }
 
-    if (!gAudioApi->init()) {
+    if (!gAudioApi->init(configAudioOutputDevice, configAudioInputDevice)) {
         gAudioApi = &audio_null;
     }
 

@@ -92,6 +92,8 @@ unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 6;
 // sound settings
+char configAudioOutputDevice[MAX_AUDIO_DEVICE_LENGTH] = "";
+char configAudioInputDevice[MAX_AUDIO_DEVICE_LENGTH] = "";
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
@@ -279,6 +281,8 @@ static const struct ConfigOption options[] = {
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     // sound settings
+    {.name = "output_device",                  .type = CONFIG_TYPE_STRING, .stringValue = configAudioOutputDevice, .maxStringLength = MAX_AUDIO_DEVICE_LENGTH },
+    {.name = "input_device",                   .type = CONFIG_TYPE_STRING, .stringValue = configAudioInputDevice,  .maxStringLength = MAX_AUDIO_DEVICE_LENGTH },
     {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
@@ -812,10 +816,21 @@ static void configfile_load_internal(const char *filename, bool* error) {
                         case CONFIG_TYPE_FLOAT:
                             sscanf(tokens[1], "%f", option->floatValue);
                             break;
-                        case CONFIG_TYPE_STRING:
+                        case CONFIG_TYPE_STRING: {
                             memset(option->stringValue, '\0', option->maxStringLength);
-                            snprintf(option->stringValue, option->maxStringLength, "%s", tokens[1]);
-                            break;
+                            int ptr = 0;
+                            for (int i = 1; i < numTokens; i++) {
+                                if (ptr >= option->maxStringLength) break;
+                                strncpy(option->stringValue + ptr, tokens[i], option->maxStringLength - ptr - 1);
+                                ptr += strlen(tokens[i]);
+                                if (i + 1 < numTokens) {
+                                    int spaces = tokens[i + 1] - (tokens[i] + strlen(tokens[i]));
+                                    if (ptr + spaces >= option->maxStringLength) spaces = option->maxStringLength - ptr - 1;
+                                    memset(option->stringValue + ptr, ' ', spaces);
+                                    ptr += spaces;
+                                }
+                            }
+                        } break;
                         case CONFIG_TYPE_U64:
                             sscanf(tokens[1], "%llu", option->u64Value);
                             break;

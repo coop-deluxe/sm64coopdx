@@ -7,33 +7,53 @@
 #include "pc/network/network.h"
 #include "pc/network/voice_list.h"
 #include "pc/utils/misc.h"
+#include "pc/pc_main.h"
 
-static struct DjuiBase* activation_threshold_slider;
-static float threshold;
+static struct DjuiBase* sActivationThresholdSlider;
+static float sThreshold;
+
+static char** sAudioDevices;
+static int sNumAudioDevices;
+static unsigned int sCurrAudioDevice;
 
 static void djui_panel_sound_value_change(UNUSED struct DjuiBase* caller) {
     audio_custom_update_volume();
 }
 
 static void djui_panel_mode_value_change(UNUSED struct DjuiBase* caller) {
-    djui_base_set_enabled(activation_threshold_slider, configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD);
+    djui_base_set_enabled(sActivationThresholdSlider, configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD);
 
     voicechat_set_mute(configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK);
 }
 
 static void djui_panel_threshold_value_change(UNUSED struct DjuiBase* caller) {
-    threshold = configVoiceChatActivationThreshold / 100.f;
+    sThreshold = configVoiceChatActivationThreshold / 100.f;
 }
 
-static void djui_panel_voicechat_back(struct DjuiBase* caller) {
+static void djui_panel_voice_chat_device_change(UNUSED struct DjuiBase* caller) {
+    gAudioApi->reopen_microphone(sAudioDevices[sCurrAudioDevice]);
+    strncpy(configAudioInputDevice, sAudioDevices[sCurrAudioDevice], MAX_AUDIO_DEVICE_LENGTH - 1);
+}
+
+static void djui_panel_voice_chat_back(struct DjuiBase* caller) {
     gVoiceChatLoopback = false;
     djui_panel_menu_back(caller);
+}
+
+static void djui_panel_voice_chat_destroy(UNUSED struct DjuiBase* caller) {
+    for (int i = 0; i < sNumAudioDevices; i++) {
+        free(sAudioDevices[i]);
+    }
+    free(sAudioDevices);
 }
 
 void djui_panel_voice_chat_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(VOICECHAT, VOICE_CHAT), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
+        sAudioDevices = gAudioApi->get_microphones(&sNumAudioDevices, &sCurrAudioDevice);
+        djui_selectionbox_create(body, DLANG(VOICECHAT, AUDIO_DEVICE), sAudioDevices, sNumAudioDevices, &sCurrAudioDevice, djui_panel_voice_chat_device_change);
+
         djui_selectionbox_create(body, DLANG(VOICECHAT, ACTIVATION_MODE), (char*[]){
             DLANG(VOICECHAT, DISABLED), DLANG(VOICECHAT, PUSH_TO_TALK), DLANG(VOICECHAT, THRESHOLD)
         }, 3, &configVoiceChatActivationMode, djui_panel_mode_value_change);
@@ -42,17 +62,19 @@ void djui_panel_voice_chat_create(struct DjuiBase* caller) {
         djui_slider_create(body, DLANG(SOUND, VOICECHAT_VOLUME), &configVoiceChatVolume, 0, 127, djui_panel_sound_value_change);
         djui_slider_create(body, DLANG(VOICECHAT, STEREO_SPREAD), &configVoiceChatStereoSpread, 0, 100, NULL);
         djui_slider_create(body, DLANG(VOICECHAT, MICROPHONE_GAIN), &configVoiceChatMicrophoneGain, 0, 400, NULL);
-        activation_threshold_slider = &djui_slider_create(body, DLANG(VOICECHAT, ACTIVATION_THRESHOLD), &configVoiceChatActivationThreshold, 0, 100, djui_panel_threshold_value_change)->base;
+        sActivationThresholdSlider = &djui_slider_create(body, DLANG(VOICECHAT, ACTIVATION_THRESHOLD), &configVoiceChatActivationThreshold, 0, 100, djui_panel_threshold_value_change)->base;
 
-        djui_progress_bar_create(body, &threshold, 0, 1, false);
+        djui_progress_bar_create(body, &sThreshold, 0, 1, false);
         djui_progress_bar_create(body, &gVoiceChatMicLevel, 0, 1, false);
         djui_checkbox_create(body, DLANG(VOICECHAT, LOOPBACK), &gVoiceChatLoopback, NULL);
 
         djui_panel_mode_value_change(NULL);
         djui_panel_threshold_value_change(NULL);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_voicechat_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_voice_chat_back);
     }
+
+    panel->base.destroy = djui_panel_voice_chat_destroy;
 
     djui_panel_add(caller, panel, NULL);
 }
@@ -187,7 +209,7 @@ void djui_panel_voice_chat_ingame_create(struct DjuiBase* caller) {
         djui_panel_voice_chat_add_players(&sPlayerLayout->base);
         djui_paginated_calculate_height(sPlayerPaginated);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_voicechat_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_voice_chat_back);
     }
 
     djui_panel_add(caller, panel, NULL);
