@@ -79,7 +79,7 @@ static bool audio_sdl_reopen_microphone(const char* name) {
     sMicrophoneDev = dev;
 
     if (sActiveMicrophone) free(sActiveMicrophone);
-    sActiveSpeaker = strdup(name ?: DLANG(SOUND, SYSTEM_DEFAULT));
+    sActiveMicrophone = strdup(name ?: DLANG(SOUND, SYSTEM_DEFAULT));
 
     if (sCurrentlyCapturing) SDL_PauseAudioDevice(sMicrophoneDev, 0);
     return true;
@@ -136,6 +136,7 @@ static void audio_sdl_record_stop() {
 static char** audio_sdl_list_devices(int* count, unsigned int* current, int type) {
     int num = SDL_GetNumAudioDevices(type);
     if (count) *count = num;
+    if (current) *current = 0;
 
     char* curr_name = type == AudioDevType_Microphone ? sActiveMicrophone : sActiveSpeaker;
     char** strings = malloc(num * sizeof(const char*));
