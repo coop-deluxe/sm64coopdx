@@ -141,7 +141,7 @@ function mario_local_hammer_check(m)
                 vec3f_normalize(vel)
                 vec3f_mul(vel, 80 + 10 * (1 - mario_health_float(cmvictim)))
 
-                set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
+                set_mario_action(m, ACT_BACKWARD_AIR_KB, PVP_ATTACK_KNOCKBACK_ACTION_ARG)
                 m.invincTimer = 20
                 m.knockbackTimer = 10
                 m.vel.x = vel.x

@@ -590,7 +590,6 @@ int smlua_func_spawn_mist_particles_variable(lua_State* L) {
 }
 
 int smlua_func_bhv_spawn_star_no_level_exit(lua_State* L) {
-    if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);

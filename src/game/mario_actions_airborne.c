@@ -1236,6 +1236,11 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
     if (!m) { return 0; }
     u32 stepResult;
 
+    // Update velocity only if it's not a PVP attack
+    if (!(m->actionArg & PVP_ATTACK_KNOCKBACK_ACTION_ARG)) {
+        mario_set_forward_vel(m, speed);
+    }
+
     // Refresh knockbackTimer
     if (m->knockbackTimer > 0) {
         m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;

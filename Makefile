@@ -1015,7 +1015,7 @@ endif
 
 # Check for unsafe mode option
 ifeq ($(LUA_UNSAFE),1)
-  ifeq ($(DEVELOPMENT),1)
+  ifneq ($(or $(filter 1,$(DEVELOPMENT)),$(filter dev,$(MAKECMDGOALS))),)
     CC_CHECK_CFLAGS += -DLUA_UNSAFE
     CFLAGS += -DLUA_UNSAFE
   else

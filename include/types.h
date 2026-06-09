@@ -9,16 +9,6 @@
 #include "pc/network/version.h"
 #include "pc/platform.h"
 
-// Certain functions are marked as having return values, but do not
-// actually return a value. This causes undefined behavior, which we'd rather
-// avoid on modern GCC. This only impacts -O2 and can matter for both the function
-// itself and functions that call it.
-#ifdef AVOID_UB
-    #define BAD_RETURN(cmd) void
-#else
-    #define BAD_RETURN(cmd) cmd
-#endif
-
 struct Controller
 {
     // For optimization reasons, See MarioState

@@ -980,7 +980,7 @@ def build_function(function, do_extern):
     # make sure the bhv functions have a current object
     fname = function['filename']
     if fname == 'behavior_actions.h' or fname == 'obj_behaviors_2.h' or fname == 'obj_behaviors.h':
-        if 'bhv_' in fid:
+        if 'bhv_' in fid and len(fparams) == 0:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
     params_max = len(fparams)
