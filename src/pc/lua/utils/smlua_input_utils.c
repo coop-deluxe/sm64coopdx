@@ -7,6 +7,7 @@
 
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
+#include "pc/debuglog.h"
 
 bool gModHasInputFocus = false;
 
@@ -87,29 +88,26 @@ void controller_maps_load(const char* mapsPath, bool appendMaps) {
     while ((dir = readdir(d)) != NULL) {
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, dbpath, path)) { continue; }
-
         snprintf(path, SYS_MAX_PATH, "%s", dir->d_name);
 
-        // strip the name before the .
-        char* c = path;
-        while (*c != '\0') {
-            if (*c == '.') { *c = '\0'; break; }
-            c++;
-        }
+        // ensure the name of the path isn't nothing
         if (strlen(path) == 0) { continue; }
+
+        // only allow files ending with `.db`
+        if (!path_ends_with(path, ".db")) { continue; }
 
         // get the fullpath
         char fullpath[SYS_MAX_PATH] = "";
-        snprintf(fullpath, SYS_MAX_PATH, "%s/%s.db", dbpath, path);
+        snprintf(fullpath, SYS_MAX_PATH, "%s/%s", dbpath, path);
 
         // load map
         UNUSED int loadedMaps = SDL_GameControllerAddMappingsFromFile(fullpath);
 
 #ifdef DEVELOPMENT
         if (loadedMaps >= 0) {
-            LOG_INFO("Controller Database: Loaded %d controller mapping(s) from '%s.db'\n", loadedMaps, path);
+            LOG_INFO("Controller Database: Loaded %d controller mapping(s) from '%s'\n", loadedMaps, path);
         } else {
-            LOG_ERROR("Controller Database: Failed to load controller map from '%s.db'\n", path);
+            LOG_ERROR("Controller Database: Failed to load controller map from '%s'\n", path);
         }
 #endif
     }
