@@ -31,6 +31,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 #include "first_person_cam.h"
 
 u8 (*gContinueDialogFunction)(void) = NULL;
@@ -547,8 +548,8 @@ s16 obj_turn_toward_object(struct Object *obj, struct Object *target, s16 angleI
             break;
     }
 
-    startAngle = obj->OBJECT_FIELD_U32(angleIndex);
-    obj->OBJECT_FIELD_U32(angleIndex) = approach_s16_symmetric(startAngle, targetAngle, turnAmount);
+    startAngle = obj_get_field_u32(obj, angleIndex);
+    obj_set_field_u32(obj, angleIndex, approach_s16_symmetric(startAngle, targetAngle, turnAmount));
     return targetAngle;
 }
 
@@ -2442,16 +2443,16 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 |descriptionEnd| */
 void obj_translate_local(struct Object *obj, s16 posIndex, s16 localTranslateIndex) {
     if (obj == NULL) { return; }
-    f32 dx = obj->OBJECT_FIELD_F32(localTranslateIndex + 0);
-    f32 dy = obj->OBJECT_FIELD_F32(localTranslateIndex + 1);
-    f32 dz = obj->OBJECT_FIELD_F32(localTranslateIndex + 2);
+    f32 dx = obj_get_field_f32(obj, localTranslateIndex + 0);
+    f32 dy = obj_get_field_f32(obj, localTranslateIndex + 1);
+    f32 dz = obj_get_field_f32(obj, localTranslateIndex + 2);
 
-    obj->OBJECT_FIELD_F32(posIndex + 0) +=
-        obj->transform[0][0] * dx + obj->transform[1][0] * dy + obj->transform[2][0] * dz;
-    obj->OBJECT_FIELD_F32(posIndex + 1) +=
-        obj->transform[0][1] * dx + obj->transform[1][1] * dy + obj->transform[2][1] * dz;
-    obj->OBJECT_FIELD_F32(posIndex + 2) +=
-        obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz;
+    f32 x = obj_get_field_f32(obj, posIndex + 0);
+    f32 y = obj_get_field_f32(obj, posIndex + 1);
+    f32 z = obj_get_field_f32(obj, posIndex + 2);
+    obj_set_field_f32(obj, posIndex + 0, x + obj->transform[0][0] * dx + obj->transform[1][0] * dy + obj->transform[2][0] * dz);
+    obj_set_field_f32(obj, posIndex + 1, y + obj->transform[0][1] * dx + obj->transform[1][1] * dy + obj->transform[2][1] * dz);
+    obj_set_field_f32(obj, posIndex + 2, z + obj->transform[0][2] * dx + obj->transform[1][2] * dy + obj->transform[2][2] * dz);
 }
 
 /* |description|Copies an object's position and rotation into its transform matrix using the specified field indices|descriptionEnd| */
@@ -2460,13 +2461,13 @@ void obj_build_transform_from_pos_and_angle(struct Object *obj, s16 posIndex, s1
     f32 translate[3];
     s16 rotation[3];
 
-    translate[0] = obj->OBJECT_FIELD_F32(posIndex + 0);
-    translate[1] = obj->OBJECT_FIELD_F32(posIndex + 1);
-    translate[2] = obj->OBJECT_FIELD_F32(posIndex + 2);
+    translate[0] = obj_get_field_f32(obj, posIndex + 0);
+    translate[1] = obj_get_field_f32(obj, posIndex + 1);
+    translate[2] = obj_get_field_f32(obj, posIndex + 2);
 
-    rotation[0] = obj->OBJECT_FIELD_S32(angleIndex + 0);
-    rotation[1] = obj->OBJECT_FIELD_S32(angleIndex + 1);
-    rotation[2] = obj->OBJECT_FIELD_S32(angleIndex + 2);
+    rotation[0] = obj_get_field_s32(obj, angleIndex + 0);
+    rotation[1] = obj_get_field_s32(obj, angleIndex + 1);
+    rotation[2] = obj_get_field_s32(obj, angleIndex + 2);
 
     mtxf_rotate_zxy_and_translate(obj->transform, translate, rotation);
 }

@@ -15,6 +15,8 @@
 #include "pc/djui/djui.h"
 #include "pc/fs/fmem.h"
 
+extern void smlua_free_custom_field(void *p);
+
 lua_State* gLuaState = NULL;
 u8 gLuaInitializingScript = 0;
 u8 gSmLuaSuppressErrors = 0;
@@ -344,6 +346,7 @@ void smlua_init(void) {
 
     smlua_cobject_init_globals();
     smlua_model_util_initialize();
+    smlua_init_custom_fields();
 
     // load scripts
     mods_size_enforce(&gActiveMods);
@@ -355,6 +358,7 @@ void smlua_init(void) {
         gLuaActiveMod = mod;
         gLuaLastHookMod = mod;
         gLuaLoadingMod->customBehaviorIndex = 0;
+        gLuaLoadingMod->customObjectFields = growing_array_init(gLuaLoadingMod->customObjectFields, 4, malloc, smlua_free_custom_field);
         gPcDebug.lastModRun = gLuaActiveMod;
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
@@ -388,6 +392,8 @@ void smlua_init(void) {
         gLuaActiveModFile = NULL;
         gLuaLoadingMod = NULL;
     }
+
+    smlua_index_custom_fields();
 
     smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
@@ -425,6 +431,7 @@ void smlua_shutdown(void) {
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    smlua_clear_custom_fields();
     mod_storage_shutdown();
     mod_fs_shutdown();
     lua_State* L = gLuaState;

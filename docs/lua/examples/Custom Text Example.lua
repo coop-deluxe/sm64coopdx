@@ -8,12 +8,12 @@ smlua_text_utils_dialog_replace(gBehaviorValues.dialogs.KingBobombIntroDialog, 1
     Then DIE!"
 ))
 
--- First Paramater is what text you want to replace. To find the full table go to here: https://github.com/coop-deluxe/sm64coopdx/blob/main/docs/lua/functions-5.md
--- Second Parameter is unused in the game.
--- Third paramater defines how many lines your dialog has per box.
--- Fourth paramater sets how much you want to offset you text to the left (higher number moves to the right- lower to the left.).
--- Fifth Paramater is the width.
--- Sixth paramater is your text.
+-- First parameter is what text you want to replace. To find the full table go to here: https://github.com/coop-deluxe/sm64coopdx/blob/main/docs/lua/functions-5.md
+-- Second parameter is unused in the game.
+-- Third parameter defines how many lines your dialog has per box.
+-- Fourth parameter sets how much you want to offset you text to the left (higher number moves to the right- lower to the left.).
+-- Fifth parameter is the width.
+-- Sixth parameter is your text.
 -- Have Fun!
 
 -- The Function in C for Reference: #define DEFINE_DIALOG(id, unused, linesPerBox, leftOffset, width, text)

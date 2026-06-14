@@ -88,14 +88,14 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning" ],
+    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
     "Camera": [ "paletteEditorCapState" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "GraphNodeMasterList": [ "listHeads", "listTails" ],
     "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface" ],
+    "Object": [ "firstSurface", "customFields" ],
     "Animation": [ "unusedBoneCount" ],
     "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
