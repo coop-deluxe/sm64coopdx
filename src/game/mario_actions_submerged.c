@@ -227,7 +227,7 @@ u32 perform_water_step(struct MarioState *m) {
     return stepResult;
 }
 
-static BAD_RETURN(u32) update_water_pitch(struct MarioState *m) {
+static void update_water_pitch(struct MarioState *m) {
     if (!m) { return; }
     struct Object *marioObj = m->marioObj;
 

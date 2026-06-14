@@ -12705,6 +12705,19 @@ function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
     -- ...
 end
 
+--- @param fieldName string
+--- @param mod? Mod
+--- @return boolean
+--- @return integer fieldIndex
+--- @return integer fieldSubIndex
+--- @return string fieldType
+--- Gets the object field info (index, sub-index and type) from a field name and a specific mod (if provided). Returns `true` if the field is found, `false` otherwise.<br>
+--- Supported types are `s32`, `u32`, `f32`, `s16`.<br>
+--- This function works with custom object fields as well and is meant to be used with functions that take a field index as parameter, like `obj_get_first_with_behavior_id_and_field_s32` or `obj_get_field_s32`
+function obj_get_field_info_from_name(fieldName, mod)
+    -- ...
+end
+
 --- @param modelId ModelExtendedId
 --- @return SpawnParticlesInfo
 --- Returns a temporary particle spawn info pointer with its model loaded in from `modelId`

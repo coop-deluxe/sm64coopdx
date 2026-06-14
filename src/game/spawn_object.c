@@ -247,6 +247,8 @@ void unload_object(struct Object *obj) {
 
     smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
+    obj->customFields = NULL;
+
     deallocate_object(&gFreeObjectList, &obj->header);
 }
 
@@ -293,6 +295,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
 
     memset(&obj->rawData, 0, sizeof(obj->rawData));
     memset(&obj->ptrData, 0, sizeof(obj->ptrData));
+    smlua_init_object_custom_fields(obj);
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;

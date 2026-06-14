@@ -328,6 +328,37 @@ void growing_array_free(struct GrowingArray **array) {
     }
 }
 
+void growing_array_sort(struct GrowingArray *array, GrowingArrayCmpFunc cmpFunc) {
+    if (array && array->buffer && array->count > 0 && cmpFunc) {
+        qsort(array->buffer, array->count, sizeof(void *), cmpFunc);
+    }
+}
+
+void *growing_array_bsearch(struct GrowingArray *array, const void *elem, GrowingArrayCmpFunc cmpFunc) {
+    if (array && array->buffer && array->count > 0 && elem && cmpFunc) {
+        u32 min = 0;
+        u32 max = array->count - 1;
+        u32 i = max / 2;
+        while (min <= max) {
+            void **item = &array->buffer[i];
+            int rc = cmpFunc((const void *) &elem, (const void *) item);
+            if (rc == 0) {
+                return *item;
+            }
+            if (rc < 0) {
+                if (i == 0) { // prevent overflow
+                    return NULL;
+                }
+                max = i - 1;
+            } else {
+                min = i + 1;
+            }
+            i = min + (max - min) / 2;
+        }
+    }
+    return NULL;
+}
+
 void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y) {
     char text[256];
     u32 allocated = 0; for (u32 i = 0; i != array->capacity; ++i) { allocated += (array->buffer[i] != NULL); }

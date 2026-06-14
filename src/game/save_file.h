@@ -157,7 +157,7 @@ Erases the backup data for the current save file without affecting the primary s
 |descriptionEnd| */
 void save_file_erase_current_backup_save(void);
 
-BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex);
+void save_file_copy(s32 srcFileIndex, s32 destFileIndex);
 void save_file_load_all(u8 reload);
 
 /* |description|

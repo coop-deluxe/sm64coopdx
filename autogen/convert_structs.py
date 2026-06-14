@@ -88,14 +88,22 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning" ],
-    "Camera": [ "paletteEditorCapState" ],
+    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
+    "Camera": [ "paletteEditorCapState", "filler31", "filler3C", "unusedVec1" ],
+    "LakituState": [ "filler30", "filler3E", "filler72", "unusedVec1", "unusedVec2" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "GraphNodeMasterList": [ "listHeads", "listTails" ],
+    "GraphNodeCullingRadius": [ "pad1E" ],
+    "GraphNodeTranslation": [ "pad1E" ],
+    "GraphNodeBackground": [ "unused" ],
+    "GraphNodePerspective": [ "unused" ],
+    "GraphNodeSwitchCase": [ "unused" ],
+    "GraphNodeObject": [ "unk4C" ],
     "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface" ],
+    "Object": [ "firstSurface", "customFields", "bhvStack", "bhvStackIndex" ],
+    "SpawnInfo": [ "unk18" ],
     "Animation": [ "unusedBoneCount" ],
     "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
@@ -107,7 +115,6 @@ override_field_invisible = {
 
 override_field_deprecated = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
-    "StaticObjectCollision": [ "index" ],
     "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
 }
 
