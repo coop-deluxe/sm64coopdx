@@ -613,7 +613,7 @@
 | animReturnFromStarDance | `integer` | read-only |
 | animForwardSpinningFlip | `integer` | read-only |
 | animTripleJumpFly | `integer` | read-only |
-| anims | `Array` <`integer`> | read-only |
+| anims | `Array` <`integer`> | read-only, starts at index 0 |
 | soundFreqScale | `number` | read-only |
 | soundYahWahHoo | `integer` | read-only |
 | soundHoohoo | `integer` | read-only |
@@ -659,7 +659,7 @@
 | soundImaTired | `integer` | read-only |
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
-| sounds | `Array` <`integer`> | read-only |
+| sounds | `Array` <`integer`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 
@@ -1583,8 +1583,8 @@
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
-| animPartsPos | `Array` <`Vec3f`> | read-only |
-| animPartsRot | `Array` <`Vec3s`> | read-only |
+| animPartsPos | `Array` <`Vec3f`> | read-only, starts at index 0 |
+| animPartsRot | `Array` <`Vec3s`> | read-only, starts at index 0 |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -2791,7 +2791,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| parts | `Array` <`Color`> | read-only |
+| parts | `Array` <`Color`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 
