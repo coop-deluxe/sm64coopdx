@@ -87,14 +87,20 @@ override_field_mutable = {
 }
 
 override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning" ],
+    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
     "Camera": [ "paletteEditorCapState" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
     "GraphNodeMasterList": [ "listHeads", "listTails" ],
+    "GraphNodeCullingRadius": [ "pad1E" ],
+    "GraphNodeTranslation": [ "pad1E" ],
+    "GraphNodeBackground": [ "unused" ],
+    "GraphNodePerspective": [ "unused" ],
+    "GraphNodeSwitchCase": [ "unused" ],
+    "GraphNodeObject": [ "unk4C" ],
     "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface" ],
+    "Object": [ "firstSurface", "customFields", "bhvStack", "bhvStackIndex" ],
     "Animation": [ "unusedBoneCount" ],
     "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
     "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
@@ -103,9 +109,12 @@ override_field_invisible = {
     "ModFs": [ "files" ],
 }
 
-override_field_deprecated = {
+override_field_hidden = {
     "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
     "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
+    "Camera": [ "filler31", "filler3C", "unusedVec1" ],
+    "LakituState": [ "filler30", "filler3E", "filler72", "unusedVec1", "unusedVec2" ],
+    "SpawnInfo": [ "unk18" ],
 }
 
 override_field_immutable = {
@@ -733,8 +742,8 @@ def doc_struct_field(struct, field):
         if fid in override_field_invisible[sid]:
             return '', False
 
-    if sid in override_field_deprecated:
-        if fid in override_field_deprecated[sid]:
+    if sid in override_field_hidden:
+        if fid in override_field_hidden[sid]:
             return '', False
 
     if '???' in lvt or '???' in lot:
@@ -870,8 +879,8 @@ def def_struct(struct):
             if fid in override_field_invisible[sid]:
                 continue
 
-        if sid in override_field_deprecated:
-            if fid in override_field_deprecated[sid]:
+        if sid in override_field_hidden:
+            if fid in override_field_hidden[sid]:
                 continue
 
         if '???' in lvt or '???' in lot:

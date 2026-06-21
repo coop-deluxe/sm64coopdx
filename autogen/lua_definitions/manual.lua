@@ -240,8 +240,8 @@ end
 -- functions --
 ---------------
 
---- @param objFieldTable table<any, "u32"|"s32"|"f32">
---- Keys must start with `o` and values must be `"u32"`, `"s32"`, or `"f32"`
+--- @param objFieldTable table<any, "u32"|"s32"|"f32"|table>
+--- Keys must start with `o` and values must be `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`
 function define_custom_obj_fields(objFieldTable)
     -- ...
 end

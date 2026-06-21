@@ -250,10 +250,20 @@ manual_documentation = """
 
 Defines a custom set of overlapping object fields.
 
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+If, for a field, `global` is `true`, the field will be defined for all mods.
 
 ### Lua Example
-`define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
+```lua
+define_custom_obj_fields({
+    oCustomField1 = 'u32',
+    oCustomField2 = 's32',
+    oCustomField3 = 'f32',
+    oCustomField4 = { type = 'u32', global = true },
+    oCustomField5 = { type = 's32', global = true },
+    oCustomField6 = { type = 'f32', global = true },
+})
+```
 
 ### Parameters
 | Field | Type |
@@ -817,10 +827,8 @@ def normalize_type(t):
         t = parts[0] + ' ' + parts[1].replace(' ', '')
     return t
 
-def alter_type(t):
-    if t.startswith('enum '):
-        return 'int'
-    return t
+def is_enum(t):
+    return t.startswith('enum ')
 
 ############################################################################
 
@@ -858,7 +866,7 @@ def build_vec_types():
 ############################################################################
 
 def build_param(fid, param, i):
-    ptype = alter_type(param['type'])
+    ptype = param['type']
     pid = param['identifier']
 
     if "struct TextureInfo" in ptype and "*" in ptype:
@@ -871,7 +879,7 @@ def build_param(fid, param, i):
             return (vec_type_before % (ptype, ptype.lower())).replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))
     elif ptype == 'bool':
         return '    %s %s = smlua_to_boolean(L, %d);\n' % (ptype, pid, i)
-    elif ptype in integer_types:
+    elif ptype in integer_types or is_enum(ptype):
         return '    %s %s = smlua_to_integer(L, %d);\n' % (ptype, pid, i)
     elif ptype in number_types:
         return '    %s %s = smlua_to_number(L, %d);\n' % (ptype, pid, i)
@@ -908,11 +916,10 @@ def build_param_after(param, i):
         return ''
 
 def build_return_value(id, rtype):
-    rtype = alter_type(rtype)
     lot = translate_type_to_lot(rtype)
 
     lfunc = 'UNIMPLEMENTED -->'
-    if rtype in integer_types:
+    if rtype in integer_types or is_enum(rtype):
         lfunc = 'lua_pushinteger'
     elif rtype in number_types:
         lfunc = 'lua_pushnumber'
@@ -935,7 +942,7 @@ def build_return_value(id, rtype):
     return '    %s(L, %s);\n' % (lfunc, id)
 
 def build_call(function):
-    ftype = alter_type(function['type'])
+    ftype = function['type']
     fid = function['identifier']
 
     ccall = '%s(%s)' % (fid, ', '.join([('&' if ('RET' in x or 'INOUT' in x) else '') + x['identifier'] for x in function['params']]))
@@ -1026,7 +1033,7 @@ def build_function(function, do_extern):
         for param in freturns:
             if 'INOUT' not in param:
                 pid = param['identifier']
-                ptype = alter_type(param['rtype'])
+                ptype = param['rtype']
                 s += '    %s %s;\n' % (ptype, pid)
         s += '\n'
 
@@ -1059,7 +1066,7 @@ def build_function(function, do_extern):
     if freturns:
         for param in freturns:
             pid = param['identifier']
-            ptype = alter_type(param['rtype'])
+            ptype = param['rtype']
             s += build_return_value(pid, ptype)
         s += '\n'
 
@@ -1182,7 +1189,7 @@ def process_function(fname, line, description):
 
             if 'OPTIONAL' in param:
                 last_param_optional = param['identifier']
-            elif last_param_optional is not None:
+            elif 'RET' not in param and last_param_optional is not None:
                 print(f"REJECTED: {function['identifier']} -> mandatory parameter `{param['identifier']}` is following optional parameter `{last_param_optional}`")
                 return None
 

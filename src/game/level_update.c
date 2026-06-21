@@ -1544,30 +1544,36 @@ s32 update_current_play_mode() {
     return changeLevel;
 }
 
+s16 get_menu_level(void) {
+    static enum LevelNum sMenuLevels[] = {
+        LEVEL_CASTLE_GROUNDS,
+        LEVEL_BOB,
+        LEVEL_WF,
+        LEVEL_WMOTR,
+        LEVEL_JRB,
+        LEVEL_SSL,
+        LEVEL_TTM,
+        LEVEL_SL,
+        LEVEL_BBH,
+        LEVEL_LLL,
+        LEVEL_THI,
+        LEVEL_HMC,
+        LEVEL_CCM,
+        LEVEL_RR,
+        LEVEL_BITDW,
+        LEVEL_PSS,
+        LEVEL_TTC,
+        LEVEL_WDW,
+    };
+    if (configMenuLevel < ARRAY_COUNT(sMenuLevels)) {
+        return sMenuLevels[configMenuLevel];
+    }
+    return LEVEL_CASTLE_GROUNDS;
+}
+
 void update_menu_level(void) {
     // figure out level
-    s32 curLevel = 0;
-    switch (configMenuLevel) {
-        case 0:  curLevel = LEVEL_CASTLE_GROUNDS; break;
-        case 1:  curLevel = LEVEL_BOB;            break;
-        case 2:  curLevel = LEVEL_WF;             break;
-        case 3:  curLevel = LEVEL_WMOTR;          break;
-        case 4:  curLevel = LEVEL_JRB;            break;
-        case 5:  curLevel = LEVEL_SSL;            break;
-        case 6:  curLevel = LEVEL_TTM;            break;
-        case 7:  curLevel = LEVEL_SL;             break;
-        case 8:  curLevel = LEVEL_BBH;            break;
-        case 9:  curLevel = LEVEL_LLL;            break;
-        case 10: curLevel = LEVEL_THI;            break;
-        case 11: curLevel = LEVEL_HMC;            break;
-        case 12: curLevel = LEVEL_CCM;            break;
-        case 13: curLevel = LEVEL_RR;             break;
-        case 14: curLevel = LEVEL_BITDW;          break;
-        case 15: curLevel = LEVEL_PSS;            break;
-        case 16: curLevel = LEVEL_TTC;            break;
-        case 17: curLevel = LEVEL_WDW;            break;
-        default: curLevel = LEVEL_CASTLE_GROUNDS; break;
-    }
+    s16 curLevel = get_menu_level();
 
     // figure out music
     stop_cap_music();

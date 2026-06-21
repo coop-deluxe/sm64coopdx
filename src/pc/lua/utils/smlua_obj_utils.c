@@ -185,7 +185,7 @@ struct Object *obj_get_first_with_behavior_id(enum BehaviorId behaviorId) {
 }
 
 struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId behaviorId, s32 fieldIndex, s32 value) {
-    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS + gNumCustomObjectFields) { return NULL; }
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     u32 sanityDepth = 0;
     behavior = smlua_override_behavior(behavior);
@@ -193,7 +193,7 @@ struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId beha
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next_internal(obj, objList)) {
             if (++sanityDepth > 10000) { break; }
-            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj_get_field_s32(obj, fieldIndex) == value) {
                 return obj;
             }
         }
@@ -202,13 +202,13 @@ struct Object *obj_get_first_with_behavior_id_and_field_s32(enum BehaviorId beha
 }
 
 struct Object *obj_get_first_with_behavior_id_and_field_f32(enum BehaviorId behaviorId, s32 fieldIndex, f32 value) {
-    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS + gNumCustomObjectFields) { return NULL; }
     const BehaviorScript* behavior = get_behavior_from_id(behaviorId);
     behavior = smlua_override_behavior(behavior);
     if (behavior) {
         enum ObjectList objList = get_object_list_from_behavior(behavior);
         for (struct Object *obj = obj_get_first(objList); obj != NULL; obj = obj_get_next_internal(obj, objList)) {
-            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_F32(fieldIndex) == value) {
+            if (obj->behavior == behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj_get_field_f32(obj, fieldIndex) == value) {
                 return obj;
             }
         }
@@ -265,11 +265,11 @@ struct Object *obj_get_next_with_same_behavior_id(struct Object *o) {
 }
 
 struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o, s32 fieldIndex, s32 value) {
-    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS + gNumCustomObjectFields) { return NULL; }
     if (o) {
         enum ObjectList objList = get_object_list_from_behavior(o->behavior);
         for (struct Object *obj = obj_get_next_internal(o, objList); obj != NULL; obj = obj_get_next_internal(obj, objList)) {
-            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_S32(fieldIndex) == value) {
+            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj_get_field_s32(obj, fieldIndex) == value) {
                 return obj;
             }
         }
@@ -278,11 +278,11 @@ struct Object *obj_get_next_with_same_behavior_id_and_field_s32(struct Object *o
 }
 
 struct Object *obj_get_next_with_same_behavior_id_and_field_f32(struct Object *o, s32 fieldIndex, f32 value) {
-    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS) { return NULL; }
+    if (fieldIndex < 0 || fieldIndex >= OBJECT_NUM_FIELDS + gNumCustomObjectFields) { return NULL; }
     if (o) {
         enum ObjectList objList = get_object_list_from_behavior(o->behavior);
         for (struct Object *obj = obj_get_next_internal(o, objList); obj != NULL; obj = obj_get_next_internal(obj, objList)) {
-            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj->OBJECT_FIELD_F32(fieldIndex) == value) {
+            if (obj->behavior == o->behavior && obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj_get_field_f32(obj, fieldIndex) == value) {
                 return obj;
             }
         }
@@ -302,22 +302,34 @@ struct Object *obj_get_collided_object(struct Object *o, s16 index) {
 //
 
 u32 obj_get_field_u32(struct Object *o, s32 fieldIndex) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return 0; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         return o->OBJECT_FIELD_U32(fieldIndex);
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        return ((u32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START];
     }
     return 0;
 }
 
 s32 obj_get_field_s32(struct Object *o, s32 fieldIndex) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return 0; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         return o->OBJECT_FIELD_S32(fieldIndex);
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        return ((s32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START];
     }
     return 0;
 }
 
 f32 obj_get_field_f32(struct Object *o, s32 fieldIndex) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return 0; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         return o->OBJECT_FIELD_F32(fieldIndex);
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        return ((f32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START];
     }
     return 0;
 }
@@ -330,26 +342,102 @@ s16 obj_get_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex) {
 }
 
 void obj_set_field_u32(struct Object *o, s32 fieldIndex, u32 value) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         o->OBJECT_FIELD_U32(fieldIndex) = value;
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        ((u32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START] = value;
     }
 }
 
 void obj_set_field_s32(struct Object *o, s32 fieldIndex, s32 value) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         o->OBJECT_FIELD_S32(fieldIndex) = value;
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        ((s32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START] = value;
     }
 }
 
 void obj_set_field_f32(struct Object *o, s32 fieldIndex, f32 value) {
-    if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
+    if (!o) { return; }
+    if (fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS) {
         o->OBJECT_FIELD_F32(fieldIndex) = value;
+    }
+    if (o->customFields && fieldIndex >= OBJECT_CUSTOM_FIELDS_START && fieldIndex < OBJECT_CUSTOM_FIELDS_START + gNumCustomObjectFields) {
+        ((f32 *) o->customFields)[fieldIndex - OBJECT_CUSTOM_FIELDS_START] = value;
     }
 }
 
 void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value) {
     if (o && fieldIndex >= 0 && fieldIndex < OBJECT_NUM_FIELDS && fieldSubIndex >= 0 && fieldSubIndex < 2) {
         o->OBJECT_FIELD_S16(fieldIndex, fieldSubIndex) = value;
+    }
+}
+
+bool obj_get_field_info_from_name(const char *fieldName, OPTIONAL struct Mod *mod, RET s32 *fieldIndex, RET s32 *fieldSubIndex, RET const char **fieldType) {
+    struct LuaObjectField *lof = NULL;
+    size_t objectFieldsOffset = 0;
+    *fieldIndex = 0;
+    *fieldSubIndex = 0;
+    *fieldType = "";
+
+    // Only works with proper object fields (name starting with `o`)
+    if (!fieldName || fieldName[0] != 'o') {
+        return false;
+    }
+
+    // Check regular object fields
+    lof = smlua_get_object_field(LOT_OBJECT, fieldName);
+    if (lof) {
+        // adjust offset
+        objectFieldsOffset = offsetof(struct Object, rawData);
+    }
+
+    // Check custom fields
+    else {
+        lof = smlua_get_custom_field(NULL, fieldName, mod ? mod : gLuaActiveMod);
+        if (lof) {
+            // adjust index
+            *fieldIndex = OBJECT_CUSTOM_FIELDS_START;
+        }
+    }
+
+    // Not found
+    if (!lof) {
+        return false;
+    }
+
+    // Check type
+    switch (lof->valueType) {
+        case LVT_S32: {
+            *fieldType = "s32";
+            *fieldIndex += (lof->valueOffset - objectFieldsOffset) / sizeof(s32);
+            *fieldSubIndex = 0;
+        } return true;
+
+        case LVT_U32: {
+            *fieldType = "u32";
+            *fieldIndex += (lof->valueOffset - objectFieldsOffset) / sizeof(u32);
+            *fieldSubIndex = 0;
+        } return true;
+
+        case LVT_F32: {
+            *fieldType = "f32";
+            *fieldIndex += (lof->valueOffset - objectFieldsOffset) / sizeof(f32);
+            *fieldSubIndex = 0;
+        } return true;
+
+        case LVT_S16: {
+            *fieldType = "s16";
+            s32 shortIndex = (lof->valueOffset - objectFieldsOffset) / sizeof(s16);
+            *fieldIndex += shortIndex / 2;
+            *fieldSubIndex = shortIndex % 2;
+        } return true;
+
+        default: return false;
     }
 }
 

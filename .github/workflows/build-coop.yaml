@@ -91,11 +91,8 @@ jobs:
                     unzip
                     make
                     git
-                    mingw-w64-i686-gcc
                     mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
                     mingw-w64-x86_64-SDL2
                     python3
                     zip

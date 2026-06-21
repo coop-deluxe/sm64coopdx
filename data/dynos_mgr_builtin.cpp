@@ -184,46 +184,14 @@ static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_main_menu_entry_1),
 };
 
-#define define_level_original(lvl, script) (void*) script
-
-void* gDynosLevelScriptsOriginal[LEVEL_COUNT] = {
-    define_level_original(0, NULL),
-    define_level_original(LEVEL_UNKNOWN_1, NULL),
-    define_level_original(LEVEL_UNKNOWN_2, NULL),
-    define_level_original(LEVEL_UNKNOWN_3, NULL),
-    define_level_original(LEVEL_BBH, level_bbh_entry),
-    define_level_original(LEVEL_CCM, level_ccm_entry),
-    define_level_original(LEVEL_CASTLE, level_castle_inside_entry),
-    define_level_original(LEVEL_HMC, level_hmc_entry),
-    define_level_original(LEVEL_SSL, level_ssl_entry),
-    define_level_original(LEVEL_BOB, level_bob_entry),
-    define_level_original(LEVEL_SL, level_sl_entry),
-    define_level_original(LEVEL_WDW, level_wdw_entry),
-    define_level_original(LEVEL_JRB, level_jrb_entry),
-    define_level_original(LEVEL_THI, level_thi_entry),
-    define_level_original(LEVEL_TTC, level_ttc_entry),
-    define_level_original(LEVEL_RR, level_rr_entry),
-    define_level_original(LEVEL_CASTLE_GROUNDS, level_castle_grounds_entry),
-    define_level_original(LEVEL_BITDW, level_bitdw_entry),
-    define_level_original(LEVEL_VCUTM, level_vcutm_entry),
-    define_level_original(LEVEL_BITFS, level_bitfs_entry),
-    define_level_original(LEVEL_SA, level_sa_entry),
-    define_level_original(LEVEL_BITS, level_bits_entry),
-    define_level_original(LEVEL_LLL, level_lll_entry),
-    define_level_original(LEVEL_DDD, level_ddd_entry),
-    define_level_original(LEVEL_WF, level_wf_entry),
-    define_level_original(LEVEL_ENDING, level_ending_entry),
-    define_level_original(LEVEL_CASTLE_COURTYARD, level_castle_courtyard_entry),
-    define_level_original(LEVEL_PSS, level_pss_entry),
-    define_level_original(LEVEL_COTMC, level_cotmc_entry),
-    define_level_original(LEVEL_TOTWC, level_totwc_entry),
-    define_level_original(LEVEL_BOWSER_1, level_bowser_1_entry),
-    define_level_original(LEVEL_WMOTR, level_wmotr_entry),
-    define_level_original(LEVEL_UNKNOWN_32, NULL),
-    define_level_original(LEVEL_BOWSER_2, level_bowser_2_entry),
-    define_level_original(LEVEL_BOWSER_3, level_bowser_3_entry),
-    define_level_original(LEVEL_UNKNOWN_35, NULL),
-    define_level_original(LEVEL_TTM, level_ttm_entry),
+const void *gDynosLevelScriptsOriginal[] = {
+    [LEVEL_NONE] = NULL,
+#define STUB_LEVEL(_0, levelNum, _2, _3, _4, _5, _6, _7, _8) [levelNum] = NULL,
+#define DEFINE_LEVEL(_0, levelNum, _2, folder, _4, _5, _6, _7, _8, _9, _10) \
+    [levelNum] = level_ ## folder ## _entry,
+#include "levels/level_defines.h"
+#undef STUB_LEVEL
+#undef DEFINE_LEVEL
 };
 
 const void* DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName) {

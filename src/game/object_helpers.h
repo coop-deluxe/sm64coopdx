@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "types.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "object_constants.h"
 
 // used for chain chomp and wiggler
 struct ChainSegment
@@ -275,7 +276,7 @@ s32 is_mario_moving_fast_or_in_air(s32 speedThreshold);
 s32 is_item_in_array(s8 item, s8 *array);
 void cur_obj_enable_rendering_if_mario_in_room(void);
 s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deathSound, s32 noLootCoins);
-void obj_explode_and_spawn_coins(f32 particleSize, s32 coinType);
+void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);
 void obj_set_collision_data(struct Object *obj, const void *segAddr);
 void cur_obj_if_hit_wall_bounce_away(void);
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY);

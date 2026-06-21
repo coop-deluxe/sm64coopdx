@@ -2155,6 +2155,7 @@
    - [obj_set_field_s32](functions-7.md#obj_set_field_s32)
    - [obj_set_field_f32](functions-7.md#obj_set_field_f32)
    - [obj_set_field_s16](functions-7.md#obj_set_field_s16)
+   - [obj_get_field_info_from_name](functions-7.md#obj_get_field_info_from_name)
    - [obj_get_temp_spawn_particles_info](functions-7.md#obj_get_temp_spawn_particles_info)
    - [obj_get_temp_water_droplet_params](functions-7.md#obj_get_temp_water_droplet_params)
    - [get_temp_object_hitbox](functions-7.md#get_temp_object_hitbox)
@@ -2273,10 +2274,20 @@
 
 Defines a custom set of overlapping object fields.
 
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+If, for a field, `global` is `true`, the field will be defined for all mods.
 
 ### Lua Example
-`define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
+```lua
+define_custom_obj_fields({
+    oCustomField1 = 'u32',
+    oCustomField2 = 's32',
+    oCustomField3 = 'f32',
+    oCustomField4 = { type = 'u32', global = true },
+    oCustomField5 = { type = 's32', global = true },
+    oCustomField6 = { type = 'f32', global = true },
+})
+```
 
 ### Parameters
 | Field | Type |

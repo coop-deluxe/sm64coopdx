@@ -39,8 +39,30 @@ struct GrowingPoolNode
     struct GrowingPoolNode* prev;
 };
 
+// The function signature for the allocator function used by `growing_array_alloc`.
+// It matches `malloc`'s.
 typedef void *(*GrowingArrayAllocFunc)(size_t);
+
+// The function signature for the deallocator function used by `growing_array_free`.
+// It matches `free`'s.
 typedef void (*GrowingArrayFreeFunc)(void *);
+
+// The function signature for the compare function used by `growing_array_sort` (and `qsort`), `growing_array_bsearch`.
+// It is important to note that the parameters of such functions are POINTERS to `GrowingArray` items, not the items themselves, because that's how `qsort` works!
+// The return value should be an `int`:
+// - negative if `l` is evaluated as "lower" than `r`,
+// - positive if `l` is evaluated as "greater" than `r`,
+// - zero if `l` and `r` are evaluated as equal.
+//
+// For example, if the growing array items are `const char *`, this function should be implemented like this:
+// ```c
+// int my_sort_cmp_func(const void *l, const void *r) {
+//     const char *lstr = *((const char **) l);
+//     const char *rstr = *((const char **) r);
+//     return strcmp(lstr, rstr);
+// }
+// ```
+typedef int (*GrowingArrayCmpFunc)(const void *, const void *);
 
 struct GrowingArray
 {
@@ -81,6 +103,8 @@ void growing_array_move(struct GrowingArray *array, u32 from, u32 to, u32 count)
 bool growing_array_swap_and_pop_index(struct GrowingArray *array, u32 index);
 bool growing_array_swap_and_pop(struct GrowingArray *array, void *ptr);
 void growing_array_free(struct GrowingArray **array);
+void growing_array_sort(struct GrowingArray *array, GrowingArrayCmpFunc cmpFunc);
+void *growing_array_bsearch(struct GrowingArray *array, const void *elem, GrowingArrayCmpFunc cmpFunc);
 void growing_array_debug_print(struct GrowingArray *array, const char *name, s32 x, s32 y);
 
 #define growing_array_for_each_(array, type, item) \

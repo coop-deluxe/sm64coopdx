@@ -5172,6 +5172,15 @@ BOBOMB_ACT_LAVA_DEATH = 100
 --- @type integer
 BOBOMB_ACT_DEATH_PLANE_DEATH = 101
 
+COIN_TYPE_NONE   = 0 --- @type CoinType
+COIN_TYPE_YELLOW = 1 --- @type CoinType
+COIN_TYPE_BLUE   = 2 --- @type CoinType
+
+--- @alias CoinType
+--- | `COIN_TYPE_NONE`
+--- | `COIN_TYPE_YELLOW`
+--- | `COIN_TYPE_BLUE`
+
 --- @type integer
 HIDDEN_BLUE_COIN_ACT_INACTIVE = 0
 
@@ -11245,16 +11254,10 @@ ANIM_FLAG_BONE_SCALE = (1 << 9)
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
-OBJECT_NUM_REGULAR_FIELDS = 0x50
+OBJECT_NUM_FIELDS = 0x50
 
 --- @type integer
-OBJECT_NUM_CUSTOM_FIELDS = 0x40
-
---- @type integer
-OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
-
---- @type integer
-OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_FIELDS)
 
 MARIO_ANIM_PART_NONE          =  0 --- @type MarioAnimPart
 MARIO_ANIM_PART_ROOT          =  1 --- @type MarioAnimPart
