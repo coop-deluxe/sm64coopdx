@@ -53,7 +53,7 @@ static bool audio_sdl_reopen_speaker(const char* name) {
 
     SDL_AudioDeviceID dev = SDL_OpenAudioDevice(name, AudioDevType_Speakers, &sSpeakerSpec, NULL, 0);
     if (dev == 0) {
-        fprintf(stderr, "SDL_OpenAudio playback error: %s\n", SDL_GetError());
+        fprintf(stderr, "SDL_OpenAudioDevice playback error: %s\n", SDL_GetError());
         return false;
     }
     if (sSpeakerDev != 0) SDL_CloseAudioDevice(sSpeakerDev);
@@ -72,7 +72,7 @@ static bool audio_sdl_reopen_microphone(const char* name) {
     SDL_AudioDeviceID dev = SDL_OpenAudioDevice(name, AudioDevType_Microphone, &sMicrophoneSpec, NULL, 0);
     if (dev == 0) {
         gVoicePlayer->error = VOICECHAT_ERR_NO_MICROPHONE;
-        fprintf(stderr, "SDL_OpenAudio capture error: %s\n", SDL_GetError());
+        fprintf(stderr, "SDL_OpenAudioDevice capture error: %s\n", SDL_GetError());
         return false;
     }
     if (sMicrophoneDev != 0) SDL_CloseAudioDevice(sMicrophoneDev);
@@ -87,7 +87,7 @@ static bool audio_sdl_reopen_microphone(const char* name) {
 
 static bool audio_sdl_init(const char* speaker, const char* microphone) {
     if (SDL_Init(SDL_INIT_AUDIO) != 0) {
-        fprintf(stderr, "SDL init error: %s\n", SDL_GetError());
+        fprintf(stderr, "SDL_InitSubSystem error: %s\n", SDL_GetError());
         return false;
     }
 
@@ -168,10 +168,14 @@ static void audio_sdl_shutdown(void)
 {
     if (SDL_WasInit(SDL_INIT_AUDIO)) {
         if (sSpeakerDev != 0) {
+            SDL_PauseAudioDevice(sSpeakerDev, 1);
+            SDL_ClearQueuedAudio(sSpeakerDev);
             SDL_CloseAudioDevice(sSpeakerDev);
             sSpeakerDev = 0;
         }
         if (sMicrophoneDev != 0) {
+            SDL_PauseAudioDevice(sMicrophoneDev, 1);
+            SDL_ClearQueuedAudio(sMicrophoneDev);
             SDL_CloseAudioDevice(sMicrophoneDev);
             sMicrophoneDev = 0;
         }

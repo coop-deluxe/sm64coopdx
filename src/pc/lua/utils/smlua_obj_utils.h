@@ -9,12 +9,12 @@
 Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
-struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
+struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);
 /* |description|
 Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
 You can change the fields of the object in `objSetupFunction`
 |descriptionEnd| */
-struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);
+struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);
 
 /* |description|Checks if an object has `behaviorId`|descriptionEnd| */
 s32 obj_has_behavior_id(struct Object *o, enum BehaviorId behaviorId);

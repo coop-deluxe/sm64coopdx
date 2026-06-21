@@ -1563,6 +1563,7 @@
 --- @field public oCoinUnkF4 integer
 --- @field public oCoinUnkF8 integer
 --- @field public oCoinUnk110 number
+--- @field public oCoinBaseYVel number
 --- @field public oCoinUnk1B0 integer
 --- @field public oCollisionParticleUnkF4 number
 --- @field public oControllablePlatformUnkF8 integer
@@ -2265,6 +2266,9 @@
 --- @field public error VoiceChatError
 --- @field public clientMutedState VoiceChatMuteState
 --- @field public playerMutedState VoiceChatMuteState
+
+--- @class VoicePlayerInternal
+--- @field public buffer VoiceBuffer
 
 --- @class Vtx
 --- @field public x number

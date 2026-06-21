@@ -95,6 +95,7 @@
 - [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
 - [VoicePlayer](#VoicePlayer)
+- [VoicePlayerInternal](#VoicePlayerInternal)
 - [Vtx](#Vtx)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
@@ -2173,6 +2174,7 @@
 | oCoinUnkF4 | `integer` |  |
 | oCoinUnkF8 | `integer` |  |
 | oCoinUnk110 | `number` |  |
+| oCoinBaseYVel | `number` |  |
 | oCoinUnk1B0 | `integer` |  |
 | oCollisionParticleUnkF4 | `number` |  |
 | oControllablePlatformUnkF8 | `integer` |  |
@@ -3109,6 +3111,16 @@
 | error | [enum VoiceChatError](constants.md#enum-VoiceChatError) | read-only |
 | clientMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |
 | playerMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [VoicePlayerInternal](#VoicePlayerInternal)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| buffer | [VoiceBuffer](structs.md#VoiceBuffer) | read-only |
 
 [:arrow_up_small:](#)
 

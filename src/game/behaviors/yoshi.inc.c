@@ -62,7 +62,7 @@ void yoshi_walk_loop(void) {
 
     cur_obj_init_animation(1);
     if (animFrame == 0 || animFrame == 15)
-        cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_YOSHI_WALK);
 
     if (o->oInteractStatus == INT_STATUS_INTERACTED) {
         struct MarioState* marioState = nearest_mario_state_to_object(o);
@@ -169,7 +169,7 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oYoshiTargetYaw, 0x500);
     if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200)) {
         cur_obj_init_animation(2);
-        cur_obj_play_sound_2(SOUND_GENERAL_ENEMY_ALERT1);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ENEMY_ALERT1);
         o->oForwardVel = 50.0f;
         o->oVelY = 40.0f;
         o->oMoveAngleYaw = -0x3FFF;
@@ -177,7 +177,7 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     }
 
     if (animFrame == 0 || animFrame == 15) {
-        cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_YOSHI_WALK);
     }
 }
 
@@ -234,7 +234,7 @@ void yoshi_reappear(void) {
         o->oVelY = 0.0f;
         cur_obj_init_animation(0);
         spawn_mist_particles();
-        cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_YOSHI_WALK);
         o->oAction = YOSHI_ACT_IDLE;
         return;
     }
@@ -248,7 +248,7 @@ void yoshi_reappear(void) {
         o->oPosY = sYoshiRespawnPos[1];
         o->oPosZ = sYoshiRespawnPos[2];
         cur_obj_init_animation(2);
-        cur_obj_play_sound_2(SOUND_GENERAL_ENEMY_ALERT1);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ENEMY_ALERT1);
         spawn_mist_particles();
         o->oVelY = 160;
     }
@@ -267,7 +267,7 @@ void yoshi_reappear(void) {
         o->oPosZ = o->oHomeZ;
         cur_obj_init_animation(0);
         spawn_mist_particles();
-        cur_obj_play_sound_2(SOUND_GENERAL_YOSHI_WALK);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_YOSHI_WALK);
         o->oForwardVel = 0.0f;
         o->oVelY = 0.0f;
         o->oAction = YOSHI_ACT_IDLE;

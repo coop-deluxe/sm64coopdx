@@ -93,11 +93,11 @@ function spawn_wind_particles(pitch, yaw)
     -- ...
 end
 
---- @param a0 number
---- @param a1 number
+--- @param maxDistToFloor number
+--- @param distance number
 --- @return integer
---- Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`
-function check_if_moving_over_floor(a0, a1)
+--- Checks if the current object is moving `distance` units over a floor and within a max distance to floor of `maxDistToFloor`
+function check_if_moving_over_floor(maxDistToFloor, distance)
     -- ...
 end
 
@@ -144,8 +144,8 @@ function cur_obj_spawn_strong_wind_particles(windSpread, scale, relPosX, relPosY
     -- ...
 end
 
---- Behavior loop function for Star Door
-function bhv_star_door_loop_2()
+--- Behavior loop function for Star Door, which updates its render state
+function bhv_star_door_loop_update_render_state()
     -- ...
 end
 
@@ -319,11 +319,11 @@ function bhv_cannon_base_unused_loop()
     -- ...
 end
 
---- @param sp28 number
---- @param sp2C number
---- @param sp30 integer
---- Common behavior for when Mario's anchoring when grabbed
-function common_anchor_mario_behavior(sp28, sp2C, sp30)
+--- @param forwardVel number
+--- @param upwardsVel number
+--- @param interactStatusFlags integer
+--- Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuckya anchor objects. When Mario is thrown, sets `forwardVel`, `upwardsVel` and `interactStatusFlags` to him
+function common_anchor_mario_behavior(forwardVel, upwardsVel, interactStatusFlags)
     -- ...
 end
 
@@ -8275,13 +8275,6 @@ function set_yoshi_as_not_dead()
     -- ...
 end
 
---- @param f number
---- @return number
---- Absolute value (always positive) function
-function absf_2(f)
-    -- ...
-end
-
 --- @param objNewX number
 --- @param objY number
 --- @param objNewZ number
@@ -8947,10 +8940,10 @@ function set_room_override(room)
     -- ...
 end
 
---- @param a0 Mat4
---- @param a1 Object
+--- @param mtx Mat4
+--- @param obj Object
 --- Updates an object's position based on a parent transformation matrix
-function obj_update_pos_from_parent_transformation(a0, a1)
+function obj_update_pos_from_parent_transformation(mtx, obj)
     -- ...
 end
 
@@ -8962,11 +8955,11 @@ function obj_apply_scale_to_matrix(obj, dst, src)
     -- ...
 end
 
---- @param a0 Mat4
---- @param a1 Mat4
---- @param a2 Mat4
+--- @param dest Mat4
+--- @param src1 Mat4
+--- @param src2 Mat4
 --- Combines two transformation matrices into a single result matrix
-function create_transformation_from_matrices(a0, a1, a2)
+function create_transformation_from_matrices(dest, src1, src2)
     -- ...
 end
 
@@ -9350,11 +9343,6 @@ function cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)
     -- ...
 end
 
---- Alternative function that enables rendering for the current object
-function cur_obj_enable_rendering_2()
-    -- ...
-end
-
 --- Unused function that initializes the current object on the floor
 function cur_obj_unused_init_on_floor()
     -- ...
@@ -9513,17 +9501,17 @@ function mario_is_dive_sliding(m)
     -- ...
 end
 
---- @param sp18 number
---- @param sp1C integer
+--- @param velY number
+--- @param animIndex integer
 --- Sets the current object's vertical velocity and initializes an animation
-function cur_obj_set_y_vel_and_animation(sp18, sp1C)
+function cur_obj_set_y_vel_and_animation(velY, animIndex)
     -- ...
 end
 
---- @param sp18 integer
---- @param sp1C integer
---- Disables rendering, makes intangible, and resets action and animation
-function cur_obj_unrender_and_reset_state(sp18, sp1C)
+--- @param animIndex integer
+--- @param action integer
+--- Disables rendering, makes intangible, and resets animation and action
+function cur_obj_unrender_and_reset_state(animIndex, action)
     -- ...
 end
 
@@ -9783,11 +9771,11 @@ function cur_obj_start_cam_event(obj, cameraEvent)
     -- ...
 end
 
---- @param sp0 integer
---- @param sp4 integer
---- @param sp8 number
---- Sets Mario's interact status to hoot-grabbed if Mario is within range
-function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
+--- @param unused1 integer
+--- @param unused2 integer
+--- @param maxDistanceToMario number
+--- Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`
+function set_mario_interact_hoot_if_in_range(unused1, unused2, maxDistanceToMario)
     -- ...
 end
 
@@ -9840,29 +9828,29 @@ end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp30 number
+--- @param baseYVel number
 --- @param coinBehavior Pointer_BehaviorScript
 --- @param posJitter integer
 --- @param model integer
 --- Spawns loot coins from an object using the specified behavior, jitter, and model
-function obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)
+function obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- @param posJitter integer
 --- Spawns blue loot coins from an object
-function obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)
+function obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- Spawns yellow loot coins from an object
-function obj_spawn_loot_yellow_coins(obj, numCoins, sp28)
+function obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)
     -- ...
 end
 
@@ -10049,9 +10037,9 @@ function obj_translate_xz_random(obj, rangeLength)
     -- ...
 end
 
---- @param a0 Object
+--- @param obj Object
 --- Builds the object's world velocity from its transform basis vectors
-function obj_build_vel_from_transform(a0)
+function obj_build_vel_from_transform(obj)
     -- ...
 end
 
@@ -10137,29 +10125,17 @@ function bhv_dust_smoke_loop()
     -- ...
 end
 
---- @param sp0 integer
---- @param sp4 integer
---- Placeholder function with no behavior
-function stub_obj_helpers_3(sp0, sp4)
-    -- ...
-end
-
---- @param a0 integer
---- @param a1 integer
---- @param sp10 number
---- @param sp14 number
---- Smoothly scales the current object over time using enabled axes
-function cur_obj_scale_over_time(a0, a1, sp10, sp14)
+--- @param axes integer
+--- @param duration integer
+--- @param minScale number
+--- @param maxScale number
+--- Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)
+function cur_obj_scale_over_time(axes, duration, minScale, maxScale)
     -- ...
 end
 
 --- Moves an object to its home position while applying debug position offsets
 function cur_obj_set_pos_to_home_with_debug()
-    -- ...
-end
-
---- Placeholder function with no behavior
-function stub_obj_helpers_4()
     -- ...
 end
 
@@ -10183,30 +10159,23 @@ function cur_obj_shake_y_until(cycles, amount)
     -- ...
 end
 
---- @param a0 integer
+--- @param index integer
 --- @return integer
 --- Moves the current object up and down along a preset displacement table
-function cur_obj_move_up_and_down(a0)
+function cur_obj_move_up_and_down(index)
     -- ...
 end
 
---- @param sp20 integer
---- @param sp24 integer
+--- @param setHomeToMario integer
+--- @param unused integer
 --- @return Object
 --- Spawns a star object without triggering level exit behavior
-function spawn_star_with_no_lvl_exit(sp20, sp24)
+function spawn_star_with_no_lvl_exit(setHomeToMario, unused)
     -- ...
 end
 
 --- Spawns a base star with default parameters and no level exit behavior
 function spawn_base_star_with_no_lvl_exit()
-    -- ...
-end
-
---- @param a0 integer
---- @return integer
---- Returns the value at index a0 from a behavior-specific left-shift table
-function bit_shift_left(a0)
     -- ...
 end
 
@@ -10250,10 +10219,10 @@ function cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)
     -- ...
 end
 
---- @param sp18 number
---- @param sp1C integer
+--- @param mistSize number
+--- @param coinType CoinType
 --- Explodes the current object, spawns particles, and optionally spawns coins
-function obj_explode_and_spawn_coins(sp18, sp1C)
+function obj_explode_and_spawn_coins(mistSize, coinType)
     -- ...
 end
 
@@ -10312,19 +10281,10 @@ end
 --- @param m MarioState
 --- @param radius number
 --- @param height number
---- @param unused integer
+--- @param unused? integer
 --- @return integer
 --- Checks whether Mario can activate the current object's textbox within a vertical and horizontal range
 function cur_obj_can_mario_activate_textbox(m, radius, height, unused)
-    -- ...
-end
-
---- @param m MarioState
---- @param radius number
---- @param height number
---- @return integer
---- Wrapper that checks Mario textbox activation using a fixed unused parameter value
-function cur_obj_can_mario_activate_textbox_2(m, radius, height)
     -- ...
 end
 
@@ -10480,39 +10440,61 @@ function apply_platform_displacement(o, platform)
     -- ...
 end
 
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data
-function queue_rumble_data(a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data with `time` and `level`
+function queue_rumble_data(time, level)
     -- ...
 end
 
 --- @param object Object
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data for object, factoring in its distance from Mario
-function queue_rumble_data_object(object, a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data for object with `time` and `level`, factoring in its distance from Mario
+function queue_rumble_data_object(object, time, level)
     -- ...
 end
 
 --- @param m MarioState
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data for Mario
-function queue_rumble_data_mario(m, a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data with `time` and `level` only if `m` is the local Mario
+function queue_rumble_data_mario(m, time, level)
+    -- ...
+end
+
+--- @param decay integer
+--- Queues rumble `decay`
+function queue_rumble_decay(decay)
+    -- ...
+end
+
+--- @return integer
+--- Checks if rumble is finished and there is no rumble queued
+function is_rumble_finished_and_queue_empty()
     -- ...
 end
 
 --- @param m MarioState
---- Resets rumble timers
+--- Resets rumble timers only if `m` is the local Mario
 function reset_rumble_timers(m)
     -- ...
 end
 
 --- @param m MarioState
---- @param a0 integer
---- Resets rumble timers and sets a field based on `a0`
-function reset_rumble_timers_2(m, a0)
+--- @param level integer
+--- Resets rumble timers and sets vibrate based on `level`
+function reset_rumble_timers_vibrate(m, level)
+    -- ...
+end
+
+--- Queues rumble data for submerged actions
+function queue_rumble_submerged()
+    -- ...
+end
+
+--- Cancels all currently queued rumble data
+function cancel_rumble()
     -- ...
 end
 
@@ -12448,7 +12430,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`
@@ -12461,7 +12443,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`
@@ -13137,13 +13119,13 @@ end
 
 --- @param soundMagic integer
 --- Plays a sound if the current object is visible
-function cur_obj_play_sound_1(soundMagic)
+function cur_obj_play_sound_if_visible(soundMagic)
     -- ...
 end
 
 --- @param soundMagic integer
---- Plays a sound if the current object is visible and queues rumble for specific sounds
-function cur_obj_play_sound_2(soundMagic)
+--- Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
+function cur_obj_play_sound_and_rumble_if_visible(soundMagic)
     -- ...
 end
 
@@ -13151,24 +13133,6 @@ end
 --- Create a sound spawner for objects that need a sound play once.<br>
 --- (Breakable walls, King Bobomb exploding, etc)
 function create_sound_spawner(soundMagic)
-    -- ...
-end
-
---- @param distance number
---- @return integer
---- Unused vanilla function, calculates a volume based on `distance`.<br>
---- If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.<br>
---- What an even more strange and confusing function
-function calc_dist_to_volume_range_1(distance)
-    -- ...
-end
-
---- @param distance number
---- @return integer
---- Unused vanilla function, calculates a volume based on `distance`.<br>
---- If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.<br>
---- What a strange and confusing function
-function calc_dist_to_volume_range_2(distance)
     -- ...
 end
 

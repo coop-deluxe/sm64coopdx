@@ -611,7 +611,7 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer < 6 && m->playerIndex == 0) {
-        func_sh_8024CA04();
+        queue_rumble_submerged();
     }
 
     set_character_animation(m, CHAR_ANIM_SWIM_PART1);

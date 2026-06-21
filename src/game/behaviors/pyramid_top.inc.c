@@ -32,7 +32,7 @@ void bhv_pyramid_top_spinning(void) {
 
     // At first, move upward smoothly without rotating.
     if (o->oTimer < 60) {
-        o->oPosY = o->oHomeY + absf_2(sins(o->oTimer * 0x2000) * 10.0f);
+        o->oPosY = o->oHomeY + absf(sins(o->oTimer * 0x2000) * 10.0f);
     } else {
         // Then, rotate at an accelerating rate, and move upward at a constant rate.
         o->oAngleVelYaw += 0x100;
@@ -109,7 +109,7 @@ void bhv_pyramid_top_loop(void) {
 
         case PYRAMID_TOP_ACT_SPINNING:
             if (o->oTimer == 0) {
-                cur_obj_play_sound_2(SOUND_GENERAL2_PYRAMID_TOP_SPIN);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL2_PYRAMID_TOP_SPIN);
             }
 
             bhv_pyramid_top_spinning();

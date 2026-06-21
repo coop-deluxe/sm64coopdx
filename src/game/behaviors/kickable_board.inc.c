@@ -57,7 +57,7 @@ void bhv_kickable_board_loop(void) {
                 if (o->oTimer > 30 && (sp24 = check_mario_attacking(marioState))) {
                     if (marioState->marioObj->oPosY > o->oPosY + 160.0f && sp24 == 2) {
                         o->oAction++;
-                        cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BUTTON_PRESS_2);
                         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
                     } else
                         o->oTimer = 0;
@@ -72,7 +72,7 @@ void bhv_kickable_board_loop(void) {
             } else
                 init_kickable_board_rock();
             if (!(o->oKickableBoardF4 & 0x7FFF))
-                cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BUTTON_PRESS_2);
             o->oKickableBoardF4 += 0x400;
             break;
         case 2:
@@ -85,7 +85,7 @@ void bhv_kickable_board_loop(void) {
                 o->oAngleVelPitch = 0;
                 o->oAction++;
                 cur_obj_shake_screen(SHAKE_POS_SMALL);
-                cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN4);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNKNOWN4);
                 if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
             }
             load_object_collision_model();

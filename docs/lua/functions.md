@@ -53,7 +53,7 @@
    - [play_penguin_walking_sound](functions-2.md#play_penguin_walking_sound)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
    - [cur_obj_spawn_strong_wind_particles](functions-2.md#cur_obj_spawn_strong_wind_particles)
-   - [bhv_star_door_loop_2](functions-2.md#bhv_star_door_loop_2)
+   - [bhv_star_door_loop_update_render_state](functions-2.md#bhv_star_door_loop_update_render_state)
    - [bhv_cap_switch_loop](functions-2.md#bhv_cap_switch_loop)
    - [bhv_tiny_star_particles_init](functions-2.md#bhv_tiny_star_particles_init)
    - [bhv_grindel_thwomp_loop](functions-2.md#bhv_grindel_thwomp_loop)
@@ -1457,7 +1457,6 @@
 
 - obj_behaviors.c
    - [set_yoshi_as_not_dead](functions-5.md#set_yoshi_as_not_dead)
-   - [absf_2](functions-5.md#absf_2)
    - [obj_find_wall](functions-5.md#obj_find_wall)
    - [turn_obj_away_from_steep_floor](functions-5.md#turn_obj_away_from_steep_floor)
    - [obj_orient_graph](functions-5.md#obj_orient_graph)
@@ -1601,7 +1600,6 @@
    - [cur_obj_hide](functions-6.md#cur_obj_hide)
    - [cur_obj_set_pos_relative](functions-6.md#cur_obj_set_pos_relative)
    - [cur_obj_set_pos_relative_to_parent](functions-6.md#cur_obj_set_pos_relative_to_parent)
-   - [cur_obj_enable_rendering_2](functions-6.md#cur_obj_enable_rendering_2)
    - [cur_obj_unused_init_on_floor](functions-6.md#cur_obj_unused_init_on_floor)
    - [obj_set_face_angle_to_move_angle](functions-6.md#obj_set_face_angle_to_move_angle)
    - [get_object_list_from_behavior](functions-6.md#get_object_list_from_behavior)
@@ -1721,17 +1719,14 @@
    - [cur_obj_push_mario_away](functions-6.md#cur_obj_push_mario_away)
    - [cur_obj_push_mario_away_from_cylinder](functions-6.md#cur_obj_push_mario_away_from_cylinder)
    - [bhv_dust_smoke_loop](functions-6.md#bhv_dust_smoke_loop)
-   - [stub_obj_helpers_3](functions-6.md#stub_obj_helpers_3)
    - [cur_obj_scale_over_time](functions-6.md#cur_obj_scale_over_time)
    - [cur_obj_set_pos_to_home_with_debug](functions-6.md#cur_obj_set_pos_to_home_with_debug)
-   - [stub_obj_helpers_4](functions-6.md#stub_obj_helpers_4)
    - [cur_obj_is_mario_on_platform](functions-6.md#cur_obj_is_mario_on_platform)
    - [cur_obj_is_any_player_on_platform](functions-6.md#cur_obj_is_any_player_on_platform)
    - [cur_obj_shake_y_until](functions-6.md#cur_obj_shake_y_until)
    - [cur_obj_move_up_and_down](functions-6.md#cur_obj_move_up_and_down)
    - [spawn_star_with_no_lvl_exit](functions-6.md#spawn_star_with_no_lvl_exit)
    - [spawn_base_star_with_no_lvl_exit](functions-6.md#spawn_base_star_with_no_lvl_exit)
-   - [bit_shift_left](functions-6.md#bit_shift_left)
    - [cur_obj_mario_far_away](functions-6.md#cur_obj_mario_far_away)
    - [is_mario_moving_fast_or_in_air](functions-6.md#is_mario_moving_fast_or_in_air)
    - [is_item_in_array](functions-6.md#is_item_in_array)
@@ -1749,7 +1744,6 @@
    - [set_time_stop_flags_if_alone](functions-6.md#set_time_stop_flags_if_alone)
    - [clear_time_stop_flags](functions-6.md#clear_time_stop_flags)
    - [cur_obj_can_mario_activate_textbox](functions-6.md#cur_obj_can_mario_activate_textbox)
-   - [cur_obj_can_mario_activate_textbox_2](functions-6.md#cur_obj_can_mario_activate_textbox_2)
    - [cur_obj_end_dialog](functions-6.md#cur_obj_end_dialog)
    - [cur_obj_has_model](functions-6.md#cur_obj_has_model)
    - [cur_obj_align_gfx_with_floor](functions-6.md#cur_obj_align_gfx_with_floor)
@@ -1788,8 +1782,12 @@
    - [queue_rumble_data](functions-6.md#queue_rumble_data)
    - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
    - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [queue_rumble_decay](functions-6.md#queue_rumble_decay)
+   - [is_rumble_finished_and_queue_empty](functions-6.md#is_rumble_finished_and_queue_empty)
    - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
+   - [reset_rumble_timers_vibrate](functions-6.md#reset_rumble_timers_vibrate)
+   - [queue_rumble_submerged](functions-6.md#queue_rumble_submerged)
+   - [cancel_rumble](functions-6.md#cancel_rumble)
 
 <br />
 
@@ -2231,11 +2229,9 @@
 <br />
 
 - spawn_sound.h
-   - [cur_obj_play_sound_1](functions-7.md#cur_obj_play_sound_1)
-   - [cur_obj_play_sound_2](functions-7.md#cur_obj_play_sound_2)
+   - [cur_obj_play_sound_if_visible](functions-7.md#cur_obj_play_sound_if_visible)
+   - [cur_obj_play_sound_and_rumble_if_visible](functions-7.md#cur_obj_play_sound_and_rumble_if_visible)
    - [create_sound_spawner](functions-7.md#create_sound_spawner)
-   - [calc_dist_to_volume_range_1](functions-7.md#calc_dist_to_volume_range_1)
-   - [calc_dist_to_volume_range_2](functions-7.md#calc_dist_to_volume_range_2)
 
 <br />
 

@@ -80,15 +80,15 @@ void bhv_water_level_diamond_loop(void) {
                         o->oAngleVelYaw = 0x800;
                 } else {
                     if (o->oTimer == 0)
-                        cur_obj_play_sound_2(SOUND_GENERAL_WATER_LEVEL_TRIG);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_WATER_LEVEL_TRIG);
                     else {
                         if (*gEnvironmentLevels > o->oWaterLevelTriggerTargetWaterLevel)
-                            cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
+                            cur_obj_play_sound_if_visible(SOUND_ENV_WATER_DRAIN);
                         else
-                            cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN); // same as above
+                            cur_obj_play_sound_if_visible(SOUND_ENV_WATER_DRAIN); // same as above
                     }
                     o->oAngleVelYaw = 0x800;
-                    reset_rumble_timers_2(&gMarioStates[0], 2);
+                    reset_rumble_timers_vibrate(&gMarioStates[0], 2);
                 }
                 break;
             case WATER_LEVEL_DIAMOND_ACT_IDLE_SPINNING:

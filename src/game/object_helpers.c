@@ -265,15 +265,15 @@ Gfx *geo_choose_area_ext(UNUSED s32 callContext, struct GraphNode *node, UNUSED 
 }
 
 /* |description|Updates an object's position based on a parent transformation matrix|descriptionEnd| */
-void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1) {
-    if (a1 == NULL) { return; }
-    f32 spC = a1->oParentRelativePosX;
-    f32 sp8 = a1->oParentRelativePosY;
-    f32 sp4 = a1->oParentRelativePosZ;
+void obj_update_pos_from_parent_transformation(Mat4 mtx, struct Object *obj) {
+    if (obj == NULL) { return; }
+    f32 relPosX = obj->oParentRelativePosX;
+    f32 relPosY = obj->oParentRelativePosY;
+    f32 relPosZ = obj->oParentRelativePosZ;
 
-    a1->oPosX = spC * a0[0][0] + sp8 * a0[1][0] + sp4 * a0[2][0] + a0[3][0];
-    a1->oPosY = spC * a0[0][1] + sp8 * a0[1][1] + sp4 * a0[2][1] + a0[3][1];
-    a1->oPosZ = spC * a0[0][2] + sp8 * a0[1][2] + sp4 * a0[2][2] + a0[3][2];
+    obj->oPosX = relPosX * mtx[0][0] + relPosY * mtx[1][0] + relPosZ * mtx[2][0] + mtx[3][0];
+    obj->oPosY = relPosX * mtx[0][1] + relPosY * mtx[1][1] + relPosZ * mtx[2][1] + mtx[3][1];
+    obj->oPosZ = relPosX * mtx[0][2] + relPosY * mtx[1][2] + relPosZ * mtx[2][2] + mtx[3][2];
 }
 
 /* |description|Applies an object's scale to a transformation matrix|descriptionEnd| */
@@ -301,33 +301,33 @@ void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src) {
 }
 
 /* |description|Combines two transformation matrices into a single result matrix|descriptionEnd| */
-void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2) {
+void create_transformation_from_matrices(VEC_OUT Mat4 dest, Mat4 src1, Mat4 src2) {
     f32 spC, sp8, sp4;
 
-    spC = a2[3][0] * a2[0][0] + a2[3][1] * a2[0][1] + a2[3][2] * a2[0][2];
-    sp8 = a2[3][0] * a2[1][0] + a2[3][1] * a2[1][1] + a2[3][2] * a2[1][2];
-    sp4 = a2[3][0] * a2[2][0] + a2[3][1] * a2[2][1] + a2[3][2] * a2[2][2];
+    spC = src2[3][0] * src2[0][0] + src2[3][1] * src2[0][1] + src2[3][2] * src2[0][2];
+    sp8 = src2[3][0] * src2[1][0] + src2[3][1] * src2[1][1] + src2[3][2] * src2[1][2];
+    sp4 = src2[3][0] * src2[2][0] + src2[3][1] * src2[2][1] + src2[3][2] * src2[2][2];
 
-    a0[0][0] = a1[0][0] * a2[0][0] + a1[0][1] * a2[0][1] + a1[0][2] * a2[0][2];
-    a0[0][1] = a1[0][0] * a2[1][0] + a1[0][1] * a2[1][1] + a1[0][2] * a2[1][2];
-    a0[0][2] = a1[0][0] * a2[2][0] + a1[0][1] * a2[2][1] + a1[0][2] * a2[2][2];
+    dest[0][0] = src1[0][0] * src2[0][0] + src1[0][1] * src2[0][1] + src1[0][2] * src2[0][2];
+    dest[0][1] = src1[0][0] * src2[1][0] + src1[0][1] * src2[1][1] + src1[0][2] * src2[1][2];
+    dest[0][2] = src1[0][0] * src2[2][0] + src1[0][1] * src2[2][1] + src1[0][2] * src2[2][2];
 
-    a0[1][0] = a1[1][0] * a2[0][0] + a1[1][1] * a2[0][1] + a1[1][2] * a2[0][2];
-    a0[1][1] = a1[1][0] * a2[1][0] + a1[1][1] * a2[1][1] + a1[1][2] * a2[1][2];
-    a0[1][2] = a1[1][0] * a2[2][0] + a1[1][1] * a2[2][1] + a1[1][2] * a2[2][2];
+    dest[1][0] = src1[1][0] * src2[0][0] + src1[1][1] * src2[0][1] + src1[1][2] * src2[0][2];
+    dest[1][1] = src1[1][0] * src2[1][0] + src1[1][1] * src2[1][1] + src1[1][2] * src2[1][2];
+    dest[1][2] = src1[1][0] * src2[2][0] + src1[1][1] * src2[2][1] + src1[1][2] * src2[2][2];
 
-    a0[2][0] = a1[2][0] * a2[0][0] + a1[2][1] * a2[0][1] + a1[2][2] * a2[0][2];
-    a0[2][1] = a1[2][0] * a2[1][0] + a1[2][1] * a2[1][1] + a1[2][2] * a2[1][2];
-    a0[2][2] = a1[2][0] * a2[2][0] + a1[2][1] * a2[2][1] + a1[2][2] * a2[2][2];
+    dest[2][0] = src1[2][0] * src2[0][0] + src1[2][1] * src2[0][1] + src1[2][2] * src2[0][2];
+    dest[2][1] = src1[2][0] * src2[1][0] + src1[2][1] * src2[1][1] + src1[2][2] * src2[1][2];
+    dest[2][2] = src1[2][0] * src2[2][0] + src1[2][1] * src2[2][1] + src1[2][2] * src2[2][2];
 
-    a0[3][0] = a1[3][0] * a2[0][0] + a1[3][1] * a2[0][1] + a1[3][2] * a2[0][2] - spC;
-    a0[3][1] = a1[3][0] * a2[1][0] + a1[3][1] * a2[1][1] + a1[3][2] * a2[1][2] - sp8;
-    a0[3][2] = a1[3][0] * a2[2][0] + a1[3][1] * a2[2][1] + a1[3][2] * a2[2][2] - sp4;
+    dest[3][0] = src1[3][0] * src2[0][0] + src1[3][1] * src2[0][1] + src1[3][2] * src2[0][2] - spC;
+    dest[3][1] = src1[3][0] * src2[1][0] + src1[3][1] * src2[1][1] + src1[3][2] * src2[1][2] - sp8;
+    dest[3][2] = src1[3][0] * src2[2][0] + src1[3][1] * src2[2][1] + src1[3][2] * src2[2][2] - sp4;
 
-    a0[0][3] = 0;
-    a0[1][3] = 0;
-    a0[2][3] = 0;
-    a0[3][3] = 1.0f;
+    dest[0][3] = 0;
+    dest[1][3] = 0;
+    dest[2][3] = 0;
+    dest[3][3] = 1.0f;
 }
 
 /* |description|Sets an object's held state based on the behavior script it will perform|descriptionEnd| */
@@ -1047,11 +1047,6 @@ void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward) {
     cur_obj_set_pos_relative(o->parentObj, dleft, dy, dforward);
 }
 
-/* |description|Alternative function that enables rendering for the current object|descriptionEnd| */
-void cur_obj_enable_rendering_2(void) {
-    cur_obj_enable_rendering();
-}
-
 /* |description|Unused function that initializes the current object on the floor|descriptionEnd| */
 void cur_obj_unused_init_on_floor(void) {
     if (!o) { return; }
@@ -1429,23 +1424,23 @@ s32 mario_is_dive_sliding(struct MarioState* m) {
 }
 
 /* |description|Sets the current object's vertical velocity and initializes an animation|descriptionEnd| */
-void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C) {
+void cur_obj_set_y_vel_and_animation(f32 velY, s32 animIndex) {
     if (!o) { return; }
-    o->oVelY = sp18;
-    cur_obj_init_animation_with_sound(sp1C);
+    o->oVelY = velY;
+    cur_obj_init_animation_with_sound(animIndex);
 }
 
-/* |description|Disables rendering, makes intangible, and resets action and animation|descriptionEnd| */
-void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C) {
+/* |description|Disables rendering, makes intangible, and resets animation and action|descriptionEnd| */
+void cur_obj_unrender_and_reset_state(s32 animIndex, s32 action) {
     if (!o) { return; }
     cur_obj_become_intangible();
     cur_obj_disable_rendering();
 
-    if (sp18 >= 0) {
-        cur_obj_init_animation_with_sound(sp18);
+    if (animIndex >= 0) {
+        cur_obj_init_animation_with_sound(animIndex);
     }
 
-    o->oAction = sp1C;
+    o->oAction = action;
 }
 
 /* |description|Moves an object after being thrown or dropped with gravity applied|descriptionEnd| */
@@ -2042,10 +2037,10 @@ void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent) {
     gSecondCameraFocus = o;
 }
 
-/* |description|Sets Mario's interact status to hoot-grabbed if Mario is within range|descriptionEnd| */
-void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8) {
+/* |description|Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`|descriptionEnd| */
+void set_mario_interact_hoot_if_in_range(UNUSED s32 unused1, UNUSED s32 unused2, f32 maxDistanceToMario) {
     if (!o || !gMarioObject) { return; }
-    if (o->oDistanceToMario < sp8) {
+    if (o->oDistanceToMario < maxDistanceToMario) {
         gMarioObject->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
     }
 }
@@ -2105,7 +2100,7 @@ void cur_obj_set_hurtbox_radius_and_height(f32 radius, f32 height) {
 }
 
 /* |description|Spawns loot coins from an object using the specified behavior, jitter, and model|descriptionEnd| */
-void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model) {
+void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model) {
     if (obj == NULL) { return; }
     s32 i;
     f32 spawnHeight;
@@ -2128,18 +2123,18 @@ void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const Beha
         if (coin == NULL) { return; }
         obj_translate_xz_random(coin, posJitter);
         coin->oPosY = spawnHeight;
-        coin->oCoinUnk110 = sp30;
+        coin->oCoinBaseYVel = baseYVel;
     }
 }
 
 /* |description|Spawns blue loot coins from an object|descriptionEnd| */
-void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter) {
-    obj_spawn_loot_coins(obj, numCoins, sp28, bhvBlueCoinJumping, posJitter, MODEL_BLUE_COIN);
+void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter) {
+    obj_spawn_loot_coins(obj, numCoins, baseYVel, bhvBlueCoinJumping, posJitter, MODEL_BLUE_COIN);
 }
 
 /* |description|Spawns yellow loot coins from an object|descriptionEnd| */
-void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28) {
-    obj_spawn_loot_coins(obj, numCoins, sp28, bhvSingleCoinGetsSpawned, 0, MODEL_YELLOW_COIN);
+void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel) {
+    obj_spawn_loot_coins(obj, numCoins, baseYVel, bhvSingleCoinGetsSpawned, 0, MODEL_YELLOW_COIN);
 }
 
 /* |description|Spawns a yellow coin at Mario's position and decrements the current object's loot count|descriptionEnd| */
@@ -2649,15 +2644,15 @@ void obj_translate_xz_random(struct Object *obj, f32 rangeLength) {
 }
 
 /* |description|Builds the object's world velocity from its transform basis vectors|descriptionEnd| */
-void obj_build_vel_from_transform(struct Object *a0) {
-    if (a0 == NULL) { return; }
-    f32 spC = a0->oUnkC0;
-    f32 sp8 = a0->oUnkBC;
-    f32 sp4 = a0->oForwardVel;
+void obj_build_vel_from_transform(struct Object *obj) {
+    if (obj == NULL) { return; }
+    f32 spC = obj->oUnkC0;
+    f32 sp8 = obj->oUnkBC;
+    f32 sp4 = obj->oForwardVel;
 
-    a0->oVelX = a0->transform[0][0] * spC + a0->transform[1][0] * sp8 + a0->transform[2][0] * sp4;
-    a0->oVelY = a0->transform[0][1] * spC + a0->transform[1][1] * sp8 + a0->transform[2][1] * sp4;
-    a0->oVelZ = a0->transform[0][2] * spC + a0->transform[1][2] * sp8 + a0->transform[2][2] * sp4;
+    obj->oVelX = obj->transform[0][0] * spC + obj->transform[1][0] * sp8 + obj->transform[2][0] * sp4;
+    obj->oVelY = obj->transform[0][1] * spC + obj->transform[1][1] * sp8 + obj->transform[2][1] * sp4;
+    obj->oVelZ = obj->transform[0][2] * spC + obj->transform[1][2] * sp8 + obj->transform[2][2] * sp4;
 }
 
 /* |description|Moves the current object using its transform-derived velocity|descriptionEnd| */
@@ -2911,26 +2906,25 @@ s32 cur_obj_progress_direction_table(void) {
     return ret;
 }
 
-/* |description|Placeholder function with no behavior|descriptionEnd| */
 void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4) {
 }
 
-/* |description|Smoothly scales the current object over time using enabled axes|descriptionEnd| */
-void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14) {
+/* |description|Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)|descriptionEnd| */
+void cur_obj_scale_over_time(s32 axes, s32 duration, f32 minScale, f32 maxScale) {
     if (!o) { return; }
-    f32 sp4 = sp14 - sp10;
-    f32 sp0 = (f32) o->oTimer / a1;
+    f32 diffScale = maxScale - minScale;
+    f32 scaleFactor = (f32) o->oTimer / duration;
 
-    if (a0 & 0x01) {
-        o->header.gfx.scale[0] = sp4 * sp0 + sp10;
+    if (axes & 0x01) {
+        o->header.gfx.scale[0] = diffScale * scaleFactor + minScale;
     }
 
-    if (a0 & 0x02) {
-        o->header.gfx.scale[1] = sp4 * sp0 + sp10;
+    if (axes & 0x02) {
+        o->header.gfx.scale[1] = diffScale * scaleFactor + minScale;
     }
 
-    if (a0 & 0x04) {
-        o->header.gfx.scale[2] = sp4 * sp0 + sp10;
+    if (axes & 0x04) {
+        o->header.gfx.scale[2] = diffScale * scaleFactor + minScale;
     }
 }
 
@@ -2943,7 +2937,6 @@ void cur_obj_set_pos_to_home_with_debug(void) {
     cur_obj_scale(gDebugInfo[5][3] / 100.0f + 1.0l);
 }
 
-/* |description|Placeholder function with no behavior|descriptionEnd| */
 void stub_obj_helpers_4(void) {
 }
 
@@ -2984,13 +2977,13 @@ s32 cur_obj_shake_y_until(s32 cycles, s32 amount) {
 }
 
 /* |description|Moves the current object up and down along a preset displacement table|descriptionEnd| */
-s32 cur_obj_move_up_and_down(s32 a0) {
+s32 cur_obj_move_up_and_down(s32 index) {
     if (!o) { return 0; }
-    if (a0 >= 4 || a0 < 0) {
+    if (index >= 4 || index < 0) {
         return TRUE;
     }
 
-    o->oPosY += D_8032F0A0[a0];
+    o->oPosY += D_8032F0A0[index];
     return FALSE;
 }
 
@@ -3005,15 +2998,15 @@ void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t acti
 }
 
 /* |description|Spawns a star object without triggering level exit behavior|descriptionEnd| */
-struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24) {
+struct Object *spawn_star_with_no_lvl_exit(s32 setHomeToMario, s32 unused) {
     if (!o) { return NULL; }
-    struct Object *sp1C = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
-    if (sp1C == NULL) { return NULL; }
-    sp1C->oSparkleSpawnUnk1B0 = sp24;
-    sp1C->oBehParams = o->oBehParams;
-    sp1C->oBehParams2ndByte = sp20;
+    struct Object *star = spawn_object(o, MODEL_STAR, bhvSpawnedStarNoLevelExit);
+    if (star == NULL) { return NULL; }
+    star->oSparkleSpawnUnk1B0 = unused;
+    star->oBehParams = o->oBehParams;
+    star->oBehParams2ndByte = setHomeToMario;
 
-    return sp1C;
+    return star;
 }
 
 /* |description|Spawns a base star with default parameters and no level exit behavior|descriptionEnd| */
@@ -3021,7 +3014,6 @@ void spawn_base_star_with_no_lvl_exit(void) {
     spawn_star_with_no_lvl_exit(0, 0);
 }
 
-/* |description|Returns the value at index a0 from a behavior-specific left-shift table|descriptionEnd| */
 s32 bit_shift_left(s32 a0) {
     return BHV_ARR(D_8032F0A4, a0, s16);
 }
@@ -3170,15 +3162,15 @@ s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deat
 }
 
 /* |description|Explodes the current object, spawns particles, and optionally spawns coins|descriptionEnd| */
-void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C) {
+void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType) {
     if (!o) { return; }
-    spawn_mist_particles_variable(0, 0, sp18);
+    spawn_mist_particles_variable(0, 0, mistSize);
     spawn_triangle_break_particles(30, 138, 3.0f, 4);
     obj_mark_for_deletion(o);
 
-    if (sp1C == 1) {
+    if (coinType == COIN_TYPE_YELLOW) {
         obj_spawn_loot_yellow_coins(o, o->oNumLootCoins, 20.0f);
-    } else if (sp1C == 2) {
+    } else if (coinType == COIN_TYPE_BLUE) {
         obj_spawn_loot_blue_coins(o, o->oNumLootCoins, 20.0f, 150);
     }
 }
@@ -3282,7 +3274,7 @@ void clear_time_stop_flags(s32 flags) {
 }
 
 /* |description|Checks whether Mario can activate the current object's textbox within a vertical and horizontal range|descriptionEnd| */
-s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused) {
+s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, OPTIONAL UNUSED s32 unused) {
     if (!o || !m) { return 0; }
     if (!m->visibleToObjects) { return FALSE; }
     if (o->oDistanceToMario < 1500.0f) {
@@ -3297,12 +3289,6 @@ s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 hei
     }
 
     return FALSE;
-}
-
-/* |description|Wrapper that checks Mario textbox activation using a fixed unused parameter value|descriptionEnd| */
-s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height) {
-    // The last argument here is unused. When this function is called directly the argument is always set to 0x7FFF.
-    return cur_obj_can_mario_activate_textbox(m, radius, height, 0x1000);
 }
 
 /* |description|Ends dialog state for the current object and records Mario's response|descriptionEnd| */
@@ -3638,7 +3624,7 @@ s32 player_performed_grab_escape_action(void) {
 /* |description|Plays a footstep sound when the current animation reaches one of two frames|descriptionEnd| */
 void cur_obj_unused_play_footstep_sound(s32 animFrame1, s32 animFrame2, s32 sound) {
     if (cur_obj_check_anim_frame(animFrame1) || cur_obj_check_anim_frame(animFrame2)) {
-        cur_obj_play_sound_2(sound);
+        cur_obj_play_sound_and_rumble_if_visible(sound);
     }
 }
 

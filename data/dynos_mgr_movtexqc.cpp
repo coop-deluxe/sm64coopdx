@@ -70,8 +70,5 @@ DataNode<MovtexQC>* DynOS_MovtexQC_GetFromIndex(s32 index) {
 
 void DynOS_MovtexQC_ModShutdown() {
     auto& _DynosRegisteredMovtexQCs = DynosRegisteredMovtexQCs();
-    for (auto &registered : _DynosRegisteredMovtexQCs) {
-        Delete(registered.dataNode);
-    }
     _DynosRegisteredMovtexQCs.clear();
 }

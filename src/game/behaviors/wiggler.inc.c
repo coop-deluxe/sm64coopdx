@@ -331,7 +331,7 @@ static void wiggler_act_jumped_on(void) {
                     o->oMoveAngleYaw = o->oFaceAngleYaw;
 
                     if (o->oHealth == 2) {
-                        cur_obj_play_sound_2(SOUND_OBJ_WIGGLER_JUMP);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WIGGLER_JUMP);
                         o->oForwardVel = 10.0f;
                         o->oVelY = 70.0f;
                     }
@@ -370,7 +370,7 @@ static void wiggler_act_knockback(void) {
 static void wiggler_act_shrink(void) {
     if (o->oTimer >= 20) {
         if (o->oTimer == 20) {
-            cur_obj_play_sound_2(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
         }
 
         // 4 is the default scale, so shrink to 1/4 of regular size
@@ -415,7 +415,7 @@ static void wiggler_act_fall_through_floor(void) {
  * Stop and enter the jumped on action.
  */
 void wiggler_jumped_on_attack_handler(void) {
-    cur_obj_play_sound_2(SOUND_OBJ_WIGGLER_ATTACKED);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WIGGLER_ATTACKED);
     // Check for if we've already defeated the Wiggler.
     if (o->header.gfx.scale[0] == 1.0f) {
         o->oAction = WIGGLER_ACT_KNOCKBACK;

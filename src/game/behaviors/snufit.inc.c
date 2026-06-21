@@ -109,7 +109,7 @@ void snufit_act_shoot(void) {
     } else if (o->oSnufitBullets < 3 && o->oTimer >= 3) {
         if (sync_object_is_owned_locally(o->oSyncID)) {
             o->oSnufitBullets += 1;
-            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNUFIT_SHOOT);
             struct Object* bullet = spawn_object_relative(0, 0, -20, 40, o, MODEL_BOWLING_BALL, bhvSnufitBalls);
             o->oSnufitRecoil = -30;
             o->oTimer = 0;
@@ -120,7 +120,7 @@ void snufit_act_shoot(void) {
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
         } else {
-            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNUFIT_SHOOT);
             o->oSnufitRecoil = -30;
             o->oTimer = 0;
         }

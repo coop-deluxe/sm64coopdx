@@ -1,43 +1,21 @@
-import os
 import re
 import sys
 from extract_structs import *
 from extract_object_fields import *
 from common import *
 from vec_types import *
-
-in_files = [
-    "include/types.h",
-    "src/game/area.h",
-    "src/game/camera.h",
-    "src/game/characters.h",
-    "src/engine/surface_collision.h",
-    "src/pc/network/network_player.h",
-    "src/pc/djui/djui_hud_utils.h",
-    "src/pc/djui/djui_theme.h",
-    "src/game/object_helpers.h",
-    "src/game/mario_step.h",
-    "src/game/ingame_menu.h",
-    "src/pc/lua/utils/smlua_anim_utils.h",
-    "src/pc/lua/utils/smlua_misc_utils.h",
-    "src/pc/lua/utils/smlua_camera_utils.h",
-    "src/pc/lua/utils/smlua_collision_utils.h",
-    "src/pc/lua/utils/smlua_level_utils.h",
-    "src/game/spawn_sound.h",
-    "src/pc/network/network.h",
-    "src/game/hardcoded.h",
-    "src/pc/mods/mod.h",
-    "src/pc/mods/mod_fs.h",
-    "src/pc/lua/utils/smlua_audio_utils.h",
-    "src/game/paintings.h",
-    "src/pc/djui/djui_types.h",
-    "src/game/level_update.h",
-    "src/game/first_person_cam.h",
-    "src/game/player_palette.h",
-    "src/engine/graph_node.h",
-    "include/PR/gbi.h",
-    "src/pc/voice_chat.h",
-]
+from exposed_lists import \
+    structs_files, \
+    structs_whitelist, \
+    structs_blacklist, \
+    structs_excluded, \
+    structs_fields_whitelist, \
+    structs_fields_blacklist, \
+    structs_fields_hidden, \
+    structs_fields_version_excludes, \
+    structs_fields_types, \
+    structs_fields_mutable, \
+    structs_fields_immutable
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
 out_filename_h = 'src/pc/lua/smlua_cobject_autogen.h'
@@ -74,108 +52,7 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 #endif
 """
 
-override_field_types = {
-    "Surface": { "normal": "Vec3f" },
-    "Object": { "oAnimations": "ObjectAnimPointer*" },
-}
-
-override_field_mutable = {
-    "NetworkPlayer": [
-        "overrideModelIndex",
-        "overridePalette",
-        "overridePaletteIndex",
-    ],
-}
-
-override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
-    "Camera": [ "paletteEditorCapState", "filler31", "filler3C", "unusedVec1" ],
-    "LakituState": [ "filler30", "filler3E", "filler72", "unusedVec1", "unusedVec2" ],
-    "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
-    "GraphNode": [ "_guard1", "_guard2", "padding" ],
-    "GraphNodeRoot": ["unk15", "views"],
-    "GraphNodeMasterList": [ "listHeads", "listTails" ],
-    "GraphNodeCullingRadius": [ "pad1E" ],
-    "GraphNodeTranslation": [ "pad1E" ],
-    "GraphNodeBackground": [ "unused" ],
-    "GraphNodePerspective": [ "unused" ],
-    "GraphNodeSwitchCase": [ "unused" ],
-    "GraphNodeObject": [ "unk4C" ],
-    "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface", "customFields", "bhvStack", "bhvStackIndex" ],
-    "SpawnInfo": [ "unk18" ],
-    "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
-    "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
-    "DialogEntry": [ "str" ],
-    "ModFsFile": [ "data", "capacity" ],
-    "ModFs": [ "files" ],
-    "VoicePlayer": [ "internal" ],
-}
-
-override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
-    "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
-}
-
-override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId" ],
-    "MarioAnimation": [ "animDmaTable" ],
-    "ObjectNode": [ "next", "prev" ],
-    "Character": [ "*" ],
-    "NetworkPlayer": [ "*" ],
-    "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
-    "Surface": [ "poolType", "socId" ],
-    "GlobalObjectAnimations": [ "*"],
-    "SpawnParticlesInfo": [ "model" ],
-    "WaterDropletParams": [ "model" ],
-    "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "animPartsRot", "currAnimPart" ],
-    "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
-    "Mod": [ "*" ],
-    "ModFile": [ "*" ],
-    "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
-    "SpawnInfo": [ "syncID", "next", "unk18" ],
-    "CustomLevelInfo": [ "next" ],
-    "GraphNode": [ "children", "next", "parent", "prev", "type" ],
-    "GraphNodeBackground": [ "prevCameraTimestamp", "unused" ],
-    "GraphNodeCamera": [ "matrixPtrPrev", "prevTimestamp" ],
-    "GraphNodeHeldObject": [ "prevShadowPosTimestamp" ],
-    "GraphNodeObject": [ "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
-    "GraphNodeObjectParent": [ "sharedChild" ],
-    "GraphNodePerspective": [ "unused" ],
-    "GraphNodeSwitchCase": [ "fnNode", "unused" ],
-    "GraphNodeRoot": ["node", "areaIndex", "numViews"],
-    "ObjectWarpNode": [ "next" ],
-    "Animation": [ "*" ],
-    "AnimationTable": [ "*" ],
-    "Controller": [ "controllerData", "statusData" ],
-    "FirstPersonCamera": [ "enabled" ],
-    "ModAudio": [ "isStream", "loaded" ],
-    "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
-    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text", "replaced"],
-    "ModFsFile": [ "*" ],
-    "ModFs": [ "*" ],
-    "StaticObjectCollision": [ "*" ],
-    "VoicePlayer": [ "talking", "error", "clientMutedState", "playerMutedState" ],
-}
-
-override_field_version_excludes = {
-    "oCameraLakituMusicPlayed": "VERSION_JP",
-    "oCoinUnk1B0": "VERSION_JP",
-}
-
-override_allowed_structs = {
-    "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
-    "src/pc/djui/djui_types.h": [ "DjuiColor" ],
-    "src/game/level_update.h": [ "HudDisplay" ],
-    "src/game/player_palette.h": [ "PlayerPalette" ],
-    "src/game/ingame_menu.h" : [ "DialogEntry" ],
-    "include/PR/gbi.h": [ "Gfx", "Vtx" ],
-    "src/pc/voice_chat.h": [ "VoicePlayer" ],
-}
-
-sLuaManuallyDefinedStructs = [{
+lua_manually_defined_structs = [{
     'path': 'n/a',
     'structs': [
         *['struct %s { %s }' % (
@@ -379,10 +256,8 @@ def parse_structs(extracted, sortFields = False):
     for e in extracted:
         for struct in e['structs']:
             parsed = parse_struct(struct, sortFields)
-            if e['path'] in override_allowed_structs:
-                if parsed['identifier'] not in override_allowed_structs[e['path']]:
-                    continue
-            structs.append(parsed)
+            if allowed_identifier(structs_whitelist, structs_blacklist, e['path'], parsed['identifier']):
+                structs.append(parsed)
     return structs
 
 ############################################################################
@@ -419,9 +294,9 @@ def output_fuzz_struct(struct):
         fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
 
         if '(' in fid or '[' in fid or ']' in fid:
             continue
@@ -510,8 +385,8 @@ def get_struct_field_info(struct, field):
     ftype = field['type']
     size = 1
 
-    if sid in override_field_types and fid in override_field_types[sid]:
-        ftype = override_field_types[sid][fid]
+    if sid in structs_fields_types and fid in structs_fields_types[sid]:
+        ftype = structs_fields_types[sid][fid]
 
     lvt = translate_type_to_lvt(ftype, allowArrays=True)
     lot = translate_type_to_lot(ftype, allowArrays=True)
@@ -522,12 +397,12 @@ def get_struct_field_info(struct, field):
     if field.get('get') and field['set'] == 'NULL':
         fimmutable = 'true'
 
-    if sid in override_field_immutable:
-        if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
+    if sid in structs_fields_immutable:
+        if fid in structs_fields_immutable[sid] or '*' in structs_fields_immutable[sid]:
             fimmutable = 'true'
 
-    if sid in override_field_mutable:
-        if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
+    if sid in structs_fields_mutable:
+        if fid in structs_fields_mutable[sid] or '*' in structs_fields_mutable[sid]:
             fimmutable = 'false'
 
     if not ('char' in ftype and '[' in ftype and 'unsigned' not in ftype):
@@ -558,12 +433,11 @@ def build_struct(struct):
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
+
         if re.search(r'\[([^\]]+)\]', ftype):
             ftype = re.sub(r'\[[^\]]*\]', '', ftype).strip()
-
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
 
         name = sid
         if sid in reversed_override_types:
@@ -576,8 +450,8 @@ def build_struct(struct):
         struct_str = "struct " if not struct['typedef'] else ""
         startStr = ''
         endStr = ' },'
-        if fid in override_field_version_excludes:
-            startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
+        if fid in structs_fields_version_excludes:
+            startStr += '#ifndef ' + structs_fields_version_excludes[fid] + '\n'
             endStr += '\n#endif'
         startStr += '    { '
         row.append(startStr)
@@ -640,7 +514,7 @@ def build_structs(structs):
 
     s = ''
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         oldFields = struct['fields']
         struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
@@ -669,7 +543,7 @@ def build_body(parsed):
 
     for struct in parsed:
         sid = struct['identifier']
-        if sid in exclude_structs:
+        if sid in structs_excluded:
             continue
         lot_names += f'\t[LOT_{sid.upper()}] = "{sid}",\n'
     lot_names += '};\n'
@@ -703,7 +577,7 @@ def build_lot_enum():
 
 def build_includes():
     s = '#include "smlua.h"\n'
-    for in_file in in_files:
+    for in_file in structs_files:
         s += '#include "%s"\n' % in_file
     return s
 
@@ -729,7 +603,7 @@ def doc_struct_index(structs):
     s = '# Supported Structs\n'
     for struct in structs:
         sid = struct['identifier']
-        if sid in exclude_structs:
+        if sid in structs_excluded:
             continue
         s += '- [%s](#%s)\n' % (sid, sid)
         global total_structs
@@ -739,15 +613,13 @@ def doc_struct_index(structs):
 
 def doc_struct_field(struct, field):
     fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
-
     sid = struct['identifier']
-    if sid in override_field_invisible:
-        if fid in override_field_invisible[sid]:
-            return '', False
 
-    if sid in override_field_deprecated:
-        if fid in override_field_deprecated[sid]:
-            return '', False
+    if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+        return '', False
+
+    if not allowed_identifier(None, structs_fields_hidden, sid, fid):
+        return '', False
 
     if '???' in lvt or '???' in lot:
         return '', False
@@ -823,13 +695,13 @@ def doc_struct(struct):
     return s
 
 def doc_structs(structs):
-    structs.extend(parse_structs(sLuaManuallyDefinedStructs, False)) # Don't sort fields for vec types in the documentation
+    structs.extend(parse_structs(lua_manually_defined_structs, False)) # Don't sort fields for vec types in the documentation
     structs = sorted(structs, key=lambda d: d['identifier'])
 
     s = '## [:rewind: Lua Reference](lua.md)\n\n'
     s += doc_struct_index(structs)
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         s += doc_struct(struct) + '\n'
 
@@ -878,13 +750,11 @@ def def_struct(struct):
     for field in struct['fields']:
         fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
 
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
 
-        if sid in override_field_deprecated:
-            if fid in override_field_deprecated[sid]:
-                continue
+        if not allowed_identifier(None, structs_fields_hidden, sid, fid):
+            continue
 
         if '???' in lvt or '???' in lot:
             continue
@@ -911,7 +781,7 @@ def def_structs(structs):
     s = '-- AUTOGENERATED FOR CODE EDITORS --\n'
 
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         s += def_struct(struct)
 
@@ -926,7 +796,7 @@ def def_structs(structs):
 
 def build_files():
     extracted = []
-    for in_file in in_files:
+    for in_file in structs_files:
         path = get_path(in_file)
         extracted.append({
             'path': in_file,

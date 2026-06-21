@@ -379,20 +379,23 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "trajectories",             LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),             true,  LOT_BEHAVIORTRAJECTORIES },
 };
 
-#define LUA_CAMERA_FIELD_COUNT 12
+#define LUA_CAMERA_FIELD_COUNT 15
 static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
-    { "areaCenX",   LVT_F32,     offsetof(struct Camera, areaCenX),   false, LOT_NONE  },
-    { "areaCenY",   LVT_F32,     offsetof(struct Camera, areaCenY),   false, LOT_NONE  },
-    { "areaCenZ",   LVT_F32,     offsetof(struct Camera, areaCenZ),   false, LOT_NONE  },
-    { "cutscene",   LVT_U8,      offsetof(struct Camera, cutscene),   false, LOT_NONE  },
-    { "defMode",    LVT_U8,      offsetof(struct Camera, defMode),    false, LOT_NONE  },
-    { "doorStatus", LVT_U8,      offsetof(struct Camera, doorStatus), false, LOT_NONE  },
-    { "focus",      LVT_COBJECT, offsetof(struct Camera, focus),      true,  LOT_VEC3F },
-    { "mode",       LVT_U8,      offsetof(struct Camera, mode),       false, LOT_NONE  },
-    { "mtx",        LVT_COBJECT, offsetof(struct Camera, mtx),        true,  LOT_MAT4  },
-    { "nextYaw",    LVT_S16,     offsetof(struct Camera, nextYaw),    false, LOT_NONE  },
-    { "pos",        LVT_COBJECT, offsetof(struct Camera, pos),        true,  LOT_VEC3F },
-    { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE  },
+    { "areaCenX",   LVT_F32,     offsetof(struct Camera, areaCenX),   false, LOT_NONE                 },
+    { "areaCenY",   LVT_F32,     offsetof(struct Camera, areaCenY),   false, LOT_NONE                 },
+    { "areaCenZ",   LVT_F32,     offsetof(struct Camera, areaCenZ),   false, LOT_NONE                 },
+    { "cutscene",   LVT_U8,      offsetof(struct Camera, cutscene),   false, LOT_NONE                 },
+    { "defMode",    LVT_U8,      offsetof(struct Camera, defMode),    false, LOT_NONE                 },
+    { "doorStatus", LVT_U8,      offsetof(struct Camera, doorStatus), false, LOT_NONE                 },
+    { "filler31",   LVT_U8,      offsetof(struct Camera, filler31),   false, LOT_NONE, 8,  sizeof(u8) },
+    { "filler3C",   LVT_U8,      offsetof(struct Camera, filler3C),   false, LOT_NONE, 40, sizeof(u8) },
+    { "focus",      LVT_COBJECT, offsetof(struct Camera, focus),      true,  LOT_VEC3F                },
+    { "mode",       LVT_U8,      offsetof(struct Camera, mode),       false, LOT_NONE                 },
+    { "mtx",        LVT_COBJECT, offsetof(struct Camera, mtx),        true,  LOT_MAT4                 },
+    { "nextYaw",    LVT_S16,     offsetof(struct Camera, nextYaw),    false, LOT_NONE                 },
+    { "pos",        LVT_COBJECT, offsetof(struct Camera, pos),        true,  LOT_VEC3F                },
+    { "unusedVec1", LVT_COBJECT, offsetof(struct Camera, unusedVec1), true,  LOT_VEC3F                },
+    { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE                 },
 };
 
 #define LUA_CHAIN_SEGMENT_FIELD_COUNT 6
@@ -1240,41 +1243,46 @@ static struct LuaObjectField sInstantWarpFields[LUA_INSTANT_WARP_FIELD_COUNT] = 
     { "id",           LVT_U8,      offsetof(struct InstantWarp, id),           false, LOT_NONE  },
 };
 
-#define LUA_LAKITU_STATE_FIELD_COUNT 33
+#define LUA_LAKITU_STATE_FIELD_COUNT 38
 static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = {
-    { "curFocus",                         LVT_COBJECT, offsetof(struct LakituState, curFocus),                         true,  LOT_VEC3F },
-    { "curPos",                           LVT_COBJECT, offsetof(struct LakituState, curPos),                           true,  LOT_VEC3F },
-    { "defMode",                          LVT_U8,      offsetof(struct LakituState, defMode),                          false, LOT_NONE  },
-    { "focHSpeed",                        LVT_F32,     offsetof(struct LakituState, focHSpeed),                        false, LOT_NONE  },
-    { "focVSpeed",                        LVT_F32,     offsetof(struct LakituState, focVSpeed),                        false, LOT_NONE  },
-    { "focus",                            LVT_COBJECT, offsetof(struct LakituState, focus),                            true,  LOT_VEC3F },
-    { "focusDistance",                    LVT_F32,     offsetof(struct LakituState, focusDistance),                    false, LOT_NONE  },
-    { "goalFocus",                        LVT_COBJECT, offsetof(struct LakituState, goalFocus),                        true,  LOT_VEC3F },
-    { "goalPos",                          LVT_COBJECT, offsetof(struct LakituState, goalPos),                          true,  LOT_VEC3F },
-    { "keyDanceRoll",                     LVT_S16,     offsetof(struct LakituState, keyDanceRoll),                     false, LOT_NONE  },
-    { "lastFrameAction",                  LVT_U32,     offsetof(struct LakituState, lastFrameAction),                  false, LOT_NONE  },
-    { "mode",                             LVT_U8,      offsetof(struct LakituState, mode),                             false, LOT_NONE  },
-    { "nextYaw",                          LVT_S16,     offsetof(struct LakituState, nextYaw),                          false, LOT_NONE  },
-    { "oldPitch",                         LVT_S16,     offsetof(struct LakituState, oldPitch),                         false, LOT_NONE  },
-    { "oldRoll",                          LVT_S16,     offsetof(struct LakituState, oldRoll),                          false, LOT_NONE  },
-    { "oldYaw",                           LVT_S16,     offsetof(struct LakituState, oldYaw),                           false, LOT_NONE  },
-    { "pos",                              LVT_COBJECT, offsetof(struct LakituState, pos),                              true,  LOT_VEC3F },
-    { "posHSpeed",                        LVT_F32,     offsetof(struct LakituState, posHSpeed),                        false, LOT_NONE  },
-    { "posVSpeed",                        LVT_F32,     offsetof(struct LakituState, posVSpeed),                        false, LOT_NONE  },
-    { "roll",                             LVT_S16,     offsetof(struct LakituState, roll),                             false, LOT_NONE  },
-    { "shakeMagnitude",                   LVT_COBJECT, offsetof(struct LakituState, shakeMagnitude),                   true,  LOT_VEC3S },
-    { "shakePitchDecay",                  LVT_S16,     offsetof(struct LakituState, shakePitchDecay),                  false, LOT_NONE  },
-    { "shakePitchPhase",                  LVT_S16,     offsetof(struct LakituState, shakePitchPhase),                  false, LOT_NONE  },
-    { "shakePitchVel",                    LVT_S16,     offsetof(struct LakituState, shakePitchVel),                    false, LOT_NONE  },
-    { "shakeRollDecay",                   LVT_S16,     offsetof(struct LakituState, shakeRollDecay),                   false, LOT_NONE  },
-    { "shakeRollPhase",                   LVT_S16,     offsetof(struct LakituState, shakeRollPhase),                   false, LOT_NONE  },
-    { "shakeRollVel",                     LVT_S16,     offsetof(struct LakituState, shakeRollVel),                     false, LOT_NONE  },
-    { "shakeYawDecay",                    LVT_S16,     offsetof(struct LakituState, shakeYawDecay),                    false, LOT_NONE  },
-    { "shakeYawPhase",                    LVT_S16,     offsetof(struct LakituState, shakeYawPhase),                    false, LOT_NONE  },
-    { "shakeYawVel",                      LVT_S16,     offsetof(struct LakituState, shakeYawVel),                      false, LOT_NONE  },
-    { "skipCameraInterpolationTimestamp", LVT_U32,     offsetof(struct LakituState, skipCameraInterpolationTimestamp), false, LOT_NONE  },
-    { "unused",                           LVT_S16,     offsetof(struct LakituState, unused),                           false, LOT_NONE  },
-    { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE  },
+    { "curFocus",                         LVT_COBJECT, offsetof(struct LakituState, curFocus),                         true,  LOT_VEC3F                },
+    { "curPos",                           LVT_COBJECT, offsetof(struct LakituState, curPos),                           true,  LOT_VEC3F                },
+    { "defMode",                          LVT_U8,      offsetof(struct LakituState, defMode),                          false, LOT_NONE                 },
+    { "filler30",                         LVT_U8,      offsetof(struct LakituState, filler30),                         false, LOT_NONE, 12, sizeof(u8) },
+    { "filler3E",                         LVT_U8,      offsetof(struct LakituState, filler3E),                         false, LOT_NONE, 10, sizeof(u8) },
+    { "filler72",                         LVT_U8,      offsetof(struct LakituState, filler72),                         false, LOT_NONE, 8,  sizeof(u8) },
+    { "focHSpeed",                        LVT_F32,     offsetof(struct LakituState, focHSpeed),                        false, LOT_NONE                 },
+    { "focVSpeed",                        LVT_F32,     offsetof(struct LakituState, focVSpeed),                        false, LOT_NONE                 },
+    { "focus",                            LVT_COBJECT, offsetof(struct LakituState, focus),                            true,  LOT_VEC3F                },
+    { "focusDistance",                    LVT_F32,     offsetof(struct LakituState, focusDistance),                    false, LOT_NONE                 },
+    { "goalFocus",                        LVT_COBJECT, offsetof(struct LakituState, goalFocus),                        true,  LOT_VEC3F                },
+    { "goalPos",                          LVT_COBJECT, offsetof(struct LakituState, goalPos),                          true,  LOT_VEC3F                },
+    { "keyDanceRoll",                     LVT_S16,     offsetof(struct LakituState, keyDanceRoll),                     false, LOT_NONE                 },
+    { "lastFrameAction",                  LVT_U32,     offsetof(struct LakituState, lastFrameAction),                  false, LOT_NONE                 },
+    { "mode",                             LVT_U8,      offsetof(struct LakituState, mode),                             false, LOT_NONE                 },
+    { "nextYaw",                          LVT_S16,     offsetof(struct LakituState, nextYaw),                          false, LOT_NONE                 },
+    { "oldPitch",                         LVT_S16,     offsetof(struct LakituState, oldPitch),                         false, LOT_NONE                 },
+    { "oldRoll",                          LVT_S16,     offsetof(struct LakituState, oldRoll),                          false, LOT_NONE                 },
+    { "oldYaw",                           LVT_S16,     offsetof(struct LakituState, oldYaw),                           false, LOT_NONE                 },
+    { "pos",                              LVT_COBJECT, offsetof(struct LakituState, pos),                              true,  LOT_VEC3F                },
+    { "posHSpeed",                        LVT_F32,     offsetof(struct LakituState, posHSpeed),                        false, LOT_NONE                 },
+    { "posVSpeed",                        LVT_F32,     offsetof(struct LakituState, posVSpeed),                        false, LOT_NONE                 },
+    { "roll",                             LVT_S16,     offsetof(struct LakituState, roll),                             false, LOT_NONE                 },
+    { "shakeMagnitude",                   LVT_COBJECT, offsetof(struct LakituState, shakeMagnitude),                   true,  LOT_VEC3S                },
+    { "shakePitchDecay",                  LVT_S16,     offsetof(struct LakituState, shakePitchDecay),                  false, LOT_NONE                 },
+    { "shakePitchPhase",                  LVT_S16,     offsetof(struct LakituState, shakePitchPhase),                  false, LOT_NONE                 },
+    { "shakePitchVel",                    LVT_S16,     offsetof(struct LakituState, shakePitchVel),                    false, LOT_NONE                 },
+    { "shakeRollDecay",                   LVT_S16,     offsetof(struct LakituState, shakeRollDecay),                   false, LOT_NONE                 },
+    { "shakeRollPhase",                   LVT_S16,     offsetof(struct LakituState, shakeRollPhase),                   false, LOT_NONE                 },
+    { "shakeRollVel",                     LVT_S16,     offsetof(struct LakituState, shakeRollVel),                     false, LOT_NONE                 },
+    { "shakeYawDecay",                    LVT_S16,     offsetof(struct LakituState, shakeYawDecay),                    false, LOT_NONE                 },
+    { "shakeYawPhase",                    LVT_S16,     offsetof(struct LakituState, shakeYawPhase),                    false, LOT_NONE                 },
+    { "shakeYawVel",                      LVT_S16,     offsetof(struct LakituState, shakeYawVel),                      false, LOT_NONE                 },
+    { "skipCameraInterpolationTimestamp", LVT_U32,     offsetof(struct LakituState, skipCameraInterpolationTimestamp), false, LOT_NONE                 },
+    { "unused",                           LVT_S16,     offsetof(struct LakituState, unused),                           false, LOT_NONE                 },
+    { "unusedVec1",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec1),                       true,  LOT_VEC3F                },
+    { "unusedVec2",                       LVT_COBJECT, offsetof(struct LakituState, unusedVec2),                       true,  LOT_VEC3S                },
+    { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE                 },
 };
 
 #define LUA_LEVEL_VALUES_FIELD_COUNT 56
@@ -1589,7 +1597,7 @@ static struct LuaObjectField sNetworkPlayerFields[LUA_NETWORK_PLAYER_FIELD_COUNT
     { "type",                   LVT_U8,      offsetof(struct NetworkPlayer, type),                   true,  LOT_NONE          },
 };
 
-#define LUA_OBJECT_FIELD_COUNT 762
+#define LUA_OBJECT_FIELD_COUNT 763
 static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "activeFlags",                                LVT_S16,                 offsetof(struct Object, activeFlags),                                false, LOT_NONE                                  },
     { "allowRemoteInteractions",                    LVT_U8,                  offsetof(struct Object, allowRemoteInteractions),                    false, LOT_NONE                                  },
@@ -1785,6 +1793,7 @@ static struct LuaObjectField sObjectFields[LUA_OBJECT_FIELD_COUNT] = {
     { "oCloudCenterY",                              LVT_F32,                 offsetof(struct Object, oCloudCenterY),                              false, LOT_NONE                                  },
     { "oCloudFwooshMovementRadius",                 LVT_S16,                 offsetof(struct Object, oCloudFwooshMovementRadius),                 false, LOT_NONE                                  },
     { "oCloudGrowSpeed",                            LVT_F32,                 offsetof(struct Object, oCloudGrowSpeed),                            false, LOT_NONE                                  },
+    { "oCoinBaseYVel",                              LVT_F32,                 offsetof(struct Object, oCoinBaseYVel),                              false, LOT_NONE                                  },
     { "oCoinUnk110",                                LVT_F32,                 offsetof(struct Object, oCoinUnk110),                                false, LOT_NONE                                  },
 #ifndef VERSION_JP
     { "oCoinUnk1B0",                                LVT_S32,                 offsetof(struct Object, oCoinUnk1B0),                                false, LOT_NONE                                  },
@@ -2510,7 +2519,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "voiceChat",                   LVT_U8,  offsetof(struct ServerSettings, voiceChat),                   false, LOT_NONE },
 };
 
-#define LUA_SPAWN_INFO_FIELD_COUNT 7
+#define LUA_SPAWN_INFO_FIELD_COUNT 8
 static struct LuaObjectField sSpawnInfoFields[LUA_SPAWN_INFO_FIELD_COUNT] = {
     { "activeAreaIndex", LVT_S8,        offsetof(struct SpawnInfo, activeAreaIndex), false, LOT_NONE      },
     { "areaIndex",       LVT_S8,        offsetof(struct SpawnInfo, areaIndex),       false, LOT_NONE      },
@@ -2520,6 +2529,7 @@ static struct LuaObjectField sSpawnInfoFields[LUA_SPAWN_INFO_FIELD_COUNT] = {
     { "startAngle",      LVT_COBJECT,   offsetof(struct SpawnInfo, startAngle),      true,  LOT_VEC3S     },
     { "startPos",        LVT_COBJECT,   offsetof(struct SpawnInfo, startPos),        true,  LOT_VEC3S     },
     { "syncID",          LVT_U32,       offsetof(struct SpawnInfo, syncID),          true,  LOT_NONE      },
+    { "unk18",           LVT_COBJECT_P, offsetof(struct SpawnInfo, unk18),           true,  LOT_GRAPHNODE },
 };
 
 #define LUA_SPAWN_PARTICLES_INFO_FIELD_COUNT 12
@@ -2624,6 +2634,13 @@ static struct LuaObjectField sVoicePlayerFields[LUA_VOICE_PLAYER_FIELD_COUNT] = 
     { "playerMutedState", LVT_S32,  offsetof(struct VoicePlayer, playerMutedState), true,  LOT_NONE },
     { "talking",          LVT_BOOL, offsetof(struct VoicePlayer, talking),          true,  LOT_NONE },
     { "volume",           LVT_U32,  offsetof(struct VoicePlayer, volume),           false, LOT_NONE },
+};
+
+#define LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT 1
+static struct LuaObjectField sVoicePlayerInternalFields[LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT] = {
+    { "buffer",  LVT_COBJECT, offsetof(struct VoicePlayerInternal, buffer),  true,  LOT_VOICEBUFFER },
+//  { "decoder", LVT_???,     offsetof(struct VoicePlayerInternal, decoder), false, LOT_???         }, <--- UNIMPLEMENTED
+//  { "encoder", LVT_???,     offsetof(struct VoicePlayerInternal, encoder), false, LOT_???         }, <--- UNIMPLEMENTED
 };
 
 #define LUA_VTX_FIELD_COUNT 13
@@ -2776,6 +2793,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_VOICEPLAYER,                  sVoicePlayerFields,                  LUA_VOICE_PLAYER_FIELD_COUNT                    },
+    { LOT_VOICEPLAYERINTERNAL,          sVoicePlayerInternalFields,          LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT           },
     { LOT_VTX,                          sVtxFields,                          LUA_VTX_FIELD_COUNT                             },
     { LOT_WALLCOLLISIONDATA,            sWallCollisionDataFields,            LUA_WALL_COLLISION_DATA_FIELD_COUNT             },
     { LOT_WARPNODE,                     sWarpNodeFields,                     LUA_WARP_NODE_FIELD_COUNT                       },
@@ -2883,6 +2901,7 @@ const char *sLuaLotNames[] = {
 	[LOT_SURFACE] = "Surface",
 	[LOT_TEXTUREINFO] = "TextureInfo",
 	[LOT_VOICEPLAYER] = "VoicePlayer",
+	[LOT_VOICEPLAYERINTERNAL] = "VoicePlayerInternal",
 	[LOT_VTX] = "Vtx",
 	[LOT_WALLCOLLISIONDATA] = "WallCollisionData",
 	[LOT_WARPNODE] = "WarpNode",

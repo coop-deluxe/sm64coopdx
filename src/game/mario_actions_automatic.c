@@ -862,7 +862,7 @@ s32 act_in_cannon(struct MarioState *m) {
                 } else {
                     if (m->faceAngle[0] != startFacePitch || m->faceAngle[1] != startFaceYaw) {
                         play_sound(SOUND_MOVING_AIM_CANNON, m->marioObj->header.gfx.cameraToObject);
-                        reset_rumble_timers_2(m, 0);
+                        reset_rumble_timers_vibrate(m, 0);
                     }
                 }
         }

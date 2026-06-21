@@ -182,7 +182,7 @@ static void fish_act_flee(void)  {
             distance = (s32)(1.0 / (distanceToPlayer / 600.0));
         }
         distance *= 127;
-        cur_obj_play_sound_2(SOUND_GENERAL_MOVING_WATER);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_MOVING_WATER);
     }
 
     // Speed the animation up over time.
