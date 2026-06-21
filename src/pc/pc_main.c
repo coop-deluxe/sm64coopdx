@@ -506,11 +506,10 @@ int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     // handle Windows console
-    DWORD consolePid = 0;
-
     HWND hwnd = GetConsoleWindow();
-
+    
     if (hwnd) {
+        DWORD consolePid = 0;
         GetWindowThreadProcessId(hwnd, &consolePid);
         if (consolePid != GetCurrentProcessId()) {
             SetConsoleOutputCP(CP_UTF8);
