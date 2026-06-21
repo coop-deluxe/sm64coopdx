@@ -506,11 +506,18 @@ int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     // handle Windows console
-    if (gCLIOpts.console || gCLIOpts.headless) {
-        SetConsoleOutputCP(CP_UTF8);
-    } else {
-        FreeConsole();
-        freopen("NUL", "w", stdout);
+    DWORD consolePid = 0;
+
+    HWND hwnd = GetConsoleWindow();
+
+    if (hwnd) {
+        GetWindowThreadProcessId(hwnd, &consolePid);
+        if (consolePid != GetCurrentProcessId()) {
+            SetConsoleOutputCP(CP_UTF8);
+        } else {
+            FreeConsole();
+            freopen("NUL", "w", stdout);
+        }
     }
 #endif
 
