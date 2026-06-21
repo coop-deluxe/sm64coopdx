@@ -2636,13 +2636,6 @@ static struct LuaObjectField sVoicePlayerFields[LUA_VOICE_PLAYER_FIELD_COUNT] = 
     { "volume",           LVT_U32,  offsetof(struct VoicePlayer, volume),           false, LOT_NONE },
 };
 
-#define LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT 1
-static struct LuaObjectField sVoicePlayerInternalFields[LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT] = {
-    { "buffer",  LVT_COBJECT, offsetof(struct VoicePlayerInternal, buffer),  true,  LOT_VOICEBUFFER },
-//  { "decoder", LVT_???,     offsetof(struct VoicePlayerInternal, decoder), false, LOT_???         }, <--- UNIMPLEMENTED
-//  { "encoder", LVT_???,     offsetof(struct VoicePlayerInternal, encoder), false, LOT_???         }, <--- UNIMPLEMENTED
-};
-
 #define LUA_VTX_FIELD_COUNT 13
 static struct LuaObjectField sVtxFields[LUA_VTX_FIELD_COUNT] = {
     { "a",    LVT_U8,  offsetof(Vtx_L, a),    false, LOT_NONE },
@@ -2793,7 +2786,6 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
     { LOT_VOICEPLAYER,                  sVoicePlayerFields,                  LUA_VOICE_PLAYER_FIELD_COUNT                    },
-    { LOT_VOICEPLAYERINTERNAL,          sVoicePlayerInternalFields,          LUA_VOICE_PLAYER_INTERNAL_FIELD_COUNT           },
     { LOT_VTX,                          sVtxFields,                          LUA_VTX_FIELD_COUNT                             },
     { LOT_WALLCOLLISIONDATA,            sWallCollisionDataFields,            LUA_WALL_COLLISION_DATA_FIELD_COUNT             },
     { LOT_WARPNODE,                     sWarpNodeFields,                     LUA_WARP_NODE_FIELD_COUNT                       },
@@ -2901,7 +2893,6 @@ const char *sLuaLotNames[] = {
 	[LOT_SURFACE] = "Surface",
 	[LOT_TEXTUREINFO] = "TextureInfo",
 	[LOT_VOICEPLAYER] = "VoicePlayer",
-	[LOT_VOICEPLAYERINTERNAL] = "VoicePlayerInternal",
 	[LOT_VTX] = "Vtx",
 	[LOT_WALLCOLLISIONDATA] = "WallCollisionData",
 	[LOT_WARPNODE] = "WarpNode",

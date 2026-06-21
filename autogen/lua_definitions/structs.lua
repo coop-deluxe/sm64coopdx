@@ -2267,9 +2267,6 @@
 --- @field public clientMutedState VoiceChatMuteState
 --- @field public playerMutedState VoiceChatMuteState
 
---- @class VoicePlayerInternal
---- @field public buffer VoiceBuffer
-
 --- @class Vtx
 --- @field public x number
 --- @field public y number

@@ -335,7 +335,7 @@ structs_whitelist = { "__name__": "structs_whitelist",
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
     "include/PR/gbi.h": [ "Gfx", "^Vtx$" ],
-    "src/pc/voice_chat.h": [ "VoicePlayer" ],
+    "src/pc/voice_chat.h": [ "^VoicePlayer$" ],
 }
 
 # For each file, do not expose these structs
