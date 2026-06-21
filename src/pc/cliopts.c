@@ -14,9 +14,6 @@ struct CLIOptions gCLIOpts;
 
 static void print_help(void) {
     printf("sm64coopdx\n");
-#if defined(_WIN32)
-    printf("--console                 Enables the Windows console.\n");
-#endif
     printf("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
     printf("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
     printf("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");

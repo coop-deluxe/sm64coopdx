@@ -506,17 +506,13 @@ int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     // handle Windows console
-    HWND hwnd = GetConsoleWindow();
-    
-    if (hwnd) {
-        DWORD consolePid = 0;
-        GetWindowThreadProcessId(hwnd, &consolePid);
-        if (consolePid != GetCurrentProcessId()) {
-            SetConsoleOutputCP(CP_UTF8);
-        } else {
-            FreeConsole();
-            freopen("NUL", "w", stdout);
-        }
+    DWORD pids[2];
+    DWORD pcount = GetConsoleProcessList(pids, 2);
+    if (pcount > 1) {
+        SetConsoleOutputCP(CP_UTF8);
+    } else {
+        FreeConsole();
+        freopen("NUL", "w", stdout);
     }
 #endif
 
