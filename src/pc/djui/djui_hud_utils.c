@@ -755,11 +755,6 @@ static inline bool is_power_of_two(u32 n) {
 }
 
 static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, struct InterpHud *interp) {
-    if (!is_power_of_two(width) || !is_power_of_two(height)) {
-        LOG_LUA_LINE("Tried to render DJUI HUD texture with NPOT width or height");
-        return;
-    }
-
     if (!texture) { return; }
 
     gDjuiHudUtilsZ += 0.001f;
