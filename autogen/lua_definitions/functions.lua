@@ -12151,6 +12151,15 @@ function get_mario_anim_part_rot(m, animPart, rot)
     -- ...
 end
 
+--- @param m MarioState
+--- @param animPart integer
+--- @param mtx Mat4
+--- @return boolean
+--- Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+function get_mario_anim_part_mtx(m, animPart, mtx)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()

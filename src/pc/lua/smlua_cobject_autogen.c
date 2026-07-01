@@ -1351,10 +1351,11 @@ static struct LuaObjectField sMarioAnimationFields[LUA_MARIO_ANIMATION_FIELD_COU
     { "targetAnim",      LVT_COBJECT_P, offsetof(struct MarioAnimation, targetAnim),      false, LOT_ANIMATION },
 };
 
-#define LUA_MARIO_BODY_STATE_FIELD_COUNT 29
+#define LUA_MARIO_BODY_STATE_FIELD_COUNT 30
 static struct LuaObjectField sMarioBodyStateFields[LUA_MARIO_BODY_STATE_FIELD_COUNT] = {
     { "action",              LVT_U32,     offsetof(struct MarioBodyState, action),              false, LOT_NONE                                      },
     { "allowPartRotation",   LVT_U8,      offsetof(struct MarioBodyState, allowPartRotation),   false, LOT_NONE                                      },
+    { "animPartsMtx",        LVT_COBJECT, offsetof(struct MarioBodyState, animPartsMtx),        true,  LOT_MAT4,  MARIO_ANIM_PART_MAX, sizeof(Mat4)  },
     { "animPartsPos",        LVT_COBJECT, offsetof(struct MarioBodyState, animPartsPos),        true,  LOT_VEC3F, MARIO_ANIM_PART_MAX, sizeof(Vec3f) },
     { "animPartsRot",        LVT_COBJECT, offsetof(struct MarioBodyState, animPartsRot),        true,  LOT_VEC3S, MARIO_ANIM_PART_MAX, sizeof(Vec3s) },
     { "capState",            LVT_S8,      offsetof(struct MarioBodyState, capState),            false, LOT_NONE                                      },

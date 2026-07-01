@@ -419,6 +419,7 @@ struct MarioBodyState
 
     Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
     Vec3s animPartsRot[MARIO_ANIM_PART_MAX];
+    Mat4 animPartsMtx[MARIO_ANIM_PART_MAX];
     u32 currAnimPart;
 
     u32 updateTorsoTime;

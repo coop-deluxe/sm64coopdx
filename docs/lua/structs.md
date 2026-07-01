@@ -1585,6 +1585,7 @@
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
 | animPartsPos | `Array` <`Vec3f`> | read-only |
 | animPartsRot | `Array` <`Vec3s`> | read-only |
+| animPartsMtx | `Array` <`Mat4`> | read-only |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |

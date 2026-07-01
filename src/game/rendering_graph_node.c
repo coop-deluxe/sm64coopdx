@@ -1203,7 +1203,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
 
-    // Mario anim part pos and rot
+    // Mario anim part pos, rot, and matrix
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
         get_pos_from_transform_mtx(
             gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
@@ -1213,6 +1213,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
         Vec3s rot = { rotation[2], rotation[0], rotation[1] };
         vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
+        mtxf_copy(gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart], gMatStack[gMatStackIndex]);
     }
 
     if (gCurGraphNodeMarioState != NULL) {
@@ -1861,7 +1862,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
 
-    // Mario anim part pos and rot
+    // Mario anim part pos, rot, and matrix
     if (gCurMarioBodyState && !gCurGraphNodeHeldObject && gCurMarioBodyState->currAnimPart > MARIO_ANIM_PART_NONE && gCurMarioBodyState->currAnimPart < MARIO_ANIM_PART_MAX) {
         get_pos_from_transform_mtx(
             gCurMarioBodyState->animPartsPos[gCurMarioBodyState->currAnimPart],
@@ -1871,6 +1872,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
 
         Vec3s rot = { rotation[2], rotation[0], rotation[1] };
         vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
+        mtxf_copy(gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart], gMatStack[gMatStackIndex]);
     }
 
     if (gCurGraphNodeMarioState != NULL) {
