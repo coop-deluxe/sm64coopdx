@@ -7082,6 +7082,14 @@ function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
 end
 
+--- @param dest Mat4
+--- @param objMtx Mat4
+--- @param camMtx Mat4
+--- Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+function get_world_mtx_from_transform(dest, objMtx, camMtx)
+    -- ...
+end
+
 --- @param value number
 --- @param replacement number
 --- @return number

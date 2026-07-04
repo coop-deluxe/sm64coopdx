@@ -291,5 +291,9 @@ Extracts the position (translation component) from the transformation matrix `ob
 |descriptionEnd| */
 OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(VEC_OUT Vec3f dest, Mat4 objMtx, Mat4 camMtx);
 
+/* |description|
+Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+|descriptionEnd| */
+OPTIMIZE_O3 void get_world_mtx_from_transform(VEC_OUT Mat4 dest, Mat4 objMtx, Mat4 camMtx);
 #endif // MATH_UTIL_H
 

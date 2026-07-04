@@ -5634,6 +5634,31 @@ Extracts the position (translation component) from the transformation matrix `ob
 
 <br />
 
+## [get_world_mtx_from_transform](#get_world_mtx_from_transform)
+
+### Description
+Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+
+### Lua Example
+`get_world_mtx_from_transform(dest, objMtx, camMtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Mat4](structs.md#Mat4) |
+| objMtx | [Mat4](structs.md#Mat4) |
+| camMtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- None
+
+### C Prototype
+`void get_world_mtx_from_transform(VEC_OUT Mat4 dest, Mat4 objMtx, Mat4 camMtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from math_util.inl
 
