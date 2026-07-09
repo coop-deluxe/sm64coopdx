@@ -24,12 +24,15 @@
 
 static struct GfxBackendAPI *sBackends[GFX_BACKEND_COUNT] = {
     [GFX_BACKEND_OPENGL] = &gfx_gl,
+#if defined(_WIN32)
     [GFX_BACKEND_DIRECTX] = &gfx_dxgi,
+#endif
+    [GFX_BACKEND_DUMMY] = &gfx_dummy_backend,
 };
 
 // TODO: figure out how to switch the backend without restarting
 // this is currently used to initialize which backend is used
-static enum GfxBackend currBackend = GFX_BACKEND_OPENGL;
+static enum GfxBackend currBackend = GFX_BACKEND_DUMMY;
 
 static SDL_Window *wnd;
 static SDL_GLContext ctx = NULL;
@@ -91,11 +94,12 @@ static void gfx_wm_reset_dimension_and_pos(void) {
 }
 
 void gfx_wm_init(const char *window_title) {
+    if (gCLIOpts.headless) { return; }
 #if defined(_WIN32)
     SetProcessDPIAware();
 #endif
 
-    currBackend = configGraphicsBackend;
+    currBackend = (enum GfxBackend)configGraphicsBackend; // Casting isn't actually necessary, this just shuts up the stupid compiler warning
 
     sBackends[currBackend]->init(window_title);
 
@@ -112,6 +116,11 @@ void gfx_wm_main_loop(void (*run_one_game_iter)(void)) {
 }
 
 void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
+    if (currBackend == GFX_BACKEND_DUMMY) {
+        if (width) *width = 320;
+        if (height) *height = 240;
+        return;
+    }
     int w, h;
     SDL_GetWindowSize(wnd, &w, &h);
     if (width) *width = w;
@@ -161,6 +170,7 @@ static void gfx_wm_ondropfile(char* path) {
 }
 
 void gfx_wm_handle_events(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -214,6 +224,7 @@ void gfx_wm_handle_events(void) {
 
 void gfx_wm_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callback_t on_key_up,
     void (*on_all_keys_up)(void), void (*on_text_input)(char*), void (*on_text_editing)(char*, int)) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     kb_key_down = on_key_down;
     kb_key_up = on_key_up;
     kb_all_keys_up = on_all_keys_up;
@@ -222,6 +233,7 @@ void gfx_wm_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callback_t on_k
 }
 
 void gfx_wm_set_scroll_callback(void (*on_scroll)(float, float)) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     m_scroll = on_scroll;
 }
 
@@ -242,6 +254,7 @@ double gfx_wm_get_time(void) {
 }
 
 void gfx_wm_delay(u32 ms) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     SDL_Delay(ms);
 }
 
@@ -250,14 +263,17 @@ int gfx_wm_get_max_msaa(void) {
 }
 
 void gfx_wm_set_window_title(const char* title) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     SDL_SetWindowTitle(wnd, title);
 }
 
 void gfx_wm_reset_window_title(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     SDL_SetWindowTitle(wnd, TITLE);
 }
 
 void gfx_wm_shutdown(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
     if (SDL_WasInit(0)) {
         if (ctx) { SDL_GL_DeleteContext(ctx); ctx = NULL; }
         if (wnd) { SDL_DestroyWindow(wnd); wnd = NULL; }
@@ -266,13 +282,21 @@ void gfx_wm_shutdown(void) {
 }
 
 bool gfx_wm_has_focus(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return true; }
     return (SDL_GetWindowFlags(wnd) & SDL_WINDOW_INPUT_FOCUS);
 }
 
-void gfx_wm_start_text_input(void) { SDL_StartTextInput(); }
-void gfx_wm_stop_text_input(void) { SDL_StopTextInput(); }
+void gfx_wm_start_text_input(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    SDL_StartTextInput();
+}
+void gfx_wm_stop_text_input(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    SDL_StopTextInput();
+}
 
 char* gfx_wm_get_clipboard_text(void) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return ""; }
     static char clipboard_buf[WAPI_CLIPBOARD_BUFSIZ];
 
     char* text = SDL_GetClipboardText();
@@ -283,5 +307,11 @@ char* gfx_wm_get_clipboard_text(void) {
     return clipboard_buf;
 }
 
-void gfx_wm_set_clipboard_text(const char* text) { SDL_SetClipboardText(text); }
-void gfx_wm_set_cursor_visible(bool visible) { SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE); }
+void gfx_wm_set_clipboard_text(const char* text) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    SDL_SetClipboardText(text);
+}
+void gfx_wm_set_cursor_visible(bool visible) {
+    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+}

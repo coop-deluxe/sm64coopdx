@@ -15,7 +15,10 @@ typedef bool (*kb_callback_t)(int code);
 
 enum GfxBackend {
     GFX_BACKEND_OPENGL,
+#if defined(_WIN32)
     GFX_BACKEND_DIRECTX,
+#endif
+    GFX_BACKEND_DUMMY,
     GFX_BACKEND_COUNT,
 };
 
