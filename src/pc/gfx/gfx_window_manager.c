@@ -99,9 +99,12 @@ void gfx_wm_init(const char *window_title) {
     SetProcessDPIAware();
 #endif
 
+#if defined(_WIN32)
     // Casting isn't actually necessary, this just shuts up the stupid compiler warning
     currBackend = gCLIOpts.backend != -1 ? (enum GfxBackend)gCLIOpts.backend : (enum GfxBackend)configGraphicsBackend;
-
+#else
+    currBackend = (enum GfxBackend)configGraphicsBackend;
+#endif
     sBackends[currBackend]->init(window_title);
 
     gfx_wm_set_fullscreen();
