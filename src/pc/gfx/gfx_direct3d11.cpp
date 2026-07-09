@@ -21,7 +21,7 @@
 #include "pc/configfile.h"
 
 #include "gfx_cc.h"
-#include "gfx_window_manager_api.h"
+#include "gfx_window_manager.h"
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
 

@@ -1,7 +1,7 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -73,11 +73,11 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
 
         if (GAPI_MAX > 1) {
-            char* gfxBackendChoices[2] = {
+            char* gfxBackendChoices[GFX_BACKEND_COUNT] = {
                 "OpenGL",
                 "DirectX 11"
             };
-            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, 2, &configGraphicsBackend, djui_panel_display_update_restart_text);
+            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GFX_BACKEND_COUNT, &configGraphicsBackend, djui_panel_display_update_restart_text);
         }
 
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
@@ -114,7 +114,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FILTERING), filterChoices, 3, &configFiltering, NULL);
 
-        int maxMsaa = gWindowApi->get_max_msaa();
+        int maxMsaa = gfx_wm_get_max_msaa();
         if (maxMsaa >= 2) {
             if      (configWindow.msaa >= 16) { sMsaaSelection = 4; }
             else if (configWindow.msaa >=  8) { sMsaaSelection = 3; }

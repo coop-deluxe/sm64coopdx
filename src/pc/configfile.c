@@ -10,7 +10,7 @@
 #include "configfile.h"
 #include "cliopts.h"
 #include "gfx/gfx_screen_config.h"
-#include "gfx/gfx_window_manager_api.h"
+#include "gfx/gfx_window_manager.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
 #include "mods/mods.h"
