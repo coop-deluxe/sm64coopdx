@@ -99,7 +99,8 @@ void gfx_wm_init(const char *window_title) {
     SetProcessDPIAware();
 #endif
 
-    currBackend = (enum GfxBackend)configGraphicsBackend; // Casting isn't actually necessary, this just shuts up the stupid compiler warning
+    // Casting isn't actually necessary, this just shuts up the stupid compiler warning
+    currBackend = gCLIOpts.backend != -1 ? (enum GfxBackend)gCLIOpts.backend : (enum GfxBackend)configGraphicsBackend;
 
     sBackends[currBackend]->init(window_title);
 
@@ -175,10 +176,10 @@ void gfx_wm_handle_events(void) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_TEXTINPUT:
-                kb_text_input(event.text.text);
+                if (kb_text_input) { kb_text_input(event.text.text); }
                 break;
             case SDL_TEXTEDITING: //IME composition
-                kb_text_editing(event.edit.text,event.edit.start);
+                if (kb_text_editing) { kb_text_editing(event.edit.text,event.edit.start); }
                 break;
             case SDL_KEYDOWN:
                 gfx_wm_onkeydown(event.key.keysym.scancode);
