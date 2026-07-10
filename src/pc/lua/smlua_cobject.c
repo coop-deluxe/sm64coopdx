@@ -588,7 +588,7 @@ static int smlua__get_field(lua_State* L) {
         }
 
         int isNum;
-        s32 index = lua_tointegerx(L, 2, &isNum);
+        lua_Integer index = lua_tointegerx(L, 2, &isNum);
         if (!isNum) {
             const char *key = lua_tostring(L, 2);
             if (key && key[0] == '_') {
@@ -605,17 +605,17 @@ static int smlua__get_field(lua_State* L) {
             return 0;
         }
 
-        s32 indexStart = data->cArray ? 0 : 1;
-        s32 indexEnd = indexStart + (s32) data->count;
+        lua_Integer indexStart = data->cArray ? 0 : 1;
+        lua_Integer indexEnd = indexStart + (lua_Integer) data->count;
         if (index < indexStart || index >= indexEnd) {
-            LOG_LUA_LINE("Index out of bounds: %d (should be between %d and %d)", index, indexStart, indexEnd - 1);
+            LOG_LUA_LINE("Index out of bounds: "LUA_INTEGER_FMT" (should be between "LUA_INTEGER_FMT" and "LUA_INTEGER_FMT")", index, indexStart, indexEnd - 1);
             return 0;
         }
 
         index -= indexStart;
         u8* p = ((u8*)(intptr_t)pointer) + (index * data->size);
         if (smlua_push_field(L, p, data)) {
-            LOG_LUA_LINE("_get_field on unimplemented type '%d', index %d", data->valueType, index);
+            LOG_LUA_LINE("_get_field on unimplemented type '%d', index "LUA_INTEGER_FMT, data->valueType, index);
             return 0;
         }
 
@@ -704,23 +704,23 @@ static int smlua__set_field(lua_State* L) {
         }
 
         int isNum;
-        s32 index = lua_tointegerx(L, 2, &isNum);
+        lua_Integer index = lua_tointegerx(L, 2, &isNum);
         if (!isNum) {
             LOG_LUA_LINE("Tried to set a non-integer field of cobject array");
             return 0;
         }
 
-        s32 indexStart = data->cArray ? 0 : 1;
-        s32 indexEnd = indexStart + (s32) data->count;
+        lua_Integer indexStart = data->cArray ? 0 : 1;
+        lua_Integer indexEnd = indexStart + (lua_Integer) data->count;
         if (index < indexStart || index >= indexEnd) {
-            LOG_LUA_LINE("Index out of bounds: %d (should be between %d and %d)", index, indexStart, indexEnd - 1);
+            LOG_LUA_LINE("Index out of bounds: "LUA_INTEGER_FMT" (should be between "LUA_INTEGER_FMT" and "LUA_INTEGER_FMT")", index, indexStart, indexEnd - 1);
             return 0;
         }
 
         index -= indexStart;
         u8* p = ((u8*)(intptr_t)pointer) + (index * data->size);
         if (smlua_set_field(L, p, data)) {
-            LOG_LUA_LINE("_set_field on unimplemented type '%d', index %d", data->valueType, index);
+            LOG_LUA_LINE("_set_field on unimplemented type '%d', index "LUA_INTEGER_FMT"", data->valueType, index);
             return 0;
         }
 
