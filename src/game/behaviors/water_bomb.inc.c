@@ -130,7 +130,7 @@ void water_bomb_spawn_explode_particles(s8 offsetY, s8 forwardVelRange, s8 velYB
  * Enter the drop action with -40 y vel.
  */
 static void water_bomb_act_init(void) {
-    cur_obj_play_sound_2(SOUND_OBJ_SOMETHING_LANDING);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SOMETHING_LANDING);
 
     o->oAction = WATER_BOMB_ACT_DROP;
     o->oMoveFlags = 0;
@@ -157,7 +157,7 @@ static void water_bomb_act_drop(void) {
             o->oWaterBombOnGround = TRUE;
 
             if ((o->oWaterBombNumBounces += 1.0f) < 3.0f) {
-                cur_obj_play_sound_2(SOUND_OBJ_WATER_BOMB_BOUNCING);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WATER_BOMB_BOUNCING);
             } else {
                 create_sound_spawner(SOUND_OBJ_DIVING_IN_WATER);
             }

@@ -3116,6 +3116,31 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 
 <br />
 
+## [get_mario_anim_part_mtx](#get_mario_anim_part_mtx)
+
+### Description
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+
+### Lua Example
+`local booleanValue = get_mario_anim_part_mtx(m, animPart, mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animPart | `integer` |
+| mtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Description
@@ -4104,7 +4129,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -4133,7 +4158,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -6332,13 +6357,13 @@ Stops cap music completely
 <br />
 
 
-## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+## [cur_obj_play_sound_if_visible](#cur_obj_play_sound_if_visible)
 
 ### Description
 Plays a sound if the current object is visible
 
 ### Lua Example
-`cur_obj_play_sound_1(soundMagic)`
+`cur_obj_play_sound_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -6349,19 +6374,19 @@ Plays a sound if the current object is visible
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_1(s32 soundMagic);`
+`void cur_obj_play_sound_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+## [cur_obj_play_sound_and_rumble_if_visible](#cur_obj_play_sound_and_rumble_if_visible)
 
 ### Description
-Plays a sound if the current object is visible and queues rumble for specific sounds
+Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
 
 ### Lua Example
-`cur_obj_play_sound_2(soundMagic)`
+`cur_obj_play_sound_and_rumble_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -6372,7 +6397,7 @@ Plays a sound if the current object is visible and queues rumble for specific so
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_2(s32 soundMagic);`
+`void cur_obj_play_sound_and_rumble_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
@@ -6397,56 +6422,6 @@ Create a sound spawner for objects that need a sound play once.
 
 ### C Prototype
 `void create_sound_spawner(s32 soundMagic);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.
-What an even more strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_1(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_1(f32 distance);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.
-What a strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_2(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_2(f32 distance);`
 
 [:arrow_up_small:](#)
 

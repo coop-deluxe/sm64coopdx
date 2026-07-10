@@ -76,7 +76,7 @@ void coffin_act_idle(void) {
 
             // If the coffin landed...
             if (obj_face_pitch_approach(0, -o->oAngleVelPitch)) {
-                cur_obj_play_sound_2(SOUND_GENERAL_ELEVATOR_MOVE_2);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ELEVATOR_MOVE_2);
 
                 // This bit changes the coffin's position,
                 // spawns dust there, then resets the position.
@@ -114,7 +114,7 @@ void coffin_act_idle(void) {
                 && (distanceToPlayer > 100.0f || (marioState && marioState->action == ACT_SQUISHED))) {
                 if ((player && player->oPosY - o->oPosY < 200.0f) && absf(distForwards) < 140.0f) {
                     if (distSideways < 150.0f && distSideways > -450.0f) {
-                        cur_obj_play_sound_2(SOUND_GENERAL_BUTTON_PRESS_2_LOWPRIO);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BUTTON_PRESS_2_LOWPRIO);
                         o->oAction = COFFIN_ACT_STAND_UP;
                     }
                 }
@@ -140,7 +140,7 @@ void coffin_act_stand_up(void) {
             o->oFaceAngleRoll = 0;
         } else if (o->oTimer > 30) {
             if (gGlobalTimer % 4 == 0) {
-                cur_obj_play_sound_2(SOUND_GENERAL_ELEVATOR_MOVE_2);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ELEVATOR_MOVE_2);
             }
             // Shake the coffin while its standing
             o->oFaceAngleRoll = 400 * (gGlobalTimer % 2) - 200;

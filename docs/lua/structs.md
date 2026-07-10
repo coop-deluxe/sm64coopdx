@@ -1585,6 +1585,7 @@
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
 | animPartsPos | `Array` <`Vec3f`> | read-only, starts at index 0 |
 | animPartsRot | `Array` <`Vec3s`> | read-only, starts at index 0 |
+| animPartsMtx | `Array` <`Mat4`> | read-only, starts at index 0 |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -2172,6 +2173,7 @@
 | oCoinUnkF4 | `integer` |  |
 | oCoinUnkF8 | `integer` |  |
 | oCoinUnk110 | `number` |  |
+| oCoinBaseYVel | `number` |  |
 | oCoinUnk1B0 | `integer` |  |
 | oCollisionParticleUnkF4 | `number` |  |
 | oControllablePlatformUnkF8 | `integer` |  |

@@ -39,10 +39,10 @@ void small_breakable_box_act_move(void) {
 
     obj_attack_collided_from_other_object(o);
     if (sp1E == 1)
-        cur_obj_play_sound_2(SOUND_GENERAL_BOX_LANDING_2);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BOX_LANDING_2);
     if (sp1E & 1) {
         if (o->oForwardVel > 20.0f) {
-            cur_obj_play_sound_2(SOUND_ENV_SLIDING);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_ENV_SLIDING);
             small_breakable_box_spawn_dust();
         }
     }
@@ -110,7 +110,6 @@ void breakable_box_small_get_dropped(void) {
 
 void breakable_box_small_get_thrown(void) {
     cur_obj_become_tangible();
-    cur_obj_enable_rendering_2();
     cur_obj_enable_rendering();
     o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
     o->oHeldState = 0;

@@ -2,11 +2,11 @@
 
 # SMLua
 
-SMLua is what allows Lua to communicate with SM64. It's the backbone of the modding api, and it contains multiple features that makes development in C convenient.
+SMLua is what allows Lua to communicate with SM64. It's the backbone of the modding API, and it contains multiple features that makes development in C convenient.
 
 ## Autogen
 
-Autogen is the system in place to allow C functions to be generated into Lua functions automatically.
+Autogen is the system in place to allow C constants, functions and structs to be exposed to the Lua API automatically.
 
 Autogen can be ran by running `autogen/autogen.sh` in the root directory of your project.
 
@@ -25,23 +25,37 @@ Constants, functions, and structs are each handled in their own files.
 - `convert_functions.py`
 - `convert_structs.py`
 
-Each file is laid out differently to account for their own needs, the only thing that's the same in each is `in_files`, which tells autogen to look for functions, constants, or structs in a specific file
+But thankfully, one does not need to know how it works but rather focus on a single file: `exposed_lists.py`.<br>
+In this file, you will find numerous options sorted in three categories: `constants`, `functions` and `structs`.<br>
+Note that all `whitelist`, `blacklist` and `hidden` dicts support regular expressions.
 
 ### Constants
 
-Constants is the least used one, so it has the least to go over.
+Let's start with the constants options:
 
-- `exclude_constants` tells autogen to ignore specific constants. For instance, in `djui_console.h`, we don't want to include `CONSOLE_MAX_TMP_BUFFER`, Lua has no need for that constant, so we exclude it.
-- `include_constants` tells autogen to add specific constants, and ignore every other constant in that file. For instance, in `mod_storage.h`, there's a bunch of constants we don't want exposed to Lua, so instead of excluding them, we include the few we actually need.
+- `constants_files` defines in which files autogen should look into to expose constants.<br>
+  All filepaths are relative to the root of the repository.
+- `constants_whitelist` defines for each file which constants should be exposed and ignore every other constant in that file.<br>
+  For example, in `mod_storage.h`, there's a bunch of constants we don't want exposed to Lua, so instead of excluding them, we include the few we actually need.
+- `constants_blacklist` defines for each file which constants should not be exposed.<br>
+  For example, in `djui_console.h`, we don't want to include `CONSOLE_MAX_TMP_BUFFER`, Lua has no need for that constant, so we exclude it.
+- `constants_hidden` defines for each file which constants should be exposed, but not appear in the documentation.<br>
+  It is usually done for deprecated constants or ones that have a temporary or placeholder name but some mods already use them, so they can't be removed completely.<br>
+  For example, in `interaction.h`, `INTERACT_UNKNOWN_08` is not a very explicit name, but since mods use it, it must exist in the API.
 
 ### Functions
 
 Functions have quite a bit of options, so let's go over it:
 
-- `override_allowed_functions` is similar to `include_constants`, it tells autogen to add specific functions and ignore all other functions in the file. It proves especially useful for functions since frequently files contains tons of functions that shouldn't be exposed to Lua.
-- `override_disallowed_functions` is similar to `exclude_constants`, it tells autogen to ignore specific functions.
-- `override_hide_functions` tells autogen to not document the function. It still exists in SMLua, and Lua can call it, but it can't see it. This is typically used for deprecated functions.
-- `override_function_version_excludes` excludes functions from a specific version of the game. It doesn't have too much of a use anymore, so you can ignore it.
+- `functions_files` defines in which files autogen should look into to expose functions.<br>
+  All filepaths are relative to the root of the repository.
+- `functions_whitelist` defines for each file which functions should be exposed and ignore every other function in that file.<br>
+  It proves especially useful for functions since frequently files contains tons of functions that shouldn't be exposed to Lua.
+- `functions_blacklist` defines for each file which functions should not be exposed.
+- `functions_hidden` defines for each file which functions should be exposed, but not appear in the documentation.<br>
+  This is typically used for deprecated or renamed functions.
+- `functions_version_excludes` excludes functions from a specific version of the game.<br>
+  It doesn't have too much of a use anymore, so you can ignore it.
 
 Functions have a unique feature of being able to be documented. In a header file where autogen reads the function and generates documentation and generates an SMLua implementation, you can define a description for the function above it. An example of it and the syntax is as the following:
 
@@ -64,13 +78,22 @@ s32 is_anim_at_end(struct MarioState *m);
 
 Structs have the most options, so let's go through it:
 
-- `override_field_types` changes the type of a field in a struct to something else. It pretty much lies to lua about what it actually is. This usually isn't useful, but in specific scenarios it can be.
-- `override_field_mutable` tells autogen to make a specific field mutable and also make every other field immutable.
-- `override_field_invisible` tells autogen to remove a field from Lua. Unlike `override_hide_functions`, it makes the value not accessible at all.
-- `override_field_hidden` tells autogen to mark certain fields as deprecated/hidden. They do not appear in the docs, but mods can still use them.
-- `override_field_immutable` tells autogen to make certain fields immutable.
-- `override_field_version_excludes` tells autogen to exclude specific fields depending on your version. Similarly to `override_function_version_excludes`, it doesn't have too much of a use anymore, so you can ignore it.
-- `override_allowed_structs` tells autogen to make specific structs visible and tangible to Lua, but remove all other structs from Lua.
+- `structs_files` defines in which files autogen should look into to expose structs.<br>
+  All filepaths are relative to the root of the repository.
+- `structs_whitelist` defines for each file which structs should be exposed and ignore every other struct in that file.
+- `structs_blacklist` defines for each file which structs should not be exposed at all.
+- `structs_excluded` is a list of struct names that should never be exposed from any file, including as another struct fields.
+- `structs_fields_whitelist` defines for each struct which fields should be exposed and ignore every other field in that struct.
+- `structs_fields_blacklist` defines for each struct which fields should not be exposed to Lua.
+- `structs_fields_hidden` defines for each struct which fields should be exposed, but not appear in the documentation.<br>
+  Like constants and functions, this is usually done for deprecated or renamed fields.
+- `structs_fields_version_excludes` tells autogen to exclude specific fields depending on your version.<br>
+  Similarly to `functions_version_excludes`, it doesn't have too much of a use anymore, so you can ignore it.
+- `structs_fields_types` changes the type of a field in a struct to something else.<br>
+  It pretty much lies to Lua about what it actually is. This usually isn't useful, but in specific scenarios it can be.
+- `structs_fields_mutable` defines which fields should be mutable (read and write), but turn every other field of the struct immutable (read-only).
+- `structs_fields_immutable` defines which fields should be immutable (read-only).<br>
+  By default, all fields are mutable, except pointers.
 
 ## Hook Events
 
@@ -103,7 +126,7 @@ enum LuaHookedEventReturn {
 - `HOOK_RETURN_ON_SUCCESSFUL_CALL` should be used if you don't want any other mods to use a hook call if the call succeeds for the first mod handling it. It's only used a few times, but it can come in handy.
 - `HOOK_RETURN_ON_OUTPUT_SET` should be used if you don't want any mod to access a hook that had it's output set by Lua.
 - If these 3 hook return types don't cover what you are looking for, you need to make a custom implementation, mark this parameter with an `_` if you want to do a custom implementation.
-- Every argument after is the parameters and return values for Lua, and they are optional. Parameters come first, insert the parameters you want Lua to receive, for instance, `struct MarioState* m` to allow Lua to receive a mario state in the hook event call.
+- Every argument after is the parameters and return values for Lua, and they are optional. Parameters come first, insert the parameters you want Lua to receive, for instance, `struct MarioState *m` to allow Lua to receive a mario state in the hook event call.
 - After parameters comes output, or return values. This is optional. To define an output parameter, use the `OUTPUT` macro.
 - Here is an example hook showcasing this:
 

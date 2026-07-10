@@ -1075,6 +1075,7 @@
 --- @field public heldObjLastPosition Vec3f
 --- @field public animPartsPos Vec3f[]
 --- @field public animPartsRot Vec3s[]
+--- @field public animPartsMtx Mat4[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer
@@ -1563,6 +1564,7 @@
 --- @field public oCoinUnkF4 integer
 --- @field public oCoinUnkF8 integer
 --- @field public oCoinUnk110 number
+--- @field public oCoinBaseYVel number
 --- @field public oCoinUnk1B0 integer
 --- @field public oCollisionParticleUnkF4 number
 --- @field public oControllablePlatformUnkF8 integer

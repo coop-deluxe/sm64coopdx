@@ -65,19 +65,19 @@ Overrides the current room Mario is in. Set to -1 to reset override
 Updates an object's position based on a parent transformation matrix
 
 ### Lua Example
-`obj_update_pos_from_parent_transformation(a0, a1)`
+`obj_update_pos_from_parent_transformation(mtx, obj)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Mat4](structs.md#Mat4) |
-| a1 | [Object](structs.md#Object) |
+| mtx | [Mat4](structs.md#Mat4) |
+| obj | [Object](structs.md#Object) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);`
+`void obj_update_pos_from_parent_transformation(Mat4 mtx, struct Object *obj);`
 
 [:arrow_up_small:](#)
 
@@ -114,20 +114,20 @@ Applies an object's scale to a transformation matrix
 Combines two transformation matrices into a single result matrix
 
 ### Lua Example
-`create_transformation_from_matrices(a0, a1, a2)`
+`create_transformation_from_matrices(dest, src1, src2)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Mat4](structs.md#Mat4) |
-| a1 | [Mat4](structs.md#Mat4) |
-| a2 | [Mat4](structs.md#Mat4) |
+| dest | [Mat4](structs.md#Mat4) |
+| src1 | [Mat4](structs.md#Mat4) |
+| src2 | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2);`
+`void create_transformation_from_matrices(VEC_OUT Mat4 dest, Mat4 src1, Mat4 src2);`
 
 [:arrow_up_small:](#)
 
@@ -1329,27 +1329,6 @@ Sets the current object's position relative to its parent's facing direction
 
 <br />
 
-## [cur_obj_enable_rendering_2](#cur_obj_enable_rendering_2)
-
-### Description
-Alternative function that enables rendering for the current object
-
-### Lua Example
-`cur_obj_enable_rendering_2()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void cur_obj_enable_rendering_2(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
 
 ### Description
@@ -1896,19 +1875,19 @@ Checks if Mario is performing a dive slide action
 Sets the current object's vertical velocity and initializes an animation
 
 ### Lua Example
-`cur_obj_set_y_vel_and_animation(sp18, sp1C)`
+`cur_obj_set_y_vel_and_animation(velY, animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `number` |
-| sp1C | `integer` |
+| velY | `number` |
+| animIndex | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C);`
+`void cur_obj_set_y_vel_and_animation(f32 velY, s32 animIndex);`
 
 [:arrow_up_small:](#)
 
@@ -1917,22 +1896,22 @@ Sets the current object's vertical velocity and initializes an animation
 ## [cur_obj_unrender_and_reset_state](#cur_obj_unrender_and_reset_state)
 
 ### Description
-Disables rendering, makes intangible, and resets action and animation
+Disables rendering, makes intangible, and resets animation and action
 
 ### Lua Example
-`cur_obj_unrender_and_reset_state(sp18, sp1C)`
+`cur_obj_unrender_and_reset_state(animIndex, action)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `integer` |
-| sp1C | `integer` |
+| animIndex | `integer` |
+| action | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C);`
+`void cur_obj_unrender_and_reset_state(s32 animIndex, s32 action);`
 
 [:arrow_up_small:](#)
 
@@ -2831,23 +2810,23 @@ Starts a camera event and makes the current object the secondary camera focus
 ## [set_mario_interact_hoot_if_in_range](#set_mario_interact_hoot_if_in_range)
 
 ### Description
-Sets Mario's interact status to hoot-grabbed if Mario is within range
+Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`
 
 ### Lua Example
-`set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)`
+`set_mario_interact_hoot_if_in_range(unused1, unused2, maxDistanceToMario)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp0 | `integer` |
-| sp4 | `integer` |
-| sp8 | `number` |
+| unused1 | `integer` |
+| unused2 | `integer` |
+| maxDistanceToMario | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);`
+`void set_mario_interact_hoot_if_in_range(UNUSED s32 unused1, UNUSED s32 unused2, f32 maxDistanceToMario);`
 
 [:arrow_up_small:](#)
 
@@ -3024,14 +3003,14 @@ Sets the current object's hurtbox radius and height
 Spawns loot coins from an object using the specified behavior, jitter, and model
 
 ### Lua Example
-`obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)`
+`obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp30 | `number` |
+| baseYVel | `number` |
 | coinBehavior | `Pointer` <`BehaviorScript`> |
 | posJitter | `integer` |
 | model | `integer` |
@@ -3040,7 +3019,7 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 - None
 
 ### C Prototype
-`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
+`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
 
 [:arrow_up_small:](#)
 
@@ -3052,21 +3031,21 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 Spawns blue loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)`
+`obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 | posJitter | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter);`
+`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter);`
 
 [:arrow_up_small:](#)
 
@@ -3078,20 +3057,20 @@ Spawns blue loot coins from an object
 Spawns yellow loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_yellow_coins(obj, numCoins, sp28)`
+`obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28);`
+`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel);`
 
 [:arrow_up_small:](#)
 
@@ -3759,18 +3738,18 @@ Applies a random translation to an object on the X and Z axes
 Builds the object's world velocity from its transform basis vectors
 
 ### Lua Example
-`obj_build_vel_from_transform(a0)`
+`obj_build_vel_from_transform(obj)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Object](structs.md#Object) |
+| obj | [Object](structs.md#Object) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_build_vel_from_transform(struct Object *a0);`
+`void obj_build_vel_from_transform(struct Object *obj);`
 
 [:arrow_up_small:](#)
 
@@ -4069,51 +4048,27 @@ Behavior loop function for dust smoke
 
 <br />
 
-## [stub_obj_helpers_3](#stub_obj_helpers_3)
-
-### Description
-Placeholder function with no behavior
-
-### Lua Example
-`stub_obj_helpers_3(sp0, sp4)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sp0 | `integer` |
-| sp4 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_scale_over_time](#cur_obj_scale_over_time)
 
 ### Description
-Smoothly scales the current object over time using enabled axes
+Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)
 
 ### Lua Example
-`cur_obj_scale_over_time(a0, a1, sp10, sp14)`
+`cur_obj_scale_over_time(axes, duration, minScale, maxScale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
-| sp10 | `number` |
-| sp14 | `number` |
+| axes | `integer` |
+| duration | `integer` |
+| minScale | `number` |
+| maxScale | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14);`
+`void cur_obj_scale_over_time(s32 axes, s32 duration, f32 minScale, f32 maxScale);`
 
 [:arrow_up_small:](#)
 
@@ -4135,27 +4090,6 @@ Moves an object to its home position while applying debug position offsets
 
 ### C Prototype
 `void cur_obj_set_pos_to_home_with_debug(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stub_obj_helpers_4](#stub_obj_helpers_4)
-
-### Description
-Placeholder function with no behavior
-
-### Lua Example
-`stub_obj_helpers_4()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void stub_obj_helpers_4(void);`
 
 [:arrow_up_small:](#)
 
@@ -4233,18 +4167,18 @@ Oscillates the current object vertically until a specified number of cycles pass
 Moves the current object up and down along a preset displacement table
 
 ### Lua Example
-`local integerValue = cur_obj_move_up_and_down(a0)`
+`local integerValue = cur_obj_move_up_and_down(index)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
+| index | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_move_up_and_down(s32 a0);`
+`s32 cur_obj_move_up_and_down(s32 index);`
 
 [:arrow_up_small:](#)
 
@@ -4256,19 +4190,19 @@ Moves the current object up and down along a preset displacement table
 Spawns a star object without triggering level exit behavior
 
 ### Lua Example
-`local objectValue = spawn_star_with_no_lvl_exit(sp20, sp24)`
+`local objectValue = spawn_star_with_no_lvl_exit(setHomeToMario, unused)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp20 | `integer` |
-| sp24 | `integer` |
+| setHomeToMario | `integer` |
+| unused | `integer` |
 
 ### Returns
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24);`
+`struct Object *spawn_star_with_no_lvl_exit(s32 setHomeToMario, s32 unused);`
 
 [:arrow_up_small:](#)
 
@@ -4290,29 +4224,6 @@ Spawns a base star with default parameters and no level exit behavior
 
 ### C Prototype
 `void spawn_base_star_with_no_lvl_exit(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bit_shift_left](#bit_shift_left)
-
-### Description
-Returns the value at index a0 from a behavior-specific left-shift table
-
-### Lua Example
-`local integerValue = bit_shift_left(a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 bit_shift_left(s32 a0);`
 
 [:arrow_up_small:](#)
 
@@ -4459,19 +4370,19 @@ Gives the current object a hitbox and kills it if attacked, with optional loot s
 Explodes the current object, spawns particles, and optionally spawns coins
 
 ### Lua Example
-`obj_explode_and_spawn_coins(sp18, sp1C)`
+`obj_explode_and_spawn_coins(mistSize, coinType)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `number` |
-| sp1C | `integer` |
+| mistSize | `number` |
+| coinType | [enum CoinType](constants.md#enum-CoinType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C);`
+`void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);`
 
 [:arrow_up_small:](#)
 
@@ -4696,32 +4607,7 @@ Checks whether Mario can activate the current object's textbox within a vertical
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cur_obj_can_mario_activate_textbox_2](#cur_obj_can_mario_activate_textbox_2)
-
-### Description
-Wrapper that checks Mario textbox activation using a fixed unused parameter value
-
-### Lua Example
-`local integerValue = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| radius | `number` |
-| height | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height);`
+`s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, OPTIONAL UNUSED s32 unused);`
 
 [:arrow_up_small:](#)
 
@@ -5273,22 +5159,22 @@ Apply one frame of platform rotation to the object using the given platform
 ## [queue_rumble_data](#queue_rumble_data)
 
 ### Description
-Queues rumble data
+Queues rumble data with `time` and `level`
 
 ### Lua Example
-`queue_rumble_data(a0, a1)`
+`queue_rumble_data(time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data(s16 a0, s16 a1);`
+`void queue_rumble_data(s16 time, s16 level);`
 
 [:arrow_up_small:](#)
 
@@ -5297,23 +5183,23 @@ Queues rumble data
 ## [queue_rumble_data_object](#queue_rumble_data_object)
 
 ### Description
-Queues rumble data for object, factoring in its distance from Mario
+Queues rumble data for object with `time` and `level`, factoring in its distance from Mario
 
 ### Lua Example
-`queue_rumble_data_object(object, a0, a1)`
+`queue_rumble_data_object(object, time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | object | [Object](structs.md#Object) |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
+`void queue_rumble_data_object(struct Object* object, s16 time, s16 level);`
 
 [:arrow_up_small:](#)
 
@@ -5322,23 +5208,67 @@ Queues rumble data for object, factoring in its distance from Mario
 ## [queue_rumble_data_mario](#queue_rumble_data_mario)
 
 ### Description
-Queues rumble data for Mario
+Queues rumble data with `time` and `level` only if `m` is the local Mario
 
 ### Lua Example
-`queue_rumble_data_mario(m, a0, a1)`
+`queue_rumble_data_mario(m, time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
+`void queue_rumble_data_mario(struct MarioState* m, s16 time, s16 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_decay](#queue_rumble_decay)
+
+### Description
+Queues rumble `decay`
+
+### Lua Example
+`queue_rumble_decay(decay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| decay | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_decay(s16 decay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_rumble_finished_and_queue_empty](#is_rumble_finished_and_queue_empty)
+
+### Description
+Checks if rumble is finished and there is no rumble queued
+
+### Lua Example
+`local integerValue = is_rumble_finished_and_queue_empty()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_rumble_finished_and_queue_empty(void);`
 
 [:arrow_up_small:](#)
 
@@ -5347,7 +5277,7 @@ Queues rumble data for Mario
 ## [reset_rumble_timers](#reset_rumble_timers)
 
 ### Description
-Resets rumble timers
+Resets rumble timers only if `m` is the local Mario
 
 ### Lua Example
 `reset_rumble_timers(m)`
@@ -5367,25 +5297,67 @@ Resets rumble timers
 
 <br />
 
-## [reset_rumble_timers_2](#reset_rumble_timers_2)
+## [reset_rumble_timers_vibrate](#reset_rumble_timers_vibrate)
 
 ### Description
-Resets rumble timers and sets a field based on `a0`
+Resets rumble timers and sets vibrate based on `level`
 
 ### Lua Example
-`reset_rumble_timers_2(m, a0)`
+`reset_rumble_timers_vibrate(m, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
+`void reset_rumble_timers_vibrate(struct MarioState* m, s32 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_submerged](#queue_rumble_submerged)
+
+### Description
+Queues rumble data for submerged actions
+
+### Lua Example
+`queue_rumble_submerged()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_submerged(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cancel_rumble](#cancel_rumble)
+
+### Description
+Cancels all currently queued rumble data
+
+### Lua Example
+`cancel_rumble()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cancel_rumble(void);`
 
 [:arrow_up_small:](#)
 

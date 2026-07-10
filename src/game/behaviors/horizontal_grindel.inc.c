@@ -14,7 +14,7 @@ void bhv_horizontal_grindel_init(void) {
 void bhv_horizontal_grindel_update(void) {
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         if (!o->oHorizontalGrindelOnGround) {
-            cur_obj_play_sound_2(SOUND_OBJ_THWOMP);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_THWOMP);
             o->oHorizontalGrindelOnGround = TRUE;
             set_camera_shake_from_point(SHAKE_POS_SMALL, o->oPosX, o->oPosY, o->oPosZ);
 
@@ -29,7 +29,7 @@ void bhv_horizontal_grindel_update(void) {
                     o->oHorizontalGrindelTargetYaw += 0x8000;
                     o->oHorizontalGrindelDistToHome = 0.0f;
                 } else {
-                    cur_obj_play_sound_2(SOUND_OBJ_KING_BOBOMB_JUMP);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KING_BOBOMB_JUMP);
                     o->oForwardVel = 11.0f;
                     o->oVelY = 70.0f;
                     o->oGravity = -4.0f;

@@ -14,3 +14,4 @@
 - [SMLua](sections/smlua.md)
 - [Config File](sections/configfile.md)
 - [DJUI](sections/djui.md)
+- [Languages](sections/lang.md)

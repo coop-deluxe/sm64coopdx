@@ -17,8 +17,8 @@ void spawn_mist_from_global(void);
 void clear_particle_flags(u32 flags);
 /* |description|Spawns wind particles around the current object|descriptionEnd| */
 void spawn_wind_particles(s16 pitch, s16 yaw);
-/* |description|Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`|descriptionEnd| */
-s32 check_if_moving_over_floor(f32 a0, f32 a1);
+/* |description|Checks if the current object is moving `distance` units over a floor and within a max distance to floor of `maxDistToFloor`|descriptionEnd| */
+s32 check_if_moving_over_floor(f32 maxDistToFloor, f32 distance);
 /* |description|Calculates the time it takes for the current object to follow an arc from `pos` to `goal`|descriptionEnd| */
 s32 arc_to_goal_pos(Vec3f goal, Vec3f pos, f32 yVel, f32 gravity);
 /* |description|Moves Tox Box|descriptionEnd| */
@@ -30,8 +30,8 @@ s32 update_angle_from_move_flags(INOUT s32 *angle);
 /* |description|Spawns strong wind particles relative to the current object|descriptionEnd| */
 void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX, f32 relPosY, f32 relPosZ);
 
-/* |description|Behavior loop function for Star Door|descriptionEnd| */
-void bhv_star_door_loop_2(void);
+/* |description|Behavior loop function for Star Door, which updates its render state|descriptionEnd| */
+void bhv_star_door_loop_update_render_state(void);
 /* |description|Behavior loop function for Cap Switch|descriptionEnd| */
 void bhv_cap_switch_loop(void);
 /* |description|Behavior init function for tiny Star particles|descriptionEnd| */
@@ -100,8 +100,8 @@ void bhv_cannon_base_loop(void);
 void bhv_cannon_barrel_loop(void);
 /* |description|Behavior loop function for cannon base unused|descriptionEnd| */
 void bhv_cannon_base_unused_loop(void);
-/* |description|Common behavior for when Mario's anchoring when grabbed|descriptionEnd| */
-void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30);
+/* |description|Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuckya anchor objects. When Mario is thrown, sets `forwardVel`, `upwardsVel` and `interactStatusFlags` to him|descriptionEnd| */
+void common_anchor_mario_behavior(f32 forwardVel, f32 upwardsVel, s32 interactStatusFlags);
 /* |description|Behavior loop function for Chuckya|descriptionEnd| */
 void bhv_chuckya_loop(void);
 /* |description|Behavior loop function for Chuckya mario anchor|descriptionEnd| */

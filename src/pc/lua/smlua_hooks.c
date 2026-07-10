@@ -853,15 +853,18 @@ int smlua_hook_behavior(lua_State *L) {
 
     // Can't hook Mario
     if (id == id_bhvMario) {
-        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
+        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE instead");
         return 0;
     }
 
     // Get object list
-    enum ObjectList objectList = (enum ObjectList) (u8) smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess || objectList >= NUM_OBJ_LISTS) {
-        LOG_LUA_LINE("Hook behavior: tried use invalid object list: %d, %u", objectList, gSmLuaConvertSuccess);
-        return 0;
+    enum ObjectList objectList = NUM_OBJ_LISTS;
+    if (lua_type(L, 2) != LUA_TNIL) {
+        objectList = (enum ObjectList) (u8) smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess || objectList >= NUM_OBJ_LISTS) {
+            LOG_LUA_LINE("Hook behavior: tried to use invalid object list: %d", objectList);
+            return 0;
+        }
     }
 
     // Check replace if it's a vanilla behavior hook
@@ -944,6 +947,16 @@ int smlua_hook_behavior(lua_State *L) {
             return 0;
         }
 
+        // Find object list if not provided
+        if (objectList == NUM_OBJ_LISTS) {
+            if (!isVanillaId) {
+                LOG_LUA_LINE("Hook behavior: object list must be provided for non-vanilla behaviors");
+                return 0;
+            }
+
+            objectList = get_object_list_from_behavior(get_vanilla_behavior_from_id(id));
+        }
+
         enum BehaviorId customId = LUA_BEHAVIOR_START + gHookedBehaviors->count;
 
         hooked = smlua_create_hooked_behavior();
@@ -963,7 +976,9 @@ int smlua_hook_behavior(lua_State *L) {
             switch (hooked->type) {
                 case LUA_BEHAVIOR_TYPE_CALLBACKS: {
                     hooked->type = LUA_BEHAVIOR_TYPE_LUA;
-                    hooked->script[0] = (BehaviorScript) BEGIN(objectList); // Override object list
+                    if (objectList != NUM_OBJ_LISTS) {
+                        hooked->script[0] = (BehaviorScript) BEGIN(objectList); // Override object list
+                    }
                 } break;
 
                 case LUA_BEHAVIOR_TYPE_LUA: {
@@ -977,9 +992,11 @@ int smlua_hook_behavior(lua_State *L) {
         }
 
         // Warn user if trying to change the object list
-        enum ObjectList hookedObjectList = get_object_list_from_behavior(hooked->script);
-        if (hookedObjectList != objectList) {
-            LOG_LUA_WARNING("Hook behavior: trying to change the object list of the existing hooked behavior %s: %d (should be %d)", (const char *) hooked->bhvNames->buffer[hooked->bhvNames->count - 1], objectList, hookedObjectList);
+        if (objectList != NUM_OBJ_LISTS) {
+            enum ObjectList hookedObjectList = get_object_list_from_behavior(hooked->script);
+            if (hookedObjectList != objectList) {
+                LOG_LUA_WARNING("Hook behavior: trying to change the object list of the existing hooked behavior %s: %d (should be %d)", (const char *) hooked->bhvNames->buffer[hooked->bhvNames->count - 1], objectList, hookedObjectList);
+            }
         }
     }
 
@@ -987,25 +1004,39 @@ int smlua_hook_behavior(lua_State *L) {
     // - <ModName> is the mod name in CamelCase format, alphanumeric chars only
     // - <Index> is in 3-digit numeric format (from 001 to 999, no longer applies for index greater than 1000)
     // For example, the 4th unnamed behavior of the mod "my-great_MOD" will be named "bhvMyGreatMODCustom004"
+    // If it's a vanilla behavior, use the vanilla name + "Custom"
     if (!bhvName && hooked->bhvNames->count == 0) {
-        static char sGenericBhvName[MOD_NAME_MAX_LENGTH + 16];
-        s32 i = 3;
-        snprintf(sGenericBhvName, 4, "bhv");
-        for (char caps = TRUE, *c = gLuaLoadingMod->name; *c && i < MOD_NAME_MAX_LENGTH + 3; ++c) {
-            if ('0' <= *c && *c <= '9') {
-                sGenericBhvName[i++] = *c;
-                caps = TRUE;
-            } else if ('A' <= *c && *c <= 'Z') {
-                sGenericBhvName[i++] = *c;
-                caps = FALSE;
-            } else if ('a' <= *c && *c <= 'z') {
-                sGenericBhvName[i++] = *c + (caps ? 'A' - 'a' : 0);
-                caps = FALSE;
-            } else {
-                caps = TRUE;
+        static char sGenericBhvName[MOD_NAME_SIZE + 16];
+
+        if (isVanillaId) {
+            snprintf(sGenericBhvName, sizeof(sGenericBhvName), "%sCustom", get_behavior_name_from_id(id));
+        } else {
+
+            // Remove color codes
+            char uncoloredName[MOD_NAME_SIZE];
+            snprintf(uncoloredName, sizeof(uncoloredName), "%s", gLuaLoadingMod->name);
+            djui_text_remove_colors(uncoloredName);
+
+            // Generate name from a reduced char set
+            s32 i = 3;
+            snprintf(sGenericBhvName, 4, "bhv");
+            for (char caps = TRUE, *c = uncoloredName; *c && i < MOD_NAME_SIZE + 3; ++c) {
+                if ('0' <= *c && *c <= '9') {
+                    sGenericBhvName[i++] = *c;
+                    caps = TRUE;
+                } else if ('A' <= *c && *c <= 'Z') {
+                    sGenericBhvName[i++] = *c;
+                    caps = FALSE;
+                } else if ('a' <= *c && *c <= 'z') {
+                    sGenericBhvName[i++] = *c + (caps ? 'A' - 'a' : 0);
+                    caps = FALSE;
+                } else {
+                    caps = TRUE;
+                }
             }
+            snprintf(sGenericBhvName + i, 12, "Custom%03u", (u32) (gLuaLoadingMod->customBehaviorIndex++) + 1);
         }
-        snprintf(sGenericBhvName + i, 12, "Custom%03u", (u32) (gLuaLoadingMod->customBehaviorIndex++) + 1);
+
         bhvName = sGenericBhvName;
     }
 

@@ -81,7 +81,7 @@ static void manta_ray_move(void) {
 
     cur_obj_set_pos_via_transform();
     if (animFrame == 0) {
-        cur_obj_play_sound_2(SOUND_GENERAL_MOVING_WATER);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_MOVING_WATER);
     }
 }
 

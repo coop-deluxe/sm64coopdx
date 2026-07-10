@@ -815,10 +815,6 @@ int smlua_func_log_to_console(lua_State* L) {
 ////////////////////
 
 int smlua_func_add_scroll_target(lua_State* L) {
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("add_scroll_target() can only be called on load.");
-        return 0;
-    }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
     int paramCount = lua_gettop(L);

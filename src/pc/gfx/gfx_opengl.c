@@ -209,7 +209,7 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_COMBINEDA:
                 return "texel.a";
             case SHADER_NOISE:
-                return "noise.a";
+                return "noise";
         }
     }
     return "unknown";
@@ -437,7 +437,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(fs_buf, &fs_len, "void main() {");
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
-        append_line(fs_buf, &fs_len, "float noise = floor(random(floor(vec3(gl_FragCoord.xy, uFrameCount))) + 0.5);");
+        append_line(fs_buf, &fs_len, "float noise = random(floor(vec3(gl_FragCoord.xy, uFrameCount)));");
     }
 
     if (ccf.used_textures[0]) {
@@ -453,9 +453,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
     }
 
-    append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
+    append_line(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = vec4(0.0, 0.0, 0.0, 0.0);" : "vec3 texel = vec3(0.0, 0.0, 0.0);");
+
     for (int i = 0; i < (opt_2cycle + 1); i++) {
         u8* cmd = &cc->shader_commands[i * 8];
+        append_str(fs_buf, &fs_len, "texel = ");
         if (!ccf.color_alpha_same[i] && opt_alpha) {
             append_str(fs_buf, &fs_len, "vec4(");
             append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
@@ -467,10 +469,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
         append_line(fs_buf, &fs_len, ";");
 
-        if (i == 0 && opt_2cycle) {
-            append_str(fs_buf, &fs_len, "texel = ");
+        if (i == 0) {
+            append_line(fs_buf, &fs_len, "texel = mod(texel + 0.5, 2.0) - 0.5;");
         }
     }
+
+    append_line(fs_buf, &fs_len, "texel = clamp(mod(texel + 0.5, 2.0) - 0.5, 0.0, 1.0);");
 
     if (opt_texture_edge && opt_alpha) {
         append_line(fs_buf, &fs_len, "if (texel.a > 0.3) texel.a = 1.0; else discard;");
@@ -536,7 +540,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     if (opt_alpha && opt_dither) {
-        append_line(fs_buf, &fs_len, "texel.a *= noise;");
+        append_line(fs_buf, &fs_len, "texel.a = noise < texel.a ? 1.0 : 0.0;");
     }
 
     if (opt_alpha) {

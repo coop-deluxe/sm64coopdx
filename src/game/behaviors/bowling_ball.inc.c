@@ -103,7 +103,7 @@ void bhv_bowling_ball_roll_loop(void) {
     }
 
     if ((collisionFlags & OBJ_COL_FLAG_GROUNDED) && (o->oVelY > 5.0f))
-        cur_obj_play_sound_2(SOUND_GENERAL_QUIET_POUND1_LOWPRIO);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_QUIET_POUND1_LOWPRIO);
 }
 
 void bhv_bowling_ball_initializeLoop(void) {
@@ -271,7 +271,7 @@ void bhv_bob_pit_bowling_ball_loop(void) {
 
     bowling_ball_set_hitbox();
     set_camera_shake_from_point(SHAKE_POS_BOWLING_BALL, o->oPosX, o->oPosY, o->oPosZ);
-    cur_obj_play_sound_1(SOUND_ENV_UNKNOWN2);
+    cur_obj_play_sound_if_visible(SOUND_ENV_UNKNOWN2);
     set_object_visibility(o, 3000);
 }
 
@@ -291,12 +291,12 @@ void bhv_free_bowling_ball_roll_loop(void) {
 
     if (o->oForwardVel > 10.0f) {
         set_camera_shake_from_point(SHAKE_POS_BOWLING_BALL, o->oPosX, o->oPosY, o->oPosZ);
-        cur_obj_play_sound_1(SOUND_ENV_UNKNOWN2);
+        cur_obj_play_sound_if_visible(SOUND_ENV_UNKNOWN2);
     }
 
     // warning: 'and' of mutually exclusive equal-tests is always 0
     /*if ((collisionFlags & OBJ_COL_FLAG_GROUNDED) && !(collisionFlags & OBJ_COL_FLAGS_LANDED))
-        cur_obj_play_sound_2(SOUND_GENERAL_QUIET_POUND1_LOWPRIO);*/
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_QUIET_POUND1_LOWPRIO);*/
 
     if (!is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 6000)) {
         o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;

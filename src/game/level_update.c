@@ -449,7 +449,7 @@ void init_mario_after_warp(void) {
             // enforce bubble on area change
             if (gServerSettings.bubbleDeath) {
                 if (i == 0 && gMarioStates[i].numLives == -1) {
-                    mario_set_bubbled(&gMarioStates[i]);
+                    mario_set_bubbled(&gMarioStates[i], false);
                     gMarioStates[i].health = 0xFF;
                 }
             }
@@ -838,7 +838,7 @@ static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
     fadeout_music(398);
     queue_rumble_data(80, 70);
-    func_sh_8024C89C(1);
+    queue_rumble_decay(1);
 }
 
 /**
@@ -861,7 +861,7 @@ void initiate_painting_warp(s16 paintingIndex) {
                 fadeout_music(398);
 #ifdef VERSION_SH
                 queue_rumble_data(80, 70);
-                func_sh_8024C89C(1);
+                queue_rumble_decay(1);
 #endif
             }
         }

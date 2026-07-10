@@ -3,172 +3,23 @@ import sys
 from extract_functions import *
 from common import *
 from vec_types import *
+from exposed_lists import \
+    functions_files, \
+    functions_whitelist, \
+    functions_blacklist, \
+    functions_hidden, \
+    functions_version_excludes, \
+    functions_params_types
 
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
 rejects = ""
 integer_types = ["u8", "u16", "u32", "u64", "s8", "s16", "s32", "s64", "int", "lua_Integer"]
 number_types = ["f32", "float", "f64", "double", "lua_Number"]
+parameter_keywords = ["VEC_OUT", "RET", "INOUT", "OPTIONAL"]
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
-
-in_files = [
-    "src/audio/external.h",
-    "src/engine/math_util.h",
-    "src/engine/math_util.inl",
-    "src/engine/math_util_vec3f.inl",
-    "src/engine/math_util_vec3i.inl",
-    "src/engine/math_util_vec3s.inl",
-    "src/engine/math_util_mat4.inl",
-    "src/engine/surface_collision.h",
-    "src/engine/surface_load.h",
-    "src/game/camera.h",
-    "src/game/characters.h",
-    "src/game/mario_actions_airborne.c",
-    "src/game/mario_actions_automatic.c",
-    "src/game/mario_actions_cutscene.c",
-    "src/game/mario_actions_moving.c",
-    "src/game/mario_actions_object.c",
-    "src/game/mario_actions_stationary.c",
-    "src/game/mario_actions_submerged.c",
-    "src/game/mario_step.h",
-    "src/game/mario.h",
-    "src/game/rumble_init.h",
-    "src/pc/djui/djui_popup.h",
-    "src/pc/network/network_utils.h",
-    "src/pc/djui/djui_console.h",
-    "src/pc/djui/djui_chat_message.h",
-    "src/pc/djui/djui_language.h",
-    "src/game/interaction.h",
-    "src/game/level_info.h",
-    "src/game/save_file.h",
-    "src/game/sound_init.h",
-    "src/pc/djui/djui_hud_utils.h",
-    "src/pc/djui/djui_panel_menu.h",
-    "src/pc/network/network_player.h",
-    "src/pc/network/lag_compensation.h",
-    "include/behavior_table.h",
-    "src/pc/lua/utils/smlua_obj_utils.h",
-    "src/pc/lua/utils/smlua_misc_utils.h",
-    "src/pc/lua/utils/smlua_camera_utils.h",
-    "src/pc/lua/utils/smlua_gfx_utils.h",
-    "src/pc/lua/utils/smlua_collision_utils.h",
-    "src/pc/lua/utils/smlua_model_utils.h",
-    "src/pc/lua/utils/smlua_text_utils.h",
-    "src/pc/lua/utils/smlua_audio_utils.h",
-    "src/pc/lua/utils/smlua_level_utils.h",
-    "src/pc/lua/utils/smlua_anim_utils.h",
-    "src/pc/lua/utils/smlua_deprecated.h",
-    "src/game/object_helpers.c",
-    "src/game/obj_behaviors.c",
-    "src/game/obj_behaviors_2.c",
-    "src/game/platform_displacement.h",
-    "src/game/spawn_sound.h",
-    "src/game/object_list_processor.h",
-    "src/game/behavior_actions.h",
-    "src/game/mario_misc.h",
-    "src/pc/mods/mod_storage.h",
-    "src/pc/mods/mod_fs.h",
-    "src/pc/utils/misc.h",
-    "src/game/level_update.h",
-    "src/game/area.h",
-    "src/engine/level_script.h",
-    "src/game/ingame_menu.h",
-    "src/game/first_person_cam.h",
-    "src/engine/behavior_script.h",
-    "src/audio/seqplayer.h",
-    "src/engine/lighting_engine.h",
-    "src/pc/network/sync_object.h",
-    "src/audio/load.h",
-    "src/pc/djui/djui_gfx.h",
-]
-
-override_allowed_functions = {
-    "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "set_sound_moving_speed", "background_music_default_volume", "get_sound_pan", "sound_get_level_intensity", "set_audio_muted" ],
-    "src/game/rumble_init.h":               [ "queue_rumble_", "reset_rumble_timers" ],
-    "src/pc/djui/djui_popup.h":             [ "create" ],
-    "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
-    "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
-    "src/game/save_file.h":                 [ "get_level_", "save_file_get_", "save_file_set_flags", "save_file_clear_flags", "save_file_reload", "save_file_erase_current_backup_save", "save_file_set_star_flags", "save_file_is_cannon_unlocked", "save_file_set_cannon_unlocked", "touch_coin_score_age", "save_file_set_course_coin_score", "save_file_do_save", "save_file_remove_star_flags", "save_file_erase" ],
-    "src/pc/lua/utils/smlua_model_utils.h": [ "smlua_model_util_get_id" ],
-    "src/game/object_list_processor.h":     [ "set_object_respawn_info_bits" ],
-    "src/game/platform_displacement.h":     [ "apply_platform_displacement" ],
-    "src/game/mario_misc.h":                [ "bhv_toad.*", "bhv_unlock_door.*", "geo_get_.*" ],
-    "src/game/level_update.h":              [ "level_trigger_warp", "get_painting_warp_node", "initiate_warp", "initiate_painting_warp", "warp_special", "lvl_set_current_level", "level_control_timer_running", "pressed_pause", "fade_into_special_warp", "get_instant_warp" ],
-    "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
-    "src/engine/level_script.h":            [ "area_create_warp_node" ],
-    "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", "handle_special_dialog_text" ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
-    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
-    "src/audio/load.h":                     [ "set_sound_bank_override" ],
-    "src/pc/djui/djui_gfx.h":               [ "djui_gfx_get_scale" ],
-}
-
-override_disallowed_functions = {
-    "src/audio/external.h":                     [ " func_" ],
-    "src/engine/surface_load.h":                [ "load_area_terrain", "alloc_surface_pools", "clear_dynamic_surfaces", "get_area_terrain_size", "alloc_surface", "add_surface", "remove_surface_from_partition", "delete_surface", "swap_and_pop_surface_pool", "add_surface_without_hook" ],
-    "src/engine/surface_collision.h":           [ " debug_", "f32_find_wall_collision" ],
-    "src/game/mario_actions_airborne.c":        [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_automatic.c":       [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_cutscene.c":        [ "^[us]32 act_.*", " geo_", "spawn_obj", "print_displaying_credits_entry" ],
-    "src/game/mario_actions_moving.c":          [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_object.c":          [ "^[us]32 act_.*" ],
-    "src/game/mario_actions_stationary.c":      [ "^[us]32 act_.*", "mario_exit_palette_editor" ],
-    "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
-    "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
-    "src/game/mario.h":                         [ " init_mario" ],
-    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
-    "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
-    "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data", "djui_hud_print_text", "djui_hud_print_text_interpolated" ],
-    "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
-    "src/game/sound_init.h":                    [ "_loop_", "thread4_", "set_sound_mode" ],
-    "src/pc/network/network_utils.h":           [ "network_get_player_text_color[^_]" ],
-    "src/pc/network/network_player.h":          [ "_init", "_connected[^_]", "_shutdown", "_disconnected", "_update", "construct_player_popup", "network_player_name_valid" ],
-    "src/game/object_helpers.c":                [ "spawn_obj", "^bhv_", "geo_", "abs[fi]", "^bit_shift", "_debug$", "^stub_", "_set_model", "cur_obj_set_direction_table", "cur_obj_progress_direction_table" ],
-    "src/game/obj_behaviors.c":                 [ "debug_", "geo_", "turn_obj_away_from_surface"],
-    "src/game/obj_behaviors_2.c":               [ "wiggler_jumped_on_attack_handler", "huge_goomba_weakly_attacked" ],
-    "src/game/spawn_sound.h":                   [ "exec_anim_sound_state" ],
-    "src/game/level_info.h":                    [ "_name_table", "convert_string_" ],
-    "src/pc/lua/utils/smlua_obj_utils.h":       [ "spawn_object_remember_field" ],
-    "src/game/camera.h":                        [ "geo_", "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
-    "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room", "geo_" ],
-    "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_sample_destroy_pending_copies", "audio_custom_update_volume" ],
-    "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified"],
-    "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
-    "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
-    "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
-    "src/game/first_person_cam.h":              [ "first_person_update" ],
-    "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
-    "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
-    "src/pc/mods/mod_storage.h":                [ "mod_storage_shutdown" ],
-    "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
-    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64", "can_update_game", "update_game", "open_url", "open_folder" ],
-    "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
-}
-
-override_hide_functions = {
-    "smlua_deprecated.h": [ ".*" ],
-    "network_player.h":   [ "network_player_get_palette_color_channel", "network_player_get_override_palette_color_channel" ],
-}
-
-override_function_version_excludes = {
-    "bhv_play_music_track_when_touched_loop": "VERSION_JP",
-    "play_knockback_sound": "VERSION_JP",
-    "cur_obj_spawn_star_at_y_offset": "VERSION_JP",
-}
-
-lua_function_params = {
-    "src/pc/lua/utils/smlua_obj_utils.h::spawn_object_sync::objSetupFunction": [ "struct Object*" ],
-}
-
-parameter_keywords = [
-    "VEC_OUT",
-    "RET",
-    "INOUT",
-    "OPTIONAL"
-]
 
 ###########################################################
 
@@ -977,8 +828,8 @@ def build_function(function, do_extern):
     s = ''
     fid = function['identifier']
 
-    if fid in override_function_version_excludes:
-        s += '#ifndef ' + override_function_version_excludes[fid] + '\n'
+    if fid in functions_version_excludes:
+        s += '#ifndef ' + functions_version_excludes[fid] + '\n'
 
     fparams, freturns = split_function_parameters_and_returns(function)
 
@@ -1016,11 +867,11 @@ def build_function(function, do_extern):
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
         elif 'OPTIONAL' in param:
             sparam = build_param(fid, param, i)
-            param_var, param_value = sparam.split('=')
-            param_type = param_var.replace(pid, '').strip()
-            s += '    %s = (%s) %s;\n' % (param_var.strip(), param_type, "NULL" if '*' in param_type else "0")
+            param_var, param_value = sparam.strip().split(' = ')
+            param_type = param['type']
+            s += '    %s = (%s) %s;\n' % (param_var, param_type, "NULL" if '*' in param_type else "0")
             s += '    if (top >= %d) {\n' % (i)
-            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        %s = %s\n' % (pid, param_value)
             s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
             s += '    }\n'
         else:
@@ -1073,7 +924,7 @@ def build_function(function, do_extern):
     num_returns = max(1, push_value + len(freturns))
     s += '    return %d;\n}\n' % num_returns
 
-    if fid in override_function_version_excludes:
+    if fid in functions_version_excludes:
         s += '#endif\n'
 
     function['implemented'] = 'UNIMPLEMENTED' not in s
@@ -1107,8 +958,8 @@ def build_bind(function):
         s = '    ' + s
         # There is no point in adding the ifndef statement if the function is commented out here anyways.
         # So we only do it on implemented functions.
-        if fid in override_function_version_excludes:
-            s = '#ifndef ' + override_function_version_excludes[fid] + '\n' + s
+        if fid in functions_version_excludes:
+            s = '#ifndef ' + functions_version_excludes[fid] + '\n' + s
             s += '\n#endif'
     else:
         s = '    //' + s + ' <--- UNIMPLEMENTED'
@@ -1125,7 +976,7 @@ def build_binds(processed_files):
 
 def build_includes():
     s = ''
-    for f in in_files:
+    for f in functions_files:
         if not f.endswith('.h'):
             continue
         s += '#include "%s"\n' % f
@@ -1134,19 +985,8 @@ def build_includes():
 ############################################################################
 
 def process_function(fname, line, description):
-    if fname in override_allowed_functions:
-        found_match = False
-        for pattern in override_allowed_functions[fname]:
-            if re.search(pattern, line) != None:
-                found_match = True
-                break
-        if not found_match:
-            return None
-
-    if fname in override_disallowed_functions:
-        for pattern in override_disallowed_functions[fname]:
-            if re.search(pattern, line) != None:
-                return None
+    if not allowed_identifier(functions_whitelist, functions_blacklist, fname, line):
+        return None
 
     function = {}
 
@@ -1202,8 +1042,8 @@ def process_function(fname, line, description):
 
             # remember lua function params
             lf_key = fname + '::' + function['identifier'] + '::' + param['identifier']
-            if param['type'] == 'LuaFunction' and lf_key in lua_function_params:
-                param['lua_function_params'] = lua_function_params[lf_key]
+            if param['type'] == 'LuaFunction' and lf_key in functions_params_types:
+                param['lua_function_params'] = functions_params_types[lf_key]
 
             function['params'].append(param)
             param_index += 1
@@ -1237,7 +1077,7 @@ def process_file(fname):
 
 def process_files():
     processed_files = []
-    files = sorted(in_files, key=lambda d: d.split('/')[-1])
+    files = sorted(functions_files, key=lambda d: d.split('/')[-1])
     for f in files:
         processed_files.append(process_file(f))
     return processed_files
@@ -1291,16 +1131,6 @@ def output_fuzz_file():
 
 ############################################################################
 
-def doc_should_document(fname, identifier):
-    if fname in override_hide_functions:
-        found_match = False
-        for pattern in override_hide_functions[fname]:
-            if re.search(pattern, identifier) != None:
-                found_match = True
-                break
-        return not found_match
-    return True
-
 def doc_page_link(page_num):
     if page_num == 1:
         return 'functions.md'
@@ -1317,7 +1147,7 @@ def doc_function_index(processed_files):
         for function in processed_file['functions']:
             if not function['implemented']:
                 continue
-            if not doc_should_document(processed_file['filename'], function['identifier']):
+            if not allowed_identifier(None, functions_hidden, processed_file['filename'], function['identifier']):
                 continue
 
             s += '   - [%s](%s#%s)\n' % (function['identifier'], doc_page_link(page_num), function['identifier'])
@@ -1354,7 +1184,7 @@ def doc_function(fname, function):
     if len(sys.argv) >= 2 and sys.argv[1] == 'fuzz':
         output_fuzz_function(fname, function)
 
-    if not doc_should_document(fname, function['identifier']):
+    if not allowed_identifier(None, functions_hidden, fname, function['identifier']):
         return ''
 
     fid = function['identifier']
@@ -1501,7 +1331,7 @@ def def_function(fname, function):
         return ''
 
     fid = function['identifier']
-    if not doc_should_document(fname, fid):
+    if not allowed_identifier(None, functions_hidden, fname, fid):
         return ''
 
     rtype, _ = translate_type_to_lua(function['type'])

@@ -176,10 +176,10 @@ void bhv_mips_act_follow_path(void) {
 
     // Play sounds during walk animation.
     if (cur_obj_check_if_near_animation_end() == 1 && (collisionFlags & OBJ_COL_FLAG_UNDERWATER)) {
-        cur_obj_play_sound_2(SOUND_OBJ_MIPS_RABBIT_WATER);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_MIPS_RABBIT_WATER);
         spawn_object(o, MODEL_NONE, bhvShallowWaterSplash);
     } else if (cur_obj_check_if_near_animation_end() == 1) {
-        cur_obj_play_sound_2(SOUND_OBJ_MIPS_RABBIT);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_MIPS_RABBIT);
     }
 }
 
@@ -315,7 +315,7 @@ void bhv_mips_dropped(void) {
  * Handles MIPS being thrown by Mario.
  */
 void bhv_mips_thrown(void) {
-    cur_obj_enable_rendering_2();
+    cur_obj_enable_rendering();
     o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
     o->oHeldState = HELD_FREE;
     o->oFlags &= ~OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW;

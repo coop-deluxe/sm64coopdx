@@ -50,7 +50,7 @@ static void skeeter_act_idle(void) {
                 if (o->oSkeeterWaitTime != 0) {
                     o->oSkeeterWaitTime -= 1;
                 } else if (cur_obj_check_if_near_animation_end()) {
-                    cur_obj_play_sound_2(SOUND_OBJ_WALKING_WATER);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WALKING_WATER);
                     o->oAction = SKEETER_ACT_LUNGE;
                     o->oForwardVel = 80.0f;
                     o->oSkeeterUnk1AC = 0;

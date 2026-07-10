@@ -56,18 +56,18 @@ void set_door_camera_event(void) {
 void play_door_open_noise(void) {
     s32 sp1C = cur_obj_has_model(MODEL_HMC_METAL_DOOR);
     if (o->oTimer == 0) {
-        cur_obj_play_sound_2(D_8032F328[sp1C]);
+        cur_obj_play_sound_and_rumble_if_visible(D_8032F328[sp1C]);
         //gTimeStopState |= TIME_STOP_MARIO_OPENED_DOOR;
     }
     if (o->oTimer == 70) {
-        cur_obj_play_sound_2(D_8032F330[sp1C]);
+        cur_obj_play_sound_and_rumble_if_visible(D_8032F330[sp1C]);
     }
 }
 
 void play_warp_door_open_noise(void) {
     s32 sp1C = cur_obj_has_model(MODEL_HMC_METAL_DOOR);
     if (o->oTimer == 30)
-        cur_obj_play_sound_2(D_8032F330[sp1C]);
+        cur_obj_play_sound_and_rumble_if_visible(D_8032F330[sp1C]);
 }
 
 void bhv_door_loop(void) {
@@ -120,7 +120,7 @@ void bhv_door_loop(void) {
         load_object_collision_model();
         o->oIntangibleTimer = 0;
     }
-    bhv_star_door_loop_2();
+    bhv_star_door_loop_update_render_state();
 }
 
 void bhv_door_init(void) {
@@ -155,31 +155,31 @@ void bhv_door_init(void) {
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
 }
 
-void bhv_star_door_loop_2(void) {
-    s32 sp4 = 0;
+void bhv_star_door_loop_update_render_state(void) {
+    s32 inSameOrAdjacentRoomToMario = 0;
     if (gMarioCurrentRoom != 0) {
         if (o->oDoorUnkF8 == gMarioCurrentRoom)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gMarioCurrentRoom == o->oDoorUnkFC)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gMarioCurrentRoom == o->oDoorUnk100)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gDoorAdjacentRooms[gMarioCurrentRoom][0] == o->oDoorUnkFC)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gDoorAdjacentRooms[gMarioCurrentRoom][0] == o->oDoorUnk100)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gDoorAdjacentRooms[gMarioCurrentRoom][1] == o->oDoorUnkFC)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
         else if (gDoorAdjacentRooms[gMarioCurrentRoom][1] == o->oDoorUnk100)
-            sp4 = 1;
+            inSameOrAdjacentRoomToMario = 1;
     } else
-        sp4 = 1;
-    if (sp4 == 1) {
+        inSameOrAdjacentRoomToMario = 1;
+    if (inSameOrAdjacentRoomToMario == 1) {
         o->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;
         D_8035FEE4++;
     }
-    if (sp4 == 0) {
+    if (inSameOrAdjacentRoomToMario == 0) {
         o->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
     }
-    o->oDoorUnk88 = sp4;
+    o->oDoorUnk88 = inSameOrAdjacentRoomToMario;
 }
