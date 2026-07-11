@@ -184,7 +184,7 @@ static s32 boo_vanish_or_appear(void) {
     if (relativeAngleToMario > relativeAngleToMarioThreshhold || relativeMarioFaceAngle < relativeMarioFaceAngleThreshhold) {
         if (o->oOpacity == 40) {
             o->oBooTargetOpacity = 255;
-            cur_obj_play_sound_2(SOUND_OBJ_BOO_LAUGH_LONG);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_LAUGH_LONG);
         }
 
         if (o->oOpacity > 180) {
@@ -351,11 +351,11 @@ static s32 boo_get_attack_status(void) {
 
             o->oInteractStatus = 0;
 
-            cur_obj_play_sound_2(SOUND_OBJ_BOO_LAUGH_SHORT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_LAUGH_SHORT);
 
             attackStatus = BOO_ATTACKED;
         } else {
-            cur_obj_play_sound_2(SOUND_OBJ_BOO_BOUNCE_TOP);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_BOUNCE_TOP);
 
             o->oInteractStatus = 0;
 
@@ -969,7 +969,7 @@ void bhv_boo_in_castle_loop(void) {
 
         if (distanceToPlayer < 1000.0f) {
             o->oAction++;
-            cur_obj_play_sound_2(SOUND_OBJ_BOO_LAUGH_LONG);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_LAUGH_LONG);
         }
 
         o->oForwardVel = 0.0f;
@@ -1026,7 +1026,7 @@ void bhv_boo_boss_spawned_bridge_loop(void) {
             // fallthrough
         case 1:
             o->oPosY += 8.0f;
-            cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
+            cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR2);
 
             if (o->oPosY > targetY) {
                 o->oPosY = targetY;
@@ -1036,7 +1036,7 @@ void bhv_boo_boss_spawned_bridge_loop(void) {
             break;
         case 2:
             if (o->oTimer == 0) {
-                cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN4_LOWPRIO);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNKNOWN4_LOWPRIO);
             }
 
             if (cur_obj_move_up_and_down(o->oTimer)) {

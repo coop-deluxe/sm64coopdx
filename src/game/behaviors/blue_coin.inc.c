@@ -144,7 +144,7 @@ void bhv_blue_coin_switch_loop(void) {
                 // Set gravity to 0 so it doesn't accelerate when receding.
                 o->oGravity = 0.0f;
 
-                cur_obj_play_sound_2(SOUND_GENERAL_SWITCH_DOOR_OPEN);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWITCH_DOOR_OPEN);
                 network_send_object(o);
             }
 
@@ -194,7 +194,7 @@ void bhv_blue_coin_switch_loop(void) {
                     o->oPosY = o->oHomeY - 120.0f;
                     o->oVelY = 20.0f;
                     o->oGravity = 0.0f;
-                    cur_obj_play_sound_2(SOUND_GENERAL_SWITCH_DOOR_OPEN);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWITCH_DOOR_OPEN);
                     network_send_object(o);
                 } else {
                     obj_mark_for_deletion(o);

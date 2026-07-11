@@ -1,7 +1,9 @@
 #include "dynos.cpp.h"
 
 extern "C" {
+#include "include/level_table.h"
 #include "engine/level_script.h"
+#include "game/level_update.h"
 #include "game/skybox.h"
 }
 
@@ -41,7 +43,7 @@ void DynOS_Lvl_ModShutdown() {
     if (!_CustomLevelScripts.empty()) {
         for (auto& pair : _CustomLevelScripts) {
             DynOS_Tex_Invalid(pair.second);
-            Delete(pair.second);
+            DynOS_Gfx_Free(pair.second);
         }
         _CustomLevelScripts.clear();
     }
@@ -173,12 +175,17 @@ double_break:
 }
 
 void *DynOS_Lvl_Override(void *aCmd) {
+    static bool sLevelIsVanilla = true;
+
     auto& _OverrideLevelScripts = DynosOverrideLevelScripts();
     for (auto& overrideStruct : _OverrideLevelScripts) {
         if (aCmd == overrideStruct.originalScript || aCmd == overrideStruct.newScript) {
-            aCmd = (void*)overrideStruct.newScript;
+            if (!DynOS_Mod_IsShuttingDown()) {
+                aCmd = (void*)overrideStruct.newScript;
+            }
             gLevelScriptModIndex = overrideStruct.gfxData->mModIndex;
             gLevelScriptActive = (LevelScript*)aCmd;
+            sLevelIsVanilla = false;
         }
     }
 
@@ -189,8 +196,28 @@ void *DynOS_Lvl_Override(void *aCmd) {
             if (aCmd == s->mData) {
                 gLevelScriptModIndex = script.second->mModIndex;
                 gLevelScriptActive = (LevelScript*)aCmd;
+                sLevelIsVanilla = false;
             }
         }
+    }
+
+    for (u16 i = 0; i < LEVEL_COUNT; ++i) {
+        const void *vanillaScript = DynOS_Level_GetVanillaScript(i);
+        if (vanillaScript == aCmd) {
+            gLevelScriptModIndex = -1;
+            gLevelScriptActive = (LevelScript*)aCmd;
+            sLevelIsVanilla = true;
+            break;
+        }
+    }
+
+    // Evict the VM from any custom level scripts because we're about to delete them
+    if (DynOS_Mod_IsShuttingDown() && !sLevelIsVanilla) {
+        LevelScript *vanillaScript = (LevelScript *) DynOS_Level_GetVanillaScript(get_menu_level());
+        gLevelScriptModIndex = -1;
+        gLevelScriptActive = vanillaScript;
+        sLevelIsVanilla = true;
+        return vanillaScript;
     }
 
     return aCmd;

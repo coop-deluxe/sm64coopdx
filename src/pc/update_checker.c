@@ -185,7 +185,7 @@ void check_for_updates(void) {
     if (sRemoteVersionStr[0] == 'v' && is_version_newer(sClientVersion, sRemoteVersion)) {
         snprintf(
             sVersionUpdateTextBuffer, 256,
-            "\\#ffffa0\\%s\n\\#dcdcdc\\%s: %s\n%s: %s",
+            "\\#ffffa0\\%s\n\\#\\%s: %s\n%s: %s",
             DLANG(NOTIF, UPDATE_AVAILABLE),
             DLANG(NOTIF, LATEST_VERSION),
             sRemoteVersionStr,

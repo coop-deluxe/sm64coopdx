@@ -179,7 +179,7 @@ struct SmCodeGlyph sSmCodeGlyphs[] = {
 };
 
 struct SmCodeGlyph sSmCodeGlyphs_JP[] = {
-#include "jp_glyphs.h"
+#include "jp_glyphs.inl"
 };
 
 struct SmCodeGlyph sSmCodeDuplicateGlyphs[] = {

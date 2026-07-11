@@ -116,7 +116,7 @@ static void camera_lakitu_intro_act_show_dialog(void) {
     s16 targetMovePitch = 0;
     s16 targetMoveYaw = 0;
 
-    cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
+    cur_obj_play_sound_if_visible(SOUND_AIR_LAKITU_FLY);
 
     // Face toward mario
     if (marioState) {

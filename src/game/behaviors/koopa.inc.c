@@ -340,7 +340,7 @@ static void koopa_shelled_act_lying(void) {
  */
 void shelled_koopa_attack_handler(s32 attackType) {
     if (o->header.gfx.scale[0] > 0.8f) {
-        cur_obj_play_sound_2(SOUND_OBJ_KOOPA_DAMAGE);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KOOPA_DAMAGE);
 
         o->oKoopaMovementType = KOOPA_BP_UNSHELLED;
         o->oAction = KOOPA_UNSHELLED_ACT_LYING;
@@ -583,7 +583,7 @@ static void koopa_unshelled_update(void) {
  */
 s32 obj_begin_race(s32 noTimer) {
     if (o->oTimer == 50) {
-        cur_obj_play_sound_2(SOUND_GENERAL_RACE_GUN_SHOT);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_RACE_GUN_SHOT);
 
         if (!noTimer) {
             play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, SEQ_LEVEL_SLIDE), 0);
@@ -614,7 +614,7 @@ static void koopa_the_quick_act_wait_before_race(void) {
 
     if (o->oKoopaTheQuickInitTextboxCooldown != 0) {
         o->oKoopaTheQuickInitTextboxCooldown -= 1;
-    } else if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+    } else if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox(&gMarioStates[0], 400.0f, 400.0f, 0x1000)) {
         //! The next action doesn't execute until next frame, giving mario one
         //  frame where he can jump, and thus no longer be ready to speak.
         //  (On J, he has two frames and doing this enables time stop - see
@@ -847,7 +847,7 @@ static void koopa_the_quick_act_after_race(void) {
     if (!o->parentObj) { return; }
 
     if (o->parentObj->oKoopaRaceEndpointUnk100 == 0) {
-        if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+        if (marioState == &gMarioStates[0] && cur_obj_can_mario_activate_textbox(&gMarioStates[0], 400.0f, 400.0f, 0x1000)) {
             stop_background_music(SEQUENCE_ARGS(4, SEQ_LEVEL_SLIDE));
 
             // Determine which text to display

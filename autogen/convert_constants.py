@@ -1,143 +1,25 @@
+import sys
 from common import *
 from extract_constants import *
 from vec_types import *
-import sys
+from exposed_lists import \
+    constants_files, \
+    constants_whitelist, \
+    constants_blacklist, \
+    constants_hidden
 
-in_filename = 'autogen/lua_constants/built-in.lua'
+verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
+
+in_filenames = ['autogen/lua_constants/built-in.lua', 'autogen/lua_constants/math.lua']
 deprecated_filename = 'autogen/lua_constants/deprecated.lua'
 out_filename = 'src/pc/lua/smlua_constants_autogen.c'
 out_filename_docs = 'docs/lua/constants.md'
 out_filename_defs = 'autogen/lua_definitions/constants.lua'
 
-in_files = [
-    "include/types.h",
-    "include/sm64.h",
-    "src/pc/lua/smlua_hooks.h",
-    "src/game/area.h",
-    "src/game/camera.h",
-    "include/mario_animation_ids.h",
-    "include/sounds.h",
-    "src/game/characters.h",
-    "src/pc/network/network.h",
-    "src/pc/network/network_player.h",
-    "include/PR/os_cont.h",
-    "src/game/interaction.c",
-    "src/game/interaction.h",
-    "src/pc/djui/djui_hud_utils.h",
-    "src/pc/controller/controller_mouse.h",
-    "include/behavior_table.h",
-    "src/pc/lua/utils/smlua_model_utils.h",
-    "src/pc/lua/utils/smlua_misc_utils.h",
-    "include/object_constants.h",
-    "include/mario_geo_switch_case_ids.h",
-    "src/game/object_list_processor.h",
-    "src/engine/graph_node.h",
-    "levels/level_defines.h",
-    "src/game/obj_behaviors.c",
-    "src/game/save_file.h",
-    "src/game/obj_behaviors_2.h",
-    "include/dialog_ids.h",
-    "include/seq_ids.h",
-    "include/surface_terrains.h",
-    "src/game/level_update.h",
-    "src/pc/network/version.h",
-    "include/geo_commands.h",
-    "include/level_commands.h",
-    "src/audio/external.h",
-    "src/game/envfx_snow.h",
-    "src/pc/mods/mod_storage.h",
-    "src/pc/mods/mod_fs.h",
-    "src/game/first_person_cam.h",
-    "src/pc/djui/djui_console.h",
-    "src/game/player_palette.h",
-    "src/pc/network/lag_compensation.h",
-    "src/pc/djui/djui_panel_menu.h",
-    "src/engine/lighting_engine.h",
-    "include/PR/gbi.h",
-    "include/PR/gbi_extension.h",
-    "src/pc/gfx/gfx_pc.h",
-    "src/engine/surface_load.h",
-    "src/pc/lua/utils/smlua_audio_utils.h",
-]
-
-exclude_constants = {
-    "*": [ "^MAXCONTROLLERS$", "^AREA_[^T].*", "^AREA_T[HTO]", "^CONT_ERR.*", "^READ_MASK$", "^SIGN_RANGE$", ],
-    "include/sm64.h": [ "END_DEMO" ],
-    "include/types.h": [ "GRAPH_NODE_GUARD" ],
-    "src/audio/external.h": [ "DS_DIFF" ],
-    "src/game/save_file.h": [ "EEPROM_SIZE" ],
-    "src/game/obj_behaviors.c": [ "^o$" ],
-    "src/pc/djui/djui_console.h": [ "CONSOLE_MAX_TMP_BUFFER" ],
-    "src/pc/lua/smlua_hooks.h": [ "^LUA_BEHAVIOR_.*", "MAX_HOOKED_.*", "^HOOK_RETURN_.*", "^ACTION_HOOK_.*", "^MOD_MENU_ELEMENT_.*" ],
-    "src/pc/djui/djui_panel_menu.h": [ "RAINBOW_TEXT_LEN" ],
-    "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
-    "src/engine/surface_load.h": [ "NUM_CELLS" ],
-    "src/pc/network/version.h": [ "VERSION_OFFSET" ],
-}
-
-include_constants = {
-    "include/geo_commands.h": [ "BACKGROUND" ],
-    "include/level_commands.h": [ "WARP_CHECKPOINT", "WARP_NO_CHECKPOINT" ],
-    "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
-    "src/pc/lua/utils/smlua_audio_utils.h": ["MOD_AUDIO_CHANNEL"],
-    "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
-    "include/PR/gbi.h": [
-        "^G_NOOP$",
-        "^G_SETOTHERMODE_H$",
-        "^G_SETOTHERMODE_L$",
-        "^G_ENDDL$",
-        "^G_DL$",
-        "^G_MOVEMEM$",
-        "^G_MOVEWORD$",
-        "^G_MTX$",
-        "^G_GEOMETRYMODE$",
-        "^G_POPMTX$",
-        "^G_TEXTURE$",
-        "^G_COPYMEM$",
-        "^G_VTX$",
-        "^G_TRI1$",
-        "^G_TRI2$",
-        "^G_SETCIMG$",
-        "^G_SETZIMG$",
-        "^G_SETTIMG$",
-        "^G_SETCOMBINE$",
-        "^G_SETENVCOLOR$",
-        "^G_SETPRIMCOLOR$",
-        "^G_SETBLENDCOLOR$",
-        "^G_SETFOGCOLOR$",
-        "^G_SETFILLCOLOR$",
-        "^G_FILLRECT$",
-        "^G_SETTILE$",
-        "^G_LOADTILE$",
-        "^G_LOADBLOCK$",
-        "^G_SETTILESIZE$",
-        "^G_LOADTLUT$",
-        "^G_SETSCISSOR$",
-        "^G_TEXRECTFLIP$",
-        "^G_TEXRECT$",
-    ],
-    "include/PR/gbi_extension.h": [
-        "^G_VTX_EXT$",
-        "^G_PPARTTOCOLOR$",
-        "^G_SETENVRGB$",
-        "^G_STATE_EXT$",
-    ],
-}
-
-# Constants that exist in the source code but should not appear
-# in the documentation or VSCode autocomplete
-hide_constants = {
-    "interaction.h": [ "INTERACT_UNKNOWN_08" ],
-}
-
-pretend_find = [
-    "SOUND_ARG_LOAD",
-]
 ############################################################################
 
 seen_constants = []
 totalConstants = 0
-verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 overrideConstant = {
     'VERSION_REGION': '"US"',
 }
@@ -149,6 +31,9 @@ defined_values = {
     'F3DEX_GBI_2': True,
     'DEVELOPMENT': False,
 }
+pretend_find = [
+    "SOUND_ARG_LOAD",
+]
 
 ############################################################################
 
@@ -178,26 +63,19 @@ def saw_constant(identifier, inIfBlock):
         seen_constants.append(identifier)
         return False
 
-def allowed_identifier(filename, ident):
-    exclude_list = exclude_constants['*']
+def get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val):
+    if set_to is not None:
+        if allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
+            if set_to_val is not None:
+                return [field, str(set_to_val + index)]
+            return [field, '((%s) + %d)' % (set_to, index)]
 
-    if filename in exclude_constants:
-        exclude_list.extend(exclude_constants[filename])
+    elif allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
+        if saw_constant(field, inIfBlock):
+            print('>>> ' + line)
+        return [field, str(index)]
 
-    for exclude in exclude_list:
-        if re.search(exclude, ident) != None:
-            return False
-
-    if filename in include_constants:
-        for include in include_constants[filename]:
-            if re.search(include, ident) != None:
-                return True
-        return False
-
-    if ident in overrideConstant:
-        return False
-
-    return True
+    return None
 
 def process_enum(filename, line, inIfBlock):
     _, ident, val = line.split(' ', 2)
@@ -232,24 +110,15 @@ def process_enum(filename, line, inIfBlock):
             except Exception:
                 set_to_val = None
 
-            constants.append([ident, val])
+            if allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
+                constants.append([ident, val])
             set_to = ident
             index = 1
             continue
 
-        if set_to is not None:
-            if set_to_val is not None:
-                constants.append([field, str(set_to_val + index)])
-            else:
-                constants.append([field, '((%s) + %d)' % (set_to, index)])
-            index += 1
-            continue
-
-        if allowed_identifier(filename, field):
-            constants.append([field, str(index)])
-
-            if saw_constant(field, inIfBlock):
-                print('>>> ' + line)
+        constant = get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val)
+        if constant is not None:
+            constants.append(constant)
 
         index += 1
 
@@ -276,7 +145,7 @@ def process_define(filename, line, inIfBlock):
                     print('UNRECOGNIZED DEFINE: ' + line)
                 return None
 
-    if not allowed_identifier(filename, ident):
+    if not allowed_identifier(constants_whitelist, constants_blacklist, filename, ident):
         return None
 
     if saw_constant(ident, inIfBlock):
@@ -347,7 +216,7 @@ def process_file(filename):
 def process_files():
     seen_constants = []
     processed_files = []
-    files = sorted(in_files, key=lambda d: d.split('/')[-1])
+    files = sorted(constants_files, key=lambda d: d.split('/')[-1])
     for f in files:
         processed_files.append(process_file(f))
     for key, item in overrideConstant.items():
@@ -410,7 +279,7 @@ def build_to_c(built_files):
     txt = ''
 
     # Built-in and deprecated
-    for filename in [in_filename, deprecated_filename]:
+    for filename in [*in_filenames, deprecated_filename]:
         with open(get_path(filename), 'r') as f:
             for line in f.readlines():
                 txt += line.strip() + '\n'
@@ -437,13 +306,6 @@ def build_to_c(built_files):
     return txt
 
 ############################################################################
-
-def doc_should_document(fname, identifier):
-    if fname in hide_constants:
-        for pattern in hide_constants[fname]:
-            if re.search(pattern, identifier) != None:
-                return False
-    return True
 
 def doc_constant_index(processed_files):
     s = '# Supported Constants\n'
@@ -477,7 +339,7 @@ def doc_constant(fname, processed_constant):
     for c in [processed_constant]:
         if c[0].startswith('#'):
             continue
-        if not doc_should_document(fname, c[0]):
+        if not allowed_identifier(None, constants_hidden, fname, c[0]):
             continue
         s += '- %s\n' % (c[0])
 
@@ -539,7 +401,7 @@ def def_constant(fname, processed_constant, skip_constant):
             continue
         if skip_constant:
             continue
-        if not doc_should_document(fname, c[0]):
+        if not allowed_identifier(None, constants_hidden, fname, c[0]):
             continue
         if '"' in c[1]:
             s += '\n--- @type string\n'
@@ -554,9 +416,10 @@ def def_constant(fname, processed_constant, skip_constant):
 
 def build_to_def(processed_files):
     s = '-- AUTOGENERATED FOR CODE EDITORS --\n\n'
-    with open(get_path(in_filename), 'r') as f:
-        s += f.read()
-        s += '\n'
+    for filename in in_filenames:
+        with open(get_path(filename), 'r') as f:
+            s += f.read()
+            s += '\n'
 
     s += '\n\n-------------------------\n'
     s += '-- vec types constants --\n'

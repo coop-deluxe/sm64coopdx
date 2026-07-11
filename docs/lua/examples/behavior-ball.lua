@@ -58,10 +58,10 @@ function bhv_ball_loop(obj)
 
     -- play sounds
     if stepRc == 1 then
-        cur_obj_play_sound_2(SOUND_GENERAL_BOX_LANDING_2)
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BOX_LANDING_2)
     elseif (stepRc & 1) ~= 0 then
         if obj.oForwardVel > 20.0 then
-            cur_obj_play_sound_2(SOUND_ENV_SLIDING)
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_ENV_SLIDING)
         end
     end
 

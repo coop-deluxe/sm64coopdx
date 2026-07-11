@@ -3116,6 +3116,31 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 
 <br />
 
+## [get_mario_anim_part_mtx](#get_mario_anim_part_mtx)
+
+### Description
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+
+### Lua Example
+`local booleanValue = get_mario_anim_part_mtx(m, animPart, mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animPart | `integer` |
+| mtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Description
@@ -4104,7 +4129,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -4133,7 +4158,7 @@ You can change the fields of the object in `objSetupFunction`
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction);`
+`struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction);`
 
 [:arrow_up_small:](#)
 
@@ -4868,6 +4893,35 @@ Sets the signed 16-bit integer value of the object field and sub field correspon
 
 ### C Prototype
 `void obj_set_field_s16(struct Object *o, s32 fieldIndex, s32 fieldSubIndex, s16 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [obj_get_field_info_from_name](#obj_get_field_info_from_name)
+
+### Description
+Gets the object field info (index, sub-index and type) from a field name and a specific mod (if provided). Returns `true` if the field is found, `false` otherwise.
+Supported types are `s32`, `u32`, `f32`, `s16`.
+This function works with custom object fields as well and is meant to be used with functions that take a field index as parameter, like `obj_get_first_with_behavior_id_and_field_s32` or `obj_get_field_s32`
+
+### Lua Example
+`local booleanValue, fieldIndex, fieldSubIndex, fieldType = obj_get_field_info_from_name(fieldName, mod)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| fieldName | `string` |
+| mod | [Mod](structs.md#Mod) |
+
+### Returns
+- `boolean`
+- `integer`
+- `integer`
+- `string`
+
+### C Prototype
+`bool obj_get_field_info_from_name(const char *fieldName, OPTIONAL struct Mod *mod, RET s32 *fieldIndex, RET s32 *fieldSubIndex, RET const char **fieldType);`
 
 [:arrow_up_small:](#)
 
@@ -6303,13 +6357,13 @@ Stops cap music completely
 <br />
 
 
-## [cur_obj_play_sound_1](#cur_obj_play_sound_1)
+## [cur_obj_play_sound_if_visible](#cur_obj_play_sound_if_visible)
 
 ### Description
 Plays a sound if the current object is visible
 
 ### Lua Example
-`cur_obj_play_sound_1(soundMagic)`
+`cur_obj_play_sound_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -6320,19 +6374,19 @@ Plays a sound if the current object is visible
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_1(s32 soundMagic);`
+`void cur_obj_play_sound_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [cur_obj_play_sound_2](#cur_obj_play_sound_2)
+## [cur_obj_play_sound_and_rumble_if_visible](#cur_obj_play_sound_and_rumble_if_visible)
 
 ### Description
-Plays a sound if the current object is visible and queues rumble for specific sounds
+Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
 
 ### Lua Example
-`cur_obj_play_sound_2(soundMagic)`
+`cur_obj_play_sound_and_rumble_if_visible(soundMagic)`
 
 ### Parameters
 | Field | Type |
@@ -6343,7 +6397,7 @@ Plays a sound if the current object is visible and queues rumble for specific so
 - None
 
 ### C Prototype
-`void cur_obj_play_sound_2(s32 soundMagic);`
+`void cur_obj_play_sound_and_rumble_if_visible(s32 soundMagic);`
 
 [:arrow_up_small:](#)
 
@@ -6368,56 +6422,6 @@ Create a sound spawner for objects that need a sound play once.
 
 ### C Prototype
 `void create_sound_spawner(s32 soundMagic);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_1](#calc_dist_to_volume_range_1)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.
-What an even more strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_1(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_1(f32 distance);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [calc_dist_to_volume_range_2](#calc_dist_to_volume_range_2)
-
-### Description
-Unused vanilla function, calculates a volume based on `distance`.
-If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.
-What a strange and confusing function
-
-### Lua Example
-`local integerValue = calc_dist_to_volume_range_2(distance)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| distance | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 calc_dist_to_volume_range_2(f32 distance);`
 
 [:arrow_up_small:](#)
 

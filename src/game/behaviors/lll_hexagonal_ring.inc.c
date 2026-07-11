@@ -13,7 +13,7 @@ void hexagonal_ring_spawn_flames(void) {
         obj_scale_xyz(sp1C, size, size, size);
     }
     if (random_float() < 0.1)
-        cur_obj_play_sound_2(SOUND_GENERAL_VOLCANO_EXPLOSION);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_VOLCANO_EXPLOSION);
 }
 
 void bhv_lll_rotating_hexagonal_ring_loop(void) {

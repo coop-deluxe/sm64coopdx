@@ -90,11 +90,11 @@ end
 
 function team_color_str(teamNum)
     if teamNum == 1 then
-        return '\\#ff9999\\'
+        return '\\#f99\\'
     elseif teamNum == 2 then
-        return '\\#9999ff\\'
+        return '\\#99f\\'
     else
-        return '\\#ffffff\\'
+        return '\\#fff\\'
     end
 end
 

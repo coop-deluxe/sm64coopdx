@@ -3,16 +3,6 @@ import re
 import sys
 
 replacements = {
-    'BAD_RETURN(s8)':  'void',
-    'BAD_RETURN(s16)': 'void',
-    'BAD_RETURN(s32)': 'void',
-    'BAD_RETURN(s64)': 'void',
-    'BAD_RETURN(u8)':  'void',
-    'BAD_RETURN(u16)': 'void',
-    'BAD_RETURN(u32)': 'void',
-    'BAD_RETURN(u64)': 'void',
-    'BAD_RETURN(f32)': 'void',
-    'BAD_RETURN(f64)': 'void',
     'INLINE': '',
     'NOINLINE': '',
     'OPTIMIZE_O3': '',

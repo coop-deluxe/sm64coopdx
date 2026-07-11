@@ -195,7 +195,7 @@ void bhv_treasure_chest_ship_loop(void) {
                     o->activeFlags = 0;
                 }
 #ifdef VERSION_SH
-                reset_rumble_timers_2(2);
+                reset_rumble_timers_vibrate(2);
 #endif
             }
             break;

@@ -176,7 +176,7 @@ void network_receive_spawn_objects(struct Packet* p) {
         }
 
         LOG_INFO("rx spawn object %s from %s (%s)", bhvName, name, id);
-        LOG_CONSOLE("rx spawn object %s from %s\\#dcdcdc\\ (%s)", bhvName, name, id);
+        LOG_CONSOLE("rx spawn object %s from %s\\#\\ (%s)", bhvName, name, id);
         snprintf(gLastRemoteBhv, 256, "%s %s (%s)", bhvName, name, id);
 
         struct Object* parentObj = NULL;

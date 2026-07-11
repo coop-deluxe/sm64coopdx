@@ -77,10 +77,10 @@ static void cloud_fwoosh_update(void) {
             o->oCloudBlowing = o->oTimer = 0;
         } else if (o->oCloudGrowSpeed < -0.1f) {
             // Start blowing once we start shrinking faster than -0.1
-            cur_obj_play_sound_1(SOUND_AIR_BLOW_WIND);
+            cur_obj_play_sound_if_visible(SOUND_AIR_BLOW_WIND);
             cur_obj_spawn_strong_wind_particles(12, 3.0f, 0.0f, -50.0f, 120.0f);
         } else {
-            cur_obj_play_sound_1(SOUND_ENV_WIND1);
+            cur_obj_play_sound_if_visible(SOUND_ENV_WIND1);
         }
     } else {
         // Return to normal size

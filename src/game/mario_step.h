@@ -25,7 +25,7 @@ void stub_mario_step_2(void);
 void mario_bonk_reflection(struct MarioState *m, u8 negateSpeed);
 void transfer_bully_speed(struct BullyCollisionData *obj1, struct BullyCollisionData *obj2);
 /* |description|Sets the values of `data` for bully "collision"|descriptionEnd| */
-BAD_RETURN(s32) init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);
+void init_bully_collision_data(struct BullyCollisionData *data, f32 posX, f32 posZ, f32 forwardVel, s16 yaw, f32 conversionRatio, f32 radius);
 /* |description|Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand|descriptionEnd| */
 u32 mario_update_quicksand(struct MarioState *m, f32 sinkingSpeed);
 /* |description|Pushes Mario off a steep floor and sets his action to `action` with `actionArg`|descriptionEnd| */

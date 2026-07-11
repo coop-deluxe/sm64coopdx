@@ -862,7 +862,7 @@ s32 act_in_cannon(struct MarioState *m) {
                 } else {
                     if (m->faceAngle[0] != startFacePitch || m->faceAngle[1] != startFaceYaw) {
                         play_sound(SOUND_MOVING_AIM_CANNON, m->marioObj->header.gfx.cameraToObject);
-                        reset_rumble_timers_2(m, 0);
+                        reset_rumble_timers_vibrate(m, 0);
                     }
                 }
         }
@@ -1032,9 +1032,11 @@ Makes Mario act like he was popped from a bubble. Useful for custom bubble poppi
 void mario_pop_bubble(struct MarioState* m) {
     if (!m) { return; }
     m->marioObj->activeFlags &= ~ACTIVE_FLAG_MOVE_THROUGH_GRATE;
-    m->hurtCounter = 0;
-    m->healCounter = 31;
-    m->health = 0x100;
+    if (!m->actionArg) {
+        m->hurtCounter = 0;
+        m->healCounter = 31;
+        m->health = 0x100;
+    }
     m->marioObj->oIntangibleTimer = 0;
     m->peakHeight = m->pos[1];
     mario_set_forward_vel(m, 0.0f);
@@ -1064,20 +1066,23 @@ s32 act_bubbled(struct MarioState* m) {
     s32 pitchToPlayer = obj_pitch_to_object(m->marioObj, target);
     s32 distanceToPlayer = dist_between_objects(m->marioObj, target);
 
-    // trigger warp if all are bubbled
+    // trigger warp if all are bubbled long enough
     if (m->playerIndex == 0) {
         u8 allInBubble = TRUE;
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (!gMarioStates[i].visibleToObjects) { continue; }
-            if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
+            if (gMarioStates[i].action != ACT_BUBBLED) {
                 allInBubble = FALSE;
                 break;
             }
         }
         if (allInBubble) {
-            level_trigger_warp(m, WARP_OP_DEATH);
-            return set_mario_action(m, ACT_SOFT_BONK, 0);
+            if (m->actionState++ == 60) {
+                level_trigger_warp(m, WARP_OP_EXIT);
+            }
+        } else {
+            m->actionState = 0;
         }
     }
 
@@ -1144,21 +1149,8 @@ s32 act_bubbled(struct MarioState* m) {
     // offset the player model to be in the center of the bubble
     bubbled_offset_visual(m);
 
-    // make invisible on -1 lives
-    if (m->playerIndex == 0) {
-        if (m->numLives <= -1) {
-            m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
-            level_trigger_warp(m, WARP_OP_DEATH);
-            return set_mario_action(m, ACT_SOFT_BONK, 0);
-        } else {
-            m->marioObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
-        }
-    }
-
-    if (gLocalBubbleCounter > 0) { gLocalBubbleCounter--; }
-
     // pop bubble
-    if (m->playerIndex == 0 && distanceToPlayer < 120 && is_player_active(targetMarioState) && m->numLives != -1 && gLocalBubbleCounter == 0) {
+    if (m->playerIndex == 0 && ++m->actionTimer > 20 && distanceToPlayer < 120 && is_player_active(targetMarioState)) {
         mario_pop_bubble(m);
         return TRUE;
     }

@@ -1228,21 +1228,22 @@ Checks whether Mario can become bubbled under certain game conditions (multiplay
 ## [mario_set_bubbled](#mario_set_bubbled)
 
 ### Description
-Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
+Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
 
 ### Lua Example
-`mario_set_bubbled(m)`
+`mario_set_bubbled(m, stayAlive)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
+| stayAlive | `boolean` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mario_set_bubbled(struct MarioState* m);`
+`void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive);`
 
 [:arrow_up_small:](#)
 
@@ -5629,6 +5630,31 @@ Extracts the position (translation component) from the transformation matrix `ob
 
 ### C Prototype
 `Vec3fp get_pos_from_transform_mtx(VEC_OUT Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_world_mtx_from_transform](#get_world_mtx_from_transform)
+
+### Description
+Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+
+### Lua Example
+`get_world_mtx_from_transform(dest, objMtx, camMtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Mat4](structs.md#Mat4) |
+| objMtx | [Mat4](structs.md#Mat4) |
+| camMtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- None
+
+### C Prototype
+`void get_world_mtx_from_transform(VEC_OUT Mat4 dest, Mat4 objMtx, Mat4 camMtx);`
 
 [:arrow_up_small:](#)
 

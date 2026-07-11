@@ -1,6 +1,6 @@
 // chuckya.c.inc
 
-void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
+void common_anchor_mario_behavior(f32 forwardVel, f32 upwardsVel, s32 interactStatusFlags) {
     if (!o) { return; }
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
@@ -15,9 +15,9 @@ void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
                 obj_set_gfx_pos_at_obj_pos(player, o);
                 break;
             case 2:
-                player->oInteractStatus |= (sp30 + INT_STATUS_MARIO_UNK2);
-                marioState->forwardVel = sp28;
-                marioState->vel[1] = sp2C;
+                player->oInteractStatus |= (interactStatusFlags + INT_STATUS_MARIO_UNK2);
+                marioState->forwardVel = forwardVel;
+                marioState->vel[1] = upwardsVel;
                 o->parentObj->oChuckyaUnk88 = 0;
                 break;
             case 3:
@@ -35,7 +35,7 @@ void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30) {
 }
 
 void bhv_chuckya_anchor_mario_loop(void) {
-    common_anchor_mario_behavior(40.0f, 40.0f, 64);
+    common_anchor_mario_behavior(40.0f, 40.0f, INT_STATUS_MARIO_UNK6);
 }
 
 s32 unknown_chuckya_function(s32 sp20, f32 sp24, f32 sp28, s32 sp2C) {
@@ -134,7 +134,7 @@ void chuckya_act_0(void) {
         o->oChuckyaUnkFC++;
     cur_obj_init_animation_with_sound(4);
     if (o->oForwardVel > 1.0f)
-        cur_obj_play_sound_1(SOUND_AIR_CHUCKYA_MOVE);
+        cur_obj_play_sound_if_visible(SOUND_AIR_CHUCKYA_MOVE);
     print_debug_bottom_up("fg %d", sp3C);
     print_debug_bottom_up("sp %d", o->oForwardVel);
 }
@@ -167,7 +167,7 @@ void chuckya_act_1(void) {
         } else {
             cur_obj_init_animation_with_sound(3);
             if (cur_obj_check_anim_frame(18)) {
-                cur_obj_play_sound_2(SOUND_OBJ_UNKNOWN4);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_UNKNOWN4);
                 o->oChuckyaUnk88 = 2;
                 o->oAction = 3;
                 o->oInteractStatus &= ~(INT_STATUS_GRABBED_MARIO);
@@ -205,7 +205,7 @@ void chuckya_move(void) {
     if (o->oInteractStatus & INT_STATUS_GRABBED_MARIO) {
         o->oAction = 1;
         o->oChuckyaUnk88 = 1;
-        cur_obj_play_sound_2(SOUND_OBJ_UNKNOWN3);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_UNKNOWN3);
         o->usingObj = nearest_player_to_object(o);
     }
 }

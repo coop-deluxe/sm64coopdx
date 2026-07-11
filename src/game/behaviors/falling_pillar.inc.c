@@ -79,7 +79,7 @@ void bhv_falling_pillar_loop(void) {
                 o->oAction = FALLING_PILLAR_ACT_TURNING;
 
                 // Play the detaching sound.
-                cur_obj_play_sound_2(SOUND_GENERAL_POUND_ROCK);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_POUND_ROCK);
             }
             break;
 

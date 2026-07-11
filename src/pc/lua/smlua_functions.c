@@ -220,7 +220,7 @@ int smlua_func_network_init_object(lua_State* L) {
 
             struct LuaObjectField* data = smlua_get_object_field(LOT_OBJECT, fieldIdentifier);
             if (data == NULL) {
-                data = smlua_get_custom_field(L, LOT_OBJECT, lua_gettop(L));
+                data = smlua_get_custom_field(obj, fieldIdentifier, gLuaActiveMod);
                 if (data == NULL) {
                     LOG_LUA_LINE("Unknown field passed to network_init_object(): %s", fieldIdentifier);
                     lua_pop(L, 1); // pop value
@@ -815,10 +815,6 @@ int smlua_func_log_to_console(lua_State* L) {
 ////////////////////
 
 int smlua_func_add_scroll_target(lua_State* L) {
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("add_scroll_target() can only be called on load.");
-        return 0;
-    }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
     int paramCount = lua_gettop(L);

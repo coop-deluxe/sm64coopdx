@@ -393,6 +393,13 @@ bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s r
     return true;
 }
 
+bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx) {
+    if (!m) { return false; }
+    if (animPart >= MARIO_ANIM_PART_MAX) { return false; }
+    mtxf_copy(mtx, m->marioBodyState->animPartsMtx[animPart]);
+    return true;
+}
+
 ///
 
 s16 get_current_save_file_num(void) {
