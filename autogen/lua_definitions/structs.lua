@@ -1192,15 +1192,25 @@
 --- @field public size integer
 
 --- @class ModAudio
+--- @field public flags integer
 --- @field public filepath string
---- @field public isStream boolean
---- @field public baseVolume number
---- @field public loaded boolean
---- @field public position number
---- @field public looping boolean
---- @field public frequency number
+--- @field public play fun(audio: ModAudio, restart: boolean, volume: number)
+--- @field public play fun(audio: ModAudio, position: Vec3f, volume: number): ModAudio
+--- @field public play fun(audio: ModAudio)
+--- @field public pause fun(audio: ModAudio)
+--- @field public stop fun(audio: ModAudio)
+--- @field public destroy fun(audio: ModAudio)
+--- @field public reload fun(audio: ModAudio)
+--- @field public copy fun(audio: ModAudio): ModAudio
 --- @field public volume number
+--- @field public pan number
+--- @field public length number
+--- @field public position number
+--- @field public frequency number
+--- @field public looping boolean
+--- @field public playing boolean
 --- @field public channel integer
+--- @field public sampleRate integer
 
 --- @class ModFs
 --- @field public mod Mod

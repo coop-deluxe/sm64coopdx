@@ -8197,17 +8197,32 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
---- @type integer
-MOD_AUDIO_CHANNEL_MASTER = 0
+MA_TYPE_NONE   = 0 --- @type ModAudioType
+MA_TYPE_SAMPLE = 1 --- @type ModAudioType
+MA_TYPE_STREAM = 2 --- @type ModAudioType
 
---- @type integer
-MOD_AUDIO_CHANNEL_MUSIC = 1
+--- @alias ModAudioType
+--- | `MA_TYPE_NONE`
+--- | `MA_TYPE_SAMPLE`
+--- | `MA_TYPE_STREAM`
 
---- @type integer
-MOD_AUDIO_CHANNEL_SFX = 2
+MA_FLAGS_LOADED = (1 << 2) --- @type ModAudioFlags
+MA_FLAGS_COPY   = (1 << 6) --- @type ModAudioFlags
 
---- @type integer
-MOD_AUDIO_CHANNEL_ENV = 3
+--- @alias ModAudioFlags
+--- | `MA_FLAGS_LOADED`
+--- | `MA_FLAGS_COPY`
+
+MA_CHANNEL_MUSIC  = 0 --- @type ModAudioChannel
+MA_CHANNEL_SFX    = 1 --- @type ModAudioChannel
+MA_CHANNEL_ENV    = 2 --- @type ModAudioChannel
+MA_CHANNEL_MASTER = 3 --- @type ModAudioChannel
+
+--- @alias ModAudioChannel
+--- | `MA_CHANNEL_MUSIC`
+--- | `MA_CHANNEL_SFX`
+--- | `MA_CHANNEL_ENV`
+--- | `MA_CHANNEL_MASTER`
 
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType

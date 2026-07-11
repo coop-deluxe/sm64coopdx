@@ -4169,6 +4169,51 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scale)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
@@ -10783,15 +10828,10 @@ function smlua_audio_utils_allocate_sequence()
 end
 
 --- @param filename string
+--- @param type? ModAudioType
 --- @return ModAudio
---- Loads an `audio` stream by `filename` (with extension)
-function audio_stream_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` stream
-function audio_stream_destroy(audio)
+--- Loads an `audio` by `filename` (with extension)
+function audio_load(filename, type)
     -- ...
 end
 
@@ -10799,124 +10839,181 @@ end
 --- @param restart boolean
 --- @param volume number
 --- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-function audio_stream_play(audio, restart, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- Pauses an `audio` stream
-function audio_stream_pause(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` stream
-function audio_stream_stop(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the position of an `audio` stream in seconds
-function audio_stream_get_position(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param pos number
---- Sets the position of an `audio` stream in seconds
-function audio_stream_set_position(audio, pos)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return boolean
---- Gets if an `audio` stream is looping or not
-function audio_stream_get_looping(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param looping boolean
---- Sets if an `audio` stream is looping or not
-function audio_stream_set_looping(audio, looping)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param loopStart integer
---- @param loopEnd integer
---- Sets an `audio` stream's loop points in samples
-function audio_stream_set_loop_points(audio, loopStart, loopEnd)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the frequency of an `audio` stream
-function audio_stream_get_frequency(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param freq number
---- Sets the frequency of an `audio` stream
-function audio_stream_set_frequency(audio, freq)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the volume of an `audio` stream
-function audio_stream_get_volume(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param volume number
---- Sets the volume of an `audio` stream
-function audio_stream_set_volume(audio, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return integer
---- Gets the volume channel of an `audio` stream
-function audio_stream_get_volume_channel(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param channel integer
---- Sets the volume channel of an `audio` stream
-function audio_stream_set_volume_channel(audio, channel)
-    -- ...
-end
-
---- @param filename string
---- @return ModAudio
---- Loads an `audio` sample
-function audio_sample_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` sample
-function audio_sample_destroy(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` sample
-function audio_sample_stop(audio)
+function audio_play(audio, restart, volume)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- @return ModAudio
 --- Plays an `audio` sample at `position` with `volume`
-function audio_sample_play(audio, position, volume)
+function audio_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Plays an `audio`
+function audio_play(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Pauses an `audio`
+function audio_pause(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Stops an `audio`
+function audio_stop(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Destroys an `audio`
+function audio_destroy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Reloads a destroyed `audio`
+function audio_reload(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return ModAudio
+--- Copies an `audio`
+function audio_copy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the volume of an `audio`
+function audio_get_volume(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param volume number
+--- Sets the volume of an `audio`
+function audio_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the pan of an `audio`
+function audio_get_pan(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pan number
+--- Sets the pan of an `audio`
+function audio_set_pan(audio, pan)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number length
+--- Gets the length of an `audio` in seconds
+function audio_get_length(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number position
+--- Gets the position of an `audio` in seconds
+function audio_get_position(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pos number
+--- Sets the position of an `audio` in seconds
+function audio_set_position(audio, pos)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is looping or not
+function audio_get_looping(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param looping boolean
+--- Sets if an `audio` is looping or not
+function audio_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is playing
+function audio_get_playing(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param playing boolean
+--- Sets if an `audio` is playing
+function audio_set_playing(audio, playing)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer loopStart
+--- @return integer loopEnd
+--- Gets an `audio`'s loop points in samples
+function audio_get_loop_points(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param loopStart integer
+--- @param loopEnd? integer
+--- Sets an `audio`'s loop points in samples
+function audio_set_loop_points(audio, loopStart, loopEnd)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the frequency of an `audio`
+function audio_get_frequency(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param freq number
+--- Sets the frequency of an `audio`
+function audio_set_frequency(audio, freq)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the volume channel of an `audio`
+function audio_get_volume_channel(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param channel integer
+--- Sets the volume channel of an `audio`
+function audio_set_volume_channel(audio, channel)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio`
+function audio_get_sample_rate(audio)
     -- ...
 end
 
@@ -12285,49 +12382,49 @@ function get_coopnet_id(localIndex)
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...

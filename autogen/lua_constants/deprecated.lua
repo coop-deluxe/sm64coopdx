@@ -35,3 +35,29 @@ sqrf = math.sqr
 clamp = math.clamp
 clampf = math.clamp
 hypotf = math.hypot
+
+-------------------------
+-- Old audio functions --
+-------------------------
+
+function audio_sample_load(filename) return audio_load(filename, MA_TYPE_SAMPLE) end
+function audio_stream_load(filename) return audio_load(filename, MA_TYPE_STREAM) end
+audio_sample_play = audio_play
+audio_stream_play = audio_play
+audio_sample_destroy = audio_destroy
+audio_stream_destroy = audio_destroy
+audio_sample_stop = audio_stop
+audio_stream_stop = audio_stop
+audio_stream_pause = audio_pause
+audio_stream_get_position = audio_get_position
+audio_stream_set_position = audio_set_position
+audio_stream_get_looping = audio_get_looping
+audio_stream_set_looping = audio_set_looping
+audio_stream_set_loop_points = audio_set_loop_points
+audio_stream_get_frequency = audio_get_frequency
+audio_stream_set_frequency = audio_set_frequency
+audio_stream_get_volume = audio_get_volume
+audio_stream_set_volume = audio_set_volume
+
+-- compatibility band-aid
+function return_self(self) return self end

@@ -1748,15 +1748,28 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| flags | `integer` | read-only |
 | filepath | `string` | read-only |
-| isStream | `boolean` | read-only |
-| baseVolume | `number` |  |
-| loaded | `boolean` | read-only |
-| position | `number` |  |
-| looping | `boolean` |  |
-| frequency | `number` |  |
-| volume | `number` |  |
-| channel | `integer` |  |
+| volume | number |  |
+| pan | number |  |
+| length | number | read-only |
+| position | number |  |
+| frequency | number |  |
+| looping | boolean |  |
+| playing | boolean |  |
+| channel | integer |  |
+| sampleRate | integer | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| play | [`audio_play`](functions-6.md#audio_play) |
+| pause | [`audio_pause`](functions-6.md#audio_pause) |
+| stop | [`audio_stop`](functions-6.md#audio_stop) |
+| destroy | [`audio_destroy`](functions-6.md#audio_destroy) |
+| reload | [`audio_reload`](functions-6.md#audio_reload) |
+| copy | [`audio_copy`](functions-6.md#audio_copy) |
 
 [:arrow_up_small:](#)
 
