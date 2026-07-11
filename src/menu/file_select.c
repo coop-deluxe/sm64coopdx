@@ -1165,22 +1165,22 @@ void return_to_main_menu(s16 prevMenuButtonID, struct Object *sourceButton) {
         // Hide buttons of corresponding button menu groups
         if (prevMenuButtonID == MENU_BUTTON_SCORE) {
             for (buttonID = MENU_BUTTON_SCORE_MIN; buttonID < MENU_BUTTON_SCORE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_COPY) {
             for (buttonID = MENU_BUTTON_COPY_MIN; buttonID < MENU_BUTTON_COPY_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_ERASE) {
             for (buttonID = MENU_BUTTON_ERASE_MIN; buttonID < MENU_BUTTON_ERASE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_SOUND_MODE) {
             for (buttonID = MENU_BUTTON_OPTION_MIN; buttonID < MENU_BUTTON_OPTION_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
     }
@@ -1206,17 +1206,17 @@ void load_score_menu_from_submenu(s16 prevMenuButtonID, struct Object *sourceBut
                                                    //! was opened from the score menu!
         {
             for (buttonID = MENU_BUTTON_SCORE_MIN; buttonID < MENU_BUTTON_SCORE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_COPY) {
             for (buttonID = MENU_BUTTON_COPY_MIN; buttonID < MENU_BUTTON_COPY_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_ERASE) {
             for (buttonID = MENU_BUTTON_ERASE_MIN; buttonID < MENU_BUTTON_ERASE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         // Play zoom in sound, select score menu and render it's buttons
@@ -1245,19 +1245,19 @@ void load_copy_menu_from_submenu(s16 prevMenuButtonID, struct Object *sourceButt
         // Hide buttons of corresponding button menu groups
         if (prevMenuButtonID == MENU_BUTTON_SCORE) {
             for (buttonID = MENU_BUTTON_SCORE_MIN; buttonID < MENU_BUTTON_SCORE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_COPY) //! Not possible, this is checking if the copy menu
                                                   //! was opened from the copy menu!
         {
             for (buttonID = MENU_BUTTON_COPY_MIN; buttonID < MENU_BUTTON_COPY_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_ERASE) {
             for (buttonID = MENU_BUTTON_ERASE_MIN; buttonID < MENU_BUTTON_ERASE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         // Play zoom in sound, select copy menu and render it's buttons
@@ -1286,19 +1286,19 @@ void load_erase_menu_from_submenu(s16 prevMenuButtonID, struct Object *sourceBut
         // Hide buttons of corresponding button menu groups
         if (prevMenuButtonID == MENU_BUTTON_SCORE) {
             for (buttonID = MENU_BUTTON_SCORE_MIN; buttonID < MENU_BUTTON_SCORE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_COPY) {
             for (buttonID = MENU_BUTTON_COPY_MIN; buttonID < MENU_BUTTON_COPY_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         if (prevMenuButtonID == MENU_BUTTON_ERASE) //! Not possible, this is checking if the erase menu
                                                    //! was opened from the erase menu!
         {
             for (buttonID = MENU_BUTTON_ERASE_MIN; buttonID < MENU_BUTTON_ERASE_MAX; buttonID++) {
-                mark_obj_for_deletion(sMainMenuButtons[buttonID]);
+                obj_mark_for_deletion(sMainMenuButtons[buttonID]);
             }
         }
         // Play zoom in sound, select erase menu and render it's buttons
@@ -1432,28 +1432,28 @@ void check_main_menu_clicked_buttons(void) {
                 play_sound(SAVE_FILE_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
                 queue_rumble_data(60, 70);
-                func_sh_8024C89C(1);
+                queue_rumble_decay(1);
 #endif
                 break;
             case MENU_BUTTON_PLAY_FILE_B:
                 play_sound(SAVE_FILE_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
                 queue_rumble_data(60, 70);
-                func_sh_8024C89C(1);
+                queue_rumble_decay(1);
 #endif
                 break;
             case MENU_BUTTON_PLAY_FILE_C:
                 play_sound(SAVE_FILE_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
                 queue_rumble_data(60, 70);
-                func_sh_8024C89C(1);
+                queue_rumble_decay(1);
 #endif
                 break;
             case MENU_BUTTON_PLAY_FILE_D:
                 play_sound(SAVE_FILE_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
                 queue_rumble_data(60, 70);
-                func_sh_8024C89C(1);
+                queue_rumble_decay(1);
 #endif
                 break;
             // Play sound of the button clicked and render buttons of that menu.

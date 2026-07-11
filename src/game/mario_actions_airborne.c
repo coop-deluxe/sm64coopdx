@@ -1741,7 +1741,7 @@ s32 act_lava_boost(struct MarioState *m) {
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }

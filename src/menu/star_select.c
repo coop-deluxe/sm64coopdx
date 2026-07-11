@@ -495,7 +495,7 @@ void star_select_finish_selection(void) {
 #endif
 #ifdef VERSION_SH
     queue_rumble_data(60, 70);
-    func_sh_8024C89C(1);
+    queue_rumble_decay(1);
 #endif
     if (sInitSelectedActNum >= sSelectedActIndex + 1) {
         sLoadedActNum = sSelectedActIndex + 1;

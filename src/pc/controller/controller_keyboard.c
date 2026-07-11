@@ -126,7 +126,6 @@ static void keyboard_init(void) {
     keyboard_bindkeys();
 }
 
-
 static void keyboard_read(OSContPad *pad) {
     for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
         bool prev = gKeyboard[scancode].down;

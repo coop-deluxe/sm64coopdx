@@ -181,7 +181,7 @@ jobs:
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 gcc@9 pkg-config glfw3 coreutils
+                brew install make mingw-w64 pkg-config glfw3 coreutils
 
             - name: Compile glew
               run: |

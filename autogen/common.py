@@ -1,12 +1,14 @@
 import os
 import re
 from vec_types import *
+from exposed_lists import structs_excluded
 
 usf_types = ['u8', 'u16', 'u32', 'u64', 's8', 's16', 's32', 's64', 'f32', 'f64']
 vec_types = list(VEC_TYPES.keys())
 typedef_pointers = ['BehaviorScript', 'ObjectAnimPointer', 'Collision', 'LevelScript', 'Trajectory', 'Texture']
 cobject_function_identifier = 'FUNCTION'
 cobject_property_identifier = 'PROPERTY'
+cobject_c_array_identifier = 'C_ARRAY'
 
 type_mappings = {
     'char': 's8',
@@ -20,37 +22,6 @@ type_mappings = {
     'uintptr_t': 'u64', # this is assumed
     'size_t': 'u64', # this is assumed
 }
-
-exclude_structs = [
-    'AnimationTable',
-    'BullyCollisionData',
-    'CameraFOVStatus',
-    'CameraStoredInfo',
-    'CameraTrigger',
-    'Cutscene',
-    'CutsceneSplinePoint',
-    'CutsceneVariable',
-    'FloorGeometry',
-    'GraphNode_802A45E4',
-    'HandheldShakePoint',
-    'LinearTransitionPoint',
-    'MarioAnimDmaRelatedThing',
-    'ModAudioSampleCopies',
-    'ModFile',
-    'ModeTransitionInfo',
-    'OffsetSizePair',
-    'PaintingMeshVertex',
-    'ParallelTrackingPoint',
-    'PlayerGeometry',
-    'SPTask',
-    'SoundState',
-    'TransitionInfo',
-    'UnusedArea28',
-    'VblankHandler',
-    'Vtx_Interp',
-    'WarpTransition',
-    'WarpTransitionData',
-]
 
 override_types = { "Gfx", "Vtx" }
 
@@ -212,7 +183,7 @@ def translate_type_to_lot(ptype, allowArrays=True):
 
         struct_id = ptype.split(' ')[1]
 
-        if struct_id in exclude_structs:
+        if struct_id in structs_excluded:
             return 'LOT_???'
 
         return 'LOT_' + struct_id.upper()
@@ -328,3 +299,31 @@ def translate_to_def(ptype):
     if ptype.startswith('`Array` <'):
         ptype = ptype.replace('`Array` <', '') + "[]"
     return ptype.replace('enum ', '').replace('const ', '').replace(' ', '').replace('`', '').replace('<', '_').replace('>', '')
+
+allowed_identifier_cache = {}
+def allowed_identifier(whitelists, blacklists, key, ident):
+    global allowed_identifier_cache
+
+    if whitelists is None: whitelists = {}
+    if blacklists is None: blacklists = {}
+
+    cache_key = "_".join([whitelists.get("__name__", ""), blacklists.get("__name__", ""), key])
+    if cache_key in allowed_identifier_cache:
+        whitelist_regex, blacklist_regex = allowed_identifier_cache[cache_key]
+    else:
+        blacklist = blacklists.get("*", []) + blacklists.get(key, [])
+        blacklist_regex = blacklist and re.compile("|".join(blacklist)) or None
+        whitelist = whitelists.get(key, [])
+        whitelist_regex = whitelist and re.compile("|".join(whitelist)) or None
+        allowed_identifier_cache[cache_key] = (whitelist_regex, blacklist_regex)
+
+    if blacklist_regex is not None:
+        if blacklist_regex.search(ident) is not None:
+            return False
+
+    if whitelist_regex is not None:
+        if whitelist_regex.search(ident) is not None:
+            return True
+        return False
+
+    return True

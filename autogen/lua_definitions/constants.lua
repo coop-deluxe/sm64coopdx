@@ -81,72 +81,6 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     )
 end
 
--------------
--- courses --
--------------
-
---- @type integer
-COURSE_NONE     = 0
---- @type integer
-COURSE_BOB      = 1
---- @type integer
-COURSE_WF       = 2
---- @type integer
-COURSE_JRB      = 3
---- @type integer
-COURSE_CCM      = 4
---- @type integer
-COURSE_BBH      = 5
---- @type integer
-COURSE_HMC      = 6
---- @type integer
-COURSE_LLL      = 7
---- @type integer
-COURSE_SSL      = 8
---- @type integer
-COURSE_DDD      = 9
---- @type integer
-COURSE_SL       = 10
---- @type integer
-COURSE_WDW      = 11
---- @type integer
-COURSE_TTM      = 12
---- @type integer
-COURSE_THI      = 13
---- @type integer
-COURSE_TTC      = 14
---- @type integer
-COURSE_RR       = 15
---- @type integer
-COURSE_BITDW    = 16
---- @type integer
-COURSE_BITFS    = 17
---- @type integer
-COURSE_BITS     = 18
---- @type integer
-COURSE_PSS      = 19
---- @type integer
-COURSE_COTMC    = 20
---- @type integer
-COURSE_TOTWC    = 21
---- @type integer
-COURSE_VCUTM    = 22
---- @type integer
-COURSE_WMOTR    = 23
---- @type integer
-COURSE_SA       = 24
---- @type integer
-COURSE_CAKE_END = 25
---- @type integer
-COURSE_END = 26
---- @type integer
-COURSE_MAX = 25
---- @type integer
-COURSE_COUNT = 25
---- @type integer
-COURSE_MIN = 1
-
-
 ------------------------------
 -- player palette functions --
 ------------------------------
@@ -177,15 +111,11 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
---------------------------
--- local math functions --
---------------------------
 local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
 
 ------------
 -- tweens --
 ------------
--- Unrelated to SM64, but these are for `math.tween`
 
 ---@param x number
 ---@return number
@@ -350,294 +280,6 @@ OUT_IN_BOUNCE  = function (x) return x < 0.5 and 0.5 * OUT_BOUNCE(x * 2) or 0.5 
 --- | `IN_OUT_BOUNCE`
 --- | `OUT_IN_BOUNCE`
 --- | fun(x: number): number
-
--------------------
--- sdl scancodes --
--------------------
-
---- @class SDL_Scancode:integer
---- @class SDL_GameControllerButton:integer
-
-do -- SDL
-    -- Scancodes --
-
-    SDL_SCANCODE_UNKNOWN            = 0   --- @type SDL_Scancode
-    SDL_SCANCODE_A                  = 4   --- @type SDL_Scancode
-    SDL_SCANCODE_B                  = 5   --- @type SDL_Scancode
-    SDL_SCANCODE_C                  = 6   --- @type SDL_Scancode
-    SDL_SCANCODE_D                  = 7   --- @type SDL_Scancode
-    SDL_SCANCODE_E                  = 8   --- @type SDL_Scancode
-    SDL_SCANCODE_F                  = 9   --- @type SDL_Scancode
-    SDL_SCANCODE_G                  = 10  --- @type SDL_Scancode
-    SDL_SCANCODE_H                  = 11  --- @type SDL_Scancode
-    SDL_SCANCODE_I                  = 12  --- @type SDL_Scancode
-    SDL_SCANCODE_J                  = 13  --- @type SDL_Scancode
-    SDL_SCANCODE_K                  = 14  --- @type SDL_Scancode
-    SDL_SCANCODE_L                  = 15  --- @type SDL_Scancode
-    SDL_SCANCODE_M                  = 16  --- @type SDL_Scancode
-    SDL_SCANCODE_N                  = 17  --- @type SDL_Scancode
-    SDL_SCANCODE_O                  = 18  --- @type SDL_Scancode
-    SDL_SCANCODE_P                  = 19  --- @type SDL_Scancode
-    SDL_SCANCODE_Q                  = 20  --- @type SDL_Scancode
-    SDL_SCANCODE_R                  = 21  --- @type SDL_Scancode
-    SDL_SCANCODE_S                  = 22  --- @type SDL_Scancode
-    SDL_SCANCODE_T                  = 23  --- @type SDL_Scancode
-    SDL_SCANCODE_U                  = 24  --- @type SDL_Scancode
-    SDL_SCANCODE_V                  = 25  --- @type SDL_Scancode
-    SDL_SCANCODE_W                  = 26  --- @type SDL_Scancode
-    SDL_SCANCODE_X                  = 27  --- @type SDL_Scancode
-    SDL_SCANCODE_Y                  = 28  --- @type SDL_Scancode
-    SDL_SCANCODE_Z                  = 29  --- @type SDL_Scancode
-    SDL_SCANCODE_1                  = 30  --- @type SDL_Scancode
-    SDL_SCANCODE_2                  = 31  --- @type SDL_Scancode
-    SDL_SCANCODE_3                  = 32  --- @type SDL_Scancode
-    SDL_SCANCODE_4                  = 33  --- @type SDL_Scancode
-    SDL_SCANCODE_5                  = 34  --- @type SDL_Scancode
-    SDL_SCANCODE_6                  = 35  --- @type SDL_Scancode
-    SDL_SCANCODE_7                  = 36  --- @type SDL_Scancode
-    SDL_SCANCODE_8                  = 37  --- @type SDL_Scancode
-    SDL_SCANCODE_9                  = 38  --- @type SDL_Scancode
-    SDL_SCANCODE_0                  = 39  --- @type SDL_Scancode
-    SDL_SCANCODE_RETURN             = 40  --- @type SDL_Scancode
-    SDL_SCANCODE_ESCAPE             = 41  --- @type SDL_Scancode
-    SDL_SCANCODE_BACKSPACE          = 42  --- @type SDL_Scancode
-    SDL_SCANCODE_TAB                = 43  --- @type SDL_Scancode
-    SDL_SCANCODE_SPACE              = 44  --- @type SDL_Scancode
-    SDL_SCANCODE_MINUS              = 45  --- @type SDL_Scancode
-    SDL_SCANCODE_EQUALS             = 46  --- @type SDL_Scancode
-    SDL_SCANCODE_LEFTBRACKET        = 47  --- @type SDL_Scancode
-    SDL_SCANCODE_RIGHTBRACKET       = 48  --- @type SDL_Scancode
-    SDL_SCANCODE_BACKSLASH          = 49  --- @type SDL_Scancode
-    SDL_SCANCODE_NONUSHASH          = 50  --- @type SDL_Scancode
-    SDL_SCANCODE_SEMICOLON          = 51  --- @type SDL_Scancode
-    SDL_SCANCODE_APOSTROPHE         = 52  --- @type SDL_Scancode
-    SDL_SCANCODE_GRAVE              = 53  --- @type SDL_Scancode
-    SDL_SCANCODE_COMMA              = 54  --- @type SDL_Scancode
-    SDL_SCANCODE_PERIOD             = 55  --- @type SDL_Scancode
-    SDL_SCANCODE_SLASH              = 56  --- @type SDL_Scancode
-    SDL_SCANCODE_CAPSLOCK           = 57  --- @type SDL_Scancode
-    SDL_SCANCODE_F1                 = 58  --- @type SDL_Scancode
-    SDL_SCANCODE_F2                 = 59  --- @type SDL_Scancode
-    SDL_SCANCODE_F3                 = 60  --- @type SDL_Scancode
-    SDL_SCANCODE_F4                 = 61  --- @type SDL_Scancode
-    SDL_SCANCODE_F5                 = 62  --- @type SDL_Scancode
-    SDL_SCANCODE_F6                 = 63  --- @type SDL_Scancode
-    SDL_SCANCODE_F7                 = 64  --- @type SDL_Scancode
-    SDL_SCANCODE_F8                 = 65  --- @type SDL_Scancode
-    SDL_SCANCODE_F9                 = 66  --- @type SDL_Scancode
-    SDL_SCANCODE_F10                = 67  --- @type SDL_Scancode
-    SDL_SCANCODE_F11                = 68  --- @type SDL_Scancode
-    SDL_SCANCODE_F12                = 69  --- @type SDL_Scancode
-    SDL_SCANCODE_PRINTSCREEN        = 70  --- @type SDL_Scancode
-    SDL_SCANCODE_SCROLLLOCK         = 71  --- @type SDL_Scancode
-    SDL_SCANCODE_PAUSE              = 72  --- @type SDL_Scancode
-    SDL_SCANCODE_INSERT             = 73  --- @type SDL_Scancode
-    SDL_SCANCODE_HOME               = 74  --- @type SDL_Scancode
-    SDL_SCANCODE_PAGEUP             = 75  --- @type SDL_Scancode
-    SDL_SCANCODE_DELETE             = 76  --- @type SDL_Scancode
-    SDL_SCANCODE_END                = 77  --- @type SDL_Scancode
-    SDL_SCANCODE_PAGEDOWN           = 78  --- @type SDL_Scancode
-    SDL_SCANCODE_RIGHT              = 79  --- @type SDL_Scancode
-    SDL_SCANCODE_LEFT               = 80  --- @type SDL_Scancode
-    SDL_SCANCODE_DOWN               = 81  --- @type SDL_Scancode
-    SDL_SCANCODE_UP                 = 82  --- @type SDL_Scancode
-    SDL_SCANCODE_NUMLOCKCLEAR       = 83  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_DIVIDE          = 84  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MULTIPLY        = 85  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MINUS           = 86  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_PLUS            = 87  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_ENTER           = 88  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_1               = 89  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_2               = 90  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_3               = 91  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_4               = 92  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_5               = 93  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_6               = 94  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_7               = 95  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_8               = 96  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_9               = 97  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_0               = 98  --- @type SDL_Scancode
-    SDL_SCANCODE_KP_PERIOD          = 99  --- @type SDL_Scancode
-    SDL_SCANCODE_NONUSBACKSLASH     = 100 --- @type SDL_Scancode
-    SDL_SCANCODE_APPLICATION        = 101 --- @type SDL_Scancode
-    SDL_SCANCODE_POWER              = 102 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_EQUALS          = 103 --- @type SDL_Scancode
-    SDL_SCANCODE_F13                = 104 --- @type SDL_Scancode
-    SDL_SCANCODE_F14                = 105 --- @type SDL_Scancode
-    SDL_SCANCODE_F15                = 106 --- @type SDL_Scancode
-    SDL_SCANCODE_F16                = 107 --- @type SDL_Scancode
-    SDL_SCANCODE_F17                = 108 --- @type SDL_Scancode
-    SDL_SCANCODE_F18                = 109 --- @type SDL_Scancode
-    SDL_SCANCODE_F19                = 110 --- @type SDL_Scancode
-    SDL_SCANCODE_F20                = 111 --- @type SDL_Scancode
-    SDL_SCANCODE_F21                = 112 --- @type SDL_Scancode
-    SDL_SCANCODE_F22                = 113 --- @type SDL_Scancode
-    SDL_SCANCODE_F23                = 114 --- @type SDL_Scancode
-    SDL_SCANCODE_F24                = 115 --- @type SDL_Scancode
-    SDL_SCANCODE_EXECUTE            = 116 --- @type SDL_Scancode
-    SDL_SCANCODE_HELP               = 117 --- @type SDL_Scancode
-    SDL_SCANCODE_MENU               = 118 --- @type SDL_Scancode
-    SDL_SCANCODE_SELECT             = 119 --- @type SDL_Scancode
-    SDL_SCANCODE_STOP               = 120 --- @type SDL_Scancode
-    SDL_SCANCODE_AGAIN              = 121 --- @type SDL_Scancode
-    SDL_SCANCODE_UNDO               = 122 --- @type SDL_Scancode
-    SDL_SCANCODE_CUT                = 123 --- @type SDL_Scancode
-    SDL_SCANCODE_COPY               = 124 --- @type SDL_Scancode
-    SDL_SCANCODE_PASTE              = 125 --- @type SDL_Scancode
-    SDL_SCANCODE_FIND               = 126 --- @type SDL_Scancode
-    SDL_SCANCODE_MUTE               = 127 --- @type SDL_Scancode
-    SDL_SCANCODE_VOLUMEUP           = 128 --- @type SDL_Scancode
-    SDL_SCANCODE_VOLUMEDOWN         = 129 --- @type SDL_Scancode
-    SDL_SCANCODE_LOCKINGCAPSLOCK    = 130 --- @type SDL_Scancode
-    SDL_SCANCODE_LOCKINGNUMLOCK     = 131 --- @type SDL_Scancode
-    SDL_SCANCODE_LOCKINGSCROLLLOCK  = 132 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_COMMA           = 133 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_EQUALSAS400     = 134 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL1     = 135 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL2     = 136 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL3     = 137 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL4     = 138 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL5     = 139 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL6     = 140 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL7     = 141 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL8     = 142 --- @type SDL_Scancode
-    SDL_SCANCODE_INTERNATIONAL9     = 143 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG1              = 144 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG2              = 145 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG3              = 146 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG4              = 147 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG5              = 148 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG6              = 149 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG7              = 150 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG8              = 151 --- @type SDL_Scancode
-    SDL_SCANCODE_LANG9              = 152 --- @type SDL_Scancode
-    SDL_SCANCODE_ALTERASE           = 153 --- @type SDL_Scancode
-    SDL_SCANCODE_SYSREQ             = 154 --- @type SDL_Scancode
-    SDL_SCANCODE_CANCEL             = 155 --- @type SDL_Scancode
-    SDL_SCANCODE_CLEAR              = 156 --- @type SDL_Scancode
-    SDL_SCANCODE_PRIOR              = 157 --- @type SDL_Scancode
-    SDL_SCANCODE_RETURN2            = 158 --- @type SDL_Scancode
-    SDL_SCANCODE_SEPARATOR          = 159 --- @type SDL_Scancode
-    SDL_SCANCODE_OUT                = 160 --- @type SDL_Scancode
-    SDL_SCANCODE_OPER               = 161 --- @type SDL_Scancode
-    SDL_SCANCODE_CLEARAGAIN         = 162 --- @type SDL_Scancode
-    SDL_SCANCODE_CRSEL              = 163 --- @type SDL_Scancode
-    SDL_SCANCODE_EXSEL              = 164 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_00              = 176 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_000             = 177 --- @type SDL_Scancode
-    SDL_SCANCODE_THOUSANDSSEPARATOR = 178 --- @type SDL_Scancode
-    SDL_SCANCODE_DECIMALSEPARATOR   = 179 --- @type SDL_Scancode
-    SDL_SCANCODE_CURRENCYUNIT       = 180 --- @type SDL_Scancode
-    SDL_SCANCODE_CURRENCYSUBUNIT    = 181 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_LEFTPAREN       = 182 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_RIGHTPAREN      = 183 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_LEFTBRACE       = 184 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_RIGHTBRACE      = 185 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_TAB             = 186 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_BACKSPACE       = 187 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_A               = 188 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_B               = 189 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_C               = 190 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_D               = 191 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_E               = 192 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_F               = 193 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_XOR             = 194 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_POWER           = 195 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_PERCENT         = 196 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_LESS            = 197 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_GREATER         = 198 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_AMPERSAND       = 199 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_DBLAMPERSAND    = 200 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_VERTICALBAR     = 201 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_DBLVERTICALBAR  = 202 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_COLON           = 203 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_HASH            = 204 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_SPACE           = 205 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_AT              = 206 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_EXCLAM          = 207 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMSTORE        = 208 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMRECALL       = 209 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMCLEAR        = 210 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMADD          = 211 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMSUBTRACT     = 212 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMMULTIPLY     = 213 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_MEMDIVIDE       = 214 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_PLUSMINUS       = 215 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_CLEAR           = 216 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_CLEARENTRY      = 217 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_BINARY          = 218 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_OCTAL           = 219 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_DECIMAL         = 220 --- @type SDL_Scancode
-    SDL_SCANCODE_KP_HEXADECIMAL     = 221 --- @type SDL_Scancode
-    SDL_SCANCODE_LCTRL              = 224 --- @type SDL_Scancode
-    SDL_SCANCODE_LSHIFT             = 225 --- @type SDL_Scancode
-    SDL_SCANCODE_LALT               = 226 --- @type SDL_Scancode
-    SDL_SCANCODE_LGUI               = 227 --- @type SDL_Scancode
-    SDL_SCANCODE_RCTRL              = 228 --- @type SDL_Scancode
-    SDL_SCANCODE_RSHIFT             = 229 --- @type SDL_Scancode
-    SDL_SCANCODE_RALT               = 230 --- @type SDL_Scancode
-    SDL_SCANCODE_RGUI               = 231 --- @type SDL_Scancode
-    SDL_SCANCODE_MODE               = 257 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIONEXT          = 258 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOPREV          = 259 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOSTOP          = 260 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOPLAY          = 261 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOMUTE          = 262 --- @type SDL_Scancode
-    SDL_SCANCODE_MEDIASELECT        = 263 --- @type SDL_Scancode
-    SDL_SCANCODE_WWW                = 264 --- @type SDL_Scancode
-    SDL_SCANCODE_MAIL               = 265 --- @type SDL_Scancode
-    SDL_SCANCODE_CALCULATOR         = 266 --- @type SDL_Scancode
-    SDL_SCANCODE_COMPUTER           = 267 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_SEARCH          = 268 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_HOME            = 269 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_BACK            = 270 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_FORWARD         = 271 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_STOP            = 272 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_REFRESH         = 273 --- @type SDL_Scancode
-    SDL_SCANCODE_AC_BOOKMARKS       = 274 --- @type SDL_Scancode
-    SDL_SCANCODE_BRIGHTNESSDOWN     = 275 --- @type SDL_Scancode
-    SDL_SCANCODE_BRIGHTNESSUP       = 276 --- @type SDL_Scancode
-    SDL_SCANCODE_DISPLAYSWITCH      = 277 --- @type SDL_Scancode
-    SDL_SCANCODE_KBDILLUMTOGGLE     = 278 --- @type SDL_Scancode
-    SDL_SCANCODE_KBDILLUMDOWN       = 279 --- @type SDL_Scancode
-    SDL_SCANCODE_KBDILLUMUP         = 280 --- @type SDL_Scancode
-    SDL_SCANCODE_EJECT              = 281 --- @type SDL_Scancode
-    SDL_SCANCODE_SLEEP              = 282 --- @type SDL_Scancode
-    SDL_SCANCODE_APP1               = 283 --- @type SDL_Scancode
-    SDL_SCANCODE_APP2               = 284 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOREWIND        = 285 --- @type SDL_Scancode
-    SDL_SCANCODE_AUDIOFASTFORWARD   = 286 --- @type SDL_Scancode
-    SDL_SCANCODE_SOFTLEFT           = 287 --- @type SDL_Scancode
-    SDL_SCANCODE_SOFTRIGHT          = 288 --- @type SDL_Scancode
-    SDL_SCANCODE_CALL               = 289 --- @type SDL_Scancode
-    SDL_SCANCODE_ENDCALL            = 290 --- @type SDL_Scancode
-    SDL_NUM_SCANCODES               = 512 --- @type SDL_Scancode
-
-    -- Controller --
-
-    SDL_CONTROLLER_BUTTON_A             = 1  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_B             = 2  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_X             = 3  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_Y             = 4  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_BACK          = 5  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_GUIDE         = 6  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_START         = 7  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_LEFTSTICK     = 8  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_RIGHTSTICK    = 9  --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_LEFTSHOULDER  = 10 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_RIGHTSHOULDER = 11 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_DPAD_UP       = 12 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_DPAD_DOWN     = 13 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_DPAD_LEFT     = 14 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_DPAD_RIGHT    = 15 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_MISC1         = 16 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_PADDLE1       = 17 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_PADDLE2       = 18 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_PADDLE3       = 19 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_PADDLE4       = 20 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_TOUCHPAD      = 21 --- @type SDL_GameControllerButton
-    SDL_CONTROLLER_BUTTON_MAX           = 22 --- @type SDL_GameControllerButton
-end
 
 --------------------
 -- math functions --
@@ -867,6 +509,557 @@ gMat4Identity = create_read_only_table({m00=1,m01=0,m02=0,m03=0,m10=0,m11=1,m12=
 gMat4Fullscreen = create_read_only_table({m00=0.00625,m01=0,m02=0,m03=0,m10=0,m11=0.008333333333333333,m12=0,m13=0,m20=0,m21=0,m22=-1,m23=0,m30=-1,m31=-1,m32=-1,m33=1})
 
 
+SDL_CONTROLLER_BUTTON_INVALID       = -1 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_A             =  0 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_B             =  1 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_X             =  2 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_Y             =  3 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_BACK          =  4 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_GUIDE         =  5 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_START         =  6 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_LEFTSTICK     =  7 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_RIGHTSTICK    =  8 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_LEFTSHOULDER  =  9 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_RIGHTSHOULDER = 10 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_DPAD_UP       = 11 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_DPAD_DOWN     = 12 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_DPAD_LEFT     = 13 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_DPAD_RIGHT    = 14 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_MISC1         = 15 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_PADDLE1       = 16 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_PADDLE2       = 17 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_PADDLE3       = 18 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_PADDLE4       = 19 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_TOUCHPAD      = 20 --- @type SDL_GameControllerButton
+SDL_CONTROLLER_BUTTON_MAX           = 21 --- @type SDL_GameControllerButton
+
+--- @alias SDL_GameControllerButton
+--- | `SDL_CONTROLLER_BUTTON_INVALID`
+--- | `SDL_CONTROLLER_BUTTON_A`
+--- | `SDL_CONTROLLER_BUTTON_B`
+--- | `SDL_CONTROLLER_BUTTON_X`
+--- | `SDL_CONTROLLER_BUTTON_Y`
+--- | `SDL_CONTROLLER_BUTTON_BACK`
+--- | `SDL_CONTROLLER_BUTTON_GUIDE`
+--- | `SDL_CONTROLLER_BUTTON_START`
+--- | `SDL_CONTROLLER_BUTTON_LEFTSTICK`
+--- | `SDL_CONTROLLER_BUTTON_RIGHTSTICK`
+--- | `SDL_CONTROLLER_BUTTON_LEFTSHOULDER`
+--- | `SDL_CONTROLLER_BUTTON_RIGHTSHOULDER`
+--- | `SDL_CONTROLLER_BUTTON_DPAD_UP`
+--- | `SDL_CONTROLLER_BUTTON_DPAD_DOWN`
+--- | `SDL_CONTROLLER_BUTTON_DPAD_LEFT`
+--- | `SDL_CONTROLLER_BUTTON_DPAD_RIGHT`
+--- | `SDL_CONTROLLER_BUTTON_MISC1`
+--- | `SDL_CONTROLLER_BUTTON_PADDLE1`
+--- | `SDL_CONTROLLER_BUTTON_PADDLE2`
+--- | `SDL_CONTROLLER_BUTTON_PADDLE3`
+--- | `SDL_CONTROLLER_BUTTON_PADDLE4`
+--- | `SDL_CONTROLLER_BUTTON_TOUCHPAD`
+--- | `SDL_CONTROLLER_BUTTON_MAX`
+
+--- @type string
+VERSION_REGION = "US"
+
+SDL_SCANCODE_UNKNOWN            =   0 --- @type SDL_Scancode
+SDL_SCANCODE_A                  =   4 --- @type SDL_Scancode
+SDL_SCANCODE_B                  =   5 --- @type SDL_Scancode
+SDL_SCANCODE_C                  =   6 --- @type SDL_Scancode
+SDL_SCANCODE_D                  =   7 --- @type SDL_Scancode
+SDL_SCANCODE_E                  =   8 --- @type SDL_Scancode
+SDL_SCANCODE_F                  =   9 --- @type SDL_Scancode
+SDL_SCANCODE_G                  =  10 --- @type SDL_Scancode
+SDL_SCANCODE_H                  =  11 --- @type SDL_Scancode
+SDL_SCANCODE_I                  =  12 --- @type SDL_Scancode
+SDL_SCANCODE_J                  =  13 --- @type SDL_Scancode
+SDL_SCANCODE_K                  =  14 --- @type SDL_Scancode
+SDL_SCANCODE_L                  =  15 --- @type SDL_Scancode
+SDL_SCANCODE_M                  =  16 --- @type SDL_Scancode
+SDL_SCANCODE_N                  =  17 --- @type SDL_Scancode
+SDL_SCANCODE_O                  =  18 --- @type SDL_Scancode
+SDL_SCANCODE_P                  =  19 --- @type SDL_Scancode
+SDL_SCANCODE_Q                  =  20 --- @type SDL_Scancode
+SDL_SCANCODE_R                  =  21 --- @type SDL_Scancode
+SDL_SCANCODE_S                  =  22 --- @type SDL_Scancode
+SDL_SCANCODE_T                  =  23 --- @type SDL_Scancode
+SDL_SCANCODE_U                  =  24 --- @type SDL_Scancode
+SDL_SCANCODE_V                  =  25 --- @type SDL_Scancode
+SDL_SCANCODE_W                  =  26 --- @type SDL_Scancode
+SDL_SCANCODE_X                  =  27 --- @type SDL_Scancode
+SDL_SCANCODE_Y                  =  28 --- @type SDL_Scancode
+SDL_SCANCODE_Z                  =  29 --- @type SDL_Scancode
+SDL_SCANCODE_1                  =  30 --- @type SDL_Scancode
+SDL_SCANCODE_2                  =  31 --- @type SDL_Scancode
+SDL_SCANCODE_3                  =  32 --- @type SDL_Scancode
+SDL_SCANCODE_4                  =  33 --- @type SDL_Scancode
+SDL_SCANCODE_5                  =  34 --- @type SDL_Scancode
+SDL_SCANCODE_6                  =  35 --- @type SDL_Scancode
+SDL_SCANCODE_7                  =  36 --- @type SDL_Scancode
+SDL_SCANCODE_8                  =  37 --- @type SDL_Scancode
+SDL_SCANCODE_9                  =  38 --- @type SDL_Scancode
+SDL_SCANCODE_0                  =  39 --- @type SDL_Scancode
+SDL_SCANCODE_RETURN             =  40 --- @type SDL_Scancode
+SDL_SCANCODE_ESCAPE             =  41 --- @type SDL_Scancode
+SDL_SCANCODE_BACKSPACE          =  42 --- @type SDL_Scancode
+SDL_SCANCODE_TAB                =  43 --- @type SDL_Scancode
+SDL_SCANCODE_SPACE              =  44 --- @type SDL_Scancode
+SDL_SCANCODE_MINUS              =  45 --- @type SDL_Scancode
+SDL_SCANCODE_EQUALS             =  46 --- @type SDL_Scancode
+SDL_SCANCODE_LEFTBRACKET        =  47 --- @type SDL_Scancode
+SDL_SCANCODE_RIGHTBRACKET       =  48 --- @type SDL_Scancode
+SDL_SCANCODE_BACKSLASH          =  49 --- @type SDL_Scancode
+SDL_SCANCODE_NONUSHASH          =  50 --- @type SDL_Scancode
+SDL_SCANCODE_SEMICOLON          =  51 --- @type SDL_Scancode
+SDL_SCANCODE_APOSTROPHE         =  52 --- @type SDL_Scancode
+SDL_SCANCODE_GRAVE              =  53 --- @type SDL_Scancode
+SDL_SCANCODE_COMMA              =  54 --- @type SDL_Scancode
+SDL_SCANCODE_PERIOD             =  55 --- @type SDL_Scancode
+SDL_SCANCODE_SLASH              =  56 --- @type SDL_Scancode
+SDL_SCANCODE_CAPSLOCK           =  57 --- @type SDL_Scancode
+SDL_SCANCODE_F1                 =  58 --- @type SDL_Scancode
+SDL_SCANCODE_F2                 =  59 --- @type SDL_Scancode
+SDL_SCANCODE_F3                 =  60 --- @type SDL_Scancode
+SDL_SCANCODE_F4                 =  61 --- @type SDL_Scancode
+SDL_SCANCODE_F5                 =  62 --- @type SDL_Scancode
+SDL_SCANCODE_F6                 =  63 --- @type SDL_Scancode
+SDL_SCANCODE_F7                 =  64 --- @type SDL_Scancode
+SDL_SCANCODE_F8                 =  65 --- @type SDL_Scancode
+SDL_SCANCODE_F9                 =  66 --- @type SDL_Scancode
+SDL_SCANCODE_F10                =  67 --- @type SDL_Scancode
+SDL_SCANCODE_F11                =  68 --- @type SDL_Scancode
+SDL_SCANCODE_F12                =  69 --- @type SDL_Scancode
+SDL_SCANCODE_PRINTSCREEN        =  70 --- @type SDL_Scancode
+SDL_SCANCODE_SCROLLLOCK         =  71 --- @type SDL_Scancode
+SDL_SCANCODE_PAUSE              =  72 --- @type SDL_Scancode
+SDL_SCANCODE_INSERT             =  73 --- @type SDL_Scancode
+SDL_SCANCODE_HOME               =  74 --- @type SDL_Scancode
+SDL_SCANCODE_PAGEUP             =  75 --- @type SDL_Scancode
+SDL_SCANCODE_DELETE             =  76 --- @type SDL_Scancode
+SDL_SCANCODE_END                =  77 --- @type SDL_Scancode
+SDL_SCANCODE_PAGEDOWN           =  78 --- @type SDL_Scancode
+SDL_SCANCODE_RIGHT              =  79 --- @type SDL_Scancode
+SDL_SCANCODE_LEFT               =  80 --- @type SDL_Scancode
+SDL_SCANCODE_DOWN               =  81 --- @type SDL_Scancode
+SDL_SCANCODE_UP                 =  82 --- @type SDL_Scancode
+SDL_SCANCODE_NUMLOCKCLEAR       =  83 --- @type SDL_Scancode
+SDL_SCANCODE_KP_DIVIDE          =  84 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MULTIPLY        =  85 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MINUS           =  86 --- @type SDL_Scancode
+SDL_SCANCODE_KP_PLUS            =  87 --- @type SDL_Scancode
+SDL_SCANCODE_KP_ENTER           =  88 --- @type SDL_Scancode
+SDL_SCANCODE_KP_1               =  89 --- @type SDL_Scancode
+SDL_SCANCODE_KP_2               =  90 --- @type SDL_Scancode
+SDL_SCANCODE_KP_3               =  91 --- @type SDL_Scancode
+SDL_SCANCODE_KP_4               =  92 --- @type SDL_Scancode
+SDL_SCANCODE_KP_5               =  93 --- @type SDL_Scancode
+SDL_SCANCODE_KP_6               =  94 --- @type SDL_Scancode
+SDL_SCANCODE_KP_7               =  95 --- @type SDL_Scancode
+SDL_SCANCODE_KP_8               =  96 --- @type SDL_Scancode
+SDL_SCANCODE_KP_9               =  97 --- @type SDL_Scancode
+SDL_SCANCODE_KP_0               =  98 --- @type SDL_Scancode
+SDL_SCANCODE_KP_PERIOD          =  99 --- @type SDL_Scancode
+SDL_SCANCODE_NONUSBACKSLASH     = 100 --- @type SDL_Scancode
+SDL_SCANCODE_APPLICATION        = 101 --- @type SDL_Scancode
+SDL_SCANCODE_POWER              = 102 --- @type SDL_Scancode
+SDL_SCANCODE_KP_EQUALS          = 103 --- @type SDL_Scancode
+SDL_SCANCODE_F13                = 104 --- @type SDL_Scancode
+SDL_SCANCODE_F14                = 105 --- @type SDL_Scancode
+SDL_SCANCODE_F15                = 106 --- @type SDL_Scancode
+SDL_SCANCODE_F16                = 107 --- @type SDL_Scancode
+SDL_SCANCODE_F17                = 108 --- @type SDL_Scancode
+SDL_SCANCODE_F18                = 109 --- @type SDL_Scancode
+SDL_SCANCODE_F19                = 110 --- @type SDL_Scancode
+SDL_SCANCODE_F20                = 111 --- @type SDL_Scancode
+SDL_SCANCODE_F21                = 112 --- @type SDL_Scancode
+SDL_SCANCODE_F22                = 113 --- @type SDL_Scancode
+SDL_SCANCODE_F23                = 114 --- @type SDL_Scancode
+SDL_SCANCODE_F24                = 115 --- @type SDL_Scancode
+SDL_SCANCODE_EXECUTE            = 116 --- @type SDL_Scancode
+SDL_SCANCODE_HELP               = 117 --- @type SDL_Scancode
+SDL_SCANCODE_MENU               = 118 --- @type SDL_Scancode
+SDL_SCANCODE_SELECT             = 119 --- @type SDL_Scancode
+SDL_SCANCODE_STOP               = 120 --- @type SDL_Scancode
+SDL_SCANCODE_AGAIN              = 121 --- @type SDL_Scancode
+SDL_SCANCODE_UNDO               = 122 --- @type SDL_Scancode
+SDL_SCANCODE_CUT                = 123 --- @type SDL_Scancode
+SDL_SCANCODE_COPY               = 124 --- @type SDL_Scancode
+SDL_SCANCODE_PASTE              = 125 --- @type SDL_Scancode
+SDL_SCANCODE_FIND               = 126 --- @type SDL_Scancode
+SDL_SCANCODE_MUTE               = 127 --- @type SDL_Scancode
+SDL_SCANCODE_VOLUMEUP           = 128 --- @type SDL_Scancode
+SDL_SCANCODE_VOLUMEDOWN         = 129 --- @type SDL_Scancode
+SDL_SCANCODE_KP_COMMA           = 133 --- @type SDL_Scancode
+SDL_SCANCODE_KP_EQUALSAS400     = 134 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL1     = 135 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL2     = 136 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL3     = 137 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL4     = 138 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL5     = 139 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL6     = 140 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL7     = 141 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL8     = 142 --- @type SDL_Scancode
+SDL_SCANCODE_INTERNATIONAL9     = 143 --- @type SDL_Scancode
+SDL_SCANCODE_LANG1              = 144 --- @type SDL_Scancode
+SDL_SCANCODE_LANG2              = 145 --- @type SDL_Scancode
+SDL_SCANCODE_LANG3              = 146 --- @type SDL_Scancode
+SDL_SCANCODE_LANG4              = 147 --- @type SDL_Scancode
+SDL_SCANCODE_LANG5              = 148 --- @type SDL_Scancode
+SDL_SCANCODE_LANG6              = 149 --- @type SDL_Scancode
+SDL_SCANCODE_LANG7              = 150 --- @type SDL_Scancode
+SDL_SCANCODE_LANG8              = 151 --- @type SDL_Scancode
+SDL_SCANCODE_LANG9              = 152 --- @type SDL_Scancode
+SDL_SCANCODE_ALTERASE           = 153 --- @type SDL_Scancode
+SDL_SCANCODE_SYSREQ             = 154 --- @type SDL_Scancode
+SDL_SCANCODE_CANCEL             = 155 --- @type SDL_Scancode
+SDL_SCANCODE_CLEAR              = 156 --- @type SDL_Scancode
+SDL_SCANCODE_PRIOR              = 157 --- @type SDL_Scancode
+SDL_SCANCODE_RETURN2            = 158 --- @type SDL_Scancode
+SDL_SCANCODE_SEPARATOR          = 159 --- @type SDL_Scancode
+SDL_SCANCODE_OUT                = 160 --- @type SDL_Scancode
+SDL_SCANCODE_OPER               = 161 --- @type SDL_Scancode
+SDL_SCANCODE_CLEARAGAIN         = 162 --- @type SDL_Scancode
+SDL_SCANCODE_CRSEL              = 163 --- @type SDL_Scancode
+SDL_SCANCODE_EXSEL              = 164 --- @type SDL_Scancode
+SDL_SCANCODE_KP_00              = 176 --- @type SDL_Scancode
+SDL_SCANCODE_KP_000             = 177 --- @type SDL_Scancode
+SDL_SCANCODE_THOUSANDSSEPARATOR = 178 --- @type SDL_Scancode
+SDL_SCANCODE_DECIMALSEPARATOR   = 179 --- @type SDL_Scancode
+SDL_SCANCODE_CURRENCYUNIT       = 180 --- @type SDL_Scancode
+SDL_SCANCODE_CURRENCYSUBUNIT    = 181 --- @type SDL_Scancode
+SDL_SCANCODE_KP_LEFTPAREN       = 182 --- @type SDL_Scancode
+SDL_SCANCODE_KP_RIGHTPAREN      = 183 --- @type SDL_Scancode
+SDL_SCANCODE_KP_LEFTBRACE       = 184 --- @type SDL_Scancode
+SDL_SCANCODE_KP_RIGHTBRACE      = 185 --- @type SDL_Scancode
+SDL_SCANCODE_KP_TAB             = 186 --- @type SDL_Scancode
+SDL_SCANCODE_KP_BACKSPACE       = 187 --- @type SDL_Scancode
+SDL_SCANCODE_KP_A               = 188 --- @type SDL_Scancode
+SDL_SCANCODE_KP_B               = 189 --- @type SDL_Scancode
+SDL_SCANCODE_KP_C               = 190 --- @type SDL_Scancode
+SDL_SCANCODE_KP_D               = 191 --- @type SDL_Scancode
+SDL_SCANCODE_KP_E               = 192 --- @type SDL_Scancode
+SDL_SCANCODE_KP_F               = 193 --- @type SDL_Scancode
+SDL_SCANCODE_KP_XOR             = 194 --- @type SDL_Scancode
+SDL_SCANCODE_KP_POWER           = 195 --- @type SDL_Scancode
+SDL_SCANCODE_KP_PERCENT         = 196 --- @type SDL_Scancode
+SDL_SCANCODE_KP_LESS            = 197 --- @type SDL_Scancode
+SDL_SCANCODE_KP_GREATER         = 198 --- @type SDL_Scancode
+SDL_SCANCODE_KP_AMPERSAND       = 199 --- @type SDL_Scancode
+SDL_SCANCODE_KP_DBLAMPERSAND    = 200 --- @type SDL_Scancode
+SDL_SCANCODE_KP_VERTICALBAR     = 201 --- @type SDL_Scancode
+SDL_SCANCODE_KP_DBLVERTICALBAR  = 202 --- @type SDL_Scancode
+SDL_SCANCODE_KP_COLON           = 203 --- @type SDL_Scancode
+SDL_SCANCODE_KP_HASH            = 204 --- @type SDL_Scancode
+SDL_SCANCODE_KP_SPACE           = 205 --- @type SDL_Scancode
+SDL_SCANCODE_KP_AT              = 206 --- @type SDL_Scancode
+SDL_SCANCODE_KP_EXCLAM          = 207 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMSTORE        = 208 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMRECALL       = 209 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMCLEAR        = 210 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMADD          = 211 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMSUBTRACT     = 212 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMMULTIPLY     = 213 --- @type SDL_Scancode
+SDL_SCANCODE_KP_MEMDIVIDE       = 214 --- @type SDL_Scancode
+SDL_SCANCODE_KP_PLUSMINUS       = 215 --- @type SDL_Scancode
+SDL_SCANCODE_KP_CLEAR           = 216 --- @type SDL_Scancode
+SDL_SCANCODE_KP_CLEARENTRY      = 217 --- @type SDL_Scancode
+SDL_SCANCODE_KP_BINARY          = 218 --- @type SDL_Scancode
+SDL_SCANCODE_KP_OCTAL           = 219 --- @type SDL_Scancode
+SDL_SCANCODE_KP_DECIMAL         = 220 --- @type SDL_Scancode
+SDL_SCANCODE_KP_HEXADECIMAL     = 221 --- @type SDL_Scancode
+SDL_SCANCODE_LCTRL              = 224 --- @type SDL_Scancode
+SDL_SCANCODE_LSHIFT             = 225 --- @type SDL_Scancode
+SDL_SCANCODE_LALT               = 226 --- @type SDL_Scancode
+SDL_SCANCODE_LGUI               = 227 --- @type SDL_Scancode
+SDL_SCANCODE_RCTRL              = 228 --- @type SDL_Scancode
+SDL_SCANCODE_RSHIFT             = 229 --- @type SDL_Scancode
+SDL_SCANCODE_RALT               = 230 --- @type SDL_Scancode
+SDL_SCANCODE_RGUI               = 231 --- @type SDL_Scancode
+SDL_SCANCODE_MODE               = 257 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIONEXT          = 258 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOPREV          = 259 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOSTOP          = 260 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOPLAY          = 261 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOMUTE          = 262 --- @type SDL_Scancode
+SDL_SCANCODE_MEDIASELECT        = 263 --- @type SDL_Scancode
+SDL_SCANCODE_WWW                = 264 --- @type SDL_Scancode
+SDL_SCANCODE_MAIL               = 265 --- @type SDL_Scancode
+SDL_SCANCODE_CALCULATOR         = 266 --- @type SDL_Scancode
+SDL_SCANCODE_COMPUTER           = 267 --- @type SDL_Scancode
+SDL_SCANCODE_AC_SEARCH          = 268 --- @type SDL_Scancode
+SDL_SCANCODE_AC_HOME            = 269 --- @type SDL_Scancode
+SDL_SCANCODE_AC_BACK            = 270 --- @type SDL_Scancode
+SDL_SCANCODE_AC_FORWARD         = 271 --- @type SDL_Scancode
+SDL_SCANCODE_AC_STOP            = 272 --- @type SDL_Scancode
+SDL_SCANCODE_AC_REFRESH         = 273 --- @type SDL_Scancode
+SDL_SCANCODE_AC_BOOKMARKS       = 274 --- @type SDL_Scancode
+SDL_SCANCODE_BRIGHTNESSDOWN     = 275 --- @type SDL_Scancode
+SDL_SCANCODE_BRIGHTNESSUP       = 276 --- @type SDL_Scancode
+SDL_SCANCODE_DISPLAYSWITCH      = 277 --- @type SDL_Scancode
+SDL_SCANCODE_KBDILLUMTOGGLE     = 278 --- @type SDL_Scancode
+SDL_SCANCODE_KBDILLUMDOWN       = 279 --- @type SDL_Scancode
+SDL_SCANCODE_KBDILLUMUP         = 280 --- @type SDL_Scancode
+SDL_SCANCODE_EJECT              = 281 --- @type SDL_Scancode
+SDL_SCANCODE_SLEEP              = 282 --- @type SDL_Scancode
+SDL_SCANCODE_APP1               = 283 --- @type SDL_Scancode
+SDL_SCANCODE_APP2               = 284 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOREWIND        = 285 --- @type SDL_Scancode
+SDL_SCANCODE_AUDIOFASTFORWARD   = 286 --- @type SDL_Scancode
+SDL_SCANCODE_SOFTLEFT           = 287 --- @type SDL_Scancode
+SDL_SCANCODE_SOFTRIGHT          = 288 --- @type SDL_Scancode
+SDL_SCANCODE_CALL               = 289 --- @type SDL_Scancode
+SDL_SCANCODE_ENDCALL            = 290 --- @type SDL_Scancode
+SDL_NUM_SCANCODES               = 512 --- @type SDL_Scancode
+
+--- @alias SDL_Scancode
+--- | `SDL_SCANCODE_UNKNOWN`
+--- | `SDL_SCANCODE_A`
+--- | `SDL_SCANCODE_B`
+--- | `SDL_SCANCODE_C`
+--- | `SDL_SCANCODE_D`
+--- | `SDL_SCANCODE_E`
+--- | `SDL_SCANCODE_F`
+--- | `SDL_SCANCODE_G`
+--- | `SDL_SCANCODE_H`
+--- | `SDL_SCANCODE_I`
+--- | `SDL_SCANCODE_J`
+--- | `SDL_SCANCODE_K`
+--- | `SDL_SCANCODE_L`
+--- | `SDL_SCANCODE_M`
+--- | `SDL_SCANCODE_N`
+--- | `SDL_SCANCODE_O`
+--- | `SDL_SCANCODE_P`
+--- | `SDL_SCANCODE_Q`
+--- | `SDL_SCANCODE_R`
+--- | `SDL_SCANCODE_S`
+--- | `SDL_SCANCODE_T`
+--- | `SDL_SCANCODE_U`
+--- | `SDL_SCANCODE_V`
+--- | `SDL_SCANCODE_W`
+--- | `SDL_SCANCODE_X`
+--- | `SDL_SCANCODE_Y`
+--- | `SDL_SCANCODE_Z`
+--- | `SDL_SCANCODE_1`
+--- | `SDL_SCANCODE_2`
+--- | `SDL_SCANCODE_3`
+--- | `SDL_SCANCODE_4`
+--- | `SDL_SCANCODE_5`
+--- | `SDL_SCANCODE_6`
+--- | `SDL_SCANCODE_7`
+--- | `SDL_SCANCODE_8`
+--- | `SDL_SCANCODE_9`
+--- | `SDL_SCANCODE_0`
+--- | `SDL_SCANCODE_RETURN`
+--- | `SDL_SCANCODE_ESCAPE`
+--- | `SDL_SCANCODE_BACKSPACE`
+--- | `SDL_SCANCODE_TAB`
+--- | `SDL_SCANCODE_SPACE`
+--- | `SDL_SCANCODE_MINUS`
+--- | `SDL_SCANCODE_EQUALS`
+--- | `SDL_SCANCODE_LEFTBRACKET`
+--- | `SDL_SCANCODE_RIGHTBRACKET`
+--- | `SDL_SCANCODE_BACKSLASH`
+--- | `SDL_SCANCODE_NONUSHASH`
+--- | `SDL_SCANCODE_SEMICOLON`
+--- | `SDL_SCANCODE_APOSTROPHE`
+--- | `SDL_SCANCODE_GRAVE`
+--- | `SDL_SCANCODE_COMMA`
+--- | `SDL_SCANCODE_PERIOD`
+--- | `SDL_SCANCODE_SLASH`
+--- | `SDL_SCANCODE_CAPSLOCK`
+--- | `SDL_SCANCODE_F1`
+--- | `SDL_SCANCODE_F2`
+--- | `SDL_SCANCODE_F3`
+--- | `SDL_SCANCODE_F4`
+--- | `SDL_SCANCODE_F5`
+--- | `SDL_SCANCODE_F6`
+--- | `SDL_SCANCODE_F7`
+--- | `SDL_SCANCODE_F8`
+--- | `SDL_SCANCODE_F9`
+--- | `SDL_SCANCODE_F10`
+--- | `SDL_SCANCODE_F11`
+--- | `SDL_SCANCODE_F12`
+--- | `SDL_SCANCODE_PRINTSCREEN`
+--- | `SDL_SCANCODE_SCROLLLOCK`
+--- | `SDL_SCANCODE_PAUSE`
+--- | `SDL_SCANCODE_INSERT`
+--- | `SDL_SCANCODE_HOME`
+--- | `SDL_SCANCODE_PAGEUP`
+--- | `SDL_SCANCODE_DELETE`
+--- | `SDL_SCANCODE_END`
+--- | `SDL_SCANCODE_PAGEDOWN`
+--- | `SDL_SCANCODE_RIGHT`
+--- | `SDL_SCANCODE_LEFT`
+--- | `SDL_SCANCODE_DOWN`
+--- | `SDL_SCANCODE_UP`
+--- | `SDL_SCANCODE_NUMLOCKCLEAR`
+--- | `SDL_SCANCODE_KP_DIVIDE`
+--- | `SDL_SCANCODE_KP_MULTIPLY`
+--- | `SDL_SCANCODE_KP_MINUS`
+--- | `SDL_SCANCODE_KP_PLUS`
+--- | `SDL_SCANCODE_KP_ENTER`
+--- | `SDL_SCANCODE_KP_1`
+--- | `SDL_SCANCODE_KP_2`
+--- | `SDL_SCANCODE_KP_3`
+--- | `SDL_SCANCODE_KP_4`
+--- | `SDL_SCANCODE_KP_5`
+--- | `SDL_SCANCODE_KP_6`
+--- | `SDL_SCANCODE_KP_7`
+--- | `SDL_SCANCODE_KP_8`
+--- | `SDL_SCANCODE_KP_9`
+--- | `SDL_SCANCODE_KP_0`
+--- | `SDL_SCANCODE_KP_PERIOD`
+--- | `SDL_SCANCODE_NONUSBACKSLASH`
+--- | `SDL_SCANCODE_APPLICATION`
+--- | `SDL_SCANCODE_POWER`
+--- | `SDL_SCANCODE_KP_EQUALS`
+--- | `SDL_SCANCODE_F13`
+--- | `SDL_SCANCODE_F14`
+--- | `SDL_SCANCODE_F15`
+--- | `SDL_SCANCODE_F16`
+--- | `SDL_SCANCODE_F17`
+--- | `SDL_SCANCODE_F18`
+--- | `SDL_SCANCODE_F19`
+--- | `SDL_SCANCODE_F20`
+--- | `SDL_SCANCODE_F21`
+--- | `SDL_SCANCODE_F22`
+--- | `SDL_SCANCODE_F23`
+--- | `SDL_SCANCODE_F24`
+--- | `SDL_SCANCODE_EXECUTE`
+--- | `SDL_SCANCODE_HELP`
+--- | `SDL_SCANCODE_MENU`
+--- | `SDL_SCANCODE_SELECT`
+--- | `SDL_SCANCODE_STOP`
+--- | `SDL_SCANCODE_AGAIN`
+--- | `SDL_SCANCODE_UNDO`
+--- | `SDL_SCANCODE_CUT`
+--- | `SDL_SCANCODE_COPY`
+--- | `SDL_SCANCODE_PASTE`
+--- | `SDL_SCANCODE_FIND`
+--- | `SDL_SCANCODE_MUTE`
+--- | `SDL_SCANCODE_VOLUMEUP`
+--- | `SDL_SCANCODE_VOLUMEDOWN`
+--- | `SDL_SCANCODE_KP_COMMA`
+--- | `SDL_SCANCODE_KP_EQUALSAS400`
+--- | `SDL_SCANCODE_INTERNATIONAL1`
+--- | `SDL_SCANCODE_INTERNATIONAL2`
+--- | `SDL_SCANCODE_INTERNATIONAL3`
+--- | `SDL_SCANCODE_INTERNATIONAL4`
+--- | `SDL_SCANCODE_INTERNATIONAL5`
+--- | `SDL_SCANCODE_INTERNATIONAL6`
+--- | `SDL_SCANCODE_INTERNATIONAL7`
+--- | `SDL_SCANCODE_INTERNATIONAL8`
+--- | `SDL_SCANCODE_INTERNATIONAL9`
+--- | `SDL_SCANCODE_LANG1`
+--- | `SDL_SCANCODE_LANG2`
+--- | `SDL_SCANCODE_LANG3`
+--- | `SDL_SCANCODE_LANG4`
+--- | `SDL_SCANCODE_LANG5`
+--- | `SDL_SCANCODE_LANG6`
+--- | `SDL_SCANCODE_LANG7`
+--- | `SDL_SCANCODE_LANG8`
+--- | `SDL_SCANCODE_LANG9`
+--- | `SDL_SCANCODE_ALTERASE`
+--- | `SDL_SCANCODE_SYSREQ`
+--- | `SDL_SCANCODE_CANCEL`
+--- | `SDL_SCANCODE_CLEAR`
+--- | `SDL_SCANCODE_PRIOR`
+--- | `SDL_SCANCODE_RETURN2`
+--- | `SDL_SCANCODE_SEPARATOR`
+--- | `SDL_SCANCODE_OUT`
+--- | `SDL_SCANCODE_OPER`
+--- | `SDL_SCANCODE_CLEARAGAIN`
+--- | `SDL_SCANCODE_CRSEL`
+--- | `SDL_SCANCODE_EXSEL`
+--- | `SDL_SCANCODE_KP_00`
+--- | `SDL_SCANCODE_KP_000`
+--- | `SDL_SCANCODE_THOUSANDSSEPARATOR`
+--- | `SDL_SCANCODE_DECIMALSEPARATOR`
+--- | `SDL_SCANCODE_CURRENCYUNIT`
+--- | `SDL_SCANCODE_CURRENCYSUBUNIT`
+--- | `SDL_SCANCODE_KP_LEFTPAREN`
+--- | `SDL_SCANCODE_KP_RIGHTPAREN`
+--- | `SDL_SCANCODE_KP_LEFTBRACE`
+--- | `SDL_SCANCODE_KP_RIGHTBRACE`
+--- | `SDL_SCANCODE_KP_TAB`
+--- | `SDL_SCANCODE_KP_BACKSPACE`
+--- | `SDL_SCANCODE_KP_A`
+--- | `SDL_SCANCODE_KP_B`
+--- | `SDL_SCANCODE_KP_C`
+--- | `SDL_SCANCODE_KP_D`
+--- | `SDL_SCANCODE_KP_E`
+--- | `SDL_SCANCODE_KP_F`
+--- | `SDL_SCANCODE_KP_XOR`
+--- | `SDL_SCANCODE_KP_POWER`
+--- | `SDL_SCANCODE_KP_PERCENT`
+--- | `SDL_SCANCODE_KP_LESS`
+--- | `SDL_SCANCODE_KP_GREATER`
+--- | `SDL_SCANCODE_KP_AMPERSAND`
+--- | `SDL_SCANCODE_KP_DBLAMPERSAND`
+--- | `SDL_SCANCODE_KP_VERTICALBAR`
+--- | `SDL_SCANCODE_KP_DBLVERTICALBAR`
+--- | `SDL_SCANCODE_KP_COLON`
+--- | `SDL_SCANCODE_KP_HASH`
+--- | `SDL_SCANCODE_KP_SPACE`
+--- | `SDL_SCANCODE_KP_AT`
+--- | `SDL_SCANCODE_KP_EXCLAM`
+--- | `SDL_SCANCODE_KP_MEMSTORE`
+--- | `SDL_SCANCODE_KP_MEMRECALL`
+--- | `SDL_SCANCODE_KP_MEMCLEAR`
+--- | `SDL_SCANCODE_KP_MEMADD`
+--- | `SDL_SCANCODE_KP_MEMSUBTRACT`
+--- | `SDL_SCANCODE_KP_MEMMULTIPLY`
+--- | `SDL_SCANCODE_KP_MEMDIVIDE`
+--- | `SDL_SCANCODE_KP_PLUSMINUS`
+--- | `SDL_SCANCODE_KP_CLEAR`
+--- | `SDL_SCANCODE_KP_CLEARENTRY`
+--- | `SDL_SCANCODE_KP_BINARY`
+--- | `SDL_SCANCODE_KP_OCTAL`
+--- | `SDL_SCANCODE_KP_DECIMAL`
+--- | `SDL_SCANCODE_KP_HEXADECIMAL`
+--- | `SDL_SCANCODE_LCTRL`
+--- | `SDL_SCANCODE_LSHIFT`
+--- | `SDL_SCANCODE_LALT`
+--- | `SDL_SCANCODE_LGUI`
+--- | `SDL_SCANCODE_RCTRL`
+--- | `SDL_SCANCODE_RSHIFT`
+--- | `SDL_SCANCODE_RALT`
+--- | `SDL_SCANCODE_RGUI`
+--- | `SDL_SCANCODE_MODE`
+--- | `SDL_SCANCODE_AUDIONEXT`
+--- | `SDL_SCANCODE_AUDIOPREV`
+--- | `SDL_SCANCODE_AUDIOSTOP`
+--- | `SDL_SCANCODE_AUDIOPLAY`
+--- | `SDL_SCANCODE_AUDIOMUTE`
+--- | `SDL_SCANCODE_MEDIASELECT`
+--- | `SDL_SCANCODE_WWW`
+--- | `SDL_SCANCODE_MAIL`
+--- | `SDL_SCANCODE_CALCULATOR`
+--- | `SDL_SCANCODE_COMPUTER`
+--- | `SDL_SCANCODE_AC_SEARCH`
+--- | `SDL_SCANCODE_AC_HOME`
+--- | `SDL_SCANCODE_AC_BACK`
+--- | `SDL_SCANCODE_AC_FORWARD`
+--- | `SDL_SCANCODE_AC_STOP`
+--- | `SDL_SCANCODE_AC_REFRESH`
+--- | `SDL_SCANCODE_AC_BOOKMARKS`
+--- | `SDL_SCANCODE_BRIGHTNESSDOWN`
+--- | `SDL_SCANCODE_BRIGHTNESSUP`
+--- | `SDL_SCANCODE_DISPLAYSWITCH`
+--- | `SDL_SCANCODE_KBDILLUMTOGGLE`
+--- | `SDL_SCANCODE_KBDILLUMDOWN`
+--- | `SDL_SCANCODE_KBDILLUMUP`
+--- | `SDL_SCANCODE_EJECT`
+--- | `SDL_SCANCODE_SLEEP`
+--- | `SDL_SCANCODE_APP1`
+--- | `SDL_SCANCODE_APP2`
+--- | `SDL_SCANCODE_AUDIOREWIND`
+--- | `SDL_SCANCODE_AUDIOFASTFORWARD`
+--- | `SDL_SCANCODE_SOFTLEFT`
+--- | `SDL_SCANCODE_SOFTRIGHT`
+--- | `SDL_SCANCODE_CALL`
+--- | `SDL_SCANCODE_ENDCALL`
+--- | `SDL_NUM_SCANCODES`
+
 --- @type integer
 INSTANT_WARP_INDEX_START = 0x00
 
@@ -905,9 +1098,6 @@ WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 
 --- @type integer
 WARP_TRANSITION_FADE_INTO_BOWSER = 0x13
-
---- @type string
-VERSION_REGION = "US"
 
 id_bhv1Up                                 =   0 --- @type BehaviorId
 id_bhv1upJumpOnApproach                   =   1 --- @type BehaviorId
@@ -2691,6 +2881,69 @@ M_MOUSE_BUTTON = MOUSE_BUTTON_2
 
 --- @type integer
 R_MOUSE_BUTTON = MOUSE_BUTTON_3
+
+COURSE_NONE     =              0 --- @type CourseNum
+COURSE_BOB      =              1 --- @type CourseNum
+COURSE_WF       =              2 --- @type CourseNum
+COURSE_JRB      =              3 --- @type CourseNum
+COURSE_CCM      =              4 --- @type CourseNum
+COURSE_BBH      =              5 --- @type CourseNum
+COURSE_HMC      =              6 --- @type CourseNum
+COURSE_LLL      =              7 --- @type CourseNum
+COURSE_SSL      =              8 --- @type CourseNum
+COURSE_DDD      =              9 --- @type CourseNum
+COURSE_SL       =             10 --- @type CourseNum
+COURSE_WDW      =             11 --- @type CourseNum
+COURSE_TTM      =             12 --- @type CourseNum
+COURSE_THI      =             13 --- @type CourseNum
+COURSE_TTC      =             14 --- @type CourseNum
+COURSE_RR       =             15 --- @type CourseNum
+COURSE_BITDW    =             16 --- @type CourseNum
+COURSE_BITFS    =             17 --- @type CourseNum
+COURSE_BITS     =             18 --- @type CourseNum
+COURSE_PSS      =             19 --- @type CourseNum
+COURSE_COTMC    =             20 --- @type CourseNum
+COURSE_TOTWC    =             21 --- @type CourseNum
+COURSE_VCUTM    =             22 --- @type CourseNum
+COURSE_WMOTR    =             23 --- @type CourseNum
+COURSE_SA       =             24 --- @type CourseNum
+COURSE_CAKE_END =             25 --- @type CourseNum
+COURSE_END      =             26 --- @type CourseNum
+COURSE_COUNT    = COURSE_END - 1 --- @type CourseNum
+COURSE_MAX      =   COURSE_COUNT --- @type CourseNum
+COURSE_MIN      =              1 --- @type CourseNum
+
+--- @alias CourseNum
+--- | `COURSE_NONE`
+--- | `COURSE_BOB`
+--- | `COURSE_WF`
+--- | `COURSE_JRB`
+--- | `COURSE_CCM`
+--- | `COURSE_BBH`
+--- | `COURSE_HMC`
+--- | `COURSE_LLL`
+--- | `COURSE_SSL`
+--- | `COURSE_DDD`
+--- | `COURSE_SL`
+--- | `COURSE_WDW`
+--- | `COURSE_TTM`
+--- | `COURSE_THI`
+--- | `COURSE_TTC`
+--- | `COURSE_RR`
+--- | `COURSE_BITDW`
+--- | `COURSE_BITFS`
+--- | `COURSE_BITS`
+--- | `COURSE_PSS`
+--- | `COURSE_COTMC`
+--- | `COURSE_TOTWC`
+--- | `COURSE_VCUTM`
+--- | `COURSE_WMOTR`
+--- | `COURSE_SA`
+--- | `COURSE_CAKE_END`
+--- | `COURSE_END`
+--- | `COURSE_COUNT`
+--- | `COURSE_MAX`
+--- | `COURSE_MIN`
 
 DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId
@@ -5466,6 +5719,15 @@ BOBOMB_ACT_LAVA_DEATH = 100
 
 --- @type integer
 BOBOMB_ACT_DEATH_PLANE_DEATH = 101
+
+COIN_TYPE_NONE   = 0 --- @type CoinType
+COIN_TYPE_YELLOW = 1 --- @type CoinType
+COIN_TYPE_BLUE   = 2 --- @type CoinType
+
+--- @alias CoinType
+--- | `COIN_TYPE_NONE`
+--- | `COIN_TYPE_YELLOW`
+--- | `COIN_TYPE_BLUE`
 
 --- @type integer
 HIDDEN_BLUE_COIN_ACT_INACTIVE = 0

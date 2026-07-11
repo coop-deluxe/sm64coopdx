@@ -358,13 +358,10 @@
 | yaw | `integer` |  |
 | focus | [Vec3f](structs.md#Vec3f) | read-only |
 | pos | [Vec3f](structs.md#Vec3f) | read-only |
-| unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
 | areaCenX | `number` |  |
 | areaCenZ | `number` |  |
 | cutscene | `integer` |  |
-| filler31 | `Array` <`integer`> |  |
 | nextYaw | `integer` |  |
-| filler3C | `Array` <`integer`> |  |
 | doorStatus | `integer` |  |
 | areaCenY | `number` |  |
 | mtx | [Mat4](structs.md#Mat4) | read-only |
@@ -619,7 +616,7 @@
 | animReturnFromStarDance | `integer` | read-only |
 | animForwardSpinningFlip | `integer` | read-only |
 | animTripleJumpFly | `integer` | read-only |
-| anims | `Array` <`integer`> | read-only |
+| anims | `Array` <`integer`> | read-only, starts at index 0 |
 | soundFreqScale | `number` | read-only |
 | soundYahWahHoo | `integer` | read-only |
 | soundHoohoo | `integer` | read-only |
@@ -665,7 +662,7 @@
 | soundImaTired | `integer` | read-only |
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
-| sounds | `Array` <`integer`> | read-only |
+| sounds | `Array` <`integer`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 
@@ -893,7 +890,7 @@
 | name | `string` | read-only |
 | index | `integer` | read-only |
 | playerIndex | `integer` |  |
-| buttons | `Array` <`boolean`> | read-only |
+| buttons | `Array` <`boolean`> | read-only, starts at index 0 |
 | leftTrigger | `integer` | read-only |
 | rightTrigger | `integer` | read-only |
 | leftStick | [Vec2s](structs.md#Vec2s) | read-only |
@@ -1157,7 +1154,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| unused | `integer` | read-only |
 | background | `integer` |  |
 | prevCameraPos | [Vec3f](structs.md#Vec3f) | read-only |
 | prevCameraFocus | [Vec3f](structs.md#Vec3f) | read-only |
@@ -1218,7 +1214,6 @@
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | cullingRadius | `integer` |  |
-| pad1E | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1289,7 +1284,6 @@
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | sharedChild | [GraphNode](structs.md#GraphNode) | read-only |
-| unk4C | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | throwMatrix | `Pointer` <`Mat4`> |  |
 | throwMatrixPrev | `Pointer` <`Mat4`> | read-only |
 | prevThrowMatrix | [Mat4](structs.md#Mat4) | read-only |
@@ -1346,7 +1340,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| unused | `integer` | read-only |
 | fov | `number` |  |
 | near | `integer` |  |
 | far | `integer` |  |
@@ -1437,7 +1430,6 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | fnNode | [FnGraphNode](structs.md#FnGraphNode) | read-only |
-| unused | `integer` | read-only |
 | parameter | `integer` |  |
 | selectedCase | `integer` |  |
 
@@ -1452,7 +1444,6 @@
 | node | [GraphNode](structs.md#GraphNode) | read-only |
 | displayList | `Pointer` <`Gfx`> |  |
 | translation | [Vec3s](structs.md#Vec3s) | read-only |
-| pad1E | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -1519,10 +1510,8 @@
 | curPos | [Vec3f](structs.md#Vec3f) | read-only |
 | goalFocus | [Vec3f](structs.md#Vec3f) | read-only |
 | goalPos | [Vec3f](structs.md#Vec3f) | read-only |
-| filler30 | `Array` <`integer`> |  |
 | mode | `integer` |  |
 | defMode | `integer` |  |
-| filler3E | `Array` <`integer`> |  |
 | focusDistance | `number` |  |
 | oldPitch | `integer` |  |
 | oldYaw | `integer` |  |
@@ -1531,9 +1520,6 @@
 | shakePitchPhase | `integer` |  |
 | shakePitchVel | `integer` |  |
 | shakePitchDecay | `integer` |  |
-| unusedVec1 | [Vec3f](structs.md#Vec3f) | read-only |
-| unusedVec2 | [Vec3s](structs.md#Vec3s) | read-only |
-| filler72 | `Array` <`integer`> |  |
 | roll | `integer` |  |
 | yaw | `integer` |  |
 | nextYaw | `integer` |  |
@@ -1652,8 +1638,9 @@
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
-| animPartsPos | `Array` <`Vec3f`> | read-only |
-| animPartsRot | `Array` <`Vec3s`> | read-only |
+| animPartsPos | `Array` <`Vec3f`> | read-only, starts at index 0 |
+| animPartsRot | `Array` <`Vec3s`> | read-only, starts at index 0 |
+| animPartsMtx | `Array` <`Mat4`> | read-only, starts at index 0 |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -1963,8 +1950,6 @@
 | behavior | `Pointer` <`BehaviorScript`> | read-only |
 | initBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
 | curBhvCommand | `Pointer` <`BehaviorScript`> | read-only |
-| bhvStack | `Array` <`integer`> | read-only |
-| bhvStackIndex | `integer` | read-only |
 | bhvDelayTimer | `integer` |  |
 | activeFlags | `integer` |  |
 | collidedObjInteractTypes | `integer` |  |
@@ -2243,6 +2228,7 @@
 | oCoinUnkF4 | `integer` |  |
 | oCoinUnkF8 | `integer` |  |
 | oCoinUnk110 | `number` |  |
+| oCoinBaseYVel | `number` |  |
 | oCoinUnk1B0 | `integer` |  |
 | oCollisionParticleUnkF4 | `number` |  |
 | oControllablePlatformUnkF8 | `integer` |  |
@@ -2862,7 +2848,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| parts | `Array` <`Color`> | read-only |
+| parts | `Array` <`Color`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 
@@ -2929,7 +2915,6 @@
 | areaIndex | `integer` |  |
 | activeAreaIndex | `integer` |  |
 | behaviorArg | `integer` |  |
-| unk18 | [GraphNode](structs.md#GraphNode) | read-only |
 | next | [SpawnInfo](structs.md#SpawnInfo) | read-only |
 | syncID | `integer` | read-only |
 

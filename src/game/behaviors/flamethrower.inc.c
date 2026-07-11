@@ -73,7 +73,7 @@ void bhv_flamethrower_loop(void) {
         o->oFlameThowerUnk110 = sp34;
         flame = spawn_object_relative(o->oBehParams2ndByte, 0, 0, 0, o, model, bhvFlamethrowerFlame);
         if (flame != NULL) { flame->oForwardVel = flameVel; }
-        cur_obj_play_sound_1(SOUND_AIR_BLOW_FIRE);
+        cur_obj_play_sound_if_visible(SOUND_AIR_BLOW_FIRE);
     } else if (o->oTimer > 60)
         o->oAction = 0;
 }

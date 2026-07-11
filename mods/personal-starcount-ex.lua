@@ -1,6 +1,6 @@
 -- name: Personal Star Counter
 -- incompatible: gamemode
--- description: See how many stars you've collected!\n\nCredits:\n\\#097419\\Mr.Needlemouse\\#FFFFFF\\ - Concept\nSunk\\#dcdcdc\\ - Creator\n\\#269A91\\Demnyx\\#dcdcdc\\ - Assistance\n\\#f296af\\PeachyPeach\\#dcdcdc\\ - Global functions
+-- description: See how many stars you've collected!\n\nCredits:\n\\#097419\\Mr.Needlemouse\\#FFF\\ - Concept\nSunk\\#\\ - Creator\n\\#269A91\\Demnyx\\#\\ - Assistance\n\\#f296af\\PeachyPeach\\#\\ - Global functions
 
 ------------------------------
 ----- Localize functions -----
@@ -273,7 +273,7 @@ end
 local function psc_update()
     gPlayerSyncTable[0].psc = ThisGameStarCounter
     for i = 0, MAX_PLAYERS - 1 do
-        network_player_set_description(gNetworkPlayers[i], "\\#FF0000\\Stars: " .. tostring(gPlayerSyncTable[i].psc), 255, 255, 255, 255)
+        network_player_set_description(gNetworkPlayers[i], "\\#F00\\Stars: " .. tostring(gPlayerSyncTable[i].psc), 255, 255, 255, 255)
     end
 end
 

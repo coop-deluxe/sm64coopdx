@@ -184,46 +184,14 @@ static const void* sDynosBuiltinScriptPtrs[] = {
     define_builtin(level_main_menu_entry_1),
 };
 
-#define define_level_original(lvl, script) (void*) script
-
-void* gDynosLevelScriptsOriginal[LEVEL_COUNT] = {
-    define_level_original(0, NULL),
-    define_level_original(LEVEL_UNKNOWN_1, NULL),
-    define_level_original(LEVEL_UNKNOWN_2, NULL),
-    define_level_original(LEVEL_UNKNOWN_3, NULL),
-    define_level_original(LEVEL_BBH, level_bbh_entry),
-    define_level_original(LEVEL_CCM, level_ccm_entry),
-    define_level_original(LEVEL_CASTLE, level_castle_inside_entry),
-    define_level_original(LEVEL_HMC, level_hmc_entry),
-    define_level_original(LEVEL_SSL, level_ssl_entry),
-    define_level_original(LEVEL_BOB, level_bob_entry),
-    define_level_original(LEVEL_SL, level_sl_entry),
-    define_level_original(LEVEL_WDW, level_wdw_entry),
-    define_level_original(LEVEL_JRB, level_jrb_entry),
-    define_level_original(LEVEL_THI, level_thi_entry),
-    define_level_original(LEVEL_TTC, level_ttc_entry),
-    define_level_original(LEVEL_RR, level_rr_entry),
-    define_level_original(LEVEL_CASTLE_GROUNDS, level_castle_grounds_entry),
-    define_level_original(LEVEL_BITDW, level_bitdw_entry),
-    define_level_original(LEVEL_VCUTM, level_vcutm_entry),
-    define_level_original(LEVEL_BITFS, level_bitfs_entry),
-    define_level_original(LEVEL_SA, level_sa_entry),
-    define_level_original(LEVEL_BITS, level_bits_entry),
-    define_level_original(LEVEL_LLL, level_lll_entry),
-    define_level_original(LEVEL_DDD, level_ddd_entry),
-    define_level_original(LEVEL_WF, level_wf_entry),
-    define_level_original(LEVEL_ENDING, level_ending_entry),
-    define_level_original(LEVEL_CASTLE_COURTYARD, level_castle_courtyard_entry),
-    define_level_original(LEVEL_PSS, level_pss_entry),
-    define_level_original(LEVEL_COTMC, level_cotmc_entry),
-    define_level_original(LEVEL_TOTWC, level_totwc_entry),
-    define_level_original(LEVEL_BOWSER_1, level_bowser_1_entry),
-    define_level_original(LEVEL_WMOTR, level_wmotr_entry),
-    define_level_original(LEVEL_UNKNOWN_32, NULL),
-    define_level_original(LEVEL_BOWSER_2, level_bowser_2_entry),
-    define_level_original(LEVEL_BOWSER_3, level_bowser_3_entry),
-    define_level_original(LEVEL_UNKNOWN_35, NULL),
-    define_level_original(LEVEL_TTM, level_ttm_entry),
+const void *gDynosLevelScriptsOriginal[] = {
+    [LEVEL_NONE] = NULL,
+#define STUB_LEVEL(_0, levelNum, _2, _3, _4, _5, _6, _7, _8) [levelNum] = NULL,
+#define DEFINE_LEVEL(_0, levelNum, _2, folder, _4, _5, _6, _7, _8, _9, _10) \
+    [levelNum] = level_ ## folder ## _entry,
+#include "levels/level_defines.h"
+#undef STUB_LEVEL
+#undef DEFINE_LEVEL
 };
 
 const void* DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName) {
@@ -1398,12 +1366,13 @@ static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct {
-    const char *name;
+    const char *names[2];
     const void *func;
     u8 type;
 } DynosBuiltinFunction;
 
-#define define_builtin_function(_func, _type) { .name = #_func, .func = (const void *) _func, .type = _type }
+#define define_builtin_function(_func, _type) { .names = {#_func, NULL}, .func = (const void *) _func, .type = _type }
+#define define_builtin_function_renamed(_func, _oldName, _type) { .names = {#_func, #_oldName}, .func = (const void *) _func, .type = _type }
 
 static const DynosBuiltinFunction sDynosBuiltinFuncs[] = {
     define_builtin_function(geo_mirror_mario_set_alpha, FUNCTION_GEO),
@@ -1452,7 +1421,7 @@ static const DynosBuiltinFunction sDynosBuiltinFuncs[] = {
     define_builtin_function(geo_snufit_move_mask, FUNCTION_GEO),
     define_builtin_function(geo_snufit_scale_body, FUNCTION_GEO),
     define_builtin_function(geo_scale_bowser_key, FUNCTION_GEO),
-    { .name = "geo_rotate_coin", .func = (const void *) geo_rotate_3d_coin, .type = FUNCTION_GEO },
+    define_builtin_function_renamed(geo_rotate_3d_coin, geo_rotate_coin, FUNCTION_GEO),
     define_builtin_function(geo_offset_klepto_held_object, FUNCTION_GEO),
     define_builtin_function(geo_switch_peach_eyes, FUNCTION_GEO),
 
@@ -1470,7 +1439,7 @@ static const DynosBuiltinFunction sDynosBuiltinFuncs[] = {
     define_builtin_function(bhv_door_init, FUNCTION_BHV),
     define_builtin_function(bhv_door_loop, FUNCTION_BHV),
     define_builtin_function(bhv_star_door_loop, FUNCTION_BHV),
-    define_builtin_function(bhv_star_door_loop_2, FUNCTION_BHV),
+    define_builtin_function_renamed(bhv_star_door_loop_update_render_state, bhv_star_door_loop_2, FUNCTION_BHV),
     define_builtin_function(bhv_mr_i_loop, FUNCTION_BHV),
     define_builtin_function(bhv_mr_i_body_loop, FUNCTION_BHV),
     define_builtin_function(bhv_mr_i_particle_loop, FUNCTION_BHV),
@@ -2047,9 +2016,16 @@ static const char *sDynosBuiltinFuncTypeNames[] = {
     [FUNCTION_LVL] = "level script",
 };
 
+static inline bool DynOS_Builtin_Func_HasName(const DynosBuiltinFunction &aBuiltinFunc, const char *aDataName) {
+    return aDataName != NULL && (
+        (aBuiltinFunc.names[0] != NULL && strcmp(aBuiltinFunc.names[0], aDataName) == 0) ||
+        (aBuiltinFunc.names[1] != NULL && strcmp(aBuiltinFunc.names[1], aDataName) == 0)
+    );
+}
+
 const void* DynOS_Builtin_Func_GetFromName(const char* aDataName, u8 aFuncType) {
     for (const auto &builtinFunc : sDynosBuiltinFuncs) {
-        if (builtinFunc.type == aFuncType && strcmp(builtinFunc.name, aDataName) == 0) {
+        if (builtinFunc.type == aFuncType && DynOS_Builtin_Func_HasName(builtinFunc, aDataName)) {
             return builtinFunc.func;
         }
     }
@@ -2067,7 +2043,7 @@ const char *DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u8 aFuncType) {
     s32 count = (s32) (sizeof(sDynosBuiltinFuncs) / sizeof(sDynosBuiltinFuncs[0]));
     if (aIndex < 0 || aIndex >= count) { return NULL; }
     if (sDynosBuiltinFuncs[aIndex].type != aFuncType) { return NULL; }
-    return sDynosBuiltinFuncs[aIndex].name;
+    return sDynosBuiltinFuncs[aIndex].names[0];
 }
 
 s32 DynOS_Builtin_Func_GetIndexFromData(const void* aData, u8 aFuncType) {
@@ -2086,10 +2062,11 @@ static String DynOS_Builtin_Func_CheckMisuse_Internal(s32 aIndex, const char* aD
     for (s32 i = 0; i < count; ++i) {
         const auto &builtinFunc = sDynosBuiltinFuncs[i];
         if (aFuncType != builtinFunc.type && (
-            aIndex == i || (aDataName && strcmp(aDataName, builtinFunc.name) == 0) || aData == builtinFunc.func)) {
+            aIndex == i || DynOS_Builtin_Func_HasName(builtinFunc, aDataName) || aData == builtinFunc.func)
+        ) {
             return String(
                 "Invalid use of %s function in %s: %s",
-                builtinFunc.name,
+                builtinFunc.names[0],
                 sDynosBuiltinFuncTypeNames[builtinFunc.type],
                 sDynosBuiltinFuncTypeNames[aFuncType]
             );

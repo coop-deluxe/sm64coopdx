@@ -19,65 +19,32 @@ struct Finger {
 };
 
 struct Gamepad {
-
-    /* Misc Data */
-
     SDL_GameController *controller; // Shouldn't be exposed, used to check if the controller exists
-
     const char *name;
     s32 index;
-    u8 playerIndex; // Used specifically for player LEDs, 0 by default, can also be used to assign controllers to players
-
-    /* Buttons */
-
-    bool buttons[SDL_CONTROLLER_BUTTON_MAX];
-    
-    /* Triggers */
-
+    u8 playerIndex;
+    C_ARRAY bool buttons[SDL_CONTROLLER_BUTTON_MAX];
     s16 leftTrigger;
     s16 rightTrigger;
-
-    /* Sticks */
-    
     Vec2s leftStick;
     Vec2s rightStick;
-    
-    /* Sensors */
-
     Vec3f gyro;
     Vec3f accelerometer;
-
-    // These are used for controllers that may have more than one of a sensor, like joycons
-
     Vec3f leftGyro;
     Vec3f rightGyro;
     Vec3f leftAccelerometer;
     Vec3f rightAccelerometer;
-
-    /* Touchpad */
-
     struct Finger touchpad[MAX_TOUCHPAD_FINGERS];
-
-    /* Rumble */
-
     u16 rumbleLowFreq;
     u16 rumbleHighFreq;
     u32 rumbleDurationMs;
-
-    /* LED Color */
-
     Color ledColor;
-
 };
 
 struct Key {
-
-    /* Scancodes */
-
     bool down;
     bool pressed;
     bool released;
-
 };
 
 extern bool gModHasInputFocus;
@@ -88,9 +55,9 @@ extern struct Key gKeyboard[SDL_NUM_SCANCODES];
 /* |description|Returns the current gamepad index in the config file|descriptionEnd| */
 u32 get_current_gamepad_index(void);
 /* |description|Returns the clipboard text|descriptionEnd| */
-const char* get_clipboard_text(void);
+const char *get_clipboard_text(void);
 /* |description|Sets the clipboard text|descriptionEnd| */
-void set_clipboard_text(const char* text);
+void set_clipboard_text(const char *text);
 /* |description|Starts text input and grabs input focus|descriptionEnd| */
 void start_text_input(void);
 /* |description|Stops text input and loses input focus|descriptionEnd| */
@@ -98,5 +65,5 @@ void stop_text_input(void);
 /* |description|Checks if text input is active and if you have input focus|descriptionEnd| */
 bool is_text_input_active(void);
 void clear_gamepad_input_data(void);
-void controller_maps_load(const char* mapsPath, bool appendMaps);
+void controller_maps_load(const char *mapsPath, bool appendMaps);
 #endif

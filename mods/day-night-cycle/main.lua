@@ -1,6 +1,6 @@
 -- name: Day Night Cycle DX
 -- incompatible: light day-night-cycle
--- description: Day Night Cycle DX v2.5.2\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#dcdcdc\\ for the night time music.\nSpecial thanks to \\#00ffff\\AngelicMiracles\\#dcdcdc\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#dcdcdc\\ for salvaging\nthe mod files.
+-- description: Day Night Cycle DX v2.5.2\nBy \\#ec7731\\Agent X\n\n\\#\\This mod adds a fully featured day & night cycle system with night, sunrise, day and sunset to sm64coopdx. It includes an API and hook system for interfacing with several components of the mod externally. This mod was originally made for sm64ex-coop but has been practically rewritten for sm64coopdx.\n\nDays last 24 minutes and with the /time command, you can get/set the time or change your settings.\n\nThere is also now a new menu in the pause menu for Day Night Cycle DX!\n\nSpecial thanks to \\#e06de4\\MaiskX3\\#\\ for the night time music.\nSpecial thanks to \\#0ff\\AngelicMiracles\\#\\ for the sunset, sunrise and night time skyboxes.\nSpecial thanks to \\#344ee1\\eros71\\#\\ for salvaging\nthe mod files.
 
 -- localize functions to improve performance
 local network_is_server,mod_storage_load,tonumber,math_floor,type,error,table_insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,math_lerp,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string_format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time = network_is_server,mod_storage_load,tonumber,math.floor,type,error,table.insert,get_skybox,set_lighting_dir,set_lighting_color,set_vertex_color,set_fog_color,set_fog_intensity,network_check_singleplayer_pause,network_player_connected_count,obj_get_first_with_behavior_id,spawn_non_sync_object,obj_scale,math.lerp,set_lighting_color_ambient,le_set_ambient_color,djui_hud_set_resolution,djui_hud_set_font,hud_is_hidden,hud_get_value,djui_hud_get_screen_width,djui_hud_measure_text,djui_hud_get_screen_height,djui_hud_set_color,play_sound,djui_chat_message_create,string.format,mod_storage_save_number,mod_storage_save_bool,get_date_and_time
@@ -338,7 +338,7 @@ local function on_set_command(msg)
     end
 
     if msg == "" then
-        djui_chat_message_create("/time \\#00ffff\\set\\#ffff00\\ [TIME]\\#dcdcdc\\ to set the time")
+        djui_chat_message_create("/time \\#0ff\\set\\#ff0\\ [TIME]\\#\\ to set the time")
         return
     end
 
@@ -379,7 +379,7 @@ local function on_add_command(msg)
 
     local amount = tonumber(msg)
     if amount == nil then
-        djui_chat_message_create("/time \\#00ffff\\add\\#ffff00\\ [AMOUNT]\\#dcdcdc\\ to add to the time")
+        djui_chat_message_create("/time \\#0ff\\add\\#ff0\\ [AMOUNT]\\#\\ to add to the time")
         return
     end
     local oldTime = gGlobalSyncTable.time
@@ -403,7 +403,7 @@ local function on_scale_command(msg)
 
     local scale = tonumber(msg)
     if scale == nil then
-        djui_chat_message_create("/time \\#00ffff\\scale\\#ffff00\\ [SCALE]\\#dcdcdc\\ to scale the rate at which time passes")
+        djui_chat_message_create("/time \\#0ff\\scale\\#ff0\\ [SCALE]\\#\\ to scale the rate at which time passes")
         return
     end
     gGlobalSyncTable.timeScale = scale
@@ -773,7 +773,7 @@ hook_event(HOOK_ON_WARP, on_warp)
 hook_event(HOOK_ON_EXIT, on_exit)
 hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
 
-hook_chat_command("time", "\\#00ffff\\[set|add|scale|query|24h|sync|sync-sun|music|display-time]\\#dcdcdc\\ - The command handle for Day Night Cycle DX \\#7f7f7f\\(leave blank to toggle Day Night Cycle on or off)", on_time_command)
+hook_chat_command("time", "\\#0ff\\[set|add|scale|query|24h|sync|sync-sun|music|display-time]\\#\\ - The command handle for Day Night Cycle DX \\#7f7f7f\\(leave blank to toggle Day Night Cycle on or off)", on_time_command)
 
 hook_on_sync_table_change(gGlobalSyncTable, "sunrise", 0, on_sunrise_changed)
 hook_on_sync_table_change(gGlobalSyncTable, "sunset", 0, on_sunset_changed)

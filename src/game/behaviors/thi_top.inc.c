@@ -35,14 +35,14 @@ void bhv_thi_tiny_island_top_loop(void) {
                 o->oAction++;
                 cur_obj_spawn_particles(&D_8032F134);
                 spawn_triangle_break_particles(20, 138, 0.3f, 3);
-                cur_obj_play_sound_2(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
                 cur_obj_hide();
                 network_send_object(o);
             }
         } else {
             if (o->oTimer < 50) {
                 if (gEnvironmentRegions && gEnvironmentRegionsLength > 18) { gEnvironmentRegions[18]--; }
-                cur_obj_play_sound_1(SOUND_ENV_WATER_DRAIN);
+                cur_obj_play_sound_if_visible(SOUND_ENV_WATER_DRAIN);
             } else {
                 gTHIWaterDrained |= 1;
                 play_puzzle_jingle();

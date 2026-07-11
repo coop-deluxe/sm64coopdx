@@ -31,7 +31,7 @@ void smlua_mod_error(void) {
     if (mod == NULL) { mod = gLuaLastHookMod; }
     if (mod == NULL) { return; }
     char txt[255] = { 0 };
-    snprintf(txt, 254, "'%s\\#ff0000\\' has script errors!", mod->name);
+    snprintf(txt, 254, "'%s\\#f00\\' has script errors!", mod->name);
     static const struct DjuiColor color = { 255, 0, 0, 255 };
     djui_lua_error(txt, color);
 }

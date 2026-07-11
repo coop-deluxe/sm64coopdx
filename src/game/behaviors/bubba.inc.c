@@ -64,7 +64,7 @@ void bubba_act_1(void) {
         o->oAction = 0;
     } else if (o->oBubbaUnk100 != 0) {
         if (--o->oBubbaUnk100 == 0) {
-            cur_obj_play_sound_2(SOUND_OBJ_BUBBA_CHOMP);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BUBBA_CHOMP);
             o->oAction = 0;
         } else if (o->oBubbaUnk100 < 15) {
             o->oAnimState = 1;

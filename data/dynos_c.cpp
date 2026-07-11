@@ -228,6 +228,10 @@ void* dynos_level_get_script(s32 level) {
     return (void *) DynOS_Level_GetScript(level);
 }
 
+const void *dynos_level_get_vanilla_script(s32 level) {
+    return DynOS_Level_GetVanillaScript(level);
+}
+
 s32 dynos_level_get_mod_index(s32 level) {
     return DynOS_Level_GetModIndex(level);
 }

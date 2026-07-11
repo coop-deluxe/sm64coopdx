@@ -76,11 +76,11 @@ static struct Object* spawn_object_internal(enum BehaviorId behaviorId, enum Mod
     return obj;
 }
 
-struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction) {
+struct Object* spawn_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction) {
     return spawn_object_internal(behaviorId, modelId, x, y, z, objSetupFunction, true);
 }
 
-struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, LuaFunction objSetupFunction) {
+struct Object* spawn_non_sync_object(enum BehaviorId behaviorId, enum ModelExtendedId modelId, f32 x, f32 y, f32 z, OPTIONAL LuaFunction objSetupFunction) {
     return spawn_object_internal(behaviorId, modelId, x, y, z, objSetupFunction, false);
 }
 
