@@ -310,7 +310,7 @@ function cast_graph_node(node)
 end
 
 --- @param str string Any string
---- @return string test
+--- @return string
 --- Removes color codes from a string.
 ---
 --- ### Lua Example

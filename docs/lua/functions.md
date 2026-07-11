@@ -2788,7 +2788,7 @@ print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored 
 | str | `string` |
 
 ### Returns
-- test: `string`
+- `string`
 
 [:arrow_up_small:](#)
 
