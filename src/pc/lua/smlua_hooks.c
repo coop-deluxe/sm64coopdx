@@ -1086,15 +1086,10 @@ void smlua_call_behavior_hook(struct Object* object) {
  // hooked chat command //
 /////////////////////////
 
-struct LuaHookedChatCommand {
-    char* command;
-    char* description;
-    int reference;
-    struct Mod* mod;
-    struct ModFile* modFile;
-};
-
 #define MAX_HOOKED_CHAT_COMMANDS 512
+
+const char *HOOKED_CHAT_COMMAND_KEY_CALLBACK = "callback";
+const char *HOOKED_CHAT_COMMAND_KEY_ENABLED = "enabled"; 
 
 static struct LuaHookedChatCommand sHookedChatCommands[MAX_HOOKED_CHAT_COMMANDS] = { 0 };
 static int sHookedChatCommandsCount = 0;
@@ -1125,16 +1120,41 @@ int smlua_hook_chat_command(lua_State* L) {
         return 0;
     }
 
-    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    if (ref == -1) {
+    int thirdParamType = lua_type(L, 3);
+    int callbackRef = -1;
+    int enabledRef = -1;
+
+    if (thirdParamType == LUA_TFUNCTION) {
+        lua_pushvalue(L, 3);
+        callbackRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        enabledRef = LUA_NOREF;
+    } else if (thirdParamType == LUA_TTABLE) {
+
+        lua_pushstring(L, HOOKED_CHAT_COMMAND_KEY_CALLBACK);
+
+        if (lua_gettable(L, 3) != LUA_TNIL) {
+            callbackRef = luaL_ref(L, LUA_REGISTRYINDEX);
+            
+            lua_pushstring(L, HOOKED_CHAT_COMMAND_KEY_ENABLED);
+            if (lua_gettable(L, 3) != LUA_TNIL) {
+                enabledRef = luaL_ref(L, LUA_REGISTRYINDEX);
+            } else {
+                enabledRef = LUA_NOREF;
+            }
+        }
+    }
+
+    if (callbackRef == -1 || enabledRef == -1) {
         LOG_LUA_LINE("Hook chat command: tried to hook undefined function '%s'", command);
         return 0;
     }
 
     struct LuaHookedChatCommand* hooked = &sHookedChatCommands[sHookedChatCommandsCount];
+
     hooked->command = strdup(command);
     hooked->description = strdup(description);
-    hooked->reference = ref;
+    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_CALLBACK] = callbackRef;
+    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED] = enabledRef;
     hooked->mod = gLuaActiveMod;
     hooked->modFile = gLuaActiveModFile;
 
@@ -1173,6 +1193,24 @@ int smlua_update_chat_command_description(lua_State* L) {
     return 0;
 }
 
+bool smlua_verify_chat_command(struct LuaHookedChatCommand *hooked) {
+    lua_State *L = gLuaState;
+    bool enabled = true;
+
+    if (hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED] != LUA_NOREF) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED]);
+
+        if (0 == smlua_call_hook(L, 0, 1, 0, hooked->mod, hooked->modFile)) {
+            if (lua_type(L, -1) == LUA_TBOOLEAN) {
+                enabled = smlua_to_boolean(L, -1);
+            }
+            lua_pop(L, 1);
+        }
+    }
+
+    return enabled;
+}
+
 bool smlua_call_chat_command_hook(char* command) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
@@ -1185,6 +1223,11 @@ bool smlua_call_chat_command_hook(char* command) {
             }
         }
 
+        // verify if chat command should be triggered
+        if (!smlua_verify_chat_command(hook)) {
+            goto NEXT_HOOK;
+        }
+
         char* params = &command[commandLength + 1];
         if (*params != '\0' && *params != ' ') {
             goto NEXT_HOOK;
@@ -1194,7 +1237,7 @@ bool smlua_call_chat_command_hook(char* command) {
         }
 
         // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->chatCommandHookRefs[CHAT_COMMAND_HOOK_CALLBACK]);
 
         // push parameter
         lua_pushstring(L, params);
@@ -1225,6 +1268,9 @@ NEXT_HOOK:;
 void smlua_display_chat_commands(void) {
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+
+        if (!smlua_verify_chat_command(hook)) continue;
+
         char msg[256] = { 0 };
         snprintf(msg, 256, "/%s %s", hook->command, hook->description);
         djui_chat_message_create(msg);
@@ -1871,7 +1917,9 @@ void smlua_hook_replace_function_references(lua_State* L, int oldReference, int 
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
-        smlua_hook_replace_function_reference(L, &hooked->reference, oldReference, newReference);
+        for (int j = 0; j < CHAT_COMMAND_HOOK_MAX; j++) {
+            smlua_hook_replace_function_reference(L, &hooked->chatCommandHookRefs[j], oldReference, newReference);
+        }
     }
 
     for (int i = 0; i < gHookedModMenuElementsCount; i++) {
@@ -1917,9 +1965,10 @@ void smlua_clear_hooks(void) {
         if (hooked->description != NULL) { free(sHookedChatCommands[i].description); }
         hooked->description = NULL;
 
-        hooked->reference = 0;
         hooked->mod = NULL;
         hooked->modFile = NULL;
+
+        memset(hooked->chatCommandHookRefs, 0, sizeof(hooked->chatCommandHookRefs));
     }
     sHookedChatCommandsCount = 0;
 

@@ -87,6 +87,7 @@
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
+    - [enum LuaChatCommandHookType](#enum-LuaChatCommandHookType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
     - [enum HudDisplayValue](#enum-HudDisplayValue)
     - [enum HudDisplayFlags](#enum-HudDisplayFlags)
@@ -3641,6 +3642,13 @@
 | HOOK_BEFORE_PLAY_MODE_UPDATE | 67 |
 | HOOK_ON_PLAY_MODE_UPDATE | 68 |
 | HOOK_MAX | 69 |
+
+### [enum LuaChatCommandHookType](#LuaChatCommandHookType)
+| Identifier | Value |
+| :--------- | :---- |
+| CHAT_COMMAND_HOOK_CALLBACK | 0 |
+| CHAT_COMMAND_HOOK_ENABLED | 1 |
+| CHAT_COMMAND_HOOK_MAX | 2 |
 
 [:arrow_up_small:](#)
 

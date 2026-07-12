@@ -108,6 +108,20 @@ static const char* LuaActionHookTypeArgName[] = {
 
 #define ACTION_HOOK_CONTINUE_EXECUTION -1
 
+enum LuaChatCommandHookType {
+    CHAT_COMMAND_HOOK_CALLBACK,
+    CHAT_COMMAND_HOOK_ENABLED,
+    CHAT_COMMAND_HOOK_MAX,
+};
+
+struct LuaHookedChatCommand {
+    char *command;
+    char *description;
+    int chatCommandHookRefs[CHAT_COMMAND_HOOK_MAX];
+    struct Mod *mod;
+    struct ModFile *modFile;
+};
+
 #define MAX_HOOKED_MOD_MENU_ELEMENTS 256
 
 enum LuaModMenuElementType {
@@ -188,6 +202,7 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
 bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 
+bool smlua_verify_chat_command(struct LuaHookedChatCommand* hooked);
 bool smlua_call_chat_command_hook(char* command);
 void smlua_display_chat_commands(void);
 char** smlua_get_chat_player_list(void);

@@ -117,10 +117,18 @@ function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, lo
     -- ...
 end
 
+--- @class ChatCommandTable
+--- @field callback fun(msg:string): boolean
+--- @field enabled? fun():boolean
+
 --- @param command string The command to run. Should be easy to type
 --- @param description string Should describe what the command does and how to use it
---- @param func fun(msg:string): boolean Run upon activating the command. Return `true` to confirm the command has succeeded
-function hook_chat_command(command, description, func)
+--- @param funcOrTable fun(msg:string): boolean | ChatCommandTable The action of the command.
+--- If a function is used, return `true` to confirm the command has succeeded.
+--- Otherwise, if a table is used:
+--- - `callback`: Run the command and return `true` to confirm the command has succeeded. 
+--- - `enabled`: Checks if the command should run or be displayed in the command list.
+function hook_chat_command(command, description, funcOrTable)
     -- ...
 end
 

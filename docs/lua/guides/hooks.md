@@ -54,7 +54,7 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 <br />
 
 ## [hook_chat_command](#hook_chat_command)
-`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise.
+`hook_chat_command()` allows Lua mods to react and respond to chat commands. Chat commands start with the `/` character. If a function table is passed, `callback` should return `true` when the command was valid and `false` otherwise, and `enabled` checks if the command should trigger and be displayed in the command list. If a function is passed instead, it has the behavior of `callback`.
 
 ### Parameters
 
@@ -62,23 +62,46 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 | ----- | ---- |
 | command | `string` |
 | description | `string` |
-| func | `Lua Function` (`string` message) -> `bool` |
+| func | `Lua Function` (`string` message) -> `bool` or table with entries for [Chat Command Table Entries](#chat-command-table-entries) |
+
+#### [Chat Command Table Entries](#chat-command-table-entries)
+
+| Type | Description | Parameters | Returns |
+| :--- | :---------- | :--------- | :------ |
+| callback | Runs when the command is triggered | `string` message | `true` if command was successful, else `false` |
+| enabled | Used to verify if the command should be triggered and displayed in the command list | None | `true` if command should be enabled, else `false` |
 
 ### Lua Example
 
 ```lua
-function on_test_command(msg)
+local secondCommandEnabled = false
+
+function on_test_command_1(msg)
     if msg == "on" then
-        djui_chat_message_create("Test: enabled")
+        secondCommandEnabled = true
+        djui_chat_message_create("Second command enabled")
         return true
     elseif msg == "off" then
-        djui_chat_message_create("Test: disabled")
+        secondCommandEnabled = false
+        djui_chat_message_create("Second command disabled")
         return true
     end
     return false
 end
 
-hook_chat_command("test", "[on|off] turn test on or off", on_hide_and_seek_command)
+function on_test_command_2_callback(msg)
+    play_character_sound(gMarioStates[0], CHAR_SOUND_HERE_WE_GO)
+    djui_chat_message_create("Here we go!!!")
+    return true
+end
+
+function on_test_command_2_enabled(msg)
+    return secondCommandEnabled
+end
+
+
+hook_chat_command("test1", "[on|off] turn test2 on or off", on_test_command_1)
+hook_chat_command("test2", "make your character shout", { callback = on_test_command_2_callback, enabled = on_test_command_2_enabled })
 ```
 
 [:arrow_up_small:](#)
