@@ -852,7 +852,7 @@ ComPtr<IDXGISwapChain1> gfx_dxgi_create_swap_chain(IUnknown *device) {
     if (dxgi.allow_tearing) {
         swap_chain_desc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
     }
-    
+
     run_as_dpi_aware([&] () {
         // When setting size for the buffers, the values that DXGI puts into the desc (that can later be retrieved by GetDesc1)
         // have been divided by the current scaling factor. By making this call dpi aware, no division will be performed.

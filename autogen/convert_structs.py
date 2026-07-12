@@ -204,6 +204,8 @@ def parse_struct(struct_str, sortFields = False):
     for field_str in field_strs:
         if len(field_str.strip()) == 0:
             continue
+        if ':' in field_str:
+            continue
 
         is_c_array = False
         if cobject_c_array_identifier in field_str:
@@ -543,18 +545,18 @@ def build_body(parsed):
 
     lot_names = '\nconst char *sLuaLotNames[] = {\n'
     for type_name in VEC_TYPES.keys():
-        lot_names += f'\t[LOT_{type_name.upper()}] = "{type_name}",\n'
+        lot_names += f'    [LOT_{type_name.upper()}] = "{type_name}",\n'
 
-    lot_names += f'\t[LOT_ARRAY] = "Array",\n'
-    lot_names += f'\t[LOT_POINTER] = "Pointer",\n'
-    lot_names += f'\t[LOT_MAX] = "Max",\n'
+    lot_names += f'    [LOT_ARRAY] = "Array",\n'
+    lot_names += f'    [LOT_POINTER] = "Pointer",\n'
+    lot_names += f'    [LOT_MAX] = "Max",\n'
     lot_names += '\n'
 
     for struct in parsed:
         sid = struct['identifier']
         if sid in structs_excluded:
             continue
-        lot_names += f'\t[LOT_{sid.upper()}] = "{sid}",\n'
+        lot_names += f'    [LOT_{sid.upper()}] = "{sid}",\n'
     lot_names += '};\n'
 
     return built + obj_table_built + lot_names
@@ -640,8 +642,7 @@ def doc_struct_field(struct, field):
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
     if ftype == cobject_property_identifier:
-        ftype = get_function_signature(field['get'])
-        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
+        ftype = get_return_signature(field['get'])
 
     restrictions = []
 
@@ -747,10 +748,16 @@ def get_function_signature(function):
                 if function_return:
                     sig += ': %s' % (function_return)
                 function_name = line.replace('(', ' ').split()[1]
-                function_signatures[function_name] = sig
+                if function_signatures.get(function_name) is None:
+                    function_signatures[function_name] = []
+                function_signatures[function_name].append(sig)
                 function_params.clear()
                 function_return = None
-    return function_signatures.get(function, 'function')
+
+    return function_signatures.get(function, ['function'])
+
+def get_return_signature(function):
+    return f"{'): '.join(get_function_signature(function)[0].split('): ')[1:])}"
 
 def def_struct(struct):
     sid = struct['identifier']
@@ -779,15 +786,15 @@ def def_struct(struct):
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
         elif ftype == cobject_property_identifier:
-            ftype = get_function_signature(field['get'])
-            ftype = f"{ftype[ftype.rfind(':')+2:]}"
+            ftype = [get_return_signature(field['get'])]
         else:
-            ftype = translate_to_def(ftype)
+            ftype = [translate_to_def(ftype)]
 
-        if ftype.startswith('Pointer_') and ftype not in def_pointers:
-            def_pointers.append(ftype)
+        if ftype[0].startswith('Pointer_') and ftype[0] not in def_pointers:
+            def_pointers.append(ftype[0])
 
-        s += '--- @field public %s %s\n' % (fid, ftype)
+        for type in ftype:
+            s += '--- @field public %s %s\n' % (fid, type)
 
     return s
 

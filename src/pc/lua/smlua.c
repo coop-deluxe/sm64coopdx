@@ -404,7 +404,7 @@ void smlua_update(void) {
 
     if (network_allow_mod_dev_mode()) { smlua_live_reload_update(L); }
 
-    audio_sample_destroy_pending_copies();
+    audio_destroy_pending_copies();
 
     smlua_call_event_hooks(HOOK_UPDATE);
 

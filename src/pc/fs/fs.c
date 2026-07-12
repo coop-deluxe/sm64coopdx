@@ -292,34 +292,34 @@ bool fs_sys_filename_is_portable(char const *filename) {
 
 /* these operate on the real file system */
 
-bool fs_sys_copy_file(char* src, const char* dir) {
-    FILE* fin = fopen(src, "rb");
+bool fs_sys_copy_file(const char *src, const char *dir) {
+    FILE *fin = fopen(src, "rb");
     if (fin == NULL) {
         return false;
     }
 
-    FILE* fout = fopen(dir, "wb");
+    FILE *fout = fopen(dir, "wb");
     if (fout == NULL) {
         fclose(fin);
         return false;
     }
 
-    size_t rbytes;
-    size_t wbytes;
+    size_t rbytes = 0;
+    size_t wbytes = 0;
     unsigned char buff[8192];
-    do {
-        rbytes = fread(buff, 1, sizeof(buff), fin);
-        if (rbytes > 0) {
-            wbytes = fwrite(buff, 1, rbytes, fout);
-        } else {
-            wbytes = 0;
+    while ((rbytes = fread(buff, 1, sizeof(buff), fin)) > 0) {
+        wbytes = fwrite(buff, 1, rbytes, fout);
+        if (wbytes != rbytes) {
+            fclose(fout);
+            fclose(fin);
+            return false;
         }
-    } while ((rbytes > 0) && (rbytes == wbytes));
+    }
 
     fclose(fout);
     fclose(fin);
 
-    if (wbytes) {
+    if (ferror(fin) || ferror(fout)) {
         return false;
     }
 

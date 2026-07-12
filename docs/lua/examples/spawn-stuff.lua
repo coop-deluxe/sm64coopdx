@@ -115,7 +115,6 @@ function l_spawning(m)
             nil)
         m.invincTimer = 5
     end
-    
 end
 
 function mario_update_local(m)

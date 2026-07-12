@@ -1213,7 +1213,7 @@ static void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
 
         Vec3s rot = { rotation[2], rotation[0], rotation[1] };
         vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
-        
+
         get_world_mtx_from_transform(
             gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart],
             gMatStack[gMatStackIndex],
@@ -1877,7 +1877,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
 
         Vec3s rot = { rotation[2], rotation[0], rotation[1] };
         vec3s_copy(gCurMarioBodyState->animPartsRot[gCurMarioBodyState->currAnimPart], rot);
-        
+
         get_world_mtx_from_transform(
             gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart],
             gMatStack[gMatStackIndex], 

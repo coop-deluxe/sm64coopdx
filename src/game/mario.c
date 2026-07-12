@@ -445,7 +445,7 @@ void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive) {
         m->healCounter = 0;
         m->hurtCounter = 31;
     }
-    
+
     gCamera->cutscene = 0;
     m->statusForCamera->action = m->action;
     m->statusForCamera->cameraEvent = 0;
