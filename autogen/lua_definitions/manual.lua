@@ -199,7 +199,7 @@ end
 --- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
 --- 
 --- ### Lua Example
---- ```
+--- ```lua
 --- smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
 --- ```
 function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
@@ -262,7 +262,7 @@ end
 --- set_exclamation_box_contents({
 ---    {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
 ---    {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
----    {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+---    {id = 2, firstByte = 0, model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
 ---    {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
 --- })
 --- ```

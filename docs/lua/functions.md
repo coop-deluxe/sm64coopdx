@@ -2330,7 +2330,7 @@ network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| object | [Object](structs.md#Object) |
+| object | [Object](./structs.md#Object) |
 | standardSync | `bool` |
 | fieldTable | `table` |
 
@@ -2356,7 +2356,7 @@ network_send_object(obj, false)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| object | [Object](structs.md#Object) |
+| object | [Object](./structs.md#Object) |
 | reliable | `bool` |
 
 ### Returns
@@ -2503,7 +2503,7 @@ local texinfo = get_texture_info(textureName)
 | textureName | `string` |
 
 ### Returns
-- [TextureInfo](structs.md#TextureInfo)
+- [TextureInfo](./structs.md#TextureInfo)
 
 [:arrow_up_small:](#)
 
@@ -2525,7 +2525,7 @@ texture_override_set("outside_09004000", overrideTexInfo)
 | Field | Type |
 | ----- | ---- |
 | textureName | `string` |
-| overrideTexInfo | [TextureInfo](structs.md#TextureInfo) |
+| overrideTexInfo | [TextureInfo](./structs.md#TextureInfo) |
 
 ### Returns
 - None
@@ -2573,7 +2573,7 @@ level_script_parse(LEVEL_BOB, func)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [enum LevelNum](constants.md#enum-LevelNum) \| `integer` |
+| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -2589,7 +2589,7 @@ level_script_parse(LEVEL_BOB, func)
 Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
 
 ### Lua Example
-```
+```lua
 smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
 ```
 
@@ -2626,7 +2626,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](constants.md#enum-ConsoleMessageLevel) |
+| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
 
 ### Returns
 - None
@@ -2680,7 +2680,7 @@ local hit = collision_find_surface_on_ray(0, 0, 0, 50, 100, 50, 3.0)
 | precision | `number` |
 
 ### Returns
-- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+- [RayIntersectionInfo](./structs.md#RayIntersectionInfo)
 
 [:arrow_up_small:](#)
 
@@ -2702,7 +2702,7 @@ A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior
 set_exclamation_box_contents({
    {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
    {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
-   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+   {id = 2, firstByte = 0, model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
    {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
 })
 ```
@@ -2710,7 +2710,7 @@ set_exclamation_box_contents({
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| contents | `table` of [ExclamationBoxContent](structs.md#ExclamationBoxContent) |
+| contents | `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent) |
 
 ### Returns
 - None
@@ -2745,7 +2745,7 @@ end
 - None
 
 ### Returns
-- `table` of [ExclamationBoxContent](structs.md#ExclamationBoxContent)
+- `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent)
 
 [:arrow_up_small:](#)
 
@@ -2768,10 +2768,10 @@ print(marioGfx == cast_graph_node(node)) -- true
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| node | [GraphNode](structs.md#GraphNode) \| [FnGraphNode](structs.md#FnGraphNode) |
+| node | [GraphNode](./structs.md#GraphNode) \| [FnGraphNode](./structs.md#FnGraphNode) |
 
 ### Returns
-- [GraphNode](structs.md#GraphNode) \| [GraphNodeAnimatedPart](structs.md#GraphNodeAnimatedPart) \| [GraphNodeBackground](structs.md#GraphNodeBackground) \| [GraphNodeBillboard](structs.md#GraphNodeBillboard) \| [GraphNodeCamera](structs.md#GraphNodeCamera) \| [GraphNodeCullingRadius](structs.md#GraphNodeCullingRadius) \| [GraphNodeDisplayList](structs.md#GraphNodeDisplayList) \| [GraphNodeGenerated](structs.md#GraphNodeGenerated) \| [GraphNodeHeldObject](structs.md#GraphNodeHeldObject) \| [GraphNodeLevelOfDetail](structs.md#GraphNodeLevelOfDetail) \| [GraphNodeMasterList](structs.md#GraphNodeMasterList) \| [GraphNodeObject](structs.md#GraphNodeObject) \| [GraphNodeObjectParent](structs.md#GraphNodeObjectParent) \| [GraphNodeOrthoProjection](structs.md#GraphNodeOrthoProjection) \| [GraphNodePerspective](structs.md#GraphNodePerspective) \| [GraphNodeRotation](structs.md#GraphNodeRotation) \| [GraphNodeScale](structs.md#GraphNodeScale) \| [GraphNodeShadow](structs.md#GraphNodeShadow) \| [GraphNodeStart](structs.md#GraphNodeStart) \| [GraphNodeSwitchCase](structs.md#GraphNodeSwitchCase) \| [GraphNodeTranslation](structs.md#GraphNodeTranslation) \| [GraphNodeTranslationRotation](structs.md#GraphNodeTranslationRotation) \| [GraphNodeBone](structs.md#GraphNodeBone)
+- [GraphNode](./structs.md#GraphNode) \| [GraphNodeAnimatedPart](./structs.md#GraphNodeAnimatedPart) \| [GraphNodeBackground](./structs.md#GraphNodeBackground) \| [GraphNodeBillboard](./structs.md#GraphNodeBillboard) \| [GraphNodeCamera](./structs.md#GraphNodeCamera) \| [GraphNodeCullingRadius](./structs.md#GraphNodeCullingRadius) \| [GraphNodeDisplayList](./structs.md#GraphNodeDisplayList) \| [GraphNodeGenerated](./structs.md#GraphNodeGenerated) \| [GraphNodeHeldObject](./structs.md#GraphNodeHeldObject) \| [GraphNodeLevelOfDetail](./structs.md#GraphNodeLevelOfDetail) \| [GraphNodeMasterList](./structs.md#GraphNodeMasterList) \| [GraphNodeObject](./structs.md#GraphNodeObject) \| [GraphNodeObjectParent](./structs.md#GraphNodeObjectParent) \| [GraphNodeOrthoProjection](./structs.md#GraphNodeOrthoProjection) \| [GraphNodePerspective](./structs.md#GraphNodePerspective) \| [GraphNodeRotation](./structs.md#GraphNodeRotation) \| [GraphNodeScale](./structs.md#GraphNodeScale) \| [GraphNodeShadow](./structs.md#GraphNodeShadow) \| [GraphNodeStart](./structs.md#GraphNodeStart) \| [GraphNodeSwitchCase](./structs.md#GraphNodeSwitchCase) \| [GraphNodeTranslation](./structs.md#GraphNodeTranslation) \| [GraphNodeTranslationRotation](./structs.md#GraphNodeTranslationRotation) \| [GraphNodeBone](./structs.md#GraphNodeBone)
 
 [:arrow_up_small:](#)
 
@@ -2830,9 +2830,9 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gfx | [Gfx](structs.md#Gfx) |
+| gfx | [Gfx](./structs.md#Gfx) |
 | command | `string` |
-| parameters... | `integer` \| `string` \| [Gfx](structs.md#Gfx) \| [Texture](structs.md#Texture) \| [Vtx](structs.md#Vtx) |
+| parameters... | `integer` \| `string` \| [Gfx](./structs.md#Gfx) \| [Texture](./structs.md#Texture) \| [Vtx](./structs.md#Vtx) |
 
 ### Returns
 - None
