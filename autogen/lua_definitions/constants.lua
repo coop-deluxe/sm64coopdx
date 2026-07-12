@@ -8352,15 +8352,6 @@ HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 --- | `HOOK_ON_PLAY_MODE_UPDATE`
 --- | `HOOK_MAX`
 
-CHAT_COMMAND_HOOK_CALLBACK = 0 --- @type LuaChatCommandHookType
-CHAT_COMMAND_HOOK_ENABLED  = 1 --- @type LuaChatCommandHookType
-CHAT_COMMAND_HOOK_MAX      = 2 --- @type LuaChatCommandHookType
-
---- @alias LuaChatCommandHookType
---- | `CHAT_COMMAND_HOOK_CALLBACK`
---- | `CHAT_COMMAND_HOOK_ENABLED`
---- | `CHAT_COMMAND_HOOK_MAX`
-
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue

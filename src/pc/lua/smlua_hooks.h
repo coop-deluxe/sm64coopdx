@@ -109,15 +109,15 @@ static const char* LuaActionHookTypeArgName[] = {
 #define ACTION_HOOK_CONTINUE_EXECUTION -1
 
 enum LuaChatCommandHookType {
-    CHAT_COMMAND_HOOK_CALLBACK,
-    CHAT_COMMAND_HOOK_ENABLED,
-    CHAT_COMMAND_HOOK_MAX,
+    CHAT_COMMAND_HOOK_TYPE_CALLBACK,
+    CHAT_COMMAND_HOOK_TYPE_ENABLED,
+    CHAT_COMMAND_HOOK_TYPE_MAX,
 };
 
 struct LuaHookedChatCommand {
     char *command;
     char *description;
-    int chatCommandHookRefs[CHAT_COMMAND_HOOK_MAX];
+    int chatCommandHookRefs[CHAT_COMMAND_HOOK_TYPE_MAX];
     struct Mod *mod;
     struct ModFile *modFile;
 };

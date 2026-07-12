@@ -1153,8 +1153,8 @@ int smlua_hook_chat_command(lua_State* L) {
 
     hooked->command = strdup(command);
     hooked->description = strdup(description);
-    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_CALLBACK] = callbackRef;
-    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED] = enabledRef;
+    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_TYPE_CALLBACK] = callbackRef;
+    hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_TYPE_ENABLED] = enabledRef;
     hooked->mod = gLuaActiveMod;
     hooked->modFile = gLuaActiveModFile;
 
@@ -1197,8 +1197,9 @@ bool smlua_verify_chat_command(struct LuaHookedChatCommand *hooked) {
     lua_State *L = gLuaState;
     bool enabled = true;
 
-    if (hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED] != LUA_NOREF) {
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_ENABLED]);
+    int ref = hooked->chatCommandHookRefs[CHAT_COMMAND_HOOK_TYPE_ENABLED];
+    if (ref != LUA_NOREF) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 
         if (0 == smlua_call_hook(L, 0, 1, 0, hooked->mod, hooked->modFile)) {
             if (lua_type(L, -1) == LUA_TBOOLEAN) {
@@ -1237,7 +1238,7 @@ bool smlua_call_chat_command_hook(char* command) {
         }
 
         // push the callback onto the stack
-        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->chatCommandHookRefs[CHAT_COMMAND_HOOK_CALLBACK]);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->chatCommandHookRefs[CHAT_COMMAND_HOOK_TYPE_CALLBACK]);
 
         // push parameter
         lua_pushstring(L, params);
@@ -1917,7 +1918,7 @@ void smlua_hook_replace_function_references(lua_State* L, int oldReference, int 
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
-        for (int j = 0; j < CHAT_COMMAND_HOOK_MAX; j++) {
+        for (int j = 0; j < CHAT_COMMAND_HOOK_TYPE_MAX; j++) {
             smlua_hook_replace_function_reference(L, &hooked->chatCommandHookRefs[j], oldReference, newReference);
         }
     }
