@@ -21,6 +21,9 @@
 // Optional parameters must be contiguous until the last parameter (a mandatory parameter following an optional parameter is not allowed)
 #define OPTIONAL
 
+// A macro to tell autogen this struct field should be treated as a C array, which starts at index 0 instead of 1
+#define C_ARRAY
+
 // A macro to tell autogen the field `name` is a property member of the struct that calls `get` or `set` accessors
 // - get: fun(self) -> value
 // - set: fun(self, value) (property immutable if NULL)
@@ -28,5 +31,8 @@
 
 // A macro to tell autogen the field `name` is a function member of the struct that calls `c_function`
 #define FUNCTION(name, c_function)
+
+// A macro to tell autogen the function is to be part of a single overloaded function under `name`
+#define OVERLOAD(name)
 
 #endif // SMLUA_AUTOGEN_H

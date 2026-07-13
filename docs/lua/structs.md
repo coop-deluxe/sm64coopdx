@@ -613,7 +613,7 @@
 | animReturnFromStarDance | `integer` | read-only |
 | animForwardSpinningFlip | `integer` | read-only |
 | animTripleJumpFly | `integer` | read-only |
-| anims | `Array` <`integer`> | read-only |
+| anims | `Array` <`integer`> | read-only, starts at index 0 |
 | soundFreqScale | `number` | read-only |
 | soundYahWahHoo | `integer` | read-only |
 | soundHoohoo | `integer` | read-only |
@@ -659,7 +659,7 @@
 | soundImaTired | `integer` | read-only |
 | soundLetsAGo | `integer` | read-only |
 | soundOkeyDokey | `integer` | read-only |
-| sounds | `Array` <`integer`> | read-only |
+| sounds | `Array` <`integer`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 
@@ -1583,8 +1583,9 @@
 | headPos | [Vec3f](structs.md#Vec3f) | read-only |
 | torsoPos | [Vec3f](structs.md#Vec3f) | read-only |
 | heldObjLastPosition | [Vec3f](structs.md#Vec3f) | read-only |
-| animPartsPos | `Array` <`Vec3f`> | read-only |
-| animPartsRot | `Array` <`Vec3s`> | read-only |
+| animPartsPos | `Array` <`Vec3f`> | read-only, starts at index 0 |
+| animPartsRot | `Array` <`Vec3s`> | read-only, starts at index 0 |
+| animPartsMtx | `Array` <`Mat4`> | read-only, starts at index 0 |
 | currAnimPart | `integer` | read-only |
 | updateTorsoTime | `integer` | read-only |
 | updateHeadPosTime | `integer` | read-only |
@@ -1747,15 +1748,28 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| flags | `integer` | read-only |
 | filepath | `string` | read-only |
-| isStream | `boolean` | read-only |
-| baseVolume | `number` |  |
-| loaded | `boolean` | read-only |
-| position | `number` |  |
-| looping | `boolean` |  |
-| frequency | `number` |  |
-| volume | `number` |  |
-| channel | `integer` |  |
+| volume | number |  |
+| pan | number |  |
+| length | number | read-only |
+| position | number |  |
+| frequency | number |  |
+| looping | boolean |  |
+| playing | boolean |  |
+| channel | integer |  |
+| sampleRate | integer | read-only |
+
+**Functions:**
+
+| Name | Reference |
+| ---- | --------- |
+| play | [`audio_play`](functions-6.md#audio_play) |
+| pause | [`audio_pause`](functions-6.md#audio_pause) |
+| stop | [`audio_stop`](functions-6.md#audio_stop) |
+| destroy | [`audio_destroy`](functions-6.md#audio_destroy) |
+| reload | [`audio_reload`](functions-6.md#audio_reload) |
+| copy | [`audio_copy`](functions-6.md#audio_copy) |
 
 [:arrow_up_small:](#)
 
@@ -2792,7 +2806,7 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| parts | `Array` <`Color`> | read-only |
+| parts | `Array` <`Color`> | read-only, starts at index 0 |
 
 [:arrow_up_small:](#)
 

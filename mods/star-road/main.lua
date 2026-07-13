@@ -1,6 +1,6 @@
 -- name: Star Road
 -- incompatible: romhack
--- description: Star Road\nRomhack created by \\#ffd700\\SKELUX\\#dcdcdc\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#ffaaff\\PeachyPeach\\#dcdcdc\\, and \\#8c4ac7\\PrinceFrizzy\\#dcdcdc\\\n\nPorted to coop by \\#093614\\djoslin0\\#dcdcdc\\,\n\\#8c4ac7\\PrinceFrizzy\\#dcdcdc\\, and \\#141699\\Isaac\\#dcdcdc\\.\n\nAdditional Fixes and "\\#ff0000\\Hard Mode\\#dcdcdc\\" addition by  \\#2D851C\\Mr.Needlemouse\\#dcdcdc\\.
+-- description: Star Road\nRomhack created by \\#ffd700\\SKELUX\\#\\\n\nwww.youtube.com/c/Skelux\n\nThere are 23 custom levels, with a total of 130 stars.\n\nPorted to PC by AloXado320,\n\\#faf\\PeachyPeach\\#\\, and \\#8c4ac7\\PrinceFrizzy\\#\\\n\nPorted to coop by \\#093614\\djoslin0\\#\\,\n\\#8c4ac7\\PrinceFrizzy\\#\\, and \\#141699\\Isaac\\#\\.\n\nAdditional Fixes and "\\#f00\\Hard Mode\\#\\" addition by  \\#2D851C\\Mr.Needlemouse\\#\\.
 
 LEVEL_ZERO_LIFE = level_register("level_zerolife_entry", COURSE_NONE, "ZERO LIFE", "zl", 28000, 0x28, 0x28, 0x28)
 

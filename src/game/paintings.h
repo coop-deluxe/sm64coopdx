@@ -44,8 +44,8 @@
 #define GREATEST_RIPPLE 3
 
 typedef struct {
-	float		ob[3];	/* x, y, z */
-	signed char	n[3];	/* normal */
+    float       ob[3];  /* x, y, z */
+    signed char n[3];   /* normal */
 } Vtx_Interp;
 
 #define DEFINE_PAINTING(name, ...) \

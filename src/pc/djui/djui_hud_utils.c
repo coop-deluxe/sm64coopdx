@@ -722,6 +722,10 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scal
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, NULL);
 }
 
+inline void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text(message, x, y, scale, scale);
+}
+
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
 
@@ -748,6 +752,10 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     }
 
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, interp);
+}
+
+inline void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, prevScale, x, y, scale, scale);
 }
 
 static inline bool is_power_of_two(u32 n) {

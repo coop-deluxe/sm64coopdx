@@ -208,11 +208,6 @@ struct Painting_List_Item paintingZero = {
     NULL
 };
 
-// typedef struct {
-// 	float		ob[3];	/* x, y, z */
-// 	signed char	n[3];	/* normal */
-// } Vtx_Interp;
-
 static Vtx_Interp sVertexBuffers[2][2 * 264 * 3];
 UNUSED static u8 sVerticesCurIndex = 0;
 UNUSED static u8 sVertexSwaps = 0;

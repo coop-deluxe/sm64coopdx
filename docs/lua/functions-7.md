@@ -3116,6 +3116,31 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 
 <br />
 
+## [get_mario_anim_part_mtx](#get_mario_anim_part_mtx)
+
+### Description
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+
+### Lua Example
+`local booleanValue = get_mario_anim_part_mtx(m, animPart, mtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| animPart | `integer` |
+| mtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_current_save_file_num](#get_current_save_file_num)
 
 ### Description
@@ -3521,16 +3546,16 @@ Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and t
 Gets the master volume level
 
 ### Lua Example
-`local numberValue = get_volume_master()`
+`local integerValue = get_volume_master()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_master(void);`
+`u8 get_volume_master(void);`
 
 [:arrow_up_small:](#)
 
@@ -3542,16 +3567,16 @@ Gets the master volume level
 Gets the volume level of music
 
 ### Lua Example
-`local numberValue = get_volume_level()`
+`local integerValue = get_volume_level()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_level(void);`
+`u8 get_volume_level(void);`
 
 [:arrow_up_small:](#)
 
@@ -3563,16 +3588,16 @@ Gets the volume level of music
 Gets the volume level of sound effects
 
 ### Lua Example
-`local numberValue = get_volume_sfx()`
+`local integerValue = get_volume_sfx()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_sfx(void);`
+`u8 get_volume_sfx(void);`
 
 [:arrow_up_small:](#)
 
@@ -3584,16 +3609,16 @@ Gets the volume level of sound effects
 Gets the volume level of environment sounds effects
 
 ### Lua Example
-`local numberValue = get_volume_env()`
+`local integerValue = get_volume_env()`
 
 ### Parameters
 - None
 
 ### Returns
-- `number`
+- `integer`
 
 ### C Prototype
-`f32 get_volume_env(void);`
+`u8 get_volume_env(void);`
 
 [:arrow_up_small:](#)
 
@@ -3610,13 +3635,13 @@ Sets the master volume level
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_master(f32 volume);`
+`void set_volume_master(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -3633,13 +3658,13 @@ Sets the volume level of music
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_level(f32 volume);`
+`void set_volume_level(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -3656,13 +3681,13 @@ Sets the volume level of sound effects
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_sfx(f32 volume);`
+`void set_volume_sfx(u8 volume);`
 
 [:arrow_up_small:](#)
 
@@ -3679,13 +3704,13 @@ Sets the volume level of environment sounds effects
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| volume | `number` |
+| volume | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_volume_env(f32 volume);`
+`void set_volume_env(u8 volume);`
 
 [:arrow_up_small:](#)
 

@@ -15,6 +15,7 @@ GitHub:        https://github.com/mackron/miniaudio
 extern "C" {
 #endif
 
+// OUR DEFINES
 #define MA_NO_RESOURCE_MANAGER
 #define MA_NO_GENERATION
 #define MA_NO_ENCODING
@@ -22,6 +23,7 @@ extern "C" {
 // enable Vorbis decoding (provides ogg audio decoding support) for miniaudio
 #define STB_VORBIS_HEADER_ONLY
 #include "stb_vorbis.c"
+// OUR DEFINES
 
 #define MA_STRINGIFY(x)     #x
 #define MA_XSTRINGIFY(x)    MA_STRINGIFY(x)

@@ -449,7 +449,7 @@ void init_mario_after_warp(void) {
             // enforce bubble on area change
             if (gServerSettings.bubbleDeath) {
                 if (i == 0 && gMarioStates[i].numLives == -1) {
-                    mario_set_bubbled(&gMarioStates[i]);
+                    mario_set_bubbled(&gMarioStates[i], false);
                     gMarioStates[i].health = 0xFF;
                 }
             }
