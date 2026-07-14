@@ -20,6 +20,7 @@ enum GfxBackend {
 #endif
     GFX_BACKEND_DUMMY,
     GFX_BACKEND_COUNT,
+    GFX_BACKEND_MAX = GFX_BACKEND_COUNT - 1,
 };
 
 struct GfxBackendAPI {

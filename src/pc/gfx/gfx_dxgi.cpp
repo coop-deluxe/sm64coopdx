@@ -138,15 +138,6 @@ static void gfx_dxgi_swap_buffers_begin(void) {
 }
 
 static void gfx_dxgi_swap_buffers_end(void) {
-    LARGE_INTEGER t0, t1, t2;
-    QueryPerformanceCounter(&t0);
-    QueryPerformanceCounter(&t1);
-
-    DXGI_FRAME_STATISTICS stats;
-    dxgi.swap_chain->GetFrameStatistics(&stats);
-
-    QueryPerformanceCounter(&t2);
-
 }
 
 static double gfx_dxgi_get_time(void) {

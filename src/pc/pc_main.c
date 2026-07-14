@@ -221,22 +221,22 @@ static void select_graphics_backend(void) {
     }
 
 #if defined(_WIN32)
-    if (configGraphicsBackend == GAPI_GL && !gfx_gl_check_compatibility()) {
-        configGraphicsBackend = GAPI_D3D11;
+    if (configGraphicsBackend == GFX_BACKEND_OPENGL && !gfx_gl_check_compatibility()) {
+        configGraphicsBackend = GFX_BACKEND_DIRECTX;
     }
 #endif
     int backend = configGraphicsBackend;
 #if defined(_WIN32)
-    if (gCLIOpts.backend != -1) { backend = gCLIOpts.backend; }
+    if (gCLIOpts.backend != GFX_BACKEND_COUNT) { backend = gCLIOpts.backend; }
 #endif
 
     switch (backend) {
-        case GAPI_GL:
+        case GFX_BACKEND_OPENGL:
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
             break;
 #if defined(_WIN32)
-        case GAPI_D3D11:
+        case GFX_BACKEND_DIRECTX:
             gRenderApi = &gfx_direct3d11_api;
             gAudioApi  = &audio_sdl;
             break;

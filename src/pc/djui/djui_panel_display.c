@@ -72,12 +72,12 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
 
-        if (GAPI_MAX > 1) {
-            char* gfxBackendChoices[GAPI_MAX] = {
+        if (GFX_BACKEND_MAX > 1) {
+            char* gfxBackendChoices[GFX_BACKEND_MAX] = {
                 "OpenGL",
                 "DirectX 11"
             };
-            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GAPI_MAX, &configGraphicsBackend, djui_panel_display_update_restart_text);
+            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GFX_BACKEND_MAX, &configGraphicsBackend, djui_panel_display_update_restart_text);
         }
 
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };

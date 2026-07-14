@@ -334,8 +334,6 @@ static void gfx_d3d11_init(void) {
                   gfx_dxgi_get_h_wnd(), "Failed to create lightmap constant buffer.");
 
     d3d.context->PSSetConstantBuffers(2, 1, d3d.lightmap_cb.GetAddressOf());
-
-    controller_bind_init();
 }
 
 
