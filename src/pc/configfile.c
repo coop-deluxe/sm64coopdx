@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-enum GfxBackend configGraphicsBackend             = GFX_BACKEND_OPENGL;
+enum GfxWindowBackend configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -813,7 +813,7 @@ NEXT_OPTION:
 
     fs_close(file);
 
-    if (configGraphicsBackend < GFX_BACKEND_OPENGL || configGraphicsBackend > GFX_BACKEND_MAX) { configGraphicsBackend = GFX_BACKEND_OPENGL; }
+    if (configGraphicsBackend < GFX_WINDOW_BACKEND_OPENGL || configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }

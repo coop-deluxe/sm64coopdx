@@ -61,7 +61,7 @@ bool parse_cli_opts(int argc, char* argv[]) {
     memset(&gCLIOpts, 0, sizeof(gCLIOpts));
     gCLIOpts.enableMods = NULL;
 #if defined(_WIN32)
-    gCLIOpts.backend = GFX_BACKEND_COUNT;
+    gCLIOpts.backend = GFX_WINDOW_BACKEND_COUNT;
 #endif
 
     for (int i = 1; i < argc; i++) {
@@ -124,9 +124,9 @@ bool parse_cli_opts(int argc, char* argv[]) {
 #if defined(_WIN32)
         } else if (!strcmp(argv[i], "--backend") && (i + 1) < argc) {
             if (!strcmp(argv[i + 1], "opengl")) {
-                gCLIOpts.backend = GFX_BACKEND_OPENGL;
+                gCLIOpts.backend = GFX_WINDOW_BACKEND_OPENGL;
             } else if (!strcmp(argv[i + 1], "directx")) {
-                gCLIOpts.backend = GFX_BACKEND_DIRECTX;
+                gCLIOpts.backend = GFX_WINDOW_BACKEND_DIRECTX;
             }
 #endif
         } else if (!strcmp(argv[i], "--help")) {

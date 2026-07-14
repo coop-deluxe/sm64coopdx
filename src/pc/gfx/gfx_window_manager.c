@@ -8,13 +8,13 @@
 #include <unistd.h>
 
 #include "gfx_window_manager.h"
-#include "gfx_gl.h"
-#include "gfx_dxgi.h"
+#include "gfx_window_opengl.h"
+#include "gfx_window_dxgi.h"
 #include "gfx_screen_config.h"
-#include "../pc_main.h"
-#include "../configfile.h"
-#include "../cliopts.h"
 
+#include "pc/pc_main.h"
+#include "pc/configfile.h"
+#include "pc/cliopts.h"
 #include "pc/controller/controller_keyboard.h"
 #include "pc/controller/controller_sdl.h"
 #include "pc/controller/controller_bind_mapping.h"
@@ -22,20 +22,19 @@
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
 
-static struct GfxBackendAPI *sBackends[GFX_BACKEND_COUNT] = {
-    [GFX_BACKEND_OPENGL] = &gfx_gl,
+static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
+    [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
 #if defined(_WIN32)
-    [GFX_BACKEND_DIRECTX] = &gfx_dxgi,
+    [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
 #endif
-    [GFX_BACKEND_DUMMY] = &gfx_dummy_backend,
+    [GFX_WINDOW_BACKEND_DUMMY] = &gfx_window_dummy,
 };
 
 // TODO: figure out how to switch the backend without restarting
 // this is currently used to initialize which backend is used
-static enum GfxBackend currBackend = GFX_BACKEND_DUMMY;
+static enum GfxWindowBackend currBackend = GFX_WINDOW_BACKEND_DUMMY;
 
 static SDL_Window *wnd;
-static SDL_GLContext ctx = NULL;
 
 static kb_callback_t kb_key_down = NULL;
 static kb_callback_t kb_key_up = NULL;
@@ -99,8 +98,11 @@ void gfx_wm_init(const char *window_title) {
     SetProcessDPIAware();
 #endif
 
+    SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
+    SDL_Init(SDL_INIT_VIDEO);
+
 #if defined(_WIN32)
-    currBackend = gCLIOpts.backend != GFX_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
+    currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
 #else
     currBackend = configGraphicsBackend;
 #endif
@@ -119,7 +121,7 @@ void gfx_wm_main_loop(void (*run_one_game_iter)(void)) {
 }
 
 void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
-    if (currBackend == GFX_BACKEND_DUMMY) {
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) {
         if (width) *width = 320;
         if (height) *height = 240;
         return;
@@ -173,7 +175,7 @@ static void gfx_wm_ondropfile(char* path) {
 }
 
 void gfx_wm_handle_events(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -227,7 +229,7 @@ void gfx_wm_handle_events(void) {
 
 void gfx_wm_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callback_t on_key_up,
     void (*on_all_keys_up)(void), void (*on_text_input)(char*), void (*on_text_editing)(char*, int)) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     kb_key_down = on_key_down;
     kb_key_up = on_key_up;
     kb_all_keys_up = on_all_keys_up;
@@ -236,7 +238,7 @@ void gfx_wm_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callback_t on_k
 }
 
 void gfx_wm_set_scroll_callback(void (*on_scroll)(float, float)) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     m_scroll = on_scroll;
 }
 
@@ -257,7 +259,7 @@ double gfx_wm_get_time(void) {
 }
 
 void gfx_wm_delay(u32 ms) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_Delay(ms);
 }
 
@@ -266,40 +268,41 @@ int gfx_wm_get_max_msaa(void) {
 }
 
 void gfx_wm_set_window_title(const char* title) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_SetWindowTitle(wnd, title);
 }
 
 void gfx_wm_reset_window_title(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_SetWindowTitle(wnd, TITLE);
 }
 
 void gfx_wm_shutdown(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     if (SDL_WasInit(0)) {
-        if (ctx) { SDL_GL_DeleteContext(ctx); ctx = NULL; }
+        SDL_GLContext ctx = SDL_GL_GetCurrentContext();
+        if (ctx) { SDL_GL_DeleteContext(ctx); }
         if (wnd) { SDL_DestroyWindow(wnd); wnd = NULL; }
         SDL_Quit();
     }
 }
 
 bool gfx_wm_has_focus(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return true; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return true; }
     return (SDL_GetWindowFlags(wnd) & SDL_WINDOW_INPUT_FOCUS);
 }
 
 void gfx_wm_start_text_input(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_StartTextInput();
 }
 void gfx_wm_stop_text_input(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_StopTextInput();
 }
 
 char* gfx_wm_get_clipboard_text(void) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return ""; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return ""; }
     static char clipboard_buf[WAPI_CLIPBOARD_BUFSIZ];
 
     char* text = SDL_GetClipboardText();
@@ -311,10 +314,10 @@ char* gfx_wm_get_clipboard_text(void) {
 }
 
 void gfx_wm_set_clipboard_text(const char* text) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_SetClipboardText(text);
 }
 void gfx_wm_set_cursor_visible(bool visible) {
-    if (currBackend == GFX_BACKEND_DUMMY) { return; }
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }

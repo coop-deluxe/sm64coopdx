@@ -57,18 +57,18 @@
 static SDL_Window *wnd;
 static SDL_GLContext ctx = NULL;
 
-static inline void gfx_gl_set_vsync(const bool enabled) {
+static inline void gfx_window_opengl_set_vsync(const bool enabled) {
     SDL_GL_SetSwapInterval(enabled);
 }
 
-static void gfx_gl_set_fullscreen(void) {
+static void gfx_window_opengl_set_fullscreen(void) {
 }
 
-static void gfx_gl_reset_dimension_and_pos(void) {
-    gfx_gl_set_vsync(configWindow.vsync);
+static void gfx_window_opengl_reset_dimension_and_pos(void) {
+    gfx_window_opengl_set_vsync(configWindow.vsync);
 }
 
-static void gfx_gl_init(const char *window_title) {
+static void gfx_window_opengl_init(const char *window_title) {
     if (configWindow.msaa > 0) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, configWindow.msaa);
@@ -96,10 +96,10 @@ static void gfx_gl_init(const char *window_title) {
     ctx = SDL_GL_CreateContext(wnd);
 
     gfx_wm_set_window(wnd);
-    gfx_gl_set_vsync(configWindow.vsync);
+    gfx_window_opengl_set_vsync(configWindow.vsync);
 }
 
-bool gfx_gl_check_compatibility(void) {
+bool gfx_window_opengl_check_compatibility(void) {
     if (!(SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO)) {
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
             return false;
@@ -133,41 +133,41 @@ bool gfx_gl_check_compatibility(void) {
     return validVersion;
 }
 
-static void gfx_gl_handle_events(UNUSED SDL_Event event) {
+static void gfx_window_opengl_handle_events(UNUSED SDL_Event event) {
     if (configWindow.settings_changed) {
-        gfx_gl_reset_dimension_and_pos();
+        gfx_window_opengl_reset_dimension_and_pos();
     }
 }
 
-static bool gfx_gl_start_frame(void) {
+static bool gfx_window_opengl_start_frame(void) {
     return true;
 }
 
-static void gfx_gl_swap_buffers_begin(void) {
+static void gfx_window_opengl_swap_buffers_begin(void) {
     SDL_GL_SwapWindow(wnd);
 }
 
-static void gfx_gl_swap_buffers_end(void) {
+static void gfx_window_opengl_swap_buffers_end(void) {
 }
 
-static double gfx_gl_get_time(void) {
+static double gfx_window_opengl_get_time(void) {
     return 0.0;
 }
 
-static int gfx_gl_get_max_msaa(void) {
+static int gfx_window_opengl_get_max_msaa(void) {
     int maxSamples = 0;
     glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
     if (maxSamples > 16) { maxSamples = 16; }
     return maxSamples;
 }
 
-struct GfxBackendAPI gfx_gl = {
-    gfx_gl_init,
-    gfx_gl_set_fullscreen,
-    gfx_gl_handle_events,
-    gfx_gl_start_frame,
-    gfx_gl_swap_buffers_begin,
-    gfx_gl_swap_buffers_end,
-    gfx_gl_get_time,
-    gfx_gl_get_max_msaa,
+struct GfxWindowBackendAPI gfx_window_opengl = {
+    gfx_window_opengl_init,
+    gfx_window_opengl_set_fullscreen,
+    gfx_window_opengl_handle_events,
+    gfx_window_opengl_start_frame,
+    gfx_window_opengl_swap_buffers_begin,
+    gfx_window_opengl_swap_buffers_end,
+    gfx_window_opengl_get_time,
+    gfx_window_opengl_get_max_msaa,
 };

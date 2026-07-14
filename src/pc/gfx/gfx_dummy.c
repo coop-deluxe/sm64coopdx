@@ -147,7 +147,7 @@ static const char* gfx_dummy_renderer_get_name(void) {
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
-struct GfxBackendAPI gfx_dummy_backend = {
+struct GfxWindowBackendAPI gfx_window_dummy = {
     gfx_dummy_wm_init,
     gfx_dummy_wm_set_fullscreen,
     gfx_dummy_wm_handle_events,

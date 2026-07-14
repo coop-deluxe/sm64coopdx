@@ -10,8 +10,8 @@ extern "C" {
 #include "gfx/gfx_opengl.h"
 #include "gfx/gfx_direct3d11.h"
 
-#include "gfx/gfx_gl.h"
-#include "gfx/gfx_dxgi.h"
+#include "gfx/gfx_window_opengl.h"
+#include "gfx/gfx_window_dxgi.h"
 #include "gfx/gfx_dummy.h"
 
 #include "audio/audio_api.h"

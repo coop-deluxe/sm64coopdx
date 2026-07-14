@@ -11,8 +11,8 @@ char gLastRemoteBhv[256] = "";
 #include <PR/gbi.h>
 #include "config.h"
 #include "pc/gfx/gfx_window_manager.h"
-#include "pc/gfx/gfx_gl.h"
-#include "pc/gfx/gfx_dxgi.h"
+#include "pc/gfx/gfx_window_opengl.h"
+#include "pc/gfx/gfx_window_dxgi.h"
 #include "pc/gfx/gfx_pc.h"
 #include "game/game_init.h"
 #include "game/ingame_menu.h"

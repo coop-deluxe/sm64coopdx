@@ -5,6 +5,6 @@
 #include "gfx_window_manager.h"
 
 extern struct GfxRenderingAPI gfx_dummy_renderer_api;
-extern struct GfxBackendAPI gfx_dummy_backend;
+extern struct GfxWindowBackendAPI gfx_window_dummy;
 
 #endif

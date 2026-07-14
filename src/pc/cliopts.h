@@ -39,7 +39,7 @@ struct CLIOptions {
     char** enableMods;
     bool headless;
 #if defined(_WIN32)
-    enum GfxBackend backend;
+    enum GfxWindowBackend backend;
 #endif
 };
 

@@ -13,17 +13,17 @@
 
 typedef bool (*kb_callback_t)(int code);
 
-enum GfxBackend {
-    GFX_BACKEND_OPENGL,
+enum GfxWindowBackend {
+    GFX_WINDOW_BACKEND_OPENGL,
 #if defined(_WIN32)
-    GFX_BACKEND_DIRECTX,
+    GFX_WINDOW_BACKEND_DIRECTX,
 #endif
-    GFX_BACKEND_DUMMY,
-    GFX_BACKEND_COUNT,
-    GFX_BACKEND_MAX = GFX_BACKEND_COUNT - 1,
+    GFX_WINDOW_BACKEND_DUMMY,
+    GFX_WINDOW_BACKEND_COUNT,
+    GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
 };
 
-struct GfxBackendAPI {
+struct GfxWindowBackendAPI {
     void (*init)(const char *window_title);
     void (*set_fullscreen)(void);
     void (*handle_events)(SDL_Event);

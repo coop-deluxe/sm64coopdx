@@ -49,7 +49,7 @@ extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
-extern enum GfxBackend configGraphicsBackend;
+extern enum GfxWindowBackend configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;

@@ -23,14 +23,13 @@
 #include <PR/gbi.h>
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
-#include "gfx_dxgi.h"
+#include "gfx_window_dxgi.h"
 
 extern "C" {
     #include "pc/mods/mod_import.h"
     #include "pc/rom_checker.h"
     #include "pc/network/version.h"
     #include "pc/configfile.h"
-    #include "pc/controller/controller_bind_mapping.h"
 }
 
 #include "pc/pc_main.h"
@@ -71,7 +70,7 @@ static void load_dxgi_library(void) {
 
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
-static void gfx_dxgi_on_resize(void) {
+static void gfx_window_dxgi_on_resize(void) {
     if (dxgi.swap_chain.Get() != nullptr) {
         gfx_get_current_rendering_api()->on_resize();
 
@@ -80,11 +79,11 @@ static void gfx_dxgi_on_resize(void) {
     }
 }
 
-static void gfx_dxgi_set_fullscreen(void) {
-    gfx_dxgi_on_resize();
+static void gfx_window_dxgi_set_fullscreen(void) {
+    gfx_window_dxgi_on_resize();
 }
 
-static void gfx_dxgi_init(const char *window_title) {
+static void gfx_window_dxgi_init(const char *window_title) {
     LARGE_INTEGER qpc_init, qpc_freq;
     QueryPerformanceCounter(&qpc_init);
     QueryPerformanceFrequency(&qpc_freq);
@@ -114,21 +113,21 @@ static void gfx_dxgi_init(const char *window_title) {
     load_dxgi_library();
 }
 
-static void gfx_dxgi_handle_events(SDL_Event event) {
+static void gfx_window_dxgi_handle_events(SDL_Event event) {
     if (event.type == SDL_WINDOWEVENT) {
         if (!IS_FULLSCREEN()) {
             if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                gfx_dxgi_on_resize();
+                gfx_window_dxgi_on_resize();
             }
         }
     }
 }
 
-static bool gfx_dxgi_start_frame(void) {
+static bool gfx_window_dxgi_start_frame(void) {
     return true;
 }
 
-static void gfx_dxgi_swap_buffers_begin(void) {
+static void gfx_window_dxgi_swap_buffers_begin(void) {
     UINT syncInterval = configWindow.vsync;
     UINT presentFlags = 0;
     if (!syncInterval && dxgi.allow_tearing) {
@@ -137,16 +136,16 @@ static void gfx_dxgi_swap_buffers_begin(void) {
     ThrowIfFailed(dxgi.swap_chain->Present(syncInterval, presentFlags));
 }
 
-static void gfx_dxgi_swap_buffers_end(void) {
+static void gfx_window_dxgi_swap_buffers_end(void) {
 }
 
-static double gfx_dxgi_get_time(void) {
+static double gfx_window_dxgi_get_time(void) {
     LARGE_INTEGER t;
     QueryPerformanceCounter(&t);
     return (double)(t.QuadPart - dxgi.qpc_init) / dxgi.qpc_freq;
 }
 
-void gfx_dxgi_create_factory_and_device(bool debug, int d3d_version, bool (*create_device_fn)(IDXGIAdapter1 *adapter, bool test_only)) {
+void gfx_window_dxgi_create_factory_and_device(bool debug, int d3d_version, bool (*create_device_fn)(IDXGIAdapter1 *adapter, bool test_only)) {
     if (dxgi.CreateDXGIFactory2 != nullptr) {
         ThrowIfFailed(dxgi.CreateDXGIFactory2(debug ? DXGI_CREATE_FACTORY_DEBUG : 0, __uuidof(IDXGIFactory2), &dxgi.factory));
     } else {
@@ -169,7 +168,7 @@ void gfx_dxgi_create_factory_and_device(bool debug, int d3d_version, bool (*crea
     SDL_SetWindowTitle(wnd, dxgi.window_title.c_str());
 }
 
-ComPtr<IDXGISwapChain1> gfx_dxgi_create_swap_chain(IUnknown *device) {
+ComPtr<IDXGISwapChain1> gfx_window_dxgi_create_swap_chain(IUnknown *device) {
     bool win8 = IsWindows8OrGreater(); // DXGI_SCALING_NONE is only supported on Win8 and beyond
     bool dxgi_13 = dxgi.CreateDXGIFactory2 != nullptr; // DXGI 1.3 introduced waitable object
 
@@ -219,11 +218,11 @@ ComPtr<IDXGISwapChain1> gfx_dxgi_create_swap_chain(IUnknown *device) {
     return dxgi.swap_chain;
 }
 
-static int gfx_dxgi_get_max_msaa(void) {
+static int gfx_window_dxgi_get_max_msaa(void) {
     return 0;
 }
 
-extern "C" HWND gfx_dxgi_get_h_wnd(void) {
+extern "C" HWND gfx_window_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
 
@@ -244,15 +243,15 @@ void ThrowIfFailed(HRESULT res, HWND h_wnd, const char *message) {
     }
 }
 
-struct GfxBackendAPI gfx_dxgi = {
-    gfx_dxgi_init,
-    gfx_dxgi_set_fullscreen,
-    gfx_dxgi_handle_events,
-    gfx_dxgi_start_frame,
-    gfx_dxgi_swap_buffers_begin,
-    gfx_dxgi_swap_buffers_end,
-    gfx_dxgi_get_time,
-    gfx_dxgi_get_max_msaa,
+struct GfxWindowBackendAPI gfx_window_dxgi = {
+    gfx_window_dxgi_init,
+    gfx_window_dxgi_set_fullscreen,
+    gfx_window_dxgi_handle_events,
+    gfx_window_dxgi_start_frame,
+    gfx_window_dxgi_swap_buffers_begin,
+    gfx_window_dxgi_swap_buffers_end,
+    gfx_window_dxgi_get_time,
+    gfx_window_dxgi_get_max_msaa,
 };
 
 #endif
