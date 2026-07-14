@@ -75,7 +75,9 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         if (GFX_WINDOW_BACKEND_MAX > 1) {
             char* gfxBackendChoices[GFX_WINDOW_BACKEND_MAX] = {
                 "OpenGL",
+#if defined(_WIN32)
                 "DirectX 11"
+#endif
             };
             djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GFX_WINDOW_BACKEND_MAX, &configGraphicsBackend, djui_panel_display_update_restart_text);
         }
