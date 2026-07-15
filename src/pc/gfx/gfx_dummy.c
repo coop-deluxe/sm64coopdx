@@ -55,9 +55,7 @@ UNUSED static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
 }
 
 static void gfx_dummy_wm_main_loop(void (*run_one_game_iter)(void)) {
-    while (1) {
-        run_one_game_iter();
-    }
+    run_one_game_iter();
 }
 
 static void gfx_dummy_wm_get_dimensions(uint32_t *width, uint32_t *height) {

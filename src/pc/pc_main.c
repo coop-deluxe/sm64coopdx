@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "sm64.h"
 
@@ -96,6 +97,12 @@ static u32 sDrawnFrames = 0;
 
 bool gGameInited = false;
 bool gGfxInited = false;
+static volatile bool gQuitSignal = false;
+
+static void handle_signal(int sig) {
+    (void)sig;
+    gQuitSignal = true;
+}
 
 f32 gMasterVolume;
 
@@ -506,6 +513,13 @@ int main(int argc, char *argv[]) {
     // handle terminal arguments
     if (!parse_cli_opts(argc, argv)) { return 0; }
 
+    struct sigaction sa;
+    sa.sa_handler = handle_signal;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+
 #ifdef _WIN32
     // handle Windows console
     if (gCLIOpts.console || gCLIOpts.headless) {
@@ -544,7 +558,7 @@ int main(int argc, char *argv[]) {
 
     // render the rom setup screen
     if (!main_rom_handler()) {
-        if (!gCLIOpts.hideLoadingScreen) {
+        if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
             render_rom_setup_screen(); // holds the game load until a valid rom is provided
         } else {
             printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
@@ -614,6 +628,7 @@ int main(int argc, char *argv[]) {
 
     // main loop
     while (true) {
+        if (gQuitSignal) { game_exit(); }
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
         gWindowApi->main_loop(produce_one_frame);
