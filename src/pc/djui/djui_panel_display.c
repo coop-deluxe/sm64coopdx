@@ -6,6 +6,8 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 
+extern bool gfx_sdl_hidpi_supported(void);
+
 #define OPTION_ORIGINAL_UNSET ((u32)-1)
 
 static struct DjuiInputbox* sFrameLimitInput = NULL;
@@ -14,6 +16,8 @@ static struct DjuiText* sRestartText = NULL;
 static u32 sMsaaSelection = 0;
 static u32 sMsaaOriginal = OPTION_ORIGINAL_UNSET;
 static u32 sGfxBackendOriginal = OPTION_ORIGINAL_UNSET;
+static bool sHidpiOriginal = false;
+static bool sHidpiOriginalSet = false;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
@@ -39,7 +43,8 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
 }
 
 static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
-    if (sMsaaOriginal != configWindow.msaa || sGfxBackendOriginal != configGraphicsBackend) {
+    bool hidpiChanged = sHidpiOriginalSet && (sHidpiOriginal != configWindow.hidpi);
+    if (sMsaaOriginal != configWindow.msaa || sGfxBackendOriginal != configGraphicsBackend || hidpiChanged) {
         djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
     } else {
         djui_text_set_text(sRestartText, "");
@@ -58,6 +63,10 @@ static void djui_panel_display_msaa_change(struct DjuiBase* caller) {
     djui_panel_display_update_restart_text(caller);
 }
 
+static void djui_panel_display_hidpi_change(struct DjuiBase* caller) {
+    djui_panel_display_update_restart_text(caller);
+}
+
 void djui_panel_display_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DISPLAY, DISPLAY), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -71,6 +80,10 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
+        if (gfx_sdl_hidpi_supported()) {
+            if (!sHidpiOriginalSet) { sHidpiOriginal = configWindow.hidpi; sHidpiOriginalSet = true; }
+            djui_checkbox_create(body, "HiDPI", &configWindow.hidpi, djui_panel_display_hidpi_change);
+        }
 
         if (GAPI_MAX > 1) {
             char* gfxBackendChoices[2] = {

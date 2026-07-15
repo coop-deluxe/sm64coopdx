@@ -12,6 +12,8 @@ extern HWND gfx_dxgi_get_h_wnd(void);
 static bool mouse_relative_prev_cursor_state;
 #endif
 
+extern void gfx_sdl_get_hidpi_scale(float *sx, float *sy);
+
 bool mouse_init_ok;
 
 u32 mouse_buttons;
@@ -95,6 +97,10 @@ void controller_mouse_read_window(void) {
     }
 #else
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
+    float hidpi_sx = 1.0f, hidpi_sy = 1.0f;
+    gfx_sdl_get_hidpi_scale(&hidpi_sx, &hidpi_sy);
+    mouse_window_x = (s32)(mouse_window_x * hidpi_sx);
+    mouse_window_y = (s32)(mouse_window_y * hidpi_sy);
     mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
 #endif
 }

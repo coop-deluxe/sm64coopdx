@@ -77,6 +77,7 @@ ConfigWindow configWindow = {
     .exiting_fullscreen = false,
     .settings_changed = false,
     .msaa = 0,
+    .hidpi = false,
 };
 
 ConfigStick configStick = { 0 };
@@ -255,6 +256,7 @@ static const struct ConfigOption options[] = {
     {.name = "window_h",                       .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
     {.name = "vsync",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
     {.name = "msaa",                           .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.msaa},
+    {.name = "hidpi",                          .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.hidpi},
     // display settings
     {.name = "graphics_backend",               .type = CONFIG_TYPE_UINT, .uintValue = &configGraphicsBackend},
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},

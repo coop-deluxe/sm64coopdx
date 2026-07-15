@@ -56,6 +56,8 @@
 
 static SDL_Window *wnd;
 static SDL_GLContext ctx = NULL;
+static bool sHidpiSupported = false;
+static bool sHidpiActive = false;
 
 static kb_callback_t kb_key_down = NULL;
 static kb_callback_t kb_key_up = NULL;
@@ -138,12 +140,33 @@ static void gfx_sdl_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
+    // Probe whether this display actually scales drawable > window under HIGHDPI.
+    SDL_Window *probe = SDL_CreateWindow("", 0, 0, 64, 64, SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI);
+    if (probe) {
+        int pdw = 64, pdh = 64, pww = 64, pwh = 64;
+        SDL_GL_GetDrawableSize(probe, &pdw, &pdh);
+        SDL_GetWindowSize(probe, &pww, &pwh);
+        sHidpiSupported = (pdw > pww) || (pdh > pwh);
+        SDL_DestroyWindow(probe);
+    }
+
+    Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+    if (configWindow.hidpi) { windowFlags |= SDL_WINDOW_ALLOW_HIGHDPI; }
     wnd = SDL_CreateWindow(
         window_title,
         xpos, ypos, configWindow.w, configWindow.h,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+        windowFlags
     );
     ctx = SDL_GL_CreateContext(wnd);
+
+    // Record actual HiDPI state — drives rendering decisions for this window's lifetime.
+    // Toggling the config takes effect only on restart.
+    {
+        int dw = 0, dh = 0, ww = 0, wh = 0;
+        SDL_GL_GetDrawableSize(wnd, &dw, &dh);
+        SDL_GetWindowSize(wnd, &ww, &wh);
+        sHidpiActive = (dw > ww) || (dh > wh);
+    }
 
     gfx_sdl_set_vsync(configWindow.vsync);
 
@@ -195,9 +218,27 @@ static void gfx_sdl_main_loop(void (*run_one_game_iter)(void)) {
 
 static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
     int w, h;
-    SDL_GetWindowSize(wnd, &w, &h);
+    if (sHidpiActive) {
+        SDL_GL_GetDrawableSize(wnd, &w, &h);
+    } else {
+        SDL_GetWindowSize(wnd, &w, &h);
+    }
     if (width) *width = w;
     if (height) *height = h;
+}
+
+bool gfx_sdl_hidpi_supported(void) {
+    return sHidpiSupported;
+}
+
+void gfx_sdl_get_hidpi_scale(float *sx, float *sy) {
+    int dw = 1, dh = 1, ww = 1, wh = 1;
+    if (wnd && sHidpiActive) {
+        SDL_GL_GetDrawableSize(wnd, &dw, &dh);
+        SDL_GetWindowSize(wnd, &ww, &wh);
+    }
+    if (sx) *sx = (ww > 0) ? ((float)dw / (float)ww) : 1.0f;
+    if (sy) *sy = (wh > 0) ? ((float)dh / (float)wh) : 1.0f;
 }
 
 static void gfx_sdl_onkeydown(int scancode) {
