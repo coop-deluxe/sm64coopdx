@@ -2452,13 +2452,12 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
  * Called from threads: thread5_game_loop
  */
 void play_dialog_sound(s32 dialogID) {
-    s32 speaker;
+    s32 speaker = DS_NONE;
 
-    if (!IS_VALID_VANILLA_DIALOG(dialogID)) {
-        dialogID = 0;
+    if (IS_VALID_VANILLA_DIALOG(dialogID)) {
+        speaker = sDialogSpeaker[dialogID];
     }
 
-    speaker = sDialogSpeaker[dialogID];
     smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, dialogID, &speaker);
 
     // Hook returned a sound id
