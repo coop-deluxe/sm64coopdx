@@ -13003,6 +13003,26 @@ function smlua_text_utils_allocate_dialog()
     -- ...
 end
 
+--- @param dialogId DialogId
+--- @return DialogType
+--- Gets the type of a `dialogId`
+function smlua_text_utils_dialog_get_type(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @param dialogType DialogType
+--- Sets the type of a `dialogId`
+function smlua_text_utils_dialog_set_type(dialogId, dialogType)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- Resets the type of a `dialogId`
+function smlua_text_utils_dialog_reset_type(dialogId)
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- @param act1 string

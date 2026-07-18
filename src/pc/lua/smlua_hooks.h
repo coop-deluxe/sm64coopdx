@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "include/behavior_table.h"
+#include "include/dialog_ids.h"
 
 #include "smlua.h"
 #include "pc/mods/mod.h"

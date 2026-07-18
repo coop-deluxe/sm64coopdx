@@ -1035,49 +1035,29 @@ s32 get_dialog_id(void) {
 }
 
 void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
-    // King Bob-omb (Start), Whomp (Start), King Bob-omb (throw him out), Eyerock (Start), Wiggler (Start)
-    enum DialogId dialogBossStart[] = { DIALOG_017, DIALOG_114, DIALOG_128, DIALOG_117, DIALOG_150 };
-    // Koopa the Quick (BOB), Koopa the Quick (THI), Penguin Race, Fat Penguin Race (120 stars)
-    enum DialogId dialogRaceSound[] = { DIALOG_005, DIALOG_009, DIALOG_055, DIALOG_164 };
-    // Red Switch, Green Switch, Blue Switch, 100 coins star, Bowser Red Coin Star
-    enum DialogId dialogStarSound[] = { DIALOG_010, DIALOG_011, DIALOG_012, DIALOG_013, DIALOG_014 };
-    // King Bob-omb (Start), Whomp (Defeated), King Bob-omb (Defeated, missing in JP), Eyerock (Defeated), Wiggler (Defeated)
-#if BUGFIX_KING_BOB_OMB_FADE_MUSIC
-    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_116, DIALOG_118, DIALOG_152 };
-#else
-    //! @bug JP misses King Bob-omb defeated dialog "116", meaning that the boss music will still
-    //! play after King Bob-omb is defeated until BOB loads it's music after the star cutscene
-    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_118, DIALOG_152 };
-#endif
-    s16 i;
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogBossStart); i++) {
-        if (dialogBossStart[i] == dialogID) {
+    switch (smlua_text_utils_dialog_get_type(dialogID)) {
+        case DIALOG_TYPE_BOSS_START: {
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
             play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, SEQ_EVENT_BOSS), 0);
-            return;
-        }
-    }
+        } break;
 
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogRaceSound); i++) {
-        if (dialogRaceSound[i] == dialogID && gDialogLineNum == 1) {
-            play_race_fanfare();
-            return;
-        }
-    }
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogStarSound); i++) {
-        if (dialogStarSound[i] == dialogID && gDialogLineNum == 1) {
-            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
-            return;
-        }
-    }
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogBossStop); i++) {
-        if (dialogBossStop[i] == dialogID) {
+        case DIALOG_TYPE_BOSS_STOP: {
             seq_player_fade_out(SEQ_PLAYER_LEVEL, 1);
-            return;
-        }
+        } break;
+
+        case DIALOG_TYPE_RACE: {
+            if (gDialogLineNum == 1) {
+                play_race_fanfare();
+            }
+        } break;
+
+        case DIALOG_TYPE_STAR_SOUND: {
+            if (gDialogLineNum == 1) {
+                play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+            }
+        } break;
+
+        default: break;
     }
 }
 

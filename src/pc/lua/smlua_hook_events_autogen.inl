@@ -1129,7 +1129,7 @@ bool smlua_call_event_hooks_HOOK_ON_EXIT() {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride) {
+bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, enum DialogId dialogId, s32 *speakerOverride) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -1143,8 +1143,11 @@ bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride)
         // push speaker
         lua_pushinteger(L, speaker);
 
+        // push dialogId
+        lua_pushinteger(L, dialogId);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_DIALOG_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }

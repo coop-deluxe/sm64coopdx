@@ -96,6 +96,8 @@
     - [enum ActSelectHudPart](#enum-ActSelectHudPart)
 - [smlua_model_utils.h](#smlua_model_utilsh)
     - [enum ModelExtendedId](#enum-ModelExtendedId)
+- [smlua_text_utils.h](#smlua_text_utilsh)
+    - [enum DialogType](#enum-DialogType)
 - [sounds.h](#soundsh)
 - [surface_load.h](#surface_loadh)
 - [surface_terrains.h](#surface_terrainsh)
@@ -4098,6 +4100,23 @@
 | E_MODEL_WARIOS_WING_CAP | 379 |
 | E_MODEL_WARIOS_WINGED_METAL_CAP | 380 |
 | E_MODEL_MAX | 381 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils.h](#smlua_text_utils.h)
+- MAX_ACTS
+- MAX_ACTS_AND_100_COINS
+
+### [enum DialogType](#DialogType)
+| Identifier | Value |
+| :--------- | :---- |
+| DIALOG_TYPE_DEFAULT | 0 |
+| DIALOG_TYPE_BOSS_START | 1 |
+| DIALOG_TYPE_BOSS_STOP | 2 |
+| DIALOG_TYPE_RACE | 3 |
+| DIALOG_TYPE_STAR_SOUND | 4 |
 
 [:arrow_up_small:](#)
 

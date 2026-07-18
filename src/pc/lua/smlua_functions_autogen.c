@@ -34795,6 +34795,59 @@ int smlua_func_smlua_text_utils_allocate_dialog(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_text_utils_dialog_get_type(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_get_type", 1, top);
+        return 0;
+    }
+
+    enum DialogId dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_get_type"); return 0; }
+
+    lua_pushinteger(L, smlua_text_utils_dialog_get_type(dialogId));
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_dialog_set_type(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_set_type", 2, top);
+        return 0;
+    }
+
+    enum DialogId dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_set_type"); return 0; }
+    enum DialogType dialogType = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_text_utils_dialog_set_type"); return 0; }
+
+    smlua_text_utils_dialog_set_type(dialogId, dialogType);
+
+    return 1;
+}
+
+int smlua_func_smlua_text_utils_dialog_reset_type(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_text_utils_dialog_reset_type", 1, top);
+        return 0;
+    }
+
+    enum DialogId dialogId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_text_utils_dialog_reset_type"); return 0; }
+
+    smlua_text_utils_dialog_reset_type(dialogId);
+
+    return 1;
+}
+
 int smlua_func_smlua_text_utils_course_acts_replace(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37952,6 +38005,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "smlua_text_utils_dialog_restore", smlua_func_smlua_text_utils_dialog_restore);
     smlua_bind_function(L, "smlua_text_utils_dialog_is_replaced", smlua_func_smlua_text_utils_dialog_is_replaced);
     smlua_bind_function(L, "smlua_text_utils_allocate_dialog", smlua_func_smlua_text_utils_allocate_dialog);
+    smlua_bind_function(L, "smlua_text_utils_dialog_get_type", smlua_func_smlua_text_utils_dialog_get_type);
+    smlua_bind_function(L, "smlua_text_utils_dialog_set_type", smlua_func_smlua_text_utils_dialog_set_type);
+    smlua_bind_function(L, "smlua_text_utils_dialog_reset_type", smlua_func_smlua_text_utils_dialog_reset_type);
     smlua_bind_function(L, "smlua_text_utils_course_acts_replace", smlua_func_smlua_text_utils_course_acts_replace);
     smlua_bind_function(L, "smlua_text_utils_secret_star_replace", smlua_func_smlua_text_utils_secret_star_replace);
     smlua_bind_function(L, "smlua_text_utils_course_name_replace", smlua_func_smlua_text_utils_course_name_replace);

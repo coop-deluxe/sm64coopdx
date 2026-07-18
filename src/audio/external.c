@@ -2459,8 +2459,15 @@ void play_dialog_sound(s32 dialogID) {
     }
 
     speaker = sDialogSpeaker[dialogID];
-    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, &speaker);
-    if (speaker < DS_MAX && speaker != 0xff) {
+    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, dialogID, &speaker);
+
+    // Hook returned a sound id
+    if (speaker > 0xFF) {
+        play_sound(speaker, gGlobalSoundSource);
+    }
+
+    // Hook returned a speaker id
+    else if (speaker < DS_MAX) {
         play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
 
         // Play music during bowser message that appears when first entering the

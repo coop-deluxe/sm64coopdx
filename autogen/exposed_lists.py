@@ -53,6 +53,7 @@ constants_files = [
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/pc/lua/utils/smlua_text_utils.h",
 ]
 
 # For each file, expose only these constants
@@ -119,6 +120,7 @@ constants_blacklist = { "__name__": "constants_blacklist",
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
     "src/engine/surface_load.h": [ "NUM_CELLS" ],
     "src/pc/network/version.h": [ "VERSION_OFFSET" ],
+    "src/pc/lua/utils/smlua_text_utils.h": [ "DIALOG_TYPE_MAX" ],
 }
 
 # For each file, expose these constants, but hide them from the documentation or VSCode autocomplete
@@ -255,7 +257,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room", "geo_" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "smlua_audio_utils_override", "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_destroy_pending_copies", "audio_custom_update_volume" ],
     "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified"],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
