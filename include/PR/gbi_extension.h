@@ -9,7 +9,7 @@
 // Please update the following table when implementing a new command.
 //
 // RSP ->                     09 0a 0b 0c 0d 0e 0f
-//             14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
+//                15 16 17 18 19 1a 1b 1c 1d 1e 1f
 // 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
 // 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f
 // 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f
@@ -63,6 +63,7 @@
 #define G_VTX_EXT          0x11
 #define G_TRI2_EXT         0x12
 #define G_TEXADDR_DJUI     0x13
+#define G_NATIVERES_DJUI   0x14
 #define G_EXECUTE_DJUI     0xdd
 
 #define G_MTX_INVERSE_CAMERA_EXT   0x08
@@ -71,6 +72,15 @@
 {{ \
 	(_SHIFTL(G_TEXADDR_DJUI,24,8)|_SHIFTL(~(u32)(c),0,24)),(u32)(0)	\
 }}
+
+// marks the point where the internal resolution render target is upscaled to
+// the window and all further rendering happens at native window resolution
+#define gSPNativeResDjui(pkt)                                   \
+{                                                               \
+    Gfx *_g = (Gfx *)(pkt);                                     \
+    _g->words.w0 = _SHIFTL(G_NATIVERES_DJUI, 24, 8);            \
+    _g->words.w1 = 0;                                           \
+}
 
 #define gSetClippingDjui(pkt, cmd, x1, y1, x2, y2)         \
 {                                                               \

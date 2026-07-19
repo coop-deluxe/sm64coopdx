@@ -200,6 +200,18 @@ static void gfx_sdl_get_dimensions(uint32_t *width, uint32_t *height) {
     if (height) *height = h;
 }
 
+static void gfx_sdl_get_display_size(uint32_t *width, uint32_t *height) {
+    SDL_DisplayMode mode;
+    int displayIndex = wnd ? SDL_GetWindowDisplayIndex(wnd) : 0;
+    if (displayIndex < 0) { displayIndex = 0; }
+    if (SDL_GetDesktopDisplayMode(displayIndex, &mode) == 0) {
+        if (width) *width = mode.w;
+        if (height) *height = mode.h;
+    } else {
+        gfx_sdl_get_dimensions(width, height);
+    }
+}
+
 static void gfx_sdl_onkeydown(int scancode) {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
@@ -391,5 +403,6 @@ struct GfxWindowManagerAPI gfx_sdl = {
     gfx_sdl_get_max_msaa,
     gfx_sdl_set_window_title,
     gfx_sdl_reset_window_title,
-    gfx_sdl_has_focus
+    gfx_sdl_has_focus,
+    gfx_sdl_get_display_size
 };

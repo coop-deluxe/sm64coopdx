@@ -36,6 +36,14 @@ extern bool gShaderFlagsEnabled;
 extern "C" {
 #endif
 
+// actual window size; gfx_current_dimensions holds the internal render size
+extern uint32_t gfx_window_width;
+extern uint32_t gfx_window_height;
+
+// internal render target size, 0 when rendering directly at window resolution
+extern uint32_t gfx_internal_res_width;
+extern uint32_t gfx_internal_res_height;
+
 void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title);
 struct GfxRenderingAPI *gfx_get_current_rendering_api(void);
 void gfx_start_frame(void);

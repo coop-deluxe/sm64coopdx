@@ -25,6 +25,12 @@ void djui_gfx_displaylist_begin(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_begin);
 }
 
+// everything after this marker renders at native window resolution,
+// even when an internal resolution is set for the game
+void djui_gfx_native_res_begin(void) {
+    gSPNativeResDjui(gDisplayListHead++);
+}
+
 void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }

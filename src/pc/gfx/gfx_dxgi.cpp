@@ -629,6 +629,11 @@ static bool gfx_dxgi_has_focus(void) {
     return GetFocus() == dxgi.h_wnd;
 }
 
+static void gfx_dxgi_get_display_size(uint32_t *width, uint32_t *height) {
+    if (width) *width = GetSystemMetrics(SM_CXSCREEN);
+    if (height) *height = GetSystemMetrics(SM_CYSCREEN);
+}
+
 extern "C" HWND gfx_dxgi_get_h_wnd(void) {
     return dxgi.h_wnd;
 }
@@ -716,7 +721,8 @@ struct GfxWindowManagerAPI gfx_dxgi = {
     gfx_dxgi_get_max_msaa,
     gfx_dxgi_set_window_title,
     gfx_dxgi_reset_window_title,
-    gfx_dxgi_has_focus
+    gfx_dxgi_has_focus,
+    gfx_dxgi_get_display_size
 };
 
 #endif

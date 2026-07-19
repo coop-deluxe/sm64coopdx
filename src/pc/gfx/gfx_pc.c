@@ -110,6 +110,14 @@ static struct RenderingState {
 
 struct GfxDimensions gfx_current_dimensions = { 0 };
 
+// actual window size; gfx_current_dimensions holds the internal render size
+uint32_t gfx_window_width = 0;
+uint32_t gfx_window_height = 0;
+
+// internal render target size, 0 when rendering directly at window resolution
+uint32_t gfx_internal_res_width = 0;
+uint32_t gfx_internal_res_height = 0;
+
 static bool dropped_frame = false;
 
 static float buf_vbo[MAX_BUFFERED * (26 * 3)] = { 0.0f }; // 3 vertices in a triangle and 26 floats per vtx
@@ -2063,6 +2071,44 @@ void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
     }
 }
 
+static void gfx_update_dimensions(uint32_t width, uint32_t height) {
+    gfx_current_dimensions.width = width;
+    gfx_current_dimensions.height = height;
+    if (configForce4By3
+        && ((4.0f / 3.0f) * gfx_current_dimensions.height) < gfx_current_dimensions.width) {
+        gfx_current_dimensions.x_adjust_4by3 = (gfx_current_dimensions.width - (4.0f / 3.0f) * gfx_current_dimensions.height) / 2;
+        gfx_current_dimensions.width = (4.0f / 3.0f) * gfx_current_dimensions.height;
+    } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
+    gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
+    gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
+}
+
+static bool sRenderingNativeRes = false;
+
+// called via G_NATIVERES_DJUI: upscales the internal render target to the window
+// and switches all further rendering (DJUI) to native window resolution
+static void gfx_native_res_begin(void) {
+    if (gfx_internal_res_height == 0 || sRenderingNativeRes) { return; }
+    sRenderingNativeRes = true;
+
+    gfx_flush();
+    if (gfx_rapi->end_internal_res) { gfx_rapi->end_internal_res(); }
+
+    f32 scale = (f32)gfx_window_height / (f32)gfx_internal_res_height;
+    gfx_update_dimensions(gfx_window_width, gfx_window_height);
+
+    // rescale the cached viewport/scissor from internal to window space
+    rdp.viewport.x      = (uint16_t)(rdp.viewport.x      * scale + 0.5f);
+    rdp.viewport.y      = (uint16_t)(rdp.viewport.y      * scale + 0.5f);
+    rdp.viewport.width  = (uint16_t)(rdp.viewport.width  * scale + 0.5f);
+    rdp.viewport.height = (uint16_t)(rdp.viewport.height * scale + 0.5f);
+    rdp.scissor.x       = (uint16_t)(rdp.scissor.x       * scale + 0.5f);
+    rdp.scissor.y       = (uint16_t)(rdp.scissor.y       * scale + 0.5f);
+    rdp.scissor.width   = (uint16_t)(rdp.scissor.width   * scale + 0.5f);
+    rdp.scissor.height  = (uint16_t)(rdp.scissor.height  * scale + 0.5f);
+    rdp.viewport_or_scissor_changed = true;
+}
+
 void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title) {
     gfx_wapi = wapi;
     gfx_rapi = rapi;
@@ -2085,18 +2131,30 @@ void gfx_start_frame(void) {
         rdp.loaded_texture[1].size_bytes = 0;
     }
     gfx_wapi->handle_events();
-    gfx_wapi->get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
-    if (gfx_current_dimensions.height == 0) {
+    gfx_wapi->get_dimensions(&gfx_window_width, &gfx_window_height);
+    if (gfx_window_height == 0) {
         // Avoid division by zero
-        gfx_current_dimensions.height = 1;
+        gfx_window_height = 1;
     }
-    if (configForce4By3
-        && ((4.0f / 3.0f) * gfx_current_dimensions.height) < gfx_current_dimensions.width) {
-        gfx_current_dimensions.x_adjust_4by3 = (gfx_current_dimensions.width - (4.0f / 3.0f) * gfx_current_dimensions.height) / 2;
-        gfx_current_dimensions.width = (4.0f / 3.0f) * gfx_current_dimensions.height;
-    } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
-    gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
-    gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
+    sRenderingNativeRes = false;
+    gfx_internal_res_width = 0;
+    gfx_internal_res_height = 0;
+    if (gfx_rapi->get_supports_internal_res && gfx_rapi->get_supports_internal_res()) {
+        if (configInternalResHeight >= SCREEN_HEIGHT && configInternalResHeight != gfx_window_height) {
+            gfx_internal_res_height = configInternalResHeight;
+            gfx_internal_res_width = (uint32_t)((f32)gfx_window_width * ((f32)configInternalResHeight / (f32)gfx_window_height) + 0.5f);
+            if (gfx_internal_res_width == 0) { gfx_internal_res_width = 1; }
+        } else if (configInternalResFilter >= 2) {
+            // the composite filters need the offscreen render target even at native resolution
+            gfx_internal_res_width = gfx_window_width;
+            gfx_internal_res_height = gfx_window_height;
+        }
+    }
+    if (gfx_internal_res_height > 0) {
+        gfx_update_dimensions(gfx_internal_res_width, gfx_internal_res_height);
+    } else {
+        gfx_update_dimensions(gfx_window_width, gfx_window_height);
+    }
 }
 
 void gfx_run(Gfx *commands) {
@@ -2479,6 +2537,9 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
             break;
         case G_TEXADDR_DJUI:
             sOnlyTextureChangeOnAddrChange = !(C0(0, 24) & 0x01);
+            break;
+        case G_NATIVERES_DJUI:
+            gfx_native_res_begin();
             break;
         case G_EXECUTE_DJUI:
             djui_gfx_dp_execute_djui(cmd->words.w1);
