@@ -51,6 +51,7 @@ void network_player_init(void) {
 }
 
 void network_player_update_model(u8 localIndex) {
+    if (localIndex >= MAX_PLAYERS) { return; }
     struct MarioState* m = &gMarioStates[localIndex];
     if (m == NULL) { return; }
     struct NetworkPlayer* np = &gNetworkPlayers[localIndex];
@@ -256,6 +257,11 @@ void network_player_update(void) {
 
 extern bool gCurrentlyJoining;
 u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 modelIndex, const struct PlayerPalette* palette, const char* name, const char* discordId) {
+    if (globalIndex >= MAX_PLAYERS) {
+        LOG_ERROR("refusing player with invalid global index %u", globalIndex);
+        return UNKNOWN_LOCAL_INDEX;
+    }
+
     // translate globalIndex to localIndex
     u8 localIndex = globalIndex;
     if (gNetworkType == NT_SERVER) {
@@ -268,6 +274,15 @@ u8 network_player_connected(enum NetworkPlayerType type, u8 globalIndex, u8 mode
         localIndex = globalIndex + ((globalIndex < gNetworkPlayerLocal->globalIndex) ? 1 : 0);
     } else {
         assert(false);
+    }
+
+    if (localIndex >= MAX_PLAYERS) {
+        LOG_ERROR(
+            "refusing player with invalid local index %u from global index %u",
+            localIndex,
+            globalIndex
+        );
+        return UNKNOWN_LOCAL_INDEX;
     }
     struct NetworkPlayer *np = &gNetworkPlayers[localIndex];
 
@@ -504,6 +519,7 @@ void network_player_update_course_level(struct NetworkPlayer* np, s16 courseNum,
 }
 
 void network_player_shutdown(bool popup) {
+    network_reset_network_players_roster();
     gNetworkPlayerLocal = NULL;
     gNetworkPlayerServer = NULL;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {

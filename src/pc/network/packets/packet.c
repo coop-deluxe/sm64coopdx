@@ -2,6 +2,7 @@
 #include <zlib.h>
 #include "../network.h"
 #include "pc/network/ban_list.h"
+#include "pc/network/network_metrics.h"
 #include "pc/debuglog.h"
 
 static u32 sCompBufferLen = 0;
@@ -19,7 +20,7 @@ static void increase_comp_buffer(u32 compressedLen) {
 void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize) {
     uLong sourceSize = p->dataLength + sizeof(u32);
     uLongf compressedLen = compressBound(sourceSize);
-    increase_comp_buffer(PACKET_LENGTH);
+    increase_comp_buffer(compressedLen);
 
     if (sCompBuffer && compress2((Bytef*)sCompBuffer, &compressedLen, (Bytef*)p->buffer, sourceSize, Z_BEST_COMPRESSION) == Z_OK) {
         *compBuffer = sCompBuffer;
@@ -35,8 +36,11 @@ bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize) {
     if (!sCompBuffer) { return false; }
     uLong decompSize = PACKET_LENGTH;
     if (uncompress((Bytef*)p->buffer, &decompSize, (Bytef*)compBuffer, compSize) == Z_OK) {
-        p->dataLength = decompSize - sizeof(u32);
-        return true;
+        if (decompSize < PACKET_HASH_LENGTH || decompSize > PACKET_LENGTH) {
+            return false;
+        }
+        p->dataLength = decompSize - PACKET_HASH_LENGTH;
+        return p->dataLength <= PACKET_DATA_LENGTH;
     } else {
         return false;
     }
@@ -145,6 +149,28 @@ void packet_process(struct Packet* p) {
     }
 }
 
+static bool packet_relay_recipient_matches(
+    struct Packet* p,
+    struct NetworkPlayer* np
+) {
+    if (p == NULL || np == NULL || !np->connected) { return false; }
+
+    if (p->levelAreaMustMatch) {
+        return p->courseNum == np->currCourseNum
+            && p->actNum == np->currActNum
+            && p->levelNum == np->currLevelNum
+            && p->areaIndex == np->currAreaIndex;
+    }
+
+    if (p->levelMustMatch) {
+        return p->courseNum == np->currCourseNum
+            && p->actNum == np->currActNum
+            && p->levelNum == np->currLevelNum;
+    }
+
+    return true;
+}
+
 void packet_receive(struct Packet* p) {
     u8 packetType = (u8)p->buffer[0];
 
@@ -185,7 +211,13 @@ void packet_receive(struct Packet* p) {
     }
 
     // check if we've already seen this packet
-    if (p->localIndex != 0 && p->localIndex != UNKNOWN_LOCAL_INDEX && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
+    if (
+        p->localIndex != 0
+        && p->localIndex != UNKNOWN_LOCAL_INDEX
+        && p->localIndex < MAX_PLAYERS
+        && p->seqId != 0
+        && gNetworkPlayers[p->localIndex].connected
+    ) {
         u32 packetHash = packet_hash(p);
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (s32 i = 0; i < MAX_RX_SEQ_IDS; i++) {
@@ -222,13 +254,22 @@ void packet_receive(struct Packet* p) {
     // broadcast packet
     if (p->requestBroadcast) {
         if (gNetworkType == NT_SERVER && gNetworkSystem->requireServerBroadcast) {
+            u32 metricsRecipients = 0;
             for (s32 i = 1; i < MAX_PLAYERS; i++) {
-                if (!gNetworkPlayers[i].connected) { continue; }
                 if (i == p->localIndex) { continue; }
+
+                struct NetworkPlayer* np = &gNetworkPlayers[i];
+                if (!packet_relay_recipient_matches(p, np)) { continue; }
+
+                metricsRecipients++;
                 struct Packet p2 = { 0 };
                 packet_duplicate(p, &p2);
                 network_send_to(i, &p2);
             }
+            network_metrics_record_broadcast(
+                (enum PacketType)p->packetType,
+                metricsRecipients
+            );
         }
     }
 }

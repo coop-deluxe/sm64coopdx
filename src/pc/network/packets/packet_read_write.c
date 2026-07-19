@@ -98,9 +98,11 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     dstPacket->levelNum  = srcPacket->levelNum;
     dstPacket->areaIndex = srcPacket->areaIndex;
 
-#ifdef DEBUG
-    assert(srcPacket->dataLength <= PACKET_LENGTH);
-#endif
+    if (srcPacket->dataLength > PACKET_DATA_LENGTH) {
+        dstPacket->error = true;
+        dstPacket->writeError = true;
+        return;
+    }
     memcpy(&dstPacket->buffer[0], &srcPacket->buffer[0], srcPacket->dataLength);
 
     if (dstPacket->reliable) {
@@ -129,19 +131,40 @@ void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
     packet->buffer[PACKET_DESTINATION_BUFFER_OFFSET] = destGlobalId;
 }
 
-void packet_write(struct Packet* packet, void* data, u16 length) {
-    if (data == NULL) { packet->error = true; return; }
-#ifdef DEBUG
-    assert(packet->dataLength + length <= PACKET_LENGTH);
-#endif
+u16 packet_write_remaining(const struct Packet* packet) {
+    if (packet == NULL || packet->cursor >= PACKET_DATA_LENGTH) { return 0; }
+    return PACKET_DATA_LENGTH - packet->cursor;
+}
 
-    if (packet->cursor + length >= PACKET_LENGTH) {
-        SOFT_ASSERT(packet->cursor + length < PACKET_LENGTH);
+u16 packet_read_remaining(const struct Packet* packet) {
+    if (packet == NULL || packet->cursor >= packet->dataLength) { return 0; }
+    return packet->dataLength - packet->cursor;
+}
+
+void packet_write(struct Packet* packet, const void* data, u16 length) {
+    if (packet == NULL) { return; }
+    if (data == NULL) {
+        packet->error = true;
         packet->writeError = true;
+        return;
     }
+
+    if (length > packet_write_remaining(packet)) {
+        LOG_ERROR(
+            "packet %u write overflow: cursor=%u length=%u capacity=%u",
+            packet->packetType,
+            packet->cursor,
+            length,
+            PACKET_DATA_LENGTH
+        );
+        packet->error = true;
+        packet->writeError = true;
+        return;
+    }
+
     memcpy(&packet->buffer[packet->cursor], data, length);
     packet->dataLength += length;
-    packet->cursor     += length;
+    packet->cursor += length;
 }
 
 u8 packet_initial_read(struct Packet* packet) {
@@ -178,17 +201,31 @@ u8 packet_initial_read(struct Packet* packet) {
         packet_read(packet, &packet->levelNum,  sizeof(s16));
     }
 
-    // don't drop packet
-    return TRUE;
+    // don't drop a malformed packet
+    return !packet->error;
 }
 
 void packet_read(struct Packet* packet, void* data, u16 length) {
-    u16 cursor = packet->cursor;
-    if (data == NULL) { packet->error = true; return; }
-    if (cursor + length >= PACKET_LENGTH) { packet->error = true; return; }
+    if (packet == NULL) { return; }
+    if (data == NULL) {
+        packet->error = true;
+        return;
+    }
 
-    memcpy(data, &packet->buffer[cursor], length);
-    packet->cursor = cursor + length;
+    if (length > packet_read_remaining(packet)) {
+        LOG_ERROR(
+            "packet %u read overflow: cursor=%u length=%u dataLength=%u",
+            packet->packetType,
+            packet->cursor,
+            length,
+            packet->dataLength
+        );
+        packet->error = true;
+        return;
+    }
+
+    memcpy(data, &packet->buffer[packet->cursor], length);
+    packet->cursor += length;
 }
 
 u32 packet_hash(struct Packet* packet) {
@@ -202,9 +239,17 @@ u32 packet_hash(struct Packet* packet) {
 }
 
 bool packet_check_hash(struct Packet* packet) {
+    if (packet == NULL || packet->dataLength > PACKET_DATA_LENGTH) {
+        return false;
+    }
+
     u32 localHash = packet_hash(packet);
     u32 packetHash = 0;
-    memcpy(&packetHash, &packet->buffer[packet->dataLength], sizeof(u32));
+    memcpy(
+        &packetHash,
+        &packet->buffer[packet->dataLength],
+        PACKET_HASH_LENGTH
+    );
     return localHash == packetHash;
 }
 

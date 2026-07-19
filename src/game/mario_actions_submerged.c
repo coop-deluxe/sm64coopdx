@@ -25,14 +25,8 @@
 #define MIN_SWIM_STRENGTH 160
 #define MIN_SWIM_SPEED 16.0f
 
-static s16 sWasAtSurface[MAX_PLAYERS] = { FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE,
-                                          FALSE, FALSE, FALSE, FALSE };
-static s16 sSwimStrength[MAX_PLAYERS] = { MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH,
-                                          MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH, MIN_SWIM_STRENGTH };
+static s16 sWasAtSurface[MAX_PLAYERS] = { 0 };
+static s16 sSwimStrength[MAX_PLAYERS] = { 0 };
 
 static s16 sWaterCurrentSpeeds[] = { 28, 12, 8, 4 };
 
@@ -1662,8 +1656,12 @@ Executes Mario's current submerged action by first checking common submerged can
 Dispatches to the appropriate action function, such as breaststroke, flutterkick, water punch, ect
 |descriptionEnd| */
 s32 mario_execute_submerged_action(struct MarioState *m) {
-    if (!m) { return FALSE; }
+    if (!m || m->playerIndex >= MAX_PLAYERS) { return FALSE; }
     s32 cancel;
+
+    if (sSwimStrength[m->playerIndex] == 0) {
+        sSwimStrength[m->playerIndex] = MIN_SWIM_STRENGTH;
+    }
 
     if (check_common_submerged_cancels(m)) {
         return TRUE;
