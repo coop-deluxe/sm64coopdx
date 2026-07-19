@@ -34,6 +34,7 @@ struct GfxWindowManagerAPI {
     void (*set_window_title)(const char* title);
     void (*reset_window_title)(void);
     bool (*has_focus)(void);
+    void (*get_display_size)(uint32_t *width, uint32_t *height);
 };
 
 #endif

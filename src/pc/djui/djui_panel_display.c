@@ -1,7 +1,10 @@
+#include <stdio.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
 #include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_rendering_api.h"
+#include "pc/gfx/gfx_pc.h"
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
@@ -43,6 +46,46 @@ static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* calle
         djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
     } else {
         djui_text_set_text(sRestartText, "");
+    }
+}
+
+// common resolution heights, from the N64's original 240p up
+static const u32 sInternalResHeights[] = { 240, 360, 480, 720, 1080, 1440, 2160, 4320 };
+#define INTERNAL_RES_MAX_CHOICES (ARRAY_COUNT(sInternalResHeights) + 1)
+static u32 sInternalResSelection = 0;
+static u32 sInternalResCount = 0;
+static u32 sInternalResValues[INTERNAL_RES_MAX_CHOICES] = { 0 };
+static char sInternalResLabels[INTERNAL_RES_MAX_CHOICES][32] = { 0 };
+static char* sInternalResChoices[INTERNAL_RES_MAX_CHOICES] = { 0 };
+
+static void djui_panel_display_internal_res_change(UNUSED struct DjuiBase* caller) {
+    configInternalResHeight = sInternalResValues[sInternalResSelection];
+}
+
+static void djui_panel_display_internal_res_build_choices(void) {
+    u32 displayWidth = 0;
+    u32 displayHeight = 0;
+    if (gWindowApi->get_display_size) {
+        gWindowApi->get_display_size(&displayWidth, &displayHeight);
+    }
+    if (displayHeight == 0) { displayHeight = 1080; }
+
+    // native resolution first, then the common resolutions below it, descending
+    sInternalResCount = 0;
+    sInternalResValues[sInternalResCount] = 0;
+    snprintf(sInternalResLabels[sInternalResCount], 32, "%s (%dp)", DLANG(DISPLAY, NATIVE), displayHeight);
+    sInternalResCount++;
+    for (s32 i = ARRAY_COUNT(sInternalResHeights) - 1; i >= 0; i--) {
+        if (sInternalResHeights[i] >= displayHeight) { continue; }
+        sInternalResValues[sInternalResCount] = sInternalResHeights[i];
+        snprintf(sInternalResLabels[sInternalResCount], 32, "%dp%s", sInternalResHeights[i], (sInternalResHeights[i] == 240) ? " (N64)" : "");
+        sInternalResCount++;
+    }
+
+    sInternalResSelection = 0;
+    for (u32 i = 0; i < sInternalResCount; i++) {
+        sInternalResChoices[i] = sInternalResLabels[i];
+        if (sInternalResValues[i] == configInternalResHeight) { sInternalResSelection = i; }
     }
 }
 
@@ -113,6 +156,15 @@ void djui_panel_display_create(struct DjuiBase* caller) {
 
         char* filterChoices[3] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, TRIPOINT) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FILTERING), filterChoices, 3, &configFiltering, NULL);
+
+        struct GfxRenderingAPI* rapi = gfx_get_current_rendering_api();
+        if (rapi && rapi->get_supports_internal_res && rapi->get_supports_internal_res()) {
+            djui_panel_display_internal_res_build_choices();
+            djui_selectionbox_create(body, DLANG(DISPLAY, INTERNAL_RESOLUTION), sInternalResChoices, sInternalResCount, &sInternalResSelection, djui_panel_display_internal_res_change);
+
+            char* upscalingChoices[4] = { DLANG(DISPLAY, NEAREST), DLANG(DISPLAY, LINEAR), DLANG(DISPLAY, COMPOSITE), DLANG(DISPLAY, COMPOSITE_CAPTURE) };
+            djui_selectionbox_create(body, DLANG(DISPLAY, UPSCALING), upscalingChoices, 4, &configInternalResFilter, NULL);
+        }
 
         int maxMsaa = gWindowApi->get_max_msaa();
         if (maxMsaa >= 2) {

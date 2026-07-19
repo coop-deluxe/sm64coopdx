@@ -406,6 +406,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     gfx_start_frame();
     config_gfx_pool();
     init_render_image();
+    djui_gfx_native_res_begin();
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 

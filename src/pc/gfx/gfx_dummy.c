@@ -119,6 +119,10 @@ static bool gfx_dummy_wm_has_focus(void) {
     return true;
 }
 
+static void gfx_dummy_wm_get_display_size(uint32_t *width, uint32_t *height) {
+    gfx_dummy_wm_get_dimensions(width, height);
+}
+
 static bool gfx_dummy_renderer_z_is_from_0_to_1(void) {
     return false;
 }
@@ -199,6 +203,10 @@ static const char* gfx_dummy_renderer_get_name(void) {
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
+static bool gfx_dummy_renderer_get_supports_internal_res(void) {
+    return false;
+}
+
 struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_init,
     gfx_dummy_wm_set_keyboard_callbacks,
@@ -220,7 +228,8 @@ struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_get_max_msaa,
     gfx_dummy_wm_set_window_title,
     gfx_dummy_wm_reset_window_title,
-    gfx_dummy_wm_has_focus
+    gfx_dummy_wm_has_focus,
+    gfx_dummy_wm_get_display_size
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {
@@ -247,5 +256,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_end_frame,
     gfx_dummy_renderer_finish_render,
     gfx_dummy_renderer_get_name,
-    gfx_dummy_renderer_shutdown
+    gfx_dummy_renderer_shutdown,
+    gfx_dummy_renderer_get_supports_internal_res
 };

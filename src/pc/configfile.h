@@ -64,6 +64,8 @@ extern enum RefreshRateMode configFramerateMode;
 extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
+extern unsigned int configInternalResHeight;
+extern unsigned int configInternalResFilter;
 // sound settings
 extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;

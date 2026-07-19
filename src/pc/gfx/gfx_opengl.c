@@ -790,6 +790,357 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
 }
 
+  ///////////////////////////////
+ // internal resolution (FBO) //
+///////////////////////////////
+
+static bool internal_res_supported = false;
+static bool internal_res_active = false;
+static GLuint internal_res_fbo = 0;
+static GLuint internal_res_tex = 0;
+static GLuint internal_res_depth = 0;
+static uint32_t internal_res_width = 0;
+static uint32_t internal_res_height = 0;
+
+static bool gfx_opengl_get_supports_internal_res(void) {
+    return internal_res_supported;
+}
+
+#ifndef USE_GLES
+
+// approximates the look of an N64 hooked up over composite video:
+// luma stays mostly sharp while chroma bleeds horizontally
+static GLuint composite_prg = 0;
+static GLint composite_texel_loc = -1;
+static bool composite_prg_failed = false;
+
+static const char* composite_vs_src =
+    "#version 120\n"
+    "void main() {\n"
+    "    gl_Position = gl_Vertex;\n"
+    "    gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+    "}\n";
+
+static const char* composite_fs_src =
+    "#version 120\n"
+    "uniform sampler2D uTex;\n"
+    "uniform vec2 uTexelSize;\n"
+    "vec3 to_yiq(vec3 c) {\n"
+    "    return vec3(dot(c, vec3(0.299,  0.587,  0.114)),\n"
+    "                dot(c, vec3(0.596, -0.274, -0.322)),\n"
+    "                dot(c, vec3(0.211, -0.523,  0.312)));\n"
+    "}\n"
+    "vec3 to_rgb(vec3 c) {\n"
+    "    return vec3(c.x + 0.956 * c.y + 0.621 * c.z,\n"
+    "                c.x - 0.272 * c.y - 0.647 * c.z,\n"
+    "                c.x - 1.106 * c.y + 1.703 * c.z);\n"
+    "}\n"
+    "void main() {\n"
+    "    vec2 uv = gl_TexCoord[0].xy;\n"
+    "    float dx = uTexelSize.x;\n"
+    "    vec3 t0 = to_yiq(texture2D(uTex, uv - vec2(3.0 * dx, 0.0)).rgb);\n"
+    "    vec3 t1 = to_yiq(texture2D(uTex, uv - vec2(2.0 * dx, 0.0)).rgb);\n"
+    "    vec3 t2 = to_yiq(texture2D(uTex, uv - vec2(1.0 * dx, 0.0)).rgb);\n"
+    "    vec3 t3 = to_yiq(texture2D(uTex, uv).rgb);\n"
+    "    vec3 t4 = to_yiq(texture2D(uTex, uv + vec2(1.0 * dx, 0.0)).rgb);\n"
+    "    vec3 t5 = to_yiq(texture2D(uTex, uv + vec2(2.0 * dx, 0.0)).rgb);\n"
+    "    vec3 t6 = to_yiq(texture2D(uTex, uv + vec2(3.0 * dx, 0.0)).rgb);\n"
+    "    float luma = t2.x * 0.15 + t3.x * 0.70 + t4.x * 0.15;\n"
+    "    vec2 chroma = t0.yz * 0.07 + t1.yz * 0.12 + t2.yz * 0.19 + t3.yz * 0.24\n"
+    "                + t4.yz * 0.19 + t5.yz * 0.12 + t6.yz * 0.07;\n"
+    "    gl_FragColor = vec4(to_rgb(vec3(luma, chroma)), 1.0);\n"
+    "}\n";
+
+// like the composite filter, but mimics a recorded capture of real N64 video
+// output: sharper luma with edge ringing, line jitter and analog noise
+static GLuint capture_prg = 0;
+static GLint capture_texel_loc = -1;
+static GLint capture_frame_loc = -1;
+static bool capture_prg_failed = false;
+
+static const char* capture_fs_src =
+    "#version 120\n"
+    "uniform sampler2D uTex;\n"
+    "uniform vec2 uTexelSize;\n"
+    "uniform float uFrame;\n"
+    "vec3 to_yiq(vec3 c) {\n"
+    "    return vec3(dot(c, vec3(0.299,  0.587,  0.114)),\n"
+    "                dot(c, vec3(0.596, -0.274, -0.322)),\n"
+    "                dot(c, vec3(0.211, -0.523,  0.312)));\n"
+    "}\n"
+    "vec3 to_rgb(vec3 c) {\n"
+    "    return vec3(c.x + 0.956 * c.y + 0.621 * c.z,\n"
+    "                c.x - 0.272 * c.y - 0.647 * c.z,\n"
+    "                c.x - 1.106 * c.y + 1.703 * c.z);\n"
+    "}\n"
+    "float hash(vec2 p) {\n"
+    "    return fract(sin(dot(p, vec2(12.9898, 78.233)) + uFrame * 0.317) * 43758.5453);\n"
+    "}\n"
+    "void main() {\n"
+    "    vec2 uv = gl_TexCoord[0].xy;\n"
+    "    float dx = uTexelSize.x;\n"
+    "    float dy = uTexelSize.y;\n"
+    "    // capture line index at half-texel granularity (480 lines for 240p)\n"
+    "    float subline = floor(uv.y / (0.5 * dy));\n"
+    "    // vertical: snap to source lines with a narrow transition (hard TV lines)\n"
+    "    float ty = uv.y / dy;\n"
+    "    float baseLine = floor(ty - 0.5) + 0.5;\n"
+    "    float fracY = clamp((ty - baseLine - 0.5) * 4.0 + 0.5, 0.0, 1.0);\n"
+    "    float sy = (baseLine + fracY) * dy;\n"
+    "    // alternate capture lines are shifted, like a deinterlaced recording\n"
+    "    float sx = uv.x + ((mod(subline, 2.0) < 1.0) ? -0.25 : 0.25) * dx;\n"
+    "    // luma samples snap toward texel centers so the upscale smears less\n"
+    "    float tx = sx / dx;\n"
+    "    float baseCol = floor(tx - 0.5) + 0.5;\n"
+    "    float fracX = clamp((tx - baseCol - 0.5) * 2.5 + 0.5, 0.0, 1.0);\n"
+    "    vec2 luv = vec2((baseCol + fracX) * dx, sy);\n"
+    "    vec2 suv = vec2(sx, sy);\n"
+    "    // luma: mostly sharp, with ringing halos around edges\n"
+    "    float l0 = to_yiq(texture2D(uTex, luv - vec2(2.0 * dx, 0.0)).rgb).x;\n"
+    "    float l1 = to_yiq(texture2D(uTex, luv - vec2(1.0 * dx, 0.0)).rgb).x;\n"
+    "    float l2 = to_yiq(texture2D(uTex, luv).rgb).x;\n"
+    "    float l3 = to_yiq(texture2D(uTex, luv + vec2(1.0 * dx, 0.0)).rgb).x;\n"
+    "    float l4 = to_yiq(texture2D(uTex, luv + vec2(2.0 * dx, 0.0)).rgb).x;\n"
+    "    float luma = -0.20 * l0 + 0.10 * l1 + 1.20 * l2 + 0.10 * l3 - 0.20 * l4;\n"
+    "    // chroma: wide horizontal bleed, delayed to the right\n"
+    "    vec2 cuv = suv - vec2(1.0 * dx, 0.0);\n"
+    "    vec2 c0 = to_yiq(texture2D(uTex, cuv - vec2(4.5 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 c1 = to_yiq(texture2D(uTex, cuv - vec2(3.0 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 c2 = to_yiq(texture2D(uTex, cuv - vec2(1.5 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 c3 = to_yiq(texture2D(uTex, cuv).rgb).yz;\n"
+    "    vec2 c4 = to_yiq(texture2D(uTex, cuv + vec2(1.5 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 c5 = to_yiq(texture2D(uTex, cuv + vec2(3.0 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 c6 = to_yiq(texture2D(uTex, cuv + vec2(4.5 * dx, 0.0)).rgb).yz;\n"
+    "    vec2 chroma = c0 * 0.07 + c1 * 0.12 + c2 * 0.19 + c3 * 0.24\n"
+    "                + c4 * 0.19 + c5 * 0.12 + c6 * 0.07;\n"
+    "    // composite captures look saturated: boost the chroma\n"
+    "    chroma *= 1.25;\n"
+    "    // animated analog grain, at half-texel granularity\n"
+    "    float n = hash(floor(vec2(uv.x / (0.5 * dx), subline)));\n"
+    "    luma += (n - 0.5) * 0.06;\n"
+    "    gl_FragColor = vec4(to_rgb(vec3(luma, chroma)), 1.0);\n"
+    "}\n";
+
+static GLuint gfx_opengl_composite_compile(GLenum type, const char* src) {
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &src, NULL);
+    glCompileShader(shader);
+    GLint ok = GL_FALSE;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
+    if (!ok) {
+        char log[1024] = { 0 };
+        glGetShaderInfoLog(shader, sizeof(log), NULL, log);
+        fprintf(stderr, "upscale filter shader failed to compile:\n%s\n", log);
+        glDeleteShader(shader);
+        return 0;
+    }
+    return shader;
+}
+
+static GLuint gfx_opengl_filter_prg_link(const char* fs_src) {
+    GLuint vs = gfx_opengl_composite_compile(GL_VERTEX_SHADER, composite_vs_src);
+    GLuint fs = gfx_opengl_composite_compile(GL_FRAGMENT_SHADER, fs_src);
+    if (vs == 0 || fs == 0) {
+        if (vs) { glDeleteShader(vs); }
+        if (fs) { glDeleteShader(fs); }
+        return 0;
+    }
+
+    GLuint prg = glCreateProgram();
+    glAttachShader(prg, vs);
+    glAttachShader(prg, fs);
+    glLinkProgram(prg);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+
+    GLint ok = GL_FALSE;
+    glGetProgramiv(prg, GL_LINK_STATUS, &ok);
+    if (!ok) {
+        glDeleteProgram(prg);
+        return 0;
+    }
+
+    glUseProgram(prg);
+    glUniform1i(glGetUniformLocation(prg, "uTex"), 0);
+    glUseProgram(0);
+    return prg;
+}
+
+static void gfx_opengl_composite_prg_ensure(void) {
+    if (composite_prg != 0 || composite_prg_failed) { return; }
+    composite_prg = gfx_opengl_filter_prg_link(composite_fs_src);
+    if (composite_prg == 0) {
+        composite_prg_failed = true;
+        return;
+    }
+    composite_texel_loc = glGetUniformLocation(composite_prg, "uTexelSize");
+}
+
+static void gfx_opengl_capture_prg_ensure(void) {
+    if (capture_prg != 0 || capture_prg_failed) { return; }
+    capture_prg = gfx_opengl_filter_prg_link(capture_fs_src);
+    if (capture_prg == 0) {
+        capture_prg_failed = true;
+        return;
+    }
+    capture_texel_loc = glGetUniformLocation(capture_prg, "uTexelSize");
+    capture_frame_loc = glGetUniformLocation(capture_prg, "uFrame");
+}
+
+// rebind the game's texture state after we messed with texture unit 0
+static void gfx_opengl_restore_texture_state(void) {
+    glActiveTexture(GL_TEXTURE0);
+    if (opengl_tex[0]) { glBindTexture(GL_TEXTURE_2D, opengl_tex[0]->gltex); }
+    glActiveTexture(GL_TEXTURE0 + opengl_curtex);
+}
+
+static void gfx_opengl_internal_res_destroy(void) {
+    if (internal_res_fbo != 0) {
+        glDeleteFramebuffers(1, &internal_res_fbo);
+        glDeleteTextures(1, &internal_res_tex);
+        glDeleteRenderbuffers(1, &internal_res_depth);
+        internal_res_fbo = 0;
+        internal_res_tex = 0;
+        internal_res_depth = 0;
+        internal_res_width = 0;
+        internal_res_height = 0;
+    }
+}
+
+static bool gfx_opengl_internal_res_ensure(uint32_t width, uint32_t height) {
+    if (internal_res_fbo != 0 && internal_res_width == width && internal_res_height == height) {
+        return true;
+    }
+
+    if (internal_res_fbo == 0) {
+        glGenFramebuffers(1, &internal_res_fbo);
+        glGenTextures(1, &internal_res_tex);
+        glGenRenderbuffers(1, &internal_res_depth);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, internal_res_tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, internal_res_depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, internal_res_fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, internal_res_tex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, internal_res_depth);
+
+    bool complete = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    if (!complete) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        gfx_opengl_internal_res_destroy();
+        internal_res_supported = false;
+    } else {
+        internal_res_width = width;
+        internal_res_height = height;
+    }
+
+    gfx_opengl_restore_texture_state();
+    return complete;
+}
+
+// draw the internal render target to the window as a fullscreen quad,
+// leaving the window framebuffer bound for any further rendering
+static void gfx_opengl_internal_res_blit(void) {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    GLint prevViewport[4];
+    glGetIntegerv(GL_VIEWPORT, prevViewport);
+    GLboolean prevScissorTest = glIsEnabled(GL_SCISSOR_TEST);
+    GLboolean prevDepthTest = glIsEnabled(GL_DEPTH_TEST);
+    GLboolean prevBlend = glIsEnabled(GL_BLEND);
+    GLboolean prevDepthMask;
+    glGetBooleanv(GL_DEPTH_WRITEMASK, &prevDepthMask);
+
+    glViewport(0, 0, gfx_window_width, gfx_window_height);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_BLEND);
+
+    if (configInternalResFilter == 2) {
+        gfx_opengl_composite_prg_ensure();
+    } else if (configInternalResFilter == 3) {
+        gfx_opengl_capture_prg_ensure();
+    }
+    if (configInternalResFilter == 2 && composite_prg != 0) {
+        glUseProgram(composite_prg);
+        glUniform2f(composite_texel_loc, 1.0f / (f32)internal_res_width, 1.0f / (f32)internal_res_height);
+    } else if (configInternalResFilter == 3 && capture_prg != 0) {
+        glUseProgram(capture_prg);
+        glUniform2f(capture_texel_loc, 1.0f / (f32)internal_res_width, 1.0f / (f32)internal_res_height);
+        glUniform1f(capture_frame_loc, (f32)(frame_count % 1024u));
+    } else {
+        glUseProgram(0);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, internal_res_tex);
+    GLint filter = (configInternalResFilter >= 1) ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glEnable(GL_TEXTURE_2D);
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glBegin(GL_TRIANGLE_STRIP);
+    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f, -1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f,  1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f,  1.0f);
+    glEnd();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+
+    // clear the window depth buffer so any further native res rendering starts fresh
+    glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    // restore the state the game rendering expects
+    if (opengl_prg != NULL) { glUseProgram(opengl_prg->opengl_program_id); }
+    gfx_opengl_restore_texture_state();
+    glViewport(prevViewport[0], prevViewport[1], prevViewport[2], prevViewport[3]);
+    if (prevScissorTest) { glEnable(GL_SCISSOR_TEST); }
+    if (prevDepthTest) { glEnable(GL_DEPTH_TEST); }
+    if (prevBlend) { glEnable(GL_BLEND); }
+    glDepthMask(prevDepthMask);
+}
+
+#else // USE_GLES
+
+static void gfx_opengl_internal_res_destroy(void) { }
+static bool gfx_opengl_internal_res_ensure(uint32_t width, uint32_t height) { (void)width; (void)height; return false; }
+static void gfx_opengl_internal_res_blit(void) { }
+
+#endif
+
+// called mid-frame when DJUI rendering begins: upscale the internal render
+// target to the window and let everything after render at native resolution
+static void gfx_opengl_end_internal_res(void) {
+    if (!internal_res_active) { return; }
+    internal_res_active = false;
+    gfx_opengl_internal_res_blit();
+}
+
 static inline bool gl_version_is_supported(int major, int minor, bool is_es) {
     if (is_es) {
         return major >= 2;
@@ -840,6 +1191,11 @@ static void gfx_opengl_init(void) {
         glBindVertexArray(opengl_vao);
     }
 
+#ifndef USE_GLES
+    // the internal resolution render target needs framebuffer objects (GL 3.0+)
+    internal_res_supported = (vmajor >= 3 && !is_es);
+#endif
+
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -861,6 +1217,14 @@ static void gfx_opengl_on_resize(void) {
 static void gfx_opengl_start_frame(void) {
     frame_count++;
 
+    internal_res_active = internal_res_supported && gfx_internal_res_height > 0
+        && gfx_opengl_internal_res_ensure(gfx_internal_res_width, gfx_internal_res_height);
+#ifndef USE_GLES
+    if (internal_res_supported) {
+        glBindFramebuffer(GL_FRAMEBUFFER, internal_res_active ? internal_res_fbo : 0);
+    }
+#endif
+
     glDisable(GL_SCISSOR_TEST);
     glDepthMask(GL_TRUE); // Must be set to clear Z-buffer
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -872,6 +1236,9 @@ static void gfx_opengl_end_frame(void) {
 }
 
 static void gfx_opengl_finish_render(void) {
+    if (internal_res_active) {
+        gfx_opengl_internal_res_blit();
+    }
 }
 
 static const char* gfx_opengl_get_name(void) {
@@ -879,6 +1246,8 @@ static const char* gfx_opengl_get_name(void) {
 }
 
 static void gfx_opengl_shutdown(void) {
+    gfx_opengl_internal_res_destroy();
+    internal_res_active = false;
 }
 
 struct GfxRenderingAPI gfx_opengl_api = {
@@ -905,5 +1274,7 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_end_frame,
     gfx_opengl_finish_render,
     gfx_opengl_get_name,
-    gfx_opengl_shutdown
+    gfx_opengl_shutdown,
+    gfx_opengl_get_supports_internal_res,
+    gfx_opengl_end_internal_res
 };

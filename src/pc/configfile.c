@@ -90,6 +90,8 @@ enum RefreshRateMode configFramerateMode          = RRM_AUTO;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 6;
+unsigned int configInternalResHeight              = 0; // 0 = native, otherwise render height in pixels
+unsigned int configInternalResFilter              = 0; // 0 = Nearest, 1 = Linear, 2 = Composite, 3 = Composite Capture
 // sound settings
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
@@ -264,6 +266,8 @@ static const struct ConfigOption options[] = {
     {.name = "frame_limit",                    .type = CONFIG_TYPE_UINT, .uintValue = &configFrameLimit},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
+    {.name = "internal_res_height",            .type = CONFIG_TYPE_UINT, .uintValue = &configInternalResHeight},
+    {.name = "internal_res_filter",            .type = CONFIG_TYPE_UINT, .uintValue = &configInternalResFilter},
     // sound settings
     {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},

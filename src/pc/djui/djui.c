@@ -196,6 +196,7 @@ void djui_render(void) {
     gDjuiHudUtilsZ = 0;
     djui_reset_hud_params();
 
+    djui_gfx_native_res_begin();
     create_dl_ortho_matrix();
     djui_gfx_displaylist_begin();
 

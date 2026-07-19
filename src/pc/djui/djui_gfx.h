@@ -11,6 +11,7 @@ extern const Gfx dl_djui_img_begin[];
 extern const Gfx dl_djui_img_end[];
 
 void djui_gfx_displaylist_begin(void);
+void djui_gfx_native_res_begin(void);
 void djui_gfx_displaylist_end(void);
 
 /* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */

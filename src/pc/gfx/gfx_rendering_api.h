@@ -33,6 +33,8 @@ struct GfxRenderingAPI {
     void (*finish_render)(void);
     const char* (*get_name)(void);
     void (*shutdown)(void);
+    bool (*get_supports_internal_res)(void);
+    void (*end_internal_res)(void);
 };
 
 #endif
