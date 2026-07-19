@@ -193,7 +193,7 @@ UNUSED static void unused_delete_leaf_nodes(struct Object *obj) {
         unused_delete_leaf_nodes(children);
     } else {
         // No children
-        mark_obj_for_deletion(obj);
+        obj_mark_for_deletion(obj);
     }
 
     while ((sibling = (struct Object *) obj->header.gfx.node.next) != obj0) {
@@ -247,6 +247,8 @@ void unload_object(struct Object *obj) {
 
     smlua_call_event_hooks(HOOK_ON_OBJECT_UNLOAD, obj);
 
+    obj->customFields = NULL;
+
     deallocate_object(&gFreeObjectList, &obj->header);
 }
 
@@ -293,6 +295,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
 
     memset(&obj->rawData, 0, sizeof(obj->rawData));
     memset(&obj->ptrData, 0, sizeof(obj->ptrData));
+    smlua_init_object_custom_fields(obj);
 
     obj->unused1 = 0;
     obj->bhvStackIndex = 0;
@@ -417,13 +420,4 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     smlua_call_event_hooks(HOOK_ON_OBJECT_LOAD, obj);
 
     return obj;
-}
-
-/**
- * Mark an object to be unloaded at the end of the frame.
- */
-void mark_obj_for_deletion(struct Object *obj) {
-    if (!obj) { return; }
-    //! Same issue as obj_mark_for_deletion
-    obj->activeFlags = ACTIVE_FLAG_DEACTIVATED;
 }

@@ -33,13 +33,13 @@ void exec_anim_sound_state(struct SoundState *soundStates, u16 maxSoundStates) {
             // animFrame entries. These checks skips them.
             if ((animFrame = soundStates[stateIdx].animFrame1) >= 0) {
                 if (cur_obj_check_anim_frame(animFrame)) {
-                    cur_obj_play_sound_2(soundStates[stateIdx].soundMagic);
+                    cur_obj_play_sound_and_rumble_if_visible(soundStates[stateIdx].soundMagic);
                 }
             }
 
             if ((animFrame = soundStates[stateIdx].animFrame2) >= 0) {
                 if (cur_obj_check_anim_frame(animFrame)) {
-                    cur_obj_play_sound_2(soundStates[stateIdx].soundMagic);
+                    cur_obj_play_sound_and_rumble_if_visible(soundStates[stateIdx].soundMagic);
                 }
             }
         } break;
@@ -59,17 +59,17 @@ void create_sound_spawner(s32 soundMagic) {
 
 /*
  * The following 2 functions are relevant to the sound state function
- * above. While only cur_obj_play_sound_2 is used, they may have been intended as
+ * above. While only cur_obj_play_sound_and_rumble_if_visible is used, they may have been intended as
  * separate left/right leg functions that went unused.
  */
-void cur_obj_play_sound_1(s32 soundMagic) {
+void cur_obj_play_sound_if_visible(s32 soundMagic) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);
     }
 }
 
-void cur_obj_play_sound_2(s32 soundMagic) {
+void cur_obj_play_sound_and_rumble_if_visible(s32 soundMagic) {
     if (!gCurrentObject) { return; }
     if (gCurrentObject->header.gfx.node.flags & GRAPH_RENDER_ACTIVE) {
         play_sound(soundMagic, gCurrentObject->header.gfx.cameraToObject);

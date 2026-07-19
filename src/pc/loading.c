@@ -70,7 +70,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
         u32 length = strlen(gCurrLoadingSegment.str);
         if (length > 0) {
             if (gCurrLoadingSegment.percentage > 0) {
-                snprintf(buffer, 256, "%s\n\\#dcdcdc\\%d%%", gCurrLoadingSegment.str, (u8)floor(gCurrLoadingSegment.percentage * 100));
+                snprintf(buffer, 256, "%s\n\\#\\%d%%", gCurrLoadingSegment.str, (u8)floor(gCurrLoadingSegment.percentage * 100));
             } else {
                 snprintf(buffer, 256, "%s...", gCurrLoadingSegment.str);
             }

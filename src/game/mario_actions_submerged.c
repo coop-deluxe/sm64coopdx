@@ -221,7 +221,7 @@ u32 perform_water_step(struct MarioState *m) {
     return stepResult;
 }
 
-static BAD_RETURN(u32) update_water_pitch(struct MarioState *m) {
+static void update_water_pitch(struct MarioState *m) {
     if (!m) { return; }
     struct Object *marioObj = m->marioObj;
 
@@ -605,7 +605,7 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer < 6 && m->playerIndex == 0) {
-        func_sh_8024CA04();
+        queue_rumble_submerged();
     }
 
     set_character_animation(m, CHAR_ANIM_SWIM_PART1);
@@ -998,7 +998,7 @@ static s32 act_drowning(struct MarioState *m) {
                     if (!allowDeath) { return FALSE; }
 
                     if ((mario_can_bubble(m) && m->numLives > 0)) {
-                        mario_set_bubbled(m);
+                        mario_set_bubbled(m, false);
                     } else {
                         level_trigger_warp(m, WARP_OP_DEATH);
                     }
@@ -1033,7 +1033,7 @@ static s32 act_water_death(struct MarioState *m) {
             if (!allowDeath) { return FALSE; }
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
@@ -1159,7 +1159,7 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
                 if (!allowDeath) { reset_rumble_timers(m); return FALSE; }
 
                 if ((mario_can_bubble(m) && m->numLives > 0)) {
-                    mario_set_bubbled(m);
+                    mario_set_bubbled(m, false);
                 } else {
                     level_trigger_warp(m, WARP_OP_DEATH);
                 }

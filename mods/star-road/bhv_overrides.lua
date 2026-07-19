@@ -110,10 +110,17 @@ id_bhvGrandStar = hook_behavior(id_bhvGrandStar, OBJ_LIST_LEVEL, true, bhv_custo
 ---------------------------------------------------
 
 --- @param o Object
+local function bhv_custom_racing_penguin_init(o)
+    cur_obj_scale(2.56)
+    o.oBehParams2ndByte = 0
+end
+
+--- @param o Object
 local function bhv_custom_racing_penguin_update(o)
     if o.oRacingPenguinReachedBottom == 1 then
         o.oRacingPenguinWeightedNewTargetSpeed = 10
+        o.oWallHitboxRadius = 200
     end
 end
 
-id_bhvRacingPenguin = hook_behavior(id_bhvRacingPenguin, OBJ_LIST_GENACTOR, false, nil, bhv_custom_racing_penguin_update, "bhvRacingPenguin")
+id_bhvRacingPenguin = hook_behavior(id_bhvRacingPenguin, OBJ_LIST_GENACTOR, false, bhv_custom_racing_penguin_init, bhv_custom_racing_penguin_update, "bhvRacingPenguin")

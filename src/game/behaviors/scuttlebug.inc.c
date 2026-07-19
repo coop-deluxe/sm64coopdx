@@ -50,7 +50,7 @@ void bhv_scuttlebug_loop(void) {
     switch (o->oSubAction) {
         case 0:
             if (o->oMoveFlags & OBJ_MOVE_LANDED)
-                cur_obj_play_sound_2(SOUND_OBJ_GOOMBA_ALERT);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_GOOMBA_ALERT);
             if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
                 o->oHomeX = o->oPosX;
                 o->oHomeY = o->oPosY;
@@ -71,7 +71,7 @@ void bhv_scuttlebug_loop(void) {
                     if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x800) {
                         o->oScuttlebugUnkF8 = 1;
                         o->oVelY = 20.0f;
-                        cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_SCUTTLEBUG_ALERT);
                     }
                 } else if (o->oScuttlebugUnkF8 == 1) {
                     o->oForwardVel = 15.0f;
@@ -96,7 +96,7 @@ void bhv_scuttlebug_loop(void) {
             o->oFlags &= ~8;
             o->oForwardVel = -10.0f;
             o->oVelY = 30.0f;
-            cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_SCUTTLEBUG_ALERT);
             o->oSubAction++;
             break;
         case 4:
@@ -156,7 +156,7 @@ void bhv_scuttlebug_spawn_loop(void) {
 
     if (o->oAction == 0) {
         if (o->oTimer > 30 && 500.0f < distanceToPlayer && distanceToPlayer < 1500.0f) {
-            cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_SCUTTLEBUG_ALERT);
             struct Object *scuttlebug = spawn_object(o, MODEL_SCUTTLEBUG, bhvScuttlebug);
             if (scuttlebug != NULL) {
                 scuttlebug->oScuttlebugUnkF4 = o->oScuttlebugSpawnerUnkF4;

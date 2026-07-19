@@ -40,7 +40,7 @@ void bhv_ship_part_3_loop(void) {
     o->oAngleVelPitch = o->oFaceAnglePitch - sp1E;
     o->oAngleVelRoll = o->oFaceAngleRoll - sp1C;
     if (gMarioObject && gMarioObject->oPosY > 1000.0f) {
-        cur_obj_play_sound_1(SOUND_ENV_BOAT_ROCKING1);
+        cur_obj_play_sound_if_visible(SOUND_ENV_BOAT_ROCKING1);
     }
 }
 
@@ -106,7 +106,7 @@ void bhv_jrb_sliding_box_loop(void) {
     o->oParentRelativePosZ += o->oJrbSlidingBoxUnkFC;
     if (gMarioObject && gMarioObject->oPosY > 1000.0f) {
         if (absf(o->oJrbSlidingBoxUnkFC) > 3.0f) {
-            cur_obj_play_sound_1(SOUND_AIR_ROUGH_SLIDE);
+            cur_obj_play_sound_if_visible(SOUND_AIR_ROUGH_SLIDE);
         }
     }
 

@@ -88,8 +88,8 @@ extern int gPressedStart;
 
 int start_demo(int timer)
 {
-	gCurrDemoInput = NULL;
-	gPressedStart = 0;
+    gCurrDemoInput = NULL;
+    gPressedStart = 0;
     // start the mario demo animation for the demo list.
     //func_80278AD4(&gDemo, gDemoInputListID_2);
 
@@ -190,7 +190,7 @@ s32 intro_default(void) {
         play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
         queue_rumble_data(60, 70);
-        func_sh_8024C89C(1);
+        queue_rumble_decay(1);
 #endif
         sp1C = 100 + gDebugLevelSelect;
 #ifndef VERSION_JP
@@ -216,7 +216,7 @@ s32 intro_game_over(void) {
         play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
 #ifdef VERSION_SH
         queue_rumble_data(60, 70);
-        func_sh_8024C89C(1);
+        queue_rumble_decay(1);
 #endif
         sp1C = 100 + gDebugLevelSelect;
 #ifndef VERSION_JP

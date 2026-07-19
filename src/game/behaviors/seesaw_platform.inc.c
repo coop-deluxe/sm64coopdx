@@ -42,7 +42,7 @@ void bhv_seesaw_platform_update(void) {
     o->oFaceAnglePitch += (s32) o->oSeesawPlatformPitchVel;
 
     if (absf(o->oSeesawPlatformPitchVel) > 10.0f) {
-        cur_obj_play_sound_1(SOUND_ENV_BOAT_ROCKING1);
+        cur_obj_play_sound_if_visible(SOUND_ENV_BOAT_ROCKING1);
     }
 
     f32 x = 0;

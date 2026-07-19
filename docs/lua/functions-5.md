@@ -2909,29 +2909,6 @@ Marks Yoshi as alive
 
 <br />
 
-## [absf_2](#absf_2)
-
-### Description
-Absolute value (always positive) function
-
-### Lua Example
-`local numberValue = absf_2(f)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| f | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 absf_2(f32 f);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [obj_find_wall](#obj_find_wall)
 
 ### Description

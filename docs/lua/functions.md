@@ -25,8 +25,6 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
-   - [djui_hud_print_text](#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -53,7 +51,7 @@
    - [play_penguin_walking_sound](functions-2.md#play_penguin_walking_sound)
    - [update_angle_from_move_flags](functions-2.md#update_angle_from_move_flags)
    - [cur_obj_spawn_strong_wind_particles](functions-2.md#cur_obj_spawn_strong_wind_particles)
-   - [bhv_star_door_loop_2](functions-2.md#bhv_star_door_loop_2)
+   - [bhv_star_door_loop_update_render_state](functions-2.md#bhv_star_door_loop_update_render_state)
    - [bhv_cap_switch_loop](functions-2.md#bhv_cap_switch_loop)
    - [bhv_tiny_star_particles_init](functions-2.md#bhv_tiny_star_particles_init)
    - [bhv_grindel_thwomp_loop](functions-2.md#bhv_grindel_thwomp_loop)
@@ -797,6 +795,8 @@
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
+   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -1261,6 +1261,7 @@
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
+   - [get_world_mtx_from_transform](functions-4.md#get_world_mtx_from_transform)
 
 <br />
 
@@ -1457,7 +1458,6 @@
 
 - obj_behaviors.c
    - [set_yoshi_as_not_dead](functions-5.md#set_yoshi_as_not_dead)
-   - [absf_2](functions-5.md#absf_2)
    - [obj_find_wall](functions-5.md#obj_find_wall)
    - [turn_obj_away_from_steep_floor](functions-5.md#turn_obj_away_from_steep_floor)
    - [obj_orient_graph](functions-5.md#obj_orient_graph)
@@ -1601,7 +1601,6 @@
    - [cur_obj_hide](functions-6.md#cur_obj_hide)
    - [cur_obj_set_pos_relative](functions-6.md#cur_obj_set_pos_relative)
    - [cur_obj_set_pos_relative_to_parent](functions-6.md#cur_obj_set_pos_relative_to_parent)
-   - [cur_obj_enable_rendering_2](functions-6.md#cur_obj_enable_rendering_2)
    - [cur_obj_unused_init_on_floor](functions-6.md#cur_obj_unused_init_on_floor)
    - [obj_set_face_angle_to_move_angle](functions-6.md#obj_set_face_angle_to_move_angle)
    - [get_object_list_from_behavior](functions-6.md#get_object_list_from_behavior)
@@ -1721,17 +1720,14 @@
    - [cur_obj_push_mario_away](functions-6.md#cur_obj_push_mario_away)
    - [cur_obj_push_mario_away_from_cylinder](functions-6.md#cur_obj_push_mario_away_from_cylinder)
    - [bhv_dust_smoke_loop](functions-6.md#bhv_dust_smoke_loop)
-   - [stub_obj_helpers_3](functions-6.md#stub_obj_helpers_3)
    - [cur_obj_scale_over_time](functions-6.md#cur_obj_scale_over_time)
    - [cur_obj_set_pos_to_home_with_debug](functions-6.md#cur_obj_set_pos_to_home_with_debug)
-   - [stub_obj_helpers_4](functions-6.md#stub_obj_helpers_4)
    - [cur_obj_is_mario_on_platform](functions-6.md#cur_obj_is_mario_on_platform)
    - [cur_obj_is_any_player_on_platform](functions-6.md#cur_obj_is_any_player_on_platform)
    - [cur_obj_shake_y_until](functions-6.md#cur_obj_shake_y_until)
    - [cur_obj_move_up_and_down](functions-6.md#cur_obj_move_up_and_down)
    - [spawn_star_with_no_lvl_exit](functions-6.md#spawn_star_with_no_lvl_exit)
    - [spawn_base_star_with_no_lvl_exit](functions-6.md#spawn_base_star_with_no_lvl_exit)
-   - [bit_shift_left](functions-6.md#bit_shift_left)
    - [cur_obj_mario_far_away](functions-6.md#cur_obj_mario_far_away)
    - [is_mario_moving_fast_or_in_air](functions-6.md#is_mario_moving_fast_or_in_air)
    - [is_item_in_array](functions-6.md#is_item_in_array)
@@ -1749,7 +1745,6 @@
    - [set_time_stop_flags_if_alone](functions-6.md#set_time_stop_flags_if_alone)
    - [clear_time_stop_flags](functions-6.md#clear_time_stop_flags)
    - [cur_obj_can_mario_activate_textbox](functions-6.md#cur_obj_can_mario_activate_textbox)
-   - [cur_obj_can_mario_activate_textbox_2](functions-6.md#cur_obj_can_mario_activate_textbox_2)
    - [cur_obj_end_dialog](functions-6.md#cur_obj_end_dialog)
    - [cur_obj_has_model](functions-6.md#cur_obj_has_model)
    - [cur_obj_align_gfx_with_floor](functions-6.md#cur_obj_align_gfx_with_floor)
@@ -1788,8 +1783,12 @@
    - [queue_rumble_data](functions-6.md#queue_rumble_data)
    - [queue_rumble_data_object](functions-6.md#queue_rumble_data_object)
    - [queue_rumble_data_mario](functions-6.md#queue_rumble_data_mario)
+   - [queue_rumble_decay](functions-6.md#queue_rumble_decay)
+   - [is_rumble_finished_and_queue_empty](functions-6.md#is_rumble_finished_and_queue_empty)
    - [reset_rumble_timers](functions-6.md#reset_rumble_timers)
-   - [reset_rumble_timers_2](functions-6.md#reset_rumble_timers_2)
+   - [reset_rumble_timers_vibrate](functions-6.md#reset_rumble_timers_vibrate)
+   - [queue_rumble_submerged](functions-6.md#queue_rumble_submerged)
+   - [cancel_rumble](functions-6.md#cancel_rumble)
 
 <br />
 
@@ -1843,26 +1842,31 @@
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
    - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
-   - [audio_stream_load](functions-6.md#audio_stream_load)
-   - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
-   - [audio_stream_play](functions-6.md#audio_stream_play)
-   - [audio_stream_pause](functions-6.md#audio_stream_pause)
-   - [audio_stream_stop](functions-6.md#audio_stream_stop)
-   - [audio_stream_get_position](functions-6.md#audio_stream_get_position)
-   - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
-   - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
-   - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
-   - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
-   - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
-   - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
-   - [audio_stream_get_volume](functions-6.md#audio_stream_get_volume)
-   - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
-   - [audio_stream_get_volume_channel](functions-6.md#audio_stream_get_volume_channel)
-   - [audio_stream_set_volume_channel](functions-6.md#audio_stream_set_volume_channel)
-   - [audio_sample_load](functions-6.md#audio_sample_load)
-   - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
-   - [audio_sample_stop](functions-6.md#audio_sample_stop)
-   - [audio_sample_play](functions-6.md#audio_sample_play)
+   - [audio_load](functions-6.md#audio_load)
+   - [audio_play](functions-6.md#audio_play)
+   - [audio_pause](functions-6.md#audio_pause)
+   - [audio_stop](functions-6.md#audio_stop)
+   - [audio_destroy](functions-6.md#audio_destroy)
+   - [audio_reload](functions-6.md#audio_reload)
+   - [audio_copy](functions-6.md#audio_copy)
+   - [audio_get_volume](functions-6.md#audio_get_volume)
+   - [audio_set_volume](functions-6.md#audio_set_volume)
+   - [audio_get_pan](functions-6.md#audio_get_pan)
+   - [audio_set_pan](functions-6.md#audio_set_pan)
+   - [audio_get_length](functions-6.md#audio_get_length)
+   - [audio_get_position](functions-6.md#audio_get_position)
+   - [audio_set_position](functions-6.md#audio_set_position)
+   - [audio_get_looping](functions-6.md#audio_get_looping)
+   - [audio_set_looping](functions-6.md#audio_set_looping)
+   - [audio_get_playing](functions-6.md#audio_get_playing)
+   - [audio_set_playing](functions-6.md#audio_set_playing)
+   - [audio_get_loop_points](functions-6.md#audio_get_loop_points)
+   - [audio_set_loop_points](functions-6.md#audio_set_loop_points)
+   - [audio_get_frequency](functions-6.md#audio_get_frequency)
+   - [audio_set_frequency](functions-6.md#audio_set_frequency)
+   - [audio_get_volume_channel](functions-6.md#audio_get_volume_channel)
+   - [audio_set_volume_channel](functions-6.md#audio_set_volume_channel)
+   - [audio_get_sample_rate](functions-6.md#audio_get_sample_rate)
 
 <br />
 
@@ -2073,6 +2077,7 @@
    - [get_hand_foot_pos_z](functions-7.md#get_hand_foot_pos_z)
    - [get_mario_anim_part_pos](functions-7.md#get_mario_anim_part_pos)
    - [get_mario_anim_part_rot](functions-7.md#get_mario_anim_part_rot)
+   - [get_mario_anim_part_mtx](functions-7.md#get_mario_anim_part_mtx)
    - [get_current_save_file_num](functions-7.md#get_current_save_file_num)
    - [save_file_get_using_backup_slot](functions-7.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-7.md#save_file_set_using_backup_slot)
@@ -2157,6 +2162,7 @@
    - [obj_set_field_s32](functions-7.md#obj_set_field_s32)
    - [obj_set_field_f32](functions-7.md#obj_set_field_f32)
    - [obj_set_field_s16](functions-7.md#obj_set_field_s16)
+   - [obj_get_field_info_from_name](functions-7.md#obj_get_field_info_from_name)
    - [obj_get_temp_spawn_particles_info](functions-7.md#obj_get_temp_spawn_particles_info)
    - [obj_get_temp_water_droplet_params](functions-7.md#obj_get_temp_water_droplet_params)
    - [get_temp_object_hitbox](functions-7.md#get_temp_object_hitbox)
@@ -2230,11 +2236,9 @@
 <br />
 
 - spawn_sound.h
-   - [cur_obj_play_sound_1](functions-7.md#cur_obj_play_sound_1)
-   - [cur_obj_play_sound_2](functions-7.md#cur_obj_play_sound_2)
+   - [cur_obj_play_sound_if_visible](functions-7.md#cur_obj_play_sound_if_visible)
+   - [cur_obj_play_sound_and_rumble_if_visible](functions-7.md#cur_obj_play_sound_and_rumble_if_visible)
    - [create_sound_spawner](functions-7.md#create_sound_spawner)
-   - [calc_dist_to_volume_range_1](functions-7.md#calc_dist_to_volume_range_1)
-   - [calc_dist_to_volume_range_2](functions-7.md#calc_dist_to_volume_range_2)
 
 <br />
 
@@ -2277,10 +2281,20 @@
 
 Defines a custom set of overlapping object fields.
 
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `u32`, `s32`, or `f32`.
+The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+If, for a field, `global` is `true`, the field will be defined for all mods.
 
 ### Lua Example
-`define_custom_obj_fields({ oCustomField1 = 'u32', oCustomField2 = 's32', oCustomField3 = 'f32' })`
+```lua
+define_custom_obj_fields({
+    oCustomField1 = 'u32',
+    oCustomField2 = 's32',
+    oCustomField3 = 'f32',
+    oCustomField4 = { type = 'u32', global = true },
+    oCustomField5 = { type = 's32', global = true },
+    oCustomField6 = { type = 'f32', global = true },
+})
+```
 
 ### Parameters
 | Field | Type |
@@ -2753,64 +2767,6 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 ### C Prototype
 N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text](#djui_hud_print_text)
-
-### Description
-Prints DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text(message, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-### Description
-Prints interpolated DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleX | `number` |
-| prevScaleY | `number` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
 
 [:arrow_up_small:](#)
 

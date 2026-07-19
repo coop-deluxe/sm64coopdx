@@ -23,7 +23,7 @@ void bhv_recovery_heart_loop(void) {
 
     if (collided) {
         if (o->oSpinningHeartPlayedSound == 0) {
-            cur_obj_play_sound_2(SOUND_GENERAL_HEART_SPIN);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_HEART_SPIN);
             o->oSpinningHeartPlayedSound += 1;
         }
 

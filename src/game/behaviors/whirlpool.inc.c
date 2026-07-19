@@ -70,7 +70,7 @@ void bhv_whirlpool_loop(void) {
 
     o->oFaceAngleYaw += 0x1F40;
 
-    cur_obj_play_sound_1(SOUND_ENV_WATER);
+    cur_obj_play_sound_if_visible(SOUND_ENV_WATER);
 
     whirlpool_set_hitbox();
 }
@@ -85,5 +85,5 @@ void bhv_jet_stream_loop(void) {
     } else
         gEnvFxBubbleConfig[ENVFX_STATE_PARTICLECOUNT] = 0;
 
-    cur_obj_play_sound_1(SOUND_ENV_WATER);
+    cur_obj_play_sound_if_visible(SOUND_ENV_WATER);
 }

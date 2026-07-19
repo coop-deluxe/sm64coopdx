@@ -2,21 +2,21 @@
 #define MAIN_H
 
 struct RumbleData {
-    u8 unk00;
-    u8 unk01;
-    s16 unk02;
-    s16 unk04;
+    u8 comm;
+    u8 level;
+    s16 time;
+    s16 decay;
 };
 
-struct StructSH8031D9B0 {
-    s16 unk00;
-    s16 unk02;
-    s16 unk04;
-    s16 unk06;
-    s16 unk08;
-    s16 unk0A;
-    s16 unk0C;
-    s16 unk0E;
+struct RumbleSettings {
+    s16 event;
+    s16 level;
+    s16 timer;
+    s16 count;
+    s16 start;
+    s16 slip;
+    s16 vibrate;
+    s16 decay;
 };
 
 extern OSThread D_80339210;
@@ -49,7 +49,7 @@ extern OSMesgQueue gRumbleThreadVIMesgQueue;
 
 extern s32 gRumblePakPfs; // Actually an OSPfs but we don't have that header yet
 extern struct RumbleData gRumbleDataQueue[3];
-extern struct StructSH8031D9B0 gCurrRumbleSettings;
+extern struct RumbleSettings gCurrRumbleSettings;
 
 extern struct VblankHandler *gVblankHandler1;
 extern struct VblankHandler *gVblankHandler2;

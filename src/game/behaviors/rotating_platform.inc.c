@@ -10,7 +10,7 @@ struct WFRotatingPlatformData sWFRotatingPlatformData[] = {
 
 static void bhv_wf_rotating_wooden_platform_run_once(void) {
     if (o->oAction != 0) {
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR2);
+        cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR2);
     }
     load_object_collision_model();
 }

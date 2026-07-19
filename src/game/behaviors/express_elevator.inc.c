@@ -19,7 +19,7 @@ void bhv_wdw_express_elevator_loop(void) {
     } else if (o->oAction == 1) {
         o->oVelY = -20.0f;
         o->oPosY += o->oVelY;
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
+        cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR4);
         if (o->oTimer > 132)
             o->oAction++;
     } else if (o->oAction == 2) {
@@ -28,7 +28,7 @@ void bhv_wdw_express_elevator_loop(void) {
     } else if (o->oAction == 3) {
         o->oVelY = 10.0f;
         o->oPosY += o->oVelY;
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
+        cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR4);
         if (o->oPosY >= o->oHomeY) {
             o->oPosY = o->oHomeY;
             o->oAction++;

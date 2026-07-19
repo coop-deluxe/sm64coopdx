@@ -716,9 +716,9 @@ void update_game(void) {
     }
     exit(0);
 #else
-    fclose(stdin);
-    fclose(stdout);
-    fclose(stderr);
+    freopen("/dev/null", "r", stdin);
+    freopen("/dev/null", "w", stdout);
+    freopen("/dev/null", "w", stderr);
     execl(updateExecFilePath, "coopdx_updater", "--game-update", NULL);
     exit(1);
 #endif

@@ -181,7 +181,7 @@ static void enemy_lakitu_sub_act_hold_spiny(void) {
  */
 static void enemy_lakitu_sub_act_throw_spiny(void) {
     if (cur_obj_init_anim_check_frame(2, 2)) {
-        cur_obj_play_sound_2(SOUND_OBJ_EVIL_LAKITU_THROW);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_EVIL_LAKITU_THROW);
         o->prevObj = NULL;
     }
 
@@ -196,7 +196,7 @@ static void enemy_lakitu_sub_act_throw_spiny(void) {
  */
 static void enemy_lakitu_act_main(void) {
     cur_obj_unhide();
-    cur_obj_play_sound_1(SOUND_AIR_LAKITU_FLY);
+    cur_obj_play_sound_if_visible(SOUND_AIR_LAKITU_FLY);
 
     cur_obj_update_floor_and_walls();
 

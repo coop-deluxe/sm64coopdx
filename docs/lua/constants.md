@@ -11,6 +11,8 @@
     - [enum CharacterType](#enum-CharacterType)
     - [enum CharacterSound](#enum-CharacterSound)
 - [controller_mouse.h](#controller_mouseh)
+- [course_defines.h](#course_definesh)
+    - [enum CourseNum](#enum-CourseNum)
 - [dialog_ids.h](#dialog_idsh)
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
@@ -70,6 +72,7 @@
 - [obj_behaviors.c](#obj_behaviorsc)
 - [obj_behaviors_2.h](#obj_behaviors_2h)
 - [object_constants.h](#object_constantsh)
+    - [enum CoinType](#enum-CoinType)
 - [object_list_processor.h](#object_list_processorh)
     - [enum ObjectList](#enum-ObjectList)
 - [os_cont.h](#os_conth)
@@ -82,6 +85,9 @@
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
+    - [enum ModAudioType](#enum-ModAudioType)
+    - [enum ModAudioFlags](#enum-ModAudioFlags)
+    - [enum ModAudioChannel](#enum-ModAudioChannel)
 - [smlua_hooks.h](#smlua_hooksh)
     - [enum LuaHookedEventType](#enum-LuaHookedEventType)
 - [smlua_misc_utils.h](#smlua_misc_utilsh)
@@ -950,6 +956,46 @@
 - L_MOUSE_BUTTON
 - M_MOUSE_BUTTON
 - R_MOUSE_BUTTON
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [course_defines.h](#course_defines.h)
+
+### [enum CourseNum](#CourseNum)
+| Identifier | Value |
+| :--------- | :---- |
+| COURSE_NONE | 0 |
+| COURSE_BOB | 1 |
+| COURSE_WF | 2 |
+| COURSE_JRB | 3 |
+| COURSE_CCM | 4 |
+| COURSE_BBH | 5 |
+| COURSE_HMC | 6 |
+| COURSE_LLL | 7 |
+| COURSE_SSL | 8 |
+| COURSE_DDD | 9 |
+| COURSE_SL | 10 |
+| COURSE_WDW | 11 |
+| COURSE_TTM | 12 |
+| COURSE_THI | 13 |
+| COURSE_TTC | 14 |
+| COURSE_RR | 15 |
+| COURSE_BITDW | 16 |
+| COURSE_BITFS | 17 |
+| COURSE_BITS | 18 |
+| COURSE_PSS | 19 |
+| COURSE_COTMC | 20 |
+| COURSE_TOTWC | 21 |
+| COURSE_VCUTM | 22 |
+| COURSE_WMOTR | 23 |
+| COURSE_SA | 24 |
+| COURSE_CAKE_END | 25 |
+| COURSE_END | 26 |
+| COURSE_COUNT | COURSE_END - 1 |
+| COURSE_MAX | COURSE_COUNT |
+| COURSE_MIN | 1 |
 
 [:arrow_up_small:](#)
 
@@ -2422,6 +2468,13 @@
 - BOBOMB_ACT_EXPLODE
 - BOBOMB_ACT_LAVA_DEATH
 - BOBOMB_ACT_DEATH_PLANE_DEATH
+
+### [enum CoinType](#CoinType)
+| Identifier | Value |
+| :--------- | :---- |
+| COIN_TYPE_NONE | 0 |
+| COIN_TYPE_YELLOW | 1 |
+| COIN_TYPE_BLUE | 2 |
 - HIDDEN_BLUE_COIN_ACT_INACTIVE
 - HIDDEN_BLUE_COIN_ACT_WAITING
 - HIDDEN_BLUE_COIN_ACT_ACTIVE
@@ -3507,10 +3560,27 @@
 <br />
 
 ## [smlua_audio_utils.h](#smlua_audio_utils.h)
-- MOD_AUDIO_CHANNEL_MASTER
-- MOD_AUDIO_CHANNEL_MUSIC
-- MOD_AUDIO_CHANNEL_SFX
-- MOD_AUDIO_CHANNEL_ENV
+
+### [enum ModAudioType](#ModAudioType)
+| Identifier | Value |
+| :--------- | :---- |
+| MA_TYPE_NONE | 0 |
+| MA_TYPE_SAMPLE | 1 |
+| MA_TYPE_STREAM | 2 |
+
+### [enum ModAudioFlags](#ModAudioFlags)
+| Identifier | Value |
+| :--------- | :---- |
+| MA_FLAGS_LOADED | (1 << 2) |
+| MA_FLAGS_COPY | (1 << 6) |
+
+### [enum ModAudioChannel](#ModAudioChannel)
+| Identifier | Value |
+| :--------- | :---- |
+| MA_CHANNEL_MUSIC | 0 |
+| MA_CHANNEL_SFX | 1 |
+| MA_CHANNEL_ENV | 2 |
+| MA_CHANNEL_MASTER | 3 |
 
 [:arrow_up_small:](#)
 
@@ -4752,10 +4822,8 @@
 - ANIM_FLAG_BONE_TRANS
 - ANIM_FLAG_BONE_SCALE
 - OBJECT_MAX_BHV_STACK
-- OBJECT_NUM_REGULAR_FIELDS
-- OBJECT_NUM_CUSTOM_FIELDS
-- OBJECT_CUSTOM_FIELDS_START
 - OBJECT_NUM_FIELDS
+- OBJECT_CUSTOM_FIELDS_START
 
 ### [enum MarioAnimPart](#MarioAnimPart)
 | Identifier | Value |

@@ -1,5 +1,5 @@
 -- name: Lighting Engine Demo
--- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\Open the mod menu in the pause menu to see what you can do.
+-- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#\\Open the mod menu in the pause menu to see what you can do.
 
 flashlightColor = { 255, 255, 200 }
 

@@ -34,12 +34,12 @@ static s32 klepto_set_and_check_if_anim_at_end(void) {
         cur_obj_set_anim_if_at_end(5);
     } else if (o->oSoundStateID == 5) {
         if (cur_obj_set_anim_if_at_end(0)) {
-            cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWISH_WATER);
             o->header.gfx.animInfo.animFrame = 9;
         }
     } else {
         if (cur_obj_check_anim_frame(9)) {
-            cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWISH_WATER);
         }
         return TRUE;
     }
@@ -54,7 +54,7 @@ static void klepto_anim_dive(void) {
         } else {
             if (o->oSoundStateID == 0) {
                 if (cur_obj_check_anim_frame(9)) {
-                    cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWISH_WATER);
                     cur_obj_init_animation_with_sound(6);
                 }
             } else if (--o->oKleptoUnk1AE == 0) {
@@ -231,7 +231,7 @@ static void klepto_act_turn_toward_mario(void) {
 
     if (klepto_set_and_check_if_anim_at_end() && cur_obj_check_if_at_animation_end() && o->oKleptoDistanceToTarget > 800.0f
         && abs_angle_diff(angleToPlayer, o->oFaceAngleYaw) < 0x800 && o->oKleptoUnk1B0 < 0x400) {
-        cur_obj_play_sound_2(SOUND_OBJ_KLEPTO1);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KLEPTO1);
         o->oAction = KLEPTO_ACT_DIVE_AT_MARIO;
         o->oMoveAngleYaw = o->oFaceAngleYaw;
         o->oFlags |= 0x00000008;
@@ -252,7 +252,7 @@ static void klepto_act_dive_at_mario(void) {
     approach_f32_ptr(&o->oKleptoSpeed, 60.0f, 10.0f);
     if (o->oSoundStateID == 2) {
         if (cur_obj_check_anim_frame(11)) {
-            cur_obj_play_sound_2(SOUND_GENERAL_SWISH_WATER);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_SWISH_WATER);
         }
 
         if (cur_obj_set_anim_if_at_end(0)) {
@@ -408,7 +408,7 @@ void bhv_klepto_update(void) {
         }
 
         if (obj_handle_attacks(&sKleptoHitbox, o->oAction, sKleptoAttackHandlers)) {
-            cur_obj_play_sound_2(SOUND_OBJ_KLEPTO2);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KLEPTO2);
 
             u8 kleptoHoldingCap = (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP);
 

@@ -115,8 +115,8 @@ void bhv_rolling_log_loop(void) {
     }
 
     o->oFaceAnglePitch += o->oAngleVelPitch;
-    if (absf_2(o->oFaceAnglePitch & 0x1FFF) < 528.0f && o->oAngleVelPitch != 0) {
-        cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN1_2);
+    if (absf(o->oFaceAnglePitch & 0x1FFF) < 528.0f && o->oAngleVelPitch != 0) {
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNKNOWN1_2);
     }
 }
 
@@ -130,7 +130,7 @@ void volcano_act_1(void) {
         o->oAngleVelPitch = 0;
         o->oRollingLogUnkF4 = 0;
         o->oAction = 2;
-        cur_obj_play_sound_2(SOUND_GENERAL_BIG_POUND);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BIG_POUND);
         set_camera_shake_from_point(SHAKE_POS_LARGE, o->oPosX, o->oPosY, o->oPosZ);
     }
 }
@@ -159,7 +159,7 @@ void bhv_volcano_trap_loop(void) {
         case 0:
             if (is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, 1000)) {
                 o->oAction = 1;
-                cur_obj_play_sound_2(SOUND_GENERAL_QUIET_POUND2);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_QUIET_POUND2);
             }
             break;
 
@@ -172,7 +172,7 @@ void bhv_volcano_trap_loop(void) {
                 o->oPosY = o->oHomeY + sins(o->oTimer * 0x1000) * 10.0f;
             }
             if (o->oTimer == 50) {
-                cur_obj_play_sound_2(SOUND_GENERAL_UNK45);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNK45);
                 o->oAction = 3;
             }
             break;

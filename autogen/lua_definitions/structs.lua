@@ -207,13 +207,10 @@
 --- @field public yaw integer
 --- @field public focus Vec3f
 --- @field public pos Vec3f
---- @field public unusedVec1 Vec3f
 --- @field public areaCenX number
 --- @field public areaCenZ number
 --- @field public cutscene integer
---- @field public filler31 integer[]
 --- @field public nextYaw integer
---- @field public filler3C integer[]
 --- @field public doorStatus integer
 --- @field public areaCenY number
 --- @field public mtx Mat4
@@ -800,7 +797,6 @@
 
 --- @class GraphNodeBackground
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public background integer
 --- @field public prevCameraPos Vec3f
 --- @field public prevCameraFocus Vec3f
@@ -833,7 +829,6 @@
 --- @class GraphNodeCullingRadius
 --- @field public node GraphNode
 --- @field public cullingRadius integer
---- @field public pad1E integer[]
 
 --- @class GraphNodeDisplayList
 --- @field public node GraphNode
@@ -862,7 +857,6 @@
 --- @class GraphNodeObject
 --- @field public node GraphNode
 --- @field public sharedChild GraphNode
---- @field public unk4C SpawnInfo
 --- @field public throwMatrix Pointer_Mat4
 --- @field public throwMatrixPrev Pointer_Mat4
 --- @field public prevThrowMatrix Mat4
@@ -898,7 +892,6 @@
 
 --- @class GraphNodePerspective
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public fov number
 --- @field public near integer
 --- @field public far integer
@@ -940,7 +933,6 @@
 
 --- @class GraphNodeSwitchCase
 --- @field public fnNode FnGraphNode
---- @field public unused integer
 --- @field public parameter integer
 --- @field public selectedCase integer
 
@@ -948,7 +940,6 @@
 --- @field public node GraphNode
 --- @field public displayList Pointer_Gfx
 --- @field public translation Vec3s
---- @field public pad1E integer[]
 
 --- @class GraphNodeTranslationRotation
 --- @field public node GraphNode
@@ -975,10 +966,8 @@
 --- @field public curPos Vec3f
 --- @field public goalFocus Vec3f
 --- @field public goalPos Vec3f
---- @field public filler30 integer[]
 --- @field public mode integer
 --- @field public defMode integer
---- @field public filler3E integer[]
 --- @field public focusDistance number
 --- @field public oldPitch integer
 --- @field public oldYaw integer
@@ -987,9 +976,6 @@
 --- @field public shakePitchPhase integer
 --- @field public shakePitchVel integer
 --- @field public shakePitchDecay integer
---- @field public unusedVec1 Vec3f
---- @field public unusedVec2 Vec3s
---- @field public filler72 integer[]
 --- @field public roll integer
 --- @field public yaw integer
 --- @field public nextYaw integer
@@ -1089,6 +1075,7 @@
 --- @field public heldObjLastPosition Vec3f
 --- @field public animPartsPos Vec3f[]
 --- @field public animPartsRot Vec3s[]
+--- @field public animPartsMtx Mat4[]
 --- @field public currAnimPart integer
 --- @field public updateTorsoTime integer
 --- @field public updateHeadPosTime integer
@@ -1203,18 +1190,27 @@
 --- @field public pausable boolean
 --- @field public ignoreScriptWarnings boolean
 --- @field public size integer
---- @field public customBehaviorIndex integer
 
 --- @class ModAudio
+--- @field public flags integer
 --- @field public filepath string
---- @field public isStream boolean
---- @field public baseVolume number
---- @field public loaded boolean
---- @field public position number
---- @field public looping boolean
---- @field public frequency number
+--- @field public play fun(audio: ModAudio, restart: boolean, volume: number)
+--- @field public play fun(audio: ModAudio, position: Vec3f, volume: number): ModAudio
+--- @field public play fun(audio: ModAudio)
+--- @field public pause fun(audio: ModAudio)
+--- @field public stop fun(audio: ModAudio)
+--- @field public destroy fun(audio: ModAudio)
+--- @field public reload fun(audio: ModAudio)
+--- @field public copy fun(audio: ModAudio): ModAudio
 --- @field public volume number
+--- @field public pan number
+--- @field public length number
+--- @field public position number
+--- @field public frequency number
+--- @field public looping boolean
+--- @field public playing boolean
 --- @field public channel integer
+--- @field public sampleRate integer
 
 --- @class ModFs
 --- @field public mod Mod
@@ -1308,8 +1304,6 @@
 --- @field public behavior Pointer_BehaviorScript
 --- @field public initBhvCommand Pointer_BehaviorScript
 --- @field public curBhvCommand Pointer_BehaviorScript
---- @field public bhvStack integer[]
---- @field public bhvStackIndex integer
 --- @field public bhvDelayTimer integer
 --- @field public activeFlags integer
 --- @field public collidedObjInteractTypes integer
@@ -1580,6 +1574,7 @@
 --- @field public oCoinUnkF4 integer
 --- @field public oCoinUnkF8 integer
 --- @field public oCoinUnk110 number
+--- @field public oCoinBaseYVel number
 --- @field public oCoinUnk1B0 integer
 --- @field public oCollisionParticleUnkF4 number
 --- @field public oControllablePlatformUnkF8 integer
@@ -2189,7 +2184,6 @@
 --- @field public areaIndex integer
 --- @field public activeAreaIndex integer
 --- @field public behaviorArg integer
---- @field public unk18 GraphNode
 --- @field public next SpawnInfo
 --- @field public syncID integer
 
@@ -2244,6 +2238,7 @@
 --- @field public dialog6 integer
 
 --- @class StaticObjectCollision
+--- @field public index integer
 --- @field public length integer
 
 --- @class Surface

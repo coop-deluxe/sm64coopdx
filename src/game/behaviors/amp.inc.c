@@ -233,7 +233,7 @@ void bhv_homing_amp_loop(void) {
 
         case HOMING_AMP_ACT_CHASE:
             homing_amp_chase_loop();
-            cur_obj_play_sound_1(SOUND_AIR_AMP_BUZZ);
+            cur_obj_play_sound_if_visible(SOUND_AIR_AMP_BUZZ);
             break;
 
         case HOMING_AMP_ACT_GIVE_UP:
@@ -316,7 +316,7 @@ static void fixed_circling_amp_idle_loop(void) {
     // Oscillate
     o->oAmpYPhase++;
 
-    // Where there is a cur_obj_play_sound_1 call in the main circling amp update function,
+    // Where there is a cur_obj_play_sound_if_visible call in the main circling amp update function,
     // there is nothing here. Fixed amps are the only amps that never play
     // the "amp buzzing" sound.
 }
@@ -342,7 +342,7 @@ static void circling_amp_idle_loop(void) {
     // Oscillate
     o->oAmpYPhase++;
 
-    cur_obj_play_sound_1(SOUND_AIR_AMP_BUZZ);
+    cur_obj_play_sound_if_visible(SOUND_AIR_AMP_BUZZ);
 }
 
 /**

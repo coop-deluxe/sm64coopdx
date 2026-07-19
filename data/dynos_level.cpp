@@ -21,7 +21,7 @@ extern const BehaviorScript *sWarpBhvSpawnTable[];
 
 #define DYNOS_LEVEL_MARIO_POS_WARP_ID (-1)
 
-extern void *gDynosLevelScriptsOriginal[LEVEL_COUNT];
+extern const void *gDynosLevelScriptsOriginal[LEVEL_COUNT];
 
 void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
 
@@ -158,7 +158,7 @@ void DynOS_Level_Init() {
 
         // Level warps
         for (sDynosCurrentLevelNum = 0; sDynosCurrentLevelNum < LEVEL_COUNT; ++sDynosCurrentLevelNum) {
-            sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript = gDynosLevelScriptsOriginal[sDynosCurrentLevelNum];
+            sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript = (void *) gDynosLevelScriptsOriginal[sDynosCurrentLevelNum];
             sDynosLevelScripts[sDynosCurrentLevelNum].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
             if (sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript) {
                 DynOS_Level_ParseScript(sDynosLevelScripts[sDynosCurrentLevelNum].mLevelScript, DynOS_Level_PreprocessScript);
@@ -199,7 +199,7 @@ void DynOS_Level_Unoverride() {
     for (s32 i = 0; i < LEVEL_COUNT; i++) {
         sDynosCurrentLevelNum = i;
         sDynosLevelWarps[i].Clear();
-        sDynosLevelScripts[i].mLevelScript = gDynosLevelScriptsOriginal[i];
+        sDynosLevelScripts[i].mLevelScript = (void *) gDynosLevelScriptsOriginal[i];
         sDynosLevelScripts[i].mModIndex = DYNOS_LEVEL_MOD_INDEX_VANILLA;
         DynOS_Level_ParseScript(sDynosLevelScripts[i].mLevelScript, DynOS_Level_PreprocessScript);
     }
@@ -214,6 +214,13 @@ const void *DynOS_Level_GetScript(s32 aLevel) {
 
     DynOS_Level_Init();
     return sDynosLevelScripts[aLevel].mLevelScript;
+}
+
+const void *DynOS_Level_GetVanillaScript(s32 aLevel) {
+    if (aLevel < LEVEL_MIN || aLevel >= LEVEL_COUNT) {
+        return NULL;
+    }
+    return (const void *) gDynosLevelScriptsOriginal[aLevel];
 }
 
 s32 DynOS_Level_GetModIndex(s32 aLevel) {
@@ -231,7 +238,7 @@ bool DynOS_Level_IsVanillaLevel(s32 aLevel) {
     DynOS_Level_Init();
 
     if (aLevel >= LEVEL_MIN && aLevel < LEVEL_COUNT) {
-        return sDynosLevelScripts[aLevel].mLevelScript == gDynosLevelScriptsOriginal[aLevel];
+        return sDynosLevelScripts[aLevel].mLevelScript == (void *) gDynosLevelScriptsOriginal[aLevel];
     }
     return false;
 }

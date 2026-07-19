@@ -52,3 +52,7 @@ void DynOS_Mod_Update() {
 void DynOS_Mod_Shutdown() {
     sDynosModShutdown = true;
 }
+
+bool DynOS_Mod_IsShuttingDown() {
+    return sDynosModShutdown;
+}

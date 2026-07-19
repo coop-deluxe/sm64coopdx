@@ -856,15 +856,16 @@ if (_Symbol == #symb) {                                             \
     if (_Symbol == "gsSPEndDisplayList") {
         gSPEndDisplayList(aHead++);
 
-        // Convert raw texture to PNG if all raw members are set
-        if (aGfxData->mGfxContext.mCurrentTexture                    != NULL &&
-            aGfxData->mGfxContext.mCurrentTexture->mData             != NULL &&
-            aGfxData->mGfxContext.mCurrentTexture->mData->mPngData.Empty()   &&
-            aGfxData->mGfxContext.mCurrentTexture->mData->mRawFormat != -1   &&
-            aGfxData->mGfxContext.mCurrentTexture->mData->mRawSize   != -1   &&
-            aGfxData->mGfxContext.mCurrentTexture->mData->mRawWidth  != -1   &&
-            aGfxData->mGfxContext.mCurrentTexture->mData->mRawHeight != -1) {
-            DynOS_Tex_ConvertTextureDataToPng(aGfxData, aGfxData->mGfxContext.mCurrentTexture->mData);
+        // Convert every raw texture to PNG if all raw members are set
+        for (auto& _TexNode : aGfxData->mTextures) {
+            if (_TexNode->mData             != NULL &&
+                _TexNode->mData->mPngData.Empty()   &&
+                _TexNode->mData->mRawFormat != -1   &&
+                _TexNode->mData->mRawSize   != -1   &&
+                _TexNode->mData->mRawWidth  != -1   &&
+                _TexNode->mData->mRawHeight != -1) {
+                DynOS_Tex_ConvertTextureDataToPng(aGfxData, _TexNode->mData);
+            }
         }
 
         // End the display list parsing after hitting gsSPEndDisplayList

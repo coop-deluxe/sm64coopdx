@@ -462,8 +462,7 @@ void save_file_erase_current_backup_save(void) {
     save_file_do_save(gCurrSaveFileNum - 1, TRUE);
 }
 
-//! Needs to be s32 to match on -O2, despite no return value.
-BAD_RETURN(s32) save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
+void save_file_copy(s32 srcFileIndex, s32 destFileIndex) {
     if (INVALID_FILE_INDEX(srcFileIndex)) { return; }
     if (INVALID_FILE_INDEX(destFileIndex)) { return; }
 

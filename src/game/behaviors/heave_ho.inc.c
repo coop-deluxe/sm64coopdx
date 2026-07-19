@@ -19,7 +19,7 @@ void bhv_heave_ho_throw_mario_loop(void) {
             case 1:
                 break;
             case 2:
-                cur_obj_play_sound_2(SOUND_OBJ_HEAVEHO_TOSSED);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_HEAVEHO_TOSSED);
                 if (player) {
                     player->oInteractStatus |= INT_STATUS_MARIO_UNK2;
                 }
@@ -108,7 +108,7 @@ void heave_ho_move(void) {
     else
         o->oGraphYOffset = 0.0f;
     if (o->oForwardVel > 3.0f)
-        cur_obj_play_sound_1(SOUND_AIR_HEAVEHO_MOVE);
+        cur_obj_play_sound_if_visible(SOUND_AIR_HEAVEHO_MOVE);
     if (o->oAction != 0 && o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER)
         o->oAction = 0;
     if (o->oInteractStatus & INT_STATUS_GRABBED_MARIO) {

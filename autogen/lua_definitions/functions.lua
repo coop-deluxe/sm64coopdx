@@ -93,11 +93,11 @@ function spawn_wind_particles(pitch, yaw)
     -- ...
 end
 
---- @param a0 number
---- @param a1 number
+--- @param maxDistToFloor number
+--- @param distance number
 --- @return integer
---- Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`
-function check_if_moving_over_floor(a0, a1)
+--- Checks if the current object is moving `distance` units over a floor and within a max distance to floor of `maxDistToFloor`
+function check_if_moving_over_floor(maxDistToFloor, distance)
     -- ...
 end
 
@@ -144,8 +144,8 @@ function cur_obj_spawn_strong_wind_particles(windSpread, scale, relPosX, relPosY
     -- ...
 end
 
---- Behavior loop function for Star Door
-function bhv_star_door_loop_2()
+--- Behavior loop function for Star Door, which updates its render state
+function bhv_star_door_loop_update_render_state()
     -- ...
 end
 
@@ -319,11 +319,11 @@ function bhv_cannon_base_unused_loop()
     -- ...
 end
 
---- @param sp28 number
---- @param sp2C number
---- @param sp30 integer
---- Common behavior for when Mario's anchoring when grabbed
-function common_anchor_mario_behavior(sp28, sp2C, sp30)
+--- @param forwardVel number
+--- @param upwardsVel number
+--- @param interactStatusFlags integer
+--- Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuckya anchor objects. When Mario is thrown, sets `forwardVel`, `upwardsVel` and `interactStatusFlags` to him
+function common_anchor_mario_behavior(forwardVel, upwardsVel, interactStatusFlags)
     -- ...
 end
 
@@ -4169,6 +4169,51 @@ function djui_hud_measure_text(message)
     -- ...
 end
 
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scale)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
+    -- ...
+end
+
 --- @param texInfo TextureInfo
 --- @param x number
 --- @param y number
@@ -5663,8 +5708,9 @@ function mario_can_bubble(m)
 end
 
 --- @param m MarioState
---- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
-function mario_set_bubbled(m)
+--- @param stayAlive? boolean
+--- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
+function mario_set_bubbled(m, stayAlive)
     -- ...
 end
 
@@ -7082,6 +7128,14 @@ function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
 end
 
+--- @param dest Mat4
+--- @param objMtx Mat4
+--- @param camMtx Mat4
+--- Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+function get_world_mtx_from_transform(dest, objMtx, camMtx)
+    -- ...
+end
+
 --- @param value number
 --- @param replacement number
 --- @return number
@@ -8275,13 +8329,6 @@ function set_yoshi_as_not_dead()
     -- ...
 end
 
---- @param f number
---- @return number
---- Absolute value (always positive) function
-function absf_2(f)
-    -- ...
-end
-
 --- @param objNewX number
 --- @param objY number
 --- @param objNewZ number
@@ -8947,10 +8994,10 @@ function set_room_override(room)
     -- ...
 end
 
---- @param a0 Mat4
---- @param a1 Object
+--- @param mtx Mat4
+--- @param obj Object
 --- Updates an object's position based on a parent transformation matrix
-function obj_update_pos_from_parent_transformation(a0, a1)
+function obj_update_pos_from_parent_transformation(mtx, obj)
     -- ...
 end
 
@@ -8962,11 +9009,11 @@ function obj_apply_scale_to_matrix(obj, dst, src)
     -- ...
 end
 
---- @param a0 Mat4
---- @param a1 Mat4
---- @param a2 Mat4
+--- @param dest Mat4
+--- @param src1 Mat4
+--- @param src2 Mat4
 --- Combines two transformation matrices into a single result matrix
-function create_transformation_from_matrices(a0, a1, a2)
+function create_transformation_from_matrices(dest, src1, src2)
     -- ...
 end
 
@@ -9350,11 +9397,6 @@ function cur_obj_set_pos_relative_to_parent(dleft, dy, dforward)
     -- ...
 end
 
---- Alternative function that enables rendering for the current object
-function cur_obj_enable_rendering_2()
-    -- ...
-end
-
 --- Unused function that initializes the current object on the floor
 function cur_obj_unused_init_on_floor()
     -- ...
@@ -9513,17 +9555,17 @@ function mario_is_dive_sliding(m)
     -- ...
 end
 
---- @param sp18 number
---- @param sp1C integer
+--- @param velY number
+--- @param animIndex integer
 --- Sets the current object's vertical velocity and initializes an animation
-function cur_obj_set_y_vel_and_animation(sp18, sp1C)
+function cur_obj_set_y_vel_and_animation(velY, animIndex)
     -- ...
 end
 
---- @param sp18 integer
---- @param sp1C integer
---- Disables rendering, makes intangible, and resets action and animation
-function cur_obj_unrender_and_reset_state(sp18, sp1C)
+--- @param animIndex integer
+--- @param action integer
+--- Disables rendering, makes intangible, and resets animation and action
+function cur_obj_unrender_and_reset_state(animIndex, action)
     -- ...
 end
 
@@ -9783,11 +9825,11 @@ function cur_obj_start_cam_event(obj, cameraEvent)
     -- ...
 end
 
---- @param sp0 integer
---- @param sp4 integer
---- @param sp8 number
---- Sets Mario's interact status to hoot-grabbed if Mario is within range
-function set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)
+--- @param unused1 integer
+--- @param unused2 integer
+--- @param maxDistanceToMario number
+--- Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`
+function set_mario_interact_hoot_if_in_range(unused1, unused2, maxDistanceToMario)
     -- ...
 end
 
@@ -9840,29 +9882,29 @@ end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp30 number
+--- @param baseYVel number
 --- @param coinBehavior Pointer_BehaviorScript
 --- @param posJitter integer
 --- @param model integer
 --- Spawns loot coins from an object using the specified behavior, jitter, and model
-function obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)
+function obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- @param posJitter integer
 --- Spawns blue loot coins from an object
-function obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)
+function obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)
     -- ...
 end
 
 --- @param obj Object
 --- @param numCoins integer
---- @param sp28 number
+--- @param baseYVel number
 --- Spawns yellow loot coins from an object
-function obj_spawn_loot_yellow_coins(obj, numCoins, sp28)
+function obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)
     -- ...
 end
 
@@ -10049,9 +10091,9 @@ function obj_translate_xz_random(obj, rangeLength)
     -- ...
 end
 
---- @param a0 Object
+--- @param obj Object
 --- Builds the object's world velocity from its transform basis vectors
-function obj_build_vel_from_transform(a0)
+function obj_build_vel_from_transform(obj)
     -- ...
 end
 
@@ -10137,29 +10179,17 @@ function bhv_dust_smoke_loop()
     -- ...
 end
 
---- @param sp0 integer
---- @param sp4 integer
---- Placeholder function with no behavior
-function stub_obj_helpers_3(sp0, sp4)
-    -- ...
-end
-
---- @param a0 integer
---- @param a1 integer
---- @param sp10 number
---- @param sp14 number
---- Smoothly scales the current object over time using enabled axes
-function cur_obj_scale_over_time(a0, a1, sp10, sp14)
+--- @param axes integer
+--- @param duration integer
+--- @param minScale number
+--- @param maxScale number
+--- Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)
+function cur_obj_scale_over_time(axes, duration, minScale, maxScale)
     -- ...
 end
 
 --- Moves an object to its home position while applying debug position offsets
 function cur_obj_set_pos_to_home_with_debug()
-    -- ...
-end
-
---- Placeholder function with no behavior
-function stub_obj_helpers_4()
     -- ...
 end
 
@@ -10183,30 +10213,23 @@ function cur_obj_shake_y_until(cycles, amount)
     -- ...
 end
 
---- @param a0 integer
+--- @param index integer
 --- @return integer
 --- Moves the current object up and down along a preset displacement table
-function cur_obj_move_up_and_down(a0)
+function cur_obj_move_up_and_down(index)
     -- ...
 end
 
---- @param sp20 integer
---- @param sp24 integer
+--- @param setHomeToMario integer
+--- @param unused integer
 --- @return Object
 --- Spawns a star object without triggering level exit behavior
-function spawn_star_with_no_lvl_exit(sp20, sp24)
+function spawn_star_with_no_lvl_exit(setHomeToMario, unused)
     -- ...
 end
 
 --- Spawns a base star with default parameters and no level exit behavior
 function spawn_base_star_with_no_lvl_exit()
-    -- ...
-end
-
---- @param a0 integer
---- @return integer
---- Returns the value at index a0 from a behavior-specific left-shift table
-function bit_shift_left(a0)
     -- ...
 end
 
@@ -10250,10 +10273,10 @@ function cur_obj_set_hitbox_and_die_if_attacked(hitbox, deathSound, noLootCoins)
     -- ...
 end
 
---- @param sp18 number
---- @param sp1C integer
+--- @param mistSize number
+--- @param coinType CoinType
 --- Explodes the current object, spawns particles, and optionally spawns coins
-function obj_explode_and_spawn_coins(sp18, sp1C)
+function obj_explode_and_spawn_coins(mistSize, coinType)
     -- ...
 end
 
@@ -10312,19 +10335,10 @@ end
 --- @param m MarioState
 --- @param radius number
 --- @param height number
---- @param unused integer
+--- @param unused? integer
 --- @return integer
 --- Checks whether Mario can activate the current object's textbox within a vertical and horizontal range
 function cur_obj_can_mario_activate_textbox(m, radius, height, unused)
-    -- ...
-end
-
---- @param m MarioState
---- @param radius number
---- @param height number
---- @return integer
---- Wrapper that checks Mario textbox activation using a fixed unused parameter value
-function cur_obj_can_mario_activate_textbox_2(m, radius, height)
     -- ...
 end
 
@@ -10480,39 +10494,61 @@ function apply_platform_displacement(o, platform)
     -- ...
 end
 
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data
-function queue_rumble_data(a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data with `time` and `level`
+function queue_rumble_data(time, level)
     -- ...
 end
 
 --- @param object Object
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data for object, factoring in its distance from Mario
-function queue_rumble_data_object(object, a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data for object with `time` and `level`, factoring in its distance from Mario
+function queue_rumble_data_object(object, time, level)
     -- ...
 end
 
 --- @param m MarioState
---- @param a0 integer
---- @param a1 integer
---- Queues rumble data for Mario
-function queue_rumble_data_mario(m, a0, a1)
+--- @param time integer
+--- @param level integer
+--- Queues rumble data with `time` and `level` only if `m` is the local Mario
+function queue_rumble_data_mario(m, time, level)
+    -- ...
+end
+
+--- @param decay integer
+--- Queues rumble `decay`
+function queue_rumble_decay(decay)
+    -- ...
+end
+
+--- @return integer
+--- Checks if rumble is finished and there is no rumble queued
+function is_rumble_finished_and_queue_empty()
     -- ...
 end
 
 --- @param m MarioState
---- Resets rumble timers
+--- Resets rumble timers only if `m` is the local Mario
 function reset_rumble_timers(m)
     -- ...
 end
 
 --- @param m MarioState
---- @param a0 integer
---- Resets rumble timers and sets a field based on `a0`
-function reset_rumble_timers_2(m, a0)
+--- @param level integer
+--- Resets rumble timers and sets vibrate based on `level`
+function reset_rumble_timers_vibrate(m, level)
+    -- ...
+end
+
+--- Queues rumble data for submerged actions
+function queue_rumble_submerged()
+    -- ...
+end
+
+--- Cancels all currently queued rumble data
+function cancel_rumble()
     -- ...
 end
 
@@ -10792,15 +10828,10 @@ function smlua_audio_utils_allocate_sequence()
 end
 
 --- @param filename string
+--- @param type? ModAudioType
 --- @return ModAudio
---- Loads an `audio` stream by `filename` (with extension)
-function audio_stream_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` stream
-function audio_stream_destroy(audio)
+--- Loads an `audio` by `filename` (with extension)
+function audio_load(filename, type)
     -- ...
 end
 
@@ -10808,124 +10839,181 @@ end
 --- @param restart boolean
 --- @param volume number
 --- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-function audio_stream_play(audio, restart, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- Pauses an `audio` stream
-function audio_stream_pause(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` stream
-function audio_stream_stop(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the position of an `audio` stream in seconds
-function audio_stream_get_position(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param pos number
---- Sets the position of an `audio` stream in seconds
-function audio_stream_set_position(audio, pos)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return boolean
---- Gets if an `audio` stream is looping or not
-function audio_stream_get_looping(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param looping boolean
---- Sets if an `audio` stream is looping or not
-function audio_stream_set_looping(audio, looping)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param loopStart integer
---- @param loopEnd integer
---- Sets an `audio` stream's loop points in samples
-function audio_stream_set_loop_points(audio, loopStart, loopEnd)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the frequency of an `audio` stream
-function audio_stream_get_frequency(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param freq number
---- Sets the frequency of an `audio` stream
-function audio_stream_set_frequency(audio, freq)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the volume of an `audio` stream
-function audio_stream_get_volume(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param volume number
---- Sets the volume of an `audio` stream
-function audio_stream_set_volume(audio, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return integer
---- Gets the volume channel of an `audio` stream
-function audio_stream_get_volume_channel(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param channel integer
---- Sets the volume channel of an `audio` stream
-function audio_stream_set_volume_channel(audio, channel)
-    -- ...
-end
-
---- @param filename string
---- @return ModAudio
---- Loads an `audio` sample
-function audio_sample_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` sample
-function audio_sample_destroy(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` sample
-function audio_sample_stop(audio)
+function audio_play(audio, restart, volume)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- @return ModAudio
 --- Plays an `audio` sample at `position` with `volume`
-function audio_sample_play(audio, position, volume)
+function audio_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Plays an `audio`
+function audio_play(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Pauses an `audio`
+function audio_pause(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Stops an `audio`
+function audio_stop(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Destroys an `audio`
+function audio_destroy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Reloads a destroyed `audio`
+function audio_reload(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return ModAudio
+--- Copies an `audio`
+function audio_copy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the volume of an `audio`
+function audio_get_volume(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param volume number
+--- Sets the volume of an `audio`
+function audio_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the pan of an `audio`
+function audio_get_pan(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pan number
+--- Sets the pan of an `audio`
+function audio_set_pan(audio, pan)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number length
+--- Gets the length of an `audio` in seconds
+function audio_get_length(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number position
+--- Gets the position of an `audio` in seconds
+function audio_get_position(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pos number
+--- Sets the position of an `audio` in seconds
+function audio_set_position(audio, pos)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is looping or not
+function audio_get_looping(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param looping boolean
+--- Sets if an `audio` is looping or not
+function audio_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is playing
+function audio_get_playing(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param playing boolean
+--- Sets if an `audio` is playing
+function audio_set_playing(audio, playing)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer loopStart
+--- @return integer loopEnd
+--- Gets an `audio`'s loop points in samples
+function audio_get_loop_points(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param loopStart integer
+--- @param loopEnd? integer
+--- Sets an `audio`'s loop points in samples
+function audio_set_loop_points(audio, loopStart, loopEnd)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the frequency of an `audio`
+function audio_get_frequency(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param freq number
+--- Sets the frequency of an `audio`
+function audio_set_frequency(audio, freq)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the volume channel of an `audio`
+function audio_get_volume_channel(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param channel integer
+--- Sets the volume channel of an `audio`
+function audio_set_volume_channel(audio, channel)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio`
+function audio_get_sample_rate(audio)
     -- ...
 end
 
@@ -12169,6 +12257,15 @@ function get_mario_anim_part_rot(m, animPart, rot)
     -- ...
 end
 
+--- @param m MarioState
+--- @param animPart integer
+--- @param mtx Mat4
+--- @return boolean
+--- Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+function get_mario_anim_part_mtx(m, animPart, mtx)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
@@ -12285,49 +12382,49 @@ function get_coopnet_id(localIndex)
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...
@@ -12448,7 +12545,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`
@@ -12461,7 +12558,7 @@ end
 --- @param x number
 --- @param y number
 --- @param z number
---- @param objSetupFunction function
+--- @param objSetupFunction? function
 --- @return Object
 --- Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.<br>
 --- You can change the fields of the object in `objSetupFunction`
@@ -12702,6 +12799,19 @@ end
 --- @param value integer
 --- Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
 function obj_set_field_s16(o, fieldIndex, fieldSubIndex, value)
+    -- ...
+end
+
+--- @param fieldName string
+--- @param mod? Mod
+--- @return boolean
+--- @return integer fieldIndex
+--- @return integer fieldSubIndex
+--- @return string fieldType
+--- Gets the object field info (index, sub-index and type) from a field name and a specific mod (if provided). Returns `true` if the field is found, `false` otherwise.<br>
+--- Supported types are `s32`, `u32`, `f32`, `s16`.<br>
+--- This function works with custom object fields as well and is meant to be used with functions that take a field index as parameter, like `obj_get_first_with_behavior_id_and_field_s32` or `obj_get_field_s32`
+function obj_get_field_info_from_name(fieldName, mod)
     -- ...
 end
 
@@ -13124,13 +13234,13 @@ end
 
 --- @param soundMagic integer
 --- Plays a sound if the current object is visible
-function cur_obj_play_sound_1(soundMagic)
+function cur_obj_play_sound_if_visible(soundMagic)
     -- ...
 end
 
 --- @param soundMagic integer
---- Plays a sound if the current object is visible and queues rumble for specific sounds
-function cur_obj_play_sound_2(soundMagic)
+--- Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
+function cur_obj_play_sound_and_rumble_if_visible(soundMagic)
     -- ...
 end
 
@@ -13138,24 +13248,6 @@ end
 --- Create a sound spawner for objects that need a sound play once.<br>
 --- (Breakable walls, King Bobomb exploding, etc)
 function create_sound_spawner(soundMagic)
-    -- ...
-end
-
---- @param distance number
---- @return integer
---- Unused vanilla function, calculates a volume based on `distance`.<br>
---- If `distance` is less than 500 then 127, if `distance` is greater than 1500 then 0, if `distance` is between 500 and 1500 then it ranges linearly from 60 to 124.<br>
---- What an even more strange and confusing function
-function calc_dist_to_volume_range_1(distance)
-    -- ...
-end
-
---- @param distance number
---- @return integer
---- Unused vanilla function, calculates a volume based on `distance`.<br>
---- If `distance` is less than 1300 then 127, if `distance` is greater than 2300 then 0, if `distance` is between 1300 and 2300 then it ranges linearly from 60 to 127.<br>
---- What a strange and confusing function
-function calc_dist_to_volume_range_2(distance)
     -- ...
 end
 
