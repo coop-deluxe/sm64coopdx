@@ -24,6 +24,7 @@
 #include "gfx_window_manager_api.h"
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
+#include "gfx_pc.h"
 
 extern "C" {
     #include "pc/controller/controller_bind_mapping.h"
@@ -124,11 +125,45 @@ static struct {
     int current_tile;
     uint32_t current_texture_ids[2];
 
+    // Internal resolution render target (offscreen game render, upscaled to the
+    // window by end_internal_res() before DJUI renders natively). See the
+    // equivalent FBO logic in gfx_opengl.c for the OpenGL backend.
+    ComPtr<ID3D11Texture2D> internal_res_color_texture;
+    ComPtr<ID3D11RenderTargetView> internal_res_rtv;
+    ComPtr<ID3D11ShaderResourceView> internal_res_srv;
+    ComPtr<ID3D11Texture2D> internal_res_depth_texture;
+    ComPtr<ID3D11DepthStencilView> internal_res_dsv;
+    uint32_t internal_res_width;
+    uint32_t internal_res_height;
+    bool internal_res_active; // true while the game is rendering into the offscreen target this frame
+    bool internal_res_create_failed;
+
+    // Blit pipeline (fullscreen triangle, no vertex/index buffer needed)
+    ComPtr<ID3D11VertexShader> blit_vertex_shader;
+    ComPtr<ID3D11PixelShader> blit_pixel_shader_passthrough;
+    ComPtr<ID3D11PixelShader> blit_pixel_shader_composite;
+    ComPtr<ID3D11PixelShader> blit_pixel_shader_capture;
+    ComPtr<ID3D11InputLayout> blit_input_layout;
+    ComPtr<ID3D11SamplerState> blit_sampler_point;
+    ComPtr<ID3D11SamplerState> blit_sampler_linear;
+    ComPtr<ID3D11Buffer> blit_cb;
+    ComPtr<ID3D11RasterizerState> blit_rasterizer_state;
+    ComPtr<ID3D11DepthStencilState> blit_depth_stencil_state;
+    ComPtr<ID3D11BlendState> blit_blend_state;
+    bool blit_resources_ready;
+    bool blit_resources_failed;
+
     // Current state
 
     struct ShaderProgramD3D11 *shader_program;
 
     uint32_t current_width, current_height;
+
+    // Dimensions of whatever render target is currently bound (either the window
+    // backbuffer, or the internal-res offscreen target while internal_res_active).
+    // gfx_d3d11_set_viewport/set_scissor need this (not current_width/height) to
+    // flip Y into the bound target's own space.
+    uint32_t render_width, render_height;
 
     int8_t depth_test;
     int8_t depth_mask;
@@ -203,6 +238,9 @@ static void create_render_target_views(bool is_resize) {
 
     d3d.current_width = desc1.Width;
     d3d.current_height = desc1.Height;
+    // keep render_width/height valid even before the first start_frame() call
+    d3d.render_width = desc1.Width;
+    d3d.render_height = desc1.Height;
 }
 
 static void gfx_d3d11_init(void) {
@@ -564,7 +602,10 @@ static void gfx_d3d11_set_zmode_decal(bool zmode_decal) {
 static void gfx_d3d11_set_viewport(int x, int y, int width, int height) {
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = x;
-    viewport.TopLeftY = d3d.current_height - y - height;
+    // flip into whichever render target is currently bound -- the window
+    // backbuffer normally, or the (typically smaller) internal-res offscreen
+    // target while the game is rendering at a reduced resolution
+    viewport.TopLeftY = d3d.render_height - y - height;
     viewport.Width = width;
     viewport.Height = height;
     viewport.MinDepth = 0.0f;
@@ -576,9 +617,9 @@ static void gfx_d3d11_set_viewport(int x, int y, int width, int height) {
 static void gfx_d3d11_set_scissor(int x, int y, int width, int height) {
     D3D11_RECT rect;
     rect.left = x;
-    rect.top = d3d.current_height - y - height;
+    rect.top = d3d.render_height - y - height;
     rect.right = x + width;
-    rect.bottom = d3d.current_height - y;
+    rect.bottom = d3d.render_height - y;
 
     d3d.context->RSSetScissorRects(1, &rect);
 }
@@ -722,20 +763,455 @@ static void gfx_d3d11_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t
     d3d.context->Draw(buf_vbo_num_tris * 3, 0);
 }
 
+  ///////////////////////////////////////
+ // internal resolution render target //
+///////////////////////////////////////
+//
+// Mirrors the OpenGL backend's FBO + GLSL shaders in gfx_opengl.c: the game
+// renders into an offscreen target sized to gfx_internal_res_width/height,
+// which is then upscaled into the window backbuffer by end_internal_res()
+// right before DJUI starts rendering (see gfx_native_res_begin() in
+// gfx_pc.c), so DJUI always renders sharp at native window resolution.
+
+struct BlitCB {
+    float texel_size[2];
+    float frame_num;
+    float padding;
+};
+
+// Fullscreen triangle without any vertex/index buffer (the classic
+// SV_VertexID trick: 3 vertices covering (-1,-3)-(3,1) in NDC, which is a
+// superset of the screen -- clipped down to the visible (-1,-1)-(1,1) quad).
+static const char* sBlitVertexShaderSrc = R"HLSL(
+struct VSOut {
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
+VSOut VSMain(uint vid : SV_VertexID) {
+    VSOut o;
+    float2 uv = float2((vid << 1) & 2, vid & 2);
+    o.pos = float4(uv * float2(2.0, -2.0) + float2(-1.0, 1.0), 0.0, 1.0);
+    o.uv = uv;
+    return o;
+}
+)HLSL";
+
+static const char* sBlitPassthroughPixelShaderSrc = R"HLSL(
+struct VSOut {
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
+Texture2D uTex : register(t0);
+SamplerState uSamp : register(s0);
+
+float4 PSMain(VSOut i) : SV_TARGET {
+    return uTex.Sample(uSamp, i.uv);
+}
+)HLSL";
+
+// Shared declarations + YIQ helpers for the two composite filters below.
+// Translated 1:1 from the GLSL shaders in gfx_opengl.c (composite_fs_src /
+// capture_fs_src) -- keep the math in both files in sync when tuning either.
+static const char* sBlitFilterCommonSrc = R"HLSL(
+struct VSOut {
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
+cbuffer BlitCB : register(b3) {
+    float2 uTexelSize;
+    float uFrame;
+    float uPad;
+};
+
+Texture2D uTex : register(t0);
+SamplerState uSamp : register(s0);
+
+float3 to_yiq(float3 c) {
+    return float3(dot(c, float3(0.299,  0.587,  0.114)),
+                  dot(c, float3(0.596, -0.274, -0.322)),
+                  dot(c, float3(0.211, -0.523,  0.312)));
+}
+
+float3 to_rgb(float3 c) {
+    return float3(c.x + 0.956 * c.y + 0.621 * c.z,
+                  c.x - 0.272 * c.y - 0.647 * c.z,
+                  c.x - 1.106 * c.y + 1.703 * c.z);
+}
+)HLSL";
+
+// Soft look: luma gets a light horizontal blur, chroma a wide one.
+static const char* sBlitCompositePixelShaderSrc = R"HLSL(
+float4 PSMain(VSOut i) : SV_TARGET {
+    float2 uv = i.uv;
+    float dx = uTexelSize.x;
+    float3 t0 = to_yiq(uTex.Sample(uSamp, uv - float2(3.0 * dx, 0.0)).rgb);
+    float3 t1 = to_yiq(uTex.Sample(uSamp, uv - float2(2.0 * dx, 0.0)).rgb);
+    float3 t2 = to_yiq(uTex.Sample(uSamp, uv - float2(1.0 * dx, 0.0)).rgb);
+    float3 t3 = to_yiq(uTex.Sample(uSamp, uv).rgb);
+    float3 t4 = to_yiq(uTex.Sample(uSamp, uv + float2(1.0 * dx, 0.0)).rgb);
+    float3 t5 = to_yiq(uTex.Sample(uSamp, uv + float2(2.0 * dx, 0.0)).rgb);
+    float3 t6 = to_yiq(uTex.Sample(uSamp, uv + float2(3.0 * dx, 0.0)).rgb);
+    float luma = t2.x * 0.15 + t3.x * 0.70 + t4.x * 0.15;
+    float2 chroma = t0.yz * 0.07 + t1.yz * 0.12 + t2.yz * 0.19 + t3.yz * 0.24
+                  + t4.yz * 0.19 + t5.yz * 0.12 + t6.yz * 0.07;
+    return float4(to_rgb(float3(luma, chroma)), 1.0);
+}
+)HLSL";
+
+// Mimics a recorded capture of real N64 composite video output: sharper
+// luma with edge ringing, hard scanlines, line jitter and analog grain.
+static const char* sBlitCapturePixelShaderSrc = R"HLSL(
+float hash(float2 p) {
+    return frac(sin(dot(p, float2(12.9898, 78.233)) + uFrame * 0.317) * 43758.5453);
+}
+
+float4 PSMain(VSOut i) : SV_TARGET {
+    float2 uv = i.uv;
+    float dx = uTexelSize.x;
+    float dy = uTexelSize.y;
+    // capture line index at half-texel granularity (480 lines for 240p)
+    float subline = floor(uv.y / (0.5 * dy));
+    // vertical: snap to source lines with a narrow transition (hard TV lines)
+    float ty = uv.y / dy;
+    float baseLine = floor(ty - 0.5) + 0.5;
+    float fracY = saturate((ty - baseLine - 0.5) * 4.0 + 0.5);
+    float sy = (baseLine + fracY) * dy;
+    // alternate capture lines are shifted, like a deinterlaced recording
+    float sx = uv.x + ((fmod(subline, 2.0) < 1.0) ? -0.25 : 0.25) * dx;
+    // luma samples snap toward texel centers so the upscale smears less
+    float tx = sx / dx;
+    float baseCol = floor(tx - 0.5) + 0.5;
+    float fracX = saturate((tx - baseCol - 0.5) * 2.5 + 0.5);
+    float2 luv = float2((baseCol + fracX) * dx, sy);
+    float2 suv = float2(sx, sy);
+    // luma: mostly sharp, with ringing halos around edges
+    float l0 = to_yiq(uTex.Sample(uSamp, luv - float2(2.0 * dx, 0.0)).rgb).x;
+    float l1 = to_yiq(uTex.Sample(uSamp, luv - float2(1.0 * dx, 0.0)).rgb).x;
+    float l2 = to_yiq(uTex.Sample(uSamp, luv).rgb).x;
+    float l3 = to_yiq(uTex.Sample(uSamp, luv + float2(1.0 * dx, 0.0)).rgb).x;
+    float l4 = to_yiq(uTex.Sample(uSamp, luv + float2(2.0 * dx, 0.0)).rgb).x;
+    float luma = -0.20 * l0 + 0.10 * l1 + 1.20 * l2 + 0.10 * l3 - 0.20 * l4;
+    // chroma: wide horizontal bleed, delayed to the right
+    float2 cuv = suv - float2(1.0 * dx, 0.0);
+    float2 c0 = to_yiq(uTex.Sample(uSamp, cuv - float2(4.5 * dx, 0.0)).rgb).yz;
+    float2 c1 = to_yiq(uTex.Sample(uSamp, cuv - float2(3.0 * dx, 0.0)).rgb).yz;
+    float2 c2 = to_yiq(uTex.Sample(uSamp, cuv - float2(1.5 * dx, 0.0)).rgb).yz;
+    float2 c3 = to_yiq(uTex.Sample(uSamp, cuv).rgb).yz;
+    float2 c4 = to_yiq(uTex.Sample(uSamp, cuv + float2(1.5 * dx, 0.0)).rgb).yz;
+    float2 c5 = to_yiq(uTex.Sample(uSamp, cuv + float2(3.0 * dx, 0.0)).rgb).yz;
+    float2 c6 = to_yiq(uTex.Sample(uSamp, cuv + float2(4.5 * dx, 0.0)).rgb).yz;
+    float2 chroma = c0 * 0.07 + c1 * 0.12 + c2 * 0.19 + c3 * 0.24
+                  + c4 * 0.19 + c5 * 0.12 + c6 * 0.07;
+    // composite captures look saturated: boost the chroma
+    chroma *= 1.25;
+    // animated analog grain, at half-texel granularity
+    float n = hash(floor(float2(uv.x / (0.5 * dx), subline)));
+    luma += (n - 0.5) * 0.06;
+    return float4(to_rgb(float3(luma, chroma)), 1.0);
+}
+)HLSL";
+
+static ComPtr<ID3DBlob> d3d11_compile_blit_shader(const std::string& src, const char* entry, const char* target) {
+    ComPtr<ID3DBlob> blob;
+    ComPtr<ID3DBlob> error_blob;
+    HRESULT hr = d3d.D3DCompile(src.c_str(), src.size(), nullptr, nullptr, nullptr, entry, target,
+                                 D3DCOMPILE_OPTIMIZATION_LEVEL2, 0, blob.GetAddressOf(), error_blob.GetAddressOf());
+    if (FAILED(hr)) {
+        fprintf(stderr, "upscale filter shader failed to compile (%s):\n%s\n", entry,
+                error_blob ? (const char*)error_blob->GetBufferPointer() : "(no error message)");
+        return nullptr;
+    }
+    return blob;
+}
+
+// Lazily compiles and creates the blit pipeline (shaders, input layout,
+// samplers, constant buffer, pipeline state). Failure disables the feature
+// instead of crashing the renderer -- an upscale filter is optional, unlike
+// the main color-combiner shaders.
+static bool d3d11_ensure_blit_resources(void) {
+    if (d3d.blit_resources_ready) { return true; }
+    if (d3d.blit_resources_failed) { return false; }
+
+    ComPtr<ID3DBlob> vs_blob = d3d11_compile_blit_shader(sBlitVertexShaderSrc, "VSMain", "vs_4_0");
+    ComPtr<ID3DBlob> ps_pass_blob = d3d11_compile_blit_shader(sBlitPassthroughPixelShaderSrc, "PSMain", "ps_4_0");
+    ComPtr<ID3DBlob> ps_composite_blob = d3d11_compile_blit_shader(std::string(sBlitFilterCommonSrc) + sBlitCompositePixelShaderSrc, "PSMain", "ps_4_0");
+    ComPtr<ID3DBlob> ps_capture_blob = d3d11_compile_blit_shader(std::string(sBlitFilterCommonSrc) + sBlitCapturePixelShaderSrc, "PSMain", "ps_4_0");
+
+    if (!vs_blob || !ps_pass_blob || !ps_composite_blob || !ps_capture_blob) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    if (FAILED(d3d.device->CreateVertexShader(vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), nullptr, d3d.blit_vertex_shader.GetAddressOf()))
+        || FAILED(d3d.device->CreatePixelShader(ps_pass_blob->GetBufferPointer(), ps_pass_blob->GetBufferSize(), nullptr, d3d.blit_pixel_shader_passthrough.GetAddressOf()))
+        || FAILED(d3d.device->CreatePixelShader(ps_composite_blob->GetBufferPointer(), ps_composite_blob->GetBufferSize(), nullptr, d3d.blit_pixel_shader_composite.GetAddressOf()))
+        || FAILED(d3d.device->CreatePixelShader(ps_capture_blob->GetBufferPointer(), ps_capture_blob->GetBufferSize(), nullptr, d3d.blit_pixel_shader_capture.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    // the vertex shader only uses SV_VertexID, so it needs no input elements
+    // or vertex buffer -- an empty input layout is valid and still required
+    // to satisfy IASetInputLayout()
+    if (FAILED(d3d.device->CreateInputLayout(nullptr, 0, vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), d3d.blit_input_layout.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    D3D11_SAMPLER_DESC sampler_desc;
+    ZeroMemory(&sampler_desc, sizeof(sampler_desc));
+    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.MinLOD = 0;
+    sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    if (FAILED(d3d.device->CreateSamplerState(&sampler_desc, d3d.blit_sampler_point.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    if (FAILED(d3d.device->CreateSamplerState(&sampler_desc, d3d.blit_sampler_linear.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    D3D11_BUFFER_DESC cb_desc;
+    ZeroMemory(&cb_desc, sizeof(cb_desc));
+    cb_desc.Usage = D3D11_USAGE_DYNAMIC;
+    cb_desc.ByteWidth = (sizeof(BlitCB) + 15) / 16 * 16;
+    cb_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cb_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    if (FAILED(d3d.device->CreateBuffer(&cb_desc, nullptr, d3d.blit_cb.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    D3D11_RASTERIZER_DESC rasterizer_desc;
+    ZeroMemory(&rasterizer_desc, sizeof(rasterizer_desc));
+    rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+    rasterizer_desc.CullMode = D3D11_CULL_NONE;
+    rasterizer_desc.DepthClipEnable = true;
+    rasterizer_desc.ScissorEnable = false;
+    if (FAILED(d3d.device->CreateRasterizerState(&rasterizer_desc, d3d.blit_rasterizer_state.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc;
+    ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
+    depth_stencil_desc.DepthEnable = false;
+    depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depth_stencil_desc.StencilEnable = false;
+    if (FAILED(d3d.device->CreateDepthStencilState(&depth_stencil_desc, d3d.blit_depth_stencil_state.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    D3D11_BLEND_DESC blend_desc;
+    ZeroMemory(&blend_desc, sizeof(blend_desc));
+    blend_desc.RenderTarget[0].BlendEnable = false;
+    blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    if (FAILED(d3d.device->CreateBlendState(&blend_desc, d3d.blit_blend_state.GetAddressOf()))) {
+        d3d.blit_resources_failed = true;
+        return false;
+    }
+
+    d3d.blit_resources_ready = true;
+    return true;
+}
+
+// Render-to-texture + shader model 4 blit shaders need at least feature
+// level 10.0; feature levels 9.x have enough restrictions around this that
+// it's not worth supporting (mirrors gfx_opengl.c requiring GL 3.0+).
+static bool d3d11_supports_internal_res(void) {
+    return d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 && !d3d.internal_res_create_failed;
+}
+
+static bool gfx_d3d11_get_supports_internal_res(void) {
+    return d3d11_supports_internal_res();
+}
+
+static bool d3d11_internal_res_ensure(uint32_t width, uint32_t height) {
+    if (d3d.internal_res_color_texture.Get() != nullptr && d3d.internal_res_width == width && d3d.internal_res_height == height) {
+        return true;
+    }
+
+    d3d.internal_res_rtv.Reset();
+    d3d.internal_res_srv.Reset();
+    d3d.internal_res_color_texture.Reset();
+    d3d.internal_res_dsv.Reset();
+    d3d.internal_res_depth_texture.Reset();
+
+    D3D11_TEXTURE2D_DESC color_desc;
+    ZeroMemory(&color_desc, sizeof(color_desc));
+    color_desc.Width = width;
+    color_desc.Height = height;
+    color_desc.MipLevels = 1;
+    color_desc.ArraySize = 1;
+    color_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    color_desc.SampleDesc.Count = 1;
+    color_desc.SampleDesc.Quality = 0;
+    color_desc.Usage = D3D11_USAGE_DEFAULT;
+    color_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+    if (FAILED(d3d.device->CreateTexture2D(&color_desc, nullptr, d3d.internal_res_color_texture.GetAddressOf()))) {
+        d3d.internal_res_create_failed = true;
+        return false;
+    }
+    if (FAILED(d3d.device->CreateRenderTargetView(d3d.internal_res_color_texture.Get(), nullptr, d3d.internal_res_rtv.GetAddressOf()))
+        || FAILED(d3d.device->CreateShaderResourceView(d3d.internal_res_color_texture.Get(), nullptr, d3d.internal_res_srv.GetAddressOf()))) {
+        d3d.internal_res_create_failed = true;
+        return false;
+    }
+
+    D3D11_TEXTURE2D_DESC depth_desc;
+    ZeroMemory(&depth_desc, sizeof(depth_desc));
+    depth_desc.Width = width;
+    depth_desc.Height = height;
+    depth_desc.MipLevels = 1;
+    depth_desc.ArraySize = 1;
+    depth_desc.Format = DXGI_FORMAT_D32_FLOAT;
+    depth_desc.SampleDesc.Count = 1;
+    depth_desc.SampleDesc.Quality = 0;
+    depth_desc.Usage = D3D11_USAGE_DEFAULT;
+    depth_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+    if (FAILED(d3d.device->CreateTexture2D(&depth_desc, nullptr, d3d.internal_res_depth_texture.GetAddressOf()))
+        || FAILED(d3d.device->CreateDepthStencilView(d3d.internal_res_depth_texture.Get(), nullptr, d3d.internal_res_dsv.GetAddressOf()))) {
+        d3d.internal_res_create_failed = true;
+        return false;
+    }
+
+    d3d.internal_res_width = width;
+    d3d.internal_res_height = height;
+    return true;
+}
+
+// Called mid-frame (via the G_NATIVERES_DJUI opcode, see gfx_native_res_begin()
+// in gfx_pc.c) when DJUI rendering begins: upscales the internal render
+// target into the window backbuffer and leaves the window backbuffer bound
+// (with its own depth buffer, cleared) for any further native-res rendering.
+static void gfx_d3d11_end_internal_res(void) {
+    if (!d3d.internal_res_active) { return; }
+    d3d.internal_res_active = false;
+
+    d3d.render_width = d3d.current_width;
+    d3d.render_height = d3d.current_height;
+
+    if (d3d11_ensure_blit_resources()) {
+        ID3D11PixelShader* ps = d3d.blit_pixel_shader_passthrough.Get();
+        ID3D11SamplerState* samp = d3d.blit_sampler_point.Get();
+        if (configInternalResFilter == 1) {
+            samp = d3d.blit_sampler_linear.Get();
+        } else if (configInternalResFilter == 2) {
+            ps = d3d.blit_pixel_shader_composite.Get();
+            samp = d3d.blit_sampler_linear.Get();
+        } else if (configInternalResFilter == 3) {
+            ps = d3d.blit_pixel_shader_capture.Get();
+            samp = d3d.blit_sampler_linear.Get();
+        }
+
+        BlitCB cb_data;
+        cb_data.texel_size[0] = 1.0f / (float)d3d.internal_res_width;
+        cb_data.texel_size[1] = 1.0f / (float)d3d.internal_res_height;
+        cb_data.frame_num = (float)(d3d.per_frame_cb_data.noise_frame % 1024u);
+        cb_data.padding = 0.0f;
+
+        D3D11_MAPPED_SUBRESOURCE ms;
+        ZeroMemory(&ms, sizeof(ms));
+        d3d.context->Map(d3d.blit_cb.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
+        memcpy(ms.pData, &cb_data, sizeof(cb_data));
+        d3d.context->Unmap(d3d.blit_cb.Get(), 0);
+
+        // bind the window backbuffer without a depth buffer for the blit itself
+        d3d.context->OMSetRenderTargets(1, d3d.backbuffer_view.GetAddressOf(), nullptr);
+
+        D3D11_VIEWPORT viewport;
+        viewport.TopLeftX = 0;
+        viewport.TopLeftY = 0;
+        viewport.Width = (float)d3d.current_width;
+        viewport.Height = (float)d3d.current_height;
+        viewport.MinDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
+        d3d.context->RSSetViewports(1, &viewport);
+
+        ID3D11Buffer* null_vb = nullptr;
+        UINT stride = 0, offset = 0;
+        d3d.context->IASetInputLayout(d3d.blit_input_layout.Get());
+        d3d.context->IASetVertexBuffers(0, 1, &null_vb, &stride, &offset);
+        d3d.context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        d3d.context->VSSetShader(d3d.blit_vertex_shader.Get(), nullptr, 0);
+        d3d.context->PSSetShader(ps, nullptr, 0);
+        d3d.context->PSSetShaderResources(0, 1, d3d.internal_res_srv.GetAddressOf());
+        d3d.context->PSSetSamplers(0, 1, &samp);
+        d3d.context->PSSetConstantBuffers(3, 1, d3d.blit_cb.GetAddressOf());
+        d3d.context->OMSetDepthStencilState(d3d.blit_depth_stencil_state.Get(), 0);
+        d3d.context->OMSetBlendState(d3d.blit_blend_state.Get(), nullptr, 0xFFFFFFFF);
+        d3d.context->RSSetState(d3d.blit_rasterizer_state.Get());
+
+        d3d.context->Draw(3, 0);
+
+        // unbind the offscreen SRV: it needs to be bindable as a render target
+        // again next frame, and D3D11 forbids a resource being simultaneously
+        // bound as both an input and an output
+        ID3D11ShaderResourceView* null_srv = nullptr;
+        d3d.context->PSSetShaderResources(0, 1, &null_srv);
+
+        // the blit changed VS/PS/IA/OM state directly, bypassing the "last_*"
+        // change-detection caches in gfx_d3d11_draw_triangles() -- invalidate
+        // them so the next real draw call (DJUI, at native resolution)
+        // reapplies its own state instead of trusting stale cached pointers
+        d3d.last_shader_program = nullptr;
+        d3d.last_vertex_buffer_stride = 0;
+        d3d.last_blend_state = nullptr;
+        d3d.last_resource_views[0] = nullptr;
+        d3d.last_resource_views[1] = nullptr;
+        d3d.last_sampler_states[0] = nullptr;
+        d3d.last_sampler_states[1] = nullptr;
+        d3d.last_depth_test = -1;
+        d3d.last_depth_mask = -1;
+        d3d.last_zmode_decal = -1;
+        d3d.last_primitive_topology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+    }
+
+    // rebind the window depth buffer (cleared) for subsequent native-res
+    // rendering, mirroring gfx_opengl_internal_res_blit() clearing the window
+    // depth buffer so DJUI starts with a fresh depth test
+    d3d.context->ClearDepthStencilView(d3d.depth_stencil_view.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+    d3d.context->OMSetRenderTargets(1, d3d.backbuffer_view.GetAddressOf(), d3d.depth_stencil_view.Get());
+}
+
 static void gfx_d3d11_on_resize(void) {
     create_render_target_views(true);
 }
 
 static void gfx_d3d11_start_frame(void) {
+    // Decide whether the game renders into the internal-res offscreen target
+    // this frame (see the "internal resolution render target" section above)
+
+    d3d.internal_res_active = d3d11_supports_internal_res() && gfx_internal_res_height > 0
+        && d3d11_internal_res_ensure(gfx_internal_res_width, gfx_internal_res_height);
+
+    ID3D11RenderTargetView *rtv = d3d.internal_res_active ? d3d.internal_res_rtv.Get() : d3d.backbuffer_view.Get();
+    ID3D11DepthStencilView *dsv = d3d.internal_res_active ? d3d.internal_res_dsv.Get() : d3d.depth_stencil_view.Get();
+    d3d.render_width = d3d.internal_res_active ? d3d.internal_res_width : d3d.current_width;
+    d3d.render_height = d3d.internal_res_active ? d3d.internal_res_height : d3d.current_height;
+
     // Set render targets
 
-    d3d.context->OMSetRenderTargets(1, d3d.backbuffer_view.GetAddressOf(), d3d.depth_stencil_view.Get());
+    d3d.context->OMSetRenderTargets(1, &rtv, dsv);
 
     // Clear render targets
 
     const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    d3d.context->ClearRenderTargetView(d3d.backbuffer_view.Get(), clearColor);
-    d3d.context->ClearDepthStencilView(d3d.depth_stencil_view.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+    d3d.context->ClearRenderTargetView(rtv, clearColor);
+    d3d.context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     // Set per-frame constant buffer
 
@@ -745,8 +1221,8 @@ static void gfx_d3d11_start_frame(void) {
         d3d.per_frame_cb_data.noise_frame = 0;
     }
 
-    d3d.per_frame_cb_data.noise_scale_x = (float) d3d.current_width;
-    d3d.per_frame_cb_data.noise_scale_y = (float) d3d.current_height;
+    d3d.per_frame_cb_data.noise_scale_x = (float) d3d.render_width;
+    d3d.per_frame_cb_data.noise_scale_y = (float) d3d.render_height;
 
     D3D11_MAPPED_SUBRESOURCE ms;
     ZeroMemory(&ms, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -763,6 +1239,12 @@ static const char* gfx_d3d11_get_name(void) {
 }
 
 static void gfx_d3d11_finish_render(void) {
+    // normally end_internal_res() already ran mid-frame (right before DJUI
+    // rendering); this is the fallback for when DJUI is disabled and the
+    // G_NATIVERES_DJUI opcode never fires
+    if (d3d.internal_res_active) {
+        gfx_d3d11_end_internal_res();
+    }
 }
 
 } // namespace
@@ -791,6 +1273,9 @@ struct GfxRenderingAPI gfx_direct3d11_api = {
     gfx_d3d11_end_frame,
     gfx_d3d11_finish_render,
     gfx_d3d11_get_name,
+    nullptr, // shutdown: not implemented
+    gfx_d3d11_get_supports_internal_res,
+    gfx_d3d11_end_internal_res,
 };
 
 #endif
