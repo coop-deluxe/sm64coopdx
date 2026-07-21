@@ -207,6 +207,9 @@ static bool gfx_dummy_renderer_get_supports_internal_res(void) {
     return false;
 }
 
+static void gfx_dummy_renderer_end_internal_res(void) {
+}
+
 struct GfxWindowManagerAPI gfx_dummy_wm_api = {
     gfx_dummy_wm_init,
     gfx_dummy_wm_set_keyboard_callbacks,
@@ -257,5 +260,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_finish_render,
     gfx_dummy_renderer_get_name,
     gfx_dummy_renderer_shutdown,
-    gfx_dummy_renderer_get_supports_internal_res
+    gfx_dummy_renderer_get_supports_internal_res,
+    gfx_dummy_renderer_end_internal_res
 };

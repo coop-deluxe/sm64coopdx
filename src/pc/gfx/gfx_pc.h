@@ -19,6 +19,14 @@ enum ShaderFlag {
 struct GfxRenderingAPI;
 struct GfxWindowManagerAPI;
 
+// all of these are defined in the C translation unit gfx_pc.c; the extern "C"
+// block (below) must cover them too, not just the function declarations, so
+// that C++ backends (e.g. gfx_direct3d11.cpp) reference them with the same
+// (unmangled) linkage they were actually defined with
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern Vec3f gLightingDir;
 extern Color gLightingColor[2];
 extern Color gVertexColor;
@@ -31,10 +39,6 @@ extern int gShaderFlags[SHADER_FLAG_MAX];
 extern f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX];
 extern f32 gShaderFlagValues[SHADER_FLAG_MAX];
 extern bool gShaderFlagsEnabled;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 // actual window size; gfx_current_dimensions holds the internal render size
 extern uint32_t gfx_window_width;

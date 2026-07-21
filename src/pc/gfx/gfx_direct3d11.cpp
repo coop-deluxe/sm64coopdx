@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <vector>
 #include <cmath>
+#include <string>
 
 #include <windows.h>
 #include <versionhelpers.h>
@@ -28,7 +29,6 @@
 
 extern "C" {
     #include "pc/controller/controller_bind_mapping.h"
-    extern Color gVertexColor;
 }
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
@@ -152,6 +152,11 @@ static struct {
     ComPtr<ID3D11BlendState> blit_blend_state;
     bool blit_resources_ready;
     bool blit_resources_failed;
+    // dedicated counter for the capture filter's grain animation -- kept
+    // separate from per_frame_cb_data.noise_frame, which is capped at 150
+    // for the unrelated built-in dithering effect and would otherwise make
+    // the grain repeat far more often than the OpenGL backend's 1024-frame cycle
+    uint32_t blit_frame_counter;
 
     // Current state
 
@@ -1030,7 +1035,7 @@ static bool d3d11_ensure_blit_resources(void) {
 // level 10.0; feature levels 9.x have enough restrictions around this that
 // it's not worth supporting (mirrors gfx_opengl.c requiring GL 3.0+).
 static bool d3d11_supports_internal_res(void) {
-    return d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 && !d3d.internal_res_create_failed;
+    return d3d.feature_level >= D3D_FEATURE_LEVEL_10_0 && !d3d.internal_res_create_failed && !d3d.blit_resources_failed;
 }
 
 static bool gfx_d3d11_get_supports_internal_res(void) {
@@ -1120,7 +1125,7 @@ static void gfx_d3d11_end_internal_res(void) {
         BlitCB cb_data;
         cb_data.texel_size[0] = 1.0f / (float)d3d.internal_res_width;
         cb_data.texel_size[1] = 1.0f / (float)d3d.internal_res_height;
-        cb_data.frame_num = (float)(d3d.per_frame_cb_data.noise_frame % 1024u);
+        cb_data.frame_num = (float)(d3d.blit_frame_counter % 1024u);
         cb_data.padding = 0.0f;
 
         D3D11_MAPPED_SUBRESOURCE ms;
@@ -1220,6 +1225,7 @@ static void gfx_d3d11_start_frame(void) {
         // No high values, as noise starts to look ugly
         d3d.per_frame_cb_data.noise_frame = 0;
     }
+    d3d.blit_frame_counter++;
 
     d3d.per_frame_cb_data.noise_scale_x = (float) d3d.render_width;
     d3d.per_frame_cb_data.noise_scale_y = (float) d3d.render_height;
