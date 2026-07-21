@@ -18,22 +18,6 @@
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
-static void sleep_ms(int milliseconds) { // cross-platform sleep function
-    // from StackOverflow user Bernardo Ramos: https://stackoverflow.com/a/28827188
-#ifdef WIN32
-    Sleep(milliseconds);
-#elif _POSIX_C_SOURCE >= 199309L
-    struct timespec ts;
-    ts.tv_sec = milliseconds / 1000;
-    ts.tv_nsec = (milliseconds % 1000) * 1000000;
-    nanosleep(&ts, NULL);
-#else
-    if (milliseconds >= 1000)
-        sleep(milliseconds / 1000);
-    usleep((milliseconds % 1000) * 1000);
-#endif
-}
-
 static void gfx_dummy_wm_init(UNUSED const char *game_name) {
 }
 
@@ -49,12 +33,6 @@ static bool gfx_dummy_wm_start_frame(void) {
 
 static int gfx_dummy_wm_get_max_msaa(void) {
     return 0;
-}
-
-static void gfx_dummy_wm_set_window_title(UNUSED const char* title) {
-}
-
-static void gfx_dummy_wm_reset_window_title(void) {
 }
 
 static void gfx_dummy_wm_swap_buffers_begin(void) {

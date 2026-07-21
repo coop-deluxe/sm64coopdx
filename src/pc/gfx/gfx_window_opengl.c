@@ -47,15 +47,8 @@
 #define GL_MAX_SAMPLES 0x8D57
 #endif
 
-// TODO: figure out if this shit even works
-#ifdef VERSION_EU
-# define FRAMERATE 25
-#else
-# define FRAMERATE 30
-#endif
-
-static SDL_Window *wnd;
-static SDL_GLContext ctx = NULL;
+static SDL_Window *sSdlWindow;
+static SDL_GLContext sGlContext = NULL;
 
 static inline void gfx_window_opengl_set_vsync(const bool enabled) {
     SDL_GL_SetSwapInterval(enabled);
@@ -88,14 +81,14 @@ static void gfx_window_opengl_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    wnd = SDL_CreateWindow(
+    sSdlWindow = SDL_CreateWindow(
         window_title,
         xpos, ypos, configWindow.w, configWindow.h,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
-    ctx = SDL_GL_CreateContext(wnd);
+    sGlContext = SDL_GL_CreateContext(sSdlWindow);
 
-    gfx_wm_set_window(wnd);
+    gfx_wm_set_window(sSdlWindow);
     gfx_window_opengl_set_vsync(configWindow.vsync);
 }
 
@@ -107,7 +100,7 @@ bool gfx_window_opengl_check_compatibility(void) {
     }
 
     // hidden window
-    SDL_Window* window = SDL_CreateWindow(
+    SDL_Window *window = SDL_CreateWindow(
         "",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1,
         SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN
@@ -144,7 +137,7 @@ static bool gfx_window_opengl_start_frame(void) {
 }
 
 static void gfx_window_opengl_swap_buffers_begin(void) {
-    SDL_GL_SwapWindow(wnd);
+    SDL_GL_SwapWindow(sSdlWindow);
 }
 
 static void gfx_window_opengl_swap_buffers_end(void) {

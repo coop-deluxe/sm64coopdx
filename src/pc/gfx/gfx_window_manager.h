@@ -1,6 +1,6 @@
-#ifndef GFX_WINDOW_MANAGER_API_H
-#define GFX_WINDOW_MANAGER_API_H
+#pragma once
 
+#include <PR/ultratypes.h>
 #include <SDL2/SDL.h>
 
 #include <stdint.h>
@@ -54,10 +54,8 @@ void gfx_wm_stop_text_input(void);
 char* gfx_wm_get_clipboard_text(void);
 void gfx_wm_set_clipboard_text(const char*);
 void gfx_wm_set_cursor_visible(bool);
-void gfx_wm_delay(unsigned int ms);
+void gfx_wm_delay(u32 ms);
 int gfx_wm_get_max_msaa(void);
 void gfx_wm_set_window_title(const char* title);
 void gfx_wm_reset_window_title(void);
 bool gfx_wm_has_focus(void);
-
-#endif

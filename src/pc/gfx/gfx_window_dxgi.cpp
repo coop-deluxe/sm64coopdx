@@ -44,7 +44,7 @@ extern "C" f64 clock_elapsed_f64(void);
 
 using namespace Microsoft::WRL; // For ComPtr
 
-static SDL_Window *wnd;
+static SDL_Window *sSdlWindow;
 
 static struct {
     HWND h_wnd;
@@ -68,7 +68,7 @@ static void load_dxgi_library(void) {
     *(FARPROC *)&dxgi.CreateDXGIFactory2 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory2");
 }
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(wnd) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
 
 static void gfx_window_dxgi_on_resize(void) {
     if (dxgi.swap_chain.Get() != nullptr) {
@@ -95,18 +95,18 @@ static void gfx_window_dxgi_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    wnd = SDL_CreateWindow(
+    sSdlWindow = SDL_CreateWindow(
         window_title,
         xpos, ypos, configWindow.w, configWindow.h,
         SDL_WINDOW_RESIZABLE
     );
 
-    gfx_wm_set_window(wnd);
+    gfx_wm_set_window(sSdlWindow);
 
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
 
-    SDL_GetWindowWMInfo(wnd, &wmInfo);
+    SDL_GetWindowWMInfo(sSdlWindow, &wmInfo);
 
     dxgi.h_wnd = wmInfo.info.win.window;
 
@@ -165,7 +165,7 @@ void gfx_window_dxgi_create_factory_and_device(bool debug, int d3d_version, bool
     }
     create_device_fn(adapter.Get(), false);
 
-    SDL_SetWindowTitle(wnd, dxgi.window_title.c_str());
+    SDL_SetWindowTitle(sSdlWindow, dxgi.window_title.c_str());
 }
 
 ComPtr<IDXGISwapChain1> gfx_window_dxgi_create_swap_chain(IUnknown *device) {
@@ -198,7 +198,7 @@ ComPtr<IDXGISwapChain1> gfx_window_dxgi_create_swap_chain(IUnknown *device) {
     if (dxgi.allow_tearing) {
         swap_chain_desc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
     }
-    
+
     ThrowIfFailed(dxgi.factory->CreateSwapChainForHwnd(device, dxgi.h_wnd, &swap_chain_desc, nullptr, nullptr, &dxgi.swap_chain));
     ThrowIfFailed(dxgi.factory->MakeWindowAssociation(dxgi.h_wnd, DXGI_MWA_NO_ALT_ENTER));
 
