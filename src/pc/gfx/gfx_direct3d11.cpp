@@ -143,7 +143,6 @@ static struct {
     ComPtr<ID3D11PixelShader> blit_pixel_shader_passthrough;
     ComPtr<ID3D11PixelShader> blit_pixel_shader_composite;
     ComPtr<ID3D11PixelShader> blit_pixel_shader_capture;
-    ComPtr<ID3D11InputLayout> blit_input_layout;
     ComPtr<ID3D11SamplerState> blit_sampler_point;
     ComPtr<ID3D11SamplerState> blit_sampler_linear;
     ComPtr<ID3D11Buffer> blit_cb;
@@ -958,13 +957,10 @@ static bool d3d11_ensure_blit_resources(void) {
         return false;
     }
 
-    // the vertex shader only uses SV_VertexID, so it needs no input elements
-    // or vertex buffer -- an empty input layout is valid and still required
-    // to satisfy IASetInputLayout()
-    if (FAILED(d3d.device->CreateInputLayout(nullptr, 0, vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), d3d.blit_input_layout.GetAddressOf()))) {
-        d3d.blit_resources_failed = true;
-        return false;
-    }
+    // the vertex shader only uses SV_VertexID and has no input signature to
+    // satisfy, so no input layout object is needed -- IASetInputLayout(nullptr)
+    // unbinds any layout, which some drivers require anyway since
+    // CreateInputLayout(nullptr, 0, ...) is rejected with E_INVALIDARG
 
     D3D11_SAMPLER_DESC sampler_desc;
     ZeroMemory(&sampler_desc, sizeof(sampler_desc));
@@ -1148,7 +1144,7 @@ static void gfx_d3d11_end_internal_res(void) {
 
         ID3D11Buffer* null_vb = nullptr;
         UINT stride = 0, offset = 0;
-        d3d.context->IASetInputLayout(d3d.blit_input_layout.Get());
+        d3d.context->IASetInputLayout(nullptr);
         d3d.context->IASetVertexBuffers(0, 1, &null_vb, &stride, &offset);
         d3d.context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         d3d.context->VSSetShader(d3d.blit_vertex_shader.Get(), nullptr, 0);
