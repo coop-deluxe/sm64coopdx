@@ -8,8 +8,11 @@
 #include <unistd.h>
 
 #include "gfx_window_manager.h"
+#if !defined(ENABLE_VULKAN)
 #include "gfx_window_opengl.h"
+#endif
 #include "gfx_window_dxgi.h"
+#include "gfx_window_vulkan.h"
 #include "gfx_screen_config.h"
 
 #include "pc/pc_main.h"
@@ -23,9 +26,14 @@
 #include "pc/rom_checker.h"
 
 static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
+#if !defined(ENABLE_VULKAN)
     [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
+#endif
 #if defined(_WIN32)
     [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
+#endif
+#if defined(ENABLE_VULKAN)
+    [GFX_WINDOW_BACKEND_VULKAN] = &gfx_window_vulkan,
 #endif
     [GFX_WINDOW_BACKEND_DUMMY] = &gfx_window_dummy,
 };

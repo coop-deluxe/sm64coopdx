@@ -7,12 +7,15 @@ extern "C" {
 
 #include "gfx/gfx_pc.h"
 
+#if !defined(ENABLE_VULKAN)
 #include "gfx/gfx_opengl.h"
+#include "gfx/gfx_window_opengl.h"
+#endif
 #include "gfx/gfx_direct3d11.h"
 
-#include "gfx/gfx_window_opengl.h"
 #include "gfx/gfx_window_dxgi.h"
 #include "gfx/gfx_dummy.h"
+#include "gfx/gfx_vulkan.h"
 
 #include "audio/audio_api.h"
 #include "audio/audio_sdl.h"

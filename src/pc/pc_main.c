@@ -220,24 +220,39 @@ static void select_graphics_backend(void) {
         return;
     }
 
+#if defined(ENABLE_VULKAN)
+    // ENABLE_VULKAN dev/testing builds run Vulkan exclusively: no GL/D3D11
+    // fallback, no backend selector (see djui_panel_display.c) - switching
+    // between backends at runtime broke swapchain resize handling.
+    configGraphicsBackend = GFX_WINDOW_BACKEND_VULKAN;
+#else
 #if defined(_WIN32)
     if (configGraphicsBackend == GFX_WINDOW_BACKEND_OPENGL && !gfx_window_opengl_check_compatibility()) {
         configGraphicsBackend = GFX_WINDOW_BACKEND_DIRECTX;
     }
 #endif
+#endif
     enum GfxWindowBackend backend = configGraphicsBackend;
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(ENABLE_VULKAN)
     if (gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
 #endif
 
     switch (backend) {
+#if !defined(ENABLE_VULKAN)
         case GFX_WINDOW_BACKEND_OPENGL:
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
             break;
+#endif
 #if defined(_WIN32)
         case GFX_WINDOW_BACKEND_DIRECTX:
             gRenderApi = &gfx_direct3d11_api;
+            gAudioApi  = &audio_sdl;
+            break;
+#endif
+#if defined(ENABLE_VULKAN)
+        case GFX_WINDOW_BACKEND_VULKAN:
+            gRenderApi = &gfx_vulkan_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif
