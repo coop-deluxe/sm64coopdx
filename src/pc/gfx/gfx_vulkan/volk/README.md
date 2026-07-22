@@ -1,4 +1,4 @@
-Vendored for the Vulkan backend (`ENABLE_VULKAN`, see `special_ai/VULKAN_BACKEND_PLAN.md`).
+Vendored for the Vulkan backend (`ENABLE_VULKAN`).
 
 - `volk.h`/`volk.c`: dynamic Vulkan function loader, source at https://github.com/zeux/volk
   (tag `vulkan-sdk-1.4.335.0`). Avoids a hard link-time dependency on
