@@ -7,6 +7,7 @@
 #define MA_NO_GENERATION
 #define MA_NO_ENCODING
 #include "pc/utils/miniaudio.h"
+#include "pc/mods/mod.h"
 
 /* |description|Resets all custom sequences back to vanilla|descriptionEnd| */
 void smlua_audio_utils_reset_all(void);
@@ -96,7 +97,9 @@ struct ModAudio {
 };
 
 /* |description|Loads an `audio` by `filename` (with extension)|descriptionEnd| */
-struct ModAudio* audio_load(const char* filename, OPTIONAL enum ModAudioType type);
+struct ModAudio *audio_load(const char* filename, OPTIONAL enum ModAudioType type);
+/* |description|Loads an `audio` in a `mod` by `filename` (with extension)|descriptionEnd| */
+struct ModAudio *audio_load_from_mod(struct Mod *mod, const char* filename, OPTIONAL enum ModAudioType type);
 
 /* |description|Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.|descriptionEnd| */
 OVERLOAD(audio_play) void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);

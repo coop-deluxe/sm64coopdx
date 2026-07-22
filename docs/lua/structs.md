@@ -75,6 +75,7 @@
 - [PaintingValues](#PaintingValues)
 - [PlayerCameraState](#PlayerCameraState)
 - [PlayerPalette](#PlayerPalette)
+- [PresetPalette](#PresetPalette)
 - [RayIntersectionInfo](#RayIntersectionInfo)
 - [RomhackCameraSettings](#RomhackCameraSettings)
 - [ServerSettings](#ServerSettings)
@@ -386,280 +387,281 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| type | [enum CharacterType](constants.md#enum-CharacterType) | read-only |
-| name | `string` | read-only |
-| hudHead | `integer` | read-only |
+| type | [enum CharacterType](constants.md#enum-CharacterType) |  |
+| name | `string` |  |
 | hudHeadTexture | [TextureInfo](structs.md#TextureInfo) | read-only |
-| cameraHudHead | `integer` | read-only |
-| modelId | `integer` | read-only |
-| capModelId | `integer` | read-only |
-| capMetalModelId | `integer` | read-only |
-| capWingModelId | `integer` | read-only |
-| capMetalWingModelId | `integer` | read-only |
-| capEnemyLayer | `integer` | read-only |
-| capEnemyGfx | `Pointer` <`Gfx`> | read-only |
-| capEnemyDecalGfx | `Pointer` <`Gfx`> | read-only |
-| torsoRotMult | `number` | read-only |
-| animOffsetEnabled | `integer` | read-only |
-| animOffsetLowYPoint | `number` | read-only |
-| animOffsetFeet | `number` | read-only |
-| animOffsetHand | `number` | read-only |
-| animSlowLedgeGrab | `integer` | read-only |
-| animFallOverBackwards | `integer` | read-only |
-| animBackwardAirKb | `integer` | read-only |
-| animDyingOnBack | `integer` | read-only |
-| animBackflip | `integer` | read-only |
-| animClimbUpPole | `integer` | read-only |
-| animGrabPoleShort | `integer` | read-only |
-| animGrabPoleSwingPart1 | `integer` | read-only |
-| animGrabPoleSwingPart2 | `integer` | read-only |
-| animHandstandIdle | `integer` | read-only |
-| animHandstandJump | `integer` | read-only |
-| animStartHandstand | `integer` | read-only |
-| animReturnFromHandstand | `integer` | read-only |
-| animIdleOnPole | `integer` | read-only |
-| animAPose | `integer` | read-only |
-| animSkidOnGround | `integer` | read-only |
-| animStopSkid | `integer` | read-only |
-| animCrouchFromFastLongjump | `integer` | read-only |
-| animCrouchFromSlowLongjump | `integer` | read-only |
-| animFastLongjump | `integer` | read-only |
-| animSlowLongjump | `integer` | read-only |
-| animAirborneOnStomach | `integer` | read-only |
-| animWalkWithLightObj | `integer` | read-only |
-| animRunWithLightObj | `integer` | read-only |
-| animSlowWalkWithLightObj | `integer` | read-only |
-| animShiveringWarmingHand | `integer` | read-only |
-| animShiveringReturnToIdle | `integer` | read-only |
-| animShivering | `integer` | read-only |
-| animClimbDownLedge | `integer` | read-only |
-| animCreditsWaving | `integer` | read-only |
-| animCreditsLookUp | `integer` | read-only |
-| animCreditsReturnFromLookUp | `integer` | read-only |
-| animCreditsRaiseHand | `integer` | read-only |
-| animCreditsLowerHand | `integer` | read-only |
-| animCreditsTakeOffCap | `integer` | read-only |
-| animCreditsStartWalkLookUp | `integer` | read-only |
-| animCreditsLookBackThenRun | `integer` | read-only |
-| animFinalBowserRaiseHandSpin | `integer` | read-only |
-| animFinalBowserWingCapTakeOff | `integer` | read-only |
-| animCreditsPeaceSign | `integer` | read-only |
-| animStandUpFromLavaBoost | `integer` | read-only |
-| animFireLavaBurn | `integer` | read-only |
-| animWingCapFly | `integer` | read-only |
-| animHangOnOwl | `integer` | read-only |
-| animLandOnStomach | `integer` | read-only |
-| animAirForwardKb | `integer` | read-only |
-| animDyingOnStomach | `integer` | read-only |
-| animSuffocating | `integer` | read-only |
-| animCoughing | `integer` | read-only |
-| animThrowCatchKey | `integer` | read-only |
-| animDyingFallOver | `integer` | read-only |
-| animIdleOnLedge | `integer` | read-only |
-| animFastLedgeGrab | `integer` | read-only |
-| animHangOnCeiling | `integer` | read-only |
-| animPutCapOn | `integer` | read-only |
-| animTakeCapOffThenOn | `integer` | read-only |
-| animQuicklyPutCapOn | `integer` | read-only |
-| animHeadStuckInGround | `integer` | read-only |
-| animGroundPoundLanding | `integer` | read-only |
-| animTripleJumpGroundPound | `integer` | read-only |
-| animStartGroundPound | `integer` | read-only |
-| animGroundPound | `integer` | read-only |
-| animBottomStuckInGround | `integer` | read-only |
-| animIdleWithLightObj | `integer` | read-only |
-| animJumpLandWithLightObj | `integer` | read-only |
-| animJumpWithLightObj | `integer` | read-only |
-| animFallLandWithLightObj | `integer` | read-only |
-| animFallWithLightObj | `integer` | read-only |
-| animFallFromSlidingWithLightObj | `integer` | read-only |
-| animSlidingOnBottomWithLightObj | `integer` | read-only |
-| animStandUpFromSlidingWithLightObj | `integer` | read-only |
-| animRidingShell | `integer` | read-only |
-| animWalking | `integer` | read-only |
-| animForwardFlip | `integer` | read-only |
-| animJumpRidingShell | `integer` | read-only |
-| animLandFromDoubleJump | `integer` | read-only |
-| animDoubleJumpFall | `integer` | read-only |
-| animSingleJump | `integer` | read-only |
-| animLandFromSingleJump | `integer` | read-only |
-| animAirKick | `integer` | read-only |
-| animDoubleJumpRise | `integer` | read-only |
-| animStartForwardSpinning | `integer` | read-only |
-| animThrowLightObject | `integer` | read-only |
-| animFallFromSlideKick | `integer` | read-only |
-| animBendKnessRidingShell | `integer` | read-only |
-| animLegsStuckInGround | `integer` | read-only |
-| animGeneralFall | `integer` | read-only |
-| animGeneralLand | `integer` | read-only |
-| animBeingGrabbed | `integer` | read-only |
-| animGrabHeavyObject | `integer` | read-only |
-| animSlowLandFromDive | `integer` | read-only |
-| animFlyFromCannon | `integer` | read-only |
-| animMoveOnWireNetRight | `integer` | read-only |
-| animMoveOnWireNetLeft | `integer` | read-only |
-| animMissingCap | `integer` | read-only |
-| animPullDoorWalkIn | `integer` | read-only |
-| animPushDoorWalkIn | `integer` | read-only |
-| animUnlockDoor | `integer` | read-only |
-| animStartReachPocket | `integer` | read-only |
-| animReachPocket | `integer` | read-only |
-| animStopReachPocket | `integer` | read-only |
-| animGroundThrow | `integer` | read-only |
-| animGroundKick | `integer` | read-only |
-| animFirstPunch | `integer` | read-only |
-| animSecondPunch | `integer` | read-only |
-| animFirstPunchFast | `integer` | read-only |
-| animSecondPunchFast | `integer` | read-only |
-| animPickUpLightObj | `integer` | read-only |
-| animPushing | `integer` | read-only |
-| animStartRidingShell | `integer` | read-only |
-| animPlaceLightObj | `integer` | read-only |
-| animForwardSpinning | `integer` | read-only |
-| animBackwardSpinning | `integer` | read-only |
-| animBreakdance | `integer` | read-only |
-| animRunning | `integer` | read-only |
-| animRunningUnused | `integer` | read-only |
-| animSoftBackKb | `integer` | read-only |
-| animSoftFrontKb | `integer` | read-only |
-| animDyingInQuicksand | `integer` | read-only |
-| animIdleInQuicksand | `integer` | read-only |
-| animMoveInQuicksand | `integer` | read-only |
-| animElectrocution | `integer` | read-only |
-| animShocked | `integer` | read-only |
-| animBackwardKb | `integer` | read-only |
-| animForwardKb | `integer` | read-only |
-| animIdleHeavyObj | `integer` | read-only |
-| animStandAgainstWall | `integer` | read-only |
-| animSidestepLeft | `integer` | read-only |
-| animSidestepRight | `integer` | read-only |
-| animStartSleepIdle | `integer` | read-only |
-| animStartSleepScratch | `integer` | read-only |
-| animStartSleepYawn | `integer` | read-only |
-| animStartSleepSitting | `integer` | read-only |
-| animSleepIdle | `integer` | read-only |
-| animSleepStartLying | `integer` | read-only |
-| animSleepLying | `integer` | read-only |
-| animDive | `integer` | read-only |
-| animSlideDive | `integer` | read-only |
-| animGroundBonk | `integer` | read-only |
-| animStopSlideLightObj | `integer` | read-only |
-| animSlideKick | `integer` | read-only |
-| animCrouchFromSlideKick | `integer` | read-only |
-| animSlideMotionless | `integer` | read-only |
-| animStopSlide | `integer` | read-only |
-| animFallFromSlide | `integer` | read-only |
-| animSlide | `integer` | read-only |
-| animTiptoe | `integer` | read-only |
-| animTwirlLand | `integer` | read-only |
-| animTwirl | `integer` | read-only |
-| animStartTwirl | `integer` | read-only |
-| animStopCrouching | `integer` | read-only |
-| animStartCrouching | `integer` | read-only |
-| animCrouching | `integer` | read-only |
-| animCrawling | `integer` | read-only |
-| animStopCrawling | `integer` | read-only |
-| animStartCrawling | `integer` | read-only |
-| animSummonStar | `integer` | read-only |
-| animReturnStarApproachDoor | `integer` | read-only |
-| animBackwardsWaterKb | `integer` | read-only |
-| animSwimWithObjPart1 | `integer` | read-only |
-| animSwimWithObjPart2 | `integer` | read-only |
-| animFlutterkickWithObj | `integer` | read-only |
-| animWaterActionEndWithObj | `integer` | read-only |
-| animStopGrabObjWater | `integer` | read-only |
-| animWaterIdleWithObj | `integer` | read-only |
-| animDrowningPart1 | `integer` | read-only |
-| animDrowningPart2 | `integer` | read-only |
-| animWaterDying | `integer` | read-only |
-| animWaterForwardKb | `integer` | read-only |
-| animFallFromWater | `integer` | read-only |
-| animSwimPart1 | `integer` | read-only |
-| animSwimPart2 | `integer` | read-only |
-| animFlutterkick | `integer` | read-only |
-| animWaterActionEnd | `integer` | read-only |
-| animWaterPickUpObj | `integer` | read-only |
-| animWaterGrabObjPart2 | `integer` | read-only |
-| animWaterGrabObjPart1 | `integer` | read-only |
-| animWaterThrowObj | `integer` | read-only |
-| animWaterIdle | `integer` | read-only |
-| animWaterStarDance | `integer` | read-only |
-| animReturnFromWaterStarDance | `integer` | read-only |
-| animGrabBowser | `integer` | read-only |
-| animSwingingBowser | `integer` | read-only |
-| animReleaseBowser | `integer` | read-only |
-| animHoldingBowser | `integer` | read-only |
-| animHeavyThrow | `integer` | read-only |
-| animWalkPanting | `integer` | read-only |
-| animWalkWithHeavyObj | `integer` | read-only |
-| animTurningPart1 | `integer` | read-only |
-| animTurningPart2 | `integer` | read-only |
-| animSlideflipLand | `integer` | read-only |
-| animSlideflip | `integer` | read-only |
-| animTripleJumpLand | `integer` | read-only |
-| animTripleJump | `integer` | read-only |
-| animFirstPerson | `integer` | read-only |
-| animIdleHeadLeft | `integer` | read-only |
-| animIdleHeadRight | `integer` | read-only |
-| animIdleHeadCenter | `integer` | read-only |
-| animHandstandLeft | `integer` | read-only |
-| animHandstandRight | `integer` | read-only |
-| animWakeFromSleep | `integer` | read-only |
-| animWakeFromLying | `integer` | read-only |
-| animStartTiptoe | `integer` | read-only |
-| animSlidejump | `integer` | read-only |
-| animStartWallkick | `integer` | read-only |
-| animStarDance | `integer` | read-only |
-| animReturnFromStarDance | `integer` | read-only |
-| animForwardSpinningFlip | `integer` | read-only |
-| animTripleJumpFly | `integer` | read-only |
-| anims | `Array` <`integer`> | read-only, starts at index 0 |
-| soundFreqScale | `number` | read-only |
-| soundYahWahHoo | `integer` | read-only |
-| soundHoohoo | `integer` | read-only |
-| soundYahoo | `integer` | read-only |
-| soundUh | `integer` | read-only |
-| soundHrmm | `integer` | read-only |
-| soundWah2 | `integer` | read-only |
-| soundWhoa | `integer` | read-only |
-| soundEeuh | `integer` | read-only |
-| soundAttacked | `integer` | read-only |
-| soundOoof | `integer` | read-only |
-| soundOoof2 | `integer` | read-only |
-| soundHereWeGo | `integer` | read-only |
-| soundYawning | `integer` | read-only |
-| soundSnoring1 | `integer` | read-only |
-| soundSnoring2 | `integer` | read-only |
-| soundWaaaooow | `integer` | read-only |
-| soundHaha | `integer` | read-only |
-| soundHaha_2 | `integer` | read-only |
-| soundUh2 | `integer` | read-only |
-| soundUh2_2 | `integer` | read-only |
-| soundOnFire | `integer` | read-only |
-| soundDying | `integer` | read-only |
-| soundPantingCold | `integer` | read-only |
-| soundPanting | `integer` | read-only |
-| soundCoughing1 | `integer` | read-only |
-| soundCoughing2 | `integer` | read-only |
-| soundCoughing3 | `integer` | read-only |
-| soundPunchYah | `integer` | read-only |
-| soundPunchHoo | `integer` | read-only |
-| soundMamaMia | `integer` | read-only |
-| soundGroundPoundWah | `integer` | read-only |
-| soundDrowning | `integer` | read-only |
-| soundPunchWah | `integer` | read-only |
-| soundYahooWahaYippee | `integer` | read-only |
-| soundDoh | `integer` | read-only |
-| soundGameOver | `integer` | read-only |
-| soundHello | `integer` | read-only |
-| soundPressStartToPlay | `integer` | read-only |
-| soundTwirlBounce | `integer` | read-only |
-| soundSnoring3 | `integer` | read-only |
-| soundSoLongaBowser | `integer` | read-only |
-| soundImaTired | `integer` | read-only |
-| soundLetsAGo | `integer` | read-only |
-| soundOkeyDokey | `integer` | read-only |
-| sounds | `Array` <`integer`> | read-only, starts at index 0 |
+| modelId | `integer` |  |
+| capModelId | `integer` |  |
+| capMetalModelId | `integer` |  |
+| capWingModelId | `integer` |  |
+| capMetalWingModelId | `integer` |  |
+| capEnemyLayer | `integer` |  |
+| capEnemyGfx | `string` |  |
+| capEnemyDecalGfx | `string` |  |
+| torsoRotMult | `number` |  |
+| animOffsetEnabled | `integer` |  |
+| animOffsetLowYPoint | `number` |  |
+| animOffsetFeet | `number` |  |
+| animOffsetHand | `number` |  |
+| animSlowLedgeGrab | `integer` |  |
+| animFallOverBackwards | `integer` |  |
+| animBackwardAirKb | `integer` |  |
+| animDyingOnBack | `integer` |  |
+| animBackflip | `integer` |  |
+| animClimbUpPole | `integer` |  |
+| animGrabPoleShort | `integer` |  |
+| animGrabPoleSwingPart1 | `integer` |  |
+| animGrabPoleSwingPart2 | `integer` |  |
+| animHandstandIdle | `integer` |  |
+| animHandstandJump | `integer` |  |
+| animStartHandstand | `integer` |  |
+| animReturnFromHandstand | `integer` |  |
+| animIdleOnPole | `integer` |  |
+| animAPose | `integer` |  |
+| animSkidOnGround | `integer` |  |
+| animStopSkid | `integer` |  |
+| animCrouchFromFastLongjump | `integer` |  |
+| animCrouchFromSlowLongjump | `integer` |  |
+| animFastLongjump | `integer` |  |
+| animSlowLongjump | `integer` |  |
+| animAirborneOnStomach | `integer` |  |
+| animWalkWithLightObj | `integer` |  |
+| animRunWithLightObj | `integer` |  |
+| animSlowWalkWithLightObj | `integer` |  |
+| animShiveringWarmingHand | `integer` |  |
+| animShiveringReturnToIdle | `integer` |  |
+| animShivering | `integer` |  |
+| animClimbDownLedge | `integer` |  |
+| animCreditsWaving | `integer` |  |
+| animCreditsLookUp | `integer` |  |
+| animCreditsReturnFromLookUp | `integer` |  |
+| animCreditsRaiseHand | `integer` |  |
+| animCreditsLowerHand | `integer` |  |
+| animCreditsTakeOffCap | `integer` |  |
+| animCreditsStartWalkLookUp | `integer` |  |
+| animCreditsLookBackThenRun | `integer` |  |
+| animFinalBowserRaiseHandSpin | `integer` |  |
+| animFinalBowserWingCapTakeOff | `integer` |  |
+| animCreditsPeaceSign | `integer` |  |
+| animStandUpFromLavaBoost | `integer` |  |
+| animFireLavaBurn | `integer` |  |
+| animWingCapFly | `integer` |  |
+| animHangOnOwl | `integer` |  |
+| animLandOnStomach | `integer` |  |
+| animAirForwardKb | `integer` |  |
+| animDyingOnStomach | `integer` |  |
+| animSuffocating | `integer` |  |
+| animCoughing | `integer` |  |
+| animThrowCatchKey | `integer` |  |
+| animDyingFallOver | `integer` |  |
+| animIdleOnLedge | `integer` |  |
+| animFastLedgeGrab | `integer` |  |
+| animHangOnCeiling | `integer` |  |
+| animPutCapOn | `integer` |  |
+| animTakeCapOffThenOn | `integer` |  |
+| animQuicklyPutCapOn | `integer` |  |
+| animHeadStuckInGround | `integer` |  |
+| animGroundPoundLanding | `integer` |  |
+| animTripleJumpGroundPound | `integer` |  |
+| animStartGroundPound | `integer` |  |
+| animGroundPound | `integer` |  |
+| animBottomStuckInGround | `integer` |  |
+| animIdleWithLightObj | `integer` |  |
+| animJumpLandWithLightObj | `integer` |  |
+| animJumpWithLightObj | `integer` |  |
+| animFallLandWithLightObj | `integer` |  |
+| animFallWithLightObj | `integer` |  |
+| animFallFromSlidingWithLightObj | `integer` |  |
+| animSlidingOnBottomWithLightObj | `integer` |  |
+| animStandUpFromSlidingWithLightObj | `integer` |  |
+| animRidingShell | `integer` |  |
+| animWalking | `integer` |  |
+| animForwardFlip | `integer` |  |
+| animJumpRidingShell | `integer` |  |
+| animLandFromDoubleJump | `integer` |  |
+| animDoubleJumpFall | `integer` |  |
+| animSingleJump | `integer` |  |
+| animLandFromSingleJump | `integer` |  |
+| animAirKick | `integer` |  |
+| animDoubleJumpRise | `integer` |  |
+| animStartForwardSpinning | `integer` |  |
+| animThrowLightObject | `integer` |  |
+| animFallFromSlideKick | `integer` |  |
+| animBendKnessRidingShell | `integer` |  |
+| animLegsStuckInGround | `integer` |  |
+| animGeneralFall | `integer` |  |
+| animGeneralLand | `integer` |  |
+| animBeingGrabbed | `integer` |  |
+| animGrabHeavyObject | `integer` |  |
+| animSlowLandFromDive | `integer` |  |
+| animFlyFromCannon | `integer` |  |
+| animMoveOnWireNetRight | `integer` |  |
+| animMoveOnWireNetLeft | `integer` |  |
+| animMissingCap | `integer` |  |
+| animPullDoorWalkIn | `integer` |  |
+| animPushDoorWalkIn | `integer` |  |
+| animUnlockDoor | `integer` |  |
+| animStartReachPocket | `integer` |  |
+| animReachPocket | `integer` |  |
+| animStopReachPocket | `integer` |  |
+| animGroundThrow | `integer` |  |
+| animGroundKick | `integer` |  |
+| animFirstPunch | `integer` |  |
+| animSecondPunch | `integer` |  |
+| animFirstPunchFast | `integer` |  |
+| animSecondPunchFast | `integer` |  |
+| animPickUpLightObj | `integer` |  |
+| animPushing | `integer` |  |
+| animStartRidingShell | `integer` |  |
+| animPlaceLightObj | `integer` |  |
+| animForwardSpinning | `integer` |  |
+| animBackwardSpinning | `integer` |  |
+| animBreakdance | `integer` |  |
+| animRunning | `integer` |  |
+| animRunningUnused | `integer` |  |
+| animSoftBackKb | `integer` |  |
+| animSoftFrontKb | `integer` |  |
+| animDyingInQuicksand | `integer` |  |
+| animIdleInQuicksand | `integer` |  |
+| animMoveInQuicksand | `integer` |  |
+| animElectrocution | `integer` |  |
+| animShocked | `integer` |  |
+| animBackwardKb | `integer` |  |
+| animForwardKb | `integer` |  |
+| animIdleHeavyObj | `integer` |  |
+| animStandAgainstWall | `integer` |  |
+| animSidestepLeft | `integer` |  |
+| animSidestepRight | `integer` |  |
+| animStartSleepIdle | `integer` |  |
+| animStartSleepScratch | `integer` |  |
+| animStartSleepYawn | `integer` |  |
+| animStartSleepSitting | `integer` |  |
+| animSleepIdle | `integer` |  |
+| animSleepStartLying | `integer` |  |
+| animSleepLying | `integer` |  |
+| animDive | `integer` |  |
+| animSlideDive | `integer` |  |
+| animGroundBonk | `integer` |  |
+| animStopSlideLightObj | `integer` |  |
+| animSlideKick | `integer` |  |
+| animCrouchFromSlideKick | `integer` |  |
+| animSlideMotionless | `integer` |  |
+| animStopSlide | `integer` |  |
+| animFallFromSlide | `integer` |  |
+| animSlide | `integer` |  |
+| animTiptoe | `integer` |  |
+| animTwirlLand | `integer` |  |
+| animTwirl | `integer` |  |
+| animStartTwirl | `integer` |  |
+| animStopCrouching | `integer` |  |
+| animStartCrouching | `integer` |  |
+| animCrouching | `integer` |  |
+| animCrawling | `integer` |  |
+| animStopCrawling | `integer` |  |
+| animStartCrawling | `integer` |  |
+| animSummonStar | `integer` |  |
+| animReturnStarApproachDoor | `integer` |  |
+| animBackwardsWaterKb | `integer` |  |
+| animSwimWithObjPart1 | `integer` |  |
+| animSwimWithObjPart2 | `integer` |  |
+| animFlutterkickWithObj | `integer` |  |
+| animWaterActionEndWithObj | `integer` |  |
+| animStopGrabObjWater | `integer` |  |
+| animWaterIdleWithObj | `integer` |  |
+| animDrowningPart1 | `integer` |  |
+| animDrowningPart2 | `integer` |  |
+| animWaterDying | `integer` |  |
+| animWaterForwardKb | `integer` |  |
+| animFallFromWater | `integer` |  |
+| animSwimPart1 | `integer` |  |
+| animSwimPart2 | `integer` |  |
+| animFlutterkick | `integer` |  |
+| animWaterActionEnd | `integer` |  |
+| animWaterPickUpObj | `integer` |  |
+| animWaterGrabObjPart2 | `integer` |  |
+| animWaterGrabObjPart1 | `integer` |  |
+| animWaterThrowObj | `integer` |  |
+| animWaterIdle | `integer` |  |
+| animWaterStarDance | `integer` |  |
+| animReturnFromWaterStarDance | `integer` |  |
+| animGrabBowser | `integer` |  |
+| animSwingingBowser | `integer` |  |
+| animReleaseBowser | `integer` |  |
+| animHoldingBowser | `integer` |  |
+| animHeavyThrow | `integer` |  |
+| animWalkPanting | `integer` |  |
+| animWalkWithHeavyObj | `integer` |  |
+| animTurningPart1 | `integer` |  |
+| animTurningPart2 | `integer` |  |
+| animSlideflipLand | `integer` |  |
+| animSlideflip | `integer` |  |
+| animTripleJumpLand | `integer` |  |
+| animTripleJump | `integer` |  |
+| animFirstPerson | `integer` |  |
+| animIdleHeadLeft | `integer` |  |
+| animIdleHeadRight | `integer` |  |
+| animIdleHeadCenter | `integer` |  |
+| animHandstandLeft | `integer` |  |
+| animHandstandRight | `integer` |  |
+| animWakeFromSleep | `integer` |  |
+| animWakeFromLying | `integer` |  |
+| animStartTiptoe | `integer` |  |
+| animSlidejump | `integer` |  |
+| animStartWallkick | `integer` |  |
+| animStarDance | `integer` |  |
+| animReturnFromStarDance | `integer` |  |
+| animForwardSpinningFlip | `integer` |  |
+| animTripleJumpFly | `integer` |  |
+| anims | `Array` <`integer`> | starts at index 0 |
+| moddedAnims | `Array` <`integer`> |  |
+| soundFreqScale | `number` |  |
+| soundYahWahHoo | `integer` |  |
+| soundHoohoo | `integer` |  |
+| soundYahoo | `integer` |  |
+| soundUh | `integer` |  |
+| soundHrmm | `integer` |  |
+| soundWah2 | `integer` |  |
+| soundWhoa | `integer` |  |
+| soundEeuh | `integer` |  |
+| soundAttacked | `integer` |  |
+| soundOoof | `integer` |  |
+| soundOoof2 | `integer` |  |
+| soundHereWeGo | `integer` |  |
+| soundYawning | `integer` |  |
+| soundSnoring1 | `integer` |  |
+| soundSnoring2 | `integer` |  |
+| soundWaaaooow | `integer` |  |
+| soundHaha | `integer` |  |
+| soundHaha_2 | `integer` |  |
+| soundUh2 | `integer` |  |
+| soundUh2_2 | `integer` |  |
+| soundOnFire | `integer` |  |
+| soundDying | `integer` |  |
+| soundPantingCold | `integer` |  |
+| soundPanting | `integer` |  |
+| soundCoughing1 | `integer` |  |
+| soundCoughing2 | `integer` |  |
+| soundCoughing3 | `integer` |  |
+| soundPunchYah | `integer` |  |
+| soundPunchHoo | `integer` |  |
+| soundMamaMia | `integer` |  |
+| soundGroundPoundWah | `integer` |  |
+| soundDrowning | `integer` |  |
+| soundPunchWah | `integer` |  |
+| soundYahooWahaYippee | `integer` |  |
+| soundDoh | `integer` |  |
+| soundGameOver | `integer` |  |
+| soundHello | `integer` |  |
+| soundPressStartToPlay | `integer` |  |
+| soundTwirlBounce | `integer` |  |
+| soundSnoring3 | `integer` |  |
+| soundSoLongaBowser | `integer` |  |
+| soundImaTired | `integer` |  |
+| soundLetsAGo | `integer` |  |
+| soundOkeyDokey | `integer` |  |
+| sounds | `Array` <`integer`> | starts at index 0 |
+| modAudioSounds | `Array` <`integer`> |  |
+| modIndexForAudio | `Array` <`integer`> |  |
 
 [:arrow_up_small:](#)
 
@@ -2807,6 +2809,18 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | parts | `Array` <`Color`> | read-only, starts at index 0 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [PresetPalette](#PresetPalette)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| name | `string` |  |
+| palette | [PlayerPalette](structs.md#PlayerPalette) | read-only |
+| active | `boolean` |  |
 
 [:arrow_up_small:](#)
 

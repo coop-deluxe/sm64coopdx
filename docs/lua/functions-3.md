@@ -2633,6 +2633,113 @@ This function is designed for non-standard level layouts and modded game environ
 <br />
 
 
+## [character_get_first_allocated_index](#character_get_first_allocated_index)
+
+### Description
+Gets the first allocated index.
+
+### Lua Example
+`local integerValue = character_get_first_allocated_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`int character_get_first_allocated_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_unallocated_index](#character_get_first_unallocated_index)
+
+### Description
+Gets the first unallocated index.
+
+### Lua Example
+`local integerValue = character_get_first_unallocated_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`int character_get_first_unallocated_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_allocated](#character_get_first_allocated)
+
+### Description
+Gets the first allocated character.
+
+### Lua Example
+`local characterValue = character_get_first_allocated()`
+
+### Parameters
+- None
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* character_get_first_allocated();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_get_first_unallocated](#character_get_first_unallocated)
+
+### Description
+Gets the first unallocated character.
+
+### Lua Example
+`local characterValue = character_get_first_unallocated()`
+
+### Parameters
+- None
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* character_get_first_unallocated();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_allocated_character_from_index](#get_allocated_character_from_index)
+
+### Description
+Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.
+
+### Lua Example
+`local characterValue = get_allocated_character_from_index(i)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| i | `integer` |
+
+### Returns
+- [Character](structs.md#Character)
+
+### C Prototype
+`struct Character* get_allocated_character_from_index(int i);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_character](#get_character)
 
 ### Description
@@ -2782,6 +2889,30 @@ Useful for determining which animation to play for actions like walking, jumping
 
 <br />
 
+## [get_modded_character_anim_string](#get_modded_character_anim_string)
+
+### Description
+Gets the current name of the animation used if the animation is modded.
+
+### Lua Example
+`local stringValue = get_modded_character_anim_string(m, characterAnim)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| characterAnim | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char* get_modded_character_anim_string(struct MarioState* m, enum CharacterAnimID characterAnim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [update_character_anim_offset](#update_character_anim_offset)
 
 ### Description
@@ -2801,6 +2932,251 @@ Useful for keeping Mario's animations visually aligned, particularly when transi
 
 ### C Prototype
 `void update_character_anim_offset(struct MarioState* m);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_allocate](#character_allocate)
+
+### Description
+Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
+
+### Lua Example
+`local characterValue, characterIndex = character_allocate(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- [Character](structs.md#Character)
+- `integer`
+
+### C Prototype
+`struct Character* character_allocate(const char* name, RET int *characterIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_deallocate](#character_deallocate)
+
+### Description
+Deallocates your `character` from the `gCharacters` struct.
+
+### Lua Example
+`character_deallocate(character)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_deallocate(struct Character* character);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_name](#character_set_name)
+
+### Description
+Set Character name for `character`
+
+### Lua Example
+`character_set_name(character, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_name(struct Character* character, const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_cap_enemy_gfx_name](#character_set_cap_enemy_gfx_name)
+
+### Description
+Set Character's cap enemy gfx for `character`. This is rendered on enemies that steal your caps
+
+### Lua Example
+`character_set_cap_enemy_gfx_name(character, gfxName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| gfxName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_cap_enemy_gfx_name(struct Character* character, const char* gfxName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_cap_enemy_decal_gfx_name](#character_set_cap_enemy_decal_gfx_name)
+
+### Description
+Set Character's cap enemy decal gfx for `character`. This is rendered on enemies that steal your caps
+
+### Lua Example
+`character_set_cap_enemy_decal_gfx_name(character, gfxName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| gfxName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_cap_enemy_decal_gfx_name(struct Character* character, const char* gfxName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_hud_head_texture](#character_set_hud_head_texture)
+
+### Description
+Set hud head texture for `character`. This is the texture that appears for the playerlist, life, and mario cam icon
+
+### Lua Example
+`character_set_hud_head_texture(character, texInfo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_hud_head_texture(struct Character* character, struct TextureInfo* texInfo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_add_sound](#character_add_sound)
+
+### Description
+Adds a `audioName` for `characterSound` on `character`. You can add multiple sound files to the same `characterSound`
+When you have multiple sounds, it picks between them at random.
+
+### Lua Example
+`character_add_sound(character, characterSound, audioName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+| audioName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_add_sound(struct Character* character, enum CharacterSound characterSound, const char* audioName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_remove_sounds](#character_remove_sounds)
+
+### Description
+Removes all sounds for `characterSound` on `character`.
+Every sound file will get removed from the character.
+
+### Lua Example
+`character_remove_sounds(character, characterSound)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| characterSound | [enum CharacterSound](constants.md#enum-CharacterSound) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_remove_sounds(struct Character* character, enum CharacterSound characterSound);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_set_animation](#character_set_animation)
+
+### Description
+Sets animation for `animID` using a registered smlua animation.
+You can register an smlua animation by using `smlua_anim_util_register_animation`.
+The animation string you used to register the animation is the `animString` to be passed.
+
+### Lua Example
+`character_set_animation(character, animID, animString)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| animID | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+| animString | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void character_set_animation(struct Character* character, enum CharacterAnimID animID, const char* animString);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [character_remove_animation](#character_remove_animation)
+
+### Description
+Removes the animation for `animId` on `character`
+
+### Lua Example
+`character_remove_animation(character, animID)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| character | [Character](structs.md#Character) |
+| animID | [enum CharacterAnimID](constants.md#enum-CharacterAnimID) |
+
+### Returns
+- None
+
+### C Prototype
+`void character_remove_animation(struct Character* character, enum CharacterAnimID animID);`
 
 [:arrow_up_small:](#)
 
@@ -7057,278 +7433,6 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as a dec
 
 ### C Prototype
 `const char *get_star_name(s16 courseNum, s16 starNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from level_script.h
-
-<br />
-
-
-## [area_create_warp_node](#area_create_warp_node)
-
-### Description
-Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.
-To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)
-`checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
-
-### Lua Example
-`local objectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| destLevel | `integer` |
-| destArea | `integer` |
-| destNode | `integer` |
-| checkpoint | `integer` |
-| o | [Object](structs.md#Object) |
-
-### Returns
-- [ObjectWarpNode](structs.md#ObjectWarpNode)
-
-### C Prototype
-`struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from level_update.h
-
-<br />
-
-
-## [level_control_timer_running](#level_control_timer_running)
-
-### Description
-Returns if the level timer is running
-
-### Lua Example
-`local integerValue = level_control_timer_running()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u8 level_control_timer_running(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [pressed_pause](#pressed_pause)
-
-### Description
-Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
-
-### Lua Example
-`local booleanValue = pressed_pause()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool pressed_pause(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [fade_into_special_warp](#fade_into_special_warp)
-
-### Description
-Fades into a special warp with `arg` and using `color`
-
-### Lua Example
-`fade_into_special_warp(arg, color)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg | `integer` |
-| color | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void fade_into_special_warp(u32 arg, u32 color);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_instant_warp](#get_instant_warp)
-
-### Description
-Gets an instant warp from the current area's instant warp array (0-3)
-
-### Lua Example
-`local instantWarpValue = get_instant_warp(index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-
-### Returns
-- [InstantWarp](structs.md#InstantWarp)
-
-### C Prototype
-`struct InstantWarp *get_instant_warp(u8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_painting_warp_node](#get_painting_warp_node)
-
-### Description
-Gets a painting warp node from the local mario's floor type
-
-### Lua Example
-`local warpNodeValue = get_painting_warp_node()`
-
-### Parameters
-- None
-
-### Returns
-- [WarpNode](structs.md#WarpNode)
-
-### C Prototype
-`struct WarpNode *get_painting_warp_node(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [initiate_painting_warp](#initiate_painting_warp)
-
-### Description
-Initiates a painting warp of `paintingIndex`
-
-### Lua Example
-`initiate_painting_warp(paintingIndex)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| paintingIndex | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void initiate_painting_warp(s16 paintingIndex);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [level_trigger_warp](#level_trigger_warp)
-
-### Description
-Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
-
-### Lua Example
-`local integerValue = level_trigger_warp(m, warpOp)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| warpOp | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 level_trigger_warp(struct MarioState *m, s32 warpOp);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_special](#warp_special)
-
-### Description
-Special warps to arg (`SPECIAL_WARP_*`)
-
-### Lua Example
-`warp_special(arg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| arg | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void warp_special(s32 arg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [initiate_warp](#initiate_warp)
-
-### Description
-Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-
-### Lua Example
-`initiate_warp(destLevel, destArea, destWarpNode, arg)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| destLevel | `integer` |
-| destArea | `integer` |
-| destWarpNode | `integer` |
-| arg | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [lvl_set_current_level](#lvl_set_current_level)
-
-### Description
-Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
-
-### Lua Example
-`local integerValue = lvl_set_current_level(param, levelNum)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| param | `integer` |
-| levelNum | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 lvl_set_current_level(s16 param, s16 levelNum);`
 
 [:arrow_up_small:](#)
 

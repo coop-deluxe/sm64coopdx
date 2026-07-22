@@ -384,6 +384,19 @@ def build_vec_types():
 
 ############################################################################
 
+def is_field_overridden(sid, fid, override_dict):
+    if sid in override_dict:
+        for pattern in override_dict[sid]:
+            if pattern == '*':
+                return True
+            if pattern.endswith('*') and fid.startswith(pattern[:-1]):
+                return True
+            if fid == pattern:
+                return True
+    return False
+
+############################################################################
+
 sLuaObjectTable = []
 sLotAutoGenList = []
 

@@ -21,8 +21,8 @@ gNetworkPlayers = {}
 gActiveMods = {}
 
 --- @type Character[]
---- Array of every character, from 0 to `CT_MAX` - 1
---- - The contents or order of the characters can never change
+--- Array of every character, from 0 to `MAX_CHARACTERS` - 1
+--- - The array is completely writable, and you can add or modify characters here.
 gCharacters = {}
 
 --- @type Controller[]

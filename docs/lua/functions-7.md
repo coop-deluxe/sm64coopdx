@@ -6,6 +6,1154 @@
 
 
 ---
+# functions from smlua_camera_utils.h
+
+<br />
+
+
+## [camera_reset_overrides](#camera_reset_overrides)
+
+### Description
+Resets camera config overrides
+
+### Lua Example
+`camera_reset_overrides()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_reset_overrides(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_freeze](#camera_freeze)
+
+### Description
+Freezes the camera by not updating it
+
+### Lua Example
+`camera_freeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_freeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_unfreeze](#camera_unfreeze)
+
+### Description
+Unfreezes the camera
+
+### Lua Example
+`camera_unfreeze()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void camera_unfreeze(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_is_frozen](#camera_is_frozen)
+
+### Description
+Checks if the camera is frozen
+
+### Lua Example
+`local booleanValue = camera_is_frozen()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_is_frozen(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_only_mods](#camera_romhack_allow_only_mods)
+
+### Description
+Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)
+
+### Lua Example
+`camera_romhack_allow_only_mods(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_only_mods(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_romhack_override](#camera_set_romhack_override)
+
+### Description
+Sets the romhack camera override status
+
+### Lua Example
+`camera_set_romhack_override(rco)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| rco | [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride) |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_romhack_override(enum RomhackCameraOverride rco);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_switchable](#camera_romhack_allow_switchable)
+
+### Description
+Sets if the romhack camera should allow water/flying switching, triggered with the L button
+
+### Lua Example
+`camera_romhack_allow_switchable(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_switchable(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_allow_toxic_gas_camera](#camera_allow_toxic_gas_camera)
+
+### Description
+Sets if the romhack camera should fly above poison gas
+
+### Lua Example
+`camera_allow_toxic_gas_camera(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_allow_toxic_gas_camera(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_allow_dpad_usage](#camera_romhack_allow_dpad_usage)
+
+### Description
+Sets if the romhack camera should allow D-Pad movement
+
+### Lua Example
+`camera_romhack_allow_dpad_usage(allow)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| allow | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_allow_dpad_usage(u8 allow);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_collisions](#camera_romhack_set_collisions)
+
+### Description
+Toggles collision settings for the ROM hack camera.
+This enables or disables specific collision behaviors in modded levels
+
+### Lua Example
+`camera_romhack_set_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_collisions(u8 enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_in_dist](#camera_romhack_set_zoomed_in_dist)
+
+### Description
+Sets the romhack camera's zoomed in distance (Default: 900)
+
+### Lua Example
+`camera_romhack_set_zoomed_in_dist(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_in_dist(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_out_dist](#camera_romhack_set_zoomed_out_dist)
+
+### Description
+Sets the romhack camera's zoomed out additional distance (Default: 500)
+
+### Lua Example
+`camera_romhack_set_zoomed_out_dist(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_out_dist(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_in_height](#camera_romhack_set_zoomed_in_height)
+
+### Description
+Sets the romhack camera's zoomed in height (Default: 300)
+
+### Lua Example
+`camera_romhack_set_zoomed_in_height(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_in_height(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_set_zoomed_out_height](#camera_romhack_set_zoomed_out_height)
+
+### Description
+Sets the romhack camera's zoomed out additional height (Default: 150)
+
+### Lua Example
+`camera_romhack_set_zoomed_out_height(val)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| val | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_romhack_set_zoomed_out_height(u32 val);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_in_dist](#camera_romhack_get_zoomed_in_dist)
+
+### Description
+Gets the romhack camera's zoomed in distance
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_in_dist()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_in_dist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_out_dist](#camera_romhack_get_zoomed_out_dist)
+
+### Description
+Gets the romhack camera's additional zoomed out distance
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_out_dist()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_out_dist(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_in_height](#camera_romhack_get_zoomed_in_height)
+
+### Description
+Gets the romhack camera's zoomed in height
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_in_height()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_in_height(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_zoomed_out_height](#camera_romhack_get_zoomed_out_height)
+
+### Description
+Gets the romhack camera's additional zoomed out height
+
+### Lua Example
+`local integerValue = camera_romhack_get_zoomed_out_height()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_romhack_get_zoomed_out_height(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_romhack_override](#camera_get_romhack_override)
+
+### Description
+Gets the current romhack camera override status
+
+### Lua Example
+`local enumValue = camera_get_romhack_override()`
+
+### Parameters
+- None
+
+### Returns
+- [enum RomhackCameraOverride](constants.md#enum-RomhackCameraOverride)
+
+### C Prototype
+`enum RomhackCameraOverride camera_get_romhack_override(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_switchable](#camera_romhack_get_allow_switchable)
+
+### Description
+Gets if the romhack camera should allow water/flying switching
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_switchable()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_switchable(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_allow_toxic_gas_camera](#camera_get_allow_toxic_gas_camera)
+
+### Description
+Gets if the romhack camera should fly above poison gas
+
+### Lua Example
+`local integerValue = camera_get_allow_toxic_gas_camera()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_get_allow_toxic_gas_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_allow_dpad_usage](#camera_romhack_get_allow_dpad_usage)
+
+### Description
+Gets if the romhack camera should allow D-Pad movement
+
+### Lua Example
+`local integerValue = camera_romhack_get_allow_dpad_usage()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_allow_dpad_usage(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_romhack_get_collisions](#camera_romhack_get_collisions)
+
+### Description
+Gets if the romhack camera has surface collisions
+
+### Lua Example
+`local integerValue = camera_romhack_get_collisions()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 camera_romhack_get_collisions(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
+
+### Description
+Checks if Free Camera is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_free_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_free_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_analog_cam_enabled](#camera_config_is_analog_cam_enabled)
+
+### Description
+Checks if Analog Camera is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_analog_cam_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_analog_cam_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_dpad_enabled](#camera_config_is_dpad_enabled)
+
+### Description
+Checks if Freecam DPad Behavior is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_dpad_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_dpad_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_collision_enabled](#camera_config_is_collision_enabled)
+
+### Description
+Checks if Camera Collision is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_collision_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_collision_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_mouse_look_enabled](#camera_config_is_mouse_look_enabled)
+
+### Description
+Checks if Mouse Look is enabled
+
+### Lua Example
+`local booleanValue = camera_config_is_mouse_look_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_mouse_look_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_x_inverted](#camera_config_is_x_inverted)
+
+### Description
+Checks if camera X is inverted
+
+### Lua Example
+`local booleanValue = camera_config_is_x_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_x_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_is_y_inverted](#camera_config_is_y_inverted)
+
+### Description
+Checks if camera Y is inverted
+
+### Lua Example
+`local booleanValue = camera_config_is_y_inverted()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_is_y_inverted(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_x_sensitivity](#camera_config_get_x_sensitivity)
+
+### Description
+Gets camera X sensitivity
+
+### Lua Example
+`local integerValue = camera_config_get_x_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_x_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_y_sensitivity](#camera_config_get_y_sensitivity)
+
+### Description
+Gets camera Y sensitivity
+
+### Lua Example
+`local integerValue = camera_config_get_y_sensitivity()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_y_sensitivity(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_aggression](#camera_config_get_aggression)
+
+### Description
+Gets camera aggression
+
+### Lua Example
+`local integerValue = camera_config_get_aggression()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_aggression(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_pan_level](#camera_config_get_pan_level)
+
+### Description
+Gets camera pan level
+
+### Lua Example
+`local integerValue = camera_config_get_pan_level()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_pan_level(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_deceleration](#camera_config_get_deceleration)
+
+### Description
+Gets camera deceleration
+
+### Lua Example
+`local integerValue = camera_config_get_deceleration()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 camera_config_get_deceleration(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_get_centering](#camera_config_get_centering)
+
+### Description
+Gets if the L button will center the camera
+
+### Lua Example
+`local booleanValue = camera_config_get_centering()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_config_get_centering(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
+
+### Description
+Overrides if Free Camera is enabled
+
+### Lua Example
+`camera_config_enable_free_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_free_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_analog_cam](#camera_config_enable_analog_cam)
+
+### Description
+Overrides if Analog Camera is enabled
+
+### Lua Example
+`camera_config_enable_analog_cam(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_analog_cam(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_centering](#camera_config_enable_centering)
+
+### Description
+Overrides if the L button will center the camera
+
+### Lua Example
+`camera_config_enable_centering(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_centering(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_dpad](#camera_config_enable_dpad)
+
+### Description
+Overrides if Freecam DPad Behavior is enabled
+
+### Lua Example
+`camera_config_enable_dpad(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_dpad(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_collisions](#camera_config_enable_collisions)
+
+### Description
+Overrides if Camera Collision is enabled
+
+### Lua Example
+`camera_config_enable_collisions(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_collisions(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_enable_mouse_look](#camera_config_enable_mouse_look)
+
+### Description
+Overrides if camera mouse look is enabled
+
+### Lua Example
+`camera_config_enable_mouse_look(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_enable_mouse_look(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_x](#camera_config_invert_x)
+
+### Description
+Overrides if camera X is inverted
+
+### Lua Example
+`camera_config_invert_x(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_x(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_invert_y](#camera_config_invert_y)
+
+### Description
+Overrides if camera Y is inverted
+
+### Lua Example
+`camera_config_invert_y(invert)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| invert | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_invert_y(bool invert);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_x_sensitivity](#camera_config_set_x_sensitivity)
+
+### Description
+Overrides camera X sensitivity
+
+### Lua Example
+`camera_config_set_x_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_x_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_y_sensitivity](#camera_config_set_y_sensitivity)
+
+### Description
+Overrides camera Y sensitivity
+
+### Lua Example
+`camera_config_set_y_sensitivity(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_y_sensitivity(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_aggression](#camera_config_set_aggression)
+
+### Description
+Overrides camera aggression
+
+### Lua Example
+`camera_config_set_aggression(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_aggression(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_pan_level](#camera_config_set_pan_level)
+
+### Description
+Overrides camera pan level
+
+### Lua Example
+`camera_config_set_pan_level(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_pan_level(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_config_set_deceleration](#camera_config_set_deceleration)
+
+### Description
+Overrides camera deceleration
+
+### Lua Example
+`camera_config_set_deceleration(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_config_set_deceleration(u32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
+
+### Description
+Checks if the camera should account for surfaces
+
+### Lua Example
+`local booleanValue = camera_get_checking_surfaces()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool camera_get_checking_surfaces(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [camera_set_checking_surfaces](#camera_set_checking_surfaces)
+
+### Description
+Sets if the camera should account for surfaces
+
+### Lua Example
+`camera_set_checking_surfaces(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void camera_set_checking_surfaces(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [center_free_camera](#center_free_camera)
+
+### Description
+Centers the free camera.
+This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
+
+### Lua Example
+`center_free_camera()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void center_free_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_collision_utils.h
 
 <br />

@@ -30,6 +30,7 @@ Save file locations:
 - [Behavior Object Lists](guides/object-lists.md)
 - [Lighting Engine](guides/lighting-engine.md)
 - [ModFS](guides/modfs.md)
+- [Characters](guides/characters.md)
 
 ## Important notes on player indices
 

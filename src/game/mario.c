@@ -41,6 +41,8 @@
 #include "pc/configfile.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_anim_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 #include "pc/network/socket/socket.h"
 #include "bettercamera.h"
 #include "first_person_cam.h"
@@ -106,6 +108,32 @@ static s16 mario_set_animation_internal(struct MarioState *m, s32 targetAnimID, 
     return o->header.gfx.animInfo.animFrame;
 }
 
+static s16 mario_set_modded_animation_internal(struct MarioState *m, const char* moddedCharAnim, s32 accel) {
+    if (!m) { return 0; }
+    struct Object *o = m->marioObj;
+    if (!o || !m->animation) { return 0; }
+
+    const char* currentAnimName = smlua_anim_util_get_current_animation_name(o);
+    if (!currentAnimName || strcmp(currentAnimName, moddedCharAnim) != 0) {
+        smlua_anim_util_set_animation(o, moddedCharAnim);
+        struct Animation* curAnim = o->header.gfx.animInfo.curAnim;
+        if (curAnim == NULL) { return 0; }
+        if (curAnim->flags & ANIM_FLAG_2) {
+            o->header.gfx.animInfo.animFrameAccelAssist = (curAnim->startFrame << 0x10);
+        } else {
+            if (curAnim->flags & ANIM_FLAG_BACKWARD) {
+                o->header.gfx.animInfo.animFrameAccelAssist = (curAnim->startFrame << 0x10) + accel;
+            } else {
+                o->header.gfx.animInfo.animFrameAccelAssist = (curAnim->startFrame << 0x10) - accel;
+            }
+        }
+        o->header.gfx.animInfo.animFrame = (o->header.gfx.animInfo.animFrameAccelAssist >> 0x10);
+    }
+
+    o->header.gfx.animInfo.animAccel = accel;
+    return o->header.gfx.animInfo.animFrame;
+}
+
 /**
  * Sets Mario's animation without any acceleration, running at its default rate.
  */
@@ -125,7 +153,13 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
  * Sets the character specific animation without any acceleration, running at its default rate.
  */
 s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAnimID) {
-    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), 0x10000);
+    s32 charAnim = get_character_anim(m, targetAnimID);
+    const char* moddedCharAnim = get_modded_character_anim_string(m, targetAnimID);
+    if (moddedCharAnim) {
+        return mario_set_modded_animation_internal(m, moddedCharAnim, 0x10000);
+    } else {
+        return mario_set_animation_internal(m, charAnim, 0x10000);
+    }
 }
 
 /**
@@ -133,7 +167,13 @@ s16 set_character_animation(struct MarioState *m, enum CharacterAnimID targetAni
  * slowed down via acceleration.
  */
 s16 set_character_anim_with_accel(struct MarioState *m, enum CharacterAnimID targetAnimID, s32 accel) {
-    return mario_set_animation_internal(m, get_character_anim(m, targetAnimID), accel);
+    s32 charAnim = get_character_anim(m, targetAnimID);
+    const char* moddedCharAnim = get_modded_character_anim_string(m, targetAnimID);
+    if (moddedCharAnim) {
+        return mario_set_modded_animation_internal(m, moddedCharAnim, accel);
+    } else {
+        return mario_set_animation_internal(m, charAnim, accel);
+    }
 }
 
 /**
@@ -2296,13 +2336,12 @@ void init_single_mario(struct MarioState* m) {
         m->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
         m->wasNetworkVisible = false;
         gNetworkPlayers[playerIndex].fadeOpacity = 0;
+    } else {
+        u16 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
+        struct Character* character = get_allocated_character_from_index(modelIndex);
+        m->character = character;
+        obj_set_model_extended(m->marioObj, m->character->modelId);
     }
-
-    // set character model
-    u8 modelIndex = gNetworkPlayers[playerIndex].overrideModelIndex;
-    if (modelIndex >= CT_MAX) { modelIndex = 0; }
-    m->character = &gCharacters[modelIndex];
-    obj_set_model(m->marioObj, m->character->modelId);
 }
 
 void init_mario(void) {

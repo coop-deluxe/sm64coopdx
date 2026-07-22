@@ -1,6 +1,6 @@
 #include "djui.h"
 
-static void djui_checkbox_update_style(struct DjuiBase* base) {
+void djui_checkbox_update_style(struct DjuiBase* base) {
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)base;
     if (!checkbox) { return; }
     if (!checkbox->base.enabled) {

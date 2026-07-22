@@ -489,6 +489,7 @@ void* main_game_init(UNUSED void* dummy) {
         loading_screen_set_segment_text("Starting Game");
     );
 
+    reset_all_characters();
     audio_init();
     sound_init();
     network_player_init();

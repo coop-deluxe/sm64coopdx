@@ -199,6 +199,8 @@ void network_receive_join(struct Packet* p) {
 
     network_send_network_players_request();
     network_send_lua_sync_table_request();
+    network_request_all_characters();
+    network_send_character();
 
     gCurrentlyJoining = false;
     smlua_call_event_hooks(HOOK_JOINED_GAME);

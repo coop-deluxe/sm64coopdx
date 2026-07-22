@@ -416,7 +416,7 @@ void mario_blow_off_cap(struct MarioState *m, f32 capSpeed) {
 
     m->flags &= ~(MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
-    u8 capModel = m->character->capModelId;
+    u16 capModel = smlua_model_util_load(m->character->capModelId);
     struct Object *capObject = spawn_object(m->marioObj, capModel, bhvNormalCap);
     if (capObject == NULL) { return; }
     capObject->globalPlayerIndex = gNetworkPlayers[m->playerIndex].globalIndex;

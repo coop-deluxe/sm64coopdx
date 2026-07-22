@@ -96,10 +96,10 @@ void exclamation_box_act_3(void) {
 static s32 exclamation_replace_model(struct MarioState* m, s32 model) {
     if (!m) { return model; }
     switch (model) {
-        case MODEL_MARIOS_CAP:              return m->character->capModelId;
-        case MODEL_MARIOS_METAL_CAP:        return m->character->capMetalModelId;
-        case MODEL_MARIOS_WING_CAP:         return m->character->capWingModelId;
-        case MODEL_MARIOS_WINGED_METAL_CAP: return m->character->capMetalWingModelId;
+        case E_MODEL_MARIOS_CAP:              return m->character->capModelId;
+        case E_MODEL_MARIOS_METAL_CAP:        return m->character->capMetalModelId;
+        case E_MODEL_MARIOS_WING_CAP:         return m->character->capWingModelId;
+        case E_MODEL_MARIOS_WINGED_METAL_CAP: return m->character->capMetalWingModelId;
         default:                            return model;
     }
 }
@@ -116,7 +116,7 @@ void exclamation_box_spawn_contents(struct ExclamationBoxContent *content, u8 it
 
     for (u8 i = 0; i < gExclamationBoxSize; i++) {
         if (itemId == content->id) {
-            s32 model = exclamation_replace_model(marioState, smlua_model_util_load(content->model));
+            s32 model = smlua_model_util_load(exclamation_replace_model(marioState, content->model));
 
             spawnedObject = spawn_object(o, model, get_behavior_from_id(content->behavior));
             if (spawnedObject != NULL) {

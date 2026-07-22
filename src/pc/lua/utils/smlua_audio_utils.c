@@ -244,13 +244,13 @@ static struct ModAudio *find_mod_audio(const char *filepath) {
     return NULL;
 }
 
-struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
+struct ModAudio *audio_load_internal(struct Mod *mod, const char* filename, enum ModAudioType type) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
 
     // check file type
     bool validFileType = false;
     const char *fileTypes[] = { ".mp3", ".aiff", ".ogg", NULL };
-    const char** ft = fileTypes;
+    const char **ft = fileTypes;
     while (*ft != NULL) {
         if (path_ends_with(filename, *ft)) {
             validFileType = true;
@@ -273,10 +273,10 @@ struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
 
         // find mod file in mod list
         bool foundModFile = false;
-        struct ModFile *modFile = NULL;
-        u16 fileCount = gLuaActiveMod->fileCount;
+        struct ModFile* modFile = NULL;
+        u16 fileCount = mod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
-            struct ModFile *file = &gLuaActiveMod->files[i];
+            struct ModFile* file = &mod->files[i];
             if (path_ends_with(file->relativePath, normPath)) {
                 foundModFile = true;
                 modFile = file;
@@ -400,6 +400,14 @@ error:
         dynamic_pool_free(sModAudioPool, audio);
     }
     return NULL;
+}
+
+struct ModAudio *audio_load(const char *filename, OPTIONAL enum ModAudioType type) {
+    return audio_load_internal(gLuaActiveMod, filename, type);
+}
+
+struct ModAudio *audio_load_from_mod(struct Mod *mod, const char *filename, OPTIONAL enum ModAudioType type) {
+    return audio_load_internal(mod, filename, type);
 }
 
 void audio_stream_play(struct ModAudio *audio, bool restart, f32 volume) {

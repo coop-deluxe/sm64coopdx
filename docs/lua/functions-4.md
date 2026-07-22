@@ -6,6 +6,278 @@
 
 
 ---
+# functions from level_script.h
+
+<br />
+
+
+## [area_create_warp_node](#area_create_warp_node)
+
+### Description
+Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.
+To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)
+`checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
+
+### Lua Example
+`local objectWarpNodeValue = area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `integer` |
+| o | [Object](structs.md#Object) |
+
+### Returns
+- [ObjectWarpNode](structs.md#ObjectWarpNode)
+
+### C Prototype
+`struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from level_update.h
+
+<br />
+
+
+## [level_control_timer_running](#level_control_timer_running)
+
+### Description
+Returns if the level timer is running
+
+### Lua Example
+`local integerValue = level_control_timer_running()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 level_control_timer_running(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [pressed_pause](#pressed_pause)
+
+### Description
+Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
+
+### Lua Example
+`local booleanValue = pressed_pause()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool pressed_pause(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [fade_into_special_warp](#fade_into_special_warp)
+
+### Description
+Fades into a special warp with `arg` and using `color`
+
+### Lua Example
+`fade_into_special_warp(arg, color)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg | `integer` |
+| color | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void fade_into_special_warp(u32 arg, u32 color);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_instant_warp](#get_instant_warp)
+
+### Description
+Gets an instant warp from the current area's instant warp array (0-3)
+
+### Lua Example
+`local instantWarpValue = get_instant_warp(index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| index | `integer` |
+
+### Returns
+- [InstantWarp](structs.md#InstantWarp)
+
+### C Prototype
+`struct InstantWarp *get_instant_warp(u8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_painting_warp_node](#get_painting_warp_node)
+
+### Description
+Gets a painting warp node from the local mario's floor type
+
+### Lua Example
+`local warpNodeValue = get_painting_warp_node()`
+
+### Parameters
+- None
+
+### Returns
+- [WarpNode](structs.md#WarpNode)
+
+### C Prototype
+`struct WarpNode *get_painting_warp_node(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [initiate_painting_warp](#initiate_painting_warp)
+
+### Description
+Initiates a painting warp of `paintingIndex`
+
+### Lua Example
+`initiate_painting_warp(paintingIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| paintingIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void initiate_painting_warp(s16 paintingIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_trigger_warp](#level_trigger_warp)
+
+### Description
+Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
+
+### Lua Example
+`local integerValue = level_trigger_warp(m, warpOp)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](structs.md#MarioState) |
+| warpOp | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 level_trigger_warp(struct MarioState *m, s32 warpOp);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [warp_special](#warp_special)
+
+### Description
+Special warps to arg (`SPECIAL_WARP_*`)
+
+### Lua Example
+`warp_special(arg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| arg | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void warp_special(s32 arg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [initiate_warp](#initiate_warp)
+
+### Description
+Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+
+### Lua Example
+`initiate_warp(destLevel, destArea, destWarpNode, arg)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destWarpNode | `integer` |
+| arg | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void initiate_warp(s16 destLevel, s16 destArea, s16 destWarpNode, s32 arg);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [lvl_set_current_level](#lvl_set_current_level)
+
+### Description
+Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
+
+### Lua Example
+`local integerValue = lvl_set_current_level(param, levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| param | `integer` |
+| levelNum | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 lvl_set_current_level(s16 param, s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from lighting_engine.h
 
 <br />

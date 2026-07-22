@@ -35,7 +35,7 @@ u8 sPageIndex = 0;
 static u8 sPlayer = 0; // all player slots always exist this switches their visibility on and off if they're connected or not
 
 static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
-    u8 charIndex = np->overrideModelIndex;
+    struct MarioState* remoteMarioState = &gMarioStates[np->localIndex];
     char sActNum[7];
     if (np->currActNum != 99 && np->currActNum != 0) {
         snprintf(sActNum, 7, "# %d", np->currActNum);
@@ -44,8 +44,11 @@ static void playerlist_update_row(u8 i, struct NetworkPlayer *np) {
     } else {
         snprintf(sActNum, 7, "Done");
     }
-    if (charIndex >= CT_MAX) { charIndex = 0; }
-    djuiHeadIconImages[i]->textureInfo.texture = gCharacters[charIndex].hudHeadTexture.texture;
+    if (remoteMarioState && remoteMarioState->character && remoteMarioState->character->hudHeadTexture.texture) {
+        djuiHeadIconImages[i]->textureInfo.texture = remoteMarioState->character->hudHeadTexture.texture;
+    } else {
+        djuiHeadIconImages[i]->textureInfo.texture = gOriginalCharacters[CT_MARIO].hudHeadTexture.texture;
+    }
 
     s16 pingValue = np->ping / 150;
     switch (pingValue) {

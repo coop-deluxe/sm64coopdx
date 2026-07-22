@@ -4,9 +4,16 @@
 #include <PR/ultratypes.h>
 #include "pc/configfile.h"
 #include "mario_animation_ids.h"
+#include "pc/lua/smlua_autogen.h"
 // NOTE: do not include any additional headers
 
+#define MAX_CHARACTERS 256
+#define MAX_CHARACTER_NAME_LEN 128
+#define MAX_CHARACTER_AUDIOS_PER_SOUND 8
+#define MAX_CHARACTER_GFX_NAME_LEN 512
+
 enum CharacterType {
+    CT_UNALLOCATED = -1,
     CT_MARIO,
     CT_LUIGI,
     CT_TOAD,
@@ -14,7 +21,7 @@ enum CharacterType {
     CT_WARIO,
 
     // must be last
-    CT_MAX
+    CT_COUNT
 };
 
 enum CharacterSound {
@@ -67,18 +74,16 @@ enum CharacterSound {
 
 struct Character {
     enum CharacterType type;
-    char* name;
-    char hudHead;
+    char name[MAX_CHARACTER_NAME_LEN];
     struct TextureInfo hudHeadTexture;
-    u32 cameraHudHead;
     u32 modelId;
     u32 capModelId;
     u32 capMetalModelId;
     u32 capWingModelId;
     u32 capMetalWingModelId;
     u8 capEnemyLayer;
-    Gfx* capEnemyGfx;
-    Gfx* capEnemyDecalGfx;
+    char capEnemyGfx[MAX_CHARACTER_GFX_NAME_LEN];
+    char capEnemyDecalGfx[MAX_CHARACTER_GFX_NAME_LEN];
     f32 torsoRotMult;
     // anim
     u8 animOffsetEnabled;
@@ -301,6 +306,7 @@ struct Character {
         };
         C_ARRAY s32 anims[CHAR_ANIM_MAX];
     };
+    s16 moddedAnims[CHAR_ANIM_MAX];
 
     // sounds
     f32 soundFreqScale;
@@ -353,10 +359,30 @@ struct Character {
         };
         C_ARRAY s32 sounds[CHAR_SOUND_MAX];
     };
+    s16 modAudioSounds[CHAR_SOUND_MAX][MAX_CHARACTER_AUDIOS_PER_SOUND];
+    s16 modIndexForAudio[CHAR_SOUND_MAX][MAX_CHARACTER_AUDIOS_PER_SOUND];
 };
 
 struct MarioState;
+extern struct Character gTemplateCharacter;
 extern struct Character gCharacters[];
+extern struct Character gOriginalCharacters[];
+
+/* |description|Gets the first allocated index.|descriptionEnd| */
+int character_get_first_allocated_index();
+
+/* |description|Gets the first unallocated index.|descriptionEnd| */
+int character_get_first_unallocated_index();
+
+/* |description|Gets the first allocated character.|descriptionEnd| */
+struct Character* character_get_first_allocated();
+
+/* |description|Gets the first unallocated character.|descriptionEnd| */
+struct Character* character_get_first_unallocated();
+
+/* |description|Gets an allocated Character struct from an index. If the index provided is not allocated, it will return the first allocated character instead.|descriptionEnd| */
+struct Character* get_allocated_character_from_index(int i);
+
 /* |description|Gets a Character struct from `m`|descriptionEnd| */
 struct Character* get_character(struct MarioState* m);
 
@@ -391,8 +417,64 @@ Useful for determining which animation to play for actions like walking, jumping
 s32 get_character_anim(struct MarioState* m, enum CharacterAnimID characterAnim);
 
 /* |description|
+Gets the current name of the animation used if the animation is modded.
+|descriptionEnd| */
+const char* get_modded_character_anim_string(struct MarioState* m, enum CharacterAnimID characterAnim);
+
+/* |description|
 Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural.
 Useful for keeping Mario's animations visually aligned, particularly when transitioning between animations
 |descriptionEnd| */
 void update_character_anim_offset(struct MarioState* m);
+
+/* |description|
+Allocates a character named `name` to the `gCharacters` struct, and provides back the `Character` and `characterIndex`.
+|descriptionEnd| */
+struct Character* character_allocate(const char* name, RET int *characterIndex);
+
+/* |description|
+Deallocates your `character` from the `gCharacters` struct.
+|descriptionEnd| */
+void character_deallocate(struct Character* character);
+
+/* |description|Set Character name for `character`|descriptionEnd| */
+void character_set_name(struct Character* character, const char* name);
+
+/* |description|
+Set Character's cap enemy gfx for `character`. This is rendered on enemies that steal your caps
+|descriptionEnd| */
+void character_set_cap_enemy_gfx_name(struct Character* character, const char* gfxName);
+/* |description|
+Set Character's cap enemy decal gfx for `character`. This is rendered on enemies that steal your caps
+|descriptionEnd| */
+void character_set_cap_enemy_decal_gfx_name(struct Character* character, const char* gfxName);
+
+/* |description|
+Set hud head texture for `character`. This is the texture that appears for the playerlist, life, and mario cam icon
+|descriptionEnd| */
+void character_set_hud_head_texture(struct Character* character, struct TextureInfo* texInfo);
+
+/* |description|
+Adds a `audioName` for `characterSound` on `character`. You can add multiple sound files to the same `characterSound`
+When you have multiple sounds, it picks between them at random.
+|descriptionEnd| */
+void character_add_sound(struct Character* character, enum CharacterSound characterSound, const char* audioName);
+
+/* |description|
+Removes all sounds for `characterSound` on `character`.
+Every sound file will get removed from the character.
+|descriptionEnd| */
+void character_remove_sounds(struct Character* character, enum CharacterSound characterSound);
+
+/* |description|
+Sets animation for `animID` using a registered smlua animation.
+You can register an smlua animation by using `smlua_anim_util_register_animation`.
+The animation string you used to register the animation is the `animString` to be passed.
+|descriptionEnd| */
+void character_set_animation(struct Character* character, enum CharacterAnimID animID, const char* animString);
+
+/* |description|Removes the animation for `animId` on `character`|descriptionEnd| */
+void character_remove_animation(struct Character* character, enum CharacterAnimID animID);
+
+void reset_all_characters();
 #endif // CHARACTERS_H

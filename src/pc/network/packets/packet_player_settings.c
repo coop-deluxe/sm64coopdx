@@ -12,7 +12,7 @@ void network_send_player_settings(void) {
     packet_init(&p, PACKET_PLAYER_SETTINGS, true, PLMT_NONE);
     packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
     packet_write(&p, playerName, MAX_CONFIG_STRING * sizeof(u8));
-    packet_write(&p, &configPlayerModel, sizeof(u8));
+    packet_write(&p, &configPlayerModel, sizeof(u32));
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
 
     if (gNetworkPlayerLocal != NULL) {
@@ -27,12 +27,12 @@ void network_send_player_settings(void) {
 void network_receive_player_settings(struct Packet* p) {
     u8 globalId;
     char playerName[MAX_CONFIG_STRING] = { 0 };
-    u8 playerModel;
+    u32 playerModel;
     struct PlayerPalette playerPalette;
 
     packet_read(p, &globalId, sizeof(u8));
     packet_read(p, &playerName, MAX_CONFIG_STRING * sizeof(u8));
-    packet_read(p, &playerModel, sizeof(u8));
+    packet_read(p, &playerModel, sizeof(u32));
     packet_read(p, &playerPalette, sizeof(struct PlayerPalette));
 
     if (globalId == gNetworkPlayers[0].globalIndex || globalId > MAX_PLAYERS) {
@@ -47,7 +47,8 @@ void network_receive_player_settings(struct Packet* p) {
     }
 
     // sanity check
-    if (playerModel >= CT_MAX) { playerModel = CT_MARIO; }
+    if (playerModel >= MAX_CHARACTERS) { playerModel = MAX_CHARACTERS - 1; }
+    if (gCharacters[playerModel].type == CT_UNALLOCATED) { playerModel = character_get_first_allocated_index(); }
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     if (!np) { LOG_ERROR("Failed to retrieve network player."); return; }

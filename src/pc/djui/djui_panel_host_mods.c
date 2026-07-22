@@ -15,15 +15,16 @@
 #include "pc/thread.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
+#define MAX_CATEGORY_STRINGS 4
 
 struct ModCategory {
     const char* langKey;
-    const char* category;
+    const char* category[MAX_CATEGORY_STRINGS];
 };
 
 struct ModCategory sCategories[] = {
 #define MOD_CATEGORY_DEF(key) { #key, NULL },
-#define MOD_CATEGORY(key, category) { #key, category },
+#define MOD_CATEGORY(key, ...) { #key, { __VA_ARGS__ } },
 #include "mod_categories.inl"
 #undef MOD_CATEGORY_DEF
 #undef MOD_CATEGORY
@@ -31,7 +32,7 @@ struct ModCategory sCategories[] = {
 
 enum ModCategories {
 #define MOD_CATEGORY_DEF(key) MOD_CATEGORY_ ## key,
-#define MOD_CATEGORY(key, category)
+#define MOD_CATEGORY(key, ...)
 #include "mod_categories.inl"
 #undef MOD_CATEGORY_DEF
 #undef MOD_CATEGORY
@@ -141,6 +142,15 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     sTooltip = NULL;
 }
 
+static bool mods_category_is_in_list(const char *category, const char **categoryList) {
+    for (int i = 0; i < MAX_CATEGORY_STRINGS; i++) {
+        if (categoryList[i] && strcasecmp(category, categoryList[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool should_add_mod_to_list(struct Mod* mod, const char* category) {
     switch (sSelectedCategory) {
         case MOD_CATEGORY_ALL: { return true; }
@@ -148,7 +158,7 @@ bool should_add_mod_to_list(struct Mod* mod, const char* category) {
         case MOD_CATEGORY_MISC: {
             if (category) {
                 for (int i = MOD_CATEGORY_START; i < MOD_CATEGORY_COUNT; i++) {
-                    if (strstr(category, sCategories[i].category)) {
+                    if (mods_category_is_in_list(category, sCategories[i].category)) {
                         return false;
                     }
                 }
@@ -156,7 +166,7 @@ bool should_add_mod_to_list(struct Mod* mod, const char* category) {
             return true;
         }
         default: {
-            return category && strstr(category, sCategories[sSelectedCategory].category);
+            return category && mods_category_is_in_list(category, sCategories[sSelectedCategory].category);
         }
     }
 }
@@ -166,9 +176,6 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     for (int i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         char* category = mod->category != NULL ? mod->category : mod->incompatible;
-        if (category != NULL) {
-            category = !strcmp(category, "cs") ? "character" : category;
-        }
 
         if (!should_add_mod_to_list(mod, category)) { continue; }
 

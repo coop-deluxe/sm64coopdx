@@ -71,6 +71,14 @@ struct Animation *get_mario_vanilla_animation(u16 index);
 
 void smlua_anim_util_reset();
 void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength);
+/* |description|Check if an animation with a name exists|descriptionEnd| */
+bool smlua_anim_util_animation_exists(const char* name);
+/* |description|Check if an animation with a index exists|descriptionEnd| */
+bool smlua_anim_util_animation_exists_using_index(int index);
+/* |description|Gets the animation index from the animation name|descriptionEnd| */
+int smlua_anim_util_get_index_from_name(const char* name);
+/* |description|Gets the animation name from the animation index|descriptionEnd| */
+const char* smlua_anim_util_get_name_from_index(int index);
 /* |description|Sets the animation of `obj` to the animation `name` corresponds to|descriptionEnd| */
 void smlua_anim_util_set_animation(struct Object *obj, const char *name);
 /* |description|Gets the name of the current animation playing on `obj`, returns `nil` if there's no name|descriptionEnd| */
