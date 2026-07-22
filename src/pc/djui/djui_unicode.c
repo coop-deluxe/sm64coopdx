@@ -211,7 +211,8 @@ static s32 count_bytes_for_char(const char* text) {
         bytes++;
         mask >>= 1;
     }
-    return bytes ? bytes : 1;
+    s32 result = bytes ? bytes : 1;
+    return result > 4 ? 4 : result;
 }
 
 static u64 convert_unicode_char_to_u64(const char* text) {

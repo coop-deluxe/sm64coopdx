@@ -11,7 +11,7 @@
 
 #include "pc/platform.h"
 #include "pc/fs/fs.h"
-#include "pc/lua/utils/smlua_audio_utils.h"
+#include "data/dynos.c.h"
 #include "pc/lua/smlua_hooks.h"
 
 #define ALIGN16(val) (((val) + 0xF) & ~0xF)
@@ -1588,7 +1588,7 @@ void load_sequence_internal(u32 player, u32 seqId, s32 loadAsync) {
     // do custom music override
     {
         s32 bankId = 0;
-        if (smlua_audio_utils_override(seqId, &bankId, &sequenceData)) {
+        if (dynos_audio_override(seqId, &bankId, &sequenceData)) {
             sequence_player_disable(seqPlayer);
             seqPlayer->defaultBank[0] = bankId;
 

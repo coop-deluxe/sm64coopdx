@@ -12043,16 +12043,47 @@ int smlua_func_djui_hud_set_viewport(lua_State* L) {
         return 0;
     }
 
-    f32 x = smlua_to_number(L, 1);
+    f32 ulx = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_viewport"); return 0; }
-    f32 y = smlua_to_number(L, 2);
+    f32 uly = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_viewport"); return 0; }
-    f32 width = smlua_to_number(L, 3);
+    f32 lrx = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_viewport"); return 0; }
-    f32 height = smlua_to_number(L, 4);
+    f32 lry = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_viewport"); return 0; }
 
-    djui_hud_set_viewport(x, y, width, height);
+    djui_hud_set_viewport(ulx, uly, lrx, lry);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_viewport_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_viewport_interpolated", 8, top);
+        return 0;
+    }
+
+    f32 pulx = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 puly = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 plrx = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 plry = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 ulx = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 uly = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 lrx = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_set_viewport_interpolated"); return 0; }
+    f32 lry = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_set_viewport_interpolated"); return 0; }
+
+    djui_hud_set_viewport_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry);
 
     return 1;
 }
@@ -12080,16 +12111,47 @@ int smlua_func_djui_hud_set_scissor(lua_State* L) {
         return 0;
     }
 
-    f32 x = smlua_to_number(L, 1);
+    f32 ulx = smlua_to_number(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_scissor"); return 0; }
-    f32 y = smlua_to_number(L, 2);
+    f32 uly = smlua_to_number(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_scissor"); return 0; }
-    f32 width = smlua_to_number(L, 3);
+    f32 lrx = smlua_to_number(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_scissor"); return 0; }
-    f32 height = smlua_to_number(L, 4);
+    f32 lry = smlua_to_number(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_scissor"); return 0; }
 
-    djui_hud_set_scissor(x, y, width, height);
+    djui_hud_set_scissor(ulx, uly, lrx, lry);
+
+    return 1;
+}
+
+int smlua_func_djui_hud_set_scissor_interpolated(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_set_scissor_interpolated", 8, top);
+        return 0;
+    }
+
+    f32 pulx = smlua_to_number(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 puly = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 plrx = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 plry = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 ulx = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 uly = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 lrx = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_set_scissor_interpolated"); return 0; }
+    f32 lry = smlua_to_number(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_set_scissor_interpolated"); return 0; }
+
+    djui_hud_set_scissor_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry);
 
     return 1;
 }
@@ -36639,8 +36701,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_hud_get_mouse_scroll_x", smlua_func_djui_hud_get_mouse_scroll_x);
     smlua_bind_function(L, "djui_hud_get_mouse_scroll_y", smlua_func_djui_hud_get_mouse_scroll_y);
     smlua_bind_function(L, "djui_hud_set_viewport", smlua_func_djui_hud_set_viewport);
+    smlua_bind_function(L, "djui_hud_set_viewport_interpolated", smlua_func_djui_hud_set_viewport_interpolated);
     smlua_bind_function(L, "djui_hud_reset_viewport", smlua_func_djui_hud_reset_viewport);
     smlua_bind_function(L, "djui_hud_set_scissor", smlua_func_djui_hud_set_scissor);
+    smlua_bind_function(L, "djui_hud_set_scissor_interpolated", smlua_func_djui_hud_set_scissor_interpolated);
     smlua_bind_function(L, "djui_hud_reset_scissor", smlua_func_djui_hud_reset_scissor);
     smlua_bind_function(L, "djui_hud_measure_text", smlua_func_djui_hud_measure_text);
     smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
