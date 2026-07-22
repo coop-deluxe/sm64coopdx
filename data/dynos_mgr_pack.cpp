@@ -60,7 +60,7 @@ static void ScanPackBins(struct PackData* aPack) {
             String _SeqName = _PackEnt->d_name;
             _SeqName[length - 4] = '\0';
             std::string seqName = _SeqName.begin();
-            std::regex re(".*_(\\d+)_(\\d+)_(\\d+)$");
+            std::regex re(".*\\.(\\d+)\\.(\\d+)\\.(\\d+)$");
             std::smatch match;
             bool success = false;
             if (std::regex_match(seqName, match, re) && match.size() == 4) {
@@ -80,7 +80,7 @@ static void ScanPackBins(struct PackData* aPack) {
             }
             if (!success) {
                 PrintError(
-                    "Invalid sequence override filename (expected format: <name>_<sequenceId>_<bankId>_<defaultVolume>.m64): '%s.m64'",
+                    "Invalid sequence override filename (expected format: <name>.<sequenceId>.<bankId>.<defaultVolume>.m64): '%s.m64'",
                     _SeqName.begin()
                 );
             }
