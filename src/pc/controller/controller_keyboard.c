@@ -8,7 +8,7 @@
 #include "../configfile.h"
 #include "controller_keyboard.h"
 
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
 #include "menu/file_select.h"

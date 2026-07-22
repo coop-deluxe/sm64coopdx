@@ -10,7 +10,7 @@
 #include "configfile.h"
 #include "cliopts.h"
 #include "gfx/gfx_screen_config.h"
-#include "gfx/gfx_window_manager_api.h"
+#include "gfx/gfx_window_manager.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
 #include "mods/mods.h"
@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-enum GraphicsBackend configGraphicsBackend        = GAPI_GL;
+enum GfxWindowBackend configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -813,7 +813,7 @@ NEXT_OPTION:
 
     fs_close(file);
 
-    if (configGraphicsBackend < GAPI_GL || configGraphicsBackend > GAPI_MAX) { configGraphicsBackend = GAPI_GL; }
+    if (configGraphicsBackend < GFX_WINDOW_BACKEND_OPENGL || configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }

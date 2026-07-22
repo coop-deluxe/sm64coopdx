@@ -35,6 +35,12 @@ bool dynos_pack_get_exists(s32 index);
 void dynos_generate_mod_pack(char* modPath);
 void dynos_generate_packs(const char* directory);
 
+// -- audio -- //
+void dynos_audio_reset_mods();
+bool dynos_audio_override(u8 sequenceId, s32* bankId, void** seqData);
+void dynos_audio_create_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath);
+u8 dynos_audio_alloc_sequence(void);
+
 // -- geos -- //
 void dynos_actor_override(struct Object* obj, void** aSharedChild);
 bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName);

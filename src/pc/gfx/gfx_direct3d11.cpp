@@ -21,17 +21,16 @@
 #include "pc/configfile.h"
 
 #include "gfx_cc.h"
-#include "gfx_window_manager_api.h"
+#include "gfx_window_manager.h"
 #include "gfx_rendering_api.h"
 #include "gfx_direct3d_common.h"
 
 extern "C" {
-    #include "pc/controller/controller_bind_mapping.h"
     extern Color gVertexColor;
 }
 
 #define DECLARE_GFX_DXGI_FUNCTIONS
-#include "gfx_dxgi.h"
+#include "gfx_window_dxgi.h"
 
 #include "gfx_screen_config.h"
 
@@ -162,7 +161,7 @@ static void create_render_target_views(bool is_resize) {
 
         ThrowIfFailed(d3d.swap_chain->GetDesc1(&desc1));
         ThrowIfFailed(d3d.swap_chain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, desc1.Flags),
-                      gfx_dxgi_get_h_wnd(), "Failed to resize IDXGISwapChain buffers.");
+                      gfx_window_dxgi_get_h_wnd(), "Failed to resize IDXGISwapChain buffers.");
     }
 
     // Get new size
@@ -173,10 +172,10 @@ static void create_render_target_views(bool is_resize) {
 
     ComPtr<ID3D11Texture2D> backbuffer_texture;
     ThrowIfFailed(d3d.swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *) backbuffer_texture.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to get backbuffer from IDXGISwapChain.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to get backbuffer from IDXGISwapChain.");
 
     ThrowIfFailed(d3d.device->CreateRenderTargetView(backbuffer_texture.Get(), nullptr, d3d.backbuffer_view.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create render target view.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to create render target view.");
 
     // Create depth buffer
 
@@ -209,7 +208,7 @@ static void gfx_d3d11_init(void) {
     // Load d3d11.dll
     d3d.d3d11_module = LoadLibraryW(L"d3d11.dll");
     if (d3d.d3d11_module == nullptr) {
-        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(), "d3d11.dll could not be loaded");
+        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_window_dxgi_get_h_wnd(), "d3d11.dll could not be loaded");
     }
     d3d.D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(d3d.d3d11_module, "D3D11CreateDevice");
 
@@ -218,14 +217,14 @@ static void gfx_d3d11_init(void) {
     if (d3d.d3dcompiler_module == nullptr) {
         d3d.d3dcompiler_module = LoadLibraryW(L"D3DCompiler_43.dll");
         if (d3d.d3dcompiler_module == nullptr) {
-            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_dxgi_get_h_wnd(), "D3DCompiler_47.dll or D3DCompiler_43.dll could not be loaded");
+            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()), gfx_window_dxgi_get_h_wnd(), "D3DCompiler_47.dll or D3DCompiler_43.dll could not be loaded");
         }
     }
     d3d.D3DCompile = (pD3DCompile)GetProcAddress(d3d.d3dcompiler_module, "D3DCompile");
 
     // Create D3D11 device
 
-    gfx_dxgi_create_factory_and_device(DEBUG_D3D, 11, [](IDXGIAdapter1 *adapter, bool test_only) {
+    gfx_window_dxgi_create_factory_and_device(DEBUG_D3D, 11, [](IDXGIAdapter1 *adapter, bool test_only) {
 #if DEBUG_D3D
         UINT device_creation_flags = D3D11_CREATE_DEVICE_DEBUG;
 #else
@@ -255,7 +254,7 @@ static void gfx_d3d11_init(void) {
         if (test_only) {
             return SUCCEEDED(res);
         } else {
-            ThrowIfFailed(res, gfx_dxgi_get_h_wnd(), "Failed to create D3D11 device.");
+            ThrowIfFailed(res, gfx_window_dxgi_get_h_wnd(), "Failed to create D3D11 device.");
             return true;
         }
     });
@@ -266,13 +265,13 @@ static void gfx_d3d11_init(void) {
     d3d.sample_description.Quality = 0;
 
     // Create the swap chain
-    d3d.swap_chain = gfx_dxgi_create_swap_chain(d3d.device.Get());
+    d3d.swap_chain = gfx_window_dxgi_create_swap_chain(d3d.device.Get());
 
     // Create D3D Debug device if in debug mode
 
 #if DEBUG_D3D
     ThrowIfFailed(d3d.device->QueryInterface(__uuidof(ID3D11Debug), (void **) d3d.debug.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to get ID3D11Debug device.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to get ID3D11Debug device.");
 #endif
 
     // Create views
@@ -291,7 +290,7 @@ static void gfx_d3d11_init(void) {
     vertex_buffer_desc.MiscFlags = 0;
 
     ThrowIfFailed(d3d.device->CreateBuffer(&vertex_buffer_desc, nullptr, d3d.vertex_buffer.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create vertex buffer.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to create vertex buffer.");
 
     // Create per-frame constant buffer
 
@@ -305,7 +304,7 @@ static void gfx_d3d11_init(void) {
     constant_buffer_desc.MiscFlags = 0;
 
     ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_frame_cb.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create per-frame constant buffer.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to create per-frame constant buffer.");
 
     d3d.context->PSSetConstantBuffers(0, 1, d3d.per_frame_cb.GetAddressOf());
 
@@ -318,7 +317,7 @@ static void gfx_d3d11_init(void) {
     constant_buffer_desc.MiscFlags = 0;
 
     ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.per_draw_cb.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create per-draw constant buffer.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to create per-draw constant buffer.");
 
     d3d.context->PSSetConstantBuffers(1, 1, d3d.per_draw_cb.GetAddressOf());
 
@@ -331,11 +330,9 @@ static void gfx_d3d11_init(void) {
     constant_buffer_desc.MiscFlags = 0;
 
     ThrowIfFailed(d3d.device->CreateBuffer(&constant_buffer_desc, nullptr, d3d.lightmap_cb.GetAddressOf()),
-                  gfx_dxgi_get_h_wnd(), "Failed to create lightmap constant buffer.");
+                  gfx_window_dxgi_get_h_wnd(), "Failed to create lightmap constant buffer.");
 
     d3d.context->PSSetConstantBuffers(2, 1, d3d.lightmap_cb.GetAddressOf());
-
-    controller_bind_init();
 }
 
 
@@ -371,14 +368,14 @@ static struct ShaderProgram *gfx_d3d11_create_and_load_new_shader(struct ColorCo
     HRESULT hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "VSMain", "vs_4_0", compile_flags, 0, vs.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
-        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
+        MessageBox(gfx_window_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
         throw hr;
     }
 
     hr = d3d.D3DCompile(buf, len, nullptr, nullptr, nullptr, "PSMain", "ps_4_0", compile_flags, 0, ps.GetAddressOf(), error_blob.GetAddressOf());
 
     if (FAILED(hr)) {
-        MessageBox(gfx_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
+        MessageBox(gfx_window_dxgi_get_h_wnd(), (char *) error_blob->GetBufferPointer(), "Error", MB_OK | MB_ICONERROR);
         throw hr;
     }
 
