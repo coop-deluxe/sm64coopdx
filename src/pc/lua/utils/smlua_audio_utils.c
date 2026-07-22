@@ -13,120 +13,10 @@
 #include "pc/pc_main.h"
 #include "pc/fs/fmem.h"
 #include "audio/load.h"
-
-struct AudioOverride {
-    bool enabled;
-    bool loaded;
-    const char *filename;
-    u64 length;
-    u8 bank;
-    u8* buffer;
-};
-
-struct AudioOverride sAudioOverrides[MAX_AUDIO_OVERRIDE] = { 0 };
-
-static void smlua_audio_utils_reset(struct AudioOverride *override) {
-    if (override == NULL) { return; }
-
-    override->enabled = false;
-    override->loaded = false;
-
-    if (override->filename) {
-        free((char*)override->filename);
-        override->filename = NULL;
-    }
-
-    override->length = 0;
-    override->bank = 0;
-
-    if (override->buffer != NULL) {
-        free((u8*)override->buffer);
-        override->buffer = NULL;
-    }
-}
+#include "data/dynos.c.h"
 
 void smlua_audio_utils_reset_all(void) {
-    audio_init();
-    for (s32 i = 0; i < MAX_AUDIO_OVERRIDE; i++) {
-#ifdef VERSION_EU
-        if (sAudioOverrides[i].enabled) {
-            if (i >= SEQ_EVENT_CUTSCENE_LAKITU) {
-                sBackgroundMusicDefaultVolume[i] = 75;
-                return;
-            }
-            sBackgroundMusicDefaultVolume[i] = sBackgroundMusicDefaultVolumeDefault[i];
-        }
-#else
-        if (sAudioOverrides[i].enabled) { sound_reset_background_music_default_volume(i); }
-#endif
-        smlua_audio_utils_reset(&sAudioOverrides[i]);
-    }
-}
-
-bool smlua_audio_utils_override(u8 sequenceId, s32* bankId, void** seqData) {
-    if (sequenceId >= MAX_AUDIO_OVERRIDE) { return false; }
-    struct AudioOverride *override = &sAudioOverrides[sequenceId];
-    if (!override->enabled) { return false; }
-
-    if (gOverrideBank > -1) { override->bank = gOverrideBank; }
-
-    if (override->loaded) {
-        *seqData = override->buffer;
-        *bankId = override->bank;
-        return true;
-    }
-
-    u8* buffer = NULL;
-    u32 length = 0;
-
-    if (is_mod_fs_file(override->filename)) {
-        if (!mod_fs_read_file_from_uri(override->filename, (void **) &buffer, &length)) {
-            return false;
-        }
-    } else {
-        FILE *fp = f_open_r(override->filename);
-        if (!fp) { return false; }
-        f_seek(fp, 0L, SEEK_END);
-        length = f_tell(fp);
-
-        buffer = malloc(length+1);
-        if (buffer == NULL) {
-            LOG_ERROR("Failed to malloc m64 sound file");
-            f_close(fp);
-            f_delete(fp);
-            return false;
-        }
-
-        f_seek(fp, 0L, SEEK_SET);
-        f_read(buffer, length, 1, fp);
-
-        f_close(fp);
-        f_delete(fp);
-    }
-
-    if (!buffer || !length) {
-        return false;
-    }
-
-    // cache
-    override->loaded = true;
-    override->buffer = buffer;
-    override->length = length;
-
-    *seqData = buffer;
-    *bankId = override->bank;
-    return true;
-}
-
-static void smlua_audio_utils_create_audio_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath) {
-    struct AudioOverride *override = &sAudioOverrides[sequenceId];
-    if (override->enabled) { audio_init(); }
-    smlua_audio_utils_reset(override);
-    LOG_INFO("Loading audio: %s", filepath);
-    override->filename = strdup(filepath);
-    override->enabled = true;
-    override->bank = bankId;
-    sound_set_background_music_default_volume(sequenceId, defaultVolume);
+    dynos_audio_reset_mods();
 }
 
 void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *m64Name) {
@@ -142,7 +32,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
     }
 
     if (is_mod_fs_file(m64Name)) {
-        smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, m64Name);
+        dynos_audio_create_override(sequenceId, bankId, defaultVolume, m64Name);
         return;
     }
 
@@ -159,7 +49,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         snprintf(relPath, SYS_MAX_PATH-1, "%s", file->relativePath);
         normalize_path(relPath);
         if (path_ends_with(relPath, m64path)) {
-            smlua_audio_utils_create_audio_override(sequenceId, bankId, defaultVolume, file->cachedPath);
+            dynos_audio_create_override(sequenceId, bankId, defaultVolume, file->cachedPath);
             return;
         }
     }
@@ -168,13 +58,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
 }
 
 u8 smlua_audio_utils_allocate_sequence(void) {
-    for (u8 seqId = SEQ_COUNT + 1; seqId < MAX_AUDIO_OVERRIDE; seqId++) {
-        if (!sAudioOverrides[seqId].enabled) {
-            return seqId;
-        }
-    }
-    LOG_ERROR("Cannot allocate more custom sequences.");
-    return MAX_AUDIO_OVERRIDE;
+    return dynos_audio_alloc_sequence();
 }
 
   ///////////////
