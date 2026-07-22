@@ -2,8 +2,8 @@
 -- hooks --
 -----------
 
---- @param behaviorId? BehaviorId|integer|nil The behavior id of the object to modify. Pass in as `nil` to create a custom object
---- @param objectList ObjectList|integer|nil Object list. Pass in as `nil` to use the vanilla object list or the already assigned object list in case of multiple hooks
+--- @param behaviorId BehaviorId | integer | nil The behavior id of the object to modify. Pass in as `nil` to create a custom object
+--- @param objectList ObjectList | integer | nil Object list. Pass in as `nil` to use the vanilla object list or the already assigned object list in case of multiple hooks
 --- @param replaceBehavior boolean Whether or not to completely replace the behavior (ignored for non-vanilla behaviors, which are always replaced)
 --- @param initFunction? fun(obj:Object) Run on object creation
 --- @param loopFunction? fun(obj:Object) Run every frame
@@ -31,7 +31,7 @@ end
 
 --- @param command string The command to run. Should be easy to type
 --- @param description string Should describe what the command does and how to use it
---- @param func fun(msg:string):boolean Run upon activating the command. Return `true` to confirm the command has succeeded
+--- @param func fun(msg:string): boolean Run upon activating the command. Return `true` to confirm the command has succeeded
 --- Allows Lua mods to react and respond to chat commands.
 ---
 --- - To execute a chat command, type `/` followed by the command name.
@@ -70,7 +70,7 @@ function update_chat_command_description(command, description)
 end
 
 --- @param hookEventType LuaHookedEventType When a function should run
---- @param func fun(...:any):any?,any? The function to run
+--- @param func fun(...: any): any?, any? The function to run
 --- Assigns a callback function to a game hook [event](hook-events.md#Hook-Event-Types). This function will be automatically called by the game when this kind of event occurs.
 ---
 --- ### Lua Example
@@ -91,7 +91,7 @@ end
 --- @field gravity fun(m:MarioState):integer?
 
 --- @param actionId integer The action to replace
---- @param funcOrFuncTable fun(m:MarioState):integer|table Action function or table with entries for action hooks
+--- @param funcOrFuncTable fun(m:MarioState):integer? | ActionTable Action function or table with entries for action hooks
 --- @param interactionType? InteractionFlag Optional; The flag that determines how the action interacts with other objects
 --- Allows Lua mods to create new actions or override existing ones.
 --- If a function table is used, it must be in the form of `{ action_hook = [func], ... }`.
@@ -165,7 +165,7 @@ end
 --- @param syncTable SyncTable Must be the gGlobalSyncTable or gPlayerSyncTable[] or one of their child tables
 --- @param field string Field name
 --- @param tag any An additional parameter
---- @param func fun(tag:any,oldVal:any,newVal:any) Run when the specified field has been changed
+--- @param func fun(tag:any, oldVal:any, newVal:any) Run when the specified field has been changed
 --- Allows Lua mods to react to sync table changes.
 --- - `syncTable` parameter must be a sync table, e.g. [gGlobalSyncTable](../globals.md#gGlobalSyncTable), [gPlayerSyncTable[]](../globals.md#gPlayerSyncTable), or one of their child tables.
 --- - `field` parameter must be one of the fields in the `SyncTable`.
@@ -236,7 +236,7 @@ end
 
 --- @param name string The text to show on the left
 --- @param defaultValue boolean The default state of the checkbox
---- @param func fun(index:integer,value:boolean) The function that is called when the checkbox is changed
+--- @param func fun(index:integer, value:boolean) The function that is called when the checkbox is changed
 --- @return integer
 --- Allows Lua to add checkboxes to their designated mod menu submenu.
 --- 
@@ -268,7 +268,7 @@ end
 --- @param defaultValue integer The default value of the slider
 --- @param min integer The lowest the slider can go
 --- @param max integer The highest the slider can go
---- @param func fun(index:integer,value:integer) The function that is called when the value of the slider changes
+--- @param func fun(index:integer, value:integer) The function that is called when the value of the slider changes
 --- @return integer
 --- Allows Lua to add sliders to their designated mod menu submenu.
 --- 
@@ -290,7 +290,7 @@ end
 --- @param name string The text to show on the left
 --- @param defaultValue string The default text in the inputbox
 --- @param stringLength integer The max length of the inputbox
---- @param func fun(index:integer,value:string) The function that is called when the value of the inputbox changes
+--- @param func fun(index:integer, value:string) The function that is called when the value of the inputbox changes
 --- @return integer
 --- Allows Lua to add textboxes to their designated mod menu submenu.
 --- 

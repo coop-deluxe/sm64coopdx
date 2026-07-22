@@ -2,7 +2,7 @@
 -- manually written functions --
 --------------------------------
 
---- @param objFieldTable table<any,"u32"|"s32"|"f32"|table> Table of object field names and types
+--- @param objFieldTable table<any, "u32"|"s32"|"f32"|table> Table of object field names and types
 --- Defines a custom set of overlapping object fields.
 --- 
 --- - The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
@@ -55,7 +55,7 @@ function network_send_object(object, reliable)
 end
 
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
---- @param dataTable table<string,number|boolean|string|nil> Table of values to be included in the packet
+--- @param dataTable table<string, number|boolean|string|nil> Table of values to be included in the packet
 --- Sends a global Lua packet with the values of `dataTable`. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
 ---
 --- - `dataTable` can only contain strings, integers, numbers, booleans, and nil.
@@ -172,8 +172,8 @@ end
 --- @field behavior BehaviorId
 --- @field behaviorArg integer
 
---- @param levelNum LevelNum|integer The level number (ex: `LEVEL_BOB`)
---- @param func fun(areaIndex:number,bhvData:BehaviorData,macroBhvIds:BehaviorId[],macroBhvArgs:integer[]) Function to process parsed data
+--- @param levelNum LevelNum | integer The level number (ex: `LEVEL_BOB`)
+--- @param func fun(areaIndex:number, bhvData:BehaviorData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[]) Function to process parsed data
 --- Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
 --- When `func` is called, arguments are filled depending on the level command:
 --- - `AREA` command: only `areaIndex` is filled. It's a number
@@ -293,8 +293,8 @@ function get_exclamation_box_contents()
     -- ...
 end
 
---- @param node GraphNode|FnGraphNode A graph node
---- @return GraphNode|GraphNodeAnimatedPart|GraphNodeBackground|GraphNodeBillboard|GraphNodeCamera|GraphNodeCullingRadius|GraphNodeDisplayList|GraphNodeGenerated|GraphNodeHeldObject|GraphNodeLevelOfDetail|GraphNodeMasterList|GraphNodeObject|GraphNodeObjectParent|GraphNodeOrthoProjection|GraphNodePerspective|GraphNodeRotation|GraphNodeScale|GraphNodeShadow|GraphNodeStart|GraphNodeSwitchCase|GraphNodeTranslation|GraphNodeTranslationRotation|GraphNodeBone
+--- @param node GraphNode | FnGraphNode A graph node
+--- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation | GraphNodeBone
 --- Returns the specific GraphNode(...) the node is part of.
 --- Basically the reverse of `.node` or `.fnNode`.
 --- 
@@ -323,7 +323,7 @@ end
 
 --- @param gfx Gfx A display list
 --- @param command string A display list command
---- @vararg integer|string|Gfx|Texture|Vtx parameters
+--- @vararg integer | string | Gfx | Texture | Vtx parameters
 --- Sets a display list command on the display list given.
 ---
 --- If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.

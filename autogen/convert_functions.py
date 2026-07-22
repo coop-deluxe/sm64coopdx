@@ -658,6 +658,66 @@ def output_fuzz_file():
 
 ############################################################################
 
+manual_function_types = {
+    'boolean':  '`bool`',
+    'integer':  '`integer`',
+    'number':   '`number`',
+    'string':   '`string`',
+    'table':    '`table`',
+    'function': '`function`',
+    'fun':      '`function`',
+    'nil':      '`nil`',
+    'any':      '`any`',
+}
+
+def read_single_type(buffer: str):
+    ptype = ''
+    depth = 0
+    for i, c in enumerate(buffer):
+        if c in '<(':
+            depth += 1
+        elif c in '>)':
+            depth = max(depth - 1, 0)
+        elif depth == 0:
+            if c.isalnum() or c in '_[]':
+                ptype += c
+            else:
+                return ptype, buffer[i:]
+    return ptype, ''
+
+def read_type_and_description(line: str):
+    ptype = ''
+    pdesc = ''
+    is_param = True
+    is_function_return = False
+
+    while line:
+        stype, line = read_single_type(line)
+        if stype:
+            if is_function_return:
+                is_function_return = False
+                continue
+            if is_param:
+                ptype += stype
+                is_param = False
+            else:
+                pdesc = stype + line
+                break
+        elif line[0] == ':':
+            is_function_return = True
+            line = line[1:]
+        elif line[0] == ',':
+            is_function_return = True
+            line = line[1:]
+        elif line[0] == '|':
+            ptype += '|'
+            is_param = True
+            line = line[1:]
+        else:
+            line = line[1:]
+
+    return ptype.strip(), pdesc.strip()
+
 def get_empty_function_definition():
     return {
         'identifier': '',
@@ -671,36 +731,55 @@ def read_manually_written_functions(in_filename):
     with open(in_filename, 'r', encoding='utf-8', newline='\n') as f:
         lines = f.readlines()
 
+    classes = []
     functions = []
     function = get_empty_function_definition()
     text_type = None
     for line in lines:
+
+        # Custom table
+        if line.startswith('--- @class'):
+            tokens = [token for token in line.split() if token]
+            classes.append(tokens[2])
+
+        # Parameter
         if line.startswith('--- @param'):
             tokens = [token for token in line.split() if token]
+            ptype, pdesc = read_type_and_description(' '.join(tokens[3:]))
             function['params'].append({
                 'name': tokens[2].strip('?'),
-                'type': tokens[3],
-                'desc': ' '.join(tokens[4:]),
+                'type': ptype,
+                'desc': pdesc,
                 'is_vararg': False,
             })
             text_type = 'description'
+
+        # Vararg parameter
         elif line.startswith('--- @vararg'):
             tokens = [token for token in line.split() if token]
+            ptype, pdesc = read_type_and_description(' '.join(tokens[2:]))
+            ptokens = pdesc.split() or ['']
             function['params'].append({
-                'name': tokens[3].strip('?'),
-                'type': tokens[2],
-                'desc': ' '.join(tokens[4:]),
+                'name': ptokens[0],
+                'type': ptype,
+                'desc': " ".join(ptokens[1:]),
                 'is_vararg': True,
             })
             text_type = 'description'
+
+        # Return value
         elif line.startswith('--- @return'):
             tokens = [token for token in line.split() if token]
+            rtype, rdesc = read_type_and_description(' '.join(tokens[2:]))
+            rtokens = rdesc.split() or ['']
             function['returns'].append({
-                'name': tokens[3].strip('?') if len(tokens) > 3 else '',
-                'type': tokens[2],
-                'desc': ' '.join(tokens[4:]),
+                'name': rtokens[0],
+                'type': rtype,
+                'desc': " ".join(rtokens[1:]),
             })
             text_type = 'description'
+
+        # End of function doc
         elif line.startswith('function '):
             tokens = [token for token in line.replace('(', ' ').split() if token]
             function['identifier'] = tokens[1]
@@ -709,16 +788,22 @@ def read_manually_written_functions(in_filename):
             functions.append(function)
             function = get_empty_function_definition()
             text_type = None
+
+        # Lua example in doc
         elif line.startswith('--- ### Lua Example'):
             text_type = 'lua_example'
+
+        # Doc
         elif line.startswith('---') and text_type:
             line_desc = line[4:].rstrip()
             function[text_type].append(line_desc)
+
+        # Anything else
         else:
             function = get_empty_function_definition()
             text_type = None
 
-    return functions
+    return functions, classes
 
 enums_file = ''
 def function_type_is_enum(ptype):
@@ -729,8 +814,7 @@ def function_type_is_enum(ptype):
 
     return '@alias {ptype}\n'.format(ptype=ptype) in enums_file
 
-def get_manual_function_type(ptype: str, docs_dir):
-    ptype = ptype[:max(ptype.find('<'), 0)] + ptype[ptype.find('>')+1:]
+def get_manual_function_type(ptype: str, classes, docs_dir):
     types = ptype.split('|')
     converted_types = []
     for t in types:
@@ -738,22 +822,10 @@ def get_manual_function_type(ptype: str, docs_dir):
         if t.endswith('[]'):
             type_str += '`table` of '
             t = t[:-2]
-        if t.startswith('table'):
-            type_str += '`table`'
-        elif t.startswith('function') or t.startswith('fun('):
-            type_str += '`function`'
-        elif t == 'boolean':
-            type_str += '`bool`'
-        elif t == 'integer':
-            type_str += '`integer`'
-        elif t == 'number':
-            type_str += '`number`'
-        elif t == 'string':
-            type_str += '`string`'
-        elif t == 'nil':
-            type_str += '`nil`'
-        elif t == 'any':
-            type_str += '`any`'
+        if t in manual_function_types:
+            type_str += manual_function_types[t]
+        elif t in classes:
+            type_str += manual_function_types['table']
         elif t == 'SyncTable':
             type_str += '[SyncTable]({docs_dir}/globals.md#gGlobalSyncTable)'.format(docs_dir=docs_dir)
         elif function_type_is_enum(t):
@@ -764,7 +836,7 @@ def get_manual_function_type(ptype: str, docs_dir):
 
     return ' \\| '.join(converted_types)
 
-def doc_manual_function(function, docs_dir, include_param_desc):
+def doc_manual_function(function, classes, docs_dir, include_param_desc):
     fid = function['identifier']
     s = '\n## [%s](#%s)\n' % (fid, fid)
 
@@ -789,9 +861,9 @@ def doc_manual_function(function, docs_dir, include_param_desc):
             ptype = param['type']
             is_vararg = param['is_vararg']
             if include_param_desc:
-                s += '| %s%s | %s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, docs_dir), param.get('desc', ''))
+                s += '| %s%s | %s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, classes, docs_dir), param.get('desc', ''))
             else:
-                s += '| %s%s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, docs_dir))
+                s += '| %s%s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, classes, docs_dir))
     else:
         s += '- None\n'
 
@@ -801,9 +873,9 @@ def doc_manual_function(function, docs_dir, include_param_desc):
             rname = ret['name']
             rtype = ret['type']
             if rname:
-                s += '- %s: %s\n' % (rname, get_manual_function_type(rtype, docs_dir))
+                s += '- %s: %s\n' % (rname, get_manual_function_type(rtype, classes, docs_dir))
             else:
-                s += '- %s\n' % get_manual_function_type(rtype, docs_dir)
+                s += '- %s\n' % get_manual_function_type(rtype, classes, docs_dir)
     else:
         s += '- None\n'
 
@@ -981,11 +1053,11 @@ def doc_files(processed_files):
     s += '---\n\n$[FUNCTION_NAV_HERE]\n\n---\n\n'
     s += '$[FUNCTION_INDEX_HERE]'
 
-    manual_functions = read_manually_written_functions(get_path(manually_written_functions_filename))
+    manual_functions, classes = read_manually_written_functions(get_path(manually_written_functions_filename))
     if manual_functions:
         s += '\n---\n# manually written functions\n'
         for function in manual_functions:
-            s += doc_manual_function(function, ".", False)
+            s += doc_manual_function(function, classes, ".", False)
 
     for processed_file in processed_files:
         s_file  = '\n---'
@@ -1119,7 +1191,7 @@ def def_files(processed_files):
 ############################################################################
 
 def doc_hooks(in_filename, out_filename):
-    hooks = read_manually_written_functions(in_filename)
+    hooks, classes = read_manually_written_functions(in_filename)
 
     s  = '## [:rewind: Lua Reference](../lua.md)\n\n'
     s += '# Hooks\n'
@@ -1131,7 +1203,7 @@ def doc_hooks(in_filename, out_filename):
             s += '- [{identifier}](#{identifier})\n'.format(identifier=hook['identifier'])
         s += '\n<br />\n'
         for hook in hooks:
-            s += doc_manual_function(hook, "..", True)
+            s += doc_manual_function(hook, classes, "..", True)
 
     with open(out_filename, 'w', encoding='utf-8', newline='\n') as out:
         out.write(s)
