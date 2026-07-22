@@ -113,6 +113,12 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_text_set_font(gDjuiModReload, gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED]);
         djui_text_set_text(gDjuiModReload, DLANG(MISC, L_BUTTON));
     }
+
+    if (gDjuiChatBox) {
+        struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+        struct DjuiColor* textColor = &theme->interactables.textColor;
+        djui_inputbox_set_text_color(gDjuiChatBox->chatInput, textColor->r, textColor->g, textColor->b, textColor->a);
+    }
     gDjuiChangingTheme = false;
 
     smlua_call_event_hooks(HOOK_ON_DJUI_THEME_CHANGED);

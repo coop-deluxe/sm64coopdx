@@ -30,7 +30,7 @@ struct ObjectHitbox sSnufitBulletHitbox = {
 };
 
 /**
- * This geo function shifts snufit's mask when it shrinks down, 
+ * This geo function shifts snufit's mask when it shrinks down,
  * since the parts move independently.
  */
 Gfx *geo_snufit_move_mask(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c) {
@@ -79,7 +79,7 @@ void snufit_act_idle(void) {
     // if the game would not have already crashed.
     marioDist = (s32)(distanceToPlayer / 10.0f);
     if (o->oTimer > marioDist && distanceToPlayer < 800.0f) {
-        
+
         // Controls an alternating scaling factor in a cos.
         o->oSnufitBodyScalePeriod
             = approach_s16_symmetric(o->oSnufitBodyScalePeriod, 0, 1500);
@@ -109,7 +109,7 @@ void snufit_act_shoot(void) {
     } else if (o->oSnufitBullets < 3 && o->oTimer >= 3) {
         if (sync_object_is_owned_locally(o->oSyncID)) {
             o->oSnufitBullets += 1;
-            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNUFIT_SHOOT);
             struct Object* bullet = spawn_object_relative(0, 0, -20, 40, o, MODEL_BOWLING_BALL, bhvSnufitBalls);
             o->oSnufitRecoil = -30;
             o->oTimer = 0;
@@ -120,7 +120,7 @@ void snufit_act_shoot(void) {
                 network_send_spawn_objects(spawn_objects, models, 1);
             }
         } else {
-            cur_obj_play_sound_2(SOUND_OBJ_SNUFIT_SHOOT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNUFIT_SHOOT);
             o->oSnufitRecoil = -30;
             o->oTimer = 0;
         }
@@ -154,7 +154,7 @@ void bhv_snufit_loop(void) {
     // Only update if Mario is in the current room.
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
-        
+
         // Face Mario if he is within range.
         if (distanceToPlayer < 800.0f) {
             if (marioState) {
@@ -232,7 +232,7 @@ void bhv_snufit_balls_loop(void) {
             o->oGravity = -4.0f;
 
             cur_obj_become_intangible();
-        } else if (o->oAction == 1 
+        } else if (o->oAction == 1
                || (o->oMoveFlags & (OBJ_MOVE_MASK_ON_GROUND | OBJ_MOVE_HIT_WALL))) {
             // The Snufit shot Mario and has fulfilled its lonely existance.
             //! The above check could theoretically be avoided by finding a geometric

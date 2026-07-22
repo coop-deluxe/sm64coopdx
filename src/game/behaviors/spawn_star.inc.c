@@ -78,7 +78,7 @@ void bhv_collect_star_loop(void) {
     o->oFaceAngleYaw += 0x800;
 
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        mark_obj_for_deletion(o);
+        obj_mark_for_deletion(o);
         o->oInteractStatus = 0;
     }
     spawn_star_number();
@@ -91,7 +91,7 @@ void bhv_star_spawn_init(void) {
     o->oForwardVel = o->oStarSpawnDisFromHome / 30.0f;
     o->oStarSpawnUnkFC = o->oPosY;
 
-    if (o->oStarSpawnExtCutsceneFlags) {
+    if (o->oStarSpawnExtCutsceneFlags && ((gMarioStates[0].action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE)) {
         if (o->oBehParams2ndByte == 0 || gCurrCourseNum == COURSE_BBH)
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
         else
@@ -126,7 +126,7 @@ void bhv_star_spawn_loop(void) {
             o->oPosY = o->oStarSpawnUnkFC + sins((o->oTimer * 0x8000) / 30) * 400.0f;
             o->oFaceAngleYaw += 0x1000;
             spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
-            cur_obj_play_sound_1(SOUND_ENV_STAR);
+            cur_obj_play_sound_if_visible(SOUND_ENV_STAR);
             if (o->oTimer == 30) {
                 o->oAction = 2;
                 o->oForwardVel = 0;
@@ -143,10 +143,10 @@ void bhv_star_spawn_loop(void) {
             spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
             obj_move_xyz_using_fvel_and_yaw(o);
             o->oFaceAngleYaw = o->oFaceAngleYaw - o->oTimer * 0x10 + 0x1000;
-            cur_obj_play_sound_1(SOUND_ENV_STAR);
+            cur_obj_play_sound_if_visible(SOUND_ENV_STAR);
 
             if (o->oPosY < o->oHomeY) {
-                cur_obj_play_sound_2(SOUND_GENERAL_STAR_APPEARS);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_STAR_APPEARS);
                 cur_obj_become_tangible();
                 o->oPosY = o->oHomeY;
                 o->oAction = 3;
@@ -165,7 +165,7 @@ void bhv_star_spawn_loop(void) {
             }
 
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-                mark_obj_for_deletion(o);
+                obj_mark_for_deletion(o);
                 o->oInteractStatus = 0;
             }
 

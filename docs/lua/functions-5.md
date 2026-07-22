@@ -2295,21 +2295,22 @@ Saves a `key` corresponding to a bool `value` to mod storage
 ## [mod_storage_load](#mod_storage_load)
 
 ### Description
-Loads a string `value` from a `key` in mod storage
+Loads a string `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `nil`
 
 ### Lua Example
-`local stringValue = mod_storage_load(key)`
+`local stringValue = mod_storage_load(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `string` |
 
 ### Returns
 - `string`
 
 ### C Prototype
-`const char *mod_storage_load(const char* key);`
+`const char *mod_storage_load(const char* key, OPTIONAL const char* defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2318,21 +2319,22 @@ Loads a string `value` from a `key` in mod storage
 ## [mod_storage_load_integer](#mod_storage_load_integer)
 
 ### Description
-Loads an integer `value` from a `key` in mod storage
+Loads an integer `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
 
 ### Lua Example
-`local integerValue = mod_storage_load_integer(key)`
+`local integerValue = mod_storage_load_integer(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`lua_Integer mod_storage_load_integer(const char* key);`
+`lua_Integer mod_storage_load_integer(const char* key, OPTIONAL lua_Integer defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2341,21 +2343,22 @@ Loads an integer `value` from a `key` in mod storage
 ## [mod_storage_load_number](#mod_storage_load_number)
 
 ### Description
-Loads a number `value` from a `key` in mod storage
+Loads a number `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
 
 ### Lua Example
-`local numberValue = mod_storage_load_number(key)`
+`local numberValue = mod_storage_load_number(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `number` |
 
 ### Returns
 - `number`
 
 ### C Prototype
-`lua_Number mod_storage_load_number(const char* key);`
+`lua_Number mod_storage_load_number(const char* key, OPTIONAL lua_Number defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2364,21 +2367,22 @@ Loads a number `value` from a `key` in mod storage
 ## [mod_storage_load_bool](#mod_storage_load_bool)
 
 ### Description
-Loads a bool `value` from a `key` in mod storage
+Loads a bool `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `false`
 
 ### Lua Example
-`local booleanValue = mod_storage_load_bool(key)`
+`local booleanValue = mod_storage_load_bool(key, defaultValue)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | key | `string` |
+| defaultValue | `boolean` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool mod_storage_load_bool(const char* key);`
+`bool mod_storage_load_bool(const char* key, OPTIONAL bool defaultValue);`
 
 [:arrow_up_small:](#)
 
@@ -2905,33 +2909,10 @@ Marks Yoshi as alive
 
 <br />
 
-## [absf_2](#absf_2)
-
-### Description
-An absolute value (always positive) function.
-
-### Lua Example
-`local numberValue = absf_2(f)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| f | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 absf_2(f32 f);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [obj_find_wall](#obj_find_wall)
 
 ### Description
-Finds any wall collisions, applies them, and turns away from the surface.
+Finds any wall collisions, applies them, and turns away from the surface
 
 ### Lua Example
 `local integerValue = obj_find_wall(objNewX, objY, objNewZ, objVelX, objVelZ)`
@@ -2958,7 +2939,7 @@ Finds any wall collisions, applies them, and turns away from the surface.
 ## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
 
 ### Description
-Turns an object away from steep floors, similarly to walls.
+Turns an object away from steep floors, similarly to walls
 
 ### Lua Example
 `local integerValue = turn_obj_away_from_steep_floor(objFloor, floorY, objVelX, objVelZ)`
@@ -2984,7 +2965,7 @@ Turns an object away from steep floors, similarly to walls.
 ## [obj_orient_graph](#obj_orient_graph)
 
 ### Description
-Orients an object with the given normals, typically the surface under the object.
+Orients an object with the given normals, typically the surface under the object
 
 ### Lua Example
 `obj_orient_graph(obj, normalX, normalY, normalZ)`
@@ -3010,7 +2991,7 @@ Orients an object with the given normals, typically the surface under the object
 ## [calc_obj_friction](#calc_obj_friction)
 
 ### Description
-Determines an object's forward speed multiplier.
+Determines an object's forward speed multiplier
 
 ### Lua Example
 `local objFriction = calc_obj_friction(floor_nY)`
@@ -3033,7 +3014,7 @@ Determines an object's forward speed multiplier.
 ## [calc_new_obj_vel_and_pos_y](#calc_new_obj_vel_and_pos_y)
 
 ### Description
-Updates an objects speed for gravity and updates Y position.
+Updates an objects speed for gravity and updates Y position
 
 ### Lua Example
 `calc_new_obj_vel_and_pos_y(objFloor, objFloorY, objVelX, objVelZ)`
@@ -3086,7 +3067,7 @@ Adjusts the current object's veloicty and y position for being underwater
 ## [obj_update_pos_vel_xz](#obj_update_pos_vel_xz)
 
 ### Description
-Updates an objects position from oForwardVel and oMoveAngleYaw.
+Updates an objects position from forward velocity and move angle yaw
 
 ### Lua Example
 `obj_update_pos_vel_xz()`
@@ -3175,8 +3156,7 @@ Used for boulders, falling pillars, and the rolling snowman body
 ## [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
 
 ### Description
-Don't use this function outside of of a context where the current object and `obj` are the same.
-Moves `obj` based on a seemingly random mix of using either the current obj or `obj`'s fields
+Updates the object `obj` horizontal velocity using its forward velocity and move angle yaw, then moves it
 
 ### Lua Example
 `obj_move_xyz_using_fvel_and_yaw(obj)`
@@ -3199,7 +3179,7 @@ Moves `obj` based on a seemingly random mix of using either the current obj or `
 ## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
 
 ### Description
-Checks if a point is within distance from any active Mario visible to enemies' graphical position
+Checks if a point is within distance from any active Mario visible to objects' graphical position
 
 ### Lua Example
 `local integerValue = is_point_within_radius_of_mario(x, y, z, dist)`
@@ -3612,7 +3592,7 @@ of a given angle, within a certain range
 ## [obj_find_wall_displacement](#obj_find_wall_displacement)
 
 ### Description
-Finds any wall collisions and returns what the displacement vector would be.
+Finds any wall collisions and returns what the displacement vector would be
 
 ### Lua Example
 `local integerValue = obj_find_wall_displacement(dist, x, y, z, radius)`
@@ -3757,7 +3737,7 @@ audio, and eventually despawning it. Returns TRUE when the obj is dead
 ## [spawn_orange_number](#spawn_orange_number)
 
 ### Description
-Spawns an orange number object relatively, such as those that count up for secrets.
+Spawns an orange number object relatively, such as those that count up for secrets
 
 ### Lua Example
 `spawn_orange_number(behParam, relX, relY, relZ)`
@@ -4311,6 +4291,9 @@ Approaches a `target` value with the current object's facing roll using `delta`
 
 ## [obj_smooth_turn](#obj_smooth_turn)
 
+### Description
+Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `angle` reaches `targetAngle`
+
 ### Lua Example
 `local integerValue, angleVel, angle = obj_smooth_turn(angleVel, angle, targetAngle, targetSpeedProportion, accel, minSpeed, maxSpeed)`
 
@@ -4465,6 +4448,9 @@ Return -1 once it's reached endScale
 
 ## [oscillate_toward](#oscillate_toward)
 
+### Description
+Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`
+
 ### Lua Example
 `local integerValue, value, vel = oscillate_toward(value, vel, target, velCloseToZero, accel, slowdown)`
 
@@ -4491,6 +4477,9 @@ Return -1 once it's reached endScale
 <br />
 
 ## [obj_update_blinking](#obj_update_blinking)
+
+### Description
+Update the current object's blinking through `oAnimState`
 
 ### Lua Example
 `local blinkTimer = obj_update_blinking(blinkTimer, baseCycleLength, cycleLengthRange, blinkLength)`
@@ -4669,6 +4658,9 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 
 ## [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
 
+### Description
+Checks if the object is above lava and has non-positive health. Kills the object if true and returns `TRUE` if above lava
+
 ### Lua Example
 `local integerValue = obj_die_if_above_lava_and_health_non_positive()`
 
@@ -4686,6 +4678,9 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 <br />
 
 ## [obj_handle_attacks](#obj_handle_attacks)
+
+### Description
+Sets the object's hitbox, handles attack interactions by calling appropriate attack handlers, and returns the attack type or 0
 
 ### Lua Example
 `local integerValue = obj_handle_attacks(hitbox, attackedMarioAction, attackHandlers)`
@@ -4709,6 +4704,9 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 
 ## [obj_act_knockback](#obj_act_knockback)
 
+### Description
+Handles the knockback action by updating floor/walls, extending animation, checking lava, and moving the object
+
 ### Lua Example
 `obj_act_knockback(baseScale)`
 
@@ -4729,6 +4727,9 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 
 ## [obj_act_squished](#obj_act_squished)
 
+### Description
+Handles the squished action by scaling the object vertically and horizontally while checking if it's time to die
+
 ### Lua Example
 `obj_act_squished(baseScale)`
 
@@ -4748,6 +4749,9 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 <br />
 
 ## [obj_update_standard_actions](#obj_update_standard_actions)
+
+### Description
+Updates standard object actions like knockback and squished. Returns TRUE if action is less than 100, `FALSE` otherwise
 
 ### Lua Example
 `local integerValue = obj_update_standard_actions(scale)`
@@ -4839,6 +4843,9 @@ Treats far home as Mario. Returns the distance and angle to the nearest player
 <br />
 
 ## [obj_spit_fire](#obj_spit_fire)
+
+### Description
+Spawns a small piranha flame object with the given parameters. Used by Bowser, Fly Guy, Piranha Plant, and Fire Spitters
 
 ### Lua Example
 `local objectValue = obj_spit_fire(relativePosX, relativePosY, relativePosZ, scale, model, startSpeed, endSpeed, movePitch)`

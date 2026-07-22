@@ -50,7 +50,7 @@ void bhv_temp_coin_loop(void) {
 
 void bhv_coin_init(void) {
     rng_position_init(o->oPosX, o->oPosY, o->oPosZ);
-    o->oVelY = random_float() * 10.0f + 30 + o->oCoinUnk110;
+    o->oVelY = random_float() * 10.0f + 30 + o->oCoinBaseYVel;
     o->oForwardVel = random_float() * 10.0f;
     o->oMoveAngleYaw = random_u16();
     rng_position_finish();
@@ -78,11 +78,11 @@ void bhv_coin_loop(void) {
     }
     if (o->oTimer == 0)
 #if defined(VERSION_US)
-        cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_2);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT_2);
 #elif defined(VERSION_EU) || defined(VERSION_SH)
-        cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_EU);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT_EU);
 #else
-        cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT);
 #endif
     if (o->oVelY < 0)
         cur_obj_become_tangible();
@@ -97,12 +97,12 @@ void bhv_coin_loop(void) {
 #ifndef VERSION_JP
     if (o->oMoveFlags & OBJ_MOVE_BOUNCE) {
         if (o->oCoinUnk1B0 < 5)
-            cur_obj_play_sound_2(SOUND_GENERAL_COIN_DROP);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_DROP);
         o->oCoinUnk1B0++;
     }
 #else
     if (o->oMoveFlags & OBJ_MOVE_BOUNCE)
-        cur_obj_play_sound_2(SOUND_GENERAL_COIN_DROP);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_DROP);
 #endif
     if (cur_obj_wait_then_blink(400, 20))
         obj_mark_for_deletion(o);
@@ -212,7 +212,7 @@ void coin_inside_boo_act_1(void) {
     cur_obj_update_floor_and_walls();
     cur_obj_if_hit_wall_bounce_away();
     if (o->oMoveFlags & OBJ_MOVE_BOUNCE)
-        cur_obj_play_sound_2(SOUND_GENERAL_COIN_DROP);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_DROP);
     if (o->oTimer > 90 || (o->oMoveFlags & OBJ_MOVE_LANDED)) {
         obj_set_hitbox(o, &sYellowCoinHitbox);
         cur_obj_become_tangible();
@@ -228,15 +228,15 @@ void coin_inside_boo_act_1(void) {
 
 void coin_inside_boo_act_0(void) {
     struct Object *parent = o->parentObj;
-    
+
     cur_obj_become_intangible();
-    
+
     if (parent == NULL || (parent->behavior != smlua_override_behavior(bhvMerryGoRoundBoo) && parent->behavior != smlua_override_behavior(bhvGhostHuntBoo) && parent->behavior != smlua_override_behavior(bhvBoo))) {
         o->parentObj = NULL;
         obj_mark_for_deletion(o);
         return;
     }
-    
+
     if (o->oTimer == 0 && gCurrLevelNum == LEVEL_BBH) {
         cur_obj_set_model(smlua_model_util_load(E_MODEL_BLUE_COIN));
         cur_obj_scale(0.7);

@@ -1,6 +1,7 @@
 #include "smlua_camera_utils.h"
 #include "game/bettercamera.h"
 #include "game/object_list_processor.h"
+#include "game/level_update.h"
 
 struct CameraOverride {
     u32 value;
@@ -261,4 +262,9 @@ bool camera_get_checking_surfaces(void) {
 
 void camera_set_checking_surfaces(bool value) {
     gCheckingSurfaceCollisionsForCamera = value;
+}
+
+void center_free_camera(void) {
+    gNewCamera.yawTarget = -gMarioState->statusForCamera->faceAngle[1] - 0x4000;
+    gNewCamera.centering = true;
 }

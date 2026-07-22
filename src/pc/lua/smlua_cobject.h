@@ -2,6 +2,7 @@
 #define SMLUA_COBJECT_H
 
 #include "lua.h"
+#include "behavior_table.h" // for enum BehaviorId
 
 enum LuaValueType {
     LVT_BOOL,
@@ -50,6 +51,7 @@ struct LuaObjectField {
             u16 lot;
             u16 count;
             u32 size;
+            bool cArray; // if true, array starts at index 0
         };
         const char* function;
         struct {
@@ -79,17 +81,25 @@ typedef struct {
     void *info;
 } CPointer;
 
+struct Mod;
+
 extern int gSmLuaCObjects;
 extern int gSmLuaCPointers;
 extern int gSmLuaCObjectMetatable;
 extern int gSmLuaCPointerMetatable;
+
+extern s32 gNumCustomObjectFields;
 
 bool smlua_valid_lot(u16 lot);
 bool smlua_valid_lvt(u16 lvt);
 const char *smlua_get_lvt_name(u16 lvt);
 struct LuaObjectField* smlua_get_object_field_from_ot(struct LuaObjectTable* ot, const char* key);
 struct LuaObjectField* smlua_get_object_field(u16 lot, const char* key);
-struct LuaObjectField* smlua_get_custom_field(lua_State* L, u32 lot, int keyIndex);
+struct LuaObjectField* smlua_get_custom_field(struct Object *o, const char *key, struct Mod *mod);
+void smlua_init_object_custom_fields(struct Object *o);
+void smlua_init_custom_fields();
+void smlua_index_custom_fields();
+void smlua_clear_custom_fields();
 void smlua_cobject_init_globals(void);
 void smlua_cobject_init_per_file_globals(const char* path);
 void smlua_bind_cobject(void);

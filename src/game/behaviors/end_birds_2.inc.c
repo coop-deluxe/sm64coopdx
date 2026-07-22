@@ -23,7 +23,7 @@ void bhv_end_birds_2_loop(void) {
             obj_rotate_towards_point(gCurrentObject, sp3C, 0, 0, 8, 8);
 
             if ((gCurrentObject->oEndBirdUnk104 == 0.f) && (gCurrentObject->oTimer == 0))
-                cur_obj_play_sound_2(SOUND_GENERAL_BIRDS_FLY_AWAY);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BIRDS_FLY_AWAY);
             break;
     }
 

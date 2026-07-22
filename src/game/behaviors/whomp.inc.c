@@ -11,7 +11,7 @@ void whomp_play_sfx_from_pound_animation(void) {
         sp28 |= cur_obj_check_anim_frame_in_range(23, 3);
     }
     if (sp28)
-        cur_obj_play_sound_2(SOUND_OBJ_POUNDING1);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_POUNDING1);
 }
 
 u8 whomp_act_0_continue_dialog(void) { return o->oAction == 0; }
@@ -139,7 +139,7 @@ void whomp_act_4(void) {
 
 void whomp_act_5(void) {
     if (o->oSubAction == 0 && o->oMoveFlags & OBJ_MOVE_LANDED) {
-        cur_obj_play_sound_2(SOUND_OBJ_WHOMP_LOWPRIO);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WHOMP_LOWPRIO);
         cur_obj_shake_screen(SHAKE_POS_SMALL);
         o->oVelY = 0.0f;
         o->oSubAction++;
@@ -155,8 +155,8 @@ void king_whomp_on_ground(void) {
     if (o->oSubAction == 0) {
         if (cur_obj_is_mario_ground_pounding_platform()) {
             o->oHealth--;
-            cur_obj_play_sound_2(SOUND_OBJ2_WHOMP_SOUND_SHORT);
-            cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_WHOMP_SOUND_SHORT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KING_WHOMP_DEATH);
             if (o->oHealth == 0)
                 o->oAction = 8;
             else {
@@ -249,7 +249,7 @@ void whomp_act_8(void) {
             f32* starPos = gLevelValues.starPositions.KingWhompStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
-            cur_obj_play_sound_2(SOUND_OBJ_KING_WHOMP_DEATH);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_KING_WHOMP_DEATH);
             o->oAction = 9;
             network_send_object(o);
         }

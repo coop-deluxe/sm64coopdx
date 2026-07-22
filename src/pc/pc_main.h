@@ -10,8 +10,8 @@ extern "C" {
 #include "gfx/gfx_opengl.h"
 #include "gfx/gfx_direct3d11.h"
 
-#include "gfx/gfx_dxgi.h"
-#include "gfx/gfx_sdl.h"
+#include "gfx/gfx_window_opengl.h"
+#include "gfx/gfx_window_dxgi.h"
 #include "gfx/gfx_dummy.h"
 
 #include "audio/audio_api.h"
@@ -27,7 +27,6 @@ extern "C" {
 #define AT_STARTUP __attribute__((constructor))
 
 extern struct AudioAPI* gAudioApi;
-extern struct GfxWindowManagerAPI* gWindowApi;
 extern struct GfxRenderingAPI* gRenderApi;
 
 extern bool gGameInited;
@@ -40,7 +39,6 @@ extern u8 gLuaVolumeLevel;
 extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
-extern struct GfxWindowManagerAPI* wm_api;
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
 void game_deinit(void);
 void game_exit(void);

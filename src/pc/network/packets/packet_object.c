@@ -68,10 +68,14 @@ static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* beh
     struct Object* o = so->o;
 
     // bhvPenguinBaby can be set to bhvSmallPenguin
-    bool oBehaviorPenguin = (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvPenguinBaby)) || o->behavior == segmented_to_virtual(smlua_override_behavior(bhvSmallPenguin)));
-    bool inBehaviorPenguin = (behavior == segmented_to_virtual(smlua_override_behavior(bhvPenguinBaby)) || behavior == segmented_to_virtual(smlua_override_behavior(bhvSmallPenguin)));
-    bool allow = (oBehaviorPenguin && inBehaviorPenguin);
+    bool oBehaviorPenguin = (o->behavior == smlua_override_behavior(bhvPenguinBaby) || o->behavior == smlua_override_behavior(bhvSmallPenguin));
+    bool inBehaviorPenguin = (behavior == smlua_override_behavior(bhvPenguinBaby) || behavior == smlua_override_behavior(bhvSmallPenguin));
 
+    // bhvCoinFormationSpawn can be set to bhvYellowCoin
+    bool oBehaviorCoin = (o->behavior == smlua_override_behavior(bhvCoinFormationSpawn) || o->behavior == smlua_override_behavior(bhvYellowCoin));
+    bool inBehaviorCoin = (behavior == smlua_override_behavior(bhvCoinFormationSpawn) || behavior == smlua_override_behavior(bhvYellowCoin));
+
+    bool allow = (oBehaviorPenguin && inBehaviorPenguin) || (oBehaviorCoin && inBehaviorCoin);
     if (!allow) { return false; }
 
     so->behavior = behavior;
@@ -135,8 +139,15 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     if (behavior == NULL) {
         LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
-    } if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(behavior));
+    }
+    if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
+        enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
+        enum BehaviorId inBehaviorId = get_id_from_behavior(behavior);
+        LOG_ERROR(
+            "during read behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            inBehaviorId,  get_behavior_name_from_id(inBehaviorId)
+        );
         return NULL;
     }
 
@@ -288,7 +299,13 @@ void network_send_object(struct Object* o) {
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", o->oSyncID, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
+        enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
+        enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
+        LOG_ERROR(
+            "during send behavior mismatch for %d: %04X (%s) vs %04X (%s)", o->oSyncID,
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
+        );
         sync_object_forget(so->id);
         return;
     }
@@ -322,7 +339,13 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
         return;
     }
     if (o->behavior != so->behavior && !allowable_behavior_change(so, so->behavior)) {
-        LOG_ERROR("behavior mismatch for %d: %04X vs %04X", syncId, get_id_from_behavior(o->behavior), get_id_from_behavior(so->behavior));
+        enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
+        enum BehaviorId soBehaviorId = get_id_from_behavior(so->behavior);
+        LOG_ERROR(
+            "during send reliability behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
+            objBehaviorId, get_behavior_name_from_id(objBehaviorId),
+            soBehaviorId,  get_behavior_name_from_id(soBehaviorId)
+        );
         sync_object_forget(so->id);
         return;
     }
@@ -468,7 +491,10 @@ void network_update_objects(void) {
 
         // check for stale sync object
         if (so->o->oSyncID != so->id) {
-            if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED) { // check if object was just deleted
+            // check if object was deleted
+            if (so->o->activeFlags != ACTIVE_FLAG_DEACTIVATED &&
+                so->o->behavior == so->behavior // a new object may be in this slot
+            ) {
                 enum BehaviorId bhvId = get_id_from_behavior(so->o->behavior);
                 const char* bhvName = get_behavior_name_from_id(bhvId);
                 LOG_ERROR("sync id mismatch: %d vs %d (behavior %s, %d)", so->o->oSyncID, so->id, bhvName != NULL ? bhvName : "NULL", bhvId);

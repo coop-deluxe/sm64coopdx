@@ -17,7 +17,7 @@ void clam_act_0(void) {
     s32 distanceToPlayer = dist_between_objects(o, player);
 
     if (cur_obj_init_anim_check_frame(0, 25)) {
-        cur_obj_play_sound_2(SOUND_GENERAL_CLAM_SHELL3);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_CLAM_SHELL3);
         spawn_mist_from_global();
         cur_obj_become_tangible();
 
@@ -25,7 +25,7 @@ void clam_act_0(void) {
         o->oTimer = 0;
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     } else if (o->oTimer > 150 && player == gMarioStates[0].marioObj && distanceToPlayer < 500.0f) {
-        cur_obj_play_sound_2(SOUND_GENERAL_CLAM_SHELL2);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_CLAM_SHELL2);
         o->oAction = 1;
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     } else if (o->oClamUnkF4 != 0) {

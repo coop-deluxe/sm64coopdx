@@ -9,7 +9,7 @@ on:
 
 jobs:
     build-linux:
-        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
@@ -32,7 +32,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -41,7 +41,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_Linux.zip
 
     build-steamos:
-        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
+                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -73,7 +73,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_SteamOS.zip
 
     build-windows:
-        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: windows-latest
         defaults:
             run:
@@ -91,11 +91,8 @@ jobs:
                     unzip
                     make
                     git
-                    mingw-w64-i686-gcc
                     mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
                     mingw-w64-x86_64-SDL2
                     python3
                     zip
@@ -112,7 +109,7 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
+                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
@@ -121,7 +118,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_Windows.zip
 
     build-macos-arm:
-        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-26
         steps:
             - name: Checkout repository
@@ -176,7 +173,7 @@ jobs:
                 path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
 
     build-macos-intel:
-        if: ${{ github.event_name != 'push' || contains(github.event.head_commit.message, '[build]') }}
+        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
         runs-on: macos-15-intel
         steps:
             - name: Checkout repository
@@ -184,7 +181,7 @@ jobs:
 
             - name: Install dependencies
               run: |
-                brew install make mingw-w64 gcc@9 pkg-config glfw3 coreutils
+                brew install make mingw-w64 pkg-config glfw3 coreutils
 
             - name: Compile glew
               run: |

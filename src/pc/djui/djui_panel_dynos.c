@@ -41,6 +41,10 @@ static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
     gDjuiInPlayerMenu = false;
 }
 
+static void djui_panel_dynos_open_folder(UNUSED struct DjuiBase* caller) {
+    open_folder(fs_get_write_path("/dynos"));
+}
+
 static void djui_panel_dynos_add_packs(struct DjuiBase* base) {
     int packCount = dynos_pack_get_count();
     for (int i = 0; i < packCount; i++) {
@@ -85,15 +89,19 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
 
         struct DjuiRect* space = djui_rect_create(body);
         djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&space->base, 0, 32);
+        djui_base_set_size(&space->base, 0, dynos_pack_get_count() <= 8 ? 16 : 0);
         djui_base_set_color(&space->base, 0, 0, 0, 0);
 
         djui_checkbox_create(body, DLANG(DYNOS, LOCAL_PLAYER_MODEL_ONLY), &configDynosLocalPlayerModelOnly, djui_panel_dynos_local_player_model_only);
         if (gNetworkType == NT_NONE) {
-            struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
+            struct DjuiRect* rect1 = djui_rect_container_create(body, 45);
             {
-                djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-                djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_refresh);
+                struct DjuiButton* button1 = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+                struct DjuiButton* button2 = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_refresh);
+                struct DjuiButton* button3 = djui_button_create(body, DLANG(DYNOS, OPEN_DYNOS_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_open_folder);
+                djui_base_set_size(&button1->base, 0.485f, 45);
+                djui_base_set_size(&button2->base, 0.485f, 45);
+                djui_base_set_size(&button3->base, 1.0f, 45);
             }
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

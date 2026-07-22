@@ -299,7 +299,7 @@ struct Character {
             /* 0xcf */s32 animForwardSpinningFlip;
             /* 0xd0 */s32 animTripleJumpFly;
         };
-        s32 anims[CHAR_ANIM_MAX];
+        C_ARRAY s32 anims[CHAR_ANIM_MAX];
     };
 
     // sounds
@@ -351,7 +351,7 @@ struct Character {
             s32 soundLetsAGo;
             s32 soundOkeyDokey;
         };
-        s32 sounds[CHAR_SOUND_MAX];
+        C_ARRAY s32 sounds[CHAR_SOUND_MAX];
     };
 };
 
@@ -367,7 +367,7 @@ Useful for triggering sound effects for actions like jumping or interacting with
 void play_character_sound(struct MarioState* m, enum CharacterSound characterSound);
 
 /* |description|
-Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`). 
+Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`).
 Useful for adding dynamic sound effects or syncing sounds to specific animations or events
 |descriptionEnd| */
 void play_character_sound_offset(struct MarioState* m, enum CharacterSound characterSound, u32 offset);

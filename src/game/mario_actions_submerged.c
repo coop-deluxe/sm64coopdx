@@ -209,7 +209,7 @@ u32 perform_water_step(struct MarioState *m) {
     nextPos[0] = m->pos[0] + step[0];
     nextPos[1] = m->pos[1] + step[1];
     nextPos[2] = m->pos[2] + step[2];
-  
+
     if (nextPos[1] > m->waterLevel - 80) {
         bool allowForceAction = true;
         smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
@@ -227,7 +227,7 @@ u32 perform_water_step(struct MarioState *m) {
     return stepResult;
 }
 
-static BAD_RETURN(u32) update_water_pitch(struct MarioState *m) {
+static void update_water_pitch(struct MarioState *m) {
     if (!m) { return; }
     struct Object *marioObj = m->marioObj;
 
@@ -539,9 +539,9 @@ static s32 check_water_jump(struct MarioState *m) {
     s32 probe = (s32)(m->pos[1] + 1.5f);
 
     if (m->input & INPUT_A_PRESSED) {
-        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {      
+        if (probe >= m->waterLevel - 80 && m->faceAngle[0] >= 0 && m->controller->stickY < -60.0f) {
             bool allowForceAction = true;
-            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction); 
+            smlua_call_event_hooks(HOOK_ALLOW_FORCE_WATER_ACTION, m, true, &allowForceAction);
             if (!allowForceAction) { return FALSE; }
 
             vec3s_set(m->angleVel, 0, 0, 0);
@@ -611,7 +611,7 @@ static s32 act_breaststroke(struct MarioState *m) {
     }
 
     if (m->actionTimer < 6 && m->playerIndex == 0) {
-        func_sh_8024CA04();
+        queue_rumble_submerged();
     }
 
     set_character_animation(m, CHAR_ANIM_SWIM_PART1);
@@ -1004,7 +1004,7 @@ static s32 act_drowning(struct MarioState *m) {
                     if (!allowDeath) { return FALSE; }
 
                     if ((mario_can_bubble(m) && m->numLives > 0)) {
-                        mario_set_bubbled(m);
+                        mario_set_bubbled(m, false);
                     } else {
                         level_trigger_warp(m, WARP_OP_DEATH);
                     }
@@ -1039,7 +1039,7 @@ static s32 act_water_death(struct MarioState *m) {
             if (!allowDeath) { return FALSE; }
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
@@ -1165,7 +1165,7 @@ static s32 act_caught_in_whirlpool(struct MarioState *m) {
                 if (!allowDeath) { reset_rumble_timers(m); return FALSE; }
 
                 if ((mario_can_bubble(m) && m->numLives > 0)) {
-                    mario_set_bubbled(m);
+                    mario_set_bubbled(m, false);
                 } else {
                     level_trigger_warp(m, WARP_OP_DEATH);
                 }

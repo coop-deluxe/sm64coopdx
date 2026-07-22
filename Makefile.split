@@ -180,7 +180,7 @@ $(BUILD_DIR)/levels/%/leveldata.elf: SEGMENT_ADDRESS := 0x07000000
 
 # TODO: Generate these rules from the level configs?
 
-define level_rules = 
+define level_rules =
     $(1)_SEG7_FILES     := $$(patsubst %.png,%.inc.c,$$(wildcard levels/$(1)/*.png))
     $$(BUILD_DIR)/levels/$(1)/leveldata.o: $$(addprefix $$(BUILD_DIR)/,$$($(1)_SEG7_FILES))
     $$(BUILD_DIR)/levels/$(1)/leveldata.elf: TEXTURE_BIN := $(2)

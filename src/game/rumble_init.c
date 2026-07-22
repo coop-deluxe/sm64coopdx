@@ -15,7 +15,7 @@ OSMesg gRumbleThreadVIMesgBuf[1];
 OSMesgQueue gRumbleThreadVIMesgQueue;
 
 struct RumbleData gRumbleDataQueue[3];
-struct StructSH8031D9B0 gCurrRumbleSettings;
+struct RumbleSettings gCurrRumbleSettings;
 
 s32 sRumblePakThreadActive = 0;
 s32 sRumblePakActive = 0;
@@ -80,109 +80,109 @@ static void update_rumble_pak(void) {
         return;
     }
 
-    if (gCurrRumbleSettings.unk08 > 0) {
-        gCurrRumbleSettings.unk08--;
+    if (gCurrRumbleSettings.start > 0) {
+        gCurrRumbleSettings.start--;
         start_rumble();
-    } else if (gCurrRumbleSettings.unk04 > 0) {
-        gCurrRumbleSettings.unk04--;
+    } else if (gCurrRumbleSettings.timer > 0) {
+        gCurrRumbleSettings.timer--;
 
-        gCurrRumbleSettings.unk02 -= gCurrRumbleSettings.unk0E;
-        if (gCurrRumbleSettings.unk02 < 0) {
-            gCurrRumbleSettings.unk02 = 0;
+        gCurrRumbleSettings.level -= gCurrRumbleSettings.decay;
+        if (gCurrRumbleSettings.level < 0) {
+            gCurrRumbleSettings.level = 0;
         }
 
-        if (gCurrRumbleSettings.unk00 == 1) {
+        if (gCurrRumbleSettings.event == 1) {
             start_rumble();
-        } else if (gCurrRumbleSettings.unk06 >= 0x100) {
-            gCurrRumbleSettings.unk06 -= 0x100;
+        } else if (gCurrRumbleSettings.count >= 0x100) {
+            gCurrRumbleSettings.count -= 0x100;
             start_rumble();
         } else {
-            gCurrRumbleSettings.unk06 +=
-                ((gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02 * gCurrRumbleSettings.unk02) / (1 << 9)) + 4;
+            gCurrRumbleSettings.count +=
+                ((gCurrRumbleSettings.level * gCurrRumbleSettings.level * gCurrRumbleSettings.level) / (1 << 9)) + 4;
 
             stop_rumble();
         }
     } else {
-        gCurrRumbleSettings.unk04 = 0;
+        gCurrRumbleSettings.timer = 0;
 
-        if (gCurrRumbleSettings.unk0A >= 5) {
+        if (gCurrRumbleSettings.slip >= 5) {
             start_rumble();
-        } else if ((gCurrRumbleSettings.unk0A >= 2) && gCurrRumbleSettings.unk0C && (gNumVblanks % gCurrRumbleSettings.unk0C == 0)) {
+        } else if ((gCurrRumbleSettings.slip >= 2) && gCurrRumbleSettings.vibrate && (gNumVblanks % gCurrRumbleSettings.vibrate == 0)) {
             start_rumble();
         } else {
             stop_rumble();
         }
     }
 
-    if (gCurrRumbleSettings.unk0A > 0) {
-        gCurrRumbleSettings.unk0A--;
+    if (gCurrRumbleSettings.slip > 0) {
+        gCurrRumbleSettings.slip--;
     }
 }
 
 static void update_rumble_data_queue(void) {
-    if (gRumbleDataQueue[0].unk00) {
-        gCurrRumbleSettings.unk06 = 0;
-        gCurrRumbleSettings.unk08 = 4;
-        gCurrRumbleSettings.unk00 = gRumbleDataQueue[0].unk00;
-        gCurrRumbleSettings.unk04 = gRumbleDataQueue[0].unk02;
-        gCurrRumbleSettings.unk02 = gRumbleDataQueue[0].unk01;
-        gCurrRumbleSettings.unk0E = gRumbleDataQueue[0].unk04;
+    if (gRumbleDataQueue[0].comm) {
+        gCurrRumbleSettings.count = 0;
+        gCurrRumbleSettings.start = 4;
+        gCurrRumbleSettings.event = gRumbleDataQueue[0].comm;
+        gCurrRumbleSettings.timer = gRumbleDataQueue[0].time;
+        gCurrRumbleSettings.level = gRumbleDataQueue[0].level;
+        gCurrRumbleSettings.decay = gRumbleDataQueue[0].decay;
     }
 
     gRumbleDataQueue[0] = gRumbleDataQueue[1];
     gRumbleDataQueue[1] = gRumbleDataQueue[2];
 
-    gRumbleDataQueue[2].unk00 = 0;
+    gRumbleDataQueue[2].comm = 0;
 }
 
-void queue_rumble_data(s16 a0, s16 a1) {
+void queue_rumble_data(s16 time, s16 level) {
     if (gCurrDemoInput != NULL || gDjuiInMainMenu) {
         return;
     }
 
-    if (a1 > 70) {
-        gRumbleDataQueue[2].unk00 = 1;
+    if (level > 70) {
+        gRumbleDataQueue[2].comm = 1;
     } else {
-        gRumbleDataQueue[2].unk00 = 2;
+        gRumbleDataQueue[2].comm = 2;
     }
 
-    gRumbleDataQueue[2].unk01 = a1;
-    gRumbleDataQueue[2].unk02 = a0;
-    gRumbleDataQueue[2].unk04 = 0;
+    gRumbleDataQueue[2].level = level;
+    gRumbleDataQueue[2].time = time;
+    gRumbleDataQueue[2].decay = 0;
 }
 
-void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1) {
+void queue_rumble_data_object(struct Object* object, s16 time, s16 level) {
     extern struct MarioState gMarioStates[];
     f32 dist = dist_between_objects(object, gMarioStates[0].marioObj);
     if (dist > 5000) { return; }
-    a0 = a0 * (1.0f - (dist / 5000.0f));
-    a1 = a1 * (1.0f - (dist / 5000.0f));
-    queue_rumble_data(a0, a1);
+    time = time * (1.0f - (dist / 5000.0f));
+    level = level * (1.0f - (dist / 5000.0f));
+    queue_rumble_data(time, level);
 }
 
-void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1) {
+void queue_rumble_data_mario(struct MarioState* m, s16 time, s16 level) {
     if (!m || m->playerIndex != 0) { return; }
-    queue_rumble_data(a0, a1);
+    queue_rumble_data(time, level);
 }
 
-void func_sh_8024C89C(s16 a0) {
-    gRumbleDataQueue[2].unk04 = a0;
+void queue_rumble_decay(s16 decay) {
+    gRumbleDataQueue[2].decay = decay;
 }
 
 u8 is_rumble_finished_and_queue_empty(void) {
-    if (gCurrRumbleSettings.unk08 + gCurrRumbleSettings.unk04 >= 4) {
+    if (gCurrRumbleSettings.start + gCurrRumbleSettings.timer >= 4) {
         return FALSE;
     }
 
-    if (gRumbleDataQueue[0].unk00 != 0) {
+    if (gRumbleDataQueue[0].comm != 0) {
         return FALSE;
     }
 
-    if (gRumbleDataQueue[1].unk00 != 0) {
+    if (gRumbleDataQueue[1].comm != 0) {
         return FALSE;
     }
 
-    if (gRumbleDataQueue[2].unk00 != 0) {
+    if (gRumbleDataQueue[2].comm != 0) {
         return FALSE;
     }
 
@@ -196,60 +196,48 @@ void reset_rumble_timers(struct MarioState* m) {
         return;
     }
 
-    if (gCurrRumbleSettings.unk0A == 0) {
-        gCurrRumbleSettings.unk0A = 7;
+    if (gCurrRumbleSettings.slip == 0) {
+        gCurrRumbleSettings.slip = 7;
     }
 
-    if (gCurrRumbleSettings.unk0A < 4) {
-        gCurrRumbleSettings.unk0A = 4;
+    if (gCurrRumbleSettings.slip < 4) {
+        gCurrRumbleSettings.slip = 4;
     }
 
-    gCurrRumbleSettings.unk0C = 7;
+    gCurrRumbleSettings.vibrate = 7;
 }
 
-void reset_rumble_timers_2(struct MarioState* m, s32 a0) {
+void reset_rumble_timers_vibrate(struct MarioState* m, s32 level) {
     if (!m || m->playerIndex != 0) { return; }
 
     if (gCurrDemoInput != NULL) {
         return;
     }
 
-    if (gCurrRumbleSettings.unk0A == 0) {
-        gCurrRumbleSettings.unk0A = 7;
+    if (gCurrRumbleSettings.slip == 0) {
+        gCurrRumbleSettings.slip = 7;
     }
 
-    if (gCurrRumbleSettings.unk0A < 4) {
-        gCurrRumbleSettings.unk0A = 4;
+    if (gCurrRumbleSettings.slip < 4) {
+        gCurrRumbleSettings.slip = 4;
     }
 
-    if (a0 == 4) {
-        gCurrRumbleSettings.unk0C = 1;
-    }
-
-    if (a0 == 3) {
-        gCurrRumbleSettings.unk0C = 2;
-    }
-
-    if (a0 == 2) {
-        gCurrRumbleSettings.unk0C = 3;
-    }
-
-    if (a0 == 1) {
-        gCurrRumbleSettings.unk0C = 4;
-    }
-
-    if (a0 == 0) {
-        gCurrRumbleSettings.unk0C = 5;
+    switch (level) {
+        case 0: gCurrRumbleSettings.vibrate = 5; break;
+        case 1: gCurrRumbleSettings.vibrate = 4; break;
+        case 2: gCurrRumbleSettings.vibrate = 3; break;
+        case 3: gCurrRumbleSettings.vibrate = 2; break;
+        case 4: gCurrRumbleSettings.vibrate = 1; break;
     }
 }
 
-void func_sh_8024CA04(void) {
+void queue_rumble_submerged(void) {
     if (gCurrDemoInput != NULL) {
         return;
     }
 
-    gCurrRumbleSettings.unk0A = 4;
-    gCurrRumbleSettings.unk0C = 4;
+    gCurrRumbleSettings.slip = 4;
+    gCurrRumbleSettings.vibrate = 4;
 }
 
 void thread6_rumble_loop(UNUSED void *a0) {
@@ -280,12 +268,12 @@ void cancel_rumble(void) {
         osMotorStop(&gRumblePakPfs);
     }
 
-    gRumbleDataQueue[0].unk00 = 0;
-    gRumbleDataQueue[1].unk00 = 0;
-    gRumbleDataQueue[2].unk00 = 0;
+    gRumbleDataQueue[0].comm = 0;
+    gRumbleDataQueue[1].comm = 0;
+    gRumbleDataQueue[2].comm = 0;
 
-    gCurrRumbleSettings.unk04 = 0;
-    gCurrRumbleSettings.unk0A = 0;
+    gCurrRumbleSettings.timer = 0;
+    gCurrRumbleSettings.slip  = 0;
 
     gRumblePakTimer = 0;
 }

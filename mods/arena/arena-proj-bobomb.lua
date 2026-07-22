@@ -73,7 +73,7 @@ function bhv_arena_bobomb_expode(obj, directHitLocal)
         vec3f_normalize(vel)
         vec3f_mul(vel, 40)
 
-        set_mario_action(m, ACT_BACKWARD_AIR_KB, 0)
+        set_mario_action(m, ACT_BACKWARD_AIR_KB, PVP_ATTACK_KNOCKBACK_ACTION_ARG)
         m.invincTimer = 10
         m.knockbackTimer = 10
         m.vel.x = vel.x

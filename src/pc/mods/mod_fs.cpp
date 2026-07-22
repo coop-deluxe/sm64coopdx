@@ -1744,7 +1744,7 @@ C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level) {
 
     file->compressionLevel = level;
     return true;
-} 
+}
 
 //
 // Errors

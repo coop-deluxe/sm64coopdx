@@ -209,7 +209,7 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_COMBINEDA:
                 return "texel.a";
             case SHADER_NOISE:
-                return "noise.a";
+                return "noise";
         }
     }
     return "unknown";
@@ -390,7 +390,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         append_line(fs_buf, &fs_len, "    }");
         append_line(fs_buf, &fs_len, "    return brightness < limit ? 0.0 : 1.0;");
         append_line(fs_buf, &fs_len, "}");
-    
+
         append_line(fs_buf, &fs_len, "vec3 rgb2hsv(vec3 c) {");
         append_line(fs_buf, &fs_len, "    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);");
         append_line(fs_buf, &fs_len, "    vec4 p = mix(vec4(c.bg, K.wz),");
@@ -437,7 +437,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     append_line(fs_buf, &fs_len, "void main() {");
 
     if ((opt_alpha && opt_dither) || ccf.do_noise) {
-        append_line(fs_buf, &fs_len, "float noise = floor(random(floor(vec3(gl_FragCoord.xy, uFrameCount))) + 0.5);");
+        append_line(fs_buf, &fs_len, "float noise = random(floor(vec3(gl_FragCoord.xy, uFrameCount)));");
     }
 
     if (ccf.used_textures[0]) {
@@ -453,9 +453,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
     }
 
-    append_str(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = " : "vec3 texel = ");
+    append_line(fs_buf, &fs_len, (opt_alpha) ? "vec4 texel = vec4(0.0, 0.0, 0.0, 0.0);" : "vec3 texel = vec3(0.0, 0.0, 0.0);");
+
     for (int i = 0; i < (opt_2cycle + 1); i++) {
         u8* cmd = &cc->shader_commands[i * 8];
+        append_str(fs_buf, &fs_len, "texel = ");
         if (!ccf.color_alpha_same[i] && opt_alpha) {
             append_str(fs_buf, &fs_len, "vec4(");
             append_formula(fs_buf, &fs_len, cmd, ccf.do_single[i*2+0], ccf.do_multiply[i*2+0], ccf.do_mix[i*2+0], false, false, true);
@@ -467,10 +469,12 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
         }
         append_line(fs_buf, &fs_len, ";");
 
-        if (i == 0 && opt_2cycle) {
-            append_str(fs_buf, &fs_len, "texel = ");
+        if (i == 0) {
+            append_line(fs_buf, &fs_len, "texel = mod(texel + 0.5, 2.0) - 0.5;");
         }
     }
+
+    append_line(fs_buf, &fs_len, "texel = clamp(mod(texel + 0.5, 2.0) - 0.5, 0.0, 1.0);");
 
     if (opt_texture_edge && opt_alpha) {
         append_line(fs_buf, &fs_len, "if (texel.a > 0.3) texel.a = 1.0; else discard;");
@@ -536,7 +540,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     if (opt_alpha && opt_dither) {
-        append_line(fs_buf, &fs_len, "texel.a *= noise;");
+        append_line(fs_buf, &fs_len, "texel.a = noise < texel.a ? 1.0 : 0.0;");
     }
 
     if (opt_alpha) {
@@ -640,8 +644,7 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     prg->num_floats = num_floats;
     prg->num_attribs = cnt;
 
-    gfx_opengl_load_shader(prg);
-
+    glUseProgram(shader_program);
     for (int t = 0; t < 2; t++) {
         if (ccf.used_textures[t]) {
             char name[16];
@@ -678,6 +681,8 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     }
 
     prg->uniform_locations[8] = glGetUniformLocation(shader_program, "uFilter");
+
+    gfx_opengl_load_shader(prg);
 
     return prg;
 }
@@ -789,6 +794,13 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
 }
 
+static inline bool gl_version_is_supported(int major, int minor, bool is_es) {
+    if (is_es) {
+        return major >= 2;
+    }
+    return (major > 2) || (major == 2 && minor >= 1);
+}
+
 static inline bool gl_get_version(int *major, int *minor, bool *is_es) {
     const char *vstr = (const char *)glGetString(GL_VERSION);
     if (!vstr || !vstr[0]) return false;
@@ -819,9 +831,9 @@ static void gfx_opengl_init(void) {
     int vmajor = 0;
     int vminor = 0;
     bool is_es = false;
-    gl_get_version(&vmajor, &vminor, &is_es);
-    if (vmajor < 2 && vminor < 1 && !is_es)
+    if (!gl_get_version(&vmajor, &vminor, &is_es) || !gl_version_is_supported(vmajor, vminor, is_es)) {
         sys_fatal("OpenGL 2.1+ is required.\nReported version: %s%d.%d", is_es ? "ES" : "", vmajor, vminor);
+    }
 
     glGenBuffers(1, &opengl_vbo);
 
@@ -841,11 +853,10 @@ bool gfx_opengl_check_compatibility(void) {
     int vmajor = 0;
     int vminor = 0;
     bool is_es = false;
-    gl_get_version(&vmajor, &vminor, &is_es);
-    if (vmajor < 2 && vminor < 1 && !is_es)
+    if (!gl_get_version(&vmajor, &vminor, &is_es)) {
         return false;
-
-    return true;
+    }
+    return gl_version_is_supported(vmajor, vminor, is_es);
 }
 
 static void gfx_opengl_on_resize(void) {

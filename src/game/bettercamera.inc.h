@@ -125,6 +125,11 @@ static void newcam_init(struct Camera *c, u8 isSoftReset) {
             case LEVEL_PSS: gNewCamera.isSlide = true; break;
             case LEVEL_TTM: if (gCurrAreaIndex == 2) { gNewCamera.isSlide = true; } break;
         }
+
+        // reset camera momentum
+        gNewCamera.yawAccel = 0;
+        gNewCamera.tiltAccel = 0;
+        gNewCamera.centering = false;
     }
 
     // clear these out when entering a new level to prevent "camera mode buffering"

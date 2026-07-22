@@ -138,10 +138,10 @@ void bhv_treasure_chest_ship_init(void) {
     chests[1] = spawn_treasure_chest(2, 650, -350, -940, -0x6001);
     chests[2] = spawn_treasure_chest(3, -550, -350, -770, 0x5FFF);
     chests[3] = spawn_treasure_chest(4, 100, -350, -1700, 0);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -195,7 +195,7 @@ void bhv_treasure_chest_ship_loop(void) {
                     o->activeFlags = 0;
                 }
 #ifdef VERSION_SH
-                reset_rumble_timers_2(2);
+                reset_rumble_timers_vibrate(2);
 #endif
             }
             break;
@@ -208,10 +208,10 @@ void bhv_treasure_chest_jrb_init(void) {
     chests[1] = spawn_treasure_chest(2, -1150, -2812, -1550, 0x7FFF);
     chests[2] = spawn_treasure_chest(3, -2400, -2812, -1800, 0x7FFF);
     chests[3] = spawn_treasure_chest(4, -1800, -2812, -2100, 0x7FFF);
-    
+
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 1;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.
@@ -279,7 +279,7 @@ void bhv_treasure_chest_init(void) {
 
     o->oTreasureChestCurrentAnswer = 1;
     o->oTreasureChestIsAboveWater = 0;
-    
+
     // We haven't interacted with a player yet.
     // We also don't sync this as not only is it not required
     // but it also is only set for an interaction.

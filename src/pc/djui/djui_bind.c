@@ -88,3 +88,37 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
 
     return bind;
 }
+
+void djui_bind_refresh(struct DjuiBind *bind) {
+    if (!bind || !bind->configKey) { return; }
+
+    for (s32 i = 0; i < MAX_BINDS; ++i) {
+        struct DjuiButton *button = bind->buttons[i];
+        if (!button) { continue; }
+
+        u32 key = bind->configKey[i];
+        djui_text_set_text(button->text, translate_bind_to_name(key));
+    }
+}
+
+void djui_bind_unbind(struct DjuiBase* caller) {
+    if (!caller || !caller->interactable || !caller->parent || !caller->parent->parent) { return; }
+
+    struct DjuiInteractable *interactable = caller->interactable;
+    if (interactable->on_bind != djui_bind_button_on_bind) {
+        return; // not a bind
+    }
+
+    struct DjuiBind *bind = (struct DjuiBind *) caller->parent->parent;
+    for (s32 i = 0; i < MAX_BINDS; ++i) {
+        if (&bind->buttons[i]->base == caller) {
+            bind->configKey[i] = VK_INVALID;
+
+            // refresh bind
+            djui_bind_refresh(bind);
+            play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource);
+            controller_reconfigure();
+            return;
+        }
+    }
+}

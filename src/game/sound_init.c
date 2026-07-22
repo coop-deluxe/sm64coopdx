@@ -219,6 +219,7 @@ void play_painting_eject_sound(void) {
  * Called from threads: thread5_game_loop
  */
 void play_infinite_stairs_music(void) {
+    if (gMarioState->playerIndex != 0) { return; }
     u8 shouldPlay = FALSE;
 
     if (gCurrLevelNum == LEVEL_CASTLE && gCurrAreaIndex == 2 && gMarioState->numStars < gLevelValues.infiniteStairsRequirement) {

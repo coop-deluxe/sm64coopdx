@@ -120,7 +120,7 @@ bool exec_chat_command(char* command) {
         djui_chat_message_create(DLANG(CHAT, PLAYER_NOT_FOUND));
         return true;
     }
-  
+
     if (str_starts_with(command, "/kick ")) {
         if (gNetworkType != NT_SERVER && !npl->moderator) {
             djui_chat_message_create(DLANG(CHAT, NO_PERMS));
@@ -205,7 +205,7 @@ bool exec_chat_command(char* command) {
         return true;
     }
 
-    if (str_starts_with(command, "/moderator ")) {     
+    if (str_starts_with(command, "/moderator ")) {
         if (gNetworkType != NT_SERVER) {
             djui_chat_message_create(DLANG(CHAT, SERVER_ONLY));
             return true;

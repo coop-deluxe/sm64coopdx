@@ -428,14 +428,14 @@ u8 network_player_disconnected(u8 globalIndex) {
 
 void construct_player_popup(struct NetworkPlayer* np, char* msg, const char* level) {
     char built[256] = { 0 };
-    snprintf(built, 256, "\\#dcdcdc\\");
+    snprintf(built, 256, "\\#\\");
 
     char player[128] = { 0 };
-    snprintf(player, 128, "%s%s\\#dcdcdc\\", network_get_player_text_color_string(np->localIndex), np->name);
+    snprintf(player, 128, "%s%s\\#\\", network_get_player_text_color_string(np->localIndex), np->name);
     if (level) {
-        djui_language_replace2(msg, &built[9], 256 - 9, '@', player, '#', (char*)level);
+        djui_language_replace2(msg, &built[3], 256 - 3, '@', player, '#', (char*)level);
     } else {
-        djui_language_replace(msg, &built[9], 256 - 9, '@', player);
+        djui_language_replace(msg, &built[3], 256 - 3, '@', player);
     }
     djui_popup_create(built, 1);
 }

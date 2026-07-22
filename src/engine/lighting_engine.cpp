@@ -434,6 +434,7 @@ C_FIELD void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals) {
 
 void le_clear(void) {
     sLightPool.clear();
+    sActiveLights.clear();
     sLightID = -1;
 
     color_set(gLEAmbientColor, 127, 127, 127);

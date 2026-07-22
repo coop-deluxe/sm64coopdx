@@ -11,8 +11,21 @@ def extract_level_defines(txt):
     txt += '    LEVEL_COUNT,\n };'
     return txt
 
+def extract_course_defines(txt):
+    tmp = txt
+    txt = 'enum CourseNum {\n'
+    for line in tmp.splitlines():
+        if line.startswith('DEFINE_COURSE(') or line.startswith('DEFINE_BONUS_COURSE('):
+            txt += '    ' + line.replace('(', ',').split(',')[1].strip() + ',\n'
+    txt += '    COURSE_END,\n'
+    txt += '    COURSE_COUNT = COURSE_END - 1,\n'
+    txt += '    COURSE_MAX = COURSE_COUNT,\n'
+    txt += '    COURSE_MIN = 1,\n };'
+    return txt
+
 extra_steps = {
     "levels/level_defines.h": extract_level_defines,
+    "levels/course_defines.h": extract_course_defines,
 }
 
 def extract_constants(filename):

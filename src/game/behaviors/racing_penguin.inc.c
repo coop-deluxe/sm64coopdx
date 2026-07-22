@@ -88,7 +88,7 @@ static void racing_penguin_act_wait_for_mario(void) {
     struct Object* player = nearest_player_to_object(o);
     if (!player) { return; }
     if (o->oTimer > o->oRacingPenguinInitTextCooldown && o->oPosY - player->oPosY <= 0.0f
-        && cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+        && cur_obj_can_mario_activate_textbox(&gMarioStates[0], 400.0f, 400.0f, 0x1000)) {
         o->oAction = RACING_PENGUIN_ACT_SHOW_INIT_TEXT;
     }
 }
@@ -96,7 +96,7 @@ static void racing_penguin_act_wait_for_mario(void) {
 u8 racing_penguin_act_show_init_text_continue_dialog(void) { return o->oAction == RACING_PENGUIN_ACT_SHOW_INIT_TEXT; }
 
 static void racing_penguin_act_show_init_text(void) {
-    if (!gMarioStates[0].visibleToEnemies) { return; }
+    if (!gMarioStates[0].visibleToObjects) { return; }
     if (!BHV_ARR_CHECK(sRacingPenguinData, o->oBehParams2ndByte, struct RacingPenguinData)) { return; }
     s32 response = obj_update_race_proposition_dialog(&gMarioStates[0], *sRacingPenguinData[o->oBehParams2ndByte].text, racing_penguin_act_show_init_text_continue_dialog);
 
@@ -160,7 +160,7 @@ static void racing_penguin_act_race(void) {
         targetSpeed = player ? (o->oPosY - player->oPosY) : o->oPosY;
         minSpeed = 70.0f;
 
-        cur_obj_play_sound_1(SOUND_AIR_ROUGH_SLIDE);
+        cur_obj_play_sound_if_visible(SOUND_AIR_ROUGH_SLIDE);
 
         if (targetSpeed < 100.0f || (o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) >= 35) {
             if ((o->oPathedPrevWaypointFlags & WAYPOINT_MASK_00FF) >= 35) {
@@ -210,7 +210,7 @@ static void racing_penguin_act_race(void) {
 static void racing_penguin_act_finish_race(void) {
     if (o->oForwardVel != 0.0f) {
         if (o->oTimer > 5 && (o->oMoveFlags & OBJ_MOVE_HIT_WALL)) {
-            cur_obj_play_sound_2(SOUND_OBJ_POUNDING_LOUD);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_POUNDING_LOUD);
             set_camera_shake_from_point(SHAKE_POS_SMALL, o->oPosX, o->oPosY, o->oPosZ);
             o->oForwardVel = 0.0f;
         }
@@ -229,7 +229,7 @@ static void racing_penguin_act_show_final_text(void) {
             cur_obj_init_animation_with_sound(3);
             o->oForwardVel = 0.0f;
 
-            if (cur_obj_can_mario_activate_textbox_2(&gMarioStates[0], 400.0f, 400.0f)) {
+            if (cur_obj_can_mario_activate_textbox(&gMarioStates[0], 400.0f, 400.0f, 0x1000)) {
                 if (o->oRacingPenguinMarioWon) {
                     if (o->oRacingPenguinMarioCheated) {
                         o->oRacingPenguinFinalTextbox = gBehaviorValues.dialogs.RacingPenguinCheatDialog;

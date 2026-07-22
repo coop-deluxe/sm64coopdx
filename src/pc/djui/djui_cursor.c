@@ -1,7 +1,7 @@
 #include "djui.h"
 #include "djui_panel.h"
 #include "pc/controller/controller_mouse.h"
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 
 #define CURSOR_GFX_MAX_SIZE 20
@@ -29,12 +29,10 @@ void djui_cursor_set_visible(bool visible) {
         djui_base_set_visible(&sMouseCursor->base, visible);
     }
 
-    if (gWindowApi) {
-        if (configWindow.fullscreen) {
-            gWindowApi->set_cursor_visible(false);
-        } else {
-            gWindowApi->set_cursor_visible(!visible);
-        }
+    if (configWindow.fullscreen) {
+        gfx_wm_set_cursor_visible(false);
+    } else {
+        gfx_wm_set_cursor_visible(!visible);
     }
     sSavedMouseX = mouse_window_x;
     sSavedMouseY = mouse_window_y;
@@ -155,7 +153,7 @@ static void djui_cursor_update_position(void) {
     djui_base_set_location(&sMouseCursor->base, gCursorX - 13, gCursorY - 13);
 
     // set cursor sprite
-    if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & MOUSE_BUTTON_1)) {
+    if ((gInteractablePad.button & PAD_BUTTON_A) || (mouse_window_buttons & L_MOUSE_BUTTON)) {
         sMouseCursor->textureInfo.texture = gd_texture_hand_closed;
     } else {
         sMouseCursor->textureInfo.texture = gd_texture_hand_open;

@@ -5,15 +5,15 @@
  * These rings contain a significant bug that is documented in water_ring.inc.c
  */
 
-static Trajectory sMantaRayTraj[] = { 
-    TRAJECTORY_POS(0, /*pos*/ -4500, -1380,   -40), 
-    TRAJECTORY_POS(1, /*pos*/ -4120, -2240,   740), 
-    TRAJECTORY_POS(2, /*pos*/ -3280, -3080,  1040), 
-    TRAJECTORY_POS(3, /*pos*/ -2240, -3320,   720), 
-    TRAJECTORY_POS(4, /*pos*/ -1840, -3140,  -280), 
-    TRAJECTORY_POS(5, /*pos*/ -2320, -2480, -1100), 
-    TRAJECTORY_POS(6, /*pos*/ -3220, -1600, -1360), 
-    TRAJECTORY_POS(7, /*pos*/ -4180, -1020, -1040), 
+static Trajectory sMantaRayTraj[] = {
+    TRAJECTORY_POS(0, /*pos*/ -4500, -1380,   -40),
+    TRAJECTORY_POS(1, /*pos*/ -4120, -2240,   740),
+    TRAJECTORY_POS(2, /*pos*/ -3280, -3080,  1040),
+    TRAJECTORY_POS(3, /*pos*/ -2240, -3320,   720),
+    TRAJECTORY_POS(4, /*pos*/ -1840, -3140,  -280),
+    TRAJECTORY_POS(5, /*pos*/ -2320, -2480, -1100),
+    TRAJECTORY_POS(6, /*pos*/ -3220, -1600, -1360),
+    TRAJECTORY_POS(7, /*pos*/ -4180, -1020, -1040),
     TRAJECTORY_END(),
 };
 
@@ -65,7 +65,7 @@ static void manta_ray_move(void) {
 
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oMantaTargetYaw, 0x80);
     o->oMoveAnglePitch = approach_s16_symmetric(o->oMoveAnglePitch, o->oMantaTargetPitch, 0x80);
-    
+
     // This causes the ray to tilt as it turns.
     if ((s16) o->oMantaTargetYaw != (s16) o->oMoveAngleYaw) {
         o->oMoveAngleRoll -= 91;
@@ -81,7 +81,7 @@ static void manta_ray_move(void) {
 
     cur_obj_set_pos_via_transform();
     if (animFrame == 0) {
-        cur_obj_play_sound_2(SOUND_GENERAL_MOVING_WATER);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_MOVING_WATER);
     }
 }
 
@@ -94,7 +94,7 @@ static void manta_ray_act_spawn_ring(void) {
     if (o->oTimer >= 300) {
         o->oTimer = 0;
     }
-    
+
     if (o->oTimer == 0 || o->oTimer == 50 || o->oTimer == 150 || o->oTimer == 200 || o->oTimer == 250) {
         ring = spawn_object(o, MODEL_WATER_RING, bhvMantaRayWaterRing);
         if (ring != NULL) {
@@ -110,7 +110,7 @@ static void manta_ray_act_spawn_ring(void) {
         if (ringManager->oWaterRingMgrNextRingIndex > 10000) {
             ringManager->oWaterRingMgrNextRingIndex = 0;
         }
-        
+
         if (ring != NULL) {
             struct Object *spawn_objects[] = { ring };
             u32 models[] = { MODEL_WATER_RING };

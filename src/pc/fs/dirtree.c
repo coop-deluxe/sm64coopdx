@@ -46,7 +46,7 @@ static inline fs_dirtree_entry_t *dirtree_add_ancestors(fs_dirtree_t *tree, char
     char *last_sep = strrchr(name, '/');
     if (!last_sep) return ent;
     *last_sep = 0;
-    ent = fs_dirtree_find(tree, name); 
+    ent = fs_dirtree_find(tree, name);
 
     if (ent) {
         *last_sep = '/'; // put the separator back
@@ -74,7 +74,7 @@ fs_dirtree_entry_t *fs_dirtree_add(fs_dirtree_t *tree, char *name, const bool is
     ent = calloc(1, allocsize);
     if (!ent) return NULL;
 
-    ent->name = (const char *)ent + tree->entry_len; 
+    ent->name = (const char *)ent + tree->entry_len;
     strcpy((char *)ent->name, name);
 
     const uint32_t hash = dirtree_hash(name, name_len);

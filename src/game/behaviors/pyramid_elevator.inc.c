@@ -15,7 +15,7 @@ void bhv_pyramid_elevator_init(void) {
         if (ball == NULL) { continue; }
         ball->oPosY = 4600 - i * 460;
     }
-    
+
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -78,7 +78,7 @@ void bhv_pyramid_elevator_loop(void) {
                 network_send_object(o);
             }
             break;
-        
+
         /**
          * The elevator is now at the bottom and finished it's moving
          * We will no longer move from this point.

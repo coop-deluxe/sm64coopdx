@@ -638,14 +638,14 @@ Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUS
         if (gfxHead == NULL) {
             return NULL;
         }
-        
+
         Gfx *gfx = gfxHead;
-            
+
         struct GraphNodeGenerated *asGenerated = (struct GraphNodeGenerated *) node;
         if (asGenerated == NULL) {
             return NULL;
         }
-        
+
         if (asGenerated->parameter == JRB_MOVTEX_INTIAL_MIST) {
             if (gLakituState.goalPos[1] < 1024.0) { // if camera under water
                 return NULL;
@@ -658,7 +658,7 @@ Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUS
         } else if (asGenerated->parameter == SSL_MOVTEX_TOXBOX_QUICKSAND_MIST) {
             gMovtexVtxColor = MOVTEX_VTX_COLOR_RED;
         }
-        
+
         void *quadCollection = get_quad_collection_from_id(asGenerated->parameter);
         if (quadCollection == NULL) {
             return NULL;
@@ -696,22 +696,22 @@ Gfx *geo_movtex_draw_water_regions_ext(s32 callContext, struct GraphNode *node, 
         if (gEnvironmentRegions == NULL) {
             return NULL;
         }
-        
+
         gMovtexVtxColor = MOVTEX_VTX_COLOR_DEFAULT;
-        
+
         s16 numWaterBoxes = gEnvironmentRegions[0];
         gfxHead = alloc_display_list((numWaterBoxes + 3) * sizeof(*gfxHead));
         if (gfxHead == NULL) {
             return NULL;
         }
-        
+
         Gfx *gfx = gfxHead;
-            
+
         struct GraphNodeGenerated *asGenerated = (struct GraphNodeGenerated *) node;
         if (asGenerated == NULL) {
             return NULL;
         }
-        
+
         quadCollection = dynos_movtexqc_get_from_index(asGenerated->parameter);
         if (quadCollection == NULL) {
             return NULL;

@@ -15,7 +15,7 @@ static void fish_spawner_act_spawn(void) {
     struct Object *fishObject;
 
     switch (o->oBehParams2ndByte) {
-        
+
         // Cases need to be on one line to match with and without optimizations.
         case FISH_SPAWNER_BP_MANY_BLUE:
             model = MODEL_FISH;      schoolQuantity = 20; fishAnimation = &blue_fish_seg3_anims_0301C2B0;
@@ -81,7 +81,7 @@ static void fish_vertical_roam(s32 speed) {
     if (!o->parentObj) { return; }
     f32 parentY = o->parentObj->oPosY;
 
-    // If the stage is Secret Aquarium, the fish can 
+    // If the stage is Secret Aquarium, the fish can
     // travel as far vertically as they wish.
     if (gCurrLevelNum == LEVEL_SA) {
         if (500.0f < absf(o->oPosY - o->oFishGoalY)) {
@@ -106,7 +106,7 @@ static void fish_act_roam(void) {
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     f32 fishY = player ? (o->oPosY - player->oPosY) : 0;
-    
+
     // Alters speed of animation for natural movement.
     if (o->oTimer < 10) {
         cur_obj_init_animation_with_accel_and_sound(0, 2.0f);
@@ -128,7 +128,7 @@ static void fish_act_roam(void) {
     o->oFishGoalY = player
                   ? (player->oPosY + o->oFishHeightOffset)
                   : o->oFishHeightOffset;
-    
+
     // If fish groups are too close, call fish_regroup()
     // Rotate the fish towards Mario.
     cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
@@ -182,7 +182,7 @@ static void fish_act_flee(void)  {
             distance = (s32)(1.0 / (distanceToPlayer / 600.0));
         }
         distance *= 127;
-        cur_obj_play_sound_2(SOUND_GENERAL_MOVING_WATER);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_MOVING_WATER);
     }
 
     // Speed the animation up over time.
@@ -213,7 +213,7 @@ static void fish_act_flee(void)  {
         } else {
             fish_vertical_roam(4);
         }
-        
+
     // Don't let the fish leave the water vertically.
     } else {
         o->oPosY = o->oFishWaterLevel - 50.0f;

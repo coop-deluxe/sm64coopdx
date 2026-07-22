@@ -93,6 +93,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
     GfxData *_GfxData = NULL;
     BinFile *_File = DynOS_Bin_Decompress(aFilename);
     if (_File) {
+        PrintInfo("Loading actor '%s' from file: %s", aActorName, aFilename.c_str());
         _GfxData = New<GfxData>();
         if (aAddToPack) {
             _GfxData->mModIndex = PACK_MOD_INDEX;
@@ -115,6 +116,13 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
             }
         }
         BinFile::Close(_File);
+    }
+
+    // If something went wrong, do not register actor
+    if (_GfxData && _GfxData->mErrorCount > 0) {
+        PrintError("  %u error(s) occurred during loading: Actor '%s' will not be enabled", _GfxData->mErrorCount, aActorName);
+        DynOS_Gfx_Free(_GfxData);
+        return NULL;
     }
 
     // Add data to cache, even if not loaded
@@ -177,8 +185,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mGeoNodeStack.Clear();
 
         // Parse data
-        PrintNoNewLine("%s.bin: Model identifier: %llX - Processing... ", _GeoRootName.begin(), _GfxData->mDataIdentifier);
-        PrintConsole(CONSOLE_MESSAGE_INFO, "%s.bin: Model identifier: %llX - Processing... ", _GeoRootName.begin(), _GfxData->mDataIdentifier);
+        PrintInfoNoNewLine("%s.bin: Model identifier: %llX - Processing... ", _GeoRootName.begin(), _GfxData->mDataIdentifier);
         DynOS_Geo_Parse(_GfxData, _GeoNode, true);
 
         // Init animation data
@@ -277,6 +284,11 @@ void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
             }
         }
         closedir(aPackDir);
+    }
+
+    // Prevent generating actors with Lua variables if it's a DynOS pack
+    if (aPackFolder.find(DYNOS_PACKS_FOLDER) != SysPath::npos) {
+        _GfxData->mModIndex = PACK_MOD_INDEX;
     }
 
     // Generate a binary file for each actor found in the GfxData

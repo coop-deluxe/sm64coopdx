@@ -63,19 +63,19 @@ static f32 sWigglerSpeeds[] = { 2.0f, 40.0f, 30.0f, 16.0f };
  */
 void bhv_wiggler_body_part_update(void) {
     if (o == NULL) { return; }
-    
+
     struct Object *parent = o->parentObj;
-    
+
     if (parent == NULL) { return; }
-    
+
     // Sanity check the array size of our segments,
     // This should never be higher then 3
     // in normal circumstances.
     if (o->oBehParams2ndByte > 3 || o->oBehParams2ndByte < 0) { return; }
     if (!parent->oWigglerSegments) { return; }
-    
+
     struct ChainSegment *segment = &parent->oWigglerSegments[o->oBehParams2ndByte];
-    
+
     if (segment == NULL) { return; }
 
     cur_obj_scale(parent->header.gfx.scale[0]);
@@ -331,7 +331,7 @@ static void wiggler_act_jumped_on(void) {
                     o->oMoveAngleYaw = o->oFaceAngleYaw;
 
                     if (o->oHealth == 2) {
-                        cur_obj_play_sound_2(SOUND_OBJ_WIGGLER_JUMP);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WIGGLER_JUMP);
                         o->oForwardVel = 10.0f;
                         o->oVelY = 70.0f;
                     }
@@ -370,7 +370,7 @@ static void wiggler_act_knockback(void) {
 static void wiggler_act_shrink(void) {
     if (o->oTimer >= 20) {
         if (o->oTimer == 20) {
-            cur_obj_play_sound_2(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
         }
 
         // 4 is the default scale, so shrink to 1/4 of regular size
@@ -378,13 +378,13 @@ static void wiggler_act_shrink(void) {
 
             f32* starPos = gLevelValues.starPositions.WigglerStarPos;
             struct Object *star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
-            
+
             // If we're not the closet to Wiggler,
             // Don't play this cutscene!
             if (star != NULL && nearest_mario_state_to_object(o) != &gMarioStates[0]) {
                 star->oStarSpawnExtCutsceneFlags = 0;
             }
-            
+
             o->oAction = WIGGLER_ACT_FALL_THROUGH_FLOOR;
         }
 
@@ -415,7 +415,7 @@ static void wiggler_act_fall_through_floor(void) {
  * Stop and enter the jumped on action.
  */
 void wiggler_jumped_on_attack_handler(void) {
-    cur_obj_play_sound_2(SOUND_OBJ_WIGGLER_ATTACKED);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_WIGGLER_ATTACKED);
     // Check for if we've already defeated the Wiggler.
     if (o->header.gfx.scale[0] == 1.0f) {
         o->oAction = WIGGLER_ACT_KNOCKBACK;

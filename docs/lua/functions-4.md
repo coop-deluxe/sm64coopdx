@@ -1228,21 +1228,22 @@ Checks whether Mario can become bubbled under certain game conditions (multiplay
 ## [mario_set_bubbled](#mario_set_bubbled)
 
 ### Description
-Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
+Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
 
 ### Lua Example
-`mario_set_bubbled(m)`
+`mario_set_bubbled(m, stayAlive)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
+| stayAlive | `boolean` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void mario_set_bubbled(struct MarioState* m);`
+`void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive);`
 
 [:arrow_up_small:](#)
 
@@ -4291,27 +4292,6 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
-## [mario_exit_palette_editor](#mario_exit_palette_editor)
-
-### Lua Example
-`local integerValue = mario_exit_palette_editor(m, c)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| c | [Camera](structs.md#Camera) |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 mario_exit_palette_editor(struct MarioState *m, struct Camera *c);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [check_common_stationary_cancels](#check_common_stationary_cancels)
 
 ### Description
@@ -4634,6 +4614,27 @@ When used in a geo function, retrieve the MarioBodyState associated to the curre
 
 ### C Prototype
 `struct MarioBodyState *geo_get_body_state(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [geo_get_mario_object](#geo_get_mario_object)
+
+### Description
+When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise
+
+### Lua Example
+`local objectValue = geo_get_mario_object()`
+
+### Parameters
+- None
+
+### Returns
+- [Object](structs.md#Object)
+
+### C Prototype
+`struct Object *geo_get_mario_object(void);`
 
 [:arrow_up_small:](#)
 
@@ -5629,6 +5630,31 @@ Extracts the position (translation component) from the transformation matrix `ob
 
 ### C Prototype
 `Vec3fp get_pos_from_transform_mtx(VEC_OUT Vec3f dest, Mat4 objMtx, Mat4 camMtx);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_world_mtx_from_transform](#get_world_mtx_from_transform)
+
+### Description
+Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+
+### Lua Example
+`get_world_mtx_from_transform(dest, objMtx, camMtx)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Mat4](structs.md#Mat4) |
+| objMtx | [Mat4](structs.md#Mat4) |
+| camMtx | [Mat4](structs.md#Mat4) |
+
+### Returns
+- None
+
+### C Prototype
+`void get_world_mtx_from_transform(VEC_OUT Mat4 dest, Mat4 objMtx, Mat4 camMtx);`
 
 [:arrow_up_small:](#)
 

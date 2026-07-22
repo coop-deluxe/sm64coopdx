@@ -211,6 +211,10 @@ private:
 
 template <typename T>
 class Array {
+    static_assert(
+        std::is_trivially_destructible_v<T>,
+        "DynOS Array can only be used with types that have trivial destructors."
+    );
 public:
     inline Array() : mBuffer(NULL), mCount(0), mCapacity(0) {
     }
@@ -666,57 +670,6 @@ struct PackData {
     bool mLoaded;
 };
 
-typedef Pair<String, const u8 *> Label;
-struct DynosOption : NoCopy {
-    String mName;
-    String mConfigName; // Name used in the config file
-    Label mLabel;
-    Label mTitle; // Full caps label, displayed with colored font
-    DynosOption *mPrev;
-    DynosOption *mNext;
-    DynosOption *mParent;
-    bool mDynos; // true from create, false from convert
-    u8 mType;
-
-    // TOGGLE
-    struct Toggle : NoCopy {
-        bool *mTog;
-    } mToggle;
-
-    // CHOICE
-    struct Choice : NoCopy {
-        Array<Label> mChoices;
-        s32 *mIndex;
-    } mChoice;
-
-    // SCROLL
-    struct Scroll : NoCopy {
-        s32 mMin;
-        s32 mMax;
-        s32 mStep;
-        s32 *mValue;
-    } mScroll;
-
-    // BIND
-    struct Bind : NoCopy {
-        u32 mMask;
-        u32 *mBinds;
-        s32 mIndex;
-    } mBind;
-
-    // BUTTON
-    struct Button : NoCopy {
-        String mFuncName;
-    } mButton;
-
-    // SUBMENU
-    struct Submenu : NoCopy {
-        DynosOption *mChild;
-        bool mEmpty;
-    } mSubMenu;
-};
-typedef bool (*DynosLoopFunc)(DynosOption *, void *);
-
 struct LvlCmd {
     u8 mType;
     u8 mSize;
@@ -802,10 +755,20 @@ void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArg
 }
 
 template <typename... Args>
+void PrintInfoNoNewLine(const char *aFmt, Args... aArgs) {
+    PrintNoNewLine(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
+void PrintInfo(const char *aFmt, Args... aArgs) {
+    Print(aFmt, aArgs...);
+    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+}
+
+template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
-    fflush(stdout);
+    Print(aFmt, aArgs...);
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
@@ -847,6 +810,7 @@ void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
 void DynOS_Mod_Update();
 void DynOS_Mod_Shutdown();
+bool DynOS_Mod_IsShuttingDown();
 
 //
 // Gfx
@@ -878,6 +842,7 @@ s8 DynOS_Level_GetCourse(s32 aLevel);
 void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex);
 void DynOS_Level_Unoverride();
 const void *DynOS_Level_GetScript(s32 aLevel);
+const void *DynOS_Level_GetVanillaScript(s32 aLevel);
 s32 DynOS_Level_GetModIndex(s32 aLevel);
 bool DynOS_Level_IsVanillaLevel(s32 aLevel);
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea);

@@ -22,6 +22,8 @@ void bhv_unlock_door_star_loop(void);
 struct MarioState *geo_get_mario_state(void);
 /* |description|When used in a geo function, retrieve the MarioBodyState associated to the current processed object|descriptionEnd| */
 struct MarioBodyState *geo_get_body_state(void);
+/* |description|When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise|descriptionEnd| */
+struct Object *geo_get_mario_object(void);
 Gfx *geo_mirror_mario_set_alpha(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);
 Gfx *geo_switch_mario_stand_run(s32 callContext, struct GraphNode *node, UNUSED Mat4 *mtx);
 Gfx *geo_switch_mario_eyes(s32 callContext, struct GraphNode *node, UNUSED Mat4 *c);

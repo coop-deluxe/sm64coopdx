@@ -90,7 +90,6 @@
 |`bhvUnused0DFC`|`OBJ_LIST_DEFAULT`|
 |`bhvMistCircParticleSpawner`|`OBJ_LIST_DEFAULT`|
 |`bhvDirtParticleSpawner`|`OBJ_LIST_DEFAULT`|
-|``|`OBJ_LIST_DEFAULT`|
 |`bhvSnowParticleSpawner`|`OBJ_LIST_DEFAULT`|
 |`bhvWind`|`OBJ_LIST_UNIMPORTANT`|
 |`bhvEndToad`|`OBJ_LIST_DEFAULT`|
@@ -106,6 +105,7 @@
 |`bhvBitfsTiltingInvertedPyramid`|`OBJ_LIST_SURFACE`|
 |`bhvSquishablePlatform`|`OBJ_LIST_SURFACE`|
 |`bhvCutOutObject`|`OBJ_LIST_GENACTOR`|
+|`bhvBetaMovingFlamesSpawn`|`OBJ_LIST_DEFAULT`|
 |`bhvBetaMovingFlames`|`OBJ_LIST_LEVEL`|
 |`bhvRrRotatingBridgePlatform`|`OBJ_LIST_SURFACE`|
 |`bhvFlamethrower`|`OBJ_LIST_DEFAULT`|
@@ -186,6 +186,7 @@
 |`bhvLllSinkingRockBlock`|`OBJ_LIST_SURFACE`|
 |`bhvStub1D70`|`OBJ_LIST_DEFAULT`|
 |`bhvLllMovingOctagonalMeshPlatform`|`OBJ_LIST_SURFACE`|
+|`bhvSnowBall`|`OBJ_LIST_DEFAULT`|
 |`bhvLllRotatingBlockWithFireBars`|`OBJ_LIST_SURFACE`|
 |`bhvLllRotatingHexFlame`|`OBJ_LIST_LEVEL`|
 |`bhvLllWoodPiece`|`OBJ_LIST_SURFACE`|
@@ -214,6 +215,7 @@
 |`bhvWdwExpressElevator`|`OBJ_LIST_SURFACE`|
 |`bhvWdwExpressElevatorPlatform`|`OBJ_LIST_SURFACE`|
 |`bhvChirpChirp`|`OBJ_LIST_DEFAULT`|
+|`bhvChirpChirpUnused`|`OBJ_LIST_DEFAULT`|
 |`bhvBub`|`OBJ_LIST_GENACTOR`|
 |`bhvExclamationBox`|`OBJ_LIST_SURFACE`|
 |`bhvRotatingExclamationMark`|`OBJ_LIST_DEFAULT`|
@@ -235,6 +237,7 @@
 |`bhvWhitePuff2`|`OBJ_LIST_UNIMPORTANT`|
 |`bhvWhitePuffSmoke2`|`OBJ_LIST_UNIMPORTANT`|
 |`bhvPurpleSwitchHiddenBoxes`|`OBJ_LIST_SURFACE`|
+|`bhvBlueCoinNumber`|`OBJ_LIST_DEFAULT`|
 |`bhvBlueCoinSwitch`|`OBJ_LIST_SURFACE`|
 |`bhvHiddenBlueCoin`|`OBJ_LIST_LEVEL`|
 |`bhvOpenableCageDoor`|`OBJ_LIST_SURFACE`|
@@ -261,6 +264,7 @@
 |`bhvMeshElevator`|`OBJ_LIST_SURFACE`|
 |`bhvMerryGoRound`|`OBJ_LIST_SURFACE`|
 |`bhvPlaysMusicTrackWhenTouched`|`OBJ_LIST_DEFAULT`|
+|`bhvInsideCannon`|`OBJ_LIST_DEFAULT`|
 |`bhvBetaBowserAnchor`|`OBJ_LIST_DESTRUCTIVE`|
 |`bhvStaticCheckeredPlatform`|`OBJ_LIST_SURFACE`|
 |`bhvUnused2A10`|`OBJ_LIST_DEFAULT`|
@@ -273,7 +277,6 @@
 |`bhvSparkle`|`OBJ_LIST_UNIMPORTANT`|
 |`bhvSparkleSpawn`|`OBJ_LIST_UNIMPORTANT`|
 |`bhvSparkleParticleSpawner`|`OBJ_LIST_DEFAULT`|
-|``|`OBJ_LIST_UNIMPORTANT`|
 |`bhvScuttlebug`|`OBJ_LIST_GENACTOR`|
 |`bhvScuttlebugSpawn`|`OBJ_LIST_SPAWNER`|
 |`bhvWhompKingBoss`|`OBJ_LIST_SURFACE`|
@@ -296,6 +299,20 @@
 |`bhvMario`|`OBJ_LIST_PLAYER`|
 |`bhvToadMessage`|`OBJ_LIST_GENACTOR`|
 |`bhvUnlockDoorStar`|`OBJ_LIST_LEVEL`|
+|`bhvInstantActiveWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvAirborneWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvHardAirKnockBackWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvSpinAirborneCircleWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvDeathWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvSpinAirborneWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvFlyingWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvPaintingStarCollectWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvPaintingDeathWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvAirborneDeathWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvAirborneStarCollectWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvLaunchStarCollectWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvLaunchDeathWarp`|`OBJ_LIST_DEFAULT`|
+|`bhvSwimmingWarp`|`OBJ_LIST_DEFAULT`|
 |`bhvRandomAnimatedTexture`|`OBJ_LIST_LEVEL`|
 |`bhvYellowBackgroundInMenu`|`OBJ_LIST_LEVEL`|
 |`bhvMenuButton`|`OBJ_LIST_LEVEL`|
@@ -388,6 +405,7 @@
 |`bhvMetalCap`|`OBJ_LIST_LEVEL`|
 |`bhvNormalCap`|`OBJ_LIST_LEVEL`|
 |`bhvVanishCap`|`OBJ_LIST_LEVEL`|
+|`bhvStarNumber`|`OBJ_LIST_DEFAULT`|
 |`bhvStar`|`OBJ_LIST_LEVEL`|
 |`bhvStarSpawnCoordinates`|`OBJ_LIST_LEVEL`|
 |`bhvHiddenRedCoinStar`|`OBJ_LIST_LEVEL`|

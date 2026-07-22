@@ -1345,7 +1345,7 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
 s32 act_riding_shell_ground(struct MarioState *m) {
     if (!m) { return FALSE; }
-    
+
     // If we don't have an object we're riding or if the interaction was with something
     // not a Koopa Shell-Then we abort the riding state.
     if (gLevelValues.fixInvalidShellRides && (m->riddenObj == NULL || m->riddenObj->oInteractType != INTERACT_KOOPA_SHELL)) {

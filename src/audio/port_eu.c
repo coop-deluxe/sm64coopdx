@@ -41,7 +41,7 @@ struct SPTask *create_next_audio_frame_task(void) {
 void create_next_audio_buffer(s16 *samples, u32 num_samples) {
     s32 writtenCmds;
     OSMesg msg;
- 
+
     gAudioFrameCount++;
     decrease_sample_dma_ttls();
     if (osRecvMesg(OSMesgQueues[2], &msg, OS_MESG_NOBLOCK) != -1) {

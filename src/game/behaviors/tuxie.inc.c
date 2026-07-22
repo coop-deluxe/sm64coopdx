@@ -113,7 +113,7 @@ u8 tuxies_mother_act_0_continue_dialog(void) { return (o->oAction == 0 && o->oSu
 void tuxies_mother_act_0(void) {
     // only local can interact with mother
     struct MarioState* marioState = &gMarioStates[0];
-    s32 distanceToPlayer = marioState->visibleToEnemies ? dist_between_objects(o, marioState->marioObj) : 10000;
+    s32 distanceToPlayer = marioState->visibleToObjects ? dist_between_objects(o, marioState->marioObj) : 10000;
 
     s32 sp2C;
     f32 sp28;
@@ -131,12 +131,12 @@ void tuxies_mother_act_0(void) {
     } else {
         switch (o->oSubAction) {
             case 0:
-                if (cur_obj_can_mario_activate_textbox_2(marioState, 300.0f, 100.0f))
+                if (cur_obj_can_mario_activate_textbox(marioState, 300.0f, 100.0f, 0x1000))
                     if (sp2C == 0)
                         o->oSubAction++;
                 break;
             case 1:
-                if (marioState->visibleToEnemies && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.TuxieMotherDialog, tuxies_mother_act_0_continue_dialog))
+                if (marioState->visibleToObjects && cur_obj_update_dialog_with_cutscene(marioState, 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.TuxieMotherDialog, tuxies_mother_act_0_continue_dialog))
                     o->oSubAction++;
                 break;
             case 2:
@@ -146,7 +146,7 @@ void tuxies_mother_act_0(void) {
         }
     }
     if (cur_obj_check_anim_frame(1))
-        cur_obj_play_sound_2(SOUND_OBJ_BIG_PENGUIN_YELL);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BIG_PENGUIN_YELL);
 }
 
 void (*sTuxiesMotherActions[])(void) = { tuxies_mother_act_0, tuxies_mother_act_1,
@@ -212,7 +212,7 @@ void small_penguin_act_1(void) {
 void small_penguin_act_3(void) {
     if (o->oTimer > 5) {
         if (o->oTimer == 6)
-            cur_obj_play_sound_2(SOUND_OBJ_BABY_PENGUIN_DIVE);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BABY_PENGUIN_DIVE);
         cur_obj_init_animation_with_sound(1);
         if (o->oTimer > 25) {
             if (o->heldByPlayerIndex < MAX_PLAYERS && !mario_is_dive_sliding(&gMarioStates[o->heldByPlayerIndex])) {

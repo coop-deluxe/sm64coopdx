@@ -40,6 +40,16 @@ AT_STARTUP void clear_all_shader_flags(void) {
 
 ///
 
+bool get_shading_fullbright_enabled(void) {
+    return gFullbright;
+}
+
+void set_shading_fullbright_enabled(bool enabled) {
+    gFullbright = enabled;
+}
+
+///
+
 void set_override_fov(f32 fov) {
     gOverrideFOV = fov;
 }

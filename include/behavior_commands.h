@@ -274,23 +274,23 @@
 #define SPAWN_WATER_DROPLET(dropletParams) \
     BC_B(0x37), \
     BC_PTR(dropletParams)
-    
+
 // coop
 
 // Defines the id of the behavior script
 #define ID(id) \
     BC_B0H(0x39, id)
-    
+
 // Jumps to a new behavior command and stores the return address in the object's stack.
 #define CALL_EXT(addr) \
     BC_B(0x3A), \
     BC_PTR(addr)
-    
+
 // Jumps to a new behavior script without saving anything.
 #define GOTO_EXT(addr) \
     BC_B(0x3B), \
     BC_PTR(addr)
-    
+
 // Executes a native game function.
 #define CALL_NATIVE_EXT(func) \
     BC_B(0x3C), \
@@ -301,32 +301,32 @@
     BC_B(0x3D), \
     BC_W(modelID), \
     BC_PTR(behavior)
-    
+
 // Spawns a child object with the specified model and behavior, plus a behavior param.
 #define SPAWN_CHILD_WITH_PARAM_EXT(bhvParam, modelID, behavior) \
     BC_B0H(0x3E, bhvParam), \
     BC_W(modelID), \
     BC_PTR(behavior)
-    
+
 // Spawns a new object with the specified model and behavior.
 #define SPAWN_OBJ_EXT(modelID, behavior) \
     BC_B(0x3F), \
     BC_W(modelID), \
     BC_PTR(behavior)
-    
+
 // Loads the animations for the object. <field> is always set to oAnimations.
 #define LOAD_ANIMATIONS_EXT(field, anims) \
     BC_BB(0x40, field), \
     BC_PTR(anims)
-    
+
 // Loads collision data for the object.
 #define LOAD_COLLISION_DATA_EXT(collisionData) \
     BC_B(0x41), \
     BC_PTR(collisionData)
-    
+
 // This is a special case for behaviors hooked from LUA.
 #define CALL_LUA_FUNC(func) \
     BC_B(0x42), \
     BC_W(func)
-    
+
 #endif // BEHAVIOR_COMMANDS_H

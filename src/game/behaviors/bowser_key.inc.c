@@ -38,14 +38,14 @@ void bhv_bowser_key_loop(void) {
             o->oAction++;
         else if (o->oMoveFlags & OBJ_MOVE_LANDED)
 #ifndef VERSION_JP
-            cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN3_2);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNKNOWN3_2);
 #else
-            cur_obj_play_sound_2(SOUND_GENERAL_UNKNOWN3_LOWPRIO);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_UNKNOWN3_LOWPRIO);
 #endif
     } else {
         obj_set_hitbox(o, &sBowserKeyHitbox);
         if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-            mark_obj_for_deletion(o);
+            obj_mark_for_deletion(o);
             o->oInteractStatus = 0;
         }
     }

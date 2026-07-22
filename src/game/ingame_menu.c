@@ -1897,6 +1897,30 @@ void render_dialog_entries(void) {
         return;
     }
 
+    s16 dialogLen = (s16)strlen64(dialog->str);
+    // this prevents overflow. This is only triggered if we are oob. That means that
+    // only a handful, or even a single character could be rendered on a switch
+    if (gDialogTextPos >= dialogLen) {
+        // look for the last valid page start tex pos index
+        s16 textPos = 0;
+        u16 lineNum = 0;
+        s16 strIdx = 0;
+        while (strIdx < dialogLen) { 
+            u8 strChar = dialog->str[strIdx];
+
+            if (strChar == DIALOG_CHAR_NEWLINE) {
+                lineNum++;
+                if (lineNum >= dialog->linesPerBox) {
+                    textPos = strIdx + 1;
+                    lineNum = 0;
+                }
+            }
+            strIdx++;
+        }
+        gDialogTextPos = textPos;
+        gLastDialogPageStrPos = -1;
+    }
+
 #ifdef VERSION_EU
     gDialogX = 0;
     gDialogY = 0;

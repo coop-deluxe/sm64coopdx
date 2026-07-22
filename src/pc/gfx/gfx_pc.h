@@ -17,13 +17,14 @@ enum ShaderFlag {
 };
 
 struct GfxRenderingAPI;
-struct GfxWindowManagerAPI;
 
 extern Vec3f gLightingDir;
 extern Color gLightingColor[2];
 extern Color gVertexColor;
 extern Color gFogColor;
 extern f32 gFogIntensity;
+
+extern bool gFullbright;
 
 extern int gShaderFlags[SHADER_FLAG_MAX];
 extern f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX];
@@ -34,7 +35,7 @@ extern bool gShaderFlagsEnabled;
 extern "C" {
 #endif
 
-void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title);
+void gfx_init(struct GfxRenderingAPI *rapi, const char *window_title);
 struct GfxRenderingAPI *gfx_get_current_rendering_api(void);
 void gfx_start_frame(void);
 void gfx_run(Gfx *commands);

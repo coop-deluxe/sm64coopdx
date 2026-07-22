@@ -42,7 +42,7 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
         return;
     }
-	configAmountOfPlayers = atoi(sPlayerAmount->buffer);
+    configAmountOfPlayers = atoi(sPlayerAmount->buffer);
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {

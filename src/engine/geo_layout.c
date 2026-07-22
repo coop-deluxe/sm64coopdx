@@ -878,8 +878,8 @@ void geo_layout_cmd_bone(void) {
     cmdPos += 2 << CMD_SIZE_SHIFT;
 
     graphNode = init_graph_node_bone(
-        gGraphNodePool, NULL, 
-        drawingLayer, displayList, 
+        gGraphNodePool, NULL,
+        drawingLayer, displayList,
         translation, rotation,
         scale);
 

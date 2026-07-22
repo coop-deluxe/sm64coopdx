@@ -37,7 +37,7 @@
 #include "pc/gfx/gfx_pc.h"
 #include "pc/gfx/gfx_rendering_api.h"
 #include "pc/gfx/gfx_screen_config.h"
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 
 #define G_TX_LOADTILE_6_UNKNOWN 6
 
@@ -116,7 +116,6 @@ static float buf_vbo[MAX_BUFFERED * (26 * 3)] = { 0.0f }; // 3 vertices in a tri
 static size_t buf_vbo_len = 0;
 static size_t buf_vbo_num_tris = 0;
 
-static struct GfxWindowManagerAPI *gfx_wapi = NULL;
 static struct GfxRenderingAPI *gfx_rapi = NULL;
 
 static f32 sDepthZAdd = 0;
@@ -127,13 +126,15 @@ Vec3f gLightingDir = { 0.0f, 0.0f, 0.0f };
 Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
 Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
-f32 gFogIntensity = 1;
+f32 gFogIntensity = 1.0f;
+
+bool gFullbright = false;
 
 int gShaderFlags[SHADER_FLAG_MAX] = { 0 };
 f32 gDefaultShaderFlagValues[SHADER_FLAG_MAX] = {
     [SHADER_FLAG_HUE] = 0.0f,
     [SHADER_FLAG_SATURATION] = 1.0f,
-    [SHADER_FLAG_BRIGHTNESS] = 1.0f, 
+    [SHADER_FLAG_BRIGHTNESS] = 1.0f,
     [SHADER_FLAG_CONTRAST] = 1.0f,
     [SHADER_FLAG_EXPOSURE] = 1.0f,
     [SHADER_FLAG_DITHERING] = 0.0f,
@@ -718,7 +719,18 @@ static void gfx_sp_pop_matrix(uint32_t count) {
 }
 
 static float gfx_adjust_x_for_aspect_ratio(float x) {
-    return x * gfx_current_dimensions.x_adjust_ratio;
+    float adjusted = x * gfx_current_dimensions.x_adjust_ratio;
+
+    // Force 2D coordinates to be aligned perfectly on the nearest pixel
+    // This prevents MSAA sub-pixel gaps (e.g. on vanilla dialog boxes)
+    // Skip DJUI coords (sOnlyTextureChangeOnAddrChange).
+    if (!sOnlyTextureChangeOnAddrChange && rsp.P_matrix[3][3] > 0.5f && rdp.viewport.width > 0.0f) {
+        float pixelX = rdp.viewport.x + (adjusted + 1.0f) * 0.5f * rdp.viewport.width;
+        pixelX = floorf(pixelX + 0.5f);
+        adjusted = ((pixelX - rdp.viewport.x) / rdp.viewport.width) * 2.0f - 1.0f;
+    }
+
+    return adjusted;
 }
 
 static OPTIMIZE_O3 void gfx_local_to_world_space(VEC_OUT Vec3f pos, VEC_OUT Vec3f normal) {
@@ -821,9 +833,24 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 rsp.lights_changed = false;
             }
 
-            float r = rsp.current_lights[rsp.current_num_lights - 1].col[0] * globalLightCached[1][0];
-            float g = rsp.current_lights[rsp.current_num_lights - 1].col[1] * globalLightCached[1][1];
-            float b = rsp.current_lights[rsp.current_num_lights - 1].col[2] * globalLightCached[1][2];
+            bool useShade = rsp.current_num_lights > 1 &&
+                rsp.current_lights[rsp.current_num_lights - 2].col[0] == 0 &&
+                rsp.current_lights[rsp.current_num_lights - 2].col[1] == 0 &&
+                rsp.current_lights[rsp.current_num_lights - 2].col[2] == 0;
+            float r = 0;
+            float g = 0;
+            float b = 0;
+            if (gFullbright) {
+                int32_t shadeIndex = rsp.current_num_lights > 1 ? rsp.current_num_lights - (useShade ? 1 : 2) : 0;
+                r = rsp.current_lights[shadeIndex].col[0];
+                g = rsp.current_lights[shadeIndex].col[1];
+                b = rsp.current_lights[shadeIndex].col[2];
+            } else {
+                int32_t lightIndex = rsp.current_num_lights > 0 ? rsp.current_num_lights - 1 : 0;
+                r = rsp.current_lights[lightIndex].col[0] * globalLightCached[1][0];
+                g = rsp.current_lights[lightIndex].col[1] * globalLightCached[1][1];
+                b = rsp.current_lights[lightIndex].col[2] * globalLightCached[1][2];
+            }
 
             signed char nx = vn->n[0];
             signed char ny = vn->n[1];
@@ -849,18 +876,20 @@ static void OPTIMIZE_O3 gfx_sp_vertex(size_t n_vertices, size_t dest_index, cons
                 SUPPORT_CHECK(absi(nx) + absi(ny) + absi(nz) == 127);
             }
 
-            for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
-                float intensity = 0;
+            if (!gFullbright) {
+                for (int32_t i = 0; i < rsp.current_num_lights - 1; i++) {
+                    float intensity = 0;
 
-                intensity += nx * rsp.current_lights_coeffs[i][0];
-                intensity += ny * rsp.current_lights_coeffs[i][1];
-                intensity += nz * rsp.current_lights_coeffs[i][2];
+                    intensity += nx * rsp.current_lights_coeffs[i][0];
+                    intensity += ny * rsp.current_lights_coeffs[i][1];
+                    intensity += nz * rsp.current_lights_coeffs[i][2];
 
-                intensity /= 127.0f;
-                if (intensity > 0.0f) {
-                    r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
-                    g += intensity * rsp.current_lights[i].col[1] * globalLightCached[0][1];
-                    b += intensity * rsp.current_lights[i].col[2] * globalLightCached[0][2];
+                    intensity /= 127.0f;
+                    if (intensity > 0.0f) {
+                        r += intensity * rsp.current_lights[i].col[0] * globalLightCached[0][0];
+                        g += intensity * rsp.current_lights[i].col[1] * globalLightCached[0][1];
+                        b += intensity * rsp.current_lights[i].col[2] * globalLightCached[0][2];
+                    }
                 }
             }
 
@@ -2027,16 +2056,15 @@ static void gfx_sp_reset(void) {
 }
 
 void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
-    gfx_wapi->get_dimensions(width, height);
+    gfx_wm_get_dimensions(width, height);
     if (configForce4By3) {
         *width = gfx_current_dimensions.aspect_ratio * *height;
     }
 }
 
-void gfx_init(struct GfxWindowManagerAPI *wapi, struct GfxRenderingAPI *rapi, const char *window_title) {
-    gfx_wapi = wapi;
+void gfx_init(struct GfxRenderingAPI *rapi, const char *window_title) {
+    gfx_wm_init(window_title);
     gfx_rapi = rapi;
-    gfx_wapi->init(window_title);
     gfx_rapi->init();
 
     gfx_cc_precomp();
@@ -2054,8 +2082,8 @@ void gfx_start_frame(void) {
         rdp.loaded_texture[1].addr = NULL;
         rdp.loaded_texture[1].size_bytes = 0;
     }
-    gfx_wapi->handle_events();
-    gfx_wapi->get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
+    gfx_wm_handle_events();
+    gfx_wm_get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
     if (gfx_current_dimensions.height == 0) {
         // Avoid division by zero
         gfx_current_dimensions.height = 1;
@@ -2076,13 +2104,13 @@ void gfx_run(Gfx *commands) {
 
     //puts("New frame");
 
-    if (!gfx_wapi->start_frame()) {
+    if (!gfx_wm_start_frame()) {
         dropped_frame = true;
         return;
     }
     dropped_frame = false;
 
-    //double t0 = gfx_wapi->get_time();
+    //double t0 = gfx_wm_get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
 }
@@ -2093,10 +2121,10 @@ void gfx_end_frame_render(void) {
 }
 
 void gfx_display_frame(void) {
-    gfx_wapi->swap_buffers_begin();
+    gfx_wm_swap_buffers_begin();
     if (!dropped_frame) {
         gfx_rapi->finish_render();
-        gfx_wapi->swap_buffers_end();
+        gfx_wm_swap_buffers_end();
     }
 }
 
@@ -2110,10 +2138,7 @@ void gfx_shutdown(void) {
         if (gfx_rapi->shutdown) gfx_rapi->shutdown();
         gfx_rapi = NULL;
     }
-    if (gfx_wapi) {
-        if (gfx_wapi->shutdown) gfx_wapi->shutdown();
-        gfx_wapi = NULL;
-    }
+    gfx_wm_shutdown();
     gGfxInited = false;
 }
 

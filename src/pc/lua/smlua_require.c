@@ -49,7 +49,7 @@ void smlua_mark_module_as_loading(lua_State* L, struct Mod* mod, struct ModFile*
     lua_setfield(L, -2, file->relativePath);
     lua_pop(L, 1); // pop loaded table
 }
- 
+
 void smlua_cache_module_result(lua_State* L, struct Mod* mod, struct ModFile* file, s32 prevTop) {
     if (lua_gettop(L) == prevTop) {
         lua_pushboolean(L, 1);

@@ -2862,6 +2862,54 @@ Toggles the visibility of the DJUI console
 
 <br />
 
+## [djui_console_is_open](#djui_console_is_open)
+
+### Description
+Returns whether the DJUI console is currently open or not
+
+### Lua Example
+`local booleanValue = djui_console_is_open()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool djui_console_is_open(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from djui_gfx.h
+
+<br />
+
+
+## [djui_gfx_get_scale](#djui_gfx_get_scale)
+
+### Description
+Gets the current visual scaling factor of DJUI
+
+### Lua Example
+`local numberValue = djui_gfx_get_scale()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 djui_gfx_get_scale(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from djui_hud_utils.h
 
@@ -3672,6 +3720,109 @@ Measures the width and height of `message` in the current font
 
 ### C Prototype
 `void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+---
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+---
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScale | `number` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
 
 [:arrow_up_small:](#)
 

@@ -6,10 +6,10 @@
 #include "macros.h"
 #include "types.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "object_constants.h"
 
 // used for chain chomp and wiggler
-struct ChainSegment
-{
+struct ChainSegment {
     f32 posX;
     f32 posY;
     f32 posZ;
@@ -26,8 +26,7 @@ struct ChainSegment
 #define WATER_DROPLET_FLAG_RAND_ANGLE_INCR           0x80 // Unused
 
 // Call spawn_water_droplet with this struct to spawn an object.
-struct WaterDropletParams
-{
+struct WaterDropletParams {
     s16 flags; // Droplet spawn flags, see defines above
     s16 model;
     const BehaviorScript *behavior;
@@ -41,9 +40,7 @@ struct WaterDropletParams
     f32 randSizeScale;
 };
 
-// TODO: Field names
-struct SpawnParticlesInfo
-{
+struct SpawnParticlesInfo {
     /*0x00*/ s8 behParam;
     /*0x01*/ s8 count;
     /*0x02*/ u16 model;
@@ -72,9 +69,9 @@ Gfx *geo_switch_anim_state(s32 callContext, struct GraphNode *node);
 Gfx *geo_switch_area(s32 callContext, struct GraphNode *node);
 #endif
 Gfx *geo_choose_area_ext(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
-void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);
+void obj_update_pos_from_parent_transformation(Mat4 mtx, struct Object *obj);
 void obj_apply_scale_to_matrix(struct Object *obj, VEC_OUT Mat4 dst, Mat4 src);
-void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2);
+void create_transformation_from_matrices(VEC_OUT Mat4 dest, Mat4 src1, Mat4 src2);
 void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior);
 f32 lateral_dist_between_objects(struct Object *obj1, struct Object *obj2);
 f32 dist_between_objects(struct Object *obj1, struct Object *obj2);
@@ -137,7 +134,6 @@ void cur_obj_unhide(void);
 void cur_obj_hide(void);
 void cur_obj_set_pos_relative(struct Object *other, f32 dleft, f32 dy, f32 dforward);
 void cur_obj_set_pos_relative_to_parent(f32 dleft, f32 dy, f32 dforward);
-void cur_obj_enable_rendering_2(void);
 void obj_set_face_angle_to_move_angle(struct Object *obj);
 u32 get_object_list_from_behavior(const BehaviorScript *behavior);
 struct Object *cur_obj_nearest_object_with_behavior(const BehaviorScript *behavior);
@@ -152,16 +148,16 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior);
 struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist);
 void cur_obj_change_action(s32 action);
 void cur_obj_set_vel_from_mario_vel(struct MarioState* m, f32 f12,f32 f14);
-BAD_RETURN(s16) cur_obj_reverse_animation(void);
-BAD_RETURN(s32) cur_obj_extend_animation_if_at_end(void);
+void cur_obj_reverse_animation(void);
+void cur_obj_extend_animation_if_at_end(void);
 s32 cur_obj_check_if_near_animation_end(void);
 s32 cur_obj_check_if_at_animation_end(void);
 s32 cur_obj_check_anim_frame(s32 frame);
 s32 cur_obj_check_anim_frame_in_range(s32 startFrame, s32 rangeLength);
 s32 mario_is_in_air_action(struct MarioState* m);
 s32 mario_is_dive_sliding(struct MarioState* m);
-void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C);
-void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C);
+void cur_obj_set_y_vel_and_animation(f32 velY, s32 animIndex);
+void cur_obj_unrender_and_reset_state(s32 animIndex, s32 action);
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction);
 void cur_obj_get_dropped(void);
 void cur_obj_set_model(s32 modelID);
@@ -194,7 +190,7 @@ void cur_obj_set_pos_to_home(void);
 void cur_obj_set_pos_to_home_and_stop(void);
 void cur_obj_shake_y(f32 amount);
 void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent);
-void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);
+void set_mario_interact_hoot_if_in_range(UNUSED s32 unused1, UNUSED s32 unused2, f32 maxDistanceToMario);
 void obj_set_billboard(struct Object *obj);
 void obj_set_cylboard(struct Object *obj);
 void cur_obj_set_billboard_if_vanilla_cam(void);
@@ -264,10 +260,10 @@ void cur_obj_push_mario_away_from_cylinder(f32 radius, f32 extentY);
 s32 cur_obj_set_direction_table(s8 *a0);
 s32 cur_obj_progress_direction_table(void);
 void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4);
-void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14);
+void cur_obj_scale_over_time(s32 axes, s32 duration, f32 minScale, f32 maxScale);
 void cur_obj_set_pos_to_home_with_debug(void);
 s32 cur_obj_is_mario_on_platform(void);
-s32 cur_obj_move_up_and_down(s32 a0);
+s32 cur_obj_move_up_and_down(s32 index);
 void cur_obj_call_action_function(void (*actionFunctions[])(void), uint32_t actionFunctionsLength);
 void spawn_base_star_with_no_lvl_exit(void);
 s32 bit_shift_left(s32 a0);
@@ -276,7 +272,7 @@ s32 is_mario_moving_fast_or_in_air(s32 speedThreshold);
 s32 is_item_in_array(s8 item, s8 *array);
 void cur_obj_enable_rendering_if_mario_in_room(void);
 s32 cur_obj_set_hitbox_and_die_if_attacked(struct ObjectHitbox *hitbox, s32 deathSound, s32 noLootCoins);
-void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C);
+void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);
 void obj_set_collision_data(struct Object *obj, const void *segAddr);
 void cur_obj_if_hit_wall_bounce_away(void);
 s32 cur_obj_hide_if_mario_far_away_y(f32 distY);
@@ -289,8 +285,7 @@ void disable_time_stop(void);
 void set_time_stop_flags(s32 flags);
 void set_time_stop_flags_if_alone(s32 flags);
 void clear_time_stop_flags(s32 flags);
-s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused);
-s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height);
+s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, OPTIONAL UNUSED s32 unused);
 s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 dialogID, UNUSED s32 unused, u8 (*inContinueDialogFunction)(void));
 s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32 dialogFlags, s32 cutsceneTable, s32 dialogID, u8 (*inContinueDialogFunction)(void));
 s32 cur_obj_has_model(u16 modelID);

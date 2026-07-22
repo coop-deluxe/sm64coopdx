@@ -21,10 +21,10 @@
         level boundaries are 4 times as big (-32768 to 32767)
         Collision calculations remain as fast as vanilla, at the cost of using far more RAM (16 times vanilla).
         64x64 collision cells.
-    
 
-    If you see "SURFACE POOL FULL" or "SURFACE NODE POOL FULL" in game, you should increase 
-    SURFACE_POOL_SIZE or SURFACE_NODE_POOL_SIZE, respectively, or reduce the amount of 
+
+    If you see "SURFACE POOL FULL" or "SURFACE NODE POOL FULL" in game, you should increase
+    SURFACE_POOL_SIZE or SURFACE_NODE_POOL_SIZE, respectively, or reduce the amount of
     collision surfaces in your level.
 */
 

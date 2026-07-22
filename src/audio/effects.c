@@ -59,10 +59,10 @@ void sequence_channel_process_sound(struct SequenceChannel *seqChannel, s32 reca
 #else
 static void sequence_channel_process_sound(struct SequenceChannel *seqChannel) {
     if (seqChannel == NULL) { return; }
-    
+
     struct SequencePlayer *seqPlayer = seqChannel->seqPlayer;
     if (seqPlayer == NULL) { return; }
-    
+
     f32 channelVolume;
     f32 panLayerWeight;
     f32 panFromChannel;

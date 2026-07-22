@@ -54,7 +54,7 @@ The first 3 bytes are for the red, green, and blue values. This will set the amb
 
 There are two ways you can add point lights in the scene.
 
-### 1. `le_add_light(x, y, z, r, g, b, radius, intensity)` 
+### 1. `le_add_light(x, y, z, r, g, b, radius, intensity)`
 To spawn a point light directly through code.
 
 | Parameter | Description |

@@ -557,7 +557,7 @@ s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found) {
     common_legacy_constant(bhvFish2, bhvManyBlueFishSpawner);
     common_legacy_constant(bhvFish3, bhvFewBlueFishSpawner);
     common_legacy_constant(bhvLargeFishGroup, bhvFishSpawner);
-    
+
     // Version exclusive behaviors
 #ifndef VERSION_JP
     common_constant(bhvPlaysMusicTrackWhenTouched);

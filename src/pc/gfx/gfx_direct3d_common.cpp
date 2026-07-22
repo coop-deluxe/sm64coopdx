@@ -153,7 +153,7 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         }
     }
     if ((cc.cm.use_alpha && cc.cm.use_dither) || ccf.do_noise) {
-        append_line(buf, &len, "    float4 screenPos : TEXCOORD1;");
+        append_line(buf, &len, "    float4 screenPos : SCREENPOS;");
     }
     if (cc.cm.use_fog) {
         append_line(buf, &len, "    float4 fog : FOG;");

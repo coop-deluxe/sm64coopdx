@@ -51,7 +51,7 @@ void checkerboard_plat_act_rotate(s32 a0, s16 a1) {
 
 static void bhv_checkerboard_platform_run_once(void) {
     if (o->oDistanceToMario < 1000.0f) {
-        cur_obj_play_sound_1(SOUND_ENV_ELEVATOR4);
+        cur_obj_play_sound_if_visible(SOUND_ENV_ELEVATOR4);
     }
     load_object_collision_model();
 }

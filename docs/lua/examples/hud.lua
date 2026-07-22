@@ -135,7 +135,7 @@ local function test_filtering()
 
     -- reset rotation from earlier
     djui_hud_set_rotation(0, 0, 0)
-    
+
     -- render to the N64's screen space with the HUD font
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_HUD)

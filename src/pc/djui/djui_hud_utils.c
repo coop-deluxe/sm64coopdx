@@ -5,7 +5,7 @@
 
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 
@@ -722,6 +722,10 @@ void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scal
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, NULL);
 }
 
+inline void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text(message, x, y, scale, scale);
+}
+
 void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY) {
     if (message == NULL) { return; }
 
@@ -748,6 +752,10 @@ void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY,
     }
 
     djui_hud_print_text_internal(message, x, y, scaleX, scaleY, interp);
+}
+
+inline void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale) {
+    djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, prevScale, x, y, scale, scale);
 }
 
 static inline bool is_power_of_two(u32 n) {
@@ -993,14 +1001,6 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out) {
         return false;
     }
 
-    out[0] *= 256.0f / -out[2];
-    out[1] *= 256.0f / out[2];
-
-    f32 fovCoeff = djui_hud_get_fov_coeff();
-
-    out[0] *= fovCoeff;
-    out[1] *= fovCoeff;
-
     f32 screenWidth, screenHeight;
     if (sHudUtilsState.resolution == RESOLUTION_N64) {
         screenWidth = GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT;
@@ -1008,9 +1008,17 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out) {
     } else {
         u32 windowWidth, windowHeight;
         gfx_get_dimensions(&windowWidth, &windowHeight);
-        screenWidth = (f32) windowWidth;
-        screenHeight = (f32) windowHeight;
+        screenWidth = (f32) windowWidth / djui_gfx_get_scale();
+        screenHeight = (f32) windowHeight / djui_gfx_get_scale();
     }
+
+    float scale = 256.0f * (screenHeight / 240.0f);
+    out[0] *= scale / -out[2];
+    out[1] *= scale /  out[2];
+
+    f32 fovCoeff = djui_hud_get_fov_coeff();
+    out[0] *= fovCoeff;
+    out[1] *= fovCoeff;
 
     out[0] += screenWidth  / 2.0f;
     out[1] += screenHeight / 2.0f;

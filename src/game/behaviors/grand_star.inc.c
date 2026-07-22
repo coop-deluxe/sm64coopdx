@@ -49,21 +49,21 @@ void bhv_grand_star_init(void) {
                 sync_object_init_field(o, o->oGraphYOffset);
             }
         }
-        return; 
+        return;
     }
-    
+
     obj_mark_for_deletion(o);
     if (gSecondCameraFocus == o) { gSecondCameraFocus = other; }
 }
 
 void bhv_grand_star_loop(void) {
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) { return; }
-    
+
     if (o->oAction == 0) {
         if (o->oTimer == 0) {
             obj_set_angle(o, 0, 0, 0);
             o->oAngleVelYaw = 0x400;
-            cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL2_STAR_APPEARS);
         }
         if (o->oTimer > 70) {
             o->oAction++;
@@ -73,8 +73,8 @@ void bhv_grand_star_loop(void) {
         if (o->oTimer == 0) {
             Vec3f empty;
             empty[0] = empty[1] = empty[2] = 0.0f;
-            
-            cur_obj_play_sound_2(SOUND_GENERAL_GRAND_STAR);
+
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_GRAND_STAR);
             cutscene_object(CUTSCENE_STAR_SPAWN, o);
             o->oGrandStarUnk108 = arc_to_goal_pos(empty, &o->oPosX, 80.0f, -2.0f);
         }
@@ -85,7 +85,7 @@ void bhv_grand_star_loop(void) {
                 o->oVelY = 60.0f;
                 o->oForwardVel = 0.0f;
                 o->oSubAction++;
-                cur_obj_play_sound_2(SOUND_GENERAL_GRAND_STAR_JUMP);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_GRAND_STAR_JUMP);
             }
         } else if (o->oVelY < 0.0f && o->oPosY < o->oHomeY + 200.0f) {
             o->oPosY = o->oHomeY + 200.0f;
@@ -94,7 +94,7 @@ void bhv_grand_star_loop(void) {
             set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
             o->oAction++;
             o->oInteractStatus = 0;
-            cur_obj_play_sound_2(SOUND_GENERAL_GRAND_STAR_JUMP);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_GRAND_STAR_JUMP);
         }
         spawn_sparkle_particles(3, 200, 80, -60);
     } else if (o->oAction == 2) {

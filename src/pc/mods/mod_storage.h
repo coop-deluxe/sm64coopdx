@@ -22,14 +22,14 @@ bool mod_storage_save_number(const char* key, lua_Number value);
 /* |description|Saves a `key` corresponding to a bool `value` to mod storage|descriptionEnd| */
 bool mod_storage_save_bool(const char* key, bool value);
 
-/* |description|Loads a string `value` from a `key` in mod storage|descriptionEnd| */
-const char *mod_storage_load(const char* key);
-/* |description|Loads an integer `value` from a `key` in mod storage|descriptionEnd| */
-lua_Integer mod_storage_load_integer(const char* key);
-/* |description|Loads a number `value` from a `key` in mod storage|descriptionEnd| */
-lua_Number mod_storage_load_number(const char* key);
-/* |description|Loads a bool `value` from a `key` in mod storage|descriptionEnd| */
-bool mod_storage_load_bool(const char* key);
+/* |description|Loads a string `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `nil`|descriptionEnd| */
+const char *mod_storage_load(const char* key, OPTIONAL const char* defaultValue);
+/* |description|Loads an integer `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`|descriptionEnd| */
+lua_Integer mod_storage_load_integer(const char* key, OPTIONAL lua_Integer defaultValue);
+/* |description|Loads a number `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`|descriptionEnd| */
+lua_Number mod_storage_load_number(const char* key, OPTIONAL lua_Number defaultValue);
+/* |description|Loads a bool `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `false`|descriptionEnd| */
+bool mod_storage_load_bool(const char* key, OPTIONAL bool defaultValue);
 /* |description|Loads all keys and values in mod storage as strings and returns them as a table|descriptionEnd| */
 LuaTable mod_storage_load_all(void);
 

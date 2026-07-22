@@ -47,7 +47,7 @@ void network_receive_sync_valid(struct Packet* p) {
     packet_read(p, &areaIndex, sizeof(s16));
     packet_read(p, &fromGlobalIndex, sizeof(u8));
     packet_read(p, &forGlobalIndex, sizeof(u8));
-    
+
     LOG_INFO("rx sync valid: from global %d, for global %d", fromGlobalIndex, forGlobalIndex);
 
     bool isOurSyncValid = (forGlobalIndex == gNetworkPlayerLocal->globalIndex);

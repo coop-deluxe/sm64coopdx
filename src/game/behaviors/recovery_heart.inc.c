@@ -17,13 +17,13 @@ void bhv_recovery_heart_loop(void) {
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
-        if (!gMarioStates[i].visibleToEnemies) { continue; }
+        if (!gMarioStates[i].visibleToObjects) { continue; }
         if (obj_check_if_collided_with_object(o, gMarioStates[i].marioObj)) { collided = TRUE; }
     }
 
     if (collided) {
         if (o->oSpinningHeartPlayedSound == 0) {
-            cur_obj_play_sound_2(SOUND_GENERAL_HEART_SPIN);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_HEART_SPIN);
             o->oSpinningHeartPlayedSound += 1;
         }
 
@@ -44,7 +44,7 @@ void bhv_recovery_heart_loop(void) {
 
         struct MarioState* nearestInteractingState = nearest_interacting_mario_state_to_object(o);
         for (s32 i = 0; i < MAX_PLAYERS; i++) {
-            if (!gMarioStates[i].visibleToEnemies) { continue; }
+            if (!gMarioStates[i].visibleToObjects) { continue; }
             if (!is_player_active(&gMarioStates[i])) { continue; }
             if (&gMarioStates[i] == nearestInteractingState) {
                 gMarioStates[i].healCounter += 4;

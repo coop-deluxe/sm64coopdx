@@ -883,7 +883,7 @@ s32 group_contains_obj(struct ObjGroup *group, struct GdObj *obj) {
 }
 
 /**
- * Unused (not called) - this shows details about all objects in the main object linked list 
+ * Unused (not called) - this shows details about all objects in the main object linked list
  */
 void show_details(enum ObjTypeFlag type) {
     enum ObjTypeFlag curObjType;

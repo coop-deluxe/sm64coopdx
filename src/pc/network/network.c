@@ -724,6 +724,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     color_set(gSkyboxColor, 0xFF, 0xFF, 0xFF);
     color_set(gFogColor, 0xFF, 0xFF, 0xFF);
     gFogIntensity = 1.0f;
+    gFullbright = false;
     clear_all_shader_flags();
     gOverrideBackground = -1;
     gOverrideEnvFx = ENVFX_MODE_NO_OVERRIDE;
@@ -738,7 +739,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     mods_clear(&gRemoteMods);
     smlua_shutdown();
     extern s16 gChangeLevel;
-    gChangeLevel = LEVEL_CASTLE_GROUNDS;
+    s16 menuLevel = get_menu_level();
+    gChangeLevel = menuLevel;
     network_player_init();
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;

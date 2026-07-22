@@ -1,18 +1,9 @@
 import os
 import re
 import sys
+from common import cobject_overload_identifier
 
 replacements = {
-    'BAD_RETURN(s8)':  'void',
-    'BAD_RETURN(s16)': 'void',
-    'BAD_RETURN(s32)': 'void',
-    'BAD_RETURN(s64)': 'void',
-    'BAD_RETURN(u8)':  'void',
-    'BAD_RETURN(u16)': 'void',
-    'BAD_RETURN(u32)': 'void',
-    'BAD_RETURN(u64)': 'void',
-    'BAD_RETURN(f32)': 'void',
-    'BAD_RETURN(f64)': 'void',
     'INLINE': '',
     'NOINLINE': '',
     'OPTIMIZE_O3': '',
@@ -75,28 +66,31 @@ def extract_functions(filename):
     while ('  ' in txt):
         txt = txt.replace('  ', ' ')
 
+    # handle overloads
+    txt = re.sub(f'{cobject_overload_identifier}\\((.*?)\\) ', f'{cobject_overload_identifier} \\1 ', txt)
+
     # strip macros
     txt = re.sub(r'[^a-zA-Z0-9_][A-Z0-9_]+\(.*\)', '', txt)
 
     # strip blocks
     tmp = txt
     txt = ''
-    inside = 0
+    depth = 0
     for character in tmp:
-        if inside == 0:
+        if depth == 0:
             txt += character
         if character == '{':
             txt += '\n'
-            inside += 1
+            depth += 1
         if character == '}':
-            inside -= 1
+            depth -= 1
 
     # cull obvious non-functions, statics, and externs
     tmp = txt
     txt = ''
     functions = []
-    descriptions = {}
 
+    descriptions = {}
     # use raw lines to find descriptions for identified functions
     for line in tmp.splitlines():
         line = line.strip()
@@ -107,6 +101,9 @@ def extract_functions(filename):
 
         # add function
         functions.append(line)
+
+        # clean overload before description search
+        line = re.sub(f'{cobject_overload_identifier} .+? ', '', line)
 
         # look for a description above the function in raw lines
         function_without_semicolon = line.rstrip(';')

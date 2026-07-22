@@ -132,6 +132,42 @@ void djui_text_remove_colors(char *str) {
     }
 }
 
+void djui_text_remove_alpha(char *str) {
+    if (!str) { return; }
+    char *colorStart = str;
+    const char *strEnd = str + strlen(str);
+    while ((colorStart = strstr(colorStart, "\\#"))) {
+        char *colorEnd;
+        struct DjuiColor parsedColor;
+        if (djui_text_parse_color(colorStart, strEnd, false, NULL, &colorEnd, &parsedColor) && colorEnd > colorStart) {
+            u8 length = (u8) (colorEnd - colorStart) - 3;
+            switch (length) {
+
+                // #rgba -> #rgb
+                case 4: {
+                    snprintf(colorStart, strEnd - colorStart, "\\#%01x%01x%01x\\", parsedColor.r >> 4, parsedColor.g >> 4, parsedColor.b >> 4);
+                    colorStart = colorEnd - 1;
+                    memmove(colorStart, colorStart + 1, strlen(colorStart + 1) + 1);
+                } break;
+
+                // #rrggbbaa -> #rrggbb
+                case 8: {
+                    snprintf(colorStart, strEnd - colorStart, "\\#%02x%02x%02x\\", parsedColor.r, parsedColor.g, parsedColor.b);
+                    colorStart = colorEnd - 2;
+                    memmove(colorStart, colorStart + 2, strlen(colorStart + 2) + 1);
+                } break;
+
+                // Nothing to change
+                default: {
+                    colorStart = colorEnd;
+                } break;
+            }
+        } else {
+            colorStart++;
+        }
+    }
+}
+
 char *djui_text_get_uncolored_string(char *dest, size_t length, const char *str) {
     if (!dest) {
         dest = malloc(length * sizeof(char));

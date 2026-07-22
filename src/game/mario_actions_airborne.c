@@ -98,7 +98,7 @@ Useful for determining if Mario's fall warrants a health penalty or a special la
 |descriptionEnd| */
 s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
     if (!m) { return 0; }
-    
+
     f32 fallHeight;
     f32 damageHeight;
 
@@ -1236,6 +1236,11 @@ u32 common_air_knockback_step(struct MarioState *m, u32 landAction, u32 hardFall
     if (!m) { return 0; }
     u32 stepResult;
 
+    // Update velocity only if it's not a PVP attack
+    if (!(m->actionArg & PVP_ATTACK_KNOCKBACK_ACTION_ARG)) {
+        mario_set_forward_vel(m, speed);
+    }
+
     // Refresh knockbackTimer
     if (m->knockbackTimer > 0) {
         m->knockbackTimer = PVP_ATTACK_KNOCKBACK_TIMER_DEFAULT;
@@ -1736,7 +1741,7 @@ s32 act_lava_boost(struct MarioState *m) {
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
